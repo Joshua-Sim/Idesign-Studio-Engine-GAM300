@@ -77,10 +77,8 @@ int main(void)
     // ------- Add systems to engine below -------- //
     engine->AddSystem(Window.get());
     engine->AddSystem(inputHandlerSystem);
- //   engine->AddSystem(physicsSystem.get());
     engine->AddSystem(graphicsSystem.get());
     engine->AddSystem(messageSystem.get());
- //   engine->AddSystem(playersystem.get());
 
     // Initialize the engine and run the main game loop
     engine->Initialize();

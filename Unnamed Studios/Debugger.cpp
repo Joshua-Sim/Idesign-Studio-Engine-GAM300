@@ -20,7 +20,7 @@ namespace Framework {
     *              Displays a message when the system is created.       *
     ********************************************************************/
     DebugSystem::DebugSystem() {
-        std::cout << "DebugSystem created" << std::endl;
+       // std::cout << "DebugSystem created" << std::endl;
     }
 
     /********************************************************************
@@ -28,7 +28,7 @@ namespace Framework {
     *               Displays a message when the system is destroyed.    *
     ********************************************************************/
     DebugSystem::~DebugSystem() {
-        std::cout << "DebugSystem destroyed" << std::endl;
+      //  std::cout << "DebugSystem destroyed" << std::endl;
     }
 
     /********************************************************************
@@ -113,7 +113,7 @@ namespace Framework {
 
            // std::cout << "Updated Cached Percentages - Frame: " << currentFrame << std::endl;
             for (const auto& [systemName, percentage] : lastValidPercentages) {
-                std::cout << systemName << ": " << percentage << "%" << std::endl;
+      //          std::cout << systemName << ": " << percentage << "%" << std::endl;
             }
         }
         else {
@@ -137,7 +137,7 @@ namespace Framework {
     void DebugSystem::AddCheck(const std::string& checkName, std::function<void(float)> checkFunc) {
         checks.emplace_back(checkName, checkFunc);
         checkStates[checkName] = true;
-        std::cout << "Added debug check: " << checkName << std::endl;
+      //  std::cout << "Added debug check: " << checkName << std::endl;
     }
 
     /********************************************************************
@@ -146,7 +146,7 @@ namespace Framework {
     void DebugSystem::ListChecks() {
         std::cout << "Registered Debug Checks:" << std::endl;
         for (const auto& [checkName, checkFunc] : checks) {
-            std::cout << "- " << checkName << std::endl;
+      //      std::cout << "- " << checkName << std::endl;
         }
     }
 
@@ -158,7 +158,7 @@ namespace Framework {
     void DebugSystem::ToggleCheck(const std::string& checkName, bool isActive) {
         if (checkStates.find(checkName) != checkStates.end()) {
             checkStates[checkName] = isActive;
-            std::cout << "Check " << checkName << (isActive ? " enabled" : " disabled") << std::endl;
+  //          std::cout << "Check " << checkName << (isActive ? " enabled" : " disabled") << std::endl;
         }
     }
 
