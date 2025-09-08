@@ -1,0 +1,296 @@
+{
+  "entities": [
+    {
+      "type": "Player&Textbox&S",
+      "components": {
+        "TransformComponent": {
+          "x": 400.0,
+          "y": 800.0,
+          "scaleX": 750.0,
+          "scaleY": 156.0,
+          "rotation": 0.0
+        },
+        "RenderComponent": {
+          "textureID": "textbox",  
+          "color": [1.0, 1.0, 1.0],  
+          "alpha": 1.0,
+          "renderType": "Sprite"
+        },
+        "TextComponent": {
+          "text": "Sample Text",
+          "fontSize": 1,
+          "color": [0.8, 0.8, 0.8],
+          "fontName": "Salmon",
+          "offset": [-170.0, 10.0]
+        },
+        "LayerComponent": {
+          "LayerID": 2,
+          "SortID": 4
+        },
+        "PlayerComponent": {
+          "CurrentText": ""
+        }
+      }
+    },
+    {
+      "type": "Enemy",
+      "components": {
+        "TransformComponent": {
+          "x": 0.0,
+          "y": 0.0,
+          "scaleX": 100.0,
+          "scaleY": 100.0,
+          "rotation": 0.0
+        },
+        "RenderComponent": {
+          "textureID": "PoisonIdle1",
+          "color": [1.0, 1.0, 1.0],  
+          "alpha": 1.0,
+          "renderType": "Sprite"
+        },
+        "LayerComponent": {
+          "LayerID": 1,
+          "SortID": 1
+        },
+        "MovementComponent": {
+          "x": 100.0,
+          "y": 100.0
+        },
+        "CollisionComponent": {
+          "type": "Enemy",
+          "collided": false,
+          "radius": 50.0
+        },
+        "EnemyComponent": {
+            "type": "Minion",
+            "health": 100.0,
+            "UpdateFunctionName": "ChasePlayer"
+          },
+        "AnimationComponent": {
+          "interval": 0.1,
+          "animationIndex": 0,
+          "totalFrameTime": 0,
+          "key": "PoisonIdle"
+        }
+      }
+    },
+    {
+      "type": "Enemy",
+      "components": {
+        "TransformComponent": {
+          "x": 200.0,
+          "y": 800.0,
+          "scaleX": 100.0,
+          "scaleY": 100.0,
+          "rotation": 0.0
+        },
+        "RenderComponent": {
+          "textureID": "PoisonIdle1",
+          "color": [1.0, 1.0, 1.0],  
+          "alpha": 1.0,
+          "renderType": "Sprite"
+        },
+        "LayerComponent": {
+          "LayerID": 1,
+          "SortID": 1
+        },
+        "MovementComponent": {
+          "x": 100.0,
+          "y": 100.0
+        },
+        "CollisionComponent": {
+          "type": "Enemy",
+          "collided": false,
+          "radius": 50.0
+        },
+        "EnemyComponent": {
+          "type": "Minion",
+          "health": 100.0,
+          "UpdateFunctionName": "ChasePlayer"
+        },
+        "AnimationComponent": {
+          "interval": 0.1,
+          "animationIndex": 0,
+          "totalFrameTime": 0,
+          "key": "PoisonIdle"
+        }
+      }
+    },
+    {
+      "type": "Enemy",
+      "components": {
+        "TransformComponent": {
+          "x": 1200.0,
+          "y": 900.0,
+          "scaleX": 100.0,
+          "scaleY": 100.0,
+          "rotation": 0.0
+        },
+        "RenderComponent": {
+          "textureID": "PoisonIdle1",
+          "color": [1.0, 1.0, 1.0],  
+          "alpha": 1.0,
+          "renderType": "Sprite"
+        },
+        "LayerComponent": {
+          "LayerID": 1,
+          "SortID": 1
+        },
+        "MovementComponent": {
+          "x": 100.0,
+          "y": 100.0
+        },
+        "CollisionComponent": {
+          "type": "Enemy",
+          "collided": false,
+          "radius": 50.0
+        },
+        "EnemyComponent": {
+          "type": "Minion",
+          "health": 100.0,
+          "UpdateFunctionName": "ChasePlayer"
+        },
+        "AnimationComponent": {
+          "interval": 0.1,
+          "animationIndex": 0,
+          "totalFrameTime": 0,
+          "key": "PoisonIdle"
+        }
+      }
+    },
+    {
+      "type": "Enemy",
+      "components": {
+        "TransformComponent": {
+          "x": 800.0,
+          "y": 0.0,
+          "scaleX": 100.0,
+          "scaleY": 100.0,
+          "rotation": 0.0
+        },
+        "RenderComponent": {
+          "textureID": "PoisonIdle1",
+          "color": [1.0, 1.0, 1.0],  
+          "alpha": 1.0,
+          "renderType": "Sprite"
+        },
+        "LayerComponent": {
+          "LayerID": 1,"SortID": 1
+        },
+        "MovementComponent": {
+          "x": 100.0,
+          "y": 100.0
+        },
+        "CollisionComponent": {
+          "type": "Enemy",
+          "collided": false,
+          "radius": 50.0
+        },
+        "EnemyComponent": {
+          "type": "Minion",
+          "health": 100.0,
+          "UpdateFunctionName": "ChasePlayer"
+        },
+        "AnimationComponent": {
+          "interval": 0.1,
+          "animationIndex": 0,
+          "totalFrameTime": 0,
+          "key": "PoisonIdle"
+        }
+      }
+    },
+    {
+      "type": "Player",
+      "components": {
+        "TransformComponent": {
+          "x": 900.0,
+          "y": 450.0,
+          "scaleX": 100.0,
+          "scaleY": 100.0,
+          "rotation": 0.0
+        },
+        "RenderComponent": {
+          "textureID": "McIdle1",
+          "color": [1.0, 1.0, 1.0],  
+          "alpha": 1.0,
+          "renderType": "Sprite"
+        },
+        "LayerComponent": {
+          "LayerID": 1,
+          "SortID": 1
+        },
+        "MovementComponent": {
+          "x": 150.0,
+          "y": 150.0
+        },
+        "CollisionComponent": {
+          "type": "Player",
+          "collided": false,
+          "radius": 50.0
+        },
+        "EnemyComponent": {
+          "type": "Minion",
+          "health": 100.0,
+          "UpdateFunctionName": ""
+        },
+        "AnimationComponent": {
+          "interval": 0.04,
+          "animationIndex": 0,
+          "totalFrameTime": 0,
+          "key": "McIdle"
+        }
+      }
+    },
+    {
+      "type": "Background",
+      "components": {
+        "TransformComponent": {
+          "x": 800.0,
+          "y": 450.0,
+          "scaleX": 1600.0,
+          "scaleY": 900.0,
+          "rotation": 0.0
+        },
+        "RenderComponent": {
+          "textureID": "blackback",
+          "color": [ 1.0, 1.0, 1.0 ],
+          "alpha": 1.0,
+          "renderType": "Sprite"
+        },
+        "LayerComponent": {
+          "LayerID": 0,
+          "SortID": 0
+        }
+      }
+    },
+    {
+      "type": "TextEntity2",
+      "components": {
+        "TransformComponent": {
+          "x": 400.0,
+          "y": 200.0,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "rotation": 0.0
+        },
+        "RenderComponent": {
+          "textureID": "fire",
+          "color": [ 1.0, 1.0, 1.0 ],
+          "alpha": 1.0,
+          "renderType": "Text"
+        },
+        "TextComponent": {
+          "text": "Unnamed Engine",
+          "fontSize": 2,
+          "color": [0.0, 0.0, 1.0],
+          "fontName": "Rubik",
+          "offset": [10.0, -10.0]
+        },
+        "LayerComponent": {
+          "LayerID": 2,
+          "SortID": 2
+        }
+      }
+    }
+  ]
+}

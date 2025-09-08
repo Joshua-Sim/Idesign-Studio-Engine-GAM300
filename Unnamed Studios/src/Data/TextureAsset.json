@@ -1,0 +1,152 @@
+{
+    "textures": [
+        {
+            "name": "HitboxTest",
+            "path": "./images/HitboxTest.png"
+        },
+        {
+            "name": "McIdle101",
+            "path": "./images/Animation/McIdle101.png"
+        },
+        {
+            "name": "McIdle11",
+            "path": "./images/Animation/McIdle11.png"
+        },
+        {
+            "name": "McIdle12",
+            "path": "./images/Animation/McIdle12.png"
+        },
+        {
+            "name": "McIdle13",
+            "path": "./images/Animation/McIdle13.png"
+        },
+        {
+            "name": "McIdle14Test",
+            "path": "./images/Animation/McIdle14Test.png"
+        },
+        {
+            "name": "McIdle15Test1",
+            "path": "./images/Animation/McIdle15Test1.png"
+        },
+        {
+            "name": "McIdle1Test",
+            "path": "./images/Animation/McIdle1Test.png"
+        },
+        {
+            "name": "McIdle2",
+            "path": "./images/Animation/McIdle2.png"
+        },
+        {
+            "name": "McIdle3",
+            "path": "./images/Animation/McIdle3.png"
+        },
+        {
+            "name": "McIdle4",
+            "path": "./images/Animation/McIdle4.png"
+        },
+        {
+            "name": "McIdle5Test",
+            "path": "./images/Animation/McIdle5Test.png"
+        },
+        {
+            "name": "McIdle6",
+            "path": "./images/Animation/McIdle6.png"
+        },
+        {
+            "name": "McIdle7",
+            "path": "./images/Animation/McIdle7.png"
+        },
+        {
+            "name": "McIdle8",
+            "path": "./images/Animation/McIdle8.png"
+        },
+        {
+            "name": "McIdle9",
+            "path": "./images/Animation/McIdle9.png"
+        },
+        {
+            "name": "PoisonIdle1",
+            "path": "./images/Animation/PoisonIdle1.png"
+        },
+        {
+            "name": "PoisonIdle10",
+            "path": "./images/Animation/PoisonIdle11.png"
+        },
+        {
+            "name": "PoisonIdle11",
+            "path": "./images/Animation/PoisonIdle11.png"
+        },
+        {
+            "name": "PoisonIdle12",
+            "path": "./images/Animation/PoisonIdle12.png"
+        },
+        {
+            "name": "PoisonIdle2",
+            "path": "./images/Animation/PoisonIdle2.png"
+        },
+        {
+            "name": "PoisonIdle3",
+            "path": "./images/Animation/PoisonIdle3.png"
+        },
+        {
+            "name": "PoisonIdle4",
+            "path": "./images/Animation/PoisonIdle4.png"
+        },
+        {
+            "name": "PoisonIdle5",
+            "path": "./images/Animation/PoisonIdle5.png"
+        },
+        {
+            "name": "PoisonIdle6",
+            "path": "./images/Animation/PoisonIdle6.png"
+        },
+        {
+            "name": "PoisonIdle7",
+            "path": "./images/Animation/PoisonIdle7.png"
+        },
+        {
+            "name": "PoisonIdle8",
+            "path": "./images/Animation/PoisonIdle8.png"
+        },
+        {
+            "name": "PoisonIdle9",
+            "path": "./images/Animation/PoisonIdle9.png"
+        },
+        {
+            "name": "WalkRight",
+            "path": "images/WalkRight.png"
+        },
+        {
+            "name": "background",
+            "path": "images/background_main.png"
+        },
+        {
+            "name": "blackback",
+            "path": "images/BlackBack.png"
+        },
+        {
+            "name": "fire",
+            "path": "./images/armored_pro.png"
+        },
+        {
+            "name": "globe",
+            "path": "images/test.png"
+        },
+        {
+            "name": "idleTestTest",
+            "path": "images/idleTestTest.png"
+        },
+        {
+            "name": "mainchar",
+            "path": "images/mainchar.png"
+        },
+        {
+            "name": "textbox",
+            "path": "./images/Textbox.png"
+        },
+        {
+            "name": "walkleftTest",
+            "path": "images/walkleftTest.png"
+        }
+    ]
+}

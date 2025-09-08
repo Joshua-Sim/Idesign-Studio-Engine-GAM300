@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="PrecompiledH">
+      <UniqueIdentifier>{5b9d2cc4-bd2c-4ca4-9264-c32eb4243c50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CoreEngine">
+      <UniqueIdentifier>{8322c668-2c8d-4d2b-b174-4fc5520830a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CoreEngine\Core">
+      <UniqueIdentifier>{88695784-4713-4e7e-bf9a-a6762a0a0fa3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CoreEngine\Engine">
+      <UniqueIdentifier>{d55df84d-4295-47c4-905d-7cb17868c802}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CoreEngine\Isystem">
+      <UniqueIdentifier>{e1ed4674-389c-4ae7-9ee3-562fff362836}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CoreEngine\Main">
+      <UniqueIdentifier>{b261a4b3-33c2-43ca-88ee-800ef7a4a293}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems">
+      <UniqueIdentifier>{afbf5283-5ccc-41f7-8ab5-dee10ac3c21e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Graphics">
+      <UniqueIdentifier>{031a7bea-93c1-4bf0-9765-859c18c7806a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Particles">
+      <UniqueIdentifier>{bd6b209a-78ca-49fc-95cb-57de79554a7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\AnimationSystem">
+      <UniqueIdentifier>{f85fc29d-5998-40ef-955e-e2a93636fb73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\EnemyAI">
+      <UniqueIdentifier>{3ddaf270-835f-4be1-83dd-5967b20c4ed2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Window">
+      <UniqueIdentifier>{e98ed7e8-32a6-492f-a204-5d0f11647bd8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\pch.cpp">
+      <Filter>PrecompiledH</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core.cpp">
+      <Filter>CoreEngine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>CoreEngine\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GraphicsWindows.cpp">
+      <Filter>Systems\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics.cpp">
+      <Filter>Systems\Graphics</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\pch.h">
+      <Filter>PrecompiledH</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core.h">
+      <Filter>CoreEngine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\System.h">
+      <Filter>CoreEngine\Isystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GraphicsWindows.h">
+      <Filter>Systems\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics.h">
+      <Filter>Systems\Graphics</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
