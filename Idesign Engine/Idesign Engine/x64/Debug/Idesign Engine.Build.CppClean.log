@@ -1,46 +1,59 @@
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\idesign engine.pch
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\vc143.pdb
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\vc143.idb
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\pch.obj
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\graphics.obj
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\fontsystem.obj
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\fontshaderasset.obj
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\fontasset.obj
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\entitymanager.obj
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\entityasset.obj
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\enginestate.obj
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\enemymanager.obj
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\dummysystem.obj
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\dictionaryasset.obj
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\debugger.obj
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\core.obj
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\coordinator.obj
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\componentmanager.obj
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\collision.obj
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\buttonsystem.obj
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\audioasset.obj
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\audio.obj
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\assetmanager.obj
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\animationsystem.obj
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\windowasset.obj
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\vector2d.obj
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\textureasset.obj
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\testsystem.obj
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\tagmanager.obj
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\playersystem.obj
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\physicssystem.obj
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\messagesystem.obj
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\matrix3x3.obj
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\main.obj
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\logicmanager.obj
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\inputhandler.obj
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\graphicswindows.obj
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\graphicsshader.obj
-c:\year 3\idesign-studio-engine\idesign engine\x64\debug\idesign engine.pdb
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\idesign engine.tlog\cl.command.1.tlog
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\idesign engine.tlog\cl.read.1.tlog
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\idesign engine.tlog\cl.write.1.tlog
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\idesign engine.tlog\link.command.1.tlog
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\idesign engine.tlog\link.read.1.tlog
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\idesign engine.tlog\link.read.2.tlog
-c:\year 3\idesign-studio-engine\idesign engine\idesign engine\x64\debug\idesign engine.tlog\link.write.1.tlog
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.pch
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\vc143.pdb
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\vc143.idb
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\pch.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\enginestate.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\enemymanager.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\dummysystem.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\dictionaryasset.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\debugger.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\core.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\coordinator.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\componentmanager.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\collision.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\buttonsystem.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\audioasset.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\audio.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\assetmanager.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\animationsystem.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imgui_widgets.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imgui_tables.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imgui_impl_opengl3.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imgui_impl_glfw.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imgui_draw.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imgui.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\windowasset.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\vector2d.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\textureasset.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\testsystem.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\tagmanager.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\playersystem.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\physicssystem.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\messagesystem.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\matrix3x3.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\main.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\logicmanager.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\inputhandler.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\graphicswindows.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\graphicsshader.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\graphics.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\fontsystem.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\fontshaderasset.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\fontasset.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\entitymanager.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\entityasset.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imgui_demo.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\x64\debug\idesign engine.pdb
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\cl.command.1.tlog
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\cl.read.1.tlog
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\cl.write.1.tlog
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\link-cvtres.read.1.tlog
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\link-cvtres.write.1.tlog
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\link-rc.read.1.tlog
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\link-rc.write.1.tlog
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\link.command.1.tlog
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\link.read.1.tlog
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\link.read.2.tlog
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\link.read.3.tlog
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\link.read.4.tlog
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\link.write.1.tlog
