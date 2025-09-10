@@ -1,0 +1,57 @@
+﻿  Graphics.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\minwindef.h(130,9): warning C4005: 'APIENTRY': macro redefinition
+  (compiling source file '/src/Graphics.cpp')
+      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\lib\glfw-3.4.bin.WIN64\include\GLFW\glfw3.h(123,11):
+      see previous definition of 'APIENTRY'
+  
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.h(62,30): warning C4245: 'initializing': conversion from 'int' to 'unsigned int', signed/unsigned mismatch
+  (compiling source file '/src/Graphics.cpp')
+  
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.cpp(858,44): warning C4459: declaration of 'selectedMode' hides global declaration
+  (compiling source file '/src/Graphics.cpp')
+      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.cpp(89,24):
+      see declaration of 'Framework::selectedMode'
+  
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.cpp(889,43): warning C4456: declaration of 'audioAsset' hides previous local declaration
+  (compiling source file '/src/Graphics.cpp')
+      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.cpp(821,22):
+      see declaration of 'audioAsset'
+  
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.cpp(989,39): warning C4456: declaration of 'audioAsset' hides previous local declaration
+  (compiling source file '/src/Graphics.cpp')
+      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.cpp(821,22):
+      see declaration of 'audioAsset'
+  
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.cpp(1064,140): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file '/src/Graphics.cpp')
+  
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.cpp(1089,51): warning C4456: declaration of 'audioAsset' hides previous local declaration
+  (compiling source file '/src/Graphics.cpp')
+      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.cpp(821,22):
+      see declaration of 'audioAsset'
+  
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.cpp(613,27): warning C4189: 'textureAsset': local variable is initialized but not referenced
+  (compiling source file '/src/Graphics.cpp')
+  
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.cpp(2173,25): warning C4459: declaration of 'filePath' hides global declaration
+  (compiling source file '/src/Graphics.cpp')
+      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.cpp(78,24):
+      see declaration of 'Framework::filePath'
+  
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\algorithm(3799,24): warning C4244: '=': conversion from 'int' to 'char', possible loss of data
+  (compiling source file '/src/Graphics.cpp')
+      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\algorithm(3799,24):
+      the template instantiation context (the oldest one first) is
+          C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.cpp(2177,18):
+          see reference to function template instantiation '_OutIt std::transform<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,int(__cdecl *)(int)>(const _InIt,const _InIt,_OutIt,_Fn)' being compiled
+          with
+          [
+              _OutIt=std::_String_iterator<std::_String_val<std::_Simple_types<char>>>,
+              _Elem=char,
+              _InIt=std::_String_iterator<std::_String_val<std::_Simple_types<char>>>,
+              _Fn=int (__cdecl *)(int)
+          ]
+  
+  Idesign Engine.vcxproj -> C:\Year 3\Idesign-Studio-Engine\Idesign Engine\x64\Debug\Idesign Engine.exe
+  'pwsh.exe' is not recognized as an internal or external command,
+  operable program or batch file.
