@@ -156,7 +156,6 @@
     <ClInclude Include="src\Coordinator.h" />
     <ClInclude Include="src\Core.h" />
     <ClInclude Include="src\Debugger.h" />
-    <ClInclude Include="src\DictionaryAsset.h" />
     <ClInclude Include="src\DummySystem.h" />
     <ClInclude Include="src\ECSystemManager.h" />
     <ClInclude Include="src\EnemyBehavior.h" />
@@ -251,7 +250,6 @@
     <ClCompile Include="src\Coordinator.cpp" />
     <ClCompile Include="src\Core.cpp" />
     <ClCompile Include="src\Debugger.cpp" />
-    <ClCompile Include="src\DictionaryAsset.cpp" />
     <ClCompile Include="src\DummySystem.cpp" />
     <ClCompile Include="src\EnemyManager.cpp" />
     <ClCompile Include="src\EngineState.cpp" />

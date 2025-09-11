@@ -21,7 +21,7 @@ AudioAsset::AudioAsset()
 
 AudioAsset::AudioAsset(const std::string& filePath)
 {
-    DeserializeAudio(filePath);
+    //DeserializeAudio(filePath);
 }
 
 AudioAsset::~AudioAsset() {}

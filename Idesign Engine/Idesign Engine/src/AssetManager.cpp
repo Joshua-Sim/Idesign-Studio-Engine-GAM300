@@ -21,10 +21,6 @@ namespace Framework
     AssetManager::AssetManager() 
     {
         // Initialization of Assets
-        //LoadWindow("src/Window.json");                                // Loaded in main.cpp
-        //LoadDictionary("src/Data/DictionaryAsset.json", "src/Data/PrefixesAsset.json");
-        //LoadEntities("src/Data/EntityAsset.json");
-        //LoadEntities("src/entities_1.json");                          // Load in main.cpp
         LoadAudio("src/Data/AudioAsset.json");
         LoadTexture("src/Data/TextureAsset.json");                      // Load textures on initialization
         //LoadFont("../Unnamed Studios/Assets/Font/arial.ttf", 40);     // Loaded in fontsystem
@@ -35,23 +31,6 @@ namespace Framework
     }
 
     AssetManager::~AssetManager() {}
-
-    Dictionary& AssetManager::LoadDictionary(const std::string& dictionaryPath, const std::string& prefixPath)
-    {
-        // Check if the dictionary is already loaded
-        auto it = dictionaryAssets.find(dictionaryPath);
-        if (it != dictionaryAssets.end())
-        {
-            return *(it->second);
-        }
-
-        // If not, create a new dictionary instance
-        auto dictionary = std::make_unique<Dictionary>(dictionaryPath, prefixPath);
-        Dictionary& dictionaryRef = *dictionary;
-        dictionaryAssets[dictionaryPath] = std::move(dictionary);
-
-        return dictionaryRef;
-    }
 
     void AssetManager::LoadEntities(const std::string& filePath)
     {

@@ -7,16 +7,21 @@
 #include <span>
 #include <array>
 
+#include <Audio.h>
+#include <AudioAsset.h>
+
 // Property system backbone
 // Things to do
 /*
-    Window Config       - (Nid Test)
+    Audio               - WIP
     Editor (IMGUI)      - (Jasper)
     Serialization       - 1 Generic Load (Nid Test)
     Deserialization     - 1 Generic Unload (Nid Test)
     ECS Components      - 1 Prop per Component (Jasper)
     Prefab System       - 1 Prop per Prefab (Jasper)
     Scripting           - In the future
+    Font System?
+    Physics System?
 
     - Create a struct for each Object
     - With that struct, create an array for that Object's properties
@@ -31,12 +36,12 @@ namespace Framework
         // The kinds of primitive types we support right now
         enum atomic_type
         {
-            INT
-            , FLOAT
-            , DOUBLE
-            , STRING
-            , CHAR
-            , BOOL
+            INT,
+            FLOAT,
+            DOUBLE,
+            STRING,
+            CHAR,
+            BOOL
         };
 
         // Function pointers to *set* and *get* a value on an object.
@@ -55,7 +60,7 @@ namespace Framework
     // Collection of Properties for one type
     struct prop_list
     {
-        const char* m_pName;      // Type name
+        const char* m_pName;                // Type name
         std::span<const prop> m_Props;      // Span of all its properties
     };
 
@@ -64,7 +69,7 @@ namespace Framework
     struct global_registration
     {
         global_registration* m_pNext;       // Linked-list pointer
-        const prop_list* m_pPopList;    // The type's property list
+        const prop_list* m_pPopList;        // The type's property list
 
         // Constructor registers this type into the global linked list
         global_registration(const prop_list* pPropList)
@@ -87,20 +92,51 @@ namespace Framework
 
     struct AudioData
     {
-        std::string file;
-        float volume;
+        std::string customName;
+        std::string filePath;
+        std::string mode;
+        std::string soundType;
     };
 
-    inline constexpr std::array g_AudioDataPropsArray
-    {
-        prop{ "file",  prop::STRING,
-          [](void* pObject, const void* pData) { assert(pObject && pData); static_cast<AudioData*>(pObject)->file = *static_cast<const std::string*>(pData); },
-          [](const void* pObject, void* pData) { assert(pObject && pData); *static_cast<std::string*>(pData) = static_cast<const AudioData*>(pObject)->file; } },
+    inline constexpr std::array<prop, 4> g_AudioDataPropsArray = {
+        prop{
+        "customName", prop::STRING,
+        [](void* pObject, const void* pData) { assert(pObject && pData); static_cast<AudioData*>(pObject)->customName = *static_cast<const std::string*>(pData); },
+        [](const void* pObject, void* pData) { assert(pObject && pData); *static_cast<std::string*>(pData) = static_cast<const AudioData*>(pObject)->customName; }
+    },
 
-        prop{ "volume", prop::FLOAT,
-          [](void* pObject, const void* pData) { assert(pObject && pData); static_cast<AudioData*>(pObject)->volume = *static_cast<const float*>(pData); },
-          [](const void* pObject, void* pData) { assert(pObject && pData); *static_cast<float*>(pData) = static_cast<const AudioData*>(pObject)->volume; } },
+        prop{
+        "filePath", prop::STRING,
+        [](void* pObject, const void* pData) { assert(pObject && pData); static_cast<AudioData*>(pObject)->filePath = *static_cast<const std::string*>(pData); },
+        [](const void* pObject, void* pData) { assert(pObject && pData); *static_cast<std::string*>(pData) = static_cast<const AudioData*>(pObject)->filePath; }
+    },
+
+        prop{
+        "mode", prop::STRING,
+        [](void* pObject, const void* pData) { assert(pObject && pData); static_cast<AudioData*>(pObject)->mode = *static_cast<const std::string*>(pData); },
+        [](const void* pObject, void* pData) { assert(pObject && pData); *static_cast<std::string*>(pData) = static_cast<const AudioData*>(pObject)->mode; }
+    },
+        prop{
+        "soundType", prop::STRING,
+        [](void* pObject, const void* pData) { assert(pObject && pData); static_cast<AudioData*>(pObject)->soundType = *static_cast<const std::string*>(pData); },
+        [](const void* pObject, void* pData) { assert(pObject && pData); *static_cast<std::string*>(pData) = static_cast<const AudioData*>(pObject)->soundType; }
+    },
+
+    /*prop{
+        "soundType", prop::STRING,
+        [](void* pObject, const void* pData) {
+            assert(pObject && pData);
+            std::string str = *static_cast<const std::string*>(pData);
+            static_cast<AudioData*>(pObject)->soundType = UE_GetSoundTypeFromString(str);
+        },
+        [](const void* pObject, void* pData) {
+            assert(pObject && pData);
+            std::string str = UE_GetStringFromSoundType(static_cast<const AudioData*>(pObject)->soundType);
+            *static_cast<std::string*>(pData) = str;
+        }
+    }*/
     };
+
 
     inline constexpr prop_list g_AudioDataProps{ "AudioData", g_AudioDataPropsArray };
 
@@ -153,7 +189,6 @@ namespace Framework
             [](void* pObject, const void* pData) { assert(pObject && pData); static_cast<WindowConfig*>(pObject)->y = *static_cast<const int*>(pData); },
             [](const void* pObject, void* pData) { assert(pObject && pData); *static_cast<int*>(pData) = static_cast<const WindowConfig*>(pObject)->y; }
         },
-        // Strings need special handling
         prop
         {
             "program_name", prop::STRING,
@@ -162,10 +197,10 @@ namespace Framework
         }
     };
 
-    // Bundle all properties of `pepe` together
+    // Bundle all properties of `windowconfig` together
     inline constexpr prop_list g_WindowConfigProps{ "WindowConfig", g_WindowConfigPropsArray };
 
-    // Auto-register `pepe` in the global registry
+    // Auto-register `windowconfig` in the global registry
     inline global_registration g_WindowConfigReg(&g_WindowConfigProps);
 
 }

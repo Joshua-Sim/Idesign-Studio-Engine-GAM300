@@ -45,9 +45,6 @@
     <ClInclude Include="src\Core.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\DictionaryAsset.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\DummySystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -328,9 +325,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Debugger.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DictionaryAsset.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\DummySystem.cpp">

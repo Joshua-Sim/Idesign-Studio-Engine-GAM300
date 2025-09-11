@@ -35,32 +35,64 @@ void EnableMemoryLeakChecking(int breakAlloc = -1)
     if (breakAlloc != -1) _CrtSetBreakAlloc(breakAlloc);
 }
 
-
 // Define global ptrs
 Coordinator ecsInterface;   // REQUIRED FOR ECS INTERFACE
 EngineState engineState;
 
 int main(void)
 {
-    //EnableMemoryLeakChecking(); // For memory check
+    EnableMemoryLeakChecking(); // For memory check
 
     //Create the core engine which manages all the systems that make up the game
     auto engine = std::make_unique<CoreEngine>();
 
     // ------- Create systems below -------- //
 
-    auto WindowConfigAsset = LoadFromJson<WindowConfig>("src/Data/WindowAsset.json", g_WindowConfigProps);
-    WindowConfig* configPtr = static_cast<WindowConfig*>(WindowConfigAsset.get());
+    //  Windows
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+    WindowConfig& config = NewAssetManager::Instance().Load<WindowConfig>("WindowConfig", "src/Data/WindowAsset.json", g_WindowConfigProps);     // Load Window Config data
+    auto Window = std::make_unique<GraphicsWindows>(&config, engine.get());                                                                      // Create Windows
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    auto Window = std::make_unique<GraphicsWindows>(configPtr, engine.get()); // Replace with serialized data
 
+    //  Audio
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+    try
+    {
+        NewAssetManager::Instance().LoadArray<AudioData>("musicAssets", "src/Data/AudioAsset.json", g_AudioDataProps);      // To use LoadArray, name of array in json must match else will fail
+    }
+    catch (const std::exception& e)
+    {
+        std::cerr << "Asset Load Failed: " << e.what() << std::endl;
+    }
+
+    const auto& assets = NewAssetManager::Instance().GetAssets();
+
+    for (const auto& [key, entry] : assets) {
+        if (entry.typeName != "musicAssets") continue; // Only process AudioData
+
+        const AudioData* audio = static_cast<const AudioData*>(entry.pObject.get());
+        if (!audio) continue;
+
+        std::cout << "Asset Key: " << key << "\n";
+        std::cout << "  Name: " << audio->customName << "\n";
+        std::cout << "  Path: " << audio->filePath << "\n";
+        std::cout << "  Mode: " << audio->mode << "\n";
+        std::cout << "  Type: " << audio->soundType << "\n";
+        std::cout << "-----------------------------\n";
+    }
+
+
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+    
     // Initialize the InputHandler singleton
     InputHandler::Initialize(Window->GetWindow());
     GlobalLogicManager.Initialize();
 
     // Access the InputHandler instance from the singleton
     InputHandler* inputHandlerSystem = InputHandler::GetInstance();
-    if (!inputHandlerSystem) {
+    if (!inputHandlerSystem) 
+    {
         std::cerr << "Failed to initialize InputHandler!" << std::endl;
         return -1; // Exit if InputHandler initialization failed
     }
@@ -89,6 +121,5 @@ int main(void)
 
     // Clean up smart pointers as they go out of scope
     // No need to manually delete as unique_ptr will handle it
-
     return 0;
 }

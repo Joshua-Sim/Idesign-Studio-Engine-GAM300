@@ -22,7 +22,6 @@
 #include "stb_image_resize2.h"
 
 // Sub Asset Header Files
-#include "DictionaryAsset.h"
 #include "EntityAsset.h"
 #include "AudioAsset.h"
 #include "TextureAsset.h"
@@ -32,7 +31,6 @@
 #include <PropertySystem.h>
 
 // Forward declaration of asset types here
-class Dictionary;
 class EntityAsset;
 class AudioAsset;
 class TextureAsset;
@@ -41,97 +39,234 @@ class FontShaderAsset;
 
 namespace Framework
 {
-
     struct AssetEntry
     {
         std::unique_ptr<void, void(*)(void*)> pObject;
         const prop_list* pProps;
+        std::string typeName;
+
+        AssetEntry() : pObject(nullptr, [](void*) {}), pProps(nullptr), typeName() {}
+        
+        AssetEntry(const AssetEntry&) = delete;
+        AssetEntry& operator=(const AssetEntry&) = delete;
+        AssetEntry(AssetEntry&&) = default;
+        AssetEntry& operator=(AssetEntry&&) = default;
+
+        AssetEntry(std::unique_ptr<void, void(*)(void*)> obj, const prop_list* props, const std::string& type)
+            : pObject(std::move(obj)), pProps(props), typeName(type) {
+        }
     };
 
     class NewAssetManager
     {
     public:
+
+        static NewAssetManager& Instance() {
+            static NewAssetManager instance;
+            return instance;
+        }
+
+        // Delete copy/move constructors to enforce singleton
+        NewAssetManager(const NewAssetManager&) = delete;
+        NewAssetManager& operator=(const NewAssetManager&) = delete;
+
         template<typename T>
-        T& Load(const std::string& key, const prop_list& props)
+        T& Load(const std::string& key, const std::string& filePath, const prop_list& props)
         {
             auto it = m_Assets.find(key);
             if (it != m_Assets.end())
             {
-                return *static_cast<T*>(it->second.pObject);
+                return *static_cast<T*>(it->second.pObject.get());
             }
 
-            T* obj = new T(); // Load file here
-            
+            // Load from JSON
+            std::ifstream file(filePath);
+            if (!file.is_open()) {
+                throw std::runtime_error("Failed to open file: " + filePath);
+            }
+
+            rapidjson::IStreamWrapper isw(file);
+            rapidjson::Document doc;
+            doc.ParseStream(isw);
+            file.close();
+
+            if (doc.HasParseError()) {
+                throw std::runtime_error("JSON parse error at offset " +
+                    std::to_string(doc.GetErrorOffset()) + ": " +
+                    rapidjson::GetParseError_En(doc.GetParseError()));
+            }
+
+            T* obj = new T();
+            Deserialize(obj, props, doc);
+
             auto deleter = [](void* p) { delete static_cast<T*>(p); };
             std::unique_ptr<void, void(*)(void*)> ptr(obj, deleter);
 
-            m_Assets[key] = AssetEntry{ std::move(ptr), &props };
+            m_Assets[key] = AssetEntry{ std::move(ptr), &props, key };
             return *obj;
         }
 
-        AssetEntry* Get(const std::string& key)
+        template<typename T>
+        void LoadArray(const std::string& arrayKey, const std::string& filePath, const prop_list& props)
+        {
+            std::ifstream file(filePath);
+            if (!file.is_open()) {
+                throw std::runtime_error("Failed to open file: " + filePath);
+            }
+
+            rapidjson::IStreamWrapper isw(file);
+            rapidjson::Document doc;
+            doc.ParseStream(isw);
+            file.close();
+
+            if (doc.HasParseError()) {
+                throw std::runtime_error("JSON parse error at offset " +
+                    std::to_string(doc.GetErrorOffset()) + ": " +
+                    rapidjson::GetParseError_En(doc.GetParseError()));
+            }
+
+            if (!doc.HasMember(arrayKey.c_str()) || !doc[arrayKey.c_str()].IsArray()) {
+                throw std::runtime_error("Missing or invalid array key: " + arrayKey);
+            }
+
+            const auto& array = doc[arrayKey.c_str()];
+            for (const auto& entry : array.GetArray()) {
+                T* obj = new T();
+                Deserialize(obj, props, entry);
+
+                // Use customName as the asset key
+                if (!entry.HasMember("customName") || !entry["customName"].IsString()) {
+                    delete obj;
+                    throw std::runtime_error("Missing or invalid 'customName' field in array entry");
+                }
+
+                std::string key = entry["customName"].GetString();
+
+                auto deleter = [](void* p) { delete static_cast<T*>(p); };
+                std::unique_ptr<void, void(*)(void*)> ptr(obj, deleter);
+
+                m_Assets[key] = AssetEntry{ std::move(ptr), &props, arrayKey };
+            }
+        }
+
+
+        template<typename T>
+        T* Get(const std::string& key)
         {
             auto it = m_Assets.find(key);
-            return (it != m_Assets.end()) ? &it->second : nullptr;
+            if (it == m_Assets.end()) return nullptr;
+
+            return static_cast<T*>(it->second.pObject);
+        }
+
+
+        void Unload(const std::string& key)
+        {
+            auto it = m_Assets.find(key);
+            if (it != m_Assets.end())
+            {
+                m_Assets.erase(it);     
+            }
+        }
+
+        void Serialize(void* pObject, const prop_list& PropList, rapidjson::Value& outObj, rapidjson::Document::AllocatorType& allocator)
+        {
+            for (const prop& p : PropList.m_Props)
+            {
+                rapidjson::Value key;
+                key.SetString(p.m_pName, allocator); // Properly construct key
+
+                if (p.m_Type == prop::INT)
+                {
+                    int value;
+                    p.m_fnGet(pObject, &value);
+                    outObj.AddMember(key, value, allocator);
+                }
+                else if (p.m_Type == prop::FLOAT)
+                {
+                    float value;
+                    p.m_fnGet(pObject, &value);
+                    outObj.AddMember(key, value, allocator);
+                }
+                else if (p.m_Type == prop::STRING)
+                {
+                    std::string value;
+                    p.m_fnGet(pObject, &value);
+
+                    rapidjson::Value jsonValue;
+                    jsonValue.SetString(value.c_str(), static_cast<rapidjson::SizeType>(value.length()), allocator);
+
+                    outObj.AddMember(key, jsonValue, allocator);
+                }
+                // Add other types as needed
+            }
+        }
+
+
+        bool SaveToJson(const std::string& filePath, void* pObject, const prop_list& props)
+        {
+            rapidjson::Document doc;
+            doc.SetObject();
+            auto& allocator = doc.GetAllocator();
+
+            Serialize(pObject, props, doc, allocator);
+
+            std::ofstream ofs(filePath);
+            if (!ofs.is_open()) return false;
+
+            rapidjson::OStreamWrapper osw(ofs);
+            rapidjson::Writer<rapidjson::OStreamWrapper> writer(osw);
+            doc.Accept(writer);
+
+            return true;
+        }
+
+        template<typename T>
+        bool Reload(const std::string& key, const std::string& filePath, const prop_list& props)
+        {
+            auto newAsset = LoadFromJson<T>(filePath, props);
+            if (!newAsset) return false;
+
+            m_Assets[key] = AssetEntry{ std::move(newAsset), &props };
+            return true;
+        }
+
+        const std::unordered_map<std::string, AssetEntry>& GetAssets() const 
+        {
+            return m_Assets;
         }
 
     private:
+        NewAssetManager() = default; // Private constructor
         std::unordered_map<std::string, AssetEntry> m_Assets;
-    };
 
-    inline void TestDeserialize(void* pObject, const prop_list& PropList, const rapidjson::Value& obj)
-    {
-        for (const prop& p : PropList.m_Props)
+        inline void Deserialize(void* pObject, const prop_list& PropList, const rapidjson::Value& obj)
         {
-            if (!obj.HasMember(p.m_pName)) continue;
-
-            const rapidjson::Value& val = obj[p.m_pName];
-
-            if (p.m_Type == prop::INT && val.IsInt())
+            for (const prop& p : PropList.m_Props)
             {
-                int temp = val.GetInt();
-                p.m_fnSet(pObject, &temp);
+                if (!obj.HasMember(p.m_pName)) continue;
+
+                const rapidjson::Value& val = obj[p.m_pName];
+
+                if (p.m_Type == prop::INT && val.IsInt())
+                {
+                    int temp = val.GetInt();
+                    p.m_fnSet(pObject, &temp);
+                }
+                else if (p.m_Type == prop::FLOAT && val.IsFloat())
+                {
+                    float temp = val.GetFloat();
+                    p.m_fnSet(pObject, &temp);
+                }
+                else if (p.m_Type == prop::STRING && val.IsString())
+                {
+                    std::string temp = val.GetString();
+                    p.m_fnSet(pObject, &temp);
+                }
+                // Add other types as needed
             }
-            else if (p.m_Type == prop::FLOAT && val.IsFloat())
-            {
-                float temp = val.GetFloat();
-                p.m_fnSet(pObject, &temp);
-            }
-            else if (p.m_Type == prop::STRING && val.IsString())
-            {
-                std::string temp = val.GetString();
-                p.m_fnSet(pObject, &temp);
-            }
-            // Add other types as needed
         }
-    }
-
-    template<typename T>
-    std::unique_ptr<void, void(*)(void*)> LoadFromJson(const std::string& filePath, const prop_list& props)
-    {
-        std::ifstream file(filePath);
-        if (!file.is_open()) {
-            std::cerr << "Failed to open file: " << filePath << "\n";
-            return std::unique_ptr<void, void(*)(void*)>(nullptr, [](void*) {});
-        }
-
-        rapidjson::IStreamWrapper isw(file);
-        rapidjson::Document doc;
-        doc.ParseStream(isw);
-
-        if (doc.HasParseError()) {
-            std::cerr << "JSON parse error at offset " << doc.GetErrorOffset() << ": "
-                << rapidjson::GetParseError_En(doc.GetParseError()) << "\n";
-            return std::unique_ptr<void, void(*)(void*)>(nullptr, [](void*) {});
-        }
-
-        T* obj = new T();
-        TestDeserialize(obj, props, doc);
-        return std::unique_ptr<void, void(*)(void*)>(static_cast<void*>(obj), [](void* p) {
-            delete static_cast<T*>(p);
-            });
-    }
-
+    };
 
     /**
      * @class AssetManager
@@ -152,17 +287,6 @@ namespace Framework
          * @brief Destructor for AssetManager. Cleans up managed assets.
          */
         ~AssetManager();
-
-        // Dictionary & Prefix
-
-        /**
-         * @brief Loads a dictionary and prefix data from specified paths.
-         * @param dictionaryPath Path to the dictionary file.
-         * @param prefixPath Path to the prefix file.
-         * @return A reference to the loaded Dictionary object.
-         */
-        Dictionary& LoadDictionary(const std::string& dictionaryPath,               // Load dictionary and prefix
-                                   const std::string& prefixPath);       
 
         // ECS Objects
 
@@ -336,7 +460,6 @@ namespace Framework
 
     private:
         static unsigned char* data;     // Static data buffer used for image loading
-        std::unordered_map<std::string, std::unique_ptr<Dictionary>> dictionaryAssets;                  // Container for Dictionary
         std::unordered_map<std::string, std::unique_ptr<EntityAsset>> entityAssets;                     // Container for EntityAsset
         std::unordered_map<std::string, std::shared_ptr<AudioAsset>> audioAssets;                       // Container for AudioAsset
         std::unordered_map<std::string, std::shared_ptr<TextureAsset>> textureAssets;                   // Container for TextureAsset

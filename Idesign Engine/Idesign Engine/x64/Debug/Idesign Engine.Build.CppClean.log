@@ -4,7 +4,6 @@ d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\v
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\pch.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\enemymanager.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\dummysystem.obj
-d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\dictionaryasset.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\debugger.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\core.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\coordinator.obj
@@ -42,10 +41,11 @@ d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\f
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\entitymanager.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\entityasset.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\enginestate.obj
-d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\windowasset.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\x64\debug\idesign engine.exe
 d:\github\idesign-studio-engine-gam300\idesign engine\x64\debug\idesign engine.pdb
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.ilk
+d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\dictionaryasset.obj
+d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\windowasset.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\cl.command.1.tlog
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\cl.items.tlog
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\cl.read.1.tlog
