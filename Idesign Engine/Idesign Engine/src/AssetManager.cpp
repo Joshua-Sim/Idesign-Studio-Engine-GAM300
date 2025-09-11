@@ -36,36 +36,6 @@ namespace Framework
 
     AssetManager::~AssetManager() {}
 
-    Window& AssetManager::LoadWindow(const std::string& filePath)
-    {
-        // Check if the window is already loaded
-        auto it = windowAssets.find(filePath);
-        if (it != windowAssets.end())
-        {
-            return *(it->second); // Return existing window if already loaded
-        }
-
-        auto window = std::make_unique<Window>(filePath);
-        //window->Deserialize(filePath);
-        Window& ref = *window;	// Ref to the created window
-
-        // store the unique_ptr in the map
-        windowAssets[filePath] = std::move(window);	// move ownership to map
-
-        return ref;		// Return a ref to the window
-    }
-
-    Window& AssetManager::GetWindow(const std::string& assetName)
-    {
-        auto it = windowAssets.find(assetName);
-        if (it != windowAssets.end())
-        {
-            return *(it->second); // Dereference the unique_ptr to return the Window&
-        }
-
-        throw std::runtime_error("Window asset not found: " + assetName); // Error if not found
-    }
-
     Dictionary& AssetManager::LoadDictionary(const std::string& dictionaryPath, const std::string& prefixPath)
     {
         // Check if the dictionary is already loaded

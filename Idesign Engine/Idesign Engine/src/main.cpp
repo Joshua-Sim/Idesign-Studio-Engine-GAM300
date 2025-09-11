@@ -44,19 +44,19 @@ int main(void)
 {
     //EnableMemoryLeakChecking(); // For memory check
 
-  //Create the core engine which manages all the systems that make up the game
+    //Create the core engine which manages all the systems that make up the game
     auto engine = std::make_unique<CoreEngine>();
 
     // ------- Create systems below -------- //
 
-    Window& myWindowConfig = GlobalAssetManager.LoadWindow("src/Data/WindowAsset.json");
-    //auto AudioManager = std::make_unique<Audio>();
-    auto Window = std::make_unique<GraphicsWindows>(myWindowConfig.GetConfig(), engine.get()); // Replace with serialized data
+    auto WindowConfigAsset = LoadFromJson<WindowConfig>("src/Data/WindowAsset.json", g_WindowConfigProps);
+    WindowConfig* configPtr = static_cast<WindowConfig*>(WindowConfigAsset.get());
+
+    auto Window = std::make_unique<GraphicsWindows>(configPtr, engine.get()); // Replace with serialized data
 
     // Initialize the InputHandler singleton
     InputHandler::Initialize(Window->GetWindow());
     GlobalLogicManager.Initialize();
-
 
     // Access the InputHandler instance from the singleton
     InputHandler* inputHandlerSystem = InputHandler::GetInstance();

@@ -249,9 +249,6 @@
     <ClInclude Include="src\Vector2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\WindowAsset.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Debugger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -285,6 +282,9 @@
     <ClInclude Include="..\lib\imgui\imstb_truetype.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PropertySystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />
@@ -298,9 +298,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Vector2D.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\WindowAsset.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\AnimationSystem.cpp">

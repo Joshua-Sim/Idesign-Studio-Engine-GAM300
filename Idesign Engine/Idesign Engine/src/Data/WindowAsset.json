@@ -1,9 +1,5 @@
 {
-  "windows": [
-    {
-      "x": 1600,
-      "y": 900,
-      "program_name": "Idesign Engine"
-    }
-  ]
+  "x": 1920,
+  "y": 1080,
+  "program_name": "IDesignStudios"
 }

@@ -143,6 +143,7 @@
     <ClInclude Include="..\lib\imgui\imstb_rectpack.h" />
     <ClInclude Include="..\lib\imgui\imstb_textedit.h" />
     <ClInclude Include="..\lib\imgui\imstb_truetype.h" />
+    <ClInclude Include="PropertySystem.h" />
     <ClInclude Include="src\AnimationSystem.h" />
     <ClInclude Include="src\AssetManager.h" />
     <ClInclude Include="src\Audio.h" />
@@ -224,7 +225,6 @@
     <ClInclude Include="src\TextureAsset.h" />
     <ClInclude Include="src\Types.h" />
     <ClInclude Include="src\Vector2D.h" />
-    <ClInclude Include="src\WindowAsset.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />
@@ -277,7 +277,6 @@
     <ClCompile Include="src\TestSystem.cpp" />
     <ClCompile Include="src\TextureAsset.cpp" />
     <ClCompile Include="src\Vector2D.cpp" />
-    <ClCompile Include="src\WindowAsset.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

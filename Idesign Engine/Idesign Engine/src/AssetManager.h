@@ -22,7 +22,6 @@
 #include "stb_image_resize2.h"
 
 // Sub Asset Header Files
-#include "WindowAsset.h"
 #include "DictionaryAsset.h"
 #include "EntityAsset.h"
 #include "AudioAsset.h"
@@ -30,8 +29,9 @@
 #include "FontAsset.h"
 #include "FontShaderAsset.h"
 
+#include <PropertySystem.h>
+
 // Forward declaration of asset types here
-class Window;
 class Dictionary;
 class EntityAsset;
 class AudioAsset;
@@ -41,6 +41,98 @@ class FontShaderAsset;
 
 namespace Framework
 {
+
+    struct AssetEntry
+    {
+        std::unique_ptr<void, void(*)(void*)> pObject;
+        const prop_list* pProps;
+    };
+
+    class NewAssetManager
+    {
+    public:
+        template<typename T>
+        T& Load(const std::string& key, const prop_list& props)
+        {
+            auto it = m_Assets.find(key);
+            if (it != m_Assets.end())
+            {
+                return *static_cast<T*>(it->second.pObject);
+            }
+
+            T* obj = new T(); // Load file here
+            
+            auto deleter = [](void* p) { delete static_cast<T*>(p); };
+            std::unique_ptr<void, void(*)(void*)> ptr(obj, deleter);
+
+            m_Assets[key] = AssetEntry{ std::move(ptr), &props };
+            return *obj;
+        }
+
+        AssetEntry* Get(const std::string& key)
+        {
+            auto it = m_Assets.find(key);
+            return (it != m_Assets.end()) ? &it->second : nullptr;
+        }
+
+    private:
+        std::unordered_map<std::string, AssetEntry> m_Assets;
+    };
+
+    inline void TestDeserialize(void* pObject, const prop_list& PropList, const rapidjson::Value& obj)
+    {
+        for (const prop& p : PropList.m_Props)
+        {
+            if (!obj.HasMember(p.m_pName)) continue;
+
+            const rapidjson::Value& val = obj[p.m_pName];
+
+            if (p.m_Type == prop::INT && val.IsInt())
+            {
+                int temp = val.GetInt();
+                p.m_fnSet(pObject, &temp);
+            }
+            else if (p.m_Type == prop::FLOAT && val.IsFloat())
+            {
+                float temp = val.GetFloat();
+                p.m_fnSet(pObject, &temp);
+            }
+            else if (p.m_Type == prop::STRING && val.IsString())
+            {
+                std::string temp = val.GetString();
+                p.m_fnSet(pObject, &temp);
+            }
+            // Add other types as needed
+        }
+    }
+
+    template<typename T>
+    std::unique_ptr<void, void(*)(void*)> LoadFromJson(const std::string& filePath, const prop_list& props)
+    {
+        std::ifstream file(filePath);
+        if (!file.is_open()) {
+            std::cerr << "Failed to open file: " << filePath << "\n";
+            return std::unique_ptr<void, void(*)(void*)>(nullptr, [](void*) {});
+        }
+
+        rapidjson::IStreamWrapper isw(file);
+        rapidjson::Document doc;
+        doc.ParseStream(isw);
+
+        if (doc.HasParseError()) {
+            std::cerr << "JSON parse error at offset " << doc.GetErrorOffset() << ": "
+                << rapidjson::GetParseError_En(doc.GetParseError()) << "\n";
+            return std::unique_ptr<void, void(*)(void*)>(nullptr, [](void*) {});
+        }
+
+        T* obj = new T();
+        TestDeserialize(obj, props, doc);
+        return std::unique_ptr<void, void(*)(void*)>(static_cast<void*>(obj), [](void* p) {
+            delete static_cast<T*>(p);
+            });
+    }
+
+
     /**
      * @class AssetManager
      * @brief Manages various asset types, including window configurations, dictionaries,
@@ -60,20 +152,6 @@ namespace Framework
          * @brief Destructor for AssetManager. Cleans up managed assets.
          */
         ~AssetManager();
-
-        /**
-         * @brief Loads a window configuration from a specified file path.
-         * @param filePath Path to the window configuration file.
-         * @return A reference to the loaded Window object.
-         */
-        Window& LoadWindow(const std::string& filePath);	                        // Load a window from a filepath
-        
-        /**
-         * @brief Retrieves a loaded Window asset by name.
-         * @param assetName Name of the window asset.
-         * @return A reference to the Window object.
-         */
-        Window& GetWindow(const std::string& assetName);                            // Retrieve window config information
 
         // Dictionary & Prefix
 
@@ -258,7 +336,6 @@ namespace Framework
 
     private:
         static unsigned char* data;     // Static data buffer used for image loading
-        std::unordered_map<std::string, std::unique_ptr<Window>> windowAssets;                          // Container for Windowconfig
         std::unordered_map<std::string, std::unique_ptr<Dictionary>> dictionaryAssets;                  // Container for Dictionary
         std::unordered_map<std::string, std::unique_ptr<EntityAsset>> entityAssets;                     // Container for EntityAsset
         std::unordered_map<std::string, std::shared_ptr<AudioAsset>> audioAssets;                       // Container for AudioAsset

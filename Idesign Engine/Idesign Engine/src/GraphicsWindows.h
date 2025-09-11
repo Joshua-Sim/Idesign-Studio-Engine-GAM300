@@ -26,7 +26,7 @@ namespace Framework {
     public:
         // Constructor to initialize window properties
         //GraphicsWindows(int width, int height, const std::string& title, CoreEngine* CorePointer);
-        GraphicsWindows(const Window::WindowConfig& config, CoreEngine* EnginePointer);
+        GraphicsWindows(const WindowConfig* config, CoreEngine* EnginePointer);
         
         // Destructor to clean up resources
         ~GraphicsWindows();
