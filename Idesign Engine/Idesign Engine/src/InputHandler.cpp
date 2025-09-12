@@ -78,41 +78,41 @@ namespace Framework {
 		// BGM Audio
 		if (IsKeyPressed(GLFW_KEY_5))
 		{
-			GlobalAudio.UE_PlaySound("piano");
+			//GlobalAudio.UE_PlaySound("piano");
 		}
 
 		if (IsKeyPressed(GLFW_KEY_6))
 		{
-			GlobalAudio.UE_PauseSound("piano");
+			//GlobalAudio.UE_PauseSound("piano");
 		}
 
 		// Sound Effects Audio
 		if (IsKeyPressed(GLFW_KEY_7))
 		{
-			GlobalAudio.UE_PlaySound("buttonclick");
+			//GlobalAudio.UE_PlaySound("buttonclick");
 		}
 
 		if (IsKeyPressed(GLFW_KEY_8))
 		{
-			GlobalAudio.UE_PlaySound("selectbutton");
+			//GlobalAudio.UE_PlaySound("selectbutton");
 		}
 
 		if (IsKeyPressed(GLFW_KEY_9))
 		{
-			GlobalAudio.UE_PlaySound("previousbutton");
+			//GlobalAudio.UE_PlaySound("previousbutton");
 		}
 
 		// Audio Volume Control
 		if (IsKeyPressed(GLFW_KEY_MINUS))
 		{
-			GlobalAudio.DecrementGroupVol("BackgroundMusic");
-			GlobalAudio.DecrementGroupVol("SoundEffects");
+			//GlobalAudio.DecrementGroupVol("BackgroundMusic");
+			//GlobalAudio.DecrementGroupVol("SoundEffects");
 		}
 
 		if (IsKeyPressed(GLFW_KEY_EQUAL))
 		{
-			GlobalAudio.IncrementGroupVol("BackgroundMusic");
-			GlobalAudio.IncrementGroupVol("SoundEffects");
+			//GlobalAudio.IncrementGroupVol("BackgroundMusic");
+			//GlobalAudio.IncrementGroupVol("SoundEffects");
 		}
 	}
 

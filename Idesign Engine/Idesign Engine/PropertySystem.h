@@ -1,24 +1,28 @@
+///////////////////////////////////////////////////////////////////////////////
+///
+///	@file  : PropertySystem.h
+/// @Brief : 
+///	
+///	@Authors: Edwin Leow
+///	@Copyright 2025, Digipen Institute of Technology
+///
+///////////////////////////////////////////////////////////////////////////////
 #pragma once
-// BasicPropertyExample.cpp : This file contains the 'main' function. Program execution begins and ends there.
-
 #include <iostream>
 #include <vector>
 #include <cassert>
 #include <span>
 #include <array>
 
-#include <Audio.h>
-#include <AudioAsset.h>
-
 // Property system backbone
 // Things to do
 /*
-    Audio               - WIP
-    Editor (IMGUI)      - (Jasper)
-    Serialization       - 1 Generic Load (Nid Test)
+    Audio               - All Cleared
+    Editor (IMGUI)      - Wait for 3D Graphics to be implemented first
+    Serialization       - 1 Generic Load + 1 Generic LoadArray Cleared
     Deserialization     - 1 Generic Unload (Nid Test)
-    ECS Components      - 1 Prop per Component (Jasper)
-    Prefab System       - 1 Prop per Prefab (Jasper)
+    ECS Components      - 1 Prop per Component (Nid Test)
+    Prefab System       - 1 Prop per Prefab
     Scripting           - In the future
     Font System?
     Physics System?
@@ -87,7 +91,7 @@ namespace Framework
     };
 
     /////////////////////////////////////////////
-    // Example reflected structs
+    // Reflected structs
     /////////////////////////////////////////////
 
     struct AudioData
@@ -98,43 +102,23 @@ namespace Framework
         std::string soundType;
     };
 
-    inline constexpr std::array<prop, 4> g_AudioDataPropsArray = {
-        prop{
-        "customName", prop::STRING,
-        [](void* pObject, const void* pData) { assert(pObject && pData); static_cast<AudioData*>(pObject)->customName = *static_cast<const std::string*>(pData); },
-        [](const void* pObject, void* pData) { assert(pObject && pData); *static_cast<std::string*>(pData) = static_cast<const AudioData*>(pObject)->customName; }
-    },
+    inline constexpr std::array g_AudioDataPropsArray = 
+    {
+        prop{ "customName", prop::STRING,
+            [](void* pObject, const void* pData) { assert(pObject && pData); static_cast<AudioData*>(pObject)->customName = *static_cast<const std::string*>(pData); },
+            [](const void* pObject, void* pData) { assert(pObject && pData); *static_cast<std::string*>(pData) = static_cast<const AudioData*>(pObject)->customName; } },
 
-        prop{
-        "filePath", prop::STRING,
-        [](void* pObject, const void* pData) { assert(pObject && pData); static_cast<AudioData*>(pObject)->filePath = *static_cast<const std::string*>(pData); },
-        [](const void* pObject, void* pData) { assert(pObject && pData); *static_cast<std::string*>(pData) = static_cast<const AudioData*>(pObject)->filePath; }
-    },
+        prop{ "filePath", prop::STRING,
+            [](void* pObject, const void* pData) { assert(pObject && pData); static_cast<AudioData*>(pObject)->filePath = *static_cast<const std::string*>(pData); },
+            [](const void* pObject, void* pData) { assert(pObject && pData); *static_cast<std::string*>(pData) = static_cast<const AudioData*>(pObject)->filePath; } },
 
-        prop{
-        "mode", prop::STRING,
-        [](void* pObject, const void* pData) { assert(pObject && pData); static_cast<AudioData*>(pObject)->mode = *static_cast<const std::string*>(pData); },
-        [](const void* pObject, void* pData) { assert(pObject && pData); *static_cast<std::string*>(pData) = static_cast<const AudioData*>(pObject)->mode; }
-    },
-        prop{
-        "soundType", prop::STRING,
-        [](void* pObject, const void* pData) { assert(pObject && pData); static_cast<AudioData*>(pObject)->soundType = *static_cast<const std::string*>(pData); },
-        [](const void* pObject, void* pData) { assert(pObject && pData); *static_cast<std::string*>(pData) = static_cast<const AudioData*>(pObject)->soundType; }
-    },
-
-    /*prop{
-        "soundType", prop::STRING,
-        [](void* pObject, const void* pData) {
-            assert(pObject && pData);
-            std::string str = *static_cast<const std::string*>(pData);
-            static_cast<AudioData*>(pObject)->soundType = UE_GetSoundTypeFromString(str);
-        },
-        [](const void* pObject, void* pData) {
-            assert(pObject && pData);
-            std::string str = UE_GetStringFromSoundType(static_cast<const AudioData*>(pObject)->soundType);
-            *static_cast<std::string*>(pData) = str;
-        }
-    }*/
+        prop{ "mode", prop::STRING,
+            [](void* pObject, const void* pData) { assert(pObject && pData); static_cast<AudioData*>(pObject)->mode = *static_cast<const std::string*>(pData); },
+            [](const void* pObject, void* pData) { assert(pObject && pData); *static_cast<std::string*>(pData) = static_cast<const AudioData*>(pObject)->mode; } },
+        
+        prop{ "soundType", prop::STRING,
+            [](void* pObject, const void* pData) { assert(pObject && pData); static_cast<AudioData*>(pObject)->soundType = *static_cast<const std::string*>(pData); },
+            [](const void* pObject, void* pData) { assert(pObject && pData); *static_cast<std::string*>(pData) = static_cast<const AudioData*>(pObject)->soundType; } },
     };
 
 
@@ -153,18 +137,17 @@ namespace Framework
 
     inline constexpr std::array g_PrefabPropsArray
     {
-    prop{ "name", prop::STRING,
-        [](void* pObject, const void* pData) { assert(pObject && pData); static_cast<Prefab*>(pObject)->name = *static_cast<const std::string*>(pData); },
-        [](const void* pObject, void* pData) { assert(pObject && pData); *static_cast<std::string*>(pData) = static_cast<const Prefab*>(pObject)->name; } },
+        prop{ "name", prop::STRING,
+            [](void* pObject, const void* pData) { assert(pObject && pData); static_cast<Prefab*>(pObject)->name = *static_cast<const std::string*>(pData); },
+            [](const void* pObject, void* pData) { assert(pObject && pData); *static_cast<std::string*>(pData) = static_cast<const Prefab*>(pObject)->name; } },
 
-    prop{ "entityCount", prop::INT,
-        [](void* pObject, const void* pData) { assert(pObject && pData); static_cast<Prefab*>(pObject)->entityCount = *static_cast<const int*>(pData); },
-        [](const void* pObject, void* pData) { assert(pObject && pData); *static_cast<int*>(pData) = static_cast<const Prefab*>(pObject)->entityCount; } },
+        prop{ "entityCount", prop::INT,
+            [](void* pObject, const void* pData) { assert(pObject && pData); static_cast<Prefab*>(pObject)->entityCount = *static_cast<const int*>(pData); },
+            [](const void* pObject, void* pData) { assert(pObject && pData); *static_cast<int*>(pData) = static_cast<const Prefab*>(pObject)->entityCount; } },
     };
 
     inline constexpr prop_list g_PrefabProps{ "Prefab", g_PrefabPropsArray };
     inline global_registration g_PrefabPropsReg(&g_PrefabProps);
-
 
     //----------------------------------------------------------
 
@@ -177,24 +160,17 @@ namespace Framework
 
     inline constexpr std::array g_WindowConfigPropsArray
     {
-        prop
-        {
-            "x", prop::INT,
+        prop { "x", prop::INT,
             [](void* pObject, const void* pData) { assert(pObject && pData); static_cast<WindowConfig*>(pObject)->x = *static_cast<const int*>(pData); },
-            [](const void* pObject, void* pData) { assert(pObject && pData); *static_cast<int*>(pData) = static_cast<const WindowConfig*>(pObject)->x; }
-        },
-        prop
-        {
-            "y", prop::INT,
+            [](const void* pObject, void* pData) { assert(pObject && pData); *static_cast<int*>(pData) = static_cast<const WindowConfig*>(pObject)->x; } },
+
+        prop { "y", prop::INT,
             [](void* pObject, const void* pData) { assert(pObject && pData); static_cast<WindowConfig*>(pObject)->y = *static_cast<const int*>(pData); },
-            [](const void* pObject, void* pData) { assert(pObject && pData); *static_cast<int*>(pData) = static_cast<const WindowConfig*>(pObject)->y; }
-        },
-        prop
-        {
-            "program_name", prop::STRING,
+            [](const void* pObject, void* pData) { assert(pObject && pData); *static_cast<int*>(pData) = static_cast<const WindowConfig*>(pObject)->y; } },
+
+        prop { "program_name", prop::STRING,
             [](void* pObject, const void* pData) { assert(pObject && pData); static_cast<WindowConfig*>(pObject)->programName = *static_cast<const std::string*>(pData); },
-            [](const void* pObject, void* pData) { assert(pObject && pData); *static_cast<std::string*>(pData) = static_cast<const WindowConfig*>(pObject)->programName; }
-        }
+            [](const void* pObject, void* pData) { assert(pObject && pData); *static_cast<std::string*>(pData) = static_cast<const WindowConfig*>(pObject)->programName; } }
     };
 
     // Bundle all properties of `windowconfig` together
@@ -202,5 +178,4 @@ namespace Framework
 
     // Auto-register `windowconfig` in the global registry
     inline global_registration g_WindowConfigReg(&g_WindowConfigProps);
-
 }

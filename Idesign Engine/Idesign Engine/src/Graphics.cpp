@@ -35,7 +35,6 @@
 #include "imgui_impl_opengl3.h"
 #include "EngineState.h"
 #include "AssetManager.h"
-#include "TextureAsset.h"
 #include "Debugger.h"
 
 extern Framework::FontSystem fontSystem;
@@ -63,14 +62,14 @@ namespace Framework {
     float scale_right = 200.0f;
 
     // Loading of Graphics Shaders
-    std::string const UE_vs = GlobalAssetManager.LoadandStoreShader("src/UE.vert");
-    std::string const UE_vs2 = GlobalAssetManager.LoadandStoreShader("src/UE_Vertex.vert");
-    std::string const UE_fs = GlobalAssetManager.LoadandStoreShader("src/UE.frag");
-    std::string const UE_fs2 = GlobalAssetManager.LoadandStoreShader("src/UE_Tint.frag");
+    //std::string const UE_vs = GlobalAssetManager.LoadandStoreShader("src/UE.vert");
+    //std::string const UE_vs2 = GlobalAssetManager.LoadandStoreShader("src/UE_Vertex.vert");
+    //std::string const UE_fs = GlobalAssetManager.LoadandStoreShader("src/UE.frag");
+    //std::string const UE_fs2 = GlobalAssetManager.LoadandStoreShader("src/UE_Tint.frag");
 
     // edwin
-    auto& textureAssets = GlobalAssetManager.GetAllTextureAssets();
-    auto& audioAssets = GlobalAssetManager.GetAllAudioAssets();
+    //auto& textureAssets = GlobalAssetManager.GetAllTextureAssets();
+    //auto& audioAssets = GlobalAssetManager.GetAllAudioAssets();
     auto& entityAssets = GlobalAssetManager.GetAllEntities();
        
     static std::string selectedTextureName;
@@ -102,7 +101,7 @@ namespace Framework {
     static bool pathChanged = false;
 
     // Declare the map for storing dropped texture files
-    std::map<std::string, TextureAsset::Texture> droppedTextureFiles;
+    //std::map<std::string, TextureAsset::Texture> droppedTextureFiles;
     std::vector<std::pair<std::string, std::string>> updates;
 
     std::vector<glm::vec2> vertices =
@@ -346,9 +345,10 @@ namespace Framework {
                 Graphics::Model& model = getMesh("sprite"); // Use for mesh
 
                 // Loads the texture if it�s not loaded into map
-                if (textures.find(renderComponent.textureID) == textures.end()) {
+                /*if (textures.find(renderComponent.textureID) == textures.end()) 
+                {
                     textures[renderComponent.textureID] = GlobalAssetManager.GetTextureForGraphics(renderComponent.textureID);
-                }
+                }*/
 
                 model.textureID = textures[renderComponent.textureID]; // Assign loaded texture ID to model
 
@@ -416,7 +416,7 @@ namespace Framework {
             if (p.active)
             {
                 Graphics::Model& particle = getMesh("sprite");
-                particle.textureID = GlobalAssetManager.GetTextureForGraphics("fire");
+                //particle.textureID = GlobalAssetManager.GetTextureForGraphics("fire");
                 // Loads the texture if it�s not loaded into map
                 /*if (textures.find(("./images/armored_pro.png")) == textures.end()) {
                     particle.textureID = GlobalAssetManager.GetTextureForGraphics("fire");
@@ -489,10 +489,10 @@ namespace Framework {
             if (renderComponent.renderType == RenderType::Sprite) 
             {
                 Graphics::Model& model = getMesh("sprite");
-                if (textures.find(renderComponent.textureID) == textures.end()) 
+                /*if (textures.find(renderComponent.textureID) == textures.end()) 
                 {
                     textures[renderComponent.textureID] = GlobalAssetManager.GetTextureForGraphics(renderComponent.textureID);
-                }
+                }*/
                 model.textureID = textures[renderComponent.textureID];
 
                 glm::vec2 translation(transformComponent.position.x, transformComponent.position.y);
@@ -599,93 +599,6 @@ namespace Framework {
         //for edwin
         if (ImGui::Begin("Assets", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
         {
-            if (ImGui::CollapsingHeader("Sprites", ImGuiTreeNodeFlags_DefaultOpen))
-            {
-                int columns = 3; // Adjust this to the number of textures you want per row
-                int count = 0;
-                static char newNameBuffer[256] = { 0 }; // Buffer for name editing
-
-                std::vector<std::string> texturesToDelete;  // Vector to hold textures marked for deletion
-
-                for (auto& texturePair : textureAssets)  // textureAssets is loaded at line 60 of Graphics.cpp
-                {
-                    const std::string& assetName = texturePair.first;  // Name of texture
-                    auto& textureAsset = texturePair.second;
-                    GLuint textureID = GlobalAssetManager.GetTextureForGraphics(assetName);  // Get the textureID of the asset
-
-                    ImTextureID imguiTextureID = static_cast<ImTextureID>(textureID);  // Cast to ImTextureID to display in ImGui
-                    ImVec2 imageSize(64, 64);  // Choose imageSize (x, y)
-                    ImGui::Image(imguiTextureID, imageSize);  // Create Image to display
-
-                    ImGui::SameLine();
-
-                    // If the selected texture matches the current asset name
-                    if (selectedTextureName == assetName)
-                    {
-                        if (ImGui::InputText(("##edit" + selectedTextureName).c_str(), newNameBuffer, sizeof(newNameBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
-                        {
-                            if (strlen(newNameBuffer) > 0)
-                            {
-                                std::string newName = newNameBuffer;  // Get the new name entered by the user
-                                std::cout << "New Name is : " << newName << std::endl;
-
-                                // Collect the name change
-                                updates.push_back({ assetName, newName });
-
-                                // Update local variables to reflect the new name
-                                selectedTextureName = newName;  // Update selection to the new name
-                                std::cout << "Updated local variable is : " << selectedTextureName << std::endl;
-
-                                // Update buffer to reflect the new name
-                                strncpy(newNameBuffer, newName.c_str(), sizeof(newNameBuffer));
-
-                                // Optionally reset selection after update
-                                selectedTextureName = ""; // Reset the selection after update
-
-                                newTextureName = newName;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (ImGui::Selectable(assetName.c_str(), selectedTextureName == assetName))  // Select to rename
-                        {
-                            selectedTextureName = assetName;
-                            strncpy(newNameBuffer, assetName.c_str(), sizeof(newNameBuffer));  // Initialize buffer with current name
-                        }
-                    }
-
-                    // Right-click to delete
-                    if (ImGui::IsItemClicked(1))  // 1 corresponds to right-click in ImGui
-                    {
-                        texturesToDelete.push_back(assetName);  // Mark texture for deletion
-                    }
-
-                    // Adjust layout to place textures in rows
-                    count++;
-                    if (count % columns != 0)
-                        ImGui::SameLine();
-                    else
-                        ImGui::NewLine();
-                }
-
-                // Apply the deletions
-                for (const auto& textureName : texturesToDelete)
-                {
-                    GlobalAssetManager.DeleteTexture(textureName);  // Delete the texture from the asset manager
-                    std::cout << "Deleted texture: " << textureName << std::endl;
-                }
-                texturesToDelete.clear();
-
-                // Now, outside of the loop, apply the updates
-                for (const auto& update : updates)
-                {
-                    // Safely update the texture name and reload it
-                    GlobalAssetManager.UpdateTextureName(update.first, update.second);
-                    std::cout << "Updated texture: " << update.first << " to " << update.second << std::endl;
-                }
-                updates.clear();
-            }
             ImGui::NewLine();
 
             RenderErrorPopup();
@@ -693,439 +606,7 @@ namespace Framework {
             // Audio
             if (ImGui::CollapsingHeader("Audio"))
             {
-                for (const auto& audioPair : audioAssets)
-                {
-                    const std::string& assetName = audioPair.first;
-
-                    // Check if this audio asset is being edited
-                    bool& isEditingThisName = editingStates[assetName];
-
-                    if (!isEditingThisName)
-                    {
-                        // If not editing, display the name normally and allow selection
-                        if (ImGui::Selectable((assetName + "##Selectable").c_str(), selectedAudioName == assetName))
-                        {
-                            selectedAudioName = assetName;  // Set the selected name
-                        }
-
-                        // Double-click to enter editing mode
-                        if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
-                        {
-                            isEditingThisName = true; // Enter editing mode
-                        }
-                    }
-                    else
-                    {
-                        strncpy(newAudioNameBuffer, selectedAudioName.c_str(), sizeof(newAudioNameBuffer) - 1); // Initialize the buffer with the current name
-                        newAudioNameBuffer[sizeof(newAudioNameBuffer) - 1] = '\0'; // Ensure null termination
-
-                        // Create an input field to edit the audio name
-                        if (ImGui::InputText("##RenameAudio", newAudioNameBuffer, sizeof(newAudioNameBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
-                        {
-                            std::string newAudioName(newAudioNameBuffer);
-                            if (!newAudioName.empty() && newAudioName != selectedAudioName)
-                            {
-                                // Call the AssetManager function to rename the audio
-                                GlobalAssetManager.UpdateAudioName(selectedAudioName, newAudioName);
-                                selectedAudioName = newAudioName; // Update the selected name
-                            }
-                            // Exit editing mode after renaming
-                            isEditingThisName = false;
-                        }
-
-                        // Optionally, allow the user to click outside and exit editing mode
-                        if (ImGui::IsMouseClicked(0) && !ImGui::IsItemHovered())
-                        {
-                            isEditingThisName = false; // Exit editing mode
-                        }
-                    }
-                    // Handle deleting the audio asset using a keyboard shortcut (Delete key)
-                    if (selectedAudioName == assetName && ImGui::IsKeyPressed(ImGuiKey_Delete))
-                    {
-                        ImGui::OpenPopup(("Confirm Delete?##" + assetName).c_str());
-                    }
-
-                    // Optionally show a confirmation popup for deletion (if desired)
-                    if (ImGui::BeginPopupModal(("Confirm Delete?##" + assetName).c_str(), NULL, ImGuiWindowFlags_AlwaysAutoResize))
-                    {
-                        ImGui::Text("Are you sure you want to delete this audio asset?");
-                        if (ImGui::Button("Yes"))
-                        {
-                            assetsToDelete.push_back(assetName); // Mark for deletion
-                            ImGui::CloseCurrentPopup();                 // Close the popup
-                        }
-                        ImGui::SameLine();
-                        if (ImGui::Button("No"))
-                        {
-                            ImGui::CloseCurrentPopup();                 // Close the popup without deleting
-                        }
-                        ImGui::EndPopup();
-                    }
-                }
-                // Perform deletions after the loop to avoid iterator invalidation
-                for (const auto& name : assetsToDelete)
-                {
-                    GlobalAssetManager.DeleteAudio(name);
-                    selectedAudioName.clear(); // Reset selection if necessary
-                }
-                assetsToDelete.clear();
-            }
-            else
-            {
-                // Reset all editing states when the node is collapsed
-                editingStates.clear();
-                selectedAudioName.clear();
-            }
-
-            static std::string previousSelectedAudioName;
-
-            if (!selectedAudioName.empty())
-            {
-                // Check if the audio selection has changed
-                if (previousSelectedAudioName != selectedAudioName)
-                {
-                    // Stop or reset the previous audio
-                    if (!previousSelectedAudioName.empty())
-                    {
-                        GlobalAudio.Reset();
-                    }
-
-                    // Update the previous selection
-                    previousSelectedAudioName = selectedAudioName;
-                }
-
-                // Play button
-                if (ImGui::Button("Play"))
-                {
-                    GlobalAudio.UE_PlaySound(selectedAudioName);
-                }
-
-                // Pause button
-                ImGui::SameLine(); // Place "Pause" button next to "Play" button
-                if (ImGui::Button("Pause/Resume"))
-                {
-                    GlobalAudio.UE_PauseSound(selectedAudioName);
-                }
-
-                // Reset button
-                ImGui::SameLine();  // Reset button next to pause
-                if (ImGui::Button("Reset"))
-                {
-                    GlobalAudio.Reset();
-                }
-
-                // Dropdown Box Mode
-                ImGui::Text("Select Mode Option: ");
-
-                // Retrieve the AudioAsset using the AssetManager
-                auto audioAsset = GlobalAssetManager.GetAudioAsset(selectedAudioName); // This returns a pointer to the AudioAsset
-
-                static int selectedOption1 = 0; // This will hold the selected index
-                std::vector<std::string> modeOptions;
-
-                static int selectedSoundTypeIndex = 0; // This will hold the selected index
-                std::vector<std::string> soundTypeOptions;
-
-                if (audioAsset)  // Check if audioAsset is valid
-                {
-                    try
-                    {
-                        // Get the current mode for the selected audio asset
-                        std::string currentMode = audioAsset->UE_GetMusicMode(selectedAudioName);
-
-                        // Clear previous options to prevent duplication
-                        modeOptions.clear();
-
-                        // Add the current mode as the first option and the other mode as the second
-                        if (currentMode == "oneshot")
-                        {
-                            modeOptions.push_back("oneshot");  // Current mode
-                            modeOptions.push_back("loop");     // Other mode
-                        }
-                        else if (currentMode == "loop")
-                        {
-                            modeOptions.push_back("loop");     // Current mode
-                            modeOptions.push_back("oneshot");  // Other mode
-                        }
-                        else
-                        {
-                            modeOptions.push_back("Unknown");  // Placeholder for an unknown mode
-                            modeOptions.push_back("oneshot");
-                            modeOptions.push_back("loop");
-                        }
-
-                        // Use ImGui::Combo to allow the user to select an option
-                        static std::string selectedMode = currentMode;  // Initialize with the current mode
-                        
-                        if (selectedMode != currentMode)
-                        {
-                            selectedMode = currentMode;  // Sync selectedMode with currentMode
-                        }
-
-                        if (ImGui::BeginCombo("##Mode", selectedMode.c_str()))
-                        {
-                            for (const auto& mode : modeOptions)
-                            {
-                                bool isSelected = (selectedMode == mode);  // Check if the mode matches the selected mode
-                                if (ImGui::Selectable(mode.c_str(), isSelected))
-                                {
-                                    selectedMode = mode;  // Update the selected mode with the string value
-                                    modeChanged = true;    // Mark that the mode has changed
-                                }
-                            }
-                            ImGui::EndCombo();
-                        }
-
-                        // Handle the mode change
-                        if (modeChanged)
-                        {
-                            std::string newMode = selectedMode;
-
-                            if (newMode != currentMode)
-                            {
-                                auto audioMap = audioAssets.find(selectedAudioName);
-                                if (audioMap != audioAssets.end())
-                                {
-                                    auto& audioAsset = audioMap->second;
-
-                                    AudioAsset::MusicAsset* musicAsset = audioAsset->GetMusicAssetByName(selectedAudioName);
-
-                                    if (musicAsset != nullptr)
-                                    {
-                                        // Update the mode
-                                        musicAsset->mode = newMode;
-                                        std::cout << "Updated " << selectedAudioName << " mode to " << newMode << std::endl;
-
-                                        // Serialize the updated audio asset
-                                        audioAsset->SerializeAudio("src/Data/AudioAsset.json");
-                                        std::cout << "Audio asset serialized after mode update." << std::endl;
-
-                                        // Reset flags after updating
-                                        modeChanged = false;
-                                    }
-                                    else
-                                    {
-                                        std::cerr << "MusicAsset not found for audio name: " << selectedAudioName << std::endl;
-                                    }
-                                }
-                            }
-                            GlobalAudio.Reset();
-                        }
-                    }
-                    catch (const std::runtime_error& e)
-                    {
-                        // Handle error if the mode retrieval fails
-                        ImGui::Text("Error: %s", e.what());
-                    }
-                }
-                else
-                {
-                    ImGui::Text("Error: AudioAsset not found.");
-                }
-
-                // Dropdown Box Sound Type
-                ImGui::Text("Select Sound Type: ");
-
-                if (audioAsset)  // Check if audioAsset is valid
-                {
-                    try
-                    {
-                        // Get the current SoundType for the selected audio asset
-                        Framework::Audio::SoundType soundType = audioAsset->UE_GetMusicSoundType(selectedAudioName);
-
-                        // Clear previous options to prevent duplication
-                        soundTypeOptions.clear();
-
-                        // Add available sound types to the options list
-                        soundTypeOptions.push_back("Background_Music");
-                        soundTypeOptions.push_back("Sound_Effect");
-                        soundTypeOptions.push_back("Empty");
-
-                        // Initialize selectedSoundTypeIndex with the index of the current sound type
-                        if (soundType == Framework::Audio::SoundType::BACKGROUND_MUSIC)
-                        {
-                            selectedSoundTypeIndex = 0;
-                        }
-                        else if (soundType == Framework::Audio::SoundType::SOUND_EFFECT)
-                        {
-                            selectedSoundTypeIndex = 1;
-                        }
-                        else if (soundType == Framework::Audio::SoundType::EMPTY)
-                        {
-                            selectedSoundTypeIndex = 2;
-                        }
-
-                        // Create the combo box to allow the user to select a sound type
-                        if (ImGui::BeginCombo("##SoundType", soundTypeOptions[selectedSoundTypeIndex].c_str()))
-                        {
-                            for (int i = 0; i < soundTypeOptions.size(); ++i)
-                            {
-                                bool isSelected = (selectedSoundTypeIndex == i);
-                                if (ImGui::Selectable(soundTypeOptions[i].c_str(), isSelected))
-                                {
-                                    selectedSoundTypeIndex = i;  // Update the selected sound type
-                                    soundTypeChanged = true;     // Mark that the sound type has changed
-                                }
-                            }
-                            ImGui::EndCombo();
-                        }
-
-                        // Handle the sound type change
-                        if (soundTypeChanged)
-                        {
-                            Framework::Audio::SoundType newSoundType;
-                            switch (selectedSoundTypeIndex)
-                            {
-                            case 0: newSoundType = Framework::Audio::SoundType::BACKGROUND_MUSIC; break;
-                            case 1: newSoundType = Framework::Audio::SoundType::SOUND_EFFECT; break;
-                            case 2: newSoundType = Framework::Audio::SoundType::EMPTY; break;
-                            default: return;  // Invalid index, do nothing
-                            }
-
-                            // Update the sound type in the music asset
-                            auto audioMap = audioAssets.find(selectedAudioName);
-                            if (audioMap != audioAssets.end())
-                            {
-                                auto& audioAsset = audioMap->second;
-
-                                AudioAsset::MusicAsset* musicAsset = audioAsset->GetMusicAssetByName(selectedAudioName);
-
-                                if (musicAsset != nullptr)
-                                {
-                                    // Update the sound type
-                                    musicAsset->soundType = newSoundType;
-                                    std::cout << "Updated " << selectedAudioName << " sound type to " << soundTypeOptions[selectedSoundTypeIndex] << std::endl;
-
-                                    // Serialize the updated audio asset
-                                    audioAsset->SerializeAudio("src/Data/AudioAsset.json");
-
-                                    std::cout << "Audio asset serialized after sound type update." << std::endl;
-
-                                    // Reset flags after updating
-                                    soundTypeChanged = false;
-                                }
-                                else
-                                {
-                                    std::cerr << "MusicAsset not found for audio name: " << selectedAudioName << std::endl;
-                                }
-                            }
-                        }
-                    }
-                    catch (const std::runtime_error& e)
-                    {
-                        // Handle error if the sound type retrieval fails
-                        ImGui::Text("Error: %s", e.what());
-                    }
-                }
-                else
-                {
-                    ImGui::Text("Error: AudioAsset not found.");
-                }
-
-                // Dropdown Box for Audio Path Selection (BGM or SoundEffect)
-                ImGui::Text("Select Audio Path: ");
-
-                if (audioAsset)  // Check if audioAsset is valid
-                {
-                    try
-                    {
-                        // Get the current audio path for the selected audio asset inside the try block
-                        std::string currentPath = audioAsset->UE_GetMusicFilePath(selectedAudioName);
-
-                        // Remove the file extension from the current path (to get just the folder path)
-                        size_t lastSlash = currentPath.find_last_of("/\\"); // Find the last slash in the path
-                        std::string folderPath = (lastSlash != std::string::npos) ? currentPath.substr(0, lastSlash + 1) : currentPath;
-
-                        // Extract the file extension from the current path (full file path)
-                        size_t dotPos = currentPath.find_last_of(".");
-                        std::string fileExtension = (dotPos != std::string::npos) ? currentPath.substr(dotPos + 1) : "";
-
-                        // Check which path is currently selected and set it
-                        for (int i = 0; i < audioPathOptions.size(); ++i)
-                        {
-                            if (audioPathOptions[i] == folderPath)
-                            {
-                                selectedAudioPathIndex = i;  // Set to the current path index
-                                break;
-                            }
-                        }
-
-                        // Create the combo box for selecting the audio path
-                        if (!audioPathOptions.empty())
-                        {
-                            // Convert audioPathOptions to const char* array for ImGui
-                            std::vector<const char*> audioPathCStrOptions;
-                            for (const auto& path : audioPathOptions)
-                            {
-                                audioPathCStrOptions.push_back(path.c_str());
-                            }
-
-                            // Display the Combo Box for selecting the audio path
-                            if (ImGui::Combo("##AudioPath", &selectedAudioPathIndex, audioPathCStrOptions.data(), audioPathCStrOptions.size()))
-                            {
-                                // Get the new path selected by the user
-                                std::string newPath = audioPathOptions[selectedAudioPathIndex];
-
-                                // Handle the path change only if the new path is different from the current one
-                                if (newPath != folderPath)
-                                {
-                                    // Build the new and old full paths
-                                    std::string newFullPath = newPath + selectedAudioName + "." + fileExtension;
-                                    std::string oldFullPath = folderPath + selectedAudioName + "." + fileExtension;
-
-                                    // Copy the file to the new folder
-                                    if (GlobalAssetManager.CopyAudioToFolder(oldFullPath, newPath))
-                                    {
-                                        // Delete the original file
-                                        if (!GlobalAssetManager.DeleteAudioFile(oldFullPath))
-                                        {
-                                            std::cerr << "Warning: Failed to delete the original file after copying." << std::endl;
-                                        }
-
-                                        // Update the file path in the asset
-                                        auto audioMap = audioAssets.find(selectedAudioName);
-                                        if (audioMap != audioAssets.end())
-                                        {
-                                            auto& audioAsset = audioMap->second;
-                                            AudioAsset::MusicAsset* musicAsset = audioAsset->GetMusicAssetByName(selectedAudioName);
-
-                                            if (musicAsset != nullptr)
-                                            {
-                                                musicAsset->filePath = newFullPath; // Update with the new full path
-                                                std::cout << "Updated " << selectedAudioName << " file path to " << musicAsset->filePath << std::endl;
-
-                                                // Serialize the updated audio asset
-                                                audioAsset->SerializeAudio("src/Data/AudioAsset.json");
-                                                std::cout << "Audio asset serialized after file path update." << std::endl;
-                                            }
-                                            else
-                                            {
-                                                std::cerr << "MusicAsset not found for audio name: " << selectedAudioName << std::endl;
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        std::cerr << "Error: Failed to copy the audio file to the new location." << std::endl;
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            ImGui::Text("No audio paths available.");
-                        }
-                    }
-                    catch (const std::runtime_error& e)
-                    {
-                        // Handle error if the audio path retrieval fails
-                        ImGui::Text("Error: %s", e.what());
-                    }
-                }
-                else
-                {
-                    ImGui::Text("Error: AudioAsset not found.");
-                }
+                
             }
             ImGui::End();
         }
@@ -1297,40 +778,14 @@ namespace Framework {
                         // combo box = dropdown box
                         if (ImGui::BeginCombo("Change Texture", newTextureName.empty() ? "Select Texture" : newTextureName.c_str()))
                         {
-                            for (auto& texturePair : textureAssets)
-                            {
-                                const std::string& assetName = texturePair.first;       // Get the name of the texture
-                                bool isSelected = (newTextureName == assetName);        // Check if the texture is selected
 
-                                if (ImGui::Selectable(assetName.c_str(), isSelected))   // If the texture is selected in the combo box, set it as the new texture
-                                {
-                                    newTextureName = assetName;                         // Update the selected texture name
-                                }
-                                if (isSelected)
-                                {
-                                    ImGui::SetItemDefaultFocus();           // Auto scroll to and focus on the selected item in the combo box
-                                }
-                            }
                             ImGui::EndCombo();                                          // End combo box
                         }
 
                         // Apply texture change
                         if (!newTextureName.empty() && ImGui::Button("Apply Texture"))  // Button to apply selected texture
                         {
-                            // Check if the texture name has actually changed
-                            std::string currentTexturePath = renderComponent.textureID;
 
-                            auto it = textureAssets.find(newTextureName);               // Find the selected texture in assetmanager
-                            if (it == textureAssets.end())
-                            {
-                                std::cerr << "Texture not found in asset manager: " << newTextureName << std::endl;
-                                return;
-                            }
-
-                            std::string newTexturePath = it->second->GetPath(newTextureName);   // Retrieve the filepath of the new texture
-
-                            // Assign the new texture name to the render component
-                            renderComponent.textureID = newTextureName;
 
                             std::cout << "Texture changed to: " << newTextureName << std::endl;
                         }
@@ -1693,7 +1148,7 @@ namespace Framework {
         glBindVertexArray(0);
 
         mdl.primitive_type = GL_POINTS;
-        mdl.setup_shdrpgm(UE_vs, UE_fs);
+        //mdl.setup_shdrpgm(UE_vs, UE_fs);
         mdl.color = clr_vtx;
         mdl.draw_cnt = 1; // Only one point
         mdl.primitive_cnt = 1; // Only one point
@@ -1731,7 +1186,7 @@ namespace Framework {
         glBindVertexArray(0);
 
         mdl.primitive_type = GL_LINES;
-        mdl.setup_shdrpgm(UE_vs, UE_fs);
+        //mdl.setup_shdrpgm(UE_vs, UE_fs);
         mdl.draw_cnt = static_cast<GLuint>(pos_vtx.size()); // number of vertices (2 for a line)
         mdl.primitive_cnt = 1; // only one line
         mdl.color = clr_vtx;
@@ -1778,7 +1233,7 @@ namespace Framework {
         glVertexArrayAttribBinding(mdl.vaoid, 0, 0);
         glBindVertexArray(0);
 
-        mdl.setup_shdrpgm(UE_vs, UE_fs);
+        //mdl.setup_shdrpgm(UE_vs, UE_fs);
         mdl.primitive_type = GL_TRIANGLE_FAN;
         mdl.color = clr_vtx; // Store the color in the model
         mdl.draw_cnt = static_cast<GLuint>(pos_vtx.size());
@@ -1836,7 +1291,7 @@ namespace Framework {
 
         // Set model properties
         mdl.primitive_type = GL_TRIANGLES;
-        mdl.setup_shdrpgm(UE_vs, UE_fs);
+        //mdl.setup_shdrpgm(UE_vs, UE_fs);
         mdl.color = clr_vtx;  // Use this color in your fragment shader to apply it
         mdl.draw_cnt = static_cast<GLuint>(indices.size());
         mdl.primitive_cnt = mdl.draw_cnt / 3;
@@ -1858,7 +1313,7 @@ namespace Framework {
         const std::string& textureName) // Add texture path
     {
         //GLuint textureID = loadTexture(textureFilePath); // Load texture and get its ID
-        GLuint textureID = GlobalAssetManager.GetTextureForGraphics(textureName);
+        //GLuint textureID = GlobalAssetManager.GetTextureForGraphics(textureName);
         
         std::vector<GLuint> indices = { 0, 1, 2, 2, 3, 0 };
 
@@ -1894,9 +1349,9 @@ namespace Framework {
         glBindVertexArray(0);
 
         // Setup the shader program
-        mdl.setup_shdrpgm(UE_vs, UE_fs);
+        //mdl.setup_shdrpgm(UE_vs, UE_fs);
         mdl.color = clr_vtx;
-        mdl.textureID = textureID; // Store the texture ID in the model
+        //mdl.textureID = textureID; // Store the texture ID in the model
         mdl.primitive_type = GL_TRIANGLES;
         mdl.draw_cnt = static_cast<GLuint>(indices.size());
         mdl.primitive_cnt = mdl.draw_cnt / 3;
@@ -1979,7 +1434,7 @@ namespace Framework {
         // Loads the texture if it�s not loaded into map
         if (textures.find("Hitbox") == textures.end()) 
         {
-            textures["Hitbox"] = GlobalAssetManager.GetTextureForGraphics("Hitbox");
+            //textures["Hitbox"] = GlobalAssetManager.GetTextureForGraphics("Hitbox");
         }
 
         model.textureID = textures["Hitbox"]; // Assign loaded texture ID to model
@@ -2180,42 +1635,6 @@ namespace Framework {
             if (extension == "png" || extension == "jpg" || extension == "jpeg" || extension == "bmp" || extension == "tga" || extension == "dds") {
                 // This is a texture file, process it as such
                 std::string textureName = filePath.substr(filePath.find_last_of("/\\") + 1);  // Get filename
-                auto it = textureAssets.find(textureName);
-                if (it == textureAssets.end()) 
-                {
-                    GlobalAssetManager.AddTexture(textureName, filePath);  // Add to texture asset manager
-                    std::cout << "Texture added: " << textureName << " from path: " << filePath << std::endl;
-                }
-                else 
-                {
-                    std::cout << "Texture already exists: " << textureName << std::endl;
-                }
-            }
-            // Check if the file is an audio file (e.g., .mp3, .wav, .ogg, etc.)
-            else if (extension == "mp3" || extension == "wav" || extension == "flac") 
-            {
-                // This is an audio file, process it as such
-                std::string audioName = filePath.substr(filePath.find_last_of("/\\") + 1);  // Get filename
-                auto it = audioAssets.find(audioName);
-                if (it == audioAssets.end()) 
-                {
-                    GlobalAssetManager.AddAudio(audioName, filePath);  // Add to audio asset manager
-                    std::cout << "Audio file added: " << audioName << " from path: " << filePath << std::endl;
-                }
-                else {
-                    std::cout << "Audio file already exists: " << audioName << std::endl;
-                }
-            }
-            else if (extension == "ogg")
-            {
-                // Unsupported .ogg file type - set error message and trigger popup
-                errorMessage = "Unsupported file type: ." + extension + "\nPlease use supported formats (.mp3, .wav, .flac).";
-                showErrorPopup = true;
-            }
-            else 
-            {
-                // Handle other file types (non-texture and non-audio files)
-                std::cout << "Unsupported file type: " << extension << " for file: " << filePath << std::endl;
             }
         }
     }
@@ -2334,5 +1753,4 @@ namespace Framework {
         // Delete the shader program
         shdr_pgm.DeleteShaderProgram();
     }
-
 }

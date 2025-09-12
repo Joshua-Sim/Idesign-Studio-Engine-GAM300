@@ -147,7 +147,6 @@
     <ClInclude Include="src\AnimationSystem.h" />
     <ClInclude Include="src\AssetManager.h" />
     <ClInclude Include="src\Audio.h" />
-    <ClInclude Include="src\AudioAsset.h" />
     <ClInclude Include="src\ButtonSystem.h" />
     <ClInclude Include="src\Collision.h" />
     <ClInclude Include="src\ComponentArray.h" />
@@ -163,9 +162,7 @@
     <ClInclude Include="src\EngineState.h" />
     <ClInclude Include="src\EntityAsset.h" />
     <ClInclude Include="src\EntityManager.h" />
-    <ClInclude Include="src\FontAsset.h" />
     <ClInclude Include="src\FontShader.h" />
-    <ClInclude Include="src\FontShaderAsset.h" />
     <ClInclude Include="src\FontSystem.h" />
     <ClInclude Include="src\Graphics.h" />
     <ClInclude Include="src\GraphicsShader.h" />
@@ -221,7 +218,6 @@
     <ClInclude Include="src\SystemInclude.h" />
     <ClInclude Include="src\TagManager.h" />
     <ClInclude Include="src\TestSystem.h" />
-    <ClInclude Include="src\TextureAsset.h" />
     <ClInclude Include="src\Types.h" />
     <ClInclude Include="src\Vector2D.h" />
   </ItemGroup>
@@ -243,7 +239,6 @@
     <ClCompile Include="src\AnimationSystem.cpp" />
     <ClCompile Include="src\AssetManager.cpp" />
     <ClCompile Include="src\Audio.cpp" />
-    <ClCompile Include="src\AudioAsset.cpp" />
     <ClCompile Include="src\ButtonSystem.cpp" />
     <ClCompile Include="src\Collision.cpp" />
     <ClCompile Include="src\ComponentManager.cpp" />
@@ -255,8 +250,6 @@
     <ClCompile Include="src\EngineState.cpp" />
     <ClCompile Include="src\EntityAsset.cpp" />
     <ClCompile Include="src\EntityManager.cpp" />
-    <ClCompile Include="src\FontAsset.cpp" />
-    <ClCompile Include="src\FontShaderAsset.cpp" />
     <ClCompile Include="src\FontSystem.cpp" />
     <ClCompile Include="src\Graphics.cpp" />
     <ClCompile Include="src\GraphicsShader.cpp" />
@@ -273,7 +266,6 @@
     <ClCompile Include="src\PlayerSystem.cpp" />
     <ClCompile Include="src\TagManager.cpp" />
     <ClCompile Include="src\TestSystem.cpp" />
-    <ClCompile Include="src\TextureAsset.cpp" />
     <ClCompile Include="src\Vector2D.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
