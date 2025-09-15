@@ -18,7 +18,7 @@
 #include "Core.h"
 #include <InputHandler.h>
 
-#include "AssetManager.h"
+#include <WindowConfigProperties.h>
 
 namespace Framework {
 

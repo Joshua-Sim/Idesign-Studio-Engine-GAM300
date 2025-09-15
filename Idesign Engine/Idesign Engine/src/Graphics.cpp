@@ -70,7 +70,7 @@ namespace Framework {
     // edwin
     //auto& textureAssets = GlobalAssetManager.GetAllTextureAssets();
     //auto& audioAssets = GlobalAssetManager.GetAllAudioAssets();
-    auto& entityAssets = GlobalAssetManager.GetAllEntities();
+    //auto& entityAssets = GlobalAssetManager.GetAllEntities();
        
     static std::string selectedTextureName;
     static std::string selectedAudioName;
@@ -571,10 +571,10 @@ namespace Framework {
                     if (!filePath.empty())
                     {
                         ecsInterface.ClearEntities();
-                        entityAssets.clear();
+                        //entityAssets.clear();
 
                         // This function expects a const std::string& as input
-                        GlobalAssetManager.LoadEntities(filePath);
+                        //GlobalAssetManager.LoadEntities(filePath);
                     }
                 }
                 if (ImGui::MenuItem("Save"))
@@ -582,7 +582,7 @@ namespace Framework {
                     std::string savePath = SaveFileDialog();
                     if (!savePath.empty())
                     {
-                        GlobalEntityAsset.SerializeEntities(savePath);
+                        //GlobalEntityAsset.SerializeEntities(savePath);
                     }
                     else
                     {
@@ -902,7 +902,7 @@ namespace Framework {
                 // Stop the game by setting play to false
                 engineState.SetPlay(false);
                 ecsInterface.ClearEntities(); // Clear all entity and load json to reset scene
-                GlobalAssetManager.LoadEntities(filePath); // temporarily load this scene // cant load
+                //GlobalAssetManager.LoadEntities(filePath); // temporarily load this scene // cant load
                // GlobalAssetManager.LoadEntities.clear();   
             }
             ImGui::PopStyleColor(3); // Restore color

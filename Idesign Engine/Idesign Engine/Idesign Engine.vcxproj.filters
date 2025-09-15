@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Properties">
+      <UniqueIdentifier>{fc85e7e0-43c6-41a7-98cc-84d04434e8fd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\AnimationSystem.h">
@@ -55,9 +58,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\EngineState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\EntityAsset.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\EntityManager.h">
@@ -267,8 +267,23 @@
     <ClInclude Include="..\lib\imgui\imstb_truetype.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="AudioProperties.h">
+      <Filter>Header Files\Properties</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformProperties.h">
+      <Filter>Header Files\Properties</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowConfigProperties.h">
+      <Filter>Header Files\Properties</Filter>
+    </ClInclude>
+    <ClInclude Include="PropertyMacro.h">
+      <Filter>Header Files\Properties</Filter>
+    </ClInclude>
     <ClInclude Include="PropertySystem.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Properties</Filter>
+    </ClInclude>
+    <ClInclude Include="PrefabProperties.h">
+      <Filter>Header Files\Properties</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -277,6 +292,7 @@
     <None Include="SceneWithEnemies.json" />
     <None Include="SceneWithOscilators.json" />
     <None Include="Test Scene Save.json" />
+    <None Include="cpp.hint" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Vector2D.cpp">
@@ -316,9 +332,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\EngineState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\EntityAsset.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\EntityManager.cpp">

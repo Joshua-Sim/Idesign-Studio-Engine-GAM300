@@ -6,34 +6,243 @@
 ///          these assets in the Framework namespace.
 ///
 ///	@Authors : Edwin
-///	@Copyright 2024, Digipen Institute of Technology
+///	@Copyright 2025, Digipen Institute of Technology
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #include "pch.h"
 #include "AssetManager.h"
-#include "LogicManager.h"
 
 namespace Framework
 {
-    AssetManager GlobalAssetManager;        // Global instance of AssetManager.
-    unsigned char* AssetManager::data{};    // Texture data buffer for loading textures.
-
-    AssetManager::AssetManager() 
+    void AssetManager::Unload(const std::string& key)
     {
-        // Initialization of Assets
-        //LoadFont("../Unnamed Studios/Assets/Font/arial.ttf", 40);     // Loaded in fontsystem
-        //LoadFontShader("src/UE_Font.vert");                           // Loaded in fontsystem
-        //LoadFontShader("src/UE_Font.frag");                           // Loaded in fontsystem
-        //LoadandStoreShader("src/UE.vert");                            // Loaded in Graphics.cpp
-        //LoadandStoreShader("src/UE.frag");                            // Loaded in Graphics.cpp
+        auto it = m_Assets.find(key);
+        if (it != m_Assets.end())
+        {
+            m_Assets.erase(it);
+        }
     }
 
-    AssetManager::~AssetManager() {}
-
-    void AssetManager::LoadEntities(const std::string& filePath)
+    void AssetManager::Deserialize(void* pObject, const prop_list& PropList, const rapidjson::Value& obj)
     {
-        // If not, load it and store it in the container
-        auto entityAsset = std::make_unique<EntityAsset>(filePath);
-        entityAssets[filePath] = std::move(entityAsset);
+        assert(pObject != nullptr);
+        assert(obj.IsObject());
+
+        for (const prop& p : PropList.m_Props)
+        {
+            if (!obj.HasMember(p.m_pName)) continue;
+
+            const rapidjson::Value& val = obj[p.m_pName];
+
+            switch (p.m_Type)
+            {
+            case prop::INT:
+                if (val.IsInt())
+                {
+                    int temp = val.GetInt();
+                    p.m_fnSet(pObject, &temp);
+                }
+                break;
+
+            case prop::FLOAT:
+                if (val.IsNumber()) // Accepts both float and double
+                {
+                    float temp = static_cast<float>(val.GetDouble());
+                    p.m_fnSet(pObject, &temp);
+                }
+                break;
+
+            case prop::DOUBLE:
+                if (val.IsNumber())
+                {
+                    double temp = val.GetDouble();
+                    p.m_fnSet(pObject, &temp);
+                }
+                break;
+
+            case prop::LONG:
+                if (val.IsInt64())
+                {
+                    long temp = static_cast<long>(val.GetInt64());
+                    p.m_fnSet(pObject, &temp);
+                }
+                break;
+
+            case prop::SHORT:
+                if (val.IsInt())
+                {
+                    short temp = static_cast<short>(val.GetInt());
+                    p.m_fnSet(pObject, &temp);
+                }
+                break;
+
+            case prop::CHAR:
+                if (val.IsString() && val.GetStringLength() == 1)
+                {
+                    char temp = val.GetString()[0];
+                    p.m_fnSet(pObject, &temp);
+                }
+                break;
+
+            case prop::BOOL:
+                if (val.IsBool())
+                {
+                    bool temp = val.GetBool();
+                    p.m_fnSet(pObject, &temp);
+                }
+                break;
+
+            case prop::STRING:
+                if (val.IsString())
+                {
+                    std::string temp(val.GetString(), val.GetStringLength()); // Safer string copy
+                    p.m_fnSet(pObject, &temp);
+                }
+                break;
+                // Future types can be added here
+                // case prop::ENUM:
+                // case prop::ARRAY:
+                // case prop::OBJECT:
+
+            default:
+                // Optional: log unsupported or mismatched types
+                std::cerr << "Unsupported or mismatched type for property: " << p.m_pName << std::endl;
+                break;
+            }
+        }
+    }
+
+    void AssetManager::Serialize(void* pObject, const prop_list& PropList, rapidjson::Value& outObj, rapidjson::Document::AllocatorType& allocator)
+    {
+        assert(pObject != nullptr);
+        assert(outObj.IsObject());
+
+        for (const prop& p : PropList.m_Props)
+        {
+            rapidjson::Value key;
+            key.SetString(p.m_pName, allocator);
+
+            switch (p.m_Type)
+            {
+            case prop::INT:
+            {
+                int value;
+                p.m_fnGet(pObject, &value);
+                outObj.AddMember(key, value, allocator);
+                break;
+            }
+            case prop::FLOAT:
+            {
+                float value;
+                p.m_fnGet(pObject, &value);
+                outObj.AddMember(key, value, allocator);
+                break;
+            }
+            case prop::DOUBLE:
+            {
+                double value;
+                p.m_fnGet(pObject, &value);
+                outObj.AddMember(key, value, allocator);
+                break;
+            }
+            case prop::LONG:
+            {
+                long value;
+                p.m_fnGet(pObject, &value);
+                outObj.AddMember(key, static_cast<int64_t>(value), allocator); // RapidJSON prefers int64_t
+                break;
+            }
+            case prop::SHORT:
+            {
+                short value;
+                p.m_fnGet(pObject, &value);
+                outObj.AddMember(key, static_cast<int>(value), allocator); // Promote to int for JSON
+                break;
+            }
+            case prop::CHAR:
+            {
+                char value;
+                p.m_fnGet(pObject, &value);
+                rapidjson::Value jsonValue;
+                jsonValue.SetString(&value, 1, allocator); // Single char as string
+                outObj.AddMember(key, jsonValue, allocator);
+                break;
+            }
+            case prop::BOOL:
+            {
+                bool value;
+                p.m_fnGet(pObject, &value);
+                outObj.AddMember(key, value, allocator);
+                break;
+            }
+            case prop::STRING:
+            {
+                std::string value;
+                p.m_fnGet(pObject, &value);
+                rapidjson::Value jsonValue;
+                jsonValue.SetString(value.c_str(), static_cast<rapidjson::SizeType>(value.length()), allocator);
+                outObj.AddMember(key, jsonValue, allocator);
+                break;
+            }
+            default:
+                std::cerr << "Unsupported type during serialization: " << p.m_pName << std::endl;
+                break;
+            }
+        }
+    }
+
+    bool AssetManager::SaveToJson(void* pObject, const std::string& filePath, const prop_list& props)
+    {
+        assert(pObject != nullptr);
+        assert(!props.m_Props.empty());
+
+        rapidjson::Document doc;
+        doc.SetObject();
+        auto& allocator = doc.GetAllocator();
+
+        Serialize(pObject, props, doc, allocator);
+
+        std::ofstream ofs(filePath);
+        if (!ofs.is_open()) return false;
+
+        rapidjson::OStreamWrapper osw(ofs);
+        rapidjson::PrettyWriter<rapidjson::OStreamWrapper> writer(osw);
+        doc.Accept(writer);
+
+        return true;
+    }
+
+    void AssetManager::SaveArrayToJson(const std::string& typeName, const std::string& filePath, const std::string& arrayKey)
+    {
+        assert(!typeName.empty());
+        assert(!arrayKey.empty());
+
+        const auto& assets = GetAssets();
+
+        rapidjson::Document doc;
+        doc.SetObject();
+        auto& allocator = doc.GetAllocator();
+
+        rapidjson::Value array(rapidjson::kArrayType);
+
+        for (const auto& [key, entry] : assets)
+        {
+            if (entry.typeName != typeName) continue;
+
+            rapidjson::Value obj(rapidjson::kObjectType);
+            AssetManager::Instance().Serialize(entry.pObject.get(), *entry.pProps, obj, allocator);
+            array.PushBack(obj, allocator);
+        }
+
+        doc.AddMember(rapidjson::Value(arrayKey.c_str(), allocator), array, allocator);
+
+        std::ofstream ofs(filePath);
+        if (ofs.is_open())
+        {
+            rapidjson::OStreamWrapper osw(ofs);
+            rapidjson::PrettyWriter<rapidjson::OStreamWrapper> writer(osw);
+            writer.SetIndent(' ', 4);
+            doc.Accept(writer);
+        }
     }
 }

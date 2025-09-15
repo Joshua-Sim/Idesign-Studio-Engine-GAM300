@@ -14,7 +14,6 @@
 #include "TestSystem.h"
 #include "FontShader.h"
 #include "AssetManager.h"
-#include "Audio.h"
 #include "EngineState.h"
 #include "PlayerSystem.h"
 #include "Collision.h"
@@ -22,6 +21,7 @@
 #include "AnimationSystem.h"
 #include "LogicManager.h"
 
+#include <WindowConfigProperties.h>
 using namespace Framework;
 
 void EnableMemoryLeakChecking(int breakAlloc = -1)
@@ -41,7 +41,7 @@ EngineState engineState;
 
 int main(void)
 {
-    EnableMemoryLeakChecking(); // For memory check
+    //EnableMemoryLeakChecking(); // For memory check
 
     //Create the core engine which manages all the systems that make up the game
     auto engine = std::make_unique<CoreEngine>();
@@ -50,39 +50,42 @@ int main(void)
 
     //  Windows
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
-    WindowConfig& config = NewAssetManager::Instance().Load<WindowConfig>("WindowConfig", "src/Data/WindowAsset.json", g_WindowConfigProps);     // Load Window Config data
-    auto Window = std::make_unique<GraphicsWindows>(&config, engine.get());                                                                      // Create Windows
+    WindowConfig& config = AssetManager::Instance().Load<WindowConfig>("WindowConfig", "src/Data/WindowAsset.json", g_WindowConfigProps);     // Load Window Config data
+    auto Window = std::make_unique<GraphicsWindows>(&config, engine.get());                                                                   // Create Windows
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
+    const auto& assetsTest = AssetManager::Instance().GetAssets();
+    auto it = assetsTest.find("WindowConfig");
+    if (it != assetsTest.end())
+    {
+        const AssetEntry& windowConfigEntry = it->second;
+        WindowConfig* pConfig = static_cast<WindowConfig*>(windowConfigEntry.pObject.get());
+
+        if (pConfig)
+        {
+            std::cout << "Width: " << pConfig->x << "\n";
+            std::cout << "Height: " << pConfig->y << "\n";
+            std::cout << "Name: " << pConfig->programName << "\n";
+        }
+
+        AssetManager::Instance().SaveToJson(pConfig, "src/Data/Test.json", g_WindowConfigProps);
+    }
+    else
+    {
+        std::cerr << "WindowConfig not found in assets.\n";
+    }
 
     //  Audio
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     try
     {
-        NewAssetManager::Instance().LoadArray<AudioData>("musicAssets", "src/Data/AudioAsset.json", g_AudioDataProps);      // To use LoadArray, name of array in json must match else will fail
+        AssetManager::Instance().LoadArray<AudioProperties>("musicAssets", "src/Data/AudioAsset.json", g_AudioPropertiesProps);      // To use LoadArray, name of array in json must match else will fail
     }
     catch (const std::exception& e)
     {
         std::cerr << "Asset Load Failed: " << e.what() << std::endl;
     }
-
-    const auto& assets = NewAssetManager::Instance().GetAssets();
-
-    for (const auto& [key, entry] : assets) {
-        if (entry.typeName != "musicAssets") continue; // Only process AudioData
-
-        const AudioData* audio = static_cast<const AudioData*>(entry.pObject.get());
-        if (!audio) continue;
-
-        std::cout << "Asset Key: " << key << "\n";
-        std::cout << "  Name: " << audio->customName << "\n";
-        std::cout << "  Path: " << audio->filePath << "\n";
-        std::cout << "  Mode: " << audio->mode << "\n";
-        std::cout << "  Type: " << audio->soundType << "\n";
-        std::cout << "-----------------------------\n";
-    }
-
-
+    AssetManager::Instance().SaveArrayToJson("musicAssets","src/Data/MusicAssetTest.json", "musicAssets");
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     
     // Initialize the InputHandler singleton

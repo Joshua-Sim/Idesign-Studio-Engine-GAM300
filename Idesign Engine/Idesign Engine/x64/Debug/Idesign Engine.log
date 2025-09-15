@@ -1,10 +1,5 @@
-﻿  AnimationSystem.cpp
-  AssetManager.cpp
+﻿  AssetManager.cpp
   Audio.cpp
-  ButtonSystem.cpp
-  Collision.cpp
-  EnemyManager.cpp
-  EntityAsset.cpp
   Graphics.cpp
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\minwindef.h(130,9): warning C4005: 'APIENTRY': macro redefinition
   (compiling source file '/src/Graphics.cpp')
@@ -37,27 +32,6 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.3520
           ]
   
   GraphicsWindows.cpp
-  InputHandler.cpp
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\InputHandler.cpp(298,23): warning C4189: 'msg': local variable is initialized but not referenced
-  (compiling source file '/src/InputHandler.cpp')
-  
-  LogicManager.cpp
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EnemyBehavior.h(90,63): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EnemyBehavior.h(90,63): warning C4244:         with
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EnemyBehavior.h(90,63): warning C4244:         [
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EnemyBehavior.h(90,63): warning C4244:             T=float
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EnemyBehavior.h(90,63): warning C4244:         ]
-  (compiling source file '/src/LogicManager.cpp')
-  
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EnemyBehavior.h(104,63): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EnemyBehavior.h(104,63): warning C4244:         with
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EnemyBehavior.h(104,63): warning C4244:         [
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EnemyBehavior.h(104,63): warning C4244:             T=float
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EnemyBehavior.h(104,63): warning C4244:         ]
-  (compiling source file '/src/LogicManager.cpp')
-  
-  PhysicsSystem.cpp
-  PlayerSystem.cpp
   main.cpp
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(62,30): warning C4245: 'initializing': conversion from 'int' to 'unsigned int', signed/unsigned mismatch
   (compiling source file '/src/main.cpp')
