@@ -111,7 +111,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)lib\glfw-3.4.bin.WIN64\lib-vc2022;$(SolutionDir)Idesign Engine;$(SolutionDir)Idesign Engine\src;$(SolutionDir)lib\glew\lib\Release\x64;$(SolutionDir)lib\glew\lib\Debug\x64;$(SolutionDir)Idesign Engine\x64\Debug;$(SolutionDir)Idesign Engine\x64\Release;$(SolutionDir)lib\freetype;$(SolutionDir)lib\FMOD_CORE\lib\x64;$(SolutionDir)lib\FMOD_STUDIO\lib\x64</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;user32.lib;gdi32.lib;shell32.lib;%(AdditionalDependencies);glew32s.lib;glew32d.lib;freetype.lib;fmod_vc.lib;fmodL_vc.lib;glfw3.lib</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;user32.lib;gdi32.lib;shell32.lib;%(AdditionalDependencies);glew32s.lib;freetype.lib;fmod_vc.lib;fmodL_vc.lib;glfw3.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -148,6 +148,7 @@
     <ClInclude Include="src\Audio.h" />
     <ClInclude Include="src\AudioAsset.h" />
     <ClInclude Include="src\ButtonSystem.h" />
+    <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Collision.h" />
     <ClInclude Include="src\ComponentArray.h" />
     <ClInclude Include="src\ComponentList.h" />
@@ -172,8 +173,12 @@
     <ClInclude Include="src\GraphicsWindows.h" />
     <ClInclude Include="src\InputHandler.h" />
     <ClInclude Include="src\JsonSerialize.h" />
+    <ClInclude Include="src\Lighting.h" />
     <ClInclude Include="src\LogicManager.h" />
     <ClInclude Include="src\Matrix3x3.h" />
+    <ClInclude Include="src\Mesh.h" />
+    <ClInclude Include="src\MeshComponent.h" />
+    <ClInclude Include="src\MeshLoader.h" />
     <ClInclude Include="src\Message.h" />
     <ClInclude Include="src\MessageSystem.h" />
     <ClInclude Include="src\pch.h" />
@@ -217,11 +222,14 @@
     <ClInclude Include="src\rapidjson\stringbuffer.h" />
     <ClInclude Include="src\rapidjson\uri.h" />
     <ClInclude Include="src\rapidjson\writer.h" />
+    <ClInclude Include="src\ShaderProgram.h" />
     <ClInclude Include="src\System.h" />
     <ClInclude Include="src\SystemInclude.h" />
     <ClInclude Include="src\TagManager.h" />
+    <ClInclude Include="src\Terrain.h" />
     <ClInclude Include="src\TestSystem.h" />
     <ClInclude Include="src\TextureAsset.h" />
+    <ClInclude Include="src\TextureLoader.h" />
     <ClInclude Include="src\Types.h" />
     <ClInclude Include="src\Vector2D.h" />
     <ClInclude Include="src\WindowAsset.h" />
@@ -231,6 +239,17 @@
     <None Include="SceneMenuSample.json" />
     <None Include="SceneWithEnemies.json" />
     <None Include="SceneWithOscilators.json" />
+    <None Include="src\shaders\blur.glsl" />
+    <None Include="src\shaders\final.glsl" />
+    <None Include="src\shaders\fragment.glsl" />
+    <None Include="src\shaders\lightingfrag.glsl" />
+    <None Include="src\shaders\lightingvert.glsl" />
+    <None Include="src\shaders\meshfrag.glsl" />
+    <None Include="src\shaders\meshvert.glsl" />
+    <None Include="src\shaders\postprocess.glsl" />
+    <None Include="src\shaders\terrainfrag.glsl" />
+    <None Include="src\shaders\terrainvert.glsl" />
+    <None Include="src\shaders\vertex.glsl" />
     <None Include="Test Scene Save.json" />
   </ItemGroup>
   <ItemGroup>
@@ -262,20 +281,25 @@
     <ClCompile Include="src\FontSystem.cpp" />
     <ClCompile Include="src\Graphics.cpp" />
     <ClCompile Include="src\GraphicsShader.cpp" />
-    <ClCompile Include="src\GraphicsWindows.cpp" />
     <ClCompile Include="src\InputHandler.cpp" />
+    <ClCompile Include="src\Lighting.cpp" />
     <ClCompile Include="src\LogicManager.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Matrix3x3.cpp" />
+    <ClCompile Include="src\Mesh.cpp" />
+    <ClCompile Include="src\MeshLoader.cpp" />
     <ClCompile Include="src\MessageSystem.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\PhysicsSystem.cpp" />
     <ClCompile Include="src\PlayerSystem.cpp" />
+    <ClCompile Include="src\ShaderProgram.cpp" />
     <ClCompile Include="src\TagManager.cpp" />
+    <ClCompile Include="src\Terrain.cpp" />
     <ClCompile Include="src\TestSystem.cpp" />
     <ClCompile Include="src\TextureAsset.cpp" />
+    <ClCompile Include="src\TextureLoader.cpp" />
     <ClCompile Include="src\Vector2D.cpp" />
     <ClCompile Include="src\WindowAsset.cpp" />
   </ItemGroup>

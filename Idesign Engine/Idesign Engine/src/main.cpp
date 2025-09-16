@@ -49,12 +49,12 @@ int main(void)
 
     // ------- Create systems below -------- //
 
-    Window& myWindowConfig = GlobalAssetManager.LoadWindow("src/Data/WindowAsset.json");
+    //Window& myWindowConfig = GlobalAssetManager.LoadWindow("src/Data/WindowAsset.json");
     //auto AudioManager = std::make_unique<Audio>();
-    auto Window = std::make_unique<GraphicsWindows>(myWindowConfig.GetConfig(), engine.get()); // Replace with serialized data
+    //auto Window = std::make_unique<GraphicsWindows>(myWindowConfig.GetConfig(), engine.get()); // Replace with serialized data
 
     // Initialize the InputHandler singleton
-    InputHandler::Initialize(Window->GetWindow());
+    //InputHandler::Initialize(Window->GetWindow());
     GlobalLogicManager.Initialize();
 
 
@@ -69,13 +69,13 @@ int main(void)
     ecsInterface.Init();
 
     // Registering systems in the ECS interface.
-    auto graphicsSystem = ecsInterface.RegisterSystem<Graphics>(Window.get());
+    auto graphicsSystem = ecsInterface.RegisterSystem<Graphics>();
     auto messageSystem = std::make_unique<MessageSystem>();
 
     inputHandlerSystem->SetMessageSystem(messageSystem.get());    // Inject the MessageSystem into InputHandler
 
     // ------- Add systems to engine below -------- //
-    engine->AddSystem(Window.get());
+    //engine->AddSystem(Window.get());
     engine->AddSystem(inputHandlerSystem);
     engine->AddSystem(graphicsSystem.get());
     engine->AddSystem(messageSystem.get());

@@ -13,290 +13,73 @@
 #ifndef _GRAPHICS_H_
 #define _GRAPHICS_H_
 
-#include <glew.h>
-#include <vec2.hpp>
-#include <array>
-#include <iostream>
-#include <sstream>
-#include <iomanip> 
-#include <gtc/constants.hpp>
-#include <cstdlib>
-#include <unordered_map> 
-#include <gtc/matrix_transform.hpp>
-#include <gtc/type_ptr.hpp>  
-
-//FILES
+//
+////FILES
 #include "System.h"
-#include "GraphicsWindows.h"
-#include <GraphicsShader.h>
 #include <InputHandler.h>
 #include <PhysicsSystem.h>
 #include <FontSystem.h>
 #include "AssetManager.h"
 #include <ComponentList.h>
+#include "Camera.h"
+#include "Mesh.h"
+#include "Terrain.h"
+#include "Lighting.h"
+#include "MeshLoader.h"
+#include "TextureLoader.h"
 
 namespace Framework {
 
 	class Graphics : public ISystem
 	{
 	public:
-		Graphics(GraphicsWindows* graphicWindows);
+		Graphics();
 		~Graphics();
 
 		void Initialize() override;
 		void Update(float deltaTime) override;
 		std::string GetName() override;
 
-		std::string OpenFileDialog();
-		std::string SaveFileDialog();
-
-		static void DropCallback(GLFWwindow* window, int count, const char** paths);
-		static void RenderErrorPopup();
-
-		//linking
-		GraphicsWindows* graphicWindows;
-		InputHandler* InputHandlerInstance;
-		FontSystem fontSystem; // Define the instance
+		////linking
+		//GraphicsWindows* graphicWindows;
+		//InputHandler* InputHandlerInstance;
+		//FontSystem fontSystem; // Define the instance
 
 		// Sorting Layer Variables
 		unsigned int CurrentSize = -1;
 		std::vector<Entity> sortedEntities;
 
-      class Model
-            {
-				public:
-					GLenum primitive_type{};
-					GLuint primitive_cnt{};
-					GLuint vaoid{};
-					GLuint vbo_hdl{};
-					GLuint ebo_hdl{};
-					GLuint tex_vbo_hdl{};
-					GLuint draw_cnt{};
-					UE_Shader shdr_pgm{};
-					glm::vec3 color{};
-					float alpha{};
-					GLuint textureID{};
-					glm::mat4 modelMatrix{};
-					glm::mat4 viewMatrix{};
-					glm::mat4 projectionMatrix{};
-					std::string name{};
-					bool isMovable = false; // New flag for movability
+    private:
+        static void framebuffer_size_callback(GLFWwindow*, int, int);
+        static void mouse_callback(GLFWwindow*, double, double);
 
-					glm::vec2 translation = { 0.0f, 0.0f };
-					float rotation = 0.0f;
-					glm::vec2 scale = { 1.0f, 1.0f };
+        void process_input(float dt);
 
-					void draw();
-					void setup_shdrpgm(std::string const& vtx_shdr, std::string const& frag_shdr);
-					void cleanup();
+        // window & timing
+        GLFWwindow* window = nullptr;
+        int width = 1280, height = 720;
+        float lastTime = 0.0f;
 
-            };
+        // camera & movement
+        Camera camera{ {0.f, 1.f, 3.f} };
+        static bool mouseCaptured;
+        bool groundMode = true;
 
+        // scene content
+        Terrain terrain{ 128, 1.0f };
+        Mesh cube = Mesh::CreateUnitCube();
+        MeshComponent mesh;
+        GLuint tex = 0;
 
-		class Camera
-		{
-		public:
-			glm::vec2 position;    // Camera position in world coordinates
-			float zoom;            // Zoom factor (1.0f = no zoom, < 1.0f = zoom out, > 1.0f = zoom in)
-			glm::vec2 viewportSize; // Size of the viewport (get from 
+        // shaders
+        ShaderProgram terrainShader{ "shaders/terrainvert.glsl","shaders/terrainfrag.glsl" };
+        ShaderProgram meshShader{ "shaders/meshvert.glsl","shaders/meshfrag.glsl" };
 
-			Camera(const glm::vec2& viewportSize) : position(0.0f, 0.0f), zoom(1.0f), viewportSize(viewportSize) {}
-
-			glm::mat4 getViewMatrix() const; //getting pov view
-      
-			void move(const glm::vec2& delta);
-
-			void setZoom(float newZoom);
-
-			void setPosition(const glm::vec2& newPosition);
-		};
-
-		// CONTAINERS
-		static std::vector<Model> models;
-		static std::unordered_map<std::string, GLuint> textures;
-		static std::unordered_map<std::string, Model> meshes;
-
-		//creating frame buffer for imGUI
-		static GLuint gameFramebuffer, gameTexture, rbo;
-		static unsigned char* data;
-		static float projHeight;
-		static float projWidth;
-
-		/*******    MODEL FUNCTIONS    ********/
-		//Points Model
-		static Model points_model(const glm::vec2& coordinate, const glm::vec3& clr_vtx);
-
-		//Lines Model
-		static Model lines_model(const std::pair<glm::vec2, glm::vec2>& line_segment, const glm::vec3& clr_vtx);
-
-		//Circle Model
-		static Model trifans_model(float radius, float centerX, float centerY, const glm::vec3& clr_vtx);
-
-		//Square Model
-		static Model sqaure_model(glm::vec2 position, float width, float height, const glm::vec3& clr_vtx);
-
-		//Debug Model Drawing capability
-		static void DrawDebugBox(const glm::vec2& center, float width, float height);
-
-			//Creating Frame Buffer for imGUI
-			static GLuint CreateFramebuffer(int width, int height, GLuint& texture, GLuint& rbo);
-
-
-		//** USAGE FUNCTIONS ** //
-
-		//Functions below are used by clients to create a game.
-		//Doxygen-level file documentation has been provided to aid clients in using functions.
-
-		/**
-		 * @brief Draws a circle on the viewport.
-		 *
-		 * This function draws a circle at the specified position and radius
-		 * in non-normalized device coordinates (non-NDC).
-		 *
-		 * @param [float] radius The radius of the circle in non-NDC value.
-		 * @param [float] centerX The X-coordinate of the circle's center in non-NDC value.
-		 * @param [float] centerY The Y-coordinate of the circle's center in non-NDC value.
-		 * @param [const glm::vec3&] color The color of the circle in RGB, represented as a glm::vec3.
-		 */
-		static void DrawCircle(float radius, float centerX, float centerY, const glm::vec3& clr_vtx);
-
-		/**
-		 * @brief Draws a line segment on the viewport.
-		 *
-		 * This function draws a line between two specified points in non-NDC coordinates.
-		 *
-		 * @param [const std::pair<glm::vec2, glm::vec2>&] line_segment A pair of glm::vec2 representing the start and end points of the line.
-		 * @param [const glm::vec3&] color The color of the line in RGB, represented as a glm::vec3.
-		 */
-		static void DrawLine(const std::pair<glm::vec2, glm::vec2>& line_segment, const glm::vec3& clr_vtx);
-
-		/**
-		 * @brief Draws a point on the viewport.
-		 *
-		 * This function draws a single point at the specified coordinates in non-NDC coordinates.
-		 *
-		 * @param [const glm::vec2&] coordinates The X and Y coordinates of the point in non-NDC value (glm::vec2).
-		 * @param [const glm::vec3&] color The color of the point in RGB, represented as a glm::vec3.
-		 */
-		static void DrawPoint(const glm::vec2& coordinates, const glm::vec3& clr_vtx);
-
-
-		/**
-		 * @brief Draws a square on the viewport.
-		 *
-		 * This function draws a square at a given position, with specified width and height, in non-NDC coordinates.
-		 *
-		 * @param [glm::vec2] position The X and Y coordinates of the top-left corner of the square in non-NDC value (glm::vec2).
-		 * @param [float] width The width of the square.
-		 * @param [float] height The height of the square.
-		 * @param [const glm::vec3&] color The color of the square in RGB, represented as a glm::vec3.
-		 */
-		static void DrawSquare(glm::vec2 position, float width, float height, const glm::vec3& clr_vtx);
-
-		/**
-		 * @brief Creates and loads a mesh for rendering a game object.
-		 *
-		 * This function creates a mesh using vertex coordinates, texture coordinates,
-		 * and vertex color for rendering game objects. The mesh is associated with a
-		 * texture file and a unique name.
-		 *
-		 * @param vtx_coord : A vector of 2D vertex coordinates defining the shape of the mesh.
-		 * @param txt_coords : A vector of 2D texture coordinates mapping textures to the mesh vertices.
-		 * @param clr_vtx : A 3D vector representing the color to be applied to each vertex (RGB values).
-		 * @param meshName : A string representing the name of the mesh, used for identification.
-		 * @param textureFilePath : A string representing the path to the texture file to be applied to the mesh.
-		 *
-		 * @return A `Graphics::Model` object representing the created mesh, ready for rendering.
-		 */
-		static Graphics::Model createMesh(const std::vector<glm::vec2>& vtx_coord,
-			const std::vector<glm::vec2>& txt_coords,
-			const glm::vec3& clr_vtx,
-			const std::string& meshName,
-			const std::string& textureFilePath);
-
-
-		/**
-		 * @brief Retrieves a mesh by its name.
-		 *
-		 * This function returns a reference to a previously created mesh identified by the provided name.
-		 * It ensures that the mesh exists in the `meshes` collection.
-		 *
-		 * @param name : A string representing the name of the mesh to retrieve.
-		 *
-		 * @return A reference to the `Graphics::Model` object corresponding to the mesh with the given name.
-		 *         If the mesh does not exist, behavior depends on the implementation (e.g., could throw an exception or return a default mesh).
-		 */
-		static Graphics::Model& getMesh(const std::string& name);
-
-
-		/**
-		 * @brief Drawing meshes with animation spritesheet
-		 *
-		 * This function must be paired with a Mesh Creation function and use before .draw()
-		 *
-		 * @param mdl : Model binded to mesh
-		 *
-		 * @param currentFrame = (deltaTime * speed(float)) % number_of_sprite_images_per_png
-		 *
-		 */
-		static void drawMeshWithAnimation(Graphics::Model& mdl, int currentFrame, int cols, int rows);
-
-		/**
-		 * @brief Calculate 2D Transformation With Scale, Rotate and Translate;
-		 *
-		 * This function is used to combine all SRT together
-		 *
-		 * @param [const glm::vec2&] translation value.
-		 * @param [float]            rotation value.
-		 * @param [const glm::vec2&] scaling value.
-		 */
-		static glm::mat4 calculate2DTransform(const glm::vec2& translation, float rotation, const glm::vec2& scale);
-
-
-		/*
-		@brief Setting Background Color
-		 *
-		 * This function is used in initialise function after initialising GLFW.
-		 *
-		 * @param r : 256-bit RED color
-		 * @param g : 256-bit GREEN color
-		 * @param b : 256-bit BLUE color
-		 * @param alpha : set alpha
-		*/
-		static void SetBackgroundColor(int r, int g, int b, GLclampf alpha);
-
-	};
-
-	struct Particle
-	{
-		glm::vec2 position;				// Particle Position in 2D space
-		glm::vec2 velocity;				// Particle Velocity in 2D space
-		glm::vec3 color;				// Particle Color
-		float size;						// Particle Size
-		float life;						// Particle Life
-		bool active;					// Check if particle is active or inactive
-
-		// Constructor
-		Particle() : position(0.0f, 0.0f), velocity(0.1f, 0.1f),	
-					 color(1.0f, 1.0f, 1.0f), size(10.0f), 
-					 life(0.0f), active(false) {}
-	};
-
-	class ParticleSystem
-	{
-	public:
-		std::vector<Particle> particles;		// Dynamic Array of Particles
-		unsigned int maxParticles;				// Maximum Number of Particles
-		glm::vec2 emitterPosition;				// Position of the Particle Emitter
-
-		ParticleSystem(unsigned int maxParticles, const glm::vec2 emitterPosition);	// Constructor
-		void update(float deltaTime);
-		void emit(unsigned int count, const glm::vec2 initialVelocity);
-
-	private:
-		void resetParticles(Particle& p);	// Reset a particle to its initial state
-		Particle* getInactiveParticle();	// Find an inactive particle to reuse
-		glm::vec2 randomVelocity();			// Generate some randomness in particle velocity
+        // lighting
+        DirectionalLightCPU sun;
+        bool hasSun = true;
+        std::vector<PointLightCPU> pointLights;
+        std::vector<SpotLightCPU>  spotLights;
 	};
 
 }
