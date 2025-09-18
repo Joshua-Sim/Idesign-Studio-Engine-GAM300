@@ -67,13 +67,13 @@ namespace Framework {
 
         // scene content
         Terrain terrain{ 128, 1.0f };
-        Mesh cube = Mesh::CreateUnitCube();
+        Mesh cube;
         MeshComponent mesh;
         GLuint tex = 0;
 
         // shaders
-        ShaderProgram terrainShader{ "shaders/terrainvert.glsl","shaders/terrainfrag.glsl" };
-        ShaderProgram meshShader{ "shaders/meshvert.glsl","shaders/meshfrag.glsl" };
+        ShaderProgram terrainShader{ "Assets/shaders/terrainvert.glsl", "Assets/shaders/terrainfrag.glsl" };
+        ShaderProgram meshShader{ "Assets/shaders/meshvert.glsl", "Assets/shaders/meshfrag.glsl" };
 
         // lighting
         DirectionalLightCPU sun;

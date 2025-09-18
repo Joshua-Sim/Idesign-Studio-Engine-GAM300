@@ -6,25 +6,20 @@ public:
     Mesh() = default;
     ~Mesh();
 
-    static Mesh CreateUnitCube();
+    // Factory: CPU-only data creation
+    static Mesh CreateUnitCubeData();
+
+    // Upload to GPU (must be called after context exists)
+    void initGL();
 
     void draw() const;
 
-    // allow construction from VAO/VBO
-    Mesh(GLuint vao, GLuint vbo, GLsizei count)
-        : vao(vao), vbo(vbo), vertexCount(count) {
-    }
-
-    // disable copy
-    Mesh(const Mesh&) = delete;
-    Mesh& operator=(const Mesh&) = delete;
-    // enable move
-    Mesh(Mesh&&) noexcept;
-    Mesh& operator=(Mesh&&) noexcept;
+    // move semantics
+    Mesh(Mesh&& other) noexcept;
+    Mesh& operator=(Mesh&& other) noexcept;
 
 private:
-    GLuint vao = 0;
-    GLuint vbo = 0;
+    std::vector<float> vertices;   // CPU-side vertex data (pos+normal interleaved)
+    GLuint vao = 0, vbo = 0;
     GLsizei vertexCount = 0;
 };
-#pragma once

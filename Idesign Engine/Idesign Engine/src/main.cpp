@@ -58,12 +58,12 @@ int main(void)
     GlobalLogicManager.Initialize();
 
 
-    // Access the InputHandler instance from the singleton
-    InputHandler* inputHandlerSystem = InputHandler::GetInstance();
-    if (!inputHandlerSystem) {
-        std::cerr << "Failed to initialize InputHandler!" << std::endl;
-        return -1; // Exit if InputHandler initialization failed
-    }
+    //// Access the InputHandler instance from the singleton
+    //InputHandler* inputHandlerSystem = InputHandler::GetInstance();
+    //if (!inputHandlerSystem) {
+    //    std::cerr << "Failed to initialize InputHandler!" << std::endl;
+    //    return -1; // Exit if InputHandler initialization failed
+    //}
 
     // Initialize global ECS interface and other singleton components
     ecsInterface.Init();
@@ -72,11 +72,11 @@ int main(void)
     auto graphicsSystem = ecsInterface.RegisterSystem<Graphics>();
     auto messageSystem = std::make_unique<MessageSystem>();
 
-    inputHandlerSystem->SetMessageSystem(messageSystem.get());    // Inject the MessageSystem into InputHandler
+    //inputHandlerSystem->SetMessageSystem(messageSystem.get());    // Inject the MessageSystem into InputHandler
 
     // ------- Add systems to engine below -------- //
     //engine->AddSystem(Window.get());
-    engine->AddSystem(inputHandlerSystem);
+    //engine->AddSystem(inputHandlerSystem);
     engine->AddSystem(graphicsSystem.get());
     engine->AddSystem(messageSystem.get());
 

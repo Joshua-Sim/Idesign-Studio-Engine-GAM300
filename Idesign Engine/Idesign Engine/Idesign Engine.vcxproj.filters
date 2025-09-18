@@ -13,8 +13,8 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\shaders">
-      <UniqueIdentifier>{28ca560b-abac-4905-934b-6d8c5eca17b3}</UniqueIdentifier>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{1918bdb8-3d04-44ed-8cd1-9004ab2821b9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -319,38 +319,38 @@
     <None Include="SceneWithEnemies.json" />
     <None Include="SceneWithOscilators.json" />
     <None Include="Test Scene Save.json" />
-    <None Include="src\shaders\blur.glsl">
-      <Filter>Source Files\shaders</Filter>
+    <None Include="Assets\shaders\blur.glsl">
+      <Filter>Shaders</Filter>
     </None>
-    <None Include="src\shaders\final.glsl">
-      <Filter>Source Files\shaders</Filter>
+    <None Include="Assets\shaders\final.glsl">
+      <Filter>Shaders</Filter>
     </None>
-    <None Include="src\shaders\fragment.glsl">
-      <Filter>Source Files\shaders</Filter>
+    <None Include="Assets\shaders\fragment.glsl">
+      <Filter>Shaders</Filter>
     </None>
-    <None Include="src\shaders\lightingfrag.glsl">
-      <Filter>Source Files\shaders</Filter>
+    <None Include="Assets\shaders\lightingfrag.glsl">
+      <Filter>Shaders</Filter>
     </None>
-    <None Include="src\shaders\lightingvert.glsl">
-      <Filter>Source Files\shaders</Filter>
+    <None Include="Assets\shaders\lightingvert.glsl">
+      <Filter>Shaders</Filter>
     </None>
-    <None Include="src\shaders\meshfrag.glsl">
-      <Filter>Source Files\shaders</Filter>
+    <None Include="Assets\shaders\meshfrag.glsl">
+      <Filter>Shaders</Filter>
     </None>
-    <None Include="src\shaders\meshvert.glsl">
-      <Filter>Source Files\shaders</Filter>
+    <None Include="Assets\shaders\meshvert.glsl">
+      <Filter>Shaders</Filter>
     </None>
-    <None Include="src\shaders\postprocess.glsl">
-      <Filter>Source Files\shaders</Filter>
+    <None Include="Assets\shaders\postprocess.glsl">
+      <Filter>Shaders</Filter>
     </None>
-    <None Include="src\shaders\terrainfrag.glsl">
-      <Filter>Source Files\shaders</Filter>
+    <None Include="Assets\shaders\terrainfrag.glsl">
+      <Filter>Shaders</Filter>
     </None>
-    <None Include="src\shaders\terrainvert.glsl">
-      <Filter>Source Files\shaders</Filter>
+    <None Include="Assets\shaders\terrainvert.glsl">
+      <Filter>Shaders</Filter>
     </None>
-    <None Include="src\shaders\vertex.glsl">
-      <Filter>Source Files\shaders</Filter>
+    <None Include="Assets\shaders\vertex.glsl">
+      <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

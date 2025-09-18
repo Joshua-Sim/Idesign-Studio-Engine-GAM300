@@ -57,7 +57,8 @@ extern Framework::Coordinator ecsInterface;
 
 
 namespace Framework {
-
+    ShaderProgram terrainShader;
+    ShaderProgram meshShader;
     std::vector<PointLightCPU> pointLights;
     std::vector<SpotLightCPU> spotLights;
     DirectionalLightCPU sun; // defaults are fine
@@ -87,40 +88,41 @@ namespace Framework {
     // Initialize the system
     void Graphics::Initialize()
     {
-        if (!glfwInit()) 
-        {
-            std::cerr << "GLFW init failed\n";
-            std::terminate(); // or exit(-1);
-        }
-
+        if (!glfwInit()) { std::cerr << "GLFW init failed\n"; return; }
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-        window = glfwCreateWindow(width, height, "ECS 3D Renderer", nullptr, nullptr);
-        if (!window) 
-        {
-            std::cerr << "Window creation failed\n";
-            glfwTerminate();
-            std::terminate();
-        }
+        window = glfwCreateWindow(WIDTH, HEIGHT, "ECS 3D Renderer", nullptr, nullptr);
+        if (!window) { std::cerr << "Window creation failed\n"; glfwTerminate(); return; }
         glfwMakeContextCurrent(window);
         glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-        glfwSetWindowUserPointer(window, this);
 
-        if (!glewInit())
-        {
-            std::cerr << "GLEW init failed\n";
-            glfwTerminate();
-            std::terminate();
-        }
+        // ---- GLEW
+        if (glewInit() != GLEW_OK) { std::cerr << "GLEW init failed\n"; return; }
         glEnable(GL_DEPTH_TEST);
+
+        // ---- Camera
+        Camera camera(glm::vec3(0.0f, 1.0f, 3.0f));
+        glfwSetWindowUserPointer(window, &camera);
         glfwSetCursorPosCallback(window, mouse_callback);
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
         // assets
-        MeshLoader::loadMesh("assets/player.obj", mesh);
-        tex = TextureLoader::loadTexture("assets/test.png");
+        MeshLoader::loadMesh("Assets/Objects/player.obj", mesh);
+        tex = TextureLoader::loadTexture("Assets/PNG/test.png");
+        cube = Mesh::CreateUnitCubeData();
+
+        // shaders
+        ShaderProgram terrainShader("Assets/shaders/terrainvert.glsl", "Assets/shaders/terrainfrag.glsl");
+        ShaderProgram meshShader("Assets/shaders/meshvert.glsl", "Assets/shaders/meshfrag.glsl");
+
+        //initialising all required
+        terrainShader.initGL();
+        meshShader.initGL();
+        terrain.initGL();
+        cube.initGL();
+        terrain = Terrain(128, 1.0f);
 
         // lights
         sun = DirectionalLightCPU{};
@@ -171,7 +173,7 @@ namespace Framework {
             LightComponent::upload(meshShader, sun, hasSun, pointLights, spotLights);
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, tex);
-            meshShader.setInt("uTexture", 0); // ✅ correct shader
+            meshShader.setInt("uTexture", 0); // correct shader
             glBindVertexArray(mesh.vao);
             glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
 

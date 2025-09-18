@@ -7,20 +7,20 @@ class Terrain {
 public:
     Terrain(int size, float scale);
 
-    ~Terrain();
+    // init GL resources AFTER OpenGL context exists
+    void initGL();
 
     void draw() const;
 
     float getHeightAt(float x, float z) const;
 
-
 private:
-    int size;       // number of vertices along one axis
-    float scale;    // spacing between vertices
+    int size;
+    float scale;
     std::vector<float> heights;
+    std::vector<float> vertices;
+    std::vector<unsigned int> indices;
 
-    GLuint vao = 0;
-    GLuint vbo = 0;
-    GLuint ebo = 0;
+    GLuint vao = 0, vbo = 0, ebo = 0;
     GLsizei indexCount = 0;
 };
