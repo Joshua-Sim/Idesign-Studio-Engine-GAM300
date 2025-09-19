@@ -57,11 +57,11 @@ extern Framework::Coordinator ecsInterface;
 
 
 namespace Framework {
-    ShaderProgram terrainShader;
-    ShaderProgram meshShader;
-    std::vector<PointLightCPU> pointLights;
-    std::vector<SpotLightCPU> spotLights;
-    DirectionalLightCPU sun; // defaults are fine
+    //ShaderProgram terrainShader;
+    //ShaderProgram meshShader;
+    //std::vector<PointLightCPU> pointLights;
+    //std::vector<SpotLightCPU> spotLights;
+    //DirectionalLightCPU sun; // defaults are fine
     bool Graphics::mouseCaptured = true;
 
     static const unsigned int WIDTH = 1280;
@@ -96,35 +96,34 @@ namespace Framework {
         window = glfwCreateWindow(WIDTH, HEIGHT, "ECS 3D Renderer", nullptr, nullptr);
         if (!window) { std::cerr << "Window creation failed\n"; glfwTerminate(); return; }
         glfwMakeContextCurrent(window);
-        glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-        // ---- GLEW
+        //glewExperimental = GL_TRUE; //optional to include can remove
         if (glewInit() != GLEW_OK) { std::cerr << "GLEW init failed\n"; return; }
+
+        // always enable for depth test framebuffering
         glEnable(GL_DEPTH_TEST);
 
-        // ---- Camera
-        Camera camera(glm::vec3(0.0f, 1.0f, 3.0f));
+        // set callbacks
+        glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+        // IMPORTANT: always store Graphics* as user pointer, not Camera*
         glfwSetWindowUserPointer(window, &camera);
         glfwSetCursorPosCallback(window, mouse_callback);
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-        // assets
+        // asset load
         MeshLoader::loadMesh("Assets/Objects/player.obj", mesh);
         tex = TextureLoader::loadTexture("Assets/PNG/test.png");
         cube = Mesh::CreateUnitCubeData();
 
-        // shaders
-        ShaderProgram terrainShader("Assets/shaders/terrainvert.glsl", "Assets/shaders/terrainfrag.glsl");
-        ShaderProgram meshShader("Assets/shaders/meshvert.glsl", "Assets/shaders/meshfrag.glsl");
-
-        //initialising all required
+        // Initialisers for OpenGL (IMPORTANT : always call these after every initialiser values)
+        // If want to change any values, please change in header or reconstruct after calling
         terrainShader.initGL();
         meshShader.initGL();
         terrain.initGL();
         cube.initGL();
-        terrain = Terrain(128, 1.0f);
 
-        // lights
+        // lights (use member containers)
         sun = DirectionalLightCPU{};
         pointLights.push_back({ {5,3,0},  {1,0.2f,0.2f}, 1.5f, 12.0f, true });
         pointLights.push_back({ {-3,2,-5},{0.2f,0.2f,1}, 1.2f, 14.0f, true });
@@ -189,83 +188,6 @@ namespace Framework {
             glfwPollEvents();
         }
     }
-  
-    //// Constructor
-    //ParticleSystem::ParticleSystem(unsigned int maxParticles, const glm::vec2 emitterPosition)
-    //    : maxParticles(maxParticles), emitterPosition(emitterPosition)
-    //{
-    //    particles.resize(maxParticles);
-    //    for (Particle& p : particles)
-    //    {
-    //        resetParticles(p);	// Initialize each particles
-    //    }
-    //}
-
-    //void ParticleSystem::update(float deltaTime)
-    //{
-    //    for (Particle& p : particleSystem.particles)
-    //    {
-    //        if (p.active)
-    //        {
-    //            p.position += p.velocity * deltaTime;	// Update position based on velocity
-    //            p.life -= deltaTime;					// Decrease particle life
-    //            if (p.life <= 0.0f)                     // Check Particle Life
-    //            {
-    //                resetParticles(p);
-    //                p.active = false;					// Mark particle as inactive
-    //            }
-    //        }
-    //    }
-    //}
-
-    //void ParticleSystem::emit(unsigned int count, const glm::vec2 initialVelocity)
-    //{
-    //    for (unsigned int i = 0; i < count; i++)
-    //    {
-    //        Particle* p = getInactiveParticle();                    // Get an inactive particle to reuse
-    //        if (p)
-    //        {
-    //            p->position = emitterPosition;                      // All particles to start from the same emit position
-    //            p->velocity = initialVelocity + randomVelocity();   // Add Random Velocity
-    //            p->active = true;                                   // Activate particle
-    //            p->life = 5.0f;                                     // Particle Life
-    //            p->size = 50.0f;                                    // Particle Size
-    //            p->color = glm::vec3(1.0f, 1.0f, 1.0f);             // Particle Color
-    //        }
-    //    }
-    //}
-
-    //void ParticleSystem::resetParticles(Particle& p)
-    //{
-    //    p.position = emitterPosition;				// Set the Emitter as the starting point
-    //    p.velocity = glm::vec2(0.0, 0.0);			// Reset Velocity
-    //    p.color = glm::vec3(1.0f, 1.0f, 1.0f);		// Color
-    //    p.size = 1.0f;								// Default Size
-    //    p.life = 5.0f;								// Set Life of each Particle
-    //    p.active = false;							// Set active of each Particle
-    //}
-
-    //Particle* ParticleSystem::getInactiveParticle()
-    //{
-    //    for (Particle& p : particles)				// Iterate through all particles
-    //    {
-    //        if (!p.active)							// Check if active or not
-    //        {
-    //            return &p;							// Return reference to that particle
-    //        }
-    //    }
-    //    return nullptr;			// No available inactive particles
-    //}
-
-    //glm::vec2 ParticleSystem::randomVelocity()
-    //{
-    //    return glm::vec2							// Return vector of (x,y)
-    //    {
-    //        (static_cast<float>(rand()) / RAND_MAX * 2.0f - 1.0f) * 50,
-    //        (static_cast<float>(rand()) / RAND_MAX * 2.0f - 1.0f) * 50
-
-    //    };
-    //}
 
     // Get the name of the system
     std::string Graphics::GetName()
@@ -278,6 +200,7 @@ namespace Framework {
         glViewport(0, 0, w, h);
     }
 
+    // DO NOT CHANGE
     void Graphics::mouse_callback(GLFWwindow* window, double xpos, double ypos)
     {
         if (!mouseCaptured) return;
@@ -290,6 +213,8 @@ namespace Framework {
         cam->processMouseMovement(xoffset, yoffset);
     }
 
+    // FOR FUTURE REFERENCE
+    // Can be pushed to input handler
     void Graphics::process_input(float dt)
     {
         if (glfwGetKey(window, GLFW_KEY_F1) == GLFW_PRESS) groundMode = !groundMode;
