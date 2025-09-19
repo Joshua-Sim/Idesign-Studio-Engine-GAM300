@@ -1,18 +1,8 @@
 ﻿  Graphics.cpp
-C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(49,30): warning C4245: 'initializing': conversion from 'int' to 'unsigned int', signed/unsigned mismatch
-  (compiling source file '/src/Graphics.cpp')
-  
-C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(136,33): warning C4100: 'deltaTime': unreferenced parameter
-  (compiling source file '/src/Graphics.cpp')
-  
-C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(274,58): warning C4100: 'window': unreferenced parameter
-  (compiling source file '/src/Graphics.cpp')
-  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(49,31): warning C4245: 'initializing': conversion from 'int' to 'unsigned int', signed/unsigned mismatch
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(175,33): warning C4100: 'deltaTime': unreferenced formal parameter
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(284,58): warning C4100: 'window': unreferenced formal parameter
   main.cpp
-C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(49,30): warning C4245: 'initializing': conversion from 'int' to 'unsigned int', signed/unsigned mismatch
-  (compiling source file '/src/main.cpp')
-  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(49,31): warning C4245: 'initializing': conversion from 'int' to 'unsigned int', signed/unsigned mismatch
   Generating Code...
-  Idesign Engine.vcxproj -> C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe
-  'pwsh.exe' is not recognized as an internal or external command,
-  operable program or batch file.
+  Idesign Engine.vcxproj -> C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe

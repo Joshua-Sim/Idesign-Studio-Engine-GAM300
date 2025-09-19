@@ -54,6 +54,7 @@ namespace Framework {
         static void mouse_callback(GLFWwindow*, double, double);
 
         void process_input(float dt);
+        void renderQuad();
 
         // window & timing
         GLFWwindow* window = nullptr;
@@ -73,12 +74,29 @@ namespace Framework {
         // shaders
         ShaderProgram terrainShader{ "Assets/shaders/terrainvert.glsl", "Assets/shaders/terrainfrag.glsl" };
         ShaderProgram meshShader{ "Assets/shaders/meshvert.glsl", "Assets/shaders/meshfrag.glsl" };
-
+        ShaderProgram blurShader{ "Assets/shaders/postprocess.glsl", "Assets/shaders/blur.glsl" };
+        ShaderProgram finalShader{ "Assets/shaders/postprocess.glsl", "Assets/shaders/final.glsl" };
         // lighting
         DirectionalLightCPU sun;
         bool hasSun = true;
         std::vector<PointLightCPU> pointLights;
         std::vector<SpotLightCPU>  spotLights;
+
+
+        // ADD HDR & BLOOM VARIABLES
+        float hdrExposure = 1.0f;
+        float bloomStrength = 1.0f;
+
+        GLuint hdrFBO = 0;
+        GLuint colorBuffer = 0;
+        GLuint rboDepth = 0;
+
+        GLuint pingpongFBO[2] = { 0, 0 };
+        GLuint pingpongColorbuffers[2] = { 0, 0 };
+
+        GLuint quadVAO = 0;
+        GLuint quadVBO = 0;
+
 	};
 
 }

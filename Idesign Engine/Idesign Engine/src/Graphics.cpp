@@ -120,8 +120,12 @@ namespace Framework {
         // If want to change any values, please change in header or reconstruct after calling
         terrainShader.initGL();
         meshShader.initGL();
+        blurShader.initGL();
+        finalShader.initGL();
+
         terrain.initGL();
         cube.initGL();
+
 
         // lights (use member containers)
         sun = DirectionalLightCPU{};
@@ -130,16 +134,58 @@ namespace Framework {
         spotLights.push_back({ {0,3,0}, {0,-1,0}, {1,1,1}, 2.0f, 18.0f,
                                glm::radians(10.f), glm::radians(15.f), true });
 
+
+        // --- HDR FRAMEBUFFER SETUP ---
+        glGenFramebuffers(1, &hdrFBO);
+        glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
+        glGenTextures(1, &colorBuffer);
+        glBindTexture(GL_TEXTURE_2D, colorBuffer);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, WIDTH, HEIGHT,0, GL_RGBA, GL_FLOAT, NULL);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBuffer, 0);
+        glGenRenderbuffers(1, &rboDepth);
+        glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, WIDTH, HEIGHT);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
+        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+            std::cout << "ERROR::FRAMEBUFFER:: HDR Framebuffer is not complete!\n";
+
+        // --- BLOOM (PINGPONG) FRAMEBUFFER SETUP ---
+        glGenFramebuffers(2, pingpongFBO);
+        glGenTextures(2, pingpongColorbuffers);
+        for (unsigned int i = 0; i < 2; i++)
+        {
+            glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[i]);
+            glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[i]);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, WIDTH, HEIGHT, 0, GL_RGBA, GL_FLOAT, NULL);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, pingpongColorbuffers[i], 0);
+            if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+                std::cout << "ERROR::FRAMEBUFFER:: Ping-pong FBO is not complete!\n";
+        }
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
         lastTime = (float)glfwGetTime();
     }
 
     // Update the system
     void Graphics::Update(float deltaTime)
     {
+        
         while (!glfwWindowShouldClose(window)) {
             float now = (float)glfwGetTime();
             float dt = now - lastTime; lastTime = now;
             process_input(dt);
+
+
+            // ====================================================================
+           // 1. SCENE PASS: Render the scene to the HDR framebuffer
+           // ====================================================================
+                glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
+            glEnable(GL_DEPTH_TEST);
 
             int w, h; glfwGetFramebufferSize(window, &w, &h);
             float aspect = (h == 0) ? 1.f : float(w) / float(h);
@@ -184,9 +230,49 @@ namespace Framework {
                 cube.draw();
             }
 
+
+            // ====================================================================
+            // 2. BLOOM PASS: Apply a two-pass Gaussian blur
+            // ====================================================================
+            glDisable(GL_DEPTH_TEST);
+            bool horizontal = true, first_iteration = true;
+            unsigned int amount = 10;
+            blurShader.use();
+            for (unsigned int i = 0; i < amount; i++)
+            {
+                glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[horizontal]);
+                blurShader.setBool("horizontal", horizontal);
+                glBindTexture(GL_TEXTURE_2D, first_iteration ? colorBuffer : pingpongColorbuffers[!horizontal]);
+                renderQuad();
+                horizontal = !horizontal;
+                if (first_iteration) first_iteration = false;
+            }
+
+            // ====================================================================
+            // 3. FINAL PASS: Render to screen with tone mapping and bloom
+            // ====================================================================
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            glViewport(0, 0, w, h);
+            glClear(GL_COLOR_BUFFER_BIT);
+
+            finalShader.use();
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, colorBuffer);
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[!horizontal]);
+            finalShader.setInt("sceneTexture", 0);
+            finalShader.setInt("bloomTexture", 1);
+            finalShader.setFloat("exposure", hdrExposure);
+            finalShader.setFloat("bloomStrength", bloomStrength);
+
+           
+            renderQuad();
+
+
             glfwSwapBuffers(window);
             glfwPollEvents();
         }
+       
     }
 
     // Get the name of the system
@@ -240,6 +326,37 @@ namespace Framework {
         {
             pointLights[0].enabled = !pointLights[0].enabled;
         }
+
+        // HDR and Bloom control
+        if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS) hdrExposure += 1.0f * dt;
+        if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) if (hdrExposure > 0.0f) hdrExposure -= 1.0f * dt;
+        if (glfwGetKey(window, GLFW_KEY_EQUAL) == GLFW_PRESS) bloomStrength += 1.0f * dt;
+        if (glfwGetKey(window, GLFW_KEY_MINUS) == GLFW_PRESS) if (bloomStrength > 0.0f) bloomStrength -= 1.0f * dt;
     }
 
+    void Graphics::renderQuad()
+    {
+        if (quadVAO == 0)
+        {
+            float quadVertices[] = {
+                // positions        // texture Coords
+                -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+                -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+                 1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+                 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+            };
+            glGenVertexArrays(1, &quadVAO);
+            glGenBuffers(1, &quadVBO);
+            glBindVertexArray(quadVAO);
+            glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+            glEnableVertexAttribArray(0);
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+            glEnableVertexAttribArray(1);
+            glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+        }
+        glBindVertexArray(quadVAO);
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        glBindVertexArray(0);
+    }
 }
