@@ -111,10 +111,13 @@ namespace Framework {
         glfwSetCursorPosCallback(window, mouse_callback);
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-        // asset load
+        // asset load / loading shape units
         MeshLoader::loadMesh("Assets/Objects/player.obj", mesh);
         tex = TextureLoader::loadTexture("Assets/PNG/test.png");
         cube = Mesh::CreateUnitCubeData();
+        plane = Mesh::CreateUnitSphereData();
+        cone = Mesh::CreateUnitConeData();
+        cylinder = Mesh::CreateUnitCylinderData();
 
         // Initialisers for OpenGL (IMPORTANT : always call these after every initialiser values)
         // If want to change any values, please change in header or reconstruct after calling
@@ -122,9 +125,13 @@ namespace Framework {
         meshShader.initGL();
         blurShader.initGL();
         finalShader.initGL();
-
         terrain.initGL();
+
+        //initialise shapes
         cube.initGL();
+        plane.initGL();
+        cone.initGL();
+        cylinder.initGL();
 
 
         // lights (use member containers)
@@ -222,14 +229,14 @@ namespace Framework {
             glBindVertexArray(mesh.vao);
             glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
 
-            // extra cubes (untextured or textured as you like)
+
+            // drawing of 5 shapes (testing)
             for (int i = 0; i < 5; ++i) {
                 glm::mat4 model(1.0f);
                 model = glm::translate(model, glm::vec3((i - 2) * 1.7f, 0.0f, 0.0f));
                 meshShader.setMat4("uModel", model);
-                cube.draw();
+                cylinder.draw(); //change line to whichever you want to test : 1. cube 2. cylinder 3. plane 4.cone follow by .draw();
             }
-
 
             // ====================================================================
             // 2. BLOOM PASS: Apply a two-pass Gaussian blur

@@ -68,6 +68,9 @@ namespace Framework {
         // scene content
         Terrain terrain{ 128, 1.0f };
         Mesh cube;
+        Mesh cone;
+        Mesh plane;
+        Mesh cylinder;
         MeshComponent mesh;
         GLuint tex = 0;
 
