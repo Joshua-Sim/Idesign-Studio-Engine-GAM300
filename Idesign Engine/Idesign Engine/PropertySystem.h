@@ -56,7 +56,8 @@ namespace Framework
             SHORT,
             STRING,
             CHAR,
-            BOOL
+            BOOL,
+            STRING_ARRAY
         };
 
         // Function pointers to *set* and *get* a value on an object.

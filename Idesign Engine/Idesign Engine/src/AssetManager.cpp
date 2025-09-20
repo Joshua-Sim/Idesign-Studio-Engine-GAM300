@@ -14,6 +14,56 @@
 
 namespace Framework
 {
+    void AssetManager::PrintAssetsOfType(const std::string& typeName)
+    {
+        for (const auto& [key, entry] : m_Assets)
+        {
+            if (entry.typeName != typeName) continue;
+
+            std::cout << "Asset: " << key << "\n";
+
+            for (const auto& prop : entry.pProps->m_Props)
+            {
+                if (!prop.m_fnGet) continue;
+
+                std::cout << "  " << prop.m_pName << ": ";
+
+                switch (prop.m_Type)
+                {
+                case prop::STRING:
+                {
+                    std::string value;
+                    prop.m_fnGet(entry.pObject.get(), &value);
+                    std::cout << value;
+                    break;
+                }
+                case prop::INT:
+                {
+                    int value;
+                    prop.m_fnGet(entry.pObject.get(), &value);
+                    std::cout << value;
+                    break;
+                }
+                case prop::BOOL:
+                {
+                    bool value;
+                    prop.m_fnGet(entry.pObject.get(), &value);
+                    std::cout << (value ? "true" : "false");
+                    break;
+                }
+                // Add other types as needed
+                default:
+                    std::cout << "[unsupported type]";
+                    break;
+                }
+
+                std::cout << "\n";
+            }
+
+            std::cout << "------------------------\n";
+        }
+    }
+
     void AssetManager::Unload(const std::string& key)
     {
         auto it = m_Assets.find(key);
@@ -99,10 +149,29 @@ namespace Framework
                     p.m_fnSet(pObject, &temp);
                 }
                 break;
-                // Future types can be added here
-                // case prop::ENUM:
-                // case prop::ARRAY:
-                // case prop::OBJECT:
+
+            case prop::STRING_ARRAY:
+                if (val.IsArray())
+                {
+                    std::vector<std::string> temp;
+                    for (const auto& item : val.GetArray())
+                    {
+                        if (item.IsString())
+                        {
+                            temp.emplace_back(item.GetString(), item.GetStringLength());
+                        }
+                        else
+                        {
+                            std::cerr << "Non-string element found in array for property: " << p.m_pName << std::endl;
+                        }
+                    }
+                    p.m_fnSet(pObject, &temp);
+                }
+                else
+                {
+                    std::cerr << "Expected array for property: " << p.m_pName << std::endl;
+                }
+                break;
 
             default:
                 // Optional: log unsupported or mismatched types
@@ -180,7 +249,7 @@ namespace Framework
                 std::string value;
                 p.m_fnGet(pObject, &value);
                 rapidjson::Value jsonValue;
-                jsonValue.SetString(value.c_str(), static_cast<rapidjson::SizeType>(value.length()), allocator);
+                jsonValue.SetString(value.c_str(), allocator);
                 outObj.AddMember(key, jsonValue, allocator);
                 break;
             }
@@ -227,10 +296,13 @@ namespace Framework
 
         for (const auto& [key, entry] : assets)
         {
+            std::cout << entry.typeName << std::endl;
+            std::cout << typeName << std::endl;
+
             if (entry.typeName != typeName) continue;
 
             rapidjson::Value obj(rapidjson::kObjectType);
-            AssetManager::Instance().Serialize(entry.pObject.get(), *entry.pProps, obj, allocator);
+            Serialize(entry.pObject.get(), *entry.pProps, obj, allocator);
             array.PushBack(obj, allocator);
         }
 

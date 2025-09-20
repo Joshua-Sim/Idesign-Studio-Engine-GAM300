@@ -33,6 +33,6 @@ namespace Framework
     };
 
     inline constexpr prop_list g_AudioPropertiesProps{ "AudioProperties", g_AudioPropertiesPropsArray };
-    inline global_registration g_AudioPropertiesPropsReg(&g_AudioPropertiesProps);
+    inline global_registration g_AudioPropertiesReg(&g_AudioPropertiesProps);
 }
 #endif // !_AUDIO_PROPERTIES_H_

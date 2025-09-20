@@ -47,45 +47,17 @@ int main(void)
     auto engine = std::make_unique<CoreEngine>();
 
     // ------- Create systems below -------- //
-
     //  Windows
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
-    WindowConfig& config = AssetManager::Instance().Load<WindowConfig>("WindowConfig", "src/Data/WindowAsset.json", g_WindowConfigProps);     // Load Window Config data
-    auto Window = std::make_unique<GraphicsWindows>(&config, engine.get());                                                                   // Create Windows
+    //AssetManager::Instance().CompileSingleObject<WindowConfig>("src/Data/WindowAsset.json", "src/Data/WindowAsset.cfg", g_WindowConfigProps);
+    WindowConfig& config = AssetManager::Instance().LoadBinary<WindowConfig>("WindowConfig", "src/Data/WindowAsset.cfg", g_WindowConfigProps);
+    auto Window = std::make_unique<GraphicsWindows>(&config, engine.get());
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
-
-    const auto& assetsTest = AssetManager::Instance().GetAssets();
-    auto it = assetsTest.find("WindowConfig");
-    if (it != assetsTest.end())
-    {
-        const AssetEntry& windowConfigEntry = it->second;
-        WindowConfig* pConfig = static_cast<WindowConfig*>(windowConfigEntry.pObject.get());
-
-        if (pConfig)
-        {
-            std::cout << "Width: " << pConfig->x << "\n";
-            std::cout << "Height: " << pConfig->y << "\n";
-            std::cout << "Name: " << pConfig->programName << "\n";
-        }
-
-        AssetManager::Instance().SaveToJson(pConfig, "src/Data/Test.json", g_WindowConfigProps);
-    }
-    else
-    {
-        std::cerr << "WindowConfig not found in assets.\n";
-    }
-
     //  Audio
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
-    try
-    {
-        AssetManager::Instance().LoadArray<AudioProperties>("musicAssets", "src/Data/AudioAsset.json", g_AudioPropertiesProps);      // To use LoadArray, name of array in json must match else will fail
-    }
-    catch (const std::exception& e)
-    {
-        std::cerr << "Asset Load Failed: " << e.what() << std::endl;
-    }
-    AssetManager::Instance().SaveArrayToJson("musicAssets","src/Data/MusicAssetTest.json", "musicAssets");
+    //AssetManager::Instance().CompileArray<AudioProperties>("src/Data/AudioAsset.json", "src/Data/AudioAsset.bin", g_AudioPropertiesProps, "AudioProperties");
+    AssetManager::Instance().LoadBinaryArray<AudioProperties>("src/Data/AudioAsset.bin", g_AudioPropertiesProps);
+    //AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, "src/Data/MusicAssetTest1.json", "AudioProperties");
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     
     // Initialize the InputHandler singleton

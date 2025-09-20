@@ -16,12 +16,12 @@
     <Filter Include="Header Files\Properties">
       <UniqueIdentifier>{fc85e7e0-43c6-41a7-98cc-84d04434e8fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Assets">
+      <UniqueIdentifier>{ce8b9f9d-85a5-478b-b8f3-ed8e0ef24888}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\AnimationSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AssetManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ButtonSystem.h">
@@ -285,6 +285,15 @@
     <ClInclude Include="PrefabProperties.h">
       <Filter>Header Files\Properties</Filter>
     </ClInclude>
+    <ClInclude Include="src\AssetManager.h">
+      <Filter>Header Files\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="xresource_guid.h">
+      <Filter>Header Files\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="xresource_mgr.h">
+      <Filter>Header Files\Assets</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />
@@ -399,6 +408,9 @@
     </ClCompile>
     <ClCompile Include="..\lib\imgui\imgui_impl_opengl3.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xresource_mgr.cpp">
+      <Filter>Header Files\Assets</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

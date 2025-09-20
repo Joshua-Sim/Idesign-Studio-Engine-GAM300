@@ -1,5 +1,5 @@
 {
-    "musicAssets": [
+    "AudioProperties": [
       {
         "customName": "winloop",
         "filePath": "assets/audio/bgm/winning_loop.wav",

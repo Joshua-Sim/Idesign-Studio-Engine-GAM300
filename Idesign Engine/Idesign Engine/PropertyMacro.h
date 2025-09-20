@@ -128,6 +128,42 @@
 #endif // !_PROPERTY_MACRO_H_
 
 //------------------------------------------------------------------------------------------------------------------------------------
+//  META MACRO
+//------------------------------------------------------------------------------------------------------------------------------------
+
+#define PROP_INT_ARRAY(field, type) \
+    Framework::prop{ \
+        #field, Framework::prop::INT_ARRAY, \
+        [](void* pObj, const void* pData) { static_cast<type*>(pObj)->field = *static_cast<const std::vector<int>*>(pData); }, \
+        [](const void* pObj, void* pData) { *static_cast<std::vector<int>*>(pData) = static_cast<const type*>(pObj)->field; } \
+    }
+
+#define PROP_FLOAT_ARRAY(field, type) \
+    Framework::prop{ \
+        #field, Framework::prop::FLOAT_ARRAY, \
+        [](void* pObj, const void* pData) { static_cast<type*>(pObj)->field = *static_cast<const std::vector<float>*>(pData); }, \
+        [](const void* pObj, void* pData) { *static_cast<std::vector<float>*>(pData) = static_cast<const type*>(pObj)->field; } \
+    }
+
+#define PROP_STRING_ARRAY(field, type) \
+    Framework::prop{ \
+        #field, Framework::prop::STRING_ARRAY, \
+        [](void* pObj, const void* pData) { static_cast<type*>(pObj)->field = *static_cast<const std::vector<std::string>*>(pData); }, \
+        [](const void* pObj, void* pData) { *static_cast<std::vector<std::string>*>(pData) = static_cast<const type*>(pObj)->field; } \
+    }
+
+//------------------------------------------------------------------------------------------------------------------------------------
+//  TYPENAME MACRO
+//------------------------------------------------------------------------------------------------------------------------------------
+
+template<typename T>
+struct TypeName;
+
+#define REGISTER_TYPE_NAME(Type) \
+    template<> struct TypeName<Type> { static constexpr const char* value = #Type; }
+
+
+//------------------------------------------------------------------------------------------------------------------------------------
 //  ECS COMPONENT MACRO
 //------------------------------------------------------------------------------------------------------------------------------------
 
