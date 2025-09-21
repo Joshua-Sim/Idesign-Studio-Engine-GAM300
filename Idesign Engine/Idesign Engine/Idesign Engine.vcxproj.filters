@@ -13,15 +13,18 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\Properties">
-      <UniqueIdentifier>{fc85e7e0-43c6-41a7-98cc-84d04434e8fd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Assets">
-      <UniqueIdentifier>{ce8b9f9d-85a5-478b-b8f3-ed8e0ef24888}</UniqueIdentifier>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{1918bdb8-3d04-44ed-8cd1-9004ab2821b9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\AnimationSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AssetManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AudioAsset.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ButtonSystem.h">
@@ -45,6 +48,9 @@
     <ClInclude Include="src\Core.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\DictionaryAsset.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\DummySystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -60,10 +66,19 @@
     <ClInclude Include="src\EngineState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\EntityAsset.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\EntityManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\FontAsset.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\FontShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FontShaderAsset.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\FontSystem.h">
@@ -231,7 +246,13 @@
     <ClInclude Include="src\TestSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\TextureAsset.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\Vector2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\WindowAsset.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Debugger.h">
@@ -267,32 +288,29 @@
     <ClInclude Include="..\lib\imgui\imstb_truetype.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AudioProperties.h">
-      <Filter>Header Files\Properties</Filter>
+    <ClInclude Include="src\Camera.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TransformProperties.h">
-      <Filter>Header Files\Properties</Filter>
+    <ClInclude Include="src\TextureLoader.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="WindowConfigProperties.h">
-      <Filter>Header Files\Properties</Filter>
+    <ClInclude Include="src\Lighting.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PropertyMacro.h">
-      <Filter>Header Files\Properties</Filter>
+    <ClInclude Include="src\Mesh.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PropertySystem.h">
-      <Filter>Header Files\Properties</Filter>
+    <ClInclude Include="src\MeshLoader.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PrefabProperties.h">
-      <Filter>Header Files\Properties</Filter>
+    <ClInclude Include="src\MeshComponent.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\AssetManager.h">
-      <Filter>Header Files\Assets</Filter>
+    <ClInclude Include="src\ShaderProgram.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AssetCompiler.h">
-      <Filter>Header Files\Assets</Filter>
-    </ClInclude>
-    <ClInclude Include="AssetLoader.h">
-      <Filter>Header Files\Assets</Filter>
+    <ClInclude Include="src\Terrain.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -301,10 +319,48 @@
     <None Include="SceneWithEnemies.json" />
     <None Include="SceneWithOscilators.json" />
     <None Include="Test Scene Save.json" />
-    <None Include="cpp.hint" />
+    <None Include="Assets\shaders\blur.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\final.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\fragment.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\lightingfrag.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\lightingvert.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\meshfrag.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\meshvert.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\postprocess.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\terrainfrag.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\terrainvert.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\vertex.glsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\TextureAsset.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\Vector2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WindowAsset.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\AnimationSystem.cpp">
@@ -314,6 +370,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Audio.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AudioAsset.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ButtonSystem.cpp">
@@ -334,6 +393,9 @@
     <ClCompile Include="src\Debugger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\DictionaryAsset.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\DummySystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -343,7 +405,16 @@
     <ClCompile Include="src\EngineState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\EntityAsset.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\EntityManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FontAsset.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FontShaderAsset.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\FontSystem.cpp">
@@ -353,9 +424,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\GraphicsShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GraphicsWindows.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\InputHandler.cpp">
@@ -409,8 +477,23 @@
     <ClCompile Include="..\lib\imgui\imgui_impl_opengl3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AssetCompiler.cpp">
-      <Filter>Header Files\Assets</Filter>
+    <ClCompile Include="src\TextureLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Lighting.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Terrain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MeshLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ShaderProgram.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
