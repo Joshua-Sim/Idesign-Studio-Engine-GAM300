@@ -49,14 +49,14 @@ int main(void)
     // ------- Create systems below -------- //
     //  Windows
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
-    //AssetManager::Instance().CompileSingleObject<WindowConfig>("src/Data/WindowAsset.json", "src/Data/WindowAsset.cfg", g_WindowConfigProps);
+    //CompileSingleObject<WindowConfig>("src/Data/WindowAsset.json", "src/Data/WindowAsset.cfg", g_WindowConfigProps);
     WindowConfig& config = AssetManager::Instance().LoadBinary<WindowConfig>("WindowConfig", "src/Data/WindowAsset.cfg", g_WindowConfigProps);
     auto Window = std::make_unique<GraphicsWindows>(&config, engine.get());
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     //  Audio
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
-    //AssetManager::Instance().CompileArray<AudioProperties>("src/Data/AudioAsset.json", "src/Data/AudioAsset.bin", g_AudioPropertiesProps, "AudioProperties");
-    AssetManager::Instance().LoadBinaryArray<AudioProperties>("src/Data/AudioAsset.bin", g_AudioPropertiesProps);
+    //CompileArray<AudioProperties>("src/Data/AudioAsset.json", "src/Data/AudioAsset.bin", g_AudioPropertiesProps, "AudioProperties");
+    //AssetManager::Instance().LoadBinaryArray<AudioProperties>("src/Data/AudioAsset.bin", g_AudioPropertiesProps);
     //AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, "src/Data/MusicAssetTest1.json", "AudioProperties");
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     

@@ -5,6 +5,7 @@ D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\imgui\imgui_impl_glfw.
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\imgui\imgui_impl_opengl3.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\imgui_impl_opengl3.obj
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\imgui\imgui_tables.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\imgui_tables.obj
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\imgui\imgui_widgets.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\imgui_widgets.obj
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\AssetCompiler.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\AssetCompiler.obj
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationSystem.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\AnimationSystem.obj
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AssetManager.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\AssetManager.obj
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Audio.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\Audio.obj
@@ -33,4 +34,3 @@ D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PlayerS
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\TagManager.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\TagManager.obj
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\TestSystem.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\TestSystem.obj
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Vector2D.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\Vector2D.obj
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\xresource_mgr.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\xresource_mgr.obj

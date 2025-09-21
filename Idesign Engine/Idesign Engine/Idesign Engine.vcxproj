@@ -143,6 +143,8 @@
     <ClInclude Include="..\lib\imgui\imstb_rectpack.h" />
     <ClInclude Include="..\lib\imgui\imstb_textedit.h" />
     <ClInclude Include="..\lib\imgui\imstb_truetype.h" />
+    <ClInclude Include="AssetCompiler.h" />
+    <ClInclude Include="AssetLoader.h" />
     <ClInclude Include="AudioProperties.h" />
     <ClInclude Include="PrefabProperties.h" />
     <ClInclude Include="PropertyMacro.h" />
@@ -224,8 +226,6 @@
     <ClInclude Include="src\Vector2D.h" />
     <ClInclude Include="TransformProperties.h" />
     <ClInclude Include="WindowConfigProperties.h" />
-    <ClInclude Include="xresource_guid.h" />
-    <ClInclude Include="xresource_mgr.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
@@ -243,6 +243,7 @@
     <ClCompile Include="..\lib\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="..\lib\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\lib\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="AssetCompiler.cpp" />
     <ClCompile Include="src\AnimationSystem.cpp" />
     <ClCompile Include="src\AssetManager.cpp" />
     <ClCompile Include="src\Audio.cpp" />
@@ -273,7 +274,6 @@
     <ClCompile Include="src\TagManager.cpp" />
     <ClCompile Include="src\TestSystem.cpp" />
     <ClCompile Include="src\Vector2D.cpp" />
-    <ClCompile Include="xresource_mgr.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

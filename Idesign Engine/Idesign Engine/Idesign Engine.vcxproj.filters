@@ -288,10 +288,10 @@
     <ClInclude Include="src\AssetManager.h">
       <Filter>Header Files\Assets</Filter>
     </ClInclude>
-    <ClInclude Include="xresource_guid.h">
+    <ClInclude Include="AssetCompiler.h">
       <Filter>Header Files\Assets</Filter>
     </ClInclude>
-    <ClInclude Include="xresource_mgr.h">
+    <ClInclude Include="AssetLoader.h">
       <Filter>Header Files\Assets</Filter>
     </ClInclude>
   </ItemGroup>
@@ -409,7 +409,7 @@
     <ClCompile Include="..\lib\imgui\imgui_impl_opengl3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="xresource_mgr.cpp">
+    <ClCompile Include="AssetCompiler.cpp">
       <Filter>Header Files\Assets</Filter>
     </ClCompile>
   </ItemGroup>
