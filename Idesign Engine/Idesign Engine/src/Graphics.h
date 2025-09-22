@@ -47,6 +47,9 @@ namespace Framework {
 		//InputHandler* InputHandlerInstance;
 		//FontSystem fontSystem; // Define the instance
 
+        //Getter for windows for external systems.
+        GLFWwindow* GetWindow();
+
 		// Sorting Layer Variables
 		unsigned int CurrentSize = -1;
 		std::vector<Entity> sortedEntities;

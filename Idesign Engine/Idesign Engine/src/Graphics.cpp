@@ -43,7 +43,7 @@
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 #include <iostream>
-
+#include "Core.h"
 #include "ShaderProgram.h"
 #include "Camera.h"
 #include "Mesh.h"
@@ -76,18 +76,6 @@ namespace Framework {
     // Constructor
     Graphics::Graphics()
     {
-
-    }
-
-    // Destructor
-    Graphics::~Graphics()
-    {
-
-    }
-
-    // Initialize the system
-    void Graphics::Initialize()
-    {
         if (!glfwInit()) { std::cerr << "GLFW init failed\n"; return; }
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -99,7 +87,17 @@ namespace Framework {
 
         //glewExperimental = GL_TRUE; //optional to include can remove
         if (glewInit() != GLEW_OK) { std::cerr << "GLEW init failed\n"; return; }
+    }
 
+    // Destructor
+    Graphics::~Graphics()
+    {
+
+    }
+
+    // Initialize the system
+    void Graphics::Initialize()
+    {
         // always enable for depth test framebuffering
         glEnable(GL_DEPTH_TEST);
 
@@ -181,8 +179,11 @@ namespace Framework {
     // Update the system
     void Graphics::Update(float deltaTime)
     {
+        if (glfwWindowShouldClose(window)) {
+            CORE->EndGameLoop(); // Mark the game loop as done
+            return;
+        }
         
-        while (!glfwWindowShouldClose(window)) {
             float now = (float)glfwGetTime();
             float dt = now - lastTime; lastTime = now;
             process_input(dt);
@@ -278,7 +279,7 @@ namespace Framework {
 
             glfwSwapBuffers(window);
             glfwPollEvents();
-        }
+        
        
     }
 
@@ -286,6 +287,11 @@ namespace Framework {
     std::string Graphics::GetName()
     {
         return "Graphics";
+    }
+
+    // Get and return windows ptr for external system
+    GLFWwindow* Graphics::GetWindow() {
+        return window;
     }
 
     void Graphics::framebuffer_size_callback(GLFWwindow* window, int w, int h)
