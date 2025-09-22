@@ -50,9 +50,6 @@ namespace Framework
         }
 
         //Note: FMOD will automatically 
-        // 
-        // 
-        // 
         //  channel when sound is released, so dont nid to stop channel
         for (auto& pair : loadedSounds)     // Loop through all loadedSounds
         {
@@ -248,6 +245,13 @@ namespace Framework
         std::cout << "================================" << std::endl;
     }
 
+    Audio::SoundType Audio::ParseSoundType(const std::string& str)
+    {
+        if (str == "background") return Audio::SoundType::BACKGROUND_MUSIC;
+        if (str == "effect") return Audio::SoundType::SOUND_EFFECT;
+        throw std::invalid_argument("Unknown SoundType: " + str);
+    }
+
     // Function to change from String to FMOD_MODE
     FMOD_MODE Audio::UE_GetModeFromString(const std::string& mode)
     {
@@ -268,111 +272,101 @@ namespace Framework
     Sound* Audio::UE_LoadSound(const std::string& customName)
     {
         Sound* pSound = nullptr;        // Initialize a Sound pointer to nullptr
-        /*AudioAsset* audioAsset = GlobalAssetManager.GetAudioAsset(customName);
-        if (!audioAsset)
+
+        // Retrieve AudioProperties from AssetManager
+        AudioProperties* audioProps = AssetManager::Instance().Get<AudioProperties>(customName);
+        if (!audioProps)
         {
-            std::cout << "Error: AudioAsset not found for customName: " << customName << std::endl;
+            std::cout << "Error: AudioProperties not found for customName: " << customName << std::endl;
             return nullptr;
         }
-        AudioAsset::MusicAsset* musicAsset = audioAsset->GetMusicAssetByName(customName);
-        if (!musicAsset)
-        {
-            std::cout << "Error: MusicAsset not found for customName: " << customName << std::endl;
-            return nullptr;
-        }
-        std::string filePath = musicAsset->filePath;
-        std::string modeString = musicAsset->mode;
+
+        const std::string& filePath = audioProps->filePath;
+        const std::string& modeString = audioProps->mode;
+
         std::cout << "File path: " << filePath << std::endl;
         std::cout << "Mode: " << modeString << std::endl;
-        //std::string filePath = audioAsset->UE_GetMusicFilePath(customName);        // Retrieve the filePath from AssetManager
-        //std::string modeString = audioAsset->UE_GetMusicMode(customName);          // Retrieve the modeString from AssetManager
 
-        FMOD_MODE mode = UE_GetModeFromString(modeString);                                      // Convert the string mode to FMOD_MODE
+        FMOD_MODE mode = UE_GetModeFromString(modeString);
         std::cout << "FMOD Mode: " << mode << std::endl;
-        FMOD_RESULT result = pSystem->createSound(filePath.c_str(), mode, nullptr, &pSound);    // Create Sound
 
+        FMOD_RESULT result = pSystem->createSound(filePath.c_str(), mode, nullptr, &pSound);
         if (result != FMOD_OK)
         {
-            std::cout << "Error, Fail to create audio for " << customName << " " << result << std::endl;
+            std::cout << "Error: Failed to create sound for " << customName << " with FMOD result " << result << std::endl;
+            return nullptr;
         }
-        */
-        loadedSounds[customName] = pSound;      // Store the created sound in loadedSounds Map, with customName as key
 
-        return pSound;                          // Return the created sound
+        loadedSounds[customName] = pSound;
+        return pSound;
     }
 
     void Audio::UE_PlaySound(const std::string& customName)
     {
-        /*
-        Sound* pSound = UE_LoadSound(customName);                               // Load the sound with customName as key
-        AudioAsset* audioAsset = GlobalAssetManager.GetAudioAsset(customName);
-        AudioAsset::MusicAsset* musicAsset = audioAsset->GetMusicAssetByName(customName);
-        SoundType soundType = musicAsset->soundType;
+        Sound* pSound = UE_LoadSound(customName);  // Load sound from AudioProperties
+        if (!pSound)
+        {
+            std::cout << "Error: Sound " << customName << " could not be loaded." << std::endl;
+            return;
+        }
 
-        auto it = activeChannels.find(customName);                      // Check if there is already an active channel for this customName
-        if (it != activeChannels.end() && it->second != nullptr)        // If activeChannel for the key exists
+        // Retrieve AudioProperties from AssetManager
+        AudioProperties* audioProps = AssetManager::Instance().Get<AudioProperties>(customName);
+        if (!audioProps)
+        {
+            std::cout << "Error: AudioProperties not found for " << customName << std::endl;
+            return;
+        }
+
+        SoundType soundType = ParseSoundType(audioProps->soundType);
+
+        // Check for existing channel
+        auto it = activeChannels.find(customName);
+        if (it != activeChannels.end() && it->second != nullptr)
         {
             bool isPlaying = false;
             it->second->isPlaying(&isPlaying);
+
             if (isPlaying)
             {
                 std::cout << "Audio " << customName << " is already playing." << std::endl;
-                return;     // If it's already playing, return and do nothing
-            }
-            else
-            {
-                bool isPaused = false;
-                it->second->getPaused(&isPaused);
-
-                if (isPaused)
-                {
-                    // The sound is paused, so resume it
-                    std::cout << "Resuming audio " << customName << "." << std::endl;
-                    it->second->setPaused(false);  // Unpause the channel
-                    return;
-                }
-                else
-                {
-                    // If the sound is not paused, it has ended, so reset the channel
-                    std::cout << "Audio " << customName << " has finished, replaying." << std::endl;
-                    activeChannels.erase(it);  // Remove the channel reference to allow re-playing
-                }
-            }
-        }
-
-        // Note: Channel will be considered playing when System::playSound is called
-        if (pSound != nullptr)          // If activeChannel for key does not exists
-        {
-            FMOD::Channel* pChannel = nullptr;
-            FMOD_RESULT result = pSystem->playSound(pSound, nullptr, false, &pChannel);
-
-            if (result != FMOD_OK)
-            {
-                std::cout << "Error, cannot play audio";
                 return;
             }
 
-            if (pChannel != nullptr)
-            {
-                // set the appropriate channel group based on soundtype
-                if (soundType == BACKGROUND_MUSIC)
-                {
-                    pChannel->setChannelGroup(activeChannelGroup["BackgroundMusic"]);
-                }
-                else if (soundType == SOUND_EFFECT)
-                {
-                    pChannel->setChannelGroup(activeChannelGroup["SoundEffects"]);
-                }
+            bool isPaused = false;
+            it->second->getPaused(&isPaused);
 
-                activeChannels[customName] = pChannel;      // Store channel associated with the custom audio name
-                std::cout << "Playing audio " << customName << "." << std::endl;
+            if (isPaused)
+            {
+                std::cout << "Resuming audio " << customName << "." << std::endl;
+                it->second->setPaused(false);
+                return;
             }
+
+            std::cout << "Audio " << customName << " has finished, replaying." << std::endl;
+            activeChannels.erase(it);
         }
-        else
+
+        // Play sound
+        FMOD::Channel* pChannel = nullptr;
+        FMOD_RESULT result = pSystem->playSound(pSound, nullptr, false, &pChannel);
+
+        if (result != FMOD_OK)
         {
-            std::cout << "Error: Sound " << customName << " could not be loaded." << std::endl;
+            std::cout << "Error: Cannot play audio " << customName << ", FMOD result: " << result << std::endl;
+            return;
         }
-        */
+
+        if (pChannel)
+        {
+            if (soundType == BACKGROUND_MUSIC)
+                pChannel->setChannelGroup(activeChannelGroup["BackgroundMusic"]);
+            else if (soundType == SOUND_EFFECT)
+                pChannel->setChannelGroup(activeChannelGroup["SoundEffects"]);
+
+            activeChannels[customName] = pChannel;
+            std::cout << "Playing audio " << customName << "." << std::endl;
+        }
     }
 
     //========================== NEW 3D AUDIO FUNCTIONS ==============================
@@ -399,18 +393,12 @@ namespace Framework
             }
         }
 
-        // Get audio asset info
-        /*AudioAsset* audioAsset = GlobalAssetManager.GetAudioAsset(customName);
-        if (!audioAsset) {
-            std::cerr << "Audio asset not found: " << customName << std::endl;
-            return -1;
-        }*/
-
-        /*AudioAsset::MusicAsset* musicAsset = audioAsset->GetMusicAssetByName(customName);
-        if (!musicAsset) {
-            std::cerr << "Music asset not found: " << customName << std::endl;
-            return -1;
-        }*/
+        // Retrieve AudioProperties from AssetManager
+        AudioProperties* audioProps = AssetManager::Instance().Get<AudioProperties>(customName);
+        if (!audioProps)
+        {
+            std::cout << "Error: AudioProperties not found for customName: " << customName << std::endl;
+        }
 
         // Configure sound mode based on source type
         FMOD_MODE mode = FMOD_DEFAULT;
@@ -425,12 +413,12 @@ namespace Framework
         }
 
         // Set looping mode
-        /*if (musicAsset->mode == "loop") {
+        if (audioProps->mode == "loop") {
             mode |= FMOD_LOOP_NORMAL;
         }
         else {
             mode |= FMOD_LOOP_OFF;
-        }*/
+        }
 
         pSound->setMode(mode);
 
@@ -464,9 +452,11 @@ namespace Framework
                 pChannel->set3DLevel(1.0f); // Full 3D
             }
         }
+        
+        SoundType soundType = ParseSoundType(audioProps->soundType);
 
         // Assign to appropriate channel group
-        /*if (musicAsset->soundType == BACKGROUND_MUSIC) {
+        if (soundType == BACKGROUND_MUSIC) {
             pChannel->setChannelGroup(activeChannelGroup["BackgroundMusic"]);
             currentBGMChannel = channelId;
         }
@@ -475,16 +465,16 @@ namespace Framework
         }
         else {
             pChannel->setChannelGroup(activeChannelGroup["SoundEffects"]);
-        }*/
+        }
 
         // Set volume with master/group volume scaling
         float finalVolume = volume;
-        /*if (musicAsset->soundType == BACKGROUND_MUSIC) {
+        if (soundType == BACKGROUND_MUSIC) {
             finalVolume *= bgmVolume;
         }
         else {
             finalVolume *= sfxVolume;
-        }*/
+        }
         finalVolume *= masterVolume;
         pChannel->setVolume(finalVolume);
 
@@ -493,14 +483,14 @@ namespace Framework
         activeChannels[customName] = pChannel;
 
         // Store 3D info for later updates
-        /*channel3DInfo[channelId] = {
+        channel3DInfo[channelId] = {
             position, velocity,
             current3DSettings.minDistance,
             current3DSettings.maxDistance,
             sourceType,
-            musicAsset->mode == "loop",
+            audioProps->mode == "loop",
             volume
-        };*/
+        };
 
         // Start playing
         pChannel->setPaused(false);
@@ -854,7 +844,6 @@ namespace Framework
         if (masterGroup) {
             masterGroup->setVolume(masterVolume);
         }
-
         std::cout << "Master volume set to: " << masterVolume << std::endl;
     }
 
@@ -868,7 +857,6 @@ namespace Framework
         if (it != activeChannelGroup.end() && it->second) {
             it->second->setVolume(bgmVolume);
         }
-
         std::cout << "BGM volume set to: " << bgmVolume << std::endl;
     }
 
@@ -888,7 +876,6 @@ namespace Framework
         if (it != activeChannelGroup.end() && it->second) {
             it->second->setVolume(sfxVolume);
         }
-
         std::cout << "SFX volume set to: " << sfxVolume << std::endl;
     }
 
@@ -911,7 +898,6 @@ namespace Framework
                 lowPassFilter->setBypass(false);
                 lowPassFilter->setParameterFloat(FMOD_DSP_LOWPASS_CUTOFF, 500.0f);
             }
-
             std::cout << "Starting BGM fade-in over " << duration << " seconds" << std::endl;
         }
     }
@@ -935,7 +921,6 @@ namespace Framework
                 lowPassFilter->setBypass(false);
                 lowPassFilter->setParameterFloat(FMOD_DSP_LOWPASS_CUTOFF, 22000.0f);
             }
-
             std::cout << "Starting BGM fade-out over " << duration << " seconds" << std::endl;
         }
     }
@@ -961,7 +946,6 @@ namespace Framework
                 pendingBGMChannel = -1;
                 FadeBGMIn(duration);
             }
-
             std::cout << "Crossfading to BGM: " << newBGM << " over " << duration << " seconds" << std::endl;
         }
     }
@@ -1035,7 +1019,6 @@ namespace Framework
     {
         FMOD::ChannelGroup* newGroup = nullptr;                         
         pSystem->createChannelGroup(groupName.c_str(), &newGroup);      //  Create a new ChannelGroup with given groupName
-
         if (newGroup != nullptr)
         {
             activeChannelGroup[groupName] = newGroup;                   // Store newGroup in Map of activeChannelGroup
@@ -1049,7 +1032,6 @@ namespace Framework
         if (it != activeChannelGroup.end())                         // Iterate through the activeChannelGroups
         {
             FMOD::ChannelGroup* group = it->second;                 // Retrieve the group
-
             float currentVolume;                                    // Create float to hold currentVolume
             FMOD_RESULT result = group->getVolume(&currentVolume);  // Retrieve the currentVolume of the group
             if (result == FMOD_OK) 
@@ -1147,7 +1129,6 @@ namespace Framework
                 channel->setPosition(0, FMOD_TIMEUNIT_MS);  // Rewind to the beginning
             }
         }
-
         activeChannels.clear();  // Clear active channels but keep loaded sounds
         std::cout << "Audio system has been reset by stopping and rewinding sounds." << std::endl;
     }

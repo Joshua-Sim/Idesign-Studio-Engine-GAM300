@@ -20,6 +20,8 @@
 #include <chrono>               // for time related things 
 #include <cmath>                //for distance calculation
 
+#include <AssetManager.h>
+
 using namespace std;            // For Standard Library
 using namespace FMOD;           // For FMOD Library
 
@@ -80,6 +82,8 @@ namespace Framework
             BACKGROUND_MUSIC,   // Background music type
             SOUND_EFFECT        // Sound effect type
         };
+
+        SoundType ParseSoundType(const std::string& str);
 
         /**
         *   @brief Constructor for Audio system.
@@ -450,7 +454,6 @@ namespace Framework
         * @param dryLevel Dry signal level in dB
         */
         void SetReverbProperties(float decayTime, float wetLevel, float dryLevel);
-        
 
     private:
 

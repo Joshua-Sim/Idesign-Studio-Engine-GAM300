@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////////////////
 ///
 ///	@File  : AssetManager.h
 /// @Brief : This file implements the AssetManager class, a central component 
@@ -98,7 +98,7 @@ namespace Framework
 
             for (size_t i = 0; i < loadedObjects.size(); ++i)
             {
-                const auto& obj = loadedObjects[i];
+                std::unique_ptr<T>& obj = loadedObjects[i];
                 std::string arrayName = obj->customName.empty() ? "unnamed_" + std::to_string(i) : obj->customName;
 
                 std::unique_ptr<void, void(*)(void*)> erasedPtr(

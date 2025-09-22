@@ -20,6 +20,7 @@
 #include "AnimationSystem.h"
 #include "LogicManager.h"
 
+#include "Audio.h"
 #include <WindowConfigProperties.h>
 using namespace Framework;
 
@@ -57,6 +58,7 @@ int main(void)
     //CompileArray<AudioProperties>("src/Data/AudioAsset.json", "src/Data/AudioAsset.bin", g_AudioPropertiesProps, "AudioProperties");
     //AssetManager::Instance().LoadBinaryArray<AudioProperties>("src/Data/AudioAsset.bin", g_AudioPropertiesProps);
     //AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, "src/Data/MusicAssetTest1.json", "AudioProperties");
+    //GlobalAudio.UE_PlaySound("winloop");
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     
     // Initialize the InputHandler singleton

@@ -148,6 +148,7 @@
     <ClInclude Include="src\AssetLoader.h" />
     <ClInclude Include="src\AssetManager.h" />
     <ClInclude Include="src\Audio.h" />
+    <ClInclude Include="src\AudioProperties.h" />
     <ClInclude Include="src\ButtonSystem.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Collision.h" />
@@ -167,7 +168,6 @@
     <ClInclude Include="src\FontSystem.h" />
     <ClInclude Include="src\Graphics.h" />
     <ClInclude Include="src\GraphicsShader.h" />
-    <ClInclude Include="src\GraphicsWindows.h" />
     <ClInclude Include="src\InputHandler.h" />
     <ClInclude Include="src\JsonSerialize.h" />
     <ClInclude Include="src\Lighting.h" />
