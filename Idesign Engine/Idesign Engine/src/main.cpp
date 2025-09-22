@@ -51,33 +51,32 @@ int main(void)
 
     //Window& myWindowConfig = GlobalAssetManager.LoadWindow("src/Data/WindowAsset.json");
     //auto AudioManager = std::make_unique<Audio>();
-    //auto Window = std::make_unique<GraphicsWindows>(myWindowConfig.GetConfig(), engine.get()); // Replace with serialized data
 
-    // Initialize the InputHandler singleton
-    //InputHandler::Initialize(Window->GetWindow());
     GlobalLogicManager.Initialize();
-
-
-    //// Access the InputHandler instance from the singleton
-    //InputHandler* inputHandlerSystem = InputHandler::GetInstance();
-    //if (!inputHandlerSystem) {
-    //    std::cerr << "Failed to initialize InputHandler!" << std::endl;
-    //    return -1; // Exit if InputHandler initialization failed
-    //}
 
     // Initialize global ECS interface and other singleton components
     ecsInterface.Init();
 
-    // Registering systems in the ECS interface.
+    // Register graphics system and GLFW Window first 
     auto graphicsSystem = ecsInterface.RegisterSystem<Graphics>();
-    auto messageSystem = std::make_unique<MessageSystem>();
 
-    //inputHandlerSystem->SetMessageSystem(messageSystem.get());    // Inject the MessageSystem into InputHandler
+    // Initialize the InputHandler singleton
+    InputHandler::Initialize(graphicsSystem->GetWindow());
+
+    //Access the InputHandler instance from the singleton
+    InputHandler* inputHandlerSystem = InputHandler::GetInstance();
+    if (!inputHandlerSystem) {
+        std::cerr << "Failed to initialize InputHandler!" << std::endl;
+        return -1; // Exit if InputHandler initialization failed
+    }
+
+    // Registering systems in the ECS interface here
+    auto messageSystem = std::make_unique<MessageSystem>();
+    inputHandlerSystem->SetMessageSystem(messageSystem.get());
 
     // ------- Add systems to engine below -------- //
-    //engine->AddSystem(Window.get());
-    //engine->AddSystem(inputHandlerSystem);
     engine->AddSystem(graphicsSystem.get());
+    engine->AddSystem(inputHandlerSystem);
     engine->AddSystem(messageSystem.get());
 
     // Initialize the engine and run the main game loop
