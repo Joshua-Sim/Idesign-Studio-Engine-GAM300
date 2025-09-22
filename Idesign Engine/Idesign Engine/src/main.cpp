@@ -3,7 +3,6 @@
 #pragma once
 #include "pch.h"
 #include "Core.h"
-#include "GraphicsWindows.h"
 #include "Graphics.h"
 #include "InputHandler.h"
 #include "Coordinator.h"
@@ -41,7 +40,7 @@ EngineState engineState;
 
 int main(void)
 {
-    //EnableMemoryLeakChecking(); // For memory check
+    EnableMemoryLeakChecking(); // For memory check
 
     //Create the core engine which manages all the systems that make up the game
     auto engine = std::make_unique<CoreEngine>();
@@ -50,8 +49,8 @@ int main(void)
     //  Windows
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     //CompileSingleObject<WindowConfig>("src/Data/WindowAsset.json", "src/Data/WindowAsset.cfg", g_WindowConfigProps);
-    WindowConfig& config = AssetManager::Instance().LoadBinary<WindowConfig>("WindowConfig", "src/Data/WindowAsset.cfg", g_WindowConfigProps);
-    auto Window = std::make_unique<GraphicsWindows>(&config, engine.get());
+    /*WindowConfig& config = AssetManager::Instance().LoadBinary<WindowConfig>("WindowConfig", "src/Data/WindowAsset.cfg", g_WindowConfigProps);
+    auto Window = std::make_unique<GraphicsWindows>(&config, engine.get());*/
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     //  Audio
     // ------------------------------------------------------------------------------------------------------------------------------------------------------

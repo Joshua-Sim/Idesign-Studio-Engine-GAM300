@@ -144,9 +144,10 @@
     <ClInclude Include="..\lib\imgui\imstb_textedit.h" />
     <ClInclude Include="..\lib\imgui\imstb_truetype.h" />
     <ClInclude Include="src\AnimationSystem.h" />
+    <ClInclude Include="src\AssetCompiler.h" />
+    <ClInclude Include="src\AssetLoader.h" />
     <ClInclude Include="src\AssetManager.h" />
     <ClInclude Include="src\Audio.h" />
-    <ClInclude Include="src\AudioAsset.h" />
     <ClInclude Include="src\ButtonSystem.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Collision.h" />
@@ -156,17 +157,13 @@
     <ClInclude Include="src\Coordinator.h" />
     <ClInclude Include="src\Core.h" />
     <ClInclude Include="src\Debugger.h" />
-    <ClInclude Include="src\DictionaryAsset.h" />
     <ClInclude Include="src\DummySystem.h" />
     <ClInclude Include="src\ECSystemManager.h" />
     <ClInclude Include="src\EnemyBehavior.h" />
     <ClInclude Include="src\EnemyManager.h" />
     <ClInclude Include="src\EngineState.h" />
-    <ClInclude Include="src\EntityAsset.h" />
     <ClInclude Include="src\EntityManager.h" />
-    <ClInclude Include="src\FontAsset.h" />
     <ClInclude Include="src\FontShader.h" />
-    <ClInclude Include="src\FontShaderAsset.h" />
     <ClInclude Include="src\FontSystem.h" />
     <ClInclude Include="src\Graphics.h" />
     <ClInclude Include="src\GraphicsShader.h" />
@@ -184,6 +181,9 @@
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\PhysicsSystem.h" />
     <ClInclude Include="src\PlayerSystem.h" />
+    <ClInclude Include="src\PrefabProperties.h" />
+    <ClInclude Include="src\PropertyMacro.h" />
+    <ClInclude Include="src\PropertySystem.h" />
     <ClInclude Include="src\rapidjson\allocators.h" />
     <ClInclude Include="src\rapidjson\cursorstreamwrapper.h" />
     <ClInclude Include="src\rapidjson\document.h" />
@@ -228,11 +228,11 @@
     <ClInclude Include="src\TagManager.h" />
     <ClInclude Include="src\Terrain.h" />
     <ClInclude Include="src\TestSystem.h" />
-    <ClInclude Include="src\TextureAsset.h" />
     <ClInclude Include="src\TextureLoader.h" />
+    <ClInclude Include="src\TransformProperties.h" />
     <ClInclude Include="src\Types.h" />
     <ClInclude Include="src\Vector2D.h" />
-    <ClInclude Include="src\WindowAsset.h" />
+    <ClInclude Include="src\WindowConfigProperties.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\shaders\blur.glsl" />
@@ -261,23 +261,19 @@
     <ClCompile Include="..\lib\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\lib\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\AnimationSystem.cpp" />
+    <ClCompile Include="src\AssetCompiler.cpp" />
     <ClCompile Include="src\AssetManager.cpp" />
     <ClCompile Include="src\Audio.cpp" />
-    <ClCompile Include="src\AudioAsset.cpp" />
     <ClCompile Include="src\ButtonSystem.cpp" />
     <ClCompile Include="src\Collision.cpp" />
     <ClCompile Include="src\ComponentManager.cpp" />
     <ClCompile Include="src\Coordinator.cpp" />
     <ClCompile Include="src\Core.cpp" />
     <ClCompile Include="src\Debugger.cpp" />
-    <ClCompile Include="src\DictionaryAsset.cpp" />
     <ClCompile Include="src\DummySystem.cpp" />
     <ClCompile Include="src\EnemyManager.cpp" />
     <ClCompile Include="src\EngineState.cpp" />
-    <ClCompile Include="src\EntityAsset.cpp" />
     <ClCompile Include="src\EntityManager.cpp" />
-    <ClCompile Include="src\FontAsset.cpp" />
-    <ClCompile Include="src\FontShaderAsset.cpp" />
     <ClCompile Include="src\FontSystem.cpp" />
     <ClCompile Include="src\Graphics.cpp" />
     <ClCompile Include="src\GraphicsShader.cpp" />
@@ -298,10 +294,8 @@
     <ClCompile Include="src\TagManager.cpp" />
     <ClCompile Include="src\Terrain.cpp" />
     <ClCompile Include="src\TestSystem.cpp" />
-    <ClCompile Include="src\TextureAsset.cpp" />
     <ClCompile Include="src\TextureLoader.cpp" />
     <ClCompile Include="src\Vector2D.cpp" />
-    <ClCompile Include="src\WindowAsset.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

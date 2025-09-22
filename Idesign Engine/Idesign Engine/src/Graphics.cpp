@@ -53,7 +53,7 @@
 #include "TextureLoader.h"
 
 extern Framework::FontSystem fontSystem;
-extern Framework::Coordinator ecsInterface;
+//extern Framework::Coordinator ecsInterface;
 
 
 namespace Framework {
