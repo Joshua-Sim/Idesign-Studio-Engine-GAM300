@@ -39,6 +39,8 @@ namespace Framework {
 		void Initialize() override;
 		void Update(float deltaTime) override;
 		std::string GetName() override;
+        static GLuint CreateFramebuffer(int width, int height, GLuint& texture, GLuint& rbo_fb);
+        GLFWwindow* getWindow();
 
 		////linking
 		//GraphicsWindows* graphicWindows;
@@ -52,6 +54,7 @@ namespace Framework {
     private:
         static void framebuffer_size_callback(GLFWwindow*, int, int);
         static void mouse_callback(GLFWwindow*, double, double);
+        
 
         void process_input(float dt);
         void renderQuad();

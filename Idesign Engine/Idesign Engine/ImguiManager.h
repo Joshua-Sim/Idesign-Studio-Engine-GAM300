@@ -27,12 +27,17 @@ namespace Framework {
 		ImguiManager();
 		~ImguiManager();
 
-		void ImguiInit();
-		void ImguiUpdate(float deltaTime);
+		void Initialize();
+		void Update(float deltaTime);
+		std::string GetName() override;
+
+		void SetGraphicsSystem(Framework::Graphics* graphicsSystem); // New "setter" function
 
 		std::string OpenFileDialog();
 		std::string SaveFileDialog();
 		void RenderErrorPopup();
+	private:
+		Framework::Graphics* m_graphicsSystem = nullptr; // Pointer to store the connection
 	};
 }
 

@@ -3,9 +3,6 @@
 #include <commdlg.h>
 #include "Graphics.h"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-#include "stb_image_resize2.h"
 #include <InputHandler.h>
 #include "ComponentList.h"
 #include "FontSystem.h"
@@ -22,13 +19,10 @@
 #include <ImguiManager.h>
 #include <Graphics.h>
 
-extern Framework::Graphics graphicsSystem;
+Framework::Graphics graphicsSystem;
+
 
 namespace Framework {
-    //initialising containers
-    std::vector<Framework::Graphics::Model> models{};
-    std::unordered_map<std::string, Framework::Graphics::Model> meshes{};
-    std::unordered_map<std::string, GLuint> textures{};
     float projWidth{};
     float projHeight{};
     GLuint gameFramebuffer{}, gameTexture{}, rbo{};
@@ -67,8 +61,14 @@ namespace Framework {
     };
     static bool pathChanged = false;
 
+    // Get the name of the system
+    std::string ImguiManager::GetName()
+    {
+        return "ImguiManager";
+    }
+
     //FILE OPENING / SAVING
-    std::string OpenFileDialog()
+    std::string ImguiManager::OpenFileDialog()
     {
         OPENFILENAMEA ofn;
         char szFile[260] = { 0 };
@@ -109,7 +109,7 @@ namespace Framework {
         return "";
     }
 
-    std::string SaveFileDialog()
+    std::string ImguiManager::SaveFileDialog()
     {
         OPENFILENAMEA ofn;
         char szFile[260] = { 0 };
@@ -144,7 +144,7 @@ namespace Framework {
     }
 
     // Error Detection for Audio
-    void RenderErrorPopup()
+    void ImguiManager::RenderErrorPopup()
     {
         if (showErrorPopup)
         {
@@ -166,7 +166,7 @@ namespace Framework {
         }
     }
 
-    // Edwin , drag and drop Texture/Audio
+    // Edwin, drag and drop Texture/Audio
     void DropCallback(GLFWwindow* window, int count, const char** paths)
     {
         (void)window;
@@ -221,19 +221,22 @@ namespace Framework {
         }
     }
 
-
-
-
     // Declare the map for storing dropped texture files
     std::map<std::string, TextureAsset::Texture> droppedTextureFiles;
     std::vector<std::pair<std::string, std::string>> updates;
 
     ImguiManager::ImguiManager() {}
-
     ImguiManager::~ImguiManager() {}
 
-    void ImguiInit() {
+    void ImguiManager::SetGraphicsSystem(Framework::Graphics* graphicsSystem)
+    {
+        m_graphicsSystem = graphicsSystem;
+    }
 
+    void ImguiManager::Initialize() {
+        // This assert will fail if the window pointer is null
+        assert(m_graphicsSystem->getWindow() != nullptr && "ERROR: getWindow() returned nullptr!");
+        std::cout << "Imgui Initialized";
         //IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGuiIO& io = ImGui::GetIO();
@@ -249,15 +252,15 @@ namespace Framework {
 
         // Set ImGui Style
         ImGui::StyleColorsDark();
-        gameFramebuffer = graphicsSystem.CreateFramebuffer(static_cast<int>(projWidth), static_cast<int>(projHeight), gameTexture, rbo);
+        gameFramebuffer = Framework::Graphics::CreateFramebuffer(static_cast<int>(projWidth), static_cast<int>(projHeight), gameTexture, rbo);
 
         // Initialize backends
-        ImGui_ImplGlfw_InitForOpenGL(graphicsSystem.graphicWindows->GetWindow(), true);
+        ImGui_ImplGlfw_InitForOpenGL(m_graphicsSystem->getWindow(), true);
         ImGui_ImplOpenGL3_Init("#version 450");
 
     }
 
-    void ImguiUpdate(float deltaTime) {
+    void ImguiManager::Update(float deltaTime) {
         // Bind the default framebuffer again
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -903,7 +906,7 @@ namespace Framework {
                         isPropertiesWindowOpen = false;
                         // Clear all objects and reset fields
                         ecsInterface.ClearEntities();
-                        models.clear();
+                        //models.clear();
 
                         ImGui::CloseCurrentPopup(); // Close the popup
                     }
@@ -1224,9 +1227,13 @@ namespace Framework {
         }
         ImGui::End();
 
-        // Render ImGui
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+        if (renderImgui) {
+            // Render ImGui
+            ImGui::Render();
+            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        }
+
 
         // Handle multiple viewports (for multi-window applications)
         GLFWwindow* backup_current_context = glfwGetCurrentContext();

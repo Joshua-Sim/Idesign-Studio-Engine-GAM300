@@ -21,6 +21,7 @@
 #include "EnemyManager.h"
 #include "AnimationSystem.h"
 #include "LogicManager.h"
+#include <ImguiManager.h>
 
 using namespace Framework;
 
@@ -71,6 +72,9 @@ int main(void)
     // Registering systems in the ECS interface.
     auto graphicsSystem = ecsInterface.RegisterSystem<Graphics>();
     auto messageSystem = std::make_unique<MessageSystem>();
+    auto imguiSystem = ecsInterface.RegisterSystem<ImguiManager>();
+
+    imguiSystem->SetGraphicsSystem(graphicsSystem.get());
 
     //inputHandlerSystem->SetMessageSystem(messageSystem.get());    // Inject the MessageSystem into InputHandler
 
@@ -79,6 +83,7 @@ int main(void)
     //engine->AddSystem(inputHandlerSystem);
     engine->AddSystem(graphicsSystem.get());
     engine->AddSystem(messageSystem.get());
+    engine->AddSystem(imguiSystem.get());
 
     // Initialize the engine and run the main game loop
     engine->Initialize();
