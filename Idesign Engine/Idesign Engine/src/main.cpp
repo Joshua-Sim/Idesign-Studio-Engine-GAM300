@@ -21,6 +21,7 @@
 #include "EnemyManager.h"
 #include "AnimationSystem.h"
 #include "LogicManager.h"
+#include <ImguiManager.h>
 
 using namespace Framework;
 
@@ -59,10 +60,12 @@ int main(void)
 
     // Register graphics system and GLFW Window first 
     auto graphicsSystem = ecsInterface.RegisterSystem<Graphics>();
-
     // Initialize the InputHandler singleton
     InputHandler::Initialize(graphicsSystem->GetWindow());
 
+
+    auto imguiSystem = ecsInterface.RegisterSystem<ImguiManager>();
+    imguiSystem->SetGraphicsSystem(graphicsSystem.get());
     //Access the InputHandler instance from the singleton
     InputHandler* inputHandlerSystem = InputHandler::GetInstance();
     if (!inputHandlerSystem) {
@@ -78,6 +81,7 @@ int main(void)
     engine->AddSystem(graphicsSystem.get());
     engine->AddSystem(inputHandlerSystem);
     engine->AddSystem(messageSystem.get());
+    engine->AddSystem(imguiSystem.get());
 
     // Initialize the engine and run the main game loop
     engine->Initialize();

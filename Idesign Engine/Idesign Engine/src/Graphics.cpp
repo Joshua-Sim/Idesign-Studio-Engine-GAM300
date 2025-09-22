@@ -373,13 +373,14 @@ namespace Framework {
         glBindVertexArray(0);
     }
 
-    GLFWwindow* Graphics::getWindow() {
-        return this->window;
-    }
-
     //For ImGUI 
     GLuint Graphics::CreateFramebuffer(int width, int height, GLuint& texture, GLuint& rbo_fb)
     {
+        // Check for invalid dimensions immediately
+        assert(width > 0 && height > 0 && "Framebuffer dimensions cannot be zero!");
+        std::cout << "Creating framebuffer with size: " << width << "x" << height << std::endl;
+
+
         GLuint framebuffer;
 
         // Generate and bind framebuffer

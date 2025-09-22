@@ -40,7 +40,6 @@ namespace Framework {
 		void Update(float deltaTime) override;
 		std::string GetName() override;
         static GLuint CreateFramebuffer(int width, int height, GLuint& texture, GLuint& rbo_fb);
-        GLFWwindow* getWindow();
 
 		////linking
 		//GraphicsWindows* graphicWindows;

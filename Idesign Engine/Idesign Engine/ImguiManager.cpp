@@ -235,8 +235,8 @@ namespace Framework {
 
     void ImguiManager::Initialize() {
         // This assert will fail if the window pointer is null
-        assert(m_graphicsSystem->getWindow() != nullptr && "ERROR: getWindow() returned nullptr!");
-        std::cout << "Imgui Initialized";
+        assert(m_graphicsSystem->GetWindow() != nullptr && "ERROR: getWindow() returned nullptr!");
+        std::cout << "Imgui Initialized\n";
         //IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGuiIO& io = ImGui::GetIO();
@@ -252,10 +252,11 @@ namespace Framework {
 
         // Set ImGui Style
         ImGui::StyleColorsDark();
-        gameFramebuffer = Framework::Graphics::CreateFramebuffer(static_cast<int>(projWidth), static_cast<int>(projHeight), gameTexture, rbo);
+        
+        gameFramebuffer = m_graphicsSystem->CreateFramebuffer(static_cast<int>(projWidth), static_cast<int>(projHeight), gameTexture, rbo);
 
         // Initialize backends
-        ImGui_ImplGlfw_InitForOpenGL(m_graphicsSystem->getWindow(), true);
+        ImGui_ImplGlfw_InitForOpenGL(m_graphicsSystem->GetWindow(), true);
         ImGui_ImplOpenGL3_Init("#version 450");
 
     }
@@ -286,14 +287,8 @@ namespace Framework {
         ImGui::Begin("DockSpace Demo", nullptr, windowFlags);
         ImGui::PopStyleVar(2);
 
-
-        // Create a dockspace ID
         ImGuiID dockspaceId = ImGui::GetID("MyDockSpace");
-
-        // Create the dockspace
         ImGui::DockSpace(dockspaceId, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
-
-        // Optionally add a menu bar
         if (ImGui::BeginMenuBar())
         {
             if (ImGui::BeginMenu("Unnamed Studio Game Engine"))
@@ -329,7 +324,6 @@ namespace Framework {
             }
             ImGui::EndMenuBar();
         }
-        // End the dockspace window
         ImGui::End();
 
         //for edwin
@@ -1227,20 +1221,16 @@ namespace Framework {
         }
         ImGui::End();
 
-
-        if (renderImgui) {
-            // Render ImGui
-            ImGui::Render();
-            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        }
-
+        // Render ImGui
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         // Handle multiple viewports (for multi-window applications)
         GLFWwindow* backup_current_context = glfwGetCurrentContext();
         ImGui::UpdatePlatformWindows();
         ImGui::RenderPlatformWindowsDefault();
         glfwMakeContextCurrent(backup_current_context);
-
+      
         // edwin testing
         glfwSetDropCallback(backup_current_context, DropCallback);
     }
