@@ -119,7 +119,7 @@ namespace Framework {
 
         // Initialisers for OpenGL (IMPORTANT : always call these after every initialiser values)
         // If want to change any values, please change in header or reconstruct after calling
-        terrainShader.initGL();
+        //terrainShader.initGL();
         meshShader.initGL();
         blurShader.initGL();
         finalShader.initGL();
@@ -277,8 +277,7 @@ namespace Framework {
             renderQuad();
 
 
-            glfwSwapBuffers(window);
-            glfwPollEvents();
+ 
         
        
     }

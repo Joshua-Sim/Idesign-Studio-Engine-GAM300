@@ -19,7 +19,7 @@
 #include <ImguiManager.h>
 #include <Graphics.h>
 
-Framework::Graphics graphicsSystem;
+
 
 
 namespace Framework {
@@ -253,7 +253,7 @@ namespace Framework {
         // Set ImGui Style
         ImGui::StyleColorsDark();
         
-        gameFramebuffer = m_graphicsSystem->CreateFramebuffer(static_cast<int>(projWidth), static_cast<int>(projHeight), gameTexture, rbo);
+        gameFramebuffer = m_graphicsSystem->CreateFramebuffer(static_cast<int>(1280), static_cast<int>(720), gameTexture, rbo);
 
         // Initialize backends
         ImGui_ImplGlfw_InitForOpenGL(m_graphicsSystem->GetWindow(), true);
@@ -1194,7 +1194,7 @@ namespace Framework {
             }
             ImGui::PopStyleColor(3); // Restore color
         }
-        ImGui::End();
+        ImGui::End();   
 
         if (ImGui::Begin("Main Viewport"))
         {
@@ -1233,6 +1233,8 @@ namespace Framework {
       
         // edwin testing
         glfwSetDropCallback(backup_current_context, DropCallback);
+        glfwPollEvents();
+        glfwSwapBuffers(m_graphicsSystem->GetWindow());
     }
 
 
