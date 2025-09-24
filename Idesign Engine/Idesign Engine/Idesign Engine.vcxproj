@@ -143,11 +143,11 @@
     <ClInclude Include="..\lib\imgui\imstb_rectpack.h" />
     <ClInclude Include="..\lib\imgui\imstb_textedit.h" />
     <ClInclude Include="..\lib\imgui\imstb_truetype.h" />
-    <ClInclude Include="ImguiManager.h" />
     <ClInclude Include="src\AnimationSystem.h" />
     <ClInclude Include="src\AssetManager.h" />
     <ClInclude Include="src\Audio.h" />
     <ClInclude Include="src\AudioAsset.h" />
+    <ClInclude Include="src\backward.hpp" />
     <ClInclude Include="src\ButtonSystem.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Collision.h" />
@@ -172,6 +172,7 @@
     <ClInclude Include="src\Graphics.h" />
     <ClInclude Include="src\GraphicsShader.h" />
     <ClInclude Include="src\GraphicsWindows.h" />
+    <ClInclude Include="src\ImguiManager.h" />
     <ClInclude Include="src\InputHandler.h" />
     <ClInclude Include="src\JsonSerialize.h" />
     <ClInclude Include="src\Lighting.h" />
@@ -224,6 +225,7 @@
     <ClInclude Include="src\rapidjson\uri.h" />
     <ClInclude Include="src\rapidjson\writer.h" />
     <ClInclude Include="src\ShaderProgram.h" />
+    <ClInclude Include="src\SignalHandler.h" />
     <ClInclude Include="src\System.h" />
     <ClInclude Include="src\SystemInclude.h" />
     <ClInclude Include="src\TagManager.h" />
@@ -261,7 +263,6 @@
     <ClCompile Include="..\lib\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="..\lib\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\lib\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="ImguiManager.cpp" />
     <ClCompile Include="src\AnimationSystem.cpp" />
     <ClCompile Include="src\AssetManager.cpp" />
     <ClCompile Include="src\Audio.cpp" />
@@ -283,6 +284,7 @@
     <ClCompile Include="src\FontSystem.cpp" />
     <ClCompile Include="src\Graphics.cpp" />
     <ClCompile Include="src\GraphicsShader.cpp" />
+    <ClCompile Include="src\ImguiManager.cpp" />
     <ClCompile Include="src\InputHandler.cpp" />
     <ClCompile Include="src\Lighting.cpp" />
     <ClCompile Include="src\LogicManager.cpp" />
@@ -297,6 +299,7 @@
     <ClCompile Include="src\PhysicsSystem.cpp" />
     <ClCompile Include="src\PlayerSystem.cpp" />
     <ClCompile Include="src\ShaderProgram.cpp" />
+    <ClCompile Include="src\SignalHandler.cpp" />
     <ClCompile Include="src\TagManager.cpp" />
     <ClCompile Include="src\Terrain.cpp" />
     <ClCompile Include="src\TestSystem.cpp" />

@@ -22,6 +22,7 @@
 #include "AnimationSystem.h"
 #include "LogicManager.h"
 #include <ImguiManager.h>
+#include <SignalHandler.h>
 
 using namespace Framework;
 
@@ -43,8 +44,9 @@ EngineState engineState;
 
 int main(void)
 {
+    //SetupSignalHandler();
     //EnableMemoryLeakChecking(); // For memory check
-
+    
   //Create the core engine which manages all the systems that make up the game
     auto engine = std::make_unique<CoreEngine>();
 
