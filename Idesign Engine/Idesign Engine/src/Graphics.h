@@ -28,6 +28,13 @@
 #include "MeshLoader.h"
 #include "TextureLoader.h"
 
+
+
+namespace Framework {
+    class ImguiManager;
+}
+
+
 namespace Framework {
 
 	class Graphics : public ISystem
@@ -48,10 +55,12 @@ namespace Framework {
 
         //Getter for windows for external systems.
         GLFWwindow* GetWindow();
+        void SetImguiManager(ImguiManager* manager);
 
 		// Sorting Layer Variables
 		unsigned int CurrentSize = -1;
 		std::vector<Entity> sortedEntities;
+
 
     private:
         static void framebuffer_size_callback(GLFWwindow*, int, int);
@@ -105,6 +114,7 @@ namespace Framework {
         GLuint quadVAO = 0;
         GLuint quadVBO = 0;
 
+        ImguiManager* m_imguiManager = nullptr;
 	};
 
 }

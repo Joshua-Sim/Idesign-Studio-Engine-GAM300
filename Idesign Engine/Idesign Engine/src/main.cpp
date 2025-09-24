@@ -66,6 +66,7 @@ int main(void)
 
     auto imguiSystem = ecsInterface.RegisterSystem<ImguiManager>();
     imguiSystem->SetGraphicsSystem(graphicsSystem.get());
+    graphicsSystem->SetImguiManager(imguiSystem.get());
     //Access the InputHandler instance from the singleton
     InputHandler* inputHandlerSystem = InputHandler::GetInstance();
     if (!inputHandlerSystem) {

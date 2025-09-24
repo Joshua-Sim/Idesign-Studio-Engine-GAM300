@@ -1,70 +1,61 @@
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.pch
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\vc143.pdb
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\vc143.idb
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\pch.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\enemymanager.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\dummysystem.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\dictionaryasset.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\debugger.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\core.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\coordinator.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\componentmanager.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\collision.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\buttonsystem.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\audioasset.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\audio.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\assetmanager.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\animationsystem.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imgui_widgets.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imgui_tables.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imgui_impl_opengl3.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imgui_impl_glfw.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imgui_draw.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imgui_demo.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imgui.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\tagmanager.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\shaderprogram.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\playersystem.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\physicssystem.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\messagesystem.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\meshloader.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\mesh.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\matrix3x3.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\main.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\logicmanager.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\lighting.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\inputhandler.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\graphicsshader.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\graphics.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\fontsystem.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\fontshaderasset.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\fontasset.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\entitymanager.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\entityasset.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\enginestate.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\windowasset.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\vector2d.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\textureloader.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\textureasset.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\testsystem.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\terrain.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\x64\debug\assimp-vc143-mtd.dll
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\x64\debug\poly2tri.dll
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\x64\debug\minizip.dll
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\x64\debug\zlibd1.dll
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\x64\debug\kubazip.dll
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\x64\debug\pugixml.dll
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\x64\debug\idesign engine.exe
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\x64\debug\idesign engine.pdb
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.ilk
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\graphicswindows.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imguimanager.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\cl.command.1.tlog
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\cl.items.tlog
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\cl.read.1.tlog
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\cl.write.1.tlog
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\idesign engine.write.1u.tlog
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\link.command.1.tlog
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\link.read.1.tlog
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\link.secondary.1.tlog
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\link.write.1.tlog
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.pch
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\vc143.pdb
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\vc143.idb
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\pch.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\dummysystem.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\dictionaryasset.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\debugger.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\core.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\coordinator.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\componentmanager.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\collision.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\buttonsystem.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\audioasset.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\audio.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\assetmanager.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\animationsystem.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imguimanager.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imgui_widgets.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imgui_tables.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imgui_impl_opengl3.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imgui_impl_glfw.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imgui_draw.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imgui_demo.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imgui.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\shaderprogram.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\playersystem.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\physicssystem.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\messagesystem.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\meshloader.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\mesh.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\matrix3x3.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\main.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\logicmanager.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\lighting.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\inputhandler.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\graphicsshader.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\graphics.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\fontsystem.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\fontshaderasset.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\fontasset.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\entitymanager.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\entityasset.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\enginestate.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\enemymanager.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\windowasset.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\vector2d.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\textureloader.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\textureasset.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\testsystem.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\terrain.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\tagmanager.obj
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\x64\debug\idesign engine.exe
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.ilk
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\x64\debug\idesign engine.pdb
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\cl.command.1.tlog
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\cl.items.tlog
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\cl.read.1.tlog
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\cl.write.1.tlog
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\link.command.1.tlog
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\link.read.1.tlog
+c:\users\simru\desktop\sit\y3\gam300\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\link.write.1.tlog

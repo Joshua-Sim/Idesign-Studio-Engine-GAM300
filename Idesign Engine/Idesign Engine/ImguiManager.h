@@ -32,6 +32,7 @@ namespace Framework {
 		std::string GetName() override;
 
 		void SetGraphicsSystem(Framework::Graphics* graphicsSystem); // New "setter" function
+		GLuint GetGameFramebuffer();
 
 		std::string OpenFileDialog();
 		std::string SaveFileDialog();

@@ -51,6 +51,7 @@
 #include "Lighting.h"
 #include "MeshLoader.h"
 #include "TextureLoader.h"
+#include "ImguiManager.h"
 
 extern Framework::FontSystem fontSystem;
 extern Framework::Coordinator ecsInterface;
@@ -176,6 +177,12 @@ namespace Framework {
         lastTime = (float)glfwGetTime();
     }
 
+
+    void Graphics::SetImguiManager(ImguiManager* manager)
+    {
+        m_imguiManager = manager;
+    }
+
     // Update the system
     void Graphics::Update(float deltaTime)
     {
@@ -259,7 +266,7 @@ namespace Framework {
             // ====================================================================
             // 3. FINAL PASS: Render to screen with tone mapping and bloom
             // ====================================================================
-            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            glBindFramebuffer(GL_FRAMEBUFFER, m_imguiManager->GetGameFramebuffer());
             glViewport(0, 0, w, h);
             glClear(GL_COLOR_BUFFER_BIT);
 
@@ -276,7 +283,8 @@ namespace Framework {
            
             renderQuad();
 
-
+            // Unbind the framebuffer, returning rendering control to the main window
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
  
         
        

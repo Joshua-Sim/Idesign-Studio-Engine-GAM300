@@ -109,6 +109,8 @@ namespace Framework {
         return "";
     }
 
+
+
     std::string ImguiManager::SaveFileDialog()
     {
         OPENFILENAMEA ofn;
@@ -164,6 +166,12 @@ namespace Framework {
 
             ImGui::EndPopup();
         }
+    }
+
+
+    GLuint ImguiManager::GetGameFramebuffer()
+    {
+        return gameFramebuffer;
     }
 
     // Edwin, drag and drop Texture/Audio
@@ -262,8 +270,7 @@ namespace Framework {
     }
 
     void ImguiManager::Update(float deltaTime) {
-        // Bind the default framebuffer again
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
@@ -1200,8 +1207,7 @@ namespace Framework {
         {
             // Get the available size in the ImGui window
             ImVec2 viewportSize = ImGui::GetContentRegionAvail();
-            float aspectRatio = static_cast<float>(projWidth) / static_cast<float>(projHeight);
-
+            float aspectRatio = 1280.0f / 720.0f; // Use the known FBO dimensions
             float newWidth = viewportSize.x;
             float newHeight = viewportSize.x / aspectRatio;
 
