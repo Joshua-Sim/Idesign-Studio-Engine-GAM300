@@ -61,6 +61,7 @@ namespace Framework {
 		unsigned int CurrentSize = -1;
 		std::vector<Entity> sortedEntities;
 
+        Camera* getCamera();
 
     private:
         static void framebuffer_size_callback(GLFWwindow*, int, int);

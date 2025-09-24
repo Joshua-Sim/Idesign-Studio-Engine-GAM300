@@ -17,8 +17,6 @@
 #include "TextureAsset.h"
 #include "Debugger.h"
 #include <ImguiManager.h>
-#include <Graphics.h>
-
 
 
 
@@ -270,8 +268,6 @@ namespace Framework {
     }
 
     void ImguiManager::Update(float deltaTime) {
-
-
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();

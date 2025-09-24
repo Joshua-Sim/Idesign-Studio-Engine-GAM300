@@ -107,7 +107,7 @@ namespace Framework {
 
         // IMPORTANT: always store Graphics* as user pointer, not Camera*
         glfwSetWindowUserPointer(window, &camera);
-        glfwSetCursorPosCallback(window, mouse_callback);
+        //glfwSetCursorPosCallback(window, mouse_callback);
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
         // asset load / loading shape units
@@ -299,6 +299,10 @@ namespace Framework {
     // Get and return windows ptr for external system
     GLFWwindow* Graphics::GetWindow() {
         return window;
+    }
+
+    Camera* Graphics::getCamera() {
+        return &camera;
     }
 
     void Graphics::framebuffer_size_callback(GLFWwindow* window, int w, int h)

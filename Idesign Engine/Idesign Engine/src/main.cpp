@@ -73,6 +73,9 @@ int main(void)
         std::cerr << "Failed to initialize InputHandler!" << std::endl;
         return -1; // Exit if InputHandler initialization failed
     }
+    // 3. Use the new getter to connect the camera to the input handler
+    Camera* graphicsCamera = graphicsSystem.get()->getCamera();
+    inputHandlerSystem->SetCamera(graphicsCamera);
 
     // Registering systems in the ECS interface here
     auto messageSystem = std::make_unique<MessageSystem>();
@@ -87,6 +90,8 @@ int main(void)
     // Initialize the engine and run the main game loop
     engine->Initialize();
     engine->GameLoop();
+
+
 
     // Clear all systems and other dynamically allocated resources
     engine->DestroySystems();

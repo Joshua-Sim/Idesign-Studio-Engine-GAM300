@@ -16,6 +16,8 @@
 #include "InputHandler.h"
 #include <iostream>
 #include <EngineState.h>
+#include <imgui.h>
+#include <Camera.h>
 
 namespace Framework {
 
@@ -38,6 +40,7 @@ namespace Framework {
 		glfwSetKeyCallback(window, KeyCallback);
 		glfwSetMouseButtonCallback(window, MouseButtonCallback);
 		glfwSetCursorPosCallback(window, CursorPositionCallback);
+
 	}
 
 	/**
@@ -51,69 +54,103 @@ namespace Framework {
 
 		glfwPollEvents();  // Poll events for GLFW, key pressed and key released
 
-		// polling for key held example
-		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-			//std::cout << "W key is being held down (move forward)" << std::endl;
-		}
+		if (IsKeyPressed(GLFW_KEY_TAB)) {
+			isUIFocused = !isUIFocused; // Flip the state
 
-		if (IsKeyPressed(GLFW_KEY_F1))
-		{
-			engineState.SetPlay(!engineState.IsPlay());
-			
-		}
-	
-		if (IsKeyPressed(GLFW_KEY_F4))
-		{ // Set Engine state to debug mode (Displays bounding box, gizmos, system info , etc)p
-			engineState.SetInDebugMode(!engineState.IsInDebugMode());
-		}
-
-		if (IsMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
-			//std::cout << "Left mouse button clicked" << std::endl;
-			if (messageSystem) {
-				MessageMouseClick* msg = new MessageMouseClick(GLFW_MOUSE_BUTTON_LEFT);
-				messageSystem->Dispatch(msg);
+			if (isUIFocused) {
+				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+			}
+			else {
+				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 			}
 		}
-		
-		// BGM Audio
-		if (IsKeyPressed(GLFW_KEY_5))
-		{
-			GlobalAudio.UE_PlaySound("piano");
+
+		ImGuiIO& io = ImGui::GetIO();
+
+		// Conditionally enable/disable ImGui input capturing
+		// When UI is focused, ImGui behaves normally.
+		// When game is focused, we tell ImGui to ignore all inputs.
+		if (!isUIFocused) {
+			io.ConfigFlags |= ImGuiConfigFlags_NoMouse;
+			io.ConfigFlags |= ImGuiConfigFlags_NoKeyboard;
+		}
+		else {
+			io.ConfigFlags &= ~ImGuiConfigFlags_NoMouse;
+			io.ConfigFlags &= ~ImGuiConfigFlags_NoKeyboard;
 		}
 
-		if (IsKeyPressed(GLFW_KEY_6))
-		{
-			GlobalAudio.UE_PauseSound("piano");
-		}
+		if (!isUIFocused) {
+			// polling for key held example
+			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+				//std::cout << "W key is being held down (move forward)" << std::endl;
+			}
 
-		// Sound Effects Audio
-		if (IsKeyPressed(GLFW_KEY_7))
-		{
-			GlobalAudio.UE_PlaySound("buttonclick");
-		}
+			if (IsKeyPressed(GLFW_KEY_F1))
+			{
+				engineState.SetPlay(!engineState.IsPlay());
 
-		if (IsKeyPressed(GLFW_KEY_8))
-		{
-			GlobalAudio.UE_PlaySound("selectbutton");
-		}
+			}
 
-		if (IsKeyPressed(GLFW_KEY_9))
-		{
-			GlobalAudio.UE_PlaySound("previousbutton");
-		}
+			if (IsKeyPressed(GLFW_KEY_F4))
+			{ // Set Engine state to debug mode (Displays bounding box, gizmos, system info , etc)p
+				engineState.SetInDebugMode(!engineState.IsInDebugMode());
+			}
 
-		// Audio Volume Control
-		if (IsKeyPressed(GLFW_KEY_MINUS))
-		{
-			GlobalAudio.DecrementGroupVol("BackgroundMusic");
-			GlobalAudio.DecrementGroupVol("SoundEffects");
-		}
 
-		if (IsKeyPressed(GLFW_KEY_EQUAL))
-		{
-			GlobalAudio.IncrementGroupVol("BackgroundMusic");
-			GlobalAudio.IncrementGroupVol("SoundEffects");
+			// BGM Audio
+			if (IsKeyPressed(GLFW_KEY_5))
+			{
+				GlobalAudio.UE_PlaySound("piano");
+			}
+
+			if (IsKeyPressed(GLFW_KEY_6))
+			{
+				GlobalAudio.UE_PauseSound("piano");
+			}
+
+			// Sound Effects Audio
+			if (IsKeyPressed(GLFW_KEY_7))
+			{
+				GlobalAudio.UE_PlaySound("buttonclick");
+			}
+
+			if (IsKeyPressed(GLFW_KEY_8))
+			{
+				GlobalAudio.UE_PlaySound("selectbutton");
+			}
+
+			if (IsKeyPressed(GLFW_KEY_9))
+			{
+				GlobalAudio.UE_PlaySound("previousbutton");
+			}
+
+			// Audio Volume Control
+			if (IsKeyPressed(GLFW_KEY_MINUS))
+			{
+				GlobalAudio.DecrementGroupVol("BackgroundMusic");
+				GlobalAudio.DecrementGroupVol("SoundEffects");
+			}
+
+			if (IsKeyPressed(GLFW_KEY_EQUAL))
+			{
+				GlobalAudio.IncrementGroupVol("BackgroundMusic");
+				GlobalAudio.IncrementGroupVol("SoundEffects");
+			}
+
+
+
+			if (IsMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
+				//std::cout << "Left mouse button clicked" << std::endl;
+				if (messageSystem) {
+					MessageMouseClick* msg = new MessageMouseClick(GLFW_MOUSE_BUTTON_LEFT);
+					messageSystem->Dispatch(msg);
+				}
+			}
 		}
+	}
+
+	void InputHandler::SetCamera(Camera* camera) {
+		this->mainCamera = camera;
 	}
 
 	/*
@@ -300,7 +337,5 @@ namespace Framework {
 			}
 		}
 	}
-
-
 }
 
