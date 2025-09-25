@@ -29,7 +29,7 @@
 #include <WindowConfigProperties.h>
 
 // Asset Files
-#include <AssetCompiler.h>
+#include "AssetCompiler.h"
 #include <AssetLoader.h>
 #include "AssetHandler.h"
 

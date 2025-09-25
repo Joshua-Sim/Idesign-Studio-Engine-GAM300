@@ -13,7 +13,6 @@
 
 //FILES
 #include "System.h"
-#include "GraphicsWindows.h"
 #include <GraphicsShader.h>
 #include <InputHandler.h>
 #include <PhysicsSystem.h>

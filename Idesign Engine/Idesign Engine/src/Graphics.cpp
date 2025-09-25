@@ -101,6 +101,8 @@ namespace Framework {
     // Initialize the system
     void Graphics::Initialize()
     {
+        WindowConfig* config = AssetManager::Instance().Get<WindowConfig>("WindowConfig");
+
         // always enable for depth test framebuffering
         glEnable(GL_DEPTH_TEST);
 
@@ -431,7 +433,4 @@ namespace Framework {
 
         return framebuffer;
     }
-
-
 }
-

@@ -1,19 +1,139 @@
-﻿  SignalHandler.cpp
+﻿  imgui.cpp
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\minwindef.h(130,9): warning C4005: 'APIENTRY': macro redefinition
-  (compiling source file '/src/SignalHandler.cpp')
-      C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\glfw-3.4.bin.WIN64\include\GLFW\glfw3.h(123,11):
+  (compiling source file '/lib/imgui/imgui.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\glfw-3.4.bin.WIN64\include\GLFW\glfw3.h(123,11):
       see previous definition of 'APIENTRY'
   
-AnimationSystem.obj : warning LNK4099: PDB 'vc143.pdb' was not found with 'AnimationSystem.obj' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\vc143.pdb'; linking object as if no debug info
-AssetManager.obj : warning LNK4099: PDB 'vc143.pdb' was not found with 'AssetManager.obj' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\vc143.pdb'; linking object as if no debug info
-ButtonSystem.obj : warning LNK4099: PDB 'vc143.pdb' was not found with 'ButtonSystem.obj' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\vc143.pdb'; linking object as if no debug info
-Collision.obj : warning LNK4099: PDB 'vc143.pdb' was not found with 'Collision.obj' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\vc143.pdb'; linking object as if no debug info
-EnemyManager.obj : warning LNK4099: PDB 'vc143.pdb' was not found with 'EnemyManager.obj' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\vc143.pdb'; linking object as if no debug info
-EntityAsset.obj : warning LNK4099: PDB 'vc143.pdb' was not found with 'EntityAsset.obj' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\vc143.pdb'; linking object as if no debug info
-LogicManager.obj : warning LNK4099: PDB 'vc143.pdb' was not found with 'LogicManager.obj' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\vc143.pdb'; linking object as if no debug info
-PhysicsSystem.obj : warning LNK4099: PDB 'vc143.pdb' was not found with 'PhysicsSystem.obj' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\vc143.pdb'; linking object as if no debug info
-PlayerSystem.obj : warning LNK4099: PDB 'vc143.pdb' was not found with 'PlayerSystem.obj' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\vc143.pdb'; linking object as if no debug info
-glew32s.lib(glew.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'glew32s.lib(glew.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\vc120.pdb'; linking object as if no debug info
+  imgui_demo.cpp
+  imgui_draw.cpp
+  imgui_impl_glfw.cpp
+  imgui_impl_opengl3.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\minwindef.h(130,9): warning C4005: 'APIENTRY': macro redefinition
+  (compiling source file '/lib/imgui/imgui_impl_opengl3.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\glfw-3.4.bin.WIN64\include\GLFW\glfw3.h(123,11):
+      see previous definition of 'APIENTRY'
+  
+  imgui_tables.cpp
+  imgui_widgets.cpp
+  AnimationSystem.cpp
+  AssetCompiler.cpp
+  AssetManager.cpp
+  Audio.cpp
+  ButtonSystem.cpp
+  Collision.cpp
+  ComponentManager.cpp
+  Coordinator.cpp
+  Core.cpp
+  Debugger.cpp
+  DummySystem.cpp
+  EnemyManager.cpp
+  EngineState.cpp
+  Generating Code...
+  Compiling...
+  EntityManager.cpp
+  FontSystem.cpp
+  Graphics.cpp
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(63,30): warning C4245: 'initializing': conversion from 'int' to 'unsigned int', signed/unsigned mismatch
+  (compiling source file '/src/Graphics.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(191,33): warning C4100: 'deltaTime': unreferenced parameter
+  (compiling source file '/src/Graphics.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(312,58): warning C4100: 'window': unreferenced parameter
+  (compiling source file '/src/Graphics.cpp')
+  
+  GraphicsShader.cpp
+  ImguiManager.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\minwindef.h(130,9): warning C4005: 'APIENTRY': macro redefinition
+  (compiling source file '/src/ImguiManager.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\glfw-3.4.bin.WIN64\include\GLFW\glfw3.h(123,11):
+      see previous definition of 'APIENTRY'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(63,30): warning C4245: 'initializing': conversion from 'int' to 'unsigned int', signed/unsigned mismatch
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(172,25): warning C4459: declaration of 'filePath' hides global declaration
+  (compiling source file '/src/ImguiManager.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(30,24):
+      see declaration of 'Framework::filePath'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(262,37): warning C4100: 'deltaTime': unreferenced parameter
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(330,21): warning C4189: 'count': local variable is initialized but not referenced
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(329,21): warning C4189: 'columns': local variable is initialized but not referenced
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(521,38): warning C4189: 'renderComponent': local variable is initialized but not referenced
+  (compiling source file '/src/ImguiManager.cpp')
+  
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\algorithm(3799,24): warning C4244: '=': conversion from 'int' to 'char', possible loss of data
+  (compiling source file '/src/ImguiManager.cpp')
+      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\algorithm(3799,24):
+      the template instantiation context (the oldest one first) is
+          D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(176,18):
+          see reference to function template instantiation '_OutIt std::transform<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,int(__cdecl *)(int)>(const _InIt,const _InIt,_OutIt,_Fn)' being compiled
+          with
+          [
+              _OutIt=std::_String_iterator<std::_String_val<std::_Simple_types<char>>>,
+              _Elem=char,
+              _InIt=std::_String_iterator<std::_String_val<std::_Simple_types<char>>>,
+              _Fn=int (__cdecl *)(int)
+          ]
+  
+  InputHandler.cpp
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\InputHandler.cpp(335,23): warning C4189: 'msg': local variable is initialized but not referenced
+  (compiling source file '/src/InputHandler.cpp')
+  
+  Lighting.cpp
+  LogicManager.cpp
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EnemyBehavior.h(90,63): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EnemyBehavior.h(90,63): warning C4244:         with
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EnemyBehavior.h(90,63): warning C4244:         [
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EnemyBehavior.h(90,63): warning C4244:             T=float
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EnemyBehavior.h(90,63): warning C4244:         ]
+  (compiling source file '/src/LogicManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EnemyBehavior.h(104,63): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EnemyBehavior.h(104,63): warning C4244:         with
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EnemyBehavior.h(104,63): warning C4244:         [
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EnemyBehavior.h(104,63): warning C4244:             T=float
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EnemyBehavior.h(104,63): warning C4244:         ]
+  (compiling source file '/src/LogicManager.cpp')
+  
+  Matrix3x3.cpp
+  Mesh.cpp
+  MeshLoader.cpp
+  MessageSystem.cpp
+  PhysicsSystem.cpp
+  PlayerSystem.cpp
+  ShaderProgram.cpp
+  SignalHandler.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\minwindef.h(130,9): warning C4005: 'APIENTRY': macro redefinition
+  (compiling source file '/src/SignalHandler.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\glfw-3.4.bin.WIN64\include\GLFW\glfw3.h(123,11):
+      see previous definition of 'APIENTRY'
+  
+  TagManager.cpp
+  Terrain.cpp
+  TestSystem.cpp
+  TextureLoader.cpp
+  Generating Code...
+  Compiling...
+  Vector2D.cpp
+  main.cpp
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(63,30): warning C4245: 'initializing': conversion from 'int' to 'unsigned int', signed/unsigned mismatch
+  (compiling source file '/src/main.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\main.cpp(57,19): warning C4189: 'config': local variable is initialized but not referenced
+  (compiling source file '/src/main.cpp')
+  
+  Generating Code...
+  LINK : D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe not found or not built by the last incremental link; performing full link
+pch.obj : warning LNK4099: PDB 'vc143.pdb' was not found with 'pch.obj' or at 'D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\vc143.pdb'; linking object as if no debug info
+glew32s.lib(glew.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'glew32s.lib(glew.obj)' or at 'D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\vc120.pdb'; linking object as if no debug info
 LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
 LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
-  Idesign Engine.vcxproj -> C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe
+  Idesign Engine.vcxproj -> D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe

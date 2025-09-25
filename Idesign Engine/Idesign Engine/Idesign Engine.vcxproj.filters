@@ -183,12 +183,6 @@
     <ClInclude Include="src\Terrain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\AssetCompiler.h">
-      <Filter>Header Files\Assets</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AssetLoader.h">
-      <Filter>Header Files\Assets</Filter>
-    </ClInclude>
     <ClInclude Include="src\AssetManager.h">
       <Filter>Header Files\Assets</Filter>
     </ClInclude>
@@ -300,35 +294,41 @@
     <ClInclude Include="src\rapidjson\writer.h">
       <Filter>Header Files\Assets\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="src\WindowConfigProperties.h">
-      <Filter>Header Files\Assets\Property</Filter>
-    </ClInclude>
-    <ClInclude Include="src\TransformProperties.h">
-      <Filter>Header Files\Assets\Property</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AudioProperties.h">
-      <Filter>Header Files\Assets\Property</Filter>
-    </ClInclude>
-    <ClInclude Include="src\PrefabProperties.h">
-      <Filter>Header Files\Assets\Property</Filter>
-    </ClInclude>
-    <ClInclude Include="src\PropertyMacro.h">
-      <Filter>Header Files\Assets\Property</Filter>
-    </ClInclude>
-    <ClInclude Include="src\PropertySystem.h">
-      <Filter>Header Files\Assets\Property</Filter>
-    </ClInclude>
     <ClInclude Include="src\JsonSerialize.h">
       <Filter>Header Files\Assets</Filter>
     </ClInclude>
-    <ClInclude Include="src\TextureProperties.h">
-      <Filter>Header Files\Assets\Property</Filter>
+    <ClInclude Include="src\AudioAsset.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\AssetHandler.h">
-      <Filter>Header Files\Assets</Filter>
+    <ClInclude Include="src\backward.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\UndoRedoSystem.h">
-      <Filter>Header Files\Assets</Filter>
+    <ClInclude Include="src\DictionaryAsset.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EntityAsset.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FontAsset.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FontShaderAsset.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GraphicsWindows.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImguiManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SignalHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TextureAsset.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\WindowAsset.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -490,6 +490,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ShaderProgram.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImguiManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SignalHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\AssetCompiler.cpp">
