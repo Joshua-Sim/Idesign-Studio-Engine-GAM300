@@ -273,6 +273,7 @@ namespace Framework
     {
         Sound* pSound = nullptr;        // Initialize a Sound pointer to nullptr
 
+        // Get is currently taking in customName but right now the key is changed to GUID
         // Retrieve AudioProperties from AssetManager
         AudioProperties* audioProps = AssetManager::Instance().Get<AudioProperties>(customName);
         if (!audioProps)

@@ -18,6 +18,7 @@ namespace Framework
 {
     struct WindowConfig
     {
+        std::string guid;
         int x = 0;
         int y = 0;
         std::string programName;
@@ -25,6 +26,7 @@ namespace Framework
 
     inline constexpr std::array g_WindowConfigPropsArray =
     {
+        PROP_STRING_META(guid, WindowConfig, "Unique ID", "WindowSystem"),
         PROP_INT_META(x, WindowConfig, "Horizontal position", "Position", 0, 1920),
         PROP_INT_META(y, WindowConfig, "Vertical position", "Position", 0, 1080),
         PROP_STRING_META(programName, WindowConfig, "Name of the window", "General"),

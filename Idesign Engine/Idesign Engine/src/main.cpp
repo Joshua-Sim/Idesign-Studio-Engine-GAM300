@@ -20,8 +20,9 @@
 #include "AnimationSystem.h"
 #include "LogicManager.h"
 
-#include "Audio.h"
+//#include "Audio.h"
 #include <WindowConfigProperties.h>
+#include "Audio.h"
 using namespace Framework;
 
 void EnableMemoryLeakChecking(int breakAlloc = -1)
@@ -50,8 +51,8 @@ int main(void)
     //  Windows
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     //CompileSingleObject<WindowConfig>("src/Data/WindowAsset.json", "src/Data/WindowAsset.cfg", g_WindowConfigProps);
-    /*WindowConfig& config = AssetManager::Instance().LoadBinary<WindowConfig>("WindowConfig", "src/Data/WindowAsset.cfg", g_WindowConfigProps);
-    auto Window = std::make_unique<GraphicsWindows>(&config, engine.get());*/
+    WindowConfig& config = AssetManager::Instance().LoadBinary<WindowConfig>("WindowConfig", "src/Data/WindowAsset.cfg", g_WindowConfigProps);
+    //auto Window = std::make_unique<GraphicsWindows>(&config, engine.get());
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     //  Audio
     // ------------------------------------------------------------------------------------------------------------------------------------------------------

@@ -31,6 +31,8 @@
 // Asset Files
 #include <AssetCompiler.h>
 #include <AssetLoader.h>
+#include "AssetHandler.h"
+
 namespace Framework
 {
     REGISTER_TYPE_NAME(WindowConfig);
@@ -49,7 +51,8 @@ namespace Framework
         const prop_list* pProps;                        // Pointer to the property list used for serialization/deserialization
         std::string typeName;                           // String to store the type name of the asset
         std::string binaryPath;                         //
-        AssetEntry() : pObject(nullptr, [](void*) {}), pProps(nullptr), typeName() {}   // Default Constructor   
+
+        AssetEntry() : pObject(nullptr, [](void*) {}), pProps(nullptr), typeName(), binaryPath() {}   // Default Constructor   
         AssetEntry(const AssetEntry&) = delete;                                         // Delete Copy Constructor
         AssetEntry& operator=(const AssetEntry&) = delete;                              // Delete Copy Assignment
         AssetEntry(AssetEntry&&) = default;                                             // Move Constructor
@@ -81,6 +84,14 @@ namespace Framework
         {
             auto obj = AssetLoader<T>::Load(binaryPath, props);
 
+            // Assign GUID if missing
+            /*if (obj->guid.empty())
+            {
+                obj->guid = GenerateGUID();
+            }
+
+            std::string guid = obj->guid;*/
+
             std::unique_ptr<void, void(*)(void*)> erasedPtr
             (
                 static_cast<void*>(obj.release()),
@@ -99,14 +110,27 @@ namespace Framework
             for (size_t i = 0; i < loadedObjects.size(); ++i)
             {
                 std::unique_ptr<T>& obj = loadedObjects[i];
-                std::string arrayName = obj->customName.empty() ? "unnamed_" + std::to_string(i) : obj->customName;
 
-                std::unique_ptr<void, void(*)(void*)> erasedPtr(
+                // Assign GUID if missing
+                if (obj->guid.empty()) 
+                {
+                    obj->guid = GenerateGUID();
+                }
+
+                // Get() function nid to change parameter to guid rather then customname
+                // Allow current function to generateguid for object, but use name as key
+                // using name as key to retrieve the guid of the object, then do hot reload
+                std::string guid = obj->guid;
+                std::string name = obj->customName;
+                
+                std::unique_ptr<void, void(*)(void*)> erasedPtr
+                (
                     static_cast<void*>(obj.release()),
                     [](void* ptr) { delete static_cast<T*>(ptr); }
                 );
 
-                m_Assets[arrayName] = AssetEntry(std::move(erasedPtr), &props, TypeName<T>::value, binaryPath);
+                // Use GUID as the key in the asset map
+                m_Assets[name] = AssetEntry(std::move(erasedPtr), &props, TypeName<T>::value, binaryPath);
             }
         }
 

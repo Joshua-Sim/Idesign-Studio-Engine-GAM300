@@ -16,12 +16,18 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{1918bdb8-3d04-44ed-8cd1-9004ab2821b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Assets">
+      <UniqueIdentifier>{30bc8075-2c21-4148-ae76-78ecc47870e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Assets\rapidjson">
+      <UniqueIdentifier>{846d2edc-77b2-464f-b3d5-9dcadcf8d817}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Assets\Property">
+      <UniqueIdentifier>{d0367ea6-a8a7-4cff-8842-5c07e26cef82}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\AnimationSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AssetManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ButtonSystem.h">
@@ -78,9 +84,6 @@
     <ClInclude Include="src\InputHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\JsonSerialize.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\LogicManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -102,118 +105,10 @@
     <ClInclude Include="src\PlayerSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\rapidjson\allocators.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\cursorstreamwrapper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\document.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\encodedstream.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\encodings.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\error\en.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\error\error.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\filereadstream.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\filewritestream.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\fwd.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\internal\biginteger.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\internal\clzll.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\internal\diyfp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\internal\dtoa.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\internal\ieee754.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\internal\itoa.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\internal\meta.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\internal\pow10.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\internal\regex.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\internal\stack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\internal\strfunc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\internal\strtod.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\internal\swap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\istreamwrapper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\memorybuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\memorystream.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\rapidjson\msinttypes\inttypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\msinttypes\stdint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\ostreamwrapper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\pointer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\prettywriter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\rapidjson.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\reader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\schema.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\stream.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\stringbuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\uri.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\writer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\System.h">
@@ -288,29 +183,152 @@
     <ClInclude Include="src\Terrain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\WindowConfigProperties.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\AssetCompiler.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Assets</Filter>
     </ClInclude>
     <ClInclude Include="src\AssetLoader.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Assets</Filter>
     </ClInclude>
-    <ClInclude Include="src\PrefabProperties.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="src\AssetManager.h">
+      <Filter>Header Files\Assets</Filter>
     </ClInclude>
-    <ClInclude Include="src\PropertyMacro.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="src\rapidjson\allocators.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
     </ClInclude>
-    <ClInclude Include="src\PropertySystem.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="src\rapidjson\document.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\internal\diyfp.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\internal\biginteger.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\internal\clzll.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\cursorstreamwrapper.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\internal\dtoa.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\encodings.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\error\en.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\encodedstream.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\error\error.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\filereadstream.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\filewritestream.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\internal\ieee754.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\fwd.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\istreamwrapper.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\internal\itoa.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\internal\pow10.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\pointer.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\ostreamwrapper.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\internal\meta.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\prettywriter.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\rapidjson.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\memorystream.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\memorybuffer.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\stream.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\internal\stack.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\internal\regex.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\schema.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\reader.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\internal\swap.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\internal\strfunc.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\stringbuffer.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\internal\strtod.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\uri.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\writer.h">
+      <Filter>Header Files\Assets\rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="src\WindowConfigProperties.h">
+      <Filter>Header Files\Assets\Property</Filter>
     </ClInclude>
     <ClInclude Include="src\TransformProperties.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Assets\Property</Filter>
     </ClInclude>
     <ClInclude Include="src\AudioProperties.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Assets\Property</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PrefabProperties.h">
+      <Filter>Header Files\Assets\Property</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PropertyMacro.h">
+      <Filter>Header Files\Assets\Property</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PropertySystem.h">
+      <Filter>Header Files\Assets\Property</Filter>
+    </ClInclude>
+    <ClInclude Include="src\JsonSerialize.h">
+      <Filter>Header Files\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TextureProperties.h">
+      <Filter>Header Files\Assets\Property</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AssetHandler.h">
+      <Filter>Header Files\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UndoRedoSystem.h">
+      <Filter>Header Files\Assets</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

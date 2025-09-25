@@ -18,6 +18,7 @@ namespace Framework
 {
     struct AudioProperties
     {
+        std::string guid;
         std::string customName;
         std::string filePath;
         std::string mode;
@@ -26,6 +27,7 @@ namespace Framework
 
     inline constexpr std::array g_AudioPropertiesPropsArray =
     {
+        PROP_STRING(guid, AudioProperties),
         PROP_STRING(customName, AudioProperties),
         PROP_STRING(filePath, AudioProperties),
         PROP_STRING(mode, AudioProperties),

@@ -28,6 +28,8 @@
 #include "MeshLoader.h"
 #include "TextureLoader.h"
 
+#include "AssetManager.h"
+#include "WindowConfigProperties.h"
 namespace Framework {
 
 	class Graphics : public ISystem

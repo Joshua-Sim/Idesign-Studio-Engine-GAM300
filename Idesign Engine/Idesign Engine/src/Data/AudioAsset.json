@@ -1,30 +1,35 @@
 {
     "AudioProperties": [
       {
+        "guid": "",
         "customName": "winloop",
         "filePath": "Assets/Audio/bgm/winloop.wav",
         "mode": "loop",
         "soundType": "background"
       },
       {
+        "guid": "",
         "customName": "piano",
         "filePath": "Assets/Audio/bgm/piano.wav",
         "mode": "loop",
         "soundType": "background"
       },
       {
+        "guid": "",
         "customName": "buttonclick",
         "filePath": "Assets/Audio/soundeffect/button_click.wav",
         "mode": "oneshot",
         "soundType": "effect"
       },
       {
+        "guid": "",
         "customName": "selectbutton",
         "filePath": "Assets/Audio/soundeffect/select_button.wav",
         "mode": "oneshot",
         "soundType": "effect"
       },
       {
+        "guid": "",
         "customName": "previousbutton",
         "filePath": "Assets/Audio/soundeffect/previous_button.wav",
         "mode": "oneshot",

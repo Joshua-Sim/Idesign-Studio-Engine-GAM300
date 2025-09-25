@@ -64,11 +64,11 @@ namespace Framework {
     //DirectionalLightCPU sun; // defaults are fine
     bool Graphics::mouseCaptured = true;
 
-    static const unsigned int WIDTH = 1280;
-    static const unsigned int HEIGHT = 720;
+    //static const unsigned int WIDTH = 1280;
+    //static const unsigned int HEIGHT = 720;
 
-    static float lastX = WIDTH * 0.5f;
-    static float lastY = HEIGHT * 0.5f;
+    //static float lastX = WIDTH * 0.5f;
+    //static float lastY = HEIGHT * 0.5f;
     static bool firstMouse = true;
     static bool mouseCaptured = true;
     bool groundMode = true; // toggle with a key (e.g., F1)
@@ -88,12 +88,14 @@ namespace Framework {
     // Initialize the system
     void Graphics::Initialize()
     {
+        WindowConfig* config = AssetManager::Instance().Get<WindowConfig>("WindowConfig");
+
         if (!glfwInit()) { std::cerr << "GLFW init failed\n"; return; }
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-        window = glfwCreateWindow(WIDTH, HEIGHT, "ECS 3D Renderer", nullptr, nullptr);
+        window = glfwCreateWindow(config->x, config->y, config->programName.c_str(), nullptr, nullptr);
         if (!window) { std::cerr << "Window creation failed\n"; glfwTerminate(); return; }
         glfwMakeContextCurrent(window);
 
@@ -147,13 +149,13 @@ namespace Framework {
         glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
         glGenTextures(1, &colorBuffer);
         glBindTexture(GL_TEXTURE_2D, colorBuffer);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, WIDTH, HEIGHT,0, GL_RGBA, GL_FLOAT, NULL);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, config->x, config->y,0, GL_RGBA, GL_FLOAT, NULL);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBuffer, 0);
         glGenRenderbuffers(1, &rboDepth);
         glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, WIDTH, HEIGHT);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, config->x, config->y);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
             std::cout << "ERROR::FRAMEBUFFER:: HDR Framebuffer is not complete!\n";
@@ -165,7 +167,7 @@ namespace Framework {
         {
             glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[i]);
             glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[i]);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, WIDTH, HEIGHT, 0, GL_RGBA, GL_FLOAT, NULL);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, config->x, config->y, 0, GL_RGBA, GL_FLOAT, NULL);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -296,6 +298,10 @@ namespace Framework {
     // DO NOT CHANGE
     void Graphics::mouse_callback(GLFWwindow* window, double xpos, double ypos)
     {
+        WindowConfig* config = AssetManager::Instance().Get<WindowConfig>("WindowConfig");
+        static float lastX = config->x * 0.5f;
+        static float lastY = config->y * 0.5f;
+
         if (!mouseCaptured) return;
         if (firstMouse) { lastX = (float)xpos; lastY = (float)ypos; firstMouse = false; }
         float xoffset = (float)xpos - lastX;

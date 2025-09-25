@@ -2,7 +2,6 @@ d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\i
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\vc143.pdb
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\vc143.idb
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\pch.obj
-d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\entitymanager.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\enginestate.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\enemymanager.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\dummysystem.obj
@@ -14,6 +13,7 @@ d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\c
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\buttonsystem.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\audio.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\assetmanager.obj
+d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\assetcompiler.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\animationsystem.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imgui_widgets.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imgui_tables.obj
@@ -41,29 +41,14 @@ d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\i
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\graphicsshader.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\graphics.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\fontsystem.obj
-d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\assetcompiler.obj
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\x64\debug\poly2tri.dll
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\x64\debug\minizip.dll
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\x64\debug\zlibd1.dll
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\x64\debug\kubazip.dll
-c:\users\victo\onedrive\desktop\sit\year 3\gam300\idesign-studio-engine-gam300\idesign engine\x64\debug\pugixml.dll
+d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\entitymanager.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\x64\debug\idesign engine.exe
 d:\github\idesign-studio-engine-gam300\idesign engine\x64\debug\idesign engine.pdb
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.ilk
-d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\audioasset.obj
-d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\dictionaryasset.obj
-d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\entityasset.obj
-d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\fontasset.obj
-d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\fontshaderasset.obj
-d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\graphicswindows.obj
-d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\textureasset.obj
-d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\windowasset.obj
-d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\xresource_mgr.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\cl.command.1.tlog
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\cl.items.tlog
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\cl.read.1.tlog
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\cl.write.1.tlog
-d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\idesign engine.write.1u.tlog
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\link.command.1.tlog
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\link.read.1.tlog
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\link.secondary.1.tlog
