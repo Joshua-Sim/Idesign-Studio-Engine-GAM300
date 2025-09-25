@@ -50,14 +50,16 @@ enum EnemyType {
 // ----- Define Components ----
 
 // Transform component for position, rotation, and scale // Graphics System
-struct TransformComponent {
+struct TransformComponent 
+{
     glm::vec2 position{ 0.0f, 0.0f };
     float rotation = 0.0f;
     glm::vec2 scale{ 1.0f, 1.0f };
 };
 
 // Transform component for position, rotation, and scale // Graphics System rendering
-struct RenderComponent {
+struct RenderComponent 
+{
     std::string textureID;        // Texture or sprite name to render
     glm::vec3 color{ 1.0f, 1.0f, 1.0f }; // Tint color (default to white)
     float alpha = 1.0f;           // Opacity

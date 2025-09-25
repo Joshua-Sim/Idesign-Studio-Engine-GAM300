@@ -19,6 +19,9 @@
 #include <imgui.h>
 #include <Camera.h>
 
+static bool sFirstMouse = true;
+static double sLastX = 0.0, sLastY = 0.0;
+
 namespace Framework {
 
 	// Initialize the static instance to nullptr
@@ -62,6 +65,7 @@ namespace Framework {
 			}
 			else {
 				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+				sFirstMouse = true;  // avoid first-frame mouse jump
 			}
 		}
 
@@ -136,7 +140,6 @@ namespace Framework {
 				//GlobalAudio.IncrementGroupVol("BackgroundMusic");
 				//GlobalAudio.IncrementGroupVol("SoundEffects");
 			}
-
 
 
 			if (IsMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
@@ -305,7 +308,7 @@ namespace Framework {
 			}
 
 			// Store the state of the mouse button in the map
-			inputSystem->keyStates[button] = currentMouseState;
+			inputSystem->mouseButtonStates[button] = currentMouseState;  // << was keyStates[button]
 
 			// Dispatch a message for mouse button press/release events
 			if (currentMouseState == KEY_PRESSED || currentMouseState == KEY_RELEASED) {
@@ -326,15 +329,19 @@ namespace Framework {
 	 */
 	void InputHandler::CursorPositionCallback(GLFWwindow* window, double xpos, double ypos) {
 		InputHandler* inputSystem = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
-		if (inputSystem) {
-			inputSystem->mouseX = xpos;
-			inputSystem->mouseY = ypos;
+		if (!inputSystem) return;
 
-			// Dispatch the mouse move event
-			if (inputSystem->messageSystem) {
-				MessageMouseMove* msg = new MessageMouseMove(xpos, ypos);
-			//	inputSystem->messageSystem->Dispatch(msg);
-			}
+		inputSystem->mouseX = xpos;
+		inputSystem->mouseY = ypos;
+
+		// Only rotate camera when game has focus (TAB toggled off UI)
+		if (!inputSystem->isUIFocused && inputSystem->mainCamera) {
+			if (sFirstMouse) { sLastX = xpos; sLastY = ypos; sFirstMouse = false; }
+			float xoffset = static_cast<float>(xpos - sLastX);
+			float yoffset = static_cast<float>(sLastY - ypos); // y inverted
+			sLastX = xpos; sLastY = ypos;
+
+			inputSystem->mainCamera->processMouseMovement(xoffset, yoffset);
 		}
 	}
 }

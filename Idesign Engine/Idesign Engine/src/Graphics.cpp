@@ -58,18 +58,7 @@ extern Framework::FontSystem fontSystem;
 
 
 namespace Framework {
-    //ShaderProgram terrainShader;
-    //ShaderProgram meshShader;
-    //std::vector<PointLightCPU> pointLights;
-    //std::vector<SpotLightCPU> spotLights;
-    //DirectionalLightCPU sun; // defaults are fine
     bool Graphics::mouseCaptured = true;
-
-    //static const unsigned int WIDTH = 1280;
-    //static const unsigned int HEIGHT = 720;
-
-    //static float lastX = WIDTH * 0.5f;
-    //static float lastY = HEIGHT * 0.5f;
     static bool firstMouse = true;
     static bool mouseCaptured = true;
     bool groundMode = true; // toggle with a key (e.g., F1)
@@ -106,13 +95,13 @@ namespace Framework {
         // always enable for depth test framebuffering
         glEnable(GL_DEPTH_TEST);
 
-        // set callbacks
-        glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+        //// set callbacks
+        //glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-        // IMPORTANT: always store Graphics* as user pointer, not Camera*
-        glfwSetWindowUserPointer(window, &camera);
-        //glfwSetCursorPosCallback(window, mouse_callback);
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        //// IMPORTANT: always store Graphics* as user pointer, not Camera*
+        //glfwSetWindowUserPointer(window, &camera);
+        ////glfwSetCursorPosCallback(window, mouse_callback);
+        //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
         // asset load / loading shape units
         MeshLoader::loadMesh("Assets/Objects/player.obj", mesh);
@@ -124,13 +113,13 @@ namespace Framework {
 
         // Initialisers for OpenGL (IMPORTANT : always call these after every initialiser values)
         // If want to change any values, please change in header or reconstruct after calling
-        //terrainShader.initGL();
+        terrainShader.initGL();
         meshShader.initGL();
         blurShader.initGL();
         finalShader.initGL();
         terrain.initGL();
 
-        //initialise shapes
+        //initialise geometry objects
         cube.initGL();
         plane.initGL();
         cone.initGL();
@@ -212,7 +201,7 @@ namespace Framework {
             glClearColor(0.07f, 0.09f, 0.12f, 1.f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            glm::mat4 proj = glm::perspective(glm::radians(camera.zoom), aspect, 0.1f, 500.0f);
+            glm::mat4 proj = camera.getProjectionMatrix(w, h);
             glm::mat4 view = camera.getViewMatrix();
 
             // stick to ground
@@ -224,7 +213,7 @@ namespace Framework {
             terrainShader.setMat4("uProj", proj);
             terrainShader.setMat4("uView", view);
             terrainShader.setMat4("uModel", glm::mat4(1.f));
-            terrainShader.setVec3("uAlbedo", { 0.6f,0.4f,0.2f });
+            terrainShader.setVec3("uAlbedo", { 0.6f,0.4f,0.2f }); //terrain color
             LightComponent::upload(terrainShader, sun, hasSun, pointLights, spotLights);
             terrain.draw();
 
@@ -242,8 +231,9 @@ namespace Framework {
             glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
 
 
-            // drawing of 5 shapes (testing)
-            for (int i = 0; i < 5; ++i) {
+            // drawing of 5 objects (primitives)
+            for (int i = 0; i < 5; ++i) 
+            {
                 glm::mat4 model(1.0f);
                 model = glm::translate(model, glm::vec3((i - 2) * 1.7f, 0.0f, 0.0f));
                 meshShader.setMat4("uModel", model);
@@ -283,15 +273,11 @@ namespace Framework {
             finalShader.setInt("bloomTexture", 1);
             finalShader.setFloat("exposure", hdrExposure);
             finalShader.setFloat("bloomStrength", bloomStrength);
-
            
             renderQuad();
 
             // Unbind the framebuffer, returning rendering control to the main window
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
- 
-        
-       
     }
 
     // Get the name of the system
