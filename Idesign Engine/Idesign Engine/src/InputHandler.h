@@ -17,6 +17,7 @@
 #include <unordered_map>
 #include "MessageSystem.h"  // Include the MessageSystem header
 #include "Audio.h"
+#include "Camera.h"
 
 namespace Framework {
 
@@ -61,6 +62,9 @@ namespace Framework {
         double GetMouseX() const;
         double GetMouseY() const;
 
+        bool isUIFocused = true;
+
+        void SetCamera(Camera* camera);
     private:
         // Enum for tracking key and mouse states
         enum KeyState {
@@ -87,5 +91,6 @@ namespace Framework {
         static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
         static void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
         static void CursorPositionCallback(GLFWwindow* window, double xpos, double ypos);
+        Camera* mainCamera = nullptr;
     };
 }

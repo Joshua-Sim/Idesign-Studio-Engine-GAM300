@@ -21,6 +21,8 @@
 #include "EnemyManager.h"
 #include "AnimationSystem.h"
 #include "LogicManager.h"
+#include <ImguiManager.h>
+#include <SignalHandler.h>
 
 using namespace Framework;
 
@@ -42,8 +44,9 @@ EngineState engineState;
 
 int main(void)
 {
+    //SetupSignalHandler();
     //EnableMemoryLeakChecking(); // For memory check
-
+    
   //Create the core engine which manages all the systems that make up the game
     auto engine = std::make_unique<CoreEngine>();
 
@@ -51,38 +54,46 @@ int main(void)
 
     //Window& myWindowConfig = GlobalAssetManager.LoadWindow("src/Data/WindowAsset.json");
     //auto AudioManager = std::make_unique<Audio>();
-    //auto Window = std::make_unique<GraphicsWindows>(myWindowConfig.GetConfig(), engine.get()); // Replace with serialized data
 
-    // Initialize the InputHandler singleton
-    //InputHandler::Initialize(Window->GetWindow());
     GlobalLogicManager.Initialize();
-
-
-    //// Access the InputHandler instance from the singleton
-    //InputHandler* inputHandlerSystem = InputHandler::GetInstance();
-    //if (!inputHandlerSystem) {
-    //    std::cerr << "Failed to initialize InputHandler!" << std::endl;
-    //    return -1; // Exit if InputHandler initialization failed
-    //}
 
     // Initialize global ECS interface and other singleton components
     ecsInterface.Init();
 
-    // Registering systems in the ECS interface.
+    // Register graphics system and GLFW Window first 
     auto graphicsSystem = ecsInterface.RegisterSystem<Graphics>();
-    auto messageSystem = std::make_unique<MessageSystem>();
+    // Initialize the InputHandler singleton
+    InputHandler::Initialize(graphicsSystem->GetWindow());
 
-    //inputHandlerSystem->SetMessageSystem(messageSystem.get());    // Inject the MessageSystem into InputHandler
+
+    auto imguiSystem = ecsInterface.RegisterSystem<ImguiManager>();
+    imguiSystem->SetGraphicsSystem(graphicsSystem.get());
+    graphicsSystem->SetImguiManager(imguiSystem.get());
+    //Access the InputHandler instance from the singleton
+    InputHandler* inputHandlerSystem = InputHandler::GetInstance();
+    if (!inputHandlerSystem) {
+        std::cerr << "Failed to initialize InputHandler!" << std::endl;
+        return -1; // Exit if InputHandler initialization failed
+    }
+    // 3. Use the new getter to connect the camera to the input handler
+    Camera* graphicsCamera = graphicsSystem.get()->getCamera();
+    inputHandlerSystem->SetCamera(graphicsCamera);
+
+    // Registering systems in the ECS interface here
+    auto messageSystem = std::make_unique<MessageSystem>();
+    inputHandlerSystem->SetMessageSystem(messageSystem.get());
 
     // ------- Add systems to engine below -------- //
-    //engine->AddSystem(Window.get());
-    //engine->AddSystem(inputHandlerSystem);
     engine->AddSystem(graphicsSystem.get());
+    engine->AddSystem(inputHandlerSystem);
     engine->AddSystem(messageSystem.get());
+    engine->AddSystem(imguiSystem.get());
 
     // Initialize the engine and run the main game loop
     engine->Initialize();
     engine->GameLoop();
+
+
 
     // Clear all systems and other dynamically allocated resources
     engine->DestroySystems();
