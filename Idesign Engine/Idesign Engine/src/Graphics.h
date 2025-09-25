@@ -30,6 +30,13 @@
 
 #include "AssetManager.h"
 #include "WindowConfigProperties.h"
+
+
+namespace Framework {
+    class ImguiManager;
+}
+
+
 namespace Framework {
 
 	class Graphics : public ISystem
@@ -41,19 +48,27 @@ namespace Framework {
 		void Initialize() override;
 		void Update(float deltaTime) override;
 		std::string GetName() override;
+        static GLuint CreateFramebuffer(int width, int height, GLuint& texture, GLuint& rbo_fb);
 
 		////linking
 		//GraphicsWindows* graphicWindows;
 		//InputHandler* InputHandlerInstance;
 		//FontSystem fontSystem; // Define the instance
 
+        //Getter for windows for external systems.
+        GLFWwindow* GetWindow();
+        void SetImguiManager(ImguiManager* manager);
+
 		// Sorting Layer Variables
 		unsigned int CurrentSize = -1;
 		std::vector<Entity> sortedEntities;
 
+        Camera* getCamera();
+
     private:
         static void framebuffer_size_callback(GLFWwindow*, int, int);
         static void mouse_callback(GLFWwindow*, double, double);
+        
 
         void process_input(float dt);
         void renderQuad();
@@ -102,6 +117,7 @@ namespace Framework {
         GLuint quadVAO = 0;
         GLuint quadVBO = 0;
 
+        ImguiManager* m_imguiManager = nullptr;
 	};
 
 }

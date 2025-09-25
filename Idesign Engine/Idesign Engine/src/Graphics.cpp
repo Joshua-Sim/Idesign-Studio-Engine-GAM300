@@ -43,7 +43,7 @@
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 #include <iostream>
-
+#include "Core.h"
 #include "ShaderProgram.h"
 #include "Camera.h"
 #include "Mesh.h"
@@ -51,6 +51,7 @@
 #include "Lighting.h"
 #include "MeshLoader.h"
 #include "TextureLoader.h"
+#include "ImguiManager.h"
 
 extern Framework::FontSystem fontSystem;
 //extern Framework::Coordinator ecsInterface;
@@ -76,20 +77,8 @@ namespace Framework {
     // Constructor
     Graphics::Graphics()
     {
-
-    }
-
-    // Destructor
-    Graphics::~Graphics()
-    {
-
-    }
-
-    // Initialize the system
-    void Graphics::Initialize()
-    {
         WindowConfig* config = AssetManager::Instance().Get<WindowConfig>("WindowConfig");
-
+        
         if (!glfwInit()) { std::cerr << "GLFW init failed\n"; return; }
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -101,7 +90,17 @@ namespace Framework {
 
         //glewExperimental = GL_TRUE; //optional to include can remove
         if (glewInit() != GLEW_OK) { std::cerr << "GLEW init failed\n"; return; }
+    }
 
+    // Destructor
+    Graphics::~Graphics()
+    {
+
+    }
+
+    // Initialize the system
+    void Graphics::Initialize()
+    {
         // always enable for depth test framebuffering
         glEnable(GL_DEPTH_TEST);
 
@@ -110,7 +109,7 @@ namespace Framework {
 
         // IMPORTANT: always store Graphics* as user pointer, not Camera*
         glfwSetWindowUserPointer(window, &camera);
-        glfwSetCursorPosCallback(window, mouse_callback);
+        //glfwSetCursorPosCallback(window, mouse_callback);
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
         // asset load / loading shape units
@@ -123,7 +122,7 @@ namespace Framework {
 
         // Initialisers for OpenGL (IMPORTANT : always call these after every initialiser values)
         // If want to change any values, please change in header or reconstruct after calling
-        terrainShader.initGL();
+        //terrainShader.initGL();
         meshShader.initGL();
         blurShader.initGL();
         finalShader.initGL();
@@ -180,11 +179,20 @@ namespace Framework {
         lastTime = (float)glfwGetTime();
     }
 
+
+    void Graphics::SetImguiManager(ImguiManager* manager)
+    {
+        m_imguiManager = manager;
+    }
+
     // Update the system
     void Graphics::Update(float deltaTime)
     {
+        if (glfwWindowShouldClose(window)) {
+            CORE->EndGameLoop(); // Mark the game loop as done
+            return;
+        }
         
-        while (!glfwWindowShouldClose(window)) {
             float now = (float)glfwGetTime();
             float dt = now - lastTime; lastTime = now;
             process_input(dt);
@@ -260,7 +268,7 @@ namespace Framework {
             // ====================================================================
             // 3. FINAL PASS: Render to screen with tone mapping and bloom
             // ====================================================================
-            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            glBindFramebuffer(GL_FRAMEBUFFER, m_imguiManager->GetGameFramebuffer());
             glViewport(0, 0, w, h);
             glClear(GL_COLOR_BUFFER_BIT);
 
@@ -277,10 +285,10 @@ namespace Framework {
            
             renderQuad();
 
-
-            glfwSwapBuffers(window);
-            glfwPollEvents();
-        }
+            // Unbind the framebuffer, returning rendering control to the main window
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+ 
+        
        
     }
 
@@ -288,6 +296,15 @@ namespace Framework {
     std::string Graphics::GetName()
     {
         return "Graphics";
+    }
+
+    // Get and return windows ptr for external system
+    GLFWwindow* Graphics::GetWindow() {
+        return window;
+    }
+
+    Camera* Graphics::getCamera() {
+        return &camera;
     }
 
     void Graphics::framebuffer_size_callback(GLFWwindow* window, int w, int h)
@@ -372,4 +389,49 @@ namespace Framework {
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         glBindVertexArray(0);
     }
+
+    //For ImGUI 
+    GLuint Graphics::CreateFramebuffer(int width, int height, GLuint& texture, GLuint& rbo_fb)
+    {
+        // Check for invalid dimensions immediately
+        assert(width > 0 && height > 0 && "Framebuffer dimensions cannot be zero!");
+        std::cout << "Creating framebuffer with size: " << width << "x" << height << std::endl;
+
+
+        GLuint framebuffer;
+
+        // Generate and bind framebuffer
+        glGenFramebuffers(1, &framebuffer);
+        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+
+        // Create a color texture to render to
+        glGenTextures(1, &texture);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+
+        // Create a renderbuffer for depth and stencil
+        glGenRenderbuffers(1, &rbo_fb);
+        glBindRenderbuffer(GL_RENDERBUFFER, rbo_fb);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo_fb);
+
+        // Check if framebuffer is complete
+        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+        {
+            std::cout << "Framebuffer not complete!" << std::endl;
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            return 0; // Indicate failure
+        }
+
+        // Unbind framebuffer to revert to default
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        return framebuffer;
+    }
+
+
 }
+
