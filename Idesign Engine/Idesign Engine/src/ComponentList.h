@@ -52,18 +52,18 @@ enum EnemyType {
 // Transform component for position, rotation, and scale // Graphics System
 struct TransformComponent 
 {
-    glm::vec2 position{ 0.0f, 0.0f };
-    float rotation = 0.0f;
-    glm::vec2 scale{ 1.0f, 1.0f };
+    glm::vec3 position{ 0.0f, 0.0f, 0.0f};
+    glm::vec3 rotation{ 0.0f, 0.0f, 0.0f };
+    glm::vec3 scale{ 0.0f, 0.0f, 0.0f };
 };
 
 // Transform component for position, rotation, and scale // Graphics System rendering
-struct RenderComponent 
+struct RenderComponent
 {
     std::string textureID;        // Texture or sprite name to render
     glm::vec3 color{ 1.0f, 1.0f, 1.0f }; // Tint color (default to white)
     float alpha = 1.0f;           // Opacity
-    RenderType renderType = RenderType::Sprite; // Type of renderable entity
+    RenderType renderType = RenderType::Sprite; // Type of renderable entity, can leave for now to toggle between 2d or 3d
 };
 
 // Layering System for rendering and logic optimization

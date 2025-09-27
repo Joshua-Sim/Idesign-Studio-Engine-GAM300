@@ -16,6 +16,7 @@
 #include "AssetManager.h"
 #include "Debugger.h"
 #include <ImguiManager.h>
+#include "TextureComponent.h"
 
 extern Framework::Coordinator ecsInterface;
 
@@ -286,7 +287,7 @@ namespace Framework {
         ImGui::DockSpace(dockspaceId, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
         if (ImGui::BeginMenuBar())
         {
-            if (ImGui::BeginMenu("Unnamed Studio Game Engine"))
+            if (ImGui::BeginMenu("Idesign Engine"))
             {
                 if (ImGui::MenuItem("Open"))
                 {
@@ -442,12 +443,9 @@ namespace Framework {
             {
                 if (ImGui::Button("Create Entity", ImVec2(140, 30)))
                 {
-                    // Call to ECS Interface to create a new entity
+                    // Call to ECS Interface to create a new entity , ideally only transform for clean entity
                     Entity newEntity = ecsInterface.CreateEntity();
                     ecsInterface.AddComponent<TransformComponent>(newEntity, TransformComponent{});
-                    ecsInterface.AddComponent<RenderComponent>(newEntity, RenderComponent{});
-                    ecsInterface.AddComponent<LayerComponent>(newEntity, LayerComponent{});
-                    ecsInterface.AddComponent<TextComponent>(newEntity, TextComponent{});
                     std::cout << "Entity created with ID: " << newEntity << std::endl;
                 }
 
@@ -518,7 +516,6 @@ namespace Framework {
                 else
                 {
                     TransformComponent& transformComponent = ecsInterface.GetComponent<TransformComponent>(selectedEntity);
-                    RenderComponent& renderComponent = ecsInterface.GetComponent<RenderComponent>(selectedEntity);
 
                     ImGui::Begin("Entity Properties", &isPropertiesWindowOpen);
                     if (ImGui::CollapsingHeader("Name", ImGuiTreeNodeFlags_DefaultOpen))
@@ -538,13 +535,13 @@ namespace Framework {
                     if (ImGui::CollapsingHeader("Transform Component", ImGuiTreeNodeFlags_DefaultOpen))
                     {
                         // Translation
-                        ImGui::InputFloat2("Translation", glm::value_ptr(transformComponent.position));
+                        ImGui::InputFloat3("Translation", glm::value_ptr(transformComponent.position));
 
                         // Rotation
-                        ImGui::SliderFloat("Rotation", &transformComponent.rotation, 0.0f, 360.0f);
+                        ImGui::InputFloat3("Rotation", glm::value_ptr(transformComponent.rotation));
 
                         // Scale
-                        ImGui::InputFloat2("Scale", glm::value_ptr(transformComponent.scale));
+                        ImGui::InputFloat3("Scale", glm::value_ptr(transformComponent.scale));
                     }
 
                     // Show combo box for adding components
@@ -592,9 +589,37 @@ namespace Framework {
 
                     if (ImGui::CollapsingHeader("Texture Component", ImGuiTreeNodeFlags_DefaultOpen))
                     {
+                        TextureComponent& textureComponent = ecsInterface.GetComponent<TextureComponent>(selectedEntity);
 
-                        ImGui::End();
+                        char texPathBuffer[256];
+                        strncpy(texPathBuffer, textureComponent.path.c_str(), sizeof(texPathBuffer));
+                        texPathBuffer[sizeof(texPathBuffer) - 1] = '\0';
+
+                        if (ImGui::InputText("Texture Path", texPathBuffer, sizeof(texPathBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
+                        {
+                            // Update texture if user edits path
+                            textureComponent.path = std::string(texPathBuffer);
+
+                            // Reload texture from new path
+                            textureComponent.textureID = TextureLoader::loadTexture(textureComponent.path);
+                        }
+
+                        // Show the OpenGL ID
+                        ImGui::Text("Texture ID: %u", textureComponent.textureID);
+
+                        // preview image
+                        if (textureComponent.textureID != 0)
+                        {
+                            ImGui::Text("Preview:");
+                            ImGui::Image(
+                                (ImTextureID)(intptr_t)textureComponent.textureID,
+                                ImVec2(128, 128)
+                            );
+                        }
+                            ImGui::End(); // included this ImGu::end from previous iteration that was left inside cempty ollapsing header of texture, 
+                                          //crashes without it but cannot close header? 
                     }
+
 
                     // Reset selectedEntity if the properties window is closed
                     if (!isPropertiesWindowOpen)
