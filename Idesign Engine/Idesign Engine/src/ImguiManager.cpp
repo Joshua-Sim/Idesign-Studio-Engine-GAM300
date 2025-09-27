@@ -225,7 +225,12 @@ namespace Framework {
     std::vector<std::pair<std::string, std::string>> updates;
 
     ImguiManager::ImguiManager() {}
-    ImguiManager::~ImguiManager() {}
+    ImguiManager::~ImguiManager() {
+    
+        ImGui_ImplOpenGL3_Shutdown();
+        ImGui_ImplGlfw_Shutdown();
+        ImGui::DestroyContext();
+    }
 
     void ImguiManager::SetGraphicsSystem(Framework::Graphics* graphicsSystem)
     {

@@ -35,6 +35,17 @@ namespace Framework {
 		messageSystem = msgSystem;
 	}
 
+	InputHandler::~InputHandler()
+	{
+		// Check if an instance exists before trying to delete it
+		if (instance)
+		{
+			delete instance;
+			instance = nullptr; // Set to null to prevent dangling pointers
+			std::cout << " System: Input Handler Shutdown" << std::endl;
+		}
+	}
+
 	void InputHandler::Initialize() {
 		// Set this InputHandler instance as the user pointer for the GLFW window
 		glfwSetWindowUserPointer(window, this);
@@ -164,11 +175,17 @@ namespace Framework {
 	*/
 	bool InputHandler::IsKeyPressed(int key)
 	{
-		if (keyStates[key] == KEY_PRESSED)
+		// 1. Safely search for the key in the map
+		auto it = keyStates.find(key);
+
+		// 2. If the iterator is not at the end, the key was found
+		if (it != keyStates.end())
 		{
-			keyStates[key] = KEY_HELD;  // Mark the key as held to prevent repeated actions
-			return true;
+			// 3. Now it's safe to check the value
+			return it->second == KEY_PRESSED;
 		}
+
+		// 4. If the key was not found, it can't be pressed
 		return false;
 	}
 
