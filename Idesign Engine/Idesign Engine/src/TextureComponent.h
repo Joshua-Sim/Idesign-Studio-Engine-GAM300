@@ -4,5 +4,5 @@
 
 struct TextureComponent {
     GLuint textureID = 0;          // OpenGL handle
-    std::string path;              // Texture file path for loading
+    std::string path = "Assets/PNG/Airplane_2_tex.jpg";              // Texture file path for loading
 };

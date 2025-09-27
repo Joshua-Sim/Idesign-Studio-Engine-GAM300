@@ -443,9 +443,19 @@ namespace Framework {
             {
                 if (ImGui::Button("Create Entity", ImVec2(140, 30)))
                 {
-                    // Call to ECS Interface to create a new entity , ideally only transform for clean entity
+                    // Call to ECS Interface to create a new entity , ideally only transform for clean entity but for now create demo entity
                     Entity newEntity = ecsInterface.CreateEntity();
                     ecsInterface.AddComponent<TransformComponent>(newEntity, TransformComponent{});
+                    TextureComponent textureComponent{};
+                    textureComponent.textureID = TextureLoader::loadTexture(textureComponent.path);
+
+                    ecsInterface.AddComponent<TextureComponent>(newEntity, textureComponent);
+                    MeshComponent meshComponent{};
+                    MeshLoader::loadMesh(meshComponent.path, meshComponent);
+
+                    ecsInterface.AddComponent<MeshComponent>(newEntity, meshComponent);
+
+                 
                     std::cout << "Entity created with ID: " << newEntity << std::endl;
                 }
 
@@ -587,6 +597,45 @@ namespace Framework {
                     //    selectedComponentIndex = -1;
                     //}
 
+                    if (ImGui::CollapsingHeader("Mesh Component", ImGuiTreeNodeFlags_DefaultOpen))
+                    {
+                        if (ecsInterface.HasComponent<MeshComponent>(selectedEntity))
+                        {
+                            MeshComponent& meshComponent = ecsInterface.GetComponent<MeshComponent>(selectedEntity);
+
+                            // Show the mesh path (editable)
+                            char meshPathBuffer[256];
+                            strncpy(meshPathBuffer, meshComponent.path.c_str(), sizeof(meshPathBuffer));
+                            meshPathBuffer[sizeof(meshPathBuffer) - 1] = '\0';
+
+                            if (ImGui::InputText("Mesh Path", meshPathBuffer, sizeof(meshPathBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
+                            {
+                                // Update mesh path if user edits it
+                                meshComponent.path = std::string(meshPathBuffer);
+                            }
+
+                            // Show debug info about mesh
+                            ImGui::Text("VAO: %u", meshComponent.vao);
+                            ImGui::Text("VBO: %u", meshComponent.vbo);
+                            ImGui::Text("EBO: %u", meshComponent.ebo);
+                            ImGui::Text("Index Count: %u", meshComponent.indexCount);
+
+                            // Optional: add a reload button
+                            if (ImGui::Button("Reload Mesh"))
+                            {
+                                MeshLoader::loadMesh(meshComponent.path, meshComponent);
+                            }
+                        }
+                        else
+                        {
+                            ImGui::Text("No MeshComponent attached to this entity.");
+                            if (ImGui::Button("Add Mesh Component"))
+                            {
+                                ecsInterface.AddComponent<MeshComponent>(selectedEntity, MeshComponent{});
+                            }
+                        }
+                    }
+
                     if (ImGui::CollapsingHeader("Texture Component", ImGuiTreeNodeFlags_DefaultOpen))
                     {
                         TextureComponent& textureComponent = ecsInterface.GetComponent<TextureComponent>(selectedEntity);
@@ -619,6 +668,7 @@ namespace Framework {
                             ImGui::End(); // included this ImGu::end from previous iteration that was left inside cempty ollapsing header of texture, 
                                           //crashes without it but cannot close header? 
                     }
+                  
 
 
                     // Reset selectedEntity if the properties window is closed
