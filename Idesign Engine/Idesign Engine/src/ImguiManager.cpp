@@ -317,7 +317,7 @@ namespace Framework {
                 if (ImGui::MenuItem("Save"))
                 {
                     std::string savePath = SaveFileDialog();
-                    saveScene(filePath);
+                    saveScene(savePath);
                 }
                 ImGui::EndMenu();
             }
@@ -734,48 +734,67 @@ namespace Framework {
 
                     if (ImGui::CollapsingHeader("Texture Component", ImGuiTreeNodeFlags_DefaultOpen))
                     {
-                        //TextureComponent& textureComponent = ecsInterface.GetComponent<TextureComponent>(selectedEntity);
-
-                        char texPathBuffer[256];
-                        //strncpy(texPathBuffer, textureComponent.path.c_str(), sizeof(texPathBuffer));
-                        texPathBuffer[sizeof(texPathBuffer) - 1] = '\0';
-
-                        if (ImGui::InputText("Texture Path", texPathBuffer, sizeof(texPathBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
+                        if (ecsInterface.HasComponent<Framework::TextureProperties>(selectedEntity))
                         {
-                            // Update texture if user edits path
-                            //textureComponent.path = std::string(texPathBuffer);
+                            auto& texture = ecsInterface.GetComponent<Framework::TextureProperties>(selectedEntity);
 
-                            // Reload texture from new path
-                            //textureComponent.textureID = TextureLoader::loadTexture(textureComponent.path);
+                            // Editable path buffer
+                            char pathBuffer[256];
+                            strncpy(pathBuffer, texture.path.c_str(), sizeof(pathBuffer) - 1);
+                            pathBuffer[sizeof(pathBuffer) - 1] = '\0';
+
+                            // Editable name buffer
+                            char nameBuffer[128];
+                            strncpy(nameBuffer, texture.name.c_str(), sizeof(nameBuffer) - 1);
+                            nameBuffer[sizeof(nameBuffer) - 1] = '\0';
+
+                            // Display GUID (read-only)
+                            ImGui::Text("GUID: %s", texture.guid.c_str());
+
+                            // Editable name
+                            if (ImGui::InputText("Texture Name", nameBuffer, sizeof(nameBuffer)))
+                            {
+                                texture.name = std::string(nameBuffer);
+                            }
+
+                            // Editable path
+                            if (ImGui::InputText("Texture Path", pathBuffer, sizeof(pathBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
+                            {
+                                std::string newPath(pathBuffer);
+                                if (newPath != texture.path)
+                                {
+                                    texture.path = newPath;
+                                    texture.textureID = TextureLoader::loadTexture(texture); // reload with updated path
+                                }
+                            }
+
+                            // Show texture metadata
+                            ImGui::Text("Texture ID: %u", texture.textureID);
+                            ImGui::Text("Size: %d x %d", texture.width, texture.height);
+
+                            // Preview texture if valid
+                            if (texture.textureID != 0)
+                            {
+                                ImGui::Text("Preview:");
+                                ImGui::Image(static_cast<ImTextureID>(texture.textureID), ImVec2(128, 128));
+                            }
                         }
-
-                        // Show the OpenGL ID
-                        //ImGui::Text("Texture ID: %u", textureComponent.textureID);
-
-                        // preview image
-                        /*if (textureComponent.textureID != 0)
+                        else
                         {
-                            ImGui::Text("Preview:");
-                            ImGui::Image(
-                                (ImTextureID)(intptr_t)textureComponent.textureID,
-                                ImVec2(128, 128)
-                            );
-                        }*/
-                            ImGui::End(); // included this ImGu::end from previous iteration that was left inside cempty ollapsing header of texture, 
-                                          //crashes without it but cannot close header? 
+                            ImGui::Text("No TextureProperties attached to this entity.");
+                        }
                     }
-                  
-
 
                     // Reset selectedEntity if the properties window is closed
                     if (!isPropertiesWindowOpen)
                     {
                         selectedEntity = std::numeric_limits<Entity>::max();
                     }
+                    ImGui::End();
                 }
             }
             ImGui::End();
-
+            
             // Begin the DebugSystem ImGui window
             if (ImGui::Begin("DebugSystem", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse)) {
 
