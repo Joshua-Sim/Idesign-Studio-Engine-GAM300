@@ -32,6 +32,11 @@ public:
         return glm::lookAt(position, position + front, up);
     }
 
+    glm::mat4 getProjectionMatrix(float width, float height) const {
+        float aspect = width / height;
+        return glm::perspective(glm::radians(zoom), aspect, 0.1f, 1000.0f);
+    }
+
     float getHeightAt(float x, float z, const std::vector<std::vector<float>>& heightmap, float gridSize) {
         int xi = (int)floor(x / gridSize);
         int zi = (int)floor(z / gridSize);

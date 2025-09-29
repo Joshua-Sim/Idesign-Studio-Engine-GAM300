@@ -19,6 +19,9 @@
 #include <imgui.h>
 #include <Camera.h>
 
+static bool sFirstMouse = true;
+static double sLastX = 0.0, sLastY = 0.0;
+
 namespace Framework {
 
 	// Initialize the static instance to nullptr
@@ -30,6 +33,17 @@ namespace Framework {
 
 	void InputHandler::SetMessageSystem(MessageSystem* msgSystem) {
 		messageSystem = msgSystem;
+	}
+
+	InputHandler::~InputHandler()
+	{
+		// Check if an instance exists before trying to delete it
+		if (instance)
+		{
+			delete instance;
+			instance = nullptr; // Set to null to prevent dangling pointers
+			std::cout << " System: Input Handler Shutdown" << std::endl;
+		}
 	}
 
 	void InputHandler::Initialize() {
@@ -62,6 +76,7 @@ namespace Framework {
 			}
 			else {
 				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+				sFirstMouse = true;  // avoid first-frame mouse jump
 			}
 		}
 
@@ -138,7 +153,6 @@ namespace Framework {
 			}
 
 
-
 			if (IsMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
 				//std::cout << "Left mouse button clicked" << std::endl;
 				if (messageSystem) {
@@ -161,11 +175,17 @@ namespace Framework {
 	*/
 	bool InputHandler::IsKeyPressed(int key)
 	{
-		if (keyStates[key] == KEY_PRESSED)
+		// 1. Safely search for the key in the map
+		auto it = keyStates.find(key);
+
+		// 2. If the iterator is not at the end, the key was found
+		if (it != keyStates.end())
 		{
-			keyStates[key] = KEY_HELD;  // Mark the key as held to prevent repeated actions
-			return true;
+			// 3. Now it's safe to check the value
+			return it->second == KEY_PRESSED;
 		}
+
+		// 4. If the key was not found, it can't be pressed
 		return false;
 	}
 
@@ -305,7 +325,7 @@ namespace Framework {
 			}
 
 			// Store the state of the mouse button in the map
-			inputSystem->keyStates[button] = currentMouseState;
+			inputSystem->mouseButtonStates[button] = currentMouseState;  // << was keyStates[button]
 
 			// Dispatch a message for mouse button press/release events
 			if (currentMouseState == KEY_PRESSED || currentMouseState == KEY_RELEASED) {
@@ -326,15 +346,19 @@ namespace Framework {
 	 */
 	void InputHandler::CursorPositionCallback(GLFWwindow* window, double xpos, double ypos) {
 		InputHandler* inputSystem = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
-		if (inputSystem) {
-			inputSystem->mouseX = xpos;
-			inputSystem->mouseY = ypos;
+		if (!inputSystem) return;
 
-			// Dispatch the mouse move event
-			if (inputSystem->messageSystem) {
-				MessageMouseMove* msg = new MessageMouseMove(xpos, ypos);
-			//	inputSystem->messageSystem->Dispatch(msg);
-			}
+		inputSystem->mouseX = xpos;
+		inputSystem->mouseY = ypos;
+
+		// Only rotate camera when game has focus (TAB toggled off UI)
+		if (!inputSystem->isUIFocused && inputSystem->mainCamera) {
+			if (sFirstMouse) { sLastX = xpos; sLastY = ypos; sFirstMouse = false; }
+			float xoffset = static_cast<float>(xpos - sLastX);
+			float yoffset = static_cast<float>(sLastY - ypos); // y inverted
+			sLastX = xpos; sLastY = ypos;
+
+			inputSystem->mainCamera->processMouseMovement(xoffset, yoffset);
 		}
 	}
 }

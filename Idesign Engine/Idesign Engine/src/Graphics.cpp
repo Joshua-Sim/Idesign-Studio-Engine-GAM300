@@ -52,23 +52,16 @@
 #include "MeshLoader.h"
 #include "TextureLoader.h"
 #include "ImguiManager.h"
+#include "Coordinator.h"
+#include "ComponentList.h"
+#include "MeshComponent.h"
+#include "TextureComponent.h"
 
 extern Framework::FontSystem fontSystem;
-//extern Framework::Coordinator ecsInterface;
+extern Framework::Coordinator ecsInterface;
 
 namespace Framework {
-    //ShaderProgram terrainShader;
-    //ShaderProgram meshShader;
-    //std::vector<PointLightCPU> pointLights;
-    //std::vector<SpotLightCPU> spotLights;
-    //DirectionalLightCPU sun; // defaults are fine
     bool Graphics::mouseCaptured = true;
-
-    //static const unsigned int WIDTH = 1280;
-    //static const unsigned int HEIGHT = 720;
-
-    //static float lastX = WIDTH * 0.5f;
-    //static float lastY = HEIGHT * 0.5f;
     static bool firstMouse = true;
     static bool mouseCaptured = true;
     bool groundMode = true; // toggle with a key (e.g., F1)
@@ -106,17 +99,57 @@ namespace Framework {
         // always enable for depth test framebuffering
         glEnable(GL_DEPTH_TEST);
 
-        // set callbacks
-        glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+        //// set callbacks
+        //glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-        // IMPORTANT: always store Graphics* as user pointer, not Camera*
-        glfwSetWindowUserPointer(window, &camera);
-        //glfwSetCursorPosCallback(window, mouse_callback);
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        //// IMPORTANT: always store Graphics* as user pointer, not Camera*
+        //glfwSetWindowUserPointer(window, &camera);
+        ////glfwSetCursorPosCallback(window, mouse_callback);
+        //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
+        // Register Graphics related Component
+        ecsInterface.RegisterComponent<TransformComponent>();
+        ecsInterface.RegisterComponent<MeshComponent>();
+        ecsInterface.RegisterComponent<TextureComponent>();
+
+        //  ---- ECS INITIALIZATION --- 
+        Signature signature;
+        signature.set(ecsInterface.GetComponentType<MeshComponent>()); //Set mEntities to be populated with MeshComponent for now
+
+        ecsInterface.SetSystemSignature<Graphics>(signature);
+        std::cout << "Signature for Graphics system is: " << signature << std::endl;
+        //  ---- ECS INITIALIZATION END --- 
+
+
+        // ---------------- Create one ECS object (Deserialized next time) -------------------- 
+        Entity newEntity = ecsInterface.CreateEntity();
+        
+        //Add transform
+        TransformComponent transformComponent;
+        transformComponent.position = glm::vec3(0.0, 2.0, 0.0); // Instantiate location
+        transformComponent.scale = glm::vec3(0.0005, 0.0005, 0.0005); // Size of my obj is big, change for test
+
+        ecsInterface.AddComponent<TransformComponent>(newEntity, transformComponent);
+
+        // Add and load mesh , temporarily hard-code component data 
+        MeshComponent meshComponent;
+        meshComponent.path = "Assets/Objects/plane.obj";
+
+        // Load mesh from its own path, again serialized for each obj in deserialization after.
+        MeshLoader::loadMesh(meshComponent.path, meshComponent);
+        ecsInterface.AddComponent<MeshComponent>(newEntity, meshComponent);
+
+        // Add and load a texture component
+        TextureComponent textureComponent;
+        textureComponent.path = "Assets/PNG/test.png";
+
+        // Load texture from its own path
+        textureComponent.textureID = TextureLoader::loadTexture(textureComponent.path);
+        ecsInterface.AddComponent<TextureComponent>(newEntity, textureComponent);
+
+        // ----------------- End object creation ------------------------------
+       
         // asset load / loading shape units
-        MeshLoader::loadMesh("Assets/Objects/player.obj", mesh);
-
         // Testing (Edwin)
         /*for (const auto& [handle, entry] : assets)
         {
@@ -136,20 +169,24 @@ namespace Framework {
         auto* tex = AssetManager::Instance().Get<TextureProperties>(AssetManager::Instance().FindGuid<TextureProperties>());
 
         //tex = TextureLoader::loadTexture("Assets/PNG/test.png");
+       // tex = TextureLoader::loadTexture("Assets/PNG/test.png");
         cube = Mesh::CreateUnitCubeData();
         plane = Mesh::CreateUnitSphereData();
         cone = Mesh::CreateUnitConeData();
         cylinder = Mesh::CreateUnitCylinderData();
 
+        // Initialise 1 object into ECS (Temporary, liase and move de-serialize with loadmesh function handled at asset-handler)
+        
+        
         // Initialisers for OpenGL (IMPORTANT : always call these after every initialiser values)
         // If want to change any values, please change in header or reconstruct after calling
-        //terrainShader.initGL();
+        terrainShader.initGL();
         meshShader.initGL();
         blurShader.initGL();
         finalShader.initGL();
         terrain.initGL();
 
-        //initialise shapes
+        //initialise geometry objects
         cube.initGL();
         plane.initGL();
         cone.initGL();
@@ -231,7 +268,7 @@ namespace Framework {
             glClearColor(0.07f, 0.09f, 0.12f, 1.f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            glm::mat4 proj = glm::perspective(glm::radians(camera.zoom), aspect, 0.1f, 500.0f);
+            glm::mat4 proj = camera.getProjectionMatrix(w, h);
             glm::mat4 view = camera.getViewMatrix();
 
             // stick to ground
@@ -243,7 +280,7 @@ namespace Framework {
             terrainShader.setMat4("uProj", proj);
             terrainShader.setMat4("uView", view);
             terrainShader.setMat4("uModel", glm::mat4(1.f));
-            terrainShader.setVec3("uAlbedo", { 0.6f,0.4f,0.2f });
+            terrainShader.setVec3("uAlbedo", { 0.6f,0.4f,0.2f }); //terrain color
             LightComponent::upload(terrainShader, sun, hasSun, pointLights, spotLights);
             terrain.draw();
 
@@ -251,18 +288,42 @@ namespace Framework {
             meshShader.use();
             meshShader.setMat4("uProj", proj);
             meshShader.setMat4("uView", view);
-            meshShader.setMat4("uModel", glm::mat4(1.f));
-            meshShader.setVec3("uAlbedo", { 1,1,1 });
-            LightComponent::upload(meshShader, sun, hasSun, pointLights, spotLights);
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, tex);
-            meshShader.setInt("uTexture", 0); // correct shader
-            glBindVertexArray(mesh.vao);
-            glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
+
+            // ---- ECS draw loop ----
+            for (auto const& entityId : mEntities) {
+                MeshComponent& meshComponent = ecsInterface.GetComponent<MeshComponent>(entityId);
+                TransformComponent& transformComponent = ecsInterface.GetComponent<TransformComponent>(entityId);
+                TextureComponent& textureComponent = ecsInterface.GetComponent<TextureComponent>(entityId);
+
+                transformComponent.position += glm::vec3(0.0f, 1, 0.0) * deltaTime; // Increment Y axis to show ECS link
+                
+                // Model SRT
+                glm::mat4 model(1.0f);
+                model = glm::translate(model, transformComponent.position); // optional
+
+                // Rotate
+                model = glm::rotate(model, transformComponent.rotation.x, glm::vec3(1, 0, 0));
+                model = glm::rotate(model, transformComponent.rotation.y, glm::vec3(0, 1, 0));
+                model = glm::rotate(model, transformComponent.rotation.z, glm::vec3(0, 0, 1));
+
+                model = glm::scale(model, transformComponent.scale);     // scale by 2x
+                meshShader.setMat4("uModel", model);
 
 
-            // drawing of 5 shapes (testing)
-            for (int i = 0; i < 5; ++i) {
+                meshShader.setVec3("uAlbedo", { 1,1,1 });
+                LightComponent::upload(meshShader, sun, hasSun, pointLights, spotLights);
+
+                //texture
+                glActiveTexture(GL_TEXTURE0);
+                glBindTexture(GL_TEXTURE_2D, textureComponent.textureID);
+                meshShader.setInt("uTexture", 0); // correct shader
+                glBindVertexArray(meshComponent.vao);
+                glDrawElements(GL_TRIANGLES, meshComponent.indexCount, GL_UNSIGNED_INT, 0);
+            }
+
+            // drawing of 5 objects (primitives)
+            for (int i = 0; i < 5; ++i) 
+            {
                 glm::mat4 model(1.0f);
                 model = glm::translate(model, glm::vec3((i - 2) * 1.7f, 0.0f, 0.0f));
                 meshShader.setMat4("uModel", model);
@@ -302,15 +363,11 @@ namespace Framework {
             finalShader.setInt("bloomTexture", 1);
             finalShader.setFloat("exposure", hdrExposure);
             finalShader.setFloat("bloomStrength", bloomStrength);
-
            
             renderQuad();
 
             // Unbind the framebuffer, returning rendering control to the main window
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
- 
-        
-       
     }
 
     // Get the name of the system

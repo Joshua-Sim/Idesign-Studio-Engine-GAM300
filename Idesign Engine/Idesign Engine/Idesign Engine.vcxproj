@@ -236,6 +236,7 @@
     <ClInclude Include="src\Terrain.h" />
     <ClInclude Include="src\TestSystem.h" />
     <ClInclude Include="src\TextureAsset.h" />
+    <ClInclude Include="src\TextureComponent.h" />
     <ClInclude Include="src\TextureLoader.h" />
     <ClInclude Include="src\TextureProperties.h" />
     <ClInclude Include="src\TransformProperties.h" />
