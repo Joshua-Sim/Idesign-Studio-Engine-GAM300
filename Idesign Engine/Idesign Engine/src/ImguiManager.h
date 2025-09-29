@@ -19,6 +19,7 @@
 #include <FontSystem.h>
 #include "AssetManager.h"
 #include <ComponentList.h>
+#include "AudioLoader.h"
 
 namespace Framework {
 	class ImguiManager : public ISystem {

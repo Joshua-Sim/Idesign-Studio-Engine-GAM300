@@ -23,6 +23,15 @@ namespace Framework
         std::string filePath;
         std::string mode;
         std::string soundType;
+
+        //  Runtime properties
+        float volume = 1.0f;           // Range: 0.0 to 1.0
+        bool loop = false;             // Loop playback
+        bool isPlaying = false;        // Playback status
+        float duration = 0.0f;         // Duration in seconds
+
+        // Optional: internal ID or handle for audio system
+        int audioID = -1;
     };
 
     inline constexpr std::array g_AudioPropertiesPropsArray =

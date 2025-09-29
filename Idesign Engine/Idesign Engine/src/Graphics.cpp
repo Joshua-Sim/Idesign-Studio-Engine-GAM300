@@ -56,7 +56,6 @@
 extern Framework::FontSystem fontSystem;
 //extern Framework::Coordinator ecsInterface;
 
-
 namespace Framework {
     //ShaderProgram terrainShader;
     //ShaderProgram meshShader;
@@ -74,11 +73,12 @@ namespace Framework {
     static bool mouseCaptured = true;
     bool groundMode = true; // toggle with a key (e.g., F1)
 
+    const auto& assets = AssetManager::Instance().GetAssets();
+
     // Constructor
     Graphics::Graphics()
     {
-        WindowConfig* config = AssetManager::Instance().Get<WindowConfig>("WindowConfig");
-        
+        WindowConfig* config = AssetManager::Instance().Get<WindowConfig>(AssetManager::Instance().FindGuid<WindowConfig>());
         if (!glfwInit()) { std::cerr << "GLFW init failed\n"; return; }
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -101,7 +101,7 @@ namespace Framework {
     // Initialize the system
     void Graphics::Initialize()
     {
-        WindowConfig* config = AssetManager::Instance().Get<WindowConfig>("WindowConfig");
+        WindowConfig* config = AssetManager::Instance().Get<WindowConfig>(AssetManager::Instance().FindGuid<WindowConfig>());
 
         // always enable for depth test framebuffering
         glEnable(GL_DEPTH_TEST);
@@ -116,7 +116,26 @@ namespace Framework {
 
         // asset load / loading shape units
         MeshLoader::loadMesh("Assets/Objects/player.obj", mesh);
-        tex = TextureLoader::loadTexture("Assets/PNG/test.png");
+
+        // Testing (Edwin)
+        /*for (const auto& [handle, entry] : assets)
+        {
+            auto* texProps = static_cast<TextureProperties*>(entry.pObject.get());
+
+            texProps->textureID = TextureLoader::loadTexture(*texProps, true);
+
+            tex = texProps->textureID;
+        }*/
+        AssetManager::Instance().LoadBinaryArray<TextureProperties>("src/Data/TextureAsset.bin", g_TexturePropertiesProps,
+            [](TextureProperties& props)
+            {
+                TextureLoader::loadTexture(props, true);
+            });
+        //AssetManager::Instance().PrintAssetsOfType(TypeName<TextureProperties>::value);
+        //AssetManager::Instance().SaveArrayToJson(TypeName<TextureProperties>::value, "src/Data/TextureAsset.json", "textures");
+        auto* tex = AssetManager::Instance().Get<TextureProperties>(AssetManager::Instance().FindGuid<TextureProperties>());
+
+        //tex = TextureLoader::loadTexture("Assets/PNG/test.png");
         cube = Mesh::CreateUnitCubeData();
         plane = Mesh::CreateUnitSphereData();
         cone = Mesh::CreateUnitConeData();
@@ -150,7 +169,7 @@ namespace Framework {
         glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
         glGenTextures(1, &colorBuffer);
         glBindTexture(GL_TEXTURE_2D, colorBuffer);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, config->x, config->y,0, GL_RGBA, GL_FLOAT, NULL);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, config->x, config->y, 0, GL_RGBA, GL_FLOAT, NULL);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBuffer, 0);
@@ -317,7 +336,7 @@ namespace Framework {
     // DO NOT CHANGE
     void Graphics::mouse_callback(GLFWwindow* window, double xpos, double ypos)
     {
-        WindowConfig* config = AssetManager::Instance().Get<WindowConfig>("WindowConfig");
+        WindowConfig* config = AssetManager::Instance().Get<WindowConfig>(AssetManager::Instance().FindGuid<WindowConfig>());
         static float lastX = config->x * 0.5f;
         static float lastY = config->y * 0.5f;
 

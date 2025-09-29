@@ -22,8 +22,8 @@
 #include <ImguiManager.h>
 #include <SignalHandler.h>
 
-//#include "Audio.h"
 #include <WindowConfigProperties.h>
+#include "AudioLoader.h"
 #include "Audio.h"
 using namespace Framework;
 
@@ -54,15 +54,23 @@ int main(void)
     //  Windows
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     //CompileSingleObject<WindowConfig>("src/Data/WindowAsset.json", "src/Data/WindowAsset.cfg", g_WindowConfigProps);
-    WindowConfig& config = AssetManager::Instance().LoadBinary<WindowConfig>("WindowConfig", "src/Data/WindowAsset.cfg", g_WindowConfigProps);
+    AssetManager::Instance().LoadBinary<WindowConfig>("src/Data/WindowAsset.cfg", g_WindowConfigProps);
     //auto Window = std::make_unique<GraphicsWindows>(&config, engine.get());
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     //  Audio
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
-    //CompileArray<AudioProperties>("src/Data/AudioAsset.json", "src/Data/AudioAsset.bin", g_AudioPropertiesProps, "AudioProperties");
-    //AssetManager::Instance().LoadBinaryArray<AudioProperties>("src/Data/AudioAsset.bin", g_AudioPropertiesProps);
-    //AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, "src/Data/MusicAssetTest1.json", "AudioProperties");
+    CompileArray<AudioProperties>("src/Data/AudioAsset.json", "src/Data/AudioAsset.bin", g_AudioPropertiesProps, "AudioProperties");
+    AssetManager::Instance().LoadBinaryArray<AudioProperties>("src/Data/AudioAsset.bin", g_AudioPropertiesProps,
+        [](AudioProperties& props)
+        {
+            GlobalAudio.UE_LoadSound(props.customName);
+        });
+    //AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, "src/Data/AudioAsset.json", "AudioProperties");
     //GlobalAudio.UE_PlaySound("winloop");
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+    //  Textures
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+    CompileArray<TextureProperties>("src/Data/TextureAsset.json", "src/Data/TextureAsset.bin", g_TexturePropertiesProps, "textures");
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     
     // Initialize the InputHandler singleton

@@ -273,9 +273,7 @@ namespace Framework
     {
         Sound* pSound = nullptr;        // Initialize a Sound pointer to nullptr
 
-        // Get is currently taking in customName but right now the key is changed to GUID
-        // Retrieve AudioProperties from AssetManager
-        AudioProperties* audioProps = AssetManager::Instance().Get<AudioProperties>(customName);
+        AudioProperties* audioProps = AssetManager::Instance().Get<AudioProperties>(AssetManager::Instance().FindGuid<AudioProperties>(customName));
         if (!audioProps)
         {
             std::cout << "Error: AudioProperties not found for customName: " << customName << std::endl;
@@ -298,6 +296,10 @@ namespace Framework
             return nullptr;
         }
 
+        unsigned int length = 0;
+        pSound->getLength(&length, FMOD_TIMEUNIT_MS);
+        audioProps->duration = length / 1000.0f;
+
         loadedSounds[customName] = pSound;
         return pSound;
     }
@@ -311,15 +313,12 @@ namespace Framework
             return;
         }
 
-        // Retrieve AudioProperties from AssetManager
-        AudioProperties* audioProps = AssetManager::Instance().Get<AudioProperties>(customName);
+        AudioProperties* audioProps = AssetManager::Instance().Get<AudioProperties>(AssetManager::Instance().FindGuid<AudioProperties>(customName));
         if (!audioProps)
         {
-            std::cout << "Error: AudioProperties not found for " << customName << std::endl;
+            std::cout << "Error: AudioProperties not found for customName: " << customName << std::endl;
             return;
         }
-
-        SoundType soundType = ParseSoundType(audioProps->soundType);
 
         // Check for existing channel
         auto it = activeChannels.find(customName);
@@ -351,7 +350,7 @@ namespace Framework
         // Play sound
         FMOD::Channel* pChannel = nullptr;
         FMOD_RESULT result = pSystem->playSound(pSound, nullptr, false, &pChannel);
-
+        SoundType soundType = ParseSoundType(audioProps->soundType);
         if (result != FMOD_OK)
         {
             std::cout << "Error: Cannot play audio " << customName << ", FMOD result: " << result << std::endl;
@@ -394,11 +393,11 @@ namespace Framework
             }
         }
 
-        // Retrieve AudioProperties from AssetManager
-        AudioProperties* audioProps = AssetManager::Instance().Get<AudioProperties>(customName);
+        AudioProperties* audioProps = AssetManager::Instance().Get<AudioProperties>(AssetManager::Instance().FindGuid<AudioProperties>(customName));
         if (!audioProps)
         {
             std::cout << "Error: AudioProperties not found for customName: " << customName << std::endl;
+            return -1;
         }
 
         // Configure sound mode based on source type

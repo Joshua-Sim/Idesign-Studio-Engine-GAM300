@@ -1,10 +1,20 @@
-
+///////////////////////////////////////////////////////////////////////////////
+///
+///	@file  : AssetCompiler.h
+/// @Brief : 
+///	
+///	@Authors: Edwin Leow
+///	@Copyright 2025, Digipen Institute of Technology
+///
+///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #ifndef  _ASSET_COMPILER_H_
 #define _ASSET_COMPILER_H_
 
 #include <JsonSerialize.h>
 #include <PropertySystem.h>
+#include "AssetHandler.h"
+#include <filesystem>
 
 // Note
 /*
@@ -17,16 +27,25 @@
 
     Convert this function to scripting ?
 */
-
+namespace fs = std::filesystem;
 namespace Framework
 {
-    void Deserialize(void* pObject, const prop_list& PropList, const rapidjson::Value& obj);
-    void Serialize(void* pObject, const prop_list& PropList, rapidjson::Value& outObj, rapidjson::Document::AllocatorType& allocator);
+    bool MoveFileToAssetFolder(const std::string& sourcePath, const std::string& destinationFolder, std::string& outFinalPath, std::string& outError);
 
+    // Deserialize JSON into a C++ object using reflection-based property list
+    void Deserialize(void* pObject, const prop_list& PropList, const rapidjson::Value& obj);
+
+    // Serialize a C++ object into a JSON object using reflection-based property list
+    void Serialize(void* pObject, const prop_list& PropList, rapidjson::Value& outObj, rapidjson::Document::AllocatorType& allocator);
+    
+    // Assign a GUID to the object if it doesn't already have one
+    void SetGuid(void* pObject, const prop_list& PropList);
+
+    // Compile a single object from JSON into binary format
     template<typename T>
     bool CompileSingleObject(const std::string& jsonPath, const std::string& outPath, const prop_list& props)
     {
-        // Parse JSON
+        // Load and Parse JSON file
         FILE* fp = fopen(jsonPath.c_str(), "r");
         char buffer[65536];
         rapidjson::FileReadStream is(fp, buffer, sizeof(buffer));
@@ -34,15 +53,19 @@ namespace Framework
         doc.ParseStream(is);
         fclose(fp);
 
+        // Check for Parse Errors
         if (doc.HasParseError())
         {
             std::cerr << "JSON parse error\n";
             return false;
         }
 
+        // Create Object and Populate from JSON
         std::unique_ptr<T> obj = std::make_unique<T>();
         Deserialize(obj.get(), props, doc);
+        SetGuid(obj.get(), props);
 
+        // Write object to Binary file
         std::ofstream out(outPath, std::ios::binary);
         if (!out.is_open()) return false;
 
@@ -51,16 +74,19 @@ namespace Framework
         return true;
     }
 
+    // Compile an array of objects from JSON into Binary Format
     template<typename T>
     bool CompileArray(const std::string& jsonPath, const std::string& outPath, const prop_list& props, const std::string& arrayKey)
     {
+        // Load and Parse JSON file
         FILE* fp = fopen(jsonPath.c_str(), "r");
-        char buffer[65536];
-        rapidjson::FileReadStream is(fp, buffer, sizeof(buffer));
+        std::unique_ptr<char[]> buffer = std::make_unique<char[]>(65536);
+        rapidjson::FileReadStream is(fp, buffer.get(), 65536);
         rapidjson::Document doc;
         doc.ParseStream(is);
         fclose(fp);
 
+        // Validatre the array in JSON
         if (doc.HasParseError() || !doc.HasMember(arrayKey.c_str()) || !doc[arrayKey.c_str()].IsArray())
         {
             std::cerr << "Invalid array format\n";
@@ -68,12 +94,16 @@ namespace Framework
         }
 
         const auto& arr = doc[arrayKey.c_str()].GetArray();
+
+        // Open Binary Output File
         std::ofstream out(outPath, std::ios::binary);
         if (!out.is_open()) return false;
 
+        // Count the array size
         uint32_t count = static_cast<uint32_t>(arr.Size());
         out.write(reinterpret_cast<char*>(&count), sizeof(count));
 
+        // Serialize each object in array
         for (const auto& item : arr)
         {
             std::unique_ptr<T> obj = std::make_unique<T>();
@@ -84,8 +114,9 @@ namespace Framework
         return true;
     }
 
+    // Serialize object to Binary using reflection-based property list
     template<typename T>
-    void JsonToBinary(std::ofstream& out, const T& obj, const Framework::prop_list& props)
+    void JsonToBinary(std::ofstream& out, const T& obj, const prop_list& props)
     {
         for (const auto& p : props.m_Props)
         {
@@ -113,35 +144,7 @@ namespace Framework
         }
     }
 
-    template<typename T>
-    void SaveToBinary(std::ofstream& out, const T& obj, const prop_list& props)
-    {
-        for (const auto& p : props.m_Props)
-        {
-            switch (p.m_Type)
-            {
-            case prop::INT:    { int    v; p.m_fnGet(&obj, &v); out.write((char*)&v, sizeof(v)); break; }
-            case prop::FLOAT:  { float  v; p.m_fnGet(&obj, &v); out.write((char*)&v, sizeof(v)); break; }
-            case prop::DOUBLE: { double v; p.m_fnGet(&obj, &v); out.write((char*)&v, sizeof(v)); break; }
-            case prop::LONG:   { long   v; p.m_fnGet(&obj, &v); out.write((char*)&v, sizeof(v)); break; }
-            case prop::SHORT:  { short  v; p.m_fnGet(&obj, &v); out.write((char*)&v, sizeof(v)); break; }
-            case prop::CHAR:   { char   v; p.m_fnGet(&obj, &v); out.write((char*)&v, sizeof(v)); break; }
-            case prop::BOOL:   { bool   v; p.m_fnGet(&obj, &v); out.write((char*)&v, sizeof(v)); break; }
-            case prop::STRING:
-            {
-                std::string v;
-                p.m_fnGet(&obj, &v);
-                uint32_t len = static_cast<uint32_t>(v.size());
-                out.write((char*)&len, sizeof(len));
-                out.write(v.data(), len);
-                break;
-            }
-            default:
-                throw std::runtime_error(std::string("Unsupported property type: ") + p.m_pName);
-            }
-        }
-    }
-
+    // Deserialize binary data into object using reflection-based property list
     template<typename T>
     void BinaryToObject(std::istream& in, T& obj, const prop_list& props)
     {

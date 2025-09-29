@@ -535,7 +535,6 @@ namespace Framework
         std::chrono::steady_clock::time_point lastVolumeChangeTime;                 // NEW: Last volume change time
         const std::chrono::milliseconds volumeDebounceTime{ 100 };
     };
-
     extern Audio GlobalAudio;   // Declare a global Audio Instance
 }
 #endif // _AUDIO_H_

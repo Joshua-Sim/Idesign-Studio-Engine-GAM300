@@ -18,6 +18,8 @@
 
 // Standard Lib files
 #include "unordered_map"
+#include <optional>
+#include <functional>
 
 // Graphics Header Files
 #include "stb_image.h"
@@ -27,6 +29,7 @@
 #include <PropertySystem.h>
 #include <AudioProperties.h>
 #include <WindowConfigProperties.h>
+#include "TextureProperties.h"
 
 // Asset Files
 #include "AssetCompiler.h"
@@ -37,7 +40,7 @@ namespace Framework
 {
     REGISTER_TYPE_NAME(WindowConfig);
     REGISTER_TYPE_NAME(AudioProperties);
-    //REGISTER_TYPE_NAME(TextureProperties);
+    REGISTER_TYPE_NAME(TextureProperties);
     //REGISTER_TYPE_NAME(FontProperties);
 
     /*  Struct Brief
@@ -50,16 +53,20 @@ namespace Framework
         std::unique_ptr<void, void(*)(void*)> pObject;  // Type-erased smart pointer to hold any asset object with a custom deleter
         const prop_list* pProps;                        // Pointer to the property list used for serialization/deserialization
         std::string typeName;                           // String to store the type name of the asset
-        std::string binaryPath;                         //
+        std::string binaryPath;                         // Asset file path
+        AssetHandle guid;                               // Unique identifier for the asset
 
-        AssetEntry() : pObject(nullptr, [](void*) {}), pProps(nullptr), typeName(), binaryPath() {}   // Default Constructor   
+        AssetEntry() : pObject(nullptr, [](void*) {}), pProps(nullptr), typeName(), binaryPath(), guid() {}   // Default Constructor   
         AssetEntry(const AssetEntry&) = delete;                                         // Delete Copy Constructor
         AssetEntry& operator=(const AssetEntry&) = delete;                              // Delete Copy Assignment
         AssetEntry(AssetEntry&&) = default;                                             // Move Constructor
         AssetEntry& operator=(AssetEntry&&) = default;                                  // Move Assignment
         AssetEntry(std::unique_ptr<void, void(*)(void*)> obj,                           // Constructor 
-            const prop_list* props, const std::string& type, const std::string& path)
-            : pObject(std::move(obj)), pProps(props), typeName(type), binaryPath(path) {}
+                   const prop_list* props, 
+                   const std::string& type, 
+                   const std::string& path, 
+                   AssetHandle guid)
+                   : pObject(std::move(obj)), pProps(props), typeName(type), binaryPath(path), guid(guid) {}
     };
 
     class AssetManager
@@ -80,57 +87,29 @@ namespace Framework
         //  Json > Binary > Read Binary during Runtime
         //------------------------------------------------------------------------------------------------------------------------------------
         template<typename T>
-        T& LoadBinary(const std::string& name, const std::string& binaryPath, const prop_list& props)
+        T& LoadBinary(const std::string& binaryPath, const prop_list& props, std::function<void(T&)> postInit = nullptr)
         {
             auto obj = AssetLoader<T>::Load(binaryPath, props);
+            AssetHandle guidHandle(obj->guid);
 
-            // Assign GUID if missing
-            /*if (obj->guid.empty())
-            {
-                obj->guid = GenerateGUID();
-            }
+            if (postInit) postInit(*obj);
 
-            std::string guid = obj->guid;*/
-
-            std::unique_ptr<void, void(*)(void*)> erasedPtr
-            (
-                static_cast<void*>(obj.release()),
-                [](void* ptr) { delete static_cast<T*>(ptr); }
-            );
-
-            m_Assets[name] = AssetEntry(std::move(erasedPtr), &props, TypeName<T>::value, binaryPath);
-            return *static_cast<T*>(m_Assets[name].pObject.get());
+            RegisterAsset(std::move(obj), &props, binaryPath);
+            return *static_cast<T*>(m_Assets[guidHandle].pObject.get());
         }
 
         template<typename T>
-        void LoadBinaryArray(const std::string& binaryPath, const prop_list& props)
+        void LoadBinaryArray(const std::string& binaryPath, const prop_list& props, std::function<void(T&)> postInit = nullptr)
         {
             auto loadedObjects = AssetLoader<T>::LoadArray(binaryPath, props);
-
-            for (size_t i = 0; i < loadedObjects.size(); ++i)
+            for (auto& obj : loadedObjects)
             {
-                std::unique_ptr<T>& obj = loadedObjects[i];
+                if (postInit)
+                    postInit(*obj); 
 
-                // Assign GUID if missing
-                if (obj->guid.empty()) 
-                {
-                    obj->guid = GenerateGUID();
-                }
+                RegisterAsset(std::move(obj), &props, binaryPath); // Move after init
 
-                // Get() function nid to change parameter to guid rather then customname
-                // Allow current function to generateguid for object, but use name as key
-                // using name as key to retrieve the guid of the object, then do hot reload
-                std::string guid = obj->guid;
-                std::string name = obj->customName;
-                
-                std::unique_ptr<void, void(*)(void*)> erasedPtr
-                (
-                    static_cast<void*>(obj.release()),
-                    [](void* ptr) { delete static_cast<T*>(ptr); }
-                );
-
-                // Use GUID as the key in the asset map
-                m_Assets[name] = AssetEntry(std::move(erasedPtr), &props, TypeName<T>::value, binaryPath);
+                // Nid to find a way to load audio here tgt with audio obj to be able to display duration at first runtime
             }
         }
 
@@ -150,16 +129,14 @@ namespace Framework
                 SaveArrayToJson(obj, jsonPath, props);
             }
             std::ofstream out(binPath, std::ios::binary);
-            SaveToBinary(out, obj, props);
+            JsonToBinary(out, obj, props);
             out.close();
         }
-
+        
         template<typename T>
-        T* Get(const std::string& key)
+        T* Get(const AssetHandle& guid)
         {
-            assert(!key.empty());
-
-            auto it = m_Assets.find(key);
+            auto it = m_Assets.find(guid);
             if (it == m_Assets.end()) return nullptr;
 
             if (it->second.typeName != TypeName<T>::value) return nullptr;
@@ -190,14 +167,67 @@ namespace Framework
             std::unique_ptr<void, void(*)(void*)> erasedPtr(
                 static_cast<void*>(obj),
                 [](void* ptr) { delete static_cast<T*>(ptr); }
-            );
+            ); 
 
             it->second.pObject = std::move(erasedPtr);
             return *obj;
         }
 
+        template<typename T>
+        void RegisterAsset(std::unique_ptr<T> obj, const prop_list* props, const std::string& binaryPath)
+        {
+            if (obj->guid.empty())
+                obj->guid = GenerateGUID();
+
+            AssetHandle guidHandle(obj->guid);
+
+            std::unique_ptr<void, void(*)(void*)> erasedPtr(
+                static_cast<void*>(obj.release()),
+                [](void* ptr) { delete static_cast<T*>(ptr); }
+            );
+
+            m_Assets[guidHandle] = AssetEntry(std::move(erasedPtr), props, TypeName<T>::value, binaryPath, guidHandle);
+        }
+
+        // Template function to find the GUID of an asset of type T.
+        // Optionally filters by name if provided.
+        template<typename T>
+        AssetHandle FindGuid(const std::optional<std::string>& name = std::nullopt)
+        {
+            // Loop through all registered assets in the AssetManager
+            for (const auto& [guid, entry] : AssetManager::Instance().GetAssets())
+            {
+                // Skip entries that don't match the requested type
+                if (entry.typeName != TypeName<T>::value)
+                    continue;
+
+                // Safely cast the generic asset pointer to the expected type T
+                T* obj = static_cast<T*>(entry.pObject.get());
+                if (!obj) continue; // Skip if the cast fails or the object is null
+
+                // If a name was provided, try to match it against the asset's customName
+                if constexpr (requires(T t) { t.customName; })
+                {
+                    // Only compare if the object has a non-empty customName
+                    if (name.has_value())
+                    {
+                        if (obj->customName == name.value())
+                            return guid;
+                    }
+                    else return guid;
+                }
+                else
+                {
+                    if (!name.has_value())
+                        return guid;
+                }
+            }
+            // No matching asset found — return an empty GUID
+            return AssetHandle();
+        }
+
         // Access to Unordered Map of Assets
-        const std::unordered_map<std::string, AssetEntry>& GetAssets() const
+        const std::unordered_map<AssetHandle, AssetEntry>& GetAssets() const
         {
             return m_Assets;
         }
@@ -208,9 +238,10 @@ namespace Framework
         void Unload(const std::string& key);
         bool SaveToJson(void* pObject, const std::string& filePath, const prop_list& props);
         void SaveArrayToJson(const std::string& typeName, const std::string& filePath, const std::string& arrayKey);
+        bool HasTextureByGUID(const std::string& guid) const;
     private:
         AssetManager() = default;                                   // Private constructor
-        std::unordered_map<std::string, AssetEntry> m_Assets;       // Contains all types of Assets
+        std::unordered_map<AssetHandle, AssetEntry> m_Assets;       // Contains all types of Assets
     };
 }
 #endif // !_ASSET_MANAGER_H_

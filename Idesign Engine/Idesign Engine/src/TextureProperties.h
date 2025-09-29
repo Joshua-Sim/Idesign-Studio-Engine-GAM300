@@ -18,14 +18,21 @@ namespace Framework
 {
     struct TextureProperties
     {
-        std::string textureName;
-        std::string filePath;
+        std::string guid;
+        std::string name;
+        std::string path;
+
+        // Runtime-only
+        unsigned int textureID = 0;
+        int width = 0;
+        int height = 0;
     };
 
     inline constexpr std::array g_TexturePropertiesPropsArray =
     {
-        PROP_STRING(textureName, TextureProperties),
-        PROP_STRING(filePath, TextureProperties)
+        PROP_STRING(guid, TextureProperties),
+        PROP_STRING(name, TextureProperties),
+        PROP_STRING(path, TextureProperties)
     };
 
     inline constexpr prop_list g_TexturePropertiesProps{ "TextureProperties", g_TexturePropertiesPropsArray };

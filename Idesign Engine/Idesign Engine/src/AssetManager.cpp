@@ -16,10 +16,21 @@ namespace Framework
 {
     void AssetManager::PrintAssetsOfType(const std::string& typeName)
     {
+        std::cout << "=== Assets of Type: " << typeName << " ===\n";
+
         for (const auto& [key, entry] : m_Assets)
         {
             if (entry.typeName != typeName) continue;
-            std::cout << "Asset: " << key << "\n";
+
+            std::cout << "Asset GUID: " << entry.guid << "\n";
+            std::cout << "Binary Path: " << entry.binaryPath << "\n";
+
+            if (!entry.pProps || entry.pProps->m_Props.empty())
+            {
+                std::cout << "  [No properties registered]\n";
+                continue;
+            }
+
             for (const auto& prop : entry.pProps->m_Props)
             {
                 if (!prop.m_fnGet) continue;
@@ -28,14 +39,22 @@ namespace Framework
 
                 switch (prop.m_Type)
                 {
-                case prop::STRING: { std::string value; prop.m_fnGet(entry.pObject.get(), &value); std::cout << value; break; }
-                case prop::INT:    { int         value; prop.m_fnGet(entry.pObject.get(), &value); std::cout << value; break; }
-                case prop::BOOL:   { bool        value; prop.m_fnGet(entry.pObject.get(), &value); std::cout << (value ? "true" : "false"); break; }
-                default:
-                    std::cout << "[unsupported type]";
-                    break;
+                    case prop::STRING:  { std::string value; prop.m_fnGet(entry.pObject.get(), &value); std::cout << value; break; }
+                    case prop::INT:     { int         value; prop.m_fnGet(entry.pObject.get(), &value); std::cout << value; break; }
+                    case prop::FLOAT:   { float       value; prop.m_fnGet(entry.pObject.get(), &value); std::cout << value; break; }
+                    case prop::DOUBLE:  { double      value; prop.m_fnGet(entry.pObject.get(), &value); std::cout << value; break; }
+                    case prop::BOOL:    { bool        value; prop.m_fnGet(entry.pObject.get(), &value); std::cout << (value ? "true" : "false"); break; }
+                    default:            std::cout << "[unsupported type]"; break;
                 }
                 std::cout << "\n";
+            }
+            // Optional: Print runtime-only fields if type matches
+            if (typeName == TypeName<TextureProperties>::value)
+            {
+                const auto* tex = static_cast<const TextureProperties*>(entry.pObject.get());
+                std::cout << "  [Runtime] TextureID: " << tex->textureID << "\n";
+                std::cout << "  [Runtime] Width: " << tex->width << "\n";
+                std::cout << "  [Runtime] Height: " << tex->height << "\n";
             }
             std::cout << "------------------------\n";
         }
@@ -81,11 +100,11 @@ namespace Framework
 
         rapidjson::Value array(rapidjson::kArrayType);
 
-        for (const auto& [key, entry] : assets)
+        for (const auto& [key, entryObject] : assets)
         {
-            if (entry.typeName != typeName) continue;
+            if (entryObject.typeName != typeName) continue;
             rapidjson::Value obj(rapidjson::kObjectType);
-            Serialize(entry.pObject.get(), *entry.pProps, obj, allocator);
+            Serialize(entryObject.pObject.get(), *entryObject.pProps, obj, allocator);
             array.PushBack(obj, allocator);
         }
         doc.AddMember(rapidjson::Value(arrayKey.c_str(), allocator), array, allocator);
@@ -97,5 +116,11 @@ namespace Framework
             writer.SetIndent(' ', 4);
             doc.Accept(writer);
         }
+    }
+
+    bool AssetManager::HasTextureByGUID(const std::string& guid) const
+    {
+        auto it = m_Assets.find(guid);
+        return it != m_Assets.end() && it->second.typeName == TypeName<TextureProperties>::value;
     }
 }

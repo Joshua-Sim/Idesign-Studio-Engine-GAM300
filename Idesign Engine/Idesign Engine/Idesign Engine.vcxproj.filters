@@ -25,6 +25,9 @@
     <Filter Include="Header Files\Assets\Property">
       <UniqueIdentifier>{d0367ea6-a8a7-4cff-8842-5c07e26cef82}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Assets\Audio">
+      <UniqueIdentifier>{ee0346f0-7d68-4b05-8cca-88d5f3bc7980}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\AnimationSystem.h">
@@ -129,9 +132,6 @@
     <ClInclude Include="src\Debugger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Audio.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -160,9 +160,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\TextureLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Lighting.h">
@@ -297,22 +294,10 @@
     <ClInclude Include="src\JsonSerialize.h">
       <Filter>Header Files\Assets</Filter>
     </ClInclude>
-    <ClInclude Include="src\AudioAsset.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\backward.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\DictionaryAsset.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\EntityAsset.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\FontAsset.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FontShaderAsset.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\GraphicsWindows.h">
@@ -324,11 +309,50 @@
     <ClInclude Include="src\SignalHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\TextureAsset.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="src\PropertySystem.h">
+      <Filter>Header Files\Assets\Property</Filter>
     </ClInclude>
-    <ClInclude Include="src\WindowAsset.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="src\PropertyMacro.h">
+      <Filter>Header Files\Assets\Property</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AudioProperties.h">
+      <Filter>Header Files\Assets\Property</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PrefabProperties.h">
+      <Filter>Header Files\Assets\Property</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TextureProperties.h">
+      <Filter>Header Files\Assets\Property</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TransformProperties.h">
+      <Filter>Header Files\Assets\Property</Filter>
+    </ClInclude>
+    <ClInclude Include="src\WindowConfigProperties.h">
+      <Filter>Header Files\Assets\Property</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AssetCompiler.h">
+      <Filter>Header Files\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AssetHandler.h">
+      <Filter>Header Files\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AssetLoader.h">
+      <Filter>Header Files\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UndoRedoSystem.h">
+      <Filter>Header Files\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Audio.h">
+      <Filter>Header Files\Assets\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TextureAsset.h">
+      <Filter>Header Files\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TextureLoader.h">
+      <Filter>Header Files\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AudioLoader.h">
+      <Filter>Header Files\Assets\Audio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -499,6 +523,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\AssetCompiler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AudioLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -4,7 +4,38 @@
 
 namespace Framework
 {
-	void Deserialize(void* pObject, const prop_list& PropList, const rapidjson::Value& obj)
+    bool MoveFileToAssetFolder(const std::string& sourcePath, const std::string& destinationFolder, std::string& outFinalPath, std::string& outError)
+    {
+        try 
+        {
+            // Ensure destination folder exists
+            if (!fs::exists(destinationFolder))
+                fs::create_directories(destinationFolder);
+
+            // Extract filename
+            std::string fileName = sourcePath.substr(sourcePath.find_last_of("/\\") + 1);
+            std::string destinationPath = destinationFolder + "/" + fileName;
+
+            // Check if file already exists
+            if (fs::exists(destinationPath))
+            {
+                outError = "File already exists at destination: " + destinationPath;
+                return false;
+            }
+
+            // Copy file
+            fs::copy_file(sourcePath, destinationPath, fs::copy_options::overwrite_existing);
+            outFinalPath = destinationPath;
+            return true;
+        }
+        catch (const fs::filesystem_error& e) 
+        {
+            outError = e.what();
+            return false;
+        }
+    }
+
+    void Deserialize(void* pObject, const prop_list& PropList, const rapidjson::Value& obj)
 	{
         assert(pObject != nullptr);
         assert(obj.IsObject());
@@ -71,4 +102,23 @@ namespace Framework
             }
         }
 	}
+
+    void SetGuid(void* pObject, const prop_list& PropList)
+    {
+        for (const auto& p : PropList.m_Props)
+        {
+            if (std::string(p.m_pName) == "guid")
+            {
+                AssetHandle currentGuid{};
+                p.m_fnGet(pObject, &currentGuid);
+
+                if (currentGuid.id.empty())
+                {
+                    AssetHandle newGuid(GenerateGUID());
+                    p.m_fnSet(pObject, &newGuid);
+                }
+                break;
+            }
+        }
+    }
 }
