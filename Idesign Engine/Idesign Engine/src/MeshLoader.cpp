@@ -14,7 +14,7 @@ struct Vertex {
     float tex[2];
 };
 
-void MeshLoader::loadMesh(const std::string& path, MeshComponent& mesh) {
+void MeshLoader::loadMesh(const std::string& path, MeshProperties& mesh) {
     Assimp::Importer importer;
 
     // Triangulate faces, flip UVs if needed

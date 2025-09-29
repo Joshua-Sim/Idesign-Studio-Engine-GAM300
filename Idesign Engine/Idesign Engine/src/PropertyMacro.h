@@ -65,6 +65,14 @@
         [](void* pObj, const void* pData) { assert(pObj && pData); static_cast<type*>(pObj)->field = *static_cast<const bool*>(pData); }, \
         [](const void* pObj, void* pData) { assert(pObj && pData); *static_cast<bool*>(pData) = static_cast<const type*>(pObj)->field; } }
 
+//------------------------------------------------------------------------------------------------------------------------------------
+//  UNSIGNED MACRO
+//------------------------------------------------------------------------------------------------------------------------------------
+
+#define PROP_UINT(field, type) \
+    Framework::prop{ #field, Framework::prop::UINT, \
+        [](void* pObj, const void* pData) { assert(pObj && pData); static_cast<type*>(pObj)->field = *static_cast<const unsigned int*>(pData); }, \
+        [](const void* pObj, void* pData) { assert(pObj && pData); *static_cast<unsigned int*>(pData) = static_cast<const type*>(pObj)->field; } }
 
 //------------------------------------------------------------------------------------------------------------------------------------
 //  META MACRO
@@ -128,7 +136,7 @@
 #endif // !_PROPERTY_MACRO_H_
 
 //------------------------------------------------------------------------------------------------------------------------------------
-//  META MACRO
+//  ARRAY MACRO
 //------------------------------------------------------------------------------------------------------------------------------------
 
 #define PROP_INT_ARRAY(field, type) \
@@ -172,3 +180,15 @@ struct TypeName;
 
 #define REGISTER_COMPONENT_AUTO(ComponentType) \
     ComponentManager::Instance().RegisterComponent<ComponentType>(&Framework::g_##ComponentType##Props)
+
+#define PROP_VEC3(field, type) \
+    Framework::prop{ #field, Framework::prop::VEC3, \
+        [](void* pObj, const void* pData) { \
+            assert(pObj && pData); \
+            static_cast<type*>(pObj)->field = *static_cast<const glm::vec3*>(pData); \
+        }, \
+        [](const void* pObj, void* pData) { \
+            assert(pObj && pData); \
+            *static_cast<glm::vec3*>(pData) = static_cast<const type*>(pObj)->field; \
+        } \
+    }

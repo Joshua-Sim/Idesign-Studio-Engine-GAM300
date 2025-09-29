@@ -15,7 +15,14 @@
 #include <PropertySystem.h>
 #include "AssetHandler.h"
 #include <filesystem>
+#include "glm.hpp"
+#include "Coordinator.h"
+#include "AssetManager.h"
 
+// Properties Files
+#include "TextureProperties.h"
+#include "MeshProperties.h"
+#include "TransformProperties.h"
 // Note
 /*
     Step 1: Read Json and populate object
@@ -30,6 +37,9 @@
 namespace fs = std::filesystem;
 namespace Framework
 {
+    void loadScene(const std::string& scenePath);
+    void saveScene(const std::string& scenePath);
+
     bool MoveFileToAssetFolder(const std::string& sourcePath, const std::string& destinationFolder, std::string& outFinalPath, std::string& outError);
 
     // Deserialize JSON into a C++ object using reflection-based property list
@@ -138,6 +148,15 @@ namespace Framework
                 out.write(value.data(), length);
                 break;
             }
+            case prop::VEC3:
+            {
+                glm::vec3 value;
+                p.m_fnGet(&obj, &value);
+                out.write(reinterpret_cast<char*>(&value.x), sizeof(float));
+                out.write(reinterpret_cast<char*>(&value.y), sizeof(float));
+                out.write(reinterpret_cast<char*>(&value.z), sizeof(float));
+                break;
+            }
             default:
                 throw std::runtime_error(std::string("Unsupported property type: ") + p.m_pName);
             }
@@ -173,6 +192,15 @@ namespace Framework
 
                 if (!in) throw std::runtime_error("Failed to read string data for property: " + std::string(p.m_pName));
                 p.m_fnSet(&obj, &value);
+                break;
+            }
+            case prop::VEC3:
+            {
+                glm::vec3 value;
+                p.m_fnGet(&obj, &value);
+                in.read(reinterpret_cast<char*>(&value.x), sizeof(float));
+                in.read(reinterpret_cast<char*>(&value.y), sizeof(float));
+                in.read(reinterpret_cast<char*>(&value.z), sizeof(float));
                 break;
             }
             default:

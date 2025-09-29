@@ -16,7 +16,6 @@
 #include "EngineState.h"
 #include "Debugger.h"
 #include <ImguiManager.h>
-#include "TextureComponent.h"
 
 extern Framework::Coordinator ecsInterface;
 
@@ -233,7 +232,6 @@ namespace Framework {
         }
     }
 
-
     ImguiManager::ImguiManager() {}
     ImguiManager::~ImguiManager() {
     
@@ -313,23 +311,13 @@ namespace Framework {
                     if (!filePath.empty())
                     {
                         ecsInterface.ClearEntities();
-                    //    entityAssets.clear();
-
-                    // This function expects a const std::string& as input
-                    //    GlobalAssetManager.LoadEntities(filePath);
+                        loadScene(filePath);
                     }
                 }
                 if (ImGui::MenuItem("Save"))
                 {
                     std::string savePath = SaveFileDialog();
-                    /*if (!savePath.empty())
-                    {
-                        GlobalEntityAsset.SerializeEntities(savePath);
-                    }
-                    else
-                    {
-                        std::cout << "Save path selected: " << savePath << std::endl;
-                    }*/
+                    saveScene(filePath);
                 }
                 ImGui::EndMenu();
             }
@@ -558,10 +546,10 @@ namespace Framework {
                         ecsInterface.AddComponent<TextureProperties>(newEntity, *tex);
                     }
 
-                    MeshComponent meshComponent{};
+                    MeshProperties meshComponent{};
                     MeshLoader::loadMesh(meshComponent.path, meshComponent);
 
-                    ecsInterface.AddComponent<MeshComponent>(newEntity, meshComponent);
+                    ecsInterface.AddComponent<MeshProperties>(newEntity, meshComponent);
 
                  
                     std::cout << "Entity created with ID: " << newEntity << std::endl;
@@ -707,9 +695,9 @@ namespace Framework {
 
                     if (ImGui::CollapsingHeader("Mesh Component", ImGuiTreeNodeFlags_DefaultOpen))
                     {
-                        if (ecsInterface.HasComponent<MeshComponent>(selectedEntity))
+                        if (ecsInterface.HasComponent<MeshProperties>(selectedEntity))
                         {
-                            MeshComponent& meshComponent = ecsInterface.GetComponent<MeshComponent>(selectedEntity);
+                            MeshProperties& meshComponent = ecsInterface.GetComponent<MeshProperties>(selectedEntity);
 
                             // Show the mesh path (editable)
                             char meshPathBuffer[256];
@@ -739,7 +727,7 @@ namespace Framework {
                             ImGui::Text("No MeshComponent attached to this entity.");
                             if (ImGui::Button("Add Mesh Component"))
                             {
-                                ecsInterface.AddComponent<MeshComponent>(selectedEntity, MeshComponent{});
+                                ecsInterface.AddComponent<MeshProperties>(selectedEntity, MeshProperties{});
                             }
                         }
                     }

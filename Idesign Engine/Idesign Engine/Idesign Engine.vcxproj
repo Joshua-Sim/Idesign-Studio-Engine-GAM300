@@ -180,8 +180,8 @@
     <ClInclude Include="src\LogicManager.h" />
     <ClInclude Include="src\Matrix3x3.h" />
     <ClInclude Include="src\Mesh.h" />
-    <ClInclude Include="src\MeshComponent.h" />
     <ClInclude Include="src\MeshLoader.h" />
+    <ClInclude Include="src\MeshProperties.h" />
     <ClInclude Include="src\Message.h" />
     <ClInclude Include="src\MessageSystem.h" />
     <ClInclude Include="src\pch.h" />
@@ -236,7 +236,6 @@
     <ClInclude Include="src\Terrain.h" />
     <ClInclude Include="src\TestSystem.h" />
     <ClInclude Include="src\TextureAsset.h" />
-    <ClInclude Include="src\TextureComponent.h" />
     <ClInclude Include="src\TextureLoader.h" />
     <ClInclude Include="src\TextureProperties.h" />
     <ClInclude Include="src\TransformProperties.h" />

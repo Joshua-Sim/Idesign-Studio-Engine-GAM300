@@ -72,7 +72,7 @@ int main(void)
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     CompileArray<TextureProperties>("src/Data/TextureAsset.json", "src/Data/TextureAsset.bin", g_TexturePropertiesProps, "textures");
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
-    
+
     // Initialize the InputHandler singleton
     //InputHandler::Initialize(Window->GetWindow());
     GlobalLogicManager.Initialize();

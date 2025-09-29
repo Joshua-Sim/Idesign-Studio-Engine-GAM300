@@ -57,7 +57,9 @@ namespace Framework
             STRING,
             CHAR,
             BOOL,
-            STRING_ARRAY
+            STRING_ARRAY,
+            VEC3,
+            UINT
         };
 
         // Function pointers to *set* and *get* a value on an object.

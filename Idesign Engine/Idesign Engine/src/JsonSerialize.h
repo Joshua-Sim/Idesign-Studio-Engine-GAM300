@@ -5,6 +5,7 @@
 // RapidJson
 #include "rapidjson/document.h"
 #include "rapidjson/filereadstream.h"
+#include "rapidjson/filewritestream.h"
 #include "rapidjson/error/en.h"
 #include "rapidjson/istreamwrapper.h"
 #include "rapidjson/prettywriter.h"

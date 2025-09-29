@@ -171,9 +171,6 @@
     <ClInclude Include="src\MeshLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\MeshComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\ShaderProgram.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -354,8 +351,8 @@
     <ClInclude Include="src\AudioLoader.h">
       <Filter>Header Files\Assets\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="src\TextureComponent.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="src\MeshProperties.h">
+      <Filter>Header Files\Assets\Property</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

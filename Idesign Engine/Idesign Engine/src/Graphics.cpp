@@ -54,8 +54,6 @@
 #include "ImguiManager.h"
 #include "Coordinator.h"
 #include "ComponentList.h"
-#include "MeshComponent.h"
-#include "TextureComponent.h"
 
 extern Framework::FontSystem fontSystem;
 extern Framework::Coordinator ecsInterface;
@@ -109,12 +107,12 @@ namespace Framework {
 
         // Register Graphics related Component
         ecsInterface.RegisterComponent<TransformComponent>();
-        ecsInterface.RegisterComponent<MeshComponent>();
+        ecsInterface.RegisterComponent<MeshProperties>();
         ecsInterface.RegisterComponent<TextureProperties>();
 
         //  ---- ECS INITIALIZATION --- 
         Signature signature;
-        signature.set(ecsInterface.GetComponentType<MeshComponent>()); //Set mEntities to be populated with MeshComponent for now
+        signature.set(ecsInterface.GetComponentType<MeshProperties>()); //Set mEntities to be populated with MeshComponent for now
 
         ecsInterface.SetSystemSignature<Graphics>(signature);
         std::cout << "Signature for Graphics system is: " << signature << std::endl;
@@ -123,7 +121,7 @@ namespace Framework {
 
         // ---------------- Create one ECS object (Deserialized next time) -------------------- 
         Entity newEntity = ecsInterface.CreateEntity();
-        
+
         //Add transform
         TransformComponent transformComponent;
         transformComponent.position = glm::vec3(0.0, 2.0, 0.0); // Instantiate location
@@ -132,12 +130,12 @@ namespace Framework {
         ecsInterface.AddComponent<TransformComponent>(newEntity, transformComponent);
 
         // Add and load mesh , temporarily hard-code component data 
-        MeshComponent meshComponent;
+        MeshProperties meshComponent;
         meshComponent.path = "Assets/Objects/plane.obj";
 
         // Load mesh from its own path, again serialized for each obj in deserialization after.
         MeshLoader::loadMesh(meshComponent.path, meshComponent);
-        ecsInterface.AddComponent<MeshComponent>(newEntity, meshComponent);
+        ecsInterface.AddComponent<MeshProperties>(newEntity, meshComponent);
 
         // Add and load a texture component
         Framework::TextureProperties textureComponent;
@@ -146,7 +144,7 @@ namespace Framework {
 
         ecsInterface.AddComponent<Framework::TextureProperties>(newEntity, textureComponent);
         // ----------------- End object creation ------------------------------
-       
+
         // asset load / loading shape units
         // Testing (Edwin)
         /*for (const auto& [handle, entry] : assets)
@@ -165,17 +163,14 @@ namespace Framework {
         //AssetManager::Instance().PrintAssetsOfType(TypeName<TextureProperties>::value);
         //AssetManager::Instance().SaveArrayToJson(TypeName<TextureProperties>::value, "src/Data/TextureAsset.json", "textures");
         auto* tex = AssetManager::Instance().Get<TextureProperties>(AssetManager::Instance().FindGuid<TextureProperties>());
-
-        //tex = TextureLoader::loadTexture("Assets/PNG/test.png");
-       // tex = TextureLoader::loadTexture("Assets/PNG/test.png");
         cube = Mesh::CreateUnitCubeData();
         plane = Mesh::CreateUnitSphereData();
         cone = Mesh::CreateUnitConeData();
         cylinder = Mesh::CreateUnitCylinderData();
 
         // Initialise 1 object into ECS (Temporary, liase and move de-serialize with loadmesh function handled at asset-handler)
-        
-        
+
+
         // Initialisers for OpenGL (IMPORTANT : always call these after every initialiser values)
         // If want to change any values, please change in header or reconstruct after calling
         terrainShader.initGL();
@@ -235,7 +230,6 @@ namespace Framework {
         lastTime = (float)glfwGetTime();
     }
 
-
     void Graphics::SetImguiManager(ImguiManager* manager)
     {
         m_imguiManager = manager;
@@ -289,7 +283,7 @@ namespace Framework {
 
             // ---- ECS draw loop ----
             for (auto const& entityId : mEntities) {
-                MeshComponent& meshComponent = ecsInterface.GetComponent<MeshComponent>(entityId);
+                MeshProperties& meshComponent = ecsInterface.GetComponent<MeshProperties>(entityId);
                 TransformComponent& transformComponent = ecsInterface.GetComponent<TransformComponent>(entityId);
                 //TextureComponent& textureComponent = ecsInterface.GetComponent<TextureProperties>(entityId);
 
