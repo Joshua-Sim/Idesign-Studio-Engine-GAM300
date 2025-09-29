@@ -110,7 +110,7 @@ namespace Framework {
         // Register Graphics related Component
         ecsInterface.RegisterComponent<TransformComponent>();
         ecsInterface.RegisterComponent<MeshComponent>();
-        ecsInterface.RegisterComponent<TextureComponent>();
+        ecsInterface.RegisterComponent<TextureProperties>();
 
         //  ---- ECS INITIALIZATION --- 
         Signature signature;
@@ -140,13 +140,11 @@ namespace Framework {
         ecsInterface.AddComponent<MeshComponent>(newEntity, meshComponent);
 
         // Add and load a texture component
-        TextureComponent textureComponent;
+        Framework::TextureProperties textureComponent;
         textureComponent.path = "Assets/PNG/test.png";
+        TextureLoader::loadTexture(textureComponent, true);
 
-        // Load texture from its own path
-        textureComponent.textureID = TextureLoader::loadTexture(textureComponent.path);
-        ecsInterface.AddComponent<TextureComponent>(newEntity, textureComponent);
-
+        ecsInterface.AddComponent<Framework::TextureProperties>(newEntity, textureComponent);
         // ----------------- End object creation ------------------------------
        
         // asset load / loading shape units
@@ -293,7 +291,7 @@ namespace Framework {
             for (auto const& entityId : mEntities) {
                 MeshComponent& meshComponent = ecsInterface.GetComponent<MeshComponent>(entityId);
                 TransformComponent& transformComponent = ecsInterface.GetComponent<TransformComponent>(entityId);
-                TextureComponent& textureComponent = ecsInterface.GetComponent<TextureComponent>(entityId);
+                //TextureComponent& textureComponent = ecsInterface.GetComponent<TextureProperties>(entityId);
 
                 transformComponent.position += glm::vec3(0.0f, 1, 0.0) * deltaTime; // Increment Y axis to show ECS link
                 
@@ -315,7 +313,7 @@ namespace Framework {
 
                 //texture
                 glActiveTexture(GL_TEXTURE0);
-                glBindTexture(GL_TEXTURE_2D, textureComponent.textureID);
+                //glBindTexture(GL_TEXTURE_2D, textureComponent.textureID);
                 meshShader.setInt("uTexture", 0); // correct shader
                 glBindVertexArray(meshComponent.vao);
                 glDrawElements(GL_TRIANGLES, meshComponent.indexCount, GL_UNSIGNED_INT, 0);

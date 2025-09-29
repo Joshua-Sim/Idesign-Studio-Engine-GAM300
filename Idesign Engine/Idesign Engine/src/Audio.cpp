@@ -280,7 +280,7 @@ namespace Framework
             return nullptr;
         }
 
-        const std::string& filePath = audioProps->filePath;
+        const std::string& filePath = audioProps->path;
         const std::string& modeString = audioProps->mode;
 
         std::cout << "File path: " << filePath << std::endl;

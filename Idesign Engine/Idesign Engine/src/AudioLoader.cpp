@@ -8,10 +8,10 @@ namespace Framework
     bool loadAudio(AudioProperties& audioProps) 
     {
         // Load sound using your Audio system
-        FMOD::Sound* sound = GlobalAudio.UE_LoadSound(audioProps.customName);
+        FMOD::Sound* sound = GlobalAudio.UE_LoadSound(audioProps.name);
         if (!sound) 
         {
-            std::cerr << "Failed to load sound: " << audioProps.customName << std::endl;
+            std::cerr << "Failed to load sound: " << audioProps.name << std::endl;
             return false;
         }
 

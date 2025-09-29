@@ -205,8 +205,8 @@ namespace Framework {
                     if (MoveFileToAssetFolder(filePath, audioFolder, finalPath, error))
                     {
                         auto audioPtr = std::make_unique<AudioProperties>();
-                        audioPtr->customName = fileName;
-                        audioPtr->filePath = finalPath;
+                        audioPtr->name = fileName;
+                        audioPtr->path = finalPath;
                         audioPtr->mode = "loop";
                         audioPtr->soundType = "background";
                         loadAudio(*audioPtr); // Load metadata
@@ -473,13 +473,13 @@ namespace Framework {
                 if (!audioProps) continue;
 
                 ImGui::Separator();
-                ImGui::Text("Clip: %s", audioProps->customName.c_str());
-                ImGui::Text("File: %s", audioProps->filePath.c_str());
+                ImGui::Text("Clip: %s", audioProps->name.c_str());
+                ImGui::Text("File: %s", audioProps->path.c_str());
                 ImGui::Text("Duration: %.2f sec", audioProps->duration);
 
                 if (ImGui::Button(("Play##" + audioProps->guid).c_str())) 
                 {
-                    GlobalAudio.UE_PlaySound(audioProps->customName);
+                    GlobalAudio.UE_PlaySound(audioProps->name);
                     audioProps->isPlaying = true;
 
                     // nid to find a way here to show isPlaying = false after audio ends
@@ -495,7 +495,7 @@ namespace Framework {
                 float volume = audioProps->volume;
                 if (ImGui::SliderFloat(("Volume##" + audioProps->guid).c_str(), &volume, 0.0f, 1.0f)) {
                     audioProps->volume = volume;
-                    GlobalAudio.UE_SetVolume(audioProps->customName, volume);
+                    GlobalAudio.UE_SetVolume(audioProps->name, volume);
                 }
 
                 const char* modes[] = { "oneshot", "loop" };
@@ -535,10 +535,29 @@ namespace Framework {
                     // Call to ECS Interface to create a new entity , ideally only transform for clean entity but for now create demo entity
                     Entity newEntity = ecsInterface.CreateEntity();
                     ecsInterface.AddComponent<TransformComponent>(newEntity, TransformComponent{});
-                    TextureComponent textureComponent{};
-                    textureComponent.textureID = TextureLoader::loadTexture(textureComponent.path);
 
-                    ecsInterface.AddComponent<TextureComponent>(newEntity, textureComponent);
+                    auto* tex = AssetManager::Instance().Get<TextureProperties>(
+                        AssetManager::Instance().FindGuid<TextureProperties>()
+                    );
+
+                    if (!tex) {
+                        // Not found, so load and register
+                        auto textureComponent = std::make_unique<TextureProperties>();
+                        textureComponent->path = "Assets/PNG/test.png";
+                        TextureLoader::loadTexture(*textureComponent, true);
+                        AssetManager::Instance().RegisterAsset(std::move(textureComponent), &g_TexturePropertiesProps, "Assets/PNG/test.png");
+
+                        // Retrieve again to get the registered pointer
+                        tex = AssetManager::Instance().Get<TextureProperties>(
+                            AssetManager::Instance().FindGuid<TextureProperties>()
+                        );
+                    }
+
+                    // Add to ECS
+                    if (tex) {
+                        ecsInterface.AddComponent<TextureProperties>(newEntity, *tex);
+                    }
+
                     MeshComponent meshComponent{};
                     MeshLoader::loadMesh(meshComponent.path, meshComponent);
 
@@ -727,33 +746,33 @@ namespace Framework {
 
                     if (ImGui::CollapsingHeader("Texture Component", ImGuiTreeNodeFlags_DefaultOpen))
                     {
-                        TextureComponent& textureComponent = ecsInterface.GetComponent<TextureComponent>(selectedEntity);
+                        //TextureComponent& textureComponent = ecsInterface.GetComponent<TextureComponent>(selectedEntity);
 
                         char texPathBuffer[256];
-                        strncpy(texPathBuffer, textureComponent.path.c_str(), sizeof(texPathBuffer));
+                        //strncpy(texPathBuffer, textureComponent.path.c_str(), sizeof(texPathBuffer));
                         texPathBuffer[sizeof(texPathBuffer) - 1] = '\0';
 
                         if (ImGui::InputText("Texture Path", texPathBuffer, sizeof(texPathBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
                         {
                             // Update texture if user edits path
-                            textureComponent.path = std::string(texPathBuffer);
+                            //textureComponent.path = std::string(texPathBuffer);
 
                             // Reload texture from new path
-                            textureComponent.textureID = TextureLoader::loadTexture(textureComponent.path);
+                            //textureComponent.textureID = TextureLoader::loadTexture(textureComponent.path);
                         }
 
                         // Show the OpenGL ID
-                        ImGui::Text("Texture ID: %u", textureComponent.textureID);
+                        //ImGui::Text("Texture ID: %u", textureComponent.textureID);
 
                         // preview image
-                        if (textureComponent.textureID != 0)
+                        /*if (textureComponent.textureID != 0)
                         {
                             ImGui::Text("Preview:");
                             ImGui::Image(
                                 (ImTextureID)(intptr_t)textureComponent.textureID,
                                 ImVec2(128, 128)
                             );
-                        }
+                        }*/
                             ImGui::End(); // included this ImGu::end from previous iteration that was left inside cempty ollapsing header of texture, 
                                           //crashes without it but cannot close header? 
                     }

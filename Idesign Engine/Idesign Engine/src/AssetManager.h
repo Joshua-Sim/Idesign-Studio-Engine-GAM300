@@ -205,13 +205,14 @@ namespace Framework
                 T* obj = static_cast<T*>(entry.pObject.get());
                 if (!obj) continue; // Skip if the cast fails or the object is null
 
-                // If a name was provided, try to match it against the asset's customName
-                if constexpr (requires(T t) { t.customName; })
+                // If a name was provided, try to match it against the asset's name
+                if constexpr (requires(T t) { t.name; })
                 {
-                    // Only compare if the object has a non-empty customName
+                    // Only compare if the object has a non-empty 
+
                     if (name.has_value())
                     {
-                        if (obj->customName == name.value())
+                        if (obj->name == name.value())
                             return guid;
                     }
                     else return guid;
