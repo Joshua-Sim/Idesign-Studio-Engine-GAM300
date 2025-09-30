@@ -173,7 +173,7 @@ namespace Framework {
 
         // Initialisers for OpenGL (IMPORTANT : always call these after every initialiser values)
         // If want to change any values, please change in header or reconstruct after calling
-        terrainShader.initGL();
+        //terrainShader.initGL();
         meshShader.initGL();
         blurShader.initGL();
         finalShader.initGL();
@@ -183,7 +183,7 @@ namespace Framework {
         cube.initGL();
         plane.initGL();
         cone.initGL();
-        cylinder.initGL();
+        //cylinder.initGL();
 
 
         // lights (use member containers)
@@ -251,16 +251,21 @@ namespace Framework {
             // ====================================================================
            // 1. SCENE PASS: Render the scene to the HDR framebuffer
            // ====================================================================
-                glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
+            glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
             glEnable(GL_DEPTH_TEST);
 
-            int w, h; glfwGetFramebufferSize(window, &w, &h);
+            int w, h; 
+            glfwGetFramebufferSize(window, &w, &h);
+ 
+            if (w == 0 || h == 0) {
+                return; // Don't render anything if the window is minimized
+            }
             float aspect = (h == 0) ? 1.f : float(w) / float(h);
             glViewport(0, 0, w, h);
             glClearColor(0.07f, 0.09f, 0.12f, 1.f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            glm::mat4 proj = camera.getProjectionMatrix(w, h);
+            glm::mat4 proj = camera.getProjectionMatrix(w,h);
             glm::mat4 view = camera.getViewMatrix();
 
             // stick to ground
@@ -371,6 +376,7 @@ namespace Framework {
     // Get and return windows ptr for external system
     GLFWwindow* Graphics::GetWindow() {
         return window;
+        
     }
 
     Camera* Graphics::getCamera() {

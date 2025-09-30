@@ -277,666 +277,672 @@ namespace Framework {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+        int w, h;
+        glfwGetFramebufferSize(m_graphicsSystem->GetWindow(), &w, &h);
 
-        // Create a full-screen dockspace
-        ImGuiWindowFlags windowFlags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-        ImGuiViewport* viewport = ImGui::GetMainViewport();
-
-        ImGui::SetNextWindowPos(viewport->WorkPos);
-        ImGui::SetNextWindowSize(viewport->WorkSize);
-        ImGui::SetNextWindowViewport(viewport->ID);
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-
-        // Add flags to prevent moving and resizing
-        windowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-        windowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-
-        // Begin the main dockspace window
-        ImGui::Begin("DockSpace Demo", nullptr, windowFlags);
-        ImGui::PopStyleVar(2);
-
-        ImGuiID dockspaceId = ImGui::GetID("MyDockSpace");
-        ImGui::DockSpace(dockspaceId, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
-        if (ImGui::BeginMenuBar())
+        // 3. Only draw your UI if the window has a valid size
+        if (w > 0 && h > 0)
         {
-            if (ImGui::BeginMenu("Idesign Engine"))
-            {
-                if (ImGui::MenuItem("Open"))
-                {
-                    // Get the file path from the OpenFileDialog
-                    filePath = OpenFileDialog();
+            // Create a full-screen dockspace
+            ImGuiWindowFlags windowFlags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+            ImGuiViewport* viewport = ImGui::GetMainViewport();
 
-                    //// Ensure the file path is not empty before proceeding
-                    if (!filePath.empty())
-                    {
-                        ecsInterface.ClearEntities();
-                        loadScene(filePath);
-                    }
-                }
-                if (ImGui::MenuItem("Save"))
+            ImGui::SetNextWindowPos(viewport->WorkPos);
+            ImGui::SetNextWindowSize(viewport->WorkSize);
+            ImGui::SetNextWindowViewport(viewport->ID);
+            ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+            ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+
+            // Add flags to prevent moving and resizing
+            windowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+            windowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+
+            // Begin the main dockspace window
+            ImGui::Begin("DockSpace Demo", nullptr, windowFlags);
+            ImGui::PopStyleVar(2);
+
+            ImGuiID dockspaceId = ImGui::GetID("MyDockSpace");
+            ImGui::DockSpace(dockspaceId, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
+            if (ImGui::BeginMenuBar())
+            {
+                if (ImGui::BeginMenu("Idesign Engine"))
                 {
-                    std::string savePath = SaveFileDialog();
-                    saveScene(savePath);
+                    if (ImGui::MenuItem("Open"))
+                    {
+                        // Get the file path from the OpenFileDialog
+                        filePath = OpenFileDialog();
+
+                        //// Ensure the file path is not empty before proceeding
+                        if (!filePath.empty())
+                        {
+                            ecsInterface.ClearEntities();
+                            loadScene(filePath);
+                        }
+                    }
+                    if (ImGui::MenuItem("Save"))
+                    {
+                        std::string savePath = SaveFileDialog();
+                        saveScene(savePath);
+                    }
+                    ImGui::EndMenu();
                 }
-                ImGui::EndMenu();
+                ImGui::EndMenuBar();
             }
-            ImGui::EndMenuBar();
-        }
-        ImGui::End();
+            ImGui::End();
 
-        //for edwin
-        if (ImGui::Begin("Assets", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
-        {
-            float windowWidth = ImGui::GetContentRegionAvail().x;
-            ImVec2 imageSize(64, 64);
-            float itemWidth = imageSize.x + 16.0f;
-            int columns = std::max(1, static_cast<int>(windowWidth / itemWidth));
-
-            std::vector<std::string> texturesToDelete;
-
-            const auto& assets = AssetManager::Instance().GetAssets();
-            int count = 0;
-
-            for (const auto& [guid, entry] : assets)
+            //for edwin
+            if (ImGui::Begin("Assets", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
             {
-                if (entry.typeName != TypeName<TextureProperties>::value)
-                    continue;
+                float windowWidth = ImGui::GetContentRegionAvail().x;
+                ImVec2 imageSize(64, 64);
+                float itemWidth = imageSize.x + 16.0f;
+                int columns = std::max(1, static_cast<int>(windowWidth / itemWidth));
 
-                auto* tex = static_cast<TextureProperties*>(entry.pObject.get());
-                if (!tex || tex->textureID == 0 || tex->guid.empty())
-                    continue;
+                std::vector<std::string> texturesToDelete;
 
-                ImTextureID imguiTextureID = (ImTextureID)(intptr_t)tex->textureID;
-                std::string modalId = "EditModal_" + tex->guid;
+                const auto& assets = AssetManager::Instance().GetAssets();
+                int count = 0;
 
-                ImGui::PushID(tex->guid.c_str());
-                ImGui::BeginGroup();
-
-                // Display texture
-                ImGui::Image(imguiTextureID, imageSize, ImVec2(0, 1), ImVec2(1, 0));
-
-                // Right-click to open modal
-                if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
-                    ImGui::OpenPopup(modalId.c_str());
-
-                // Modal dialog
-                if (ImGui::BeginPopupModal(modalId.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+                for (const auto& [guid, entry] : assets)
                 {
-                    static std::unordered_map<std::string, char[256]> renameBuffers;
-                    if (renameBuffers.find(tex->guid) == renameBuffers.end())
+                    if (entry.typeName != TypeName<TextureProperties>::value)
+                        continue;
+
+                    auto* tex = static_cast<TextureProperties*>(entry.pObject.get());
+                    if (!tex || tex->textureID == 0 || tex->guid.empty())
+                        continue;
+
+                    ImTextureID imguiTextureID = (ImTextureID)(intptr_t)tex->textureID;
+                    std::string modalId = "EditModal_" + tex->guid;
+
+                    ImGui::PushID(tex->guid.c_str());
+                    ImGui::BeginGroup();
+
+                    // Display texture
+                    ImGui::Image(imguiTextureID, imageSize, ImVec2(0, 1), ImVec2(1, 0));
+
+                    // Right-click to open modal
+                    if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+                        ImGui::OpenPopup(modalId.c_str());
+
+                    // Modal dialog
+                    if (ImGui::BeginPopupModal(modalId.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
                     {
-                        std::snprintf(renameBuffers[tex->guid], sizeof(renameBuffers[tex->guid]), "%s", tex->name.c_str());
+                        static std::unordered_map<std::string, char[256]> renameBuffers;
+                        if (renameBuffers.find(tex->guid) == renameBuffers.end())
+                        {
+                            std::snprintf(renameBuffers[tex->guid], sizeof(renameBuffers[tex->guid]), "%s", tex->name.c_str());
+                        }
+
+                        ImGui::TextColored(ImVec4(0.9f, 0.7f, 0.2f, 1.0f), "🛠 Texture Options");
+                        ImGui::Spacing();
+                        ImGui::Separator();
+                        ImGui::Spacing();
+
+                        ImGui::Text("Rename Texture:");
+                        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
+                        ImGui::InputText("##Rename", renameBuffers[tex->guid], IM_ARRAYSIZE(renameBuffers[tex->guid]));
+
+                        ImGui::Spacing();
+                        ImGui::Separator();
+                        ImGui::Spacing();
+
+                        // Button row
+                        float buttonWidth = 80.0f;
+                        float spacing = 10.0f;
+                        float totalWidth = buttonWidth * 3 + spacing * 2;
+                        float centerX = (ImGui::GetWindowSize().x - totalWidth) * 0.5f;
+                        ImGui::SetCursorPosX(centerX);
+
+                        if (ImGui::Button("Apply", ImVec2(buttonWidth, 0)))
+                        {
+                            tex->name = renameBuffers[tex->guid];
+                            ImGui::CloseCurrentPopup();
+                        }
+
+                        ImGui::SameLine(0, spacing);
+                        if (ImGui::Button("Delete", ImVec2(buttonWidth, 0)))
+                        {
+                            texturesToDelete.push_back(tex->guid);
+                            ImGui::CloseCurrentPopup();
+                        }
+
+                        ImGui::SameLine(0, spacing);
+                        if (ImGui::Button("Cancel", ImVec2(buttonWidth, 0)))
+                        {
+                            ImGui::CloseCurrentPopup();
+                        }
+                        ImGui::EndPopup();
                     }
 
-                    ImGui::TextColored(ImVec4(0.9f, 0.7f, 0.2f, 1.0f), "🛠 Texture Options");
-                    ImGui::Spacing();
-                    ImGui::Separator();
-                    ImGui::Spacing();
-
-                    ImGui::Text("Rename Texture:");
-                    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
-                    ImGui::InputText("##Rename", renameBuffers[tex->guid], IM_ARRAYSIZE(renameBuffers[tex->guid]));
-
-                    ImGui::Spacing();
-                    ImGui::Separator();
-                    ImGui::Spacing();
-
-                    // Button row
-                    float buttonWidth = 80.0f;
-                    float spacing = 10.0f;
-                    float totalWidth = buttonWidth * 3 + spacing * 2;
-                    float centerX = (ImGui::GetWindowSize().x - totalWidth) * 0.5f;
-                    ImGui::SetCursorPosX(centerX);
-
-                    if (ImGui::Button("Apply", ImVec2(buttonWidth, 0)))
+                    // Tooltip on hover
+                    if (ImGui::IsItemHovered())
                     {
-                        tex->name = renameBuffers[tex->guid];
-                        ImGui::CloseCurrentPopup();
+                        ImGui::BeginTooltip();
+                        ImGui::Text("Name: %s", tex->name.c_str());
+                        ImGui::Text("GUID: %s", tex->guid.c_str());
+                        ImGui::EndTooltip();
                     }
 
-                    ImGui::SameLine(0, spacing);
-                    if (ImGui::Button("Delete", ImVec2(buttonWidth, 0)))
-                    {
-                        texturesToDelete.push_back(tex->guid);
-                        ImGui::CloseCurrentPopup();
-                    }
+                    // Texture name centered below image
+                    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + (imageSize.x - ImGui::CalcTextSize(tex->name.c_str()).x) * 0.5f);
 
-                    ImGui::SameLine(0, spacing);
-                    if (ImGui::Button("Cancel", ImVec2(buttonWidth, 0)))
-                    {
-                        ImGui::CloseCurrentPopup();
-                    }
-                    ImGui::EndPopup();
+                    const int maxChars = 10;
+                    if (tex->name.length() > maxChars)
+                        tex->name = tex->name.substr(0, maxChars - 3) + "...";
+
+                    ImGui::PushTextWrapPos(ImGui::GetCursorPosX() + imageSize.x);
+                    ImGui::TextWrapped("%s", tex->name.c_str());
+                    ImGui::PopTextWrapPos();
+
+                    ImGui::EndGroup();
+                    ImGui::PopID();
+
+                    count++;
+                    if (count % columns != 0)
+                        ImGui::SameLine();
                 }
 
-                // Tooltip on hover
-                if (ImGui::IsItemHovered())
+                for (const auto& guid : texturesToDelete)
                 {
-                    ImGui::BeginTooltip();
-                    ImGui::Text("Name: %s", tex->name.c_str());
-                    ImGui::Text("GUID: %s", tex->guid.c_str());
-                    ImGui::EndTooltip();
+                    Framework::AssetManager::Instance().Unload(guid);
                 }
 
-                // Texture name centered below image
-                ImGui::SetCursorPosX(ImGui::GetCursorPosX() + (imageSize.x - ImGui::CalcTextSize(tex->name.c_str()).x) * 0.5f);
-                
-                const int maxChars = 10;
-                if (tex->name.length() > maxChars)
-                    tex->name = tex->name.substr(0, maxChars - 3) + "...";
+                ImGui::NewLine();
+                RenderErrorPopup();
+            }
+            ImGui::End();
 
-                ImGui::PushTextWrapPos(ImGui::GetCursorPosX() + imageSize.x);
-                ImGui::TextWrapped("%s", tex->name.c_str());
-                ImGui::PopTextWrapPos();
+            if (ImGui::Begin("Audio Manager"))
+            {
+                const auto& assetsImgui = AssetManager::Instance().GetAssets();
 
-                ImGui::EndGroup();
-                ImGui::PopID();
+                for (const auto& [handle, entry] : assetsImgui)
+                {
+                    if (entry.typeName != "AudioProperties") continue;
 
-                count++;
-                if (count % columns != 0)
+                    auto* audioProps = static_cast<AudioProperties*>(entry.pObject.get());
+
+                    if (!audioProps) continue;
+
+                    ImGui::Separator();
+                    ImGui::Text("Clip: %s", audioProps->name.c_str());
+                    ImGui::Text("File: %s", audioProps->path.c_str());
+                    ImGui::Text("Duration: %.2f sec", audioProps->duration);
+
+                    if (ImGui::Button(("Play##" + audioProps->guid).c_str()))
+                    {
+                        GlobalAudio.UE_PlaySound(audioProps->name);
+                        audioProps->isPlaying = true;
+
+                        // nid to find a way here to show isPlaying = false after audio ends
+                        // get audio channel and stop it
+                    }
                     ImGui::SameLine();
-            }
-
-            for (const auto& guid : texturesToDelete)
-            {
-                Framework::AssetManager::Instance().Unload(guid);
-            }
-
-            ImGui::NewLine();
-            RenderErrorPopup();
-        }
-        ImGui::End();
-
-        if (ImGui::Begin("Audio Manager")) 
-        {
-            const auto& assetsImgui = AssetManager::Instance().GetAssets();
-
-            for (const auto& [handle, entry] : assetsImgui)
-            {
-                if (entry.typeName != "AudioProperties") continue;
-
-                auto* audioProps = static_cast<AudioProperties*>(entry.pObject.get());
-
-                if (!audioProps) continue;
-
-                ImGui::Separator();
-                ImGui::Text("Clip: %s", audioProps->name.c_str());
-                ImGui::Text("File: %s", audioProps->path.c_str());
-                ImGui::Text("Duration: %.2f sec", audioProps->duration);
-
-                if (ImGui::Button(("Play##" + audioProps->guid).c_str())) 
-                {
-                    GlobalAudio.UE_PlaySound(audioProps->name);
-                    audioProps->isPlaying = true;
-
-                    // nid to find a way here to show isPlaying = false after audio ends
-                    // get audio channel and stop it
-                }
-                ImGui::SameLine();
-                if (ImGui::Button(("Stop##" + audioProps->guid).c_str())) 
-                {
-                    GlobalAudio.Reset();
-                    audioProps->isPlaying = false;
-                }
-
-                float volume = audioProps->volume;
-                if (ImGui::SliderFloat(("Volume##" + audioProps->guid).c_str(), &volume, 0.0f, 1.0f)) {
-                    audioProps->volume = volume;
-                    GlobalAudio.UE_SetVolume(audioProps->name, volume);
-                }
-
-                const char* modes[] = { "oneshot", "loop" };
-                int currentMode = 0;
-
-                // Find current mode index
-                for (int i = 0; i < IM_ARRAYSIZE(modes); ++i) 
-                {
-                    if (audioProps->mode == modes[i]) 
+                    if (ImGui::Button(("Stop##" + audioProps->guid).c_str()))
                     {
-                        currentMode = i;
-                        break;
+                        GlobalAudio.Reset();
+                        audioProps->isPlaying = false;
                     }
+
+                    float volume = audioProps->volume;
+                    if (ImGui::SliderFloat(("Volume##" + audioProps->guid).c_str(), &volume, 0.0f, 1.0f)) {
+                        audioProps->volume = volume;
+                        GlobalAudio.UE_SetVolume(audioProps->name, volume);
+                    }
+
+                    const char* modes[] = { "oneshot", "loop" };
+                    int currentMode = 0;
+
+                    // Find current mode index
+                    for (int i = 0; i < IM_ARRAYSIZE(modes); ++i)
+                    {
+                        if (audioProps->mode == modes[i])
+                        {
+                            currentMode = i;
+                            break;
+                        }
+                    }
+                    if (ImGui::Combo(("Mode##" + audioProps->guid).c_str(), &currentMode, modes, IM_ARRAYSIZE(modes)))
+                    {
+                        audioProps->mode = modes[currentMode];
+                    }
+                    ImGui::Text("Status: %s", audioProps->isPlaying ? "Playing" : "Stopped");
                 }
-                if (ImGui::Combo(("Mode##" + audioProps->guid).c_str(), &currentMode, modes, IM_ARRAYSIZE(modes))) 
-                {
-                    audioProps->mode = modes[currentMode];
-                }
-                ImGui::Text("Status: %s", audioProps->isPlaying ? "Playing" : "Stopped");
             }
-        }
-        ImGui::End();
+            ImGui::End();
 
-        // "Global variables" For Victor and Joel for IMGUI portion
-        static int selectedModelIndex = -1;
-        static char meshNameBuffer[128] = "";  // Buffer for the mesh name
-        static char imagePathBuffer[256] = "";  // Buffer for the image path
-        static Entity selectedEntity = std::numeric_limits<Entity>::max();  // Sets a selected entity to be a non existent entity out of range
-        static bool isPropertiesWindowOpen = false;                         // Allows opening and closing of the name editor? might want to remove
+            // "Global variables" For Victor and Joel for IMGUI portion
+            static int selectedModelIndex = -1;
+            static char meshNameBuffer[128] = "";  // Buffer for the mesh name
+            static char imagePathBuffer[256] = "";  // Buffer for the image path
+            static Entity selectedEntity = std::numeric_limits<Entity>::max();  // Sets a selected entity to be a non existent entity out of range
+            static bool isPropertiesWindowOpen = false;                         // Allows opening and closing of the name editor? might want to remove
 
-        if (ImGui::Begin("Entity", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
-        {
-            if (ImGui::CollapsingHeader("Entity Creation", ImGuiTreeNodeFlags_DefaultOpen))
+            if (ImGui::Begin("Entity", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
             {
-                if (ImGui::Button("Create Entity", ImVec2(140, 30)))
+                if (ImGui::CollapsingHeader("Entity Creation", ImGuiTreeNodeFlags_DefaultOpen))
                 {
-                    // Call to ECS Interface to create a new entity , ideally only transform for clean entity but for now create demo entity
-                    Entity newEntity = ecsInterface.CreateEntity();
-                    ecsInterface.AddComponent<TransformComponent>(newEntity, TransformComponent{});
+                    if (ImGui::Button("Create Entity", ImVec2(140, 30)))
+                    {
+                        // Call to ECS Interface to create a new entity , ideally only transform for clean entity but for now create demo entity
+                        Entity newEntity = ecsInterface.CreateEntity();
+                        ecsInterface.AddComponent<TransformComponent>(newEntity, TransformComponent{});
 
-                    auto* tex = AssetManager::Instance().Get<TextureProperties>(
-                        AssetManager::Instance().FindGuid<TextureProperties>()
-                    );
-
-                    if (!tex) {
-                        // Not found, so load and register
-                        auto textureComponent = std::make_unique<TextureProperties>();
-                        textureComponent->path = "Assets/PNG/test.png";
-                        TextureLoader::loadTexture(*textureComponent, true);
-                        AssetManager::Instance().RegisterAsset(std::move(textureComponent), &g_TexturePropertiesProps, "Assets/PNG/test.png");
-
-                        // Retrieve again to get the registered pointer
-                        tex = AssetManager::Instance().Get<TextureProperties>(
+                        auto* tex = AssetManager::Instance().Get<TextureProperties>(
                             AssetManager::Instance().FindGuid<TextureProperties>()
                         );
+
+                        if (!tex) {
+                            // Not found, so load and register
+                            auto textureComponent = std::make_unique<TextureProperties>();
+                            textureComponent->path = "Assets/PNG/test.png";
+                            TextureLoader::loadTexture(*textureComponent, true);
+                            AssetManager::Instance().RegisterAsset(std::move(textureComponent), &g_TexturePropertiesProps, "Assets/PNG/test.png");
+
+                            // Retrieve again to get the registered pointer
+                            tex = AssetManager::Instance().Get<TextureProperties>(
+                                AssetManager::Instance().FindGuid<TextureProperties>()
+                            );
+                        }
+
+                        // Add to ECS
+                        if (tex) {
+                            ecsInterface.AddComponent<TextureProperties>(newEntity, *tex);
+                        }
+
+                        MeshProperties meshComponent{};
+                        MeshLoader::loadMesh(meshComponent.path, meshComponent);
+
+                        ecsInterface.AddComponent<MeshProperties>(newEntity, meshComponent);
+
+
+                        std::cout << "Entity created with ID: " << newEntity << std::endl;
                     }
 
-                    // Add to ECS
-                    if (tex) {
-                        ecsInterface.AddComponent<TextureProperties>(newEntity, *tex);
+
+                    if (ImGui::Button("Delete All Entity", ImVec2(140, 30)))
+                    {
+                        ImGui::OpenPopup("Confirm Clear All"); // Open the confirmation popup
+                        // Clear entities list here.
                     }
 
-                    MeshProperties meshComponent{};
-                    MeshLoader::loadMesh(meshComponent.path, meshComponent);
+                    // Create the popup modal
+                    if (ImGui::BeginPopupModal("Confirm Clear All", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+                    {
+                        ImGui::Text("Are you sure?");
+                        ImGui::Separator();
 
-                    ecsInterface.AddComponent<MeshProperties>(newEntity, meshComponent);
+                        if (ImGui::Button("Yes", ImVec2(120, 0))) // Confirm button
+                        {
+                            isPropertiesWindowOpen = false;
+                            // Clear all objects and reset fields
+                            ecsInterface.ClearEntities();
+                            //models.clear();
 
-                 
-                    std::cout << "Entity created with ID: " << newEntity << std::endl;
+                            ImGui::CloseCurrentPopup(); // Close the popup
+                        }
+
+                        ImGui::SameLine();
+
+                        if (ImGui::Button("Cancel", ImVec2(120, 0))) // Cancel button
+                        {
+                            ImGui::CloseCurrentPopup(); // Close the popup without clearing
+                        }
+
+                        ImGui::EndPopup();
+                    }
                 }
 
 
-                if (ImGui::Button("Delete All Entity", ImVec2(140, 30)))
+                if (ImGui::Button("Delete Entity", ImVec2(140, 30)))
                 {
-                    ImGui::OpenPopup("Confirm Clear All"); // Open the confirmation popup
-                    // Clear entities list here.
+                    ecsInterface.DestroyEntity(selectedEntity);
                 }
 
-                // Create the popup modal
-                if (ImGui::BeginPopupModal("Confirm Clear All", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+                ImGui::Begin("Entity List");
+                // Display each entity as a selectable item
+                for (Entity entity : ecsInterface.GetEntities())
                 {
-                    ImGui::Text("Are you sure?");
-                    ImGui::Separator();
+                    std::string entityName = ecsInterface.GetEntityName(entity);
 
-                    if (ImGui::Button("Yes", ImVec2(120, 0))) // Confirm button
+                    // Use Selectable for each entity and check if it's clicked
+                    if (ImGui::Selectable(entityName.c_str(), selectedEntity == entity))
+                    {
+                        selectedEntity = entity;  // Set selected entity to this one
+                        isPropertiesWindowOpen = true;  // Open properties window
+                    }
+                }
+                ImGui::End();
+
+                // Separate panel to edit the selected entity's name
+                if (isPropertiesWindowOpen && selectedEntity != std::numeric_limits<Entity>::max())
+                {
+
+                    if (!ecsInterface.IsEntityValid(selectedEntity))
                     {
                         isPropertiesWindowOpen = false;
-                        // Clear all objects and reset fields
-                        ecsInterface.ClearEntities();
-                        //models.clear();
-
-                        ImGui::CloseCurrentPopup(); // Close the popup
+                        selectedEntity = std::numeric_limits<Entity>::max(); // Deselect the entity
                     }
-
-                    ImGui::SameLine();
-
-                    if (ImGui::Button("Cancel", ImVec2(120, 0))) // Cancel button
+                    else
                     {
-                        ImGui::CloseCurrentPopup(); // Close the popup without clearing
-                    }
+                        TransformComponent& transformComponent = ecsInterface.GetComponent<TransformComponent>(selectedEntity);
 
-                    ImGui::EndPopup();
-                }
-            }
-
-
-            if (ImGui::Button("Delete Entity", ImVec2(140, 30)))
-            {
-                ecsInterface.DestroyEntity(selectedEntity);
-            }
-
-            ImGui::Begin("Entity List");
-            // Display each entity as a selectable item
-            for (Entity entity : ecsInterface.GetEntities())
-            {
-                std::string entityName = ecsInterface.GetEntityName(entity);
-
-                // Use Selectable for each entity and check if it's clicked
-                if (ImGui::Selectable(entityName.c_str(), selectedEntity == entity))
-                {
-                    selectedEntity = entity;  // Set selected entity to this one
-                    isPropertiesWindowOpen = true;  // Open properties window
-                }
-            }
-            ImGui::End();
-
-            // Separate panel to edit the selected entity's name
-            if (isPropertiesWindowOpen && selectedEntity != std::numeric_limits<Entity>::max())
-            {
-
-                if (!ecsInterface.IsEntityValid(selectedEntity))
-                {
-                    isPropertiesWindowOpen = false;
-                    selectedEntity = std::numeric_limits<Entity>::max(); // Deselect the entity
-                }
-                else
-                {
-                    TransformComponent& transformComponent = ecsInterface.GetComponent<TransformComponent>(selectedEntity);
-
-                    ImGui::Begin("Entity Properties", &isPropertiesWindowOpen);
-                    if (ImGui::CollapsingHeader("Name", ImGuiTreeNodeFlags_DefaultOpen))
-                    {
-                        std::string selectedEntityName = ecsInterface.GetEntityName(selectedEntity);
-                        char buffer[256];
-                        strncpy(buffer, selectedEntityName.c_str(), sizeof(buffer));
-                        buffer[sizeof(buffer) - 1] = '\0';
-
-                        // Display an InputText to edit the selected entity's name
-                        if (ImGui::InputText("Edit Name", buffer, sizeof(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
+                        ImGui::Begin("Entity Properties", &isPropertiesWindowOpen);
+                        if (ImGui::CollapsingHeader("Name", ImGuiTreeNodeFlags_DefaultOpen))
                         {
-                            ecsInterface.SetEntityName(selectedEntity, std::string(buffer));  // Update the name of the selected entity
-                        }
-                    }
+                            std::string selectedEntityName = ecsInterface.GetEntityName(selectedEntity);
+                            char buffer[256];
+                            strncpy(buffer, selectedEntityName.c_str(), sizeof(buffer));
+                            buffer[sizeof(buffer) - 1] = '\0';
 
-                    if (ImGui::CollapsingHeader("Transform Component", ImGuiTreeNodeFlags_DefaultOpen))
-                    {
-                        // Translation
-                        ImGui::InputFloat3("Translation", glm::value_ptr(transformComponent.position));
-
-                        // Rotation
-                        ImGui::InputFloat3("Rotation", glm::value_ptr(transformComponent.rotation));
-
-                        // Scale
-                        ImGui::InputFloat3("Scale", glm::value_ptr(transformComponent.scale));
-                    }
-
-                    // Show combo box for adding components
-                    static int selectedComponentIndex = -1;
-                    std::vector<std::string> availableComponents;
-
-                    // Populate availableComponents with components the entity doesn�t already have
-                    for (int i = 0; i < ecsInterface.GetComponentNames().size(); ++i)
-                    {
-                        if (!ecsInterface.GetEntitySignature(selectedEntity).test(i))  // Check if the component is not yet added
-                        {
-                            availableComponents.push_back(ecsInterface.GetComponentNames()[i]);
-                        }
-                    }
-
-                    //// Show the combo box with available components
-                    //if (ImGui::BeginCombo("Choose Component", selectedComponentIndex >= 0 ? availableComponents[selectedComponentIndex].c_str() : "Select Component"))
-                    //{
-                    //    for (int i = 0; i < availableComponents.size(); ++i)
-                    //    {
-                    //        bool isSelected = (selectedComponentIndex == i);
-                    //        if (ImGui::Selectable(availableComponents[i].c_str(), isSelected))
-                    //        {
-                    //            selectedComponentIndex = i;
-                    //        }
-                    //        if (isSelected)
-                    //        {
-                    //            ImGui::SetItemDefaultFocus();
-                    //        }
-                    //    }
-                    //    ImGui::EndCombo();
-                    //}
-
-                    //// Add button to attach the selected component to the entity
-                    //if (selectedComponentIndex >= 0 && ImGui::Button("Add Component"))
-                    //{
-                    //    std::string selectedComponentName = availableComponents[selectedComponentIndex];
-
-                    //    // Add the selected component to the entity
-                    //    ecsInterface.AddComponentToEntity(selectedEntity, selectedComponentName);
-
-                    //    // Reset the combo box selection and clear out selectedComponentIndex to update available components
-                    //    selectedComponentIndex = -1;
-                    //}
-
-                    if (ImGui::CollapsingHeader("Mesh Component", ImGuiTreeNodeFlags_DefaultOpen))
-                    {
-                        if (ecsInterface.HasComponent<MeshProperties>(selectedEntity))
-                        {
-                            MeshProperties& meshComponent = ecsInterface.GetComponent<MeshProperties>(selectedEntity);
-
-                            // Show the mesh path (editable)
-                            char meshPathBuffer[256];
-                            strncpy(meshPathBuffer, meshComponent.path.c_str(), sizeof(meshPathBuffer));
-                            meshPathBuffer[sizeof(meshPathBuffer) - 1] = '\0';
-
-                            if (ImGui::InputText("Mesh Path", meshPathBuffer, sizeof(meshPathBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
+                            // Display an InputText to edit the selected entity's name
+                            if (ImGui::InputText("Edit Name", buffer, sizeof(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
                             {
-                                // Update mesh path if user edits it
-                                meshComponent.path = std::string(meshPathBuffer);
-                            }
-
-                            // Show debug info about mesh
-                            ImGui::Text("VAO: %u", meshComponent.vao);
-                            ImGui::Text("VBO: %u", meshComponent.vbo);
-                            ImGui::Text("EBO: %u", meshComponent.ebo);
-                            ImGui::Text("Index Count: %u", meshComponent.indexCount);
-
-                            // Optional: add a reload button
-                            if (ImGui::Button("Reload Mesh"))
-                            {
-                                MeshLoader::loadMesh(meshComponent.path, meshComponent);
+                                ecsInterface.SetEntityName(selectedEntity, std::string(buffer));  // Update the name of the selected entity
                             }
                         }
-                        else
+
+                        if (ImGui::CollapsingHeader("Transform Component", ImGuiTreeNodeFlags_DefaultOpen))
                         {
-                            ImGui::Text("No MeshComponent attached to this entity.");
-                            if (ImGui::Button("Add Mesh Component"))
+                            // Translation
+                            ImGui::InputFloat3("Translation", glm::value_ptr(transformComponent.position));
+
+                            // Rotation
+                            ImGui::InputFloat3("Rotation", glm::value_ptr(transformComponent.rotation));
+
+                            // Scale
+                            ImGui::InputFloat3("Scale", glm::value_ptr(transformComponent.scale));
+                        }
+
+                        // Show combo box for adding components
+                        static int selectedComponentIndex = -1;
+                        std::vector<std::string> availableComponents;
+
+                        // Populate availableComponents with components the entity doesn�t already have
+                        for (int i = 0; i < ecsInterface.GetComponentNames().size(); ++i)
+                        {
+                            if (!ecsInterface.GetEntitySignature(selectedEntity).test(i))  // Check if the component is not yet added
                             {
-                                ecsInterface.AddComponent<MeshProperties>(selectedEntity, MeshProperties{});
+                                availableComponents.push_back(ecsInterface.GetComponentNames()[i]);
                             }
                         }
-                    }
 
-                    if (ImGui::CollapsingHeader("Texture Component", ImGuiTreeNodeFlags_DefaultOpen))
-                    {
-                        if (ecsInterface.HasComponent<Framework::TextureProperties>(selectedEntity))
+                        //// Show the combo box with available components
+                        //if (ImGui::BeginCombo("Choose Component", selectedComponentIndex >= 0 ? availableComponents[selectedComponentIndex].c_str() : "Select Component"))
+                        //{
+                        //    for (int i = 0; i < availableComponents.size(); ++i)
+                        //    {
+                        //        bool isSelected = (selectedComponentIndex == i);
+                        //        if (ImGui::Selectable(availableComponents[i].c_str(), isSelected))
+                        //        {
+                        //            selectedComponentIndex = i;
+                        //        }
+                        //        if (isSelected)
+                        //        {
+                        //            ImGui::SetItemDefaultFocus();
+                        //        }
+                        //    }
+                        //    ImGui::EndCombo();
+                        //}
+
+                        //// Add button to attach the selected component to the entity
+                        //if (selectedComponentIndex >= 0 && ImGui::Button("Add Component"))
+                        //{
+                        //    std::string selectedComponentName = availableComponents[selectedComponentIndex];
+
+                        //    // Add the selected component to the entity
+                        //    ecsInterface.AddComponentToEntity(selectedEntity, selectedComponentName);
+
+                        //    // Reset the combo box selection and clear out selectedComponentIndex to update available components
+                        //    selectedComponentIndex = -1;
+                        //}
+
+                        if (ImGui::CollapsingHeader("Mesh Component", ImGuiTreeNodeFlags_DefaultOpen))
                         {
-                            auto& texture = ecsInterface.GetComponent<Framework::TextureProperties>(selectedEntity);
-
-                            // Editable path buffer
-                            char pathBuffer[256];
-                            strncpy(pathBuffer, texture.path.c_str(), sizeof(pathBuffer) - 1);
-                            pathBuffer[sizeof(pathBuffer) - 1] = '\0';
-
-                            // Editable name buffer
-                            char nameBuffer[128];
-                            strncpy(nameBuffer, texture.name.c_str(), sizeof(nameBuffer) - 1);
-                            nameBuffer[sizeof(nameBuffer) - 1] = '\0';
-
-                            // Display GUID (read-only)
-                            ImGui::Text("GUID: %s", texture.guid.c_str());
-
-                            // Editable name
-                            if (ImGui::InputText("Texture Name", nameBuffer, sizeof(nameBuffer)))
+                            if (ecsInterface.HasComponent<MeshProperties>(selectedEntity))
                             {
-                                texture.name = std::string(nameBuffer);
-                            }
+                                MeshProperties& meshComponent = ecsInterface.GetComponent<MeshProperties>(selectedEntity);
 
-                            // Editable path
-                            if (ImGui::InputText("Texture Path", pathBuffer, sizeof(pathBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
-                            {
-                                std::string newPath(pathBuffer);
-                                if (newPath != texture.path)
+                                // Show the mesh path (editable)
+                                char meshPathBuffer[256];
+                                strncpy(meshPathBuffer, meshComponent.path.c_str(), sizeof(meshPathBuffer));
+                                meshPathBuffer[sizeof(meshPathBuffer) - 1] = '\0';
+
+                                if (ImGui::InputText("Mesh Path", meshPathBuffer, sizeof(meshPathBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
                                 {
-                                    texture.path = newPath;
-                                    texture.textureID = TextureLoader::loadTexture(texture); // reload with updated path
+                                    // Update mesh path if user edits it
+                                    meshComponent.path = std::string(meshPathBuffer);
+                                }
+
+                                // Show debug info about mesh
+                                ImGui::Text("VAO: %u", meshComponent.vao);
+                                ImGui::Text("VBO: %u", meshComponent.vbo);
+                                ImGui::Text("EBO: %u", meshComponent.ebo);
+                                ImGui::Text("Index Count: %u", meshComponent.indexCount);
+
+                                // Optional: add a reload button
+                                if (ImGui::Button("Reload Mesh"))
+                                {
+                                    MeshLoader::loadMesh(meshComponent.path, meshComponent);
                                 }
                             }
-
-                            // Show texture metadata
-                            ImGui::Text("Texture ID: %u", texture.textureID);
-                            ImGui::Text("Size: %d x %d", texture.width, texture.height);
-
-                            // Preview texture if valid
-                            if (texture.textureID != 0)
+                            else
                             {
-                                ImGui::Text("Preview:");
-                                ImGui::Image(static_cast<ImTextureID>(texture.textureID), ImVec2(128, 128));
+                                ImGui::Text("No MeshComponent attached to this entity.");
+                                if (ImGui::Button("Add Mesh Component"))
+                                {
+                                    ecsInterface.AddComponent<MeshProperties>(selectedEntity, MeshProperties{});
+                                }
                             }
                         }
-                        else
+
+                        if (ImGui::CollapsingHeader("Texture Component", ImGuiTreeNodeFlags_DefaultOpen))
                         {
-                            ImGui::Text("No TextureProperties attached to this entity.");
+                            if (ecsInterface.HasComponent<Framework::TextureProperties>(selectedEntity))
+                            {
+                                auto& texture = ecsInterface.GetComponent<Framework::TextureProperties>(selectedEntity);
+
+                                // Editable path buffer
+                                char pathBuffer[256];
+                                strncpy(pathBuffer, texture.path.c_str(), sizeof(pathBuffer) - 1);
+                                pathBuffer[sizeof(pathBuffer) - 1] = '\0';
+
+                                // Editable name buffer
+                                char nameBuffer[128];
+                                strncpy(nameBuffer, texture.name.c_str(), sizeof(nameBuffer) - 1);
+                                nameBuffer[sizeof(nameBuffer) - 1] = '\0';
+
+                                // Display GUID (read-only)
+                                ImGui::Text("GUID: %s", texture.guid.c_str());
+
+                                // Editable name
+                                if (ImGui::InputText("Texture Name", nameBuffer, sizeof(nameBuffer)))
+                                {
+                                    texture.name = std::string(nameBuffer);
+                                }
+
+                                // Editable path
+                                if (ImGui::InputText("Texture Path", pathBuffer, sizeof(pathBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
+                                {
+                                    std::string newPath(pathBuffer);
+                                    if (newPath != texture.path)
+                                    {
+                                        texture.path = newPath;
+                                        texture.textureID = TextureLoader::loadTexture(texture); // reload with updated path
+                                    }
+                                }
+
+                                // Show texture metadata
+                                ImGui::Text("Texture ID: %u", texture.textureID);
+                                ImGui::Text("Size: %d x %d", texture.width, texture.height);
+
+                                // Preview texture if valid
+                                if (texture.textureID != 0)
+                                {
+                                    ImGui::Text("Preview:");
+                                    ImGui::Image(static_cast<ImTextureID>(texture.textureID), ImVec2(128, 128));
+                                }
+                            }
+                            else
+                            {
+                                ImGui::Text("No TextureProperties attached to this entity.");
+                            }
+                        }
+
+                        // Reset selectedEntity if the properties window is closed
+                        if (!isPropertiesWindowOpen)
+                        {
+                            selectedEntity = std::numeric_limits<Entity>::max();
+                        }
+                        ImGui::End();
+                    }
+                }
+                ImGui::End();
+
+                // Begin the DebugSystem ImGui window
+                if (ImGui::Begin("DebugSystem", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse)) {
+
+                    // Retrieve the DebugSystem instance
+                    Framework::DebugSystem* debugSystem = Framework::DebugSystem::GetInstance();
+
+                    // Get the cached percentage values
+                    std::unordered_map<std::string, double> systemPercentages = debugSystem->GetSystemUpdateTimes();
+
+                    // Prepare data for histogram
+                    std::vector<float> values;
+                    std::vector<const char*> labels;
+
+                    for (const auto& [systemName, percentage] : systemPercentages) {
+                        values.push_back(static_cast<float>(percentage)); // Add percentage as float for the histogram
+                        labels.push_back(systemName.c_str()); // Store the label for each system
+                    }
+
+                    // Display each system's update percentage as text
+                    for (size_t i = 0; i < values.size(); ++i) {
+                        ImGui::Text("%s: %.2f%%", labels[i], values[i]);
+                    }
+
+                    // Plot the histogram for system performance percentages
+                    if (!values.empty()) {
+                        ImGui::Text("System Performance Histogram");
+                        ImGui::PlotHistogram("##SystemUsage", values.data(), static_cast<int>(values.size()), 0, nullptr, 0.0f, 100.0f, ImVec2(0, 100));
+                    }
+                }
+                // End the DebugSystem ImGui window
+                ImGui::End();
+
+                // Open a new window for game state controls (e.g., "Game Controls")
+                if (ImGui::Begin("Game Controls", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoNav))
+                {
+                    // Get the width of the available region
+                    float windowWidth = ImGui::GetContentRegionAvail().x;
+
+                    // Set button size (adjust values as desired)
+                    ImVec2 buttonSize(50, 30); // Set the width and height of the button
+
+                    // Calculate the X position to center the buttons horizontally
+                    float centerX = (windowWidth - (3 * buttonSize.x + 2 * ImGui::GetStyle().ItemSpacing.x)) * 0.5f;
+
+                    // Add spacing on the left to center-align the buttons
+                    ImGui::SetCursorPosX(centerX);
+
+                    // Play Button with custom color
+                    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.4f, 0.7f, 1.0f, 1.0f));       // Light blue
+                    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.5f, 0.9f, 1.0f)); // Medium blue when hovered
+                    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.3f, 0.7f, 1.0f));  // Darker blue when active
+                    if (ImGui::Button("Play", buttonSize))
+                    {
+                        // Set engine state to play mode
+                        engineState.SetPlay(true);
+                    }
+                    ImGui::PopStyleColor(3); // Restore color
+
+                    ImGui::SameLine(); // Place the next button on the same line
+
+                    // Pause Button with custom color
+                    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.4f, 0.7f, 1.0f, 1.0f));       // Light blue
+                    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.5f, 0.9f, 1.0f)); // Medium blue when hovered
+                    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.3f, 0.7f, 1.0f));  // Darker blue when active
+                    if (ImGui::Button("Pause", buttonSize))
+                    {
+                        // Toggle pause state while in play mode
+                        if (engineState.IsPlay())
+                        {
+                            engineState.SetPlay(false);
                         }
                     }
+                    ImGui::PopStyleColor(3); // Restore color
 
-                    // Reset selectedEntity if the properties window is closed
-                    if (!isPropertiesWindowOpen)
+                    ImGui::SameLine(); // Place the next button on the same line
+
+                    // Stop Button with custom color
+                    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));       // Red
+                    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.8f, 0.0f, 0.0f, 1.0f)); // Darker red when hovered
+                    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.6f, 0.0f, 0.0f, 1.0f));  // Even darker red when active
+                    if (ImGui::Button("Stop", buttonSize))
                     {
-                        selectedEntity = std::numeric_limits<Entity>::max();
-                    }
-                    ImGui::End();
-                }
-            }
-            ImGui::End();
-            
-            // Begin the DebugSystem ImGui window
-            if (ImGui::Begin("DebugSystem", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse)) {
-
-                // Retrieve the DebugSystem instance
-                Framework::DebugSystem* debugSystem = Framework::DebugSystem::GetInstance();
-
-                // Get the cached percentage values
-                std::unordered_map<std::string, double> systemPercentages = debugSystem->GetSystemUpdateTimes();
-
-                // Prepare data for histogram
-                std::vector<float> values;
-                std::vector<const char*> labels;
-
-                for (const auto& [systemName, percentage] : systemPercentages) {
-                    values.push_back(static_cast<float>(percentage)); // Add percentage as float for the histogram
-                    labels.push_back(systemName.c_str()); // Store the label for each system
-                }
-
-                // Display each system's update percentage as text
-                for (size_t i = 0; i < values.size(); ++i) {
-                    ImGui::Text("%s: %.2f%%", labels[i], values[i]);
-                }
-
-                // Plot the histogram for system performance percentages
-                if (!values.empty()) {
-                    ImGui::Text("System Performance Histogram");
-                    ImGui::PlotHistogram("##SystemUsage", values.data(), static_cast<int>(values.size()), 0, nullptr, 0.0f, 100.0f, ImVec2(0, 100));
-                }
-            }
-            // End the DebugSystem ImGui window
-            ImGui::End();
-
-            // Open a new window for game state controls (e.g., "Game Controls")
-            if (ImGui::Begin("Game Controls", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoNav))
-            {
-                // Get the width of the available region
-                float windowWidth = ImGui::GetContentRegionAvail().x;
-
-                // Set button size (adjust values as desired)
-                ImVec2 buttonSize(50, 30); // Set the width and height of the button
-
-                // Calculate the X position to center the buttons horizontally
-                float centerX = (windowWidth - (3 * buttonSize.x + 2 * ImGui::GetStyle().ItemSpacing.x)) * 0.5f;
-
-                // Add spacing on the left to center-align the buttons
-                ImGui::SetCursorPosX(centerX);
-
-                // Play Button with custom color
-                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.4f, 0.7f, 1.0f, 1.0f));       // Light blue
-                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.5f, 0.9f, 1.0f)); // Medium blue when hovered
-                ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.3f, 0.7f, 1.0f));  // Darker blue when active
-                if (ImGui::Button("Play", buttonSize))
-                {
-                    // Set engine state to play mode
-                    engineState.SetPlay(true);
-                }
-                ImGui::PopStyleColor(3); // Restore color
-
-                ImGui::SameLine(); // Place the next button on the same line
-
-                // Pause Button with custom color
-                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.4f, 0.7f, 1.0f, 1.0f));       // Light blue
-                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.5f, 0.9f, 1.0f)); // Medium blue when hovered
-                ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.3f, 0.7f, 1.0f));  // Darker blue when active
-                if (ImGui::Button("Pause", buttonSize))
-                {
-                    // Toggle pause state while in play mode
-                    if (engineState.IsPlay())
-                    {
+                        // Stop the game by setting play to false
                         engineState.SetPlay(false);
+                        //ecsInterface.ClearEntities(); // Clear all entity and load json to reset scene
+                        //GlobalAssetManager.LoadEntities(filePath); // temporarily load this scene // cant load
+                        // GlobalAssetManager.LoadEntities.clear();   
                     }
+                    ImGui::PopStyleColor(3); // Restore color
+
+                    ImGui::SameLine(); // Place the next button on the same line
+                    // Debug Button with custom color
+                    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.4f, 0.7f, 1.0f, 1.0f));       // Light blue
+                    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.5f, 0.9f, 1.0f)); // Medium blue when hovered
+                    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.3f, 0.7f, 1.0f));  // Darker blue when active
+                    if (ImGui::Button("Debug", buttonSize))
+                    {
+                        // Toggle debug state while in play mode
+                        engineState.SetInDebugMode(!engineState.IsInDebugMode());
+                    }
+                    ImGui::PopStyleColor(3); // Restore color
                 }
-                ImGui::PopStyleColor(3); // Restore color
+                ImGui::End();
 
-                ImGui::SameLine(); // Place the next button on the same line
-
-                // Stop Button with custom color
-                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));       // Red
-                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.8f, 0.0f, 0.0f, 1.0f)); // Darker red when hovered
-                ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.6f, 0.0f, 0.0f, 1.0f));  // Even darker red when active
-                if (ImGui::Button("Stop", buttonSize))
+                if (ImGui::Begin("Main Viewport"))
                 {
-                    // Stop the game by setting play to false
-                    engineState.SetPlay(false);
-                    //ecsInterface.ClearEntities(); // Clear all entity and load json to reset scene
-                    //GlobalAssetManager.LoadEntities(filePath); // temporarily load this scene // cant load
-                    // GlobalAssetManager.LoadEntities.clear();   
-                }
-                ImGui::PopStyleColor(3); // Restore color
+                    // Get the available size in the ImGui window
+                    ImVec2 viewportSize = ImGui::GetContentRegionAvail();
+                    float aspectRatio = 1280.0f / 720.0f; // Use the known FBO dimensions
+                    float newWidth = viewportSize.x;
+                    float newHeight = viewportSize.x / aspectRatio;
 
-                ImGui::SameLine(); // Place the next button on the same line
-                // Debug Button with custom color
-                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.4f, 0.7f, 1.0f, 1.0f));       // Light blue
-                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.5f, 0.9f, 1.0f)); // Medium blue when hovered
-                ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.3f, 0.7f, 1.0f));  // Darker blue when active
-                if (ImGui::Button("Debug", buttonSize))
-                {
-                    // Toggle debug state while in play mode
-                    engineState.SetInDebugMode(!engineState.IsInDebugMode());
+                    // Adjust width and height to maintain the aspect ratio
+                    if (newHeight > viewportSize.y)
+                    {
+                        newHeight = viewportSize.y;
+                        newWidth = viewportSize.y * aspectRatio;
+                    }
+
+                    // Center the image in the available viewport space with black bars
+                    ImVec2 offset((viewportSize.x - newWidth) * 0.5f, (viewportSize.y - newHeight) * 0.5f);
+                    ImGui::SetCursorPos(offset);
+
+                    // Render the framebuffer texture within the calculated size
+                    ImGui::Image((ImTextureID)(intptr_t)gameTexture, ImVec2(newWidth, newHeight), ImVec2(0, 1), ImVec2(1, 0));
                 }
-                ImGui::PopStyleColor(3); // Restore color
+                ImGui::End();
             }
-            ImGui::End();
 
-            if (ImGui::Begin("Main Viewport"))
-            {
-                // Get the available size in the ImGui window
-                ImVec2 viewportSize = ImGui::GetContentRegionAvail();
-                float aspectRatio = 1280.0f / 720.0f; // Use the known FBO dimensions
-                float newWidth = viewportSize.x;
-                float newHeight = viewportSize.x / aspectRatio;
-
-                // Adjust width and height to maintain the aspect ratio
-                if (newHeight > viewportSize.y)
-                {
-                    newHeight = viewportSize.y;
-                    newWidth = viewportSize.y * aspectRatio;
-                }
-
-                // Center the image in the available viewport space with black bars
-                ImVec2 offset((viewportSize.x - newWidth) * 0.5f, (viewportSize.y - newHeight) * 0.5f);
-                ImGui::SetCursorPos(offset);
-
-                // Render the framebuffer texture within the calculated size
-                ImGui::Image((ImTextureID)(intptr_t)gameTexture, ImVec2(newWidth, newHeight), ImVec2(0, 1), ImVec2(1, 0));
-            }
-            ImGui::End();
-
-            // Render ImGui
-            ImGui::Render();
-            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-            // Handle multiple viewports (for multi-window applications)
-            GLFWwindow* backup_current_context = glfwGetCurrentContext();
-            ImGui::UpdatePlatformWindows();
-            ImGui::RenderPlatformWindowsDefault();
-            glfwMakeContextCurrent(backup_current_context);
-
-            // edwin testing
-            glfwSetDropCallback(backup_current_context, DropCallback);
-            glfwPollEvents();
-            glfwSwapBuffers(m_graphicsSystem->GetWindow());
         }
+        // Render ImGui
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+        // Handle multiple viewports (for multi-window applications)
+        GLFWwindow* backup_current_context = glfwGetCurrentContext();
+        ImGui::UpdatePlatformWindows();
+        ImGui::RenderPlatformWindowsDefault();
+        glfwMakeContextCurrent(backup_current_context);
+
+        // edwin testing
+        glfwSetDropCallback(backup_current_context, DropCallback);
+        glfwPollEvents();
+        glfwSwapBuffers(m_graphicsSystem->GetWindow());
     }
 }
