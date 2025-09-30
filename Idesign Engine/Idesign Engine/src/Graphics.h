@@ -28,6 +28,9 @@
 #include "MeshLoader.h"
 #include "TextureLoader.h"
 
+#include "AssetManager.h"
+#include "WindowConfigProperties.h"
+#include "MeshProperties.h"
 
 
 namespace Framework {
@@ -86,7 +89,7 @@ namespace Framework {
         Mesh cone;
         Mesh plane;
         Mesh cylinder;
-        MeshComponent mesh;
+        MeshProperties mesh;
         GLuint tex = 0;
 
         // shaders

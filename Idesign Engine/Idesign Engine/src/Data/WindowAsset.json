@@ -1,9 +1,6 @@
 {
-  "windows": [
-    {
-      "x": 1600,
-      "y": 900,
-      "program_name": "Idesign Engine"
-    }
-  ]
+    "guid": "de1f6b3e-84a4-4ae1-a1ca-847f2263de6b",
+    "x": 1280,
+    "y": 720,
+    "programName": "IDesignStudios"
 }

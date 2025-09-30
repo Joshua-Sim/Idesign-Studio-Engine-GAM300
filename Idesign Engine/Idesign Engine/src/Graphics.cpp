@@ -52,37 +52,30 @@
 #include "MeshLoader.h"
 #include "TextureLoader.h"
 #include "ImguiManager.h"
+#include "Coordinator.h"
+#include "ComponentList.h"
 
 extern Framework::FontSystem fontSystem;
 extern Framework::Coordinator ecsInterface;
 
-
 namespace Framework {
-    //ShaderProgram terrainShader;
-    //ShaderProgram meshShader;
-    //std::vector<PointLightCPU> pointLights;
-    //std::vector<SpotLightCPU> spotLights;
-    //DirectionalLightCPU sun; // defaults are fine
     bool Graphics::mouseCaptured = true;
-
-    static const unsigned int WIDTH = 1280;
-    static const unsigned int HEIGHT = 720;
-
-    static float lastX = WIDTH * 0.5f;
-    static float lastY = HEIGHT * 0.5f;
     static bool firstMouse = true;
     static bool mouseCaptured = true;
     bool groundMode = true; // toggle with a key (e.g., F1)
 
+    const auto& assets = AssetManager::Instance().GetAssets();
+
     // Constructor
     Graphics::Graphics()
     {
+        WindowConfig* config = AssetManager::Instance().Get<WindowConfig>(AssetManager::Instance().FindGuid<WindowConfig>());
         if (!glfwInit()) { std::cerr << "GLFW init failed\n"; return; }
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-        window = glfwCreateWindow(WIDTH, HEIGHT, "ECS 3D Renderer", nullptr, nullptr);
+        window = glfwCreateWindow(config->x, config->y, config->programName.c_str(), nullptr, nullptr);
         if (!window) { std::cerr << "Window creation failed\n"; glfwTerminate(); return; }
         glfwMakeContextCurrent(window);
 
@@ -99,24 +92,84 @@ namespace Framework {
     // Initialize the system
     void Graphics::Initialize()
     {
+        WindowConfig* config = AssetManager::Instance().Get<WindowConfig>(AssetManager::Instance().FindGuid<WindowConfig>());
+
         // always enable for depth test framebuffering
         glEnable(GL_DEPTH_TEST);
 
-        // set callbacks
-        glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+        //// set callbacks
+        //glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-        // IMPORTANT: always store Graphics* as user pointer, not Camera*
-        glfwSetWindowUserPointer(window, &camera);
-        //glfwSetCursorPosCallback(window, mouse_callback);
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        //// IMPORTANT: always store Graphics* as user pointer, not Camera*
+        //glfwSetWindowUserPointer(window, &camera);
+        ////glfwSetCursorPosCallback(window, mouse_callback);
+        //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+        // Register Graphics related Component
+        ecsInterface.RegisterComponent<TransformComponent>();
+        ecsInterface.RegisterComponent<MeshProperties>();
+        ecsInterface.RegisterComponent<TextureProperties>();
+
+        //  ---- ECS INITIALIZATION --- 
+        Signature signature;
+        signature.set(ecsInterface.GetComponentType<MeshProperties>()); //Set mEntities to be populated with MeshComponent for now
+
+        ecsInterface.SetSystemSignature<Graphics>(signature);
+        std::cout << "Signature for Graphics system is: " << signature << std::endl;
+        //  ---- ECS INITIALIZATION END --- 
+
+
+        // ---------------- Create one ECS object (Deserialized next time) -------------------- 
+        Entity newEntity = ecsInterface.CreateEntity();
+
+        //Add transform
+        TransformComponent transformComponent;
+        transformComponent.position = glm::vec3(0.0, 2.0, 0.0); // Instantiate location
+        transformComponent.scale = glm::vec3(0.0005, 0.0005, 0.0005); // Size of my obj is big, change for test
+
+        ecsInterface.AddComponent<TransformComponent>(newEntity, transformComponent);
+
+        // Add and load mesh , temporarily hard-code component data 
+        MeshProperties meshComponent;
+        meshComponent.path = "Assets/Objects/plane.obj";
+
+        // Load mesh from its own path, again serialized for each obj in deserialization after.
+        MeshLoader::loadMesh(meshComponent.path, meshComponent);
+        ecsInterface.AddComponent<MeshProperties>(newEntity, meshComponent);
+
+        // Add and load a texture component
+        Framework::TextureProperties textureComponent;
+        textureComponent.path = "Assets/PNG/test.png";
+        TextureLoader::loadTexture(textureComponent, true);
+
+        ecsInterface.AddComponent<Framework::TextureProperties>(newEntity, textureComponent);
+        // ----------------- End object creation ------------------------------
 
         // asset load / loading shape units
-        MeshLoader::loadMesh("Assets/Objects/player.obj", mesh);
-        tex = TextureLoader::loadTexture("Assets/PNG/test.png");
+        // Testing (Edwin)
+        /*for (const auto& [handle, entry] : assets)
+        {
+            auto* texProps = static_cast<TextureProperties*>(entry.pObject.get());
+
+            texProps->textureID = TextureLoader::loadTexture(*texProps, true);
+
+            tex = texProps->textureID;
+        }*/
+        AssetManager::Instance().LoadBinaryArray<TextureProperties>("src/Data/TextureAsset.bin", g_TexturePropertiesProps,
+            [](TextureProperties& props)
+            {
+                TextureLoader::loadTexture(props, true);
+            });
+        //AssetManager::Instance().PrintAssetsOfType(TypeName<TextureProperties>::value);
+        //AssetManager::Instance().SaveArrayToJson(TypeName<TextureProperties>::value, "src/Data/TextureAsset.json", "textures");
+        auto* tex = AssetManager::Instance().Get<TextureProperties>(AssetManager::Instance().FindGuid<TextureProperties>());
         cube = Mesh::CreateUnitCubeData();
         plane = Mesh::CreateUnitSphereData();
         cone = Mesh::CreateUnitConeData();
         cylinder = Mesh::CreateUnitCylinderData();
+
+        // Initialise 1 object into ECS (Temporary, liase and move de-serialize with loadmesh function handled at asset-handler)
+
 
         // Initialisers for OpenGL (IMPORTANT : always call these after every initialiser values)
         // If want to change any values, please change in header or reconstruct after calling
@@ -126,11 +179,11 @@ namespace Framework {
         finalShader.initGL();
         terrain.initGL();
 
-        //initialise shapes
+        //initialise geometry objects
         cube.initGL();
         plane.initGL();
         cone.initGL();
-        cylinder.initGL();
+        //cylinder.initGL();
 
 
         // lights (use member containers)
@@ -146,13 +199,13 @@ namespace Framework {
         glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
         glGenTextures(1, &colorBuffer);
         glBindTexture(GL_TEXTURE_2D, colorBuffer);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, WIDTH, HEIGHT,0, GL_RGBA, GL_FLOAT, NULL);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, config->x, config->y, 0, GL_RGBA, GL_FLOAT, NULL);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBuffer, 0);
         glGenRenderbuffers(1, &rboDepth);
         glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, WIDTH, HEIGHT);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, config->x, config->y);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
             std::cout << "ERROR::FRAMEBUFFER:: HDR Framebuffer is not complete!\n";
@@ -164,7 +217,7 @@ namespace Framework {
         {
             glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[i]);
             glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[i]);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, WIDTH, HEIGHT, 0, GL_RGBA, GL_FLOAT, NULL);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, config->x, config->y, 0, GL_RGBA, GL_FLOAT, NULL);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -176,7 +229,6 @@ namespace Framework {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         lastTime = (float)glfwGetTime();
     }
-
 
     void Graphics::SetImguiManager(ImguiManager* manager)
     {
@@ -199,16 +251,21 @@ namespace Framework {
             // ====================================================================
            // 1. SCENE PASS: Render the scene to the HDR framebuffer
            // ====================================================================
-                glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
+            glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
             glEnable(GL_DEPTH_TEST);
 
-            int w, h; glfwGetFramebufferSize(window, &w, &h);
+            int w, h; 
+            glfwGetFramebufferSize(window, &w, &h);
+ 
+            if (w == 0 || h == 0) {
+                return; // Don't render anything if the window is minimized
+            }
             float aspect = (h == 0) ? 1.f : float(w) / float(h);
             glViewport(0, 0, w, h);
             glClearColor(0.07f, 0.09f, 0.12f, 1.f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            glm::mat4 proj = glm::perspective(glm::radians(camera.zoom), aspect, 0.1f, 500.0f);
+            glm::mat4 proj = camera.getProjectionMatrix(w,h);
             glm::mat4 view = camera.getViewMatrix();
 
             // stick to ground
@@ -220,7 +277,7 @@ namespace Framework {
             terrainShader.setMat4("uProj", proj);
             terrainShader.setMat4("uView", view);
             terrainShader.setMat4("uModel", glm::mat4(1.f));
-            terrainShader.setVec3("uAlbedo", { 0.6f,0.4f,0.2f });
+            terrainShader.setVec3("uAlbedo", { 0.6f,0.4f,0.2f }); //terrain color
             LightComponent::upload(terrainShader, sun, hasSun, pointLights, spotLights);
             terrain.draw();
 
@@ -228,18 +285,42 @@ namespace Framework {
             meshShader.use();
             meshShader.setMat4("uProj", proj);
             meshShader.setMat4("uView", view);
-            meshShader.setMat4("uModel", glm::mat4(1.f));
-            meshShader.setVec3("uAlbedo", { 1,1,1 });
-            LightComponent::upload(meshShader, sun, hasSun, pointLights, spotLights);
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, tex);
-            meshShader.setInt("uTexture", 0); // correct shader
-            glBindVertexArray(mesh.vao);
-            glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
+
+            // ---- ECS draw loop ----
+            for (auto const& entityId : mEntities) {
+                MeshProperties& meshComponent = ecsInterface.GetComponent<MeshProperties>(entityId);
+                TransformComponent& transformComponent = ecsInterface.GetComponent<TransformComponent>(entityId);
+                //TextureComponent& textureComponent = ecsInterface.GetComponent<TextureProperties>(entityId);
+
+                transformComponent.position += glm::vec3(0.0f, 1, 0.0) * deltaTime; // Increment Y axis to show ECS link
+                
+                // Model SRT
+                glm::mat4 model(1.0f);
+                model = glm::translate(model, transformComponent.position); // optional
+
+                // Rotate
+                model = glm::rotate(model, transformComponent.rotation.x, glm::vec3(1, 0, 0));
+                model = glm::rotate(model, transformComponent.rotation.y, glm::vec3(0, 1, 0));
+                model = glm::rotate(model, transformComponent.rotation.z, glm::vec3(0, 0, 1));
+
+                model = glm::scale(model, transformComponent.scale);     // scale by 2x
+                meshShader.setMat4("uModel", model);
 
 
-            // drawing of 5 shapes (testing)
-            for (int i = 0; i < 5; ++i) {
+                meshShader.setVec3("uAlbedo", { 1,1,1 });
+                LightComponent::upload(meshShader, sun, hasSun, pointLights, spotLights);
+
+                //texture
+                glActiveTexture(GL_TEXTURE0);
+                //glBindTexture(GL_TEXTURE_2D, textureComponent.textureID);
+                meshShader.setInt("uTexture", 0); // correct shader
+                glBindVertexArray(meshComponent.vao);
+                glDrawElements(GL_TRIANGLES, meshComponent.indexCount, GL_UNSIGNED_INT, 0);
+            }
+
+            // drawing of 5 objects (primitives)
+            for (int i = 0; i < 5; ++i) 
+            {
                 glm::mat4 model(1.0f);
                 model = glm::translate(model, glm::vec3((i - 2) * 1.7f, 0.0f, 0.0f));
                 meshShader.setMat4("uModel", model);
@@ -279,15 +360,11 @@ namespace Framework {
             finalShader.setInt("bloomTexture", 1);
             finalShader.setFloat("exposure", hdrExposure);
             finalShader.setFloat("bloomStrength", bloomStrength);
-
            
             renderQuad();
 
             // Unbind the framebuffer, returning rendering control to the main window
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
- 
-        
-       
     }
 
     // Get the name of the system
@@ -299,6 +376,7 @@ namespace Framework {
     // Get and return windows ptr for external system
     GLFWwindow* Graphics::GetWindow() {
         return window;
+        
     }
 
     Camera* Graphics::getCamera() {
@@ -313,6 +391,10 @@ namespace Framework {
     // DO NOT CHANGE
     void Graphics::mouse_callback(GLFWwindow* window, double xpos, double ypos)
     {
+        WindowConfig* config = AssetManager::Instance().Get<WindowConfig>(AssetManager::Instance().FindGuid<WindowConfig>());
+        static float lastX = config->x * 0.5f;
+        static float lastY = config->y * 0.5f;
+
         if (!mouseCaptured) return;
         if (firstMouse) { lastX = (float)xpos; lastY = (float)ypos; firstMouse = false; }
         float xoffset = (float)xpos - lastX;
@@ -425,7 +507,4 @@ namespace Framework {
 
         return framebuffer;
     }
-
-
 }
-

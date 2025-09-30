@@ -26,8 +26,8 @@ namespace Framework {
      * @param config The configuration settings for the window (width, height, and title).
      * @param CorePointer A pointer to the core engine, used to signal when the window should close.
      */
-    GraphicsWindows::GraphicsWindows(const Window::WindowConfig& config, CoreEngine* CorePointer)
-        : screenWidth(config.x), screenHeight(config.y), windowTitle(config.programName), 
+    GraphicsWindows::GraphicsWindows(const WindowConfig* config, CoreEngine* CorePointer)
+        : screenWidth(config->x), screenHeight(config->y), windowTitle(config->programName), 
           window(nullptr), isInitialized(false), CorePointer(CorePointer) {
         if (!glfwInit()) {
             std::cerr << "Failed to initialize GLFW" << std::endl;

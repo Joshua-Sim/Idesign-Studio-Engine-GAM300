@@ -26,6 +26,7 @@ namespace Framework {
         // Delete copy constructor and assignment operator to prevent copying
         InputHandler(const InputHandler&) = delete;
         InputHandler& operator=(const InputHandler&) = delete;
+        ~InputHandler();
 
         // Static method to access the singleton instance of InputHandler
         static InputHandler* GetInstance() {

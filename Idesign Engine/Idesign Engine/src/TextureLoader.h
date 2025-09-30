@@ -1,7 +1,11 @@
 #pragma once
 #include <string>
+#include "TextureProperties.h"
 
-class TextureLoader {
+using namespace Framework;
+
+class TextureLoader 
+{
 public:
-    static unsigned int loadTexture(const std::string& path, bool flip = true);
+    static unsigned int loadTexture(TextureProperties& props, bool flip = true);
 };

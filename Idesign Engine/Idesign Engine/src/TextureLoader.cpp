@@ -5,23 +5,24 @@
 #include <stb_image.h>
 #include <iostream>
 
-unsigned int TextureLoader::loadTexture(const std::string& path, bool flip) {
+unsigned int TextureLoader::loadTexture(TextureProperties& props, bool flip)
+{
     int width, height, channels;
     stbi_set_flip_vertically_on_load(flip);
 
-    unsigned char* data = stbi_load(path.c_str(), &width, &height, &channels, 0);
+    unsigned char* data = stbi_load(props.path.c_str(), &width, &height, &channels, 0);
     if (!data) {
-        std::cerr << "Failed to load texture: " << path << std::endl;
+        std::cerr << "Failed to load texture: " << props.path << std::endl;
         return 0;
     }
 
-    GLenum format;
-    if (channels == 1) format = GL_RED;
-    else if (channels == 3) format = GL_RGB;
-    else if (channels == 4) format = GL_RGBA;
-    else format = GL_RGB;
+    GLenum format = (channels == 1) ? GL_RED :
+        (channels == 3) ? GL_RGB :
+        (channels == 4) ? GL_RGBA : GL_RGB;
 
     unsigned int texID;
+    
+
     glGenTextures(1, &texID);
     glBindTexture(GL_TEXTURE_2D, texID);
 
@@ -35,5 +36,11 @@ unsigned int TextureLoader::loadTexture(const std::string& path, bool flip) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     stbi_image_free(data);
-    return texID;
+
+    // Store runtime info
+    props.textureID = texID;
+    props.width = width;
+    props.height = height;
+    std::cout << "Loading texture: " << props.path << " ID: " << texID << std::endl;
+    return props.textureID;
 }

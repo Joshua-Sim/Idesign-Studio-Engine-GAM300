@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////////////////
 ///
 ///	@File  : AssetManager.h
 /// @Brief : This file implements the AssetManager class, a central component 
@@ -15,258 +15,234 @@
 #ifndef _ASSET_MANAGER_H_
 #define _ASSET_MANAGER_H_
 #include "pch.h"
+
+// Standard Lib files
 #include "unordered_map"
+#include <optional>
+#include <functional>
 
 // Graphics Header Files
 #include "stb_image.h"
 #include "stb_image_resize2.h"
 
-// Sub Asset Header Files
-#include "WindowAsset.h"
-#include "DictionaryAsset.h"
-#include "EntityAsset.h"
-#include "AudioAsset.h"
-#include "TextureAsset.h"
-#include "FontAsset.h"
-#include "FontShaderAsset.h"
+// Properties Files
+#include <PropertySystem.h>
+#include <AudioProperties.h>
+#include <WindowConfigProperties.h>
+#include "TextureProperties.h"
 
-// Forward declaration of asset types here
-class Window;
-class Dictionary;
-class EntityAsset;
-class AudioAsset;
-class TextureAsset;
-class FontAsset;
-class FontShaderAsset;
+// Asset Files
+#include "AssetCompiler.h"
+#include <AssetLoader.h>
+#include "AssetHandler.h"
 
 namespace Framework
 {
-    /**
-     * @class AssetManager
-     * @brief Manages various asset types, including window configurations, dictionaries,
-     *        ECS entities, audio, textures, shaders, and fonts. Provides loading and
-     *        retrieval functions for these assets.
-     */
+    REGISTER_TYPE_NAME(WindowConfig);
+    REGISTER_TYPE_NAME(AudioProperties);
+    REGISTER_TYPE_NAME(TextureProperties);
+    //REGISTER_TYPE_NAME(FontProperties);
+
+    /*  Struct Brief
+        - Store any type of assets in a generic way
+        - Track metadata for serialization and debugging
+        - Allow safetly movable but not copyable 
+    */
+    struct AssetEntry
+    {
+        std::unique_ptr<void, void(*)(void*)> pObject;  // Type-erased smart pointer to hold any asset object with a custom deleter
+        const prop_list* pProps;                        // Pointer to the property list used for serialization/deserialization
+        std::string typeName;                           // String to store the type name of the asset
+        std::string binaryPath;                         // Asset file path
+        AssetHandle guid;                               // Unique identifier for the asset
+
+        AssetEntry() : pObject(nullptr, [](void*) {}), pProps(nullptr), typeName(), binaryPath(), guid() {}   // Default Constructor   
+        AssetEntry(const AssetEntry&) = delete;                                         // Delete Copy Constructor
+        AssetEntry& operator=(const AssetEntry&) = delete;                              // Delete Copy Assignment
+        AssetEntry(AssetEntry&&) = default;                                             // Move Constructor
+        AssetEntry& operator=(AssetEntry&&) = default;                                  // Move Assignment
+        AssetEntry(std::unique_ptr<void, void(*)(void*)> obj,                           // Constructor 
+                   const prop_list* props, 
+                   const std::string& type, 
+                   const std::string& path, 
+                   AssetHandle guid)
+                   : pObject(std::move(obj)), pProps(props), typeName(type), binaryPath(path), guid(guid) {}
+    };
+
     class AssetManager
     {
     public:
-
-        /**
-         * @brief Default constructor for AssetManager.
-         */
-        AssetManager();
-
-        /**
-         * @brief Destructor for AssetManager. Cleans up managed assets.
-         */
-        ~AssetManager();
-
-        /**
-         * @brief Loads a window configuration from a specified file path.
-         * @param filePath Path to the window configuration file.
-         * @return A reference to the loaded Window object.
-         */
-        Window& LoadWindow(const std::string& filePath);	                        // Load a window from a filepath
-        
-        /**
-         * @brief Retrieves a loaded Window asset by name.
-         * @param assetName Name of the window asset.
-         * @return A reference to the Window object.
-         */
-        Window& GetWindow(const std::string& assetName);                            // Retrieve window config information
-
-        // Dictionary & Prefix
-
-        /**
-         * @brief Loads a dictionary and prefix data from specified paths.
-         * @param dictionaryPath Path to the dictionary file.
-         * @param prefixPath Path to the prefix file.
-         * @return A reference to the loaded Dictionary object.
-         */
-        Dictionary& LoadDictionary(const std::string& dictionaryPath,               // Load dictionary and prefix
-                                   const std::string& prefixPath);       
-
-        // ECS Objects
-
-        /**
-         * @brief Loads ECS entities from a specified file path.
-         * @param filePath Path to the file containing ECS entity data.
-         * @return A reference to the loaded EntityAsset object.
-         */
-        void LoadEntities(const std::string& filePath);                     // Load ECS Objects
-
-        std::unordered_map<std::string, std::unique_ptr<EntityAsset>>& GetAllEntities()
-        {
-            return entityAssets;
-        }
-
-        // Audio
-
-        /**
-         * @brief Loads an audio asset from a specified file path.
-         * @param filePath Path to the audio file.
-         * @return A shared pointer to the loaded AudioAsset object.
-         */
-        void LoadAudio(const std::string& filePath);         // Load Audio
-        
-        /**
-         * @brief Retrieves a loaded audio asset by name.
-         * @param assetName Name of the audio asset.
-         * @return A pointer to the AudioAsset object.
-         */
-        AudioAsset* GetAudioAsset(const std::string& assetName);                    // Method to retrieve an audio asset
-
-        /**
-         * @brief Retrieves all loaded audio assets.
-         * @return A constant reference to an unordered map of audio assets.
-         */
-        const std::unordered_map<std::string, std::shared_ptr<AudioAsset>>& GetAllAudioAssets() const
-        {
-            return audioAssets;
-        }
-
-        void AddAudio(const std::string& name, const std::string& path);
-
-        void MergeSerializeAudio(const std::string& mainFilePath, const std::string& tempFilePath);
-
-        bool CopyAudioToFolder(const std::string& sourceFilePath, const std::string& targetFolder);
-
-        bool DeleteAudioFile(const std::string& filePath);
-
-        void UpdateAudioName(const std::string& oldName, const std::string& newName);
-        
-        void DeleteAudio(const std::string& name);
-
-        // Texture
-
-        /**
-         * @brief Loads a texture asset from a specified file path.
-         * @param filePath Path to the texture file.
-         * @return A shared pointer to the loaded TextureAsset object.
-         */
-        void LoadTexture(const std::string& filePath);     // Load Texture
-        
-        /**
-         * @brief Retrieves a loaded texture asset by name.
-         * @param assetName Name of the texture asset.
-         * @return A pointer to the TextureAsset object.
-         */
-        TextureAsset* GetTexture(const std::string& assetName);                     // Get texture based on name
-        
-        /**
-         * @brief Retrieves a texture asset as a GLuint for graphics rendering.
-         * @param assetName Name of the texture asset.
-         * @return The GLuint ID associated with the texture.
-         */
-        GLuint GetTextureForGraphics(const std::string& assetName);                 // Get texture and reutrn GLuint
-
-        /**
-         * @brief Retrieves all loaded texture assets.
-         * @return A reference to an unordered map of texture assets.
-         */
-        std::unordered_map<std::string, std::shared_ptr<TextureAsset>>& GetAllTextureAssets()
-        {
-            return textureAssets;
-        }
-
-        // Function to return a vector of shared_ptr<TextureAsset>
-        std::vector<std::shared_ptr<TextureAsset>> GetAllTextureAssetsPtrs() 
-        {
-            std::vector<std::shared_ptr<TextureAsset>> texturePtrs;
-            for (const auto& pair : textureAssets) 
-            {
-                texturePtrs.push_back(pair.second);  // Push the shared_ptr<TextureAsset> into the vector
-            }
-            return texturePtrs;
-        }
-
-        bool RenameTexture(const std::string& oldName, const std::string& newName);
-
-        void UpdateTextureName(const std::string& oldName, const std::string& newName);
-
-        std::string UpdateTexturePath(const std::string& oldPath, const std::string& newName);
-
-        void MergeTextureAssets(const std::string& mainFilePath, const std::string& tempFilePath);
-
-        void DeleteTexture(const std::string& textureName);
-
-        /**
-         * @brief Adds a texture to the manager from a specified name and path.
-         * @param name The name associated with the texture.
-         * @param path The file path to the texture.
-         */
-        void AddTexture(const std::string& name, const std::string& path);
-
-        // Graphics Shader
-
-        /**
-         * @brief Loads and stores a shader source from a specified file path.
-         * @param filePath Path to the shader file.
-         * @return A string containing the shader source code.
-         */
-        std::string LoadandStoreShader(const std::string& filePath);
-        
-        /**
-         * @brief Retrieves a shader source code by its key.
-         * @param shaderKey Key identifying the shader.
-         * @return A constant reference to the shader source code string.
-         */
-        const std::string& GetShaderSource(const std::string& shaderKey) const;
-
-        // Font
-
-        /**
-         * @brief Loads a font asset from a specified file path and size.
-         * @param filePath Path to the font file.
-         * @param fontSize Size of the font to be loaded.
-         * @return A pointer to the loaded FontAsset object.
-         */
-        FontAsset* LoadFont(const std::string& filePath, int fontSize);             // Load Font
-        
-        /**
-         * @brief Retrieves a loaded font asset by name.
-         * @param assetName Name of the font asset.
-         * @return A pointer to the FontAsset object.
-         */
-        FontAsset* GetFont(const std::string& assetName);                           // Get Font based on name
-
-        // Font Shader
-
-        /**
-         * @brief Loads a font shader from a specified file path.
-         * @param filePath Path to the shader file.
-         * @return A string containing the shader source code.
-         */
-        std::string LoadFontShader(const std::string& filePath);               // Load Font Shader
-        
-        /**
-         * @brief Retrieves a loaded font shader by name.
-         * @param assetName Name of the font shader asset.
-         * @return A pointer to the FontShaderAsset object.
-         */
-        FontShaderAsset* GetFontShader(const std::string& assetName);               // Get Font Shader based on name
-
-        /**
-         * @brief Singleton instance access method for AssetManager.
-         * @return A reference to the single instance of AssetManager.
-         */
         static AssetManager& Instance()
         {
             static AssetManager instance;
             return instance;
         }
 
+        // Delete copy/move constructors to enforce singleton
+        AssetManager(const AssetManager&) = delete;
+        AssetManager& operator=(const AssetManager&) = delete;
+
+        //------------------------------------------------------------------------------------------------------------------------------------
+        //  Binary Related Functions
+        //  Json > Binary > Read Binary during Runtime
+        //------------------------------------------------------------------------------------------------------------------------------------
+        template<typename T>
+        T& LoadBinary(const std::string& binaryPath, const prop_list& props, std::function<void(T&)> postInit = nullptr)
+        {
+            auto obj = AssetLoader<T>::Load(binaryPath, props);
+            AssetHandle guidHandle(obj->guid);
+
+            if (postInit) postInit(*obj);
+
+            RegisterAsset(std::move(obj), &props, binaryPath);
+            return *static_cast<T*>(m_Assets[guidHandle].pObject.get());
+        }
+
+        template<typename T>
+        void LoadBinaryArray(const std::string& binaryPath, const prop_list& props, std::function<void(T&)> postInit = nullptr)
+        {
+            auto loadedObjects = AssetLoader<T>::LoadArray(binaryPath, props);
+            for (auto& obj : loadedObjects)
+            {
+                if (postInit)
+                    postInit(*obj); 
+
+                RegisterAsset(std::move(obj), &props, binaryPath); // Move after init
+
+                // Nid to find a way to load audio here tgt with audio obj to be able to display duration at first runtime
+            }
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------
+        //  General Functions
+        //------------------------------------------------------------------------------------------------------------------------------------
+        
+        template<typename T>
+        void SaveAllAssets(const T& obj, const std::string& jsonPath, const std::string& binPath, const prop_list& props, bool IsArray)
+        {
+            if (!IsArray)
+            {
+                SaveToJson(obj, jsonPath, props);
+            }
+            else
+            {
+                SaveArrayToJson(obj, jsonPath, props);
+            }
+            std::ofstream out(binPath, std::ios::binary);
+            JsonToBinary(out, obj, props);
+            out.close();
+        }
+        
+        template<typename T>
+        T* Get(const AssetHandle& guid)
+        {
+            auto it = m_Assets.find(guid);
+            if (it == m_Assets.end()) return nullptr;
+
+            if (it->second.typeName != TypeName<T>::value) return nullptr;
+            return static_cast<T*>(it->second.pObject.get());
+        }
+
+        // For future Hot-Reload in Imgui (Testing required)
+        template<typename T>
+        T& Reload(const std::string& name) 
+        {
+            auto it = m_Assets.find(name);
+            if (it == m_Assets.end())
+                throw std::runtime_error("Asset not found: " + name);
+
+            if (it->second.typeName != TypeName<T>::value)
+                throw std::runtime_error("Type mismatch during reload for asset: " + name);
+
+            const prop_list* props = it->second.pProps;
+            const std::string& path = it->second.binaryPath;
+
+            std::ifstream in(path, std::ios::binary);
+            if (!in.is_open())
+                throw std::runtime_error("Failed to open binary file: " + path);
+
+            T* obj = new T{};
+            BinaryToObject(in, *obj, *props);
+
+            std::unique_ptr<void, void(*)(void*)> erasedPtr(
+                static_cast<void*>(obj),
+                [](void* ptr) { delete static_cast<T*>(ptr); }
+            ); 
+
+            it->second.pObject = std::move(erasedPtr);
+            return *obj;
+        }
+
+        template<typename T>
+        void RegisterAsset(std::unique_ptr<T> obj, const prop_list* props, const std::string& binaryPath)
+        {
+            if (obj->guid.empty())
+                obj->guid = GenerateGUID();
+
+            AssetHandle guidHandle(obj->guid);
+
+            std::unique_ptr<void, void(*)(void*)> erasedPtr(
+                static_cast<void*>(obj.release()),
+                [](void* ptr) { delete static_cast<T*>(ptr); }
+            );
+
+            m_Assets[guidHandle] = AssetEntry(std::move(erasedPtr), props, TypeName<T>::value, binaryPath, guidHandle);
+        }
+
+        // Template function to find the GUID of an asset of type T.
+        // Optionally filters by name if provided.
+        template<typename T>
+        AssetHandle FindGuid(const std::optional<std::string>& name = std::nullopt)
+        {
+            // Loop through all registered assets in the AssetManager
+            for (const auto& [guid, entry] : AssetManager::Instance().GetAssets())
+            {
+                // Skip entries that don't match the requested type
+                if (entry.typeName != TypeName<T>::value)
+                    continue;
+
+                // Safely cast the generic asset pointer to the expected type T
+                T* obj = static_cast<T*>(entry.pObject.get());
+                if (!obj) continue; // Skip if the cast fails or the object is null
+
+                // If a name was provided, try to match it against the asset's name
+                if constexpr (requires(T t) { t.name; })
+                {
+                    // Only compare if the object has a non-empty 
+
+                    if (name.has_value())
+                    {
+                        if (obj->name == name.value())
+                            return guid;
+                    }
+                    else return guid;
+                }
+                else
+                {
+                    if (!name.has_value())
+                        return guid;
+                }
+            }
+            // No matching asset found — return an empty GUID
+            return AssetHandle();
+        }
+
+        // Access to Unordered Map of Assets
+        const std::unordered_map<AssetHandle, AssetEntry>& GetAssets() const
+        {
+            return m_Assets;
+        }
+
+        void PrintAssetsOfType(const std::string& typeName);
+        // PrintAssetsOfType(TypeName<AudioProperties>::value);
+
+        void Unload(const std::string& key);
+        bool SaveToJson(void* pObject, const std::string& filePath, const prop_list& props);
+        void SaveArrayToJson(const std::string& typeName, const std::string& filePath, const std::string& arrayKey);
+        bool HasTextureByGUID(const std::string& guid) const;
     private:
-        static unsigned char* data;     // Static data buffer used for image loading
-        std::unordered_map<std::string, std::unique_ptr<Window>> windowAssets;                          // Container for Windowconfig
-        std::unordered_map<std::string, std::unique_ptr<Dictionary>> dictionaryAssets;                  // Container for Dictionary
-        std::unordered_map<std::string, std::unique_ptr<EntityAsset>> entityAssets;                     // Container for EntityAsset
-        std::unordered_map<std::string, std::shared_ptr<AudioAsset>> audioAssets;                       // Container for AudioAsset
-        std::unordered_map<std::string, std::shared_ptr<TextureAsset>> textureAssets;                   // Container for TextureAsset
-        std::unordered_map<std::string, std::unique_ptr<FontAsset>> fontAssets;                         // Container for FontAsset
-        std::unordered_map<std::string, std::unique_ptr<FontShaderAsset>> fontShaderAssets;             // Container for FontShaderAsset
-        std::unordered_map<std::string, std::string> shaderSources;                                     // Container for GraphicsShaderAsset
-};
-    extern AssetManager GlobalAssetManager;  // Global instance of AssetManager, defined in AssetManager.cpp
+        AssetManager() = default;                                   // Private constructor
+        std::unordered_map<AssetHandle, AssetEntry> m_Assets;       // Contains all types of Assets
+    };
 }
 #endif // !_ASSET_MANAGER_H_

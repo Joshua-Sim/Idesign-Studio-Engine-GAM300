@@ -1,0 +1,267 @@
+
+#include <pch.h>
+#include <AssetCompiler.h>
+
+extern Framework::Coordinator ecsInterface;
+namespace Framework
+{
+    void loadScene(const std::string& scenePath)
+    {
+        // Load and parse scene.json
+        rapidjson::Document doc;
+        {
+            FILE* fp = fopen(scenePath.c_str(), "r");
+            std::unique_ptr<char[]> buffer = std::make_unique<char[]>(65536);
+            rapidjson::FileReadStream is(fp, buffer.get(), 65536);
+            doc.ParseStream(is);
+            fclose(fp);
+        }
+
+        if (!doc.IsObject() || !doc.HasMember("Entities") || !doc["Entities"].IsArray())
+        {
+            std::cerr << "Invalid scene format: missing Entities array\n";
+            return;
+        }
+
+        const auto& entities = doc["Entities"].GetArray();
+
+        for (const auto& entityJson : entities)
+        {
+            Entity entity = ecsInterface.CreateEntity();
+
+            const auto& components = entityJson["components"];
+
+            // TransformComponent
+            if (components.HasMember("TransformComponent"))
+            {
+                TransformComponent transform;
+                Deserialize(&transform, g_TransformProps, components["TransformComponent"]);
+                ecsInterface.AddComponent(entity, transform);
+            }
+
+            // TextureReference links to precompiled TextureProperties
+            if (components.HasMember("TextureReference"))
+            {
+                const auto& texRef = components["TextureReference"];
+                if (texRef.HasMember("guid") && texRef["guid"].IsString())
+                {
+                    std::string guid = texRef["guid"].GetString();
+                    const TextureProperties* tex = AssetManager::Instance().Get<TextureProperties>(guid);
+                    if (tex)
+                    {
+                        ecsInterface.AddComponent(entity, *tex);
+                    }
+                    else
+                    {
+                        std::cerr << "Missing TextureProperties for GUID: " << guid << "\n";
+                    }
+                }
+            }
+            // Add more component types here (AudioReference, MeshReference, etc.)
+        }
+        std::cout << "Scene loaded successfully: " << entities.Size() << " entities created.\n";
+    }
+
+    void saveScene(const std::string& outputPath)
+    {
+        rapidjson::Document doc;
+        doc.SetObject();
+        auto& allocator = doc.GetAllocator();
+
+        rapidjson::Value entitiesArray(rapidjson::kArrayType);
+
+        for (Entity entity : ecsInterface.GetEntities())
+        {
+            rapidjson::Value entityObj(rapidjson::kObjectType);
+
+            // Optional: store entity name
+            /*if (ecsInterface.HasComponent<NameComponent>(entity))
+            {
+                const auto& name = ecsInterface.GetComponent<NameComponent>(entity).name;
+                entityObj.AddMember("name", rapidjson::Value(name.c_str(), allocator), allocator);
+            }*/
+
+            rapidjson::Value componentsObj(rapidjson::kObjectType);
+
+            // TransformComponent
+            if (ecsInterface.HasComponent<TransformComponent>(entity))
+            {
+                const auto& transform = ecsInterface.GetComponent<TransformComponent>(entity);
+                rapidjson::Value transformJson(rapidjson::kObjectType);
+                Serialize((void*)&transform, g_TransformProps, transformJson, allocator);
+                componentsObj.AddMember("TransformComponent", transformJson, allocator);
+            }
+
+            // TextureProperties  write only GUID
+            if (ecsInterface.HasComponent<TextureProperties>(entity))
+            {
+                const auto& tex = ecsInterface.GetComponent<TextureProperties>(entity);
+                rapidjson::Value texRef(rapidjson::kObjectType);
+                texRef.AddMember("guid", rapidjson::Value(tex.guid.c_str(), allocator), allocator);
+                componentsObj.AddMember("TextureReference", texRef, allocator);
+            }
+            // Add more components here...
+
+            entityObj.AddMember("components", componentsObj, allocator);
+            entitiesArray.PushBack(entityObj, allocator);
+        }
+
+        doc.AddMember("Entities", entitiesArray, allocator);
+
+        // Write to file
+        FILE* fp = fopen(outputPath.c_str(), "w");
+        auto buffer = std::make_unique<char[]>(65536);
+        rapidjson::FileWriteStream os(fp, buffer.get(), 65536);
+        rapidjson::PrettyWriter<rapidjson::FileWriteStream> writer(os);
+        doc.Accept(writer);
+        fclose(fp);
+        std::cout << "Scene saved to: " << outputPath << "\n";
+    }
+
+    bool MoveFileToAssetFolder(const std::string& sourcePath, const std::string& destinationFolder, std::string& outFinalPath, std::string& outError)
+    {
+        try 
+        {
+            // Ensure destination folder exists
+            if (!fs::exists(destinationFolder))
+                fs::create_directories(destinationFolder);
+
+            // Extract filename
+            std::string fileName = sourcePath.substr(sourcePath.find_last_of("/\\") + 1);
+            std::string destinationPath = destinationFolder + "/" + fileName;
+
+            // Check if file already exists
+            if (fs::exists(destinationPath))
+            {
+                outError = "File already exists at destination: " + destinationPath;
+                return false;
+            }
+
+            // Copy file
+            fs::copy_file(sourcePath, destinationPath, fs::copy_options::overwrite_existing);
+            outFinalPath = destinationPath;
+            return true;
+        }
+        catch (const fs::filesystem_error& e) 
+        {
+            outError = e.what();
+            return false;
+        }
+    }
+
+    void Deserialize(void* pObject, const prop_list& PropList, const rapidjson::Value& obj)
+	{
+        assert(pObject != nullptr);
+        assert(obj.IsObject());
+
+        for (const prop& p : PropList.m_Props)
+        {
+            if (!obj.HasMember(p.m_pName)) continue;
+            const rapidjson::Value& v = obj[p.m_pName];
+            switch (p.m_Type)
+            {
+            case prop::INT:    if (v.IsInt())    { int         temp = v.GetInt();                            p.m_fnSet(pObject, &temp); } break;
+            case prop::FLOAT:  if (v.IsNumber()) { float       temp = static_cast<float>(v.GetDouble());     p.m_fnSet(pObject, &temp); } break;
+            case prop::DOUBLE: if (v.IsNumber()) { double      temp = v.GetDouble();                         p.m_fnSet(pObject, &temp); } break;
+            case prop::LONG:   if (v.IsInt64())  { long        temp = static_cast<long>(v.GetInt64());       p.m_fnSet(pObject, &temp); } break;
+            case prop::SHORT:  if (v.IsInt())    { short       temp = static_cast<short>(v.GetInt());        p.m_fnSet(pObject, &temp); } break;
+            case prop::BOOL:   if (v.IsBool())   { bool        temp = v.GetBool();                           p.m_fnSet(pObject, &temp); } break;
+            case prop::STRING: if (v.IsString()) { std::string temp(v.GetString(), v.GetStringLength());     p.m_fnSet(pObject, &temp); } break;
+            case prop::CHAR:   if (v.IsString() && v.GetStringLength() == 1) { char temp = v.GetString()[0]; p.m_fnSet(pObject, &temp); } break;
+            case prop::VEC3:
+            {
+                if (v.IsArray() && v.Size() == 3)
+                {
+                    glm::vec3 temp{
+                        v[0].GetFloat(),
+                        v[1].GetFloat(),
+                        v[2].GetFloat()
+                    };
+                    p.m_fnSet(pObject, &temp);
+                }
+                else
+                {
+                    std::cerr << "Invalid vec3 format for property: " << p.m_pName << std::endl;
+                }
+                break;
+            }
+            default:
+                std::cerr << "Unsupported or mismatched type for property: " << p.m_pName << std::endl;
+                break;
+            }
+        }
+	}
+
+	void Serialize(void* pObject, const prop_list& PropList, rapidjson::Value& outObj, rapidjson::Document::AllocatorType& allocator)
+	{
+        assert(pObject != nullptr);
+        assert(outObj.IsObject());
+
+        for (const prop& p : PropList.m_Props)
+        {
+            rapidjson::Value key;
+            key.SetString(p.m_pName, allocator);
+            switch (p.m_Type)
+            {
+            case prop::INT:    { int    v; p.m_fnGet(pObject, &v); outObj.AddMember(key, v, allocator); break; }
+            case prop::FLOAT:  { float  v; p.m_fnGet(pObject, &v); outObj.AddMember(key, v, allocator); break; }
+            case prop::DOUBLE: { double v; p.m_fnGet(pObject, &v); outObj.AddMember(key, v, allocator); break; }
+            case prop::LONG:   { long   v; p.m_fnGet(pObject, &v); outObj.AddMember(key, static_cast<int64_t>(v), allocator); break; }
+            case prop::SHORT:  { short  v; p.m_fnGet(pObject, &v); outObj.AddMember(key, static_cast<int>(v), allocator); break; }
+            case prop::BOOL:   { bool   v; p.m_fnGet(pObject, &v); outObj.AddMember(key, v, allocator); break; }
+            case prop::CHAR:
+            {
+                char v;
+                p.m_fnGet(pObject, &v);
+                rapidjson::Value jsonValue;
+                jsonValue.SetString(&v, 1, allocator); // Single char as string
+                outObj.AddMember(key, jsonValue, allocator);
+                break;
+            }
+            case prop::STRING:
+            {
+                std::string v;
+                p.m_fnGet(pObject, &v);
+                rapidjson::Value jsonValue;
+                jsonValue.SetString(v.c_str(), allocator);
+                outObj.AddMember(key, jsonValue, allocator);
+                break;
+            }
+            case prop::VEC3:
+            {
+                glm::vec3 value;
+                p.m_fnGet(pObject, &value);
+                rapidjson::Value vecArray(rapidjson::kArrayType);
+                vecArray.PushBack(value.x, allocator);
+                vecArray.PushBack(value.y, allocator);
+                vecArray.PushBack(value.z, allocator);
+                outObj.AddMember(key, vecArray, allocator);
+                break;
+            }
+
+            default:
+                std::cerr << "Unsupported type during serialization: " << p.m_pName << std::endl;
+                break;
+            }
+        }
+	}
+
+    void SetGuid(void* pObject, const prop_list& PropList)
+    {
+        for (const auto& p : PropList.m_Props)
+        {
+            if (std::string(p.m_pName) == "guid")
+            {
+                AssetHandle currentGuid{};
+                p.m_fnGet(pObject, &currentGuid);
+
+                if (currentGuid.id.empty())
+                {
+                    AssetHandle newGuid(GenerateGUID());
+                    p.m_fnSet(pObject, &newGuid);
+                }
+                break;
+            }
+        }
+    }
+}

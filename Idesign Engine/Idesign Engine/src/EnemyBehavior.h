@@ -19,16 +19,15 @@
 #include "Coordinator.h"
 #include "EngineState.h"
 #include "LogicManager.h"
-#include "Coordinator.h"
 #include "ComponentList.h"
 #include <vector>
 #include "glew.h"
 #include <cmath>
-#include <cmath>
 #include <vector>
-#include "Coordinator.h"
 #include "EnemyManager.h"
 
+#include "TransformProperties.h"
+using namespace Framework;
 extern Framework::Coordinator ecsInterface;
 
 void ChasePlayerBehavior(Framework::Entity entity, float deltaTime) {

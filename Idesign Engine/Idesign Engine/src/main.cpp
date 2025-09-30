@@ -3,7 +3,6 @@
 #pragma once
 #include "pch.h"
 #include "Core.h"
-#include "GraphicsWindows.h"
 #include "Graphics.h"
 #include "InputHandler.h"
 #include "Coordinator.h"
@@ -14,7 +13,6 @@
 #include "TestSystem.h"
 #include "FontShader.h"
 #include "AssetManager.h"
-#include "Audio.h"
 #include "EngineState.h"
 #include "PlayerSystem.h"
 #include "Collision.h"
@@ -24,6 +22,9 @@
 #include <ImguiManager.h>
 #include <SignalHandler.h>
 
+#include <WindowConfigProperties.h>
+#include "AudioLoader.h"
+#include "Audio.h"
 using namespace Framework;
 
 void EnableMemoryLeakChecking(int breakAlloc = -1)
@@ -37,7 +38,6 @@ void EnableMemoryLeakChecking(int breakAlloc = -1)
     if (breakAlloc != -1) _CrtSetBreakAlloc(breakAlloc);
 }
 
-
 // Define global ptrs
 Coordinator ecsInterface;   // REQUIRED FOR ECS INTERFACE
 EngineState engineState;
@@ -45,16 +45,36 @@ EngineState engineState;
 int main(void)
 {
     //SetupSignalHandler();
-    //EnableMemoryLeakChecking(); // For memory check
-    
-  //Create the core engine which manages all the systems that make up the game
+    EnableMemoryLeakChecking(); // For memory check
+
+    //Create the core engine which manages all the systems that make up the game
     auto engine = std::make_unique<CoreEngine>();
 
     // ------- Create systems below -------- //
+    //  Windows
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+    //CompileSingleObject<WindowConfig>("src/Data/WindowAsset.json", "src/Data/WindowAsset.cfg", g_WindowConfigProps);
+    AssetManager::Instance().LoadBinary<WindowConfig>("src/Data/WindowAsset.cfg", g_WindowConfigProps);
+    //auto Window = std::make_unique<GraphicsWindows>(&config, engine.get());
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+    //  Audio
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+    CompileArray<AudioProperties>("src/Data/AudioAsset.json", "src/Data/AudioAsset.bin", g_AudioPropertiesProps, "AudioProperties");
+    AssetManager::Instance().LoadBinaryArray<AudioProperties>("src/Data/AudioAsset.bin", g_AudioPropertiesProps,
+        [](AudioProperties& props)
+        {
+            GlobalAudio.UE_LoadSound(props.name);
+        });
+    //AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, "src/Data/AudioAsset.json", "AudioProperties");
+    //GlobalAudio.UE_PlaySound("winloop");
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+    //  Textures
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+    CompileArray<TextureProperties>("src/Data/TextureAsset.json", "src/Data/TextureAsset.bin", g_TexturePropertiesProps, "textures");
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    //Window& myWindowConfig = GlobalAssetManager.LoadWindow("src/Data/WindowAsset.json");
-    //auto AudioManager = std::make_unique<Audio>();
-
+    // Initialize the InputHandler singleton
+    //InputHandler::Initialize(Window->GetWindow());
     GlobalLogicManager.Initialize();
 
     // Initialize global ECS interface and other singleton components
@@ -100,6 +120,5 @@ int main(void)
 
     // Clean up smart pointers as they go out of scope
     // No need to manually delete as unique_ptr will handle it
-
     return 0;
 }
