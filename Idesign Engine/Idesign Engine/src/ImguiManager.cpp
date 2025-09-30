@@ -30,6 +30,9 @@ namespace Framework {
     std::string errorMessage;
     bool showErrorPopup = false;
 
+    static TextureProperties g_AudioIcon;
+    static bool g_AudioIconLoaded = false;
+
     // Get the name of the system
     std::string ImguiManager::GetName()
     {
@@ -139,14 +142,14 @@ namespace Framework {
         return gameFramebuffer;
     }
 
-    // Edwin, drag and drop Texture/Audio
+    // Edwin, drag and drop Texture/Audio/Obj
     void DropCallback(GLFWwindow* window, int count, const char** paths)
     {
         (void)window;
 
         const std::string textureFolder = "Assets/Textures";
         const std::string audioFolder = "Assets/Audio";
-
+        // .obj files nid to do as well !!!!!!
         std::string finalPath;
         std::string error;
 
@@ -271,6 +274,12 @@ namespace Framework {
         ImGui_ImplGlfw_InitForOpenGL(m_graphicsSystem->GetWindow(), true);
         ImGui_ImplOpenGL3_Init("#version 450");
 
+        if (!g_AudioIconLoaded)
+        {
+            g_AudioIcon.path = "images/test.png"; // your default icon path
+            TextureLoader::loadTexture(g_AudioIcon, false);
+            g_AudioIconLoaded = true;
+        }
     }
 
     void ImguiManager::Update(float deltaTime) {
@@ -420,7 +429,9 @@ namespace Framework {
                     {
                         ImGui::BeginTooltip();
                         ImGui::Text("Name: %s", tex->name.c_str());
+                        ImGui::Text("Path: %s", tex->path.c_str());
                         ImGui::Text("GUID: %s", tex->guid.c_str());
+                        ImGui::Text("Size: %d x %d", tex->width, tex->height);
                         ImGui::EndTooltip();
                     }
 
@@ -453,61 +464,166 @@ namespace Framework {
             }
             ImGui::End();
 
+            // Modal state
+            static std::string activeEditGuid;
+            static char nameBuffer[256] = {};
+            static char pathBuffer[256] = {};
+            static int currentMode = 0;
+            static float volumeBuffer = 1.0f;
+
+
             if (ImGui::Begin("Audio Manager"))
             {
                 const auto& assetsImgui = AssetManager::Instance().GetAssets();
 
-                for (const auto& [handle, entry] : assetsImgui)
+                if (ImGui::BeginTable("AudioTable", 2, ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersInnerV))
                 {
-                    if (entry.typeName != "AudioProperties") continue;
+                    ImGui::TableSetupColumn("Icon", ImGuiTableColumnFlags_WidthFixed, 40);
+                    ImGui::TableSetupColumn("Details");
+                    ImGui::TableHeadersRow();
 
-                    auto* audioProps = static_cast<AudioProperties*>(entry.pObject.get());
-
-                    if (!audioProps) continue;
-
-                    ImGui::Separator();
-                    ImGui::Text("Clip: %s", audioProps->name.c_str());
-                    ImGui::Text("File: %s", audioProps->path.c_str());
-                    ImGui::Text("Duration: %.2f sec", audioProps->duration);
-
-                    if (ImGui::Button(("Play##" + audioProps->guid).c_str()))
+                    for (const auto& [handle, entry] : assetsImgui)
                     {
-                        GlobalAudio.UE_PlaySound(audioProps->name);
-                        audioProps->isPlaying = true;
+                        if (entry.typeName != "AudioProperties") continue;
+                        auto* audioProps = static_cast<AudioProperties*>(entry.pObject.get());
+                        if (!audioProps) continue;
 
-                        // nid to find a way here to show isPlaying = false after audio ends
-                        // get audio channel and stop it
-                    }
-                    ImGui::SameLine();
-                    if (ImGui::Button(("Stop##" + audioProps->guid).c_str()))
-                    {
-                        GlobalAudio.Reset();
-                        audioProps->isPlaying = false;
-                    }
+                        ImGui::TableNextRow();
 
-                    float volume = audioProps->volume;
-                    if (ImGui::SliderFloat(("Volume##" + audioProps->guid).c_str(), &volume, 0.0f, 1.0f)) {
-                        audioProps->volume = volume;
-                        GlobalAudio.UE_SetVolume(audioProps->name, volume);
-                    }
-
-                    const char* modes[] = { "oneshot", "loop" };
-                    int currentMode = 0;
-
-                    // Find current mode index
-                    for (int i = 0; i < IM_ARRAYSIZE(modes); ++i)
-                    {
-                        if (audioProps->mode == modes[i])
+                        // Column 0: Icon
+                        ImGui::TableSetColumnIndex(0);
+                        if (g_AudioIcon.textureID != 0)
                         {
-                            currentMode = i;
-                            break;
+                            ImGui::Image((ImTextureID)g_AudioIcon.textureID, ImVec2(32, 32));
+
+                            // Right-click context menu on image
+                            if (ImGui::BeginPopupContextItem(("ImagePopup_" + audioProps->guid).c_str()))
+                            {
+                                if (ImGui::MenuItem("Edit"))
+                                {
+                                    activeEditGuid = audioProps->guid;
+
+                                    strncpy(nameBuffer, audioProps->name.c_str(), sizeof(nameBuffer));
+                                    nameBuffer[sizeof(nameBuffer) - 1] = '\0';
+
+                                    strncpy(pathBuffer, audioProps->path.c_str(), sizeof(pathBuffer));
+                                    pathBuffer[sizeof(pathBuffer) - 1] = '\0';
+
+                                    volumeBuffer = audioProps->volume;
+                                    currentMode = (audioProps->mode == "loop") ? 1 : 0;
+
+                                    ImGui::OpenPopup("EditAudioModal");
+                                }
+
+                                if (ImGui::MenuItem("Delete"))
+                                {
+                                    //AssetManager::Instance().Remove<AudioProperties>(audioProps->guid);
+                                }
+
+                                ImGui::EndPopup();
+                            }
+
+                            if (ImGui::IsItemHovered())
+                            {
+                                ImGui::BeginTooltip();
+                                ImGui::Text("GUID: %s", audioProps->guid.c_str());
+                                ImGui::Text("File: %s", audioProps->path.c_str());
+                                ImGui::Text("Volume: %.2f", audioProps->volume);
+                                ImGui::Text("Mode: %s", audioProps->mode.c_str());
+                                ImGui::EndTooltip();
+                            }
+                        }
+
+                        // Column 1: Details
+                        ImGui::TableSetColumnIndex(1);
+                        ImGui::Text("Name: %s", audioProps->name.c_str());
+                        ImGui::Text("Duration: %.2f sec", audioProps->duration);
+
+                        // Play/Stop buttons
+                        if (ImGui::Button(("Play##" + audioProps->guid).c_str()))
+                        {
+                            GlobalAudio.UE_PlaySound(audioProps->name);
+                            audioProps->isPlaying = true;
+                        }
+                        ImGui::SameLine();
+                        if (ImGui::Button(("Stop##" + audioProps->guid).c_str()))
+                        {
+                            GlobalAudio.Reset();
+                            audioProps->isPlaying = false;
+                            audioProps->channelID = -1;
+                        }
+
+                        // Volume slider
+                        float volume = audioProps->volume;
+                        if (ImGui::SliderFloat(("Volume##" + audioProps->guid).c_str(), &volume, 0.0f, 1.0f))
+                        {
+                            audioProps->volume = std::clamp(volume, 0.0f, 1.0f);
+                            GlobalAudio.UE_SetVolume(audioProps->name, audioProps->volume);
+                        }
+
+                        // Playback status
+                        if (audioProps->isPlaying)
+                        {
+                            ImGui::TextColored(ImVec4(0.2f, 1.0f, 0.2f, 1.0f), "Status: Playing");
+                        }
+                        else
+                        {
+                            ImGui::Text("Status: Stopped");
+                        }
+
+                        // Poll playback status
+                        if (audioProps->isPlaying && audioProps->channelID != -1)
+                        {
+                            if (!GlobalAudio.IsChannelPlaying(audioProps->channelID))
+                            {
+                                audioProps->isPlaying = false;
+                                audioProps->channelID = -1;
+                            }
                         }
                     }
-                    if (ImGui::Combo(("Mode##" + audioProps->guid).c_str(), &currentMode, modes, IM_ARRAYSIZE(modes)))
+
+                    ImGui::EndTable();
+                }
+
+                // Edit modal
+                if (ImGui::BeginPopupModal("EditAudioModal", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+                {
+                    auto* audioProps = AssetManager::Instance().Get<AudioProperties>(activeEditGuid);
+                    if (audioProps)
                     {
-                        audioProps->mode = modes[currentMode];
+                        if (ImGui::InputText("Name", nameBuffer, sizeof(nameBuffer)))
+                        {
+                            audioProps->name = std::string(nameBuffer);
+                        }
+
+                        if (ImGui::InputText("Path", pathBuffer, sizeof(pathBuffer)))
+                        {
+                            audioProps->path = std::string(pathBuffer);
+                        }
+
+                        if (ImGui::SliderFloat("Volume", &volumeBuffer, 0.0f, 1.0f))
+                        {
+                            audioProps->volume = std::clamp(volumeBuffer, 0.0f, 1.0f);
+                            GlobalAudio.UE_SetVolume(audioProps->name, audioProps->volume);
+                        }
+
+                        static const char* modes[] = { "oneshot", "loop" };
+                        if (ImGui::Combo("Mode", &currentMode, modes, IM_ARRAYSIZE(modes)))
+                        {
+                            audioProps->mode = modes[currentMode];
+                        }
+
+                        if (ImGui::Button("Save")) ImGui::CloseCurrentPopup();
+                        ImGui::SameLine();
+                        if (ImGui::Button("Cancel")) ImGui::CloseCurrentPopup();
                     }
-                    ImGui::Text("Status: %s", audioProps->isPlaying ? "Playing" : "Stopped");
+                    else
+                    {
+                        ImGui::Text("Audio asset not found.");
+                        if (ImGui::Button("Close")) ImGui::CloseCurrentPopup();
+                    }
+
+                    ImGui::EndPopup();
                 }
             }
             ImGui::End();
@@ -528,38 +644,8 @@ namespace Framework {
                         // Call to ECS Interface to create a new entity , ideally only transform for clean entity but for now create demo entity
                         Entity newEntity = ecsInterface.CreateEntity();
                         ecsInterface.AddComponent<TransformComponent>(newEntity, TransformComponent{});
-
-                        auto* tex = AssetManager::Instance().Get<TextureProperties>(
-                            AssetManager::Instance().FindGuid<TextureProperties>()
-                        );
-
-                        if (!tex) {
-                            // Not found, so load and register
-                            auto textureComponent = std::make_unique<TextureProperties>();
-                            textureComponent->path = "Assets/PNG/test.png";
-                            TextureLoader::loadTexture(*textureComponent, true);
-                            AssetManager::Instance().RegisterAsset(std::move(textureComponent), &g_TexturePropertiesProps, "Assets/PNG/test.png");
-
-                            // Retrieve again to get the registered pointer
-                            tex = AssetManager::Instance().Get<TextureProperties>(
-                                AssetManager::Instance().FindGuid<TextureProperties>()
-                            );
-                        }
-
-                        // Add to ECS
-                        if (tex) {
-                            ecsInterface.AddComponent<TextureProperties>(newEntity, *tex);
-                        }
-
-                        MeshProperties meshComponent{};
-                        MeshLoader::loadMesh(meshComponent.path, meshComponent);
-
-                        ecsInterface.AddComponent<MeshProperties>(newEntity, meshComponent);
-
-
                         std::cout << "Entity created with ID: " << newEntity << std::endl;
                     }
-
 
                     if (ImGui::Button("Delete All Entity", ImVec2(140, 30)))
                     {
@@ -582,9 +668,7 @@ namespace Framework {
 
                             ImGui::CloseCurrentPopup(); // Close the popup
                         }
-
                         ImGui::SameLine();
-
                         if (ImGui::Button("Cancel", ImVec2(120, 0))) // Cancel button
                         {
                             ImGui::CloseCurrentPopup(); // Close the popup without clearing
@@ -593,7 +677,6 @@ namespace Framework {
                         ImGui::EndPopup();
                     }
                 }
-
 
                 if (ImGui::Button("Delete Entity", ImVec2(140, 30)))
                 {
@@ -704,15 +787,47 @@ namespace Framework {
                             {
                                 MeshProperties& meshComponent = ecsInterface.GetComponent<MeshProperties>(selectedEntity);
 
-                                // Show the mesh path (editable)
-                                char meshPathBuffer[256];
-                                strncpy(meshPathBuffer, meshComponent.path.c_str(), sizeof(meshPathBuffer));
-                                meshPathBuffer[sizeof(meshPathBuffer) - 1] = '\0';
+                                // Build list of mesh labels and GUIDs
+                                std::vector<std::string> meshNames;
+                                std::vector<AssetHandle> meshGuids;
 
-                                if (ImGui::InputText("Mesh Path", meshPathBuffer, sizeof(meshPathBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
+                                for (const auto& [guid, entry] : AssetManager::Instance().GetAssets())
                                 {
-                                    // Update mesh path if user edits it
-                                    meshComponent.path = std::string(meshPathBuffer);
+                                    if (entry.typeName != TypeName<MeshProperties>::value)
+                                        continue;
+
+                                    auto* mesh = static_cast<MeshProperties*>(entry.pObject.get());
+                                    std::string label = mesh->path.empty() ? "Unnamed Mesh" : mesh->path;
+                                    meshNames.push_back(label);
+                                    meshGuids.push_back(guid);
+                                }
+
+                                // Convert to const char* array for ImGui
+                                std::vector<const char*> labelPtrs;
+                                for (const auto& name : meshNames)
+                                    labelPtrs.push_back(name.c_str());
+
+                                // Find current mesh index
+                                int currentIndex = -1;
+                                for (size_t i = 0; i < meshGuids.size(); ++i)
+                                {
+                                    if (meshGuids[i] == meshComponent.guid)
+                                    {
+                                        currentIndex = static_cast<int>(i);
+                                        break;
+                                    }
+                                }
+
+                                // Dropdown to select mesh
+                                ImGui::Separator();
+                                ImGui::Text("Select Mesh:");
+                                if (ImGui::Combo("Mesh", &currentIndex, labelPtrs.data(), static_cast<int>(labelPtrs.size())))
+                                {
+                                    auto* selectedMesh = AssetManager::Instance().Get<MeshProperties>(meshGuids[currentIndex]);
+                                    if (selectedMesh)
+                                    {
+                                        meshComponent = *selectedMesh;
+                                    }
                                 }
 
                                 // Show debug info about mesh
@@ -725,6 +840,12 @@ namespace Framework {
                                 if (ImGui::Button("Reload Mesh"))
                                 {
                                     MeshLoader::loadMesh(meshComponent.path, meshComponent);
+                                }
+
+                                ImGui::Separator();
+                                if (ImGui::Button("Remove Mesh"))
+                                {
+                                    meshComponent = MeshProperties{}; // Reset to default
                                 }
                             }
                             else
@@ -739,57 +860,80 @@ namespace Framework {
 
                         if (ImGui::CollapsingHeader("Texture Component", ImGuiTreeNodeFlags_DefaultOpen))
                         {
-                            if (ecsInterface.HasComponent<Framework::TextureProperties>(selectedEntity))
+                            if (ecsInterface.HasComponent<TextureProperties>(selectedEntity))
                             {
-                                auto& texture = ecsInterface.GetComponent<Framework::TextureProperties>(selectedEntity);
+                                auto& currentTexture = ecsInterface.GetComponent<TextureProperties>(selectedEntity);
 
-                                // Editable path buffer
-                                char pathBuffer[256];
-                                strncpy(pathBuffer, texture.path.c_str(), sizeof(pathBuffer) - 1);
-                                pathBuffer[sizeof(pathBuffer) - 1] = '\0';
+                                // Build list of texture labels and GUIDs
+                                std::vector<std::string> textureNames;
+                                std::vector<AssetHandle> textureGuids;
 
-                                // Editable name buffer
-                                char nameBuffer[128];
-                                strncpy(nameBuffer, texture.name.c_str(), sizeof(nameBuffer) - 1);
-                                nameBuffer[sizeof(nameBuffer) - 1] = '\0';
-
-                                // Display GUID (read-only)
-                                ImGui::Text("GUID: %s", texture.guid.c_str());
-
-                                // Editable name
-                                if (ImGui::InputText("Texture Name", nameBuffer, sizeof(nameBuffer)))
+                                for (const auto& [guid, entry] : AssetManager::Instance().GetAssets())
                                 {
-                                    texture.name = std::string(nameBuffer);
+                                    if (entry.typeName != TypeName<TextureProperties>::value)
+                                        continue;
+
+                                    auto* tex = static_cast<TextureProperties*>(entry.pObject.get());
+                                    std::string label = tex->name.empty() ? tex->path : tex->name;
+                                    textureNames.push_back(label);
+                                    textureGuids.push_back(guid);
                                 }
 
-                                // Editable path
-                                if (ImGui::InputText("Texture Path", pathBuffer, sizeof(pathBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
+                                // Convert to const char* array for ImGui
+                                std::vector<const char*> labelPtrs;
+                                for (const auto& name : textureNames)
+                                    labelPtrs.push_back(name.c_str());
+
+                                // Find current texture index
+                                int currentIndex = -1;
+                                for (size_t i = 0; i < textureGuids.size(); ++i)
                                 {
-                                    std::string newPath(pathBuffer);
-                                    if (newPath != texture.path)
+                                    if (textureGuids[i] == currentTexture.guid)
                                     {
-                                        texture.path = newPath;
-                                        texture.textureID = TextureLoader::loadTexture(texture); // reload with updated path
+                                        currentIndex = static_cast<int>(i);
+                                        break;
                                     }
                                 }
 
-                                // Show texture metadata
-                                ImGui::Text("Texture ID: %u", texture.textureID);
-                                ImGui::Text("Size: %d x %d", texture.width, texture.height);
+                                // Dropdown to select from registered textures
+                                ImGui::Separator();
+                                ImGui::Text("Select Texture:");
+                                if (ImGui::Combo("Texture", &currentIndex, labelPtrs.data(), static_cast<int>(labelPtrs.size())))
+                                {
+                                    auto* selectedTexture = AssetManager::Instance().Get<TextureProperties>(textureGuids[currentIndex]);
+                                    if (selectedTexture)
+                                    {
+                                        currentTexture = *selectedTexture;
+                                    }
+                                }
 
-                                // Preview texture if valid
-                                if (texture.textureID != 0)
+                                // Display metadata
+                                ImGui::Text("GUID: %s", currentTexture.guid.c_str());
+                                ImGui::Text("Texture ID: %u", currentTexture.textureID);
+                                ImGui::Text("Size: %d x %d", currentTexture.width, currentTexture.height);
+
+                                // Preview current texture
+                                if (currentTexture.textureID != 0)
                                 {
                                     ImGui::Text("Preview:");
-                                    ImGui::Image(static_cast<ImTextureID>(texture.textureID), ImVec2(128, 128));
+                                    ImGui::Image((ImTextureID)currentTexture.textureID, ImVec2(128, 128), ImVec2(0, 0), ImVec2(1, 1));
+                                }
+
+                                ImGui::Separator();
+                                if (ImGui::Button("Remove Texture"))
+                                {
+                                    currentTexture = TextureProperties{}; // Reset to default
                                 }
                             }
                             else
                             {
-                                ImGui::Text("No TextureProperties attached to this entity.");
+                                ImGui::Text("No Texture Component attached to this entity.");
+                                if (ImGui::Button("Add Texture Component"))
+                                {
+                                    ecsInterface.AddComponent<TextureProperties>(selectedEntity, TextureProperties{});
+                                }
                             }
                         }
-
                         // Reset selectedEntity if the properties window is closed
                         if (!isPropertiesWindowOpen)
                         {

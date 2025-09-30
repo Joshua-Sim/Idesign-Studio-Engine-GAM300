@@ -31,7 +31,7 @@ namespace Framework
         float duration = 0.0f;         // Duration in seconds
 
         // Optional: internal ID or handle for audio system
-        int audioID = -1;
+        int channelID = -1;
     };
 
     inline constexpr std::array g_AudioPropertiesPropsArray =

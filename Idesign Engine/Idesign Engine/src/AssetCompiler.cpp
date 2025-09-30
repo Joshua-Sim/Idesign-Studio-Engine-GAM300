@@ -29,9 +29,15 @@ namespace Framework
         {
             Entity entity = ecsInterface.CreateEntity();
 
+            // Load entity name
+            if (entityJson.HasMember("name") && entityJson["name"].IsString())
+            {
+                std::string name = entityJson["name"].GetString();
+                ecsInterface.SetEntityName(entity, name);
+            }
             const auto& components = entityJson["components"];
 
-            // TransformComponent
+            // Transform
             if (components.HasMember("TransformComponent"))
             {
                 TransformComponent transform;
@@ -39,10 +45,29 @@ namespace Framework
                 ecsInterface.AddComponent(entity, transform);
             }
 
-            // TextureReference links to precompiled TextureProperties
-            if (components.HasMember("TextureReference"))
+            // MeshProperties
+            if (components.HasMember("MeshReference"))
             {
-                const auto& texRef = components["TextureReference"];
+                const auto& meshRef = components["MeshReference"];
+                if (meshRef.HasMember("guid") && meshRef["guid"].IsString())
+                {
+                    std::string guid = meshRef["guid"].GetString();
+                    const MeshProperties* mesh = AssetManager::Instance().Get<MeshProperties>(guid);
+                    if (mesh)
+                    {
+                        ecsInterface.AddComponent(entity, *mesh);
+                    }
+                    else
+                    {
+                        std::cerr << "Missing MeshProperties for GUID: " << guid << "\n";
+                    }
+                }
+            }
+
+            // Texture
+            if (components.HasMember("TextureComponent"))
+            {
+                const auto& texRef = components["TextureComponent"];
                 if (texRef.HasMember("guid") && texRef["guid"].IsString())
                 {
                     std::string guid = texRef["guid"].GetString();
@@ -74,13 +99,10 @@ namespace Framework
         {
             rapidjson::Value entityObj(rapidjson::kObjectType);
 
-            // Optional: store entity name
-            /*if (ecsInterface.HasComponent<NameComponent>(entity))
-            {
-                const auto& name = ecsInterface.GetComponent<NameComponent>(entity).name;
-                entityObj.AddMember("name", rapidjson::Value(name.c_str(), allocator), allocator);
-            }*/
-
+            // Store entity name directly
+            std::string entityName = ecsInterface.GetEntityName(entity);
+            entityObj.AddMember("name", rapidjson::Value(entityName.c_str(), allocator), allocator);
+            
             rapidjson::Value componentsObj(rapidjson::kObjectType);
 
             // TransformComponent
@@ -92,13 +114,22 @@ namespace Framework
                 componentsObj.AddMember("TransformComponent", transformJson, allocator);
             }
 
+            // MeshProperties — write only GUID
+            if (ecsInterface.HasComponent<MeshProperties>(entity))
+            {
+                const auto& mesh = ecsInterface.GetComponent<MeshProperties>(entity);
+                rapidjson::Value meshRef(rapidjson::kObjectType);
+                meshRef.AddMember("guid", rapidjson::Value(mesh.guid.c_str(), allocator), allocator);
+                componentsObj.AddMember("MeshReference", meshRef, allocator);
+            }
+
             // TextureProperties  write only GUID
             if (ecsInterface.HasComponent<TextureProperties>(entity))
             {
                 const auto& tex = ecsInterface.GetComponent<TextureProperties>(entity);
                 rapidjson::Value texRef(rapidjson::kObjectType);
                 texRef.AddMember("guid", rapidjson::Value(tex.guid.c_str(), allocator), allocator);
-                componentsObj.AddMember("TextureReference", texRef, allocator);
+                componentsObj.AddMember("TextureComponent", texRef, allocator);
             }
             // Add more components here...
 
@@ -160,14 +191,15 @@ namespace Framework
             const rapidjson::Value& v = obj[p.m_pName];
             switch (p.m_Type)
             {
-            case prop::INT:    if (v.IsInt())    { int         temp = v.GetInt();                            p.m_fnSet(pObject, &temp); } break;
-            case prop::FLOAT:  if (v.IsNumber()) { float       temp = static_cast<float>(v.GetDouble());     p.m_fnSet(pObject, &temp); } break;
-            case prop::DOUBLE: if (v.IsNumber()) { double      temp = v.GetDouble();                         p.m_fnSet(pObject, &temp); } break;
-            case prop::LONG:   if (v.IsInt64())  { long        temp = static_cast<long>(v.GetInt64());       p.m_fnSet(pObject, &temp); } break;
-            case prop::SHORT:  if (v.IsInt())    { short       temp = static_cast<short>(v.GetInt());        p.m_fnSet(pObject, &temp); } break;
-            case prop::BOOL:   if (v.IsBool())   { bool        temp = v.GetBool();                           p.m_fnSet(pObject, &temp); } break;
-            case prop::STRING: if (v.IsString()) { std::string temp(v.GetString(), v.GetStringLength());     p.m_fnSet(pObject, &temp); } break;
-            case prop::CHAR:   if (v.IsString() && v.GetStringLength() == 1) { char temp = v.GetString()[0]; p.m_fnSet(pObject, &temp); } break;
+            case prop::INT:    if (v.IsInt())    { int          temp = v.GetInt();                            p.m_fnSet(pObject, &temp); } break;
+            case prop::FLOAT:  if (v.IsNumber()) { float        temp = static_cast<float>(v.GetDouble());     p.m_fnSet(pObject, &temp); } break;
+            case prop::DOUBLE: if (v.IsNumber()) { double       temp = v.GetDouble();                         p.m_fnSet(pObject, &temp); } break;
+            case prop::LONG:   if (v.IsInt64())  { long         temp = static_cast<long>(v.GetInt64());       p.m_fnSet(pObject, &temp); } break;
+            case prop::SHORT:  if (v.IsInt())    { short        temp = static_cast<short>(v.GetInt());        p.m_fnSet(pObject, &temp); } break;
+            case prop::BOOL:   if (v.IsBool())   { bool         temp = v.GetBool();                           p.m_fnSet(pObject, &temp); } break;
+            case prop::STRING: if (v.IsString()) { std::string  temp(v.GetString(), v.GetStringLength());     p.m_fnSet(pObject, &temp); } break;
+            case prop::CHAR:   if (v.IsString() && v.GetStringLength() == 1) { char temp = v.GetString()[0];  p.m_fnSet(pObject, &temp); } break;
+            case prop::UINT:   if (v.IsUint())   { unsigned int temp = v.GetUint();                           p.m_fnSet(pObject, &temp); } break;
             case prop::VEC3:
             {
                 if (v.IsArray() && v.Size() == 3)
@@ -203,12 +235,13 @@ namespace Framework
             key.SetString(p.m_pName, allocator);
             switch (p.m_Type)
             {
-            case prop::INT:    { int    v; p.m_fnGet(pObject, &v); outObj.AddMember(key, v, allocator); break; }
-            case prop::FLOAT:  { float  v; p.m_fnGet(pObject, &v); outObj.AddMember(key, v, allocator); break; }
-            case prop::DOUBLE: { double v; p.m_fnGet(pObject, &v); outObj.AddMember(key, v, allocator); break; }
-            case prop::LONG:   { long   v; p.m_fnGet(pObject, &v); outObj.AddMember(key, static_cast<int64_t>(v), allocator); break; }
-            case prop::SHORT:  { short  v; p.m_fnGet(pObject, &v); outObj.AddMember(key, static_cast<int>(v), allocator); break; }
-            case prop::BOOL:   { bool   v; p.m_fnGet(pObject, &v); outObj.AddMember(key, v, allocator); break; }
+            case prop::INT:    { int          v; p.m_fnGet(pObject, &v); outObj.AddMember(key, v, allocator); break; }
+            case prop::FLOAT:  { float        v; p.m_fnGet(pObject, &v); outObj.AddMember(key, v, allocator); break; }
+            case prop::DOUBLE: { double       v; p.m_fnGet(pObject, &v); outObj.AddMember(key, v, allocator); break; }
+            case prop::LONG:   { long         v; p.m_fnGet(pObject, &v); outObj.AddMember(key, static_cast<int64_t>(v), allocator); break; }
+            case prop::SHORT:  { short        v; p.m_fnGet(pObject, &v); outObj.AddMember(key, static_cast<int>(v), allocator); break; }
+            case prop::BOOL:   { bool         v; p.m_fnGet(pObject, &v); outObj.AddMember(key, v, allocator); break; }
+            case prop::UINT:   { unsigned int v; p.m_fnGet(pObject, &v); outObj.AddMember(key, v, allocator); break; }
             case prop::CHAR:
             {
                 char v;

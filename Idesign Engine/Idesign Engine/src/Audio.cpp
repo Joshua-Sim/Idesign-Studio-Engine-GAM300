@@ -365,6 +365,13 @@ namespace Framework
                 pChannel->setChannelGroup(activeChannelGroup["SoundEffects"]);
 
             activeChannels[customName] = pChannel;
+
+            // Assign a unique channel ID and store it
+            static int nextChannelId = 1;
+            int assignedId = nextChannelId++;
+            activeChannelsById[assignedId] = pChannel;
+            audioProps->channelID = assignedId;
+            audioProps->isPlaying = true;
             std::cout << "Playing audio " << customName << "." << std::endl;
         }
     }

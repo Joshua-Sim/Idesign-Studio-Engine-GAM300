@@ -30,6 +30,7 @@
 #include <AudioProperties.h>
 #include <WindowConfigProperties.h>
 #include "TextureProperties.h"
+#include "MeshProperties.h"
 
 // Asset Files
 #include "AssetCompiler.h"
@@ -41,7 +42,7 @@ namespace Framework
     REGISTER_TYPE_NAME(WindowConfig);
     REGISTER_TYPE_NAME(AudioProperties);
     REGISTER_TYPE_NAME(TextureProperties);
-    //REGISTER_TYPE_NAME(FontProperties);
+    REGISTER_TYPE_NAME(MeshProperties);
 
     /*  Struct Brief
         - Store any type of assets in a generic way

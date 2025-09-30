@@ -59,7 +59,7 @@ int main(void)
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     //  Audio
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
-    CompileArray<AudioProperties>("src/Data/AudioAsset.json", "src/Data/AudioAsset.bin", g_AudioPropertiesProps, "AudioProperties");
+    //CompileArray<AudioProperties>("src/Data/AudioAsset.json", "src/Data/AudioAsset.bin", g_AudioPropertiesProps, "AudioProperties");
     AssetManager::Instance().LoadBinaryArray<AudioProperties>("src/Data/AudioAsset.bin", g_AudioPropertiesProps,
         [](AudioProperties& props)
         {
@@ -72,6 +72,9 @@ int main(void)
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     CompileArray<TextureProperties>("src/Data/TextureAsset.json", "src/Data/TextureAsset.bin", g_TexturePropertiesProps, "textures");
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
+    //  Mesh
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+    CompileArray<MeshProperties>("src/Data/MeshAsset.json", "src/Data/MeshAsset.bin", g_MeshProps, "mesh");
 
     // Initialize the InputHandler singleton
     //InputHandler::Initialize(Window->GetWindow());

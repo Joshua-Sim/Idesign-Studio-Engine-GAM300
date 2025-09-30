@@ -11,8 +11,7 @@
 ///           Edwin Leow
 ///           Joel Teo
 ///           Joshua Sim
-///           Keegan Lim
-///	Copyright 2024, Digipen Institute of Technology
+///	Copyright 2025, Digipen Institute of Technology
 ///
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -117,49 +116,20 @@ namespace Framework {
         ecsInterface.SetSystemSignature<Graphics>(signature);
         std::cout << "Signature for Graphics system is: " << signature << std::endl;
         //  ---- ECS INITIALIZATION END --- 
-
-
-        // ---------------- Create one ECS object (Deserialized next time) -------------------- 
-        Entity newEntity = ecsInterface.CreateEntity();
-
-        //Add transform
-        TransformComponent transformComponent;
-        transformComponent.position = glm::vec3(0.0, 2.0, 0.0); // Instantiate location
-        transformComponent.scale = glm::vec3(0.0005, 0.0005, 0.0005); // Size of my obj is big, change for test
-
-        ecsInterface.AddComponent<TransformComponent>(newEntity, transformComponent);
-
-        // Add and load mesh , temporarily hard-code component data 
-        MeshProperties meshComponent;
-        meshComponent.path = "Assets/Objects/plane.obj";
-
-        // Load mesh from its own path, again serialized for each obj in deserialization after.
-        MeshLoader::loadMesh(meshComponent.path, meshComponent);
-        ecsInterface.AddComponent<MeshProperties>(newEntity, meshComponent);
-
-        // Add and load a texture component
-        Framework::TextureProperties textureComponent;
-        textureComponent.path = "Assets/PNG/test.png";
-        TextureLoader::loadTexture(textureComponent, true);
-
-        ecsInterface.AddComponent<Framework::TextureProperties>(newEntity, textureComponent);
-        // ----------------- End object creation ------------------------------
-
-        // asset load / loading shape units
-        // Testing (Edwin)
-        /*for (const auto& [handle, entry] : assets)
-        {
-            auto* texProps = static_cast<TextureProperties*>(entry.pObject.get());
-
-            texProps->textureID = TextureLoader::loadTexture(*texProps, true);
-
-            tex = texProps->textureID;
-        }*/
+        
+        // NOTE!: Both Texture + Meshes requires OpenGL to be initialized, means the loading of such files have to be after that.
         AssetManager::Instance().LoadBinaryArray<TextureProperties>("src/Data/TextureAsset.bin", g_TexturePropertiesProps,
             [](TextureProperties& props)
             {
                 TextureLoader::loadTexture(props, true);
             });
+
+        AssetManager::Instance().LoadBinaryArray<MeshProperties>("src/Data/MeshAsset.bin", g_MeshProps,
+            [](MeshProperties& props)
+            {
+                MeshLoader::loadMesh(props.path, props);
+            });
+        //AssetManager::Instance().SaveArrayToJson(TypeName<MeshProperties>::value, "src/Data/MeshAsset.json", "mesh");
         //AssetManager::Instance().PrintAssetsOfType(TypeName<TextureProperties>::value);
         //AssetManager::Instance().SaveArrayToJson(TypeName<TextureProperties>::value, "src/Data/TextureAsset.json", "textures");
         auto* tex = AssetManager::Instance().Get<TextureProperties>(AssetManager::Instance().FindGuid<TextureProperties>());
