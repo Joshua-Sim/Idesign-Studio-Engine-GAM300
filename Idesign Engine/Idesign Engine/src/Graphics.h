@@ -89,6 +89,7 @@ namespace Framework {
         Mesh cone;
         Mesh plane;
         Mesh cylinder;
+        Mesh triangle;
         MeshProperties mesh;
         GLuint tex = 0;
 
@@ -97,6 +98,8 @@ namespace Framework {
         ShaderProgram meshShader{ "Assets/shaders/meshvert.glsl", "Assets/shaders/meshfrag.glsl" };
         ShaderProgram blurShader{ "Assets/shaders/postprocess.glsl", "Assets/shaders/blur.glsl" };
         ShaderProgram finalShader{ "Assets/shaders/postprocess.glsl", "Assets/shaders/final.glsl" };
+        ShaderProgram debugShader{ "Assets/shaders/debugVertexShader.glsl", "Assets/shaders/debugFragmentShader.glsl" };
+
         // lighting
         DirectionalLightCPU sun;
         bool hasSun = true;
@@ -117,9 +120,18 @@ namespace Framework {
 
         GLuint quadVAO = 0;
         GLuint quadVBO = 0;
+        GLuint m_debugVao = 0; 
+        GLuint m_debugVbo = 0; 
 
         ImguiManager* m_imguiManager = nullptr;
-	};
+        std::map<DebugShapeType, Mesh*> m_debugMeshes;
+
+        //draw debug shapes
+        void DrawDebugBox(const TransformComponent& transform, const glm::vec3& color);
+        // Draws a wireframe sphere using the transform's position and scale as radius
+        void DrawDebugMesh(const TransformComponent& transform, Mesh* mesh, const glm::vec3& color);
+        
+    };
 
 }
 #endif // !_GRAPHICS_H_

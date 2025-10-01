@@ -167,6 +167,7 @@ namespace Framework {
         plane = Mesh::CreateUnitSphereData();
         cone = Mesh::CreateUnitConeData();
         cylinder = Mesh::CreateUnitCylinderData();
+        triangle = Mesh::CreateUnitTriangleData();
 
         // Initialise 1 object into ECS (Temporary, liase and move de-serialize with loadmesh function handled at asset-handler)
 
@@ -178,13 +179,17 @@ namespace Framework {
         blurShader.initGL();
         finalShader.initGL();
         terrain.initGL();
-
+        debugShader.initGL();
         //initialise geometry objects
         cube.initGL();
         plane.initGL();
         cone.initGL();
-        //cylinder.initGL();
+        triangle.initGL();
+        cylinder.initGL();
 
+        m_debugMeshes[DebugShapeType::Box] = &cube;
+        m_debugMeshes[DebugShapeType::Sphere] = &plane; // Remember 'plane' is your sphere mesh
+        m_debugMeshes[DebugShapeType::Triangle] = &triangle;
 
         // lights (use member containers)
         sun = DirectionalLightCPU{};
@@ -209,6 +214,9 @@ namespace Framework {
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
             std::cout << "ERROR::FRAMEBUFFER:: HDR Framebuffer is not complete!\n";
+
+
+
 
         // --- BLOOM (PINGPONG) FRAMEBUFFER SETUP ---
         glGenFramebuffers(2, pingpongFBO);
@@ -242,130 +250,144 @@ namespace Framework {
             CORE->EndGameLoop(); // Mark the game loop as done
             return;
         }
-        
-            float now = (float)glfwGetTime();
-            float dt = now - lastTime; lastTime = now;
-            process_input(dt);
+
+        float now = (float)glfwGetTime();
+        float dt = now - lastTime; lastTime = now;
+        process_input(dt);
 
 
-            // ====================================================================
-           // 1. SCENE PASS: Render the scene to the HDR framebuffer
-           // ====================================================================
-            glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
-            glEnable(GL_DEPTH_TEST);
+        // ====================================================================
+       // 1. SCENE PASS: Render the scene to the HDR framebuffer
+       // ====================================================================
+        glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
+        glEnable(GL_DEPTH_TEST);
 
-            int w, h; 
-            glfwGetFramebufferSize(window, &w, &h);
- 
-            if (w == 0 || h == 0) {
-                return; // Don't render anything if the window is minimized
-            }
-            float aspect = (h == 0) ? 1.f : float(w) / float(h);
-            glViewport(0, 0, w, h);
-            glClearColor(0.07f, 0.09f, 0.12f, 1.f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        int w, h;
+        glfwGetFramebufferSize(window, &w, &h);
 
-            glm::mat4 proj = camera.getProjectionMatrix(w,h);
-            glm::mat4 view = camera.getViewMatrix();
+        if (w == 0 || h == 0) {
+            return; // Don't render anything if the window is minimized
+        }
+        float aspect = (h == 0) ? 1.f : float(w) / float(h);
+        glViewport(0, 0, w, h);
+        glClearColor(0.07f, 0.09f, 0.12f, 1.f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            // stick to ground
-            float groundY = terrain.getHeightAt(camera.position.x, camera.position.z);
-            camera.position.y = groundY + 1.8f;
+        glm::mat4 proj = camera.getProjectionMatrix(w, h);
+        glm::mat4 view = camera.getViewMatrix();
 
-            // --- Terrain (no texture)
-            terrainShader.use();
-            terrainShader.setMat4("uProj", proj);
-            terrainShader.setMat4("uView", view);
-            terrainShader.setMat4("uModel", glm::mat4(1.f));
-            terrainShader.setVec3("uAlbedo", { 0.6f,0.4f,0.2f }); //terrain color
-            LightComponent::upload(terrainShader, sun, hasSun, pointLights, spotLights);
-            terrain.draw();
+        // stick to ground
+        float groundY = terrain.getHeightAt(camera.position.x, camera.position.z);
+        camera.position.y = groundY + 1.8f;
 
-            // --- Mesh (textured)
-            meshShader.use();
-            meshShader.setMat4("uProj", proj);
-            meshShader.setMat4("uView", view);
+        // --- Terrain (no texture)
+        terrainShader.use();
+        terrainShader.setMat4("uProj", proj);
+        terrainShader.setMat4("uView", view);
+        terrainShader.setMat4("uModel", glm::mat4(1.f));
+        terrainShader.setVec3("uAlbedo", { 0.6f,0.4f,0.2f }); //terrain color
+        LightComponent::upload(terrainShader, sun, hasSun, pointLights, spotLights);
+        terrain.draw();
 
-            // ---- ECS draw loop ----
-            for (auto const& entityId : mEntities) {
-                MeshProperties& meshComponent = ecsInterface.GetComponent<MeshProperties>(entityId);
-                TransformComponent& transformComponent = ecsInterface.GetComponent<TransformComponent>(entityId);
-                //TextureComponent& textureComponent = ecsInterface.GetComponent<TextureProperties>(entityId);
+        // --- Mesh (textured)
+        meshShader.use();
+        meshShader.setMat4("uProj", proj);
+        meshShader.setMat4("uView", view);
 
-                transformComponent.position += glm::vec3(0.0f, 1, 0.0) * deltaTime; // Increment Y axis to show ECS link
-                
-                // Model SRT
-                glm::mat4 model(1.0f);
-                model = glm::translate(model, transformComponent.position); // optional
+        // ---- ECS draw loop ----
+        for (auto const& entityId : mEntities)
+        {
+            auto& meshComponent = ecsInterface.GetComponent<MeshProperties>(entityId);
+            auto& transformComponent = ecsInterface.GetComponent<TransformComponent>(entityId);
 
-                // Rotate
-                model = glm::rotate(model, transformComponent.rotation.x, glm::vec3(1, 0, 0));
-                model = glm::rotate(model, transformComponent.rotation.y, glm::vec3(0, 1, 0));
-                model = glm::rotate(model, transformComponent.rotation.z, glm::vec3(0, 0, 1));
+            // This line is for testing and can remain here
+            transformComponent.position += glm::vec3(0.0f, 1.0f, 0.0f) * deltaTime;
 
-                model = glm::scale(model, transformComponent.scale);     // scale by 2x
-                meshShader.setMat4("uModel", model);
+            glm::mat4 model(1.0f);
+            model = glm::translate(model, transformComponent.position);
+            model = glm::rotate(model, glm::radians(transformComponent.rotation.x), glm::vec3(1, 0, 0));
+            model = glm::rotate(model, glm::radians(transformComponent.rotation.y), glm::vec3(0, 1, 0));
+            model = glm::rotate(model, glm::radians(transformComponent.rotation.z), glm::vec3(0, 0, 1));
+            model = glm::scale(model, transformComponent.scale);
 
 
-                meshShader.setVec3("uAlbedo", { 1,1,1 });
-                LightComponent::upload(meshShader, sun, hasSun, pointLights, spotLights);
 
-                //texture
+            if (meshComponent.debugShape == DebugShapeType::None)
+            {
+
                 glActiveTexture(GL_TEXTURE0);
                 //glBindTexture(GL_TEXTURE_2D, textureComponent.textureID);
-                meshShader.setInt("uTexture", 0); // correct shader
+                meshShader.setInt("uTexture", 0);
+
+                // 4. Draw the Mesh (MOVED INSIDE)
                 glBindVertexArray(meshComponent.vao);
                 glDrawElements(GL_TRIANGLES, meshComponent.indexCount, GL_UNSIGNED_INT, 0);
-            }
 
-            // drawing of 5 objects (primitives)
-            for (int i = 0; i < 5; ++i) 
+            }
+            else
             {
-                glm::mat4 model(1.0f);
-                model = glm::translate(model, glm::vec3((i - 2) * 1.7f, 0.0f, 0.0f));
-                meshShader.setMat4("uModel", model);
-                cylinder.draw(); //change line to whichever you want to test : 1. cube 2. cylinder 3. plane 4.cone follow by .draw();
+                // --- GENERIC DEBUG SHAPE RENDERING ---
+                // Find the correct mesh in our map
+                auto it = m_debugMeshes.find(meshComponent.debugShape);
+                if (it != m_debugMeshes.end())
+                {
+                    // If we found a mesh, draw it using the generic function
+                    DrawDebugMesh(transformComponent, it->second, meshComponent.debugcolor);
+                }
             }
 
-            // ====================================================================
-            // 2. BLOOM PASS: Apply a two-pass Gaussian blur
-            // ====================================================================
-            glDisable(GL_DEPTH_TEST);
-            bool horizontal = true, first_iteration = true;
-            unsigned int amount = 10;
-            blurShader.use();
-            for (unsigned int i = 0; i < amount; i++)
-            {
-                glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[horizontal]);
-                blurShader.setBool("horizontal", horizontal);
-                glBindTexture(GL_TEXTURE_2D, first_iteration ? colorBuffer : pingpongColorbuffers[!horizontal]);
-                renderQuad();
-                horizontal = !horizontal;
-                if (first_iteration) first_iteration = false;
-            }
+        }
 
-            // ====================================================================
-            // 3. FINAL PASS: Render to screen with tone mapping and bloom
-            // ====================================================================
-            glBindFramebuffer(GL_FRAMEBUFFER, m_imguiManager->GetGameFramebuffer());
-            glViewport(0, 0, w, h);
-            glClear(GL_COLOR_BUFFER_BIT);
 
-            finalShader.use();
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, colorBuffer);
-            glActiveTexture(GL_TEXTURE1);
-            glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[!horizontal]);
-            finalShader.setInt("sceneTexture", 0);
-            finalShader.setInt("bloomTexture", 1);
-            finalShader.setFloat("exposure", hdrExposure);
-            finalShader.setFloat("bloomStrength", bloomStrength);
-           
+        // drawing of 5 objects (primitives)
+        //for (int i = 0; i < 5; ++i)
+        //{
+        //    glm::mat4 model(1.0f);
+        //    model = glm::translate(model, glm::vec3((i - 2) * 1.7f, 0.0f, 0.0f));
+        //    meshShader.setMat4("uModel", model);
+        //    cylinder.draw(); //change line to whichever you want to test : 1. cube 2. cylinder 3. plane 4.cone follow by .draw();
+        //}
+
+        // ====================================================================
+        // 2. BLOOM PASS: Apply a two-pass Gaussian blur
+        // ====================================================================
+        glDisable(GL_DEPTH_TEST);
+        bool horizontal = true, first_iteration = true;
+        unsigned int amount = 10;
+        blurShader.use();
+        for (unsigned int i = 0; i < amount; i++)
+        {
+            glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[horizontal]);
+            blurShader.setBool("horizontal", horizontal);
+            glBindTexture(GL_TEXTURE_2D, first_iteration ? colorBuffer : pingpongColorbuffers[!horizontal]);
             renderQuad();
+            horizontal = !horizontal;
+            if (first_iteration) first_iteration = false;
+        }
 
-            // Unbind the framebuffer, returning rendering control to the main window
-            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        // ====================================================================
+        // 3. FINAL PASS: Render to screen with tone mapping and bloom
+        // ====================================================================
+        glBindFramebuffer(GL_FRAMEBUFFER, m_imguiManager->GetGameFramebuffer());
+        glViewport(0, 0, w, h);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        finalShader.use();
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, colorBuffer);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[!horizontal]);
+        finalShader.setInt("sceneTexture", 0);
+        finalShader.setInt("bloomTexture", 1);
+        finalShader.setFloat("exposure", hdrExposure);
+        finalShader.setFloat("bloomStrength", bloomStrength);
+
+        renderQuad();
+
+        // Unbind the framebuffer, returning rendering control to the main window
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
+
 
     // Get the name of the system
     std::string Graphics::GetName()
@@ -376,7 +398,7 @@ namespace Framework {
     // Get and return windows ptr for external system
     GLFWwindow* Graphics::GetWindow() {
         return window;
-        
+
     }
 
     Camera* Graphics::getCamera() {
@@ -506,5 +528,31 @@ namespace Framework {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         return framebuffer;
+    }
+
+    void Graphics::DrawDebugMesh(const TransformComponent& transform, Mesh* mesh, const glm::vec3& color)
+    {
+        if (!mesh) return; // Safety check
+
+        debugShader.use();
+
+        glm::mat4 projection = camera.getProjectionMatrix(1920, 1080);
+        glm::mat4 view = camera.getViewMatrix();
+
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, transform.position);
+        model = glm::rotate(model, glm::radians(transform.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(transform.rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(transform.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+        model = glm::scale(model, transform.scale);
+
+        debugShader.setMat4("projection", projection);
+        debugShader.setMat4("view", view);
+        debugShader.setMat4("model", model);
+        debugShader.setVec3("color", color);
+
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        mesh->draw(); // Draw the mesh that was passed in
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
 }
