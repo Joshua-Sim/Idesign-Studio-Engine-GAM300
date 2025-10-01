@@ -68,6 +68,10 @@ namespace Framework {
 
         shader.Compile(vertexSource.c_str(), fragmentSource.c_str());
 
+        // --- Compile 3D Shader ---
+        std::string vertex3DSource = LoadShaderFromFile("Assets/fontshaders/textvert3D.glsl");
+        shader3D.Compile(vertex3DSource.c_str(), fragmentSource.c_str());
+
         // Setup VAO/VBO
         glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);
@@ -149,37 +153,54 @@ namespace Framework {
         glm::vec3 color,
         float screenWidth,
         float screenHeight) {
+
+
+        // --- SETUP ---
         shader.Use();
         glm::mat4 projection = glm::ortho(0.0f, screenWidth, 0.0f, screenHeight);
-        glm::mat4 model = glm::mat4(1.0f);
-
         shader.SetUniform("textColor", color);
         shader.SetUniform("projection", projection);
-        shader.SetUniform("model", model);
 
+        // --- ENABLE BLENDING ---
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glDisable(GL_DEPTH_TEST);
         glActiveTexture(GL_TEXTURE0);
         glBindVertexArray(VAO);
 
-        auto& characters = FontCache[activeFont];
+        // Find the font in the cache safely
+        auto font_it = FontCache.find(activeFont);
+        if (font_it == FontCache.end()) {
+            glBindVertexArray(0); // Unbind before returning
+            glDisable(GL_BLEND);  // Disable blending before returning
+            return;
+        }
+        auto& characters = font_it->second;
 
+        // --- RENDER LOOP ---
         for (char c : text) {
             Character ch = characters[c];
 
             float xpos = x + ch.Bearing.x * scale;
-            float ypos = y - (ch.Bearing.y * scale);
+            float ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
             float w = ch.Size.x * scale;
             float h = ch.Size.y * scale;
 
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, glm::vec3(xpos, ypos, 0.0f));
+            model = glm::scale(model, glm::vec3(w, h, 1.0f));
+
+            shader.SetUniform("model", model);
             float vertices[6][4] = {
-                { xpos,     ypos + h,   0.0f, 1.0f },
-                { xpos,     ypos,       0.0f, 0.0f },
-                { xpos + w, ypos,       1.0f, 0.0f },
+                // Coords      // TexCoords
+                { 0.0f, 1.0f,   0.0f, 0.0f }, // Top-left   (Tex Y is 0.0)
+                { 0.0f, 0.0f,   0.0f, 1.0f }, // Bottom-left(Tex Y is 1.0)
+                { 1.0f, 0.0f,   1.0f, 1.0f }, // Bottom-right(Tex Y is 1.0)
 
-                { xpos,     ypos + h,   0.0f, 1.0f },
-                { xpos + w, ypos,       1.0f, 0.0f },
-                { xpos + w, ypos + h,   1.0f, 1.0f }
+                { 0.0f, 1.0f,   0.0f, 0.0f }, // Top-left   (Tex Y is 0.0)
+                { 1.0f, 0.0f,   1.0f, 1.0f }, // Bottom-right(Tex Y is 1.0)
+                { 1.0f, 1.0f,   1.0f, 0.0f }  // Top-right  (Tex Y is 0.0)
             };
-
             glBindTexture(GL_TEXTURE_2D, ch.TextureID);
             glBindBuffer(GL_ARRAY_BUFFER, VBO);
             glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
@@ -187,57 +208,80 @@ namespace Framework {
             x += (ch.Advance >> 6) * scale;
         }
 
+        // --- CLEANUP ---
         glBindVertexArray(0);
         glBindTexture(GL_TEXTURE_2D, 0);
+
+        // --- DISABLE BLENDING ---
+        glEnable(GL_DEPTH_TEST);
+        glDisable(GL_BLEND);
     }
 
-    // 3D world text
     void FontSystem::RenderText3D(const std::string& text,
-        const glm::mat4& model,
+        const glm::mat4& model, // This is the base position and billboard rotation
         const glm::mat4& view,
         const glm::mat4& projection,
         float scale,
         glm::vec3 color) {
-        shader.Use();
 
-        shader.SetUniform("textColor", color);
-        shader.SetUniform("projection", projection);
-        shader.SetUniform("view", view);
-        shader.SetUniform("model", model);
+        // --- SETUP & STATE CHANGES ---
+        shader3D.Use();
+        shader3D.SetUniform("textColor", color);
+        shader3D.SetUniform("projection", projection);
+        shader3D.SetUniform("view", view);
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glDisable(GL_DEPTH_TEST);
 
         glActiveTexture(GL_TEXTURE0);
         glBindVertexArray(VAO);
 
-        auto& characters = FontCache[activeFont];
-        float x = 0.0f;
+        auto font_it = FontCache.find(activeFont);
+        if (font_it == FontCache.end()) { /* ... cleanup and return ... */ }
+        auto& characters = font_it->second;
 
+        float x_cursor = 0.0f;
+
+        // --- RENDER LOOP ---
         for (char c : text) {
-            Character ch = characters[c];
+            Character ch = characters.at(c);
 
-            float xpos = x + ch.Bearing.x * scale;
-            float ypos = -(ch.Bearing.y * scale);
+            float xpos = x_cursor + ch.Bearing.x * scale;
+            float ypos = (ch.Bearing.y - ch.Size.y) * scale;
             float w = ch.Size.x * scale;
             float h = ch.Size.y * scale;
 
-            float vertices[6][4] = {
-                { xpos,     ypos + h,   0.0f, 1.0f },
-                { xpos,     ypos,       0.0f, 0.0f },
-                { xpos + w, ypos,       1.0f, 0.0f },
+            // --- THIS IS THE FIX ---
+            // 1. Create a matrix for the character's local offset and size
+            glm::mat4 localTransform = glm::mat4(1.0f);
+            localTransform = glm::translate(localTransform, glm::vec3(xpos, ypos, 0.0f));
+            localTransform = glm::scale(localTransform, glm::vec3(w, h, 1.0f));
 
-                { xpos,     ypos + h,   0.0f, 1.0f },
-                { xpos + w, ypos,       1.0f, 0.0f },
-                { xpos + w, ypos + h,   1.0f, 1.0f }
+            // 2. Combine with the main model matrix (world position + billboard)
+            glm::mat4 finalCharModel = model * localTransform;
+
+            shader3D.SetUniform("model", finalCharModel);
+
+            // Unit quad vertices (the same as before)
+            float vertices[6][4] = {
+                { 0.0f, 1.0f,   0.0f, 0.0f }, { 0.0f, 0.0f,   0.0f, 1.0f }, { 1.0f, 0.0f,   1.0f, 1.0f },
+                { 0.0f, 1.0f,   0.0f, 0.0f }, { 1.0f, 0.0f,   1.0f, 1.0f }, { 1.0f, 1.0f,   1.0f, 0.0f }
             };
 
             glBindTexture(GL_TEXTURE_2D, ch.TextureID);
             glBindBuffer(GL_ARRAY_BUFFER, VBO);
             glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
             glDrawArrays(GL_TRIANGLES, 0, 6);
-            x += (ch.Advance >> 6) * scale;
+
+            x_cursor += (ch.Advance >> 6) * scale;
         }
 
+        // --- CLEANUP ---
         glBindVertexArray(0);
         glBindTexture(GL_TEXTURE_2D, 0);
+        glEnable(GL_DEPTH_TEST);
+        glDisable(GL_BLEND);
     }
 
 } // namespace Framework

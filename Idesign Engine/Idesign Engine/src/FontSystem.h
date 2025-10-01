@@ -57,6 +57,7 @@ namespace Framework {
 
         GLuint VAO{}, VBO{};
         FontShader shader;
+        FontShader shader3D; // For 3D text
     };
 
     // Global FontSystem object

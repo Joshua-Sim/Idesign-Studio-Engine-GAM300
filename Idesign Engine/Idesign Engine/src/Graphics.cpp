@@ -385,6 +385,7 @@ namespace Framework {
             // ====================================================================
             // 3. FINAL PASS: Render to screen with tone mapping and bloom
             // ====================================================================
+         
             glBindFramebuffer(GL_FRAMEBUFFER, m_imguiManager->GetGameFramebuffer());
             glViewport(0, 0, w, h);
             glClear(GL_COLOR_BUFFER_BIT);
@@ -403,11 +404,36 @@ namespace Framework {
 
             // Now overlay HUD text in 2D
             fontSystem.SetActiveFont("Arial");
-            fontSystem.RenderText2D("Score: 100", 200.0f, 25.0f, 100.0f,
-                glm::vec3(1, 1, 1), w, h);
+            /*fontSystem.RenderText2D("Score: 100", 10.f, 10.0f, 1.f,
+                glm::vec3(1.0f, 1.0f, 0.5f), w, h);
+           */
+            // In your main rendering loop (e.g., in Graphics::Update)
+
+            // 1. Get the camera's view and projection matrices
+            glm::mat4 viewMatrix = camera.getViewMatrix();
+            glm::mat4 projectionMatrix = camera.getProjectionMatrix(w, h);
+
+            // 2. Extract camera's right and up vectors from the view matrix
+            glm::vec3 cameraRight_world = { viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0] };
+            glm::vec3 cameraUp_world = { viewMatrix[0][1], viewMatrix[1][1], viewMatrix[2][1] };
+
+   
+
+            // 4. Create the final model matrix by combining translation and rotation
+            glm::mat4 textModel = glm::mat4(1.0f);
+            textModel = glm::translate(textModel, glm::vec3(0.0f, 5.0f, 0.0f)); // Position in world space
+
+            // 5. Call the RenderText3D function
+            fontSystem.RenderText3D("Score: 100",
+                textModel,
+                viewMatrix,
+                projectionMatrix,
+                0.5f, // Scale
+                glm::vec3(1.0f, 1.0f, 0.5f)); // Color
 
             // Unbind the framebuffer, returning rendering control to the main window
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
     }
 
     // Get the name of the system
