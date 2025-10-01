@@ -132,12 +132,10 @@ namespace Framework {
         //AssetManager::Instance().SaveArrayToJson(TypeName<MeshProperties>::value, "src/Data/MeshAsset.json", "mesh");
         //AssetManager::Instance().PrintAssetsOfType(TypeName<TextureProperties>::value);
         //AssetManager::Instance().SaveArrayToJson(TypeName<TextureProperties>::value, "src/Data/TextureAsset.json", "textures");
-        auto* tex = AssetManager::Instance().Get<TextureProperties>(AssetManager::Instance().FindGuid<TextureProperties>());
         cube = Mesh::CreateUnitCubeData();
         plane = Mesh::CreateUnitSphereData();
         cone = Mesh::CreateUnitConeData();
         cylinder = Mesh::CreateUnitCylinderData();
-
         // Initialise 1 object into ECS (Temporary, liase and move de-serialize with loadmesh function handled at asset-handler)
 
 

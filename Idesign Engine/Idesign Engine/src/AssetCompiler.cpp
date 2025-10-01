@@ -141,6 +141,12 @@ namespace Framework
 
         // Write to file
         FILE* fp = fopen(outputPath.c_str(), "w");
+        if (!fp)
+        {
+            // Log error or show popup
+            std::cerr << "Failed to open file for writing, save cancelled" << std::endl;
+            return; // Prevent crash
+        }
         auto buffer = std::make_unique<char[]>(65536);
         rapidjson::FileWriteStream os(fp, buffer.get(), 65536);
         rapidjson::PrettyWriter<rapidjson::FileWriteStream> writer(os);

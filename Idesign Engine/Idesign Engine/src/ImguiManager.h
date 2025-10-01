@@ -20,6 +20,7 @@
 #include "AssetManager.h"
 #include <ComponentList.h>
 #include "AudioLoader.h"
+#include "UndoRedoSystem.h"
 
 namespace Framework {
 	class ImguiManager : public ISystem {
