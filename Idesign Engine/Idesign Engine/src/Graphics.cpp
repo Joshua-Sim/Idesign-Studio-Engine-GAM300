@@ -233,6 +233,8 @@ namespace Framework {
         }
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         lastTime = (float)glfwGetTime();
+        fontSystem.Initialize();
+
     }
 
     void Graphics::SetImguiManager(ImguiManager* manager)
