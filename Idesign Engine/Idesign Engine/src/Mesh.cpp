@@ -246,6 +246,21 @@ void Mesh::draw() const {
     glBindVertexArray(0);
 }
 
+void Mesh::cleanupGL() 
+{
+    if (vbo) {
+        glDeleteBuffers(1, &vbo);
+        vbo = 0;
+    }
+    if (vao) {
+        glDeleteVertexArrays(1, &vao);
+        vao = 0;
+    }
+    vertexCount = 0;
+    vertices.clear();
+    vertices.shrink_to_fit();
+}
+
 // move semantics
 Mesh::Mesh(Mesh&& other) noexcept {
     vao = other.vao; vbo = other.vbo; vertexCount = other.vertexCount;

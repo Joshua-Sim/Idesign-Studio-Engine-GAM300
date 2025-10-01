@@ -87,7 +87,37 @@ namespace Framework {
     // Destructor
     Graphics::~Graphics()
     {
+        // Delete HDR framebuffer resources
+        if (hdrFBO) glDeleteFramebuffers(1, &hdrFBO);
+        if (colorBuffer) glDeleteTextures(1, &colorBuffer);
+        if (rboDepth) glDeleteRenderbuffers(1, &rboDepth);
 
+        // Delete bloom ping-pong framebuffers & textures
+        glDeleteFramebuffers(2, pingpongFBO);
+        glDeleteTextures(2, pingpongColorbuffers);
+
+        // Delete screen quad VAO/VBO
+        if (quadVAO) glDeleteVertexArrays(1, &quadVAO);
+        if (quadVBO) glDeleteBuffers(1, &quadVBO);
+
+        // Cleanup geometry meshes (if they own VAOs/VBOs)
+        cube.cleanupGL();
+        plane.cleanupGL();
+        cone.cleanupGL();
+        cylinder.cleanupGL();
+
+        // Cleanup shaders (if your ShaderProgram has a cleanup function)
+        terrainShader.destroy();
+        meshShader.destroy();
+        blurShader.destroy();
+        finalShader.destroy();
+
+        // Finally, destroy GLFW window + terminate GLFW
+        if (window) {
+            glfwDestroyWindow(window);
+            window = nullptr;
+        }
+        glfwTerminate();
     }
 
     // Initialize the system

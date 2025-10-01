@@ -102,3 +102,12 @@ GLuint ShaderProgram::compile(GLenum type, const std::string& src) {
     }
     return sh;
 }
+
+// In ShaderProgram.cpp
+void ShaderProgram::destroy() 
+{
+    if (ID) {
+        glDeleteProgram(ID);
+        ID = 0;
+    }
+}

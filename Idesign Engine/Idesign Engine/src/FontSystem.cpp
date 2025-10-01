@@ -42,6 +42,11 @@ namespace Framework {
         else {
             std::cout << "INIT: FreeType Library initialized!" << std::endl;
         }
+
+
+        // Example default fonts
+        LoadFont("Assets/Font/arial.ttf", 40, "Arial");
+        SetActiveFont("Arial");
     }
 
     FontSystem::~FontSystem() {
@@ -74,9 +79,6 @@ namespace Framework {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
 
-        // Example default fonts
-        LoadFont("Assets/Font/arial.ttf", 40, "Arial");
-        SetActiveFont("Arial");
     }
 
     void FontSystem::Update(float deltaTime) {
