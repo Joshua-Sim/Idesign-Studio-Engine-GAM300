@@ -54,6 +54,7 @@
 #include "ImguiManager.h"
 #include "Coordinator.h"
 #include "ComponentList.h"
+#include "FontSystem.h"
 
 extern Framework::FontSystem fontSystem;
 extern Framework::Coordinator ecsInterface;
@@ -109,6 +110,7 @@ namespace Framework {
         ecsInterface.RegisterComponent<TransformComponent>();
         ecsInterface.RegisterComponent<MeshProperties>();
         ecsInterface.RegisterComponent<TextureProperties>();
+        ecsInterface.RegisterComponent<TextComponent>();
 
         //  ---- ECS INITIALIZATION --- 
         Signature signature;
@@ -142,6 +144,9 @@ namespace Framework {
         textureComponent.path = "Assets/PNG/test.png";
         TextureLoader::loadTexture(textureComponent, true);
 
+        TextComponent textComponent;
+        ecsInterface.AddComponent<TextComponent>(newEntity, textComponent);
+
         ecsInterface.AddComponent<Framework::TextureProperties>(newEntity, textureComponent);
         // ----------------- End object creation ------------------------------
 
@@ -173,7 +178,7 @@ namespace Framework {
 
         // Initialisers for OpenGL (IMPORTANT : always call these after every initialiser values)
         // If want to change any values, please change in header or reconstruct after calling
-        //terrainShader.initGL();
+        terrainShader.initGL();
         meshShader.initGL();
         blurShader.initGL();
         finalShader.initGL();
@@ -290,6 +295,7 @@ namespace Framework {
             for (auto const& entityId : mEntities) {
                 MeshProperties& meshComponent = ecsInterface.GetComponent<MeshProperties>(entityId);
                 TransformComponent& transformComponent = ecsInterface.GetComponent<TransformComponent>(entityId);
+                TextComponent& textComponent = ecsInterface.GetComponent<TextComponent>(entityId);
                 //TextureComponent& textureComponent = ecsInterface.GetComponent<TextureProperties>(entityId);
 
                 transformComponent.position += glm::vec3(0.0f, 1, 0.0) * deltaTime; // Increment Y axis to show ECS link
@@ -362,6 +368,11 @@ namespace Framework {
             finalShader.setFloat("bloomStrength", bloomStrength);
            
             renderQuad();
+
+            // Now overlay HUD text in 2D
+            fontSystem.SetActiveFont("Arial");
+            fontSystem.RenderText2D("Score: 100", 200.0f, 25.0f, 100.0f,
+                glm::vec3(1, 1, 1), w, h);
 
             // Unbind the framebuffer, returning rendering control to the main window
             glBindFramebuffer(GL_FRAMEBUFFER, 0);

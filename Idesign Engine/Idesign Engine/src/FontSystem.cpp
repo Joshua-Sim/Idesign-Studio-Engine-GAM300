@@ -15,57 +15,55 @@
 #include <iostream>
 #include <glew.h>
 #include <glm.hpp>
+#include <gtc/matrix_transform.hpp>
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
 namespace Framework {
 
-    FontSystem fontSystem; // Define the global object
+    FontSystem fontSystem; // global
 
-    std::string LoadShaderFromFile(const std::string& filePath) {
+    // Utility: load GLSL file into string
+    static std::string LoadShaderFromFile(const std::string& filePath) {
         std::ifstream shaderFile(filePath);
         if (!shaderFile.is_open()) {
             std::cerr << "Failed to open shader file: " << filePath << std::endl;
             return "";
         }
-
         std::stringstream buffer;
         buffer << shaderFile.rdbuf();
         return buffer.str();
     }
 
-    // Constructor for the FontSystem
     FontSystem::FontSystem() {
         if (FT_Init_FreeType(&ft)) {
             std::cerr << "Error: Failed to initialize FreeType Library" << std::endl;
         }
         else {
-            std::cerr << "INIT: Initialized FreeType Library!" << std::endl;
+            std::cout << "INIT: FreeType Library initialized!" << std::endl;
         }
     }
 
-    // Destructor
     FontSystem::~FontSystem() {
         for (auto& fontPair : FontCache) {
             for (auto& charPair : fontPair.second) {
-                glDeleteTextures(1, &charPair.second.TextureID);  // Delete the texture for each glyph
+                glDeleteTextures(1, &charPair.second.TextureID);
             }
         }
-        FT_Done_FreeType(ft); // Free the FreeType library
+        FT_Done_FreeType(ft);
     }
 
-    // Initializes the FontSystem
     void FontSystem::Initialize() {
-        std::string vertexSource = LoadShaderFromFile("src/UE_Font.vert");
-        std::string fragmentSource = LoadShaderFromFile("src/UE_Font.frag");
-
+        std::string vertexSource = LoadShaderFromFile("Assets/fontshaders/textvert.glsl");
+        std::string fragmentSource = LoadShaderFromFile("Assets/fontshaders/textfrag.glsl");
         if (vertexSource.empty() || fragmentSource.empty()) {
-            std::cerr << "Error loading shaders!" << std::endl;
+            std::cerr << "Error loading text shaders!" << std::endl;
             return;
         }
 
         shader.Compile(vertexSource.c_str(), fragmentSource.c_str());
 
+        // Setup VAO/VBO
         glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);
         glBindVertexArray(VAO);
@@ -76,18 +74,15 @@ namespace Framework {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
 
-        LoadFont("../Unnamed Studios/Assets/Font/arial.ttf", 40, "Arial");
-        LoadFont("../Unnamed Studios/Assets/Font/RubikWetPaint-Regular.ttf", 40, "Rubik");
-        LoadFont("../Unnamed Studios/Assets/Font/Salmon.ttf", 40, "Salmon");
-        LoadFont("../Unnamed Studios/Assets/Font/SalmonBold.ttf", 40, "SalmonBold");
+        // Example default fonts
+        LoadFont("Assets/Font/arial.ttf", 40, "Arial");
+        SetActiveFont("Arial");
     }
 
-    // Updates the FontSystem
     void FontSystem::Update(float deltaTime) {
         (void)deltaTime;
     }
 
-    // Loads a font from a file
     bool FontSystem::LoadFont(const std::string& fontPath, int fontSize, const std::string& fontName) {
         FT_Face face;
         if (FT_New_Face(ft, fontPath.c_str(), 0, &face)) {
@@ -96,9 +91,8 @@ namespace Framework {
         }
 
         FT_Set_Pixel_Sizes(face, 0, fontSize);
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // Disable byte-alignment restriction
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-        // Create a map to store characters for this font
         std::unordered_map<char, Character> characters;
 
         for (unsigned char c = 0; c < 128; c++) {
@@ -110,17 +104,11 @@ namespace Framework {
             GLuint texture;
             glGenTextures(1, &texture);
             glBindTexture(GL_TEXTURE_2D, texture);
-            glTexImage2D(
-                GL_TEXTURE_2D,
-                0,
-                GL_RED,
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RED,
                 face->glyph->bitmap.width,
                 face->glyph->bitmap.rows,
-                0,
-                GL_RED,
-                GL_UNSIGNED_BYTE,
-                face->glyph->bitmap.buffer
-            );
+                0, GL_RED, GL_UNSIGNED_BYTE,
+                face->glyph->bitmap.buffer);
 
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -134,16 +122,15 @@ namespace Framework {
                 static_cast<GLuint>(face->glyph->advance.x)
             };
 
-            characters.insert(std::pair<char, Character>(c, character));
+            characters.insert({ c, character });
         }
 
-        FontCache[fontName] = characters; // Store characters in FontCache under fontName
-        FT_Done_Face(face); // Frees face
+        FontCache[fontName] = characters;
+        FT_Done_Face(face);
 
         return true;
     }
 
-    // Sets the active font for rendering
     void FontSystem::SetActiveFont(const std::string& fontName) {
         if (FontCache.find(fontName) != FontCache.end()) {
             activeFont = fontName;
@@ -153,18 +140,28 @@ namespace Framework {
         }
     }
 
-    // Renders text on the screen
-    void FontSystem::RenderText(const std::string& text, float x, float y, float scale, glm::vec3 color, glm::mat4 projection) {
+    // 2D HUD text
+    void FontSystem::RenderText2D(const std::string& text,
+        float x, float y,
+        float scale,
+        glm::vec3 color,
+        float screenWidth,
+        float screenHeight) {
         shader.Use();
+        glm::mat4 projection = glm::ortho(0.0f, screenWidth, 0.0f, screenHeight);
+        glm::mat4 model = glm::mat4(1.0f);
+
         shader.SetUniform("textColor", color);
         shader.SetUniform("projection", projection);
+        shader.SetUniform("model", model);
+
         glActiveTexture(GL_TEXTURE0);
         glBindVertexArray(VAO);
 
         auto& characters = FontCache[activeFont];
 
-        for (auto c = text.begin(); c != text.end(); ++c) {
-            Character ch = characters[*c];
+        for (char c : text) {
+            Character ch = characters[c];
 
             float xpos = x + ch.Bearing.x * scale;
             float ypos = y - (ch.Bearing.y * scale);
@@ -184,7 +181,55 @@ namespace Framework {
             glBindTexture(GL_TEXTURE_2D, ch.TextureID);
             glBindBuffer(GL_ARRAY_BUFFER, VBO);
             glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+            x += (ch.Advance >> 6) * scale;
+        }
 
+        glBindVertexArray(0);
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
+
+    // 3D world text
+    void FontSystem::RenderText3D(const std::string& text,
+        const glm::mat4& model,
+        const glm::mat4& view,
+        const glm::mat4& projection,
+        float scale,
+        glm::vec3 color) {
+        shader.Use();
+
+        shader.SetUniform("textColor", color);
+        shader.SetUniform("projection", projection);
+        shader.SetUniform("view", view);
+        shader.SetUniform("model", model);
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindVertexArray(VAO);
+
+        auto& characters = FontCache[activeFont];
+        float x = 0.0f;
+
+        for (char c : text) {
+            Character ch = characters[c];
+
+            float xpos = x + ch.Bearing.x * scale;
+            float ypos = -(ch.Bearing.y * scale);
+            float w = ch.Size.x * scale;
+            float h = ch.Size.y * scale;
+
+            float vertices[6][4] = {
+                { xpos,     ypos + h,   0.0f, 1.0f },
+                { xpos,     ypos,       0.0f, 0.0f },
+                { xpos + w, ypos,       1.0f, 0.0f },
+
+                { xpos,     ypos + h,   0.0f, 1.0f },
+                { xpos + w, ypos,       1.0f, 0.0f },
+                { xpos + w, ypos + h,   1.0f, 1.0f }
+            };
+
+            glBindTexture(GL_TEXTURE_2D, ch.TextureID);
+            glBindBuffer(GL_ARRAY_BUFFER, VBO);
+            glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
             glDrawArrays(GL_TRIANGLES, 0, 6);
             x += (ch.Advance >> 6) * scale;
         }
