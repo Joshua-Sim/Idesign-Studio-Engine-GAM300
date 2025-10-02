@@ -1,16 +1,23 @@
 
 #include <pch.h>
 #include <AssetCompiler.h>
+#include "SceneManager.h"
 
 extern Framework::Coordinator ecsInterface;
 namespace Framework
 {
     void loadScene(const std::string& scenePath)
     {
-        // Load and parse scene.json
+        // Parse JSON
         rapidjson::Document doc;
         {
             FILE* fp = fopen(scenePath.c_str(), "r");
+            if (!fp)
+            {
+                std::cerr << "Failed to open scene file: " << scenePath << "\n";
+                return;
+            }
+
             std::unique_ptr<char[]> buffer = std::make_unique<char[]>(65536);
             rapidjson::FileReadStream is(fp, buffer.get(), 65536);
             doc.ParseStream(is);
@@ -23,18 +30,31 @@ namespace Framework
             return;
         }
 
+        // ---- substr and remove .json and directory for scene maping in scene manager ----
+        std::string cleanName = scenePath;
+        size_t lastSlash = cleanName.find_last_of("/\\");
+        if (lastSlash != std::string::npos)
+            cleanName = cleanName.substr(lastSlash + 1);
+
+        size_t lastDot = cleanName.find_last_of('.');
+        if (lastDot != std::string::npos)
+            cleanName = cleanName.substr(0, lastDot);
+
         const auto& entities = doc["Entities"].GetArray();
+
+        // ----- substr remove end -----
 
         for (const auto& entityJson : entities)
         {
             Entity entity = ecsInterface.CreateEntity();
 
-            // Load entity name
+            // Entity name
             if (entityJson.HasMember("name") && entityJson["name"].IsString())
             {
                 std::string name = entityJson["name"].GetString();
                 ecsInterface.SetEntityName(entity, name);
             }
+
             const auto& components = entityJson["components"];
 
             // Transform
@@ -45,7 +65,7 @@ namespace Framework
                 ecsInterface.AddComponent(entity, transform);
             }
 
-            // MeshProperties
+            // Mesh
             if (components.HasMember("MeshReference"))
             {
                 const auto& meshRef = components["MeshReference"];
@@ -82,10 +102,11 @@ namespace Framework
                     }
                 }
             }
-            // Add more component types here (AudioReference, MeshReference, etc.)
+
+            sceneManager.RegisterEntityToScene(entity, cleanName);
         }
-        std::cout << "Scene loaded successfully: " << entities.Size() << " entities created.\n";
     }
+
 
     void saveScene(const std::string& outputPath)
     {

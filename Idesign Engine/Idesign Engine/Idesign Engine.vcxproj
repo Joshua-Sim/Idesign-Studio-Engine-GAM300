@@ -228,6 +228,7 @@
     <ClInclude Include="src\rapidjson\stringbuffer.h" />
     <ClInclude Include="src\rapidjson\uri.h" />
     <ClInclude Include="src\rapidjson\writer.h" />
+    <ClInclude Include="src\SceneManager.h" />
     <ClInclude Include="src\ShaderProgram.h" />
     <ClInclude Include="src\SignalHandler.h" />
     <ClInclude Include="src\System.h" />
@@ -302,6 +303,7 @@
     </ClCompile>
     <ClCompile Include="src\PhysicsSystem.cpp" />
     <ClCompile Include="src\PlayerSystem.cpp" />
+    <ClCompile Include="src\SceneManager.cpp" />
     <ClCompile Include="src\ShaderProgram.cpp" />
     <ClCompile Include="src\SignalHandler.cpp" />
     <ClCompile Include="src\TagManager.cpp" />

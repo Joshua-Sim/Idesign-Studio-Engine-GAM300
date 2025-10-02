@@ -16,6 +16,7 @@
 #include "EngineState.h"
 #include "Debugger.h"
 #include <ImguiManager.h>
+#include "SceneManager.h"
 
 extern Framework::Coordinator ecsInterface;
 
@@ -324,14 +325,14 @@ namespace Framework {
                         //// Ensure the file path is not empty before proceeding
                         if (!filePath.empty())
                         {
-                            ecsInterface.ClearEntities();
-                            loadScene(filePath);
+                            // Load non additive
+                            Framework::sceneManager.LoadScene(filePath);
                         }
                     }
                     if (ImGui::MenuItem("Save"))
                     {
                         std::string savePath = SaveFileDialog();
-                        saveScene(savePath);
+                        Framework::sceneManager.SaveScene(savePath);
                     }
                     ImGui::EndMenu();
                 }
@@ -683,20 +684,59 @@ namespace Framework {
                     ecsInterface.DestroyEntity(selectedEntity);
                 }
 
+
                 ImGui::Begin("Entity List");
-                // Display each entity as a selectable item
+
+             
+                std::unordered_set<Entity> registered;
+                for (const auto& [sceneName, entities] : Framework::sceneManager.GetSceneEntities())
+                    registered.insert(entities.begin(), entities.end());
+
+                // 1. Show entities without scenes
                 for (Entity entity : ecsInterface.GetEntities())
                 {
-                    std::string entityName = ecsInterface.GetEntityName(entity);
-
-                    // Use Selectable for each entity and check if it's clicked
-                    if (ImGui::Selectable(entityName.c_str(), selectedEntity == entity))
+                    if (!registered.count(entity))
                     {
-                        selectedEntity = entity;  // Set selected entity to this one
-                        isPropertiesWindowOpen = true;  // Open properties window
+                        if (!ecsInterface.IsEntityValid(entity))
+                            continue;
+
+                        std::string entityName = ecsInterface.GetEntityName(entity);
+                        if (entityName.empty()) entityName = "Entity " + std::to_string(entity);
+
+                        if (ImGui::Selectable(entityName.c_str(), selectedEntity == entity))
+                        {
+                            selectedEntity = entity;
+                            isPropertiesWindowOpen = true;
+                        }
                     }
                 }
+
+                // 2. Then show scene-grouped entities
+                for (const auto& [sceneName, entities] : Framework::sceneManager.GetSceneEntities())
+                {
+                    if (ImGui::CollapsingHeader(sceneName.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+                    {
+                        for (Entity entity : entities)
+                        {
+                            if (!ecsInterface.IsEntityValid(entity))
+                                continue;
+
+                            std::string entityName = ecsInterface.GetEntityName(entity);
+                            if (entityName.empty()) entityName = "Entity " + std::to_string(entity);
+
+                            if (ImGui::Selectable(entityName.c_str(), selectedEntity == entity))
+                            {
+                                selectedEntity = entity;
+                                isPropertiesWindowOpen = true;
+                            }
+                        }
+                    }
+                }
+
                 ImGui::End();
+
+
+
 
                 // Separate panel to edit the selected entity's name
                 if (isPropertiesWindowOpen && selectedEntity != std::numeric_limits<Entity>::max())

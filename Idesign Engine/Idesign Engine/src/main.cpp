@@ -21,6 +21,7 @@
 #include "LogicManager.h"
 #include <ImguiManager.h>
 #include <SignalHandler.h>
+#include "Scenemanager.h"
 
 #include <WindowConfigProperties.h>
 #include "AudioLoader.h"
@@ -50,7 +51,7 @@ int main(void)
     //Create the core engine which manages all the systems that make up the game
     auto engine = std::make_unique<CoreEngine>();
 
-    // ------- Create systems below -------- //
+    // ------- Create systems below -------- 
     //  Windows
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     //CompileSingleObject<WindowConfig>("src/Data/WindowAsset.json", "src/Data/WindowAsset.cfg", g_WindowConfigProps);
@@ -88,10 +89,12 @@ int main(void)
     // Initialize the InputHandler singleton
     InputHandler::Initialize(graphicsSystem->GetWindow());
 
-
+    auto sceneManager = ecsInterface.RegisterSystem<SceneManager>();
     auto imguiSystem = ecsInterface.RegisterSystem<ImguiManager>();
     imguiSystem->SetGraphicsSystem(graphicsSystem.get());
     graphicsSystem->SetImguiManager(imguiSystem.get());
+    
+
     //Access the InputHandler instance from the singleton
     InputHandler* inputHandlerSystem = InputHandler::GetInstance();
     if (!inputHandlerSystem) {
@@ -111,6 +114,9 @@ int main(void)
     engine->AddSystem(inputHandlerSystem);
     engine->AddSystem(messageSystem.get());
     engine->AddSystem(imguiSystem.get());
+
+    // Register scene manager last
+    engine->AddSystem(sceneManager.get());
 
     // Initialize the engine and run the main game loop
     engine->Initialize();
