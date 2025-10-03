@@ -220,6 +220,11 @@ namespace Framework {
         cone.initGL();
         //cylinder.initGL();
 
+        //FONT SYSTEM
+        fontSystem.Initialize();
+        fontSystem.LoadFont("Assets/Font/arial.ttf", 40, "Arial");
+        fontSystem.SetActiveFont("Arial");
+
 
         // lights (use member containers)
         sun = DirectionalLightCPU{};
@@ -294,7 +299,6 @@ namespace Framework {
         }
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         lastTime = (float)glfwGetTime();
-        fontSystem.Initialize();
 
     }
 
@@ -358,7 +362,7 @@ namespace Framework {
             for (auto const& entityId : mEntities) {
                 MeshProperties& meshComponent = ecsInterface.GetComponent<MeshProperties>(entityId);
                 TransformComponent& transformComponent = ecsInterface.GetComponent<TransformComponent>(entityId);
-                TextComponent& textComponent = ecsInterface.GetComponent<TextComponent>(entityId);
+                //TextComponent& textComponent = ecsInterface.GetComponent<TextComponent>(entityId);
                 //TextureComponent& textureComponent = ecsInterface.GetComponent<TextureProperties>(entityId);
 
                 transformComponent.position += glm::vec3(0.0f, 1, 0.0) * deltaTime; // Increment Y axis to show ECS link
@@ -483,10 +487,9 @@ namespace Framework {
             renderQuad();
 
             // Now overlay HUD text in 2D
-            fontSystem.SetActiveFont("Arial");
-            /*fontSystem.RenderText2D("Score: 100", 10.f, 10.0f, 1.f,
+            fontSystem.RenderText2D("Score: 100", 10.f, 10.0f, 1.f,
                 glm::vec3(1.0f, 1.0f, 0.5f), w, h);
-           */
+           
             // In your main rendering loop (e.g., in Graphics::Update)
 
             // 1. Get the camera's view and projection matrices
@@ -504,11 +507,11 @@ namespace Framework {
             textModel = glm::translate(textModel, glm::vec3(0.0f, 5.0f, 0.0f)); // Position in world space
 
             // 5. Call the RenderText3D function
-            fontSystem.RenderText3D("Score: 100",
+            fontSystem.RenderText3D("iDesign Engine by iDesign Studio",
                 textModel,
                 viewMatrix,
                 projectionMatrix,
-                0.5f, // Scale
+                0.05f, // Scale
                 glm::vec3(1.0f, 1.0f, 0.5f)); // Color
 
             // --- Handle a pick request coming from ImGui ---

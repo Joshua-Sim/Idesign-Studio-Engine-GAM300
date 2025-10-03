@@ -43,10 +43,6 @@ namespace Framework {
             std::cout << "INIT: FreeType Library initialized!" << std::endl;
         }
 
-
-        // Example default fonts
-        LoadFont("Assets/Font/arial.ttf", 40, "Arial");
-        SetActiveFont("Arial");
     }
 
     FontSystem::~FontSystem() {
