@@ -50,6 +50,7 @@ namespace Framework {
 		void Update(float deltaTime) override;
 		std::string GetName() override;
         static GLuint CreateFramebuffer(int width, int height, GLuint& texture, GLuint& rbo_fb);
+        void RequestPickUV(float u, float v);
 
 		////linking
 		//GraphicsWindows* graphicWindows;
@@ -119,6 +120,15 @@ namespace Framework {
         GLuint quadVBO = 0;
 
         ImguiManager* m_imguiManager = nullptr;
+        // jay objpick
+        GLuint pickFBO[2] = { 0,0 };
+        GLuint pickColor[2] = { 0,0 };   // GL_RGB8 color IDs
+        GLuint pickDepth[2] = { 0,0 };   // GL_DEPTH24 (shared per FBO)
+        int    pickWrite = 0;                // current we render into
+        int    pickRead = 1;                // previous we read from
+        ShaderProgram pickShader{ "Assets/shaders/pickvert.glsl", "Assets/shaders/pickfrag.glsl" };
+        glm::vec2 pendingPickUV = { -1.0f,-1.0f };
+        int lastPickedId = -1;
 	};
 
 }

@@ -357,6 +357,9 @@
     <ClInclude Include="src\MeshProperties.h">
       <Filter>Header Files\Assets\Property</Filter>
     </ClInclude>
+    <ClInclude Include="src\ObjPicking.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />
@@ -402,6 +405,12 @@
     </None>
     <None Include="Assets\fontshaders\textfrag.glsl">
       <Filter>Font Shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\pickvert.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\pickfrag.glsl">
+      <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -535,6 +544,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\AudioLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ObjPicking.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

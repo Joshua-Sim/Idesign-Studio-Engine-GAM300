@@ -925,6 +925,20 @@ namespace Framework {
 
                     // Render the framebuffer texture within the calculated size
                     ImGui::Image((ImTextureID)(intptr_t)gameTexture, ImVec2(newWidth, newHeight), ImVec2(0, 1), ImVec2(1, 0));
+					// jay handle mouse click and get UV coordinates
+                    if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
+                        ImVec2 min = ImGui::GetItemRectMin();
+                        ImVec2 max = ImGui::GetItemRectMax();
+                        ImVec2 pos = ImGui::GetIO().MousePos;
+
+                        float u = (pos.x - min.x) / (max.x - min.x);
+                        float v = (pos.y - min.y) / (max.y - min.y);
+                        v = 1.0f - v; // your Image uses (0,1) to (1,0), so flip
+
+                        // hand normalized UV to Graphics for the readback
+                        m_graphicsSystem->RequestPickUV(u, v);
+                       
+                    }
                 }
                 ImGui::End();
             }

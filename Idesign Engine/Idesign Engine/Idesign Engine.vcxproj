@@ -184,6 +184,7 @@
     <ClInclude Include="src\MeshProperties.h" />
     <ClInclude Include="src\Message.h" />
     <ClInclude Include="src\MessageSystem.h" />
+    <ClInclude Include="src\ObjPicking.h" />
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\PhysicsSystem.h" />
     <ClInclude Include="src\PlayerSystem.h" />
@@ -254,6 +255,8 @@
     <None Include="Assets\shaders\lightingvert.glsl" />
     <None Include="Assets\shaders\meshfrag.glsl" />
     <None Include="Assets\shaders\meshvert.glsl" />
+    <None Include="Assets\shaders\pickfrag.glsl" />
+    <None Include="Assets\shaders\pickvert.glsl" />
     <None Include="Assets\shaders\postprocess.glsl" />
     <None Include="Assets\shaders\terrainfrag.glsl" />
     <None Include="Assets\shaders\terrainvert.glsl" />
@@ -299,6 +302,7 @@
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\MeshLoader.cpp" />
     <ClCompile Include="src\MessageSystem.cpp" />
+    <ClCompile Include="src\ObjPicking.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>

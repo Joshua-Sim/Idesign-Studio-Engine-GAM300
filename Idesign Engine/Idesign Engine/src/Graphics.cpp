@@ -228,6 +228,37 @@ namespace Framework {
         spotLights.push_back({ {0,3,0}, {0,-1,0}, {1,1,1}, 2.0f, 18.0f,
                                glm::radians(10.f), glm::radians(15.f), true });
 
+        //jay double buffer pick fbo
+        auto makePickFBO = [&](int w, int h, int idx) {
+            glGenFramebuffers(1, &pickFBO[idx]);
+            glBindFramebuffer(GL_FRAMEBUFFER, pickFBO[idx]);
+
+            glGenTextures(1, &pickColor[idx]);
+            glBindTexture(GL_TEXTURE_2D, pickColor[idx]);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, pickColor[idx], 0);
+
+            glGenRenderbuffers(1, &pickDepth[idx]);
+            glBindRenderbuffer(GL_RENDERBUFFER, pickDepth[idx]);
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, w, h);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, pickDepth[idx]);
+
+            GLenum drawBuf = GL_COLOR_ATTACHMENT0;
+            glDrawBuffers(1, &drawBuf);
+
+            if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+                std::cout << "ERROR: pick FBO " << idx << " incomplete!\n";
+
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            };
+
+        int w = 1280, h = 720;
+
+        pickShader.initGL();
+        makePickFBO(w, h, 0);
+        makePickFBO(w, h, 1);
 
         // --- HDR FRAMEBUFFER SETUP ---
         glGenFramebuffers(1, &hdrFBO);
@@ -364,6 +395,55 @@ namespace Framework {
                 meshShader.setMat4("uModel", model);
                 cylinder.draw(); //change line to whichever you want to test : 1. cube 2. cylinder 3. plane 4.cone follow by .draw();
             }
+            // object pick
+            //jay
+            //render color-IDs into offscreen (double-buffered)
+            glBindFramebuffer(GL_FRAMEBUFFER, pickFBO[pickWrite]);
+
+            // IMPORTANT: viewport must match the pick FBO size
+            // If you created pick FBOs with (config->x, config->y), use those.
+            // If you created them at 1280x720, set (1280,720) here OR recreate the FBOs to match (w,h).
+            glViewport(0, 0, w, h);
+
+            glEnable(GL_DEPTH_TEST);
+            glClearColor(0, 0, 0, 0); // id=0 => "no hit"
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            pickShader.use();
+            pickShader.setMat4("uProj", proj);
+            pickShader.setMat4("uView", view);
+
+            // ECS draw loop with encoded ID color (same transforms as scene)
+            for (auto const& entityId : mEntities) {
+                auto& meshComponent = ecsInterface.GetComponent<MeshProperties>(entityId);
+                auto& transformComponent = ecsInterface.GetComponent<TransformComponent>(entityId);
+
+                glm::mat4 model(1.0f);
+                model = glm::translate(model, transformComponent.position);
+                model = glm::rotate(model, transformComponent.rotation.x, glm::vec3(1, 0, 0));
+                model = glm::rotate(model, transformComponent.rotation.y, glm::vec3(0, 1, 0));
+                model = glm::rotate(model, transformComponent.rotation.z, glm::vec3(0, 0, 1));
+                model = glm::scale(model, transformComponent.scale);
+                pickShader.setMat4("uModel", model);
+
+                uint32_t id = static_cast<uint32_t>(entityId) + 1u; // 0 reserved for "no hit"
+                glm::vec3 idColor = {
+                    ((id) & 0xFF) / 255.0f,
+                    ((id >> 8) & 0xFF) / 255.0f,
+                    ((id >> 16) & 0xFF) / 255.0f
+                };
+                pickShader.setVec3("uIdColor", idColor);
+
+                glBindVertexArray(meshComponent.vao);
+                glDrawElements(GL_TRIANGLES, meshComponent.indexCount, GL_UNSIGNED_INT, 0);
+            }
+
+            // (Optional) give your 5 primitives fixed IDs and draw them here too if you want them pickable.
+
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+            // rotate buffers so we read the *previous* one this frame
+            std::swap(pickWrite, pickRead);
 
             // ====================================================================
             // 2. BLOOM PASS: Apply a two-pass Gaussian blur
@@ -431,6 +511,28 @@ namespace Framework {
                 0.5f, // Scale
                 glm::vec3(1.0f, 1.0f, 0.5f)); // Color
 
+            // --- Handle a pick request coming from ImGui ---
+            //jay
+            if (pendingPickUV.x >= 0.0f && pendingPickUV.y >= 0.0f) {
+                int pw = 1280, ph = 720; // keep these in sync with how you created the pick FBOs
+                int px = glm::clamp(int(pendingPickUV.x * pw), 0, pw - 1);
+                int py = glm::clamp(int(pendingPickUV.y * ph), 0, ph - 1);
+
+                glBindFramebuffer(GL_READ_FRAMEBUFFER, pickFBO[pickRead]);
+                unsigned char rgb[3] = { 0,0,0 };
+                glReadPixels(px, py, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, rgb);
+                glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+
+                uint32_t id = (uint32_t)rgb[0] | ((uint32_t)rgb[1] << 8) | ((uint32_t)rgb[2] << 16);
+                lastPickedId = (id == 0) ? -1 : int(id) - 1;
+
+                pendingPickUV = { -1.0f, -1.0f };
+
+                if (lastPickedId >= 0) {
+                    std::cout << "Picked entity: " << lastPickedId << "\n";
+                }
+            }
+
             // Unbind the framebuffer, returning rendering control to the main window
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -456,7 +558,9 @@ namespace Framework {
     {
         glViewport(0, 0, w, h);
     }
-
+    void Graphics::RequestPickUV(float u, float v) {
+        pendingPickUV = glm::vec2(u, v);
+    }
     // DO NOT CHANGE
     void Graphics::mouse_callback(GLFWwindow* window, double xpos, double ypos)
     {
