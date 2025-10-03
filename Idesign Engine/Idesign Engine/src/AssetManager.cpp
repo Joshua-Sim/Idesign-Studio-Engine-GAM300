@@ -14,6 +14,49 @@
 
 namespace Framework
 {
+    AssetManager::~AssetManager()
+    {
+        AssetManager::Instance().SaveArrayToJson(TypeName<MeshProperties>::value, "src/Data/MeshAsset.json", "mesh");
+        AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, "src/Data/AudioAsset.json", "audio");
+        AssetManager::Instance().SaveArrayToJson(TypeName<TextureProperties>::value, "src/Data/TextureAsset.json", "textures");
+
+        /*
+        for (const auto& guid : m_DirtyAssets)
+        {
+            auto it = m_Assets.find(guid);
+            if (it == m_Assets.end()) continue;
+
+            const auto& entry = it->second;
+            if (!entry.pObject || !entry.pProps) continue;
+
+            std::ofstream out(entry.binaryPath, std::ios::binary);
+
+            if (entry.typeName == TypeName<MeshProperties>::value)
+            {
+                auto* mesh = static_cast<MeshProperties*>(entry.pObject.get());
+                JsonToBinary(out, *mesh, *entry.pProps);
+            }
+            else if (entry.typeName == TypeName<AudioProperties>::value)
+            {
+                auto* audio = static_cast<AudioProperties*>(entry.pObject.get());
+                JsonToBinary(out, *audio, *entry.pProps);
+            }
+            else if (entry.typeName == TypeName<TextureProperties>::value)
+            {
+                auto* tex = static_cast<TextureProperties*>(entry.pObject.get());
+                JsonToBinary(out, *tex, *entry.pProps);
+            }
+            else
+            {
+                std::cerr << "SaveAssets Unknown asset type: " << entry.typeName << std::endl;
+            }
+            out.close();
+            std::cout << "SaveAssets Saved: " << guid << "  " << entry.binaryPath << std::endl;
+        }
+        m_DirtyAssets.clear(); // Reset after saving
+        */
+    }
+
     void AssetManager::PrintAssetsOfType(const std::string& typeName)
     {
         std::cout << "=== Assets of Type: " << typeName << " ===\n";
@@ -60,13 +103,45 @@ namespace Framework
         }
     }
 
-    void AssetManager::Unload(const std::string& key)
+    void AssetManager::Unload(const std::string& guid)
     {
-        auto it = m_Assets.find(key);
-        if (it != m_Assets.end())
+        auto it = m_Assets.find(guid);
+        if (it == m_Assets.end()) return;
+
+        const AssetEntry& entry = it->second;
+
+        std::string filePath;
+
+        // Use reflection to find the "path" property
+        if (entry.pProps)
         {
-            m_Assets.erase(it);
+            for (const auto& prop : entry.pProps->m_Props)
+            {
+                if (std::string(prop.m_pName) == "path" && prop.m_Type == prop::STRING && prop.m_fnGet)
+                {
+                    prop.m_fnGet(entry.pObject.get(), &filePath);
+                    break;
+                }
+            }
         }
+
+        // Delete file from disk
+        if (!filePath.empty() && std::filesystem::exists(filePath))
+        {
+            std::error_code ec;
+            std::filesystem::remove(filePath, ec);
+            if (ec)
+            {
+                std::cerr << "Failed to delete file: " << filePath << "\nReason: " << ec.message() << std::endl;
+            }
+            else
+            {
+                std::cout << "Deleted file from disk: " << filePath << std::endl;
+            }
+        }
+
+        // Remove from memory
+        m_Assets.erase(it);
     }
 
     bool AssetManager::SaveToJson(void* pObject, const std::string& filePath, const prop_list& props)

@@ -31,8 +31,12 @@ namespace Framework {
     std::string errorMessage;
     bool showErrorPopup = false;
 
+    // For Audio
     static TextureProperties g_AudioIcon;
     static bool g_AudioIconLoaded = false;
+
+    static TextureProperties g_ObjIcon;
+    static bool g_ObjIconLoaded = false;
 
     // Get the name of the system
     std::string ImguiManager::GetName()
@@ -150,7 +154,8 @@ namespace Framework {
 
         const std::string textureFolder = "Assets/Textures";
         const std::string audioFolder = "Assets/Audio";
-        // .obj files nid to do as well !!!!!!
+        const std::string meshFolder = "Assets/Objects";
+
         std::string finalPath;
         std::string error;
 
@@ -174,7 +179,7 @@ namespace Framework {
                     if (MoveFileToAssetFolder(filePath, textureFolder, finalPath, error))
                     {
                         auto texPtr = std::make_unique<TextureProperties>();
-                        texPtr->name = fileName;
+                        texPtr->name = std::filesystem::path(fileName).stem().string();
                         texPtr->path = finalPath;
                         TextureLoader::loadTexture(*texPtr, true); // Load using reference
                         AssetManager::Instance().RegisterAsset<TextureProperties>
@@ -208,7 +213,7 @@ namespace Framework {
                     if (MoveFileToAssetFolder(filePath, audioFolder, finalPath, error))
                     {
                         auto audioPtr = std::make_unique<AudioProperties>();
-                        audioPtr->name = fileName;
+                        audioPtr->name = std::filesystem::path(fileName).stem().string();
                         audioPtr->path = finalPath;
                         audioPtr->mode = "loop";
                         audioPtr->soundType = "background";
@@ -231,6 +236,42 @@ namespace Framework {
                 else
                 {
                     std::cout << "Audio already exists: " << fileName << std::endl;
+                }
+            }
+
+            // Handle obj files
+            else if (extension == "obj")
+            {
+                auto existingGuid = AssetManager::Instance().FindGuid<MeshProperties>(fileName);
+                if (existingGuid.empty())
+                {
+                    if (MoveFileToAssetFolder(filePath, meshFolder, finalPath, error))
+                    {
+                        auto meshPtr = std::make_unique<MeshProperties>();
+                        meshPtr->name = std::filesystem::path(fileName).stem().string();
+                        meshPtr->guid = GenerateGUID(); // Ensure GUID is set
+                        meshPtr->path = finalPath;
+
+                        MeshLoader::loadMesh(finalPath, *meshPtr); // Load mesh data
+
+                        AssetManager::Instance().RegisterAsset<MeshProperties>(
+                            std::move(meshPtr),
+                            &g_MeshProps,
+                            finalPath
+                        );
+                        AssetManager::Instance().SaveArrayToJson(TypeName<MeshProperties>::value, "src/Data/MeshAsset.json", "mesh");
+                        std::cout << "Mesh added: " << fileName << " to " << finalPath << std::endl;
+                    }
+                    else
+                    {
+                        errorMessage = "Failed to move mesh:\n" + error;
+                        showErrorPopup = true;
+                        return;
+                    }
+                }
+                else
+                {
+                    std::cout << "Mesh already exists: " << fileName << std::endl;
                 }
             }
         }
@@ -277,9 +318,16 @@ namespace Framework {
 
         if (!g_AudioIconLoaded)
         {
-            g_AudioIcon.path = "images/test.png"; // your default icon path
+            g_AudioIcon.path = "Assets/Textures/music.png"; // your default icon path
             TextureLoader::loadTexture(g_AudioIcon, false);
             g_AudioIconLoaded = true;
+        }
+
+        if (!g_ObjIconLoaded)
+        {
+            g_ObjIcon.path = "Assets/Textures/obj.png"; // your default icon path
+            TextureLoader::loadTexture(g_ObjIcon, false);
+            g_ObjIconLoaded = true;
         }
     }
 
@@ -406,7 +454,12 @@ namespace Framework {
 
                         if (ImGui::Button("Apply", ImVec2(buttonWidth, 0)))
                         {
-                            tex->name = renameBuffers[tex->guid];
+                            std::string newName = renameBuffers[tex->guid];
+                            if (newName != tex->name)
+                            {
+                                tex->name = newName;
+                                AssetManager::Instance().MarkDirty(tex->guid);
+                            }
                             ImGui::CloseCurrentPopup();
                         }
 
@@ -437,14 +490,19 @@ namespace Framework {
                     }
 
                     // Texture name centered below image
-                    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + (imageSize.x - ImGui::CalcTextSize(tex->name.c_str()).x) * 0.5f);
-
                     const int maxChars = 10;
-                    if (tex->name.length() > maxChars)
-                        tex->name = tex->name.substr(0, maxChars - 3) + "...";
+                    std::string displayName = tex->name;
+                    if (displayName.length() > maxChars)
+                        displayName = displayName.substr(0, maxChars - 3) + "...";
 
+                    // Now center based on the truncated name
+                    float textWidth = ImGui::CalcTextSize(displayName.c_str()).x;
+                    float centerOffset = (imageSize.x - textWidth) * 0.5f;
+                    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + centerOffset);
+
+                    // Display
                     ImGui::PushTextWrapPos(ImGui::GetCursorPosX() + imageSize.x);
-                    ImGui::TextWrapped("%s", tex->name.c_str());
+                    ImGui::TextWrapped("%s", displayName.c_str());
                     ImGui::PopTextWrapPos();
 
                     ImGui::EndGroup();
@@ -457,7 +515,7 @@ namespace Framework {
 
                 for (const auto& guid : texturesToDelete)
                 {
-                    Framework::AssetManager::Instance().Unload(guid);
+                    AssetManager::Instance().Unload(guid);
                 }
 
                 ImGui::NewLine();
@@ -465,18 +523,168 @@ namespace Framework {
             }
             ImGui::End();
 
-            // Modal state
-            static std::string activeEditGuid;
-            static char nameBuffer[256] = {};
-            static char pathBuffer[256] = {};
-            static int currentMode = 0;
-            static float volumeBuffer = 1.0f;
+            if (ImGui::Begin("Mesh Assets", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
+            {
+                float windowWidth = ImGui::GetContentRegionAvail().x;
+                float itemWidth = 80.0f;
+                int columns = std::max(1, static_cast<int>(windowWidth / itemWidth));
 
+                std::vector<std::string> meshesToDelete;
+                const auto& assets = AssetManager::Instance().GetAssets();
+                int count = 0;
+
+                static char nameBuffer[256] = {};
+                static bool initialized = false;
+
+                for (const auto& [guid, entry] : assets)
+                {
+                    if (entry.typeName != TypeName<MeshProperties>::value)
+                        continue;
+
+                    auto* mesh = static_cast<MeshProperties*>(entry.pObject.get());
+                    if (!mesh || mesh->guid.empty())
+                        continue;
+
+                    std::string modalId = "EditMeshModal_" + mesh->guid;
+
+                    ImGui::PushID(mesh->guid.c_str());
+                    ImGui::BeginGroup();
+
+                    // Centered placeholder image
+                    float imageSize = 64.0f;
+                    float imageX = (itemWidth - imageSize) * 0.5f;
+                    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + imageX);
+                    ImGui::Image((ImTextureID)g_ObjIcon.textureID, ImVec2(imageSize, imageSize));
+
+                    // Right-click on image
+                    if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+                    {
+                        std::snprintf(nameBuffer, sizeof(nameBuffer), "%s", mesh->name.c_str());
+                        initialized = true;
+                        ImGui::OpenPopup(modalId.c_str());
+                    }
+
+                    // Centered mesh name
+                    const int maxChars = 10;
+                    std::string displayName = mesh->name;
+                    if (displayName.length() > maxChars)
+                        displayName = displayName.substr(0, maxChars - 3) + "...";
+
+                    // Center the truncated name
+                    float textWidth = ImGui::CalcTextSize(displayName.c_str()).x;
+                    float centerOffset = (itemWidth - textWidth) * 0.5f;
+                    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + centerOffset);
+
+                    ImGui::PushTextWrapPos(ImGui::GetCursorPosX() + itemWidth);
+                    ImGui::TextWrapped("%s", displayName.c_str());
+                    ImGui::PopTextWrapPos();
+
+                    // Modal popup
+                    if (ImGui::BeginPopupModal(modalId.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+                    {
+                        ImGui::TextColored(ImVec4(0.9f, 0.7f, 0.2f, 1.0f), "Mesh Options");
+                        ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
+
+                        ImGui::Text("Edit Name:");
+                        ImGui::InputText("##Name", nameBuffer, IM_ARRAYSIZE(nameBuffer));
+
+                        ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
+
+                        float buttonWidth = 80.0f;
+                        float spacing = 10.0f;
+                        float totalWidth = buttonWidth * 3 + spacing * 2;
+                        float centerX = (ImGui::GetWindowSize().x - totalWidth) * 0.5f;
+                        ImGui::SetCursorPosX(centerX);
+
+                        if (ImGui::Button("Apply", ImVec2(buttonWidth, 0)))
+                        {
+                            std::string newName = nameBuffer;
+                            if (newName != mesh->name)
+                            {
+                                UndoRedoManager::Instance().PushAssetUndo
+                                (
+                                    guid,
+                                    "MeshProperties", // or TypeName<MeshProperties>::value if you use type traits
+                                    mesh,
+                                    *FindPropListByName("MeshProperties") // or use mesh->GetPropList() if available
+                                );
+                                mesh->name = newName;
+                                AssetManager::Instance().MarkDirty(guid);
+                            }
+                            initialized = false;
+                            ImGui::CloseCurrentPopup();
+                        }
+
+                        ImGui::SameLine(0, spacing);
+                        if (ImGui::Button("Delete", ImVec2(buttonWidth, 0)))
+                        {
+                            meshesToDelete.push_back(mesh->guid);
+                            initialized = false;
+                            ImGui::CloseCurrentPopup();
+                        }
+
+                        ImGui::SameLine(0, spacing);
+                        if (ImGui::Button("Cancel", ImVec2(buttonWidth, 0)))
+                        {
+                            initialized = false;
+                            ImGui::CloseCurrentPopup();
+                        }
+
+                        ImGui::EndPopup();
+                    }
+
+                    // Tooltip
+                    if (ImGui::IsItemHovered())
+                    {
+                        ImGui::BeginTooltip();
+                        ImGui::Text("Name: %s", mesh->name.c_str());
+                        ImGui::Text("Path: %s", mesh->path.c_str());
+                        ImGui::Text("GUID: %s", mesh->guid.c_str());
+                        ImGui::Text("VAO: %u", mesh->vao);
+                        ImGui::Text("VBO: %u", mesh->vbo);
+                        ImGui::Text("EBO: %u", mesh->ebo);
+                        ImGui::Text("Index Count: %u", mesh->indexCount);
+                        ImGui::EndTooltip();
+                    }
+
+                    ImGui::EndGroup();
+                    ImGui::PopID();
+
+                    count++;
+                    if (count % columns != 0)
+                        ImGui::SameLine();
+                }
+
+                // Deferred deletion
+                for (const auto& guid : meshesToDelete)
+                {
+                    AssetManager::Instance().Unload(guid);
+                }
+
+                if (ImGui::Button("Undo"))
+                    UndoRedoManager::Instance().UndoAsset();
+
+                ImGui::SameLine();
+                if (ImGui::Button("Redo"))
+                    UndoRedoManager::Instance().RedoAsset();
+
+                ImGui::NewLine();
+                RenderErrorPopup();
+            }
+            ImGui::End();
 
             if (ImGui::Begin("Audio Manager"))
             {
                 const auto& assetsImgui = AssetManager::Instance().GetAssets();
 
+                // Modal state
+                static std::string activeEditGuid;
+                static char nameBuffer[256] = {};
+                static char pathBuffer[256] = {};
+                static int currentMode = 0;
+                static float volumeBuffer = 1.0f;
+                std::vector<std::string> audioToDelete;
+                
                 if (ImGui::BeginTable("AudioTable", 2, ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersInnerV))
                 {
                     ImGui::TableSetupColumn("Icon", ImGuiTableColumnFlags_WidthFixed, 40);
@@ -488,6 +696,7 @@ namespace Framework {
                         if (entry.typeName != "AudioProperties") continue;
                         auto* audioProps = static_cast<AudioProperties*>(entry.pObject.get());
                         if (!audioProps) continue;
+                        std::string audioModal = "EditModal_" + audioProps->guid;
 
                         ImGui::TableNextRow();
 
@@ -497,33 +706,90 @@ namespace Framework {
                         {
                             ImGui::Image((ImTextureID)g_AudioIcon.textureID, ImVec2(32, 32));
 
-                            // Right-click context menu on image
-                            if (ImGui::BeginPopupContextItem(("ImagePopup_" + audioProps->guid).c_str()))
+                            // Right-click to open modal
+                            if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+                                ImGui::OpenPopup(audioModal.c_str());
+
+                            // Modal dialog
+                            if (ImGui::BeginPopupModal(audioModal.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
                             {
-                                if (ImGui::MenuItem("Edit"))
+                                static char nameBuffer[256] = {};
+                                static float volumeBuffer = 1.0f;
+                                static int modeBuffer = 0;
+                                static bool initialized = false;
+
+                                if (!initialized)
                                 {
-                                    activeEditGuid = audioProps->guid;
-
-                                    strncpy(nameBuffer, audioProps->name.c_str(), sizeof(nameBuffer));
-                                    nameBuffer[sizeof(nameBuffer) - 1] = '\0';
-
-                                    strncpy(pathBuffer, audioProps->path.c_str(), sizeof(pathBuffer));
-                                    pathBuffer[sizeof(pathBuffer) - 1] = '\0';
-
-                                    volumeBuffer = audioProps->volume;
-                                    currentMode = (audioProps->mode == "loop") ? 1 : 0;
-
-                                    ImGui::OpenPopup("EditAudioModal");
+                                    std::snprintf(nameBuffer, sizeof(nameBuffer), "%s", audioProps->name.c_str());
+                                    modeBuffer = (audioProps->mode == "loop") ? 1 : 0;
+                                    initialized = true;
                                 }
 
-                                if (ImGui::MenuItem("Delete"))
+                                ImGui::TextColored(ImVec4(0.9f, 0.7f, 0.2f, 1.0f), "🎧 Audio Options");
+                                ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
+
+                                ImGui::Text("Rename Audio:");
+                                ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
+                                ImGui::InputText("##Rename", nameBuffer, IM_ARRAYSIZE(nameBuffer));
+
+                                ImGui::Spacing();
+                                ImGui::Text("Playback Mode:");
+                                ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
+                                static const char* modes[] = { "oneshot", "loop" };
+                                ImGui::Combo("##Mode", &modeBuffer, modes, IM_ARRAYSIZE(modes));
+
+                                ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
+
+                                // Button row
+                                float buttonWidth = 80.0f;
+                                float spacing = 10.0f;
+                                float totalWidth = buttonWidth * 3 + spacing * 2;
+                                float centerX = (ImGui::GetWindowSize().x - totalWidth) * 0.5f;
+                                ImGui::SetCursorPosX(centerX);
+
+                                if (ImGui::Button("Apply", ImVec2(buttonWidth, 0)))
                                 {
-                                    //AssetManager::Instance().Remove<AudioProperties>(audioProps->guid);
+                                    std::string newName = nameBuffer;
+                                    std::string newMode = modes[modeBuffer];
+
+                                    bool changed = false;
+
+                                    if (newName != audioProps->name)
+                                    {
+                                        audioProps->name = newName;
+                                        changed = true;
+                                    }
+
+                                    if (newMode != audioProps->mode)
+                                    {
+                                        audioProps->mode = newMode;
+                                        changed = true;
+                                    }
+
+                                    if (changed)
+                                        AssetManager::Instance().MarkDirty(audioProps->guid);
+
+                                    initialized = false;
+                                    ImGui::CloseCurrentPopup();
+                                }
+
+                                ImGui::SameLine(0, spacing);
+                                if (ImGui::Button("Delete", ImVec2(buttonWidth, 0)))
+                                {
+                                    audioToDelete.push_back(audioProps->guid);
+                                    initialized = false;
+                                    ImGui::CloseCurrentPopup();
+                                }
+
+                                ImGui::SameLine(0, spacing);
+                                if (ImGui::Button("Cancel", ImVec2(buttonWidth, 0)))
+                                {
+                                    initialized = false;
+                                    ImGui::CloseCurrentPopup();
                                 }
 
                                 ImGui::EndPopup();
                             }
-
                             if (ImGui::IsItemHovered())
                             {
                                 ImGui::BeginTooltip();
@@ -582,49 +848,12 @@ namespace Framework {
                             }
                         }
                     }
-
                     ImGui::EndTable();
                 }
 
-                // Edit modal
-                if (ImGui::BeginPopupModal("EditAudioModal", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+                for (const auto& guid : audioToDelete)
                 {
-                    auto* audioProps = AssetManager::Instance().Get<AudioProperties>(activeEditGuid);
-                    if (audioProps)
-                    {
-                        if (ImGui::InputText("Name", nameBuffer, sizeof(nameBuffer)))
-                        {
-                            audioProps->name = std::string(nameBuffer);
-                        }
-
-                        if (ImGui::InputText("Path", pathBuffer, sizeof(pathBuffer)))
-                        {
-                            audioProps->path = std::string(pathBuffer);
-                        }
-
-                        if (ImGui::SliderFloat("Volume", &volumeBuffer, 0.0f, 1.0f))
-                        {
-                            audioProps->volume = std::clamp(volumeBuffer, 0.0f, 1.0f);
-                            GlobalAudio.UE_SetVolume(audioProps->name, audioProps->volume);
-                        }
-
-                        static const char* modes[] = { "oneshot", "loop" };
-                        if (ImGui::Combo("Mode", &currentMode, modes, IM_ARRAYSIZE(modes)))
-                        {
-                            audioProps->mode = modes[currentMode];
-                        }
-
-                        if (ImGui::Button("Save")) ImGui::CloseCurrentPopup();
-                        ImGui::SameLine();
-                        if (ImGui::Button("Cancel")) ImGui::CloseCurrentPopup();
-                    }
-                    else
-                    {
-                        ImGui::Text("Audio asset not found.");
-                        if (ImGui::Button("Close")) ImGui::CloseCurrentPopup();
-                    }
-
-                    ImGui::EndPopup();
+                    AssetManager::Instance().Unload(guid);
                 }
             }
             ImGui::End();
@@ -956,7 +1185,7 @@ namespace Framework {
                                 if (currentTexture.textureID != 0)
                                 {
                                     ImGui::Text("Preview:");
-                                    ImGui::Image((ImTextureID)currentTexture.textureID, ImVec2(128, 128), ImVec2(0, 0), ImVec2(1, 1));
+                                    ImGui::Image((ImTextureID)currentTexture.textureID, ImVec2(128, 128), ImVec2(0, 1), ImVec2(1, 0));
                                 }
 
                                 ImGui::Separator();

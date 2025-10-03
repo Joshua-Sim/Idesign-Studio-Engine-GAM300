@@ -23,6 +23,7 @@ namespace Framework
         std::string path;
         std::string mode;
         std::string soundType;
+        bool isDirty = false;
 
         //  Runtime properties
         float volume = 1.0f;           // Range: 0.0 to 1.0

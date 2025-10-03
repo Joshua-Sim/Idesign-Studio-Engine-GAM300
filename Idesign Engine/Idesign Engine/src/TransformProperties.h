@@ -22,13 +22,15 @@ namespace Framework
         glm::vec3 position{ 0.0f, 0.0f, 0.0f };
         glm::vec3 rotation{ 0.0f, 0.0f, 0.0f };
         glm::vec3 scale{ 1.0f, 1.0f, 1.0f };
+
+        bool isDirty = false;
     };
 
     inline constexpr std::array g_TransformPropsArray =
     {
         PROP_VEC3(position, TransformComponent),
         PROP_VEC3(rotation, TransformComponent),
-        PROP_VEC3(scale, TransformComponent)
+        PROP_VEC3(scale, TransformComponent),
     };
 
     inline constexpr prop_list g_TransformProps{ "TransformComponent", g_TransformPropsArray };
