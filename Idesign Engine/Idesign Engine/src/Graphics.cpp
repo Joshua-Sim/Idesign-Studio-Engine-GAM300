@@ -367,7 +367,7 @@ namespace Framework {
                 auto& transformComponent = ecsInterface.GetComponent<TransformComponent>(entityId);
 
                 // This line is for testing and can remain here
-                transformComponent.position += glm::vec3(0.0f, 1.0f, 0.0f) * deltaTime;
+               //transformComponent.position += glm::vec3(0.0f, 1.0f, 0.0f) * deltaTime;
 
 
                 glm::mat4 model(1.0f);
@@ -378,14 +378,10 @@ namespace Framework {
                 model = glm::scale(model, transformComponent.scale);
 
 
-
-
-
-
                 if (meshComponent.debugShape == DebugShapeType::None)
                 {
 
-
+                    meshShader.setMat4("uModel", model);
                     glActiveTexture(GL_TEXTURE0);
                     //glBindTexture(GL_TEXTURE_2D, textureComponent.textureID);
                     meshShader.setInt("uTexture", 0);
@@ -404,7 +400,7 @@ namespace Framework {
                     if (it != m_debugMeshes.end())
                     {
                         // If we found a mesh, draw it using the generic function
-                        DrawDebugMesh(transformComponent, it->second, meshComponent.debugcolor);
+                        DrawDebugMesh(it->second, meshComponent.debugcolor, model, proj, view);
                     }
                 }
 
@@ -702,30 +698,19 @@ namespace Framework {
 
         return framebuffer;
     }
-
-    void Graphics::DrawDebugMesh(const TransformComponent& transform, Mesh* mesh, const glm::vec3& color)
-    {
-        if (!mesh) return; // Safety check
+    void Graphics::DrawDebugMesh(Mesh* mesh, const glm::vec3& color, const glm::mat4& model, const glm::mat4& projection, const glm::mat4& view) {
+        if (!mesh) return;
 
         debugShader.use();
 
-        glm::mat4 projection = camera.getProjectionMatrix(1920, 1080);
-        glm::mat4 view = camera.getViewMatrix();
-
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, transform.position);
-        model = glm::rotate(model, glm::radians(transform.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-        model = glm::rotate(model, glm::radians(transform.rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-        model = glm::rotate(model, glm::radians(transform.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-        model = glm::scale(model, transform.scale);
-
+        // The model matrix is now passed in directly
         debugShader.setMat4("projection", projection);
         debugShader.setMat4("view", view);
-        debugShader.setMat4("model", model);
+        debugShader.setMat4("model", model); // Use the provided model matrix
         debugShader.setVec3("color", color);
 
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        mesh->draw(); // Draw the mesh that was passed in
+        mesh->draw();
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
 }

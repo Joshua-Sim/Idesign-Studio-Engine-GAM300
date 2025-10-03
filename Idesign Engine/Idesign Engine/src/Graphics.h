@@ -140,8 +140,8 @@ namespace Framework {
         //draw debug shapes
         void DrawDebugBox(const TransformComponent& transform, const glm::vec3& color);
         // Draws a wireframe sphere using the transform's position and scale as radius
-        void DrawDebugMesh(const TransformComponent& transform, Mesh* mesh, const glm::vec3& color);
-	};
+        void DrawDebugMesh(Mesh* mesh, const glm::vec3& color, const glm::mat4& model, const glm::mat4& projection, const glm::mat4& view);
+    };
 
 }
 #endif // !_GRAPHICS_H_
