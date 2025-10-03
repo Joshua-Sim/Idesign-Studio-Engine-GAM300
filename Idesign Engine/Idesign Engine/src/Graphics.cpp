@@ -202,7 +202,7 @@ namespace Framework {
         plane = Mesh::CreateUnitSphereData();
         cone = Mesh::CreateUnitConeData();
         cylinder = Mesh::CreateUnitCylinderData();
-
+        triangle = Mesh::CreateUnitTriangleData();
         // Initialise 1 object into ECS (Temporary, liase and move de-serialize with loadmesh function handled at asset-handler)
 
 
@@ -213,18 +213,20 @@ namespace Framework {
         blurShader.initGL();
         finalShader.initGL();
         terrain.initGL();
-
+        debugShader.initGL();
         //initialise geometry objects
         cube.initGL();
         plane.initGL();
         cone.initGL();
         //cylinder.initGL();
-
+        triangle.initGL();
         //FONT SYSTEM
         fontSystem.Initialize();
         fontSystem.LoadFont("Assets/Font/arial.ttf", 40, "Arial");
         fontSystem.SetActiveFont("Arial");
-
+        m_debugMeshes[DebugShapeType::Box] = &cube;
+        m_debugMeshes[DebugShapeType::Sphere] = &plane; // Remember 'plane' is your sphere mesh
+        m_debugMeshes[DebugShapeType::Triangle] = &triangle;
 
         // lights (use member containers)
         sun = DirectionalLightCPU{};
@@ -359,36 +361,53 @@ namespace Framework {
             meshShader.setMat4("uView", view);
 
             // ---- ECS draw loop ----
-            for (auto const& entityId : mEntities) {
-                MeshProperties& meshComponent = ecsInterface.GetComponent<MeshProperties>(entityId);
-                TransformComponent& transformComponent = ecsInterface.GetComponent<TransformComponent>(entityId);
-                //TextComponent& textComponent = ecsInterface.GetComponent<TextComponent>(entityId);
-                //TextureComponent& textureComponent = ecsInterface.GetComponent<TextureProperties>(entityId);
+            for (auto const& entityId : mEntities)
+            {
+                auto& meshComponent = ecsInterface.GetComponent<MeshProperties>(entityId);
+                auto& transformComponent = ecsInterface.GetComponent<TransformComponent>(entityId);
 
-                transformComponent.position += glm::vec3(0.0f, 1, 0.0) * deltaTime; // Increment Y axis to show ECS link
-                
-                // Model SRT
+                // This line is for testing and can remain here
+                transformComponent.position += glm::vec3(0.0f, 1.0f, 0.0f) * deltaTime;
+
+
                 glm::mat4 model(1.0f);
-                model = glm::translate(model, transformComponent.position); // optional
-
-                // Rotate
-                model = glm::rotate(model, transformComponent.rotation.x, glm::vec3(1, 0, 0));
-                model = glm::rotate(model, transformComponent.rotation.y, glm::vec3(0, 1, 0));
-                model = glm::rotate(model, transformComponent.rotation.z, glm::vec3(0, 0, 1));
-
-                model = glm::scale(model, transformComponent.scale);     // scale by 2x
-                meshShader.setMat4("uModel", model);
+                model = glm::translate(model, transformComponent.position);
+                model = glm::rotate(model, glm::radians(transformComponent.rotation.x), glm::vec3(1, 0, 0));
+                model = glm::rotate(model, glm::radians(transformComponent.rotation.y), glm::vec3(0, 1, 0));
+                model = glm::rotate(model, glm::radians(transformComponent.rotation.z), glm::vec3(0, 0, 1));
+                model = glm::scale(model, transformComponent.scale);
 
 
-                meshShader.setVec3("uAlbedo", { 1,1,1 });
-                LightComponent::upload(meshShader, sun, hasSun, pointLights, spotLights);
 
-                //texture
-                glActiveTexture(GL_TEXTURE0);
-                //glBindTexture(GL_TEXTURE_2D, textureComponent.textureID);
-                meshShader.setInt("uTexture", 0); // correct shader
-                glBindVertexArray(meshComponent.vao);
-                glDrawElements(GL_TRIANGLES, meshComponent.indexCount, GL_UNSIGNED_INT, 0);
+
+
+
+                if (meshComponent.debugShape == DebugShapeType::None)
+                {
+
+
+                    glActiveTexture(GL_TEXTURE0);
+                    //glBindTexture(GL_TEXTURE_2D, textureComponent.textureID);
+                    meshShader.setInt("uTexture", 0);
+
+                    // 4. Draw the Mesh (MOVED INSIDE)
+                    glBindVertexArray(meshComponent.vao);
+                    glDrawElements(GL_TRIANGLES, meshComponent.indexCount, GL_UNSIGNED_INT, 0);
+
+
+                }
+                else
+                {
+                    // --- GENERIC DEBUG SHAPE RENDERING ---
+                    // Find the correct mesh in our map
+                    auto it = m_debugMeshes.find(meshComponent.debugShape);
+                    if (it != m_debugMeshes.end())
+                    {
+                        // If we found a mesh, draw it using the generic function
+                        DrawDebugMesh(transformComponent, it->second, meshComponent.debugcolor);
+                    }
+                }
+
             }
 
             // drawing of 5 objects (primitives)
@@ -682,5 +701,31 @@ namespace Framework {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         return framebuffer;
+    }
+
+    void Graphics::DrawDebugMesh(const TransformComponent& transform, Mesh* mesh, const glm::vec3& color)
+    {
+        if (!mesh) return; // Safety check
+
+        debugShader.use();
+
+        glm::mat4 projection = camera.getProjectionMatrix(1920, 1080);
+        glm::mat4 view = camera.getViewMatrix();
+
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, transform.position);
+        model = glm::rotate(model, glm::radians(transform.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(transform.rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(transform.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+        model = glm::scale(model, transform.scale);
+
+        debugShader.setMat4("projection", projection);
+        debugShader.setMat4("view", view);
+        debugShader.setMat4("model", model);
+        debugShader.setVec3("color", color);
+
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        mesh->draw(); // Draw the mesh that was passed in
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
 }
