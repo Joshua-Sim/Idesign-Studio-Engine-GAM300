@@ -326,7 +326,6 @@ namespace Framework {
         LightComponent::upload(terrainShader, sun, hasSun, pointLights, spotLights);
         terrain.draw();
         // --- Mesh (textured)
-        meshShader.use();
         meshShader.setMat4("uProj", proj);
         meshShader.setMat4("uView", view);
             
@@ -334,8 +333,6 @@ namespace Framework {
         {
             auto& meshComponent = ecsInterface.GetComponent<MeshProperties>(entityId);
             auto& transformComponent = ecsInterface.GetComponent<TransformComponent>(entityId);
-
-            // This line is for testing and can remain here
             transformComponent.position += glm::vec3(0.0f, 1.0f, 0.0f) * deltaTime;
 
             glm::mat4 model(1.0f);
@@ -349,15 +346,21 @@ namespace Framework {
 
             if (meshComponent.debugShape == DebugShapeType::None)
             {
+             
 
+ 
+
+                meshShader.setVec3("uAlbedo", { 1,1,1 });
+                LightComponent::upload(meshShader, sun, hasSun, pointLights, spotLights);
+
+                //texture
                 glActiveTexture(GL_TEXTURE0);
                 //glBindTexture(GL_TEXTURE_2D, textureComponent.textureID);
-                meshShader.setInt("uTexture", 0);
+                meshShader.setInt("uTexture", 0); // correct shader
 
-                // 4. Draw the Mesh (MOVED INSIDE)
+
                 glBindVertexArray(meshComponent.vao);
                 glDrawElements(GL_TRIANGLES, meshComponent.indexCount, GL_UNSIGNED_INT, 0);
-
             }
             else
             {
