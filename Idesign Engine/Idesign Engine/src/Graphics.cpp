@@ -54,6 +54,7 @@
 #include "ImguiManager.h"
 #include "Coordinator.h"
 #include "ComponentList.h"
+#include "FontSystem.h"
 
 extern Framework::FontSystem fontSystem;
 extern Framework::Coordinator ecsInterface;
@@ -86,7 +87,37 @@ namespace Framework {
     // Destructor
     Graphics::~Graphics()
     {
+        // Delete HDR framebuffer resources
+        if (hdrFBO) glDeleteFramebuffers(1, &hdrFBO);
+        if (colorBuffer) glDeleteTextures(1, &colorBuffer);
+        if (rboDepth) glDeleteRenderbuffers(1, &rboDepth);
 
+        // Delete bloom ping-pong framebuffers & textures
+        glDeleteFramebuffers(2, pingpongFBO);
+        glDeleteTextures(2, pingpongColorbuffers);
+
+        // Delete screen quad VAO/VBO
+        if (quadVAO) glDeleteVertexArrays(1, &quadVAO);
+        if (quadVBO) glDeleteBuffers(1, &quadVBO);
+
+        // Cleanup geometry meshes (if they own VAOs/VBOs)
+        cube.cleanupGL();
+        plane.cleanupGL();
+        cone.cleanupGL();
+        cylinder.cleanupGL();
+
+        // Cleanup shaders (if your ShaderProgram has a cleanup function)
+        terrainShader.destroy();
+        meshShader.destroy();
+        blurShader.destroy();
+        finalShader.destroy();
+
+        // Finally, destroy GLFW window + terminate GLFW
+        if (window) {
+            glfwDestroyWindow(window);
+            window = nullptr;
+        }
+        glfwTerminate();
     }
 
     // Initialize the system
@@ -109,6 +140,7 @@ namespace Framework {
         ecsInterface.RegisterComponent<TransformComponent>();
         ecsInterface.RegisterComponent<MeshProperties>();
         ecsInterface.RegisterComponent<TextureProperties>();
+        ecsInterface.RegisterComponent<TextComponent>();
 
         //  ---- ECS INITIALIZATION --- 
         Signature signature;
@@ -142,6 +174,9 @@ namespace Framework {
         textureComponent.path = "Assets/PNG/test.png";
         TextureLoader::loadTexture(textureComponent, true);
 
+        TextComponent textComponent;
+        ecsInterface.AddComponent<TextComponent>(newEntity, textComponent);
+
         ecsInterface.AddComponent<Framework::TextureProperties>(newEntity, textureComponent);
         // ----------------- End object creation ------------------------------
 
@@ -174,7 +209,7 @@ namespace Framework {
 
         // Initialisers for OpenGL (IMPORTANT : always call these after every initialiser values)
         // If want to change any values, please change in header or reconstruct after calling
-        //terrainShader.initGL();
+        terrainShader.initGL();
         meshShader.initGL();
         blurShader.initGL();
         finalShader.initGL();
@@ -236,6 +271,8 @@ namespace Framework {
         }
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         lastTime = (float)glfwGetTime();
+        fontSystem.Initialize();
+
     }
 
     void Graphics::SetImguiManager(ImguiManager* manager)
@@ -288,13 +325,11 @@ namespace Framework {
         terrainShader.setVec3("uAlbedo", { 0.6f,0.4f,0.2f }); //terrain color
         LightComponent::upload(terrainShader, sun, hasSun, pointLights, spotLights);
         terrain.draw();
-
         // --- Mesh (textured)
         meshShader.use();
         meshShader.setMat4("uProj", proj);
         meshShader.setMat4("uView", view);
-
-        // ---- ECS draw loop ----
+            
         for (auto const& entityId : mEntities)
         {
             auto& meshComponent = ecsInterface.GetComponent<MeshProperties>(entityId);
@@ -338,6 +373,13 @@ namespace Framework {
 
         }
 
+            // ====================================================================
+            // 3. FINAL PASS: Render to screen with tone mapping and bloom
+            // ====================================================================
+         
+            glBindFramebuffer(GL_FRAMEBUFFER, m_imguiManager->GetGameFramebuffer());
+            glViewport(0, 0, w, h);
+            glClear(GL_COLOR_BUFFER_BIT);
 
         // drawing of 5 objects (primitives)
         //for (int i = 0; i < 5; ++i)
@@ -386,6 +428,38 @@ namespace Framework {
 
         // Unbind the framebuffer, returning rendering control to the main window
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            // Now overlay HUD text in 2D
+            fontSystem.SetActiveFont("Arial");
+            /*fontSystem.RenderText2D("Score: 100", 10.f, 10.0f, 1.f,
+                glm::vec3(1.0f, 1.0f, 0.5f), w, h);
+           */
+            // In your main rendering loop (e.g., in Graphics::Update)
+
+            // 1. Get the camera's view and projection matrices
+            glm::mat4 viewMatrix = camera.getViewMatrix();
+            glm::mat4 projectionMatrix = camera.getProjectionMatrix(w, h);
+
+            // 2. Extract camera's right and up vectors from the view matrix
+            glm::vec3 cameraRight_world = { viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0] };
+            glm::vec3 cameraUp_world = { viewMatrix[0][1], viewMatrix[1][1], viewMatrix[2][1] };
+
+   
+
+            // 4. Create the final model matrix by combining translation and rotation
+            glm::mat4 textModel = glm::mat4(1.0f);
+            textModel = glm::translate(textModel, glm::vec3(0.0f, 5.0f, 0.0f)); // Position in world space
+
+            // 5. Call the RenderText3D function
+            fontSystem.RenderText3D("Score: 100",
+                textModel,
+                viewMatrix,
+                projectionMatrix,
+                0.5f, // Scale
+                glm::vec3(1.0f, 1.0f, 0.5f)); // Color
+
+            // Unbind the framebuffer, returning rendering control to the main window
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
     }
 
 
