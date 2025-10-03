@@ -360,6 +360,9 @@
     <ClInclude Include="src\ObjPicking.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="TextProperties.h">
+      <Filter>Header Files\Assets\Property</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

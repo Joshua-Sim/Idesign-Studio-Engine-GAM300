@@ -31,7 +31,7 @@
 #include "AssetManager.h"
 #include "WindowConfigProperties.h"
 #include "MeshProperties.h"
-
+#include "TextProperties.h"
 
 namespace Framework {
     class ImguiManager;

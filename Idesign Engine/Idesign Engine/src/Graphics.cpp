@@ -140,11 +140,11 @@ namespace Framework {
         ecsInterface.RegisterComponent<TransformComponent>();
         ecsInterface.RegisterComponent<MeshProperties>();
         ecsInterface.RegisterComponent<TextureProperties>();
-        ecsInterface.RegisterComponent<TextComponent>();
+        ecsInterface.RegisterComponent<TextProperties>();
 
         //  ---- ECS INITIALIZATION --- 
         Signature signature;
-        signature.set(ecsInterface.GetComponentType<MeshProperties>()); //Set mEntities to be populated with MeshComponent for now
+        signature.set(ecsInterface.GetComponentType<TransformComponent>()); //Set mEntities to be populated with MeshComponent for now
 
         ecsInterface.SetSystemSignature<Graphics>(signature);
         std::cout << "Signature for Graphics system is: " << signature << std::endl;
@@ -174,8 +174,7 @@ namespace Framework {
         textureComponent.path = "Assets/PNG/test.png";
         TextureLoader::loadTexture(textureComponent, true);
 
-        TextComponent textComponent;
-        ecsInterface.AddComponent<TextComponent>(newEntity, textComponent);
+
 
         ecsInterface.AddComponent<Framework::TextureProperties>(newEntity, textureComponent);
         // ----------------- End object creation ------------------------------
@@ -221,6 +220,7 @@ namespace Framework {
         //cylinder.initGL();
         triangle.initGL();
         //FONT SYSTEM
+
         fontSystem.Initialize();
         fontSystem.LoadFont("Assets/Font/arial.ttf", 40, "Arial");
         fontSystem.SetActiveFont("Arial");
@@ -363,7 +363,6 @@ namespace Framework {
             // ---- ECS draw loop ----
             for (auto const& entityId : mEntities)
             {
-                auto& meshComponent = ecsInterface.GetComponent<MeshProperties>(entityId);
                 auto& transformComponent = ecsInterface.GetComponent<TransformComponent>(entityId);
 
                 // This line is for testing and can remain here
@@ -377,30 +376,46 @@ namespace Framework {
                 model = glm::rotate(model, glm::radians(transformComponent.rotation.z), glm::vec3(0, 0, 1));
                 model = glm::scale(model, transformComponent.scale);
 
-
-                if (meshComponent.debugShape == DebugShapeType::None)
+                if (ecsInterface.HasComponent<TextProperties>(entityId))
                 {
-
-                    meshShader.setMat4("uModel", model);
-                    glActiveTexture(GL_TEXTURE0);
-                    //glBindTexture(GL_TEXTURE_2D, textureComponent.textureID);
-                    meshShader.setInt("uTexture", 0);
-
-                    // 4. Draw the Mesh (MOVED INSIDE)
-                    glBindVertexArray(meshComponent.vao);
-                    glDrawElements(GL_TRIANGLES, meshComponent.indexCount, GL_UNSIGNED_INT, 0);
-
-
+                    auto& textComp = ecsInterface.GetComponent<TextProperties>(entityId);
+                    fontSystem.RenderText3D(
+                        textComp.text,
+                        model,      // Use the entity's transform for position
+                        view,
+                        proj,
+                        textComp.scale,
+                        textComp.color
+                    );
                 }
-                else
+
+                if (ecsInterface.HasComponent<MeshProperties>(entityId))
                 {
-                    // --- GENERIC DEBUG SHAPE RENDERING ---
-                    // Find the correct mesh in our map
-                    auto it = m_debugMeshes.find(meshComponent.debugShape);
-                    if (it != m_debugMeshes.end())
+                    auto& meshComponent = ecsInterface.GetComponent<MeshProperties>(entityId);
+                    if (meshComponent.debugShape == DebugShapeType::None)
                     {
-                        // If we found a mesh, draw it using the generic function
-                        DrawDebugMesh(it->second, meshComponent.debugcolor, model, proj, view);
+
+                        meshShader.setMat4("uModel", model);
+                        glActiveTexture(GL_TEXTURE0);
+                        //glBindTexture(GL_TEXTURE_2D, textureComponent.textureID);
+                        meshShader.setInt("uTexture", 0);
+
+                        // 4. Draw the Mesh (MOVED INSIDE)
+                        glBindVertexArray(meshComponent.vao);
+                        glDrawElements(GL_TRIANGLES, meshComponent.indexCount, GL_UNSIGNED_INT, 0);
+
+
+                    }
+                    else
+                    {
+                        // --- GENERIC DEBUG SHAPE RENDERING ---
+                        // Find the correct mesh in our map
+                        auto it = m_debugMeshes.find(meshComponent.debugShape);
+                        if (it != m_debugMeshes.end())
+                        {
+                            // If we found a mesh, draw it using the generic function
+                            DrawDebugMesh(it->second, meshComponent.debugcolor, model, proj, view);
+                        }
                     }
                 }
 
@@ -434,7 +449,7 @@ namespace Framework {
 
             // ECS draw loop with encoded ID color (same transforms as scene)
             for (auto const& entityId : mEntities) {
-                auto& meshComponent = ecsInterface.GetComponent<MeshProperties>(entityId);
+               
                 auto& transformComponent = ecsInterface.GetComponent<TransformComponent>(entityId);
 
                 glm::mat4 model(1.0f);
@@ -452,9 +467,13 @@ namespace Framework {
                     ((id >> 16) & 0xFF) / 255.0f
                 };
                 pickShader.setVec3("uIdColor", idColor);
-
-                glBindVertexArray(meshComponent.vao);
-                glDrawElements(GL_TRIANGLES, meshComponent.indexCount, GL_UNSIGNED_INT, 0);
+                if (ecsInterface.HasComponent<MeshProperties>(entityId))
+                {
+                    auto& meshComponent = ecsInterface.GetComponent<MeshProperties>(entityId);
+                    glBindVertexArray(meshComponent.vao);
+                    glDrawElements(GL_TRIANGLES, meshComponent.indexCount, GL_UNSIGNED_INT, 0);
+                }
+                
             }
 
             // (Optional) give your 5 primitives fixed IDs and draw them here too if you want them pickable.

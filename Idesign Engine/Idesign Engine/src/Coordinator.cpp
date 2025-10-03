@@ -218,10 +218,10 @@ namespace Framework {
             mComponentManager->AddComponent(entity, LayerComponent{});
         }
 
-        else if (componentName == "TextComponent")
+       /* else if (componentName == "TextComponent")
         {
             mComponentManager->AddComponent(entity, TextComponent{});
-        }
+        }*/
 
         else if (componentName == "PlayerComponent")
         {

@@ -244,6 +244,7 @@
     <ClInclude Include="src\UndoRedoSystem.h" />
     <ClInclude Include="src\Vector2D.h" />
     <ClInclude Include="src\WindowConfigProperties.h" />
+    <ClInclude Include="TextProperties.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\fontshaders\textfrag.glsl" />

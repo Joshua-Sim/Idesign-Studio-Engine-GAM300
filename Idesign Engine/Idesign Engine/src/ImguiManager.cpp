@@ -581,10 +581,25 @@ namespace Framework {
                         ecsInterface.AddComponent<TransformComponent>(newEntity, transform);
                         MeshProperties meshComponent{};
                         MeshLoader::loadMesh(meshComponent.path, meshComponent);
-                        meshComponent.debugShape = static_cast<DebugShapeType>(selectedShapeIndex);                        ecsInterface.AddComponent<MeshProperties>(newEntity, meshComponent);
+                        meshComponent.debugShape = static_cast<DebugShapeType>(selectedShapeIndex);                        
+                        ecsInterface.AddComponent<MeshProperties>(newEntity, meshComponent);
 
 
                         std::cout << "Debug Box Entity created with ID: " << newEntity << std::endl;
+                    }
+
+                    if (ImGui::Button("Create Text Entity", ImVec2(140, 30)))
+                    {
+                        // 1. Create a brand new entity
+                        Entity newTextEntity = ecsInterface.CreateEntity();
+
+                        // 2. Give it a TransformComponent so it has a position
+                        ecsInterface.AddComponent<TransformComponent>(newTextEntity, TransformComponent{});
+
+                        // 3. Immediately add a TextComponent to it
+                        ecsInterface.AddComponent<TextProperties>(newTextEntity, TextProperties{});
+
+                        std::cout << "Text Entity created with ID: " << newTextEntity << std::endl;
                     }
 
                     if (ImGui::Button("Delete All Entity", ImVec2(140, 30)))
@@ -765,6 +780,38 @@ namespace Framework {
 
                         if (ImGui::CollapsingHeader("Texture Component", ImGuiTreeNodeFlags_DefaultOpen))
                         {
+                            if (ImGui::CollapsingHeader("Text Component", ImGuiTreeNodeFlags_DefaultOpen))
+                            {
+                                if (ecsInterface.HasComponent<TextProperties>(selectedEntity))
+                                {
+                                    auto& textComponent = ecsInterface.GetComponent<TextProperties>(selectedEntity);
+
+                                    // Buffer for editing the text string
+                                    char textBuffer[256];
+                                    strncpy_s(textBuffer, textComponent.text.c_str(), sizeof(textBuffer));
+                                    textBuffer[sizeof(textBuffer) - 1] = '\0';
+
+                                    if (ImGui::InputText("Text", textBuffer, sizeof(textBuffer)))
+                                    {
+                                        textComponent.text = std::string(textBuffer);
+                                    }
+
+                                    // Slider for text scale
+                                    ImGui::DragFloat("Scale", &textComponent.scale, 0.001f, 0.001f, 10.0f);
+
+                                    // Color picker for text color
+                                    ImGui::ColorEdit3("Color", glm::value_ptr(textComponent.color));
+                                }
+                                else
+                                {
+                                    ImGui::Text("No TextComponent attached.");
+                                    if (ImGui::Button("Add Text Component"))
+                                    {
+                                        ecsInterface.AddComponent<TextComponent>(selectedEntity, TextComponent{});
+                                    }
+                                }
+                            }
+                            
                             if (ecsInterface.HasComponent<Framework::TextureProperties>(selectedEntity))
                             {
                                 auto& texture = ecsInterface.GetComponent<Framework::TextureProperties>(selectedEntity);
