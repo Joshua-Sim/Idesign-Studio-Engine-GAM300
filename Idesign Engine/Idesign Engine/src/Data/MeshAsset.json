@@ -2,7 +2,7 @@
     "mesh": [
         {
             "guid": "9e1fcb62-0699-4a0b-ae75-d0670af44b1b",
-            "name": "plane2",
+            "name": "plane22",
             "path": "Assets/Objects/plane2.obj",
             "vao": 2,
             "vbo": 3,

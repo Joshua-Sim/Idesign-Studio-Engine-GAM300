@@ -1,120 +1,93 @@
-﻿  imgui.cpp
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\minwindef.h(130,9): warning C4005: 'APIENTRY': macro redefinition
-  (compiling source file '/lib/imgui/imgui.cpp')
-      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\lib\glfw-3.4.bin.WIN64\include\GLFW\glfw3.h(123,11):
-      see previous definition of 'APIENTRY'
-  
-  imgui_demo.cpp
-  imgui_draw.cpp
-  imgui_impl_glfw.cpp
-  imgui_impl_opengl3.cpp
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\minwindef.h(130,9): warning C4005: 'APIENTRY': macro redefinition
-  (compiling source file '/lib/imgui/imgui_impl_opengl3.cpp')
-      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\lib\glfw-3.4.bin.WIN64\include\GLFW\glfw3.h(123,11):
-      see previous definition of 'APIENTRY'
-  
-  imgui_tables.cpp
-  imgui_widgets.cpp
-  AssetCompiler.cpp
-  AssetManager.cpp
-  Audio.cpp
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Audio.cpp(370,24): warning C4458: declaration of 'nextChannelId' hides class member
-  (compiling source file '/src/Audio.cpp')
-      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Audio.h(532,13):
-      see declaration of 'Framework::Audio::nextChannelId'
-  
-  AudioLoader.cpp
-  ButtonSystem.cpp
-  Collision.cpp
-  ComponentManager.cpp
-  Coordinator.cpp
-  Core.cpp
-  Debugger.cpp
-  DummySystem.cpp
-  EngineState.cpp
-  EntityManager.cpp
-  Generating Code...
-  Compiling...
-  FontSystem.cpp
-  Graphics.cpp
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.cpp(347,59): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+﻿  Graphics.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(347,59): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file '/src/Graphics.cpp')
   
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.cpp(347,57): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(347,57): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file '/src/Graphics.cpp')
   
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.cpp(530,49): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(530,49): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file '/src/Graphics.cpp')
   
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.cpp(530,46): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(530,46): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file '/src/Graphics.cpp')
   
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.cpp(536,72): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(536,72): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file '/src/Graphics.cpp')
   
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.cpp(536,69): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(536,69): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file '/src/Graphics.cpp')
   
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.cpp(318,33): warning C4100: 'deltaTime': unreferenced parameter
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(318,33): warning C4100: 'deltaTime': unreferenced parameter
   (compiling source file '/src/Graphics.cpp')
   
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.cpp(342,19): warning C4189: 'aspect': local variable is initialized but not referenced
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(342,19): warning C4189: 'aspect': local variable is initialized but not referenced
   (compiling source file '/src/Graphics.cpp')
   
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.cpp(599,58): warning C4100: 'window': unreferenced parameter
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(599,58): warning C4100: 'window': unreferenced parameter
   (compiling source file '/src/Graphics.cpp')
   
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.cpp(725,40): warning C4458: declaration of 'mesh' hides class member
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(725,40): warning C4458: declaration of 'mesh' hides class member
   (compiling source file '/src/Graphics.cpp')
-      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.h(89,24):
+      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(89,24):
       see declaration of 'Framework::Graphics::mesh'
   
-  GraphicsShader.cpp
   ImguiManager.cpp
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\minwindef.h(130,9): warning C4005: 'APIENTRY': macro redefinition
   (compiling source file '/src/ImguiManager.cpp')
-      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\lib\glfw-3.4.bin.WIN64\include\GLFW\glfw3.h(123,11):
+      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\glfw-3.4.bin.WIN64\include\GLFW\glfw3.h(123,11):
       see previous definition of 'APIENTRY'
   
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(164,25): warning C4459: declaration of 'filePath' hides global declaration
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(166,25): warning C4459: declaration of 'filePath' hides global declaration
   (compiling source file '/src/ImguiManager.cpp')
-      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(28,24):
+      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(30,24):
       see declaration of 'Framework::filePath'
   
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(176,33): warning C4456: declaration of 'finalPath' hides previous local declaration
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(178,33): warning C4456: declaration of 'finalPath' hides previous local declaration
   (compiling source file '/src/ImguiManager.cpp')
-      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(159,21):
+      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(161,21):
       see declaration of 'finalPath'
   
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(177,33): warning C4456: declaration of 'error' hides previous local declaration
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(179,33): warning C4456: declaration of 'error' hides previous local declaration
   (compiling source file '/src/ImguiManager.cpp')
-      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(160,21):
+      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(162,21):
       see declaration of 'error'
   
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(435,76): warning C4566: character represented by universal-character-name '\U0001F6E0' cannot be represented in the current code page (1252)
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(396,48): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(716,45): warning C4456: declaration of 'nameBuffer' hides previous local declaration
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(548,48): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
-      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(682,29):
+  
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(715,48): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(772,45): warning C4456: declaration of 'nameBuffer' hides previous local declaration
+  (compiling source file '/src/ImguiManager.cpp')
+      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(738,29):
       see declaration of 'nameBuffer'
   
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(717,46): warning C4456: declaration of 'volumeBuffer' hides previous local declaration
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(773,46): warning C4456: declaration of 'volumeBuffer' hides previous local declaration
   (compiling source file '/src/ImguiManager.cpp')
-      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(685,30):
+      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(741,30):
       see declaration of 'volumeBuffer'
   
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(728,84): warning C4566: character represented by universal-character-name '\U0001F3A7' cannot be represented in the current code page (1252)
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(784,84): warning C4566: character represented by universal-character-name '\U0001F3A7' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(334,37): warning C4100: 'deltaTime': unreferenced parameter
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(935,52): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\algorithm(3799,24): warning C4244: '=': conversion from 'int' to 'char', possible loss of data
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1084,52): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\algorithm(3799,24):
+  
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(336,37): warning C4100: 'deltaTime': unreferenced parameter
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\Visual Studio Product\VC\Tools\MSVC\14.44.35207\include\algorithm(3799,24): warning C4244: '=': conversion from 'int' to 'char', possible loss of data
+  (compiling source file '/src/ImguiManager.cpp')
+      D:\Visual Studio Product\VC\Tools\MSVC\14.44.35207\include\algorithm(3799,24):
       the template instantiation context (the oldest one first) is
-          C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(166,18):
+          D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(168,18):
           see reference to function template instantiation '_OutIt std::transform<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,int(__cdecl *)(int)>(const _InIt,const _InIt,_OutIt,_Fn)' being compiled
           with
           [
@@ -124,38 +97,5 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.3520
               _Fn=int (__cdecl *)(int)
           ]
   
-  InputHandler.cpp
-  Lighting.cpp
-  Matrix3x3.cpp
-  Mesh.cpp
-  MeshLoader.cpp
-  MessageSystem.cpp
-  ObjPicking.cpp
-  SceneManager.cpp
-  ShaderProgram.cpp
-  SignalHandler.cpp
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\minwindef.h(130,9): warning C4005: 'APIENTRY': macro redefinition
-  (compiling source file '/src/SignalHandler.cpp')
-      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\lib\glfw-3.4.bin.WIN64\include\GLFW\glfw3.h(123,11):
-      see previous definition of 'APIENTRY'
-  
-  TagManager.cpp
-  Terrain.cpp
-  TestSystem.cpp
-  TextureLoader.cpp
-  UndoRedoSystem.cpp
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\UndoRedoSystem.cpp(113,26): warning C4189: 'props': local variable is initialized but not referenced
-  (compiling source file '/src/UndoRedoSystem.cpp')
-  
-  Vector2D.cpp
   Generating Code...
-  Compiling...
-  main.cpp
-  Generating Code...
-  LINK : C:\Year 3\Idesign-Studio-Engine\Idesign Engine\x64\Debug\Idesign Engine.exe not found or not built by the last incremental link; performing full link
-glew32s.lib(glew.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'glew32s.lib(glew.obj)' or at 'C:\Year 3\Idesign-Studio-Engine\Idesign Engine\x64\Debug\vc120.pdb'; linking object as if no debug info
-LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
-  Idesign Engine.vcxproj -> C:\Year 3\Idesign-Studio-Engine\Idesign Engine\x64\Debug\Idesign Engine.exe
-  'pwsh.exe' is not recognized as an internal or external command,
-  operable program or batch file.
+  Idesign Engine.vcxproj -> D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe

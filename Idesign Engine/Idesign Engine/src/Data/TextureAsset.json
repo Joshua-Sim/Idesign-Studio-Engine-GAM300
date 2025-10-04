@@ -7,13 +7,8 @@
         },
         {
             "guid": "4caccc21-6007-45d5-bb72-a14260f29a35",
-            "name": "test",
+            "name": "test123",
             "path": "Assets/PNG/test.png"
-        },
-        {
-            "guid": "2c166d13-d11d-4566-9b51-cf1412bd12ca",
-            "name": "McIdle11",
-            "path": "./images/Animation/McIdle11.png"
         },
         {
             "guid": "b2d4bb99-3396-40de-8789-01d6cf083f4e",
