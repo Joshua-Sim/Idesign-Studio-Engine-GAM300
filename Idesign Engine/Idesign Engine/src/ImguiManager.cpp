@@ -518,7 +518,12 @@ namespace Framework {
             static char imagePathBuffer[256] = "";  // Buffer for the image path
             static Entity selectedEntity = std::numeric_limits<Entity>::max();  // Sets a selected entity to be a non existent entity out of range
             static bool isPropertiesWindowOpen = false;                         // Allows opening and closing of the name editor? might want to remove
-
+            //JAY FOR OBJ PICKING
+            int picked = m_graphicsSystem->GetAndClearPickedEntity();
+            if (picked >= 0 && ecsInterface.IsEntityValid((Entity)picked)) {
+                selectedEntity = (Entity)picked;
+                isPropertiesWindowOpen = true;
+            }
             if (ImGui::Begin("Entity", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
             {
                 if (ImGui::CollapsingHeader("Entity Creation", ImGuiTreeNodeFlags_DefaultOpen))

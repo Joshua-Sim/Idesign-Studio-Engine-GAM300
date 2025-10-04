@@ -357,39 +357,83 @@ namespace Framework {
             meshShader.use();
             meshShader.setMat4("uProj", proj);
             meshShader.setMat4("uView", view);
-
+            // --- highlight selected entity (picked last frame) ---
+            int sel = lastPickedId; // cache once per frame
+            const glm::vec3 kNormalAlbedo(1.0f, 1.0f, 1.0f);
+            const glm::vec3 kHighlightAlbedo(1.0f, 0.85f, 0.3f);
+            //JAY
             // ---- ECS draw loop ----
             for (auto const& entityId : mEntities) {
                 MeshProperties& meshComponent = ecsInterface.GetComponent<MeshProperties>(entityId);
-                TransformComponent& transformComponent = ecsInterface.GetComponent<TransformComponent>(entityId);
-                //TextComponent& textComponent = ecsInterface.GetComponent<TextComponent>(entityId);
-                //TextureComponent& textureComponent = ecsInterface.GetComponent<TextureProperties>(entityId);
+                TransformComponent& transformComp = ecsInterface.GetComponent<TransformComponent>(entityId);
 
-                transformComponent.position += glm::vec3(0.0f, 1, 0.0) * deltaTime; // Increment Y axis to show ECS link
-                
-                // Model SRT
+                // build model matrix (same as before)
                 glm::mat4 model(1.0f);
-                model = glm::translate(model, transformComponent.position); // optional
+                model = glm::translate(model, transformComp.position);
+                model = glm::rotate(model, transformComp.rotation.x, glm::vec3(1, 0, 0));
+                model = glm::rotate(model, transformComp.rotation.y, glm::vec3(0, 1, 0));
+                model = glm::rotate(model, transformComp.rotation.z, glm::vec3(0, 0, 1));
+                model = glm::scale(model, transformComp.scale);
 
-                // Rotate
-                model = glm::rotate(model, transformComponent.rotation.x, glm::vec3(1, 0, 0));
-                model = glm::rotate(model, transformComponent.rotation.y, glm::vec3(0, 1, 0));
-                model = glm::rotate(model, transformComponent.rotation.z, glm::vec3(0, 0, 1));
-
-                model = glm::scale(model, transformComponent.scale);     // scale by 2x
                 meshShader.setMat4("uModel", model);
 
+                // pick-based tint
+                const bool isSelected = (int)entityId == sel;
+                meshShader.setVec3("uAlbedo", isSelected ? kHighlightAlbedo : kNormalAlbedo);
 
-                meshShader.setVec3("uAlbedo", { 1,1,1 });
+                // lighting (unchanged)
                 LightComponent::upload(meshShader, sun, hasSun, pointLights, spotLights);
 
-                //texture
+                // texture (bind if entity has one, else 0)
                 glActiveTexture(GL_TEXTURE0);
-                //glBindTexture(GL_TEXTURE_2D, textureComponent.textureID);
-                meshShader.setInt("uTexture", 0); // correct shader
+                meshShader.setInt("uTexture", 0);
+                if (ecsInterface.HasComponent<TextureProperties>(entityId)) {
+                    auto& texComp = ecsInterface.GetComponent<TextureProperties>(entityId);
+                    glBindTexture(GL_TEXTURE_2D, texComp.textureID);
+                }
+                else {
+                    glBindTexture(GL_TEXTURE_2D, 0);
+                }
+
+                // draw
                 glBindVertexArray(meshComponent.vao);
                 glDrawElements(GL_TRIANGLES, meshComponent.indexCount, GL_UNSIGNED_INT, 0);
+
             }
+
+            //// ---- ECS draw loop ----
+            //for (auto const& entityId : mEntities) {
+            //    MeshProperties& meshComponent = ecsInterface.GetComponent<MeshProperties>(entityId);
+            //    TransformComponent& transformComponent = ecsInterface.GetComponent<TransformComponent>(entityId);
+            //    //TextComponent& textComponent = ecsInterface.GetComponent<TextComponent>(entityId);
+            //    //TextureComponent& textureComponent = ecsInterface.GetComponent<TextureProperties>(entityId);
+
+            //    transformComponent.position += glm::vec3(0.0f, 1, 0.0) * deltaTime; // Increment Y axis to show ECS link
+
+            //    // Model SRT
+            //    glm::mat4 model(1.0f);
+            //    model = glm::translate(model, transformComponent.position); // optional
+
+            //    // Rotate
+            //    model = glm::rotate(model, transformComponent.rotation.x, glm::vec3(1, 0, 0));
+            //    model = glm::rotate(model, transformComponent.rotation.y, glm::vec3(0, 1, 0));
+            //    model = glm::rotate(model, transformComponent.rotation.z, glm::vec3(0, 0, 1));
+
+            //    model = glm::scale(model, transformComponent.scale);     // scale by 2x
+            //    meshShader.setMat4("uModel", model);
+
+
+            //    meshShader.setVec3("uAlbedo", { 1,1,1 });
+            //    LightComponent::upload(meshShader, sun, hasSun, pointLights, spotLights);
+
+            //    //texture
+            //    glActiveTexture(GL_TEXTURE0);
+            //    //glBindTexture(GL_TEXTURE_2D, textureComponent.textureID);
+            //    meshShader.setInt("uTexture", 0); // correct shader
+            //    glBindVertexArray(meshComponent.vao);
+            //    glDrawElements(GL_TRIANGLES, meshComponent.indexCount, GL_UNSIGNED_INT, 0);
+            //}
+
 
             // drawing of 5 objects (primitives)
             for (int i = 0; i < 5; ++i) 
@@ -563,6 +607,13 @@ namespace Framework {
     }
     void Graphics::RequestPickUV(float u, float v) {
         pendingPickUV = glm::vec2(u, v);
+    }
+    //JAY
+	//THIS FUNCTION GETS THE LAST PICKED ENTITY ID AND CLEARS IT
+    int Graphics::GetAndClearPickedEntity() {
+        int id = lastPickedId;
+        lastPickedId = -1;     
+        return id;
     }
     // DO NOT CHANGE
     void Graphics::mouse_callback(GLFWwindow* window, double xpos, double ypos)

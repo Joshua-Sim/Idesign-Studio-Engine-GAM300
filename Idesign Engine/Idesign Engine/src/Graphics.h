@@ -51,7 +51,9 @@ namespace Framework {
 		std::string GetName() override;
         static GLuint CreateFramebuffer(int width, int height, GLuint& texture, GLuint& rbo_fb);
         void RequestPickUV(float u, float v);
-
+        //JAY
+        // returns picked entity id (>=0) and clears it; -1 if none
+        int GetAndClearPickedEntity();
 		////linking
 		//GraphicsWindows* graphicWindows;
 		//InputHandler* InputHandlerInstance;
