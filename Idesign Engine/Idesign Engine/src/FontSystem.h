@@ -17,15 +17,10 @@
 namespace Framework {
 
     struct Character {
-        GLuint TextureID;
-        glm::ivec2 Size;
-        glm::ivec2 Bearing;
-        GLuint Advance;
-    };
-
-    struct Font {
-        FT_Face face;
-        int size;
+        GLuint TextureID;   // Glyph texture ID
+        glm::ivec2 Size;    // Glyph size
+        glm::ivec2 Bearing; // Offset from baseline
+        GLuint Advance;     // Horizontal advance
     };
 
     class FontSystem : public ISystem {
@@ -36,9 +31,24 @@ namespace Framework {
         void Update(float deltaTime) override;
         std::string GetName() override { return "FontSystem"; }
 
+        // Font loading & selection
         bool LoadFont(const std::string& fontPath, int fontSize, const std::string& fontName);
-        void RenderText(const std::string& text, float x, float y, float scale, glm::vec3 color, glm::mat4 projection);
         void SetActiveFont(const std::string& fontName);
+
+        // Rendering
+        void RenderText2D(const std::string& text,
+            float x, float y,
+            float scale,
+            glm::vec3 color,
+            float screenWidth,
+            float screenHeight);
+
+        void RenderText3D(const std::string& text,
+            const glm::mat4& model,
+            const glm::mat4& view,
+            const glm::mat4& projection,
+            float scale,
+            glm::vec3 color);
 
     private:
         FT_Library ft;
@@ -47,9 +57,10 @@ namespace Framework {
 
         GLuint VAO{}, VBO{};
         FontShader shader;
+        FontShader shader3D; // For 3D text
     };
 
-    // Declare the global FontSystem pointer
-    extern FontSystem fontSystem; // Declare as an object
+    // Global FontSystem object
+    extern FontSystem fontSystem;
 
 } // namespace Framework

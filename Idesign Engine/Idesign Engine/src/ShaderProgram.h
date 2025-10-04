@@ -26,6 +26,8 @@ public:
     void setDirLight(const glm::vec3& dir, const glm::vec3& color, float intensity);
     void setPointLight(int idx, const glm::vec3& pos, const glm::vec3& color, float intensity, float radius);
 
+    void destroy();
+
 private:
     std::string vsrc;
     std::string fsrc;
