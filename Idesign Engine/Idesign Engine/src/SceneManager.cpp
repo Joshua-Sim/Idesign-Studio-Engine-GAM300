@@ -2,9 +2,9 @@
 ///
 /// @file SceneManager.cpp
 /// 
-/// @brief Definition of the SceneManager system. Responsible for managing
+/// @brief Implementation of the SceneManager system. Responsible for managing
 ///        scene lifecycle (loading, saving, switching, unloading) and 
-///        tracking entities that belong to each scene.
+///        tracking entities that belong to each scene. Implemented with intention of player being system-handled and not scene specific.
 ///  
 /// @authors Joshua
 /// @copyright 2025
@@ -33,6 +33,7 @@ namespace Framework {
 
     void SceneManager::Update(float deltaTime) {
 
+        deltaTime = 0;
         // First handle deferred entity deletes/unloads (from previous frame)
 
         for (Entity e : sceneManager.m_PendingEntityDeletes) {
@@ -87,7 +88,6 @@ namespace Framework {
 
     void SceneManager::SaveScene(const std::string& path) {
         saveScene(path);
-        std::cout << "SceneManager: Saved scene " << path << "\n";
     }
 
     // Call to unload only specifc scene

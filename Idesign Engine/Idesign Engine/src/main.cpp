@@ -7,18 +7,13 @@
 #include "InputHandler.h"
 #include "Coordinator.h"
 #include "ComponentList.h"
-#include "PhysicsSystem.h" // Dummy Physics System for demonstration purposes
 #include "FontSystem.h" 
 #include "MessageSystem.h"
 #include "TestSystem.h"
 #include "FontShader.h"
 #include "AssetManager.h"
 #include "EngineState.h"
-#include "PlayerSystem.h"
 #include "Collision.h"
-#include "EnemyManager.h"
-#include "AnimationSystem.h"
-#include "LogicManager.h"
 #include <ImguiManager.h>
 #include <SignalHandler.h>
 #include "Scenemanager.h"
@@ -79,7 +74,6 @@ int main(void)
 
     // Initialize the InputHandler singleton
     //InputHandler::Initialize(Window->GetWindow());
-    GlobalLogicManager.Initialize();
 
     // Initialize global ECS interface and other singleton components
     ecsInterface.Init();
@@ -89,7 +83,7 @@ int main(void)
     // Initialize the InputHandler singleton
     InputHandler::Initialize(graphicsSystem->GetWindow());
 
-    auto sceneManager = ecsInterface.RegisterSystem<SceneManager>();
+    auto sceneSystem = ecsInterface.RegisterSystem<SceneManager>();
     auto imguiSystem = ecsInterface.RegisterSystem<ImguiManager>();
     imguiSystem->SetGraphicsSystem(graphicsSystem.get());
     graphicsSystem->SetImguiManager(imguiSystem.get());
@@ -116,7 +110,7 @@ int main(void)
     engine->AddSystem(imguiSystem.get());
 
     // Register scene manager last
-    engine->AddSystem(sceneManager.get());
+    engine->AddSystem(sceneSystem.get());
 
     // Initialize the engine and run the main game loop
     engine->Initialize();

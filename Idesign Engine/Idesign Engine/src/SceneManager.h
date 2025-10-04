@@ -31,7 +31,7 @@ namespace Framework {
         void Update(float deltaTime) override;
         std::string GetName() override;
 
-        // Scene control functions (path-based for now)
+        // Scene control functions 
         void LoadScene(const std::string& path, bool additive = false);     // Load a scene from JSON
         void SaveScene(const std::string& path);     // Save current scene to JSON
         void UnloadScene(const std::string& name);   // Unload entities belonging to a scene (Replace with guid in input afterwards or load via properties? inside func maybe)

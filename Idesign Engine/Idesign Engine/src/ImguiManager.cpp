@@ -1275,7 +1275,7 @@ namespace Framework {
                             }
                         }
 
-                                            if (ImGui::CollapsingHeader("Text Component", ImGuiTreeNodeFlags_DefaultOpen))
+                        if (ImGui::CollapsingHeader("Text Component", ImGuiTreeNodeFlags_DefaultOpen))
                             {
                                 if (ecsInterface.HasComponent<TextProperties>(selectedEntity))
                                 {
@@ -1302,7 +1302,7 @@ namespace Framework {
                                     ImGui::Text("No TextComponent attached.");
                                     if (ImGui::Button("Add Text Component"))
                                     {
-                                        ecsInterface.AddComponent<TextComponent>(selectedEntity, TextComponent{});
+                                        ecsInterface.AddComponent<TextProperties>(selectedEntity, TextProperties{});
                                     }
                                 }
                             }

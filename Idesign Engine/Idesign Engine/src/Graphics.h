@@ -17,7 +17,6 @@
 ////FILES
 #include "System.h"
 #include <InputHandler.h>
-#include <PhysicsSystem.h>
 #include <FontSystem.h>
 #include "AssetManager.h"
 #include <ComponentList.h>
@@ -60,10 +59,6 @@ namespace Framework {
         //Getter for windows for external systems.
         GLFWwindow* GetWindow();
         void SetImguiManager(ImguiManager* manager);
-
-		// Sorting Layer Variables
-		unsigned int CurrentSize = -1;
-		std::vector<Entity> sortedEntities;
 
         Camera* getCamera();
 
