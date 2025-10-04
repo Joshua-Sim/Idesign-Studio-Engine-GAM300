@@ -538,6 +538,7 @@ namespace Framework {
                             AssetManager::Instance().FindGuid<TextureProperties>()
                         );
 
+
                         if (!tex) {
                             // Not found, so load and register
                             auto textureComponent = std::make_unique<TextureProperties>();
@@ -558,6 +559,7 @@ namespace Framework {
 
                         MeshProperties meshComponent{};
                         MeshLoader::loadMesh(meshComponent.path, meshComponent);
+                        meshComponent.debugShape = DebugShapeType::None; // <-- Add this line
 
                         ecsInterface.AddComponent<MeshProperties>(newEntity, meshComponent);
 
@@ -565,6 +567,30 @@ namespace Framework {
                         std::cout << "Entity created with ID: " << newEntity << std::endl;
                     }
 
+                    const char* shapeNames[] = { "None", "Box", "Sphere", "Triangle" };
+
+                    // 'static' means it will remember its value between frames.
+                    static int selectedShapeIndex = 1; // Default to "Box"
+
+                    // 1. Create the dropdown menu
+                    ImGui::Combo("Shape Type", &selectedShapeIndex, shapeNames, IM_ARRAYSIZE(shapeNames));
+
+                    if (ImGui::Button("Create Entity with debug box", ImVec2(140, 30)))
+                    {
+                        Entity newEntity = ecsInterface.CreateEntity();
+
+                        // Create a transform component and mark it for debug drawing
+                        TransformComponent transform;
+
+                        // Add the component to the new entity
+                        ecsInterface.AddComponent<TransformComponent>(newEntity, transform);
+                        MeshProperties meshComponent{};
+                        MeshLoader::loadMesh(meshComponent.path, meshComponent);
+                        meshComponent.debugShape = static_cast<DebugShapeType>(selectedShapeIndex);                        ecsInterface.AddComponent<MeshProperties>(newEntity, meshComponent);
+
+
+                        std::cout << "Debug Box Entity created with ID: " << newEntity << std::endl;
+                    }
 
                     if (ImGui::Button("Delete All Entity", ImVec2(140, 30)))
                     {
