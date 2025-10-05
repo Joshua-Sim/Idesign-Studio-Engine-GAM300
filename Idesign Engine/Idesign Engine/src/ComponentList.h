@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "Vector2D.h"
+#include "MainMath.h"
 #include "glm.hpp"
 #include "Types.h"
 
@@ -92,6 +92,23 @@ struct PlayerComponent {
 struct AABB {
     glm::vec2 max{0.0,0.0};
     glm::vec2 min{0.0,0.0};
+};
+
+struct Circle
+{
+    UE_Vector::Vector2D  m_center;
+    float	m_radius;
+};
+
+struct AABB3 {
+    UE_Vector::Vector3D min;
+    UE_Vector::Vector3D max;
+};
+
+struct OBB3 {
+    UE_Vector::Vector3D center;
+    UE_Vector::Vector3D orientation;
+    UE_Vector::Vector3D half;
 };
 
 

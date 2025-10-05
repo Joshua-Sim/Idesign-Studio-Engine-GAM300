@@ -333,9 +333,9 @@ namespace UE_Vector {
             return false;
 
         // Extract rotation (assuming no shear, row-major, normalized axes)
-        float m00 = m.m00 / outScale.x;
+        /*float m00 = m.m00 / outScale.x;
         float m11 = m.m11 / outScale.y;
-        float m22 = m.m22 / outScale.z;
+        float m22 = m.m22 / outScale.z;*/
 
         outRotationEulerRad.x = std::atan2(m.m21 / outScale.z, m.m22 / outScale.z);
         outRotationEulerRad.y = std::asin(-m.m20 / outScale.z);
