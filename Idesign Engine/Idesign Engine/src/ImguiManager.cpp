@@ -943,7 +943,6 @@ namespace Framework {
                             "and default texture. Use this for normal scene objects.\n\n"
                             "Create Shape Entity - Lets you choose a debug primitive "
                             "(Box, Sphere, or Triangle) for testing geometry or physics.\n\n"
-                            "Create Text Entity - Spawns a text-rendering object using the FontSystem.\n\n"
                             "Tips:\n"
                             "- Adjust Transform in the Properties panel after creation.\n"
                             "- Use the Entity List below to select and rename entities.\n"
@@ -1008,15 +1007,15 @@ namespace Framework {
 
                     ImGui::Spacing();
 
-                    // --- Text Entity ---
-                    if (ImGui::Button("Create Text Entity", ImVec2(220, 35)))
-                    {
-                        Entity textEntity = ecsInterface.CreateEntity();
-                        ecsInterface.AddComponent<TransformComponent>(textEntity, TransformComponent{});
-                        ecsInterface.AddComponent<TextProperties>(textEntity, TextProperties{});
+                    //// --- Text Entity ---
+                    //if (ImGui::Button("Create Text Entity", ImVec2(220, 35)))
+                    //{
+                    //    Entity textEntity = ecsInterface.CreateEntity();
+                    //    ecsInterface.AddComponent<TransformComponent>(textEntity, TransformComponent{});
+                    //    ecsInterface.AddComponent<TextProperties>(textEntity, TextProperties{});
 
-                        std::cout << "[ECS] Created Text Entity ID: " << textEntity << std::endl;
-                    }
+                    //    std::cout << "[ECS] Created Text Entity ID: " << textEntity << std::endl;
+                    //}
                 }
 
                 // -------------------------------

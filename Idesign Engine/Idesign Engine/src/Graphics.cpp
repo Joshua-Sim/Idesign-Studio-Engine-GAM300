@@ -370,6 +370,51 @@ namespace Framework {
             meshShader.setMat4("uView", view);
 
             // ---- ECS draw loop ----
+        // JAY (374 TO 415)
+        // --- highlight selected entity (picked last frame) ---
+            int sel = lastPickedId; // cache once per frame
+            const glm::vec3 kNormalAlbedo(1.0f, 1.0f, 1.0f);
+            const glm::vec3 kHighlightAlbedo(1.0f, 0.85f, 0.3f);
+            //JAY
+            // ---- ECS draw loop ----
+            for (auto const& entityId : mEntities) {
+                MeshProperties& meshComponent = ecsInterface.GetComponent<MeshProperties>(entityId);
+                TransformComponent& transformComp = ecsInterface.GetComponent<TransformComponent>(entityId);
+
+                // build model matrix (same as before)
+                glm::mat4 model(1.0f);
+                model = glm::translate(model, transformComp.position);
+                model = glm::rotate(model, transformComp.rotation.x, glm::vec3(1, 0, 0));
+                model = glm::rotate(model, transformComp.rotation.y, glm::vec3(0, 1, 0));
+                model = glm::rotate(model, transformComp.rotation.z, glm::vec3(0, 0, 1));
+                model = glm::scale(model, transformComp.scale);
+
+                meshShader.setMat4("uModel", model);
+
+                // pick-based tint
+                const bool isSelected = (int)entityId == sel;
+                meshShader.setVec3("uAlbedo", isSelected ? kHighlightAlbedo : kNormalAlbedo);
+
+                // lighting (unchanged)
+                LightComponent::upload(meshShader, sun, hasSun, pointLights, spotLights);
+
+                // texture (bind if entity has one, else 0)
+                glActiveTexture(GL_TEXTURE0);
+                meshShader.setInt("uTexture", 0);
+                if (ecsInterface.HasComponent<TextureProperties>(entityId)) {
+                    auto& texComp = ecsInterface.GetComponent<TextureProperties>(entityId);
+                    glBindTexture(GL_TEXTURE_2D, texComp.textureID);
+                }
+                else {
+                    glBindTexture(GL_TEXTURE_2D, 0);
+                }
+
+                // draw
+                glBindVertexArray(meshComponent.vao);
+                glDrawElements(GL_TRIANGLES, meshComponent.indexCount, GL_UNSIGNED_INT, 0);
+
+            }
+
             for (auto const& entityId : mEntities)
             {
                 auto& transformComponent = ecsInterface.GetComponent<TransformComponent>(entityId);
