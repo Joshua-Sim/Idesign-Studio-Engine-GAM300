@@ -49,7 +49,7 @@ EngineState engineState;
 
 int main(void)
 {
-    //SetupSignalHandler();
+    SetupSignalHandlers();
     EnableMemoryLeakChecking(); // For memory check
 
     //Create the core engine which manages all the systems that make up the game
