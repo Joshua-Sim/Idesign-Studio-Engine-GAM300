@@ -1007,15 +1007,15 @@ namespace Framework {
 
                     ImGui::Spacing();
 
-                    //// --- Text Entity ---
-                    //if (ImGui::Button("Create Text Entity", ImVec2(220, 35)))
-                    //{
-                    //    Entity textEntity = ecsInterface.CreateEntity();
-                    //    ecsInterface.AddComponent<TransformComponent>(textEntity, TransformComponent{});
-                    //    ecsInterface.AddComponent<TextProperties>(textEntity, TextProperties{});
+                    // --- Text Entity ---
+                    if (ImGui::Button("Create Text Entity", ImVec2(220, 35)))
+                    {
+                        Entity textEntity = ecsInterface.CreateEntity();
+                        ecsInterface.AddComponent<TransformComponent>(textEntity, TransformComponent{});
+                        ecsInterface.AddComponent<TextProperties>(textEntity, TextProperties{});
 
-                    //    std::cout << "[ECS] Created Text Entity ID: " << textEntity << std::endl;
-                    //}
+                        std::cout << "[ECS] Created Text Entity ID: " << textEntity << std::endl;
+                    }
                 }
 
                 // -------------------------------
