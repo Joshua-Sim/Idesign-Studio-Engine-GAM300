@@ -47,6 +47,16 @@ namespace Framework {
 			mSignatures.insert({ typeName, signature });
 		}
 
+		/// @brief Clears all registered systems and signatures.
+		void Clear()
+		{
+			// 1. Clear the signature map
+			mSignatures.clear();
+
+			// 2. Clear the system map (this destroys all shared_ptrs to systems)
+			mECSystem.clear();
+		}
+
 		void EntityDestroyed(Entity entity)
 		{
 			for (auto const& pair : mECSystem)

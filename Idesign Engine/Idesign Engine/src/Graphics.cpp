@@ -317,6 +317,8 @@ namespace Framework {
     // Update the system
     void Graphics::Update(float deltaTime)
     {
+        (void)deltaTime;
+
         if (glfwWindowShouldClose(window)) {
             CORE->EndGameLoop(); // Mark the game loop as done
             return;
@@ -344,7 +346,7 @@ namespace Framework {
             glClearColor(0.07f, 0.09f, 0.12f, 1.f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            glm::mat4 proj = camera.getProjectionMatrix(w,h);
+            glm::mat4 proj = camera.getProjectionMatrix((float)w,(float)h);
             glm::mat4 view = camera.getViewMatrix();
 
             // stick to ground
@@ -527,13 +529,13 @@ namespace Framework {
 
             // Now overlay HUD text in 2D
             fontSystem.RenderText2D("Score: 100", 10.f, 10.0f, 1.f,
-                glm::vec3(1.0f, 1.0f, 0.5f), w, h);
+                glm::vec3(1.0f, 1.0f, 0.5f), (float)w, (float)h);
            
             // In your main rendering loop (e.g., in Graphics::Update)
 
             // 1. Get the camera's view and projection matrices
             glm::mat4 viewMatrix = camera.getViewMatrix();
-            glm::mat4 projectionMatrix = camera.getProjectionMatrix(w, h);
+            glm::mat4 projectionMatrix = camera.getProjectionMatrix((float)w, (float)h);
 
             // 2. Extract camera's right and up vectors from the view matrix
             glm::vec3 cameraRight_world = { viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0] };

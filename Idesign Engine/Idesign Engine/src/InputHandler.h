@@ -66,6 +66,9 @@ namespace Framework {
         bool isUIFocused = true;
 
         void SetCamera(Camera* camera);
+
+        // Singleton instance
+        static InputHandler* instance;
     private:
         // Enum for tracking key and mouse states
         enum KeyState {
@@ -81,9 +84,6 @@ namespace Framework {
         std::unordered_map<int, KeyState> keyStates;  // Stores key states
         std::unordered_map<int, KeyState> mouseButtonStates;  // Stores mouse button states
         double mouseX, mouseY;  // Stores current mouse position
-
-        // Singleton instance
-        static InputHandler* instance;
 
         // Private constructor for singleton pattern
         InputHandler(GLFWwindow* window);

@@ -29,6 +29,8 @@ namespace Framework {
 	{
 	public:
 
+		~Coordinator();
+
 		void Init();
 
 		// Entity Functions

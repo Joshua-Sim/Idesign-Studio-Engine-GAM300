@@ -48,6 +48,30 @@ namespace Framework {
         entityNames.clear(); // Clear entity names during initialisation
     }
 
+    // ---------------------------- //
+/**
+* @brief Destructor for memory clean-up.
+*
+*/
+    Coordinator::~Coordinator()
+    {
+        if (mComponentManager)
+            mComponentManager->Clear();
+
+        if (mSystemManager)
+            mSystemManager->Clear(); // Optional if defined
+
+        if (mEntityManager)
+            mEntityManager->Clear(); // Optional if defined
+
+        if (mTagManager)
+            mTagManager->Clear();   // Optional if defined
+
+        entityNames.clear();
+        entityList.clear();
+        componentNamesList.clear(); // Optional, since these are value types
+    }
+
     /**
     * @brief Creates an Entity.
     *

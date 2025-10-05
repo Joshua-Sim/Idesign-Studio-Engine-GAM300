@@ -13,6 +13,7 @@
 #include "Core.h"
 #include "EngineState.h"
 #include "Debugger.h"
+#include "InputHandler.h"
 #include <chrono>
 namespace Framework
 {
@@ -126,9 +127,11 @@ void CoreEngine::DestroySystems()
 {
     // Just clear the vector; smart pointers handle the memory cleanup automatically
     Systems.clear();
+
+	// Flush input handler
+	delete Framework::InputHandler::instance;
+	InputHandler::instance = nullptr;
 }
-
-
 
 	/**
  * \brief Ends the game loop.

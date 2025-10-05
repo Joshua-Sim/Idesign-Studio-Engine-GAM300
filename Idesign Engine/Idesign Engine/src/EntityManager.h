@@ -35,6 +35,9 @@ namespace Framework {
 
 		Signature GetSignature(Entity entity);					// Gets the signature of the entity passed in
 
+	
+		void Clear(); 	/// Clears all entity data (used at shutdown or scene reset)
+
 	private:
 		std::queue<Entity> queueOfAvailableEntities{};			// Using std::queue to store possible entity IDs that are available at one point in time
 		std::array<Signature, MAX_ENTITIES> mSignatures{};		// Using std::array to store signatures of entities. The size is just the maximum number of possible entities we can have

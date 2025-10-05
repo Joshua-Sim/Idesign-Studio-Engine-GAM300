@@ -37,13 +37,12 @@ namespace Framework {
 
 	InputHandler::~InputHandler()
 	{
-		// Check if an instance exists before trying to delete it
-		if (instance)
-		{
-			delete instance;
-			instance = nullptr; // Set to null to prevent dangling pointers
-			std::cout << " System: Input Handler Shutdown" << std::endl;
-		}
+		keyStates.clear();
+		mouseButtonStates.clear();
+		messageSystem = nullptr;
+		mainCamera = nullptr;
+
+		std::cout << "System: Input Handler Shutdown" << std::endl;
 	}
 
 	void InputHandler::Initialize() {
@@ -291,12 +290,6 @@ namespace Framework {
 
 			 // Store the state of the key in the map
 			inputSystem->keyStates[key] = currentKeyState;
-
-			// Dispatch a message for key press/release events
-			if (currentKeyState == KEY_PRESSED || currentKeyState == KEY_RELEASED) {
-				MessageKeyPressed* message = new MessageKeyPressed(key);
-				inputSystem->messageSystem->Dispatch(message);  // Dispatch the message
-			}
 		}
 	}
 
@@ -326,12 +319,6 @@ namespace Framework {
 
 			// Store the state of the mouse button in the map
 			inputSystem->mouseButtonStates[button] = currentMouseState;  // << was keyStates[button]
-
-			// Dispatch a message for mouse button press/release events
-			if (currentMouseState == KEY_PRESSED || currentMouseState == KEY_RELEASED) {
-				//MessageMouseClick* message = new MessageMouseClick(button);
-				//inputSystem->messageSystem->Dispatch(message);  // Dispatch the message
-			}
 		}
 	}
 

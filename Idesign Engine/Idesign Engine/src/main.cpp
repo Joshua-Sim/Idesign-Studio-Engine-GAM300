@@ -1,4 +1,13 @@
-//Main, starts here 
+///////////////////////////////////////////////////////////////////////////////////////
+///
+/// @file main.cpp
+/// 
+/// @brief This file defines the main start point of the idesign studio engine. It handles system update loop and clean-up.
+/// 
+/// @Authors: IDesign Studio Team
+///	Copyright 2025, Digipen Institute of Technology
+///
+///////////////////////////////////////////////////////////////////////////////////////
 
 #pragma once
 #include "pch.h"
@@ -100,13 +109,10 @@ int main(void)
     inputHandlerSystem->SetCamera(graphicsCamera);
 
     // Registering systems in the ECS interface here
-    auto messageSystem = std::make_unique<MessageSystem>();
-    inputHandlerSystem->SetMessageSystem(messageSystem.get());
 
     // ------- Add systems to engine below -------- //
     engine->AddSystem(graphicsSystem.get());
     engine->AddSystem(inputHandlerSystem);
-    engine->AddSystem(messageSystem.get());
     engine->AddSystem(imguiSystem.get());
 
     // Register scene manager last
@@ -115,8 +121,6 @@ int main(void)
     // Initialize the engine and run the main game loop
     engine->Initialize();
     engine->GameLoop();
-
-
 
     // Clear all systems and other dynamically allocated resources
     engine->DestroySystems();

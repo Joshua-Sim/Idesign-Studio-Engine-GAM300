@@ -73,6 +73,13 @@ namespace Framework {
 
 		void EntityDestroyed(Entity entity);
 
+		void Clear()
+		{
+			mComponentArrays.clear();  // releases all shared_ptrs to ComponentArray<T>
+			mComponentTypes.clear();   // clears type-name to type-index map
+			mNextComponentType = 0;    // reset counter (optional)
+		}
+
 	private:
 		std::unordered_map<const char*, ComponentType> mComponentTypes{};						// An unordered map containing the index for the Components registered in the system
 		std::unordered_map<const char*, std::shared_ptr<IComponentArray>> mComponentArrays{};	// An unordered map containing the components in the array of components
