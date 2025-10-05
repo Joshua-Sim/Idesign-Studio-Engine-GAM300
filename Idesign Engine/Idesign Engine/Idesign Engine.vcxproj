@@ -143,7 +143,6 @@
     <ClInclude Include="..\lib\imgui\imstb_rectpack.h" />
     <ClInclude Include="..\lib\imgui\imstb_textedit.h" />
     <ClInclude Include="..\lib\imgui\imstb_truetype.h" />
-    <ClInclude Include="src\AnimationSystem.h" />
     <ClInclude Include="src\AssetCompiler.h" />
     <ClInclude Include="src\AssetHandler.h" />
     <ClInclude Include="src\AssetLoader.h" />
@@ -163,8 +162,6 @@
     <ClInclude Include="src\Debugger.h" />
     <ClInclude Include="src\DummySystem.h" />
     <ClInclude Include="src\ECSystemManager.h" />
-    <ClInclude Include="src\EnemyBehavior.h" />
-    <ClInclude Include="src\EnemyManager.h" />
     <ClInclude Include="src\EngineState.h" />
     <ClInclude Include="src\EntityManager.h" />
     <ClInclude Include="src\FontAsset.h" />
@@ -177,7 +174,6 @@
     <ClInclude Include="src\InputHandler.h" />
     <ClInclude Include="src\JsonSerialize.h" />
     <ClInclude Include="src\Lighting.h" />
-    <ClInclude Include="src\LogicManager.h" />
     <ClInclude Include="src\Matrix3x3.h" />
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\MeshLoader.h" />
@@ -186,8 +182,6 @@
     <ClInclude Include="src\MessageSystem.h" />
     <ClInclude Include="src\ObjPicking.h" />
     <ClInclude Include="src\pch.h" />
-    <ClInclude Include="src\PhysicsSystem.h" />
-    <ClInclude Include="src\PlayerSystem.h" />
     <ClInclude Include="src\PrefabProperties.h" />
     <ClInclude Include="src\PropertyMacro.h" />
     <ClInclude Include="src\PropertySystem.h" />
@@ -229,6 +223,7 @@
     <ClInclude Include="src\rapidjson\stringbuffer.h" />
     <ClInclude Include="src\rapidjson\uri.h" />
     <ClInclude Include="src\rapidjson\writer.h" />
+    <ClInclude Include="src\SceneManager.h" />
     <ClInclude Include="src\ShaderProgram.h" />
     <ClInclude Include="src\SignalHandler.h" />
     <ClInclude Include="src\System.h" />
@@ -244,6 +239,7 @@
     <ClInclude Include="src\UndoRedoSystem.h" />
     <ClInclude Include="src\Vector2D.h" />
     <ClInclude Include="src\WindowConfigProperties.h" />
+    <ClInclude Include="TextProperties.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\fontshaders\textfrag.glsl" />
@@ -275,7 +271,6 @@
     <ClCompile Include="..\lib\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="..\lib\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\lib\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="src\AnimationSystem.cpp" />
     <ClCompile Include="src\AssetCompiler.cpp" />
     <ClCompile Include="src\AssetManager.cpp" />
     <ClCompile Include="src\Audio.cpp" />
@@ -287,7 +282,6 @@
     <ClCompile Include="src\Core.cpp" />
     <ClCompile Include="src\Debugger.cpp" />
     <ClCompile Include="src\DummySystem.cpp" />
-    <ClCompile Include="src\EnemyManager.cpp" />
     <ClCompile Include="src\EngineState.cpp" />
     <ClCompile Include="src\EntityManager.cpp" />
     <ClCompile Include="src\FontSystem.cpp" />
@@ -296,7 +290,6 @@
     <ClCompile Include="src\ImguiManager.cpp" />
     <ClCompile Include="src\InputHandler.cpp" />
     <ClCompile Include="src\Lighting.cpp" />
-    <ClCompile Include="src\LogicManager.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Matrix3x3.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
@@ -306,14 +299,14 @@
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\PhysicsSystem.cpp" />
-    <ClCompile Include="src\PlayerSystem.cpp" />
+    <ClCompile Include="src\SceneManager.cpp" />
     <ClCompile Include="src\ShaderProgram.cpp" />
     <ClCompile Include="src\SignalHandler.cpp" />
     <ClCompile Include="src\TagManager.cpp" />
     <ClCompile Include="src\Terrain.cpp" />
     <ClCompile Include="src\TestSystem.cpp" />
     <ClCompile Include="src\TextureLoader.cpp" />
+    <ClCompile Include="src\UndoRedoSystem.cpp" />
     <ClCompile Include="src\Vector2D.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

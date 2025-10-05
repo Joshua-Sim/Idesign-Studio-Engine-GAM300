@@ -11,8 +11,7 @@
 ///           Edwin Leow
 ///           Joel Teo
 ///           Joshua Sim
-///           Keegan Lim
-///	Copyright 2024, Digipen Institute of Technology
+///	Copyright 2025, Digipen Institute of Technology
 ///
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -140,11 +139,11 @@ namespace Framework {
         ecsInterface.RegisterComponent<TransformComponent>();
         ecsInterface.RegisterComponent<MeshProperties>();
         ecsInterface.RegisterComponent<TextureProperties>();
-        ecsInterface.RegisterComponent<TextComponent>();
+        ecsInterface.RegisterComponent<TextProperties>();
 
         //  ---- ECS INITIALIZATION --- 
         Signature signature;
-        signature.set(ecsInterface.GetComponentType<MeshProperties>()); //Set mEntities to be populated with MeshComponent for now
+        signature.set(ecsInterface.GetComponentType<TransformComponent>()); //Set mEntities to be populated with MeshComponent for now
 
         ecsInterface.SetSystemSignature<Graphics>(signature);
         std::cout << "Signature for Graphics system is: " << signature << std::endl;
@@ -174,8 +173,7 @@ namespace Framework {
         textureComponent.path = "Assets/PNG/test.png";
         TextureLoader::loadTexture(textureComponent, true);
 
-        TextComponent textComponent;
-        ecsInterface.AddComponent<TextComponent>(newEntity, textComponent);
+
 
         ecsInterface.AddComponent<Framework::TextureProperties>(newEntity, textureComponent);
         // ----------------- End object creation ------------------------------
@@ -195,9 +193,15 @@ namespace Framework {
             {
                 TextureLoader::loadTexture(props, true);
             });
+
+        AssetManager::Instance().LoadBinaryArray<MeshProperties>("src/Data/MeshAsset.bin", g_MeshProps,
+            [](MeshProperties& props)
+            {
+                MeshLoader::loadMesh(props.path, props);
+            });
+        //AssetManager::Instance().SaveArrayToJson(TypeName<MeshProperties>::value, "src/Data/MeshAsset.json", "mesh");
         //AssetManager::Instance().PrintAssetsOfType(TypeName<TextureProperties>::value);
         //AssetManager::Instance().SaveArrayToJson(TypeName<TextureProperties>::value, "src/Data/TextureAsset.json", "textures");
-        auto* tex = AssetManager::Instance().Get<TextureProperties>(AssetManager::Instance().FindGuid<TextureProperties>());
         cube = Mesh::CreateUnitCubeData();
         plane = Mesh::CreateUnitSphereData();
         cone = Mesh::CreateUnitConeData();
@@ -221,6 +225,7 @@ namespace Framework {
         //cylinder.initGL();
 
         //FONT SYSTEM
+
         fontSystem.Initialize();
         fontSystem.LoadFont("Assets/Font/arial.ttf", 40, "Arial");
         fontSystem.SetActiveFont("Arial");
@@ -394,6 +399,48 @@ namespace Framework {
                 else {
                     glBindTexture(GL_TEXTURE_2D, 0);
                 }
+                // if (ecsInterface.HasComponent<TextProperties>(entityId))
+                // {
+                //     auto& textComp = ecsInterface.GetComponent<TextProperties>(entityId);
+                //     fontSystem.RenderText3D(
+                //         textComp.text,
+                //         model,      // Use the entity's transform for position
+                //         view,
+                //         proj,
+                //         textComp.scale,
+                //         textComp.color
+                //     );
+                // }
+
+                // if (ecsInterface.HasComponent<MeshProperties>(entityId))
+                // {
+                //     auto& meshComponent = ecsInterface.GetComponent<MeshProperties>(entityId);
+                //     if (meshComponent.debugShape == DebugShapeType::None)
+                //     {
+
+                //         meshShader.setMat4("uModel", model);
+                //         glActiveTexture(GL_TEXTURE0);
+                //         //glBindTexture(GL_TEXTURE_2D, textureComponent.textureID);
+                //         meshShader.setInt("uTexture", 0);
+
+                //         // 4. Draw the Mesh (MOVED INSIDE)
+                //         glBindVertexArray(meshComponent.vao);
+                //         glDrawElements(GL_TRIANGLES, meshComponent.indexCount, GL_UNSIGNED_INT, 0);
+
+
+                //     }
+                //     else
+                //     {
+                //         // --- GENERIC DEBUG SHAPE RENDERING ---
+                //         // Find the correct mesh in our map
+                //         auto it = m_debugMeshes.find(meshComponent.debugShape);
+                //         if (it != m_debugMeshes.end())
+                //         {
+                //             // If we found a mesh, draw it using the generic function
+                //             DrawDebugMesh(it->second, meshComponent.debugcolor, model, proj, view);
+                //         }
+                //     }
+                // }
 
                 // draw
                 glBindVertexArray(meshComponent.vao);
@@ -463,7 +510,7 @@ namespace Framework {
 
             // ECS draw loop with encoded ID color (same transforms as scene)
             for (auto const& entityId : mEntities) {
-                auto& meshComponent = ecsInterface.GetComponent<MeshProperties>(entityId);
+               
                 auto& transformComponent = ecsInterface.GetComponent<TransformComponent>(entityId);
 
                 glm::mat4 model(1.0f);
@@ -481,9 +528,13 @@ namespace Framework {
                     ((id >> 16) & 0xFF) / 255.0f
                 };
                 pickShader.setVec3("uIdColor", idColor);
-
-                glBindVertexArray(meshComponent.vao);
-                glDrawElements(GL_TRIANGLES, meshComponent.indexCount, GL_UNSIGNED_INT, 0);
+                if (ecsInterface.HasComponent<MeshProperties>(entityId))
+                {
+                    auto& meshComponent = ecsInterface.GetComponent<MeshProperties>(entityId);
+                    glBindVertexArray(meshComponent.vao);
+                    glDrawElements(GL_TRIANGLES, meshComponent.indexCount, GL_UNSIGNED_INT, 0);
+                }
+                
             }
 
             // (Optional) give your 5 primitives fixed IDs and draw them here too if you want them pickable.

@@ -67,6 +67,9 @@ void MeshLoader::loadMesh(const std::string& path, MeshProperties& mesh) {
             indices.push_back(face.mIndices[j]);
         }
     }
+    
+    // Update mesh path
+    mesh.path = path;
 
     // OpenGL buffers
     glGenVertexArrays(1, &mesh.vao);
@@ -94,4 +97,6 @@ void MeshLoader::loadMesh(const std::string& path, MeshProperties& mesh) {
     glBindVertexArray(0);
 
     mesh.indexCount = static_cast<unsigned int>(indices.size());
+
+    std::cout << mesh.guid << " " << mesh.path << " was loaded into system" << std::endl;
 }

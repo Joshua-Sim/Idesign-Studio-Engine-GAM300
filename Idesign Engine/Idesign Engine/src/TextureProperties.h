@@ -21,6 +21,7 @@ namespace Framework
         std::string guid;
         std::string name;
         std::string path;
+        bool isDirty = false;
 
         // Runtime-only
         unsigned int textureID = 0;
@@ -32,7 +33,7 @@ namespace Framework
     {
         PROP_STRING(guid, TextureProperties),
         PROP_STRING(name, TextureProperties),
-        PROP_STRING(path, TextureProperties)
+        PROP_STRING(path, TextureProperties),
     };
 
     inline constexpr prop_list g_TexturePropertiesProps{ "TextureProperties", g_TexturePropertiesPropsArray };

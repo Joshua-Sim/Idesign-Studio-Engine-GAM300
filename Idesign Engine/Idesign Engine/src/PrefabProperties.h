@@ -24,13 +24,8 @@ namespace Framework
 
     inline constexpr std::array g_PrefabPropsArray
     {
-        prop{ "name", prop::STRING,
-            [](void* pObject, const void* pData) { assert(pObject && pData); static_cast<Prefab*>(pObject)->name = *static_cast<const std::string*>(pData); },
-            [](const void* pObject, void* pData) { assert(pObject && pData); *static_cast<std::string*>(pData) = static_cast<const Prefab*>(pObject)->name; } },
-
-        prop{ "entityCount", prop::INT,
-            [](void* pObject, const void* pData) { assert(pObject && pData); static_cast<Prefab*>(pObject)->entityCount = *static_cast<const int*>(pData); },
-            [](const void* pObject, void* pData) { assert(pObject && pData); *static_cast<int*>(pData) = static_cast<const Prefab*>(pObject)->entityCount; } },
+        PROP_STRING(name, Prefab),
+        PROP_INT(entityCount, Prefab)
     };
 
     inline constexpr prop_list g_PrefabProps{ "Prefab", g_PrefabPropsArray };
