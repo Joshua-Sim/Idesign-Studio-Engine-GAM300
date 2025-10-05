@@ -1,6 +1,4 @@
-﻿glew32s.lib(glew.obj) : warning LNK4099: PDB '' was not found with 'glew32s.lib(glew.obj)' or at ''; linking object as if no debug info
-LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
-  Idesign Engine.vcxproj -> C:\Users\jayli\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe
+﻿  UndoRedoSystem.cpp
+  Idesign Engine.vcxproj -> C:\Year 3\Idesign-Studio-Engine\Idesign Engine\x64\Debug\Idesign Engine.exe
   'pwsh.exe' is not recognized as an internal or external command,
   operable program or batch file.
