@@ -175,7 +175,6 @@ namespace Framework {
 
 
 
-
         ecsInterface.AddComponent<Framework::TextureProperties>(newEntity, textureComponent);
         // ----------------- End object creation ------------------------------
 
@@ -207,7 +206,7 @@ namespace Framework {
         plane = Mesh::CreateUnitSphereData();
         cone = Mesh::CreateUnitConeData();
         cylinder = Mesh::CreateUnitCylinderData();
-
+        triangle = Mesh::CreateUnitTriangleData();
         // Initialise 1 object into ECS (Temporary, liase and move de-serialize with loadmesh function handled at asset-handler)
 
 
@@ -218,19 +217,21 @@ namespace Framework {
         blurShader.initGL();
         finalShader.initGL();
         terrain.initGL();
-
+        debugShader.initGL();
         //initialise geometry objects
         cube.initGL();
         plane.initGL();
         cone.initGL();
         //cylinder.initGL();
-
+        triangle.initGL();
         //FONT SYSTEM
 
         fontSystem.Initialize();
         fontSystem.LoadFont("Assets/Font/arial.ttf", 40, "Arial");
         fontSystem.SetActiveFont("Arial");
-
+        m_debugMeshes[DebugShapeType::Box] = &cube;
+        m_debugMeshes[DebugShapeType::Sphere] = &plane; // Remember 'plane' is your sphere mesh
+        m_debugMeshes[DebugShapeType::Triangle] = &triangle;
 
         // lights (use member containers)
         sun = DirectionalLightCPU{};
@@ -320,287 +321,313 @@ namespace Framework {
             CORE->EndGameLoop(); // Mark the game loop as done
             return;
         }
-        
-            float now = (float)glfwGetTime();
-            float dt = now - lastTime; lastTime = now;
-            process_input(dt);
+
+        float now = (float)glfwGetTime();
+        float dt = now - lastTime; lastTime = now;
+        process_input(dt);
 
 
-            // ====================================================================
-           // 1. SCENE PASS: Render the scene to the HDR framebuffer
-           // ====================================================================
-            glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
-            glEnable(GL_DEPTH_TEST);
+        // ====================================================================
+       // 1. SCENE PASS: Render the scene to the HDR framebuffer
+       // ====================================================================
+        glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
+        glEnable(GL_DEPTH_TEST);
 
-            int w, h; 
-            glfwGetFramebufferSize(window, &w, &h);
- 
-            if (w == 0 || h == 0) {
-                return; // Don't render anything if the window is minimized
+        int w, h;
+        glfwGetFramebufferSize(window, &w, &h);
+
+        if (w == 0 || h == 0) {
+            return; // Don't render anything if the window is minimized
+        }
+        float aspect = (h == 0) ? 1.f : float(w) / float(h);
+        glViewport(0, 0, w, h);
+        glClearColor(0.07f, 0.09f, 0.12f, 1.f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glm::mat4 proj = camera.getProjectionMatrix(w, h);
+        glm::mat4 view = camera.getViewMatrix();
+
+        // stick to ground
+        float groundY = terrain.getHeightAt(camera.position.x, camera.position.z);
+        camera.position.y = groundY + 1.8f;
+
+        // --- Terrain (no texture)
+        terrainShader.use();
+        terrainShader.setMat4("uProj", proj);
+        terrainShader.setMat4("uView", view);
+        terrainShader.setMat4("uModel", glm::mat4(1.f));
+        terrainShader.setVec3("uAlbedo", { 0.6f,0.4f,0.2f }); //terrain color
+        LightComponent::upload(terrainShader, sun, hasSun, pointLights, spotLights);
+        terrain.draw();
+
+        // --- Mesh (textured)
+        meshShader.use();
+        meshShader.setMat4("uProj", proj);
+        meshShader.setMat4("uView", view);
+
+        // ---- ECS draw loop ----
+        // --- Mesh (textured)
+        meshShader.use();
+        meshShader.setMat4("uProj", proj);
+        meshShader.setMat4("uView", view);
+
+        // JAY (374 TO 415)
+        // --- highlight selected entity (picked last frame) ---
+        int sel = lastPickedId; // cache once per frame
+        const glm::vec3 kNormalAlbedo(1.0f, 1.0f, 1.0f);
+        const glm::vec3 kHighlightAlbedo(1.0f, 0.85f, 0.3f);
+        //JAY
+        // ---- ECS draw loop ----
+        for (auto const& entityId : mEntities) {
+            MeshProperties& meshComponent = ecsInterface.GetComponent<MeshProperties>(entityId);
+            TransformComponent& transformComp = ecsInterface.GetComponent<TransformComponent>(entityId);
+
+            // build model matrix (same as before)
+            glm::mat4 model(1.0f);
+            model = glm::translate(model, transformComp.position);
+            model = glm::rotate(model, transformComp.rotation.x, glm::vec3(1, 0, 0));
+            model = glm::rotate(model, transformComp.rotation.y, glm::vec3(0, 1, 0));
+            model = glm::rotate(model, transformComp.rotation.z, glm::vec3(0, 0, 1));
+            model = glm::scale(model, transformComp.scale);
+
+            meshShader.setMat4("uModel", model);
+
+            // pick-based tint
+            const bool isSelected = (int)entityId == sel;
+            meshShader.setVec3("uAlbedo", isSelected ? kHighlightAlbedo : kNormalAlbedo);
+
+            // lighting (unchanged)
+            LightComponent::upload(meshShader, sun, hasSun, pointLights, spotLights);
+
+            // texture (bind if entity has one, else 0)
+            glActiveTexture(GL_TEXTURE0);
+            meshShader.setInt("uTexture", 0);
+            if (ecsInterface.HasComponent<TextureProperties>(entityId)) {
+                auto& texComp = ecsInterface.GetComponent<TextureProperties>(entityId);
+                glBindTexture(GL_TEXTURE_2D, texComp.textureID);
             }
-            float aspect = (h == 0) ? 1.f : float(w) / float(h);
-            glViewport(0, 0, w, h);
-            glClearColor(0.07f, 0.09f, 0.12f, 1.f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            else {
+                glBindTexture(GL_TEXTURE_2D, 0);
+            }
 
-            glm::mat4 proj = camera.getProjectionMatrix(w,h);
-            glm::mat4 view = camera.getViewMatrix();
+            // draw
+            glBindVertexArray(meshComponent.vao);
+            glDrawElements(GL_TRIANGLES, meshComponent.indexCount, GL_UNSIGNED_INT, 0);
 
-            // stick to ground
-            float groundY = terrain.getHeightAt(camera.position.x, camera.position.z);
-            camera.position.y = groundY + 1.8f;
+        }
 
-            // --- Terrain (no texture)
-            terrainShader.use();
-            terrainShader.setMat4("uProj", proj);
-            terrainShader.setMat4("uView", view);
-            terrainShader.setMat4("uModel", glm::mat4(1.f));
-            terrainShader.setVec3("uAlbedo", { 0.6f,0.4f,0.2f }); //terrain color
-            LightComponent::upload(terrainShader, sun, hasSun, pointLights, spotLights);
-            terrain.draw();
+        for (auto const& entityId : mEntities)
+        {
+            auto& transformComponent = ecsInterface.GetComponent<TransformComponent>(entityId);
 
-            // --- Mesh (textured)
-            meshShader.use();
-            meshShader.setMat4("uProj", proj);
-            meshShader.setMat4("uView", view);
-            // --- highlight selected entity (picked last frame) ---
-            int sel = lastPickedId; // cache once per frame
-            const glm::vec3 kNormalAlbedo(1.0f, 1.0f, 1.0f);
-            const glm::vec3 kHighlightAlbedo(1.0f, 0.85f, 0.3f);
-            //JAY
+            // This line is for testing and can remain here
+           //transformComponent.position += glm::vec3(0.0f, 1.0f, 0.0f) * deltaTime;
 
-            for (auto const& entityId : mEntities)
+
+            glm::mat4 model(1.0f);
+            model = glm::translate(model, transformComponent.position);
+            model = glm::rotate(model, glm::radians(transformComponent.rotation.x), glm::vec3(1, 0, 0));
+            model = glm::rotate(model, glm::radians(transformComponent.rotation.y), glm::vec3(0, 1, 0));
+            model = glm::rotate(model, glm::radians(transformComponent.rotation.z), glm::vec3(0, 0, 1));
+            model = glm::scale(model, transformComponent.scale);
+
+            if (ecsInterface.HasComponent<TextProperties>(entityId))
             {
-                MeshProperties& meshComponent = ecsInterface.GetComponent<MeshProperties>(entityId);
-                auto& transformComponent = ecsInterface.GetComponent<TransformComponent>(entityId);
-
-                glm::mat4 model(1.0f);
-                model = glm::translate(model, transformComponent.position);
-                model = glm::rotate(model, glm::radians(transformComponent.rotation.x), glm::vec3(1, 0, 0));
-                model = glm::rotate(model, glm::radians(transformComponent.rotation.y), glm::vec3(0, 1, 0));
-                model = glm::rotate(model, glm::radians(transformComponent.rotation.z), glm::vec3(0, 0, 1));
-                model = glm::scale(model, transformComponent.scale);
-
-                if (ecsInterface.HasComponent<TextProperties>(entityId))
-                {
-                    auto& textComp = ecsInterface.GetComponent<TextProperties>(entityId);
-                    fontSystem.RenderText3D(
-                        textComp.text,
-                        model,      // Use the entity's transform for position
-                        view,
-                        proj,
-                        textComp.scale,
-                        textComp.color
-                    );
-                }
-
-                if (ecsInterface.HasComponent<MeshProperties>(entityId))
-                {
-                    auto& meshComponent = ecsInterface.GetComponent<MeshProperties>(entityId);
-                    if (meshComponent.debugShape == DebugShapeType::None)
-                    {
-
-                        meshShader.setMat4("uModel", model);
-                        glActiveTexture(GL_TEXTURE0);
-                        //glBindTexture(GL_TEXTURE_2D, textureComponent.textureID);
-                        meshShader.setInt("uTexture", 0);
-
-                        // 4. Draw the Mesh (MOVED INSIDE)
-                        glBindVertexArray(meshComponent.vao);
-                        glDrawElements(GL_TRIANGLES, meshComponent.indexCount, GL_UNSIGNED_INT, 0);
-
-
-                    }
-                    else
-                    {
-                        // --- GENERIC DEBUG SHAPE RENDERING ---
-                        // Find the correct mesh in our map
-                        auto it = m_debugMeshes.find(meshComponent.debugShape);
-                        if (it != m_debugMeshes.end())
-                        {
-                            // If we found a mesh, draw it using the generic function
-                            DrawDebugMesh(it->second, meshComponent.debugcolor, model, proj, view);
-                        }
-                    }
-                }
-
-                meshShader.setMat4("uModel", model);
-
-                // pick-based tint
-                const bool isSelected = (int)entityId == sel;
-                meshShader.setVec3("uAlbedo", isSelected ? kHighlightAlbedo : kNormalAlbedo);
-
-                // lighting (unchanged)
-                LightComponent::upload(meshShader, sun, hasSun, pointLights, spotLights);
-
-                // texture (bind if entity has one, else 0)
-                glActiveTexture(GL_TEXTURE0);
-                meshShader.setInt("uTexture", 0);
-                if (ecsInterface.HasComponent<TextureProperties>(entityId)) {
-                    auto& texComp = ecsInterface.GetComponent<TextureProperties>(entityId);
-                    glBindTexture(GL_TEXTURE_2D, texComp.textureID);
-                }
-                else {
-                    glBindTexture(GL_TEXTURE_2D, 0);
-                }
-                // draw
-                glBindVertexArray(meshComponent.vao);
-                glDrawElements(GL_TRIANGLES, meshComponent.indexCount, GL_UNSIGNED_INT, 0);
-
+                auto& textComp = ecsInterface.GetComponent<TextProperties>(entityId);
+                fontSystem.RenderText3D(
+                    textComp.text,
+                    model,      // Use the entity's transform for position
+                    view,
+                    proj,
+                    textComp.scale,
+                    textComp.color
+                );
             }
 
-
-            // drawing of 5 objects (primitives)
-            for (int i = 0; i < 5; ++i) 
+            if (ecsInterface.HasComponent<MeshProperties>(entityId))
             {
-                glm::mat4 model(1.0f);
-                model = glm::translate(model, glm::vec3((i - 2) * 1.7f, 0.0f, 0.0f));
-                meshShader.setMat4("uModel", model);
-                cylinder.draw(); //change line to whichever you want to test : 1. cube 2. cylinder 3. plane 4.cone follow by .draw();
-            }
-            // object pick
-            //jay
-            //render color-IDs into offscreen (double-buffered)
-            glBindFramebuffer(GL_FRAMEBUFFER, pickFBO[pickWrite]);
-
-            // IMPORTANT: viewport must match the pick FBO size
-            // If you created pick FBOs with (config->x, config->y), use those.
-            // If you created them at 1280x720, set (1280,720) here OR recreate the FBOs to match (w,h).
-            glViewport(0, 0, w, h);
-
-            glEnable(GL_DEPTH_TEST);
-            glClearColor(0, 0, 0, 0); // id=0 => "no hit"
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-            pickShader.use();
-            pickShader.setMat4("uProj", proj);
-            pickShader.setMat4("uView", view);
-
-            // ECS draw loop with encoded ID color (same transforms as scene)
-            for (auto const& entityId : mEntities) {
-               
-                auto& transformComponent = ecsInterface.GetComponent<TransformComponent>(entityId);
-
-                glm::mat4 model(1.0f);
-                model = glm::translate(model, transformComponent.position);
-                model = glm::rotate(model, transformComponent.rotation.x, glm::vec3(1, 0, 0));
-                model = glm::rotate(model, transformComponent.rotation.y, glm::vec3(0, 1, 0));
-                model = glm::rotate(model, transformComponent.rotation.z, glm::vec3(0, 0, 1));
-                model = glm::scale(model, transformComponent.scale);
-                pickShader.setMat4("uModel", model);
-
-                uint32_t id = static_cast<uint32_t>(entityId) + 1u; // 0 reserved for "no hit"
-                glm::vec3 idColor = {
-                    ((id) & 0xFF) / 255.0f,
-                    ((id >> 8) & 0xFF) / 255.0f,
-                    ((id >> 16) & 0xFF) / 255.0f
-                };
-                pickShader.setVec3("uIdColor", idColor);
-                if (ecsInterface.HasComponent<MeshProperties>(entityId))
+                auto& meshComponent = ecsInterface.GetComponent<MeshProperties>(entityId);
+                if (meshComponent.debugShape == DebugShapeType::None)
                 {
-                    auto& meshComponent = ecsInterface.GetComponent<MeshProperties>(entityId);
+
+                    meshShader.setMat4("uModel", model);
+                    glActiveTexture(GL_TEXTURE0);
+                    //glBindTexture(GL_TEXTURE_2D, textureComponent.textureID);
+                    meshShader.setInt("uTexture", 0);
+
+                    // 4. Draw the Mesh (MOVED INSIDE)
                     glBindVertexArray(meshComponent.vao);
                     glDrawElements(GL_TRIANGLES, meshComponent.indexCount, GL_UNSIGNED_INT, 0);
+
+
                 }
-                
+                else
+                {
+                    // --- GENERIC DEBUG SHAPE RENDERING ---
+                    // Find the correct mesh in our map
+                    auto it = m_debugMeshes.find(meshComponent.debugShape);
+                    if (it != m_debugMeshes.end())
+                    {
+                        // If we found a mesh, draw it using the generic function
+                        DrawDebugMesh(it->second, meshComponent.debugcolor, model, proj, view);
+                    }
+                }
             }
 
-            // (Optional) give your 5 primitives fixed IDs and draw them here too if you want them pickable.
+        }
 
-            glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-            // rotate buffers so we read the *previous* one this frame
-            std::swap(pickWrite, pickRead);
+        //// drawing of 5 objects (primitives)
+        //for (int i = 0; i < 5; ++i)
+        //{
+        //    glm::mat4 model(1.0f);
+        //    model = glm::translate(model, glm::vec3((i - 2) * 1.7f, 0.0f, 0.0f));
+        //    meshShader.setMat4("uModel", model);
+        //    cylinder.draw(); //change line to whichever you want to test : 1. cube 2. cylinder 3. plane 4.cone follow by .draw();
+        //}
+        // object pick
+        //jay
+        //render color-IDs into offscreen (double-buffered)
+        glBindFramebuffer(GL_FRAMEBUFFER, pickFBO[pickWrite]);
 
-            // ====================================================================
-            // 2. BLOOM PASS: Apply a two-pass Gaussian blur
-            // ====================================================================
-            glDisable(GL_DEPTH_TEST);
-            bool horizontal = true, first_iteration = true;
-            unsigned int amount = 10;
-            blurShader.use();
-            for (unsigned int i = 0; i < amount; i++)
+        // IMPORTANT: viewport must match the pick FBO size
+        // If you created pick FBOs with (config->x, config->y), use those.
+        // If you created them at 1280x720, set (1280,720) here OR recreate the FBOs to match (w,h).
+        glViewport(0, 0, w, h);
+
+        glEnable(GL_DEPTH_TEST);
+        glClearColor(0, 0, 0, 0); // id=0 => "no hit"
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        pickShader.use();
+        pickShader.setMat4("uProj", proj);
+        pickShader.setMat4("uView", view);
+
+        // ECS draw loop with encoded ID color (same transforms as scene)
+        for (auto const& entityId : mEntities) {
+
+            auto& transformComponent = ecsInterface.GetComponent<TransformComponent>(entityId);
+
+            glm::mat4 model(1.0f);
+            model = glm::translate(model, transformComponent.position);
+            model = glm::rotate(model, transformComponent.rotation.x, glm::vec3(1, 0, 0));
+            model = glm::rotate(model, transformComponent.rotation.y, glm::vec3(0, 1, 0));
+            model = glm::rotate(model, transformComponent.rotation.z, glm::vec3(0, 0, 1));
+            model = glm::scale(model, transformComponent.scale);
+            pickShader.setMat4("uModel", model);
+
+            uint32_t id = static_cast<uint32_t>(entityId) + 1u; // 0 reserved for "no hit"
+            glm::vec3 idColor = {
+                ((id) & 0xFF) / 255.0f,
+                ((id >> 8) & 0xFF) / 255.0f,
+                ((id >> 16) & 0xFF) / 255.0f
+            };
+            pickShader.setVec3("uIdColor", idColor);
+            if (ecsInterface.HasComponent<MeshProperties>(entityId))
             {
-                glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[horizontal]);
-                blurShader.setBool("horizontal", horizontal);
-                glBindTexture(GL_TEXTURE_2D, first_iteration ? colorBuffer : pingpongColorbuffers[!horizontal]);
-                renderQuad();
-                horizontal = !horizontal;
-                if (first_iteration) first_iteration = false;
+                auto& meshComponent = ecsInterface.GetComponent<MeshProperties>(entityId);
+                glBindVertexArray(meshComponent.vao);
+                glDrawElements(GL_TRIANGLES, meshComponent.indexCount, GL_UNSIGNED_INT, 0);
             }
 
-            // ====================================================================
-            // 3. FINAL PASS: Render to screen with tone mapping and bloom
-            // ====================================================================
-         
-            glBindFramebuffer(GL_FRAMEBUFFER, m_imguiManager->GetGameFramebuffer());
-            glViewport(0, 0, w, h);
-            glClear(GL_COLOR_BUFFER_BIT);
+        }
 
-            finalShader.use();
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, colorBuffer);
-            glActiveTexture(GL_TEXTURE1);
-            glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[!horizontal]);
-            finalShader.setInt("sceneTexture", 0);
-            finalShader.setInt("bloomTexture", 1);
-            finalShader.setFloat("exposure", hdrExposure);
-            finalShader.setFloat("bloomStrength", bloomStrength);
-           
+        // (Optional) give your 5 primitives fixed IDs and draw them here too if you want them pickable.
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        // rotate buffers so we read the *previous* one this frame
+        std::swap(pickWrite, pickRead);
+
+        // ====================================================================
+        // 2. BLOOM PASS: Apply a two-pass Gaussian blur
+        // ====================================================================
+        glDisable(GL_DEPTH_TEST);
+        bool horizontal = true, first_iteration = true;
+        unsigned int amount = 10;
+        blurShader.use();
+        for (unsigned int i = 0; i < amount; i++)
+        {
+            glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[horizontal]);
+            blurShader.setBool("horizontal", horizontal);
+            glBindTexture(GL_TEXTURE_2D, first_iteration ? colorBuffer : pingpongColorbuffers[!horizontal]);
             renderQuad();
+            horizontal = !horizontal;
+            if (first_iteration) first_iteration = false;
+        }
 
-            // Now overlay HUD text in 2D
-            fontSystem.RenderText2D("Score: 100", 10.f, 10.0f, 1.f,
-                glm::vec3(1.0f, 1.0f, 0.5f), w, h);
-           
-            // In your main rendering loop (e.g., in Graphics::Update)
+        // ====================================================================
+        // 3. FINAL PASS: Render to screen with tone mapping and bloom
+        // ====================================================================
 
-            // 1. Get the camera's view and projection matrices
-            glm::mat4 viewMatrix = camera.getViewMatrix();
-            glm::mat4 projectionMatrix = camera.getProjectionMatrix(w, h);
+        glBindFramebuffer(GL_FRAMEBUFFER, m_imguiManager->GetGameFramebuffer());
+        glViewport(0, 0, w, h);
+        glClear(GL_COLOR_BUFFER_BIT);
 
-            // 2. Extract camera's right and up vectors from the view matrix
-            glm::vec3 cameraRight_world = { viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0] };
-            glm::vec3 cameraUp_world = { viewMatrix[0][1], viewMatrix[1][1], viewMatrix[2][1] };
+        finalShader.use();
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, colorBuffer);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[!horizontal]);
+        finalShader.setInt("sceneTexture", 0);
+        finalShader.setInt("bloomTexture", 1);
+        finalShader.setFloat("exposure", hdrExposure);
+        finalShader.setFloat("bloomStrength", bloomStrength);
 
-   
+        renderQuad();
 
-            // 4. Create the final model matrix by combining translation and rotation
-            glm::mat4 textModel = glm::mat4(1.0f);
-            textModel = glm::translate(textModel, glm::vec3(0.0f, 5.0f, 0.0f)); // Position in world space
+        // Now overlay HUD text in 2D
+        fontSystem.RenderText2D("Score: 100", 10.f, 10.0f, 1.f,
+            glm::vec3(1.0f, 1.0f, 0.5f), w, h);
 
-            // 5. Call the RenderText3D function
-            fontSystem.RenderText3D("iDesign Engine by iDesign Studio",
-                textModel,
-                viewMatrix,
-                projectionMatrix,
-                0.05f, // Scale
-                glm::vec3(1.0f, 1.0f, 0.5f)); // Color
+        // In your main rendering loop (e.g., in Graphics::Update)
 
-            // --- Handle a pick request coming from ImGui ---
-            //jay
-            if (pendingPickUV.x >= 0.0f && pendingPickUV.y >= 0.0f) {
-                int pw = 1280, ph = 720; // keep these in sync with how you created the pick FBOs
-                int px = glm::clamp(int(pendingPickUV.x * pw), 0, pw - 1);
-                int py = glm::clamp(int(pendingPickUV.y * ph), 0, ph - 1);
+        // 1. Get the camera's view and projection matrices
+        glm::mat4 viewMatrix = camera.getViewMatrix();
+        glm::mat4 projectionMatrix = camera.getProjectionMatrix(w, h);
 
-                glBindFramebuffer(GL_READ_FRAMEBUFFER, pickFBO[pickRead]);
-                unsigned char rgb[3] = { 0,0,0 };
-                glReadPixels(px, py, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, rgb);
-                glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+        // 2. Extract camera's right and up vectors from the view matrix
+        glm::vec3 cameraRight_world = { viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0] };
+        glm::vec3 cameraUp_world = { viewMatrix[0][1], viewMatrix[1][1], viewMatrix[2][1] };
 
-                uint32_t id = (uint32_t)rgb[0] | ((uint32_t)rgb[1] << 8) | ((uint32_t)rgb[2] << 16);
-                lastPickedId = (id == 0) ? -1 : int(id) - 1;
 
-                pendingPickUV = { -1.0f, -1.0f };
 
-                if (lastPickedId >= 0) {
-                    std::cout << "Picked entity: " << lastPickedId << "\n";
-                }
+        // 4. Create the final model matrix by combining translation and rotation
+        glm::mat4 textModel = glm::mat4(1.0f);
+        textModel = glm::translate(textModel, glm::vec3(0.0f, 5.0f, 0.0f)); // Position in world space
+
+        // 5. Call the RenderText3D function
+        fontSystem.RenderText3D("iDesign Engine by iDesign Studio",
+            textModel,
+            viewMatrix,
+            projectionMatrix,
+            0.05f, // Scale
+            glm::vec3(1.0f, 1.0f, 0.5f)); // Color
+
+        // --- Handle a pick request coming from ImGui ---
+        //jay
+        if (pendingPickUV.x >= 0.0f && pendingPickUV.y >= 0.0f) {
+            int pw = 1280, ph = 720; // keep these in sync with how you created the pick FBOs
+            int px = glm::clamp(int(pendingPickUV.x * pw), 0, pw - 1);
+            int py = glm::clamp(int(pendingPickUV.y * ph), 0, ph - 1);
+
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, pickFBO[pickRead]);
+            unsigned char rgb[3] = { 0,0,0 };
+            glReadPixels(px, py, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, rgb);
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+
+            uint32_t id = (uint32_t)rgb[0] | ((uint32_t)rgb[1] << 8) | ((uint32_t)rgb[2] << 16);
+            lastPickedId = (id == 0) ? -1 : int(id) - 1;
+
+            pendingPickUV = { -1.0f, -1.0f };
+
+            if (lastPickedId >= 0) {
+                std::cout << "Picked entity: " << lastPickedId << "\n";
             }
+        }
 
-            // Unbind the framebuffer, returning rendering control to the main window
-            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        // Unbind the framebuffer, returning rendering control to the main window
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     }
 
@@ -613,7 +640,7 @@ namespace Framework {
     // Get and return windows ptr for external system
     GLFWwindow* Graphics::GetWindow() {
         return window;
-        
+
     }
 
     Camera* Graphics::getCamera() {
@@ -626,13 +653,6 @@ namespace Framework {
     }
     void Graphics::RequestPickUV(float u, float v) {
         pendingPickUV = glm::vec2(u, v);
-    }
-    //JAY
-	//THIS FUNCTION GETS THE LAST PICKED ENTITY ID AND CLEARS IT
-    int Graphics::GetAndClearPickedEntity() {
-        int id = lastPickedId;
-        lastPickedId = -1;     
-        return id;
     }
     // DO NOT CHANGE
     void Graphics::mouse_callback(GLFWwindow* window, double xpos, double ypos)
@@ -753,7 +773,6 @@ namespace Framework {
 
         return framebuffer;
     }
-
     void Graphics::DrawDebugMesh(Mesh* mesh, const glm::vec3& color, const glm::mat4& model, const glm::mat4& projection, const glm::mat4& view) {
         if (!mesh) return;
 
@@ -768,5 +787,12 @@ namespace Framework {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         mesh->draw();
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    }
+
+    //THIS FUNCTION GETS THE LAST PICKED ENTITY ID AND CLEARS IT
+    int Graphics::GetAndClearPickedEntity() {
+        int id = lastPickedId;
+        lastPickedId = -1;
+        return id;
     }
 }
