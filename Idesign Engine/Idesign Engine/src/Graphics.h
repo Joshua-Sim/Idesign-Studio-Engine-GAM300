@@ -92,6 +92,7 @@ namespace Framework {
         Mesh cone;
         Mesh plane;
         Mesh cylinder;
+        Mesh triangle;
         MeshProperties mesh;
         GLuint tex = 0;
 
@@ -100,6 +101,7 @@ namespace Framework {
         ShaderProgram meshShader{ "Assets/shaders/meshvert.glsl", "Assets/shaders/meshfrag.glsl" };
         ShaderProgram blurShader{ "Assets/shaders/postprocess.glsl", "Assets/shaders/blur.glsl" };
         ShaderProgram finalShader{ "Assets/shaders/postprocess.glsl", "Assets/shaders/final.glsl" };
+        ShaderProgram debugShader{ "Assets/shaders/debugVertexShader.glsl", "Assets/shaders/debugFragmentShader.glsl" };
         // lighting
         DirectionalLightCPU sun;
         bool hasSun = true;
@@ -121,6 +123,9 @@ namespace Framework {
         GLuint quadVAO = 0;
         GLuint quadVBO = 0;
 
+        GLuint m_debugVao = 0;
+        GLuint m_debugVbo = 0;
+
         ImguiManager* m_imguiManager = nullptr;
         // jay objpick
         GLuint pickFBO[2] = { 0,0 };
@@ -131,7 +136,14 @@ namespace Framework {
         ShaderProgram pickShader{ "Assets/shaders/pickvert.glsl", "Assets/shaders/pickfrag.glsl" };
         glm::vec2 pendingPickUV = { -1.0f,-1.0f };
         int lastPickedId = -1;
-	};
+
+        std::map<DebugShapeType, Mesh*> m_debugMeshes;
+
+        //draw debug shapes
+        void DrawDebugBox(const TransformComponent& transform, const glm::vec3& color);
+        // Draws a wireframe sphere using the transform's position and scale as radius
+        void DrawDebugMesh(Mesh* mesh, const glm::vec3& color, const glm::mat4& model, const glm::mat4& projection, const glm::mat4& view);
+    };
 
 }
 #endif // !_GRAPHICS_H_

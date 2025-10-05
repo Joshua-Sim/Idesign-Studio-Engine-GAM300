@@ -1,10 +1,18 @@
-﻿  Graphics.cpp
+﻿  AnimationSystem.cpp
+  AssetCompiler.cpp
+  AssetManager.cpp
+  Audio.cpp
+  AudioLoader.cpp
+  ButtonSystem.cpp
+  Collision.cpp
+  EnemyManager.cpp
+  Graphics.cpp
 C:\Users\jayli\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(67,30): warning C4245: 'initializing': conversion from 'int' to 'unsigned int', signed/unsigned mismatch
   (compiling source file '/src/Graphics.cpp')
   
 C:\Users\jayli\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(200,15): warning C4458: declaration of 'tex' hides class member
   (compiling source file '/src/Graphics.cpp')
-      C:\Users\jayli\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(96,16):
+      C:\Users\jayli\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(97,16):
       see declaration of 'Framework::Graphics::tex'
   
 C:\Users\jayli\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(200,15): warning C4189: 'tex': local variable is initialized but not referenced
@@ -81,11 +89,34 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.3443
               _Fn=int (__cdecl *)(int)
           ]
   
+  InputHandler.cpp
+  LogicManager.cpp
+C:\Users\jayli\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EnemyBehavior.h(89,63): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+C:\Users\jayli\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EnemyBehavior.h(89,63): warning C4244:         with
+C:\Users\jayli\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EnemyBehavior.h(89,63): warning C4244:         [
+C:\Users\jayli\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EnemyBehavior.h(89,63): warning C4244:             T=float
+C:\Users\jayli\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EnemyBehavior.h(89,63): warning C4244:         ]
+  (compiling source file '/src/LogicManager.cpp')
+  
+C:\Users\jayli\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EnemyBehavior.h(103,63): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+C:\Users\jayli\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EnemyBehavior.h(103,63): warning C4244:         with
+C:\Users\jayli\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EnemyBehavior.h(103,63): warning C4244:         [
+C:\Users\jayli\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EnemyBehavior.h(103,63): warning C4244:             T=float
+C:\Users\jayli\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EnemyBehavior.h(103,63): warning C4244:         ]
+  (compiling source file '/src/LogicManager.cpp')
+  
+  Mesh.cpp
+  MeshLoader.cpp
+  PhysicsSystem.cpp
+  PlayerSystem.cpp
   main.cpp
 C:\Users\jayli\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(67,30): warning C4245: 'initializing': conversion from 'int' to 'unsigned int', signed/unsigned mismatch
   (compiling source file '/src/main.cpp')
   
   Generating Code...
+glew32s.lib(glew.obj) : warning LNK4099: PDB '' was not found with 'glew32s.lib(glew.obj)' or at ''; linking object as if no debug info
+LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
   Idesign Engine.vcxproj -> C:\Users\jayli\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe
   'pwsh.exe' is not recognized as an internal or external command,
   operable program or batch file.
