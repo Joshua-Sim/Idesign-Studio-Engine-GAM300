@@ -1329,6 +1329,13 @@ namespace Framework {
                     std::vector<float> values;
                     std::vector<const char*> labels;
 
+                    // In your ImGui rendering section
+                    float framerate = ImGui::GetIO().Framerate;
+                    float frameTime = 1000.0f / framerate;
+
+                    ImGui::Text("FPS: %.1f", framerate);
+                    ImGui::Text("Frame Time: %.2f ms", frameTime);
+
                     for (const auto& [systemName, percentage] : systemPercentages) {
                         values.push_back(static_cast<float>(percentage)); // Add percentage as float for the histogram
                         labels.push_back(systemName.c_str()); // Store the label for each system

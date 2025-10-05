@@ -307,6 +307,8 @@ namespace Framework {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         lastTime = (float)glfwGetTime();
 
+        m_frameCount = 0;
+        m_fpsLastTime = glfwGetTime(); // Start the timer
     }
 
     void Graphics::SetImguiManager(ImguiManager* manager)
@@ -327,7 +329,6 @@ namespace Framework {
             float now = (float)glfwGetTime();
             float dt = now - lastTime; lastTime = now;
             process_input(dt);
-
 
             // ====================================================================
            // 1. SCENE PASS: Render the scene to the HDR framebuffer
@@ -577,6 +578,30 @@ namespace Framework {
                 }
             }
 
+            //Showing FPS
+            double currentTime = glfwGetTime();
+            double delta = currentTime - m_fpsLastTime;
+            m_frameCount++;
+
+            // If more than 1 second has passed, update the window title
+            if (delta >= 1.0)
+            {
+                double fps = static_cast<double>(m_frameCount) / delta;
+
+                std::stringstream ss;
+                ss << std::fixed << std::setprecision(1) << fps << " FPS]";
+
+                // Use the class's 'window' member variable
+                glfwSetWindowTitle(window, ss.str().c_str());
+
+                // Reset for the next second
+                m_frameCount = 0;
+                m_fpsLastTime = currentTime;
+            }
+            // --- END: FPS Counter Logic ---
+
+
+
             // Unbind the framebuffer, returning rendering control to the main window
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -593,6 +618,8 @@ namespace Framework {
         return window;
         
     }
+
+
 
     Camera* Graphics::getCamera() {
         return &camera;

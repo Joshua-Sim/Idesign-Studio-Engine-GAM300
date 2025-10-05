@@ -110,7 +110,7 @@ namespace Framework
     void UndoRedoManager::ApplyComponentSnapshot(const ComponentUndoEntry& entry)
     {
         //auto* pComponent = ecsInterface.GetComponent(entry.entity, entry.componentType);
-        const prop_list* props = FindPropListByName(entry.componentType);
+        //const prop_list* props = FindPropListByName(entry.componentType);
         //if (!pComponent || !props) return;
 
         rapidjson::Document doc;

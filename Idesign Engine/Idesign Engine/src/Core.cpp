@@ -15,6 +15,7 @@
 #include "Debugger.h"
 #include "InputHandler.h"
 #include <chrono>
+#include <thread>
 namespace Framework
 {
 	//A global pointer to the core
@@ -62,42 +63,70 @@ namespace Framework
 * which represents the time passed since the last frame, and updates all systems using this dt.
 * It continues until the game is marked as inactive (GameActive is set to false).
 */
-	void CoreEngine::GameLoop()
-	{
-		LastTime = static_cast<float>(glfwGetTime());
-		DebugSystem* debugSystem = DebugSystem::GetInstance();
 
-		while (GameActive)
-		{
-			double currentTime = glfwGetTime();
-			float dt = static_cast<float>(currentTime - LastTime);
-			LastTime = static_cast<float>(currentTime);
+    void CoreEngine::GameLoop()
+    {
+        DebugSystem* debugSystem = DebugSystem::GetInstance();
 
-			std::unordered_map<std::string, double> systemTimes;
+        // --- Timestep and Frame Pacing variables ---
+        const double fixedDt = 1.0 / 60.0; // Target for logic updates (60 updates/sec)
+        const auto targetFrameDuration = std::chrono::duration<double>(1.0 / 60.0); // Target for rendering (60 frames/sec)
 
-			for (auto* system : Systems) {
-				auto start = std::chrono::high_resolution_clock::now();
+        double lastTime = glfwGetTime();
+        double accumulator = 0.0;
 
-				if (engineState.IsPlay()) {
-					system->Update(dt);
-				}
-				else{
-					system->Update(0);
-				}
-			
-				auto end = std::chrono::high_resolution_clock::now();
-				std::chrono::duration<double, std::milli> elapsed = end - start;
+        while (GameActive)
+        {
+            auto frameStart = std::chrono::high_resolution_clock::now();
 
-				systemTimes[system->GetName()] = elapsed.count();
-			}
+            // --- Fixed Timestep for Game Logic ---
+            double currentTime = glfwGetTime();
+            double frameTime = currentTime - lastTime;
+            lastTime = currentTime;
+            accumulator += frameTime;
 
-			// Update DebugSystem with timing data
-			if (debugSystem) {
-				debugSystem->SetSystemTimes(systemTimes);
-				debugSystem->ProcessSystemUpdateTimes(dt);
-			}
-		}
-	}
+            std::unordered_map<std::string, double> systemTimes;
+
+            // Update game logic in fixed steps to ensure consistency
+            while (accumulator >= fixedDt)
+            {
+                for (auto* system : Systems) {
+                    auto start = std::chrono::high_resolution_clock::now();
+
+                    if (engineState.IsPlay()) {
+                        system->Update(static_cast<float>(fixedDt)); // Use the constant fixedDt
+                    }
+                    else {
+                        system->Update(0);
+                    }
+
+                    auto end = std::chrono::high_resolution_clock::now();
+                    std::chrono::duration<double, std::milli> elapsed = end - start;
+                    systemTimes[system->GetName()] = elapsed.count();
+                }
+                accumulator -= fixedDt;
+            }
+
+            if (debugSystem) {
+                debugSystem->SetSystemTimes(systemTimes);
+                // Pass the actual frameTime for accurate FPS calculation, not dt
+                debugSystem->ProcessSystemUpdateTimes(static_cast<float>(frameTime));
+            }
+
+            // NOTE: All your rendering code would execute here, once per frame.
+
+            // --- Manual Frame Pacing to Cap FPS ---
+            auto frameEnd = std::chrono::high_resolution_clock::now();
+            auto elapsedFrameTime = frameEnd - frameStart;
+
+            // If the frame finished faster than our target, sleep for the remaining time
+            if (elapsedFrameTime < targetFrameDuration)
+            {
+                auto sleepDuration = targetFrameDuration - elapsedFrameTime;
+                std::this_thread::sleep_for(sleepDuration);
+            }
+        }
+    }
 
 
 
