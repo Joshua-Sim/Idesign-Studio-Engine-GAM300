@@ -135,7 +135,7 @@ namespace Framework {
         std::map<DebugShapeType, Mesh*> m_debugMeshes;
 
         //draw debug shapes
-        void DrawDebugBox(const TransformComponent& transform, const glm::vec3& color);
+        //void DrawDebugBox(const TransformComponent& transform, const glm::vec3& color);
         // Draws a wireframe sphere using the transform's position and scale as radius
         void DrawDebugMesh(Mesh* mesh, const glm::vec3& color, const glm::mat4& model, const glm::mat4& projection, const glm::mat4& view);
     };
