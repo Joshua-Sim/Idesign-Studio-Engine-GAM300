@@ -180,7 +180,6 @@
     <ClInclude Include="src\MeshProperties.h" />
     <ClInclude Include="src\Message.h" />
     <ClInclude Include="src\MessageSystem.h" />
-    <ClInclude Include="src\ObjPicking.h" />
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\PrefabProperties.h" />
     <ClInclude Include="src\PropertyMacro.h" />
@@ -295,7 +294,6 @@
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\MeshLoader.cpp" />
     <ClCompile Include="src\MessageSystem.cpp" />
-    <ClCompile Include="src\ObjPicking.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
