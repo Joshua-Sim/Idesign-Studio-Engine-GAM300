@@ -78,6 +78,7 @@ namespace Framework {
         window = glfwCreateWindow(config->x, config->y, config->programName.c_str(), nullptr, nullptr);
         if (!window) { std::cerr << "Window creation failed\n"; glfwTerminate(); return; }
         glfwMakeContextCurrent(window);
+        glfwSwapInterval(0); //disable V Sync
 
         //glewExperimental = GL_TRUE; //optional to include can remove
         if (glewInit() != GLEW_OK) { std::cerr << "GLEW init failed\n"; return; }
@@ -589,7 +590,7 @@ namespace Framework {
                 double fps = static_cast<double>(m_frameCount) / delta;
 
                 std::stringstream ss;
-                ss << std::fixed << std::setprecision(1) << fps << " FPS]";
+                ss << std::fixed << std::setprecision(1) << fps << " FPS";
 
                 // Use the class's 'window' member variable
                 glfwSetWindowTitle(window, ss.str().c_str());

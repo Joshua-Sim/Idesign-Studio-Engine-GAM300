@@ -20,6 +20,8 @@
 
 extern Framework::Coordinator ecsInterface;
 
+ImVec4 helpYellow = ImVec4(1.0f, 0.9f, 0.4f, 1.0f); // soft golden-yellow
+
 namespace Framework {
     float projWidth{};
     float projHeight{};
@@ -391,6 +393,24 @@ namespace Framework {
             //for edwin
             if (ImGui::Begin("Assets", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
             {
+                ImGui::TextColored(helpYellow, "(❓)");
+                if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNone))
+                {
+                    ImGui::BeginTooltip();
+                    ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+                    ImGui::TextUnformatted(
+                        "- The Texture panel displays all loaded texture assets as thumbnails.\n"
+                        "- Left-click a texture to view its details; right-click to open edit options.\n"
+                        "- Inside the popup you can:\n"
+                        "    - Rename the texture (updates its asset entry)\n"
+                        "    - Delete it (unloads it from the Asset Manager)\n\n"
+                        "- Hover over a texture to see metadata like path, GUID, and resolution.\n"
+                        "- Changes are auto-saved via the Asset Manager’s dirty-flag system.\n"
+                        "\nTip: Keep texture names short and descriptive (e.g. 'brick_diffuse')."
+                    );
+                    ImGui::PopTextWrapPos();
+                    ImGui::EndTooltip();
+                }
                 float windowWidth = ImGui::GetContentRegionAvail().x;
                 ImVec2 imageSize(64, 64);
                 float itemWidth = imageSize.x + 16.0f;
@@ -432,7 +452,7 @@ namespace Framework {
                             std::snprintf(renameBuffers[tex->guid], sizeof(renameBuffers[tex->guid]), "%s", tex->name.c_str());
                         }
 
-                        ImGui::TextColored(ImVec4(0.9f, 0.7f, 0.2f, 1.0f), "🛠 Texture Options");
+                        ImGui::TextColored(ImVec4(0.9f, 0.7f, 0.2f, 1.0f), "Texture Options");
                         ImGui::Spacing();
                         ImGui::Separator();
                         ImGui::Spacing();
@@ -525,6 +545,22 @@ namespace Framework {
 
             if (ImGui::Begin("Mesh Assets", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
             {
+                ImGui::TextColored(helpYellow, "(❓)");
+                if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNone))
+                {
+                    ImGui::BeginTooltip();
+                    ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+                    ImGui::TextUnformatted(
+                        "- The Mesh panel lists all registered mesh assets (OBJ, FBX, etc.).\n"
+                        "- Each mesh uses a placeholder icon — right-click the icon to rename or delete.\n"
+                        "- You can undo or redo recent changes using the buttons at the bottom.\n\n"
+                        "- Hovering shows mesh details such as VAO/VBO handles, vertex count, and GUID.\n"
+                        "- Deleting a mesh unloads it from GPU memory and removes it from the Asset Manager.\n"
+                        "\nTip: Keep only necessary meshes loaded — unused geometry increases VRAM usage."
+                    );
+                    ImGui::PopTextWrapPos();
+                    ImGui::EndTooltip();
+                }
                 float windowWidth = ImGui::GetContentRegionAvail().x;
                 float itemWidth = 80.0f;
                 int columns = std::max(1, static_cast<int>(windowWidth / itemWidth));
@@ -661,12 +697,12 @@ namespace Framework {
                     AssetManager::Instance().Unload(guid);
                 }
 
-                if (ImGui::Button("Undo"))
-                    UndoRedoManager::Instance().UndoAsset();
+                //if (ImGui::Button("Undo"))
+                //    UndoRedoManager::Instance().UndoAsset();
 
-                ImGui::SameLine();
-                if (ImGui::Button("Redo"))
-                    UndoRedoManager::Instance().RedoAsset();
+                //ImGui::SameLine();
+                //if (ImGui::Button("Redo"))
+                //    UndoRedoManager::Instance().RedoAsset();
 
                 ImGui::NewLine();
                 RenderErrorPopup();
@@ -675,6 +711,26 @@ namespace Framework {
 
             if (ImGui::Begin("Audio Manager"))
             {
+
+                ImGui::TextColored(helpYellow, "(❓)");
+                if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNone))
+                {
+                    ImGui::BeginTooltip();
+                    ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+                    ImGui::TextUnformatted(
+                        "- The Audio Manager displays all imported audio clips.\n"
+                        "- Right-click the audio icon to rename, change mode (oneshot / loop), or delete.\n"
+                        "- You can control playback directly from this panel:\n"
+                        "    - 'Play' to test the clip\n"
+                        "    - 'Stop' to halt playback\n"
+                        "    - Adjust volume with the slider\n\n"
+                        "- Green text indicates that an audio clip is currently playing.\n"
+                        "- Stopped clips return to idle state automatically when playback ends.\n"
+                        "\nTip: Keep sound file names consistent with use-cases, e.g. "
+                        "'ui_click', 'engine_loop', or 'explosion_short'.");
+                    ImGui::PopTextWrapPos();
+                    ImGui::EndTooltip();
+                }
                 const auto& assetsImgui = AssetManager::Instance().GetAssets();
 
                 // Modal state
@@ -865,128 +921,188 @@ namespace Framework {
             static Entity selectedEntity = std::numeric_limits<Entity>::max();  // Sets a selected entity to be a non existent entity out of range
             static bool isPropertiesWindowOpen = false;                         // Allows opening and closing of the name editor? might want to remove
 
+
+
             if (ImGui::Begin("Entity", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
             {
-                if (ImGui::CollapsingHeader("Entity Creation", ImGuiTreeNodeFlags_DefaultOpen))
+                // -------------------------------
+                // SECTION 1: ENTITY CREATION
+                // -------------------------------
+                if (ImGui::CollapsingHeader("Create New Entity"))
                 {
-                    if (ImGui::Button("Create Entity", ImVec2(140, 30)))
+                    // --- Help tooltip icon (right-aligned) ---
+                    ImGui::SameLine();
+                    ImGui::TextColored(helpYellow, "(❓)");
+                    if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNone))
                     {
-                        // Call to ECS Interface to create a new entity , ideally only transform for clean entity but for now create demo entity
+                        ImGui::BeginTooltip();
+                        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+                        ImGui::TextUnformatted(
+                            "How to use Entity Creation:\n\n"
+                            "Create Basic Entity - Adds a new empty object with a Transform, Mesh, "
+                            "and default texture. Use this for normal scene objects.\n\n"
+                            "Create Shape Entity - Lets you choose a debug primitive "
+                            "(Box, Sphere, or Triangle) for testing geometry or physics.\n\n"
+                            "Create Text Entity - Spawns a text-rendering object using the FontSystem.\n\n"
+                            "Tips:\n"
+                            "- Adjust Transform in the Properties panel after creation.\n"
+                            "- Use the Entity List below to select and rename entities.\n"
+                            "- Use 'Delete ALL Entities' to reset the scene safely."
+                        );
+                        ImGui::PopTextWrapPos();
+                        ImGui::EndTooltip();
+                    }
+
+                    ImGui::Text("Choose what type of entity to create:");
+                    ImGui::Separator();
+                    ImGui::Spacing();
+
+                    // --- Simple Entity ---
+                    if (ImGui::Button("Create Basic Entity", ImVec2(220, 35)))
+                    {
                         Entity newEntity = ecsInterface.CreateEntity();
                         ecsInterface.AddComponent<TransformComponent>(newEntity, TransformComponent{});
 
                         auto* tex = AssetManager::Instance().Get<TextureProperties>(
-                            AssetManager::Instance().FindGuid<TextureProperties>()
-                        );
+                            AssetManager::Instance().FindGuid<TextureProperties>());
 
-
-                        if (!tex) {
-                            // Not found, so load and register
+                        if (!tex)
+                        {
                             auto textureComponent = std::make_unique<TextureProperties>();
                             textureComponent->path = "Assets/PNG/test.png";
                             TextureLoader::loadTexture(*textureComponent, true);
                             AssetManager::Instance().RegisterAsset(std::move(textureComponent), &g_TexturePropertiesProps, "Assets/PNG/test.png");
-
-                            // Retrieve again to get the registered pointer
                             tex = AssetManager::Instance().Get<TextureProperties>(
-                                AssetManager::Instance().FindGuid<TextureProperties>()
-                            );
+                                AssetManager::Instance().FindGuid<TextureProperties>());
                         }
 
-                        // Add to ECS
-                        if (tex) {
-                            ecsInterface.AddComponent<TextureProperties>(newEntity, *tex);
-                        }
+                        if (tex) ecsInterface.AddComponent<TextureProperties>(newEntity, *tex);
 
                         MeshProperties meshComponent{};
                         MeshLoader::loadMesh(meshComponent.path, meshComponent);
-                        meshComponent.debugShape = DebugShapeType::None; // <-- Add this line
-
+                        meshComponent.debugShape = DebugShapeType::None;
                         ecsInterface.AddComponent<MeshProperties>(newEntity, meshComponent);
 
-
-                        std::cout << "Entity created with ID: " << newEntity << std::endl;
+                        std::cout << "[ECS] Created Basic Entity ID: " << newEntity << std::endl;
                     }
 
+                    ImGui::Spacing();
+
+                    // --- Shape Entity ---
+                    static int selectedShapeIndex = 1;
                     const char* shapeNames[] = { "None", "Box", "Sphere", "Triangle" };
-
-                    // 'static' means it will remember its value between frames.
-                    static int selectedShapeIndex = 1; // Default to "Box"
-
-                    // 1. Create the dropdown menu
                     ImGui::Combo("Shape Type", &selectedShapeIndex, shapeNames, IM_ARRAYSIZE(shapeNames));
 
-                    if (ImGui::Button("Create Entity with debug box", ImVec2(140, 30)))
+                    if (ImGui::Button("Create Shape Entity", ImVec2(220, 35)))
                     {
                         Entity newEntity = ecsInterface.CreateEntity();
+                        ecsInterface.AddComponent<TransformComponent>(newEntity, TransformComponent{});
 
-                        // Create a transform component and mark it for debug drawing
-                        TransformComponent transform;
-
-                        // Add the component to the new entity
-                        ecsInterface.AddComponent<TransformComponent>(newEntity, transform);
                         MeshProperties meshComponent{};
                         MeshLoader::loadMesh(meshComponent.path, meshComponent);
-                        meshComponent.debugShape = static_cast<DebugShapeType>(selectedShapeIndex);                        
+                        meshComponent.debugShape = static_cast<DebugShapeType>(selectedShapeIndex);
                         ecsInterface.AddComponent<MeshProperties>(newEntity, meshComponent);
 
-
-                        std::cout << "Debug Box Entity created with ID: " << newEntity << std::endl;
+                        std::cout << "[ECS] Created Shape Entity ID: " << newEntity << std::endl;
                     }
 
-                    if (ImGui::Button("Create Text Entity", ImVec2(140, 30)))
+                    ImGui::Spacing();
+
+                    // --- Text Entity ---
+                    if (ImGui::Button("Create Text Entity", ImVec2(220, 35)))
                     {
-                        // 1. Create a brand new entity
-                        Entity newTextEntity = ecsInterface.CreateEntity();
+                        Entity textEntity = ecsInterface.CreateEntity();
+                        ecsInterface.AddComponent<TransformComponent>(textEntity, TransformComponent{});
+                        ecsInterface.AddComponent<TextProperties>(textEntity, TextProperties{});
 
-                        // 2. Give it a TransformComponent so it has a position
-                        ecsInterface.AddComponent<TransformComponent>(newTextEntity, TransformComponent{});
+                        std::cout << "[ECS] Created Text Entity ID: " << textEntity << std::endl;
+                    }
+                }
 
-                        // 3. Immediately add a TextComponent to it
-                        ecsInterface.AddComponent<TextProperties>(newTextEntity, TextProperties{});
+                // -------------------------------
+                // SECTION 2: ENTITY MANAGEMENT
+                // -------------------------------
+                if (ImGui::CollapsingHeader("Entity Management"))
+                {
+                    ImGui::Spacing();
+                    if (ImGui::Button("Delete Selected Entity", ImVec2(220, 35)))
+                    {
+                        ImGui::OpenPopup("Confirm Delete Entity?");
 
-                        std::cout << "Text Entity created with ID: " << newTextEntity << std::endl;
                     }
 
-                    if (ImGui::Button("Delete All Entity", ImVec2(140, 30)))
+                    if (ImGui::BeginPopupModal("Confirm Delete Entity?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
                     {
-                        ImGui::OpenPopup("Confirm Clear All"); // Open the confirmation popup
-                        // Clear entities list here.
-                    }
-
-                    // Create the popup modal
-                    if (ImGui::BeginPopupModal("Confirm Clear All", NULL, ImGuiWindowFlags_AlwaysAutoResize))
-                    {
-                        ImGui::Text("Are you sure?");
+                        ImGui::Text("Are you sure you want to delete this entity?");
                         ImGui::Separator();
 
-                        if (ImGui::Button("Yes", ImVec2(120, 0))) // Confirm button
+                        if (ImGui::Button("Yes", ImVec2(100, 30)))
                         {
-                            isPropertiesWindowOpen = false;
-                            // Clear all objects and reset fields
-                            ecsInterface.ClearEntities();
-                            //models.clear();
-
-                            ImGui::CloseCurrentPopup(); // Close the popup
+                            if (selectedEntity != 0)
+                            {
+                                ecsInterface.DestroyEntity(selectedEntity);
+                                selectedEntity = 0;
+                                ImGui::CloseCurrentPopup();
+                            }
                         }
                         ImGui::SameLine();
-                        if (ImGui::Button("Cancel", ImVec2(120, 0))) // Cancel button
+                        if (ImGui::Button("Cancel", ImVec2(100, 30)))
                         {
-                            ImGui::CloseCurrentPopup(); // Close the popup without clearing
+                            ImGui::CloseCurrentPopup();
                         }
+                        ImGui::EndPopup();
+                    }
+
+                    if (ImGui::Button(" Delete ALL Entities", ImVec2(220, 35)))
+                    {
+                        ImGui::OpenPopup("Confirm Clear All");
+                    }
+
+                    if (ImGui::BeginPopupModal("Confirm Clear All", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+                    {
+                        ImGui::Text("Are you sure you want to clear all entities?");
+                        ImGui::Separator();
+
+                        if (ImGui::Button("Yes", ImVec2(100, 30)))
+                        {
+                            ecsInterface.ClearEntities();
+                            selectedEntity = 0;
+                            ImGui::CloseCurrentPopup();
+                        }
+                        ImGui::SameLine();
+                        if (ImGui::Button("Cancel", ImVec2(100, 30)))
+                            ImGui::CloseCurrentPopup();
 
                         ImGui::EndPopup();
                     }
                 }
 
-                if (ImGui::Button("Delete Entity", ImVec2(140, 30)))
+
+                if (ImGui::Begin("Entity List"))
                 {
-                    ecsInterface.DestroyEntity(selectedEntity);
+                    ImGui::SameLine();
+                    ImGui::TextColored(helpYellow, "(❓)");
+                    if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNone))
+                    {
+                        ImGui::BeginTooltip();
+                        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+                        ImGui::TextUnformatted(
+                            "Entity List Instructions:\n\n"
+                            "- Click an entity name to select it and open its properties.\n"
+                            "- Scene entities are grouped by scene name; ungrouped entities appear at the top.\n"
+                            "- Use the 'Delete Selected Entity' button to remove a single item.\n"
+                            "- Use 'Delete ALL Entities' (with confirmation) to clear everything.\n"
+                            "- You can add more components (e.g., Light, Text, Collider) from the Properties window."
+                        );
+                        ImGui::PopTextWrapPos();
+                        ImGui::EndTooltip();
+                    }
                 }
+                
+                // --- Help tooltip icon under Entity List header ---
 
 
-                ImGui::Begin("Entity List");
-
+                ImGui::Spacing();
              
                 std::unordered_set<Entity> registered;
                 for (const auto& [sceneName, entities] : Framework::sceneManager.GetSceneEntities())
@@ -1034,9 +1150,6 @@ namespace Framework {
                 }
 
                 ImGui::End();
-
-
-
 
                 // Separate panel to edit the selected entity's name
                 if (isPropertiesWindowOpen && selectedEntity != std::numeric_limits<Entity>::max())
@@ -1328,13 +1441,6 @@ namespace Framework {
                     // Prepare data for histogram
                     std::vector<float> values;
                     std::vector<const char*> labels;
-
-                    // In your ImGui rendering section
-                    float framerate = ImGui::GetIO().Framerate;
-                    float frameTime = 1000.0f / framerate;
-
-                    ImGui::Text("FPS: %.1f", framerate);
-                    ImGui::Text("Frame Time: %.2f ms", frameTime);
 
                     for (const auto& [systemName, percentage] : systemPercentages) {
                         values.push_back(static_cast<float>(percentage)); // Add percentage as float for the histogram

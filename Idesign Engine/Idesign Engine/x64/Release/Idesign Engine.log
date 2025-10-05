@@ -1,0 +1,86 @@
+﻿  imgui.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\imgui\imgui.cpp(1,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  imgui_demo.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\imgui\imgui_demo.cpp(1,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  imgui_draw.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\imgui\imgui_draw.cpp(1,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  imgui_impl_glfw.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\imgui\imgui_impl_glfw.cpp(1,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  imgui_impl_opengl3.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\imgui\imgui_impl_opengl3.cpp(1,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  imgui_tables.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\imgui\imgui_tables.cpp(1,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  imgui_widgets.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\imgui\imgui_widgets.cpp(1,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  AssetCompiler.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AssetCompiler.cpp(2,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  AssetManager.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AssetManager.cpp(12,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  Audio.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Audio.cpp(13,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  AudioLoader.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AudioLoader.cpp(2,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  ButtonSystem.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ButtonSystem.cpp(14,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  Collision.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Collision.cpp(13,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  ComponentManager.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ComponentManager.cpp(14,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  Coordinator.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Coordinator.cpp(26,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  Core.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Core.cpp(12,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  Debugger.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Debugger.cpp(11,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  DummySystem.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\DummySystem.cpp(12,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  EngineState.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EngineState.cpp(13,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  EntityManager.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EntityManager.cpp(13,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  Compiling...
+  FontSystem.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\FontSystem.cpp(13,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  Graphics.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(18,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  GraphicsShader.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\GraphicsShader.cpp(13,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  ImguiManager.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  InputHandler.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\InputHandler.cpp(15,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  Lighting.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Lighting.cpp(1,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  main.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\main.cpp(13,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  Matrix3x3.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Matrix3x3.cpp(19,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  Mesh.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Mesh.cpp(1,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  MeshLoader.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\MeshLoader.cpp(2,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  MessageSystem.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\MessageSystem.cpp(11,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  ObjPicking.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ObjPicking.cpp(1,9): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  pch.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\pch.cpp(11,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  SceneManager.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\SceneManager.cpp(14,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  ShaderProgram.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ShaderProgram.cpp(1,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  SignalHandler.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\SignalHandler.cpp(10,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  TagManager.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\TagManager.cpp(13,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  Terrain.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Terrain.cpp(1,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  TestSystem.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\TestSystem.cpp(11,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  TextureLoader.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\TextureLoader.cpp(1,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  Compiling...
+  UndoRedoSystem.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\UndoRedoSystem.cpp(2,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
+  Vector2D.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Vector2D.cpp(18,10): error C1083: Cannot open precompiled header file: 'x64\Release\Idesign Engine.pch': No such file or directory
