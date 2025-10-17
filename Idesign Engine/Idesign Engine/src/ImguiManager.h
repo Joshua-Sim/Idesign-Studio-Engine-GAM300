@@ -37,6 +37,12 @@ namespace Framework {
 		std::string OpenFileDialog();
 		std::string SaveFileDialog();
 		void RenderErrorPopup();
+		void RenderMenuBar();
+		void RenderMeshAssets();
+		void RenderAssetBar();
+		void RenderAudioManager();
+		void RenderEntityMenu();
+
 	private:
 		Framework::Graphics* m_graphicsSystem = nullptr; // Pointer to store the connection
 	};
