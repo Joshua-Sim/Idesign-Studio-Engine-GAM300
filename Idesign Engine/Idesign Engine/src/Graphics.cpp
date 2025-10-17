@@ -329,7 +329,7 @@ namespace Framework {
         
             float now = (float)glfwGetTime();
             float dt = now - lastTime; lastTime = now;
-            process_input(dt);
+            //process_input(dt);
 
             // ====================================================================
            // 1. SCENE PASS: Render the scene to the HDR framebuffer
@@ -685,6 +685,34 @@ namespace Framework {
         if (glfwGetKey(window, GLFW_KEY_EQUAL) == GLFW_PRESS) bloomStrength += 1.0f * dt;
         if (glfwGetKey(window, GLFW_KEY_MINUS) == GLFW_PRESS) if (bloomStrength > 0.0f) bloomStrength -= 1.0f * dt;
     }
+
+    void Graphics::MoveCameraFromLua(const std::string& dir, float dt, bool gm) {
+        if (dir == "W") camera.processKeyboard(Camera::Movement::Forward, dt, gm, terrain);
+        else if (dir == "S") camera.processKeyboard(Camera::Movement::Backward, dt, gm, terrain);
+        else if (dir == "A") camera.processKeyboard(Camera::Movement::Left, dt, gm, terrain);
+        else if (dir == "D") camera.processKeyboard(Camera::Movement::Right, dt, gm, terrain);
+    }
+
+    void Graphics::NudgeLightFromLua(const std::string& axis, float amount) {
+        if (pointLights.empty()) return;
+        if (axis == "up")    pointLights[0].position.z -= amount;
+        else if (axis == "down")  pointLights[0].position.z += amount;
+        else if (axis == "left")  pointLights[0].position.x -= amount;
+        else if (axis == "right") pointLights[0].position.x += amount;
+    }
+
+    void Graphics::ToggleMainLightFromLua() {
+        if (pointLights.empty()) return;
+        pointLights[0].enabled = !pointLights[0].enabled;
+    }
+
+    void Graphics::SetHDRFromLua(float delta) { hdrExposure = std::max(0.0f, hdrExposure + delta);}
+    void Graphics::SetBloomFromLua(float delta) { bloomStrength = std::max(0.0f, bloomStrength + delta);}
+    void Graphics::SetGroundModeFromLua(bool gm) { groundMode = gm; }
+    bool Graphics::GetGroundModeFromLua() const { return groundMode; }
+
+    void Graphics::SetScriptControlEnabled(bool on) { scriptControl_ = on; }
+    bool Graphics::IsScriptControlEnabled() const { return scriptControl_; }
 
     void Graphics::renderQuad()
     {

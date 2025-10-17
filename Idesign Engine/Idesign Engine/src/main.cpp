@@ -30,6 +30,10 @@
 #include <WindowConfigProperties.h>
 #include "AudioLoader.h"
 #include "Audio.h"
+#include "ScriptingSystem.h"
+#include "ComponentList.h" 
+#include "lua.hpp"
+
 using namespace Framework;
 
 void EnableMemoryLeakChecking(int breakAlloc = -1)
@@ -108,18 +112,32 @@ int main(void)
     Camera* graphicsCamera = graphicsSystem.get()->getCamera();
     inputHandlerSystem->SetCamera(graphicsCamera);
 
+    // Scripting System
+    auto scriptingSystem = ecsInterface.RegisterSystem<ScriptingSystem>();
+    scriptingSystem->SetGraphicsSystem(graphicsSystem.get());
     // Registering systems in the ECS interface here
 
     // ------- Add systems to engine below -------- //
     engine->AddSystem(graphicsSystem.get());
     engine->AddSystem(inputHandlerSystem);
     engine->AddSystem(imguiSystem.get());
+    engine->AddSystem(scriptingSystem.get());
 
     // Register scene manager last
     engine->AddSystem(sceneSystem.get());
 
     // Initialize the engine and run the main game loop
     engine->Initialize();
+
+    // Run All Scripts
+    if (luaL_dofile(scriptingSystem->GetLuaState(), "assets/scripts/cook_all.lua") != LUA_OK) {
+        std::cerr << "[Cook] Lua error: "
+            << lua_tostring(scriptingSystem->GetLuaState(), -1) << "\n";
+    }
+    scriptingSystem->CreateScriptEntity("assets/scripts/hello.lua");
+    scriptingSystem->CreateScriptEntity("assets/scripts/controls.lua");
+    //scriptingSystem->CreateScriptEntity("assets/scripts/prove_lua.lua");
+
     engine->GameLoop();
 
     // Clear all systems and other dynamically allocated resources

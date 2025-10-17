@@ -62,6 +62,16 @@ namespace Framework {
 
         Camera* getCamera();
 
+        void MoveCameraFromLua(const std::string& dir, float dt, bool groundMode);
+        void NudgeLightFromLua(const std::string& axis, float amount);
+        void ToggleMainLightFromLua();
+        void SetHDRFromLua(float value);
+        void SetBloomFromLua(float value);
+        void SetGroundModeFromLua(bool gm);
+        bool GetGroundModeFromLua() const;
+        void SetScriptControlEnabled(bool on);
+        bool IsScriptControlEnabled() const;
+
     private:
         static void framebuffer_size_callback(GLFWwindow*, int, int);
         static void mouse_callback(GLFWwindow*, double, double);
@@ -69,6 +79,8 @@ namespace Framework {
 
         void process_input(float dt);
         void renderQuad();
+
+        bool scriptControl_ = false;
 
         // window & timing
         GLFWwindow* window = nullptr;
