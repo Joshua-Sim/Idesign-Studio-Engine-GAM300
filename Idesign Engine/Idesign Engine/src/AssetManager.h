@@ -30,9 +30,9 @@
 #include <AudioProperties.h>
 #include <WindowConfigProperties.h>
 #include "TextureProperties.h"
+#include "MeshProperties.h"
 
 // Asset Files
-#include "AssetCompiler.h"
 #include <AssetLoader.h>
 #include "AssetHandler.h"
 
@@ -41,7 +41,7 @@ namespace Framework
     REGISTER_TYPE_NAME(WindowConfig);
     REGISTER_TYPE_NAME(AudioProperties);
     REGISTER_TYPE_NAME(TextureProperties);
-    //REGISTER_TYPE_NAME(FontProperties);
+    REGISTER_TYPE_NAME(MeshProperties);
 
     /*  Struct Brief
         - Store any type of assets in a generic way
@@ -81,6 +81,9 @@ namespace Framework
         // Delete copy/move constructors to enforce singleton
         AssetManager(const AssetManager&) = delete;
         AssetManager& operator=(const AssetManager&) = delete;
+        
+        // Save all files here (WIP)
+        ~AssetManager();
 
         //------------------------------------------------------------------------------------------------------------------------------------
         //  Binary Related Functions
@@ -115,24 +118,7 @@ namespace Framework
 
         //------------------------------------------------------------------------------------------------------------------------------------
         //  General Functions
-        //------------------------------------------------------------------------------------------------------------------------------------
-        
-        template<typename T>
-        void SaveAllAssets(const T& obj, const std::string& jsonPath, const std::string& binPath, const prop_list& props, bool IsArray)
-        {
-            if (!IsArray)
-            {
-                SaveToJson(obj, jsonPath, props);
-            }
-            else
-            {
-                SaveArrayToJson(obj, jsonPath, props);
-            }
-            std::ofstream out(binPath, std::ios::binary);
-            JsonToBinary(out, obj, props);
-            out.close();
-        }
-        
+        //------------------------------------------------------------------------------------------------------------------------------------        
         template<typename T>
         T* Get(const AssetHandle& guid)
         {
@@ -227,6 +213,16 @@ namespace Framework
             return AssetHandle();
         }
 
+        void MarkDirty(const AssetHandle& guid)
+        {
+            m_DirtyAssets.insert(guid);
+        }
+
+        bool IsDirty(const AssetHandle& guid) const
+        {
+            return m_DirtyAssets.contains(guid);
+        }
+
         // Access to Unordered Map of Assets
         const std::unordered_map<AssetHandle, AssetEntry>& GetAssets() const
         {
@@ -236,13 +232,14 @@ namespace Framework
         void PrintAssetsOfType(const std::string& typeName);
         // PrintAssetsOfType(TypeName<AudioProperties>::value);
 
-        void Unload(const std::string& key);
+        void Unload(const std::string& guid);
         bool SaveToJson(void* pObject, const std::string& filePath, const prop_list& props);
         void SaveArrayToJson(const std::string& typeName, const std::string& filePath, const std::string& arrayKey);
         bool HasTextureByGUID(const std::string& guid) const;
     private:
         AssetManager() = default;                                   // Private constructor
         std::unordered_map<AssetHandle, AssetEntry> m_Assets;       // Contains all types of Assets
+        std::unordered_set<AssetHandle> m_DirtyAssets;              // Contains changed Assets
     };
 }
 #endif // !_ASSET_MANAGER_H_

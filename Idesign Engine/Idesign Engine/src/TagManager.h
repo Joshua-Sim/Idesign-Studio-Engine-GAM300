@@ -38,6 +38,9 @@ namespace Framework
 			// Takes in an entity and removes all tags from it 
 			void RemoveAllTags(Entity entity);
 
+			/// Clears all stored tag associations.
+			void Clear();
+
 		private:
 			std::unordered_map<std::string, std::unordered_set<Entity>> tagToEntities;
 			std::unordered_map<Entity, std::unordered_set<std::string>> entityToTags;

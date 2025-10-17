@@ -1,16 +1,23 @@
 
 #include <pch.h>
 #include <AssetCompiler.h>
+#include "SceneManager.h"
 
 extern Framework::Coordinator ecsInterface;
 namespace Framework
 {
     void loadScene(const std::string& scenePath)
     {
-        // Load and parse scene.json
+        // Parse JSON
         rapidjson::Document doc;
         {
             FILE* fp = fopen(scenePath.c_str(), "r");
+            if (!fp)
+            {
+                std::cerr << "Failed to open scene file: " << scenePath << "\n";
+                return;
+            }
+
             std::unique_ptr<char[]> buffer = std::make_unique<char[]>(65536);
             rapidjson::FileReadStream is(fp, buffer.get(), 65536);
             doc.ParseStream(is);
@@ -23,15 +30,34 @@ namespace Framework
             return;
         }
 
+        // ---- substr and remove .json and directory for scene maping in scene manager ----
+        std::string cleanName = scenePath;
+        size_t lastSlash = cleanName.find_last_of("/\\");
+        if (lastSlash != std::string::npos)
+            cleanName = cleanName.substr(lastSlash + 1);
+
+        size_t lastDot = cleanName.find_last_of('.');
+        if (lastDot != std::string::npos)
+            cleanName = cleanName.substr(0, lastDot);
+
         const auto& entities = doc["Entities"].GetArray();
+
+        // ----- substr remove end -----
 
         for (const auto& entityJson : entities)
         {
             Entity entity = ecsInterface.CreateEntity();
 
+            // Entity name
+            if (entityJson.HasMember("name") && entityJson["name"].IsString())
+            {
+                std::string name = entityJson["name"].GetString();
+                ecsInterface.SetEntityName(entity, name);
+            }
+
             const auto& components = entityJson["components"];
 
-            // TransformComponent
+            // Transform
             if (components.HasMember("TransformComponent"))
             {
                 TransformComponent transform;
@@ -39,10 +65,29 @@ namespace Framework
                 ecsInterface.AddComponent(entity, transform);
             }
 
-            // TextureReference links to precompiled TextureProperties
-            if (components.HasMember("TextureReference"))
+            // Mesh
+            if (components.HasMember("MeshReference"))
             {
-                const auto& texRef = components["TextureReference"];
+                const auto& meshRef = components["MeshReference"];
+                if (meshRef.HasMember("guid") && meshRef["guid"].IsString())
+                {
+                    std::string guid = meshRef["guid"].GetString();
+                    const MeshProperties* mesh = AssetManager::Instance().Get<MeshProperties>(guid);
+                    if (mesh)
+                    {
+                        ecsInterface.AddComponent(entity, *mesh);
+                    }
+                    else
+                    {
+                        std::cerr << "Missing MeshProperties for GUID: " << guid << "\n";
+                    }
+                }
+            }
+
+            // Texture
+            if (components.HasMember("TextureComponent"))
+            {
+                const auto& texRef = components["TextureComponent"];
                 if (texRef.HasMember("guid") && texRef["guid"].IsString())
                 {
                     std::string guid = texRef["guid"].GetString();
@@ -57,10 +102,11 @@ namespace Framework
                     }
                 }
             }
-            // Add more component types here (AudioReference, MeshReference, etc.)
+
+            sceneManager.RegisterEntityToScene(entity, cleanName);
         }
-        std::cout << "Scene loaded successfully: " << entities.Size() << " entities created.\n";
     }
+
 
     void saveScene(const std::string& outputPath)
     {
@@ -74,13 +120,10 @@ namespace Framework
         {
             rapidjson::Value entityObj(rapidjson::kObjectType);
 
-            // Optional: store entity name
-            /*if (ecsInterface.HasComponent<NameComponent>(entity))
-            {
-                const auto& name = ecsInterface.GetComponent<NameComponent>(entity).name;
-                entityObj.AddMember("name", rapidjson::Value(name.c_str(), allocator), allocator);
-            }*/
-
+            // Store entity name directly
+            std::string entityName = ecsInterface.GetEntityName(entity);
+            entityObj.AddMember("name", rapidjson::Value(entityName.c_str(), allocator), allocator);
+            
             rapidjson::Value componentsObj(rapidjson::kObjectType);
 
             // TransformComponent
@@ -92,13 +135,22 @@ namespace Framework
                 componentsObj.AddMember("TransformComponent", transformJson, allocator);
             }
 
+            // MeshProperties — write only GUID
+            if (ecsInterface.HasComponent<MeshProperties>(entity))
+            {
+                const auto& mesh = ecsInterface.GetComponent<MeshProperties>(entity);
+                rapidjson::Value meshRef(rapidjson::kObjectType);
+                meshRef.AddMember("guid", rapidjson::Value(mesh.guid.c_str(), allocator), allocator);
+                componentsObj.AddMember("MeshReference", meshRef, allocator);
+            }
+
             // TextureProperties  write only GUID
             if (ecsInterface.HasComponent<TextureProperties>(entity))
             {
                 const auto& tex = ecsInterface.GetComponent<TextureProperties>(entity);
                 rapidjson::Value texRef(rapidjson::kObjectType);
                 texRef.AddMember("guid", rapidjson::Value(tex.guid.c_str(), allocator), allocator);
-                componentsObj.AddMember("TextureReference", texRef, allocator);
+                componentsObj.AddMember("TextureComponent", texRef, allocator);
             }
             // Add more components here...
 
@@ -110,6 +162,12 @@ namespace Framework
 
         // Write to file
         FILE* fp = fopen(outputPath.c_str(), "w");
+        if (!fp)
+        {
+            // Log error or show popup
+            std::cerr << "Failed to open file for writing, save cancelled" << std::endl;
+            return; // Prevent crash
+        }
         auto buffer = std::make_unique<char[]>(65536);
         rapidjson::FileWriteStream os(fp, buffer.get(), 65536);
         rapidjson::PrettyWriter<rapidjson::FileWriteStream> writer(os);
@@ -160,14 +218,15 @@ namespace Framework
             const rapidjson::Value& v = obj[p.m_pName];
             switch (p.m_Type)
             {
-            case prop::INT:    if (v.IsInt())    { int         temp = v.GetInt();                            p.m_fnSet(pObject, &temp); } break;
-            case prop::FLOAT:  if (v.IsNumber()) { float       temp = static_cast<float>(v.GetDouble());     p.m_fnSet(pObject, &temp); } break;
-            case prop::DOUBLE: if (v.IsNumber()) { double      temp = v.GetDouble();                         p.m_fnSet(pObject, &temp); } break;
-            case prop::LONG:   if (v.IsInt64())  { long        temp = static_cast<long>(v.GetInt64());       p.m_fnSet(pObject, &temp); } break;
-            case prop::SHORT:  if (v.IsInt())    { short       temp = static_cast<short>(v.GetInt());        p.m_fnSet(pObject, &temp); } break;
-            case prop::BOOL:   if (v.IsBool())   { bool        temp = v.GetBool();                           p.m_fnSet(pObject, &temp); } break;
-            case prop::STRING: if (v.IsString()) { std::string temp(v.GetString(), v.GetStringLength());     p.m_fnSet(pObject, &temp); } break;
-            case prop::CHAR:   if (v.IsString() && v.GetStringLength() == 1) { char temp = v.GetString()[0]; p.m_fnSet(pObject, &temp); } break;
+            case prop::INT:    if (v.IsInt())    { int          temp = v.GetInt();                            p.m_fnSet(pObject, &temp); } break;
+            case prop::FLOAT:  if (v.IsNumber()) { float        temp = static_cast<float>(v.GetDouble());     p.m_fnSet(pObject, &temp); } break;
+            case prop::DOUBLE: if (v.IsNumber()) { double       temp = v.GetDouble();                         p.m_fnSet(pObject, &temp); } break;
+            case prop::LONG:   if (v.IsInt64())  { long         temp = static_cast<long>(v.GetInt64());       p.m_fnSet(pObject, &temp); } break;
+            case prop::SHORT:  if (v.IsInt())    { short        temp = static_cast<short>(v.GetInt());        p.m_fnSet(pObject, &temp); } break;
+            case prop::BOOL:   if (v.IsBool())   { bool         temp = v.GetBool();                           p.m_fnSet(pObject, &temp); } break;
+            case prop::STRING: if (v.IsString()) { std::string  temp(v.GetString(), v.GetStringLength());     p.m_fnSet(pObject, &temp); } break;
+            case prop::CHAR:   if (v.IsString() && v.GetStringLength() == 1) { char temp = v.GetString()[0];  p.m_fnSet(pObject, &temp); } break;
+            case prop::UINT:   if (v.IsUint())   { unsigned int temp = v.GetUint();                           p.m_fnSet(pObject, &temp); } break;
             case prop::VEC3:
             {
                 if (v.IsArray() && v.Size() == 3)
@@ -203,12 +262,13 @@ namespace Framework
             key.SetString(p.m_pName, allocator);
             switch (p.m_Type)
             {
-            case prop::INT:    { int    v; p.m_fnGet(pObject, &v); outObj.AddMember(key, v, allocator); break; }
-            case prop::FLOAT:  { float  v; p.m_fnGet(pObject, &v); outObj.AddMember(key, v, allocator); break; }
-            case prop::DOUBLE: { double v; p.m_fnGet(pObject, &v); outObj.AddMember(key, v, allocator); break; }
-            case prop::LONG:   { long   v; p.m_fnGet(pObject, &v); outObj.AddMember(key, static_cast<int64_t>(v), allocator); break; }
-            case prop::SHORT:  { short  v; p.m_fnGet(pObject, &v); outObj.AddMember(key, static_cast<int>(v), allocator); break; }
-            case prop::BOOL:   { bool   v; p.m_fnGet(pObject, &v); outObj.AddMember(key, v, allocator); break; }
+            case prop::INT:    { int          v; p.m_fnGet(pObject, &v); outObj.AddMember(key, v, allocator); break; }
+            case prop::FLOAT:  { float        v; p.m_fnGet(pObject, &v); outObj.AddMember(key, v, allocator); break; }
+            case prop::DOUBLE: { double       v; p.m_fnGet(pObject, &v); outObj.AddMember(key, v, allocator); break; }
+            case prop::LONG:   { long         v; p.m_fnGet(pObject, &v); outObj.AddMember(key, static_cast<int64_t>(v), allocator); break; }
+            case prop::SHORT:  { short        v; p.m_fnGet(pObject, &v); outObj.AddMember(key, static_cast<int>(v), allocator); break; }
+            case prop::BOOL:   { bool         v; p.m_fnGet(pObject, &v); outObj.AddMember(key, v, allocator); break; }
+            case prop::UINT:   { unsigned int v; p.m_fnGet(pObject, &v); outObj.AddMember(key, v, allocator); break; }
             case prop::CHAR:
             {
                 char v;

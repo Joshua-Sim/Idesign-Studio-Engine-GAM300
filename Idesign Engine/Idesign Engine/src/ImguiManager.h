@@ -15,11 +15,11 @@
 #include "System.h"
 #include <GraphicsShader.h>
 #include <InputHandler.h>
-#include <PhysicsSystem.h>
 #include <FontSystem.h>
 #include "AssetManager.h"
 #include <ComponentList.h>
 #include "AudioLoader.h"
+#include "UndoRedoSystem.h"
 
 namespace Framework {
 	class ImguiManager : public ISystem {
@@ -37,6 +37,12 @@ namespace Framework {
 		std::string OpenFileDialog();
 		std::string SaveFileDialog();
 		void RenderErrorPopup();
+		void RenderMenuBar();
+		void RenderMeshAssets();
+		void RenderAssetBar();
+		void RenderAudioManager();
+		void RenderEntityMenu();
+
 	private:
 		Framework::Graphics* m_graphicsSystem = nullptr; // Pointer to store the connection
 	};

@@ -1,0 +1,41 @@
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\lib\imgui\imgui.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\imgui.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\lib\imgui\imgui_demo.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\imgui_demo.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\lib\imgui\imgui_draw.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\imgui_draw.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\lib\imgui\imgui_impl_glfw.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\imgui_impl_glfw.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\lib\imgui\imgui_impl_opengl3.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\imgui_impl_opengl3.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\lib\imgui\imgui_tables.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\imgui_tables.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\lib\imgui\imgui_widgets.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\imgui_widgets.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\AssetCompiler.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\AssetCompiler.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\AssetManager.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\AssetManager.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Audio.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\Audio.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\AudioLoader.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\AudioLoader.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ButtonSystem.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\ButtonSystem.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Collision.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\Collision.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ComponentManager.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\ComponentManager.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Coordinator.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\Coordinator.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Core.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\Core.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Debugger.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\Debugger.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\DummySystem.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\DummySystem.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\EngineState.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\EngineState.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\EntityManager.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\EntityManager.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\FontSystem.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\FontSystem.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\Graphics.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\GraphicsShader.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\GraphicsShader.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\ImguiManager.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\InputHandler.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\InputHandler.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Lighting.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\Lighting.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\main.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\main.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Matrix3x3.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\Matrix3x3.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Mesh.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\Mesh.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\MeshLoader.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\MeshLoader.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\MessageSystem.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\MessageSystem.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\pch.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\pch.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\SceneManager.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\SceneManager.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ShaderProgram.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\ShaderProgram.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\SignalHandler.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\SignalHandler.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\TagManager.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\TagManager.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Terrain.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\Terrain.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\TestSystem.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\TestSystem.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\TextureLoader.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\TextureLoader.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\UndoRedoSystem.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\UndoRedoSystem.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Vector2D.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Release\Vector2D.obj

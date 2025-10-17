@@ -59,6 +59,13 @@ namespace Framework
 		return emptySet;  // Return empty set if the tag is not found
 	}
 
+	//Clear memory on shutdown
+	void TagManager::Clear()
+	{
+		tagToEntities.clear();
+		entityToTags.clear();
+	}
+
 	// Takes in an entity and removes all tags from it 
 	void TagManager::RemoveAllTags(Entity entity)
 	{

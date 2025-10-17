@@ -23,6 +23,7 @@ namespace Framework
         std::string path;
         std::string mode;
         std::string soundType;
+        bool isDirty = false;
 
         //  Runtime properties
         float volume = 1.0f;           // Range: 0.0 to 1.0
@@ -31,7 +32,7 @@ namespace Framework
         float duration = 0.0f;         // Duration in seconds
 
         // Optional: internal ID or handle for audio system
-        int audioID = -1;
+        int channelID = -1;
     };
 
     inline constexpr std::array g_AudioPropertiesPropsArray =

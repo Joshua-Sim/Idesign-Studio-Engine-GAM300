@@ -14,10 +14,10 @@
 
 #pragma once
 
-#include "Vector2D.h"
+#include "MainMath.h"
 #include "glm.hpp"
 #include "Types.h"
-
+#include "lua.hpp"
 #include "TransformProperties.h"
 
 // ----- ENUMS & Structs for components ----
@@ -94,6 +94,23 @@ struct AABB {
     glm::vec2 min{0.0,0.0};
 };
 
+struct Circle
+{
+    UE_Vector::Vector2D  m_center;
+    float	m_radius;
+};
+
+struct AABB3 {
+    UE_Vector::Vector3D min;
+    UE_Vector::Vector3D max;
+};
+
+struct OBB3 {
+    UE_Vector::Vector3D center;
+    UE_Vector::Vector3D orientation;
+    UE_Vector::Vector3D half;
+};
+
 
 struct Render {
     std::string textureAddress{};
@@ -150,3 +167,16 @@ public:
     }
 };
 
+struct ScriptComponent
+{
+    std::string scriptPath;   // e.g. "scripts/player.lua"
+    int tableRef = LUA_NOREF; // reference to the Lua table (instance)
+    bool initialized = false; // if on_init() has been called
+    bool hotReload = true;    // enable/disable live reload
+    uint64_t lastWriteTicks = 0; // file modification time cache
+
+    ScriptComponent() = default;
+    ScriptComponent(const std::string& path)
+        : scriptPath(path)
+    {}
+};

@@ -17,7 +17,6 @@
 ////FILES
 #include "System.h"
 #include <InputHandler.h>
-#include <PhysicsSystem.h>
 #include <FontSystem.h>
 #include "AssetManager.h"
 #include <ComponentList.h>
@@ -31,7 +30,7 @@
 #include "AssetManager.h"
 #include "WindowConfigProperties.h"
 #include "MeshProperties.h"
-
+#include "TextProperties.h"
 
 namespace Framework {
     class ImguiManager;
@@ -50,6 +49,7 @@ namespace Framework {
 		void Update(float deltaTime) override;
 		std::string GetName() override;
         static GLuint CreateFramebuffer(int width, int height, GLuint& texture, GLuint& rbo_fb);
+        void RequestPickUV(float u, float v);
 
 		////linking
 		//GraphicsWindows* graphicWindows;
@@ -60,11 +60,17 @@ namespace Framework {
         GLFWwindow* GetWindow();
         void SetImguiManager(ImguiManager* manager);
 
-		// Sorting Layer Variables
-		unsigned int CurrentSize = -1;
-		std::vector<Entity> sortedEntities;
-
         Camera* getCamera();
+
+        void MoveCameraFromLua(const std::string& dir, float dt, bool groundMode);
+        void NudgeLightFromLua(const std::string& axis, float amount);
+        void ToggleMainLightFromLua();
+        void SetHDRFromLua(float value);
+        void SetBloomFromLua(float value);
+        void SetGroundModeFromLua(bool gm);
+        bool GetGroundModeFromLua() const;
+        void SetScriptControlEnabled(bool on);
+        bool IsScriptControlEnabled() const;
 
     private:
         static void framebuffer_size_callback(GLFWwindow*, int, int);
@@ -73,6 +79,8 @@ namespace Framework {
 
         void process_input(float dt);
         void renderQuad();
+
+        bool scriptControl_ = false;
 
         // window & timing
         GLFWwindow* window = nullptr;
@@ -99,7 +107,6 @@ namespace Framework {
         ShaderProgram blurShader{ "Assets/shaders/postprocess.glsl", "Assets/shaders/blur.glsl" };
         ShaderProgram finalShader{ "Assets/shaders/postprocess.glsl", "Assets/shaders/final.glsl" };
         ShaderProgram debugShader{ "Assets/shaders/debugVertexShader.glsl", "Assets/shaders/debugFragmentShader.glsl" };
-
         // lighting
         DirectionalLightCPU sun;
         bool hasSun = true;
@@ -120,17 +127,31 @@ namespace Framework {
 
         GLuint quadVAO = 0;
         GLuint quadVBO = 0;
-        GLuint m_debugVao = 0; 
-        GLuint m_debugVbo = 0; 
+
+        GLuint m_debugVao = 0;
+        GLuint m_debugVbo = 0;
 
         ImguiManager* m_imguiManager = nullptr;
+        // jay objpick
+        GLuint pickFBO[2] = { 0,0 };
+        GLuint pickColor[2] = { 0,0 };   // GL_RGB8 color IDs
+        GLuint pickDepth[2] = { 0,0 };   // GL_DEPTH24 (shared per FBO)
+        int    pickWrite = 0;                // current we render into
+        int    pickRead = 1;                // previous we read from
+        ShaderProgram pickShader{ "Assets/shaders/pickvert.glsl", "Assets/shaders/pickfrag.glsl" };
+        glm::vec2 pendingPickUV = { -1.0f,-1.0f };
+        int lastPickedId = -1;
+
         std::map<DebugShapeType, Mesh*> m_debugMeshes;
 
         //draw debug shapes
         void DrawDebugBox(const TransformComponent& transform, const glm::vec3& color);
         // Draws a wireframe sphere using the transform's position and scale as radius
-        void DrawDebugMesh(const TransformComponent& transform, Mesh* mesh, const glm::vec3& color);
-        
+        void DrawDebugMesh(Mesh* mesh, const glm::vec3& color, const glm::mat4& model, const glm::mat4& projection, const glm::mat4& view);
+
+        // Add these new members for the FPS counter
+        double m_fpsLastTime;
+        int m_frameCount;
     };
 
 }

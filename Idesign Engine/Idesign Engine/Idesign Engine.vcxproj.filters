@@ -28,14 +28,8 @@
     <Filter Include="Header Files\Assets\Audio">
       <UniqueIdentifier>{ee0346f0-7d68-4b05-8cca-88d5f3bc7980}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Font Shaders">
-      <UniqueIdentifier>{f30f63b8-c18d-4a1d-83bf-39d5d1505693}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\AnimationSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\ButtonSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -63,12 +57,6 @@
     <ClInclude Include="src\ECSystemManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\EnemyBehavior.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\EnemyManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\EngineState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -90,9 +78,6 @@
     <ClInclude Include="src\InputHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\LogicManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Matrix3x3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -103,12 +88,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\pch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\PhysicsSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\PlayerSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\msinttypes\inttypes.h">
@@ -357,6 +336,12 @@
     <ClInclude Include="src\MeshProperties.h">
       <Filter>Header Files\Assets\Property</Filter>
     </ClInclude>
+    <ClInclude Include="src\SceneManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TextProperties.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />
@@ -397,18 +382,13 @@
     <None Include="Assets\shaders\vertex.glsl">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Assets\fontshaders\textvert.glsl">
-      <Filter>Font Shaders</Filter>
-    </None>
-    <None Include="Assets\fontshaders\textfrag.glsl">
-      <Filter>Font Shaders</Filter>
-    </None>
+    <None Include="Assets\fontshaders\textfrag.glsl" />
+    <None Include="Assets\fontshaders\textvert.glsl" />
+    <None Include="Assets\shaders\pickfrag.glsl" />
+    <None Include="Assets\shaders\pickvert.glsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Vector2D.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AnimationSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\AssetManager.cpp">
@@ -438,9 +418,6 @@
     <ClCompile Include="src\DummySystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\EnemyManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\EngineState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -459,9 +436,6 @@
     <ClCompile Include="src\InputHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\LogicManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -472,12 +446,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\pch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PhysicsSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PlayerSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\TagManager.cpp">
@@ -535,6 +503,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\AudioLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UndoRedoSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SceneManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

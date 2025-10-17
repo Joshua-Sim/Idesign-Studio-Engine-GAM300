@@ -132,13 +132,14 @@ namespace Framework
         {
             switch (p.m_Type)
             {
-            case prop::INT:    { int    v; p.m_fnGet(&obj, &v); out.write(reinterpret_cast<const char*>(&v), sizeof(v)); break; }
-            case prop::FLOAT:  { float  v; p.m_fnGet(&obj, &v); out.write(reinterpret_cast<const char*>(&v), sizeof(v)); break; }
-            case prop::DOUBLE: { double v; p.m_fnGet(&obj, &v); out.write(reinterpret_cast<const char*>(&v), sizeof(v)); break; }
-            case prop::LONG:   { long   v; p.m_fnGet(&obj, &v); out.write(reinterpret_cast<const char*>(&v), sizeof(v)); break; }
-            case prop::SHORT:  { short  v; p.m_fnGet(&obj, &v); out.write(reinterpret_cast<const char*>(&v), sizeof(v)); break; }
-            case prop::CHAR:   { char   v; p.m_fnGet(&obj, &v); out.write(reinterpret_cast<const char*>(&v), sizeof(v)); break; }
-            case prop::BOOL:   { bool   v; p.m_fnGet(&obj, &v); out.write(reinterpret_cast<const char*>(&v), sizeof(v)); break; }
+            case prop::INT:    { int          v; p.m_fnGet(&obj, &v); out.write(reinterpret_cast<const char*>(&v), sizeof(v)); break; }
+            case prop::FLOAT:  { float        v; p.m_fnGet(&obj, &v); out.write(reinterpret_cast<const char*>(&v), sizeof(v)); break; }
+            case prop::DOUBLE: { double       v; p.m_fnGet(&obj, &v); out.write(reinterpret_cast<const char*>(&v), sizeof(v)); break; }
+            case prop::LONG:   { long         v; p.m_fnGet(&obj, &v); out.write(reinterpret_cast<const char*>(&v), sizeof(v)); break; }
+            case prop::SHORT:  { short        v; p.m_fnGet(&obj, &v); out.write(reinterpret_cast<const char*>(&v), sizeof(v)); break; }
+            case prop::CHAR:   { char         v; p.m_fnGet(&obj, &v); out.write(reinterpret_cast<const char*>(&v), sizeof(v)); break; }
+            case prop::BOOL:   { bool         v; p.m_fnGet(&obj, &v); out.write(reinterpret_cast<const char*>(&v), sizeof(v)); break; }
+            case prop::UINT:   { unsigned int v; p.m_fnGet(&obj, &v); out.write(reinterpret_cast<const char*>(&v), sizeof(v)); break; }
             case prop::STRING:
             {
                 std::string value;
@@ -173,13 +174,14 @@ namespace Framework
             if (!p.m_fnSet) throw std::runtime_error("Function pointer m_fnSet is null for property: " + std::string(p.m_pName));
             switch (p.m_Type)
             {
-            case prop::INT:    { int    v; in.read(reinterpret_cast<char*>(&v), sizeof(v)); if (!in) throw; p.m_fnSet(&obj, &v); break; }
-            case prop::FLOAT:  { float  v; in.read(reinterpret_cast<char*>(&v), sizeof(v)); if (!in) throw; p.m_fnSet(&obj, &v); break; }
-            case prop::DOUBLE: { double v; in.read(reinterpret_cast<char*>(&v), sizeof(v)); if (!in) throw; p.m_fnSet(&obj, &v); break; }
-            case prop::LONG:   { long   v; in.read(reinterpret_cast<char*>(&v), sizeof(v)); if (!in) throw; p.m_fnSet(&obj, &v); break; }
-            case prop::SHORT:  { short  v; in.read(reinterpret_cast<char*>(&v), sizeof(v)); if (!in) throw; p.m_fnSet(&obj, &v); break; }
-            case prop::CHAR:   { char   v; in.read(reinterpret_cast<char*>(&v), sizeof(v)); if (!in) throw; p.m_fnSet(&obj, &v); break; }
-            case prop::BOOL:   { bool   v; in.read(reinterpret_cast<char*>(&v), sizeof(v)); if (!in) throw; p.m_fnSet(&obj, &v); break; }
+            case prop::INT:    { int          v; in.read(reinterpret_cast<char*>(&v), sizeof(v)); if (!in) throw; p.m_fnSet(&obj, &v); break; }
+            case prop::FLOAT:  { float        v; in.read(reinterpret_cast<char*>(&v), sizeof(v)); if (!in) throw; p.m_fnSet(&obj, &v); break; }
+            case prop::DOUBLE: { double       v; in.read(reinterpret_cast<char*>(&v), sizeof(v)); if (!in) throw; p.m_fnSet(&obj, &v); break; }
+            case prop::LONG:   { long         v; in.read(reinterpret_cast<char*>(&v), sizeof(v)); if (!in) throw; p.m_fnSet(&obj, &v); break; }
+            case prop::SHORT:  { short        v; in.read(reinterpret_cast<char*>(&v), sizeof(v)); if (!in) throw; p.m_fnSet(&obj, &v); break; }
+            case prop::CHAR:   { char         v; in.read(reinterpret_cast<char*>(&v), sizeof(v)); if (!in) throw; p.m_fnSet(&obj, &v); break; }
+            case prop::BOOL:   { bool         v; in.read(reinterpret_cast<char*>(&v), sizeof(v)); if (!in) throw; p.m_fnSet(&obj, &v); break; }
+            case prop::UINT:   { unsigned int v; in.read(reinterpret_cast<char*>(&v), sizeof(v)); if (!in) throw; p.m_fnSet(&obj, &v); break; }
             case prop::STRING:
             {
                 uint32_t length;

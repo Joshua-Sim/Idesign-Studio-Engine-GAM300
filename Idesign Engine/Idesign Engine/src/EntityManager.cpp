@@ -37,6 +37,22 @@ namespace Framework {
 		return id;
 	}
 
+	// Clear memory on shutdown
+	void EntityManager::Clear()
+	{
+		// Reset the queue of available entities
+		std::queue<Entity> emptyQueue;
+		std::swap(queueOfAvailableEntities, emptyQueue);
+
+		// Reset all signatures to default
+		for (auto& sig : mSignatures)
+		{
+			sig.reset(); // or sig = Signature(); if Signature is a bitset
+		}
+
+		// Reset living entity count
+		mLivingEntityCount = 0;
+	}	
 	// Passes in an entity, and destroys said entity
 	void EntityManager::DestroyEntity(Entity entity)
 	{

@@ -48,6 +48,30 @@ namespace Framework {
         entityNames.clear(); // Clear entity names during initialisation
     }
 
+    // ---------------------------- //
+/**
+* @brief Destructor for memory clean-up.
+*
+*/
+    Coordinator::~Coordinator()
+    {
+        if (mComponentManager)
+            mComponentManager->Clear();
+
+        if (mSystemManager)
+            mSystemManager->Clear(); // Optional if defined
+
+        if (mEntityManager)
+            mEntityManager->Clear(); // Optional if defined
+
+        if (mTagManager)
+            mTagManager->Clear();   // Optional if defined
+
+        entityNames.clear();
+        entityList.clear();
+        componentNamesList.clear(); // Optional, since these are value types
+    }
+
     /**
     * @brief Creates an Entity.
     *
@@ -218,10 +242,10 @@ namespace Framework {
             mComponentManager->AddComponent(entity, LayerComponent{});
         }
 
-        else if (componentName == "TextComponent")
+       /* else if (componentName == "TextComponent")
         {
             mComponentManager->AddComponent(entity, TextComponent{});
-        }
+        }*/
 
         else if (componentName == "PlayerComponent")
         {

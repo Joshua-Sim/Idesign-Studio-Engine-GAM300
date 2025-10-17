@@ -13,7 +13,7 @@
 
 #include "pch.h"
 #include "System.h"
-#include "Vector2D.h"
+#include "MainMath.h"
 #include "InputHandler.h"
 #include "ComponentList.h"
 
@@ -66,6 +66,16 @@ namespace Framework {
 
         void moveEntities(float deltaTime);
 
+        bool InRange3D(const glm::vec3& from,
+            const glm::vec3& to,
+            float maxDistance) const;
+
+        bool InSight3D(const glm::vec3& eyePos,
+            const glm::vec3& forwardDir,
+            const glm::vec3& targetPos,
+            float maxDistance,
+            float fovDegrees,
+            const std::function<bool(const glm::vec3&, const glm::vec3&, float&)>& raycast = nullptr) const;
 
         InputHandler* InputHandlerInstance;
 

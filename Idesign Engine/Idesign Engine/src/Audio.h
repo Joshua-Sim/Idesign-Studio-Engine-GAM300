@@ -25,14 +25,14 @@
 using namespace std;            // For Standard Library
 using namespace FMOD;           // For FMOD Library
 
-namespace Framework 
+namespace Framework
 {
 
     //Belinda 
     //3D Vector structure for spatial positioning 
     struct Vector3 {
         float x, y, z;
-        Vector3(float x = 0, float y = 0, float z = 0): x(x), y(y), z(z) {}
+        Vector3(float x = 0, float y = 0, float z = 0) : x(x), y(y), z(z) {}
     };
 
     //AUdio source types for different 3D behaviors
@@ -54,7 +54,7 @@ namespace Framework
 
     //Channel info for tracking 3D properties 
     struct Channel3DInfo {
-        Vector3 position; 
+        Vector3 position;
         Vector3 velocity;
         float minDistance = 1.0f;
         float maxDistance = 100.0f;
@@ -68,7 +68,7 @@ namespace Framework
     *   @class Audio
     *   @brief Manages audio-related tasks such as loading sounds, playing, pausing and adjusting volume
     */
-    class Audio : public ISystem 
+    class Audio : public ISystem
     {
     public:
 
@@ -161,12 +161,12 @@ namespace Framework
         //Belinda
         //=========== 3D AUDIO FUNCTIONS ==========================
         /**
-        * @brief Plays sound in 3D space with spatial audio 
-        * @param customName The custom name of the sound 
+        * @brief Plays sound in 3D space with spatial audio
+        * @param customName The custom name of the sound
         * @param position 3D position of the sound source
         * @param velocity 3D velocity for Doppler effect
         * @param volume Base volume (0.0f to 1.0f)
-        * @param sourceType Type of 3D processing to apply 
+        * @param sourceType Type of 3D processing to apply
         * @return Channel ID for later manipulation
         */
 
@@ -182,8 +182,8 @@ namespace Framework
         * @brief Set the primary 3D listener position and orientation
         * @param position Listener's 3D position
         * @param velocity Listener's 3D velocity for Doppler effect
-        * @param forward Forward Direction Vector 
-        * @param up Up direction vector 
+        * @param forward Forward Direction Vector
+        * @param up Up direction vector
         */
         void Set3DListener(
             const Vector3& position,
@@ -193,12 +193,12 @@ namespace Framework
         );
 
         /**
-        * @brief Set multiple listeners for split-screen support 
+        * @brief Set multiple listeners for split-screen support
         * @param listenerId Index of the listener (0-based)
-        * @param position Listener's 3D position 
+        * @param position Listener's 3D position
         * @param velocity Listener's 3D velocity
-        * @param forward Forward Direction Vector 
-        * @param up Up direction vector 
+        * @param forward Forward Direction Vector
+        * @param up Up direction vector
         */
         void Set3DListenerMultiple(
             int listenerId,
@@ -209,7 +209,7 @@ namespace Framework
         );
 
         /**
-        * @brief Update 3D attributes for a moving sound 
+        * @brief Update 3D attributes for a moving sound
         * @param channelId The channel ID returned from PlaySound3D
         * @param position New 3D position
         * @param velocity New 3D velocity
@@ -221,8 +221,8 @@ namespace Framework
         );
 
         /**
-        * @brief Update 3D attributes by sound name 
-        * @param customName The custom name of the sound 
+        * @brief Update 3D attributes by sound name
+        * @param customName The custom name of the sound
         * @param position New 3D position
         * @param velocity New 3D velocity
         */
@@ -233,7 +233,7 @@ namespace Framework
         );
 
         /**
-        * @brief Configure global 3D audio settings 
+        * @brief Configure global 3D audio settings
         * @param settings 3D audio configuration parameters
         */
         void Configure3DSettings(const Audio3DSettings& settings);
@@ -241,18 +241,18 @@ namespace Framework
         /**
         * @brief Setmin/max distance for volume attenuation
         * @param channelId The channel ID
-        * @param minDist Distance at which sound is at full volume 
-        * @param maxDist Distance at which sound is inaudible 
+        * @param minDist Distance at which sound is at full volume
+        * @param maxDist Distance at which sound is inaudible
         */
         void SetChannelMinMaxDistance(int channelId, float minDist, float maxDist);
 
         /**
-        * @brief Set directional cone for a sound source 
+        * @brief Set directional cone for a sound source
         * @param channelId The channel ID
-        * @param insideConeAngle Angle of full volume cone 
-        * @param outsideConeAngle Angle of outer cone 
+        * @param insideConeAngle Angle of full volume cone
+        * @param outsideConeAngle Angle of outer cone
         * @param outsideVolume Volume outside the cone (0.0f to 1.0f)
-        * @param orientation Direction the cone is facing 
+        * @param orientation Direction the cone is facing
         */
         void SetChannel3DConeSettings(
             int channelId,
@@ -263,7 +263,7 @@ namespace Framework
         );
 
         /**
-        * @brief Set occlusionfor sound blocking by obstacles 
+        * @brief Set occlusionfor sound blocking by obstacles
         * @param channelId The channel ID
         * @param directOcclusion Direct path occlusion (0.0f to 1.0f)
         * @param reverbOcclusion Reverb occlusion (0.0f to 1.0f)
@@ -271,10 +271,10 @@ namespace Framework
         void SetChannelOcclusion(int channelId, float directOcclusion, float reverbOcclusion);
 
         /**
-        * @brief Create an Audio zone with environmental properties 
-        * @param zoneName Unique name for the zone 
-        * @param minBounds Minimum bounds of the zone 
-        * @param maxBounds Maximum bounds of the zone 
+        * @brief Create an Audio zone with environmental properties
+        * @param zoneName Unique name for the zone
+        * @param minBounds Minimum bounds of the zone
+        * @param maxBounds Maximum bounds of the zone
         * @param reverbAmount Amount of revern (0.0f to 1.0f)
         * @param lowPassFilter Low-pass filter amount (9.0f to 1.0f)
         */
@@ -287,23 +287,23 @@ namespace Framework
         );
 
         /**
-        * @brief Update which zone the listener is in 
+        * @brief Update which zone the listener is in
         * @param listenerPos Current Listener position
         */
         void UpdateListenerZone(const Vector3& listenerPos);
 
         /**
         * @brief Check if a position would be audible
-        * @param position Position to check 
+        * @param position Position to check
         * @param maxAudibleDistance Maximum audible distance
-        * @return true if position is within audible range 
+        * @return true if position is within audible range
         */
         bool IsPositionAudible(const Vector3& position, float maxAudibleDistance = 100.0);
 
         /**
-        * @brief Check if a channel is currently playing 
+        * @brief Check if a channel is currently playing
         * @param channelId The channel ID
-        * @return true if channel is playing 
+        * @return true if channel is playing
         */
         bool IsChannelPlaying(int channelId);
 
@@ -423,33 +423,33 @@ namespace Framework
         void FadeBGMIn(float duration = 2.0f);
 
         /*
-        * @brief Fade out BGM over specified duration 
-        * @param duration fade duration in seconds 
+        * @brief Fade out BGM over specified duration
+        * @param duration fade duration in seconds
         */
         void FadeBGMOut(float duration = 2.0f);
 
         /*
         * @brief Crossfade to new BGM
-        * @param newBGM Name of the new BGM to fade to 
-        * @param duration Crossfade duration in seconds 
+        * @param newBGM Name of the new BGM to fade to
+        * @param duration Crossfade duration in seconds
         */
         void CrossfadeBGM(const std::string& newBGM, float duration = 1.0f);
 
         /**
-        * @brief Initialize reverb DSP effect 
+        * @brief Initialize reverb DSP effect
         */
         void InitializeReverb();
 
         /*
         * @brief Apply reverb to a specific channel
         * @param channelId The channel ID
-        * @param enable true to enable to reverb, false to disable 
+        * @param enable true to enable to reverb, false to disable
         */
         void ApplyReverbToChannel(int channelId, bool enable);
 
         /*
         * @brief Set reverb properties
-        * @param decayTime Reverb decay time in seconds 
+        * @param decayTime Reverb decay time in seconds
         * @param wetLevel Wet signal level in dB
         * @param dryLevel Dry signal level in dB
         */
@@ -474,7 +474,7 @@ namespace Framework
         /*
         * @brief Convert FMOD_VECTOR to Vector3
         * @param v FMOD_VECTOR to convert
-        * @return Vector3 equivalent 
+        * @return Vector3 equivalent
         */
         Vector3 FmodToVector(const FMOD_VECTOR& v) {
             return Vector3(v.x, v.y, v.x);
@@ -525,7 +525,7 @@ namespace Framework
         int pendingBGMChannel = -1;
 
         //DSP Effects
-        FMOD::DSP * reverbDSP = nullptr;                                             // NEW: Reverb DSP effect
+        FMOD::DSP* reverbDSP = nullptr;                                             // NEW: Reverb DSP effect
         FMOD::DSP* lowPassFilter = nullptr;                                         // NEW: Low-pass filter DSP
 
         //Channel ID counter
