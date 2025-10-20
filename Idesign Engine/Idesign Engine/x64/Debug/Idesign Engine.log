@@ -1,104 +1,60 @@
-﻿  AssetCompiler.cpp
-  AssetManager.cpp
-  Audio.cpp
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Audio.cpp(370,24): warning C4458: declaration of 'nextChannelId' hides class member
-  (compiling source file '/src/Audio.cpp')
-      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Audio.h(532,13):
-      see declaration of 'Framework::Audio::nextChannelId'
-  
-  AudioLoader.cpp
-  ButtonSystem.cpp
-  Collision.cpp
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Collision.cpp(376,15): warning C4459: declaration of 'dt' hides global declaration
-  (compiling source file '/src/Collision.cpp')
-      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Collision.cpp(22,7):
-      see declaration of 'dt'
-  
-  Coordinator.cpp
-  Core.cpp
-  DummySystem.cpp
-  Graphics.cpp
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.cpp(399,27): warning C4458: declaration of 'mesh' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.h(101,24):
-      see declaration of 'Framework::Graphics::mesh'
-  
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.cpp(414,35): warning C4458: declaration of 'tex' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.h(102,16):
-      see declaration of 'Framework::Graphics::tex'
-  
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.cpp(347,19): warning C4189: 'aspect': local variable is initialized but not referenced
-  (compiling source file '/src/Graphics.cpp')
-  
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.cpp(332,19): warning C4189: 'dt': local variable is initialized but not referenced
-  (compiling source file '/src/Graphics.cpp')
-  
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.cpp(631,58): warning C4100: 'window': unreferenced parameter
-  (compiling source file '/src/Graphics.cpp')
-  
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.cpp(785,40): warning C4458: declaration of 'mesh' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.h(101,24):
-      see declaration of 'Framework::Graphics::mesh'
-  
-  ImguiManager.cpp
+﻿  ImguiManager.cpp
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\minwindef.h(130,9): warning C4005: 'APIENTRY': macro redefinition
   (compiling source file '/src/ImguiManager.cpp')
       C:\Year 3\Idesign-Studio-Engine\Idesign Engine\lib\glfw-3.4.bin.WIN64\include\GLFW\glfw3.h(123,11):
       see previous definition of 'APIENTRY'
   
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(173,25): warning C4459: declaration of 'filePath' hides global declaration
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(174,25): warning C4459: declaration of 'filePath' hides global declaration
   (compiling source file '/src/ImguiManager.cpp')
-      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(37,24):
+      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(38,24):
       see declaration of 'Framework::filePath'
   
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(185,33): warning C4456: declaration of 'finalPath' hides previous local declaration
-  (compiling source file '/src/ImguiManager.cpp')
-      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(168,21):
-      see declaration of 'finalPath'
-  
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(186,33): warning C4456: declaration of 'error' hides previous local declaration
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(186,33): warning C4456: declaration of 'finalPath' hides previous local declaration
   (compiling source file '/src/ImguiManager.cpp')
       C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(169,21):
+      see declaration of 'finalPath'
+  
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(187,33): warning C4456: declaration of 'error' hides previous local declaration
+  (compiling source file '/src/ImguiManager.cpp')
+      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(170,21):
       see declaration of 'error'
   
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(343,37): warning C4100: 'deltaTime': unreferenced parameter
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(344,37): warning C4100: 'deltaTime': unreferenced parameter
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(433,44): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(434,44): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(604,44): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(605,44): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(760,44): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(761,44): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(817,41): warning C4456: declaration of 'nameBuffer' hides previous local declaration
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(818,41): warning C4456: declaration of 'nameBuffer' hides previous local declaration
   (compiling source file '/src/ImguiManager.cpp')
-      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(783,25):
+      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(784,25):
       see declaration of 'nameBuffer'
   
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(818,42): warning C4456: declaration of 'volumeBuffer' hides previous local declaration
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(819,42): warning C4456: declaration of 'volumeBuffer' hides previous local declaration
   (compiling source file '/src/ImguiManager.cpp')
-      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(786,26):
+      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(787,26):
       see declaration of 'volumeBuffer'
   
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(829,80): warning C4566: character represented by universal-character-name '\U0001F3A7' cannot be represented in the current code page (1252)
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(830,80): warning C4566: character represented by universal-character-name '\U0001F3A7' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(973,48): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(974,48): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1120,48): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1121,48): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\algorithm(3799,24): warning C4244: '=': conversion from 'int' to 'char', possible loss of data
   (compiling source file '/src/ImguiManager.cpp')
       C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\algorithm(3799,24):
       the template instantiation context (the oldest one first) is
-          C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(175,18):
+          C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(176,18):
           see reference to function template instantiation '_OutIt std::transform<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,int(__cdecl *)(int)>(const _InIt,const _InIt,_OutIt,_Fn)' being compiled
           with
           [
@@ -108,13 +64,6 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.3520
               _Fn=int (__cdecl *)(int)
           ]
   
-  InputHandler.cpp
-  SceneManager.cpp
-  ScriptingSystem.cpp
-  UndoRedoSystem.cpp
-  main.cpp
-  Generating Code...
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Coordinator.cpp(309,1): warning C4702: unreachable code
   Idesign Engine.vcxproj -> C:\Year 3\Idesign-Studio-Engine\Idesign Engine\x64\Debug\Idesign Engine.exe
   'pwsh.exe' is not recognized as an internal or external command,
   operable program or batch file.
