@@ -26,6 +26,11 @@ namespace Framework
         bool isDirty = false;
     };
 
+    struct HierarchyComponent { // Left here since property serialization not necessary as a property panel, can move out if needed
+        std::string parentGUID;                  // Empty if root
+        std::vector<std::string> childrenGUIDs;  // Stable identifiers for inspector and serialization
+    };
+
     inline constexpr std::array g_TransformPropsArray =
     {
         PROP_VEC3(position, TransformComponent),

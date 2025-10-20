@@ -1,0 +1,33 @@
+{
+    "Entities": [
+        {
+            "name": "Save",
+            "guid": "20a04132-23ba-482b-ac03-bc28fe061ebd",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                "MeshReference": {
+                    "guid": ""
+                },
+                "TextureComponent": {
+                    "guid": "38a538f4-8a85-44da-8f43-84635fcc5bfb"
+                }
+            }
+        }
+    ]
+}

@@ -48,6 +48,13 @@ namespace Framework
         {
             Entity entity = ecsInterface.CreateEntity();
 
+            // Reassign guid from serialized field
+            if (entityJson.HasMember("guid") && entityJson["guid"].IsString())
+            {
+                std::string guid = entityJson["guid"].GetString();
+                ecsInterface.SetEntityGUID(entity, guid); // Overwrites the auto-generated one
+            }
+
             // Entity name
             if (entityJson.HasMember("name") && entityJson["name"].IsString())
             {
@@ -63,6 +70,31 @@ namespace Framework
                 TransformComponent transform;
                 Deserialize(&transform, g_TransformProps, components["TransformComponent"]);
                 ecsInterface.AddComponent(entity, transform);
+            }
+
+            // Hierarchy
+            if (components.HasMember("HierarchyComponent"))
+            {
+                HierarchyComponent hierarchy;
+                const auto& hierarchyJson = components["HierarchyComponent"];
+
+                // Parent GUID
+                if (hierarchyJson.HasMember("parent") && hierarchyJson["parent"].IsString())
+                {
+                    hierarchy.parentGUID = hierarchyJson["parent"].GetString();
+                }
+
+                // Children GUIDs
+                if (hierarchyJson.HasMember("children") && hierarchyJson["children"].IsArray())
+                {
+                    for (const auto& child : hierarchyJson["children"].GetArray())
+                    {
+                        if (child.IsString())
+                            hierarchy.childrenGUIDs.push_back(child.GetString());
+                    }
+                }
+
+                ecsInterface.AddComponent(entity, hierarchy);
             }
 
             // Mesh
@@ -123,6 +155,10 @@ namespace Framework
             // Store entity name directly
             std::string entityName = ecsInterface.GetEntityName(entity);
             entityObj.AddMember("name", rapidjson::Value(entityName.c_str(), allocator), allocator);
+
+            // Store GUID directly
+            std::string guid = ecsInterface.GetEntityGUID(entity);
+            entityObj.AddMember("guid", rapidjson::Value(guid.c_str(), allocator), allocator);
             
             rapidjson::Value componentsObj(rapidjson::kObjectType);
 
@@ -133,6 +169,30 @@ namespace Framework
                 rapidjson::Value transformJson(rapidjson::kObjectType);
                 Serialize((void*)&transform, g_TransformProps, transformJson, allocator);
                 componentsObj.AddMember("TransformComponent", transformJson, allocator);
+            }
+
+            // HierarchyComponent
+            if (ecsInterface.HasComponent<HierarchyComponent>(entity))
+            {
+                const auto& hierarchy = ecsInterface.GetComponent<HierarchyComponent>(entity);
+                rapidjson::Value hierarchyJson(rapidjson::kObjectType);
+
+                // Parent GUID (can be empty string)
+                hierarchyJson.AddMember(
+                    "parent",
+                    rapidjson::Value(hierarchy.parentGUID.c_str(), allocator),
+                    allocator
+                );
+
+                // Children GUIDs
+                rapidjson::Value childrenArray(rapidjson::kArrayType);
+                for (const std::string& childGUID : hierarchy.childrenGUIDs)
+                {
+                    childrenArray.PushBack(rapidjson::Value(childGUID.c_str(), allocator), allocator);
+                }
+                hierarchyJson.AddMember("children", childrenArray, allocator);
+
+                componentsObj.AddMember("HierarchyComponent", hierarchyJson, allocator);
             }
 
             // MeshProperties — write only GUID

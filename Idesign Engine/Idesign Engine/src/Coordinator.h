@@ -210,12 +210,21 @@ namespace Framework {
 		// Returns a vector of the components in string
 		std::vector<std::string> GetComponentNames();
 
+		// ------ GUID functions -----
+
+		std::string GetEntityGUID(Entity entity) const;
+
+		Entity GetEntityByGUID(const std::string& guid) const;
+
+		void SetEntityGUID(Entity entity, const std::string& guid);
+
 	private:
 		std::unique_ptr<ComponentManager> mComponentManager;	// A shared pointer of the Component Manager
 		std::unique_ptr<EntityManager> mEntityManager;			// A shared pointer of the Entity Manager
 		std::unique_ptr<ECSystemManager> mSystemManager;		// A shared pointer of the ECS System Manager
 		std::unique_ptr<TagManager> mTagManager;				// A shared pointer of the Tag Manager
 		std::unordered_map<Entity, std::string> entityNames;	// An unordered map of entity names, using the entity IDs as their keys. Since IDs are unique
+		std::unordered_map<Entity, std::string> guidMap;        // Unordered map of entity GUID to entity ID linkage, generated uniquely on creation.
 		std::vector<Entity> entityList;							// A vector of entities used for tracking all entities in game
 		std::vector<std::string> componentNamesList =			// A vector of strings that tracks the names of components. Need to edit this
 		{ "MovementComponent", "EnemyComponent", "CollisionComponent",

@@ -998,7 +998,10 @@ namespace Framework {
                 if (ImGui::Button("Create Basic Entity", ImVec2(220, 35)))
                 {
                     Entity newEntity = ecsInterface.CreateEntity();
-                    ecsInterface.AddComponent<TransformComponent>(newEntity, TransformComponent{});
+
+                    // ------ Default components added here ----------
+                    ecsInterface.AddComponent<TransformComponent>(newEntity, TransformComponent{}); // Default transform
+                    ecsInterface.AddComponent<HierarchyComponent>(newEntity, HierarchyComponent{}); // Default hierarchy
 
                     auto* tex = AssetManager::Instance().Get<TextureProperties>(
                         AssetManager::Instance().FindGuid<TextureProperties>());

@@ -138,6 +138,7 @@ namespace Framework {
 
         // Register Graphics related Component
         ecsInterface.RegisterComponent<TransformComponent>();
+        ecsInterface.RegisterComponent<HierarchyComponent>(); // Register in graphics as its default generic component allocated to all entities.
         ecsInterface.RegisterComponent<MeshProperties>();
         ecsInterface.RegisterComponent<TextureProperties>();
         ecsInterface.RegisterComponent<TextProperties>();

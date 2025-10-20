@@ -26,6 +26,7 @@ PlayerComponent 7
 #include "pch.h"
 #include "Coordinator.h"
 #include "ComponentList.h"
+#include "AssetHandler.h"
 
 namespace Framework {
 
@@ -83,8 +84,17 @@ namespace Framework {
     {
         Entity newEntity = mEntityManager->CreateEntity();
 
-        SetEntityName(newEntity, "Entity " + std::to_string(newEntity)); // Set the default name of a newly created entity to be Entity + its ID
-        entityList.push_back(newEntity);                                // Adds the newly created entity to the vector of entities
+        SetEntityName(newEntity, "Entity " + std::to_string(newEntity));
+        entityList.push_back(newEntity);
+
+        std::string guid = Framework::GenerateGUID();
+        guidMap[newEntity] = guid;
+
+        // Default components attaching here (Update eventually)
+        
+        //Add transform because every entity has x,y,z
+
+        //Add Hierarchy for parent-child and hierarchy management
         return newEntity;
     }
 
@@ -106,6 +116,8 @@ namespace Framework {
         mSystemManager->EntityDestroyed(entity);
 
         mTagManager->RemoveAllTags(entity);
+
+        guidMap.erase(entity);
 
         entityList.erase(std::remove(entityList.begin(), entityList.end(), entity), entityList.end());
     }
@@ -279,4 +291,27 @@ namespace Framework {
     {
         return componentNamesList;
     }
+
+    std::string Coordinator::GetEntityGUID(Entity entity) const
+    {
+        auto it = guidMap.find(entity);
+        return it != guidMap.end() ? it->second : "";
+    }
+
+    Entity Coordinator::GetEntityByGUID(const std::string& guid) const
+    {
+        for (const auto& pair : guidMap)
+        {
+            if (pair.second == guid)
+                return pair.first;
+        }
+        return -0; // Define INVALID_ENTITY = ~0 if you don't already
+        std::cout << "Returning -0 , invalid entity guid retrieved" << std::endl;
+    }
+
+    void Coordinator::SetEntityGUID(Entity entity, const std::string& guid)
+    {
+        guidMap[entity] = guid;
+    }
+
 }
