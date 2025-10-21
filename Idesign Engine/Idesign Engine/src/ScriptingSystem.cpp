@@ -290,6 +290,8 @@ namespace Framework {
     Entity ScriptingSystem::CreateScriptEntity(const std::string& path) {
         Entity e = ecsInterface.CreateEntity();
         ecsInterface.AddComponent<ScriptComponent>(e, ScriptComponent{ path });
+        ecsInterface.AddComponent<TransformComponent>(e,TransformComponent{});
+        ecsInterface.AddComponent<HierarchyComponent>(e, HierarchyComponent{});
         return e;
     }
 

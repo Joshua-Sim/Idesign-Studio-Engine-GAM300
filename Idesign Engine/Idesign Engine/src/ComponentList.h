@@ -58,7 +58,13 @@ enum EnemyType {
 //    glm::vec3 scale{ 1.0f, 1.0f, 1.0f };
 //};
 
-// Transform component for position, rotation, and scale // Graphics System rendering
+// Hierarchy component for engine side sorting and management.
+struct HierarchyComponent { // Left here since property serialization not necessary as a property panel, can move out if needed
+    std::string parentGUID;                  // Empty if root
+    std::vector<std::string> childrenGUIDs;  // Stable identifiers for inspector and serialization
+    int sortIndex = 0; // Default to 0, unique among siblings
+};
+
 struct RenderComponent
 {
     std::string textureID;        // Texture or sprite name to render

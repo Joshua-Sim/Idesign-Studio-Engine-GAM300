@@ -45,6 +45,8 @@ namespace Framework {
             return m_SceneEntities;
         }
 
+        std::unordered_map<std::string, std::vector<Entity>>& GetSceneEntities() { return m_SceneEntities; }
+
     private:
         std::string m_CurrentSceneName;
         

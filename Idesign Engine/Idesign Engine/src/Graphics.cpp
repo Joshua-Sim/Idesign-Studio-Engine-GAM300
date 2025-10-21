@@ -162,6 +162,8 @@ namespace Framework {
 
         ecsInterface.AddComponent<TransformComponent>(newEntity, transformComponent);
 
+        ecsInterface.AddComponent<HierarchyComponent>(newEntity, HierarchyComponent{});
+
         // Add and load mesh , temporarily hard-code component data 
         MeshProperties meshComponent;
         meshComponent.path = "Assets/Objects/plane.obj";

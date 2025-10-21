@@ -94,6 +94,11 @@ namespace Framework
                     }
                 }
 
+                if (hierarchyJson.HasMember("sortIndex") && hierarchyJson["sortIndex"].IsInt())
+                {
+                    hierarchy.sortIndex = hierarchyJson["sortIndex"].GetInt();
+                }
+
                 ecsInterface.AddComponent(entity, hierarchy);
             }
 
@@ -191,6 +196,8 @@ namespace Framework
                     childrenArray.PushBack(rapidjson::Value(childGUID.c_str(), allocator), allocator);
                 }
                 hierarchyJson.AddMember("children", childrenArray, allocator);
+
+                hierarchyJson.AddMember("sortIndex", hierarchy.sortIndex, allocator);
 
                 componentsObj.AddMember("HierarchyComponent", hierarchyJson, allocator);
             }
