@@ -354,12 +354,17 @@ namespace Framework {
             glClearColor(0.07f, 0.09f, 0.12f, 1.f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            glm::mat4 proj = camera.getProjectionMatrix((float)w,(float)h);
-            glm::mat4 view = camera.getViewMatrix();
+            Camera& cam = GetActiveCamera();
+            glm::mat4 proj = cam.getProjectionMatrix((float)w, (float)h);
+            glm::mat4 view = cam.getViewMatrix();
+
 
             // stick to ground
-            float groundY = terrain.getHeightAt(camera.position.x, camera.position.z);
-            camera.position.y = groundY + 1.8f;
+            if (groundMode)
+            {
+                float groundY = terrain.getHeightAt(cam.position.x, cam.position.z);
+                cam.position.y = groundY + 1.8f;
+            }
 
             // --- Terrain (no texture)
             terrainShader.use();
@@ -543,8 +548,8 @@ namespace Framework {
             // In your main rendering loop (e.g., in Graphics::Update)
 
             // 1. Get the camera's view and projection matrices
-            glm::mat4 viewMatrix = camera.getViewMatrix();
-            glm::mat4 projectionMatrix = camera.getProjectionMatrix((float)w, (float)h);
+            glm::mat4 viewMatrix = cam.getViewMatrix();
+            glm::mat4 projectionMatrix = cam.getProjectionMatrix((float)w, (float)h);
 
             // 2. Extract camera's right and up vectors from the view matrix
             glm::vec3 cameraRight_world = { viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0] };
@@ -630,7 +635,7 @@ namespace Framework {
 
 
     Camera* Graphics::getCamera() {
-        return &camera;
+        return &cam;
     }
 
     void Graphics::framebuffer_size_callback(GLFWwindow* window, int w, int h)
@@ -661,13 +666,38 @@ namespace Framework {
     // Can be pushed to input handler
     void Graphics::process_input(float dt)
     {
-        if (glfwGetKey(window, GLFW_KEY_F1) == GLFW_PRESS) groundMode = !groundMode;
+        Camera& cam = GetActiveCamera();
 
-        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) camera.processKeyboard(Camera::Movement::Forward, dt, groundMode, terrain);
-        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) camera.processKeyboard(Camera::Movement::Backward, dt, groundMode, terrain);
-        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) camera.processKeyboard(Camera::Movement::Left, dt, groundMode, terrain);
-        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) camera.processKeyboard(Camera::Movement::Right, dt, groundMode, terrain);
+        // Switch between Scene <-> Game camera
+        if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS)
+        {
+            activeCameraMode = CameraMode::Scene;
+            groundMode = false;          // disable ground lock
+            std::cout << "Switched to Scene Camera (noclip)\n";
+        }
+        if (glfwGetKey(window, GLFW_KEY_F3) == GLFW_PRESS)
+        {
+            activeCameraMode = CameraMode::Game;
+            groundMode = true;           // enable ground stick
+            std::cout << "Switched to Game Camera (grounded)\n";
+        }
 
+        // Movement control
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+            cam.processKeyboard(Camera::Movement::Forward, dt, groundMode, terrain);
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+            cam.processKeyboard(Camera::Movement::Backward, dt, groundMode, terrain);
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+            cam.processKeyboard(Camera::Movement::Left, dt, groundMode, terrain);
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+            cam.processKeyboard(Camera::Movement::Right, dt, groundMode, terrain);
+        if (!groundMode)
+        {
+            if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+                cam.processKeyboard(Camera::Movement::Up, dt, groundMode, terrain);
+            if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+                cam.processKeyboard(Camera::Movement::Down, dt, groundMode, terrain);
+        }
 
         //lighting
         if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
@@ -693,10 +723,10 @@ namespace Framework {
     }
 
     void Graphics::MoveCameraFromLua(const std::string& dir, float dt, bool gm) {
-        if (dir == "W") camera.processKeyboard(Camera::Movement::Forward, dt, gm, terrain);
-        else if (dir == "S") camera.processKeyboard(Camera::Movement::Backward, dt, gm, terrain);
-        else if (dir == "A") camera.processKeyboard(Camera::Movement::Left, dt, gm, terrain);
-        else if (dir == "D") camera.processKeyboard(Camera::Movement::Right, dt, gm, terrain);
+        if (dir == "W") cam.processKeyboard(Camera::Movement::Forward, dt, gm, terrain);
+        else if (dir == "S") cam.processKeyboard(Camera::Movement::Backward, dt, gm, terrain);
+        else if (dir == "A") cam.processKeyboard(Camera::Movement::Left, dt, gm, terrain);
+        else if (dir == "D") cam.processKeyboard(Camera::Movement::Right, dt, gm, terrain);
     }
 
     void Graphics::NudgeLightFromLua(const std::string& axis, float amount) {

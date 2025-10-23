@@ -86,10 +86,34 @@ namespace Framework {
         GLFWwindow* window = nullptr;
         float lastTime = 0.0f;
 
-        // camera & movement
-        Camera camera{ {0.f, 1.f, 3.f} };
+        // ================ //
+        // CAMERA FUNCTIONS //
+        //Camera camera{ {0.f, 1.f, 3.f} };
         static bool mouseCaptured;
-        bool groundMode = true;
+        bool groundMode = false;
+
+        enum class CameraMode
+        {
+            Scene,
+            Game
+        };
+
+        Camera sceneCamera{ {0.f, 3.f, 8.f} }; // Free-fly editor camera
+        Camera gameCamera{ {0.f, 1.8f, 3.f} }; // Gameplay camera
+        CameraMode activeCameraMode = CameraMode::Scene;
+
+        Camera& cam = GetActiveCamera();
+
+        Camera& GetActiveCamera()
+        {
+            return (activeCameraMode == CameraMode::Scene) ? sceneCamera : gameCamera;
+        }
+
+        void SetCameraMode(CameraMode mode) { activeCameraMode = mode; }
+        CameraMode GetCameraMode() const { return activeCameraMode; }
+
+        // ========================== //
+        //   END OF CAMERA FUNCTIONS //
 
         // scene content
         Terrain terrain{ 128, 1.0f };
