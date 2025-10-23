@@ -54,6 +54,9 @@
 #include "Coordinator.h"
 #include "ComponentList.h"
 #include "FontSystem.h"
+#include <rttr/type>
+#include <rttr/registration>
+
 
 extern Framework::FontSystem fontSystem;
 extern Framework::Coordinator ecsInterface;
