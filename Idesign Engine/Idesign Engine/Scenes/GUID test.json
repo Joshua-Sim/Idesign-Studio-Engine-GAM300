@@ -1,0 +1,93 @@
+{
+    "Entities": [
+        {
+            "name": "Entity 0",
+            "guid": "5adbd6a1-ada5-4567-b264-30e28f1b0112",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        0.0,
+                        2.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.0005000000237487257,
+                        0.0005000000237487257,
+                        0.0005000000237487257
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": []
+                },
+                "MeshReference": {
+                    "guid": ""
+                },
+                "TextureComponent": {
+                    "guid": ""
+                }
+            }
+        },
+        {
+            "name": "Entity 1",
+            "guid": "afb56b2a-47bd-4896-8bc8-11d61d4f1155",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [
+                        "58505cf7-aef9-44e3-a16c-2d836d78ddf5"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Entity 2",
+            "guid": "58505cf7-aef9-44e3-a16c-2d836d78ddf5",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "afb56b2a-47bd-4896-8bc8-11d61d4f1155",
+                    "children": []
+                }
+            }
+        }
+    ]
+}

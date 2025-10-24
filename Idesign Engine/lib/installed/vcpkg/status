@@ -123,3 +123,13 @@ Abi: e2bfaca87940751a16553c22ec1d9e8037e1687b0b1cbf90d627ff2a12027ebf
 Description: The Open Asset import library
 Status: install ok installed
 
+Package: rttr
+Version: 0.9.6+20210811
+Port-Version: 1
+Depends: rapidjson, vcpkg-cmake, vcpkg-cmake-config
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 7605772a390c4505b4331bf32cb3add85e609286973f42dc3cc4ade2230a630a
+Description: an easy and intuitive way to use reflection in C++
+Status: install ok installed
+

@@ -54,6 +54,9 @@
 #include "Coordinator.h"
 #include "ComponentList.h"
 #include "FontSystem.h"
+#include <rttr/type>
+#include <rttr/registration>
+
 
 extern Framework::FontSystem fontSystem;
 extern Framework::Coordinator ecsInterface;
@@ -138,6 +141,7 @@ namespace Framework {
 
         // Register Graphics related Component
         ecsInterface.RegisterComponent<TransformComponent>();
+        ecsInterface.RegisterComponent<HierarchyComponent>(); // Register in graphics as its default generic component allocated to all entities.
         ecsInterface.RegisterComponent<MeshProperties>();
         ecsInterface.RegisterComponent<TextureProperties>();
         ecsInterface.RegisterComponent<TextProperties>();
@@ -160,6 +164,8 @@ namespace Framework {
         transformComponent.scale = glm::vec3(0.0005, 0.0005, 0.0005); // Size of my obj is big, change for test
 
         ecsInterface.AddComponent<TransformComponent>(newEntity, transformComponent);
+
+        ecsInterface.AddComponent<HierarchyComponent>(newEntity, HierarchyComponent{});
 
         // Add and load mesh , temporarily hard-code component data 
         MeshProperties meshComponent;

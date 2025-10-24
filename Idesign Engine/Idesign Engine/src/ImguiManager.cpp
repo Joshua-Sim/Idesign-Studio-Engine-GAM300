@@ -17,6 +17,7 @@
 #include "Debugger.h"
 #include <ImguiManager.h>
 #include "SceneManager.h"
+#include "Imgui_Hierarchy.h"
 
 extern Framework::Coordinator ecsInterface;
 
@@ -52,7 +53,7 @@ namespace Framework {
     {
         return "ImguiManager";
     }
-
+   
     //FILE OPENING / SAVING
     std::string ImguiManager::OpenFileDialog()
     {
@@ -998,7 +999,10 @@ namespace Framework {
                 if (ImGui::Button("Create Basic Entity", ImVec2(220, 35)))
                 {
                     Entity newEntity = ecsInterface.CreateEntity();
-                    ecsInterface.AddComponent<TransformComponent>(newEntity, TransformComponent{});
+
+                    // ------ Default components added here ----------
+                    ecsInterface.AddComponent<TransformComponent>(newEntity, TransformComponent{}); // Default transform
+                    ecsInterface.AddComponent<HierarchyComponent>(newEntity, HierarchyComponent{}); // Default hierarchy
 
                     auto* tex = AssetManager::Instance().Get<TextureProperties>(
                         AssetManager::Instance().FindGuid<TextureProperties>());
@@ -1111,7 +1115,7 @@ namespace Framework {
             }
 
 
-            if (ImGui::Begin("Entity List"))
+            if (ImGui::Begin("Entity List [Hierarchy]"))
             {
                 ImGui::SameLine();
                 ImGui::TextColored(helpYellow, "(❓)");
@@ -1137,50 +1141,160 @@ namespace Framework {
 
             ImGui::Spacing();
 
+            // ---- Entity Inspector List ---
+
             std::unordered_set<Entity> registered;
             for (const auto& [sceneName, entities] : Framework::sceneManager.GetSceneEntities())
                 registered.insert(entities.begin(), entities.end());
 
-            // 1. Show entities without scenes
-            for (Entity entity : ecsInterface.GetEntities())
+            // 1. Entities with no scene (not recommended, but handled)
+            ImGui::PushID("NonSceneHeader");
+            bool nonSceneOpen = ImGui::CollapsingHeader("Entities", ImGuiTreeNodeFlags_DefaultOpen);
+
+            // Make non-scene header a drop target
+            if (ImGui::BeginDragDropTarget())
             {
-                if (!registered.count(entity))
+                if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ENTITY_GUID"))
                 {
-                    if (!ecsInterface.IsEntityValid(entity))
-                        continue;
+                    const char* data = (const char*)payload->Data;
+                    std::string draggedGUID(data);
 
-                    std::string entityName = ecsInterface.GetEntityName(entity);
-                    if (entityName.empty()) entityName = "Entity " + std::to_string(entity);
-
-                    if (ImGui::Selectable(entityName.c_str(), selectedEntity == entity))
-                    {
-                        selectedEntity = entity;
-                        isPropertiesWindowOpen = true;
-                    }
+                    // Move entity to non-scene (orphan) status
+                    MoveEntityToScene(draggedGUID, ""); // Empty string = no scene
                 }
+                ImGui::EndDragDropTarget();
             }
 
-            // 2. Then show scene-grouped entities
-            for (const auto& [sceneName, entities] : Framework::sceneManager.GetSceneEntities())
+            // Visual feedback while dragging
+            if (ImGui::BeginDragDropTarget())
             {
-                if (ImGui::CollapsingHeader(sceneName.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+                if (const ImGuiPayload* payload = ImGui::GetDragDropPayload())
                 {
-                    for (Entity entity : entities)
+                    if (payload->IsDataType("ENTITY_GUID"))
                     {
-                        if (!ecsInterface.IsEntityValid(entity))
-                            continue;
+                        ImVec2 min = ImGui::GetItemRectMin();
+                        ImVec2 max = ImGui::GetItemRectMax();
+                        ImDrawList* drawList = ImGui::GetWindowDrawList();
+                        drawList->AddRect(min, max, IM_COL32(100, 200, 255, 200), 0.0f, 0, 2.0f);
+                    }
+                }
+                ImGui::EndDragDropTarget();
+            }
 
-                        std::string entityName = ecsInterface.GetEntityName(entity);
-                        if (entityName.empty()) entityName = "Entity " + std::to_string(entity);
+            if (nonSceneOpen)
+            {
+                std::vector<std::string> rootGUIDs;
 
-                        if (ImGui::Selectable(entityName.c_str(), selectedEntity == entity))
+                for (Entity entity : ecsInterface.GetEntities())
+                {
+                    if (!registered.count(entity) && ecsInterface.IsEntityValid(entity))
+                    {
+                        const auto& guid = ecsInterface.GetEntityGUID(entity);
+                        const auto& h = ecsInterface.GetComponent<HierarchyComponent>(entity);
+                        if (h.parentGUID.empty())
                         {
-                            selectedEntity = entity;
-                            isPropertiesWindowOpen = true;
+                            rootGUIDs.push_back(guid);
                         }
                     }
                 }
+
+                std::sort(rootGUIDs.begin(), rootGUIDs.end(), [](const std::string& a, const std::string& b) {
+                    Entity ea = ecsInterface.GetEntityByGUID(a);
+                    Entity eb = ecsInterface.GetEntityByGUID(b);
+                    return ecsInterface.GetComponent<HierarchyComponent>(ea).sortIndex <
+                        ecsInterface.GetComponent<HierarchyComponent>(eb).sortIndex;
+                    });
+
+                for (const auto& guid : rootGUIDs)
+                {
+                    DrawEntityHierarchy(guid, selectedEntity, isPropertiesWindowOpen);
+                }
             }
+            ImGui::PopID();
+
+            // 2. Entities grouped by scene, shown with hierarchy
+            for (const auto& [sceneName, entities] : Framework::sceneManager.GetSceneEntities())
+            {
+                std::string sceneLabel = sceneName + " [Scene]";
+                std::string sceneHeaderID = "SceneHeader_" + sceneName;
+
+                ImGui::PushID(sceneHeaderID.c_str());
+
+                bool isSceneOpen = ImGui::CollapsingHeader(sceneLabel.c_str(), ImGuiTreeNodeFlags_DefaultOpen);
+
+                // Make scene header a drop target
+                if (ImGui::BeginDragDropTarget())
+                {
+                    if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ENTITY_GUID"))
+                    {
+                        const char* data = (const char*)payload->Data;
+                        std::string draggedGUID(data);
+
+                        // Move entity to this scene
+                        if (CanMoveToScene(draggedGUID, sceneName))
+                        {
+                            MoveEntityToScene(draggedGUID, sceneName);
+                        }
+                    }
+                    ImGui::EndDragDropTarget();
+                }
+
+                // Visual feedback while dragging over scene header
+                if (ImGui::BeginDragDropTarget())
+                {
+                    if (const ImGuiPayload* payload = ImGui::GetDragDropPayload())
+                    {
+                        if (payload->IsDataType("ENTITY_GUID"))
+                        {
+                            const char* data = (const char*)payload->Data;
+                            std::string draggedGUID(data);
+
+                            if (CanMoveToScene(draggedGUID, sceneName))
+                            {
+                                // Highlight the scene header
+                                ImVec2 min = ImGui::GetItemRectMin();
+                                ImVec2 max = ImGui::GetItemRectMax();
+                                ImDrawList* drawList = ImGui::GetWindowDrawList();
+                                drawList->AddRect(min, max, IM_COL32(100, 200, 255, 200), 0.0f, 0, 2.0f);
+                            }
+                        }
+                    }
+                    ImGui::EndDragDropTarget();
+                }
+
+                if (isSceneOpen)
+                {
+                    std::vector<std::string> rootGUIDs;
+
+                    for (Entity entity : entities)
+                    {
+                        if (!ecsInterface.IsEntityValid(entity)) continue;
+
+                        const auto& guid = ecsInterface.GetEntityGUID(entity);
+                        const auto& h = ecsInterface.GetComponent<HierarchyComponent>(entity);
+                        if (h.parentGUID.empty())
+                        {
+                            rootGUIDs.push_back(guid);
+                        }
+                    }
+
+                    std::sort(rootGUIDs.begin(), rootGUIDs.end(), [](const std::string& a, const std::string& b) {
+                        Entity ea = ecsInterface.GetEntityByGUID(a);
+                        Entity eb = ecsInterface.GetEntityByGUID(b);
+                        return ecsInterface.GetComponent<HierarchyComponent>(ea).sortIndex <
+                            ecsInterface.GetComponent<HierarchyComponent>(eb).sortIndex;
+                        });
+
+                    for (const auto& guid : rootGUIDs)
+                    {
+                        DrawEntityHierarchy(guid, selectedEntity, isPropertiesWindowOpen);
+                    }
+                }
+
+                ImGui::PopID();
+            }
+
+            // ---- Entity Inspector List END ---
 
             ImGui::End();
 
