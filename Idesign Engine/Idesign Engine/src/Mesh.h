@@ -25,6 +25,7 @@ public:
     Mesh& operator=(Mesh&& other) noexcept;
 
     void cleanupGL();
+    static Mesh CreateUnitTriangleData();
 private:
     std::vector<float> vertices;   // CPU-side vertex data (pos+normal interleaved)
     GLuint vao = 0, vbo = 0;

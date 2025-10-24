@@ -17,9 +17,6 @@
 #include "Debugger.h"
 #include <ImguiManager.h>
 #include "SceneManager.h"
-#include <glm.hpp>            
-#include <gtc/type_ptr.hpp>
-
 
 extern Framework::Coordinator ecsInterface;
 
@@ -157,32 +154,6 @@ namespace Framework {
     GLuint ImguiManager::GetGameFramebuffer()
     {
         return gameFramebuffer;
-    }
-
-
-
-    // Helper function to find a texture's index in the list
-    static int GetTextureIndex(const std::vector<AssetHandle>& textureGuids, const AssetHandle& currentGuid)
-    {
-        for (size_t i = 0; i < textureGuids.size(); ++i)
-        {
-            if (textureGuids[i] == currentGuid)
-            {
-                return static_cast<int>(i);
-            }
-        }
-        return -1; // Not found
-    }
-
-    // Helper function to show a small texture preview
-    static void ShowTexturePreview(const AssetHandle& textureGuid)
-    {
-        auto* tex = AssetManager::Instance().Get<TextureProperties>(textureGuid);
-        if (tex && tex->textureID != 0)
-        {
-            ImGui::SameLine();
-            ImGui::Image((ImTextureID)tex->textureID, ImVec2(64, 64), ImVec2(0, 1), ImVec2(1, 0));
-        }
     }
 
     // Edwin, drag and drop Texture/Audio/Obj
@@ -1042,27 +1013,12 @@ namespace Framework {
                             AssetManager::Instance().FindGuid<TextureProperties>());
                     }
 
-                    auto* defaultMat = AssetManager::Instance().Get<MaterialProperties>(
-                        AssetManager::Instance().FindGuid<MaterialProperties>("DefaultMaterial")
-                    );
-
-                    // This check is important in case the asset doesn't exist yet
-                    if (defaultMat)
-                    {
-                        // 2. Add the "label" (Component) to the entity
-                        MaterialComponent newMatComp;
-                        newMatComp.materialGuid = defaultMat->guid; // Point to the asset
-                        ecsInterface.AddComponent<MaterialComponent>(newEntity, newMatComp);
-                    }
-                    else
-                    {
-                        // If no default material exists, just add an empty component
-                        ecsInterface.AddComponent<MaterialComponent>(newEntity, MaterialComponent{});
-                        std::cout << "[ERROR] Could not find 'DefaultMaterial' asset for new entity.\n";
-                    }
-
+                    if (tex) ecsInterface.AddComponent<TextureProperties>(newEntity, *tex);
 
                     MeshProperties meshComponent{};
+                    MeshLoader::loadMesh(meshComponent.path, meshComponent);
+                    meshComponent.debugShape = DebugShapeType::None;
+                    ecsInterface.AddComponent<MeshProperties>(newEntity, meshComponent);
 
                     std::cout << "[ECS] Created Basic Entity ID: " << newEntity << std::endl;
                 }
@@ -1239,269 +1195,269 @@ namespace Framework {
                 }
                 else
                 {
-                    if (ecsInterface.HasComponent<TransformComponent>(selectedEntity)) {
+                    TransformComponent& transformComponent = ecsInterface.GetComponent<TransformComponent>(selectedEntity);
 
+                    ImGui::Begin("Entity Properties", &isPropertiesWindowOpen);
+                    if (ImGui::CollapsingHeader("Name", ImGuiTreeNodeFlags_DefaultOpen))
+                    {
+                        std::string selectedEntityName = ecsInterface.GetEntityName(selectedEntity);
+                        char buffer[256];
+                        strncpy(buffer, selectedEntityName.c_str(), sizeof(buffer));
+                        buffer[sizeof(buffer) - 1] = '\0';
 
-                        TransformComponent& transformComponent = ecsInterface.GetComponent<TransformComponent>(selectedEntity);
-
-                        ImGui::Begin("Entity Properties", &isPropertiesWindowOpen);
-                        if (ImGui::CollapsingHeader("Name", ImGuiTreeNodeFlags_DefaultOpen))
+                        // Display an InputText to edit the selected entity's name
+                        if (ImGui::InputText("Edit Name", buffer, sizeof(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
                         {
-                            std::string selectedEntityName = ecsInterface.GetEntityName(selectedEntity);
-                            char buffer[256];
-                            strncpy(buffer, selectedEntityName.c_str(), sizeof(buffer));
-                            buffer[sizeof(buffer) - 1] = '\0';
-
-                            // Display an InputText to edit the selected entity's name
-                            if (ImGui::InputText("Edit Name", buffer, sizeof(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
-                            {
-                                ecsInterface.SetEntityName(selectedEntity, std::string(buffer));  // Update the name of the selected entity
-                            }
+                            ecsInterface.SetEntityName(selectedEntity, std::string(buffer));  // Update the name of the selected entity
                         }
-
-                        if (ImGui::CollapsingHeader("Transform Component", ImGuiTreeNodeFlags_DefaultOpen))
-                        {
-                            // Translation
-                            ImGui::InputFloat3("Translation", glm::value_ptr(transformComponent.position));
-
-                            // Rotation
-                            ImGui::InputFloat3("Rotation", glm::value_ptr(transformComponent.rotation));
-
-                            // Scale
-                            ImGui::InputFloat3("Scale", glm::value_ptr(transformComponent.scale));
-                        }
-
-                        // Show combo box for adding components
-                        static int selectedComponentIndex = -1;
-                        std::vector<std::string> availableComponents;
-
-                        // Populate availableComponents with components the entity doesn�t already have
-                        for (int i = 0; i < ecsInterface.GetComponentNames().size(); ++i)
-                        {
-                            if (!ecsInterface.GetEntitySignature(selectedEntity).test(i))  // Check if the component is not yet added
-                            {
-                                availableComponents.push_back(ecsInterface.GetComponentNames()[i]);
-                            }
-                        }
-
-                        //// Show the combo box with available components
-                        //if (ImGui::BeginCombo("Choose Component", selectedComponentIndex >= 0 ? availableComponents[selectedComponentIndex].c_str() : "Select Component"))
-                        //{
-                        //    for (int i = 0; i < availableComponents.size(); ++i)
-                        //    {
-                        //        bool isSelected = (selectedComponentIndex == i);
-                        //        if (ImGui::Selectable(availableComponents[i].c_str(), isSelected))
-                        //        {
-                        //            selectedComponentIndex = i;
-                        //        }
-                        //        if (isSelected)
-                        //        {
-                        //            ImGui::SetItemDefaultFocus();
-                        //        }
-                        //    }
-                        //    ImGui::EndCombo();
-                        //}
-
-                        //// Add button to attach the selected component to the entity
-                        //if (selectedComponentIndex >= 0 && ImGui::Button("Add Component"))
-                        //{
-                        //    std::string selectedComponentName = availableComponents[selectedComponentIndex];
-
-                        //    // Add the selected component to the entity
-                        //    ecsInterface.AddComponentToEntity(selectedEntity, selectedComponentName);
-
-                        //    // Reset the combo box selection and clear out selectedComponentIndex to update available components
-                        //    selectedComponentIndex = -1;
-                        //}
-
-                        if (ImGui::CollapsingHeader("Mesh Component", ImGuiTreeNodeFlags_DefaultOpen))
-                        {
-                            if (ecsInterface.HasComponent<MeshProperties>(selectedEntity))
-                            {
-                                MeshProperties& meshComponent = ecsInterface.GetComponent<MeshProperties>(selectedEntity);
-
-                                // Build list of mesh labels and GUIDs
-                                std::vector<std::string> meshNames;
-                                std::vector<AssetHandle> meshGuids;
-
-                                for (const auto& [guid, entry] : AssetManager::Instance().GetAssets())
-                                {
-                                    if (entry.typeName != TypeName<MeshProperties>::value)
-                                        continue;
-
-                                    auto* mesh = static_cast<MeshProperties*>(entry.pObject.get());
-                                    std::string label = mesh->path.empty() ? "Unnamed Mesh" : mesh->path;
-                                    meshNames.push_back(label);
-                                    meshGuids.push_back(guid);
-                                }
-
-                                // Convert to const char* array for ImGui
-                                std::vector<const char*> labelPtrs;
-                                for (const auto& name : meshNames)
-                                    labelPtrs.push_back(name.c_str());
-
-                                // Find current mesh index
-                                int currentIndex = -1;
-                                for (size_t i = 0; i < meshGuids.size(); ++i)
-                                {
-                                    if (meshGuids[i] == meshComponent.guid)
-                                    {
-                                        currentIndex = static_cast<int>(i);
-                                        break;
-                                    }
-                                }
-
-                                // Dropdown to select mesh
-                                ImGui::Separator();
-                                ImGui::Text("Select Mesh:");
-                                if (ImGui::Combo("Mesh", &currentIndex, labelPtrs.data(), static_cast<int>(labelPtrs.size())))
-                                {
-                                    auto* selectedMesh = AssetManager::Instance().Get<MeshProperties>(meshGuids[currentIndex]);
-                                    if (selectedMesh)
-                                    {
-                                        meshComponent = *selectedMesh;
-                                    }
-                                }
-
-                                // Show debug info about mesh
-                                ImGui::Text("VAO: %u", meshComponent.vao);
-                                ImGui::Text("VBO: %u", meshComponent.vbo);
-                                ImGui::Text("EBO: %u", meshComponent.ebo);
-                                ImGui::Text("Index Count: %u", meshComponent.indexCount);
-
-                                // Optional: add a reload button
-                                if (ImGui::Button("Reload Mesh"))
-                                {
-                                    MeshLoader::loadMesh(meshComponent.path, meshComponent);
-                                }
-
-                                ImGui::Separator();
-                                if (ImGui::Button("Remove Mesh"))
-                                {
-                                    meshComponent = MeshProperties{}; // Reset to default
-                                }
-                            }
-                            else
-                            {
-                                ImGui::Text("No MeshComponent attached to this entity.");
-                                if (ImGui::Button("Add Mesh Component"))
-                                {
-                                    ecsInterface.AddComponent<MeshProperties>(selectedEntity, MeshProperties{});
-                                }
-                            }
-                        }
-
-                        if (ImGui::CollapsingHeader("Material Component", ImGuiTreeNodeFlags_DefaultOpen))
-                        {
-                            // Check if the entity has the "label"
-                            if (ecsInterface.HasComponent<Framework::MaterialComponent>(selectedEntity))
-                            {
-                                // Get the component from the entity
-                                auto& matComp = ecsInterface.GetComponent<MaterialComponent>(selectedEntity);
-
-                                // --- Build a list of available MATERIAL ASSETS ("paint cans") ---
-                                std::vector<std::string> materialNames;
-                                std::vector<AssetHandle> materialGuids;
-                                materialNames.push_back("None"); // Option for no material
-                                materialGuids.push_back(AssetHandle{});
-
-                                for (const auto& [guid, entry] : AssetManager::Instance().GetAssets())
-                                {
-                                    if (entry.typeName != TypeName<MaterialProperties>::value)                                        continue;
-                                    continue;
-                                    auto* mat = static_cast<MaterialProperties*>(entry.pObject.get());
-                                    // Use the material's name for the dropdown label
-                                    materialNames.push_back(mat->name.empty() ? "Unnamed Material" : mat->name);
-                                    materialGuids.push_back(guid);
-                                }
-
-                                std::vector<const char*> labelPtrs;
-                                for (const auto& name : materialNames)
-                                    labelPtrs.push_back(name.c_str());
-
-                                // Find the index of the entity's current material
-                                int currentIndex = 0; // Default to "None"
-                                for (size_t i = 0; i < materialGuids.size(); ++i)
-                                {
-                                    if (materialGuids[i] == matComp.materialGuid)
-                                    {
-                                        currentIndex = static_cast<int>(i);
-                                        break;
-                                    }
-                                }
-
-                                // --- Dropdown to select a MATERIAL ASSET ---
-                                ImGui::Separator();
-                                ImGui::Text("Material Asset:");
-                                if (ImGui::Combo("Material", &currentIndex, labelPtrs.data(), static_cast<int>(labelPtrs.size())))
-                                {
-                                    // When a new material is selected, update the component's GUID
-                                    matComp.materialGuid = materialGuids[currentIndex];
-                                }
-
-                                // Display info about the currently selected material
-                                auto* selectedMat = AssetManager::Instance().Get<MaterialProperties>(matComp.materialGuid);
-                                if (selectedMat)
-                                {
-                                    // You will need a way to convert your AssetHandle to a string for display.
-                                    // This depends on your PropertySystem, but a common way is a helper function.
-                                    // For now, we can omit displaying the GUIDs to fix the compile error.
-                                    ImGui::Text("Name: %s", selectedMat->name.c_str());
-                                }
-
-                                ImGui::Separator();
-                                if (ImGui::Button("Remove Material Component"))
-                                {
-                                    ecsInterface.RemoveComponent<MaterialComponent>(selectedEntity);
-                                }
-                            }
-                            else
-                            {
-                                ImGui::Text("No Material Component attached.");
-                                if (ImGui::Button("Add Material Component"))
-                                {
-                                    // Add a new, empty "label" component
-                                    ecsInterface.AddComponent<MaterialComponent>(selectedEntity, MaterialComponent{});
-                                }
-                            }
-                        }                        if (ImGui::CollapsingHeader("Text Component", ImGuiTreeNodeFlags_DefaultOpen))
-                        {
-                            if (ecsInterface.HasComponent<TextProperties>(selectedEntity))
-                            {
-                                auto& textComponent = ecsInterface.GetComponent<TextProperties>(selectedEntity);
-
-                                // Buffer for editing the text string
-                                char textBuffer[256];
-                                strncpy_s(textBuffer, textComponent.text.c_str(), sizeof(textBuffer));
-                                textBuffer[sizeof(textBuffer) - 1] = '\0';
-
-                                if (ImGui::InputText("Text", textBuffer, sizeof(textBuffer)))
-                                {
-                                    textComponent.text = std::string(textBuffer);
-                                }
-
-                                // Slider for text scale
-                                ImGui::DragFloat("Scale", &textComponent.scale, 0.001f, 0.001f, 10.0f);
-
-                                // Color picker for text color
-                                ImGui::ColorEdit3("Color", glm::value_ptr(textComponent.color));
-                            }
-                            else
-                            {
-                                ImGui::Text("No TextComponent attached.");
-                                if (ImGui::Button("Add Text Component"))
-                                {
-                                    ecsInterface.AddComponent<TextProperties>(selectedEntity, TextProperties{});
-                                }
-                            }
-                        }
-                        // Reset selectedEntity if the properties window is closed
-                        if (!isPropertiesWindowOpen)
-                        {
-                            selectedEntity = std::numeric_limits<Entity>::max();
-                        }
-                        ImGui::End();
                     }
+
+                    if (ImGui::CollapsingHeader("Transform Component", ImGuiTreeNodeFlags_DefaultOpen))
+                    {
+                        // Translation
+                        ImGui::InputFloat3("Translation", glm::value_ptr(transformComponent.position));
+
+                        // Rotation
+                        ImGui::InputFloat3("Rotation", glm::value_ptr(transformComponent.rotation));
+
+                        // Scale
+                        ImGui::InputFloat3("Scale", glm::value_ptr(transformComponent.scale));
+                    }
+
+                    // Show combo box for adding components
+                    static int selectedComponentIndex = -1;
+                    std::vector<std::string> availableComponents;
+
+                    // Populate availableComponents with components the entity doesn�t already have
+                    for (int i = 0; i < ecsInterface.GetComponentNames().size(); ++i)
+                    {
+                        if (!ecsInterface.GetEntitySignature(selectedEntity).test(i))  // Check if the component is not yet added
+                        {
+                            availableComponents.push_back(ecsInterface.GetComponentNames()[i]);
+                        }
+                    }
+
+                    //// Show the combo box with available components
+                    //if (ImGui::BeginCombo("Choose Component", selectedComponentIndex >= 0 ? availableComponents[selectedComponentIndex].c_str() : "Select Component"))
+                    //{
+                    //    for (int i = 0; i < availableComponents.size(); ++i)
+                    //    {
+                    //        bool isSelected = (selectedComponentIndex == i);
+                    //        if (ImGui::Selectable(availableComponents[i].c_str(), isSelected))
+                    //        {
+                    //            selectedComponentIndex = i;
+                    //        }
+                    //        if (isSelected)
+                    //        {
+                    //            ImGui::SetItemDefaultFocus();
+                    //        }
+                    //    }
+                    //    ImGui::EndCombo();
+                    //}
+
+                    //// Add button to attach the selected component to the entity
+                    //if (selectedComponentIndex >= 0 && ImGui::Button("Add Component"))
+                    //{
+                    //    std::string selectedComponentName = availableComponents[selectedComponentIndex];
+
+                    //    // Add the selected component to the entity
+                    //    ecsInterface.AddComponentToEntity(selectedEntity, selectedComponentName);
+
+                    //    // Reset the combo box selection and clear out selectedComponentIndex to update available components
+                    //    selectedComponentIndex = -1;
+                    //}
+
+                    if (ImGui::CollapsingHeader("Mesh Component", ImGuiTreeNodeFlags_DefaultOpen))
+                    {
+                        if (ecsInterface.HasComponent<MeshProperties>(selectedEntity))
+                        {
+                            MeshProperties& meshComponent = ecsInterface.GetComponent<MeshProperties>(selectedEntity);
+
+                            // Build list of mesh labels and GUIDs
+                            std::vector<std::string> meshNames;
+                            std::vector<AssetHandle> meshGuids;
+
+                            for (const auto& [guid, entry] : AssetManager::Instance().GetAssets())
+                            {
+                                if (entry.typeName != TypeName<MeshProperties>::value)
+                                    continue;
+
+                                auto* mesh = static_cast<MeshProperties*>(entry.pObject.get());
+                                std::string label = mesh->path.empty() ? "Unnamed Mesh" : mesh->path;
+                                meshNames.push_back(label);
+                                meshGuids.push_back(guid);
+                            }
+
+                            // Convert to const char* array for ImGui
+                            std::vector<const char*> labelPtrs;
+                            for (const auto& name : meshNames)
+                                labelPtrs.push_back(name.c_str());
+
+                            // Find current mesh index
+                            int currentIndex = -1;
+                            for (size_t i = 0; i < meshGuids.size(); ++i)
+                            {
+                                if (meshGuids[i] == meshComponent.guid)
+                                {
+                                    currentIndex = static_cast<int>(i);
+                                    break;
+                                }
+                            }
+
+                            // Dropdown to select mesh
+                            ImGui::Separator();
+                            ImGui::Text("Select Mesh:");
+                            if (ImGui::Combo("Mesh", &currentIndex, labelPtrs.data(), static_cast<int>(labelPtrs.size())))
+                            {
+                                auto* selectedMesh = AssetManager::Instance().Get<MeshProperties>(meshGuids[currentIndex]);
+                                if (selectedMesh)
+                                {
+                                    meshComponent = *selectedMesh;
+                                }
+                            }
+
+                            // Show debug info about mesh
+                            ImGui::Text("VAO: %u", meshComponent.vao);
+                            ImGui::Text("VBO: %u", meshComponent.vbo);
+                            ImGui::Text("EBO: %u", meshComponent.ebo);
+                            ImGui::Text("Index Count: %u", meshComponent.indexCount);
+
+                            // Optional: add a reload button
+                            if (ImGui::Button("Reload Mesh"))
+                            {
+                                MeshLoader::loadMesh(meshComponent.path, meshComponent);
+                            }
+
+                            ImGui::Separator();
+                            if (ImGui::Button("Remove Mesh"))
+                            {
+                                meshComponent = MeshProperties{}; // Reset to default
+                            }
+                        }
+                        else
+                        {
+                            ImGui::Text("No MeshComponent attached to this entity.");
+                            if (ImGui::Button("Add Mesh Component"))
+                            {
+                                ecsInterface.AddComponent<MeshProperties>(selectedEntity, MeshProperties{});
+                            }
+                        }
+                    }
+
+                    if (ImGui::CollapsingHeader("Texture Component", ImGuiTreeNodeFlags_DefaultOpen))
+                    {
+                        if (ecsInterface.HasComponent<Framework::TextureProperties>(selectedEntity))
+                        {
+                            auto& currentTexture = ecsInterface.GetComponent<TextureProperties>(selectedEntity);
+
+                            // Build list of texture labels and GUIDs
+                            std::vector<std::string> textureNames;
+                            std::vector<AssetHandle> textureGuids;
+
+                            for (const auto& [guid, entry] : AssetManager::Instance().GetAssets())
+                            {
+                                if (entry.typeName != TypeName<TextureProperties>::value)
+                                    continue;
+
+                                auto* tex = static_cast<TextureProperties*>(entry.pObject.get());
+                                std::string label = tex->name.empty() ? tex->path : tex->name;
+                                textureNames.push_back(label);
+                                textureGuids.push_back(guid);
+                            }
+
+                            // Convert to const char* array for ImGui
+                            std::vector<const char*> labelPtrs;
+                            for (const auto& name : textureNames)
+                                labelPtrs.push_back(name.c_str());
+
+                            // Find current texture index
+                            int currentIndex = -1;
+                            for (size_t i = 0; i < textureGuids.size(); ++i)
+                            {
+                                if (textureGuids[i] == currentTexture.guid)
+                                {
+                                    currentIndex = static_cast<int>(i);
+                                    break;
+                                }
+                            }
+
+                            // Dropdown to select from registered textures
+                            ImGui::Separator();
+                            ImGui::Text("Select Texture:");
+                            if (ImGui::Combo("Texture", &currentIndex, labelPtrs.data(), static_cast<int>(labelPtrs.size())))
+                            {
+                                auto* selectedTexture = AssetManager::Instance().Get<TextureProperties>(textureGuids[currentIndex]);
+                                if (selectedTexture)
+                                {
+                                    currentTexture = *selectedTexture;
+                                }
+                            }
+
+                            // Display metadata
+                            ImGui::Text("GUID: %s", currentTexture.guid.c_str());
+                            ImGui::Text("Texture ID: %u", currentTexture.textureID);
+                            ImGui::Text("Size: %d x %d", currentTexture.width, currentTexture.height);
+
+                            // Preview current texture
+                            if (currentTexture.textureID != 0)
+                            {
+                                ImGui::Text("Preview:");
+                                ImGui::Image((ImTextureID)currentTexture.textureID, ImVec2(128, 128), ImVec2(0, 1), ImVec2(1, 0));
+                            }
+
+                            ImGui::Separator();
+                            if (ImGui::Button("Remove Texture"))
+                            {
+                                currentTexture = TextureProperties{}; // Reset to default
+                            }
+                        }
+                        else
+                        {
+                            ImGui::Text("No Texture Component attached to this entity.");
+                            if (ImGui::Button("Add Texture Component"))
+                            {
+                                ecsInterface.AddComponent<TextureProperties>(selectedEntity, TextureProperties{});
+                            }
+                        }
+                    }
+
+                    if (ImGui::CollapsingHeader("Text Component", ImGuiTreeNodeFlags_DefaultOpen))
+                    {
+                        if (ecsInterface.HasComponent<TextProperties>(selectedEntity))
+                        {
+                            auto& textComponent = ecsInterface.GetComponent<TextProperties>(selectedEntity);
+
+                            // Buffer for editing the text string
+                            char textBuffer[256];
+                            strncpy_s(textBuffer, textComponent.text.c_str(), sizeof(textBuffer));
+                            textBuffer[sizeof(textBuffer) - 1] = '\0';
+
+                            if (ImGui::InputText("Text", textBuffer, sizeof(textBuffer)))
+                            {
+                                textComponent.text = std::string(textBuffer);
+                            }
+
+                            // Slider for text scale
+                            ImGui::DragFloat("Scale", &textComponent.scale, 0.001f, 0.001f, 10.0f);
+
+                            // Color picker for text color
+                            ImGui::ColorEdit3("Color", glm::value_ptr(textComponent.color));
+                        }
+                        else
+                        {
+                            ImGui::Text("No TextComponent attached.");
+                            if (ImGui::Button("Add Text Component"))
+                            {
+                                ecsInterface.AddComponent<TextProperties>(selectedEntity, TextProperties{});
+                            }
+                        }
+                    }
+                    // Reset selectedEntity if the properties window is closed
+                    if (!isPropertiesWindowOpen)
+                    {
+                        selectedEntity = std::numeric_limits<Entity>::max();
+                    }
+                    ImGui::End();
                 }
             }
             ImGui::End();

@@ -54,7 +54,6 @@
 #include "Coordinator.h"
 #include "ComponentList.h"
 #include "FontSystem.h"
-#include "MaterialProperties.h"
 
 extern Framework::FontSystem fontSystem;
 extern Framework::Coordinator ecsInterface;
@@ -140,7 +139,7 @@ namespace Framework {
         // Register Graphics related Component
         ecsInterface.RegisterComponent<TransformComponent>();
         ecsInterface.RegisterComponent<MeshProperties>();
-        ecsInterface.RegisterComponent<MaterialComponent>();
+        ecsInterface.RegisterComponent<TextureProperties>();
         ecsInterface.RegisterComponent<TextProperties>();
 
         //  ---- ECS INITIALIZATION --- 
@@ -170,32 +169,16 @@ namespace Framework {
         MeshLoader::loadMesh(meshComponent.path, meshComponent);
         ecsInterface.AddComponent<MeshProperties>(newEntity, meshComponent);
 
-        std::string defaultMatGuid;
-        auto* defaultMat = AssetManager::Instance().Get<MaterialProperties>(
-            AssetManager::Instance().FindGuid<MaterialProperties>("DefaultMaterial")
-        );
+        // Add and load a texture component
+        Framework::TextureProperties textureComponent;
+        textureComponent.path = "Assets/PNG/test.png";
+        TextureLoader::loadTexture(textureComponent, true);
 
-        if (!defaultMat)
-        {
-            auto matPtr = std::make_unique<MaterialProperties>();
-            matPtr->name = "DefaultMaterial";
-            auto mat = std::make_unique<MaterialComponent>();
-                 // You can find a default "test" texture for it if you want
-            // Note: This FindGuid will only work if "test.png" is already loaded
-            matPtr->albedoMapGuid = AssetManager::Instance().FindGuid<TextureProperties>("test.png");
 
-            defaultMatGuid = matPtr->guid; // Get the GUID before moving
-            AssetManager::Instance().RegisterAsset<MaterialProperties>(std::move(matPtr), &g_MaterialPropertiesProps, "DefaultMaterial");
-        }
-        else
-        {
-            defaultMatGuid = defaultMat->guid;
-        }
 
-        // 2. Add the "label" (Component) to the entity
-        Framework::MaterialComponent matComp;
-        matComp.materialGuid = defaultMatGuid; // Point to the "DefaultMaterial" asset
-        ecsInterface.AddComponent<Framework::MaterialComponent>(newEntity, matComp);
+        ecsInterface.AddComponent<Framework::TextureProperties>(newEntity, textureComponent);
+        // ----------------- End object creation ------------------------------
+
         // asset load / loading shape units
         // Testing (Edwin)
         /*for (const auto& [handle, entry] : assets)
@@ -426,95 +409,12 @@ namespace Framework {
 
                         glActiveTexture(GL_TEXTURE0);
                         meshShader.setInt("uTexture", 0);
-
-                        // Check if the entity has the new MaterialComponent
-                        if (ecsInterface.HasComponent<MaterialComponent>(entityId)) // <-- FIX 1
-                        {
-                            auto& matComp = ecsInterface.GetComponent<MaterialComponent>(entityId);
-
-                            // Use the "label's" GUID to get the "paint can" (MaterialProperties)
-                            auto* matAsset = AssetManager::Instance().Get<MaterialProperties>(matComp.materialGuid); // <-- FIX 2
-
-                            if (matAsset)
-                            {
-                                // --- BIND ALL MATERIAL PROPERTIES ---
-
-                                // 1. Send constant values to the shader
-                                meshShader.setVec3("uMaterial.albedo", matAsset->albedoColor);
-                                meshShader.setFloat("uMaterial.metallic", matAsset->metallic);
-                                meshShader.setFloat("uMaterial.roughness", matAsset->roughness);
-
-                                // 2. Bind Albedo Map (Texture Unit 0)
-                                glActiveTexture(GL_TEXTURE0);
-                                meshShader.setInt("uAlbedoMap", 0);
-                                auto* albedoTex = AssetManager::Instance().Get<TextureProperties>(matAsset->albedoMapGuid);
-                                if (albedoTex && albedoTex->textureID != 0) {
-                                    glBindTexture(GL_TEXTURE_2D, albedoTex->textureID);
-                                    meshShader.setBool("uHasAlbedoMap", true);
-                                }
-                                else {
-                                    glBindTexture(GL_TEXTURE_2D, 0); // Unbind
-                                    meshShader.setBool("uHasAlbedoMap", false);
-                                }
-
-                                // 3. Bind Metallic Map (Texture Unit 1)
-                                glActiveTexture(GL_TEXTURE1);
-                                meshShader.setInt("uMetallicMap", 1);
-                                auto* metallicTex = AssetManager::Instance().Get<TextureProperties>(matAsset->metallicMapGuid);
-                                if (metallicTex && metallicTex->textureID != 0) {
-                                    glBindTexture(GL_TEXTURE_2D, metallicTex->textureID);
-                                    meshShader.setBool("uHasMetallicMap", true);
-                                }
-                                else {
-                                    glBindTexture(GL_TEXTURE_2D, 0);
-                                    meshShader.setBool("uHasMetallicMap", false);
-                                }
-
-                                // 4. Bind Roughness Map (Texture Unit 2)
-                                glActiveTexture(GL_TEXTURE2);
-                                meshShader.setInt("uRoughnessMap", 2);
-                                auto* roughnessTex = AssetManager::Instance().Get<TextureProperties>(matAsset->roughnessMapGuid);
-                                if (roughnessTex && roughnessTex->textureID != 0) {
-                                    glBindTexture(GL_TEXTURE_2D, roughnessTex->textureID);
-                                    meshShader.setBool("uHasRoughnessMap", true);
-                                }
-                                else {
-                                    glBindTexture(GL_TEXTURE_2D, 0);
-                                    meshShader.setBool("uHasRoughnessMap", false);
-                                }
-                            }
-                            else
-                            {
-                                // No Material Asset found, bind defaults
-                                glActiveTexture(GL_TEXTURE0);
-                                glBindTexture(GL_TEXTURE_2D, 0);
-                                glActiveTexture(GL_TEXTURE1);
-                                glBindTexture(GL_TEXTURE_2D, 0);
-                                glActiveTexture(GL_TEXTURE2);
-                                glBindTexture(GL_TEXTURE_2D, 0);
-                                meshShader.setBool("uHasAlbedoMap", false);
-                                meshShader.setBool("uHasMetallicMap", false);
-                                meshShader.setBool("uHasRoughnessMap", false);
-                                meshShader.setVec3("uMaterial.albedo", glm::vec3(1.0f, 0.0f, 1.0f)); // Pink!
-                                meshShader.setFloat("uMaterial.metallic", 0.0f);
-                                meshShader.setFloat("uMaterial.roughness", 1.0f);
-                            }
+                        if (ecsInterface.HasComponent<TextureProperties>(entityId)) {
+                            auto& tex = ecsInterface.GetComponent<TextureProperties>(entityId);
+                            glBindTexture(GL_TEXTURE_2D, tex.textureID);
                         }
-                        else
-                        {
-                            // No Material Component attached, bind defaults
-                            glActiveTexture(GL_TEXTURE0);
+                        else {
                             glBindTexture(GL_TEXTURE_2D, 0);
-                            glActiveTexture(GL_TEXTURE1);
-                            glBindTexture(GL_TEXTURE_2D, 0);
-                            glActiveTexture(GL_TEXTURE2);
-                            glBindTexture(GL_TEXTURE_2D, 0);
-                            meshShader.setBool("uHasAlbedoMap", false);
-                            meshShader.setBool("uHasMetallicMap", false);
-                            meshShader.setBool("uHasRoughnessMap", false);
-                            meshShader.setVec3("uMaterial.albedo", glm::vec3(0.5f));
-                            meshShader.setFloat("uMaterial.metallic", 0.0f);
-                            meshShader.setFloat("uMaterial.roughness", 1.0f);
                         }
 
                         glBindVertexArray(mesh.vao);
