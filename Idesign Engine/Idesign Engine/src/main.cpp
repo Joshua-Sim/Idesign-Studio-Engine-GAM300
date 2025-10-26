@@ -91,6 +91,9 @@ int main(void)
     // Initialize global ECS interface and other singleton components
     ecsInterface.Init();
 
+    RegisterComponentTypes();                           // Step 1: Register known types
+    AutoRegisterAllReflectedComponents(ecsInterface);   // Step 2: Hook them into ECS
+
     // Register graphics system and GLFW Window first 
     auto graphicsSystem = ecsInterface.RegisterSystem<Graphics>();
     // Initialize the InputHandler singleton

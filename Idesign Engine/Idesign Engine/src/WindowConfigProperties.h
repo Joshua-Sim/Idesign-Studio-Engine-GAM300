@@ -24,7 +24,7 @@ namespace Framework
         std::string programName;
     };
 
-    inline constexpr std::array g_WindowConfigPropsArray =
+    inline const std::vector g_WindowConfigPropsArray =
     {
         PROP_STRING(guid, WindowConfig),
         PROP_INT(x, WindowConfig),
@@ -32,7 +32,7 @@ namespace Framework
         PROP_STRING(programName, WindowConfig),
     };
 
-    inline constexpr prop_list g_WindowConfigProps{ "WindowConfig", g_WindowConfigPropsArray };
+    inline const prop_list g_WindowConfigProps{ "WindowConfig", g_WindowConfigPropsArray };
     inline global_registration g_WindowConfigReg(&g_WindowConfigProps);
 }
 #endif // !_WINDOW_CONFIG_PROPERTIES_H_

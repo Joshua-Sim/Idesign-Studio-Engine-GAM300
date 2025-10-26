@@ -1326,17 +1326,17 @@ namespace Framework {
                         }
                     }
 
-                    if (ImGui::CollapsingHeader("Transform Component", ImGuiTreeNodeFlags_DefaultOpen))
-                    {
-                        // Translation
-                        ImGui::InputFloat3("Translation", glm::value_ptr(transformComponent.position));
+                    //if (ImGui::CollapsingHeader("Transform Component", ImGuiTreeNodeFlags_DefaultOpen))
+                    //{
+                    //    // Translation
+                    //    ImGui::InputFloat3("Translation", glm::value_ptr(transformComponent.position));
 
-                        // Rotation
-                        ImGui::InputFloat3("Rotation", glm::value_ptr(transformComponent.rotation));
+                    //    // Rotation
+                    //    ImGui::InputFloat3("Rotation", glm::value_ptr(transformComponent.rotation));
 
-                        // Scale
-                        ImGui::InputFloat3("Scale", glm::value_ptr(transformComponent.scale));
-                    }
+                    //    // Scale
+                    //    ImGui::InputFloat3("Scale", glm::value_ptr(transformComponent.scale));
+                    //}
 
                     // Show combo box for adding components
                     static int selectedComponentIndex = -1;
@@ -1566,6 +1566,9 @@ namespace Framework {
                             }
                         }
                     }
+
+                    DrawEntityInspector(selectedEntity, ecsInterface);
+
                     // Reset selectedEntity if the properties window is closed
                     if (!isPropertiesWindowOpen)
                     {

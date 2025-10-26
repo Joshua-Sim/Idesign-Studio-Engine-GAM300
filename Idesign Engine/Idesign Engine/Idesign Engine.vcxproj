@@ -185,6 +185,7 @@
     <ClInclude Include="src\PrefabProperties.h" />
     <ClInclude Include="src\PropertyMacro.h" />
     <ClInclude Include="src\PropertySystem.h" />
+    <ClInclude Include="src\PropertyWidget.h" />
     <ClInclude Include="src\rapidjson\allocators.h" />
     <ClInclude Include="src\rapidjson\cursorstreamwrapper.h" />
     <ClInclude Include="src\rapidjson\document.h" />
@@ -236,6 +237,7 @@
     <ClInclude Include="src\TextureLoader.h" />
     <ClInclude Include="src\TextureProperties.h" />
     <ClInclude Include="src\TransformProperties.h" />
+    <ClInclude Include="src\TypeRegistry.h" />
     <ClInclude Include="src\Types.h" />
     <ClInclude Include="src\UndoRedoSystem.h" />
     <ClInclude Include="src\Vector2D.h" />
@@ -300,6 +302,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\PropertyWidget.cpp" />
     <ClCompile Include="src\SceneManager.cpp" />
     <ClCompile Include="src\ScriptingSystem.cpp" />
     <ClCompile Include="src\ShaderProgram.cpp" />

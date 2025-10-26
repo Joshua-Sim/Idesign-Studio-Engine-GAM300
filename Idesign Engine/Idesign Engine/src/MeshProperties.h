@@ -36,18 +36,18 @@ namespace Framework
         glm::vec3 debugcolor{ 1.f,1.f,0.0f };
     };
 
-    inline constexpr std::array g_MeshPropsArray =
+    inline const std::vector g_MeshPropsArray =
     {
-        PROP_STRING(guid, MeshProperties),
+        PROP_STRING_READONLY(guid, MeshProperties),
         PROP_STRING(name, MeshProperties),
-        PROP_STRING(path, MeshProperties),
-        PROP_UINT(vao, MeshProperties),
-        PROP_UINT(vbo, MeshProperties),
-        PROP_UINT(ebo, MeshProperties),
-        PROP_UINT(indexCount, MeshProperties),
+        PROP_STRING_READONLY(path, MeshProperties),
+        PROP_UINT_READONLY(vao, MeshProperties),
+        PROP_UINT_READONLY(vbo, MeshProperties),
+        PROP_UINT_READONLY(ebo, MeshProperties),
+        PROP_UINT_READONLY(indexCount, MeshProperties),
     };
 
-    inline constexpr prop_list g_MeshProps{ "MeshProperties", g_MeshPropsArray };
+    inline const prop_list g_MeshProps{ "MeshProperties", g_MeshPropsArray };
     inline global_registration g_MeshPropsReg(&g_MeshProps);
 }
 #endif // !_MESH_PROPERTIES_H_

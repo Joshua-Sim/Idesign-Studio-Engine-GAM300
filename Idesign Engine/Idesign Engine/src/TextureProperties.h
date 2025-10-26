@@ -15,7 +15,7 @@
 #include "PropertyMacro.h"
 
 namespace Framework
-{
+{ 
     struct TextureProperties
     {
         std::string guid;
@@ -29,14 +29,33 @@ namespace Framework
         int height = 0;
     };
 
-    inline constexpr std::array g_TexturePropertiesPropsArray =
+    /*
+    std::vector<std::string> GetAvailableTextureNames()
     {
-        PROP_STRING(guid, TextureProperties),
+        std::vector<std::string> names;
+        for (auto guid : GetAllTextureGUIDs())
+        {
+            const auto& tex = ecs.GetComponent<TextureProperties>(guid);
+            names.push_back(tex.name); // or tex.guid, or tex.filePath
+        }
+        return names;
+    }
+
+    
+    inline constexpr std::array g_TexturePropsArray =
+    {
+        PROP_STRING_DROPDOWN_DYNAMIC(textureName, TextureProperties, GetAvailableTextureNames),
+    };
+    */
+
+    inline const std::vector g_TexturePropertiesPropsArray =
+    {
+        PROP_STRING_READONLY(guid, TextureProperties),
         PROP_STRING(name, TextureProperties),
-        PROP_STRING(path, TextureProperties),
+        PROP_STRING_READONLY(path, TextureProperties),
     };
 
-    inline constexpr prop_list g_TexturePropertiesProps{ "TextureProperties", g_TexturePropertiesPropsArray };
+    inline const prop_list g_TexturePropertiesProps{ "TextureProperties", g_TexturePropertiesPropsArray };
     inline global_registration g_TexturePropertiesReg(&g_TexturePropertiesProps);
 }
 #endif // !_TEXTURE_PROPERTIES_H_

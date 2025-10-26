@@ -22,13 +22,13 @@ namespace Framework
         int entityCount;
     };
 
-    inline constexpr std::array g_PrefabPropsArray
+    inline const std::vector g_PrefabPropsArray
     {
         PROP_STRING(name, Prefab),
         PROP_INT(entityCount, Prefab)
     };
 
-    inline constexpr prop_list g_PrefabProps{ "Prefab", g_PrefabPropsArray };
+    inline const prop_list g_PrefabProps{ "Prefab", g_PrefabPropsArray };
     inline global_registration g_PrefabPropsReg(&g_PrefabProps);
 }
 #endif // !_PREFAB_PROPERTIES_H_

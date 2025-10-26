@@ -35,7 +35,7 @@ namespace Framework
         int channelID = -1;
     };
 
-    inline constexpr std::array g_AudioPropertiesPropsArray =
+    inline const std::vector g_AudioPropertiesPropsArray =
     {
         PROP_STRING(guid, AudioProperties),
         PROP_STRING(name, AudioProperties),
@@ -44,7 +44,7 @@ namespace Framework
         PROP_STRING(soundType, AudioProperties),
     };
 
-    inline constexpr prop_list g_AudioPropertiesProps{ "AudioProperties", g_AudioPropertiesPropsArray };
+    inline const prop_list g_AudioPropertiesProps{ "AudioProperties", g_AudioPropertiesPropsArray };
     inline global_registration g_AudioPropertiesReg(&g_AudioPropertiesProps);
 }
 #endif // !_AUDIO_PROPERTIES_H_

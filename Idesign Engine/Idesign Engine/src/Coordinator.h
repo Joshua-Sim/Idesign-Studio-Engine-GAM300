@@ -23,6 +23,8 @@
 #include "Types.h"
 #include <memory>
 
+#include <functional>
+
 namespace Framework {
 
 	class Coordinator
@@ -218,6 +220,24 @@ namespace Framework {
 
 		void SetEntityGUID(Entity entity, const std::string& guid);
 
+		// Edwin's Stuff (For Auto Generate Entity Inspector)
+		using RawGetter = std::function<void* (Entity)>;
+
+		void RegisterRawGetter(const std::string& typeName, RawGetter getter)
+		{
+			rawGetters[typeName] = std::move(getter);
+		}
+
+		void* GetRawComponent(Entity entity, const std::string& typeName)
+		{
+			std::cout << "Fetching component: " << typeName << std::endl;
+
+			auto it = rawGetters.find(typeName);
+			if (it != rawGetters.end())
+				return it->second(entity);
+			return nullptr;
+		}
+
 	private:
 		std::unique_ptr<ComponentManager> mComponentManager;	// A shared pointer of the Component Manager
 		std::unique_ptr<EntityManager> mEntityManager;			// A shared pointer of the Entity Manager
@@ -230,8 +250,8 @@ namespace Framework {
 		{ "MovementComponent", "EnemyComponent", "CollisionComponent",
 			"TransformComponent", "RenderComponent", "LayerComponent",
 			"TextComponent", "PlayerComponent" }; 
+
+		std::unordered_map<std::string, RawGetter> rawGetters;
 	};
-
 }
-
 #endif
