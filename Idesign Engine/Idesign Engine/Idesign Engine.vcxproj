@@ -241,6 +241,7 @@
     <ClInclude Include="src\Vector2D.h" />
     <ClInclude Include="src\WindowConfigProperties.h" />
     <ClInclude Include="TextProperties.h" />
+    <ClInclude Include="TextureLoaderDDS.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\fontshaders\textfrag.glsl" />
@@ -310,6 +311,7 @@
     <ClCompile Include="src\TextureLoader.cpp" />
     <ClCompile Include="src\UndoRedoSystem.cpp" />
     <ClCompile Include="src\Vector2D.cpp" />
+    <ClCompile Include="TextureLoaderDDS.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

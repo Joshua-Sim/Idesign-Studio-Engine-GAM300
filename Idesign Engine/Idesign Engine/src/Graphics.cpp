@@ -381,7 +381,7 @@ namespace Framework {
             meshShader.setMat4("uView", view);
 
             // ---- ECS draw loop ----
-        // JAY (374 TO 415)
+
         // --- highlight selected entity (picked last frame) ---
             int sel = lastPickedId; // cache once per frame
             const glm::vec3 kNormalAlbedo(1.0f, 1.0f, 1.0f);
