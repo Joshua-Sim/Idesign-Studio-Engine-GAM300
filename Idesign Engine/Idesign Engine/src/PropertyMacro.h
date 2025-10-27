@@ -70,7 +70,21 @@ PROPERTY_END(WindowConfig, WindowConfigProps)
 #define PROP_FLOAT_READONLY(field, type) \
     PROP_FLOAT_FLAGS(field, type, Framework::prop::READ_ONLY)
 
+#define PROP_DRAG_FLOAT(field, type) \
+    Framework::prop(#field, Framework::prop::DRAG_FLOAT, \
+        [](void* obj, const void* in) { static_cast<type*>(obj)->field = *static_cast<const float*>(in); }, \
+        [](const void* obj, void* out) { *static_cast<float*>(out) = static_cast<const type*>(obj)->field; })
 
+#define PROP_COLOR3(field, type) \
+    Framework::prop(#field, Framework::prop::COLOR3, \
+        [](void* obj, const void* in) { static_cast<type*>(obj)->field = *static_cast<const glm::vec3*>(in); }, \
+        [](const void* obj, void* out) { *static_cast<glm::vec3*>(out) = static_cast<const type*>(obj)->field; })
+
+#define PROP_SLIDER_FLOAT(field, type, min, max) \
+    Framework::prop(#field, Framework::prop::SLIDER_FLOAT, \
+        [](void* obj, const void* in) { static_cast<type*>(obj)->field = *static_cast<const float*>(in); }, \
+        [](const void* obj, void* out) { *static_cast<float*>(out) = static_cast<const type*>(obj)->field; }, \
+        min, max, true)
 
 
 // DOUBLE PROPERTY MACRO

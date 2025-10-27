@@ -29,25 +29,6 @@ namespace Framework
         int height = 0;
     };
 
-    /*
-    std::vector<std::string> GetAvailableTextureNames()
-    {
-        std::vector<std::string> names;
-        for (auto guid : GetAllTextureGUIDs())
-        {
-            const auto& tex = ecs.GetComponent<TextureProperties>(guid);
-            names.push_back(tex.name); // or tex.guid, or tex.filePath
-        }
-        return names;
-    }
-
-    
-    inline constexpr std::array g_TexturePropsArray =
-    {
-        PROP_STRING_DROPDOWN_DYNAMIC(textureName, TextureProperties, GetAvailableTextureNames),
-    };
-    */
-
     inline const std::vector g_TexturePropertiesPropsArray =
     {
         PROP_STRING_READONLY(guid, TextureProperties),

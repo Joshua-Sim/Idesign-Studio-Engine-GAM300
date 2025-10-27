@@ -8,7 +8,8 @@
 
 namespace Framework
 {
-    struct TextProperties {
+    struct TextProperties 
+    {
         std::string text = "Hello World";
         float scale = 0.05f;
         glm::vec3 color = { 1.0f, 1.0f, 1.0f };
@@ -18,13 +19,11 @@ namespace Framework
     inline const std::array g_TextComponentPropsArray =
     {
         PROP_STRING(text, TextProperties),
-        PROP_FLOAT(scale, TextProperties),
-        PROP_VEC3(color, TextProperties)
+        PROP_DRAG_FLOAT(scale, TextProperties),
+        PROP_COLOR3(color, TextProperties)
     };
 
     inline const prop_list g_TextComponentProps{ "TextProperties", g_TextComponentPropsArray };
-
     inline global_registration g_TextComponentReg(&g_TextComponentProps);
 }
-
 #endif // !_TEXT_COMPONENT_H_

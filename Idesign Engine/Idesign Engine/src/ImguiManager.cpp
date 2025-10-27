@@ -1309,8 +1309,6 @@ namespace Framework {
                 }
                 else
                 {
-                    TransformComponent& transformComponent = ecsInterface.GetComponent<TransformComponent>(selectedEntity);
-
                     ImGui::Begin("Entity Properties", &isPropertiesWindowOpen);
                     if (ImGui::CollapsingHeader("Name", ImGuiTreeNodeFlags_DefaultOpen))
                     {
@@ -1326,18 +1324,6 @@ namespace Framework {
                         }
                     }
 
-                    //if (ImGui::CollapsingHeader("Transform Component", ImGuiTreeNodeFlags_DefaultOpen))
-                    //{
-                    //    // Translation
-                    //    ImGui::InputFloat3("Translation", glm::value_ptr(transformComponent.position));
-
-                    //    // Rotation
-                    //    ImGui::InputFloat3("Rotation", glm::value_ptr(transformComponent.rotation));
-
-                    //    // Scale
-                    //    ImGui::InputFloat3("Scale", glm::value_ptr(transformComponent.scale));
-                    //}
-
                     // Show combo box for adding components
                     static int selectedComponentIndex = -1;
                     std::vector<std::string> availableComponents;
@@ -1350,36 +1336,6 @@ namespace Framework {
                             availableComponents.push_back(ecsInterface.GetComponentNames()[i]);
                         }
                     }
-
-                    //// Show the combo box with available components
-                    //if (ImGui::BeginCombo("Choose Component", selectedComponentIndex >= 0 ? availableComponents[selectedComponentIndex].c_str() : "Select Component"))
-                    //{
-                    //    for (int i = 0; i < availableComponents.size(); ++i)
-                    //    {
-                    //        bool isSelected = (selectedComponentIndex == i);
-                    //        if (ImGui::Selectable(availableComponents[i].c_str(), isSelected))
-                    //        {
-                    //            selectedComponentIndex = i;
-                    //        }
-                    //        if (isSelected)
-                    //        {
-                    //            ImGui::SetItemDefaultFocus();
-                    //        }
-                    //    }
-                    //    ImGui::EndCombo();
-                    //}
-
-                    //// Add button to attach the selected component to the entity
-                    //if (selectedComponentIndex >= 0 && ImGui::Button("Add Component"))
-                    //{
-                    //    std::string selectedComponentName = availableComponents[selectedComponentIndex];
-
-                    //    // Add the selected component to the entity
-                    //    ecsInterface.AddComponentToEntity(selectedEntity, selectedComponentName);
-
-                    //    // Reset the combo box selection and clear out selectedComponentIndex to update available components
-                    //    selectedComponentIndex = -1;
-                    //}
 
                     if (ImGui::CollapsingHeader("Mesh Component", ImGuiTreeNodeFlags_DefaultOpen))
                     {
@@ -1535,35 +1491,13 @@ namespace Framework {
                         }
                     }
 
-                    if (ImGui::CollapsingHeader("Text Component", ImGuiTreeNodeFlags_DefaultOpen))
+                    if (ecsInterface.HasComponent<TextProperties>(selectedEntity)) {}
+                    else
                     {
-                        if (ecsInterface.HasComponent<TextProperties>(selectedEntity))
+                        ImGui::Text("No TextComponent attached.");
+                        if (ImGui::Button("Add Text Component"))
                         {
-                            auto& textComponent = ecsInterface.GetComponent<TextProperties>(selectedEntity);
-
-                            // Buffer for editing the text string
-                            char textBuffer[256];
-                            strncpy_s(textBuffer, textComponent.text.c_str(), sizeof(textBuffer));
-                            textBuffer[sizeof(textBuffer) - 1] = '\0';
-
-                            if (ImGui::InputText("Text", textBuffer, sizeof(textBuffer)))
-                            {
-                                textComponent.text = std::string(textBuffer);
-                            }
-
-                            // Slider for text scale
-                            ImGui::DragFloat("Scale", &textComponent.scale, 0.001f, 0.001f, 10.0f);
-
-                            // Color picker for text color
-                            ImGui::ColorEdit3("Color", glm::value_ptr(textComponent.color));
-                        }
-                        else
-                        {
-                            ImGui::Text("No TextComponent attached.");
-                            if (ImGui::Button("Add Text Component"))
-                            {
-                                ecsInterface.AddComponent<TextProperties>(selectedEntity, TextProperties{});
-                            }
+                            ecsInterface.AddComponent<TextProperties>(selectedEntity, TextProperties{});
                         }
                     }
 

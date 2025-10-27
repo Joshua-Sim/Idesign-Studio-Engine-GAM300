@@ -36,10 +36,12 @@ namespace Framework
             STRING, STRING_DROPDOWN,
             CHAR,
             BOOL,
-            STRING_ARRAY,
             VEC3,
             UINT,
-            ENUM
+
+            SLIDER_FLOAT,   // Volume, Brightness
+            DRAG_FLOAT,     // Scale, Physics, Tuning
+            COLOR3          // Color
         };
 
         // Function pointers to *set* and *get* a value on an object.

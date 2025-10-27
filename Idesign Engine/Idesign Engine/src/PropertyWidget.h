@@ -21,6 +21,7 @@
 #include "MeshProperties.h"
 #include "AudioProperties.h"
 #include "TransformProperties.h"
+#include "TextProperties.h"
 
 extern Framework::Coordinator ecsInterface;
 namespace Framework

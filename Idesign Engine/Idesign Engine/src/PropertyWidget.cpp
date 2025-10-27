@@ -51,7 +51,6 @@ namespace Framework
                     prop.m_fnSet(pObject, &value);
                 break;
             }
-
             case prop::FLOAT:
             {
                 float value = 0.0f;
@@ -64,7 +63,6 @@ namespace Framework
                     prop.m_fnSet(pObject, &value);
                 break;
             }
-
             case prop::DOUBLE:
             {
                 double value = 0.0;
@@ -74,7 +72,6 @@ namespace Framework
                     prop.m_fnSet(pObject, &value);
                 break;
             }
-
             case prop::BOOL:
             {
                 bool value = false;
@@ -84,7 +81,6 @@ namespace Framework
                     prop.m_fnSet(pObject, &value);
                 break;
             }
-
             case prop::CHAR:
             {
                 char buffer[2] = {};
@@ -98,7 +94,6 @@ namespace Framework
                 }
                 break;
             }
-
             case prop::STRING:
             {
                 char buffer[256] = {};
@@ -115,7 +110,6 @@ namespace Framework
                 }
                 break;
             }
-
             case prop::UINT:
             {
                 unsigned int value = 0;
@@ -141,39 +135,6 @@ namespace Framework
 
                 break;
             }
-
-            case prop::ENUM:
-            {
-                int value = 0;
-                prop.m_fnGet(pObject, &value);
-                const char* currentLabel = "Unknown";
-
-                for (size_t i = 0; i < prop.m_EnumCount; ++i)
-                {
-                    if (prop.m_pEnumEntries[i].value == value)
-                    {
-                        currentLabel = prop.m_pEnumEntries[i].name;
-                        break;
-                    }
-                }
-
-                if (ImGui::BeginCombo(prop.m_pName, currentLabel))
-                {
-                    for (size_t i = 0; i < prop.m_EnumCount; ++i)
-                    {
-                        bool selected = (value == prop.m_pEnumEntries[i].value);
-                        if (ImGui::Selectable(prop.m_pEnumEntries[i].name, selected))
-                        {
-                            value = prop.m_pEnumEntries[i].value;
-                            if (!readOnly)
-                                prop.m_fnSet(pObject, &value);
-                        }
-                    }
-                    ImGui::EndCombo();
-                }
-                break;
-            }
-
             case prop::VEC3:
             {
                 glm::vec3 vec = {};
@@ -185,7 +146,6 @@ namespace Framework
                 }
                 break;
             }
-
             case prop::STRING_DROPDOWN:
             {
                 std::string currentValue;
@@ -212,6 +172,56 @@ namespace Framework
                 }
                 break;
             }
+            case prop::DRAG_FLOAT:
+            {
+                float value = 0.0f;
+                prop.m_fnGet(pObject, &value);
+
+                float speed = 0.01f;
+                float min = prop.m_HasRange ? prop.GetMinAsFloat() : 0.0f;
+                float max = prop.m_HasRange ? prop.GetMaxAsFloat() : 100.0f;
+
+                if (readOnly) ImGui::BeginDisabled();
+                if (ImGui::DragFloat(prop.m_pName, &value, speed, min, max))
+                {
+                    if (!readOnly)
+                        prop.m_fnSet(pObject, &value);
+                }
+                if (readOnly) ImGui::EndDisabled();
+                break;
+            }
+            case prop::COLOR3:
+            {
+                glm::vec3 color = {};
+                prop.m_fnGet(pObject, &color);
+
+                if (readOnly) ImGui::BeginDisabled();
+                if (ImGui::ColorEdit3(prop.m_pName, glm::value_ptr(color)))
+                {
+                    if (!readOnly)
+                        prop.m_fnSet(pObject, &color);
+                }
+                if (readOnly) ImGui::EndDisabled();
+                break;
+            }
+            case prop::SLIDER_FLOAT:
+            {
+                float value = 0.0f;
+                prop.m_fnGet(pObject, &value);
+
+                float min = prop.m_HasRange ? prop.GetMinAsFloat() : 0.0f;
+                float max = prop.m_HasRange ? prop.GetMaxAsFloat() : 1.0f;
+
+                if (readOnly) ImGui::BeginDisabled();
+                if (ImGui::SliderFloat(prop.m_pName, &value, min, max))
+                {
+                    if (!readOnly)
+                        prop.m_fnSet(pObject, &value);
+                }
+                if (readOnly) ImGui::EndDisabled();
+                break;
+            }
+
 
             default:
                 ImGui::Text("Unsupported type: %d", prop.m_Type);
@@ -253,6 +263,7 @@ namespace Framework
         TypeRegistry::Instance().Register<MeshProperties>("MeshProperties");
         // Audio Component not registered with ECS yet, so cant use below function
         //TypeRegistry::Instance().Register<AudioProperties>("AudioProperties");
+        TypeRegistry::Instance().Register<TextProperties>("TextProperties");
         TypeRegistry::Instance().Register<TransformComponent>("TransformComponent");
     }
 
