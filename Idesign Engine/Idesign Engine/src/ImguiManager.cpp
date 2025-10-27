@@ -1436,6 +1436,34 @@ namespace Framework {
                             ImGui::Text("EBO: %u", meshComponent.ebo);
                             ImGui::Text("Index Count: %u", meshComponent.indexCount);
 
+                            // --- ADD NEW MATERIAL UI ---
+                            ImGui::Separator();
+                            ImGui::Text("Material Properties");
+
+                            // Use IsItemEdited() to mark assets dirty when changed
+                            if (ImGui::ColorEdit3("Ambient Color", glm::value_ptr(meshComponent.ambient)))
+                            {
+                                 AssetManager::Instance().MarkDirty(meshComponent.guid); // If you track changes
+                            }
+                            if (ImGui::ColorEdit3("Albedo Tint", glm::value_ptr(meshComponent.albedo)))
+                            {
+                                AssetManager::Instance().MarkDirty(meshComponent.guid);
+                            }
+                            if (ImGui::ColorEdit3("Specular Color", glm::value_ptr(meshComponent.specular)))
+                            {
+                                AssetManager::Instance().MarkDirty(meshComponent.guid);
+                            }
+                            if (ImGui::DragFloat("Shininess", &meshComponent.shininess, 0.5f, 2.0f, 256.0f))
+                            {
+                                AssetManager::Instance().MarkDirty(meshComponent.guid);
+                            }
+                            if (ImGui::DragFloat("Opacity", &meshComponent.opacity, 0.01f, 0.0f, 1.0f))
+                            {
+                                AssetManager::Instance().MarkDirty(meshComponent.guid);
+                            }
+                            ImGui::Separator();
+                            // --- END NEW MATERIAL UI ---
+
                             // Optional: add a reload button
                             if (ImGui::Button("Reload Mesh"))
                             {
