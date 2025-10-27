@@ -1,69 +1,21 @@
-﻿  ImguiManager.cpp
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\minwindef.h(130,9): warning C4005: 'APIENTRY': macro redefinition
-  (compiling source file '/src/ImguiManager.cpp')
-      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\lib\glfw-3.4.bin.WIN64\include\GLFW\glfw3.h(123,11):
-      see previous definition of 'APIENTRY'
+﻿  NavMeshSystem.cpp
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(58,38): warning C4100: 'deltaTime': unreferenced parameter
+  (compiling source file '/src/NavMeshSystem.cpp')
   
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(174,25): warning C4459: declaration of 'filePath' hides global declaration
-  (compiling source file '/src/ImguiManager.cpp')
-      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(38,24):
-      see declaration of 'Framework::filePath'
-  
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(186,33): warning C4456: declaration of 'finalPath' hides previous local declaration
-  (compiling source file '/src/ImguiManager.cpp')
-      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(169,21):
-      see declaration of 'finalPath'
-  
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(187,33): warning C4456: declaration of 'error' hides previous local declaration
-  (compiling source file '/src/ImguiManager.cpp')
-      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(170,21):
-      see declaration of 'error'
-  
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(344,37): warning C4100: 'deltaTime': unreferenced parameter
-  (compiling source file '/src/ImguiManager.cpp')
-  
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(434,44): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(605,44): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(761,44): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(818,41): warning C4456: declaration of 'nameBuffer' hides previous local declaration
-  (compiling source file '/src/ImguiManager.cpp')
-      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(784,25):
-      see declaration of 'nameBuffer'
-  
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(819,42): warning C4456: declaration of 'volumeBuffer' hides previous local declaration
-  (compiling source file '/src/ImguiManager.cpp')
-      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(787,26):
-      see declaration of 'volumeBuffer'
-  
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(830,80): warning C4566: character represented by universal-character-name '\U0001F3A7' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(974,48): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1121,48): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\algorithm(3799,24): warning C4244: '=': conversion from 'int' to 'char', possible loss of data
-  (compiling source file '/src/ImguiManager.cpp')
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\algorithm(3799,24):
-      the template instantiation context (the oldest one first) is
-          C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(176,18):
-          see reference to function template instantiation '_OutIt std::transform<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,int(__cdecl *)(int)>(const _InIt,const _InIt,_OutIt,_Fn)' being compiled
-          with
-          [
-              _OutIt=std::_String_iterator<std::_String_val<std::_Simple_types<char>>>,
-              _Elem=char,
-              _InIt=std::_String_iterator<std::_String_val<std::_Simple_types<char>>>,
-              _Fn=int (__cdecl *)(int)
-          ]
-  
-  Idesign Engine.vcxproj -> C:\Year 3\Idesign-Studio-Engine\Idesign Engine\x64\Debug\Idesign Engine.exe
-  'pwsh.exe' is not recognized as an internal or external command,
-  operable program or batch file.
+  Recast.cpp
+  Generating Code...
+glew32s.lib(glew.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'glew32s.lib(glew.obj)' or at 'C:\Year 3\Idesign-Studio-Engine\Idesign Engine\x64\Debug\vc120.pdb'; linking object as if no debug info
+LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+DetourNavMesh.obj : error LNK2019: unresolved external symbol "void (__cdecl*__cdecl dtAssertFailGetCustom(void))(char const *,char const *,int)" (?dtAssertFailGetCustom@@YAP6AXPEBD0H@ZXZ) referenced in function "public: struct dtOffMeshConnection const * __cdecl dtNavMesh::getOffMeshConnectionByRef(unsigned int)const " (?getOffMeshConnectionByRef@dtNavMesh@@QEBAPEBUdtOffMeshConnection@@I@Z)
+DetourNavMeshQuery.obj : error LNK2001: unresolved external symbol "void (__cdecl*__cdecl dtAssertFailGetCustom(void))(char const *,char const *,int)" (?dtAssertFailGetCustom@@YAP6AXPEBD0H@ZXZ)
+DetourNavMeshQuery.obj : error LNK2019: unresolved external symbol "public: __cdecl dtNodePool::dtNodePool(int,int)" (??0dtNodePool@@QEAA@HH@Z) referenced in function "public: unsigned int __cdecl dtNavMeshQuery::init(class dtNavMesh const *,int)" (?init@dtNavMeshQuery@@QEAAIPEBVdtNavMesh@@H@Z)
+DetourNavMeshQuery.obj : error LNK2019: unresolved external symbol "public: __cdecl dtNodePool::~dtNodePool(void)" (??1dtNodePool@@QEAA@XZ) referenced in function "public: void * __cdecl dtNodePool::`scalar deleting destructor'(unsigned int)" (??_GdtNodePool@@QEAAPEAXI@Z)
+DetourNavMeshQuery.obj : error LNK2019: unresolved external symbol "public: void __cdecl dtNodePool::clear(void)" (?clear@dtNodePool@@QEAAXXZ) referenced in function "public: unsigned int __cdecl dtNavMeshQuery::findDistanceToWall(unsigned int,float const *,float,class dtQueryFilter const *,float *,float *,float *)const " (?findDistanceToWall@dtNavMeshQuery@@QEBAIIPEBMMPEBVdtQueryFilter@@PEAM22@Z)
+DetourNavMeshQuery.obj : error LNK2019: unresolved external symbol "public: struct dtNode * __cdecl dtNodePool::getNode(unsigned int,unsigned char)" (?getNode@dtNodePool@@QEAAPEAUdtNode@@IE@Z) referenced in function "public: unsigned int __cdecl dtNavMeshQuery::findDistanceToWall(unsigned int,float const *,float,class dtQueryFilter const *,float *,float *,float *)const " (?findDistanceToWall@dtNavMeshQuery@@QEBAIIPEBMMPEBVdtQueryFilter@@PEAM22@Z)
+DetourNavMeshQuery.obj : error LNK2019: unresolved external symbol "public: unsigned int __cdecl dtNodePool::findNodes(unsigned int,struct dtNode * *,int)" (?findNodes@dtNodePool@@QEAAIIPEAPEAUdtNode@@H@Z) referenced in function "public: unsigned int __cdecl dtNavMeshQuery::finalizeSlicedFindPathPartial(unsigned int const *,int,unsigned int *,int *,int)" (?finalizeSlicedFindPathPartial@dtNavMeshQuery@@QEAAIPEBIHPEAIPEAHH@Z)
+DetourNavMeshQuery.obj : error LNK2019: unresolved external symbol "public: __cdecl dtNodeQueue::dtNodeQueue(int)" (??0dtNodeQueue@@QEAA@H@Z) referenced in function "public: unsigned int __cdecl dtNavMeshQuery::init(class dtNavMesh const *,int)" (?init@dtNavMeshQuery@@QEAAIPEBVdtNavMesh@@H@Z)
+DetourNavMeshQuery.obj : error LNK2019: unresolved external symbol "public: __cdecl dtNodeQueue::~dtNodeQueue(void)" (??1dtNodeQueue@@QEAA@XZ) referenced in function "public: void * __cdecl dtNodeQueue::`scalar deleting destructor'(unsigned int)" (??_GdtNodeQueue@@QEAAPEAXI@Z)
+DetourNavMeshQuery.obj : error LNK2019: unresolved external symbol "private: void __cdecl dtNodeQueue::bubbleUp(int,struct dtNode *)" (?bubbleUp@dtNodeQueue@@AEAAXHPEAUdtNode@@@Z) referenced in function "public: void __cdecl dtNodeQueue::modify(struct dtNode *)" (?modify@dtNodeQueue@@QEAAXPEAUdtNode@@@Z)
+DetourNavMeshQuery.obj : error LNK2019: unresolved external symbol "private: void __cdecl dtNodeQueue::trickleDown(int,struct dtNode *)" (?trickleDown@dtNodeQueue@@AEAAXHPEAUdtNode@@@Z) referenced in function "public: struct dtNode * __cdecl dtNodeQueue::pop(void)" (?pop@dtNodeQueue@@QEAAPEAUdtNode@@XZ)
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\x64\Debug\Idesign Engine.exe : fatal error LNK1120: 10 unresolved externals

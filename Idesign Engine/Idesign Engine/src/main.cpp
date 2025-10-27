@@ -26,6 +26,7 @@
 #include <ImguiManager.h>
 #include <SignalHandler.h>
 #include "Scenemanager.h"
+#include "NavMeshSystem.h"
 
 #include <WindowConfigProperties.h>
 #include "AudioLoader.h"
@@ -115,6 +116,8 @@ int main(void)
     // Scripting System
     auto scriptingSystem = ecsInterface.RegisterSystem<ScriptingSystem>();
     scriptingSystem->SetGraphicsSystem(graphicsSystem.get());
+
+    auto navMeshSystem = ecsInterface.RegisterSystem<NavMeshSystem>();
     // Registering systems in the ECS interface here
 
     // ------- Add systems to engine below -------- //
@@ -122,6 +125,7 @@ int main(void)
     engine->AddSystem(inputHandlerSystem);
     engine->AddSystem(imguiSystem.get());
     engine->AddSystem(scriptingSystem.get());
+    engine->AddSystem(navMeshSystem.get());
 
     // Register scene manager last
     engine->AddSystem(sceneSystem.get());

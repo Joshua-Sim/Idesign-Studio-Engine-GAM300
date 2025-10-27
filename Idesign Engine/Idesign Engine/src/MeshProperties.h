@@ -32,6 +32,8 @@ namespace Framework
         unsigned int indexCount = 0;
         bool isDirty = false;
         //debug rendering 
+        std::vector<glm::vec3> positions; 
+        std::vector<int> indices;         
         DebugShapeType debugShape = DebugShapeType::None;
         glm::vec3 debugcolor{ 1.f,1.f,0.0f };
     };
