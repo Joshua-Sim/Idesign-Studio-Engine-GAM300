@@ -39,6 +39,10 @@ namespace Framework {
 
         // API to build navmesh from current scene mesh data
         void BuildNavMesh();
+        void SetAgentDestination(Entity entity, const glm::vec3& destination);
+
+        // In NavMeshSystem.h (public section):
+        void PrintNavMeshInfo() const;
 
         // Optional: debug draw toggle or internal states
         void DebugDraw() const;

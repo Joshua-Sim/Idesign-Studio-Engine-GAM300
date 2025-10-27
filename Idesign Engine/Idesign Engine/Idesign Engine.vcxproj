@@ -181,6 +181,7 @@
     <ClInclude Include="src\MeshProperties.h" />
     <ClInclude Include="src\Message.h" />
     <ClInclude Include="src\MessageSystem.h" />
+    <ClInclude Include="src\NavMeshAgentProperties.h" />
     <ClInclude Include="src\NavMeshProperties.h" />
     <ClInclude Include="src\NavMeshSystem.h" />
     <ClInclude Include="src\pch.h" />

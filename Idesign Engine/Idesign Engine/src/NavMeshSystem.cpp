@@ -21,6 +21,7 @@
 #include "ComponentList.h"
 #include "NavMeshProperties.h"
 #include "AssetManager.h" // If needed to fetch mesh from GUID
+#include "NavMeshAgentProperties.h"
 
 #include "Recast/Recast.h"
 #include "Recast/DetourNavMesh.h"
@@ -62,7 +63,102 @@ namespace Framework {
     }
 
     void NavMeshSystem::Update(float deltaTime) {
-        // For now, might do nothing. Agents will go here in the future.
+        // Loop through all entities (all have TransformComponent due to signature)
+        for (auto entity : mEntities) {
+            // Check if entity has NavMeshAgentComponent
+            if (!ecsInterface.HasComponent<NavMeshAgentComponent>(entity)) {
+                continue; // Skip entities without agent component
+            }
+
+            auto& agent = ecsInterface.GetComponent<NavMeshAgentComponent>(entity);
+            auto& transform = ecsInterface.GetComponent<TransformComponent>(entity);
+
+            // If agent doesn't have a path, skip
+            if (!agent.hasPath || agent.currentPath.empty()) {
+                agent.isMoving = false;
+                agent.currentSpeed = 0.0f;
+                continue;
+            }
+
+            // Agent has a path, move towards current waypoint
+            agent.isMoving = true;
+
+            // Get current waypoint
+            if (agent.currentWaypointIndex >= agent.currentPath.size()) {
+                // Reached end of path
+                agent.hasPath = false;
+                agent.isMoving = false;
+                agent.currentPath.clear();
+                agent.currentWaypointIndex = 0;
+                agent.currentSpeed = 0.0f;
+                std::cout << "[NavMeshSystem] Entity " << entity << " reached destination!" << std::endl;
+                continue;
+            }
+
+            glm::vec3 waypoint = agent.currentPath[agent.currentWaypointIndex];
+            glm::vec3 direction = waypoint - transform.position;
+            float distanceToWaypoint = glm::length(direction);
+
+            // Check if reached waypoint
+            if (distanceToWaypoint < agent.stoppingDistance) {
+                agent.currentWaypointIndex++;
+
+                // If that was the last waypoint
+                if (agent.currentWaypointIndex >= agent.currentPath.size()) {
+                    if (agent.stopOnTargetReached) {
+                        agent.hasPath = false;
+                        agent.isMoving = false;
+                        agent.currentPath.clear();
+                        agent.currentWaypointIndex = 0;
+                        agent.currentSpeed = 0.0f;
+                        std::cout << "[NavMeshSystem] Entity " << entity << " reached final destination!" << std::endl;
+                    }
+                }
+                continue;
+            }
+
+            // Normalize direction
+            direction = glm::normalize(direction);
+
+            // Apply acceleration (smooth speed changes)
+            if (agent.currentSpeed < agent.moveSpeed) {
+                agent.currentSpeed += agent.acceleration * deltaTime;
+                agent.currentSpeed = std::min(agent.currentSpeed, agent.moveSpeed);
+            }
+
+            // Move towards waypoint
+            glm::vec3 movement = direction * agent.currentSpeed * deltaTime;
+
+            // Don't overshoot the waypoint
+            if (glm::length(movement) > distanceToWaypoint) {
+                transform.position = waypoint;
+            }
+            else {
+                transform.position += movement;
+            }
+
+            // Optional: Rotate agent to face movement direction (around Y axis)
+            if (agent.angularSpeed > 0.0f && glm::length(direction) > 0.001f) {
+                // Calculate target yaw
+                float targetYaw = glm::degrees(atan2f(direction.x, direction.z));
+
+                // Smoothly rotate towards target
+                float currentYaw = transform.rotation.y;
+                float angleDiff = targetYaw - currentYaw;
+
+                // Normalize angle difference to [-180, 180]
+                while (angleDiff > 180.0f) angleDiff -= 360.0f;
+                while (angleDiff < -180.0f) angleDiff += 360.0f;
+
+                float maxRotation = agent.angularSpeed * deltaTime;
+                if (fabs(angleDiff) < maxRotation) {
+                    transform.rotation.y = targetYaw;
+                }
+                else {
+                    transform.rotation.y += (angleDiff > 0 ? maxRotation : -maxRotation);
+                }
+            }
+        }
     }
 
     std::string NavMeshSystem::GetName() {
@@ -174,16 +270,17 @@ namespace Framework {
         // Configure navmesh build parameters
         ::rcConfig config{};
         memset(&config, 0, sizeof(config));
-
-        config.cs = 0.3f;  // cell size
-        config.ch = 0.2f;  // cell height
-        config.walkableSlopeAngle = 45.0f;
+        // In ConvertToRecastFormat(), try more aggressive settings:
+        config.cs = 0.2f;  // Smaller cell size
+        config.ch = 0.15f; // Smaller cell height
+        config.walkableSlopeAngle = 30.0f; // More strict slope
+        config.minRegionArea = (int)rcSqr(3); // Allow smaller regions
         config.walkableHeight = (int)ceilf(2.0f / config.ch);
         config.walkableClimb = (int)floorf(0.9f / config.ch);
         config.walkableRadius = (int)ceilf(0.6f / config.cs);
         config.maxEdgeLen = (int)(12.0f / config.cs);
         config.maxSimplificationError = 1.3f;
-        config.minRegionArea = (int)rcSqr(8);
+        config.minRegionArea = (int)rcSqr(3);
         config.mergeRegionArea = (int)rcSqr(20);
         config.maxVertsPerPoly = 6;
         config.detailSampleDist = 6.0f * config.cs;
@@ -397,7 +494,6 @@ namespace Framework {
     }
 
     // Nav mesh Utilization Functions
-
     bool NavMeshSystem::FindPath(const glm::vec3& start, const glm::vec3& end,
         std::vector<glm::vec3>& outPath) {
         if (!isNavMeshBuilt || !navQuery) {
@@ -405,32 +501,56 @@ namespace Framework {
             return false;
         }
 
-        // Find nearest poly to start/end positions
-        dtPolyRef startRef, endRef;
+        std::cout << "[FindPath] Searching path from (" << start.x << ", " << start.y << ", " << start.z
+            << ") to (" << end.x << ", " << end.y << ", " << end.z << ")" << std::endl;
+
+        dtPolyRef startRef = 0, endRef = 0;
         float startNearest[3], endNearest[3];
-        float extents[3] = { 2.0f, 4.0f, 2.0f }; // Search radius
+
+        // CRITICAL FIX: Much larger Y extent to cover entire navmesh
+        float extents[3] = { 10.0f, 50.0f, 10.0f }; // Increased Y from 8 to 50!
         dtQueryFilter filter;
 
-        navQuery->findNearestPoly(&start.x, extents, &filter, &startRef, startNearest);
-        navQuery->findNearestPoly(&end.x, extents, &filter, &endRef, endNearest);
+        float startPos[3] = { start.x, start.y, start.z };
+        float endPos[3] = { end.x, end.y, end.z };
+
+        dtStatus startStatus = navQuery->findNearestPoly(startPos, extents, &filter, &startRef, startNearest);
+        dtStatus endStatus = navQuery->findNearestPoly(endPos, extents, &filter, &endRef, endNearest);
+
+        std::cout << "[FindPath] Start poly search:" << std::endl;
+        std::cout << "  Status: " << (dtStatusSucceed(startStatus) ? "SUCCESS" : "FAILED") << std::endl;
+        std::cout << "  PolyRef: " << startRef << " (0 = not found)" << std::endl;
+        if (startRef) {
+            std::cout << "  Nearest point: (" << startNearest[0] << ", " << startNearest[1] << ", " << startNearest[2] << ")" << std::endl;
+        }
+
+        std::cout << "[FindPath] End poly search:" << std::endl;
+        std::cout << "  Status: " << (dtStatusSucceed(endStatus) ? "SUCCESS" : "FAILED") << std::endl;
+        std::cout << "  PolyRef: " << endRef << " (0 = not found)" << std::endl;
+        if (endRef) {
+            std::cout << "  Nearest point: (" << endNearest[0] << ", " << endNearest[1] << ", " << endNearest[2] << ")" << std::endl;
+        }
 
         if (!startRef || !endRef) {
             std::cerr << "[NavMeshSystem] Start or end not on navmesh!" << std::endl;
+            if (!startRef) std::cerr << "  - Start position not found (try larger search area)" << std::endl;
+            if (!endRef) std::cerr << "  - End position not found (try larger search area)" << std::endl;
             return false;
         }
 
-        // Find path
+        // Rest of the function stays the same...
         dtPolyRef path[256];
         int pathCount = 0;
-        navQuery->findPath(startRef, endRef, startNearest, endNearest,
+        dtStatus pathStatus = navQuery->findPath(startRef, endRef, startNearest, endNearest,
             &filter, path, &pathCount, 256);
 
+        std::cout << "[FindPath] Path search: " << pathCount << " polygons" << std::endl;
+
         if (pathCount == 0) {
-            std::cerr << "[NavMeshSystem] No path found!" << std::endl;
+            std::cerr << "[NavMeshSystem] No path found between points!" << std::endl;
             return false;
         }
 
-        // Get smooth path (straight path)
         float straightPath[256 * 3];
         unsigned char straightPathFlags[256];
         dtPolyRef straightPathRefs[256];
@@ -440,7 +560,6 @@ namespace Framework {
             straightPath, straightPathFlags, straightPathRefs,
             &straightPathCount, 256, DT_STRAIGHTPATH_ALL_CROSSINGS);
 
-        // Convert to glm::vec3
         outPath.clear();
         for (int i = 0; i < straightPathCount; ++i) {
             outPath.emplace_back(
@@ -450,8 +569,32 @@ namespace Framework {
             );
         }
 
-        std::cout << "[NavMeshSystem] Path found with " << straightPathCount << " points" << std::endl;
+        std::cout << "[NavMeshSystem] ✓ Path found with " << straightPathCount << " waypoints" << std::endl;
         return true;
+    }
+
+    void NavMeshSystem::PrintNavMeshInfo() const {
+        if (!navMesh) {
+            std::cout << "[NavMesh] No navmesh built!" << std::endl;
+            return;
+        }
+
+        std::cout << "\n=== NAVMESH INFO ===" << std::endl;
+        std::cout << "Tile count: " << navMesh->getMaxTiles() << std::endl;
+
+        for (int i = 0; i < navMesh->getMaxTiles(); ++i) {
+            const dtMeshTile* tile = navMesh->getTile(i);
+            if (!tile || !tile->header) continue;
+
+            std::cout << "Tile " << i << ":" << std::endl;
+            std::cout << "  Polys: " << tile->header->polyCount << std::endl;
+            std::cout << "  Verts: " << tile->header->vertCount << std::endl;
+            std::cout << "  Bounds: min(" << tile->header->bmin[0] << ", " << tile->header->bmin[1] << ", " << tile->header->bmin[2] << ")" << std::endl;
+            std::cout << "         max(" << tile->header->bmax[0] << ", " << tile->header->bmax[1] << ", " << tile->header->bmax[2] << ")" << std::endl;
+        }
+
+        std::cout << "Query object: " << (navQuery ? "EXISTS" : "NULL") << std::endl;
+        std::cout << "====================\n" << std::endl;
     }
 
     glm::vec3 NavMeshSystem::GetNearestPointOnNavmesh(const glm::vec3& point) {
@@ -459,16 +602,54 @@ namespace Framework {
 
         dtPolyRef nearestRef;
         float nearestPt[3];
-        float extents[3] = { 2.0f, 4.0f, 2.0f };
+        float extents[3] = { 10.0f, 50.0f, 10.0f }; // Match FindPath extents!
         dtQueryFilter filter;
 
-        navQuery->findNearestPoly(&point.x, extents, &filter, &nearestRef, nearestPt);
+        float queryPos[3] = { point.x, point.y, point.z };
+        navQuery->findNearestPoly(queryPos, extents, &filter, &nearestRef, nearestPt);
 
         if (nearestRef) {
             return glm::vec3(nearestPt[0], nearestPt[1], nearestPt[2]);
         }
         return point;
     }
+
+    void NavMeshSystem::SetAgentDestination(Entity entity, const glm::vec3& destination) {
+        if (!ecsInterface.HasComponent<NavMeshAgentComponent>(entity)) {
+            std::cerr << "[NavMeshSystem] Entity " << entity << " has no NavMeshAgentComponent!" << std::endl;
+            return;
+        }
+
+        if (!ecsInterface.HasComponent<TransformComponent>(entity)) {
+            std::cerr << "[NavMeshSystem] Entity " << entity << " has no TransformComponent!" << std::endl;
+            return;
+        }
+
+        auto& agent = ecsInterface.GetComponent<NavMeshAgentComponent>(entity);
+        auto& transform = ecsInterface.GetComponent<TransformComponent>(entity);
+
+        // Update target position
+        agent.targetPosition = destination;
+
+        // Find path from current position to destination
+        std::vector<glm::vec3> path;
+        if (FindPath(transform.position, destination, path)) {
+            agent.currentPath = path;
+            agent.currentWaypointIndex = 0;
+            agent.hasPath = true;
+            agent.isMoving = true;
+            agent.currentSpeed = 0.0f; // Reset speed for smooth acceleration
+
+            std::cout << "[NavMeshSystem] Entity " << entity << " path set with "
+                << path.size() << " waypoints" << std::endl;
+        }
+        else {
+            std::cerr << "[NavMeshSystem] Failed to find path for entity " << entity << std::endl;
+            agent.hasPath = false;
+            agent.isMoving = false;
+        }
+    }
+
     void NavMeshSystem::DebugDraw() const {
         if (!isNavMeshBuilt) return;
         // Optional: use ImGui or debug renderer to show navmesh polygons

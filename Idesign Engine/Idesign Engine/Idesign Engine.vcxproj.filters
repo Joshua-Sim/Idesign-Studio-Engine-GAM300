@@ -378,6 +378,9 @@
     <ClInclude Include="src\Recast\DetourStatus.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\NavMeshAgentProperties.h">
+      <Filter>Header Files\Assets\Property</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

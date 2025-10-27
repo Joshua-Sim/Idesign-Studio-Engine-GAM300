@@ -41,6 +41,7 @@ namespace Framework
     };
 
     // Serialized properties (only these go into JSON)
+    // Serialized properties (only these go into JSON)
     inline constexpr std::array g_NavMeshPropsArray =
     {
         PROP_STRING(sourceMeshGUID, NavMeshComponent),

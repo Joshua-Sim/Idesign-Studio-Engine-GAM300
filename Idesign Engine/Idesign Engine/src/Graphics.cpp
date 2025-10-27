@@ -50,6 +50,7 @@
 #include "Lighting.h"
 #include "MeshLoader.h"
 #include "TextureLoader.h"
+#include "NavMeshAgentProperties.h"
 #include "ImguiManager.h"
 #include "Coordinator.h"
 #include "ComponentList.h"
@@ -144,6 +145,7 @@ namespace Framework {
         ecsInterface.RegisterComponent<TextureProperties>();
         ecsInterface.RegisterComponent<TextProperties>();
         ecsInterface.RegisterComponent<NavMeshComponent>();
+        ecsInterface.RegisterComponent<NavMeshAgentComponent>(); // Move to navmesh sys after fixing load scene for mesh model
 
         //  ---- ECS INITIALIZATION --- 
         Signature signature;
@@ -159,8 +161,9 @@ namespace Framework {
 
         //Add transform
         TransformComponent transformComponent;
-        transformComponent.position = glm::vec3(0.0, 2.0, 0.0); // Instantiate location
-        transformComponent.scale = glm::vec3(0.0005, 0.0005, 0.0005); // Size of my obj is big, change for test
+        transformComponent.position = glm::vec3(0.0, 1.0, 1.5); // Instantiate location
+        transformComponent.scale = glm::vec3(3, 3, 3); // Size of my obj is big, change for test
+        transformComponent.rotation = glm::vec3(30, 280, 30);
 
         ecsInterface.AddComponent<TransformComponent>(newEntity, transformComponent);
 
@@ -168,7 +171,7 @@ namespace Framework {
 
         // Add and load mesh , temporarily hard-code component data 
         MeshProperties meshComponent;
-        meshComponent.path = "Assets/Objects/plane.obj";
+        meshComponent.path = "Assets/Objects/casa.obj";
 
         // Load mesh from its own path, again serialized for each obj in deserialization after.
         MeshLoader::loadMesh(meshComponent.path, meshComponent);
@@ -187,6 +190,47 @@ namespace Framework {
         ecsInterface.AddComponent<Framework::TextureProperties>(newEntity, textureComponent);
         // ----------------- End object creation ------------------------------
 
+
+    // ---------------- Create AI Agent Entity -------------------- 
+        Entity agentEntity = ecsInterface.CreateEntity();
+
+        // Add transform - position agent ON the navmesh floor
+        TransformComponent agentTransform;
+        agentTransform.position = glm::vec3(0.5, 1.2, 1.5); // On the floor, slightly offset in X
+        agentTransform.scale = glm::vec3(0.1, 0.1, 0.1);    // Small visual size
+        agentTransform.rotation = glm::vec3(90, -20, 0);    // Rotated to orient correctly
+        ecsInterface.AddComponent<TransformComponent>(agentEntity, agentTransform);
+
+        ecsInterface.AddComponent<HierarchyComponent>(agentEntity, HierarchyComponent{});
+
+        // Add mesh for agent (use cube, sphere, or character model)
+        MeshProperties agentMesh;
+        agentMesh.path = "Assets/Objects/plane2.obj"; // Or "sphere.obj" or "character.obj"
+        MeshLoader::loadMesh(agentMesh.path, agentMesh);
+        ecsInterface.AddComponent<MeshProperties>(agentEntity, agentMesh);
+
+        // Set destination here to test
+
+        // Add texture for agent (make it different color so you can see it)
+        Framework::TextureProperties agentTexture;
+        agentTexture.path = "Assets/PNG/test.png"; // Different texture from floor
+        TextureLoader::loadTexture(agentTexture, true);
+        ecsInterface.AddComponent<Framework::TextureProperties>(agentEntity, agentTexture);
+
+        // Add NavMeshAgent component - scaled for your scale 3 world
+        Framework::NavMeshAgentComponent navAgent;
+        navAgent.agentHeight = 2.0f;           // Standard character height in world units
+        navAgent.agentRadius = 0.6f;           // Standard radius for pathfinding
+        navAgent.moveSpeed = 5.0f;             // Movement speed (units per second)
+        navAgent.acceleration = 8.0f;          // How quickly it accelerates
+        navAgent.angularSpeed = 120.0f;        // Rotation speed
+        navAgent.stoppingDistance = 0.3f;      // Distance to stop before waypoint
+        navAgent.targetPosition = glm::vec3(-2.0, 1.0, 1.5); // Destination across the floor
+        navAgent.hasPath = false;              // Will be set when path is calculated
+        navAgent.isMoving = false;
+        ecsInterface.AddComponent<Framework::NavMeshAgentComponent>(agentEntity, navAgent);
+        // ----------------- End agent creation ------------------------------
+        
         // asset load / loading shape units
         // Testing (Edwin)
         /*for (const auto& [handle, entry] : assets)
@@ -359,6 +403,7 @@ namespace Framework {
             glm::mat4 proj = camera.getProjectionMatrix((float)w,(float)h);
             glm::mat4 view = camera.getViewMatrix();
 
+            /* */
             // stick to ground
             float groundY = terrain.getHeightAt(camera.position.x, camera.position.z);
             camera.position.y = groundY + 1.8f;
