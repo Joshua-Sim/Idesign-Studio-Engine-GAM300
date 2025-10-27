@@ -335,7 +335,7 @@ namespace Framework {
         
             float now = (float)glfwGetTime();
             float dt = now - lastTime; lastTime = now;
-            //process_input(dt);
+            process_input(dt);
 
             // ====================================================================
            // 1. SCENE PASS: Render the scene to the HDR framebuffer
@@ -723,18 +723,18 @@ namespace Framework {
     }
 
     void Graphics::MoveCameraFromLua(const std::string& dir, float dt, bool gm) {
-        if (dir == "W") cam.processKeyboard(Camera::Movement::Forward, dt, gm, terrain);
-        else if (dir == "S") cam.processKeyboard(Camera::Movement::Backward, dt, gm, terrain);
-        else if (dir == "A") cam.processKeyboard(Camera::Movement::Left, dt, gm, terrain);
-        else if (dir == "D") cam.processKeyboard(Camera::Movement::Right, dt, gm, terrain);
+        //if (dir == "W") cam.processKeyboard(Camera::Movement::Forward, dt, gm, terrain);
+        //else if (dir == "S") cam.processKeyboard(Camera::Movement::Backward, dt, gm, terrain);
+        //else if (dir == "A") cam.processKeyboard(Camera::Movement::Left, dt, gm, terrain);
+        //else if (dir == "D") cam.processKeyboard(Camera::Movement::Right, dt, gm, terrain);
     }
 
     void Graphics::NudgeLightFromLua(const std::string& axis, float amount) {
-        if (pointLights.empty()) return;
-        if (axis == "up")    pointLights[0].position.z -= amount;
-        else if (axis == "down")  pointLights[0].position.z += amount;
-        else if (axis == "left")  pointLights[0].position.x -= amount;
-        else if (axis == "right") pointLights[0].position.x += amount;
+        //if (pointLights.empty()) return;
+        //if (axis == "up")    pointLights[0].position.z -= amount;
+        //else if (axis == "down")  pointLights[0].position.z += amount;
+        //else if (axis == "left")  pointLights[0].position.x -= amount;
+        //else if (axis == "right") pointLights[0].position.x += amount;
     }
 
     void Graphics::ToggleMainLightFromLua() {

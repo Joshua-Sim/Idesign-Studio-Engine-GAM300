@@ -17,9 +17,6 @@ D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphic
 D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(352,19): warning C4189: 'aspect': local variable is initialized but not referenced
   (compiling source file '/src/Graphics.cpp')
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(337,19): warning C4189: 'dt': local variable is initialized but not referenced
-  (compiling source file '/src/Graphics.cpp')
-  
 D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(669,17): warning C4458: declaration of 'cam' hides class member
   (compiling source file '/src/Graphics.cpp')
       D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(105,17):

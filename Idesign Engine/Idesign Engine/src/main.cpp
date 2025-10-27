@@ -130,12 +130,12 @@ int main(void)
     engine->Initialize();
 
     // Run All Scripts
-    if (luaL_dofile(scriptingSystem->GetLuaState(), "assets/scripts/cook_all.lua") != LUA_OK) {
-        std::cerr << "[Cook] Lua error: "
-            << lua_tostring(scriptingSystem->GetLuaState(), -1) << "\n";
-    }
-    scriptingSystem->CreateScriptEntity("assets/scripts/hello.lua");
-    scriptingSystem->CreateScriptEntity("assets/scripts/controls.lua");
+    //if (luaL_dofile(scriptingSystem->GetLuaState(), "assets/scripts/cook_all.lua") != LUA_OK) {
+    //    std::cerr << "[Cook] Lua error: "
+    //        << lua_tostring(scriptingSystem->GetLuaState(), -1) << "\n";
+    //}
+    //scriptingSystem->CreateScriptEntity("assets/scripts/hello.lua");
+    //scriptingSystem->CreateScriptEntity("assets/scripts/controls.lua");
     //scriptingSystem->CreateScriptEntity("assets/scripts/prove_lua.lua");
 
     engine->GameLoop();
