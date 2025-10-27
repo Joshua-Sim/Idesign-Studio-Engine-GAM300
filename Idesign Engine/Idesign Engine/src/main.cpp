@@ -62,31 +62,25 @@ int main(void)
     // ------- Create systems below -------- 
     //  Windows
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
-    //CompileSingleObject<WindowConfig>("src/Data/WindowAsset.json", "src/Data/WindowAsset.cfg", g_WindowConfigProps);
-    AssetManager::Instance().LoadBinary<WindowConfig>("src/Data/WindowAsset.cfg", g_WindowConfigProps);
-    //auto Window = std::make_unique<GraphicsWindows>(&config, engine.get());
+    //CompileSingleObject<WindowConfig>("Assets/JSON/WindowAsset.json", "Resource/WindowAsset.cfg", "Descriptor/WindowAsset.meta", g_WindowConfigProps);
+    AssetManager::Instance().LoadBinary<WindowConfig>("Resource/WindowAsset.cfg", g_WindowConfigProps);
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     //  Audio
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
-    CompileArray<AudioProperties>("src/Data/AudioAsset.json", "src/Data/AudioAsset.bin", g_AudioPropertiesProps, "audio");
-    AssetManager::Instance().LoadBinaryArray<AudioProperties>("src/Data/AudioAsset.bin", g_AudioPropertiesProps,
+    //CompileArray<AudioProperties>("Assets/JSON/AudioAsset.json", "Resource/AudioAsset.bin", "Descriptor/AudioAsset.meta", g_AudioPropertiesProps, "audio");
+    AssetManager::Instance().LoadBinaryArray<AudioProperties>("Resource/AudioAsset.bin", g_AudioPropertiesProps,
         [](AudioProperties& props)
         {
             GlobalAudio.UE_LoadSound(props.name);
         });
-    //AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, "src/Data/AudioAsset.json", "AudioProperties");
-    //GlobalAudio.UE_PlaySound("winloop");
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     //  Textures
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
-    CompileArray<TextureProperties>("src/Data/TextureAsset.json", "src/Data/TextureAsset.bin", g_TexturePropertiesProps, "textures");
+    //CompileArray<TextureProperties>("Assets/JSON/TextureAsset.json", "Resource/TextureAsset.bin", "Descriptor/TextureAsset.meta", g_TexturePropertiesProps, "textures");
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     //  Mesh
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
-    CompileArray<MeshProperties>("src/Data/MeshAsset.json", "src/Data/MeshAsset.bin", g_MeshProps, "mesh");
-
-    // Initialize the InputHandler singleton
-    //InputHandler::Initialize(Window->GetWindow());
+    //CompileArray<MeshProperties>("Assets/JSON/MeshAsset.json", "Resource/MeshAsset.bin", "Descriptor/MeshProperties.meta", g_MeshProps, "mesh");
 
     // Initialize global ECS interface and other singleton components
     ecsInterface.Init();
@@ -133,12 +127,12 @@ int main(void)
     engine->Initialize();
 
     // Run All Scripts
-    if (luaL_dofile(scriptingSystem->GetLuaState(), "assets/scripts/cook_all.lua") != LUA_OK) {
+    if (luaL_dofile(scriptingSystem->GetLuaState(), "Assets/Scripts/cook_all.lua") != LUA_OK) {
         std::cerr << "[Cook] Lua error: "
             << lua_tostring(scriptingSystem->GetLuaState(), -1) << "\n";
     }
-    scriptingSystem->CreateScriptEntity("assets/scripts/hello.lua");
-    scriptingSystem->CreateScriptEntity("assets/scripts/controls.lua");
+    scriptingSystem->CreateScriptEntity("Assets/Scripts/hello.lua");
+    scriptingSystem->CreateScriptEntity("Assets/Scripts/controls.lua");
     //scriptingSystem->CreateScriptEntity("assets/scripts/prove_lua.lua");
 
     engine->GameLoop();

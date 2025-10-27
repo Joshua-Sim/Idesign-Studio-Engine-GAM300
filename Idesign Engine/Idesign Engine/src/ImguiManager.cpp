@@ -198,7 +198,7 @@ namespace Framework {
                                 &g_TexturePropertiesProps,
                                 finalPath
                             );
-                        AssetManager::Instance().SaveArrayToJson(TypeName<TextureProperties>::value, "src/Data/TextureAsset.json", "textures");
+                        AssetManager::Instance().SaveArrayToJson(TypeName<TextureProperties>::value, "Assets/JSON/TextureAsset.json", "textures");
                         std::cout << "Texture added: " << fileName << " to " << finalPath << std::endl;
                     }
                     else
@@ -233,7 +233,7 @@ namespace Framework {
                             &g_AudioPropertiesProps,
                             finalPath
                         );
-                        AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, "src/Data/AudioAsset.json", "AudioProperties");
+                        AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, "Assets/JSON/AudioAsset.json", "AudioProperties");
                         std::cout << "Audio added: " << fileName << " to " << finalPath << std::endl;
                     }
                     else
@@ -269,7 +269,7 @@ namespace Framework {
                             &g_MeshProps,
                             finalPath
                         );
-                        AssetManager::Instance().SaveArrayToJson(TypeName<MeshProperties>::value, "src/Data/MeshAsset.json", "mesh");
+                        AssetManager::Instance().SaveArrayToJson(TypeName<MeshProperties>::value, "Assets/JSON/MeshAsset.json", "mesh");
                         std::cout << "Mesh added: " << fileName << " to " << finalPath << std::endl;
                     }
                     else

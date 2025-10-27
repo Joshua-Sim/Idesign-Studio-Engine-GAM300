@@ -195,13 +195,13 @@ namespace Framework {
 
             tex = texProps->textureID;
         }*/
-        AssetManager::Instance().LoadBinaryArray<TextureProperties>("src/Data/TextureAsset.bin", g_TexturePropertiesProps,
+        AssetManager::Instance().LoadBinaryArray<TextureProperties>("Resource/TextureAsset.bin", g_TexturePropertiesProps,
             [](TextureProperties& props)
             {
                 TextureLoader::loadTexture(props, true);
             });
 
-        AssetManager::Instance().LoadBinaryArray<MeshProperties>("src/Data/MeshAsset.bin", g_MeshProps,
+        AssetManager::Instance().LoadBinaryArray<MeshProperties>("Resource/MeshAsset.bin", g_MeshProps,
             [](MeshProperties& props)
             {
                 MeshLoader::loadMesh(props.path, props);
