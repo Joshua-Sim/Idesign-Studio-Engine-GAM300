@@ -18,12 +18,14 @@ namespace Framework
 {
     struct Prefab
     {
+        AssetHandle guid;
         std::string name;
         int entityCount;
     };
 
     inline const std::vector g_PrefabPropsArray
     {
+        PROP_ASSETHANDLE_READONLY(guid, Prefab),
         PROP_STRING(name, Prefab),
         PROP_INT(entityCount, Prefab)
     };

@@ -18,7 +18,7 @@ namespace Framework
 { 
     struct TextureProperties
     {
-        std::string guid;
+        AssetHandle guid;
         std::string name;
         std::string path;
         bool isDirty = false;
@@ -31,7 +31,7 @@ namespace Framework
 
     inline const std::vector g_TexturePropertiesPropsArray =
     {
-        PROP_STRING_READONLY(guid, TextureProperties),
+        PROP_ASSETHANDLE_READONLY(guid, TextureProperties),
         PROP_STRING(name, TextureProperties),
         PROP_STRING_READONLY(path, TextureProperties),
     };

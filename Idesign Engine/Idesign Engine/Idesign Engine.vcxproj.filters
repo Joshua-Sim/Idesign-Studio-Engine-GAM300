@@ -16,351 +16,428 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{1918bdb8-3d04-44ed-8cd1-9004ab2821b9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Assets">
-      <UniqueIdentifier>{30bc8075-2c21-4148-ae76-78ecc47870e3}</UniqueIdentifier>
+    <Filter Include="Header Files\Audio">
+      <UniqueIdentifier>{ee0346f0-7d68-4b05-8cca-88d5f3bc7980}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Assets\rapidjson">
+    <Filter Include="Header Files\Engine">
+      <UniqueIdentifier>{bd7bf3bd-3c24-4ba6-8f38-e6b641881d0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Graphics">
+      <UniqueIdentifier>{b534dac5-db08-4879-bc45-d316afb43c77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS">
+      <UniqueIdentifier>{31ccb6a0-96ae-4dc3-9ce5-3aadd205659b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\AssetManager">
+      <UniqueIdentifier>{6c5a21e2-55b3-41b5-868c-ccc032e8e2b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\AssetManager\rapidjson">
       <UniqueIdentifier>{846d2edc-77b2-464f-b3d5-9dcadcf8d817}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Assets\Property">
+    <Filter Include="Header Files\EventSystem">
+      <UniqueIdentifier>{c0389d9b-6e59-4c7f-bbe7-a0640cfca03d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\FontSystem">
+      <UniqueIdentifier>{6c24c3f8-89fb-4554-a838-605d5d4bd78b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ImGui">
+      <UniqueIdentifier>{e30be14d-331d-4fd7-8ea0-81888bc1b738}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Mesh">
+      <UniqueIdentifier>{371003ee-7acc-4660-8624-fa6b957fd5d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Physics">
+      <UniqueIdentifier>{822b9b9a-690d-451e-a8df-49a6eceb4c02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Property">
       <UniqueIdentifier>{d0367ea6-a8a7-4cff-8842-5c07e26cef82}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Assets\Audio">
-      <UniqueIdentifier>{ee0346f0-7d68-4b05-8cca-88d5f3bc7980}</UniqueIdentifier>
+    <Filter Include="Header Files\Scripting">
+      <UniqueIdentifier>{78aa6a70-67ac-43b2-91a8-7906e90b28ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\AssetManager">
+      <UniqueIdentifier>{959f3556-15e6-4005-abca-4868d1f6d0e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Audio">
+      <UniqueIdentifier>{e77c2bee-9152-430f-a2f6-790bc7223ee8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ECS">
+      <UniqueIdentifier>{7803fa33-ca26-41c1-9343-c7d50876655f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine">
+      <UniqueIdentifier>{19c6feff-0b47-48d4-9391-a052872f4978}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\EventSystem">
+      <UniqueIdentifier>{f8123c2c-6c3a-4849-8a33-af30390a038c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\FontSystem">
+      <UniqueIdentifier>{a3dbd553-76a5-41ad-8ebd-2fad415c4088}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphics">
+      <UniqueIdentifier>{45c3eed8-0c0a-4019-9a6d-0b3d9438512c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ImGui">
+      <UniqueIdentifier>{4918e8f4-5c7f-4a3b-9c17-f33d403d89da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Mesh">
+      <UniqueIdentifier>{38cf0526-66bd-4491-a25a-849961ed5f3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Physics">
+      <UniqueIdentifier>{7ff23bc6-b52c-420d-a975-380720789072}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Property">
+      <UniqueIdentifier>{2082f861-7298-4c93-bdb3-6a5c623140af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Scripting">
+      <UniqueIdentifier>{3c8bd95e-be14-40ad-90ff-e6f6d5e53833}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Texture">
+      <UniqueIdentifier>{991a92f2-3e64-4719-98b9-73d1e2226a11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Scene">
+      <UniqueIdentifier>{a3708879-50c5-4d18-98a7-d34108a7b6d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Scene">
+      <UniqueIdentifier>{f7c7f1e1-4bd2-48a6-bfd4-571644be26f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Texture">
+      <UniqueIdentifier>{282bd911-ae69-41a8-bdcc-ade59d5fb686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Json">
+      <UniqueIdentifier>{124c9f49-be4b-4efa-9191-837591d4167e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Binary">
+      <UniqueIdentifier>{ab6872bc-ab36-49d0-bf29-a5601f5e2e17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Descriptor">
+      <UniqueIdentifier>{51e2f5be-f2bc-40ba-9c45-0bd43e2d0ac9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\ButtonSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Collision.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ComponentArray.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ComponentList.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ComponentManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Coordinator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\DummySystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECSystemManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\EngineState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\EntityManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FontShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FontSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Graphics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GraphicsShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\InputHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Matrix3x3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Message.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\MessageSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\pch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\msinttypes\inttypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidjson\msinttypes\stdint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\System.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\SystemInclude.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\TagManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\TestSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Vector2D.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Debugger.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Types.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\lib\imgui\imgui.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\lib\imgui\imgui_impl_glfw.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\lib\imgui\imgui_impl_opengl3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\lib\imgui\imgui_impl_opengl3_loader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\lib\imgui\imgui_internal.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\lib\imgui\imstb_rectpack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\lib\imgui\imstb_textedit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\lib\imgui\imstb_truetype.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Lighting.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Mesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\MeshLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ShaderProgram.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Terrain.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AssetManager.h">
-      <Filter>Header Files\Assets</Filter>
-    </ClInclude>
     <ClInclude Include="src\rapidjson\allocators.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\document.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\internal\diyfp.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\internal\biginteger.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\internal\clzll.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\cursorstreamwrapper.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\internal\dtoa.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\encodings.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\error\en.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\encodedstream.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\error\error.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\filereadstream.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\filewritestream.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\internal\ieee754.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\fwd.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\istreamwrapper.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\internal\itoa.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\internal\pow10.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\pointer.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\ostreamwrapper.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\internal\meta.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\prettywriter.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\rapidjson.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\memorystream.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\memorybuffer.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\stream.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\internal\stack.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\internal\regex.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\schema.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\reader.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\internal\swap.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\internal\strfunc.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\stringbuffer.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\internal\strtod.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\uri.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\rapidjson\writer.h">
-      <Filter>Header Files\Assets\rapidjson</Filter>
-    </ClInclude>
-    <ClInclude Include="src\JsonSerialize.h">
-      <Filter>Header Files\Assets</Filter>
-    </ClInclude>
-    <ClInclude Include="src\backward.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FontAsset.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GraphicsWindows.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ImguiManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\SignalHandler.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\AssetManager\rapidjson</Filter>
     </ClInclude>
     <ClInclude Include="src\PropertySystem.h">
-      <Filter>Header Files\Assets\Property</Filter>
+      <Filter>Header Files\Property</Filter>
     </ClInclude>
     <ClInclude Include="src\PropertyMacro.h">
-      <Filter>Header Files\Assets\Property</Filter>
+      <Filter>Header Files\Property</Filter>
     </ClInclude>
     <ClInclude Include="src\AudioProperties.h">
-      <Filter>Header Files\Assets\Property</Filter>
+      <Filter>Header Files\Property</Filter>
     </ClInclude>
     <ClInclude Include="src\PrefabProperties.h">
-      <Filter>Header Files\Assets\Property</Filter>
+      <Filter>Header Files\Property</Filter>
     </ClInclude>
     <ClInclude Include="src\TextureProperties.h">
-      <Filter>Header Files\Assets\Property</Filter>
+      <Filter>Header Files\Property</Filter>
     </ClInclude>
     <ClInclude Include="src\TransformProperties.h">
-      <Filter>Header Files\Assets\Property</Filter>
+      <Filter>Header Files\Property</Filter>
     </ClInclude>
     <ClInclude Include="src\WindowConfigProperties.h">
-      <Filter>Header Files\Assets\Property</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AssetCompiler.h">
-      <Filter>Header Files\Assets</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AssetHandler.h">
-      <Filter>Header Files\Assets</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AssetLoader.h">
-      <Filter>Header Files\Assets</Filter>
-    </ClInclude>
-    <ClInclude Include="src\UndoRedoSystem.h">
-      <Filter>Header Files\Assets</Filter>
+      <Filter>Header Files\Property</Filter>
     </ClInclude>
     <ClInclude Include="src\Audio.h">
-      <Filter>Header Files\Assets\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="src\TextureAsset.h">
-      <Filter>Header Files\Assets</Filter>
-    </ClInclude>
-    <ClInclude Include="src\TextureLoader.h">
-      <Filter>Header Files\Assets</Filter>
+      <Filter>Header Files\Audio</Filter>
     </ClInclude>
     <ClInclude Include="src\AudioLoader.h">
-      <Filter>Header Files\Assets\Audio</Filter>
+      <Filter>Header Files\Audio</Filter>
     </ClInclude>
     <ClInclude Include="src\MeshProperties.h">
-      <Filter>Header Files\Assets\Property</Filter>
-    </ClInclude>
-    <ClInclude Include="src\SceneManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TextProperties.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ScriptingSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Imgui_Hierarchy.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Property</Filter>
     </ClInclude>
     <ClInclude Include="src\PropertyWidget.h">
-      <Filter>Header Files\Assets\Property</Filter>
+      <Filter>Header Files\Property</Filter>
     </ClInclude>
     <ClInclude Include="src\TypeRegistry.h">
-      <Filter>Header Files\Assets\Property</Filter>
+      <Filter>Header Files\Property</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Camera.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AssetCompiler.h">
+      <Filter>Header Files\AssetManager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AssetHandler.h">
+      <Filter>Header Files\AssetManager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AssetLoader.h">
+      <Filter>Header Files\AssetManager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AssetManager.h">
+      <Filter>Header Files\AssetManager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\JsonSerialize.h">
+      <Filter>Header Files\AssetManager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UndoRedoSystem.h">
+      <Filter>Header Files\AssetManager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ButtonSystem.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Collision.h">
+      <Filter>Header Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ComponentArray.h">
+      <Filter>Header Files\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ComponentList.h">
+      <Filter>Header Files\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\backward.hpp">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ComponentManager.h">
+      <Filter>Header Files\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Coordinator.h">
+      <Filter>Header Files\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core.h">
+      <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Debugger.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DummySystem.h">
+      <Filter>Header Files\EventSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECSystemManager.h">
+      <Filter>Header Files\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EngineState.h">
+      <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EntityManager.h">
+      <Filter>Header Files\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FontShader.h">
+      <Filter>Header Files\FontSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FontSystem.h">
+      <Filter>Header Files\FontSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GraphicsShader.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GraphicsWindows.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib\imgui\imgui.h">
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Imgui_Hierarchy.h">
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib\imgui\imgui_impl_glfw.h">
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib\imgui\imgui_impl_opengl3.h">
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib\imgui\imgui_impl_opengl3_loader.h">
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib\imgui\imgui_internal.h">
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImguiManager.h">
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib\imgui\imstb_rectpack.h">
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib\imgui\imstb_textedit.h">
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib\imgui\imstb_truetype.h">
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\msinttypes\inttypes.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Matrix3x3.h">
+      <Filter>Header Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Lighting.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\InputHandler.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mesh.h">
+      <Filter>Header Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MeshLoader.h">
+      <Filter>Header Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Message.h">
+      <Filter>Header Files\EventSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MessageSystem.h">
+      <Filter>Header Files\EventSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TestSystem.h">
+      <Filter>Header Files\EventSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Types.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vector2D.h">
+      <Filter>Header Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TagManager.h">
+      <Filter>Header Files\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ShaderProgram.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SignalHandler.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rapidjson\msinttypes\stdint.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\System.h">
+      <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SystemInclude.h">
+      <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Terrain.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\pch.h">
+      <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ScriptingSystem.h">
+      <Filter>Header Files\Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TextureAsset.h">
+      <Filter>Header Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TextureLoader.h">
+      <Filter>Header Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SceneManager.h">
+      <Filter>Header Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TextProperties.h">
+      <Filter>Header Files\Property</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />
-    <None Include="SceneMenuSample.json" />
-    <None Include="SceneWithEnemies.json" />
-    <None Include="SceneWithOscilators.json" />
-    <None Include="Test Scene Save.json" />
     <None Include="Assets\shaders\blur.glsl">
       <Filter>Shaders</Filter>
     </None>
@@ -394,140 +471,196 @@
     <None Include="Assets\shaders\vertex.glsl">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Assets\fontshaders\textfrag.glsl" />
-    <None Include="Assets\fontshaders\textvert.glsl" />
-    <None Include="Assets\shaders\pickfrag.glsl" />
-    <None Include="Assets\shaders\pickvert.glsl" />
+    <None Include="Assets\shaders\pickfrag.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\pickvert.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Assets\fontshaders\textfrag.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Assets\fontshaders\textvert.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="SceneMenuSample.json">
+      <Filter>Resource Files\Json</Filter>
+    </None>
+    <None Include="SceneWithEnemies.json">
+      <Filter>Resource Files\Json</Filter>
+    </None>
+    <None Include="SceneWithOscilators.json">
+      <Filter>Resource Files\Json</Filter>
+    </None>
+    <None Include="Test Scene Save.json">
+      <Filter>Resource Files\Json</Filter>
+    </None>
+    <None Include="Assets\JSON\AudioAsset.json">
+      <Filter>Resource Files\Json</Filter>
+    </None>
+    <None Include="Assets\JSON\MeshAsset.json">
+      <Filter>Resource Files\Json</Filter>
+    </None>
+    <None Include="Assets\JSON\TextureAsset.json">
+      <Filter>Resource Files\Json</Filter>
+    </None>
+    <None Include="Assets\JSON\WindowAsset.json">
+      <Filter>Resource Files\Json</Filter>
+    </None>
+    <None Include="Resource\AudioAsset.bin">
+      <Filter>Resource Files\Binary</Filter>
+    </None>
+    <None Include="Resource\MeshAsset.bin">
+      <Filter>Resource Files\Binary</Filter>
+    </None>
+    <None Include="Resource\TextureAsset.bin">
+      <Filter>Resource Files\Binary</Filter>
+    </None>
+    <None Include="Resource\WindowAsset.cfg">
+      <Filter>Resource Files\Binary</Filter>
+    </None>
+    <None Include="Descriptor\AudioAsset.meta">
+      <Filter>Resource Files\Descriptor</Filter>
+    </None>
+    <None Include="Descriptor\MeshProperties.meta">
+      <Filter>Resource Files\Descriptor</Filter>
+    </None>
+    <None Include="Descriptor\TextureAsset.meta">
+      <Filter>Resource Files\Descriptor</Filter>
+    </None>
+    <None Include="Descriptor\WindowAsset.meta">
+      <Filter>Resource Files\Descriptor</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Vector2D.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AssetManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Audio.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ButtonSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Collision.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ComponentManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Coordinator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Debugger.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DummySystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\EngineState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\EntityManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FontSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Graphics.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GraphicsShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\InputHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Matrix3x3.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\MessageSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\pch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TagManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TestSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\lib\imgui\imgui_tables.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\lib\imgui\imgui_widgets.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\lib\imgui\imgui.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\lib\imgui\imgui_demo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\lib\imgui\imgui_draw.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\lib\imgui\imgui_impl_glfw.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\lib\imgui\imgui_impl_opengl3.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TextureLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Lighting.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Mesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Terrain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\MeshLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ShaderProgram.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ImguiManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SignalHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\AssetCompiler.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\AssetManager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AssetManager.cpp">
+      <Filter>Source Files\AssetManager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Audio.cpp">
+      <Filter>Source Files\Audio</Filter>
     </ClCompile>
     <ClCompile Include="src\AudioLoader.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="src\UndoRedoSystem.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\Collision.cpp">
+      <Filter>Source Files\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="src\SceneManager.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\ButtonSystem.cpp">
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\ScriptingSystem.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\ComponentManager.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Coordinator.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DummySystem.cpp">
+      <Filter>Source Files\EventSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Debugger.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EngineState.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EntityManager.cpp">
+      <Filter>Source Files\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FontSystem.cpp">
+      <Filter>Source Files\FontSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GraphicsShader.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\imgui\imgui.cpp">
+      <Filter>Source Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\imgui\imgui_demo.cpp">
+      <Filter>Source Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\imgui\imgui_draw.cpp">
+      <Filter>Source Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\imgui\imgui_impl_glfw.cpp">
+      <Filter>Source Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\imgui\imgui_impl_opengl3.cpp">
+      <Filter>Source Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\imgui\imgui_tables.cpp">
+      <Filter>Source Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\imgui\imgui_widgets.cpp">
+      <Filter>Source Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImguiManager.cpp">
+      <Filter>Source Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\InputHandler.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Lighting.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Matrix3x3.cpp">
+      <Filter>Source Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mesh.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MeshLoader.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MessageSystem.cpp">
+      <Filter>Source Files\EventSystem</Filter>
     </ClCompile>
     <ClCompile Include="src\PropertyWidget.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Property</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ScriptingSystem.cpp">
+      <Filter>Source Files\Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ShaderProgram.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SignalHandler.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TagManager.cpp">
+      <Filter>Source Files\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Terrain.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TestSystem.cpp">
+      <Filter>Source Files\EventSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vector2D.cpp">
+      <Filter>Source Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pch.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TextureLoader.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SceneManager.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UndoRedoSystem.cpp">
+      <Filter>Source Files\AssetManager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

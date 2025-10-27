@@ -20,6 +20,8 @@
 #include <cstring> // for std::strncpy
 #include <functional>
 
+#include "AssetHandler.h"   // For GUIDs
+
 namespace Framework
 {
     // A single property descriptor (like "field metadata")

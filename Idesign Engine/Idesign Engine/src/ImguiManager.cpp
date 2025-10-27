@@ -471,7 +471,7 @@ namespace Framework {
 
                 std::string modalId = "EditMeshModal_" + mesh->guid;
 
-                ImGui::PushID(mesh->guid.c_str());
+                ImGui::PushID(mesh->guid.id.c_str());
                 ImGui::BeginGroup();
 
                 // Centered placeholder image
@@ -542,7 +542,7 @@ namespace Framework {
                     ImGui::SameLine(0, spacing);
                     if (ImGui::Button("Delete", ImVec2(buttonWidth, 0)))
                     {
-                        meshesToDelete.push_back(mesh->guid);
+                        meshesToDelete.push_back(mesh->guid.id.c_str());
                         initialized = false;
                         ImGui::CloseCurrentPopup();
                     }
@@ -563,7 +563,7 @@ namespace Framework {
                     ImGui::BeginTooltip();
                     ImGui::Text("Name: %s", mesh->name.c_str());
                     ImGui::Text("Path: %s", mesh->path.c_str());
-                    ImGui::Text("GUID: %s", mesh->guid.c_str());
+                    ImGui::Text("GUID: %s", mesh->guid.id.c_str());
                     ImGui::Text("VAO: %u", mesh->vao);
                     ImGui::Text("VBO: %u", mesh->vbo);
                     ImGui::Text("EBO: %u", mesh->ebo);
@@ -642,7 +642,7 @@ namespace Framework {
                 ImTextureID imguiTextureID = (ImTextureID)(intptr_t)tex->textureID;
                 std::string modalId = "EditModal_" + tex->guid;
 
-                ImGui::PushID(tex->guid.c_str());
+                ImGui::PushID(tex->guid.id.c_str());
                 ImGui::BeginGroup();
 
                 // Display texture
@@ -656,9 +656,9 @@ namespace Framework {
                 if (ImGui::BeginPopupModal(modalId.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
                 {
                     static std::unordered_map<std::string, char[256]> renameBuffers;
-                    if (renameBuffers.find(tex->guid) == renameBuffers.end())
+                    if (renameBuffers.find(tex->guid.id.c_str()) == renameBuffers.end())
                     {
-                        std::snprintf(renameBuffers[tex->guid], sizeof(renameBuffers[tex->guid]), "%s", tex->name.c_str());
+                        std::snprintf(renameBuffers[tex->guid.id.c_str()], sizeof(renameBuffers[tex->guid.id.c_str()]), "%s", tex->name.c_str());
                     }
 
                     ImGui::TextColored(ImVec4(0.9f, 0.7f, 0.2f, 1.0f), "Texture Options");
@@ -668,7 +668,7 @@ namespace Framework {
 
                     ImGui::Text("Rename Texture:");
                     ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
-                    ImGui::InputText("##Rename", renameBuffers[tex->guid], IM_ARRAYSIZE(renameBuffers[tex->guid]));
+                    ImGui::InputText("##Rename", renameBuffers[tex->guid.id.c_str()], IM_ARRAYSIZE(renameBuffers[tex->guid.id.c_str()]));
 
                     ImGui::Spacing();
                     ImGui::Separator();
@@ -683,11 +683,10 @@ namespace Framework {
 
                     if (ImGui::Button("Apply", ImVec2(buttonWidth, 0)))
                     {
-                        std::string newName = renameBuffers[tex->guid];
+                        std::string newName = renameBuffers[tex->guid.id.c_str()];
                         if (newName != tex->name)
                         {
                             tex->name = newName;
-                            AssetManager::Instance().MarkDirty(tex->guid);
                         }
                         ImGui::CloseCurrentPopup();
                     }
@@ -695,7 +694,7 @@ namespace Framework {
                     ImGui::SameLine(0, spacing);
                     if (ImGui::Button("Delete", ImVec2(buttonWidth, 0)))
                     {
-                        texturesToDelete.push_back(tex->guid);
+                        texturesToDelete.push_back(tex->guid.id.c_str());
                         ImGui::CloseCurrentPopup();
                     }
 
@@ -713,7 +712,7 @@ namespace Framework {
                     ImGui::BeginTooltip();
                     ImGui::Text("Name: %s", tex->name.c_str());
                     ImGui::Text("Path: %s", tex->path.c_str());
-                    ImGui::Text("GUID: %s", tex->guid.c_str());
+                    ImGui::Text("GUID: %s", tex->guid.id.c_str());
                     ImGui::Text("Size: %d x %d", tex->width, tex->height);
                     ImGui::EndTooltip();
                 }
@@ -878,7 +877,7 @@ namespace Framework {
                             ImGui::SameLine(0, spacing);
                             if (ImGui::Button("Delete", ImVec2(buttonWidth, 0)))
                             {
-                                audioToDelete.push_back(audioProps->guid);
+                                audioToDelete.push_back(audioProps->guid.id.c_str());
                                 initialized = false;
                                 ImGui::CloseCurrentPopup();
                             }
@@ -895,7 +894,7 @@ namespace Framework {
                         if (ImGui::IsItemHovered())
                         {
                             ImGui::BeginTooltip();
-                            ImGui::Text("GUID: %s", audioProps->guid.c_str());
+                            ImGui::Text("GUID: %s", audioProps->guid.id.c_str());
                             ImGui::Text("File: %s", audioProps->path.c_str());
                             ImGui::Text("Volume: %.2f", audioProps->volume);
                             ImGui::Text("Mode: %s", audioProps->mode.c_str());
@@ -909,13 +908,14 @@ namespace Framework {
                     ImGui::Text("Duration: %.2f sec", audioProps->duration);
 
                     // Play/Stop buttons
-                    if (ImGui::Button(("Play##" + audioProps->guid).c_str()))
+                    if (ImGui::Button(("Play##" + audioProps->guid.id).c_str()))
                     {
                         GlobalAudio.UE_PlaySound(audioProps->name);
                         audioProps->isPlaying = true;
                     }
+
                     ImGui::SameLine();
-                    if (ImGui::Button(("Stop##" + audioProps->guid).c_str()))
+                    if (ImGui::Button(("Stop##" + audioProps->guid.id).c_str()))
                     {
                         GlobalAudio.Reset();
                         audioProps->isPlaying = false;
@@ -924,7 +924,7 @@ namespace Framework {
 
                     // Volume slider
                     float volume = audioProps->volume;
-                    if (ImGui::SliderFloat(("Volume##" + audioProps->guid).c_str(), &volume, 0.0f, 1.0f))
+                    if (ImGui::SliderFloat(("Volume##" + audioProps->guid.id).c_str(), &volume, 0.0f, 1.0f))
                     {
                         audioProps->volume = std::clamp(volume, 0.0f, 1.0f);
                         GlobalAudio.UE_SetVolume(audioProps->name, audioProps->volume);
@@ -1464,7 +1464,7 @@ namespace Framework {
                             }
 
                             // Display metadata
-                            ImGui::Text("GUID: %s", currentTexture.guid.c_str());
+                            ImGui::Text("GUID: %s", currentTexture.guid.id.c_str());
                             ImGui::Text("Texture ID: %u", currentTexture.textureID);
                             ImGui::Text("Size: %d x %d", currentTexture.width, currentTexture.height);
 

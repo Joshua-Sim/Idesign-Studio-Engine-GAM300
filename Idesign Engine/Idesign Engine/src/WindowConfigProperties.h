@@ -18,7 +18,7 @@ namespace Framework
 {
     struct WindowConfig
     {
-        std::string guid;
+        AssetHandle guid;
         int x = 0;
         int y = 0;
         std::string programName;
@@ -26,7 +26,7 @@ namespace Framework
 
     inline const std::vector g_WindowConfigPropsArray =
     {
-        PROP_STRING(guid, WindowConfig),
+        PROP_ASSETHANDLE_READONLY(guid, WindowConfig),
         PROP_INT(x, WindowConfig),
         PROP_INT(y, WindowConfig),
         PROP_STRING(programName, WindowConfig),

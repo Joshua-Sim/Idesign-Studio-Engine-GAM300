@@ -139,6 +139,22 @@ PROPERTY_END(WindowConfig, WindowConfigProps)
         [](const void* pObj, void* pData) { *static_cast<std::string*>(pData) = static_cast<const type*>(pObj)->field; }, \
         {}, {}, false, nullptr, nullptr, 0, Framework::prop::NONE, optionsFn }
 
+// ASSETHANDLE PROPERTY MACRO
+#define PROP_ASSETHANDLE_FLAGS(field, type, flags) \
+    Framework::prop{ #field, Framework::prop::STRING, \
+        [](void* pObj, const void* pData) { \
+            static_cast<type*>(pObj)->field = Framework::AssetHandle(*static_cast<const std::string*>(pData)); \
+        }, \
+        [](const void* pObj, void* pData) { \
+            *static_cast<std::string*>(pData) = static_cast<const type*>(pObj)->field.id; \
+        }, \
+        {}, {}, false, nullptr, nullptr, 0, flags, {} }
+
+#define PROP_ASSETHANDLE_READONLY(field, type) \
+    PROP_ASSETHANDLE_FLAGS(field, type, Framework::prop::READ_ONLY)
+
+
+
 
 // CHAR PROPERTY MACRO
 #define PROP_CHAR(field, type) \

@@ -18,7 +18,7 @@ namespace Framework
 {
     struct AudioProperties
     {
-        std::string guid;
+        AssetHandle guid;
         std::string name;
         std::string path;
         std::string mode;
@@ -37,7 +37,7 @@ namespace Framework
 
     inline const std::vector g_AudioPropertiesPropsArray =
     {
-        PROP_STRING(guid, AudioProperties),
+        PROP_ASSETHANDLE_READONLY(guid, AudioProperties),
         PROP_STRING(name, AudioProperties),
         PROP_STRING(path, AudioProperties),
         PROP_STRING(mode, AudioProperties),

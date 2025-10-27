@@ -25,7 +25,7 @@ namespace Framework
     };
     struct MeshProperties
     {
-        std::string guid;
+        AssetHandle guid;
         std::string name;
         std::string path; // asset path to load and fill in mesh component vars, alloted default
         unsigned int vao = 0, vbo = 0, ebo = 0;
@@ -38,7 +38,7 @@ namespace Framework
 
     inline const std::vector g_MeshPropsArray =
     {
-        PROP_STRING_READONLY(guid, MeshProperties),
+        PROP_ASSETHANDLE_READONLY(guid, MeshProperties),
         PROP_STRING(name, MeshProperties),
         PROP_STRING_READONLY(path, MeshProperties),
         PROP_UINT_READONLY(vao, MeshProperties),

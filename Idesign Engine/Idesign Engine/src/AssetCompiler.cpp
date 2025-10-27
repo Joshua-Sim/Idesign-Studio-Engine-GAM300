@@ -207,7 +207,7 @@ namespace Framework
             {
                 const auto& mesh = ecsInterface.GetComponent<MeshProperties>(entity);
                 rapidjson::Value meshRef(rapidjson::kObjectType);
-                meshRef.AddMember("guid", rapidjson::Value(mesh.guid.c_str(), allocator), allocator);
+                meshRef.AddMember("guid", rapidjson::Value(mesh.guid.id.c_str(), allocator), allocator);
                 componentsObj.AddMember("MeshReference", meshRef, allocator);
             }
 
@@ -216,7 +216,7 @@ namespace Framework
             {
                 const auto& tex = ecsInterface.GetComponent<TextureProperties>(entity);
                 rapidjson::Value texRef(rapidjson::kObjectType);
-                texRef.AddMember("guid", rapidjson::Value(tex.guid.c_str(), allocator), allocator);
+                texRef.AddMember("guid", rapidjson::Value(tex.guid.id.c_str(), allocator), allocator);
                 componentsObj.AddMember("TextureComponent", texRef, allocator);
             }
             // Add more components here...
