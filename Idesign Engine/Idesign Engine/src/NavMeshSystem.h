@@ -6,16 +6,32 @@
 /// @copyright 2025, Digipen Institute of Technology
 ///
 ///////////////////////////////////////////////////////////////////////////////
+#pragma once
 #include "pch.h"
 #include "System.h"
 #include "ComponentList.h"
 
-namespace Framework {
+// Forward declare Recast/Detour types from global namespace
+struct rcContext;
+struct rcHeightfield;
+struct rcCompactHeightfield;
+struct rcContourSet;
+struct rcPolyMesh;
+struct rcPolyMeshDetail;
+struct dtNavMesh;
+struct dtNavMeshQuery;
 
+namespace Framework {
     class NavMeshSystem : public ISystem {
     public:
         NavMeshSystem();
         ~NavMeshSystem();
+
+        static NavMeshSystem& Instance()
+        {
+            static NavMeshSystem instance;
+            return instance;
+        }
 
         void Initialize() override;
         void Update(float deltaTime) override;
@@ -27,20 +43,29 @@ namespace Framework {
         // Optional: debug draw toggle or internal states
         void DebugDraw() const;
 
+        //Navmesh Functions
+        bool FindPath(const glm::vec3& start, const glm::vec3& end,
+            std::vector<glm::vec3>& outPath);
+
+        bool IsPointOnNavmesh(const glm::vec3& point, float searchRadius = 2.0f);
+
+        glm::vec3 GetNearestPointOnNavmesh(const glm::vec3& point);
+
+
     private:
         // Internal helper
         void CollectSourceGeometry();
         void ConvertToRecastFormat(); // Convert collected mesh to recast input mesh format
 
-        // Recast/Detour navmesh data holders (later filled)
-        struct rcContext* recastContext = nullptr;
-        struct rcHeightfield* heightfield = nullptr;
-        struct rcCompactHeightfield* compactHeightfield = nullptr;
-        struct rcContourSet* contourSet = nullptr;
-        struct rcPolyMesh* polyMesh = nullptr;
-        struct rcPolyMeshDetail* polyMeshDetail = nullptr;
-        struct dtNavMesh* navMesh = nullptr;
-        struct dtNavMeshQuery* navQuery = nullptr;
+        // Recast/Detour navmesh data holders (use :: to reference global namespace)
+        ::rcContext* recastContext = nullptr;
+        ::rcHeightfield* heightfield = nullptr;
+        ::rcCompactHeightfield* compactHeightfield = nullptr;
+        ::rcContourSet* contourSet = nullptr;
+        ::rcPolyMesh* polyMesh = nullptr;
+        ::rcPolyMeshDetail* polyMeshDetail = nullptr;
+        ::dtNavMesh* navMesh = nullptr;
+        ::dtNavMeshQuery* navQuery = nullptr;
 
         // Temporarily store collected geometry before passing to Recast
         std::vector<glm::vec3> collectedPositions;

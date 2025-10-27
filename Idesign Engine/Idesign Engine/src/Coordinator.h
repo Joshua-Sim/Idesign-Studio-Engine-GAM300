@@ -217,6 +217,13 @@ namespace Framework {
 		Entity GetEntityByGUID(const std::string& guid) const;
 
 		void SetEntityGUID(Entity entity, const std::string& guid);
+		
+		// System retreival
+		template<typename T>
+		std::shared_ptr<T> GetSystem()
+		{
+			return mSystemManager->GetSystem<T>();
+		}
 
 	private:
 		std::unique_ptr<ComponentManager> mComponentManager;	// A shared pointer of the Component Manager

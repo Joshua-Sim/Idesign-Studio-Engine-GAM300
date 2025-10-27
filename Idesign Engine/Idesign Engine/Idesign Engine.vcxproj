@@ -225,10 +225,12 @@
     <ClInclude Include="src\rapidjson\stringbuffer.h" />
     <ClInclude Include="src\rapidjson\uri.h" />
     <ClInclude Include="src\rapidjson\writer.h" />
+    <ClInclude Include="src\Recast\DetourAlloc.h" />
     <ClInclude Include="src\Recast\DetourAssert.h" />
     <ClInclude Include="src\Recast\DetourCommon.h" />
     <ClInclude Include="src\Recast\DetourMath.h" />
     <ClInclude Include="src\Recast\DetourNode.h" />
+    <ClInclude Include="src\Recast\DetourStatus.h" />
     <ClInclude Include="src\Recast\RecastAlloc.h" />
     <ClInclude Include="src\Recast\RecastAssert.h" />
     <ClInclude Include="src\SceneManager.h" />
@@ -310,13 +312,23 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\Recast\DetourAlloc.cpp" />
+    <ClCompile Include="src\Recast\DetourAssert.cpp" />
     <ClCompile Include="src\Recast\DetourCommon.cpp" />
     <ClCompile Include="src\Recast\DetourNavMesh.cpp" />
     <ClCompile Include="src\Recast\DetourNavMeshBuilder.cpp" />
     <ClCompile Include="src\Recast\DetourNavMeshQuery.cpp" />
+    <ClCompile Include="src\Recast\DetourNode.cpp" />
     <ClCompile Include="src\Recast\Recast.cpp" />
     <ClCompile Include="src\Recast\RecastAlloc.cpp" />
+    <ClCompile Include="src\Recast\RecastArea.cpp" />
     <ClCompile Include="src\Recast\RecastAssert.cpp" />
+    <ClCompile Include="src\Recast\RecastContour.cpp" />
+    <ClCompile Include="src\Recast\RecastFilter.cpp" />
+    <ClCompile Include="src\Recast\RecastLayers.cpp" />
+    <ClCompile Include="src\Recast\RecastMesh.cpp" />
+    <ClCompile Include="src\Recast\RecastMeshDetail.cpp" />
+    <ClCompile Include="src\Recast\RecastRasterization.cpp" />
+    <ClCompile Include="src\Recast\RecastRegion.cpp" />
     <ClCompile Include="src\SceneManager.cpp" />
     <ClCompile Include="src\ScriptingSystem.cpp" />
     <ClCompile Include="src\ShaderProgram.cpp" />

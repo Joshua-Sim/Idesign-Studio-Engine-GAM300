@@ -1,21 +1,80 @@
-﻿  NavMeshSystem.cpp
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(58,38): warning C4100: 'deltaTime': unreferenced parameter
+﻿  main.cpp
+  NavMeshSystem.cpp
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Recast\Recast.h(115,7): warning C4099: 'rcContext': type name first seen using 'struct' now seen using 'class'
+  (compiling source file '/src/NavMeshSystem.cpp')
+      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Recast\Recast.h(115,7):
+      see declaration of 'rcContext'
+  
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Recast\DetourNavMesh.h(338,7): warning C4099: 'dtNavMesh': type name first seen using 'struct' now seen using 'class'
+  (compiling source file '/src/NavMeshSystem.cpp')
+      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Recast\DetourNavMesh.h(338,7):
+      see declaration of 'dtNavMesh'
+  
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Recast\DetourNavMesh.h(676,15): warning C4099: 'dtNavMeshQuery': type name first seen using 'struct' now seen using 'class'
+  (compiling source file '/src/NavMeshSystem.cpp')
+      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\NavMeshSystem.h(22,8):
+      see declaration of 'dtNavMeshQuery'
+  
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Recast\DetourNavMeshQuery.h(165,7): warning C4099: 'dtNavMeshQuery': type name first seen using 'struct' now seen using 'class'
+  (compiling source file '/src/NavMeshSystem.cpp')
+      C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Recast\DetourNavMeshQuery.h(165,7):
+      see declaration of 'dtNavMeshQuery'
+  
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(64,38): warning C4100: 'deltaTime': unreferenced parameter
   (compiling source file '/src/NavMeshSystem.cpp')
   
-  Recast.cpp
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(211,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(219,62): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(218,54): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(224,37): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(222,84): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(228,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(234,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(248,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(259,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(266,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(272,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(286,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(299,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(314,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(366,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(381,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(395,22): warning C4566: character represented by universal-character-name '\u2705' cannot be represented in the current code page (1252)
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
   Generating Code...
-glew32s.lib(glew.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'glew32s.lib(glew.obj)' or at 'C:\Year 3\Idesign-Studio-Engine\Idesign Engine\x64\Debug\vc120.pdb'; linking object as if no debug info
-LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
-DetourNavMesh.obj : error LNK2019: unresolved external symbol "void (__cdecl*__cdecl dtAssertFailGetCustom(void))(char const *,char const *,int)" (?dtAssertFailGetCustom@@YAP6AXPEBD0H@ZXZ) referenced in function "public: struct dtOffMeshConnection const * __cdecl dtNavMesh::getOffMeshConnectionByRef(unsigned int)const " (?getOffMeshConnectionByRef@dtNavMesh@@QEBAPEBUdtOffMeshConnection@@I@Z)
-DetourNavMeshQuery.obj : error LNK2001: unresolved external symbol "void (__cdecl*__cdecl dtAssertFailGetCustom(void))(char const *,char const *,int)" (?dtAssertFailGetCustom@@YAP6AXPEBD0H@ZXZ)
-DetourNavMeshQuery.obj : error LNK2019: unresolved external symbol "public: __cdecl dtNodePool::dtNodePool(int,int)" (??0dtNodePool@@QEAA@HH@Z) referenced in function "public: unsigned int __cdecl dtNavMeshQuery::init(class dtNavMesh const *,int)" (?init@dtNavMeshQuery@@QEAAIPEBVdtNavMesh@@H@Z)
-DetourNavMeshQuery.obj : error LNK2019: unresolved external symbol "public: __cdecl dtNodePool::~dtNodePool(void)" (??1dtNodePool@@QEAA@XZ) referenced in function "public: void * __cdecl dtNodePool::`scalar deleting destructor'(unsigned int)" (??_GdtNodePool@@QEAAPEAXI@Z)
-DetourNavMeshQuery.obj : error LNK2019: unresolved external symbol "public: void __cdecl dtNodePool::clear(void)" (?clear@dtNodePool@@QEAAXXZ) referenced in function "public: unsigned int __cdecl dtNavMeshQuery::findDistanceToWall(unsigned int,float const *,float,class dtQueryFilter const *,float *,float *,float *)const " (?findDistanceToWall@dtNavMeshQuery@@QEBAIIPEBMMPEBVdtQueryFilter@@PEAM22@Z)
-DetourNavMeshQuery.obj : error LNK2019: unresolved external symbol "public: struct dtNode * __cdecl dtNodePool::getNode(unsigned int,unsigned char)" (?getNode@dtNodePool@@QEAAPEAUdtNode@@IE@Z) referenced in function "public: unsigned int __cdecl dtNavMeshQuery::findDistanceToWall(unsigned int,float const *,float,class dtQueryFilter const *,float *,float *,float *)const " (?findDistanceToWall@dtNavMeshQuery@@QEBAIIPEBMMPEBVdtQueryFilter@@PEAM22@Z)
-DetourNavMeshQuery.obj : error LNK2019: unresolved external symbol "public: unsigned int __cdecl dtNodePool::findNodes(unsigned int,struct dtNode * *,int)" (?findNodes@dtNodePool@@QEAAIIPEAPEAUdtNode@@H@Z) referenced in function "public: unsigned int __cdecl dtNavMeshQuery::finalizeSlicedFindPathPartial(unsigned int const *,int,unsigned int *,int *,int)" (?finalizeSlicedFindPathPartial@dtNavMeshQuery@@QEAAIPEBIHPEAIPEAHH@Z)
-DetourNavMeshQuery.obj : error LNK2019: unresolved external symbol "public: __cdecl dtNodeQueue::dtNodeQueue(int)" (??0dtNodeQueue@@QEAA@H@Z) referenced in function "public: unsigned int __cdecl dtNavMeshQuery::init(class dtNavMesh const *,int)" (?init@dtNavMeshQuery@@QEAAIPEBVdtNavMesh@@H@Z)
-DetourNavMeshQuery.obj : error LNK2019: unresolved external symbol "public: __cdecl dtNodeQueue::~dtNodeQueue(void)" (??1dtNodeQueue@@QEAA@XZ) referenced in function "public: void * __cdecl dtNodeQueue::`scalar deleting destructor'(unsigned int)" (??_GdtNodeQueue@@QEAAPEAXI@Z)
-DetourNavMeshQuery.obj : error LNK2019: unresolved external symbol "private: void __cdecl dtNodeQueue::bubbleUp(int,struct dtNode *)" (?bubbleUp@dtNodeQueue@@AEAAXHPEAUdtNode@@@Z) referenced in function "public: void __cdecl dtNodeQueue::modify(struct dtNode *)" (?modify@dtNodeQueue@@QEAAXPEAUdtNode@@@Z)
-DetourNavMeshQuery.obj : error LNK2019: unresolved external symbol "private: void __cdecl dtNodeQueue::trickleDown(int,struct dtNode *)" (?trickleDown@dtNodeQueue@@AEAAXHPEAUdtNode@@@Z) referenced in function "public: struct dtNode * __cdecl dtNodeQueue::pop(void)" (?pop@dtNodeQueue@@QEAAPEAUdtNode@@XZ)
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\x64\Debug\Idesign Engine.exe : fatal error LNK1120: 10 unresolved externals
+  Idesign Engine.vcxproj -> C:\Year 3\Idesign-Studio-Engine\Idesign Engine\x64\Debug\Idesign Engine.exe
+  'pwsh.exe' is not recognized as an internal or external command,
+  operable program or batch file.

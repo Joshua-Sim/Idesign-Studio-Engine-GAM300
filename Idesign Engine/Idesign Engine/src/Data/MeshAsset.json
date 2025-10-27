@@ -17,6 +17,15 @@
             "vbo": 5,
             "ebo": 6,
             "indexCount": 76662
+        },
+        {
+            "guid": "b2bf372c-8d6b-43c2-bee7-45c46f760e0f",
+            "name": "Castle OBJ",
+            "path": "Assets/Objects/Castle OBJ.obj",
+            "vao": 11,
+            "vbo": 17,
+            "ebo": 18,
+            "indexCount": 8946
         }
     ]
 }

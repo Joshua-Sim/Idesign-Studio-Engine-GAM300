@@ -17,7 +17,9 @@
 #include "Debugger.h"
 #include <ImguiManager.h>
 #include "SceneManager.h"
+#include "NavMeshSystem.h"
 #include "Imgui_Hierarchy.h"
+#include "NavMeshProperties.h"
 
 extern Framework::Coordinator ecsInterface;
 
@@ -420,6 +422,13 @@ namespace Framework {
                 {
                     std::string savePath = SaveFileDialog();
                     Framework::sceneManager.SaveScene(savePath);
+                }
+                if (ImGui::MenuItem("Build Navmesh"))
+                {
+                    auto navSystem = ecsInterface.GetSystem<NavMeshSystem>();
+                    if (navSystem)
+                        navSystem->BuildNavMesh();
+
                 }
                 ImGui::EndMenu();
             }
@@ -1566,6 +1575,90 @@ namespace Framework {
                             }
                         }
                     }
+
+                    //Navmesh property
+                    if (ImGui::CollapsingHeader("NavMesh Component", ImGuiTreeNodeFlags_DefaultOpen))
+                    {
+                        if (ecsInterface.HasComponent<NavMeshComponent>(selectedEntity))
+                        {
+                            auto& navComp = ecsInterface.GetComponent<NavMeshComponent>(selectedEntity);
+
+                            // Display source mesh selection
+                            std::vector<std::string> meshNames;
+                            std::vector<AssetHandle> meshGuids;
+
+                            for (const auto& [guid, entry] : AssetManager::Instance().GetAssets())
+                            {
+                                if (entry.typeName != TypeName<MeshProperties>::value)
+                                    continue;
+
+                                auto* mesh = static_cast<MeshProperties*>(entry.pObject.get());
+                                std::string label = mesh->path.empty() ? "Unnamed Mesh" : mesh->path;
+                                meshNames.push_back(label);
+                                meshGuids.push_back(guid);
+                            }
+
+                            std::vector<const char*> labelPtrs;
+                            for (const auto& name : meshNames)
+                                labelPtrs.push_back(name.c_str());
+
+                            int currentIndex = -1;
+                            for (size_t i = 0; i < meshGuids.size(); ++i)
+                            {
+                                if (meshGuids[i] == navComp.sourceMeshGUID)
+                                {
+                                    currentIndex = static_cast<int>(i);
+                                    break;
+                                }
+                            }
+
+                            ImGui::Separator();
+                            ImGui::Text("Source Mesh:");
+                            if (ImGui::Combo("NavMesh Source", &currentIndex, labelPtrs.data(), static_cast<int>(labelPtrs.size())))
+                            {
+                                navComp.sourceMeshGUID = meshGuids[currentIndex];
+                            }
+
+                            ImGui::Separator();
+                            ImGui::Checkbox("Is NavMesh Source", &navComp.isNavMeshSource);
+                            ImGui::Checkbox("Runtime Generated", &navComp.runtimeGenerated);
+
+                            ImGui::Separator();
+                            ImGui::Text("Recast Parameters:");
+                            ImGui::DragFloat("Agent Radius", &navComp.agentRadius, 0.01f, 0.1f, 5.0f);
+                            ImGui::DragFloat("Agent Height", &navComp.agentHeight, 0.01f, 0.1f, 5.0f);
+                            ImGui::DragFloat("Cell Size", &navComp.cellSize, 0.01f, 0.05f, 1.0f);
+                            ImGui::DragFloat("Cell Height", &navComp.cellHeight, 0.01f, 0.05f, 1.0f);
+                            ImGui::DragFloat("Max Slope", &navComp.maxSlope, 1.0f, 1.0f, 85.0f);
+
+                            // Optional runtime debug
+                            ImGui::Separator();
+                            ImGui::Text("Runtime Mesh Data:");
+                            ImGui::Text("Vertices: %zu", navComp.positions.size());
+                            ImGui::Text("Indices: %zu", navComp.indices.size());
+
+                            if (ImGui::Button("Clear Runtime Buffers"))
+                            {
+                                navComp.positions.clear();
+                                navComp.indices.clear();
+                            }
+
+                            if (ImGui::Button("Reset NavMesh Component"))
+                            {
+                                navComp = NavMeshComponent{};
+                            }
+                        }
+                        else
+                        {
+                            ImGui::Text("No NavMesh Component attached.");
+                            if (ImGui::Button("Add NavMesh Component"))
+                            {
+                                ecsInterface.AddComponent<NavMeshComponent>(selectedEntity, NavMeshComponent{});
+                            }
+                        }
+                    }
+
+
                     // Reset selectedEntity if the properties window is closed
                     if (!isPropertiesWindowOpen)
                     {

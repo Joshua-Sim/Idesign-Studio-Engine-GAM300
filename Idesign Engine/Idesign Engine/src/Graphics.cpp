@@ -53,6 +53,7 @@
 #include "ImguiManager.h"
 #include "Coordinator.h"
 #include "ComponentList.h"
+#include <NavMeshProperties.h>
 #include "FontSystem.h"
 
 extern Framework::FontSystem fontSystem;
@@ -142,6 +143,7 @@ namespace Framework {
         ecsInterface.RegisterComponent<MeshProperties>();
         ecsInterface.RegisterComponent<TextureProperties>();
         ecsInterface.RegisterComponent<TextProperties>();
+        ecsInterface.RegisterComponent<NavMeshComponent>();
 
         //  ---- ECS INITIALIZATION --- 
         Signature signature;
@@ -177,8 +179,11 @@ namespace Framework {
         textureComponent.path = "Assets/PNG/test.png";
         TextureLoader::loadTexture(textureComponent, true);
 
-
-
+        // Add NavMesh component to mark this as navmesh source
+        Framework::NavMeshComponent navMeshComp;
+        navMeshComp.isNavMeshSource = true;  // Mark this mesh as navmesh source
+        navMeshComp.sourceMeshGUID = meshComponent.guid;  // Optional: store reference
+        ecsInterface.AddComponent<Framework::NavMeshComponent>(newEntity, navMeshComp);
         ecsInterface.AddComponent<Framework::TextureProperties>(newEntity, textureComponent);
         // ----------------- End object creation ------------------------------
 

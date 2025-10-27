@@ -1,6 +1,8 @@
 
 #include <pch.h>
 #include <AssetCompiler.h>
+#include "NavMeshProperties.h"
+#include "MeshLoader.h"
 #include "SceneManager.h"
 
 extern Framework::Coordinator ecsInterface;
@@ -102,16 +104,25 @@ namespace Framework
                 ecsInterface.AddComponent(entity, hierarchy);
             }
 
-            // Mesh
             if (components.HasMember("MeshReference"))
             {
                 const auto& meshRef = components["MeshReference"];
                 if (meshRef.HasMember("guid") && meshRef["guid"].IsString())
                 {
                     std::string guid = meshRef["guid"].GetString();
-                    const MeshProperties* mesh = AssetManager::Instance().Get<MeshProperties>(guid);
+                    MeshProperties* mesh = AssetManager::Instance().Get<MeshProperties>(guid);
                     if (mesh)
                     {
+                        // Ensure it has valid mesh data (path may be missing if deserialized incorrectly)
+                        if (!mesh->path.empty())
+                        {
+                            MeshLoader::loadMesh(mesh->path, *mesh); // Re-load VAO/VBO/EBO etc.
+                        }
+                        else
+                        {
+                            std::cerr << "Mesh found in AssetManager but has empty path!\n";
+                        }
+
                         ecsInterface.AddComponent(entity, *mesh);
                     }
                     else
@@ -120,6 +131,7 @@ namespace Framework
                     }
                 }
             }
+
 
             // Texture
             if (components.HasMember("TextureComponent"))
@@ -138,6 +150,32 @@ namespace Framework
                         std::cerr << "Missing TextureProperties for GUID: " << guid << "\n";
                     }
                 }
+            }
+            
+            //Navmesh
+            if (components.HasMember("NavMeshComponent"))
+            {
+                const auto& navObj = components["NavMeshComponent"];
+                NavMeshComponent nav;
+
+                if (navObj.HasMember("sourceMeshGUID"))
+                    nav.sourceMeshGUID = navObj["sourceMeshGUID"].GetString();
+                if (navObj.HasMember("isNavMeshSource"))
+                    nav.isNavMeshSource = navObj["isNavMeshSource"].GetBool();
+                if (navObj.HasMember("runtimeGenerated"))
+                    nav.runtimeGenerated = navObj["runtimeGenerated"].GetBool();
+                if (navObj.HasMember("agentRadius"))
+                    nav.agentRadius = navObj["agentRadius"].GetFloat();
+                if (navObj.HasMember("agentHeight"))
+                    nav.agentHeight = navObj["agentHeight"].GetFloat();
+                if (navObj.HasMember("cellSize"))
+                    nav.cellSize = navObj["cellSize"].GetFloat();
+                if (navObj.HasMember("cellHeight"))
+                    nav.cellHeight = navObj["cellHeight"].GetFloat();
+                if (navObj.HasMember("maxSlope"))
+                    nav.maxSlope = navObj["maxSlope"].GetFloat();
+
+                ecsInterface.AddComponent(entity, nav);
             }
 
             sceneManager.RegisterEntityToScene(entity, cleanName);
@@ -220,6 +258,24 @@ namespace Framework
                 componentsObj.AddMember("TextureComponent", texRef, allocator);
             }
             // Add more components here...
+
+            // Navmesh Component
+            if (ecsInterface.HasComponent<NavMeshComponent>(entity))
+            {
+                const auto& nav = ecsInterface.GetComponent<NavMeshComponent>(entity);
+                rapidjson::Value navObj(rapidjson::kObjectType);
+
+                navObj.AddMember("sourceMeshGUID", rapidjson::Value(nav.sourceMeshGUID.c_str(), allocator), allocator);
+                navObj.AddMember("isNavMeshSource", nav.isNavMeshSource, allocator);
+                navObj.AddMember("runtimeGenerated", nav.runtimeGenerated, allocator);
+                navObj.AddMember("agentRadius", nav.agentRadius, allocator);
+                navObj.AddMember("agentHeight", nav.agentHeight, allocator);
+                navObj.AddMember("cellSize", nav.cellSize, allocator);
+                navObj.AddMember("cellHeight", nav.cellHeight, allocator);
+                navObj.AddMember("maxSlope", nav.maxSlope, allocator);
+
+                componentsObj.AddMember("NavMeshComponent", navObj, allocator);
+            }
 
             entityObj.AddMember("components", componentsObj, allocator);
             entitiesArray.PushBack(entityObj, allocator);
