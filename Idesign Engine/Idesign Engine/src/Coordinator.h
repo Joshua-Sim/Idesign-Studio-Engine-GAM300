@@ -237,7 +237,7 @@ namespace Framework {
 
 		void* GetRawComponent(Entity entity, const std::string& typeName)
 		{
-			std::cout << "Fetching component: " << typeName << std::endl;
+			//std::cout << "Fetching component: " << typeName << std::endl;
 
 			auto it = rawGetters.find(typeName);
 			if (it != rawGetters.end())

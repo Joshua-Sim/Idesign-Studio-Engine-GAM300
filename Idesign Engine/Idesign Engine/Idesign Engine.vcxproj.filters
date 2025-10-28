@@ -112,6 +112,18 @@
     <Filter Include="Resource Files\Descriptor">
       <UniqueIdentifier>{51e2f5be-f2bc-40ba-9c45-0bd43e2d0ac9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\NavMesh">
+      <UniqueIdentifier>{f75b5d51-672e-4026-a23f-750c12e6077b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\NavMesh">
+      <UniqueIdentifier>{b2f3d8f8-2f45-439b-b8ce-a40e0a7c6349}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\NavMesh\Libraries">
+      <UniqueIdentifier>{07316e22-59b6-4f34-b77a-ca925e0b7b6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\NavMesh\Libraries">
+      <UniqueIdentifier>{a333c985-4133-4d7e-a58f-fcb69e9d2159}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\rapidjson\allocators.h">
@@ -436,37 +448,49 @@
       <Filter>Header Files\Property</Filter>
     </ClInclude>
     <ClInclude Include="src\NavMeshProperties.h">
-      <Filter>Header Files\Assets\Property</Filter>
-    </ClInclude>
-    <ClInclude Include="src\NavMeshSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Recast\DetourCommon.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Recast\DetourMath.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Recast\DetourAssert.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Recast\RecastAlloc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Recast\RecastAssert.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Recast\DetourNode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Recast\DetourAlloc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Recast\DetourStatus.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Property</Filter>
     </ClInclude>
     <ClInclude Include="src\NavMeshAgentProperties.h">
-      <Filter>Header Files\Assets\Property</Filter>
+      <Filter>Header Files\Property</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Recast\Recast.h">
+      <Filter>Header Files\NavMesh\Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Recast\RecastAlloc.h">
+      <Filter>Header Files\NavMesh\Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Recast\RecastAssert.h">
+      <Filter>Header Files\NavMesh\Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Recast\DetourAlloc.h">
+      <Filter>Header Files\NavMesh\Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Recast\DetourAssert.h">
+      <Filter>Header Files\NavMesh\Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Recast\DetourCommon.h">
+      <Filter>Header Files\NavMesh\Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Recast\DetourMath.h">
+      <Filter>Header Files\NavMesh\Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Recast\DetourNavMesh.h">
+      <Filter>Header Files\NavMesh\Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Recast\DetourNavMeshBuilder.h">
+      <Filter>Header Files\NavMesh\Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Recast\DetourNavMeshQuery.h">
+      <Filter>Header Files\NavMesh\Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Recast\DetourNode.h">
+      <Filter>Header Files\NavMesh\Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Recast\DetourStatus.h">
+      <Filter>Header Files\NavMesh\Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NavMeshSystem.h">
+      <Filter>Header Files\NavMesh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -696,61 +720,61 @@
       <Filter>Source Files\AssetManager</Filter>
     </ClCompile>
     <ClCompile Include="src\NavMeshSystem.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\NavMesh</Filter>
     </ClCompile>
     <ClCompile Include="src\Recast\DetourAlloc.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Recast\DetourCommon.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Recast\DetourNavMesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Recast\DetourNavMeshBuilder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Recast\DetourNavMeshQuery.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Recast\Recast.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Recast\RecastAlloc.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Recast\RecastAssert.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\NavMesh\Libraries</Filter>
     </ClCompile>
     <ClCompile Include="src\Recast\DetourAssert.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\NavMesh\Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Recast\DetourCommon.cpp">
+      <Filter>Source Files\NavMesh\Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Recast\DetourNavMesh.cpp">
+      <Filter>Source Files\NavMesh\Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Recast\DetourNavMeshBuilder.cpp">
+      <Filter>Source Files\NavMesh\Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Recast\DetourNavMeshQuery.cpp">
+      <Filter>Source Files\NavMesh\Libraries</Filter>
     </ClCompile>
     <ClCompile Include="src\Recast\DetourNode.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\NavMesh\Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Recast\Recast.cpp">
+      <Filter>Source Files\NavMesh\Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Recast\RecastAlloc.cpp">
+      <Filter>Source Files\NavMesh\Libraries</Filter>
     </ClCompile>
     <ClCompile Include="src\Recast\RecastArea.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\NavMesh\Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Recast\RecastAssert.cpp">
+      <Filter>Source Files\NavMesh\Libraries</Filter>
     </ClCompile>
     <ClCompile Include="src\Recast\RecastContour.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\NavMesh\Libraries</Filter>
     </ClCompile>
     <ClCompile Include="src\Recast\RecastFilter.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\NavMesh\Libraries</Filter>
     </ClCompile>
     <ClCompile Include="src\Recast\RecastLayers.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\NavMesh\Libraries</Filter>
     </ClCompile>
     <ClCompile Include="src\Recast\RecastMesh.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\NavMesh\Libraries</Filter>
     </ClCompile>
     <ClCompile Include="src\Recast\RecastMeshDetail.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\NavMesh\Libraries</Filter>
     </ClCompile>
     <ClCompile Include="src\Recast\RecastRasterization.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\NavMesh\Libraries</Filter>
     </ClCompile>
     <ClCompile Include="src\Recast\RecastRegion.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\NavMesh\Libraries</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

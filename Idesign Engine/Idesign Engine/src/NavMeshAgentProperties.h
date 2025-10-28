@@ -46,7 +46,7 @@ namespace Framework
     };
 
     // Serialized properties (saved to JSON)
-    inline constexpr std::array g_NavMeshAgentPropsArray =
+    inline std::array g_NavMeshAgentPropsArray =
     {
         PROP_FLOAT(agentHeight, NavMeshAgentComponent),
         PROP_FLOAT(agentRadius, NavMeshAgentComponent),

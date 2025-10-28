@@ -14,7 +14,7 @@ namespace Framework
             // Push a unique ID for each property instance
             ImGui::PushID(reinterpret_cast<uintptr_t>(pObject));
             ImGui::PushID(prop.m_pName);
-            printf("Inspecting property [%d]: %s\n", propIndex, prop.m_pName);
+          //  printf("Inspecting property [%d]: %s\n", propIndex, prop.m_pName);
 
             if (prop.m_Flags & prop::HIDDEN)
             {
@@ -35,7 +35,7 @@ namespace Framework
             }
 
             bool readOnly = (prop.m_Flags & prop::READ_ONLY);
-            printf("  Calling getter for type %d...\n", prop.m_Type);
+          //  printf("  Calling getter for type %d...\n", prop.m_Type);
 
             switch (prop.m_Type)
             {
@@ -229,11 +229,11 @@ namespace Framework
             }
             ImGui::PopID(); // pop prop.m_pName
             ImGui::PopID(); // pop pObject
-            printf("  Finished rendering property [%d]\n", propIndex);
+          //  printf("  Finished rendering property [%d]\n", propIndex);
             ImGui::Separator();
             ++propIndex;
         }
-        printf("DrawInspector completed.\n");
+  //      printf("DrawInspector completed.\n");
     }
 
     void DrawEntityInspector(Entity entity, Coordinator& ecs)
