@@ -379,7 +379,7 @@ namespace Framework {
             meshShader.use();
             meshShader.setMat4("uProj", proj);
             meshShader.setMat4("uView", view);
-            meshShader.setVec3("uViewPos", camera.position);
+            meshShader.setVec3("uViewPos", cam.position);
 
             // ---- ECS draw loop ----
 
@@ -402,7 +402,7 @@ namespace Framework {
                     if (mesh.opacity < 1.0f)
                     {
                         auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
-                        float distance = glm::distance(tr.position, camera.position);
+                        float distance = glm::distance(tr.position, cam.position);
 
                         // Use .insert() for multimap
                         transparentEntities.insert({ distance, entityId });
