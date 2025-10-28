@@ -111,6 +111,7 @@ enum rcTimerLabel
 /// class through the Recast build process.
 /// 
 /// @ingroup recast
+
 class rcContext
 {
 public:

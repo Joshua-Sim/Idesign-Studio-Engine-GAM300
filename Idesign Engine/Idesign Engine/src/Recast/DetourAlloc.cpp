@@ -16,20 +16,36 @@
 // 3. This notice may not be removed or altered from any source distribution.
 //
 
-#include "DetourAssert.h"
+#include "pch.h"
+#include <stdlib.h>
+#include "DetourAlloc.h"
 
-#ifndef NDEBUG
-
-static dtAssertFailFunc* sAssertFailFunc = 0;
-
-void dtAssertFailSetCustom(dtAssertFailFunc *assertFailFunc)
+static void *dtAllocDefault(size_t size, dtAllocHint)
 {
-	sAssertFailFunc = assertFailFunc;
+	return malloc(size);
 }
 
-dtAssertFailFunc* dtAssertFailGetCustom()
+static void dtFreeDefault(void *ptr)
 {
-	return sAssertFailFunc;
+	free(ptr);
 }
 
-#endif
+static dtAllocFunc* sAllocFunc = dtAllocDefault;
+static dtFreeFunc* sFreeFunc = dtFreeDefault;
+
+void dtAllocSetCustom(dtAllocFunc *allocFunc, dtFreeFunc *freeFunc)
+{
+	sAllocFunc = allocFunc ? allocFunc : dtAllocDefault;
+	sFreeFunc = freeFunc ? freeFunc : dtFreeDefault;
+}
+
+void* dtAlloc(size_t size, dtAllocHint hint)
+{
+	return sAllocFunc(size, hint);
+}
+
+void dtFree(void* ptr)
+{
+	if (ptr)
+		sFreeFunc(ptr);
+}

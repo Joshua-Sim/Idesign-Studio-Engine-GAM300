@@ -17,7 +17,10 @@
 #include "Debugger.h"
 #include <ImguiManager.h>
 #include "SceneManager.h"
+#include "NavMeshAgentProperties.h"
+#include "NavMeshSystem.h"
 #include "Imgui_Hierarchy.h"
+#include "NavMeshProperties.h"
 
 extern Framework::Coordinator ecsInterface;
 
@@ -420,6 +423,166 @@ namespace Framework {
                 {
                     std::string savePath = SaveFileDialog();
                     Framework::sceneManager.SaveScene(savePath);
+                }
+                if (ImGui::MenuItem("Build Navmesh"))
+                {
+                    auto navSystem = ecsInterface.GetSystem<NavMeshSystem>();
+                    if (navSystem) {
+                        navSystem->BuildNavMesh();
+
+                        // Debug: Print some valid navmesh positions
+                        std::cout << "\n=== NAVMESH DEBUG INFO ===" << std::endl;
+
+                        // Test some positions to see which are on navmesh
+                        std::vector<glm::vec3> testPositions = {
+                            glm::vec3(0.0f, 1.0f, 0.0f),
+                            glm::vec3(0.0f, 1.0f, 1.5f),
+                            glm::vec3(-2.0f, 1.0f, 2.0f),
+                            glm::vec3(2.0f, 1.0f, 2.0f),
+                            glm::vec3(0.0f, 1.0f, 3.0f),
+                            glm::vec3(-3.0f, 1.0f, 2.5f),
+                        };
+
+                        std::cout << "Testing positions to find valid navmesh points:" << std::endl;
+                        for (const auto& pos : testPositions) {
+                            glm::vec3 snapped = navSystem->GetNearestPointOnNavmesh(pos);
+                            float distance = glm::distance(pos, snapped);
+
+                            if (distance < 0.5f) { // Close enough = probably on navmesh
+                                std::cout << "  ✓ VALID: (" << pos.x << ", " << pos.y << ", " << pos.z
+                                    << ") → snapped to (" << snapped.x << ", " << snapped.y << ", " << snapped.z
+                                    << ") [dist: " << distance << "]" << std::endl;
+                            }
+                            else {
+                                std::cout << "  ✗ NOT ON NAVMESH: (" << pos.x << ", " << pos.y << ", " << pos.z
+                                    << ") → nearest (" << snapped.x << ", " << snapped.y << ", " << snapped.z
+                                    << ") [dist: " << distance << "]" << std::endl;
+                            }
+                        }
+                        std::cout << "=========================\n" << std::endl;
+                    }
+                }
+
+                if (ImGui::MenuItem("Agent Go"))
+                {
+                    auto navSystem = ecsInterface.GetSystem<NavMeshSystem>();
+                    if (navSystem) {
+                        const auto& allEntities = ecsInterface.GetEntities();
+                        if (allEntities.size() > 1) {
+                            Entity agentEntity = allEntities[1]; // Get agent entity
+
+                            // Check if entity has agent component
+                            if (!ecsInterface.HasComponent<NavMeshAgentComponent>(agentEntity)) {
+                                std::cerr << "Entity " << agentEntity << " is not an agent!" << std::endl;
+                                return;
+                            }
+
+                            std::cout << "\n=== AGENT PATHFINDING ===" << std::endl;
+
+                            // Get agent's current position
+                            auto& transform = ecsInterface.GetComponent<TransformComponent>(agentEntity);
+                            glm::vec3 startPos = transform.position;
+                            std::cout << "Agent current position: (" << startPos.x << ", "
+                                << startPos.y << ", " << startPos.z << ")" << std::endl;
+
+                            // SNAP agent to navmesh
+                            glm::vec3 snappedStart = navSystem->GetNearestPointOnNavmesh(startPos);
+                            float startDist = glm::distance(startPos, snappedStart);
+                            std::cout << "  → Snapped to: (" << snappedStart.x << ", "
+                                << snappedStart.y << ", " << snappedStart.z
+                                << ") [distance: " << startDist << "]" << std::endl;
+
+                            if (startDist > 5.0f) {
+                                std::cerr << "  ⚠ WARNING: Agent too far from navmesh! Placing on navmesh..." << std::endl;
+                            }
+
+                            // Update agent position to snapped position
+                            transform.position = snappedStart;
+
+                            // SNAP destination to navmesh
+                            glm::vec3 destination(-3.0f, 1.0f, 2.5f);
+                            std::cout << "Target destination: (" << destination.x << ", "
+                                << destination.y << ", " << destination.z << ")" << std::endl;
+
+                            glm::vec3 snappedDest = navSystem->GetNearestPointOnNavmesh(destination);
+                            float destDist = glm::distance(destination, snappedDest);
+                            std::cout << "  → Snapped to: (" << snappedDest.x << ", "
+                                << snappedDest.y << ", " << snappedDest.z
+                                << ") [distance: " << destDist << "]" << std::endl;
+
+                            if (destDist > 5.0f) {
+                                std::cerr << "  ⚠ WARNING: Destination too far from navmesh! Using nearest point..." << std::endl;
+                            }
+
+                            // Set agent destination with snapped positions
+                            std::cout << "Finding path..." << std::endl;
+                            navSystem->SetAgentDestination(agentEntity, snappedDest);
+                            std::cout << "=========================\n" << std::endl;
+                        }
+                        else {
+                            std::cerr << "Not enough entities! Need at least 2 entities." << std::endl;
+                        }
+                    }
+                }
+
+                if (ImGui::MenuItem("Snap Agent to Navmesh"))
+                {
+                    auto navSystem = ecsInterface.GetSystem<NavMeshSystem>();
+                    if (navSystem) {
+                        const auto& allEntities = ecsInterface.GetEntities();
+                        if (allEntities.size() > 1) {
+                            Entity agentEntity = allEntities[1];
+
+                            if (ecsInterface.HasComponent<TransformComponent>(agentEntity)) {
+                                auto& transform = ecsInterface.GetComponent<TransformComponent>(agentEntity);
+                                glm::vec3 oldPos = transform.position;
+                                glm::vec3 newPos = navSystem->GetNearestPointOnNavmesh(oldPos);
+                                transform.position = newPos;
+
+                                std::cout << "Agent snapped: (" << oldPos.x << ", " << oldPos.y << ", " << oldPos.z
+                                    << ") → (" << newPos.x << ", " << newPos.y << ", " << newPos.z << ")" << std::endl;
+                            }
+                        }
+                    }
+                }
+
+                if (ImGui::MenuItem("Debug Navmesh Info"))
+                {
+                    auto navSystem = ecsInterface.GetSystem<NavMeshSystem>();
+                    if (navSystem) {
+                        navSystem->PrintNavMeshInfo();
+                    }
+                }
+
+                if (ImGui::MenuItem("Get Random Navmesh Point"))
+                {
+                    auto navSystem = ecsInterface.GetSystem<NavMeshSystem>();
+                    if (navSystem) {
+                        // Try a bunch of random points to find one on the navmesh
+                        std::cout << "Searching for random valid navmesh points..." << std::endl;
+
+                        int foundCount = 0;
+                        for (int i = 0; i < 20 && foundCount < 5; ++i) {
+                            glm::vec3 randomPos(
+                                ((rand() % 100) / 100.0f - 0.5f) * 10.0f,  // X: -5 to 5
+                                1.0f,                                         // Y: 1.0
+                                ((rand() % 100) / 100.0f - 0.5f) * 10.0f   // Z: -5 to 5
+                            );
+
+                            glm::vec3 snapped = navSystem->GetNearestPointOnNavmesh(randomPos);
+                            float dist = glm::distance(randomPos, snapped);
+
+                            if (dist < 2.0f) {
+                                std::cout << "  ✓ Valid point found: (" << snapped.x << ", "
+                                    << snapped.y << ", " << snapped.z << ")" << std::endl;
+                                foundCount++;
+                            }
+                        }
+
+                        if (foundCount == 0) {
+                            std::cout << "  No valid points found. Navmesh might be very small." << std::endl;
+                        }
+                    }
                 }
                 ImGui::EndMenu();
             }
@@ -1502,6 +1665,88 @@ namespace Framework {
                     }
 
                     DrawEntityInspector(selectedEntity, ecsInterface);
+                    //Navmesh property
+                    if (ImGui::CollapsingHeader("NavMesh Component", ImGuiTreeNodeFlags_DefaultOpen))
+                    {
+                        if (ecsInterface.HasComponent<NavMeshComponent>(selectedEntity))
+                        {
+                            auto& navComp = ecsInterface.GetComponent<NavMeshComponent>(selectedEntity);
+
+                            // Display source mesh selection
+                            std::vector<std::string> meshNames;
+                            std::vector<AssetHandle> meshGuids;
+
+                            for (const auto& [guid, entry] : AssetManager::Instance().GetAssets())
+                            {
+                                if (entry.typeName != TypeName<MeshProperties>::value)
+                                    continue;
+
+                                auto* mesh = static_cast<MeshProperties*>(entry.pObject.get());
+                                std::string label = mesh->path.empty() ? "Unnamed Mesh" : mesh->path;
+                                meshNames.push_back(label);
+                                meshGuids.push_back(guid);
+                            }
+
+                            std::vector<const char*> labelPtrs;
+                            for (const auto& name : meshNames)
+                                labelPtrs.push_back(name.c_str());
+
+                            int currentIndex = -1;
+                            for (size_t i = 0; i < meshGuids.size(); ++i)
+                            {
+                                if (meshGuids[i] == navComp.sourceMeshGUID)
+                                {
+                                    currentIndex = static_cast<int>(i);
+                                    break;
+                                }
+                            }
+
+                            ImGui::Separator();
+                            ImGui::Text("Source Mesh:");
+                            if (ImGui::Combo("NavMesh Source", &currentIndex, labelPtrs.data(), static_cast<int>(labelPtrs.size())))
+                            {
+                                navComp.sourceMeshGUID = meshGuids[currentIndex];
+                            }
+
+                            ImGui::Separator();
+                            ImGui::Checkbox("Is NavMesh Source", &navComp.isNavMeshSource);
+                            ImGui::Checkbox("Runtime Generated", &navComp.runtimeGenerated);
+
+                            ImGui::Separator();
+                            ImGui::Text("Recast Parameters:");
+                            ImGui::DragFloat("Agent Radius", &navComp.agentRadius, 0.01f, 0.1f, 5.0f);
+                            ImGui::DragFloat("Agent Height", &navComp.agentHeight, 0.01f, 0.1f, 5.0f);
+                            ImGui::DragFloat("Cell Size", &navComp.cellSize, 0.01f, 0.05f, 1.0f);
+                            ImGui::DragFloat("Cell Height", &navComp.cellHeight, 0.01f, 0.05f, 1.0f);
+                            ImGui::DragFloat("Max Slope", &navComp.maxSlope, 1.0f, 1.0f, 85.0f);
+
+                            // Optional runtime debug
+                            ImGui::Separator();
+                            ImGui::Text("Runtime Mesh Data:");
+                            ImGui::Text("Vertices: %zu", navComp.positions.size());
+                            ImGui::Text("Indices: %zu", navComp.indices.size());
+
+                            if (ImGui::Button("Clear Runtime Buffers"))
+                            {
+                                navComp.positions.clear();
+                                navComp.indices.clear();
+                            }
+
+                            if (ImGui::Button("Reset NavMesh Component"))
+                            {
+                                navComp = NavMeshComponent{};
+                            }
+                        }
+                        else
+                        {
+                            ImGui::Text("No NavMesh Component attached.");
+                            if (ImGui::Button("Add NavMesh Component"))
+                            {
+                                ecsInterface.AddComponent<NavMeshComponent>(selectedEntity, NavMeshComponent{});
+                            }
+                        }
+                    }
+
 
                     // Reset selectedEntity if the properties window is closed
                     if (!isPropertiesWindowOpen)

@@ -219,6 +219,13 @@ namespace Framework {
 		Entity GetEntityByGUID(const std::string& guid) const;
 
 		void SetEntityGUID(Entity entity, const std::string& guid);
+		
+		// System retreival
+		template<typename T>
+		std::shared_ptr<T> GetSystem()
+		{
+			return mSystemManager->GetSystem<T>();
+		}
 
 		// Edwin's Stuff (For Auto Generate Entity Inspector)
 		using RawGetter = std::function<void* (Entity)>;

@@ -16,20 +16,23 @@
 // 3. This notice may not be removed or altered from any source distribution.
 //
 
-#include "RecastAssert.h"
+#include "pch.h"
+#include "DetourAssert.h"
+
+
 
 #ifndef NDEBUG
 
-static rcAssertFailFunc* sRecastAssertFailFunc = 0;
+static dtAssertFailFunc* sAssertFailFunc = 0;
 
-void rcAssertFailSetCustom(rcAssertFailFunc* assertFailFunc)
+void dtAssertFailSetCustom(dtAssertFailFunc *assertFailFunc)
 {
-	sRecastAssertFailFunc = assertFailFunc;
+	sAssertFailFunc = assertFailFunc;
 }
 
-rcAssertFailFunc* rcAssertFailGetCustom()
+dtAssertFailFunc* dtAssertFailGetCustom()
 {
-	return sRecastAssertFailFunc;
+	return sAssertFailFunc;
 }
 
 #endif
