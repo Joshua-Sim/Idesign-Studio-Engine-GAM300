@@ -379,17 +379,52 @@ namespace Framework {
             meshShader.use();
             meshShader.setMat4("uProj", proj);
             meshShader.setMat4("uView", view);
+            meshShader.setVec3("uViewPos", camera.position);
 
             // ---- ECS draw loop ----
 
         // --- highlight selected entity (picked last frame) ---
             int sel = lastPickedId; // cache once per frame
-            const glm::vec3 kNormalAlbedo(1.0f, 1.0f, 1.0f);
             const glm::vec3 kHighlightAlbedo(1.0f, 0.85f, 0.3f);
+
+
+            // --- TRANSPARENCY SORTING ---
+            std::vector<Entity> opaqueEntities;
+
+            // Use std::multimap to allow multiple objects at the same distance
+            std::multimap<float, Entity> transparentEntities;
+
+            for (auto const& entityId : mEntities)
+            {
+                if (ecsInterface.HasComponent<MeshProperties>(entityId))
+                {
+                    auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
+                    if (mesh.opacity < 1.0f)
+                    {
+                        auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
+                        float distance = glm::distance(tr.position, camera.position);
+
+                        // Use .insert() for multimap
+                        transparentEntities.insert({ distance, entityId });
+                    }
+                    else
+                    {
+                        opaqueEntities.push_back(entityId);
+                    }
+                }
+            }
             //JAY
             // ---- ECS draw loop ----
-            for (auto const& entityId : mEntities) {
+            // --- 1. OPAQUE PASS ---
+            // Draw all opaque objects first.
+            // Normal depth testing, blending OFF.
+            glDisable(GL_BLEND);
+            glDepthMask(GL_TRUE); // Enable writing to the depth buffer
+
+            for (auto const& entityId : opaqueEntities)
+            {
                 auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
+                auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
 
                 glm::mat4 model(1.0f);
                 model = glm::translate(model, tr.position);
@@ -398,27 +433,30 @@ namespace Framework {
                 model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
                 model = glm::scale(model, tr.scale);
 
-                // Text (optional)
+                // Text 
                 if (ecsInterface.HasComponent<TextProperties>(entityId)) {
                     auto& txt = ecsInterface.GetComponent<TextProperties>(entityId);
                     fontSystem.RenderText3D(txt.text, model, view, proj, txt.scale, txt.color);
                 }
 
-                // Mesh (optional)
+                // Mesh 
                 if (ecsInterface.HasComponent<MeshProperties>(entityId)) {
                     auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
 
                     if (mesh.debugShape == DebugShapeType::None) {
                         meshShader.use();
-                        meshShader.setMat4("uProj", proj);
-                        meshShader.setMat4("uView", view);
                         meshShader.setMat4("uModel", model);
 
                         const bool isSelected = (int)entityId == sel;
-                        meshShader.setVec3("uAlbedo", isSelected ? kHighlightAlbedo : kNormalAlbedo);
-                        LightComponent::upload(meshShader, sun, hasSun, pointLights, spotLights);
+                        glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : mesh.albedo;
+                        meshShader.setVec3("uAlbedo", finalAlbedo);
 
                         glActiveTexture(GL_TEXTURE0);
+
+                        meshShader.setVec3("uMaterial.ambient", mesh.ambient);
+                        meshShader.setVec3("uMaterial.specular", mesh.specular);
+                        meshShader.setFloat("uMaterial.shininess", mesh.shininess);
+                        meshShader.setFloat("uMaterial.opacity", mesh.opacity); 
                         meshShader.setInt("uTexture", 0);
                         if (ecsInterface.HasComponent<TextureProperties>(entityId)) {
                             auto& tex = ecsInterface.GetComponent<TextureProperties>(entityId);
@@ -428,6 +466,7 @@ namespace Framework {
                             glBindTexture(GL_TEXTURE_2D, 0);
                         }
 
+                        LightComponent::upload(meshShader, sun, hasSun, pointLights, spotLights);
                         glBindVertexArray(mesh.vao);
                         glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
                     }
@@ -441,15 +480,75 @@ namespace Framework {
 
 
             }
+            glDepthMask(GL_TRUE); // Re-enable depth writing
+            glDisable(GL_BLEND); // Disable blending
+         
+            // --- 2. TRANSPARENT PASS ---
+            // Draw all transparent objects second, sorted back-to-front.
+            // Depth testing ON, depth writing OFF, blending ON.
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Standard alpha blending
+            glDepthMask(GL_FALSE); // Disable writing to the depth buffer
+            glCullFace(GL_BACK);   // Use standard culling
 
-            // drawing of 5 objects (primitives)
-            for (int i = 0; i < 5; ++i) 
+            // Iterate std::multimap in reverse to get back-to-front order
+            for (auto it = transparentEntities.rbegin(); it != transparentEntities.rend(); ++it)
             {
+                auto const& entityId = it->second;
+
+                auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
+                auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
+
+                // Calculate model matrix
                 glm::mat4 model(1.0f);
-                model = glm::translate(model, glm::vec3((i - 2) * 1.7f, 0.0f, 0.0f));
-                meshShader.setMat4("uModel", model);
-                cylinder.draw(); //change line to whichever you want to test : 1. cube 2. cylinder 3. plane 4.cone follow by .draw();
+                model = glm::translate(model, tr.position);
+                model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
+                model = glm::rotate(model, glm::radians(tr.rotation.y), { 0,1,0 });
+                model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
+                model = glm::scale(model, tr.scale);
+
+                // Draw Transparent Mesh
+                if (mesh.debugShape == DebugShapeType::None)
+                {
+                    meshShader.use();
+                    meshShader.setMat4("uModel", model);
+
+                    // Set uniforms
+                    const bool isSelected = (int)entityId == sel;
+                    glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : mesh.albedo;
+                    meshShader.setVec3("uAlbedo", finalAlbedo);
+
+                    meshShader.setVec3("uMaterial.ambient", mesh.ambient);
+                    meshShader.setVec3("uMaterial.specular", mesh.specular);
+                    meshShader.setFloat("uMaterial.shininess", mesh.shininess);
+                    meshShader.setFloat("uMaterial.opacity", mesh.opacity); // This will be < 1.0
+
+                    LightComponent::upload(meshShader, sun, hasSun, pointLights, spotLights);
+
+                    // Bind texture
+                    glActiveTexture(GL_TEXTURE0);
+                    meshShader.setInt("uTexture", 0);
+                    if (ecsInterface.HasComponent<TextureProperties>(entityId)) {
+                        auto& tex = ecsInterface.GetComponent<TextureProperties>(entityId);
+                        glBindTexture(GL_TEXTURE_2D, tex.textureID);
+                    }
+                    else {
+                        glBindTexture(GL_TEXTURE_2D, 0);
+                    }
+
+                    // --- Standard 1-Pass Draw Call ---
+                    glBindVertexArray(mesh.vao);
+                    glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
+                }
+                // (Debug shapes are not drawn transparently in this logic)
             }
+
+            // --- 3. CLEANUP STATE ---
+            // Reset state for subsequent passes (picking, bloom, UI, etc.)
+            glDepthMask(GL_TRUE); // Re-enable depth writing
+            glDisable(GL_BLEND); // Disable blending
+            glCullFace(GL_BACK); // Restore default culling state
+
             // object pick
             //jay
             //render color-IDs into offscreen (double-buffered)
@@ -497,7 +596,6 @@ namespace Framework {
                 
             }
 
-            // (Optional) give your 5 primitives fixed IDs and draw them here too if you want them pickable.
 
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
