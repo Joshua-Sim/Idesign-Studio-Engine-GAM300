@@ -8,18 +8,23 @@ namespace Framework
     bool loadAudio(AudioProperties& audioProps) 
     {
         // Load sound using your Audio system
-        FMOD::Sound* sound = GlobalAudio.UE_LoadSound(audioProps.name);
-        if (!sound) 
+        FMOD::Studio::EventDescription* eventDesc = GlobalAudio.UE_LoadEvent(audioProps.name);
+        if (!eventDesc)
         {
             std::cerr << "Failed to load sound: " << audioProps.name << std::endl;
             return false;
         }
 
         // Get duration in milliseconds
-        unsigned int lengthMs = 0;
-        if (sound->getLength(&lengthMs, FMOD_TIMEUNIT_MS) == FMOD_OK) 
+        int lengthMs = 0;
+        FMOD_RESULT res = eventDesc->getLength(&lengthMs);
+        if (res == FMOD_OK && lengthMs > 0)
         {
-            audioProps.duration = lengthMs / 1000.0f; // Convert to seconds
+            audioProps.duration = static_cast<float>(lengthMs) / 1000.0f; // Convert to seconds
+        }
+        else
+        {
+            audioProps.duration = 0.0f;
         }
         return true;
     }

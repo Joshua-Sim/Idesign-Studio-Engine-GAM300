@@ -72,7 +72,7 @@ int main(void)
     AssetManager::Instance().LoadBinaryArray<AudioProperties>("src/Data/AudioAsset.bin", g_AudioPropertiesProps,
         [](AudioProperties& props)
         {
-            GlobalAudio.UE_LoadSound(props.name);
+            GlobalAudio.UE_LoadEvent(props.name);
         });
     //AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, "src/Data/AudioAsset.json", "AudioProperties");
     //GlobalAudio.UE_PlaySound("winloop");
