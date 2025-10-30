@@ -35,7 +35,7 @@ namespace Framework
             DOUBLE,
             LONG,
             SHORT,
-            STRING, STRING_DROPDOWN,
+            STRING, STRING_DROPDOWN, ASSET_DROPDOWN,
             CHAR,
             BOOL,
             VEC3,

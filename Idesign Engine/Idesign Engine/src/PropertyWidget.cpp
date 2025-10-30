@@ -14,7 +14,7 @@ namespace Framework
             // Push a unique ID for each property instance
             ImGui::PushID(reinterpret_cast<uintptr_t>(pObject));
             ImGui::PushID(prop.m_pName);
-            printf("Inspecting property [%d]: %s\n", propIndex, prop.m_pName);
+            //printf("Inspecting property [%d]: %s\n", propIndex, prop.m_pName);
 
             if (prop.m_Flags & prop::HIDDEN)
             {
@@ -35,7 +35,7 @@ namespace Framework
             }
 
             bool readOnly = (prop.m_Flags & prop::READ_ONLY);
-            printf("  Calling getter for type %d...\n", prop.m_Type);
+            //printf("  Calling getter for type %d...\n", prop.m_Type);
 
             switch (prop.m_Type)
             {
@@ -229,11 +229,11 @@ namespace Framework
             }
             ImGui::PopID(); // pop prop.m_pName
             ImGui::PopID(); // pop pObject
-            printf("  Finished rendering property [%d]\n", propIndex);
+            //printf("  Finished rendering property [%d]\n", propIndex);
             ImGui::Separator();
             ++propIndex;
         }
-        printf("DrawInspector completed.\n");
+        //printf("DrawInspector completed.\n");
     }
 
     void DrawEntityInspector(Entity entity, Coordinator& ecs)
@@ -244,15 +244,40 @@ namespace Framework
             if (!propList || !propList->m_pName || propList->m_Props.empty())
                 continue;
 
-            // Try to get the component from ECS
-            void* componentPtr = ecs.GetRawComponent(entity, propList->m_pName);
-            if (!componentPtr)
+            // Skip unwanted types
+            if (std::string(propList->m_pName) == "WindowConfig")
                 continue;
 
-            // Draw collapsible section for this component
-            if (ImGui::CollapsingHeader(propList->m_pName, ImGuiTreeNodeFlags_DefaultOpen))
+            // Try to get the component from ECS
+            void* componentPtr = ecs.GetRawComponent(entity, propList->m_pName);
+
+            if (componentPtr)
             {
-                DrawInspector(componentPtr, *propList);
+                // Draw collapsible section for this component
+                if (ImGui::CollapsingHeader(propList->m_pName, ImGuiTreeNodeFlags_DefaultOpen))
+                {
+                    if (std::string(propList->m_pName) == "TextureProperties")
+                    {
+                        auto& tex = ecs.GetComponent<TextureProperties>(entity);
+                        DrawAssetDropdown<TextureProperties>("Select Texture", tex.guid);
+                    }
+
+                    DrawInspector(componentPtr, *propList);
+                    if (ImGui::Button(std::string("Remove ").append(propList->m_pName).c_str()))
+                    {
+                        auto* remover = TypeRegistry::Instance().GetRemover(propList->m_pName);
+                        if (remover) (*remover)(ecs, entity);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                if (ImGui::Button(std::string("Add ").append(propList->m_pName).c_str()))
+                {
+                    auto* adder = TypeRegistry::Instance().GetAdder(propList->m_pName);
+                    if (adder) (*adder)(ecs, entity);
+                }
             }
         }
     }
@@ -261,8 +286,7 @@ namespace Framework
     {
         TypeRegistry::Instance().Register<TextureProperties>("TextureProperties");
         TypeRegistry::Instance().Register<MeshProperties>("MeshProperties");
-        // Audio Component not registered with ECS yet, so cant use below function
-        //TypeRegistry::Instance().Register<AudioProperties>("AudioProperties");
+        TypeRegistry::Instance().Register<AudioProperties>("AudioProperties");
         TypeRegistry::Instance().Register<TextProperties>("TextProperties");
         TypeRegistry::Instance().Register<TransformComponent>("TransformComponent");
     }

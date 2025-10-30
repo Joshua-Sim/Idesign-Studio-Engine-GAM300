@@ -1491,16 +1491,6 @@ namespace Framework {
                         }
                     }
 
-                    if (ecsInterface.HasComponent<TextProperties>(selectedEntity)) {}
-                    else
-                    {
-                        ImGui::Text("No TextComponent attached.");
-                        if (ImGui::Button("Add Text Component"))
-                        {
-                            ecsInterface.AddComponent<TextProperties>(selectedEntity, TextProperties{});
-                        }
-                    }
-
                     DrawEntityInspector(selectedEntity, ecsInterface);
 
                     // Reset selectedEntity if the properties window is closed

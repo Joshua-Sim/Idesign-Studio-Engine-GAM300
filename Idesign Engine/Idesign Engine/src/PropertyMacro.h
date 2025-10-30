@@ -153,7 +153,43 @@ PROPERTY_END(WindowConfig, WindowConfigProps)
 #define PROP_ASSETHANDLE_READONLY(field, type) \
     PROP_ASSETHANDLE_FLAGS(field, type, Framework::prop::READ_ONLY)
 
+#define PROP_TEXTURE_DROPDOWN(field, type) \
+    Framework::prop( \
+        #field, \
+        Framework::prop::STRING_DROPDOWN, \
+        [](void* obj, const void* data) { static_cast<type*>(obj)->field = *static_cast<const AssetHandle*>(data); }, \
+        [](const void* obj, void* data) { *static_cast<AssetHandle*>(data) = static_cast<const type*>(obj)->field; }, \
+        {}, {}, false, nullptr, nullptr, 0, Framework::prop::NONE, \
+        []() -> std::vector<std::string> { \
+            std::vector<std::string> names; \
+            for (const auto& [guid, entry] : AssetManager::Instance().GetAssets()) { \
+                if (entry.typeName != TypeName<type>::value) continue; \
+                auto* tex = static_cast<type*>(entry.pObject.get()); \
+                std::string label = tex->name.empty() ? tex->path : tex->name; \
+                names.push_back(label); \
+            } \
+            return names; \
+        } \
+    )
 
+#define PROP_ASSET_DROPDOWN(field, type) \
+    Framework::prop( \
+        #field, \
+        Framework::prop::ASSET_DROPDOWN, \
+        [](void* obj, const void* data) { static_cast<type*>(obj)->field = *static_cast<const AssetHandle*>(data); }, \
+        [](const void* obj, void* data) { *static_cast<AssetHandle*>(data) = static_cast<const type*>(obj)->field; }, \
+        {}, {}, false, nullptr, nullptr, 0, Framework::prop::NONE, \
+        []() -> std::vector<std::string> { \
+            std::vector<std::string> names; \
+            for (const auto& [guid, entry] : AssetManager::Instance().GetAssets()) { \
+                if (entry.typeName != TypeName<type>::value) continue; \
+                auto* tex = static_cast<type*>(entry.pObject.get()); \
+                std::string label = tex->name.empty() ? tex->path : tex->name; \
+                names.push_back(label); \
+            } \
+            return names; \
+        } \
+    )
 
 
 // CHAR PROPERTY MACRO
@@ -215,13 +251,6 @@ struct TypeName;
 //------------------------------------------------------------------------------------------------------------------------------------
 //  ECS COMPONENT MACRO
 //------------------------------------------------------------------------------------------------------------------------------------
-
-#define REGISTER_COMPONENT_WITH_PROPS(ComponentType, PropListRef) \
-    ComponentManager::Instance().RegisterComponent<ComponentType>(PropListRef)
-
-#define REGISTER_COMPONENT_AUTO(ComponentType) \
-    ComponentManager::Instance().RegisterComponent<ComponentType>(&Framework::g_##ComponentType##Props)
-
 #define PROP_VEC3(field, type) \
     Framework::prop{ #field, Framework::prop::VEC3, \
         [](void* pObj, const void* pData) { \

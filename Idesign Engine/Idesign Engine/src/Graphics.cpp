@@ -145,6 +145,7 @@ namespace Framework {
         ecsInterface.RegisterComponent<MeshProperties>();
         ecsInterface.RegisterComponent<TextureProperties>();
         ecsInterface.RegisterComponent<TextProperties>();
+        ecsInterface.RegisterComponent<AudioProperties>();
 
         //  ---- ECS INITIALIZATION --- 
         Signature signature;
