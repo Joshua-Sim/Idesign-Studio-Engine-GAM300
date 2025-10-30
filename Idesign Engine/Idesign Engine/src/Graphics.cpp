@@ -114,7 +114,7 @@ namespace Framework {
         meshShader.destroy();
         blurShader.destroy();
         finalShader.destroy();
-
+        skinnedShader.destroy();
         // Finally, destroy GLFW window + terminate GLFW
         if (window) {
             glfwDestroyWindow(window);
@@ -145,7 +145,6 @@ namespace Framework {
         ecsInterface.RegisterComponent<MeshProperties>();
         ecsInterface.RegisterComponent<TextureProperties>();
         ecsInterface.RegisterComponent<TextProperties>();
-
         //  ---- ECS INITIALIZATION --- 
         Signature signature;
         signature.set(ecsInterface.GetComponentType<TransformComponent>()); //Set mEntities to be populated with MeshComponent for now
@@ -225,12 +224,14 @@ namespace Framework {
         finalShader.initGL();
         terrain.initGL();
         debugShader.initGL();
+
         //initialise geometry objects
         cube.initGL();
         plane.initGL();
         cone.initGL();
         //cylinder.initGL();
         triangle.initGL();
+        skinnedShader.initGL();
         //FONT SYSTEM
 
         fontSystem.Initialize();
@@ -439,20 +440,36 @@ namespace Framework {
                     auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
 
                     if (mesh.debugShape == DebugShapeType::None) {
-                        meshShader.use();
-                        meshShader.setMat4("uModel", model);
+                        
+                        //choose shader
+                        bool isSkinned = ecsInterface.HasComponent<AnimationComponent>(entityId);
+                        ShaderProgram& currentshader = isSkinned ? skinnedShader : meshShader;
+
+                        currentshader.use();
+                        currentshader.setMat4("uModel", model);
+
+                        if (isSkinned) {
+                           
+                            auto& animator = ecsInterface.GetComponent<AnimationProperties>(entityId);
+                            for (size_t i = 0; i < animator.finalBoneMatrices.size(); ++i)
+                            {
+                                // Ensure uniform name matches shader exactly
+                                currentshader.setMat4(("uBoneMatrices[" + std::to_string(i) + "]").c_str(), animator.finalBoneMatrices[i]);
+                            }
+                        }
 
                         const bool isSelected = (int)entityId == sel;
                         glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : mesh.albedo;
-                        meshShader.setVec3("uAlbedo", finalAlbedo);
+                        currentshader.setVec3("uAlbedo", finalAlbedo);
 
                         glActiveTexture(GL_TEXTURE0);
 
-                        meshShader.setVec3("uMaterial.ambient", mesh.ambient);
-                        meshShader.setVec3("uMaterial.specular", mesh.specular);
-                        meshShader.setFloat("uMaterial.shininess", mesh.shininess);
-                        meshShader.setFloat("uMaterial.opacity", mesh.opacity); 
-                        meshShader.setInt("uTexture", 0);
+                        currentshader.setVec3("uMaterial.ambient", mesh.ambient);
+                        currentshader.setVec3("uMaterial.specular", mesh.specular);
+                        currentshader.setFloat("uMaterial.shininess", mesh.shininess);
+                        currentshader.setFloat("uMaterial.opacity", mesh.opacity);
+                        currentshader.setInt("uTexture", 0);
+
                         if (ecsInterface.HasComponent<TextureProperties>(entityId)) {
                             auto& tex = ecsInterface.GetComponent<TextureProperties>(entityId);
                             glBindTexture(GL_TEXTURE_2D, tex.textureID);
@@ -505,24 +522,38 @@ namespace Framework {
                 // Draw Transparent Mesh
                 if (mesh.debugShape == DebugShapeType::None)
                 {
-                    meshShader.use();
-                    meshShader.setMat4("uModel", model);
+                    // --- Choose Shader ---
+                    bool isSkinned = ecsInterface.HasComponent<AnimationProperties>(entityId);
+                    ShaderProgram& currentShader = isSkinned ? skinnedShader : meshShader;
+                    currentShader.use();
 
-                    // Set uniforms
+                    // --- Set Common Uniforms ---
+                    // Proj, View, ViewPos already set outside loop for both shaders
+                    currentShader.setMat4("uModel", model);
+
+                    // --- Upload Bones (if skinned) ---
+                    if (isSkinned)
+                    {
+                        auto& animator = ecsInterface.GetComponent<AnimationProperties>(entityId);
+                        for (size_t i = 0; i < animator.finalBoneMatrices.size(); ++i)
+                        {
+                            currentShader.setMat4(("uBoneMatrices[" + std::to_string(i) + "]").c_str(), animator.finalBoneMatrices[i]);
+                        }
+                    }
+
+                    // --- Upload Materials ---
                     const bool isSelected = (int)entityId == sel;
                     glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : mesh.albedo;
-                    meshShader.setVec3("uAlbedo", finalAlbedo);
+                    currentShader.setVec3("uAlbedo", finalAlbedo);
 
-                    meshShader.setVec3("uMaterial.ambient", mesh.ambient);
-                    meshShader.setVec3("uMaterial.specular", mesh.specular);
-                    meshShader.setFloat("uMaterial.shininess", mesh.shininess);
-                    meshShader.setFloat("uMaterial.opacity", mesh.opacity); // This will be < 1.0
+                    currentShader.setVec3("uMaterial.ambient", mesh.ambient);
+                    currentShader.setVec3("uMaterial.specular", mesh.specular);
+                    currentShader.setFloat("uMaterial.shininess", mesh.shininess);
+                    currentShader.setFloat("uMaterial.opacity", mesh.opacity); // Will be < 1.0
 
-                    LightComponent::upload(meshShader, sun, hasSun, pointLights, spotLights);
-
-                    // Bind texture
+                    // --- Bind Texture ---
                     glActiveTexture(GL_TEXTURE0);
-                    meshShader.setInt("uTexture", 0);
+                    currentShader.setInt("uTexture", 0);
                     if (ecsInterface.HasComponent<TextureProperties>(entityId)) {
                         auto& tex = ecsInterface.GetComponent<TextureProperties>(entityId);
                         glBindTexture(GL_TEXTURE_2D, tex.textureID);
@@ -531,12 +562,13 @@ namespace Framework {
                         glBindTexture(GL_TEXTURE_2D, 0);
                     }
 
-                    // --- Standard 1-Pass Draw Call ---
+                    // --- Upload Lights & Draw ---
+                    LightComponent::upload(currentShader, sun, hasSun, pointLights, spotLights);
                     glBindVertexArray(mesh.vao);
                     glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
+
                 }
-                // (Debug shapes are not drawn transparently in this logic)
-            }
+            } // End Transparent Lo
 
             // --- 3. CLEANUP STATE ---
             // Reset state for subsequent passes (picking, bloom, UI, etc.)

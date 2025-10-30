@@ -1,19 +1,109 @@
-﻿  Graphics.cpp
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(396,27): warning C4458: declaration of 'mesh' hides class member
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(101,24): message : see declaration of 'Framework::Graphics::mesh'
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(422,23): warning C4458: declaration of 'mesh' hides class member
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(101,24): message : see declaration of 'Framework::Graphics::mesh'
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(439,27): warning C4456: declaration of 'mesh' hides previous local declaration
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(422,23): message : see declaration of 'mesh'
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(457,35): warning C4458: declaration of 'tex' hides class member
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(102,16): message : see declaration of 'Framework::Graphics::tex'
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(495,23): warning C4458: declaration of 'mesh' hides class member
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(101,24): message : see declaration of 'Framework::Graphics::mesh'
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(527,31): warning C4458: declaration of 'tex' hides class member
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(102,16): message : see declaration of 'Framework::Graphics::tex'
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(352,19): warning C4189: 'aspect': local variable is initialized but not referenced
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(337,19): warning C4189: 'dt': local variable is initialized but not referenced
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(422,23): warning C4189: 'mesh': local variable is initialized but not referenced
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(888,40): warning C4458: declaration of 'mesh' hides class member
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(101,24): message : see declaration of 'Framework::Graphics::mesh'
+﻿  imgui.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\minwindef.h(130,1): warning C4005: 'APIENTRY': macro redefinition
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\glfw-3.4.bin.WIN64\include\GLFW\glfw3.h(123,1): message : see previous definition of 'APIENTRY'
+  imgui_demo.cpp
+  imgui_draw.cpp
+  imgui_impl_glfw.cpp
+  imgui_impl_opengl3.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\minwindef.h(130,1): warning C4005: 'APIENTRY': macro redefinition
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\glfw-3.4.bin.WIN64\include\GLFW\glfw3.h(123,1): message : see previous definition of 'APIENTRY'
+  imgui_tables.cpp
+  imgui_widgets.cpp
+  AnimationSystem.cpp
+  AssetCompiler.cpp
+  AssetManager.cpp
+  Audio.cpp
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Audio.cpp(370,24): warning C4458: declaration of 'nextChannelId' hides class member
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Audio.h(532,13): message : see declaration of 'Framework::Audio::nextChannelId'
+  AudioLoader.cpp
+  ButtonSystem.cpp
+  Collision.cpp
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Collision.cpp(376,15): warning C4459: declaration of 'dt' hides global declaration
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Collision.cpp(22,7): message : see declaration of 'dt'
+  ComponentManager.cpp
+  Coordinator.cpp
+  Core.cpp
+  Debugger.cpp
+  DummySystem.cpp
+  EngineState.cpp
+  Generating Code...
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Coordinator.cpp(309): warning C4702: unreachable code
+  Compiling...
+  EntityManager.cpp
+  FontSystem.cpp
+  Graphics.cpp
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(397,27): warning C4458: declaration of 'mesh' hides class member
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(100,24): message : see declaration of 'Framework::Graphics::mesh'
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(423,23): warning C4458: declaration of 'mesh' hides class member
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(100,24): message : see declaration of 'Framework::Graphics::mesh'
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(440,27): warning C4456: declaration of 'mesh' hides previous local declaration
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(423,23): message : see declaration of 'mesh'
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(474,35): warning C4458: declaration of 'tex' hides class member
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(101,16): message : see declaration of 'Framework::Graphics::tex'
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(512,23): warning C4458: declaration of 'mesh' hides class member
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(100,24): message : see declaration of 'Framework::Graphics::mesh'
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(558,31): warning C4458: declaration of 'tex' hides class member
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(101,16): message : see declaration of 'Framework::Graphics::tex'
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(353,19): warning C4189: 'aspect': local variable is initialized but not referenced
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(338,19): warning C4189: 'dt': local variable is initialized but not referenced
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(423,23): warning C4189: 'mesh': local variable is initialized but not referenced
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(920,40): warning C4458: declaration of 'mesh' hides class member
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(100,24): message : see declaration of 'Framework::Graphics::mesh'
+  GraphicsShader.cpp
+  ImguiManager.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\minwindef.h(130,1): warning C4005: 'APIENTRY': macro redefinition
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\glfw-3.4.bin.WIN64\include\GLFW\glfw3.h(123,1): message : see previous definition of 'APIENTRY'
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(174,25): warning C4459: declaration of 'filePath' hides global declaration
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(38,24): message : see declaration of 'Framework::filePath'
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(186,33): warning C4456: declaration of 'finalPath' hides previous local declaration
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(169,21): message : see declaration of 'finalPath'
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(187,33): warning C4456: declaration of 'error' hides previous local declaration
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(170,21): message : see declaration of 'error'
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(344,37): warning C4100: 'deltaTime': unreferenced formal parameter
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(434,44): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(605,44): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(761,44): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(818,41): warning C4456: declaration of 'nameBuffer' hides previous local declaration
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(784,25): message : see declaration of 'nameBuffer'
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(819,42): warning C4456: declaration of 'volumeBuffer' hides previous local declaration
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(787,26): message : see declaration of 'volumeBuffer'
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(830,80): warning C4566: character represented by universal-character-name '\U0001F3A7' cannot be represented in the current code page (1252)
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(974,48): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1121,48): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\algorithm(3446,24): warning C4244: '=': conversion from 'int' to 'char', possible loss of data
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(176,18): message : see reference to function template instantiation '_OutIt std::transform<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,int(__cdecl *)(int)>(const _InIt,const _InIt,_OutIt,_Fn)' being compiled
+          with
+          [
+              _OutIt=std::_String_iterator<std::_String_val<std::_Simple_types<char>>>,
+              _Elem=char,
+              _InIt=std::_String_iterator<std::_String_val<std::_Simple_types<char>>>,
+              _Fn=int (__cdecl *)(int)
+          ]
+  InputHandler.cpp
+  Lighting.cpp
+  Matrix3x3.cpp
+  Mesh.cpp
+  MeshLoader.cpp
+  MessageSystem.cpp
+  SceneManager.cpp
+  ScriptingSystem.cpp
+  ShaderProgram.cpp
+  SignalHandler.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\minwindef.h(130,1): warning C4005: 'APIENTRY': macro redefinition
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\glfw-3.4.bin.WIN64\include\GLFW\glfw3.h(123,1): message : see previous definition of 'APIENTRY'
+  TagManager.cpp
+  Terrain.cpp
+  TestSystem.cpp
+  TextureLoader.cpp
+  UndoRedoSystem.cpp
+  Generating Code...
+  Compiling...
+  Vector2D.cpp
+  main.cpp
+  Generating Code...
+  LINK : C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe not found or not built by the last incremental link; performing full link
+pch.obj : warning LNK4099: PDB '' was not found with 'pch.obj' or at ''; linking object as if no debug info
+glew32s.lib(glew.obj) : warning LNK4099: PDB '' was not found with 'glew32s.lib(glew.obj)' or at ''; linking object as if no debug info
+LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
   Idesign Engine.vcxproj -> C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe

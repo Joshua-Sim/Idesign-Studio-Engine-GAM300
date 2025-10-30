@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -130,7 +130,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib\glfw-3.4.bin.WIN64\lib-vc2022;$(SolutionDir)Idesign Engine;$(SolutionDir)Idesign Engine\src;$(SolutionDir)lib\glew\lib\Release\x64;$(SolutionDir)lib\glew\lib\Debug\x64;$(SolutionDir)Idesign Engine\x64\Debug;$(SolutionDir)Idesign Engine\x64\Release;$(SolutionDir)lib\freetype;$(SolutionDir)lib\FMOD_CORE\lib\x64;$(SolutionDir)lib\FMOD_STUDIO\lib\x64;$(SolutionDir)\Idesign Engine\x64\Debug;$(SolutionDir)lib\installed\x64-windows\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\glfw-3.4.bin.WIN64\lib-vc2022;$(SolutionDir)Idesign Engine;$(SolutionDir)Idesign Engine\src;$(SolutionDir)lib\glew\lib\Release\x64;$(SolutionDir)lib\glew\lib\Debug\x64;$(SolutionDir)Idesign Engine\x64\Debug;$(SolutionDir)Idesign Engine\x64\Release;$(SolutionDir)lib\freetype;$(SolutionDir)lib\FMOD_CORE\lib\x64;$(SolutionDir)lib\FMOD_STUDIO\lib\x64;$(SolutionDir)\Idesign Engine\x64\Debug;$(SolutionDir)lib\installed\x64-windows\lib;</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;user32.lib;gdi32.lib;shell32.lib;%(AdditionalDependencies);glew32s.lib;freetype.lib;fmod_vc.lib;fmodL_vc.lib;glfw3.lib;assimp-vc143-mt.lib;glew32.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -143,6 +143,9 @@
     <ClInclude Include="..\lib\imgui\imstb_rectpack.h" />
     <ClInclude Include="..\lib\imgui\imstb_textedit.h" />
     <ClInclude Include="..\lib\imgui\imstb_truetype.h" />
+    <ClInclude Include="src\Animation.h" />
+    <ClInclude Include="src\AnimationProperties.h" />
+    <ClInclude Include="src\AnimationSystem.h" />
     <ClInclude Include="src\AssetCompiler.h" />
     <ClInclude Include="src\AssetHandler.h" />
     <ClInclude Include="src\AssetLoader.h" />
@@ -262,6 +265,7 @@
     <None Include="SceneMenuSample.json" />
     <None Include="SceneWithEnemies.json" />
     <None Include="SceneWithOscilators.json" />
+    <None Include="SkinnedVert.glsl" />
     <None Include="Test Scene Save.json" />
   </ItemGroup>
   <ItemGroup>
@@ -272,6 +276,7 @@
     <ClCompile Include="..\lib\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="..\lib\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\lib\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="src\AnimationSystem.cpp" />
     <ClCompile Include="src\AssetCompiler.cpp" />
     <ClCompile Include="src\AssetManager.cpp" />
     <ClCompile Include="src\Audio.cpp" />
