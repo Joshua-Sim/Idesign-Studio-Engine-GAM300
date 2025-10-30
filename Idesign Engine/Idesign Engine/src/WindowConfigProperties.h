@@ -18,21 +18,21 @@ namespace Framework
 {
     struct WindowConfig
     {
-        AssetHandle guid;
+        std::string guid;
         int x = 0;
         int y = 0;
         std::string programName;
     };
 
-    inline const std::vector g_WindowConfigPropsArray =
+    inline constexpr std::array g_WindowConfigPropsArray =
     {
-        PROP_ASSETHANDLE_READONLY(guid, WindowConfig),
+        PROP_STRING(guid, WindowConfig),
         PROP_INT(x, WindowConfig),
         PROP_INT(y, WindowConfig),
         PROP_STRING(programName, WindowConfig),
     };
 
-    inline const prop_list g_WindowConfigProps{ "WindowConfig", g_WindowConfigPropsArray };
+    inline constexpr prop_list g_WindowConfigProps{ "WindowConfig", g_WindowConfigPropsArray };
     inline global_registration g_WindowConfigReg(&g_WindowConfigProps);
 }
 #endif // !_WINDOW_CONFIG_PROPERTIES_H_

@@ -17,10 +17,7 @@
 #include "Debugger.h"
 #include <ImguiManager.h>
 #include "SceneManager.h"
-#include "NavMeshAgentProperties.h"
-#include "NavMeshSystem.h"
 #include "Imgui_Hierarchy.h"
-#include "NavMeshProperties.h"
 
 extern Framework::Coordinator ecsInterface;
 
@@ -201,7 +198,7 @@ namespace Framework {
                                 &g_TexturePropertiesProps,
                                 finalPath
                             );
-                        AssetManager::Instance().SaveArrayToJson(TypeName<TextureProperties>::value, "Assets/JSON/TextureAsset.json", "textures");
+                        AssetManager::Instance().SaveArrayToJson(TypeName<TextureProperties>::value, "src/Data/TextureAsset.json", "textures");
                         std::cout << "Texture added: " << fileName << " to " << finalPath << std::endl;
                     }
                     else
@@ -236,7 +233,7 @@ namespace Framework {
                             &g_AudioPropertiesProps,
                             finalPath
                         );
-                        AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, "Assets/JSON/AudioAsset.json", "AudioProperties");
+                        AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, "src/Data/AudioAsset.json", "AudioProperties");
                         std::cout << "Audio added: " << fileName << " to " << finalPath << std::endl;
                     }
                     else
@@ -272,7 +269,7 @@ namespace Framework {
                             &g_MeshProps,
                             finalPath
                         );
-                        AssetManager::Instance().SaveArrayToJson(TypeName<MeshProperties>::value, "Assets/JSON/MeshAsset.json", "mesh");
+                        AssetManager::Instance().SaveArrayToJson(TypeName<MeshProperties>::value, "src/Data/MeshAsset.json", "mesh");
                         std::cout << "Mesh added: " << fileName << " to " << finalPath << std::endl;
                     }
                     else
@@ -424,166 +421,6 @@ namespace Framework {
                     std::string savePath = SaveFileDialog();
                     Framework::sceneManager.SaveScene(savePath);
                 }
-                if (ImGui::MenuItem("Build Navmesh"))
-                {
-                    auto navSystem = ecsInterface.GetSystem<NavMeshSystem>();
-                    if (navSystem) {
-                        navSystem->BuildNavMesh();
-
-                        // Debug: Print some valid navmesh positions
-                        std::cout << "\n=== NAVMESH DEBUG INFO ===" << std::endl;
-
-                        // Test some positions to see which are on navmesh
-                        std::vector<glm::vec3> testPositions = {
-                            glm::vec3(0.0f, 1.0f, 0.0f),
-                            glm::vec3(0.0f, 1.0f, 1.5f),
-                            glm::vec3(-2.0f, 1.0f, 2.0f),
-                            glm::vec3(2.0f, 1.0f, 2.0f),
-                            glm::vec3(0.0f, 1.0f, 3.0f),
-                            glm::vec3(-3.0f, 1.0f, 2.5f),
-                        };
-
-                        std::cout << "Testing positions to find valid navmesh points:" << std::endl;
-                        for (const auto& pos : testPositions) {
-                            glm::vec3 snapped = navSystem->GetNearestPointOnNavmesh(pos);
-                            float distance = glm::distance(pos, snapped);
-
-                            if (distance < 0.5f) { // Close enough = probably on navmesh
-                                std::cout << "  ✓ VALID: (" << pos.x << ", " << pos.y << ", " << pos.z
-                                    << ") → snapped to (" << snapped.x << ", " << snapped.y << ", " << snapped.z
-                                    << ") [dist: " << distance << "]" << std::endl;
-                            }
-                            else {
-                                std::cout << "  ✗ NOT ON NAVMESH: (" << pos.x << ", " << pos.y << ", " << pos.z
-                                    << ") → nearest (" << snapped.x << ", " << snapped.y << ", " << snapped.z
-                                    << ") [dist: " << distance << "]" << std::endl;
-                            }
-                        }
-                        std::cout << "=========================\n" << std::endl;
-                    }
-                }
-
-                if (ImGui::MenuItem("Agent Go"))
-                {
-                    auto navSystem = ecsInterface.GetSystem<NavMeshSystem>();
-                    if (navSystem) {
-                        const auto& allEntities = ecsInterface.GetEntities();
-                        if (allEntities.size() > 1) {
-                            Entity agentEntity = allEntities[1]; // Get agent entity
-
-                            // Check if entity has agent component
-                            if (!ecsInterface.HasComponent<NavMeshAgentComponent>(agentEntity)) {
-                                std::cerr << "Entity " << agentEntity << " is not an agent!" << std::endl;
-                                return;
-                            }
-
-                            std::cout << "\n=== AGENT PATHFINDING ===" << std::endl;
-
-                            // Get agent's current position
-                            auto& transform = ecsInterface.GetComponent<TransformComponent>(agentEntity);
-                            glm::vec3 startPos = transform.position;
-                            std::cout << "Agent current position: (" << startPos.x << ", "
-                                << startPos.y << ", " << startPos.z << ")" << std::endl;
-
-                            // SNAP agent to navmesh
-                            glm::vec3 snappedStart = navSystem->GetNearestPointOnNavmesh(startPos);
-                            float startDist = glm::distance(startPos, snappedStart);
-                            std::cout << "  → Snapped to: (" << snappedStart.x << ", "
-                                << snappedStart.y << ", " << snappedStart.z
-                                << ") [distance: " << startDist << "]" << std::endl;
-
-                            if (startDist > 5.0f) {
-                                std::cerr << "  ⚠ WARNING: Agent too far from navmesh! Placing on navmesh..." << std::endl;
-                            }
-
-                            // Update agent position to snapped position
-                            transform.position = snappedStart;
-
-                            // SNAP destination to navmesh
-                            glm::vec3 destination(-3.0f, 1.0f, 2.5f);
-                            std::cout << "Target destination: (" << destination.x << ", "
-                                << destination.y << ", " << destination.z << ")" << std::endl;
-
-                            glm::vec3 snappedDest = navSystem->GetNearestPointOnNavmesh(destination);
-                            float destDist = glm::distance(destination, snappedDest);
-                            std::cout << "  → Snapped to: (" << snappedDest.x << ", "
-                                << snappedDest.y << ", " << snappedDest.z
-                                << ") [distance: " << destDist << "]" << std::endl;
-
-                            if (destDist > 5.0f) {
-                                std::cerr << "  ⚠ WARNING: Destination too far from navmesh! Using nearest point..." << std::endl;
-                            }
-
-                            // Set agent destination with snapped positions
-                            std::cout << "Finding path..." << std::endl;
-                            navSystem->SetAgentDestination(agentEntity, snappedDest);
-                            std::cout << "=========================\n" << std::endl;
-                        }
-                        else {
-                            std::cerr << "Not enough entities! Need at least 2 entities." << std::endl;
-                        }
-                    }
-                }
-
-                if (ImGui::MenuItem("Snap Agent to Navmesh"))
-                {
-                    auto navSystem = ecsInterface.GetSystem<NavMeshSystem>();
-                    if (navSystem) {
-                        const auto& allEntities = ecsInterface.GetEntities();
-                        if (allEntities.size() > 1) {
-                            Entity agentEntity = allEntities[1];
-
-                            if (ecsInterface.HasComponent<TransformComponent>(agentEntity)) {
-                                auto& transform = ecsInterface.GetComponent<TransformComponent>(agentEntity);
-                                glm::vec3 oldPos = transform.position;
-                                glm::vec3 newPos = navSystem->GetNearestPointOnNavmesh(oldPos);
-                                transform.position = newPos;
-
-                                std::cout << "Agent snapped: (" << oldPos.x << ", " << oldPos.y << ", " << oldPos.z
-                                    << ") → (" << newPos.x << ", " << newPos.y << ", " << newPos.z << ")" << std::endl;
-                            }
-                        }
-                    }
-                }
-
-                if (ImGui::MenuItem("Debug Navmesh Info"))
-                {
-                    auto navSystem = ecsInterface.GetSystem<NavMeshSystem>();
-                    if (navSystem) {
-                        navSystem->PrintNavMeshInfo();
-                    }
-                }
-
-                if (ImGui::MenuItem("Get Random Navmesh Point"))
-                {
-                    auto navSystem = ecsInterface.GetSystem<NavMeshSystem>();
-                    if (navSystem) {
-                        // Try a bunch of random points to find one on the navmesh
-                        std::cout << "Searching for random valid navmesh points..." << std::endl;
-
-                        int foundCount = 0;
-                        for (int i = 0; i < 20 && foundCount < 5; ++i) {
-                            glm::vec3 randomPos(
-                                ((rand() % 100) / 100.0f - 0.5f) * 10.0f,  // X: -5 to 5
-                                1.0f,                                         // Y: 1.0
-                                ((rand() % 100) / 100.0f - 0.5f) * 10.0f   // Z: -5 to 5
-                            );
-
-                            glm::vec3 snapped = navSystem->GetNearestPointOnNavmesh(randomPos);
-                            float dist = glm::distance(randomPos, snapped);
-
-                            if (dist < 2.0f) {
-                                std::cout << "  ✓ Valid point found: (" << snapped.x << ", "
-                                    << snapped.y << ", " << snapped.z << ")" << std::endl;
-                                foundCount++;
-                            }
-                        }
-
-                        if (foundCount == 0) {
-                            std::cout << "  No valid points found. Navmesh might be very small." << std::endl;
-                        }
-                    }
-                }
                 ImGui::EndMenu();
             }
             ImGui::EndMenuBar();
@@ -634,7 +471,7 @@ namespace Framework {
 
                 std::string modalId = "EditMeshModal_" + mesh->guid;
 
-                ImGui::PushID(mesh->guid.id.c_str());
+                ImGui::PushID(mesh->guid.c_str());
                 ImGui::BeginGroup();
 
                 // Centered placeholder image
@@ -705,7 +542,7 @@ namespace Framework {
                     ImGui::SameLine(0, spacing);
                     if (ImGui::Button("Delete", ImVec2(buttonWidth, 0)))
                     {
-                        meshesToDelete.push_back(mesh->guid.id.c_str());
+                        meshesToDelete.push_back(mesh->guid);
                         initialized = false;
                         ImGui::CloseCurrentPopup();
                     }
@@ -726,7 +563,7 @@ namespace Framework {
                     ImGui::BeginTooltip();
                     ImGui::Text("Name: %s", mesh->name.c_str());
                     ImGui::Text("Path: %s", mesh->path.c_str());
-                    ImGui::Text("GUID: %s", mesh->guid.id.c_str());
+                    ImGui::Text("GUID: %s", mesh->guid.c_str());
                     ImGui::Text("VAO: %u", mesh->vao);
                     ImGui::Text("VBO: %u", mesh->vbo);
                     ImGui::Text("EBO: %u", mesh->ebo);
@@ -805,7 +642,7 @@ namespace Framework {
                 ImTextureID imguiTextureID = (ImTextureID)(intptr_t)tex->textureID;
                 std::string modalId = "EditModal_" + tex->guid;
 
-                ImGui::PushID(tex->guid.id.c_str());
+                ImGui::PushID(tex->guid.c_str());
                 ImGui::BeginGroup();
 
                 // Display texture
@@ -819,9 +656,9 @@ namespace Framework {
                 if (ImGui::BeginPopupModal(modalId.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
                 {
                     static std::unordered_map<std::string, char[256]> renameBuffers;
-                    if (renameBuffers.find(tex->guid.id.c_str()) == renameBuffers.end())
+                    if (renameBuffers.find(tex->guid) == renameBuffers.end())
                     {
-                        std::snprintf(renameBuffers[tex->guid.id.c_str()], sizeof(renameBuffers[tex->guid.id.c_str()]), "%s", tex->name.c_str());
+                        std::snprintf(renameBuffers[tex->guid], sizeof(renameBuffers[tex->guid]), "%s", tex->name.c_str());
                     }
 
                     ImGui::TextColored(ImVec4(0.9f, 0.7f, 0.2f, 1.0f), "Texture Options");
@@ -831,7 +668,7 @@ namespace Framework {
 
                     ImGui::Text("Rename Texture:");
                     ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
-                    ImGui::InputText("##Rename", renameBuffers[tex->guid.id.c_str()], IM_ARRAYSIZE(renameBuffers[tex->guid.id.c_str()]));
+                    ImGui::InputText("##Rename", renameBuffers[tex->guid], IM_ARRAYSIZE(renameBuffers[tex->guid]));
 
                     ImGui::Spacing();
                     ImGui::Separator();
@@ -846,10 +683,11 @@ namespace Framework {
 
                     if (ImGui::Button("Apply", ImVec2(buttonWidth, 0)))
                     {
-                        std::string newName = renameBuffers[tex->guid.id.c_str()];
+                        std::string newName = renameBuffers[tex->guid];
                         if (newName != tex->name)
                         {
                             tex->name = newName;
+                            AssetManager::Instance().MarkDirty(tex->guid);
                         }
                         ImGui::CloseCurrentPopup();
                     }
@@ -857,7 +695,7 @@ namespace Framework {
                     ImGui::SameLine(0, spacing);
                     if (ImGui::Button("Delete", ImVec2(buttonWidth, 0)))
                     {
-                        texturesToDelete.push_back(tex->guid.id.c_str());
+                        texturesToDelete.push_back(tex->guid);
                         ImGui::CloseCurrentPopup();
                     }
 
@@ -875,7 +713,7 @@ namespace Framework {
                     ImGui::BeginTooltip();
                     ImGui::Text("Name: %s", tex->name.c_str());
                     ImGui::Text("Path: %s", tex->path.c_str());
-                    ImGui::Text("GUID: %s", tex->guid.id.c_str());
+                    ImGui::Text("GUID: %s", tex->guid.c_str());
                     ImGui::Text("Size: %d x %d", tex->width, tex->height);
                     ImGui::EndTooltip();
                 }
@@ -1040,7 +878,7 @@ namespace Framework {
                             ImGui::SameLine(0, spacing);
                             if (ImGui::Button("Delete", ImVec2(buttonWidth, 0)))
                             {
-                                audioToDelete.push_back(audioProps->guid.id.c_str());
+                                audioToDelete.push_back(audioProps->guid);
                                 initialized = false;
                                 ImGui::CloseCurrentPopup();
                             }
@@ -1057,7 +895,7 @@ namespace Framework {
                         if (ImGui::IsItemHovered())
                         {
                             ImGui::BeginTooltip();
-                            ImGui::Text("GUID: %s", audioProps->guid.id.c_str());
+                            ImGui::Text("GUID: %s", audioProps->guid.c_str());
                             ImGui::Text("File: %s", audioProps->path.c_str());
                             ImGui::Text("Volume: %.2f", audioProps->volume);
                             ImGui::Text("Mode: %s", audioProps->mode.c_str());
@@ -1071,14 +909,13 @@ namespace Framework {
                     ImGui::Text("Duration: %.2f sec", audioProps->duration);
 
                     // Play/Stop buttons
-                    if (ImGui::Button(("Play##" + audioProps->guid.id).c_str()))
+                    if (ImGui::Button(("Play##" + audioProps->guid).c_str()))
                     {
                         GlobalAudio.UE_PlaySound(audioProps->name);
                         audioProps->isPlaying = true;
                     }
-
                     ImGui::SameLine();
-                    if (ImGui::Button(("Stop##" + audioProps->guid.id).c_str()))
+                    if (ImGui::Button(("Stop##" + audioProps->guid).c_str()))
                     {
                         GlobalAudio.Reset();
                         audioProps->isPlaying = false;
@@ -1087,7 +924,7 @@ namespace Framework {
 
                     // Volume slider
                     float volume = audioProps->volume;
-                    if (ImGui::SliderFloat(("Volume##" + audioProps->guid.id).c_str(), &volume, 0.0f, 1.0f))
+                    if (ImGui::SliderFloat(("Volume##" + audioProps->guid).c_str(), &volume, 0.0f, 1.0f))
                     {
                         audioProps->volume = std::clamp(volume, 0.0f, 1.0f);
                         GlobalAudio.UE_SetVolume(audioProps->name, audioProps->volume);
@@ -1472,6 +1309,8 @@ namespace Framework {
                 }
                 else
                 {
+                    TransformComponent& transformComponent = ecsInterface.GetComponent<TransformComponent>(selectedEntity);
+
                     ImGui::Begin("Entity Properties", &isPropertiesWindowOpen);
                     if (ImGui::CollapsingHeader("Name", ImGuiTreeNodeFlags_DefaultOpen))
                     {
@@ -1487,6 +1326,18 @@ namespace Framework {
                         }
                     }
 
+                    if (ImGui::CollapsingHeader("Transform Component", ImGuiTreeNodeFlags_DefaultOpen))
+                    {
+                        // Translation
+                        ImGui::InputFloat3("Translation", glm::value_ptr(transformComponent.position));
+
+                        // Rotation
+                        ImGui::InputFloat3("Rotation", glm::value_ptr(transformComponent.rotation));
+
+                        // Scale
+                        ImGui::InputFloat3("Scale", glm::value_ptr(transformComponent.scale));
+                    }
+
                     // Show combo box for adding components
                     static int selectedComponentIndex = -1;
                     std::vector<std::string> availableComponents;
@@ -1499,6 +1350,36 @@ namespace Framework {
                             availableComponents.push_back(ecsInterface.GetComponentNames()[i]);
                         }
                     }
+
+                    //// Show the combo box with available components
+                    //if (ImGui::BeginCombo("Choose Component", selectedComponentIndex >= 0 ? availableComponents[selectedComponentIndex].c_str() : "Select Component"))
+                    //{
+                    //    for (int i = 0; i < availableComponents.size(); ++i)
+                    //    {
+                    //        bool isSelected = (selectedComponentIndex == i);
+                    //        if (ImGui::Selectable(availableComponents[i].c_str(), isSelected))
+                    //        {
+                    //            selectedComponentIndex = i;
+                    //        }
+                    //        if (isSelected)
+                    //        {
+                    //            ImGui::SetItemDefaultFocus();
+                    //        }
+                    //    }
+                    //    ImGui::EndCombo();
+                    //}
+
+                    //// Add button to attach the selected component to the entity
+                    //if (selectedComponentIndex >= 0 && ImGui::Button("Add Component"))
+                    //{
+                    //    std::string selectedComponentName = availableComponents[selectedComponentIndex];
+
+                    //    // Add the selected component to the entity
+                    //    ecsInterface.AddComponentToEntity(selectedEntity, selectedComponentName);
+
+                    //    // Reset the combo box selection and clear out selectedComponentIndex to update available components
+                    //    selectedComponentIndex = -1;
+                    //}
 
                     if (ImGui::CollapsingHeader("Mesh Component", ImGuiTreeNodeFlags_DefaultOpen))
                     {
@@ -1655,7 +1536,7 @@ namespace Framework {
                             }
 
                             // Display metadata
-                            ImGui::Text("GUID: %s", currentTexture.guid.id.c_str());
+                            ImGui::Text("GUID: %s", currentTexture.guid.c_str());
                             ImGui::Text("Texture ID: %u", currentTexture.textureID);
                             ImGui::Text("Size: %d x %d", currentTexture.width, currentTexture.height);
 
@@ -1682,100 +1563,37 @@ namespace Framework {
                         }
                     }
 
-                    if (ecsInterface.HasComponent<TextProperties>(selectedEntity)) {}
-                    else
+                    if (ImGui::CollapsingHeader("Text Component", ImGuiTreeNodeFlags_DefaultOpen))
                     {
-                        ImGui::Text("No TextComponent attached.");
-                        if (ImGui::Button("Add Text Component"))
+                        if (ecsInterface.HasComponent<TextProperties>(selectedEntity))
                         {
-                            ecsInterface.AddComponent<TextProperties>(selectedEntity, TextProperties{});
-                        }
-                    }
+                            auto& textComponent = ecsInterface.GetComponent<TextProperties>(selectedEntity);
 
-                    DrawEntityInspector(selectedEntity, ecsInterface);
-                    //Navmesh property
-                    if (ImGui::CollapsingHeader("NavMesh Component", ImGuiTreeNodeFlags_DefaultOpen))
-                    {
-                        if (ecsInterface.HasComponent<NavMeshComponent>(selectedEntity))
-                        {
-                            auto& navComp = ecsInterface.GetComponent<NavMeshComponent>(selectedEntity);
+                            // Buffer for editing the text string
+                            char textBuffer[256];
+                            strncpy_s(textBuffer, textComponent.text.c_str(), sizeof(textBuffer));
+                            textBuffer[sizeof(textBuffer) - 1] = '\0';
 
-                            // Display source mesh selection
-                            std::vector<std::string> meshNames;
-                            std::vector<AssetHandle> meshGuids;
-
-                            for (const auto& [guid, entry] : AssetManager::Instance().GetAssets())
+                            if (ImGui::InputText("Text", textBuffer, sizeof(textBuffer)))
                             {
-                                if (entry.typeName != TypeName<MeshProperties>::value)
-                                    continue;
-
-                                auto* mesh = static_cast<MeshProperties*>(entry.pObject.get());
-                                std::string label = mesh->path.empty() ? "Unnamed Mesh" : mesh->path;
-                                meshNames.push_back(label);
-                                meshGuids.push_back(guid);
+                                textComponent.text = std::string(textBuffer);
                             }
 
-                            std::vector<const char*> labelPtrs;
-                            for (const auto& name : meshNames)
-                                labelPtrs.push_back(name.c_str());
+                            // Slider for text scale
+                            ImGui::DragFloat("Scale", &textComponent.scale, 0.001f, 0.001f, 10.0f);
 
-                            int currentIndex = -1;
-                            for (size_t i = 0; i < meshGuids.size(); ++i)
-                            {
-                                if (meshGuids[i] == navComp.sourceMeshGUID)
-                                {
-                                    currentIndex = static_cast<int>(i);
-                                    break;
-                                }
-                            }
-
-                            ImGui::Separator();
-                            ImGui::Text("Source Mesh:");
-                            if (ImGui::Combo("NavMesh Source", &currentIndex, labelPtrs.data(), static_cast<int>(labelPtrs.size())))
-                            {
-                                navComp.sourceMeshGUID = meshGuids[currentIndex];
-                            }
-
-                            ImGui::Separator();
-                            ImGui::Checkbox("Is NavMesh Source", &navComp.isNavMeshSource);
-                            ImGui::Checkbox("Runtime Generated", &navComp.runtimeGenerated);
-
-                            ImGui::Separator();
-                            ImGui::Text("Recast Parameters:");
-                            ImGui::DragFloat("Agent Radius", &navComp.agentRadius, 0.01f, 0.1f, 5.0f);
-                            ImGui::DragFloat("Agent Height", &navComp.agentHeight, 0.01f, 0.1f, 5.0f);
-                            ImGui::DragFloat("Cell Size", &navComp.cellSize, 0.01f, 0.05f, 1.0f);
-                            ImGui::DragFloat("Cell Height", &navComp.cellHeight, 0.01f, 0.05f, 1.0f);
-                            ImGui::DragFloat("Max Slope", &navComp.maxSlope, 1.0f, 1.0f, 85.0f);
-
-                            // Optional runtime debug
-                            ImGui::Separator();
-                            ImGui::Text("Runtime Mesh Data:");
-                            ImGui::Text("Vertices: %zu", navComp.positions.size());
-                            ImGui::Text("Indices: %zu", navComp.indices.size());
-
-                            if (ImGui::Button("Clear Runtime Buffers"))
-                            {
-                                navComp.positions.clear();
-                                navComp.indices.clear();
-                            }
-
-                            if (ImGui::Button("Reset NavMesh Component"))
-                            {
-                                navComp = NavMeshComponent{};
-                            }
+                            // Color picker for text color
+                            ImGui::ColorEdit3("Color", glm::value_ptr(textComponent.color));
                         }
                         else
                         {
-                            ImGui::Text("No NavMesh Component attached.");
-                            if (ImGui::Button("Add NavMesh Component"))
+                            ImGui::Text("No TextComponent attached.");
+                            if (ImGui::Button("Add Text Component"))
                             {
-                                ecsInterface.AddComponent<NavMeshComponent>(selectedEntity, NavMeshComponent{});
+                                ecsInterface.AddComponent<TextProperties>(selectedEntity, TextProperties{});
                             }
                         }
                     }
-
-
                     // Reset selectedEntity if the properties window is closed
                     if (!isPropertiesWindowOpen)
                     {

@@ -26,14 +26,14 @@ namespace Framework
         bool isDirty = false;
     };
 
-    inline const std::array g_TransformPropsArray =
+    inline constexpr std::array g_TransformPropsArray =
     {
         PROP_VEC3(position, TransformComponent),
         PROP_VEC3(rotation, TransformComponent),
         PROP_VEC3(scale, TransformComponent),
     };
 
-    inline const prop_list g_TransformProps{ "TransformComponent", g_TransformPropsArray };
+    inline constexpr prop_list g_TransformProps{ "TransformComponent", g_TransformPropsArray };
     inline global_registration g_TransformPropsReg(&g_TransformProps);
 }
 #endif // !_TRANSFORM_PROPERTIES_H_

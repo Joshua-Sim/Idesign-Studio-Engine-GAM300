@@ -236,22 +236,6 @@ namespace Framework
         bool SaveToJson(void* pObject, const std::string& filePath, const prop_list& props);
         void SaveArrayToJson(const std::string& typeName, const std::string& filePath, const std::string& arrayKey);
         bool HasTextureByGUID(const std::string& guid) const;
-
-        std::vector<std::string> GetAvailableTextureNames()
-        {
-            std::vector<std::string> names;
-            for (const auto& [handle, entry] : m_Assets)
-            {
-                if (entry.typeName == "TextureProperties")
-                {
-                    const auto* tex = static_cast<const TextureProperties*>(entry.pObject.get());
-                    if (tex)
-                        names.push_back(tex->name); // or tex->guid, or tex->path
-                }
-            }
-            return names;
-        }
-
     private:
         AssetManager() = default;                                   // Private constructor
         std::unordered_map<AssetHandle, AssetEntry> m_Assets;       // Contains all types of Assets

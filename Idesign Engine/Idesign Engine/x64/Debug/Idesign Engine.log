@@ -1,7 +1,19 @@
-﻿  PropertyWidget.cpp
-C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\PropertyWidget.cpp(15,55): warning C4244: 'argument': conversion from 'uintptr_t' to 'int', possible loss of data
-  (compiling source file '/src/PropertyWidget.cpp')
-  
-  Idesign Engine.vcxproj -> C:\Year 3\Idesign-Studio-Engine\Idesign Engine\x64\Debug\Idesign Engine.exe
-  'pwsh.exe' is not recognized as an internal or external command,
-  operable program or batch file.
+﻿  Graphics.cpp
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(396,27): warning C4458: declaration of 'mesh' hides class member
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(101,24): message : see declaration of 'Framework::Graphics::mesh'
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(422,23): warning C4458: declaration of 'mesh' hides class member
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(101,24): message : see declaration of 'Framework::Graphics::mesh'
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(439,27): warning C4456: declaration of 'mesh' hides previous local declaration
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(422,23): message : see declaration of 'mesh'
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(457,35): warning C4458: declaration of 'tex' hides class member
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(102,16): message : see declaration of 'Framework::Graphics::tex'
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(495,23): warning C4458: declaration of 'mesh' hides class member
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(101,24): message : see declaration of 'Framework::Graphics::mesh'
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(527,31): warning C4458: declaration of 'tex' hides class member
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(102,16): message : see declaration of 'Framework::Graphics::tex'
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(352,19): warning C4189: 'aspect': local variable is initialized but not referenced
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(337,19): warning C4189: 'dt': local variable is initialized but not referenced
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(422,23): warning C4189: 'mesh': local variable is initialized but not referenced
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(888,40): warning C4458: declaration of 'mesh' hides class member
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(101,24): message : see declaration of 'Framework::Graphics::mesh'
+  Idesign Engine.vcxproj -> C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe

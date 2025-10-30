@@ -15,10 +15,10 @@
 #include "PropertyMacro.h"
 
 namespace Framework
-{ 
+{
     struct TextureProperties
     {
-        AssetHandle guid;
+        std::string guid;
         std::string name;
         std::string path;
         bool isDirty = false;
@@ -29,14 +29,14 @@ namespace Framework
         int height = 0;
     };
 
-    inline const std::vector g_TexturePropertiesPropsArray =
+    inline constexpr std::array g_TexturePropertiesPropsArray =
     {
-        PROP_ASSETHANDLE_READONLY(guid, TextureProperties),
+        PROP_STRING(guid, TextureProperties),
         PROP_STRING(name, TextureProperties),
-        PROP_STRING_READONLY(path, TextureProperties),
+        PROP_STRING(path, TextureProperties),
     };
 
-    inline const prop_list g_TexturePropertiesProps{ "TextureProperties", g_TexturePropertiesPropsArray };
+    inline constexpr prop_list g_TexturePropertiesProps{ "TextureProperties", g_TexturePropertiesPropsArray };
     inline global_registration g_TexturePropertiesReg(&g_TexturePropertiesProps);
 }
 #endif // !_TEXTURE_PROPERTIES_H_
