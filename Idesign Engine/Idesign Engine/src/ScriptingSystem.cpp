@@ -116,9 +116,10 @@ namespace Framework {
         int l_Cook_WindowConfig(lua_State* L) {
             std::string json = resolve_path(luaL_checkstring(L, 1));
             std::string out = resolve_path(luaL_checkstring(L, 2));
+            std::string desc = resolve_path(luaL_checkstring(L, 3));
 
             bool skipped = prepare_output_and_skip_if_fresh(json, out);
-            bool ok = skipped ? true : CompileSingleObject<WindowConfig>(json, out, g_WindowConfigProps);
+            bool ok = skipped ? true : CompileSingleObject<WindowConfig>(json, out, desc, g_WindowConfigProps);
             lua_pushboolean(L, ok);
             return 1;
         }
@@ -127,10 +128,11 @@ namespace Framework {
         int l_Cook_Audio(lua_State* L) {
             const char* json = luaL_checkstring(L, 1);
             const char* out = luaL_checkstring(L, 2);
-            const char* key = luaL_optstring(L, 3, "AudioProperties");
+            const char* desc = luaL_checkstring(L, 3);
+            const char* key = luaL_optstring(L, 4, "AudioProperties");
 
             bool skipped = prepare_output_and_skip_if_fresh(json, out);
-            bool ok = skipped ? true : CompileArray<AudioProperties>(json, out, g_AudioPropertiesProps, key);
+            bool ok = skipped ? true : CompileArray<AudioProperties>(json, out, desc, g_AudioPropertiesProps, key);
             lua_pushboolean(L, ok);
             return 1;
         }
@@ -139,10 +141,11 @@ namespace Framework {
         int l_Cook_Textures(lua_State* L) {
             const char* json = luaL_checkstring(L, 1);
             const char* out = luaL_checkstring(L, 2);
-            const char* key = luaL_optstring(L, 3, "textures");
+            const char* desc = luaL_checkstring(L, 3);
+            const char* key = luaL_optstring(L, 4, "textures");
 
             bool skipped = prepare_output_and_skip_if_fresh(json, out);
-            bool ok = skipped ? true : CompileArray<TextureProperties>(json, out, g_TexturePropertiesProps, key);
+            bool ok = skipped ? true : CompileArray<TextureProperties>(json, out, desc, g_TexturePropertiesProps, key);
             lua_pushboolean(L, ok);
             return 1;
         }
@@ -151,10 +154,11 @@ namespace Framework {
         int l_Cook_Meshes(lua_State* L) {
             const char* json = luaL_checkstring(L, 1);
             const char* out = luaL_checkstring(L, 2);
-            const char* key = luaL_optstring(L, 3, "meshes");
+            const char* desc = luaL_checkstring(L, 3);
+            const char* key = luaL_optstring(L, 4, "meshes");
 
             bool skipped = prepare_output_and_skip_if_fresh(json, out);
-            bool ok = skipped ? true : CompileArray<MeshProperties>(json, out, g_MeshProps, key);
+            bool ok = skipped ? true : CompileArray<MeshProperties>(json, out, desc, g_MeshProps, key);
             lua_pushboolean(L, ok);
             return 1;
         }

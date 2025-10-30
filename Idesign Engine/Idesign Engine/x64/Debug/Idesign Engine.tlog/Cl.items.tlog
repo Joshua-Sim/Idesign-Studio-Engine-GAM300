@@ -1,42 +1,62 @@
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\imgui\imgui.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\imgui.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\imgui\imgui_demo.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\imgui_demo.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\imgui\imgui_draw.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\imgui_draw.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\imgui\imgui_impl_glfw.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\imgui_impl_glfw.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\imgui\imgui_impl_opengl3.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\imgui_impl_opengl3.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\imgui\imgui_tables.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\imgui_tables.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\imgui\imgui_widgets.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\imgui_widgets.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AssetCompiler.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\AssetCompiler.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AssetManager.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\AssetManager.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Audio.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\Audio.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AudioLoader.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\AudioLoader.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ButtonSystem.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\ButtonSystem.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Collision.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\Collision.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ComponentManager.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\ComponentManager.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Coordinator.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\Coordinator.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Core.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\Core.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Debugger.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\Debugger.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\DummySystem.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\DummySystem.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EngineState.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\EngineState.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EntityManager.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\EntityManager.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\FontSystem.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\FontSystem.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\Graphics.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\GraphicsShader.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\GraphicsShader.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\ImguiManager.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\InputHandler.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\InputHandler.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Lighting.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\Lighting.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\main.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\main.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Matrix3x3.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\Matrix3x3.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Mesh.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\Mesh.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\MeshLoader.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\MeshLoader.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\MessageSystem.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\MessageSystem.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\pch.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\pch.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\SceneManager.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\SceneManager.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\ScriptingSystem.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ShaderProgram.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\ShaderProgram.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\SignalHandler.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\SignalHandler.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\TagManager.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\TagManager.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Terrain.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\Terrain.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\TestSystem.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\TestSystem.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\TextureLoader.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\TextureLoader.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\UndoRedoSystem.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\UndoRedoSystem.obj
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Vector2D.cpp;C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\Vector2D.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\lib\imgui\imgui.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\imgui.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\lib\imgui\imgui_demo.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\imgui_demo.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\lib\imgui\imgui_draw.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\imgui_draw.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\lib\imgui\imgui_impl_glfw.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\imgui_impl_glfw.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\lib\imgui\imgui_impl_opengl3.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\imgui_impl_opengl3.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\lib\imgui\imgui_tables.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\imgui_tables.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\lib\imgui\imgui_widgets.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\imgui_widgets.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\AssetCompiler.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\AssetCompiler.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\AssetManager.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\AssetManager.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Audio.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\Audio.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\AudioLoader.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\AudioLoader.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ButtonSystem.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\ButtonSystem.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Collision.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\Collision.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ComponentManager.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\ComponentManager.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Coordinator.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\Coordinator.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Core.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\Core.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Debugger.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\Debugger.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\DummySystem.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\DummySystem.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\EngineState.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\EngineState.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\EntityManager.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\EntityManager.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\FontSystem.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\FontSystem.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Graphics.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\Graphics.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\GraphicsShader.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\GraphicsShader.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ImguiManager.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\ImguiManager.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\InputHandler.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\InputHandler.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Lighting.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\Lighting.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\main.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\main.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Matrix3x3.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\Matrix3x3.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Mesh.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\Mesh.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\MeshLoader.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\MeshLoader.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\MessageSystem.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\MessageSystem.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\NavMeshSystem.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\pch.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\pch.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\PropertyWidget.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\PropertyWidget.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Recast\DetourAlloc.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\DetourAlloc.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Recast\DetourAssert.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\DetourAssert.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Recast\DetourCommon.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\DetourCommon.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Recast\DetourNavMesh.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\DetourNavMesh.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Recast\DetourNavMeshBuilder.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\DetourNavMeshBuilder.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Recast\DetourNavMeshQuery.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\DetourNavMeshQuery.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Recast\DetourNode.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\DetourNode.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Recast\Recast.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\Recast.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Recast\RecastAlloc.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\RecastAlloc.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Recast\RecastArea.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\RecastArea.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Recast\RecastAssert.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\RecastAssert.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Recast\RecastContour.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\RecastContour.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Recast\RecastFilter.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\RecastFilter.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Recast\RecastLayers.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\RecastLayers.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Recast\RecastMesh.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\RecastMesh.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Recast\RecastMeshDetail.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\RecastMeshDetail.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Recast\RecastRasterization.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\RecastRasterization.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Recast\RecastRegion.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\RecastRegion.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\SceneManager.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\SceneManager.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\ScriptingSystem.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\ShaderProgram.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\ShaderProgram.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\SignalHandler.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\SignalHandler.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\TagManager.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\TagManager.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Terrain.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\Terrain.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\TestSystem.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\TestSystem.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\TextureLoader.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\TextureLoader.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\UndoRedoSystem.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\UndoRedoSystem.obj
+C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\src\Vector2D.cpp;C:\Year 3\Idesign-Studio-Engine\Idesign Engine\Idesign Engine\x64\Debug\Vector2D.obj

@@ -98,5 +98,13 @@ void MeshLoader::loadMesh(const std::string& path, MeshProperties& mesh) {
 
     mesh.indexCount = static_cast<unsigned int>(indices.size());
 
+    // Store geometry for navmesh or other CPU use
+    mesh.positions.clear();
+    mesh.indices.clear();
+    for (const auto& v : vertices) {
+        mesh.positions.emplace_back(v.pos[0], v.pos[1], v.pos[2]);
+    }
+    mesh.indices.assign(indices.begin(), indices.end());
+
     std::cout << mesh.guid << " " << mesh.path << " was loaded into system" << std::endl;
 }

@@ -1,7 +1,52 @@
 {
     "Entities": [
         {
-            "name": "Plane",
+            "name": "Entity 0",
+            "guid": "1be714ad-585c-4830-922a-d0689473c416",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        0.0,
+                        2.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.0005000000237487257,
+                        0.0005000000237487257,
+                        0.0005000000237487257
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 0
+                },
+                "MeshReference": {
+                    "guid": ""
+                },
+                "TextureComponent": {
+                    "guid": ""
+                },
+                "NavMeshComponent": {
+                    "sourceMeshGUID": "",
+                    "isNavMeshSource": false,
+                    "runtimeGenerated": false,
+                    "agentRadius": 0.5,
+                    "agentHeight": 2.0,
+                    "cellSize": 0.30000001192092896,
+                    "cellHeight": 0.20000000298023224,
+                    "maxSlope": 45.0
+                }
+            }
+        },
+        {
+            "name": "Entity 1",
+            "guid": "fbc4d7c3-f618-47e2-816d-c1e97f297b4b",
             "components": {
                 "TransformComponent": {
                     "position": [
@@ -19,17 +64,23 @@
                         1.0,
                         1.0
                     ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 0
                 }
             }
         },
         {
-            "name": "Plane 2",
+            "name": "Entity 2",
+            "guid": "d31877b1-0c24-48cc-a067-c35c85d189ad",
             "components": {
                 "TransformComponent": {
                     "position": [
                         0.0,
                         0.0,
-                        -5.0
+                        0.0
                     ],
                     "rotation": [
                         0.0,
@@ -37,13 +88,15 @@
                         0.0
                     ],
                     "scale": [
-                        0.5,
-                        0.5,
-                        0.5
+                        1.0,
+                        1.0,
+                        1.0
                     ]
                 },
-                "MeshReference": {
-                    "guid": "9e1fcb62-0699-4a0b-ae75-d0670af44b1b"
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 0
                 }
             }
         }
