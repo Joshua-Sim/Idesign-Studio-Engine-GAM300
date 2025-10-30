@@ -180,8 +180,6 @@ namespace Framework {
         textureComponent.path = "Assets/PNG/test.png";
         TextureLoader::loadTexture(textureComponent, true);
 
-
-
         ecsInterface.AddComponent<Framework::TextureProperties>(newEntity, textureComponent);
         // ----------------- End object creation ------------------------------
 
@@ -358,7 +356,6 @@ namespace Framework {
             glm::mat4 proj = cam.getProjectionMatrix((float)w, (float)h);
             glm::mat4 view = cam.getViewMatrix();
 
-
             // stick to ground
             if (groundMode)
             {
@@ -383,7 +380,7 @@ namespace Framework {
 
             // ---- ECS draw loop ----
 
-        // --- highlight selected entity (picked last frame) ---
+            // --- highlight selected entity (picked last frame) ---
             int sel = lastPickedId; // cache once per frame
             const glm::vec3 kHighlightAlbedo(1.0f, 0.85f, 0.3f);
 
