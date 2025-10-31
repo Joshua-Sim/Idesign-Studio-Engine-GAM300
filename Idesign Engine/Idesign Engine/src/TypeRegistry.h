@@ -25,7 +25,7 @@ namespace Framework
         using TypeRemover = std::function<void(Coordinator&, Entity)>;
 
         template<typename T>
-        void Register(const std::string& typeName)
+        void Register(const std::string& typeName, const prop_list* props)
         {
             registry[typeName] = [](Coordinator& ecs, Entity e) -> void*
                 {
@@ -43,6 +43,14 @@ namespace Framework
                 {
                     ecs.RemoveComponent<T>(e);
                 };
+
+            propLists[typeName] = props; // Link to reflection metadata
+        }
+
+        const prop_list* GetPropList(const std::string& typeName) const
+        {
+            auto it = propLists.find(typeName);
+            return (it != propLists.end()) ? it->second : nullptr;
         }
 
         inline TypeAdder* GetAdder(const std::string& typeName)
@@ -57,7 +65,6 @@ namespace Framework
             return (it != removers.end()) ? &it->second : nullptr;
         }
 
-
         TypeGetter* Get(const std::string& typeName)
         {
             auto it = registry.find(typeName);
@@ -70,6 +77,7 @@ namespace Framework
         std::unordered_map<std::string, TypeGetter> registry;
         std::unordered_map<std::string, TypeAdder> adders;
         std::unordered_map<std::string, TypeRemover> removers;
+        std::unordered_map<std::string, const prop_list*> propLists;
     };
 }
 #endif // !_TYPE_REGISTRY_H_

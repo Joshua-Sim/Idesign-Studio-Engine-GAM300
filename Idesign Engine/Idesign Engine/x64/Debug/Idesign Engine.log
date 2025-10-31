@@ -1,5 +1,5 @@
 ﻿  PropertyWidget.cpp
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PropertyWidget.cpp(15,55): warning C4244: 'argument': conversion from 'uintptr_t' to 'int', possible loss of data
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PropertyWidget.cpp(16,55): warning C4244: 'argument': conversion from 'uintptr_t' to 'int', possible loss of data
   (compiling source file '/src/PropertyWidget.cpp')
   
   Idesign Engine.vcxproj -> D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe

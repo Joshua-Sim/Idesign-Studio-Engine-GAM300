@@ -1,14 +1,15 @@
+
 #include "pch.h"
 #include "imgui.h"
 #include "PropertySystem.h"
 #include "PropertyWidget.h"
-
 
 namespace Framework
 {
     void DrawInspector(void* pObject, const prop_list& propList)
     {
         int propIndex = 0;
+
         for (const auto& prop : propList.m_Props)
         {
             // Push a unique ID for each property instance
@@ -18,7 +19,7 @@ namespace Framework
 
             if (prop.m_Flags & prop::HIDDEN)
             {
-                printf("  Skipped (HIDDEN)\n");
+                //printf("  Skipped (HIDDEN)\n");
                 ++propIndex;
                 ImGui::PopID(); // pop prop.m_pName
                 ImGui::PopID(); // pop pObject
@@ -96,18 +97,23 @@ namespace Framework
             }
             case prop::STRING:
             {
+                std::string value;
+                prop.m_fnGet(pObject, &value);
+
                 char buffer[256] = {};
-                prop.m_fnGet(pObject, buffer);
+                std::strncpy(buffer, value.c_str(), sizeof(buffer));
+                buffer[sizeof(buffer) - 1] = '\0';
 
                 if (readOnly) ImGui::BeginDisabled();
-                ImGui::InputText("##string", buffer, sizeof(buffer));
-                if (readOnly) ImGui::EndDisabled();
-
-                if (!readOnly && ImGui::IsItemEdited())
+                if (ImGui::InputText(prop.m_pName, buffer, sizeof(buffer)))
                 {
-                    std::string value(buffer);
-                    prop.m_fnSet(pObject, &value);
+                    if (!readOnly)
+                    {
+                        std::string newValue(buffer);
+                        prop.m_fnSet(pObject, &newValue);
+                    }
                 }
+                if (readOnly) ImGui::EndDisabled();
                 break;
             }
             case prop::UINT:
@@ -143,32 +149,6 @@ namespace Framework
                 {
                     if (!readOnly)
                         prop.m_fnSet(pObject, &vec);
-                }
-                break;
-            }
-            case prop::STRING_DROPDOWN:
-            {
-                std::string currentValue;
-                prop.m_fnGet(pObject, &currentValue);
-
-                std::vector<std::string> options = prop.GetDropdownOptions();
-                const char* preview = currentValue.c_str();
-
-                if (ImGui::BeginCombo(prop.m_pName, preview))
-                {
-                    for (const auto& option : options)
-                    {
-                        bool selected = (option == currentValue);
-                        if (ImGui::Selectable(option.c_str(), selected))
-                        {
-                            currentValue = option;
-                            if (!readOnly)
-                                prop.m_fnSet(pObject, &currentValue);
-                        }
-                        if (selected)
-                            ImGui::SetItemDefaultFocus();
-                    }
-                    ImGui::EndCombo();
                 }
                 break;
             }
@@ -221,8 +201,6 @@ namespace Framework
                 if (readOnly) ImGui::EndDisabled();
                 break;
             }
-
-
             default:
                 ImGui::Text("Unsupported type: %d", prop.m_Type);
                 break;
@@ -238,57 +216,67 @@ namespace Framework
 
     void DrawEntityInspector(Entity entity, Coordinator& ecs)
     {
+        // 1. Get all currently attached components
+        auto attached = ecs.GetAllComponents(entity);
+
+        for (const auto& [typeName, componentPtr] : attached)
+        {
+            const prop_list* propList = TypeRegistry::Instance().GetPropList(typeName);
+            if (!propList || !propList->m_pName || propList->m_Props.empty())
+                continue;
+
+            if (ImGui::CollapsingHeader(propList->m_pName, ImGuiTreeNodeFlags_DefaultOpen))
+            {
+                // Optional: draw asset dropdown if component is asset-backed
+                if (typeName == "TextureProperties")
+                {
+                    auto& tex = *static_cast<TextureProperties*>(componentPtr);
+                    DrawAssetDropdown<TextureProperties>("Select Texture", tex);
+                }
+                else if (typeName == "MeshProperties")
+                {
+                    auto& mesh = *static_cast<MeshProperties*>(componentPtr);
+                    DrawAssetDropdown<MeshProperties>("Select Mesh", mesh);
+                }
+
+                // Draw the rest of the inspector
+                DrawInspector(componentPtr, *propList);
+
+                // Remove button
+                if (ImGui::Button(std::string("Remove ").append(typeName).c_str()))
+                {
+                    auto* remover = TypeRegistry::Instance().GetRemover(typeName);
+                    if (remover) (*remover)(ecs, entity);
+                    break;
+                }
+            }
+        }
+
+        // 2. Show "Add [Component]" buttons for missing ones
         for (global_registration* reg = global_registration::m_pHead; reg; reg = reg->m_pNext)
         {
             const prop_list* propList = reg->m_pPopList;
             if (!propList || !propList->m_pName || propList->m_Props.empty())
                 continue;
 
-            // Skip unwanted types
-            if (std::string(propList->m_pName) == "WindowConfig")
+            if (attached.contains(propList->m_pName))
                 continue;
 
-            // Try to get the component from ECS
-            void* componentPtr = ecs.GetRawComponent(entity, propList->m_pName);
-
-            if (componentPtr)
+            if (ImGui::Button(std::string("Add ").append(propList->m_pName).c_str()))
             {
-                // Draw collapsible section for this component
-                if (ImGui::CollapsingHeader(propList->m_pName, ImGuiTreeNodeFlags_DefaultOpen))
-                {
-                    if (std::string(propList->m_pName) == "TextureProperties")
-                    {
-                        auto& tex = ecs.GetComponent<TextureProperties>(entity);
-                        DrawAssetDropdown<TextureProperties>("Select Texture", tex.guid);
-                    }
-
-                    DrawInspector(componentPtr, *propList);
-                    if (ImGui::Button(std::string("Remove ").append(propList->m_pName).c_str()))
-                    {
-                        auto* remover = TypeRegistry::Instance().GetRemover(propList->m_pName);
-                        if (remover) (*remover)(ecs, entity);
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                if (ImGui::Button(std::string("Add ").append(propList->m_pName).c_str()))
-                {
-                    auto* adder = TypeRegistry::Instance().GetAdder(propList->m_pName);
-                    if (adder) (*adder)(ecs, entity);
-                }
+                auto* adder = TypeRegistry::Instance().GetAdder(propList->m_pName);
+                if (adder) (*adder)(ecs, entity);
             }
         }
     }
 
     void RegisterComponentTypes()
     {
-        TypeRegistry::Instance().Register<TextureProperties>("TextureProperties");
-        TypeRegistry::Instance().Register<MeshProperties>("MeshProperties");
-        TypeRegistry::Instance().Register<AudioProperties>("AudioProperties");
-        TypeRegistry::Instance().Register<TextProperties>("TextProperties");
-        TypeRegistry::Instance().Register<TransformComponent>("TransformComponent");
+        TypeRegistry::Instance().Register<TextureProperties>("TextureProperties", &g_TexturePropertiesProps);
+        TypeRegistry::Instance().Register<MeshProperties>("MeshProperties", &g_MeshProps);
+        TypeRegistry::Instance().Register<AudioProperties>("AudioProperties", &g_AudioPropertiesProps);
+        TypeRegistry::Instance().Register<TextProperties>("TextProperties", &g_TextComponentProps);
+        TypeRegistry::Instance().Register<TransformComponent>("TransformComponent", &g_TransformProps);
     }
 
     void AutoRegisterAllReflectedComponents(Coordinator& ecs)

@@ -230,12 +230,27 @@ namespace Framework {
 
 		void* GetRawComponent(Entity entity, const std::string& typeName)
 		{
-			std::cout << "Fetching component: " << typeName << std::endl;
+			//std::cout << "Fetching component: " << typeName << std::endl;
 
 			auto it = rawGetters.find(typeName);
 			if (it != rawGetters.end())
 				return it->second(entity);
 			return nullptr;
+		}
+
+		std::unordered_map<std::string, void*> GetAllComponents(Entity entity)
+		{
+			std::unordered_map<std::string, void*> result;
+
+			for (const auto& [typeName, getter] : rawGetters)
+			{
+				void* componentPtr = getter(entity);
+				if (componentPtr)
+				{
+					result[typeName] = componentPtr;
+				}
+			}
+			return result;
 		}
 
 	private:

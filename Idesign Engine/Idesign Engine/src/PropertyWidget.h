@@ -36,7 +36,7 @@ namespace Framework
 	void AutoRegisterAllReflectedComponents(Coordinator& ecs);
 
     template<typename AssetType>
-    void DrawAssetDropdown(const std::string& label, AssetHandle& currentHandle)
+    void DrawAssetDropdown(const std::string& label, AssetType& component)
     {
         std::vector<std::string> assetNames;
         std::vector<AssetHandle> assetGuids;
@@ -59,7 +59,7 @@ namespace Framework
         int currentIndex = -1;
         for (size_t i = 0; i < assetGuids.size(); ++i)
         {
-            if (assetGuids[i] == currentHandle)
+            if (assetGuids[i] == component.guid)
             {
                 currentIndex = static_cast<int>(i);
                 break;
@@ -70,7 +70,14 @@ namespace Framework
         ImGui::Text("%s", label.c_str());
         if (ImGui::Combo(label.c_str(), &currentIndex, labelPtrs.data(), static_cast<int>(labelPtrs.size())))
         {
-            currentHandle = assetGuids[currentIndex];
+            component.guid = assetGuids[currentIndex];
+
+            // Use your Get<T> function to retrieve and sync asset data
+            if (auto* asset = AssetManager::Instance().Get<AssetType>(component.guid))
+            {
+                component.name = asset->name;
+                component.path = asset->path;
+            }
         }
     }
 }

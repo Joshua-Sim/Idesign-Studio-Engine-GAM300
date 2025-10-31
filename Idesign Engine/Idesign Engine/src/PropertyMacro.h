@@ -139,6 +139,18 @@ PROPERTY_END(WindowConfig, WindowConfigProps)
         [](const void* pObj, void* pData) { *static_cast<std::string*>(pData) = static_cast<const type*>(pObj)->field; }, \
         {}, {}, false, nullptr, nullptr, 0, Framework::prop::NONE, optionsFn }
 
+#define PROP_STRING_CHAR(field, type) \
+    Framework::prop{ #field, Framework::prop::STRING, \
+        [](void* pObj, const void* pData) { \
+            std::strncpy(static_cast<type*>(pObj)->field, static_cast<const char*>(pData), sizeof(static_cast<type*>(pObj)->field)); \
+            static_cast<type*>(pObj)->field[sizeof(static_cast<type*>(pObj)->field) - 1] = '\0'; \
+        }, \
+        [](const void* pObj, void* pData) { \
+            std::strncpy(static_cast<char*>(pData), static_cast<const type*>(pObj)->field, sizeof(static_cast<const type*>(pObj)->field)); \
+            static_cast<char*>(pData)[sizeof(static_cast<const type*>(pObj)->field) - 1] = '\0'; \
+        }, \
+        {}, {}, false, nullptr, nullptr, 0, Framework::prop::NONE, {} }
+
 // ASSETHANDLE PROPERTY MACRO
 #define PROP_ASSETHANDLE_FLAGS(field, type, flags) \
     Framework::prop{ #field, Framework::prop::STRING, \
@@ -153,43 +165,6 @@ PROPERTY_END(WindowConfig, WindowConfigProps)
 #define PROP_ASSETHANDLE_READONLY(field, type) \
     PROP_ASSETHANDLE_FLAGS(field, type, Framework::prop::READ_ONLY)
 
-#define PROP_TEXTURE_DROPDOWN(field, type) \
-    Framework::prop( \
-        #field, \
-        Framework::prop::STRING_DROPDOWN, \
-        [](void* obj, const void* data) { static_cast<type*>(obj)->field = *static_cast<const AssetHandle*>(data); }, \
-        [](const void* obj, void* data) { *static_cast<AssetHandle*>(data) = static_cast<const type*>(obj)->field; }, \
-        {}, {}, false, nullptr, nullptr, 0, Framework::prop::NONE, \
-        []() -> std::vector<std::string> { \
-            std::vector<std::string> names; \
-            for (const auto& [guid, entry] : AssetManager::Instance().GetAssets()) { \
-                if (entry.typeName != TypeName<type>::value) continue; \
-                auto* tex = static_cast<type*>(entry.pObject.get()); \
-                std::string label = tex->name.empty() ? tex->path : tex->name; \
-                names.push_back(label); \
-            } \
-            return names; \
-        } \
-    )
-
-#define PROP_ASSET_DROPDOWN(field, type) \
-    Framework::prop( \
-        #field, \
-        Framework::prop::ASSET_DROPDOWN, \
-        [](void* obj, const void* data) { static_cast<type*>(obj)->field = *static_cast<const AssetHandle*>(data); }, \
-        [](const void* obj, void* data) { *static_cast<AssetHandle*>(data) = static_cast<const type*>(obj)->field; }, \
-        {}, {}, false, nullptr, nullptr, 0, Framework::prop::NONE, \
-        []() -> std::vector<std::string> { \
-            std::vector<std::string> names; \
-            for (const auto& [guid, entry] : AssetManager::Instance().GetAssets()) { \
-                if (entry.typeName != TypeName<type>::value) continue; \
-                auto* tex = static_cast<type*>(entry.pObject.get()); \
-                std::string label = tex->name.empty() ? tex->path : tex->name; \
-                names.push_back(label); \
-            } \
-            return names; \
-        } \
-    )
 
 
 // CHAR PROPERTY MACRO
