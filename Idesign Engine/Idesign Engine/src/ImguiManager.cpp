@@ -342,6 +342,7 @@ namespace Framework {
     }
 
     void ImguiManager::Update(float deltaTime) {
+        (void)deltaTime;
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();

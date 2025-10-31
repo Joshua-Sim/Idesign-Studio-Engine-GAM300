@@ -16,6 +16,8 @@
 #include "TypeRegistry.h"
 #include "PropertySystem.h"
 #include "AssetManager.h"
+#include "MeshLoader.h"
+#include "TextureLoader.h"
 
 // All Components || Properties
 #include "TextureProperties.h"
@@ -34,7 +36,10 @@ namespace Framework
 	// For Component Registration with reflection
 	void RegisterComponentTypes();
 	void AutoRegisterAllReflectedComponents(Coordinator& ecs);
-
+    
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    // TEMPLATE FUNCTIONS
+    /////////////////////////////////////////////////////////////////////////////////////////////////
     template<typename AssetType>
     void DrawAssetDropdown(const std::string& label, AssetType& component)
     {
@@ -72,11 +77,31 @@ namespace Framework
         {
             component.guid = assetGuids[currentIndex];
 
-            // Use your Get<T> function to retrieve and sync asset data
             if (auto* asset = AssetManager::Instance().Get<AssetType>(component.guid))
             {
                 component.name = asset->name;
                 component.path = asset->path;
+
+                if constexpr (std::is_same_v<AssetType, MeshProperties>)
+                {
+                    if (asset->vao == 0 && !asset->path.empty())
+                    {
+                        MeshLoader::loadMesh(asset->path, *asset); // Load once into asset
+                    }
+
+                    component.vao = asset->vao;
+                    component.vbo = asset->vbo;
+                    component.ebo = asset->ebo;
+                    component.indexCount = asset->indexCount;
+                }
+                else if constexpr (std::is_same_v<AssetType, TextureProperties>)
+                {
+                    if (asset->textureID == 0) 
+                    {
+                        TextureLoader::loadTexture(*asset, true); // Load once
+                    }
+                    component.textureID = asset->textureID; // Reuse loaded texture
+                }
             }
         }
     }

@@ -47,10 +47,26 @@ namespace Framework
             propLists[typeName] = props; // Link to reflection metadata
         }
 
-        const prop_list* GetPropList(const std::string& typeName) const
+        inline const prop_list* GetPropList(const std::string& typeName) const
         {
             auto it = propLists.find(typeName);
             return (it != propLists.end()) ? it->second : nullptr;
+        }
+
+        inline bool RemoveComponent(const std::string& typeName, Coordinator& ecs, Entity e)
+        {
+            auto* remover = GetRemover(typeName);
+            if (!remover) return false;
+            (*remover)(ecs, e);
+            return true;
+        }
+
+        inline bool AddComponent(const std::string& typeName, Coordinator& ecs, Entity e)
+        {
+            auto* adder = GetAdder(typeName);
+            if (!adder) return false;
+            (*adder)(ecs, e);
+            return true;
         }
 
         inline TypeAdder* GetAdder(const std::string& typeName)

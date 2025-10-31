@@ -88,6 +88,8 @@ namespace Framework
                 prop.m_fnGet(pObject, buffer);
                 buffer[1] = '\0';
                 ImGui::InputText(prop.m_pName, buffer, sizeof(buffer));
+                // This is to avoid any label collision if multiple CHAR fields exist in the future 
+                // ImGui:InputTextWithHint("##char", buffer, sizeof(buffer)); 
                 if (!readOnly && ImGui::IsItemEdited())
                 {
                     char value = buffer[0];
@@ -125,13 +127,13 @@ namespace Framework
 
                 if (prop.m_HasRange)
                 {
-                    ImGui::SliderScalar("##slider", ImGuiDataType_U32, &value,
+                    ImGui::SliderScalar(prop.m_pName, ImGuiDataType_U32, &value,
                         &std::get<unsigned int>(prop.m_Min),
                         &std::get<unsigned int>(prop.m_Max));
                 }
                 else
                 {
-                    ImGui::InputScalar("##input", ImGuiDataType_U32, &value);
+                    ImGui::InputScalar(prop.m_pName, ImGuiDataType_U32, &value);
                 }
 
                 if (readOnly) ImGui::EndDisabled();
@@ -216,7 +218,7 @@ namespace Framework
 
     void DrawEntityInspector(Entity entity, Coordinator& ecs)
     {
-        // 1. Get all currently attached components
+        // Get all currently attached components
         auto attached = ecs.GetAllComponents(entity);
 
         for (const auto& [typeName, componentPtr] : attached)
@@ -227,7 +229,6 @@ namespace Framework
 
             if (ImGui::CollapsingHeader(propList->m_pName, ImGuiTreeNodeFlags_DefaultOpen))
             {
-                // Optional: draw asset dropdown if component is asset-backed
                 if (typeName == "TextureProperties")
                 {
                     auto& tex = *static_cast<TextureProperties*>(componentPtr);
@@ -239,20 +240,16 @@ namespace Framework
                     DrawAssetDropdown<MeshProperties>("Select Mesh", mesh);
                 }
 
-                // Draw the rest of the inspector
                 DrawInspector(componentPtr, *propList);
-
-                // Remove button
                 if (ImGui::Button(std::string("Remove ").append(typeName).c_str()))
                 {
-                    auto* remover = TypeRegistry::Instance().GetRemover(typeName);
-                    if (remover) (*remover)(ecs, entity);
+                    TypeRegistry::Instance().RemoveComponent(typeName, ecs, entity);
                     break;
                 }
             }
         }
 
-        // 2. Show "Add [Component]" buttons for missing ones
+        // Show "Add [Component]" buttons for missing ones
         for (global_registration* reg = global_registration::m_pHead; reg; reg = reg->m_pNext)
         {
             const prop_list* propList = reg->m_pPopList;
@@ -262,10 +259,11 @@ namespace Framework
             if (attached.contains(propList->m_pName))
                 continue;
 
+            if (propList->m_pName == "WindowConfig") continue;
+
             if (ImGui::Button(std::string("Add ").append(propList->m_pName).c_str()))
             {
-                auto* adder = TypeRegistry::Instance().GetAdder(propList->m_pName);
-                if (adder) (*adder)(ecs, entity);
+                TypeRegistry::Instance().AddComponent(propList->m_pName, ecs, entity);
             }
         }
     }
