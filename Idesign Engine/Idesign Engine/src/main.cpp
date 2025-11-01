@@ -31,6 +31,7 @@
 #include "AudioLoader.h"
 #include "Audio.h"
 #include "ScriptingSystem.h"
+#include "AnimationSystem.h"
 #include "ComponentList.h" 
 #include "lua.hpp"
 
@@ -115,9 +116,15 @@ int main(void)
     // Scripting System
     auto scriptingSystem = ecsInterface.RegisterSystem<ScriptingSystem>();
     scriptingSystem->SetGraphicsSystem(graphicsSystem.get());
+
+    // --- REGISTER ANIMATION SYSTEM ---
+    auto animationSystem = ecsInterface.RegisterSystem<AnimationSystem>();
+
     // Registering systems in the ECS interface here
 
+
     // ------- Add systems to engine below -------- //
+    engine->AddSystem(animationSystem.get()); // Calculate bone matrices
     engine->AddSystem(graphicsSystem.get());
     engine->AddSystem(inputHandlerSystem);
     engine->AddSystem(imguiSystem.get());

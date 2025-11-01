@@ -31,6 +31,7 @@ namespace Framework
         unsigned int vao = 0, vbo = 0, ebo = 0;
         unsigned int indexCount = 0;
         bool isDirty = false;
+
         //debug rendering 
         DebugShapeType debugShape = DebugShapeType::None;
         glm::vec3 debugcolor{ 1.f,1.f,0.0f };
