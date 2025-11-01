@@ -31,7 +31,7 @@ namespace Framework
 
     inline const std::vector g_TexturePropertiesPropsArray =
     {
-        PROP_ASSETHANDLE_READONLY(guid, TextureProperties),
+        PROP_GUID_READONLY(guid, TextureProperties),
         PROP_STRING(name, TextureProperties),
         PROP_STRING_READONLY(path, TextureProperties),
     };

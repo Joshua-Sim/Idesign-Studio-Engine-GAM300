@@ -146,6 +146,7 @@ namespace Framework {
         ecsInterface.RegisterComponent<TextProperties>();
         ecsInterface.RegisterComponent<NavMeshComponent>();
         ecsInterface.RegisterComponent<NavMeshAgentComponent>(); // Move to navmesh sys after fixing load scene for mesh model
+        ecsInterface.RegisterComponent<AudioProperties>();
 
         //  ---- ECS INITIALIZATION --- 
         Signature signature;
@@ -233,14 +234,6 @@ namespace Framework {
         
         // asset load / loading shape units
         // Testing (Edwin)
-        /*for (const auto& [handle, entry] : assets)
-        {
-            auto* texProps = static_cast<TextureProperties*>(entry.pObject.get());
-
-            texProps->textureID = TextureLoader::loadTexture(*texProps, true);
-
-            tex = texProps->textureID;
-        }*/
         AssetManager::Instance().LoadBinaryArray<TextureProperties>("Resource/TextureAsset.bin", g_TexturePropertiesProps,
             [](TextureProperties& props)
             {
@@ -252,9 +245,7 @@ namespace Framework {
             {
                 MeshLoader::loadMesh(props.path, props);
             });
-        //AssetManager::Instance().SaveArrayToJson(TypeName<MeshProperties>::value, "src/Data/MeshAsset.json", "mesh");
-        //AssetManager::Instance().PrintAssetsOfType(TypeName<TextureProperties>::value);
-        //AssetManager::Instance().SaveArrayToJson(TypeName<TextureProperties>::value, "src/Data/TextureAsset.json", "textures");
+
         cube = Mesh::CreateUnitCubeData();
         plane = Mesh::CreateUnitSphereData();
         cone = Mesh::CreateUnitConeData();

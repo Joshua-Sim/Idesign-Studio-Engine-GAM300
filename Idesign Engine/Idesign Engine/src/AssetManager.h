@@ -31,6 +31,7 @@
 #include <WindowConfigProperties.h>
 #include "TextureProperties.h"
 #include "MeshProperties.h"
+#include "TextProperties.h"
 
 // Asset Files
 #include <AssetLoader.h>
@@ -42,6 +43,7 @@ namespace Framework
     REGISTER_TYPE_NAME(AudioProperties);
     REGISTER_TYPE_NAME(TextureProperties);
     REGISTER_TYPE_NAME(MeshProperties);
+    REGISTER_TYPE_NAME(TextProperties);
 
     /*  Struct Brief
         - Store any type of assets in a generic way
@@ -127,36 +129,6 @@ namespace Framework
 
             if (it->second.typeName != TypeName<T>::value) return nullptr;
             return static_cast<T*>(it->second.pObject.get());
-        }
-
-        // For future Hot-Reload in Imgui (Testing required)
-        template<typename T>
-        T& Reload(const std::string& name) 
-        {
-            auto it = m_Assets.find(name);
-            if (it == m_Assets.end())
-                throw std::runtime_error("Asset not found: " + name);
-
-            if (it->second.typeName != TypeName<T>::value)
-                throw std::runtime_error("Type mismatch during reload for asset: " + name);
-
-            const prop_list* props = it->second.pProps;
-            const std::string& path = it->second.binaryPath;
-
-            std::ifstream in(path, std::ios::binary);
-            if (!in.is_open())
-                throw std::runtime_error("Failed to open binary file: " + path);
-
-            T* obj = new T{};
-            BinaryToObject(in, *obj, *props);
-
-            std::unique_ptr<void, void(*)(void*)> erasedPtr(
-                static_cast<void*>(obj),
-                [](void* ptr) { delete static_cast<T*>(ptr); }
-            ); 
-
-            it->second.pObject = std::move(erasedPtr);
-            return *obj;
         }
 
         template<typename T>

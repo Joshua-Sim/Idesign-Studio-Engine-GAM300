@@ -40,7 +40,7 @@ namespace Framework
 
     inline const std::vector g_MeshPropsArray =
     {
-        PROP_ASSETHANDLE_READONLY(guid, MeshProperties),
+        PROP_GUID_READONLY(guid, MeshProperties),
         PROP_STRING(name, MeshProperties),
         PROP_STRING_READONLY(path, MeshProperties),
         PROP_UINT_READONLY(vao, MeshProperties),

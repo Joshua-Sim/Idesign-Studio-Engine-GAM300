@@ -245,6 +245,21 @@ namespace Framework {
 			return nullptr;
 		}
 
+		std::unordered_map<std::string, void*> GetAllComponents(Entity entity)
+		{
+			std::unordered_map<std::string, void*> result;
+
+			for (const auto& [typeName, getter] : rawGetters)
+			{
+				void* componentPtr = getter(entity);
+				if (componentPtr)
+				{
+					result[typeName] = componentPtr;
+				}
+			}
+			return result;
+		}
+
 	private:
 		std::unique_ptr<ComponentManager> mComponentManager;	// A shared pointer of the Component Manager
 		std::unique_ptr<EntityManager> mEntityManager;			// A shared pointer of the Entity Manager
