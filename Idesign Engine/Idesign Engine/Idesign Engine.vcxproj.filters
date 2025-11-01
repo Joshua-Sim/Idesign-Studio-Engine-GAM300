@@ -348,13 +348,16 @@
     <ClInclude Include="src\Imgui_Hierarchy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Animation.h">
+    <ClInclude Include="src\Animation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AnimationProperties.h">
+    <ClInclude Include="src\AnimationProperties.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AnimationSystem.h">
+    <ClInclude Include="src\AnimationSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -531,6 +534,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\AnimationSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

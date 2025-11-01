@@ -1,21 +1,30 @@
 #pragma once
 
+#include <glew.h> // For GLuint
 #include <glm.hpp>
 #include <vector>
-#include <string>
 #include <map>
-#include "Animation.h" // Include the data structures
+#include <string>
+#include "animation.h"
 
 namespace Framework
 {
+    /**
+         * @brief ECS Component for animated entities.
+         */
     struct AnimationProperties
     {
-        Skeleton* skeleton = nullptr;
         Animation* currentAnimation = nullptr;
         float currentTime = 0.0f;
 
+        unsigned int vbo_skinning = 0; // VBO for bone IDs/weights
+
         std::vector<glm::mat4> finalBoneMatrices;
         std::map<std::string, Animation*> availableAnimations;
+
+        // This component OWNS the skeleton data.
+        // This line will now work because Skeleton is defined in "AnimationData.h"
+        Skeleton skeleton;
 
         void PlayAnimation(const std::string& name)
         {
@@ -28,11 +37,6 @@ namespace Framework
                     currentTime = 0.0f;
                 }
             }
-        }
-
-        AnimationProperties() // Constructor remains the same name as the struct
-        {
-            finalBoneMatrices.resize(100);
         }
     };
 }

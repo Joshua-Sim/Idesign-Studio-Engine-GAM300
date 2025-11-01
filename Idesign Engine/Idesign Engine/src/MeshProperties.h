@@ -32,9 +32,6 @@ namespace Framework
         unsigned int indexCount = 0;
         bool isDirty = false;
 
-        // Handle for the VBO containing VertexSkinning data
-        unsigned int vbo_skinning = 0;
-
         //debug rendering 
         DebugShapeType debugShape = DebugShapeType::None;
         glm::vec3 debugcolor{ 1.f,1.f,0.0f };

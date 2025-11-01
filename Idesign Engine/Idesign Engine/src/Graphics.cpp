@@ -317,6 +317,42 @@ namespace Framework {
 
         m_frameCount = 0;
         m_fpsLastTime = glfwGetTime(); // Start the timer
+
+
+
+        // ---------------- Create one ANIMATED ECS object (FOR TESTING) --------------------
+        Entity animatedEntity = ecsInterface.CreateEntity();
+
+        // 1. Add transform component
+        TransformComponent animTransform;
+        animTransform.position = glm::vec3(5.0, 2.0, 0.0); // Placed at (5,2,0)
+        // !! IMPORTANT: Adjust this scale to fit your model !!
+        animTransform.scale = glm::vec3(0.1, 0.1, 0.1);
+        ecsInterface.AddComponent<TransformComponent>(animatedEntity, animTransform);
+
+        // 2. Add hierarchy component (standard for your entities)
+        ecsInterface.AddComponent<HierarchyComponent>(animatedEntity, HierarchyComponent{});
+
+        // 3. Define the components we need to load into
+        MeshProperties animMesh;
+        Framework::AnimationProperties animProps;
+
+        // --- !! IMPORTANT: Change this path to your animated model file !! ---
+        animMesh.path = "Assets/Objects/test.fbx";
+
+        // 4. Use the new loader that loads mesh, skeleton, and animation data
+        MeshLoader::loadMesh(animMesh.path, animMesh, animProps);
+        // 5. Add all the new components to the entity
+        ecsInterface.AddComponent<MeshProperties>(animatedEntity, animMesh);
+        ecsInterface.AddComponent<Framework::AnimationProperties>(animatedEntity, animProps);
+
+        // 6. (Optional) Add a texture if your model uses one
+        Framework::TextureProperties animTexture;
+        // --- !! IMPORTANT: Change this path to your model's texture !! ---
+        animTexture.path = "Assets/PNG/YourModelTexture.png";
+        TextureLoader::loadTexture(animTexture, true);
+        ecsInterface.AddComponent<Framework::TextureProperties>(animatedEntity, animTexture);
+        // ----------------- End animated object creation ---------------------
     }
 
     void Graphics::SetImguiManager(ImguiManager* manager)
@@ -442,7 +478,7 @@ namespace Framework {
                     if (mesh.debugShape == DebugShapeType::None) {
                         
                         //choose shader
-                        bool isSkinned = ecsInterface.HasComponent<AnimationComponent>(entityId);
+                        bool isSkinned = ecsInterface.HasComponent<AnimationProperties>(entityId);
                         ShaderProgram& currentshader = isSkinned ? skinnedShader : meshShader;
 
                         currentshader.use();
@@ -478,7 +514,7 @@ namespace Framework {
                             glBindTexture(GL_TEXTURE_2D, 0);
                         }
 
-                        LightComponent::upload(meshShader, sun, hasSun, pointLights, spotLights);
+                        LightComponent::upload(currentshader, sun, hasSun, pointLights, spotLights);
                         glBindVertexArray(mesh.vao);
                         glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
                     }

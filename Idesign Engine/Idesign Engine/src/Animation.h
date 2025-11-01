@@ -90,7 +90,7 @@ namespace Framework
     {
         std::vector<Bone> bones;             // Flat list of all bones
         std::map<std::string, int> boneNameMap; // Map bone name to its index in the 'bones' vector
-
+        int rootBoneIndex = -1;
         // Helper to quickly find a bone's index by its name
         int GetBoneIndex(const std::string& name) const
         {
