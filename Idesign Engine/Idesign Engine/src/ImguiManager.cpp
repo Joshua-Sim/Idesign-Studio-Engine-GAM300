@@ -1502,6 +1502,7 @@ namespace Framework {
                     }
 
                     DrawEntityInspector(selectedEntity, ecsInterface);
+
                     //Navmesh property
                     if (ImGui::CollapsingHeader("NavMesh Component", ImGuiTreeNodeFlags_DefaultOpen))
                     {
@@ -1531,7 +1532,7 @@ namespace Framework {
                             int currentIndex = -1;
                             for (size_t i = 0; i < meshGuids.size(); ++i)
                             {
-                                if (meshGuids[i] == navComp.sourceMeshGUID)
+                                if (meshGuids[i] == navComp.guid)
                                 {
                                     currentIndex = static_cast<int>(i);
                                     break;
@@ -1542,7 +1543,7 @@ namespace Framework {
                             ImGui::Text("Source Mesh:");
                             if (ImGui::Combo("NavMesh Source", &currentIndex, labelPtrs.data(), static_cast<int>(labelPtrs.size())))
                             {
-                                navComp.sourceMeshGUID = meshGuids[currentIndex];
+                                navComp.guid = meshGuids[currentIndex];
                             }
 
                             ImGui::Separator();

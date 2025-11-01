@@ -186,7 +186,7 @@ namespace Framework {
         // Add NavMesh component to mark this as navmesh source
         Framework::NavMeshComponent navMeshComp;
         navMeshComp.isNavMeshSource = true;  // Mark this mesh as navmesh source
-        navMeshComp.sourceMeshGUID = meshComponent.guid;  // Optional: store reference
+        navMeshComp.guid = meshComponent.guid;  // Optional: store reference
         ecsInterface.AddComponent<Framework::NavMeshComponent>(newEntity, navMeshComp);
         ecsInterface.AddComponent<Framework::TextureProperties>(newEntity, textureComponent);
         // ----------------- End object creation ------------------------------

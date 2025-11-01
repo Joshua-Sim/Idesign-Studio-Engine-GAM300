@@ -25,6 +25,8 @@
 #include "AudioProperties.h"
 #include "TransformProperties.h"
 #include "TextProperties.h"
+#include "NavMeshProperties.h"
+#include "NavMeshAgentProperties.h"
 
 extern Framework::Coordinator ecsInterface;
 namespace Framework
@@ -52,8 +54,21 @@ namespace Framework
                 continue;
 
             auto* asset = static_cast<AssetType*>(entry.pObject.get());
-            std::string name = asset->name.empty() ? asset->path : asset->name;
-            assetNames.push_back(name);
+
+            if constexpr (requires(AssetType a) { a.name; a.path; })
+            {
+                if (asset->name.empty() && asset->path.empty())
+                    continue; // Skip assets with no identifying info
+
+                std::string name = asset->name.empty() ? asset->path : asset->name;
+                assetNames.push_back(name);
+            }
+            else
+            {
+                // Fallback label for types without name/path
+                assetNames.push_back(entry.typeName + " [" + std::to_string(guid) + "]");
+            }
+
             assetGuids.push_back(guid);
         }
 
@@ -79,8 +94,14 @@ namespace Framework
 
             if (auto* asset = AssetManager::Instance().Get<AssetType>(component.guid))
             {
-                component.name = asset->name;
-                component.path = asset->path;
+                if constexpr (requires(AssetType a) { a.name; a.path; })
+                {
+                    if (asset->name.empty() && asset->path.empty())
+                        return; // Skip if no identifying info
+
+                    component.name = asset->name.empty() ? asset->path : asset->name;
+                    component.path = asset->path;
+                }
 
                 if constexpr (std::is_same_v<AssetType, MeshProperties>)
                 {
@@ -106,6 +127,11 @@ namespace Framework
                 {
                     component.mode = asset->mode;
                     component.soundType = asset->soundType;
+                }
+                else if constexpr (std::is_same_v<AssetType, NavMeshComponent>)
+                {
+                    // The selected MeshProperties GUID is already stored in assetGuids[currentIndex]
+                    component.guid = assetGuids[currentIndex];
                 }
             }
         }

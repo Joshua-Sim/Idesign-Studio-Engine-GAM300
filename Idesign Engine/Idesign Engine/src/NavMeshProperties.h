@@ -22,7 +22,7 @@ namespace Framework
 {
     struct NavMeshComponent
     {
-        std::string sourceMeshGUID;  // Reference to MeshProperties
+        std::string guid;  // Reference to MeshProperties
         bool isNavMeshSource = false;
         bool runtimeGenerated = false;
 
@@ -44,14 +44,14 @@ namespace Framework
     // Serialized properties (only these go into JSON)
     inline std::array g_NavMeshPropsArray =
     {
-        PROP_STRING(sourceMeshGUID, NavMeshComponent),
+        PROP_STRING_READONLY(guid, NavMeshComponent),
         PROP_BOOL(isNavMeshSource, NavMeshComponent),
         PROP_BOOL(runtimeGenerated, NavMeshComponent),
-        PROP_FLOAT(agentRadius, NavMeshComponent),
-        PROP_FLOAT(agentHeight, NavMeshComponent),
-        PROP_FLOAT(cellSize, NavMeshComponent),
-        PROP_FLOAT(cellHeight, NavMeshComponent),
-        PROP_FLOAT(maxSlope, NavMeshComponent),
+        PROP_DRAG_FLOAT(agentRadius, NavMeshComponent),
+        PROP_DRAG_FLOAT(agentHeight, NavMeshComponent),
+        PROP_DRAG_FLOAT(cellSize, NavMeshComponent),
+        PROP_DRAG_FLOAT(cellHeight, NavMeshComponent),
+        PROP_DRAG_FLOAT(maxSlope, NavMeshComponent),
     };
 
     inline constexpr prop_list g_NavMeshProps{ "NavMeshComponent", g_NavMeshPropsArray };

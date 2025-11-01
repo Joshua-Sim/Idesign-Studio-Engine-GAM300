@@ -245,6 +245,11 @@ namespace Framework
                     auto& audio = *static_cast<AudioProperties*>(componentPtr);
                     DrawAssetDropdown<AudioProperties>("Select Audio", audio);
                 }
+                else if (typeName == "NavMeshComponent")
+                {
+                    auto& navMesh = *static_cast<NavMeshComponent*>(componentPtr);
+                    DrawAssetDropdown<NavMeshComponent>("Select navMesh", navMesh);
+                }
 
                 DrawInspector(componentPtr, *propList);
                 if (ImGui::Button(std::string("Remove ").append(typeName).c_str()))
@@ -265,7 +270,7 @@ namespace Framework
             if (attached.contains(propList->m_pName))
                 continue;
 
-            if (propList->m_pName == "WindowConfig") continue;
+            if (propList->m_pName == "WindowConfig" || "NavMeshAgentComponent" ) continue;
 
             if (ImGui::Button(std::string("Add ").append(propList->m_pName).c_str()))
             {
@@ -281,6 +286,8 @@ namespace Framework
         TypeRegistry::Instance().Register<AudioProperties>("AudioProperties", &g_AudioPropertiesProps);
         TypeRegistry::Instance().Register<TextProperties>("TextProperties", &g_TextComponentProps);
         TypeRegistry::Instance().Register<TransformComponent>("TransformComponent", &g_TransformProps);
+        TypeRegistry::Instance().Register<NavMeshComponent>("NavMeshComponent", &g_NavMeshProps);
+        TypeRegistry::Instance().Register<NavMeshAgentComponent>("NavMeshAgentComponent", &g_NavMeshAgentProps);
     }
 
     void AutoRegisterAllReflectedComponents(Coordinator& ecs)

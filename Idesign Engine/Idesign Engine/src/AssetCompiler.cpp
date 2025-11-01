@@ -158,8 +158,8 @@ namespace Framework
                 const auto& navObj = components["NavMeshComponent"];
                 NavMeshComponent nav;
 
-                if (navObj.HasMember("sourceMeshGUID"))
-                    nav.sourceMeshGUID = navObj["sourceMeshGUID"].GetString();
+                if (navObj.HasMember("guid"))
+                    nav.guid = navObj["guid"].GetString();
                 if (navObj.HasMember("isNavMeshSource"))
                     nav.isNavMeshSource = navObj["isNavMeshSource"].GetBool();
                 if (navObj.HasMember("runtimeGenerated"))
@@ -265,7 +265,7 @@ namespace Framework
                 const auto& nav = ecsInterface.GetComponent<NavMeshComponent>(entity);
                 rapidjson::Value navObj(rapidjson::kObjectType);
 
-                navObj.AddMember("sourceMeshGUID", rapidjson::Value(nav.sourceMeshGUID.c_str(), allocator), allocator);
+                navObj.AddMember("guid", rapidjson::Value(nav.guid.c_str(), allocator), allocator);
                 navObj.AddMember("isNavMeshSource", nav.isNavMeshSource, allocator);
                 navObj.AddMember("runtimeGenerated", nav.runtimeGenerated, allocator);
                 navObj.AddMember("agentRadius", nav.agentRadius, allocator);

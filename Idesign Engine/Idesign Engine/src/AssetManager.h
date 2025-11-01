@@ -32,6 +32,8 @@
 #include "TextureProperties.h"
 #include "MeshProperties.h"
 #include "TextProperties.h"
+#include "NavMeshAgentProperties.h"
+#include "NavMeshProperties.h"
 
 // Asset Files
 #include <AssetLoader.h>
@@ -44,6 +46,8 @@ namespace Framework
     REGISTER_TYPE_NAME(TextureProperties);
     REGISTER_TYPE_NAME(MeshProperties);
     REGISTER_TYPE_NAME(TextProperties);
+    REGISTER_TYPE_NAME(NavMeshComponent);
+    REGISTER_TYPE_NAME(NavMeshAgentComponent);
 
     /*  Struct Brief
         - Store any type of assets in a generic way
