@@ -5,6 +5,7 @@
 ///          tasks using FMOD. Using asset manager to retrieve sound assets to
 ///          provide functionality to play and control both background music and
 ///          sound effects.
+///          This file is the audio system that is linked to the main engine.
 ///
 ///	@Authors : Edwin Leow, Belinda Chua 
 ///	@Copyright 2024, Digipen Institute of Technology
@@ -13,6 +14,7 @@
 #include "pch.h"
 #include "Audio.h"
 #include "AssetManager.h"
+#include <filesystem>
 
 namespace Framework 
 {
@@ -41,12 +43,6 @@ namespace Framework
 
         //Configure 3D default settings 
 		Configure3DSettings(current3DSettings);
-
-        //Create references to common buses 
-		UE_CreateBus("bus:/");          //master bus 
-		UE_CreateBus("bus:/BGM");       //BGM bus
-		UE_CreateBus("bus:/SFX");       //SFX bus
-		UE_CreateBus("bus:/Ambient");   //Ambient bus
 
         //Initialize DSP effects for environmental audio 
         InitializeReverb();
@@ -97,9 +93,127 @@ namespace Framework
     }
 
     // Initialize the system
-    void Audio::Initialize() 
+    void Audio::Initialize()
     {
-		std::cout << "Audio (Studio) Initialized with 3D support." << std::endl;
+        std::cout << "Current working directory: "
+            << std::filesystem::current_path() << std::endl;
+        std::cout << "Audio (Studio) Initialized with 3D support." << std::endl;
+
+        // Get FMOD version for diagnostics
+        unsigned int version = 0;
+        if (studioSystem) {
+            FMOD::System* coreSystem = nullptr;
+            studioSystem->getCoreSystem(&coreSystem);
+            if (coreSystem) {
+                coreSystem->getVersion(&version);
+                std::cout << "[Audio] FMOD Engine version: "
+                    << ((version >> 16) & 0xFFFF) << "."
+                    << ((version >> 8) & 0xFF) << "."
+                    << (version & 0xFF) << std::endl;
+            }
+        }
+
+        // Load the bank files
+        FMOD::Studio::Bank* masterBank = nullptr;
+        FMOD::Studio::Bank* stringsBank = nullptr;
+        FMOD::Studio::Bank* bgmBank = nullptr;
+        FMOD::Studio::Bank* sfxBank = nullptr;
+        FMOD::Studio::Bank* ambientBank = nullptr;
+        FMOD_RESULT result;
+
+        // ============================================================
+        // Load Master.strings.bank FIRST (required for event names)
+        // ============================================================
+        std::cout << "\n[Audio] Loading Master.strings.bank..." << std::endl;
+        result = studioSystem->loadBankFile("Master.strings.bank",
+            FMOD_STUDIO_LOAD_BANK_NORMAL, &stringsBank);
+
+        if (result != FMOD_OK) {
+            std::cerr << "[Audio] ? ERROR: Failed to load Master.strings.bank" << std::endl;
+            std::cerr << "[Audio] Error code: " << result << std::endl;
+        }
+        else {
+            std::cout << "[Audio] ? Master.strings.bank loaded successfully!" << std::endl;
+        }
+
+        // ============================================================
+        // Load Master.bank (contains metadata/structure)
+        // ============================================================
+        std::cout << "\n[Audio] Loading Master.bank..." << std::endl;
+        result = studioSystem->loadBankFile("Master.bank",
+            FMOD_STUDIO_LOAD_BANK_NORMAL, &masterBank);
+
+        if (result != FMOD_OK) {
+            std::cerr << "[Audio] ? ERROR: Failed to load Master.bank" << std::endl;
+            std::cerr << "[Audio] Error code: " << result << std::endl;
+        }
+        else {
+            std::cout << "[Audio] ? Master.bank loaded successfully!" << std::endl;
+        }
+
+        // ============================================================
+        // Load BGM.bank (background music)
+        // ============================================================
+        std::cout << "\n[Audio] Loading BGM.bank..." << std::endl;
+        result = studioSystem->loadBankFile("BGM.bank",
+            FMOD_STUDIO_LOAD_BANK_NORMAL, &bgmBank);
+
+        if (result != FMOD_OK) {
+            std::cerr << "[Audio] ? WARNING: Failed to load BGM.bank" << std::endl;
+            std::cerr << "[Audio] Error code: " << result << std::endl;
+        }
+        else {
+            std::cout << "[Audio] ? BGM.bank loaded successfully!" << std::endl;
+            int eventCount = 0;
+            bgmBank->getEventCount(&eventCount);
+            std::cout << "[Audio] ? BGM bank contains " << eventCount << " events" << std::endl;
+        }
+
+        // ============================================================
+        // Load SFX.bank (sound effects)
+        // ============================================================
+        std::cout << "\n[Audio] Loading SFX.bank..." << std::endl;
+        result = studioSystem->loadBankFile("SFX.bank",
+            FMOD_STUDIO_LOAD_BANK_NORMAL, &sfxBank);
+
+        if (result != FMOD_OK) {
+            std::cerr << "[Audio] ? WARNING: Failed to load SFX.bank" << std::endl;
+            std::cerr << "[Audio] Error code: " << result << std::endl;
+        }
+        else {
+            std::cout << "[Audio] ? SFX.bank loaded successfully!" << std::endl;
+            int eventCount = 0;
+            sfxBank->getEventCount(&eventCount);
+            std::cout << "[Audio] ? SFX bank contains " << eventCount << " events" << std::endl;
+        }
+
+        // ============================================================
+        // Load Ambient.bank (ambient sounds)
+        // ============================================================
+        std::cout << "\n[Audio] Loading Ambient.bank..." << std::endl;
+        result = studioSystem->loadBankFile("Ambient.bank",
+            FMOD_STUDIO_LOAD_BANK_NORMAL, &ambientBank);
+
+        if (result != FMOD_OK) {
+            std::cerr << "[Audio] ? WARNING: Failed to load Ambient.bank" << std::endl;
+            std::cerr << "[Audio] Error code: " << result << std::endl;
+        }
+        else {
+            std::cout << "[Audio] ? Ambient.bank loaded successfully!" << std::endl;
+            int eventCount = 0;
+            ambientBank->getEventCount(&eventCount);
+            std::cout << "[Audio] ? Ambient bank contains " << eventCount << " events" << std::endl;
+        }
+
+        std::cout << "\n[Audio] ========================================" << std::endl;
+        std::cout << "[Audio] All bank files loaded!" << std::endl;
+        std::cout << "[Audio] ========================================\n" << std::endl;
+
+        //Create references to common buses 
+        UE_CreateBus("bus:/");          //master bus 
+        UE_CreateBus("bus:/BGM");       //BGM bus
+        UE_CreateBus("bus:/SFX");       //SFX bus
+        UE_CreateBus("bus:/Ambient");   //Ambient bus
     }
 
     // Update the system

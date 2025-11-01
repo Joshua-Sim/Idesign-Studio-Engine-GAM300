@@ -461,6 +461,27 @@ namespace Framework
         */
         void SetReverbProperties(float decayTime, float wetLevel, float dryLevel);
 
+        // Get the FMOD Studio System for direct access
+        FMOD::Studio::System* GetStudioSystem() { return studioSystem; }
+
+        // Update method to be called every frame
+        void Update() {
+            if (studioSystem) {
+                studioSystem->update();
+            }
+        }
+
+        // Check if a sound is 3D
+        bool IsEvent3D(const std::string& eventName) {
+            FMOD::Studio::EventDescription* eventDesc = UE_LoadEvent(eventName);
+            if (eventDesc) {
+                bool is3D = false;
+                eventDesc->is3D(&is3D);
+                return is3D;
+            }
+            return false;
+        }
+
     private:
 
         //Helper functions for 3D Audio
