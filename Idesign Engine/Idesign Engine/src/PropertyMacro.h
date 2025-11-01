@@ -40,9 +40,8 @@ PROPERTY_END(WindowConfig, WindowConfigProps)
     }
 
 //------------------------------------------------------------------------------------------------------------------------------------
-//  TYPES MACRO
+//  INT MACRO
 //------------------------------------------------------------------------------------------------------------------------------------
-// INT PROPERTY MACRO
 #define PROP_INT(field, type) \
     PROP_INT_FLAGS(field, type, Framework::prop::NONE)
 
@@ -55,9 +54,9 @@ PROPERTY_END(WindowConfig, WindowConfigProps)
 #define PROP_INT_READONLY(field, type) \
     PROP_INT_FLAGS(field, type, Framework::prop::READ_ONLY)
 
-
-
-// FLOAT PROPERTY MACRO
+//------------------------------------------------------------------------------------------------------------------------------------
+//  FLOAT MACRO
+//------------------------------------------------------------------------------------------------------------------------------------
 #define PROP_FLOAT(field, type) \
     PROP_FLOAT_FLAGS(field, type, Framework::prop::NONE)
 
@@ -70,24 +69,9 @@ PROPERTY_END(WindowConfig, WindowConfigProps)
 #define PROP_FLOAT_READONLY(field, type) \
     PROP_FLOAT_FLAGS(field, type, Framework::prop::READ_ONLY)
 
-#define PROP_DRAG_FLOAT(field, type) \
-    Framework::prop(#field, Framework::prop::DRAG_FLOAT, \
-        [](void* obj, const void* in) { static_cast<type*>(obj)->field = *static_cast<const float*>(in); }, \
-        [](const void* obj, void* out) { *static_cast<float*>(out) = static_cast<const type*>(obj)->field; })
-
-#define PROP_COLOR3(field, type) \
-    Framework::prop(#field, Framework::prop::COLOR3, \
-        [](void* obj, const void* in) { static_cast<type*>(obj)->field = *static_cast<const glm::vec3*>(in); }, \
-        [](const void* obj, void* out) { *static_cast<glm::vec3*>(out) = static_cast<const type*>(obj)->field; })
-
-#define PROP_SLIDER_FLOAT(field, type, min, max) \
-    Framework::prop(#field, Framework::prop::SLIDER_FLOAT, \
-        [](void* obj, const void* in) { static_cast<type*>(obj)->field = *static_cast<const float*>(in); }, \
-        [](const void* obj, void* out) { *static_cast<float*>(out) = static_cast<const type*>(obj)->field; }, \
-        min, max, true)
-
-
-// DOUBLE PROPERTY MACRO
+//------------------------------------------------------------------------------------------------------------------------------------
+//  DOUBLE MACRO
+//------------------------------------------------------------------------------------------------------------------------------------
 #define PROP_DOUBLE(field, type) \
     PROP_DOUBLE_FLAGS(field, type, Framework::prop::NONE)
 
@@ -100,27 +84,27 @@ PROPERTY_END(WindowConfig, WindowConfigProps)
 #define PROP_DOUBLE_READONLY(field, type) \
     PROP_DOUBLE_FLAGS(field, type, Framework::prop::READ_ONLY)
 
-
-
-
-// LONG PROPERTY MACRO
+//------------------------------------------------------------------------------------------------------------------------------------
+//  LONG MACRO
+//------------------------------------------------------------------------------------------------------------------------------------
 #define PROP_LONG(field, type) \
     Framework::prop{ #field, Framework::prop::LONG, \
         [](void* pObj, const void* pData) { assert(pObj && pData); static_cast<type*>(pObj)->field = *static_cast<const long*>(pData); }, \
         [](const void* pObj, void* pData) { assert(pObj && pData); *static_cast<long*>(pData) = static_cast<const type*>(pObj)->field; }, \
         {}, {}, false, nullptr, nullptr, 0, Framework::prop::NONE, {} }
 
-
-
-// SHORT PROPERTY MACRO
+//------------------------------------------------------------------------------------------------------------------------------------
+//  SHORT MACRO
+//------------------------------------------------------------------------------------------------------------------------------------
 #define PROP_SHORT(field, type) \
     Framework::prop{ #field, Framework::prop::SHORT, \
         [](void* pObj, const void* pData) { assert(pObj && pData); static_cast<type*>(pObj)->field = *static_cast<const short*>(pData); }, \
         [](const void* pObj, void* pData) { assert(pObj && pData); *static_cast<short*>(pData) = static_cast<const type*>(pObj)->field; }, \
         {}, {}, false, nullptr, nullptr, 0, Framework::prop::NONE, {} }
 
-
-// STRING PROPERTY MACRO
+//------------------------------------------------------------------------------------------------------------------------------------
+//  STRING MACRO
+//------------------------------------------------------------------------------------------------------------------------------------
 #define PROP_STRING(field, type) \
     PROP_STRING_FLAGS(field, type, Framework::prop::NONE)
 
@@ -151,23 +135,9 @@ PROPERTY_END(WindowConfig, WindowConfigProps)
         }, \
         {}, {}, false, nullptr, nullptr, 0, Framework::prop::NONE, {} }
 
-// ASSETHANDLE PROPERTY MACRO
-#define PROP_ASSETHANDLE_FLAGS(field, type, flags) \
-    Framework::prop{ #field, Framework::prop::STRING, \
-        [](void* pObj, const void* pData) { \
-            static_cast<type*>(pObj)->field = Framework::AssetHandle(*static_cast<const std::string*>(pData)); \
-        }, \
-        [](const void* pObj, void* pData) { \
-            *static_cast<std::string*>(pData) = static_cast<const type*>(pObj)->field.id; \
-        }, \
-        {}, {}, false, nullptr, nullptr, 0, flags, {} }
-
-#define PROP_ASSETHANDLE_READONLY(field, type) \
-    PROP_ASSETHANDLE_FLAGS(field, type, Framework::prop::READ_ONLY)
-
-
-
-// CHAR PROPERTY MACRO
+//------------------------------------------------------------------------------------------------------------------------------------
+//  CHAR MACRO
+//------------------------------------------------------------------------------------------------------------------------------------
 #define PROP_CHAR(field, type) \
     PROP_CHAR_FLAGS(field, type, Framework::prop::NONE)
 
@@ -180,10 +150,9 @@ PROPERTY_END(WindowConfig, WindowConfigProps)
 #define PROP_CHAR_READONLY(field, type) \
     PROP_CHAR_FLAGS(field, type, Framework::prop::READ_ONLY)
 
-
-
-
-// BOOL PROPERTY MACRO
+//------------------------------------------------------------------------------------------------------------------------------------
+//  BOOL MACRO
+//------------------------------------------------------------------------------------------------------------------------------------
 #define PROP_BOOL(field, type) \
     PROP_BOOL_FLAGS(field, type, Framework::prop::NONE)
 
@@ -196,10 +165,9 @@ PROPERTY_END(WindowConfig, WindowConfigProps)
 #define PROP_BOOL_READONLY(field, type) \
     PROP_BOOL_FLAGS(field, type, Framework::prop::READ_ONLY)
 
-
-
-
-// UNSIGNED PROPERTY MACRO
+//------------------------------------------------------------------------------------------------------------------------------------
+//  UNSIGNED INT MACRO
+//------------------------------------------------------------------------------------------------------------------------------------
 #define PROP_UINT(field, type) \
     PROP_UINT_FLAGS(field, type, Framework::prop::NONE)
 
@@ -213,18 +181,7 @@ PROPERTY_END(WindowConfig, WindowConfigProps)
     PROP_UINT_FLAGS(field, type, Framework::prop::READ_ONLY)
 
 //------------------------------------------------------------------------------------------------------------------------------------
-//  TYPENAME MACRO
-//------------------------------------------------------------------------------------------------------------------------------------
-
-template<typename T>
-struct TypeName;
-
-#define REGISTER_TYPE_NAME(Type) \
-    template<> struct TypeName<Type> { static constexpr const char* value = #Type; }
-
-
-//------------------------------------------------------------------------------------------------------------------------------------
-//  ECS COMPONENT MACRO
+//  VEC3 MACRO
 //------------------------------------------------------------------------------------------------------------------------------------
 #define PROP_VEC3(field, type) \
     Framework::prop{ #field, Framework::prop::VEC3, \
@@ -237,5 +194,50 @@ struct TypeName;
             *static_cast<glm::vec3*>(pData) = static_cast<const type*>(pObj)->field; \
         } \
     }
+
+//------------------------------------------------------------------------------------------------------------------------------------
+//  GUID MACRO
+//------------------------------------------------------------------------------------------------------------------------------------
+#define PROP_GUID_FLAGS(field, type, flags) \
+    Framework::prop{ #field, Framework::prop::STRING, \
+        [](void* pObj, const void* pData) { \
+            static_cast<type*>(pObj)->field = Framework::AssetHandle(*static_cast<const std::string*>(pData)); \
+        }, \
+        [](const void* pObj, void* pData) { \
+            *static_cast<std::string*>(pData) = static_cast<const type*>(pObj)->field.id; \
+        }, \
+        {}, {}, false, nullptr, nullptr, 0, flags, {} }
+
+#define PROP_GUID_READONLY(field, type) \
+    PROP_GUID_FLAGS(field, type, Framework::prop::READ_ONLY)
+
+//------------------------------------------------------------------------------------------------------------------------------------
+//  TYPENAME MACRO
+//------------------------------------------------------------------------------------------------------------------------------------
+
+template<typename T>
+struct TypeName;
+
+#define REGISTER_TYPE_NAME(Type) \
+    template<> struct TypeName<Type> { static constexpr const char* value = #Type; }
+
+//------------------------------------------------------------------------------------------------------------------------------------
+//  WIDGET || OTHER MACROS
+//------------------------------------------------------------------------------------------------------------------------------------
+#define PROP_DRAG_FLOAT(field, type) \
+    Framework::prop(#field, Framework::prop::DRAG_FLOAT, \
+        [](void* obj, const void* in) { static_cast<type*>(obj)->field = *static_cast<const float*>(in); }, \
+        [](const void* obj, void* out) { *static_cast<float*>(out) = static_cast<const type*>(obj)->field; })
+
+#define PROP_COLOR3(field, type) \
+    Framework::prop(#field, Framework::prop::COLOR3, \
+        [](void* obj, const void* in) { static_cast<type*>(obj)->field = *static_cast<const glm::vec3*>(in); }, \
+        [](const void* obj, void* out) { *static_cast<glm::vec3*>(out) = static_cast<const type*>(obj)->field; })
+
+#define PROP_SLIDER_FLOAT(field, type, min, max) \
+    Framework::prop(#field, Framework::prop::SLIDER_FLOAT, \
+        [](void* obj, const void* in) { static_cast<type*>(obj)->field = *static_cast<const float*>(in); }, \
+        [](const void* obj, void* out) { *static_cast<float*>(out) = static_cast<const type*>(obj)->field; }, \
+        min, max, true)
 
 #endif // !_PROPERTY_MACRO_H_

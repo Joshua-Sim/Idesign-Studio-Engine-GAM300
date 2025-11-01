@@ -233,11 +233,17 @@ namespace Framework
                 {
                     auto& tex = *static_cast<TextureProperties*>(componentPtr);
                     DrawAssetDropdown<TextureProperties>("Select Texture", tex);
+                    DrawTexturePreview(tex);
                 }
                 else if (typeName == "MeshProperties")
                 {
                     auto& mesh = *static_cast<MeshProperties*>(componentPtr);
                     DrawAssetDropdown<MeshProperties>("Select Mesh", mesh);
+                }
+                else if (typeName == "AudioProperties")
+                {
+                    auto& audio = *static_cast<AudioProperties*>(componentPtr);
+                    DrawAssetDropdown<AudioProperties>("Select Audio", audio);
                 }
 
                 DrawInspector(componentPtr, *propList);

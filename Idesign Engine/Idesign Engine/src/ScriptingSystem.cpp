@@ -150,12 +150,12 @@ namespace Framework {
             return 1;
         }
 
-        // Cook.Meshes(jsonPath, outPath [, key="meshes"])
+        // Cook.Meshes(jsonPath, outPath [, key="mesh"])
         int l_Cook_Meshes(lua_State* L) {
             const char* json = luaL_checkstring(L, 1);
             const char* out = luaL_checkstring(L, 2);
             const char* desc = luaL_checkstring(L, 3);
-            const char* key = luaL_optstring(L, 4, "meshes");
+            const char* key = luaL_optstring(L, 4, "mesh");
 
             bool skipped = prepare_output_and_skip_if_fresh(json, out);
             bool ok = skipped ? true : CompileArray<MeshProperties>(json, out, desc, g_MeshProps, key);

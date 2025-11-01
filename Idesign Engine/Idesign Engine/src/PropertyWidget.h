@@ -37,9 +37,9 @@ namespace Framework
 	void RegisterComponentTypes();
 	void AutoRegisterAllReflectedComponents(Coordinator& ecs);
     
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    // TEMPLATE FUNCTIONS
-    /////////////////////////////////////////////////////////////////////////////////////////////////
+    //------------------------------------------------------------------------------------------------------------------------------------
+    //  TEMPLATE FUNCTIONS FOR WIDGETS
+    //------------------------------------------------------------------------------------------------------------------------------------
     template<typename AssetType>
     void DrawAssetDropdown(const std::string& label, AssetType& component)
     {
@@ -102,7 +102,25 @@ namespace Framework
                     }
                     component.textureID = asset->textureID; // Reuse loaded texture
                 }
+                else if constexpr (std::is_same_v<AssetType, AudioProperties>)
+                {
+                    component.mode = asset->mode;
+                    component.soundType = asset->soundType;
+                }
             }
+        }
+    }
+
+    inline void DrawTexturePreview(const TextureProperties& tex)
+    {
+        if (tex.textureID != 0) {
+            ImGui::Text("Preview:");
+            ImGui::Image((ImTextureID)(uintptr_t)tex.textureID, ImVec2(128, 128), ImVec2(0, 1), ImVec2(1, 0)); // Flip both horizontally and vertically
+            ImGui::Text("Size: %d x %d", tex.width, tex.height);
+            ImGui::Text("Path: %s", tex.path.c_str());
+        }
+        else {
+            ImGui::TextColored(ImVec4(1, 0.5f, 0.5f, 1), "No texture loaded.");
         }
     }
 }
