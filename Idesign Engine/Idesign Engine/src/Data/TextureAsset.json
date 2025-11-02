@@ -1,14 +1,14 @@
 {
     "textures": [
         {
-            "guid": "2c166d13-d11d-4566-9b51-cf1412bd12ca",
-            "name": "McIdle11",
-            "path": "./images/Animation/McIdle11.png"
-        },
-        {
             "guid": "b2d4bb99-3396-40de-8789-01d6cf083f4e",
             "name": "obj",
             "path": "Assets/Textures/obj.png"
+        },
+        {
+            "guid": "2c166d13-d11d-4566-9b51-cf1412bd12ca",
+            "name": "McIdle11",
+            "path": "./images/Animation/McIdle11.png"
         },
         {
             "guid": "38a538f4-8a85-44da-8f43-84635fcc5bfb",

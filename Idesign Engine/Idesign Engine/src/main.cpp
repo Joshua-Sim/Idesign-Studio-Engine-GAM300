@@ -88,14 +88,15 @@ int main(void)
     std::cout << "Compiling AudioAsset.json..." << std::endl;
     bool compileSuccess = CompileArray<AudioProperties>("src/Data/AudioAsset.json", "src/Data/AudioAsset.bin", g_AudioPropertiesProps, "audio");
     std::cout << "Audio compilation: " << (compileSuccess ? "SUCCESS" : "FAILED") << std::endl;
-
+    
     // Load audio properties into AssetManager first (WITHOUT calling UE_LoadEvent yet)
     std::cout << "Loading AudioAsset.bin into AssetManager..." << std::endl;
     AssetManager::Instance().LoadBinaryArray<AudioProperties>("src/Data/AudioAsset.bin", g_AudioPropertiesProps);
     std::cout << "Audio assets registered in AssetManager!" << std::endl;
-
+  
     // NOW load FMOD events - AssetManager has all AudioProperties registered, so lookups will work
     std::cout << "Loading FMOD events..." << std::endl;
+    
     for (const auto& [guid, entry] : AssetManager::Instance().GetAssets())
     {
         if (entry.typeName == TypeName<AudioProperties>::value)
@@ -106,17 +107,21 @@ int main(void)
         }
     }
     std::cout << "All FMOD events loaded successfully!" << std::endl;
+   
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     //  Textures
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
+    
     CompileArray<TextureProperties>("src/Data/TextureAsset.json", "src/Data/TextureAsset.bin", g_TexturePropertiesProps, "textures");
-
+    
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     //  Mesh
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
+    
     CompileArray<MeshProperties>("src/Data/MeshAsset.json", "src/Data/MeshAsset.bin", g_MeshProps, "mesh");
+    
 
     // Initialize the InputHandler singleton
     //InputHandler::Initialize(Window->GetWindow());
@@ -167,6 +172,12 @@ int main(void)
 
     // Initialize the engine and run the main game loop
     engine->Initialize();
+
+    ImguiManager::Log("Initializing FontSystem...", "FontSystem");
+    fontSystem.Initialize();
+    fontSystem.LoadFont("Assets/Font/arial.ttf", 40, "Arial");
+    fontSystem.SetActiveFont("Arial");
+    ImguiManager::LogSuccess("FontSystem ready", "FontSystem");
 
     // Run All Scripts
     if (luaL_dofile(scriptingSystem->GetLuaState(), "assets/scripts/cook_all.lua") != LUA_OK) {

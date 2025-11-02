@@ -50,10 +50,10 @@
 #include "Lighting.h"
 #include "MeshLoader.h"
 #include "TextureLoader.h"
-#include "ImguiManager.h"
 #include "Coordinator.h"
 #include "ComponentList.h"
 #include "FontSystem.h"
+#include "ImguiManager.h"
 
 extern Framework::FontSystem fontSystem;
 extern Framework::Coordinator ecsInterface;
@@ -123,6 +123,8 @@ namespace Framework {
     // Initialize the system
     void Graphics::Initialize()
     {
+        ImguiManager::Log("Initializing Graphics System...", "Graphics");
+
         WindowConfig* config = AssetManager::Instance().Get<WindowConfig>(AssetManager::Instance().FindGuid<WindowConfig>());
 
         // always enable for depth test framebuffering
@@ -137,18 +139,24 @@ namespace Framework {
         //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
         // Register Graphics related Component
+        ImguiManager::Log("Registering graphics components...", "Graphics");
         ecsInterface.RegisterComponent<TransformComponent>();
         ecsInterface.RegisterComponent<HierarchyComponent>(); // Register in graphics as its default generic component allocated to all entities.
         ecsInterface.RegisterComponent<MeshProperties>();
         ecsInterface.RegisterComponent<TextureProperties>();
         ecsInterface.RegisterComponent<TextProperties>();
+        ImguiManager::LogSuccess("Graphics components registered", "Graphics");
 
         //  ---- ECS INITIALIZATION --- 
         Signature signature;
         signature.set(ecsInterface.GetComponentType<TransformComponent>()); //Set mEntities to be populated with MeshComponent for now
 
         ecsInterface.SetSystemSignature<Graphics>(signature);
+
+        std::stringstream ss;
+        ss << signature;
         std::cout << "Signature for Graphics system is: " << signature << std::endl;
+        ImguiManager::Log("Graphics signature set: " + ss.str(), "Graphics");
         //  ---- ECS INITIALIZATION END --- 
 
 
@@ -230,9 +238,10 @@ namespace Framework {
         triangle.initGL();
         //FONT SYSTEM
 
-        fontSystem.Initialize();
+        /*fontSystem.Initialize();
         fontSystem.LoadFont("Assets/Font/arial.ttf", 40, "Arial");
-        fontSystem.SetActiveFont("Arial");
+        fontSystem.SetActiveFont("Arial");*/
+
         m_debugMeshes[DebugShapeType::Box] = &cube;
         m_debugMeshes[DebugShapeType::Sphere] = &plane; // Remember 'plane' is your sphere mesh
         m_debugMeshes[DebugShapeType::Triangle] = &triangle;
@@ -313,6 +322,8 @@ namespace Framework {
 
         m_frameCount = 0;
         m_fpsLastTime = glfwGetTime(); // Start the timer
+
+        ImguiManager::LogSuccess("Graphics System initialized successfully", "Graphics");
     }
 
     void Graphics::SetImguiManager(ImguiManager* manager)

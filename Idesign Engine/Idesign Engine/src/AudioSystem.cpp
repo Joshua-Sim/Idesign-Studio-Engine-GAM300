@@ -12,6 +12,7 @@
 #include "AudioSystem.h"
 #include "Coordinator.h"
 #include "TransformProperties.h"
+#include "ImguiManager.h"
 #include <iostream>
 #include <cmath>
 
@@ -41,11 +42,16 @@ namespace Framework {
 
     void AudioSystem::Initialize() {
         std::cout << "[AudioSystem] Initializing..." << std::endl;
+        ImguiManager::Log("Initializing...", "AudioSystem");
 
         // 1) AudioComponent - should only be registered by AudioSystem
         std::cout << "[AudioSystem] Registering AudioComponent..." << std::endl;
+        ImguiManager::Log("Registering AudioComponent...", "AudioSystem");
+
         ecsInterface.RegisterComponent<AudioComponent>();
+
         std::cout << "[AudioSystem] AudioComponent registered" << std::endl;
+        ImguiManager::LogSuccess("AudioComponent registered", "AudioSystem");
 
         // 2) TransformComponent - might already be registered
         std::cout << "[AudioSystem] Checking if TransformComponent is already registered..." << std::endl;
@@ -67,7 +73,10 @@ namespace Framework {
         sig.set(ecsInterface.GetComponentType<TransformComponent>(), true);
         ecsInterface.SetSystemSignature<AudioSystem>(sig);
 
+        std::stringstream ss;
+        ss << sig;
         std::cout << "[AudioSystem] Signature set: " << sig << std::endl;
+        ImguiManager::Log("Signature set: " + ss.str(), "AudioSystem");
 
         // 3) Subscribe to messages for entity lifecycle management
         MessageBus::Get().Subscribe<EntityDestroyedMessage>(
@@ -77,6 +86,7 @@ namespace Framework {
             [this](const PlaySoundMessage& msg) { OnPlaySound(msg); });
 
         std::cout << "[AudioSystem] Initialized with 3D audio support" << std::endl;
+        ImguiManager::LogSuccess("Initialized with 3D audio support", "AudioSystem");
     }
 
     void AudioSystem::Update(float deltaTime) {

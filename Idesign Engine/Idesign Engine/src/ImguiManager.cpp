@@ -286,8 +286,14 @@ namespace Framework {
             }
         }
     }
+    //Initialize static instance 
+    ImguiManager* ImguiManager::instance = nullptr;
 
-    ImguiManager::ImguiManager() {}
+    ImguiManager::ImguiManager() {
+        instance = this;
+        memset(filterBuffer, 0, sizeof(filterBuffer));
+    }
+
     ImguiManager::~ImguiManager() {
 
         ImGui_ImplOpenGL3_Shutdown();
@@ -339,6 +345,12 @@ namespace Framework {
             TextureLoader::loadTexture(g_ObjIcon, false);
             g_ObjIconLoaded = true;
         }
+
+        //Subsribe to console messages 
+        MessageBus::Get().Subscribe<ConsoleLogMessage>(
+            [this](const ConsoleLogMessage& msg) {OnConsoleLog(msg);});
+
+        Log("ImguiManager initialized", "ImGui");
     }
 
     void ImguiManager::Update(float deltaTime) {
@@ -383,6 +395,12 @@ namespace Framework {
             RenderEntityMenu();
 
         }
+
+        //Render Console 
+        if (showConsole) {
+            RenderConsole();
+        }
+
         // Render ImGui
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -397,6 +415,149 @@ namespace Framework {
         glfwSetDropCallback(backup_current_context, DropCallback);
         glfwPollEvents();
         glfwSwapBuffers(m_graphicsSystem->GetWindow());
+    }
+
+    //Console Message handler 
+    void ImguiManager::OnConsoleLog(const ConsoleLogMessage& msg) {
+        ConsoleEntry entry;
+        entry.category = msg.category;
+        entry.message = msg.message;
+        entry.level = msg.level;
+
+        // GENERATE TIMESTAMP HERE (not copy from msg)
+        time_t now = time(nullptr);
+        char buffer[32];
+#ifdef _WIN32
+        struct tm timeInfo;
+        localtime_s(&timeInfo, &now);
+        strftime(buffer, sizeof(buffer), "%H:%M:%S", &timeInfo);
+#else
+        struct tm* timeInfo = localtime(&now);
+        strftime(buffer, sizeof(buffer), "%H:%M:%S", timeInfo);
+#endif
+        entry.timestamp = std::string(buffer);
+
+        consoleBuffer.push_back(entry);
+
+        //Maintain buffer size 
+        while (consoleBuffer.size() > maxBufferSize) {
+            consoleBuffer.pop_front();
+        }
+
+#ifdef _DEBUG
+        //Also print to stdout in debug builds 
+        std::cout << "[" << entry.timestamp << "] "
+            << entry.category << ": "  // FIX: Added space after colon
+            << entry.message << std::endl;
+#endif 
+
+    }
+
+    //Render Console Window 
+    void ImguiManager::RenderConsole() {
+        ImGui::Begin("Console Window", &showConsole, ImGuiWindowFlags_MenuBar);
+
+        //Menu Bar 
+        if (ImGui::BeginMenuBar()) {
+            if (ImGui::Button("Clear")) {
+                consoleBuffer.clear();
+            }
+
+            ImGui::Separator();
+            ImGui::Checkbox("Auto-scroll", &autoScroll);
+            ImGui::Separator();
+            ImGui::Checkbox("Info", &showInfo);
+            ImGui::SameLine();
+            ImGui::Checkbox("Warning", &showWarning);
+            ImGui::SameLine();
+            ImGui::Checkbox("Error", &showError);
+            ImGui::SameLine();
+            ImGui::Checkbox("Success", &showSuccess);
+            ImGui::EndMenuBar();
+        }
+
+        //Filter input 
+        ImGui::InputText("Filter", filterBuffer, sizeof(filterBuffer));
+        ImGui::Separator();
+
+        // Console output area
+        ImGui::BeginChild("ScrollingRegion", ImVec2(0, 0), false,
+            ImGuiWindowFlags_HorizontalScrollbar);
+
+        std::string filterStr(filterBuffer);
+
+        for (const auto& entry : consoleBuffer) {
+            // Apply level filters
+            if (entry.level == ConsoleLogMessage::LogLevel::INFO && !showInfo) continue;
+            if (entry.level == ConsoleLogMessage::LogLevel::WARNING && !showWarning) continue;
+            if (entry.level == ConsoleLogMessage::LogLevel::ERR && !showError) continue;
+            if (entry.level == ConsoleLogMessage::LogLevel::SUCCESS && !showSuccess) continue;
+
+            // Apply text filter
+            if (!filterStr.empty()) {
+                if (entry.message.find(filterStr) == std::string::npos &&
+                    entry.category.find(filterStr) == std::string::npos) {
+                    continue;
+                }
+            }
+
+            // Colorize based on level
+            glm::vec4 color = GetColorForLevel(entry.level);
+            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(color.r, color.g, color.b, color.a));
+
+            // Format: [timestamp] CATEGORY: message
+            std::string displayText = "[" + entry.timestamp + "] " +
+                entry.category + ": " +
+                entry.message;
+            ImGui::TextUnformatted(displayText.c_str());
+
+            ImGui::PopStyleColor();
+        }
+
+        if (autoScroll && ImGui::GetScrollY() >= ImGui::GetScrollMaxY()) {
+            ImGui::SetScrollHereY(1.0f);
+        }
+
+        ImGui::EndChild();
+        ImGui::End();
+    }
+
+    //Get color for log level 
+    glm::vec4 ImguiManager::GetColorForLevel(ConsoleLogMessage::LogLevel level) {
+        switch (level) {
+        case ConsoleLogMessage::LogLevel::INFO:
+            return glm::vec4(1.0f, 1.0f, 1.0f, 1.0f); //white 
+        case ConsoleLogMessage::LogLevel::WARNING:
+            return glm::vec4(1.0f, 1.0f, 0.0f, 1.0f); // Yellow
+        case ConsoleLogMessage::LogLevel::ERR:
+            return glm::vec4(1.0f, 0.2f, 0.2f, 1.0f); // Red
+        case ConsoleLogMessage::LogLevel::SUCCESS:
+            return glm::vec4(0.2f, 1.0f, 0.2f, 1.0f); // Green
+        default:
+            return glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+        }
+    }
+
+    //Static logging methods 
+    void ImguiManager::Log(const std::string& message, const std::string& category) {
+        MessageBus::Get().SendImmediate(
+            ConsoleLogMessage(message, ConsoleLogMessage::LogLevel::INFO, category));
+
+    }
+
+    void ImguiManager::LogWarning(const std::string& message, const std::string& category) {
+        MessageBus::Get().SendImmediate(
+            ConsoleLogMessage(message, ConsoleLogMessage::LogLevel::WARNING, category));
+    }
+
+    void ImguiManager::LogError(const std::string& message, const std::string& category) {
+        MessageBus::Get().SendImmediate(
+            ConsoleLogMessage(message, ConsoleLogMessage::LogLevel::ERR, category));
+    }
+
+    void ImguiManager::LogSuccess(const std::string& message, const std::string& category) {
+        MessageBus::Get().SendImmediate(
+            ConsoleLogMessage(message, ConsoleLogMessage::LogLevel::SUCCESS, category));
     }
 
     void ImguiManager::RenderMenuBar() {
@@ -422,6 +583,11 @@ namespace Framework {
                     Framework::sceneManager.SaveScene(savePath);
                 }
                 ImGui::EndMenu();
+                //Add Windows menu to toggle console
+                if (ImGui::BeginMenu("Windows")) {
+                    ImGui::MenuItem("Console Window", nullptr, &showConsole);
+                    ImGui::EndMenu();
+                }
             }
             ImGui::EndMenuBar();
         }
