@@ -2065,24 +2065,6 @@ namespace Framework {
                     }
 
                 }
-
-                if (int id = m_graphicsSystem->ConsumeLastPickedId(); id >= 0)
-                {
-                    selectedEntity = static_cast<Entity>(id);
-                    isPropertiesWindowOpen = true;  // open right panel automatically (optional)
-                    //std::cout << "Selected entity from viewport: " << selectedEntity << "\n"; // debug
-                }
-
-                // --- Gizmo overlay on top of the Main Viewport texture ---
-                ImVec2 rectMin = ImGui::GetItemRectMin();
-                ImVec2 rectMax = ImGui::GetItemRectMax();
-                ImVec2 vpSize = ImVec2(rectMax.x - rectMin.x, rectMax.y - rectMin.y);
-
-                Camera* cam = m_graphicsSystem->getCamera();
-                glm::mat4 view = cam->getViewMatrix();
-                glm::mat4 proj = cam->getProjectionMatrix(1280.0f, 720.0f);
-
-                RenderGizmoForSelected(view, proj, rectMin, vpSize);
             }
             ImGui::End();
             //Debug second viewport window
@@ -2121,6 +2103,24 @@ namespace Framework {
                     if (secondaryView == 0) m_graphicsSystem->RequestPickUV(u, v);
                     else                    m_graphicsSystem->RequestPickUVSecondary(u, v);
                 }
+
+                if (int id = m_graphicsSystem->ConsumeLastPickedId(); id >= 0)
+                {
+                    selectedEntity = static_cast<Entity>(id);
+                    isPropertiesWindowOpen = true;  // open right panel automatically (optional)
+                    //std::cout << "Selected entity from viewport: " << selectedEntity << "\n"; // debug
+                }
+
+                // --- Gizmo overlay on top of the Viewport texture ---
+                ImVec2 rectMin = ImGui::GetItemRectMin();
+                ImVec2 rectMax = ImGui::GetItemRectMax();
+                ImVec2 vpSize(rectMax.x - rectMin.x, rectMax.y - rectMin.y);
+
+                // Use the SECONDARY camera’s matrices
+                glm::mat4 view = m_graphicsSystem->GetViewMatrix(secondaryView);
+                glm::mat4 proj = m_graphicsSystem->GetProjectionMatrix(secondaryView, 1280.f, 720.f);
+
+                RenderGizmoForSelected(view, proj, rectMin, vpSize);
             }
             ImGui::End();
         }

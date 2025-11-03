@@ -1227,6 +1227,23 @@ namespace Framework {
         return id;
     }
 
+    glm::mat4 Graphics::GetViewMatrix(int viewIdx) const
+    {
+        const Camera& cam = (viewIdx == 1) ? sceneCamera : gameCamera;
+        return cam.getViewMatrix();
+    }
+
+    glm::mat4 Graphics::GetProjectionMatrix(int viewIdx, float w, float h) const
+    {
+        const Camera& cam = (viewIdx == 1) ? sceneCamera : gameCamera;
+        return cam.getProjectionMatrix(w, h);
+    }
+
+    Camera* Graphics::GetCameraByIndex(int viewIdx)
+    {
+        return (viewIdx == 1) ? &sceneCamera : &gameCamera;
+    }
+
     void Graphics::renderQuad()
     {
         if (quadVAO == 0)
