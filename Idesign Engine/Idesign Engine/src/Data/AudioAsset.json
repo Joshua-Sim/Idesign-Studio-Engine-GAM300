@@ -15,18 +15,18 @@
             "soundType": "background"
         },
         {
-            "guid": "643715c8-de70-4f9c-a5dd-0171a4e4a419",
-            "name": "piano",
-            "path": "Assets/Audio/bgm/piano.wav",
-            "mode": "loop",
-            "soundType": "background"
-        },
-        {
             "guid": "0870a325-025a-47d6-a38e-0d93515b6727",
             "name": "buttonclick",
             "path": "Assets/Audio/soundeffect/buttonclick.wav",
             "mode": "oneshot",
             "soundType": "effect"
+        },
+        {
+            "guid": "643715c8-de70-4f9c-a5dd-0171a4e4a419",
+            "name": "piano",
+            "path": "Assets/Audio/bgm/piano.wav",
+            "mode": "loop",
+            "soundType": "background"
         },
         {
             "guid": "e0a8effe-3331-427d-bc21-8399a28b38a0",
