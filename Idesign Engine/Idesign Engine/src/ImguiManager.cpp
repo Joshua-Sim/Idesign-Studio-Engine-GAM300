@@ -1580,8 +1580,6 @@ namespace Framework {
                         }
                     }
 
-                    DrawEntityInspector(selectedEntity, ecsInterface);
-
                     //Navmesh property
                     if (ImGui::CollapsingHeader("NavMesh Component", ImGuiTreeNodeFlags_DefaultOpen))
                     {
@@ -1663,6 +1661,8 @@ namespace Framework {
                             }
                         }
                     }
+
+                    DrawEntityInspector(selectedEntity, ecsInterface);
 
                     // Reset selectedEntity if the properties window is closed
                     if (!isPropertiesWindowOpen)
