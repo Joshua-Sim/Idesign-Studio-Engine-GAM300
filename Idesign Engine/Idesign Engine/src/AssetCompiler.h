@@ -183,6 +183,7 @@ namespace Framework
             switch (p.m_Type)
             {
             case prop::INT:    { int          v; p.m_fnGet(&obj, &v); out.write(reinterpret_cast<const char*>(&v), sizeof(v)); break; }
+            case prop::DRAG_FLOAT:
             case prop::SLIDER_FLOAT:
             case prop::FLOAT:  { float        v; p.m_fnGet(&obj, &v); out.write(reinterpret_cast<const char*>(&v), sizeof(v)); break; }
             case prop::DOUBLE: { double       v; p.m_fnGet(&obj, &v); out.write(reinterpret_cast<const char*>(&v), sizeof(v)); break; }
@@ -200,6 +201,7 @@ namespace Framework
                 out.write(value.data(), length);
                 break;
             }
+            case prop::COLOR3:
             case prop::VEC3:
             {
                 glm::vec3 value;
@@ -226,6 +228,7 @@ namespace Framework
             switch (p.m_Type)
             {
             case prop::INT:    { int          v; in.read(reinterpret_cast<char*>(&v), sizeof(v)); if (!in) throw; p.m_fnSet(&obj, &v); break; }
+            case prop::DRAG_FLOAT:
             case prop::SLIDER_FLOAT:
             case prop::FLOAT:  { float        v; in.read(reinterpret_cast<char*>(&v), sizeof(v)); if (!in) throw; p.m_fnSet(&obj, &v); break; }
             case prop::DOUBLE: { double       v; in.read(reinterpret_cast<char*>(&v), sizeof(v)); if (!in) throw; p.m_fnSet(&obj, &v); break; }
@@ -248,6 +251,7 @@ namespace Framework
                 p.m_fnSet(&obj, &value);
                 break;
             }
+            case prop::COLOR3:
             case prop::VEC3:
             {
                 glm::vec3 value;

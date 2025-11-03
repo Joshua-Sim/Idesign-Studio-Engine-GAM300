@@ -660,6 +660,7 @@ namespace Framework
             switch (p.m_Type)
             {
             case prop::INT:    if (v.IsInt())    { int          temp = v.GetInt();                            p.m_fnSet(pObject, &temp); } break;
+            case prop::DRAG_FLOAT:
             case prop::SLIDER_FLOAT:
             case prop::FLOAT:  if (v.IsNumber()) { float        temp = static_cast<float>(v.GetDouble());     p.m_fnSet(pObject, &temp); } break;
             case prop::DOUBLE: if (v.IsNumber()) { double       temp = v.GetDouble();                         p.m_fnSet(pObject, &temp); } break;
@@ -669,6 +670,7 @@ namespace Framework
             case prop::STRING: if (v.IsString()) { std::string  temp(v.GetString(), v.GetStringLength());     p.m_fnSet(pObject, &temp); } break;
             case prop::CHAR:   if (v.IsString() && v.GetStringLength() == 1) { char temp = v.GetString()[0];  p.m_fnSet(pObject, &temp); } break;
             case prop::UINT:   if (v.IsUint())   { unsigned int temp = v.GetUint();                           p.m_fnSet(pObject, &temp); } break;
+            case prop::COLOR3:
             case prop::VEC3:
             {
                 if (v.IsArray() && v.Size() == 3)
@@ -705,6 +707,7 @@ namespace Framework
             switch (p.m_Type)
             {
             case prop::INT:    { int          v; p.m_fnGet(pObject, &v); outObj.AddMember(key, v, allocator); break; }
+            case prop::DRAG_FLOAT:
             case prop::SLIDER_FLOAT:
             case prop::FLOAT:  { float        v; p.m_fnGet(pObject, &v); outObj.AddMember(key, v, allocator); break; }
             case prop::DOUBLE: { double       v; p.m_fnGet(pObject, &v); outObj.AddMember(key, v, allocator); break; }
@@ -730,6 +733,7 @@ namespace Framework
                 outObj.AddMember(key, jsonValue, allocator);
                 break;
             }
+            case prop::COLOR3:
             case prop::VEC3:
             {
                 glm::vec3 value;

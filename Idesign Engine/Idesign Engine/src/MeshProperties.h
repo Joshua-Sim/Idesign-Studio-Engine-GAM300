@@ -55,11 +55,11 @@ namespace Framework
         PROP_UINT_READONLY(ebo, MeshProperties),
         PROP_UINT_READONLY(indexCount, MeshProperties),
 
-        PROP_VEC3(ambient,MeshProperties),
-        PROP_VEC3(albedo,MeshProperties),
-        PROP_VEC3(specular,MeshProperties),
-        PROP_FLOAT(shininess,MeshProperties),
-        PROP_FLOAT(opacity,MeshProperties)
+        PROP_COLOR3(ambient,MeshProperties),
+        PROP_COLOR3(albedo,MeshProperties),
+        PROP_COLOR3(specular,MeshProperties),
+        PROP_DRAG_FLOAT(shininess,MeshProperties),
+        PROP_DRAG_FLOAT(opacity,MeshProperties)
     };
 
     inline const prop_list g_MeshProps{ "MeshProperties", g_MeshPropsArray };
