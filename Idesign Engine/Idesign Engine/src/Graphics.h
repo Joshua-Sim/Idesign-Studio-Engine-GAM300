@@ -107,6 +107,8 @@ namespace Framework {
         ShaderProgram blurShader{ "Assets/shaders/postprocess.glsl", "Assets/shaders/blur.glsl" };
         ShaderProgram finalShader{ "Assets/shaders/postprocess.glsl", "Assets/shaders/final.glsl" };
         ShaderProgram debugShader{ "Assets/shaders/debugVertexShader.glsl", "Assets/shaders/debugFragmentShader.glsl" };
+        ShaderProgram skinnedShader{ "Assets/Shaders/SkinnedVert.glsl", "Assets/Shaders/meshfrag.glsl" };
+
         // lighting
         DirectionalLightCPU sun;
         bool hasSun = true;
