@@ -56,6 +56,8 @@
 #include "ComponentList.h"
 #include <NavMeshProperties.h>
 #include "FontSystem.h"
+#include "PrefabProperties.h"
+#include "PrefabComponent.h"
 
 extern Framework::FontSystem fontSystem;
 extern Framework::Coordinator ecsInterface;
@@ -148,7 +150,8 @@ namespace Framework {
         ecsInterface.RegisterComponent<NavMeshComponent>();
         ecsInterface.RegisterComponent<NavMeshAgentComponent>(); // Move to navmesh sys after fixing load scene for mesh model
         ecsInterface.RegisterComponent<AudioProperties>();
-
+        //test
+        ecsInterface.RegisterComponent<PrefabComponent>();
 
         //  ---- ECS INITIALIZATION --- 
         Signature signature;
