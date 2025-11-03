@@ -21,6 +21,9 @@
 #include "NavMeshSystem.h"
 #include "Imgui_Hierarchy.h"
 #include "NavMeshProperties.h"
+#include <FileCheckSystem.h>
+#include <ScriptingSystem.h>
+#include "ImGuizmo.h"
 
 extern Framework::Coordinator ecsInterface;
 
@@ -41,6 +44,7 @@ namespace Framework {
     GLuint gameFramebuffer{}, gameTexture{}, rbo{};
     bool print_out = false;
     static std::string filePath{};
+    static std::vector<Framework::FileEvent> pendingEvents;
     //second framebuffer for game view
     GLuint gameFramebufferB{}, gameTextureB{}, rboB{};
 
@@ -135,6 +139,70 @@ namespace Framework {
             return fullPath;
         }
         return "";
+    }
+
+    //FILE CHECKING
+    void ImguiManager::DrawHotReloadPrompt()
+    {
+        auto fileCheckSystem = ecsInterface.GetSystem<Framework::FileCheckSystem>();
+        auto scriptingSystem = ecsInterface.GetSystem<Framework::ScriptingSystem>();
+
+        // Step 1: poll new file events
+        Framework::FileEvent ev;
+        static std::unordered_map<std::string, double> lastHandled;
+        double now = ImGui::GetTime();
+        int pulled = 0;
+        while (fileCheckSystem->PopEvent(ev)) {
+            ++pulled;
+
+            if (m_autoReload)
+            {
+                // simple debounce (avoid multiple reloads per save)
+                if (now - lastHandled[ev.path] > 0.35)
+                {
+                    lastHandled[ev.path] = now;
+
+                    // Reload script files only
+                    if (std::filesystem::path(ev.path).extension() == ".lua")
+                    {
+                        if (scriptingSystem)
+                            scriptingSystem->HotReloadScript(ev.path);
+
+                        std::cout << "[AutoReload] " << ev.path << "\n";
+                    }
+                }
+            }
+            else
+            {
+                // Prompt mode → push to pending
+                pendingEvents.push_back(ev);
+            }
+        }
+
+        if (m_autoReload) return;
+        //std::cout << "[HotReload] pulled this frame: " << pulled << " | pendingEvents: " << pendingEvents.size() << "\n";
+
+        // Step 2: draw prompt if any
+        if (!pendingEvents.empty()) {
+            ImGui::OpenPopup("Hot Reload");
+        }
+        if (ImGui::BeginPopupModal("Hot Reload", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+            auto& ev = pendingEvents.front();
+            ImGui::TextWrapped("File changed:\n%s", ev.path.c_str());
+            if (ImGui::Button("Hot Reload")) {
+                if (auto scripting = ecsInterface.GetSystem<Framework::ScriptingSystem>()) {
+                    scripting->HotReloadScript(ev.path);
+                }
+                pendingEvents.erase(pendingEvents.begin());
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Ignore")) {
+                pendingEvents.erase(pendingEvents.begin());
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
+        }
     }
 
     // Error Detection for Audio
@@ -422,6 +490,9 @@ namespace Framework {
 
             RenderEntityMenu();
 
+            DrawHotReloadPrompt();
+
+            RenderGizmoPanel();
             ImGui::End(); // End of main dockspace window
 
         }
@@ -1813,7 +1884,7 @@ namespace Framework {
 
                     float u = (pos.x - min.x) / (max.x - min.x);
                     float v = (pos.y - min.y) / (max.y - min.y);
-                    v = 1.0f - v; // your Image uses (0,1) to (1,0), so flip
+                    v = 1.0f - v;
 
                     // hand normalized UV to Graphics for the readback
                     m_graphicsSystem->SetPickViewIndex(g_MainViewIndex); // assuming view index 0 for main viewport
@@ -1825,6 +1896,24 @@ namespace Framework {
                     }
 
                 }
+
+                if (int id = m_graphicsSystem->ConsumeLastPickedId(); id >= 0)
+                {
+                    selectedEntity = static_cast<Entity>(id);
+                    isPropertiesWindowOpen = true;  // open right panel automatically (optional)
+                    //std::cout << "Selected entity from viewport: " << selectedEntity << "\n"; // debug
+                }
+
+                // --- Gizmo overlay on top of the Main Viewport texture ---
+                ImVec2 rectMin = ImGui::GetItemRectMin();
+                ImVec2 rectMax = ImGui::GetItemRectMax();
+                ImVec2 vpSize = ImVec2(rectMax.x - rectMin.x, rectMax.y - rectMin.y);
+
+                Camera* cam = m_graphicsSystem->getCamera();
+                glm::mat4 view = cam->getViewMatrix();
+                glm::mat4 proj = cam->getProjectionMatrix(1280.0f, 720.0f);
+
+                RenderGizmoForSelected(view, proj, rectMin, vpSize);
             }
             ImGui::End();
             //Debug second viewport window
@@ -1867,4 +1956,104 @@ namespace Framework {
             ImGui::End();
         }
     }
+
+    void ImguiManager::RenderGizmoPanel()
+    {
+        if (ImGui::Begin("Gizmos", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
+        {
+            ImGui::Text("Gizmo Controls");
+            ImGui::Separator();
+
+            ImGui::Checkbox("Enabled", &m_gizmoEnabled);
+
+            ImGui::Text("Operation");
+            ImGui::RadioButton("Translate", &m_gizmoOperation, 0); ImGui::SameLine();
+            ImGui::RadioButton("Rotate", &m_gizmoOperation, 1); ImGui::SameLine();
+            ImGui::RadioButton("Scale", &m_gizmoOperation, 2);
+
+            ImGui::Text("Space");
+            ImGui::RadioButton("Local", &m_gizmoMode, 0); ImGui::SameLine();
+            ImGui::RadioButton("World", &m_gizmoMode, 1);
+
+        }
+        ImGui::End();
+    }
+
+    void ImguiManager::RenderGizmoForSelected(const glm::mat4& view, const glm::mat4& proj,
+        const ImVec2& viewportTopLeft, const ImVec2& viewportSize)
+    {
+        if (!m_gizmoEnabled) return;
+
+        extern Framework::Coordinator ecsInterface;
+        if (selectedEntity == std::numeric_limits<Entity>::max()) return;
+        if (!ecsInterface.HasComponent<TransformComponent>(selectedEntity)) return;
+
+        ImGuizmo::BeginFrame();
+        ImGuizmo::SetDrawlist();
+        ImGuizmo::SetOrthographic(false);
+        ImGuizmo::SetRect(viewportTopLeft.x, viewportTopLeft.y, viewportSize.x, viewportSize.y);
+
+        auto& tr = ecsInterface.GetComponent<TransformComponent>(selectedEntity);
+
+        // Build model from your stored TRS (rotation is in degrees)
+        glm::mat4 model(1.0f);
+        model = glm::translate(model, tr.position);
+        model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
+        model = glm::rotate(model, glm::radians(tr.rotation.y), { 0,1,0 });
+        model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
+        model = glm::scale(model, tr.scale);
+
+        ImGuizmo::OPERATION op = (m_gizmoOperation == 0) ? ImGuizmo::TRANSLATE :
+            (m_gizmoOperation == 1) ? ImGuizmo::ROTATE : ImGuizmo::SCALE;
+        ImGuizmo::MODE mode = (m_gizmoMode == 0) ? ImGuizmo::LOCAL : ImGuizmo::WORLD;
+
+        // (optional) snapping
+        static bool  useSnap = false;
+        static float snapT[3] = { 0.1f,0.1f,0.1f };
+        static float snapR = 5.0f;   // degrees
+        static float snapS[3] = { 0.1f,0.1f,0.1f };
+        float* snap = nullptr;
+        if (useSnap) snap = (op == ImGuizmo::TRANSLATE) ? snapT : (op == ImGuizmo::ROTATE) ? &snapR : snapS;
+
+        // Use delta for stable rotation updates
+        glm::mat4 delta(1.0f);
+        if (ImGuizmo::Manipulate(glm::value_ptr(view),
+            glm::value_ptr(proj),
+            op, mode,
+            glm::value_ptr(model),
+            glm::value_ptr(delta),
+            snap))
+        {
+            if (op == ImGuizmo::ROTATE)
+            {
+                // Apply only the incremental rotation (degrees) to avoid Euler flip/jitter
+                float dt[3], dr[3], ds[3];
+                ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(delta), dt, dr, ds);
+
+                tr.rotation += glm::vec3(dr[0], dr[1], dr[2]); // add delta Euler (deg)
+
+                // keep angles tidy
+                auto wrap = [](float a) {
+                    if (a > 180.f) a = fmodf(a + 180.f, 360.f) - 180.f;
+                    if (a < -180.f) a = fmodf(a - 180.f, 360.f) + 180.f;
+                    return a;
+                    };
+                tr.rotation.x = wrap(tr.rotation.x);
+                tr.rotation.y = wrap(tr.rotation.y);
+                tr.rotation.z = wrap(tr.rotation.z);
+            }
+            else
+            {
+                // For translate/scale, full decompose is fine
+                float t[3], r[3], s[3];
+                ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(model), t, r, s);
+                tr.position = { t[0], t[1], t[2] };
+                tr.rotation = { r[0], r[1], r[2] };  // degrees
+                tr.scale = { s[0], s[1], s[2] };
+            }
+
+            tr.isDirty = true;
+        }
+    }
+
 }

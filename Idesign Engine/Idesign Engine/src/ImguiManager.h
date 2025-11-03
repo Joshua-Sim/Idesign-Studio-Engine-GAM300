@@ -38,15 +38,24 @@ namespace Framework {
 		GLuint GetGameTexture(int viewIndex);
 		std::string OpenFileDialog();
 		std::string SaveFileDialog();
+		void DrawHotReloadPrompt();
 		void RenderErrorPopup();
 		void RenderMenuBar();
 		void RenderMeshAssets();
 		void RenderAssetBar();
 		void RenderAudioManager();
 		void RenderEntityMenu();
+		void RenderGizmoPanel();
+		void RenderGizmoForSelected(const glm::mat4& view, const glm::mat4& proj,
+			const ImVec2& viewportTopLeft, const ImVec2& viewportSize);
+
 		int GetMainViewIndex() const;
 	private:
 		Framework::Graphics* m_graphicsSystem = nullptr; // Pointer to store the connection
+		bool m_autoReload = true;
+		int m_gizmoOperation = 0; // 0=Translate, 1=Rotate, 2=Scale
+		int m_gizmoMode = 0; // 0=Local, 1=World
+		bool m_gizmoEnabled = true;
 	};
 }
 

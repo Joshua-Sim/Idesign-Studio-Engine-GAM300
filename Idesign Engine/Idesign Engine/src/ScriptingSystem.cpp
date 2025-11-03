@@ -162,6 +162,10 @@ namespace Framework {
             lua_pushboolean(L, ok);
             return 1;
         }
+    
+        static uint64_t FileTimeToTicks(const std::filesystem::file_time_type& ft) {
+            return std::chrono::duration_cast<std::chrono::milliseconds>(ft.time_since_epoch()).count();
+        }
     } // anonymous namespace
 
     // ---------------------------- class methods --------------------------------
@@ -211,6 +215,30 @@ namespace Framework {
         for (auto const& e : mEntities) {
             if (!ecsInterface.HasComponent<ScriptComponent>(e)) continue;
             auto& sc = ecsInterface.GetComponent<ScriptComponent>(e);
+
+            if (sc.hotReload && !sc.scriptPath.empty()) {
+                try {
+                    auto nowTicks = FileTimeToTicks(std::filesystem::last_write_time(sc.scriptPath));
+                    if (nowTicks != sc.lastWriteTicks) {
+                        std::cout << "[HotReload] " << sc.scriptPath << "\n";
+                        if (LoadScriptTable(sc)) {
+                            // re-expose entity id
+                            lua_rawgeti(L, LUA_REGISTRYINDEX, sc.tableRef);
+                            lua_pushinteger(L, static_cast<lua_Integer>(e));
+                            lua_setfield(L, -2, "entity");
+                            lua_pop(L, 1);
+
+                            // run on_init again so the script can re-bind state
+                            CallHook(sc.tableRef, "on_init");
+                            sc.initialized = true;
+                        }
+                        sc.lastWriteTicks = nowTicks; // remember the new time
+                    }
+                }
+                catch (const std::exception& ex) {
+                    std::cerr << "[HotReload] check failed for " << sc.scriptPath << ": " << ex.what() << "\n";
+                }
+            }
 
             if (sc.tableRef == LUA_NOREF) {
                 if (!LoadScriptTable(sc)) continue;
@@ -297,6 +325,81 @@ namespace Framework {
         ecsInterface.AddComponent<TransformComponent>(e,TransformComponent{});
         ecsInterface.AddComponent<HierarchyComponent>(e, HierarchyComponent{});
         return e;
+    }
+
+    void ScriptingSystem::HotReloadScript(const std::string& changedPath)
+    {
+        namespace fs = std::filesystem;
+        std::error_code ec;
+
+        // Normalize the changed path
+        fs::path changedAbs = fs::weakly_canonical(changedPath, ec);
+        std::string changedNorm = (ec ? fs::path(changedPath) : changedAbs).lexically_normal().generic_string();
+        std::string changedFile = fs::path(changedNorm).filename().string();
+
+        std::cout << "[HotReload] request for: " << changedNorm << "\n";
+
+        bool any = false;
+
+        for (auto e : mEntities)
+        {
+            if (!ecsInterface.HasComponent<ScriptComponent>(e)) continue;
+            auto& sc = ecsInterface.GetComponent<ScriptComponent>(e);
+            if (sc.scriptPath.empty()) continue;
+
+            // Normalize the stored script path
+            ec.clear();
+            fs::path scAbs = fs::weakly_canonical(sc.scriptPath, ec);
+            std::string scNorm = (ec ? fs::path(sc.scriptPath) : scAbs).lexically_normal().generic_string();
+            std::string scFile = fs::path(scNorm).filename().string();
+
+            // Match by absolute OR by filename (helps when one side is relative)
+            bool match = (scNorm == changedNorm) || (scFile == changedFile);
+
+            if (match)
+            {
+                std::cout << "  -> reloading entity " << e << " (" << scNorm << ")\n";
+                if (LoadScriptTable(sc))
+                {
+                    // re-expose entity id on the table and re-init
+                    lua_rawgeti(L, LUA_REGISTRYINDEX, sc.tableRef);
+                    lua_pushinteger(L, static_cast<lua_Integer>(e));
+                    lua_setfield(L, -2, "entity");
+                    lua_pop(L, 1);
+
+                    sc.initialized = false;
+                    CallHook(sc.tableRef, "on_init");
+                    any = true;
+                }
+                else
+                {
+                    std::cerr << "  !! reload failed for " << scNorm << "\n";
+                }
+            }
+        }
+
+        // Optional fallback: if nothing matched but it was a .lua file, reload ALL scripts
+        if (!any && fs::path(changedNorm).extension() == ".lua")
+        {
+            std::cout << "  (no direct match; reloading all scripts)\n";
+            for (auto e : mEntities)
+            {
+                if (!ecsInterface.HasComponent<ScriptComponent>(e)) continue;
+                auto& sc = ecsInterface.GetComponent<ScriptComponent>(e);
+                if (sc.scriptPath.empty()) continue;
+
+                if (LoadScriptTable(sc))
+                {
+                    lua_rawgeti(L, LUA_REGISTRYINDEX, sc.tableRef);
+                    lua_pushinteger(L, static_cast<lua_Integer>(e));
+                    lua_setfield(L, -2, "entity");
+                    lua_pop(L, 1);
+
+                    sc.initialized = false;
+                    CallHook(sc.tableRef, "on_init");
+                }
+            }
+        }
     }
 
 } // namespace Framework

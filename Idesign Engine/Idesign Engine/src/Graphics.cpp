@@ -378,140 +378,196 @@ namespace Framework {
 
         float now = (float)glfwGetTime();
         float dt = now - lastTime; lastTime = now;
-        //process_input(dt);
-
-        // ====================================================================
-       // 1. SCENE PASS: Render the scene to the HDR framebuffer
-       // ====================================================================
-        glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
-        glEnable(GL_DEPTH_TEST);
+        process_input(dt);
 
         int w, h;
         glfwGetFramebufferSize(window, &w, &h);
-
         if (w == 0 || h == 0) {
             return; // Don't render anything if the window is minimized
         }
-        float aspect = (h == 0) ? 1.f : float(w) / float(h);
-        glViewport(0, 0, w, h);
-        glClearColor(0.07f, 0.09f, 0.12f, 1.f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        Camera& camera = gameCamera;
-        glm::mat4 proj = camera.getProjectionMatrix((float)w, (float)h);
-        glm::mat4 view = camera.getViewMatrix();
 
-        // stick to ground
-        float groundY = terrain.getHeightAt(camera.position.x, camera.position.z);
-        camera.position.y = groundY + 1.8f;
-
-        // --- Terrain (no texture)
-        terrainShader.use();
-        terrainShader.setMat4("uProj", proj);
-        terrainShader.setMat4("uView", view);
-        terrainShader.setMat4("uModel", glm::mat4(1.f));
-        terrainShader.setVec3("uAlbedo", { 0.6f,0.4f,0.2f }); //terrain color
-        LightComponent::upload(terrainShader, sun, hasSun, pointLights, spotLights);
-        terrain.draw();
-
-        // --- Mesh (textured)
-        meshShader.use();
-        meshShader.setMat4("uProj", proj);
-        meshShader.setMat4("uView", view);
-        meshShader.setVec3("uViewPos", camera.position);
-
-        // ---- ECS draw loop ----
-        // JAY (374 TO 415)
-        // --- highlight selected entity (picked last frame) ---
-        int sel = lastPickedId; // cache once per frame
-        const glm::vec3 kHighlightAlbedo(1.0f, 0.85f, 0.3f);
-
-
-        // --- TRANSPARENCY SORTING ---
-        std::vector<Entity> opaqueEntities;
-
-        // Use std::multimap to allow multiple objects at the same distance
-        std::multimap<float, Entity> transparentEntities;
-
-        for (auto const& entityId : mEntities)
+        // ====================================================================
+        // 1. RENDER VIEW 0: GAME (grounded)
+        // ====================================================================
         {
-            if (ecsInterface.HasComponent<MeshProperties>(entityId))
+            glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
+            glEnable(GL_DEPTH_TEST);
+            glDisable(GL_CULL_FACE); // Added
+
+            glViewport(0, 0, w, h);
+            glClearColor(0.07f, 0.09f, 0.12f, 1.f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            Camera& cam = gameCamera;
+            glm::mat4 proj = cam.getProjectionMatrix((float)w, (float)h);
+            glm::mat4 view = cam.getViewMatrix();
+
+            // stick to ground
+            if (groundMode)
             {
-                auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
-                if (mesh.opacity < 1.0f)
-                {
-                    auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
-                    float distance = glm::distance(tr.position, camera.position);
-
-                    // Use .insert() for multimap
-                    transparentEntities.insert({ distance, entityId });
-                }
-                else
-                {
-                    opaqueEntities.push_back(entityId);
-                }
-            }
-        }
-        //JAY
-        // ---- ECS draw loop ----
-        // --- 1. OPAQUE PASS ---
-        // Draw all opaque objects first.
-        // Normal depth testing, blending OFF.
-        glDisable(GL_BLEND);
-        glDepthMask(GL_TRUE); // Enable writing to the depth buffer
-
-        for (auto const& entityId : opaqueEntities)
-        {
-            auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
-            auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
-
-            glm::mat4 model(1.0f);
-            model = glm::translate(model, tr.position);
-            model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
-            model = glm::rotate(model, glm::radians(tr.rotation.y), { 0,1,0 });
-            model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
-            model = glm::scale(model, tr.scale);
-
-            // Text 
-            if (ecsInterface.HasComponent<TextProperties>(entityId)) {
-                auto& txt = ecsInterface.GetComponent<TextProperties>(entityId);
-                fontSystem.RenderText3D(txt.text, model, view, proj, txt.scale, txt.color);
+                float groundY = terrain.getHeightAt(cam.position.x, cam.position.z);
+                cam.position.y = groundY + 1.8f;
             }
 
-            // Mesh 
-            if (ecsInterface.HasComponent<MeshProperties>(entityId)) {
+            // --- Terrain (no texture)
+            terrainShader.use();
+            terrainShader.setMat4("uProj", proj);
+            terrainShader.setMat4("uView", view);
+            terrainShader.setMat4("uModel", glm::mat4(1.f));
+            terrainShader.setVec3("uAlbedo", { 0.6f,0.4f,0.2f }); //terrain color
+            LightComponent::upload(terrainShader, sun, hasSun, pointLights, spotLights);
+            terrain.draw();
+
+
+            // ---- START ANIMATION/TRANSPARENCY RENDER LOGIC (VIEW 0) ----
+
+            int sel = lastPickedId; // Use the main picked ID
+            const glm::vec3 kHighlightAlbedo(1.0f, 0.85f, 0.3f);
+
+            std::vector<Entity> opaqueEntities;
+            std::multimap<float, Entity> transparentEntities;
+
+            for (auto const& entityId : mEntities)
+            {
+                if (ecsInterface.HasComponent<MeshProperties>(entityId))
+                {
+                    auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
+                    if (mesh.opacity < 1.0f)
+                    {
+                        auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
+                        float distance = glm::distance(tr.position, cam.position);
+                        transparentEntities.insert({ distance, entityId });
+                    }
+                    else
+                    {
+                        opaqueEntities.push_back(entityId);
+                    }
+                }
+            }
+
+            // --- 1. OPAQUE PASS (VIEW 0) ---
+            glDisable(GL_BLEND);
+            glDepthMask(GL_TRUE);
+
+            for (auto const& entityId : opaqueEntities)
+            {
+                auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
+                glm::mat4 model(1.0f);
+                model = glm::translate(model, tr.position);
+                model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
+                model = glm::rotate(model, glm::radians(tr.rotation.y), { 0,1,0 });
+                model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
+                model = glm::scale(model, tr.scale);
+
+                // Text 
+                if (ecsInterface.HasComponent<TextProperties>(entityId)) {
+                    auto& txt = ecsInterface.GetComponent<TextProperties>(entityId);
+                    fontSystem.RenderText3D(txt.text, model, view, proj, txt.scale, txt.color);
+                }
+
+                // Mesh 
+                if (ecsInterface.HasComponent<MeshProperties>(entityId)) {
+                    auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
+
+                    if (mesh.debugShape == DebugShapeType::None) {
+
+                        bool isSkinned = ecsInterface.HasComponent<AnimationProperties>(entityId);
+                        ShaderProgram& currentshader = isSkinned ? skinnedShader : meshShader;
+
+                        currentshader.use();
+                        currentshader.setMat4("uProj", proj);
+                        currentshader.setMat4("uView", view);
+                        currentshader.setVec3("uViewPos", cam.position);
+                        currentshader.setMat4("uModel", model);
+
+                        if (isSkinned) {
+                            auto& animator = ecsInterface.GetComponent<AnimationProperties>(entityId);
+                            for (size_t i = 0; i < animator.finalBoneMatrices.size(); ++i)
+                            {
+                                currentshader.setMat4(("uBoneMatrices[" + std::to_string(i) + "]").c_str(), animator.finalBoneMatrices[i]);
+                            }
+                        }
+
+                        const bool isSelected = (int)entityId == sel;
+                        glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : mesh.albedo; // Use mesh.albedo
+                        currentshader.setVec3("uAlbedo", finalAlbedo);
+
+                        glActiveTexture(GL_TEXTURE0);
+                        currentshader.setVec3("uMaterial.ambient", mesh.ambient);
+                        currentshader.setVec3("uMaterial.specular", mesh.specular);
+                        currentshader.setFloat("uMaterial.shininess", mesh.shininess);
+                        currentshader.setFloat("uMaterial.opacity", mesh.opacity);
+                        currentshader.setInt("uTexture", 0);
+
+                        if (ecsInterface.HasComponent<TextureProperties>(entityId)) {
+                            auto& tex = ecsInterface.GetComponent<TextureProperties>(entityId);
+                            glBindTexture(GL_TEXTURE_2D, tex.textureID);
+                        }
+                        else {
+                            glBindTexture(GL_TEXTURE_2D, 0);
+                        }
+
+                        LightComponent::upload(currentshader, sun, hasSun, pointLights, spotLights);
+                        glBindVertexArray(mesh.vao);
+                        glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
+                    }
+                    else {
+                        auto it = m_debugMeshes.find(mesh.debugShape);
+                        if (it != m_debugMeshes.end()) {
+                            DrawDebugMesh(it->second, mesh.debugcolor, model, proj, view);
+                        }
+                    }
+                }
+            }
+
+            // --- 2. TRANSPARENT PASS (VIEW 0) ---
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            glDepthMask(GL_FALSE);
+
+            for (auto it = transparentEntities.rbegin(); it != transparentEntities.rend(); ++it)
+            {
+                auto const& entityId = it->second;
+                auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
                 auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
 
-                if (mesh.debugShape == DebugShapeType::None) {
+                glm::mat4 model(1.0f);
+                model = glm::translate(model, tr.position);
+                model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
+                model = glm::rotate(model, glm::radians(tr.rotation.y), { 0,1,0 });
+                model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
+                model = glm::scale(model, tr.scale);
 
-                    //choose shader
+                if (mesh.debugShape == DebugShapeType::None)
+                {
                     bool isSkinned = ecsInterface.HasComponent<AnimationProperties>(entityId);
-                    ShaderProgram& currentshader = isSkinned ? skinnedShader : meshShader;
+                    ShaderProgram& currentShader = isSkinned ? skinnedShader : meshShader;
 
-                    currentshader.use();
-                    currentshader.setMat4("uModel", model);
+                    currentShader.use();
+                    currentShader.setMat4("uProj", proj);
+                    currentShader.setMat4("uView", view);
+                    currentShader.setVec3("uViewPos", cam.position);
+                    currentShader.setMat4("uModel", model);
 
-                    if (isSkinned) {
-
+                    if (isSkinned)
+                    {
                         auto& animator = ecsInterface.GetComponent<AnimationProperties>(entityId);
                         for (size_t i = 0; i < animator.finalBoneMatrices.size(); ++i)
                         {
-                            // Ensure uniform name matches shader exactly
-                            currentshader.setMat4(("uBoneMatrices[" + std::to_string(i) + "]").c_str(), animator.finalBoneMatrices[i]);
+                            currentShader.setMat4(("uBoneMatrices[" + std::to_string(i) + "]").c_str(), animator.finalBoneMatrices[i]);
                         }
                     }
 
                     const bool isSelected = (int)entityId == sel;
                     glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : mesh.albedo;
-                    currentshader.setVec3("uAlbedo", finalAlbedo);
+                    currentShader.setVec3("uAlbedo", finalAlbedo);
+                    currentShader.setVec3("uMaterial.ambient", mesh.ambient);
+                    currentShader.setVec3("uMaterial.specular", mesh.specular);
+                    currentShader.setFloat("uMaterial.shininess", mesh.shininess);
+                    currentShader.setFloat("uMaterial.opacity", mesh.opacity);
 
                     glActiveTexture(GL_TEXTURE0);
-
-                    currentshader.setVec3("uMaterial.ambient", mesh.ambient);
-                    currentshader.setVec3("uMaterial.specular", mesh.specular);
-                    currentshader.setFloat("uMaterial.shininess", mesh.shininess);
-                    currentshader.setFloat("uMaterial.opacity", mesh.opacity);
-                    currentshader.setInt("uTexture", 0);
-
+                    currentShader.setInt("uTexture", 0);
                     if (ecsInterface.HasComponent<TextureProperties>(entityId)) {
                         auto& tex = ecsInterface.GetComponent<TextureProperties>(entityId);
                         glBindTexture(GL_TEXTURE_2D, tex.textureID);
@@ -520,275 +576,153 @@ namespace Framework {
                         glBindTexture(GL_TEXTURE_2D, 0);
                     }
 
-                    LightComponent::upload(currentshader, sun, hasSun, pointLights, spotLights);
+                    LightComponent::upload(currentShader, sun, hasSun, pointLights, spotLights);
                     glBindVertexArray(mesh.vao);
                     glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
                 }
-                else {
-                    auto it = m_debugMeshes.find(mesh.debugShape);
-                    if (it != m_debugMeshes.end()) {
-                        DrawDebugMesh(it->second, mesh.debugcolor, model, proj, view);
-                    }
-                }
             }
 
+            // --- 3. CLEANUP STATE ---
+            glDepthMask(GL_TRUE);
+            glDisable(GL_BLEND);
+            glCullFace(GL_BACK); // Restore default
 
-        }
-        glDepthMask(GL_TRUE); // Re-enable depth writing
-        glDisable(GL_BLEND); // Disable blending
+            // ---- END ANIMATION/TRANSPARENCY RENDER LOGIC (VIEW 0) ----
 
-        // --- 2. TRANSPARENT PASS ---
-        // Draw all transparent objects second, sorted back-to-front.
-        // Depth testing ON, depth writing OFF, blending ON.
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Standard alpha blending
-        glDepthMask(GL_FALSE); // Disable writing to the depth buffer
-        glCullFace(GL_BACK);   // Use standard culling
 
-        // Iterate std::multimap in reverse to get back-to-front order
-        for (auto it = transparentEntities.rbegin(); it != transparentEntities.rend(); ++it)
-        {
-            auto const& entityId = it->second;
-
-            auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
-            auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
-
-            // Calculate model matrix
-            glm::mat4 model(1.0f);
-            model = glm::translate(model, tr.position);
-            model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
-            model = glm::rotate(model, glm::radians(tr.rotation.y), { 0,1,0 });
-            model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
-            model = glm::scale(model, tr.scale);
-
-            // Draw Transparent Mesh
-            if (mesh.debugShape == DebugShapeType::None)
+            // drawing of 5 objects (primitives) - This was in your old file
+            meshShader.use();
+            meshShader.setMat4("uProj", proj);
+            meshShader.setMat4("uView", view);
+            for (int i = 0; i < 5; ++i)
             {
-                // --- Choose Shader ---
-                bool isSkinned = ecsInterface.HasComponent<AnimationProperties>(entityId);
-                ShaderProgram& currentShader = isSkinned ? skinnedShader : meshShader;
-                currentShader.use();
+                glm::mat4 model(1.0f);
+                model = glm::translate(model, glm::vec3((i - 2) * 1.7f, 0.0f, 0.0f));
+                meshShader.setMat4("uModel", model);
+                meshShader.setVec3("uAlbedo", { 1,1,1 }); // Set default albedo
+                cylinder.draw();
+            }
 
-                // --- Set Common Uniforms ---
-                // Proj, View, ViewPos already set outside loop for both shaders
-                currentShader.setMat4("uModel", model);
+            // --- PICK PASS for view 0 ---
+            glBindFramebuffer(GL_FRAMEBUFFER, pickFBO[pickWrite]);
+            glViewport(0, 0, w, h);
+            glEnable(GL_DEPTH_TEST);
+            glClearColor(0, 0, 0, 0); // id=0 => "no hit"
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-                // --- Upload Bones (if skinned) ---
-                if (isSkinned)
+            pickShader.use();
+            pickShader.setMat4("uProj", proj);
+            pickShader.setMat4("uView", view);
+
+            for (auto const& entityId : mEntities) {
+                auto& transformComponent = ecsInterface.GetComponent<TransformComponent>(entityId);
+                glm::mat4 model(1.0f);
+                model = glm::translate(model, transformComponent.position);
+                model = glm::rotate(model, transformComponent.rotation.x, glm::vec3(1, 0, 0));
+                model = glm::rotate(model, transformComponent.rotation.y, glm::vec3(0, 1, 0));
+                model = glm::rotate(model, transformComponent.rotation.z, glm::vec3(0, 0, 1));
+                model = glm::scale(model, transformComponent.scale);
+                pickShader.setMat4("uModel", model);
+
+                uint32_t id = static_cast<uint32_t>(entityId) + 1u;
+                glm::vec3 idColor = {
+                    ((id) & 0xFF) / 255.0f,
+                    ((id >> 8) & 0xFF) / 255.0f,
+                    ((id >> 16) & 0xFF) / 255.0f
+                };
+                pickShader.setVec3("uIdColor", idColor);
+                if (ecsInterface.HasComponent<MeshProperties>(entityId))
                 {
-                    auto& animator = ecsInterface.GetComponent<AnimationProperties>(entityId);
-                    for (size_t i = 0; i < animator.finalBoneMatrices.size(); ++i)
-                    {
-                        currentShader.setMat4(("uBoneMatrices[" + std::to_string(i) + "]").c_str(), animator.finalBoneMatrices[i]);
-                    }
+                    auto& meshComponent = ecsInterface.GetComponent<MeshProperties>(entityId);
+                    glBindVertexArray(meshComponent.vao);
+                    glDrawElements(GL_TRIANGLES, meshComponent.indexCount, GL_UNSIGNED_INT, 0);
                 }
-
-                // --- Upload Materials ---
-                const bool isSelected = (int)entityId == sel;
-                glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : mesh.albedo;
-                currentShader.setVec3("uAlbedo", finalAlbedo);
-
-                currentShader.setVec3("uMaterial.ambient", mesh.ambient);
-                currentShader.setVec3("uMaterial.specular", mesh.specular);
-                currentShader.setFloat("uMaterial.shininess", mesh.shininess);
-                currentShader.setFloat("uMaterial.opacity", mesh.opacity); // Will be < 1.0
-
-                // --- Bind Texture ---
-                glActiveTexture(GL_TEXTURE0);
-                currentShader.setInt("uTexture", 0);
-                if (ecsInterface.HasComponent<TextureProperties>(entityId)) {
-                    auto& tex = ecsInterface.GetComponent<TextureProperties>(entityId);
-                    glBindTexture(GL_TEXTURE_2D, tex.textureID);
-                }
-                else {
-                    glBindTexture(GL_TEXTURE_2D, 0);
-                }
-
-                // --- Upload Lights & Draw ---
-                LightComponent::upload(currentShader, sun, hasSun, pointLights, spotLights);
-                glBindVertexArray(mesh.vao);
-                glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
-
             }
-        } // End Transparent Lo
+            glBindFramebuffer(GL_FRAMEBUFFER, 0); // Unbind pick FBO
+            std::swap(pickWrite, pickRead);
 
-        // --- 3. CLEANUP STATE ---
-        // Reset state for subsequent passes (picking, bloom, UI, etc.)
-        glDepthMask(GL_TRUE); // Re-enable depth writing
-        glDisable(GL_BLEND); // Disable blending
-        glCullFace(GL_BACK); // Restore default culling state
+            // READBACK for VIEW 0
+            if (pendingPickUV0.x >= 0.0f && pendingPickUV0.y >= 0.0f) {
+                int pw = 1280, ph = 720; // Use FBO size, not window size if different
+                int px = glm::clamp(int(pendingPickUV0.x * pw), 0, pw - 1);
+                int py = glm::clamp(int(pendingPickUV0.y * ph), 0, ph - 1);
 
-        // object pick
-        //jay
-        //render color-IDs into offscreen (double-buffered)
-        glBindFramebuffer(GL_FRAMEBUFFER, pickFBO[pickWrite]);
+                glBindFramebuffer(GL_READ_FRAMEBUFFER, pickFBO[pickRead]);
+                unsigned char rgb[3] = { 0,0,0 };
+                glReadPixels(px, py, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, rgb);
+                glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 
-        // IMPORTANT: viewport must match the pick FBO size
-        // If you created pick FBOs with (config->x, config->y), use those.
-        // If you created them at 1280x720, set (1280,720) here OR recreate the FBOs to match (w,h).
-        glViewport(0, 0, w, h);
+                uint32_t id = (uint32_t)rgb[0] | ((uint32_t)rgb[1] << 8) | ((uint32_t)rgb[2] << 16);
+                lastPickedId = (id == 0) ? -1 : int(id) - 1;
+                pendingPickUV0 = { -1.0f, -1.0f };
+            }
 
-        glEnable(GL_DEPTH_TEST);
-        glClearColor(0, 0, 0, 0); // id=0 => "no hit"
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        pickShader.use();
-        pickShader.setMat4("uProj", proj);
-        pickShader.setMat4("uView", view);
-
-        // ECS draw loop with encoded ID color (same transforms as scene)
-        for (auto const& entityId : mEntities) {
-
-            auto& transformComponent = ecsInterface.GetComponent<TransformComponent>(entityId);
-
-            glm::mat4 model(1.0f);
-            model = glm::translate(model, transformComponent.position);
-            model = glm::rotate(model, transformComponent.rotation.x, glm::vec3(1, 0, 0));
-            model = glm::rotate(model, transformComponent.rotation.y, glm::vec3(0, 1, 0));
-            model = glm::rotate(model, transformComponent.rotation.z, glm::vec3(0, 0, 1));
-            model = glm::scale(model, transformComponent.scale);
-            pickShader.setMat4("uModel", model);
-
-            uint32_t id = static_cast<uint32_t>(entityId) + 1u; // 0 reserved for "no hit"
-            glm::vec3 idColor = {
-                ((id) & 0xFF) / 255.0f,
-                ((id >> 8) & 0xFF) / 255.0f,
-                ((id >> 16) & 0xFF) / 255.0f
-            };
-            pickShader.setVec3("uIdColor", idColor);
-            if (ecsInterface.HasComponent<MeshProperties>(entityId))
+            // --- BLOOM PASS (for view 0) ---
+            glDisable(GL_DEPTH_TEST);
+            bool horizontal = true, first_iteration = true;
+            unsigned int amount = 10;
+            blurShader.use();
+            for (unsigned int i = 0; i < amount; i++)
             {
-                auto& meshComponent = ecsInterface.GetComponent<MeshProperties>(entityId);
-                glBindVertexArray(meshComponent.vao);
-                glDrawElements(GL_TRIANGLES, meshComponent.indexCount, GL_UNSIGNED_INT, 0);
+                glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[horizontal]);
+                blurShader.setBool("horizontal", horizontal);
+                glBindTexture(GL_TEXTURE_2D, first_iteration ? colorBuffer : pingpongColorbuffers[!horizontal]);
+                renderQuad();
+                horizontal = !horizontal;
+                if (first_iteration) first_iteration = false;
             }
 
-        }
+            // --- FINAL PASS (for view 0) ---
+            glBindFramebuffer(GL_FRAMEBUFFER, m_imguiManager->GetGameFramebuffer(0));
+            glViewport(0, 0, w, h);
+            glClear(GL_COLOR_BUFFER_BIT);
 
-
-       // glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-        // rotate buffers so we read the *previous* one this frame
-        std::swap(pickWrite, pickRead);
-        // READBACK for VIEW 0 (main viewport)
-        if (pendingPickUV0.x >= 0.0f && pendingPickUV0.y >= 0.0f) {
-            int pw = 1280, ph = 720;
-            int px = glm::clamp(int(pendingPickUV0.x * pw), 0, pw - 1);
-            int py = glm::clamp(int(pendingPickUV0.y * ph), 0, ph - 1);
-
-            glBindFramebuffer(GL_READ_FRAMEBUFFER, pickFBO[pickRead]);
-            unsigned char rgb[3] = { 0,0,0 };
-            glReadPixels(px, py, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, rgb);
-            glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-
-            uint32_t id = (uint32_t)rgb[0] | ((uint32_t)rgb[1] << 8) | ((uint32_t)rgb[2] << 16);
-            lastPickedId = (id == 0) ? -1 : int(id) - 1;
-            pendingPickUV0 = { -1.0f, -1.0f };
-        }
-        // ====================================================================
-        // 2. BLOOM PASS: Apply a two-pass Gaussian blur
-        // ====================================================================
-        glDisable(GL_DEPTH_TEST);
-        bool horizontal = true, first_iteration = true;
-        unsigned int amount = 10;
-        blurShader.use();
-        for (unsigned int i = 0; i < amount; i++)
-        {
-            glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[horizontal]);
-            blurShader.setBool("horizontal", horizontal);
-            glBindTexture(GL_TEXTURE_2D, first_iteration ? colorBuffer : pingpongColorbuffers[!horizontal]);
+            finalShader.use();
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, colorBuffer);
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[!horizontal]);
+            finalShader.setInt("sceneTexture", 0);
+            finalShader.setInt("bloomTexture", 1);
+            finalShader.setFloat("exposure", hdrExposure);
+            finalShader.setFloat("bloomStrength", bloomStrength);
             renderQuad();
-            horizontal = !horizontal;
-            if (first_iteration) first_iteration = false;
+
+            // HUD text for view 0
+            fontSystem.RenderText2D("Score: 100", 10.f, 10.0f, 1.f,
+                glm::vec3(1.0f, 1.0f, 0.5f), (float)w, (float)h);
+
+            // 3D text for view 0
+            glEnable(GL_DEPTH_TEST); // Re-enable depth for 3D text
+            glm::mat4 textModel = glm::mat4(1.0f);
+            textModel = glm::translate(textModel, glm::vec3(0.0f, 5.0f, 0.0f));
+            fontSystem.RenderText3D("iDesign Engine by iDesign Studio",
+                textModel,
+                view, // Use game view
+                proj, // Use game proj
+                0.05f,
+                glm::vec3(1.0f, 1.0f, 0.5f));
+            glDisable(GL_DEPTH_TEST); // Disable again for UI
         }
-        int mainIdx = m_imguiManager->GetMainViewIndex();
-        int secIdx = (mainIdx == 0) ? 1 : 0;
+        // ======================= END VIEW 0 ==========================
+
+
         // ====================================================================
-        // 3. FINAL PASS: Render to screen with tone mapping and bloom
+        // 2. RENDER VIEW 1: SCENE (free-fly)
         // ====================================================================
-
-        glBindFramebuffer(GL_FRAMEBUFFER, m_imguiManager->GetGameFramebuffer(0));
-        glViewport(0, 0, w, h);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        finalShader.use();
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, colorBuffer);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[!horizontal]);
-        finalShader.setInt("sceneTexture", 0);
-        finalShader.setInt("bloomTexture", 1);
-        finalShader.setFloat("exposure", hdrExposure);
-        finalShader.setFloat("bloomStrength", bloomStrength);
-
-        renderQuad();
-
-        // Now overlay HUD text in 2D
-        fontSystem.RenderText2D("Score: 100", 10.f, 10.0f, 1.f,
-            glm::vec3(1.0f, 1.0f, 0.5f), (float)w, (float)h);
-
-        // In your main rendering loop (e.g., in Graphics::Update)
-
-        // 1. Get the camera's view and projection matrices
-        glm::mat4 viewMatrix = camera.getViewMatrix();
-        glm::mat4 projectionMatrix = camera.getProjectionMatrix((float)w, (float)h);
-
-        // 2. Extract camera's right and up vectors from the view matrix
-        glm::vec3 cameraRight_world = { viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0] };
-        glm::vec3 cameraUp_world = { viewMatrix[0][1], viewMatrix[1][1], viewMatrix[2][1] };
-
-
-
-        // 4. Create the final model matrix by combining translation and rotation
-        glm::mat4 textModel = glm::mat4(1.0f);
-        textModel = glm::translate(textModel, glm::vec3(0.0f, 5.0f, 0.0f)); // Position in world space
-
-        // 5. Call the RenderText3D function
-        fontSystem.RenderText3D("iDesign Engine by iDesign Studio",
-            textModel,
-            viewMatrix,
-            projectionMatrix,
-            0.05f, // Scale
-            glm::vec3(1.0f, 1.0f, 0.5f)); // Color
-
-        // --- Handle a pick request coming from ImGui ---
-        //jay
-        if (pendingPickUV.x >= 0.0f && pendingPickUV.y >= 0.0f) {
-            int pw = 1280, ph = 720; // keep these in sync with how you created the pick FBOs
-            int px = glm::clamp(int(pendingPickUV.x * pw), 0, pw - 1);
-            int py = glm::clamp(int(pendingPickUV.y * ph), 0, ph - 1);
-
-            glBindFramebuffer(GL_READ_FRAMEBUFFER, pickFBO[pickRead]);
-            unsigned char rgb[3] = { 0,0,0 };
-            glReadPixels(px, py, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, rgb);
-            glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-
-            uint32_t id = (uint32_t)rgb[0] | ((uint32_t)rgb[1] << 8) | ((uint32_t)rgb[2] << 16);
-            lastPickedId = (id == 0) ? -1 : int(id) - 1;
-
-            pendingPickUV = { -1.0f, -1.0f };
-
-            if (lastPickedId >= 0) {
-                std::cout << "Picked entity: " << lastPickedId << "\n";
-            }
-        }
-         // ======================= VIEW 1 : SCENE (free-fly) ==========================
         {
             // Scene pass -> HDR
             glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
             glEnable(GL_DEPTH_TEST);
+            glDisable(GL_CULL_FACE); // Added
 
-            // reuse the same w,h computed earlier
             glViewport(0, 0, w, h);
             glClearColor(0.07f, 0.09f, 0.12f, 1.f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            // Use the FREE-FLY camera for this pass
-            Camera& cam1 = sceneCamera;                 // <--- different camera
+            Camera& cam1 = sceneCamera;
             glm::mat4 proj1 = cam1.getProjectionMatrix((float)w, (float)h);
             glm::mat4 view1 = cam1.getViewMatrix();
-
-            // (No groundMode lock for sceneCamera)
 
             // --- Terrain ---
             terrainShader.use();
@@ -799,18 +733,39 @@ namespace Framework {
             LightComponent::upload(terrainShader, sun, hasSun, pointLights, spotLights);
             terrain.draw();
 
-            // --- Mesh (textured) ---
-            meshShader.use();
-            meshShader.setMat4("uProj", proj1);
-            meshShader.setMat4("uView", view1);
+            // ---- START ANIMATION/TRANSPARENCY RENDER LOGIC (VIEW 1) ----
 
-            int sel1 = lastPickedId;
-            const glm::vec3 kNormalAlbedo(1.0f, 1.0f, 1.0f);
+            int sel1 = lastPickedId; // You might want a separate lastPickedId1
             const glm::vec3 kHighlightAlbedo(1.0f, 0.85f, 0.3f);
 
-            for (auto const& entityId : mEntities) {
-                auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
+            std::vector<Entity> opaqueEntities;
+            std::multimap<float, Entity> transparentEntities;
 
+            for (auto const& entityId : mEntities)
+            {
+                if (ecsInterface.HasComponent<MeshProperties>(entityId))
+                {
+                    auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
+                    if (mesh.opacity < 1.0f)
+                    {
+                        auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
+                        float distance = glm::distance(tr.position, cam1.position); // Use cam1
+                        transparentEntities.insert({ distance, entityId });
+                    }
+                    else
+                    {
+                        opaqueEntities.push_back(entityId);
+                    }
+                }
+            }
+
+            // --- 1. OPAQUE PASS (VIEW 1) ---
+            glDisable(GL_BLEND);
+            glDepthMask(GL_TRUE);
+
+            for (auto const& entityId : opaqueEntities)
+            {
+                auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
                 glm::mat4 model(1.0f);
                 model = glm::translate(model, tr.position);
                 model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
@@ -818,25 +773,46 @@ namespace Framework {
                 model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
                 model = glm::scale(model, tr.scale);
 
+                // Text 
                 if (ecsInterface.HasComponent<TextProperties>(entityId)) {
                     auto& txt = ecsInterface.GetComponent<TextProperties>(entityId);
                     fontSystem.RenderText3D(txt.text, model, view1, proj1, txt.scale, txt.color);
                 }
 
+                // Mesh 
                 if (ecsInterface.HasComponent<MeshProperties>(entityId)) {
-                    auto& m = ecsInterface.GetComponent<MeshProperties>(entityId);
-                    if (m.debugShape == DebugShapeType::None) {
-                        meshShader.use();
-                        meshShader.setMat4("uProj", proj1);
-                        meshShader.setMat4("uView", view1);
-                        meshShader.setMat4("uModel", model);
+                    auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
+
+                    if (mesh.debugShape == DebugShapeType::None) {
+
+                        bool isSkinned = ecsInterface.HasComponent<AnimationProperties>(entityId);
+                        ShaderProgram& currentshader = isSkinned ? skinnedShader : meshShader;
+
+                        currentshader.use();
+                        currentshader.setMat4("uProj", proj1);
+                        currentshader.setMat4("uView", view1);
+                        currentshader.setVec3("uViewPos", cam1.position);
+                        currentshader.setMat4("uModel", model);
+
+                        if (isSkinned) {
+                            auto& animator = ecsInterface.GetComponent<AnimationProperties>(entityId);
+                            for (size_t i = 0; i < animator.finalBoneMatrices.size(); ++i)
+                            {
+                                currentshader.setMat4(("uBoneMatrices[" + std::to_string(i) + "]").c_str(), animator.finalBoneMatrices[i]);
+                            }
+                        }
 
                         const bool isSelected = (int)entityId == sel1;
-                        meshShader.setVec3("uAlbedo", isSelected ? kHighlightAlbedo : kNormalAlbedo);
-                        LightComponent::upload(meshShader, sun, hasSun, pointLights, spotLights);
+                        glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : mesh.albedo;
+                        currentshader.setVec3("uAlbedo", finalAlbedo);
 
                         glActiveTexture(GL_TEXTURE0);
-                        meshShader.setInt("uTexture", 0);
+                        currentshader.setVec3("uMaterial.ambient", mesh.ambient);
+                        currentshader.setVec3("uMaterial.specular", mesh.specular);
+                        currentshader.setFloat("uMaterial.shininess", mesh.shininess);
+                        currentshader.setFloat("uMaterial.opacity", mesh.opacity);
+                        currentshader.setInt("uTexture", 0);
+
                         if (ecsInterface.HasComponent<TextureProperties>(entityId)) {
                             auto& tex = ecsInterface.GetComponent<TextureProperties>(entityId);
                             glBindTexture(GL_TEXTURE_2D, tex.textureID);
@@ -845,27 +821,102 @@ namespace Framework {
                             glBindTexture(GL_TEXTURE_2D, 0);
                         }
 
-                        glBindVertexArray(m.vao);
-                        glDrawElements(GL_TRIANGLES, m.indexCount, GL_UNSIGNED_INT, 0);
+                        LightComponent::upload(currentshader, sun, hasSun, pointLights, spotLights);
+                        glBindVertexArray(mesh.vao);
+                        glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
                     }
                     else {
-                        auto it = m_debugMeshes.find(m.debugShape);
+                        auto it = m_debugMeshes.find(mesh.debugShape);
                         if (it != m_debugMeshes.end()) {
-                            DrawDebugMesh(it->second, m.debugcolor, model, proj1, view1);
+                            DrawDebugMesh(it->second, mesh.debugcolor, model, proj1, view1);
                         }
                     }
                 }
             }
 
+            // --- 2. TRANSPARENT PASS (VIEW 1) ---
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            glDepthMask(GL_FALSE);
+
+            for (auto it = transparentEntities.rbegin(); it != transparentEntities.rend(); ++it)
+            {
+                auto const& entityId = it->second;
+                auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
+                auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
+
+                glm::mat4 model(1.0f);
+                model = glm::translate(model, tr.position);
+                model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
+                model = glm::rotate(model, glm::radians(tr.rotation.y), { 0,1,0 });
+                model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
+                model = glm::scale(model, tr.scale);
+
+                if (mesh.debugShape == DebugShapeType::None)
+                {
+                    bool isSkinned = ecsInterface.HasComponent<AnimationProperties>(entityId);
+                    ShaderProgram& currentShader = isSkinned ? skinnedShader : meshShader;
+
+                    currentShader.use();
+                    currentShader.setMat4("uProj", proj1);
+                    currentShader.setMat4("uView", view1);
+                    currentShader.setVec3("uViewPos", cam1.position);
+                    currentShader.setMat4("uModel", model);
+
+                    if (isSkinned)
+                    {
+                        auto& animator = ecsInterface.GetComponent<AnimationProperties>(entityId);
+                        for (size_t i = 0; i < animator.finalBoneMatrices.size(); ++i)
+                        {
+                            currentShader.setMat4(("uBoneMatrices[" + std::to_string(i) + "]").c_str(), animator.finalBoneMatrices[i]);
+                        }
+                    }
+
+                    const bool isSelected = (int)entityId == sel1;
+                    glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : mesh.albedo;
+                    currentShader.setVec3("uAlbedo", finalAlbedo);
+                    currentShader.setVec3("uMaterial.ambient", mesh.ambient);
+                    currentShader.setVec3("uMaterial.specular", mesh.specular);
+                    currentShader.setFloat("uMaterial.shininess", mesh.shininess);
+                    currentShader.setFloat("uMaterial.opacity", mesh.opacity);
+
+                    glActiveTexture(GL_TEXTURE0);
+                    currentShader.setInt("uTexture", 0);
+                    if (ecsInterface.HasComponent<TextureProperties>(entityId)) {
+                        auto& tex = ecsInterface.GetComponent<TextureProperties>(entityId);
+                        glBindTexture(GL_TEXTURE_2D, tex.textureID);
+                    }
+                    else {
+                        glBindTexture(GL_TEXTURE_2D, 0);
+                    }
+
+                    LightComponent::upload(currentShader, sun, hasSun, pointLights, spotLights);
+                    glBindVertexArray(mesh.vao);
+                    glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
+                }
+            }
+
+            // --- 3. CLEANUP STATE ---
+            glDepthMask(GL_TRUE);
+            glDisable(GL_BLEND);
+            glCullFace(GL_BACK); // Restore default
+
+            // ---- END ANIMATION/TRANSPARENCY RENDER LOGIC (VIEW 1) ----
+
+
             // (Optional) your 5 primitives again for view 1
+            meshShader.use();
+            meshShader.setMat4("uProj", proj1);
+            meshShader.setMat4("uView", view1);
             for (int i = 0; i < 5; ++i) {
                 glm::mat4 model(1.0f);
                 model = glm::translate(model, glm::vec3((i - 2) * 1.7f, 0.0f, 0.0f));
                 meshShader.setMat4("uModel", model);
+                meshShader.setVec3("uAlbedo", { 1,1,1 }); // Set default albedo
                 cylinder.draw();
             }
 
-            // --- PICK PASS for view 1 (reuses same pick FBOs sequentially) ---
+            // --- PICK PASS for view 1 ---
             glBindFramebuffer(GL_FRAMEBUFFER, pickFBO[pickWrite]);
             glViewport(0, 0, w, h);
             glEnable(GL_DEPTH_TEST);
@@ -900,8 +951,25 @@ namespace Framework {
                     glDrawElements(GL_TRIANGLES, mc.indexCount, GL_UNSIGNED_INT, 0);
                 }
             }
-            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            glBindFramebuffer(GL_FRAMEBUFFER, 0); // Unbind pick FBO
             std::swap(pickWrite, pickRead);
+
+            // READBACK for VIEW 1
+            if (pendingPickUV1.x >= 0.0f && pendingPickUV1.y >= 0.0f) {
+                int pw = 1280, ph = 720; // Use FBO size
+                int px = glm::clamp(int(pendingPickUV1.x * pw), 0, pw - 1);
+                int py = glm::clamp(int(pendingPickUV1.y * ph), 0, ph - 1);
+
+                glBindFramebuffer(GL_READ_FRAMEBUFFER, pickFBO[pickRead]);
+                unsigned char rgb[3] = { 0,0,0 };
+                glReadPixels(px, py, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, rgb);
+                glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+
+                uint32_t id = (uint32_t)rgb[0] | ((uint32_t)rgb[1] << 8) | ((uint32_t)rgb[2] << 16);
+                lastPickedId = (id == 0) ? -1 : int(id) - 1; // Or set lastPickedId1
+                pendingPickUV1 = { -1.0f, -1.0f };
+            }
+
 
             // --- BLOOM (reuse same code) ---
             glDisable(GL_DEPTH_TEST);
@@ -933,7 +1001,8 @@ namespace Framework {
 
             // Optional HUD for view 1
             fontSystem.RenderText2D("Editor View", 10.f, 10.f, 1.f, { 1,1,0.5f }, (float)w, (float)h);
-            // 3D world-space text (needs depth test and the view1/proj1 matrices)
+
+            // 3D world-space text
             glEnable(GL_DEPTH_TEST);
             glm::mat4 textModel1(1.0f);
             textModel1 = glm::translate(textModel1, glm::vec3(0.0f, 5.0f, 0.0f));
@@ -944,38 +1013,49 @@ namespace Framework {
                 0.05f,
                 glm::vec3(1.0f, 1.0f, 0.5f));
             glDisable(GL_DEPTH_TEST);
-            // Optional: handle a second view pick here if you use per-view pending UVs
-            glBindFramebuffer(GL_FRAMEBUFFER, 0);
         }
         // ===================== END VIEW 1 : SCENE (free-fly) ========================
+
+
+        // This pick UV logic seems to be for a single, non-view-specific pick
+        // You may need to remove this if you only use pendingPickUV0 and pendingPickUV1
+        if (pendingPickUV.x >= 0.0f && pendingPickUV.y >= 0.0f) {
+            int pw = 1280, ph = 720;
+            int px = glm::clamp(int(pendingPickUV.x * pw), 0, pw - 1);
+            int py = glm::clamp(int(pendingPickUV.y * ph), 0, ph - 1);
+
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, pickFBO[pickRead]);
+            unsigned char rgb[3] = { 0,0,0 };
+            glReadPixels(px, py, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, rgb);
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+
+            uint32_t id = (uint32_t)rgb[0] | ((uint32_t)rgb[1] << 8) | ((uint32_t)rgb[2] << 16);
+            lastPickedId = (id == 0) ? -1 : int(id) - 1;
+
+            pendingPickUV = { -1.0f, -1.0f };
+
+            if (lastPickedId >= 0) {
+                std::cout << "Picked entity: " << lastPickedId << "\n";
+            }
+        }
+
 
         //Showing FPS
         double currentTime = glfwGetTime();
         double delta = currentTime - m_fpsLastTime;
         m_frameCount++;
 
-        // If more than 1 second has passed, update the window title
         if (delta >= 1.0)
         {
             double fps = static_cast<double>(m_frameCount) / delta;
-
             std::stringstream ss;
             ss << std::fixed << std::setprecision(1) << fps << " FPS";
-
-            // Use the class's 'window' member variable
             glfwSetWindowTitle(window, ss.str().c_str());
-
-            // Reset for the next second
             m_frameCount = 0;
             m_fpsLastTime = currentTime;
         }
-        // --- END: FPS Counter Logic ---
 
-
-
-        // Unbind the framebuffer, returning rendering control to the main window
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
     }
 
     // Get the name of the system
@@ -993,7 +1073,7 @@ namespace Framework {
 
 
     Camera* Graphics::getCamera() {
-        return &cam;
+        return &camera;
     }
 
     void Graphics::framebuffer_size_callback(GLFWwindow* window, int w, int h)
@@ -1043,19 +1123,10 @@ namespace Framework {
         const bool editorActive = (m_mouseTargetView == 1);       // 0 = grounded(game), 1 = editor
         Camera& cam = editorActive ? sceneCamera : gameCamera;    // was: Camera& cam = GetActiveCamera();
 
-        // Switch between Scene <-> Game camera
-        if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS)
-        {
-            activeCameraMode = CameraMode::Scene;
-            groundMode = false;          // disable ground lock
-            std::cout << "Switched to Scene Camera (noclip)\n";
-        }
-        if (glfwGetKey(window, GLFW_KEY_F3) == GLFW_PRESS)
-        {
-            activeCameraMode = CameraMode::Game;
-            groundMode = true;           // enable ground stick
-            std::cout << "Switched to Game Camera (grounded)\n";
-        }
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) camera.processKeyboard(Camera::Movement::Forward, dt, groundMode, terrain);
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) camera.processKeyboard(Camera::Movement::Backward, dt, groundMode, terrain);
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) camera.processKeyboard(Camera::Movement::Left, dt, groundMode, terrain);
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) camera.processKeyboard(Camera::Movement::Right, dt, groundMode, terrain);
 
         // Movement control
         const bool useGround = (!editorActive) && groundMode;
@@ -1103,18 +1174,18 @@ namespace Framework {
     }
 
     void Graphics::MoveCameraFromLua(const std::string& dir, float dt, bool gm) {
-        //if (dir == "W") cam.processKeyboard(Camera::Movement::Forward, dt, gm, terrain);
-        //else if (dir == "S") cam.processKeyboard(Camera::Movement::Backward, dt, gm, terrain);
-        //else if (dir == "A") cam.processKeyboard(Camera::Movement::Left, dt, gm, terrain);
-        //else if (dir == "D") cam.processKeyboard(Camera::Movement::Right, dt, gm, terrain);
+        if (dir == "W") camera.processKeyboard(Camera::Movement::Forward, dt, gm, terrain);
+        else if (dir == "S") camera.processKeyboard(Camera::Movement::Backward, dt, gm, terrain);
+        else if (dir == "A") camera.processKeyboard(Camera::Movement::Left, dt, gm, terrain);
+        else if (dir == "D") camera.processKeyboard(Camera::Movement::Right, dt, gm, terrain);
     }
 
     void Graphics::NudgeLightFromLua(const std::string& axis, float amount) {
-        //if (pointLights.empty()) return;
-        //if (axis == "up")    pointLights[0].position.z -= amount;
-        //else if (axis == "down")  pointLights[0].position.z += amount;
-        //else if (axis == "left")  pointLights[0].position.x -= amount;
-        //else if (axis == "right") pointLights[0].position.x += amount;
+        if (pointLights.empty()) return;
+        if (axis == "up")    pointLights[0].position.z -= amount;
+        else if (axis == "down")  pointLights[0].position.z += amount;
+        else if (axis == "left")  pointLights[0].position.x -= amount;
+        else if (axis == "right") pointLights[0].position.x += amount;
     }
 
     void Graphics::ToggleMainLightFromLua() {
@@ -1134,6 +1205,13 @@ namespace Framework {
     void Graphics::CaptureMouse(bool on) {
         mouseCaptured = on;
         glfwSetInputMode(window, GLFW_CURSOR, on ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
+    }
+
+    int Graphics::ConsumeLastPickedId()
+    {
+        int id = lastPickedId;
+        lastPickedId = -1;
+        return id;
     }
 
     void Graphics::renderQuad()

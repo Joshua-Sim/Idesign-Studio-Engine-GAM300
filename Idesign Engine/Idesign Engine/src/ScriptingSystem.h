@@ -25,6 +25,8 @@ namespace Framework {
         // OPTIONAL helper to spawn a script-driven entity
         Entity CreateScriptEntity(const std::string& path);
 
+        void HotReloadScript(const std::string& changedPath);
+
         lua_State* GetLuaState() const { return L; }
 
 

@@ -73,6 +73,10 @@ namespace Framework {
         bool GetGroundModeFromLua() const;
         void SetScriptControlEnabled(bool on);
         bool IsScriptControlEnabled() const;
+
+        int  ConsumeLastPickedId();
+
+
         void SetMouseTargetView(int view) { m_mouseTargetView = (view <= 0) ? 0 : 1; }
         int  GetMouseTargetView() const;
         void CaptureMouse(bool on);
@@ -93,9 +97,8 @@ namespace Framework {
         GLFWwindow* window = nullptr;
         float lastTime = 0.0f;
 
-        // ================ //
-        // CAMERA FUNCTIONS //
-        //Camera camera{ {0.f, 1.f, 3.f} };
+        // camera & movement
+        Camera camera{ {0.f, 1.f, 3.f} };
         static bool mouseCaptured;
         bool groundMode = false;
 

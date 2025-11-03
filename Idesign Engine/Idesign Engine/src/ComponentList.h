@@ -178,7 +178,7 @@ struct ScriptComponent
     std::string scriptPath;   // e.g. "scripts/player.lua"
     int tableRef = LUA_NOREF; // reference to the Lua table (instance)
     bool initialized = false; // if on_init() has been called
-    bool hotReload = true;    // enable/disable live reload
+    bool hotReload = false;    // enable/disable live reload
     uint64_t lastWriteTicks = 0; // file modification time cache
 
     ScriptComponent() = default;

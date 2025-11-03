@@ -110,8 +110,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib\glfw-3.4.bin.WIN64\lib-vc2022;$(SolutionDir)Idesign Engine;$(SolutionDir)Idesign Engine\src;$(SolutionDir)lib\glew\lib\Release\x64;$(SolutionDir)lib\glew\lib\Debug\x64;$(SolutionDir)Idesign Engine\x64\Debug;$(SolutionDir)Idesign Engine\x64\Release;$(SolutionDir)lib\freetype;$(SolutionDir)lib\FMOD_CORE\lib\x64;$(SolutionDir)lib\FMOD_STUDIO\lib\x64;$(SolutionDir)\Idesign Engine\x64\Debug;$(SolutionDir)lib\installed\x64-windows\lib;$(SolutionDir)lib\lua-5.4.2</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;user32.lib;gdi32.lib;shell32.lib;%(AdditionalDependencies);glew32s.lib;freetype.lib;fmod_vc.lib;fmodL_vc.lib;glfw3.lib;assimp-vc143-mt.lib;glew32.lib;lua54.lib;rttr_core.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\glfw-3.4.bin.WIN64\lib-vc2022;$(SolutionDir)Idesign Engine;$(SolutionDir)Idesign Engine\src;$(SolutionDir)lib\glew\lib\Release\x64;$(SolutionDir)lib\glew\lib\Debug\x64;$(SolutionDir)Idesign Engine\x64\Debug;$(SolutionDir)Idesign Engine\x64\Release;$(SolutionDir)lib\freetype;$(SolutionDir)lib\FMOD_CORE\lib\x64;$(SolutionDir)lib\FMOD_STUDIO\lib\x64;$(SolutionDir)\Idesign Engine\x64\Debug;$(SolutionDir)lib\installed\x64-windows\lib;$(SolutionDir)lib\Jolt\out\build\x64-Debug;$(SolutionDir)lib\Jolt\out\build\x64-Release;$(SolutionDir)lib\lua-5.4.2</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;user32.lib;gdi32.lib;shell32.lib;%(AdditionalDependencies);glew32s.lib;freetype.lib;fmod_vc.lib;fmodL_vc.lib;glfw3.lib;assimp-vc143-mt.lib;glew32.lib;Jolt.lib;lua54.lib;rttr_core.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -130,12 +130,13 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib\glfw-3.4.bin.WIN64\lib-vc2022;$(SolutionDir)Idesign Engine;$(SolutionDir)Idesign Engine\src;$(SolutionDir)lib\glew\lib\Release\x64;$(SolutionDir)lib\glew\lib\Debug\x64;$(SolutionDir)Idesign Engine\x64\Debug;$(SolutionDir)Idesign Engine\x64\Release;$(SolutionDir)lib\freetype;$(SolutionDir)lib\FMOD_CORE\lib\x64;$(SolutionDir)lib\FMOD_STUDIO\lib\x64;$(SolutionDir)\Idesign Engine\x64\Debug;$(SolutionDir)lib\installed\x64-windows\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;user32.lib;gdi32.lib;shell32.lib;%(AdditionalDependencies);glew32s.lib;freetype.lib;fmod_vc.lib;fmodL_vc.lib;glfw3.lib;assimp-vc143-mt.lib;glew32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\glfw-3.4.bin.WIN64\lib-vc2022;$(SolutionDir)Idesign Engine;$(SolutionDir)Idesign Engine\src;$(SolutionDir)lib\glew\lib\Release\x64;$(SolutionDir)lib\glew\lib\Debug\x64;$(SolutionDir)Idesign Engine\x64\Debug;$(SolutionDir)Idesign Engine\x64\Release;$(SolutionDir)lib\freetype;$(SolutionDir)lib\FMOD_CORE\lib\x64;$(SolutionDir)lib\FMOD_STUDIO\lib\x64;$(SolutionDir)\Idesign Engine\x64\Debug;$(SolutionDir)lib\installed\x64-windows\lib;$(SolutionDir)lib\Jolt\out\build\x64-Debug;$(SolutionDir)lib\Jolt\out\build\x64-Release;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;user32.lib;gdi32.lib;shell32.lib;%(AdditionalDependencies);glew32s.lib;freetype.lib;fmod_vc.lib;fmodL_vc.lib;glfw3.lib;assimp-vc143-mt.lib;glew32.lib;Jolt.lib;</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\lib\imgui\imgui.h" />
+    <ClInclude Include="..\lib\imgui\ImGuizmo.h" />
     <ClInclude Include="..\lib\imgui\imgui_impl_glfw.h" />
     <ClInclude Include="..\lib\imgui\imgui_impl_opengl3.h" />
     <ClInclude Include="..\lib\imgui\imgui_impl_opengl3_loader.h" />
@@ -166,6 +167,7 @@
     <ClInclude Include="src\ECSystemManager.h" />
     <ClInclude Include="src\EngineState.h" />
     <ClInclude Include="src\EntityManager.h" />
+    <ClInclude Include="src\FileCheckSystem.h" />
     <ClInclude Include="src\FontShader.h" />
     <ClInclude Include="src\FontSystem.h" />
     <ClInclude Include="src\Graphics.h" />
@@ -176,7 +178,9 @@
     <ClInclude Include="src\InputHandler.h" />
     <ClInclude Include="src\JsonSerialize.h" />
     <ClInclude Include="src\Lighting.h" />
+    <ClInclude Include="src\MainMath.h" />
     <ClInclude Include="src\Matrix3x3.h" />
+    <ClInclude Include="src\Matrix4x4.h" />
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\MeshLoader.h" />
     <ClInclude Include="src\MeshProperties.h" />
@@ -186,6 +190,7 @@
     <ClInclude Include="src\NavMeshProperties.h" />
     <ClInclude Include="src\NavMeshSystem.h" />
     <ClInclude Include="src\pch.h" />
+    <ClInclude Include="src\PhysicsSystem.h" />
     <ClInclude Include="src\PrefabProperties.h" />
     <ClInclude Include="src\PropertyMacro.h" />
     <ClInclude Include="src\PropertySystem.h" />
@@ -258,6 +263,7 @@
     <ClInclude Include="src\Types.h" />
     <ClInclude Include="src\UndoRedoSystem.h" />
     <ClInclude Include="src\Vector2D.h" />
+    <ClInclude Include="src\Vector3D.h" />
     <ClInclude Include="src\WindowConfigProperties.h" />
   </ItemGroup>
   <ItemGroup>
@@ -296,6 +302,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\lib\imgui\imgui.cpp" />
+    <ClCompile Include="..\lib\imgui\ImGuizmo.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\lib\imgui\imgui_demo.cpp" />
     <ClCompile Include="..\lib\imgui\imgui_draw.cpp" />
     <ClCompile Include="..\lib\imgui\imgui_impl_glfw.cpp" />
@@ -316,6 +326,7 @@
     <ClCompile Include="src\DummySystem.cpp" />
     <ClCompile Include="src\EngineState.cpp" />
     <ClCompile Include="src\EntityManager.cpp" />
+    <ClCompile Include="src\FileCheckSystem.cpp" />
     <ClCompile Include="src\FontSystem.cpp" />
     <ClCompile Include="src\Graphics.cpp" />
     <ClCompile Include="src\GraphicsShader.cpp" />
@@ -323,7 +334,9 @@
     <ClCompile Include="src\InputHandler.cpp" />
     <ClCompile Include="src\Lighting.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\MainMath.cpp" />
     <ClCompile Include="src\Matrix3x3.cpp" />
+    <ClCompile Include="src\Matrix4x4.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\MeshLoader.cpp" />
     <ClCompile Include="src\MessageSystem.cpp" />
@@ -332,6 +345,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\PhysicsSystem.cpp" />
     <ClCompile Include="src\PropertyWidget.cpp" />
     <ClCompile Include="src\Recast\DetourAlloc.cpp" />
     <ClCompile Include="src\Recast\DetourAssert.cpp" />
@@ -361,6 +375,7 @@
     <ClCompile Include="src\TextureLoader.cpp" />
     <ClCompile Include="src\UndoRedoSystem.cpp" />
     <ClCompile Include="src\Vector2D.cpp" />
+    <ClCompile Include="src\Vector3D.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

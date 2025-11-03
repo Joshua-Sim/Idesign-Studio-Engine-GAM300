@@ -34,6 +34,7 @@
 #include "Audio.h"
 #include "ScriptingSystem.h"
 #include "lua.hpp"
+#include <FileCheckSystem.h>
 
 using namespace Framework;
 
@@ -124,6 +125,10 @@ int main(void)
     scriptingSystem->SetGraphicsSystem(graphicsSystem.get());
 
     auto navMeshSystem = ecsInterface.RegisterSystem<NavMeshSystem>();
+
+    //File Checking System
+    auto fileCheckSystem = ecsInterface.RegisterSystem<Framework::FileCheckSystem>();
+
     // Registering systems in the ECS interface here
 
     // ------- Add systems to engine below -------- //
@@ -136,6 +141,14 @@ int main(void)
 
     // Register scene manager last
     engine->AddSystem(sceneSystem.get());
+    engine->AddSystem(fileCheckSystem.get());
+
+    //Folders and filetypes to check for external change
+    fileCheckSystem->WatchFolder("Assets/Scripts", { ".lua" });
+    fileCheckSystem->WatchFolder("Assets/JSON", { ".json", ".cfg" });
+    fileCheckSystem->WatchFolder("Assets/shaders", { ".glsl" });
+    fileCheckSystem->WatchFolder("Assets/Textures", { ".png", ".jpg" });
+    fileCheckSystem->WatchFolder("Scenes", { ".json" });
 
     // Initialize the engine and run the main game loop
     engine->Initialize();
