@@ -425,6 +425,8 @@ namespace Framework {
                     std::string savePath = SaveFileDialog();
                     Framework::sceneManager.SaveScene(savePath);
                 }
+
+
                 if (ImGui::MenuItem("Build Navmesh"))
                 {
                     auto navSystem = ecsInterface.GetSystem<NavMeshSystem>();

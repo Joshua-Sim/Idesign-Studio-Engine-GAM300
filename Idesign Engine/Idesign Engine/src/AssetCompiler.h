@@ -30,6 +30,14 @@ namespace Framework
     void loadScene(const std::string& scenePath);
     void saveScene(const std::string& scenePath);
 
+    void saveEntityToPrefab(Entity entity, const std::string& prefabPath);
+    void CreatePrefabFromEntity(Entity entity, const std::string& prefabName);
+
+    //Prefab and overloads
+    Entity InstantiatePrefab(const std::string& prefabGUID);
+    Entity InstantiatePrefab(const std::string& prefabGUID, const glm::vec3& position);
+    Entity InstantiatePrefab(const std::string& prefabGUID, const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale);
+
     bool MoveFileToAssetFolder(const std::string& sourcePath, const std::string& destinationFolder, std::string& outFinalPath, std::string& outError);
 
     // Deserialize JSON into a C++ object using reflection-based property list

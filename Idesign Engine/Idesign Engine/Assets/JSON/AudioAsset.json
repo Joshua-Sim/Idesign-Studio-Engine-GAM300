@@ -6,7 +6,7 @@
             "path": "Assets/Audio/soundeffect/selectbutton.wav",
             "mode": "oneshot",
             "soundType": "effect",
-            "volume":  1.0
+            "volume": 1.0
         },
         {
             "guid": "8be034ae-0e8c-434c-a56a-b9bd55376bd4",
@@ -17,19 +17,19 @@
             "volume": 1.0
         },
         {
-            "guid": "643715c8-de70-4f9c-a5dd-0171a4e4a419",
-            "name": "piano",
-            "path": "Assets/Audio/bgm/piano.wav",
-            "mode": "loop",
-            "soundType": "background",
-            "volume": 1.0
-        },
-        {
             "guid": "0870a325-025a-47d6-a38e-0d93515b6727",
             "name": "buttonclick",
             "path": "Assets/Audio/soundeffect/buttonclick.wav",
             "mode": "oneshot",
             "soundType": "effect",
+            "volume": 1.0
+        },
+        {
+            "guid": "643715c8-de70-4f9c-a5dd-0171a4e4a419",
+            "name": "piano",
+            "path": "Assets/Audio/bgm/piano.wav",
+            "mode": "loop",
+            "soundType": "background",
             "volume": 1.0
         },
         {

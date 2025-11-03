@@ -143,6 +143,7 @@
     <ClInclude Include="..\lib\imgui\imstb_rectpack.h" />
     <ClInclude Include="..\lib\imgui\imstb_textedit.h" />
     <ClInclude Include="..\lib\imgui\imstb_truetype.h" />
+    <ClInclude Include="PrefabComponent.h" />
     <ClInclude Include="src\AssetCompiler.h" />
     <ClInclude Include="src\AssetHandler.h" />
     <ClInclude Include="src\AssetLoader.h" />

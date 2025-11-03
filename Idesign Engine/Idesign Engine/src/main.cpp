@@ -49,7 +49,8 @@ void EnableMemoryLeakChecking(int breakAlloc = -1)
 }
 
 // Define global ptrs
-Coordinator ecsInterface;   // REQUIRED FOR ECS INTERFACE
+Coordinator
+ecsInterface;   // REQUIRED FOR ECS INTERFACE
 EngineState engineState;
 
 int main(void)
@@ -74,6 +75,13 @@ int main(void)
         {
             GlobalAudio.UE_LoadSound(props.name);
         });
+
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+    //  Prefabs
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+    //CompileArray<PrefabProperties>("Assets/JSON/PrefabAsset.json", "Resource/PrefabAsset.bin", "Descriptor/PrefabAsset.desc", g_PrefabProps, "prefabs");
+    AssetManager::Instance().LoadBinaryArray<PrefabProperties>("Resource/PrefabAsset.bin", g_PrefabProps);
+
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     //  Textures
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
