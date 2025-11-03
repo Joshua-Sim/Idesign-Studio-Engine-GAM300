@@ -56,6 +56,7 @@
 #include "ComponentList.h"
 #include <NavMeshProperties.h>
 #include "FontSystem.h"
+#include "TextureLoaderDDS.h"
 
 extern Framework::FontSystem fontSystem;
 extern Framework::Coordinator ecsInterface;
@@ -182,7 +183,7 @@ namespace Framework {
 
         // Add and load a texture component
         Framework::TextureProperties textureComponent;
-        textureComponent.path = "Assets/PNG/test.png";
+        textureComponent.path = "Assets/PNG/test.png"; //can put any compressed texture
         TextureLoader::loadTexture(textureComponent, true);
 
         // Add NavMesh component to mark this as navmesh source

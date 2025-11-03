@@ -257,6 +257,7 @@
     <ClInclude Include="src\TextProperties.h" />
     <ClInclude Include="src\TextureAsset.h" />
     <ClInclude Include="src\TextureLoader.h" />
+    <ClInclude Include="src\TextureLoaderDDS.h" />
     <ClInclude Include="src\TextureProperties.h" />
     <ClInclude Include="src\TransformProperties.h" />
     <ClInclude Include="src\TypeRegistry.h" />
@@ -373,6 +374,7 @@
     <ClCompile Include="src\Terrain.cpp" />
     <ClCompile Include="src\TestSystem.cpp" />
     <ClCompile Include="src\TextureLoader.cpp" />
+    <ClCompile Include="src\TextureLoaderDDS.cpp" />
     <ClCompile Include="src\UndoRedoSystem.cpp" />
     <ClCompile Include="src\Vector2D.cpp" />
     <ClCompile Include="src\Vector3D.cpp" />
