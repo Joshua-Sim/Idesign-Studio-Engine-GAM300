@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "ScriptingSystem.h"
 #include "Coordinator.h"
 #include "ComponentList.h"
@@ -87,7 +87,7 @@ namespace Framework {
                 std::error_code ec;
                 if (fs::exists(p, ec)) return fs::weakly_canonical(p, ec).string();
             }
-            // if not found, return as-is (fopen will fail; we’ll log)
+            // if not found, return as-is (fopen will fail; weï¿½ll log)
             return rel;
         }
 
@@ -107,7 +107,7 @@ namespace Framework {
             }
             catch (...) {
                 // swallow; we'll just recompile
-                std::cerr << "[Cook] Warning: failed to check timestamps — forcing recompile.\n";
+                std::cerr << "[Cook] Warning: failed to check timestamps ï¿½ forcing recompile.\n";
             }
             return false;
         }
@@ -170,7 +170,7 @@ namespace Framework {
     ScriptingSystem::~ScriptingSystem() { if (L) { lua_close(L); L = nullptr; } }
 
     void ScriptingSystem::Initialize() {
-        // 1) Register ScriptComponent (your engine’s pattern)
+        // 1) Register ScriptComponent (your engineï¿½s pattern)
         ecsInterface.RegisterComponent<ScriptComponent>();
 
         // 2) Set system signature
@@ -290,11 +290,11 @@ namespace Framework {
         lua_pop(L, 1);                                    // pop tbl
         return true;
     }
-    
+
     Entity ScriptingSystem::CreateScriptEntity(const std::string& path) {
         Entity e = ecsInterface.CreateEntity();
         ecsInterface.AddComponent<ScriptComponent>(e, ScriptComponent{ path });
-        ecsInterface.AddComponent<TransformComponent>(e,TransformComponent{});
+        ecsInterface.AddComponent<TransformComponent>(e, TransformComponent{});
         ecsInterface.AddComponent<HierarchyComponent>(e, HierarchyComponent{});
         return e;
     }

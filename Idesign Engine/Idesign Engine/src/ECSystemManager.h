@@ -47,6 +47,19 @@ namespace Framework {
 			mSignatures.insert({ typeName, signature });
 		}
 
+		template<typename T>
+		std::shared_ptr<T> GetSystem()
+		{
+			const char* typeName = typeid(T).name();
+			auto it = mECSystem.find(typeName);
+			if (it == mECSystem.end())
+			{
+				assert(false && "System not found! Did you forget to register it?");
+				return nullptr;
+			}
+			return std::static_pointer_cast<T>(it->second);
+		}
+
 		/// @brief Clears all registered systems and signatures.
 		void Clear()
 		{

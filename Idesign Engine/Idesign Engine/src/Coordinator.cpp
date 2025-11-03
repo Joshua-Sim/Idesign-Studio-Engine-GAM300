@@ -13,7 +13,7 @@
 
 /* Order of registration of components
 MovementComponent 0
-EnemyComponent 1 
+EnemyComponent 1
 CollisionComponent 2
 TransformComponent 3
 RenderComponent 4
@@ -91,7 +91,7 @@ namespace Framework {
         guidMap[newEntity] = guid;
 
         // Default components attaching here (Update eventually)
-        
+
         //Add transform because every entity has x,y,z
 
         //Add Hierarchy for parent-child and hierarchy management
@@ -254,10 +254,10 @@ namespace Framework {
             mComponentManager->AddComponent(entity, LayerComponent{});
         }
 
-       /* else if (componentName == "TextComponent")
-        {
-            mComponentManager->AddComponent(entity, TextComponent{});
-        }*/
+        /* else if (componentName == "TextComponent")
+         {
+             mComponentManager->AddComponent(entity, TextComponent{});
+         }*/
 
         else if (componentName == "PlayerComponent")
         {
@@ -279,7 +279,7 @@ namespace Framework {
         // Clear the entity list and entity names after all entities are destroyed
         entityList.clear();
         entityNames.clear();
-        std::cout  << entityList.size();
+        std::cout << entityList.size();
     }
 
     bool Coordinator::IsEntityValid(Entity entity) const

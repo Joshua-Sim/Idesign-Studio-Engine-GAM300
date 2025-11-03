@@ -496,16 +496,16 @@ namespace Framework {
                         }
 
                         const bool isSelected = (int)entityId == sel;
-                        glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : mesh.albedo;
-                        currentshader.setVec3("uAlbedo", finalAlbedo);
+                        //glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : mesh.albedo;
+                        //currentshader.setVec3("uAlbedo", finalAlbedo);
 
-                        glActiveTexture(GL_TEXTURE0);
+                        //glActiveTexture(GL_TEXTURE0);
 
-                        currentshader.setVec3("uMaterial.ambient", mesh.ambient);
-                        currentshader.setVec3("uMaterial.specular", mesh.specular);
-                        currentshader.setFloat("uMaterial.shininess", mesh.shininess);
-                        currentshader.setFloat("uMaterial.opacity", mesh.opacity);
-                        currentshader.setInt("uTexture", 0);
+                        //currentshader.setVec3("uMaterial.ambient", mesh.ambient);
+                        //currentshader.setVec3("uMaterial.specular", mesh.specular);
+                        //currentshader.setFloat("uMaterial.shininess", mesh.shininess);
+                        //currentshader.setFloat("uMaterial.opacity", mesh.opacity);
+                        //currentshader.setInt("uTexture", 0);
 
                         if (ecsInterface.HasComponent<TextureProperties>(entityId)) {
                             auto& tex = ecsInterface.GetComponent<TextureProperties>(entityId);

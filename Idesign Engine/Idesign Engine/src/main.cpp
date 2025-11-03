@@ -63,7 +63,7 @@ int main(void)
     // ------- Create systems below -------- 
     //  Windows
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
-    CompileSingleObject<WindowConfig>("Assets/JSON/WindowAsset.json", "Resource/WindowAsset.cfg", "Descriptor/WindowAsset.desc", g_WindowConfigProps);
+    //CompileSingleObject<WindowConfig>("Assets/JSON/WindowAsset.json", "Resource/WindowAsset.cfg", "Descriptor/WindowAsset.desc", g_WindowConfigProps);
     AssetManager::Instance().LoadBinary<WindowConfig>("Resource/WindowAsset.cfg", g_WindowConfigProps);
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     //  Audio
@@ -83,7 +83,7 @@ int main(void)
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     //  Mesh
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
-    CompileArray<MeshProperties>("src/Data/MeshAsset.json", "src/Data/MeshAsset.bin", g_MeshProps, "mesh");
+    //CompileArray<MeshProperties>("src/Data/MeshAsset.json", "src/Data/MeshAsset.bin", g_MeshProps, "mesh");
 
     // Initialize the InputHandler singleton
     //InputHandler::Initialize(Window->GetWindow());

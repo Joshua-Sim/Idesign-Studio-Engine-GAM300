@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
+ï»¿///////////////////////////////////////////////////////////////////////////////
 ///
 ///	@file  : PropertySystem.h
 /// @Brief : 
@@ -16,31 +16,12 @@
 #include <cassert>
 #include <span>
 #include <array>
+#include <variant>
+#include <cstring> // for std::strncpy
+#include <functional>
 
-// Property system backbone
-// Things to do
-/*
-    Audio               - All Cleared
-    Editor (IMGUI)      - Wait for 3D Graphics to be implemented first
-    Serialization       - Tested
-    Deserialization     - Tested
-    ECS Components      - 1 Prop per Component (Nid Test)
-    Prefab System       - 1 Prop per Prefab
-    Scripting           - In the future
-    Font System?
-    Physics System?
+#include "AssetHandler.h"   // For GUIDs
 
-    - Create a struct for each Object
-    - With that struct, create an array for that Object's properties
-    - Tie all the properties up into the same Object
-    - Register Object into Global Registry
-
-    Current Idea of Property System 12/09/2025
-    - Create a new .h object property file
-    - Include PropertySystem.h + PropertyMacro.h in new file
-    - Create reflection metadata in the new file
-    - Include the new files in other .h files that requires its data
-*/
 namespace Framework
 {
     // A single property descriptor (like "field metadata")
@@ -57,9 +38,12 @@ namespace Framework
             STRING,
             CHAR,
             BOOL,
-            STRING_ARRAY,
             VEC3,
-            UINT
+            UINT,
+
+            SLIDER_FLOAT,   // Volume, Brightness
+            DRAG_FLOAT,     // Scale, Physics, Tuning
+            COLOR3          // Color
         };
 
         // Function pointers to *set* and *get* a value on an object.
@@ -67,19 +51,68 @@ namespace Framework
         using fn_set = void(*)(void* pObject, const void* pData);
         using fn_get = void(*)(const void* pObject, void* pData);
 
-        const char* m_pName;   // Property name ("x", "y", etc.)
-        atomic_type m_Type;    // What kind of data is this (int, float, …)?
+        const char* m_pName = nullptr;   // Property name ("x", "y", etc.)
+        atomic_type m_Type;              // What kind of data is this (int, float, )?
 
         // To interact with the fields
-        fn_set      m_fnSet;   // Setter function for this property, to write a new value
-        fn_get      m_fnGet;   // Getter function for this property, to read the value
+        fn_set      m_fnSet = nullptr;   // Setter function for this property, to write a new value
+        fn_get      m_fnGet = nullptr;   // Getter function for this property, to read the value
 
-        // New metadata fields
+        // Type-safe range metadata
+        using RangeValue = std::variant<int, float, double, unsigned int>;
+        RangeValue m_Min;
+        RangeValue m_Max;
+        bool m_HasRange = false;
         const char* m_pTooltip = nullptr;
-        const char* m_pCategory = nullptr;
-        float       m_Min = 0.0f;
-        float       m_Max = 0.0f;
-        bool        m_HasRange = false;
+
+        // Enum support
+        struct EnumEntry
+        {
+            const char* name;
+            int value;
+        };
+        const EnumEntry* m_pEnumEntries = nullptr;
+        size_t m_EnumCount = 0;
+
+        // Property flags
+        enum prop_flags
+        {
+            NONE = 0,
+            READ_ONLY = 1 << 0,
+            HIDDEN = 1 << 1,
+            ADVANCED = 1 << 2,
+        };
+        uint32_t m_Flags = prop_flags::NONE;
+
+        // Helper: get min/max as float (for ImGui sliders)
+        float GetMinAsFloat() const
+        {
+            return std::visit([](auto&& val) -> float { return static_cast<float>(val); }, m_Min);
+        }
+
+        float GetMaxAsFloat() const
+        {
+            return std::visit([](auto&& val) -> float { return static_cast<float>(val); }, m_Max);
+        }
+
+        // For Dropdown 
+        std::function<std::vector<std::string>()> GetDropdownOptions;
+
+        prop(const char* name, atomic_type type,
+            fn_set setter, fn_get getter,
+            RangeValue min = {}, RangeValue max = {},
+            bool hasRange = false, const char* tooltip = nullptr,
+            const EnumEntry* enumEntries = nullptr, size_t enumCount = 0,
+            uint32_t flags = NONE,
+            std::function<std::vector<std::string>()> dropdownOptions = {})
+            : m_pName(name), m_Type(type),
+            m_fnSet(setter), m_fnGet(getter),
+            m_Min(min), m_Max(max), m_HasRange(hasRange),
+            m_pTooltip(tooltip),
+            m_pEnumEntries(enumEntries), m_EnumCount(enumCount),
+            m_Flags(flags),
+            GetDropdownOptions(dropdownOptions) {
+        }
     };
 
     // Collection of Properties for one type
@@ -116,12 +149,15 @@ namespace Framework
         global_registration* current = global_registration::m_pHead;
         while (current)
         {
-            if (current->m_pPopList && current->m_pPopList->m_pName == typeName)
+            if (current->m_pPopList && std::strcmp(current->m_pPopList->m_pName, typeName.c_str()) == 0)
                 return current->m_pPopList;
 
             current = current->m_pNext;
         }
         return nullptr;
     }
+
+    template<typename T>
+    const prop_list& GetPropList();
 }
 #endif // !_PROPERTY_SYSTEM_H_

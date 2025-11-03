@@ -18,12 +18,12 @@ namespace Framework {
         void Update(float dt) override;
         std::string GetName() override;
 
-        // NEW: allow main.cpp to wire Graphics into the system
         void SetGraphicsSystem(Graphics* g) { graphics_ = g; }
         Graphics* GetGraphicsSystem() const { return graphics_; }
 
-        // OPTIONAL helper to spawn a script-driven entity
         Entity CreateScriptEntity(const std::string& path);
+
+        void HotReloadScript(const std::string& changedPath);
 
         lua_State* GetLuaState() const { return L; }
 

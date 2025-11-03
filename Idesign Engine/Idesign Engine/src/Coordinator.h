@@ -23,6 +23,8 @@
 #include "Types.h"
 #include <memory>
 
+#include <functional>
+
 namespace Framework {
 
 	class Coordinator
@@ -197,7 +199,7 @@ namespace Framework {
 		// Entity Name Stuff
 		// Takes in an entity and a string, setting the name of the entity to be the string
 		void SetEntityName(Entity entity, const std::string& name);
-		
+
 		// Returns the name of the given entity
 		std::string GetEntityName(Entity entity) const;
 
@@ -217,6 +219,31 @@ namespace Framework {
 		Entity GetEntityByGUID(const std::string& guid) const;
 
 		void SetEntityGUID(Entity entity, const std::string& guid);
+
+		// System retreival
+		template<typename T>
+		std::shared_ptr<T> GetSystem()
+		{
+			return mSystemManager->GetSystem<T>();
+		}
+
+		// Edwin's Stuff (For Auto Generate Entity Inspector)
+		using RawGetter = std::function<void* (Entity)>;
+
+		void RegisterRawGetter(const std::string& typeName, RawGetter getter)
+		{
+			rawGetters[typeName] = std::move(getter);
+		}
+
+		void* GetRawComponent(Entity entity, const std::string& typeName)
+		{
+			//std::cout << "Fetching component: " << typeName << std::endl;
+
+			auto it = rawGetters.find(typeName);
+			if (it != rawGetters.end())
+				return it->second(entity);
+			return nullptr;
+		}
 
 		std::unordered_map<std::string, void*> GetAllComponents(Entity entity)
 		{
@@ -244,9 +271,9 @@ namespace Framework {
 		std::vector<std::string> componentNamesList =			// A vector of strings that tracks the names of components. Need to edit this
 		{ "MovementComponent", "EnemyComponent", "CollisionComponent",
 			"TransformComponent", "RenderComponent", "LayerComponent",
-			"TextComponent", "PlayerComponent" }; 
+			"TextComponent", "PlayerComponent" };
+
+		std::unordered_map<std::string, RawGetter> rawGetters;
 	};
-
 }
-
 #endif
