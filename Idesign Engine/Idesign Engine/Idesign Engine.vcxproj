@@ -136,6 +136,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\lib\imgui\imgui.h" />
+    <ClInclude Include="..\lib\imgui\ImGuizmo.h" />
     <ClInclude Include="..\lib\imgui\imgui_impl_glfw.h" />
     <ClInclude Include="..\lib\imgui\imgui_impl_opengl3.h" />
     <ClInclude Include="..\lib\imgui\imgui_impl_opengl3_loader.h" />
@@ -295,6 +296,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\lib\imgui\imgui.cpp" />
+    <ClCompile Include="..\lib\imgui\ImGuizmo.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\lib\imgui\imgui_demo.cpp" />
     <ClCompile Include="..\lib\imgui\imgui_draw.cpp" />
     <ClCompile Include="..\lib\imgui\imgui_impl_glfw.cpp" />

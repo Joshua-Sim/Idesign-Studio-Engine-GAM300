@@ -758,6 +758,13 @@ namespace Framework {
     void Graphics::SetScriptControlEnabled(bool on) { scriptControl_ = on; }
     bool Graphics::IsScriptControlEnabled() const { return scriptControl_; }
 
+    int Graphics::ConsumeLastPickedId()
+    {
+        int id = lastPickedId;
+        lastPickedId = -1;
+        return id;
+    }
+
     void Graphics::renderQuad()
     {
         if (quadVAO == 0)

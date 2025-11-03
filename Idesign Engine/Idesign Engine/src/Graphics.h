@@ -72,6 +72,9 @@ namespace Framework {
         void SetScriptControlEnabled(bool on);
         bool IsScriptControlEnabled() const;
 
+        int  ConsumeLastPickedId();
+
+
     private:
         static void framebuffer_size_callback(GLFWwindow*, int, int);
         static void mouse_callback(GLFWwindow*, double, double);
