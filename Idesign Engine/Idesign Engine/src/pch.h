@@ -22,3 +22,6 @@
 #include <stdio.h>
 #include <iostream>
 
+//Time Functions 
+#include <ctime>
+

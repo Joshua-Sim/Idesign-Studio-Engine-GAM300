@@ -2,9 +2,9 @@
 ///
 ///	@file  : Audio.h
 /// @Brief : Header file for Audio system that manages sound loading, playback,
-///          channel groups, and volume control using FMOD
+///          channel groups (buses), and volume control using FMOD Studio API
 ///	
-///	@Authors: Edwin
+///	@Authors: Edwin, Belinda 
 ///	@Copyright 2024, Digipen Institute of Technology
 ///
 ///////////////////////////////////////////////////////////////////////////////
@@ -24,6 +24,7 @@
 
 using namespace std;            // For Standard Library
 using namespace FMOD;           // For FMOD Library
+using namespace FMOD::Studio;   // For FMOD Studio Library
 
 namespace Framework
 {
@@ -35,7 +36,7 @@ namespace Framework
         Vector3(float x = 0, float y = 0, float z = 0) : x(x), y(y), z(z) {}
     };
 
-    //AUdio source types for different 3D behaviors
+    //Audio source types for different 3D behaviors
     enum class AudioSourceType {
         STEREO_2D,      //UI Sounds, BGM - no 3D processing
         WORLD_3D,       //Environmental sounds with full 3D
@@ -131,12 +132,15 @@ namespace Framework
          */
         FMOD_MODE UE_GetModeFromString(const std::string& mode);
 
+        //Load an event description (from an event path defined in FMOD Studio)
+        EventDescription* UE_LoadEvent(const std::string& customName);
+
         /**
          * @brief Loads a sound by its custom name using the Asset Manager.
          * @param customName The custom name used to load the sound.
          * @return Pointer to the FMOD::Sound object.
          */
-        Sound* UE_LoadSound(const std::string& customName);
+        //Sound* UE_LoadSound(const std::string& customName);
 
         /**
          * @brief Plays a sound by its custom name.
@@ -348,7 +352,9 @@ namespace Framework
          * @brief Creates a new channel group for organizing sounds.
          * @param groupName The name of the new channel group.
          */
-        void UE_CreateChannelGroup(const std::string& groupName);
+        //void UE_CreateChannelGroup(const std::string& groupName);
+
+        void UE_CreateBus(const std::string& busPath); // create reference to a bus (e.g., "bus:/SFX")
 
         /**********************/
         //  Volume Control    //
@@ -455,6 +461,27 @@ namespace Framework
         */
         void SetReverbProperties(float decayTime, float wetLevel, float dryLevel);
 
+        // Get the FMOD Studio System for direct access
+        FMOD::Studio::System* GetStudioSystem() { return studioSystem; }
+
+        // Update method to be called every frame
+        void Update() {
+            if (studioSystem) {
+                studioSystem->update();
+            }
+        }
+
+        // Check if a sound is 3D
+        bool IsEvent3D(const std::string& eventName) {
+            FMOD::Studio::EventDescription* eventDesc = UE_LoadEvent(eventName);
+            if (eventDesc) {
+                bool is3D = false;
+                eventDesc->is3D(&is3D);
+                return is3D;
+            }
+            return false;
+        }
+
     private:
 
         //Helper functions for 3D Audio
@@ -486,15 +513,19 @@ namespace Framework
         */
         int GetNextChannelId() { return nextChannelId++; }
 
-        FMOD::System* pSystem = nullptr;                                            // Create System API, System Object is now a member of the class
-        std::unordered_map<std::string, FMOD::ChannelGroup*> activeChannelGroup;    // Map of active channel groups
-        std::unordered_map<std::string, FMOD::Channel*> activeChannels;             // Map of active channels
-        std::unordered_map<std::string, FMOD::Sound*> loadedSounds;                 // Map for storing loaded sounds
-        const float volChangeAmount = 0.1f;                                         // Fixed amount to change volume
+        //FMOD::System* pSystem = nullptr;                                            // Create System API, System Object is now a member of the class
 
-        //Additional maps for 3D audio management
-        std::unordered_map<int, FMOD::Channel*> activeChannelsById;
-        std::unordered_map<int, Channel3DInfo> channel3DInfo;
+		FMOD::Studio::System* studioSystem = nullptr;                               // FMOD Studio System Object
+		FMOD::System* coreSystem = nullptr;                                         // FMOD Core System Object
+
+        // Event descriptions (loaded events), event instances (active)
+        std::unordered_map<std::string, FMOD::Studio::EventDescription*> loadedEvents; // keyed by customName
+        std::unordered_map<std::string, FMOD::Studio::EventInstance*> activeEvents;     // keyed by customName
+        std::unordered_map<int, FMOD::Studio::EventInstance*> activeEventsById;        // keyed by channelId / event id
+        std::unordered_map<int, Channel3DInfo> channel3DInfo; // Track 3D event info
+
+        //Buses (group equivalents)
+        std::unordered_map<std::string, FMOD::Studio::Bus*> activeBuses;
 
         //Audio zones for environmental effects 
         struct AudioZone {
@@ -508,6 +539,10 @@ namespace Framework
 
         ///3D Settings 
         Audio3DSettings current3DSettings;
+
+        //DSP Effects (on core system)
+        FMOD::DSP* reverbDSP = nullptr;
+        FMOD::DSP* lowPassFilter = nullptr;
 
         //Volume Settings 
         float masterVolume = 1.0f;
@@ -524,14 +559,11 @@ namespace Framework
         int currentBGMChannel = -1;                                                 // NEW: Current BGM channel ID
         int pendingBGMChannel = -1;
 
-        //DSP Effects
-        FMOD::DSP* reverbDSP = nullptr;                                             // NEW: Reverb DSP effect
-        FMOD::DSP* lowPassFilter = nullptr;                                         // NEW: Low-pass filter DSP
-
         //Channel ID counter
         int nextChannelId = 1;
 
-        //Debounce for volume controls
+        //Miscs
+        const float volChangeAmount = 0.1f; 
         std::chrono::steady_clock::time_point lastVolumeChangeTime;                 // NEW: Last volume change time
         const std::chrono::milliseconds volumeDebounceTime{ 100 };
     };

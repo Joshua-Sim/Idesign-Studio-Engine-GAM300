@@ -32,6 +32,8 @@
 #include <WindowConfigProperties.h>
 #include "AudioLoader.h"
 #include "Audio.h"
+#include "AudioSystem.h"
+#include "AudioComponent.h"
 #include "ScriptingSystem.h"
 #include "lua.hpp"
 #include <FileCheckSystem.h>
@@ -62,26 +64,53 @@ int main(void)
     //Create the core engine which manages all the systems that make up the game
     auto engine = std::make_unique<CoreEngine>();
 
+	// Initialize FMOD Studio Audio System
+    std::cout << "Initializing FMOD Studio Audio System..." << std::endl;
+    GlobalAudio.Initialize();
+    std::cout << "FMOD Studio Audio System initialized successfully!" << std::endl;
+
     // ------- Create systems below -------- 
     //  Windows
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
-    //CompileSingleObject<WindowConfig>("Assets/JSON/WindowAsset.json", "Resource/WindowAsset.cfg", "Descriptor/WindowAsset.desc", g_WindowConfigProps);
+    //CompileSingleObject<WindowConfig>("src/Data/WindowAsset.json", "src/Data/WindowAsset.cfg", g_WindowConfigProps);
     AssetManager::Instance().LoadBinary<WindowConfig>("Resource/WindowAsset.cfg", g_WindowConfigProps);
+    //auto Window = std::make_unique<GraphicsWindows>(&config, engine.get());
+    
+    AssetManager::Instance().LoadBinaryArray<PrefabProperties>("Resource/PrefabAsset.bin", g_PrefabProps);
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     //  Audio
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
-    //CompileArray<AudioProperties>("Assets/JSON/AudioAsset.json", "Resource/AudioAsset.bin", "Descriptor/AudioAsset.desc", g_AudioPropertiesProps, "audio");
-    AssetManager::Instance().LoadBinaryArray<AudioProperties>("Resource/AudioAsset.bin", g_AudioPropertiesProps,
+    /*CompileArray<AudioProperties>("src/Data/AudioAsset.json", "src/Data/AudioAsset.bin", g_AudioPropertiesProps, "audio");
+    AssetManager::Instance().LoadBinaryArray<AudioProperties>("src/Data/AudioAsset.bin", g_AudioPropertiesProps,
         [](AudioProperties& props)
         {
-            GlobalAudio.UE_LoadSound(props.name);
-        });
-
-    // ------------------------------------------------------------------------------------------------------------------------------------------------------
-    //  Prefabs
-    // ------------------------------------------------------------------------------------------------------------------------------------------------------
-    //CompileArray<PrefabProperties>("Assets/JSON/PrefabAsset.json", "Resource/PrefabAsset.bin", "Descriptor/PrefabAsset.desc", g_PrefabProps, "prefabs");
-    AssetManager::Instance().LoadBinaryArray<PrefabProperties>("Resource/PrefabAsset.bin", g_PrefabProps);
+            GlobalAudio.UE_LoadEvent(props.name);
+        });*/
+    //AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, "src/Data/AudioAsset.json", "AudioProperties");
+    //GlobalAudio.UE_PlaySound("winloop");
+    std::cout << "Compiling AudioAsset.json..." << std::endl;
+    bool compileSuccess = CompileArray<AudioProperties>("src/Data/AudioAsset.json", "src/Data/AudioAsset.bin", g_AudioPropertiesProps, "audio");
+    std::cout << "Audio compilation: " << (compileSuccess ? "SUCCESS" : "FAILED") << std::endl;
+    
+    // Load audio properties into AssetManager first (WITHOUT calling UE_LoadEvent yet)
+    std::cout << "Loading AudioAsset.bin into AssetManager..." << std::endl;
+    AssetManager::Instance().LoadBinaryArray<AudioProperties>("src/Data/AudioAsset.bin", g_AudioPropertiesProps);
+    std::cout << "Audio assets registered in AssetManager!" << std::endl;
+  
+    // NOW load FMOD events - AssetManager has all AudioProperties registered, so lookups will work
+    std::cout << "Loading FMOD events..." << std::endl;
+    
+    for (const auto& [guid, entry] : AssetManager::Instance().GetAssets())
+    {
+        if (entry.typeName == TypeName<AudioProperties>::value)
+        {
+            AudioProperties* audioProps = static_cast<AudioProperties*>(entry.pObject.get());
+            std::cout << "  Loading FMOD event: " << audioProps->name << " (path: " << audioProps->path << ")" << std::endl;
+            GlobalAudio.UE_LoadEvent(audioProps->name);
+        }
+    }
+    std::cout << "All FMOD events loaded successfully!" << std::endl;
+   
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     //  Textures
@@ -128,6 +157,8 @@ int main(void)
 
     //File Checking System
     auto fileCheckSystem = ecsInterface.RegisterSystem<Framework::FileCheckSystem>();
+    // Audio System
+    auto audioSystem = ecsInterface.RegisterSystem<AudioSystem>();
 
     // Registering systems in the ECS interface here
 
@@ -138,6 +169,8 @@ int main(void)
     engine->AddSystem(imguiSystem.get());
     engine->AddSystem(scriptingSystem.get());
     engine->AddSystem(navMeshSystem.get());
+	engine->AddSystem(audioSystem.get());
+	
 
     // Register scene manager last
     engine->AddSystem(sceneSystem.get());
@@ -152,6 +185,12 @@ int main(void)
 
     // Initialize the engine and run the main game loop
     engine->Initialize();
+
+    ImguiManager::Log("Initializing FontSystem...", "FontSystem");
+    fontSystem.Initialize();
+    fontSystem.LoadFont("Assets/Font/arial.ttf", 40, "Arial");
+    fontSystem.SetActiveFont("Arial");
+    ImguiManager::LogSuccess("FontSystem ready", "FontSystem");
 
     // Run All Scripts
     if (luaL_dofile(scriptingSystem->GetLuaState(), "Assets/Scripts/cook_all.lua") != LUA_OK) {

@@ -269,7 +269,7 @@ namespace Framework
                     componentsObj.AddMember("HierarchyComponent", hierarchyJson, allocator);
                 }
 
-                // MeshProperties — write only GUID
+                // MeshProperties ï¿½ write only GUID
                 if (ecsInterface.HasComponent<MeshProperties>(entity))
                 {
                     const auto& mesh = ecsInterface.GetComponent<MeshProperties>(entity);
@@ -278,7 +278,7 @@ namespace Framework
                     componentsObj.AddMember("MeshReference", meshRef, allocator);
                 }
 
-                // TextureProperties — write only GUID
+                // TextureProperties ï¿½ write only GUID
                 if (ecsInterface.HasComponent<TextureProperties>(entity))
                 {
                     const auto& tex = ecsInterface.GetComponent<TextureProperties>(entity);
