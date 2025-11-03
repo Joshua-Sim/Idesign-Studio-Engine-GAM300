@@ -19,7 +19,7 @@
 #include <unordered_map>        // std::unordered_map
 #include <chrono>               // for time related things 
 #include <cmath>                //for distance calculation
-
+#include "fmod.h"
 #include <AssetManager.h>
 
 using namespace std;            // For Standard Library

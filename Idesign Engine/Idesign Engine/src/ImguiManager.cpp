@@ -24,6 +24,9 @@
 #include <FileCheckSystem.h>
 #include <ScriptingSystem.h>
 #include "ImGuizmo.h"
+#include "fmod.h"
+#include "fmod_studio.h"
+
 
 extern Framework::Coordinator ecsInterface;
 

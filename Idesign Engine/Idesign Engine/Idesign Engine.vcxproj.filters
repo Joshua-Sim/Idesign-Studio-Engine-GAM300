@@ -519,6 +519,12 @@
     <ClInclude Include="src\TextureLoaderDDS.h">
       <Filter>Header Files\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="src\AudioComponent.h">
+      <Filter>Header Files\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AudioSystem.h">
+      <Filter>Header Files\Audio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />
@@ -826,6 +832,9 @@
     </ClCompile>
     <ClCompile Include="src\TextureLoaderDDS.cpp">
       <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AudioSystem.cpp">
+      <Filter>Source Files\Audio</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

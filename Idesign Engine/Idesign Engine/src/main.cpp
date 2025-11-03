@@ -89,12 +89,12 @@ int main(void)
     //AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, "src/Data/AudioAsset.json", "AudioProperties");
     //GlobalAudio.UE_PlaySound("winloop");
     std::cout << "Compiling AudioAsset.json..." << std::endl;
-    bool compileSuccess = CompileArray<AudioProperties>("src/Data/AudioAsset.json", "src/Data/AudioAsset.bin", g_AudioPropertiesProps, "audio");
+    bool compileSuccess = CompileArray<AudioProperties>("Assets/JSON/AudioAsset.json", "Resource/AudioAsset.bin", "Descriptor/AudioAsset.desc", g_AudioPropertiesProps, "audio");
     std::cout << "Audio compilation: " << (compileSuccess ? "SUCCESS" : "FAILED") << std::endl;
     
     // Load audio properties into AssetManager first (WITHOUT calling UE_LoadEvent yet)
     std::cout << "Loading AudioAsset.bin into AssetManager..." << std::endl;
-    AssetManager::Instance().LoadBinaryArray<AudioProperties>("src/Data/AudioAsset.bin", g_AudioPropertiesProps);
+    AssetManager::Instance().LoadBinaryArray<AudioProperties>("Resource/AudioAsset.bin", g_AudioPropertiesProps);
     std::cout << "Audio assets registered in AssetManager!" << std::endl;
   
     // NOW load FMOD events - AssetManager has all AudioProperties registered, so lookups will work

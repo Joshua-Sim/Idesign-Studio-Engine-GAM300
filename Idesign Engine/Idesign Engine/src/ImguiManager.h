@@ -65,7 +65,7 @@ namespace Framework {
 			const ImVec2& viewportTopLeft, const ImVec2& viewportSize);
 
 		int GetMainViewIndex() const;
-	private:
+
 		Framework::Graphics* m_graphicsSystem = nullptr; // Pointer to store the connection
 		bool m_autoReload = true;
 		int m_gizmoOperation = 0; // 0=Translate, 1=Rotate, 2=Scale
@@ -77,10 +77,7 @@ namespace Framework {
 		static void LogWarning(const std::string& message, const std::string& category = "APP");
 		static void LogError(const std::string& message, const std::string& category = "APP");
 		static void LogSuccess(const std::string& message, const std::string& category = "APP");
-
-
-		Graphics* m_graphicsSystem = nullptr; // Pointer to store the connection
-
+	private:
 		//Console members 
 		void OnConsoleLog(const ConsoleLogMessage& msg);
 		glm::vec4 GetColorForLevel(ConsoleLogMessage::LogLevel level);
