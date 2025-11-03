@@ -145,7 +145,7 @@ int main(void)
 
     //Folders and filetypes to check for external change
     fileCheckSystem->WatchFolder("Assets/Scripts", { ".lua" });
-    fileCheckSystem->WatchFolder("src/Data", { ".json", ".cfg" });
+    fileCheckSystem->WatchFolder("Assets/JSON", { ".json", ".cfg" });
     fileCheckSystem->WatchFolder("Assets/shaders", { ".glsl" });
     fileCheckSystem->WatchFolder("Assets/Textures", { ".png", ".jpg" });
     fileCheckSystem->WatchFolder("Scenes", { ".json" });

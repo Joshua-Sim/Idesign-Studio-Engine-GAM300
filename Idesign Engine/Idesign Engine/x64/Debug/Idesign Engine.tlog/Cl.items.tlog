@@ -1,4 +1,5 @@
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\imgui\imgui.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\imgui.obj
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\imgui\ImGuizmo.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\ImGuizmo.obj
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\imgui\imgui_demo.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\imgui_demo.obj
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\imgui\imgui_draw.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\imgui_draw.obj
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\imgui\imgui_impl_glfw.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\imgui_impl_glfw.obj
@@ -19,6 +20,7 @@ D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Debugge
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\DummySystem.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\DummySystem.obj
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EngineState.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\EngineState.obj
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EntityManager.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\EntityManager.obj
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\FileCheckSystem.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\FileCheckSystem.obj
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\FontSystem.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\FontSystem.obj
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\Graphics.obj
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\GraphicsShader.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\GraphicsShader.obj
@@ -26,12 +28,15 @@ D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiMa
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\InputHandler.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\InputHandler.obj
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Lighting.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\Lighting.obj
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\main.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\main.obj
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\MainMath.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\MainMath.obj
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Matrix3x3.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\Matrix3x3.obj
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Matrix4x4.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\Matrix4x4.obj
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Mesh.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\Mesh.obj
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\MeshLoader.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\MeshLoader.obj
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\MessageSystem.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\MessageSystem.obj
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\NavMeshSystem.obj
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\pch.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\pch.obj
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\PhysicsSystem.obj
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PropertyWidget.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\PropertyWidget.obj
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\DetourAlloc.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\DetourAlloc.obj
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\DetourAssert.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\DetourAssert.obj
@@ -61,3 +66,4 @@ D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\TestSys
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\TextureLoader.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\TextureLoader.obj
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\UndoRedoSystem.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\UndoRedoSystem.obj
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Vector2D.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\Vector2D.obj
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Vector3D.cpp;D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\Vector3D.obj
