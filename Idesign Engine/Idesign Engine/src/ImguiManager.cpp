@@ -1585,7 +1585,6 @@ namespace Framework {
                         }
                     }
 
-
                     // Reset selectedEntity if the properties window is closed
                     if (!isPropertiesWindowOpen)
                     {

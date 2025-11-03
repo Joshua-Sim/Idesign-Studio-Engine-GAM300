@@ -1,49 +1,74 @@
 {
-    "mesh": [
-        {
-            "guid": "9e1fcb62-0699-4a0b-ae75-d0670af44b1b",
-            "name": "plane2",
-            "path": "Assets/Objects/plane2.obj",
-            "vao": 3,
-            "vbo": 5,
-            "ebo": 6,
-            "indexCount": 231840
-        },
-        {
-            "guid": "3a68b780-632d-49d8-b45d-33b1ac035172",
-            "name": "plane",
-            "path": "Assets/Objects/plane.obj",
-            "vao": 4,
-            "vbo": 7,
-            "ebo": 8,
-            "indexCount": 76662
-        },
-        {
-            "guid": "b2bf372c-8d6b-43c2-bee7-45c46f760e0f",
-            "name": "Castle OBJ",
-            "path": "Assets/Objects/Castle OBJ.obj",
-            "vao": 5,
-            "vbo": 9,
-            "ebo": 10,
-            "indexCount": 8946
-        },
-        {
-            "guid": "3f129cac-38aa-4a41-97f4-c3906cf9bc43",
-            "name": "casa",
-            "path": "Assets/Objects/casa.obj",
-            "vao": 6,
-            "vbo": 11,
-            "ebo": 12,
-            "indexCount": 66
-        },
-        {
-            "guid": "88293955-8b43-44d3-8476-54b3ad582336",
-            "name": "luxury house interior",
-            "path": "Assets/Objects/luxury house interior.obj",
-            "vao": 7,
-            "vbo": 13,
-            "ebo": 14,
-            "indexCount": 486
-        }
-    ]
+  "mesh": [
+    {
+      "guid": "9e1fcb62-0699-4a0b-ae75-d0670af44b1b",
+      "name": "plane2",
+      "path": "Assets/Objects/plane2.obj",
+      "vao": 3,
+      "vbo": 5,
+      "ebo": 6,
+      "indexCount": 231840,
+      "ambient": [ 0.1, 0.1, 0.1 ],
+      "albedo": [ 1.0, 1.0, 1.0 ],
+      "specular": [ 1.0, 1.0, 1.0 ],
+      "shininess": 32.0,
+      "opacity": 1.0
+    },
+    {
+      "guid": "3a68b780-632d-49d8-b45d-33b1ac035172",
+      "name": "plane",
+      "path": "Assets/Objects/plane.obj",
+      "vao": 4,
+      "vbo": 7,
+      "ebo": 8,
+      "indexCount": 76662,
+      "ambient": [ 0.1, 0.1, 0.1 ],
+      "albedo": [ 1.0, 1.0, 1.0 ],
+      "specular": [ 1.0, 1.0, 1.0 ],
+      "shininess": 32.0,
+      "opacity": 1.0
+    },
+    {
+      "guid": "b2bf372c-8d6b-43c2-bee7-45c46f760e0f",
+      "name": "Castle OBJ",
+      "path": "Assets/Objects/Castle OBJ.obj",
+      "vao": 5,
+      "vbo": 9,
+      "ebo": 10,
+      "indexCount": 8946,
+      "ambient": [ 0.1, 0.1, 0.1 ],
+      "albedo": [ 1.0, 1.0, 1.0 ],
+      "specular": [ 1.0, 1.0, 1.0 ],
+      "shininess": 32.0,
+      "opacity": 1.0
+    },
+    {
+      "guid": "3f129cac-38aa-4a41-97f4-c3906cf9bc43",
+      "name": "casa",
+      "path": "Assets/Objects/casa.obj",
+      "vao": 6,
+      "vbo": 11,
+      "ebo": 12,
+      "indexCount": 66,
+      "ambient": [ 0.1, 0.1, 0.1 ],
+      "albedo": [ 1.0, 1.0, 1.0 ],
+      "specular": [ 1.0, 1.0, 1.0 ],
+      "shininess": 32.0,
+      "opacity": 1.0
+    },
+    {
+      "guid": "88293955-8b43-44d3-8476-54b3ad582336",
+      "name": "luxury house interior",
+      "path": "Assets/Objects/luxury house interior.obj",
+      "vao": 7,
+      "vbo": 13,
+      "ebo": 14,
+      "indexCount": 486,
+      "ambient": [ 0.1, 0.1, 0.1 ],
+      "albedo": [ 1.0, 1.0, 1.0 ],
+      "specular": [ 1.0, 1.0, 1.0 ],
+      "shininess": 32.0,
+      "opacity": 1.0
+    }
+  ]
 }

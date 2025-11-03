@@ -32,7 +32,6 @@
 #include "AudioLoader.h"
 #include "Audio.h"
 #include "ScriptingSystem.h"
-#include "ComponentList.h" 
 #include "lua.hpp"
 
 using namespace Framework;
@@ -63,7 +62,7 @@ int main(void)
     // ------- Create systems below -------- 
     //  Windows
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
-    CompileSingleObject<WindowConfig>("Assets/JSON/WindowAsset.json", "Resource/WindowAsset.cfg", "Descriptor/WindowAsset.desc", g_WindowConfigProps);
+    //CompileSingleObject<WindowConfig>("Assets/JSON/WindowAsset.json", "Resource/WindowAsset.cfg", "Descriptor/WindowAsset.desc", g_WindowConfigProps);
     AssetManager::Instance().LoadBinary<WindowConfig>("Resource/WindowAsset.cfg", g_WindowConfigProps);
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     //  Audio
@@ -81,7 +80,7 @@ int main(void)
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     //  Mesh
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
-    //CompileArray<MeshProperties>("Assets/JSON/MeshAsset.json", "Resource/MeshAsset.bin", "Descriptor/MeshProperties.meta", g_MeshProps, "mesh");
+    CompileArray<MeshProperties>("Assets/JSON/MeshAsset.json", "Resource/MeshAsset.bin", "Descriptor/MeshProperties.meta", g_MeshProps, "mesh");
 
     // Initialize global ECS interface and other singleton components
     ecsInterface.Init();
