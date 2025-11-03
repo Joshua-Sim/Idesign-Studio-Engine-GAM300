@@ -2,7 +2,6 @@
 #include "Mesh.h"
 #include <array>
 #include <cmath>
-#include <glm.hpp>
 
 // Destructor
 Mesh::~Mesh() {
@@ -218,51 +217,6 @@ Mesh Mesh::CreateUnitConeData(int slices)
     return m;
 }
 
-
-Mesh Mesh::CreateUnitTriangleData()
-{
-    Mesh triangle;
-    triangle.vertexCount = 12; // 4 faces * 3 vertices per face
-
-    // Define the 4 vertices of the tetrahedron
-    glm::vec3 p0(0.0f, 1.0f, 0.0f);
-    glm::vec3 p1(0.0f, -1.0f / 3.0f, 2.0f * sqrt(2.0f) / 3.0f);
-    glm::vec3 p2(-sqrt(6.0f) / 3.0f, -1.0f / 3.0f, -sqrt(2.0f) / 3.0f);
-    glm::vec3 p3(sqrt(6.0f) / 3.0f, -1.0f / 3.0f, -sqrt(2.0f) / 3.0f);
-
-    // Calculate the normal for each face (pointing outwards)
-    // The normal is found by taking the cross product of two edges of the triangle
-    glm::vec3 n0 = glm::normalize(glm::cross(p2 - p1, p3 - p1)); // Bottom face
-    glm::vec3 n1 = glm::normalize(glm::cross(p3 - p0, p2 - p0)); // Front-left face
-    glm::vec3 n2 = glm::normalize(glm::cross(p1 - p0, p3 - p0)); // Front-right face
-    glm::vec3 n3 = glm::normalize(glm::cross(p2 - p0, p1 - p0)); // Back face
-
-    triangle.vertices = {
-        // --- Bottom Face --- (p1, p2, p3)
-        // Position          // Normal
-        p1.x, p1.y, p1.z,      n0.x, n0.y, n0.z,
-        p2.x, p2.y, p2.z,      n0.x, n0.y, n0.z,
-        p3.x, p3.y, p3.z,      n0.x, n0.y, n0.z,
-
-        // --- Front-Left Face --- (p0, p2, p3)
-        p0.x, p0.y, p0.z,      n1.x, n1.y, n1.z,
-        p2.x, p2.y, p2.z,      n1.x, n1.y, n1.z,
-        p3.x, p3.y, p3.z,      n1.x, n1.y, n1.z,
-
-        // --- Front-Right Face --- (p0, p3, p1)
-        p0.x, p0.y, p0.z,      n2.x, n2.y, n2.z,
-        p3.x, p3.y, p3.z,      n2.x, n2.y, n2.z,
-        p1.x, p1.y, p1.z,      n2.x, n2.y, n2.z,
-
-        // --- Back Face --- (p0, p1, p2)
-        p0.x, p0.y, p0.z,      n3.x, n3.y, n3.z,
-        p1.x, p1.y, p1.z,      n3.x, n3.y, n3.z,
-        p2.x, p2.y, p2.z,      n3.x, n3.y, n3.z
-    };
-
-    return triangle;
-}
-
 void Mesh::initGL() {
     if (vao != 0) return; // already uploaded
 
@@ -322,4 +276,47 @@ Mesh& Mesh::operator=(Mesh&& other) noexcept {
         other.vao = 0; other.vbo = 0; other.vertexCount = 0;
     }
     return *this;
+}
+
+Mesh Mesh::CreateUnitTriangleData()
+{
+    Mesh triangle;
+    triangle.vertexCount = 12; // 4 faces * 3 vertices per face
+
+    // Define the 4 vertices of the tetrahedron
+    glm::vec3 p0(0.0f, 1.0f, 0.0f);
+    glm::vec3 p1(0.0f, -1.0f / 3.0f, 2.0f * sqrt(2.0f) / 3.0f);
+    glm::vec3 p2(-sqrt(6.0f) / 3.0f, -1.0f / 3.0f, -sqrt(2.0f) / 3.0f);
+    glm::vec3 p3(sqrt(6.0f) / 3.0f, -1.0f / 3.0f, -sqrt(2.0f) / 3.0f);
+    // Calculate the normal for each face (pointing outwards)
+    // The normal is found by taking the cross product of two edges of the triangle
+    glm::vec3 n0 = glm::normalize(glm::cross(p2 - p1, p3 - p1)); // Bottom face
+    glm::vec3 n1 = glm::normalize(glm::cross(p3 - p0, p2 - p0)); // Front-left face
+    glm::vec3 n2 = glm::normalize(glm::cross(p1 - p0, p3 - p0)); // Front-right face
+    glm::vec3 n3 = glm::normalize(glm::cross(p2 - p0, p1 - p0)); // Back face
+
+    triangle.vertices = {
+        // --- Bottom Face --- (p1, p2, p3)
+        // Position          // Normal
+        p1.x, p1.y, p1.z,      n0.x, n0.y, n0.z,
+        p2.x, p2.y, p2.z,      n0.x, n0.y, n0.z,
+        p3.x, p3.y, p3.z,      n0.x, n0.y, n0.z,
+
+        // --- Front-Left Face --- (p0, p2, p3)
+        p0.x, p0.y, p0.z,      n1.x, n1.y, n1.z,
+        p2.x, p2.y, p2.z,      n1.x, n1.y, n1.z,
+        p3.x, p3.y, p3.z,      n1.x, n1.y, n1.z,
+
+        // --- Front-Right Face --- (p0, p3, p1)
+        p0.x, p0.y, p0.z,      n2.x, n2.y, n2.z,
+        p3.x, p3.y, p3.z,      n2.x, n2.y, n2.z,
+        p1.x, p1.y, p1.z,      n2.x, n2.y, n2.z,
+
+        // --- Back Face --- (p0, p1, p2)
+        p0.x, p0.y, p0.z,      n3.x, n3.y, n3.z,
+        p1.x, p1.y, p1.z,      n3.x, n3.y, n3.z,
+        p2.x, p2.y, p2.z,      n3.x, n3.y, n3.z
+    };
+
+    return triangle;
 }

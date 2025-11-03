@@ -29,7 +29,8 @@
 
 #include "AssetManager.h"
 #include "WindowConfigProperties.h"
-#include "Animation.h"
+#include "MeshProperties.h"
+#include "TextProperties.h"
 
 namespace Framework {
     class ImguiManager;
@@ -85,34 +86,10 @@ namespace Framework {
         GLFWwindow* window = nullptr;
         float lastTime = 0.0f;
 
-        // ================ //
-        // CAMERA FUNCTIONS //
-        //Camera camera{ {0.f, 1.f, 3.f} };
+        // camera & movement
+        Camera camera{ {0.f, 1.f, 3.f} };
         static bool mouseCaptured;
-        bool groundMode = false;
-
-        enum class CameraMode
-        {
-            Scene,
-            Game
-        };
-
-        Camera sceneCamera{ {0.f, 3.f, 8.f} }; // Free-fly editor camera
-        Camera gameCamera{ {0.f, 1.8f, 3.f} }; // Gameplay camera
-        CameraMode activeCameraMode;
-
-        Camera& cam = GetActiveCamera();
-
-        Camera& GetActiveCamera()
-        {
-            return (activeCameraMode == CameraMode::Scene) ? sceneCamera : gameCamera;
-        }
-
-        void SetCameraMode(CameraMode mode) { activeCameraMode = mode; }
-        CameraMode GetCameraMode() const { return activeCameraMode; }
-
-        // ========================== //
-        //   END OF CAMERA FUNCTIONS //
+        bool groundMode = true;
 
         // scene content
         Terrain terrain{ 128, 1.0f };
@@ -130,7 +107,6 @@ namespace Framework {
         ShaderProgram blurShader{ "Assets/shaders/postprocess.glsl", "Assets/shaders/blur.glsl" };
         ShaderProgram finalShader{ "Assets/shaders/postprocess.glsl", "Assets/shaders/final.glsl" };
         ShaderProgram debugShader{ "Assets/shaders/debugVertexShader.glsl", "Assets/shaders/debugFragmentShader.glsl" };
-        ShaderProgram skinnedShader{ "Assets/Shaders/SkinnedVert.glsl", "Assets/Shaders/meshfrag.glsl" };
         // lighting
         DirectionalLightCPU sun;
         bool hasSun = true;

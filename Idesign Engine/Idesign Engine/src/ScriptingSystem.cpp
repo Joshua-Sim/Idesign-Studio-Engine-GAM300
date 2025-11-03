@@ -87,7 +87,7 @@ namespace Framework {
                 std::error_code ec;
                 if (fs::exists(p, ec)) return fs::weakly_canonical(p, ec).string();
             }
-            // if not found, return as-is (fopen will fail; weï¿½ll log)
+            // if not found, return as-is (fopen will fail; we’ll log)
             return rel;
         }
 
@@ -107,7 +107,7 @@ namespace Framework {
             }
             catch (...) {
                 // swallow; we'll just recompile
-                std::cerr << "[Cook] Warning: failed to check timestamps ï¿½ forcing recompile.\n";
+                std::cerr << "[Cook] Warning: failed to check timestamps — forcing recompile.\n";
             }
             return false;
         }
@@ -116,9 +116,10 @@ namespace Framework {
         int l_Cook_WindowConfig(lua_State* L) {
             std::string json = resolve_path(luaL_checkstring(L, 1));
             std::string out = resolve_path(luaL_checkstring(L, 2));
+            std::string desc = resolve_path(luaL_checkstring(L, 3));
 
             bool skipped = prepare_output_and_skip_if_fresh(json, out);
-            bool ok = skipped ? true : CompileSingleObject<WindowConfig>(json, out, g_WindowConfigProps);
+            bool ok = skipped ? true : CompileSingleObject<WindowConfig>(json, out, desc, g_WindowConfigProps);
             lua_pushboolean(L, ok);
             return 1;
         }
@@ -127,10 +128,11 @@ namespace Framework {
         int l_Cook_Audio(lua_State* L) {
             const char* json = luaL_checkstring(L, 1);
             const char* out = luaL_checkstring(L, 2);
-            const char* key = luaL_optstring(L, 3, "AudioProperties");
+            const char* desc = luaL_checkstring(L, 3);
+            const char* key = luaL_optstring(L, 4, "AudioProperties");
 
             bool skipped = prepare_output_and_skip_if_fresh(json, out);
-            bool ok = skipped ? true : CompileArray<AudioProperties>(json, out, g_AudioPropertiesProps, key);
+            bool ok = skipped ? true : CompileArray<AudioProperties>(json, out, desc, g_AudioPropertiesProps, key);
             lua_pushboolean(L, ok);
             return 1;
         }
@@ -139,10 +141,11 @@ namespace Framework {
         int l_Cook_Textures(lua_State* L) {
             const char* json = luaL_checkstring(L, 1);
             const char* out = luaL_checkstring(L, 2);
-            const char* key = luaL_optstring(L, 3, "textures");
+            const char* desc = luaL_checkstring(L, 3);
+            const char* key = luaL_optstring(L, 4, "textures");
 
             bool skipped = prepare_output_and_skip_if_fresh(json, out);
-            bool ok = skipped ? true : CompileArray<TextureProperties>(json, out, g_TexturePropertiesProps, key);
+            bool ok = skipped ? true : CompileArray<TextureProperties>(json, out, desc, g_TexturePropertiesProps, key);
             lua_pushboolean(L, ok);
             return 1;
         }
@@ -155,7 +158,7 @@ namespace Framework {
             const char* key = luaL_optstring(L, 4, "mesh");
 
             bool skipped = prepare_output_and_skip_if_fresh(json, out);
-            bool ok = skipped ? true : CompileArray<MeshProperties>(json, out, g_MeshProps, key);
+            bool ok = skipped ? true : CompileArray<MeshProperties>(json, out, desc, g_MeshProps, key);
             lua_pushboolean(L, ok);
             return 1;
         }
@@ -167,7 +170,7 @@ namespace Framework {
     ScriptingSystem::~ScriptingSystem() { if (L) { lua_close(L); L = nullptr; } }
 
     void ScriptingSystem::Initialize() {
-        // 1) Register ScriptComponent (your engineï¿½s pattern)
+        // 1) Register ScriptComponent (your engine’s pattern)
         ecsInterface.RegisterComponent<ScriptComponent>();
 
         // 2) Set system signature

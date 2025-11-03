@@ -26,12 +26,12 @@
 #include <ImguiManager.h>
 #include <SignalHandler.h>
 #include "Scenemanager.h"
+#include "NavMeshSystem.h"
 
 #include <WindowConfigProperties.h>
 #include "AudioLoader.h"
 #include "Audio.h"
 #include "ScriptingSystem.h"
-#include "AnimationSystem.h"
 #include "ComponentList.h" 
 #include "lua.hpp"
 
@@ -74,8 +74,6 @@ int main(void)
         {
             GlobalAudio.UE_LoadSound(props.name);
         });
-    //AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, "src/Data/AudioAsset.json", "AudioProperties");
-    //GlobalAudio.UE_PlaySound("winloop");
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     //  Textures
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -83,13 +81,13 @@ int main(void)
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     //  Mesh
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
-    CompileArray<MeshProperties>("src/Data/MeshAsset.json", "src/Data/MeshAsset.bin", g_MeshProps, "mesh");
-
-    // Initialize the InputHandler singleton
-    //InputHandler::Initialize(Window->GetWindow());
+    //CompileArray<MeshProperties>("Assets/JSON/MeshAsset.json", "Resource/MeshAsset.bin", "Descriptor/MeshProperties.meta", g_MeshProps, "mesh");
 
     // Initialize global ECS interface and other singleton components
     ecsInterface.Init();
+
+    RegisterComponentTypes();                           // Step 1: Register known types
+    AutoRegisterAllReflectedComponents(ecsInterface);   // Step 2: Hook them into ECS
 
     // Register graphics system and GLFW Window first 
     auto graphicsSystem = ecsInterface.RegisterSystem<Graphics>();
@@ -116,18 +114,15 @@ int main(void)
     auto scriptingSystem = ecsInterface.RegisterSystem<ScriptingSystem>();
     scriptingSystem->SetGraphicsSystem(graphicsSystem.get());
 
-    // --- REGISTER ANIMATION SYSTEM ---
-    auto animationSystem = ecsInterface.RegisterSystem<AnimationSystem>();
-
+    auto navMeshSystem = ecsInterface.RegisterSystem<NavMeshSystem>();
     // Registering systems in the ECS interface here
 
-
     // ------- Add systems to engine below -------- //
-    engine->AddSystem(animationSystem.get()); // Calculate bone matrices
     engine->AddSystem(graphicsSystem.get());
     engine->AddSystem(inputHandlerSystem);
     engine->AddSystem(imguiSystem.get());
     engine->AddSystem(scriptingSystem.get());
+    engine->AddSystem(navMeshSystem.get());
 
     // Register scene manager last
     engine->AddSystem(sceneSystem.get());
@@ -136,12 +131,12 @@ int main(void)
     engine->Initialize();
 
     // Run All Scripts
-    //if (luaL_dofile(scriptingSystem->GetLuaState(), "assets/scripts/cook_all.lua") != LUA_OK) {
-    //    std::cerr << "[Cook] Lua error: "
-    //        << lua_tostring(scriptingSystem->GetLuaState(), -1) << "\n";
-    //}
-    //scriptingSystem->CreateScriptEntity("assets/scripts/hello.lua");
-    //scriptingSystem->CreateScriptEntity("assets/scripts/controls.lua");
+    if (luaL_dofile(scriptingSystem->GetLuaState(), "Assets/Scripts/cook_all.lua") != LUA_OK) {
+        std::cerr << "[Cook] Lua error: "
+            << lua_tostring(scriptingSystem->GetLuaState(), -1) << "\n";
+    }
+    scriptingSystem->CreateScriptEntity("Assets/Scripts/hello.lua");
+    scriptingSystem->CreateScriptEntity("Assets/Scripts/controls.lua");
     //scriptingSystem->CreateScriptEntity("assets/scripts/prove_lua.lua");
 
     engine->GameLoop();

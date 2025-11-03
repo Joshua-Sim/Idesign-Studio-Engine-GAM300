@@ -13,7 +13,6 @@ public:
     static Mesh CreateUnitSphereData(int stacks = 16, int slices = 32);
     static Mesh CreateUnitCylinderData(int slices = 32);    // height=1 along Y, r=0.5, with caps
     static Mesh CreateUnitConeData(int slices = 32);
-    static Mesh CreateUnitTriangleData();
 
     // Upload to GPU (must be called after context exists)
     void initGL();
@@ -25,6 +24,7 @@ public:
     Mesh& operator=(Mesh&& other) noexcept;
 
     void cleanupGL();
+    static Mesh CreateUnitTriangleData();
 private:
     std::vector<float> vertices;   // CPU-side vertex data (pos+normal interleaved)
     GLuint vao = 0, vbo = 0;

@@ -50,13 +50,12 @@
 #include "Lighting.h"
 #include "MeshLoader.h"
 #include "TextureLoader.h"
+#include "NavMeshAgentProperties.h"
 #include "ImguiManager.h"
 #include "Coordinator.h"
 #include "ComponentList.h"
+#include <NavMeshProperties.h>
 #include "FontSystem.h"
-#include <rttr/type>
-#include <rttr/registration>
-
 
 extern Framework::FontSystem fontSystem;
 extern Framework::Coordinator ecsInterface;
@@ -114,7 +113,7 @@ namespace Framework {
         meshShader.destroy();
         blurShader.destroy();
         finalShader.destroy();
-        skinnedShader.destroy();
+
         // Finally, destroy GLFW window + terminate GLFW
         if (window) {
             glfwDestroyWindow(window);
@@ -163,8 +162,9 @@ namespace Framework {
 
         //Add transform
         TransformComponent transformComponent;
-        transformComponent.position = glm::vec3(0.0, 2.0, 0.0); // Instantiate location
-        transformComponent.scale = glm::vec3(0.0005, 0.0005, 0.0005); // Size of my obj is big, change for test
+        transformComponent.position = glm::vec3(0.0, 1.0, 1.5); // Instantiate location
+        transformComponent.scale = glm::vec3(3, 3, 3); // Size of my obj is big, change for test
+        transformComponent.rotation = glm::vec3(30, 280, 30);
 
         ecsInterface.AddComponent<TransformComponent>(newEntity, transformComponent);
 
@@ -172,7 +172,7 @@ namespace Framework {
 
         // Add and load mesh , temporarily hard-code component data 
         MeshProperties meshComponent;
-        meshComponent.path = "Assets/Objects/plane.obj";
+        meshComponent.path = "Assets/Objects/casa.obj";
 
         // Load mesh from its own path, again serialized for each obj in deserialization after.
         MeshLoader::loadMesh(meshComponent.path, meshComponent);
@@ -191,6 +191,47 @@ namespace Framework {
         ecsInterface.AddComponent<Framework::TextureProperties>(newEntity, textureComponent);
         // ----------------- End object creation ------------------------------
 
+
+    // ---------------- Create AI Agent Entity -------------------- 
+        Entity agentEntity = ecsInterface.CreateEntity();
+
+        // Add transform - position agent ON the navmesh floor
+        TransformComponent agentTransform;
+        agentTransform.position = glm::vec3(0.5, 1.2, 1.5); // On the floor, slightly offset in X
+        agentTransform.scale = glm::vec3(0.1, 0.1, 0.1);    // Small visual size
+        agentTransform.rotation = glm::vec3(90, -20, 0);    // Rotated to orient correctly
+        ecsInterface.AddComponent<TransformComponent>(agentEntity, agentTransform);
+
+        ecsInterface.AddComponent<HierarchyComponent>(agentEntity, HierarchyComponent{});
+
+        // Add mesh for agent (use cube, sphere, or character model)
+        MeshProperties agentMesh;
+        agentMesh.path = "Assets/Objects/plane2.obj"; // Or "sphere.obj" or "character.obj"
+        MeshLoader::loadMesh(agentMesh.path, agentMesh);
+        ecsInterface.AddComponent<MeshProperties>(agentEntity, agentMesh);
+
+        // Set destination here to test
+
+        // Add texture for agent (make it different color so you can see it)
+        Framework::TextureProperties agentTexture;
+        agentTexture.path = "Assets/PNG/test.png"; // Different texture from floor
+        TextureLoader::loadTexture(agentTexture, true);
+        ecsInterface.AddComponent<Framework::TextureProperties>(agentEntity, agentTexture);
+
+        // Add NavMeshAgent component - scaled for your scale 3 world
+        Framework::NavMeshAgentComponent navAgent;
+        navAgent.agentHeight = 2.0f;           // Standard character height in world units
+        navAgent.agentRadius = 0.6f;           // Standard radius for pathfinding
+        navAgent.moveSpeed = 5.0f;             // Movement speed (units per second)
+        navAgent.acceleration = 8.0f;          // How quickly it accelerates
+        navAgent.angularSpeed = 120.0f;        // Rotation speed
+        navAgent.stoppingDistance = 0.3f;      // Distance to stop before waypoint
+        navAgent.targetPosition = glm::vec3(-2.0, 1.0, 1.5); // Destination across the floor
+        navAgent.hasPath = false;              // Will be set when path is calculated
+        navAgent.isMoving = false;
+        ecsInterface.AddComponent<Framework::NavMeshAgentComponent>(agentEntity, navAgent);
+        // ----------------- End agent creation ------------------------------
+        
         // asset load / loading shape units
         // Testing (Edwin)
         AssetManager::Instance().LoadBinaryArray<TextureProperties>("Resource/TextureAsset.bin", g_TexturePropertiesProps,
@@ -199,7 +240,7 @@ namespace Framework {
                 TextureLoader::loadTexture(props, true);
             });
 
-        AssetManager::Instance().LoadBinaryArray<MeshProperties>("src/Data/MeshAsset.bin", g_MeshProps,
+        AssetManager::Instance().LoadBinaryArray<MeshProperties>("Resource/MeshAsset.bin", g_MeshProps,
             [](MeshProperties& props)
             {
                 MeshLoader::loadMesh(props.path, props);
@@ -221,14 +262,12 @@ namespace Framework {
         finalShader.initGL();
         terrain.initGL();
         debugShader.initGL();
-
         //initialise geometry objects
         cube.initGL();
         plane.initGL();
         cone.initGL();
         //cylinder.initGL();
         triangle.initGL();
-        skinnedShader.initGL();
         //FONT SYSTEM
 
         fontSystem.Initialize();
@@ -314,42 +353,6 @@ namespace Framework {
 
         m_frameCount = 0;
         m_fpsLastTime = glfwGetTime(); // Start the timer
-
-
-
-        // ---------------- Create one ANIMATED ECS object (FOR TESTING) --------------------
-        Entity animatedEntity = ecsInterface.CreateEntity();
-
-        // 1. Add transform component
-        TransformComponent animTransform;
-        animTransform.position = glm::vec3(5.0, 2.0, 0.0); // Placed at (5,2,0)
-        // !! IMPORTANT: Adjust this scale to fit your model !!
-        animTransform.scale = glm::vec3(0.1, 0.1, 0.1);
-        ecsInterface.AddComponent<TransformComponent>(animatedEntity, animTransform);
-
-        // 2. Add hierarchy component (standard for your entities)
-        ecsInterface.AddComponent<HierarchyComponent>(animatedEntity, HierarchyComponent{});
-
-        // 3. Define the components we need to load into
-        MeshProperties animMesh;
-        Framework::AnimationProperties animProps;
-
-        // --- !! IMPORTANT: Change this path to your animated model file !! ---
-        animMesh.path = "Assets/Objects/test.fbx";
-
-        // 4. Use the new loader that loads mesh, skeleton, and animation data
-        MeshLoader::loadMesh(animMesh.path, animMesh, animProps);
-        // 5. Add all the new components to the entity
-        ecsInterface.AddComponent<MeshProperties>(animatedEntity, animMesh);
-        ecsInterface.AddComponent<Framework::AnimationProperties>(animatedEntity, animProps);
-
-        // 6. (Optional) Add a texture if your model uses one
-        Framework::TextureProperties animTexture;
-        // --- !! IMPORTANT: Change this path to your model's texture !! ---
-        animTexture.path = "Assets/PNG/YourModelTexture.png";
-        TextureLoader::loadTexture(animTexture, true);
-        ecsInterface.AddComponent<Framework::TextureProperties>(animatedEntity, animTexture);
-        // ----------------- End animated object creation ---------------------
     }
 
     void Graphics::SetImguiManager(ImguiManager* manager)
@@ -369,7 +372,7 @@ namespace Framework {
         
             float now = (float)glfwGetTime();
             float dt = now - lastTime; lastTime = now;
-            process_input(dt);
+            //process_input(dt);
 
             // ====================================================================
            // 1. SCENE PASS: Render the scene to the HDR framebuffer
@@ -388,16 +391,13 @@ namespace Framework {
             glClearColor(0.07f, 0.09f, 0.12f, 1.f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            Camera& cam = GetActiveCamera();
-            glm::mat4 proj = cam.getProjectionMatrix((float)w, (float)h);
-            glm::mat4 view = cam.getViewMatrix();
+            glm::mat4 proj = camera.getProjectionMatrix((float)w,(float)h);
+            glm::mat4 view = camera.getViewMatrix();
 
+            /* */
             // stick to ground
-            if (groundMode)
-            {
-                float groundY = terrain.getHeightAt(cam.position.x, cam.position.z);
-                cam.position.y = groundY + 1.8f;
-            }
+            float groundY = terrain.getHeightAt(camera.position.x, camera.position.z);
+            camera.position.y = groundY + 1.8f;
 
             // --- Terrain (no texture)
             terrainShader.use();
@@ -412,52 +412,17 @@ namespace Framework {
             meshShader.use();
             meshShader.setMat4("uProj", proj);
             meshShader.setMat4("uView", view);
-            meshShader.setVec3("uViewPos", cam.position);
 
             // ---- ECS draw loop ----
-
-            // --- highlight selected entity (picked last frame) ---
+        // JAY (374 TO 415)
+        // --- highlight selected entity (picked last frame) ---
             int sel = lastPickedId; // cache once per frame
+            const glm::vec3 kNormalAlbedo(1.0f, 1.0f, 1.0f);
             const glm::vec3 kHighlightAlbedo(1.0f, 0.85f, 0.3f);
-
-
-            // --- TRANSPARENCY SORTING ---
-            std::vector<Entity> opaqueEntities;
-
-            // Use std::multimap to allow multiple objects at the same distance
-            std::multimap<float, Entity> transparentEntities;
-
-            for (auto const& entityId : mEntities)
-            {
-                if (ecsInterface.HasComponent<MeshProperties>(entityId))
-                {
-                    auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
-                    if (mesh.opacity < 1.0f)
-                    {
-                        auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
-                        float distance = glm::distance(tr.position, cam.position);
-
-                        // Use .insert() for multimap
-                        transparentEntities.insert({ distance, entityId });
-                    }
-                    else
-                    {
-                        opaqueEntities.push_back(entityId);
-                    }
-                }
-            }
             //JAY
             // ---- ECS draw loop ----
-            // --- 1. OPAQUE PASS ---
-            // Draw all opaque objects first.
-            // Normal depth testing, blending OFF.
-            glDisable(GL_BLEND);
-            glDepthMask(GL_TRUE); // Enable writing to the depth buffer
-
-            for (auto const& entityId : opaqueEntities)
-            {
+            for (auto const& entityId : mEntities) {
                 auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
-                auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
 
                 glm::mat4 model(1.0f);
                 model = glm::translate(model, tr.position);
@@ -466,47 +431,28 @@ namespace Framework {
                 model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
                 model = glm::scale(model, tr.scale);
 
-                // Text 
+                // Text (optional)
                 if (ecsInterface.HasComponent<TextProperties>(entityId)) {
                     auto& txt = ecsInterface.GetComponent<TextProperties>(entityId);
                     fontSystem.RenderText3D(txt.text, model, view, proj, txt.scale, txt.color);
                 }
 
-                // Mesh 
+                // Mesh (optional)
                 if (ecsInterface.HasComponent<MeshProperties>(entityId)) {
                     auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
 
                     if (mesh.debugShape == DebugShapeType::None) {
-                        
-                        //choose shader
-                        bool isSkinned = ecsInterface.HasComponent<AnimationProperties>(entityId);
-                        ShaderProgram& currentshader = isSkinned ? skinnedShader : meshShader;
-
-                        currentshader.use();
-                        currentshader.setMat4("uModel", model);
-
-                        if (isSkinned) {
-                           
-                            auto& animator = ecsInterface.GetComponent<AnimationProperties>(entityId);
-                            for (size_t i = 0; i < animator.finalBoneMatrices.size(); ++i)
-                            {
-                                // Ensure uniform name matches shader exactly
-                                currentshader.setMat4(("uBoneMatrices[" + std::to_string(i) + "]").c_str(), animator.finalBoneMatrices[i]);
-                            }
-                        }
+                        meshShader.use();
+                        meshShader.setMat4("uProj", proj);
+                        meshShader.setMat4("uView", view);
+                        meshShader.setMat4("uModel", model);
 
                         const bool isSelected = (int)entityId == sel;
-                        glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : mesh.albedo;
-                        currentshader.setVec3("uAlbedo", finalAlbedo);
+                        meshShader.setVec3("uAlbedo", isSelected ? kHighlightAlbedo : kNormalAlbedo);
+                        LightComponent::upload(meshShader, sun, hasSun, pointLights, spotLights);
 
                         glActiveTexture(GL_TEXTURE0);
-
-                        currentshader.setVec3("uMaterial.ambient", mesh.ambient);
-                        currentshader.setVec3("uMaterial.specular", mesh.specular);
-                        currentshader.setFloat("uMaterial.shininess", mesh.shininess);
-                        currentshader.setFloat("uMaterial.opacity", mesh.opacity);
-                        currentshader.setInt("uTexture", 0);
-
+                        meshShader.setInt("uTexture", 0);
                         if (ecsInterface.HasComponent<TextureProperties>(entityId)) {
                             auto& tex = ecsInterface.GetComponent<TextureProperties>(entityId);
                             glBindTexture(GL_TEXTURE_2D, tex.textureID);
@@ -515,7 +461,6 @@ namespace Framework {
                             glBindTexture(GL_TEXTURE_2D, 0);
                         }
 
-                        LightComponent::upload(currentshader, sun, hasSun, pointLights, spotLights);
                         glBindVertexArray(mesh.vao);
                         glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
                     }
@@ -529,90 +474,15 @@ namespace Framework {
 
 
             }
-            glDepthMask(GL_TRUE); // Re-enable depth writing
-            glDisable(GL_BLEND); // Disable blending
-         
-            // --- 2. TRANSPARENT PASS ---
-            // Draw all transparent objects second, sorted back-to-front.
-            // Depth testing ON, depth writing OFF, blending ON.
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Standard alpha blending
-            glDepthMask(GL_FALSE); // Disable writing to the depth buffer
-            glCullFace(GL_BACK);   // Use standard culling
 
-            // Iterate std::multimap in reverse to get back-to-front order
-            for (auto it = transparentEntities.rbegin(); it != transparentEntities.rend(); ++it)
+            // drawing of 5 objects (primitives)
+            for (int i = 0; i < 5; ++i) 
             {
-                auto const& entityId = it->second;
-
-                auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
-                auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
-
-                // Calculate model matrix
                 glm::mat4 model(1.0f);
-                model = glm::translate(model, tr.position);
-                model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
-                model = glm::rotate(model, glm::radians(tr.rotation.y), { 0,1,0 });
-                model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
-                model = glm::scale(model, tr.scale);
-
-                // Draw Transparent Mesh
-                if (mesh.debugShape == DebugShapeType::None)
-                {
-                    // --- Choose Shader ---
-                    bool isSkinned = ecsInterface.HasComponent<AnimationProperties>(entityId);
-                    ShaderProgram& currentShader = isSkinned ? skinnedShader : meshShader;
-                    currentShader.use();
-
-                    // --- Set Common Uniforms ---
-                    // Proj, View, ViewPos already set outside loop for both shaders
-                    currentShader.setMat4("uModel", model);
-
-                    // --- Upload Bones (if skinned) ---
-                    if (isSkinned)
-                    {
-                        auto& animator = ecsInterface.GetComponent<AnimationProperties>(entityId);
-                        for (size_t i = 0; i < animator.finalBoneMatrices.size(); ++i)
-                        {
-                            currentShader.setMat4(("uBoneMatrices[" + std::to_string(i) + "]").c_str(), animator.finalBoneMatrices[i]);
-                        }
-                    }
-
-                    // --- Upload Materials ---
-                    const bool isSelected = (int)entityId == sel;
-                    glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : mesh.albedo;
-                    currentShader.setVec3("uAlbedo", finalAlbedo);
-
-                    currentShader.setVec3("uMaterial.ambient", mesh.ambient);
-                    currentShader.setVec3("uMaterial.specular", mesh.specular);
-                    currentShader.setFloat("uMaterial.shininess", mesh.shininess);
-                    currentShader.setFloat("uMaterial.opacity", mesh.opacity); // Will be < 1.0
-
-                    // --- Bind Texture ---
-                    glActiveTexture(GL_TEXTURE0);
-                    currentShader.setInt("uTexture", 0);
-                    if (ecsInterface.HasComponent<TextureProperties>(entityId)) {
-                        auto& tex = ecsInterface.GetComponent<TextureProperties>(entityId);
-                        glBindTexture(GL_TEXTURE_2D, tex.textureID);
-                    }
-                    else {
-                        glBindTexture(GL_TEXTURE_2D, 0);
-                    }
-
-                    // --- Upload Lights & Draw ---
-                    LightComponent::upload(currentShader, sun, hasSun, pointLights, spotLights);
-                    glBindVertexArray(mesh.vao);
-                    glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
-
-                }
-            } // End Transparent Lo
-
-            // --- 3. CLEANUP STATE ---
-            // Reset state for subsequent passes (picking, bloom, UI, etc.)
-            glDepthMask(GL_TRUE); // Re-enable depth writing
-            glDisable(GL_BLEND); // Disable blending
-            glCullFace(GL_BACK); // Restore default culling state
-
+                model = glm::translate(model, glm::vec3((i - 2) * 1.7f, 0.0f, 0.0f));
+                meshShader.setMat4("uModel", model);
+                cylinder.draw(); //change line to whichever you want to test : 1. cube 2. cylinder 3. plane 4.cone follow by .draw();
+            }
             // object pick
             //jay
             //render color-IDs into offscreen (double-buffered)
@@ -660,6 +530,7 @@ namespace Framework {
                 
             }
 
+            // (Optional) give your 5 primitives fixed IDs and draw them here too if you want them pickable.
 
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -710,8 +581,8 @@ namespace Framework {
             // In your main rendering loop (e.g., in Graphics::Update)
 
             // 1. Get the camera's view and projection matrices
-            glm::mat4 viewMatrix = cam.getViewMatrix();
-            glm::mat4 projectionMatrix = cam.getProjectionMatrix((float)w, (float)h);
+            glm::mat4 viewMatrix = camera.getViewMatrix();
+            glm::mat4 projectionMatrix = camera.getProjectionMatrix((float)w, (float)h);
 
             // 2. Extract camera's right and up vectors from the view matrix
             glm::vec3 cameraRight_world = { viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0] };
@@ -797,7 +668,7 @@ namespace Framework {
 
 
     Camera* Graphics::getCamera() {
-        return &cam;
+        return &camera;
     }
 
     void Graphics::framebuffer_size_callback(GLFWwindow* window, int w, int h)
@@ -828,38 +699,13 @@ namespace Framework {
     // Can be pushed to input handler
     void Graphics::process_input(float dt)
     {
-        Camera& cam = GetActiveCamera();
+        if (glfwGetKey(window, GLFW_KEY_F1) == GLFW_PRESS) groundMode = !groundMode;
 
-        // Switch between Scene <-> Game camera
-        if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS)
-        {
-            activeCameraMode = CameraMode::Scene;
-            groundMode = false;          // disable ground lock
-            std::cout << "Switched to Scene Camera (noclip)\n";
-        }
-        if (glfwGetKey(window, GLFW_KEY_F3) == GLFW_PRESS)
-        {
-            activeCameraMode = CameraMode::Game;
-            groundMode = true;           // enable ground stick
-            std::cout << "Switched to Game Camera (grounded)\n";
-        }
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) camera.processKeyboard(Camera::Movement::Forward, dt, groundMode, terrain);
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) camera.processKeyboard(Camera::Movement::Backward, dt, groundMode, terrain);
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) camera.processKeyboard(Camera::Movement::Left, dt, groundMode, terrain);
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) camera.processKeyboard(Camera::Movement::Right, dt, groundMode, terrain);
 
-        // Movement control
-        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-            cam.processKeyboard(Camera::Movement::Forward, dt, groundMode, terrain);
-        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-            cam.processKeyboard(Camera::Movement::Backward, dt, groundMode, terrain);
-        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-            cam.processKeyboard(Camera::Movement::Left, dt, groundMode, terrain);
-        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-            cam.processKeyboard(Camera::Movement::Right, dt, groundMode, terrain);
-        if (!groundMode)
-        {
-            if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-                cam.processKeyboard(Camera::Movement::Up, dt, groundMode, terrain);
-            if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-                cam.processKeyboard(Camera::Movement::Down, dt, groundMode, terrain);
-        }
 
         //lighting
         if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
@@ -885,18 +731,18 @@ namespace Framework {
     }
 
     void Graphics::MoveCameraFromLua(const std::string& dir, float dt, bool gm) {
-        //if (dir == "W") cam.processKeyboard(Camera::Movement::Forward, dt, gm, terrain);
-        //else if (dir == "S") cam.processKeyboard(Camera::Movement::Backward, dt, gm, terrain);
-        //else if (dir == "A") cam.processKeyboard(Camera::Movement::Left, dt, gm, terrain);
-        //else if (dir == "D") cam.processKeyboard(Camera::Movement::Right, dt, gm, terrain);
+        if (dir == "W") camera.processKeyboard(Camera::Movement::Forward, dt, gm, terrain);
+        else if (dir == "S") camera.processKeyboard(Camera::Movement::Backward, dt, gm, terrain);
+        else if (dir == "A") camera.processKeyboard(Camera::Movement::Left, dt, gm, terrain);
+        else if (dir == "D") camera.processKeyboard(Camera::Movement::Right, dt, gm, terrain);
     }
 
     void Graphics::NudgeLightFromLua(const std::string& axis, float amount) {
-        //if (pointLights.empty()) return;
-        //if (axis == "up")    pointLights[0].position.z -= amount;
-        //else if (axis == "down")  pointLights[0].position.z += amount;
-        //else if (axis == "left")  pointLights[0].position.x -= amount;
-        //else if (axis == "right") pointLights[0].position.x += amount;
+        if (pointLights.empty()) return;
+        if (axis == "up")    pointLights[0].position.z -= amount;
+        else if (axis == "down")  pointLights[0].position.z += amount;
+        else if (axis == "left")  pointLights[0].position.x -= amount;
+        else if (axis == "right") pointLights[0].position.x += amount;
     }
 
     void Graphics::ToggleMainLightFromLua() {
