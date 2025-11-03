@@ -56,6 +56,8 @@
 #include "ComponentList.h"
 #include <NavMeshProperties.h>
 #include "FontSystem.h"
+#include "PrefabComponent.h"
+#include "PrefabProperties.h"
 #include "TextureLoaderDDS.h"
 
 
@@ -155,6 +157,7 @@ namespace Framework {
         ecsInterface.RegisterComponent<AudioProperties>();
 
         ImguiManager::LogSuccess("Graphics components registered", "Graphics");
+        ecsInterface.RegisterComponent<PrefabComponent>();
 
         //  ---- ECS INITIALIZATION --- 
         Signature signature;
