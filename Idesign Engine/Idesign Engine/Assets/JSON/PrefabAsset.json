@@ -1,0 +1,22 @@
+{
+    "prefabs": [
+        {
+            "guid": "df407087-05ec-4402-94e1-ccb2abdf94b4",
+            "name": "Entity 2_Prefab",
+            "path": "Assets/Prefabs/Entity 2_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "3ed56996-8f91-456e-b54e-ebadb0d6ffac",
+            "name": "Entity 1_Prefab",
+            "path": "Assets/Prefabs/Entity 1_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "dbeed32b-46bd-41dd-9469-3e2a137148b6",
+            "name": "Entity 0_Prefab",
+            "path": "Assets/Prefabs/Entity 0_Prefab.prefab",
+            "isScenePrefab": false
+        }
+    ]
+}

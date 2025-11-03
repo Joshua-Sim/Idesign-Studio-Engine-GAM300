@@ -31,6 +31,11 @@ namespace Framework {
         void Update(float deltaTime) override;
         std::string GetName() override;
 
+        // Prefab functions
+        Entity SpawnPrefab(const std::string& prefabGUID);
+        Entity SpawnPrefab(const std::string& prefabGUID, const glm::vec3& position);
+        Entity SpawnPrefab(const std::string& prefabGUID, const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale);
+
         // Scene control functions 
         void LoadScene(const std::string& path, bool additive = false);     // Load a scene from JSON
         void SaveScene(const std::string& path);     // Save current scene to JSON

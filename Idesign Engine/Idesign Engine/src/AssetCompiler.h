@@ -30,6 +30,14 @@ namespace Framework
     void loadScene(const std::string& scenePath);
     void saveScene(const std::string& scenePath);
 
+    void saveEntityToPrefab(Entity entity, const std::string& prefabPath);
+    void CreatePrefabFromEntity(Entity entity, const std::string& prefabName);
+
+    //Prefab and overloads
+    Entity InstantiatePrefab(const std::string& prefabGUID);
+    Entity InstantiatePrefab(const std::string& prefabGUID, const glm::vec3& position);
+    Entity InstantiatePrefab(const std::string& prefabGUID, const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale);
+
     bool MoveFileToAssetFolder(const std::string& sourcePath, const std::string& destinationFolder, std::string& outFinalPath, std::string& outError);
 
     // Deserialize JSON into a C++ object using reflection-based property list
@@ -159,7 +167,7 @@ namespace Framework
 
         char writeBuffer[65536];
         rapidjson::FileWriteStream os(descFp, writeBuffer, sizeof(writeBuffer));
-        rapidjson::Writer<rapidjson::FileWriteStream> writer(os);
+        rapidjson::PrettyWriter<rapidjson::FileWriteStream> writer(os);
         descDoc.Accept(writer);
         fclose(descFp);
 
@@ -175,6 +183,7 @@ namespace Framework
             switch (p.m_Type)
             {
             case prop::INT:    { int          v; p.m_fnGet(&obj, &v); out.write(reinterpret_cast<const char*>(&v), sizeof(v)); break; }
+            case prop::DRAG_FLOAT:
             case prop::SLIDER_FLOAT:
             case prop::FLOAT:  { float        v; p.m_fnGet(&obj, &v); out.write(reinterpret_cast<const char*>(&v), sizeof(v)); break; }
             case prop::DOUBLE: { double       v; p.m_fnGet(&obj, &v); out.write(reinterpret_cast<const char*>(&v), sizeof(v)); break; }
@@ -192,6 +201,7 @@ namespace Framework
                 out.write(value.data(), length);
                 break;
             }
+            case prop::COLOR3:
             case prop::VEC3:
             {
                 glm::vec3 value;
@@ -218,6 +228,7 @@ namespace Framework
             switch (p.m_Type)
             {
             case prop::INT:    { int          v; in.read(reinterpret_cast<char*>(&v), sizeof(v)); if (!in) throw; p.m_fnSet(&obj, &v); break; }
+            case prop::DRAG_FLOAT:
             case prop::SLIDER_FLOAT:
             case prop::FLOAT:  { float        v; in.read(reinterpret_cast<char*>(&v), sizeof(v)); if (!in) throw; p.m_fnSet(&obj, &v); break; }
             case prop::DOUBLE: { double       v; in.read(reinterpret_cast<char*>(&v), sizeof(v)); if (!in) throw; p.m_fnSet(&obj, &v); break; }
@@ -240,6 +251,7 @@ namespace Framework
                 p.m_fnSet(&obj, &value);
                 break;
             }
+            case prop::COLOR3:
             case prop::VEC3:
             {
                 glm::vec3 value;

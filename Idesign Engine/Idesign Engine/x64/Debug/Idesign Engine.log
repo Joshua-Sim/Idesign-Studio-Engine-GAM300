@@ -1,12 +1,11 @@
-﻿  PhysicsSystem.cpp
-C:\Users\jason\OneDrive\Desktop\SIT\Year 3 Sem 1\GAM 300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.cpp(80,20): warning C4459: declaration of 'cMaxPhysicsJobs' hides global declaration
-  (compiling source file '/src/PhysicsSystem.cpp')
-      C:\Users\jason\OneDrive\Desktop\SIT\Year 3 Sem 1\GAM 300\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\Jolt\Physics\PhysicsSettings.h(22,15):
-      see declaration of 'JPH::cMaxPhysicsJobs'
+﻿  PropertyWidget.cpp
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PropertyWidget.cpp(16,55): warning C4244: 'argument': conversion from 'uintptr_t' to 'int', possible loss of data
+  (compiling source file '/src/PropertyWidget.cpp')
   
-C:\Users\jason\OneDrive\Desktop\SIT\Year 3 Sem 1\GAM 300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.cpp(81,20): warning C4459: declaration of 'cMaxPhysicsBarriers' hides global declaration
-  (compiling source file '/src/PhysicsSystem.cpp')
-      C:\Users\jason\OneDrive\Desktop\SIT\Year 3 Sem 1\GAM 300\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\Jolt\Physics\PhysicsSettings.h(25,15):
-      see declaration of 'JPH::cMaxPhysicsBarriers'
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PropertyWidget.cpp(293,35): warning C4130: '==': logical operation on address of string constant
+  (compiling source file '/src/PropertyWidget.cpp')
   
-  Idesign Engine.vcxproj -> C:\Users\jason\OneDrive\Desktop\SIT\Year 3 Sem 1\GAM 300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PropertyWidget.cpp(293,74): warning C4130: '==': logical operation on address of string constant
+  (compiling source file '/src/PropertyWidget.cpp')
+  
+  Idesign Engine.vcxproj -> D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe

@@ -34,7 +34,9 @@ static char meshNameBuffer[128] = "";  // Buffer for the mesh name
 static char imagePathBuffer[256] = "";  // Buffer for the image path
 static Entity selectedEntity = std::numeric_limits<Entity>::max();  // Sets a selected entity to be a non existent entity out of range
 static bool isPropertiesWindowOpen = false;                         // Allows opening and closing of the name editor? might want to remove
-
+static int  g_MainViewIndex = 0;                                   // Main view index for framebuffers
+static bool g_prevF2 = false;                                     // Previous state of F2 key
+static bool g_prevF3 = false;                                     // Previous state of F3 key
 
 namespace Framework {
     float projWidth{};
@@ -43,6 +45,8 @@ namespace Framework {
     bool print_out = false;
     static std::string filePath{};
     static std::vector<Framework::FileEvent> pendingEvents;
+    //second framebuffer for game view
+    GLuint gameFramebufferB{}, gameTextureB{}, rboB{};
 
     // Error message and flag for popup
     std::string errorMessage;
@@ -60,7 +64,7 @@ namespace Framework {
     {
         return "ImguiManager";
     }
-   
+
     //FILE OPENING / SAVING
     std::string ImguiManager::OpenFileDialog()
     {
@@ -227,7 +231,17 @@ namespace Framework {
     {
         return gameFramebuffer;
     }
+    //return FBO by view index (0 = grounded, 1 = free-fly)
+    GLuint ImguiManager::GetGameFramebuffer(int viewIndex)
+    {
+        return (viewIndex == 0) ? gameFramebuffer : gameFramebufferB;
+    }
 
+    // Texture getter by view index so ImGui can display either view
+    GLuint ImguiManager::GetGameTexture(int viewIndex)
+    {
+        return (viewIndex == 0) ? gameTexture : gameTextureB;
+    }
     // Edwin, drag and drop Texture/Audio/Obj
     void DropCallback(GLFWwindow* window, int count, const char** paths)
     {
@@ -392,7 +406,7 @@ namespace Framework {
         ImGui::StyleColorsDark();
 
         gameFramebuffer = m_graphicsSystem->CreateFramebuffer(static_cast<int>(1280), static_cast<int>(720), gameTexture, rbo);
-
+        gameFramebufferB = m_graphicsSystem->CreateFramebuffer(static_cast<int>(1280), static_cast<int>(720), gameTextureB, rboB);
         // Initialize backends
         ImGui_ImplGlfw_InitForOpenGL(m_graphicsSystem->GetWindow(), true);
         ImGui_ImplOpenGL3_Init("#version 450");
@@ -419,6 +433,28 @@ namespace Framework {
         ImGui::NewFrame();
         int w, h;
         glfwGetFramebufferSize(m_graphicsSystem->GetWindow(), &w, &h);
+        // JAY
+        // Handle F2 / F3 to swap which view is "Main"
+        GLFWwindow* win = m_graphicsSystem->GetWindow();
+        bool nowF2 = (glfwGetKey(win, GLFW_KEY_F2) == GLFW_PRESS);
+        bool nowF3 = (glfwGetKey(win, GLFW_KEY_F3) == GLFW_PRESS);
+
+        // On rising edge of F2: main shows view 0
+        if (nowF2 && !g_prevF2) {
+            g_MainViewIndex = 1;                     // main = view 1 (your grounded/game view)
+            m_graphicsSystem->SetMouseTargetView(1); // route mouse-look to view 1
+            m_graphicsSystem->SetPickViewIndex(g_MainViewIndex);   // default pick to view 1
+        }
+
+        // On rising edge of F3: main shows view 0
+        if (nowF3 && !g_prevF3) {
+            g_MainViewIndex = 0;
+            m_graphicsSystem->SetMouseTargetView(0); // route mouse-look to view 0
+            m_graphicsSystem->SetPickViewIndex(g_MainViewIndex);   // default pick to view 0
+        }
+
+        g_prevF2 = nowF2;
+        g_prevF3 = nowF3;
 
         // 3. Only draw your UI if the window has a valid size
         if (w > 0 && h > 0)
@@ -457,6 +493,8 @@ namespace Framework {
             DrawHotReloadPrompt();
 
             RenderGizmoPanel();
+            ImGui::End(); // End of main dockspace window
+
         }
         // Render ImGui
         ImGui::Render();
@@ -496,6 +534,43 @@ namespace Framework {
                     std::string savePath = SaveFileDialog();
                     Framework::sceneManager.SaveScene(savePath);
                 }
+
+
+
+                ImGui::Separator();  // Visual separator
+
+                // === PREFAB TEST MENU ===
+                if (ImGui::MenuItem("Test Spawn Prefab"))
+                {
+                    // Find first available prefab and spawn it
+                    bool spawned = false;
+                    for (const auto& [guid, entry] : AssetManager::Instance().GetAssets())
+                    {
+                        if (entry.typeName != TypeName<PrefabProperties>::value)
+                            continue;
+
+                        auto* prefab = static_cast<PrefabProperties*>(entry.pObject.get());
+
+                        // Spawn at origin
+                        Entity entity = Framework::sceneManager.SpawnPrefab(
+                            prefab->guid.id
+                        );
+
+                        if (entity != std::numeric_limits<Entity>::max())
+                        {
+                            std::cout << "✓ Test spawned prefab: " << prefab->name
+                                << " (entity " << entity << ")" << std::endl;
+                            spawned = true;
+                        }
+                        break;  // Only spawn first prefab
+                    }
+
+                    if (!spawned)
+                    {
+                        std::cout << "⚠ No prefabs available to spawn. Create one first!" << std::endl;
+                    }
+                }
+
                 if (ImGui::MenuItem("Build Navmesh"))
                 {
                     auto navSystem = ecsInterface.GetSystem<NavMeshSystem>();
@@ -534,6 +609,7 @@ namespace Framework {
                         std::cout << "=========================\n" << std::endl;
                     }
                 }
+
 
                 if (ImGui::MenuItem("Agent Go"))
                 {
@@ -660,7 +736,8 @@ namespace Framework {
             }
             ImGui::EndMenuBar();
         }
-        ImGui::End();
+        //jay
+        //ImGui::End();
     }
 
     void ImguiManager::RenderMeshAssets() {
@@ -1195,7 +1272,9 @@ namespace Framework {
             ImGui::End();
         }
     }
-
+    int ImguiManager::GetMainViewIndex() const {
+        return g_MainViewIndex;
+    }
     void ImguiManager::RenderEntityMenu() {
         if (ImGui::Begin("Entity", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
         {
@@ -1572,8 +1651,6 @@ namespace Framework {
                         }
                     }
 
-                    DrawEntityInspector(selectedEntity, ecsInterface);
-
                     //Navmesh property
                     if (ImGui::CollapsingHeader("NavMesh Component", ImGuiTreeNodeFlags_DefaultOpen))
                     {
@@ -1656,6 +1733,7 @@ namespace Framework {
                         }
                     }
 
+                    DrawEntityInspector(selectedEntity, ecsInterface);
 
                     // Reset selectedEntity if the properties window is closed
                     if (!isPropertiesWindowOpen)
@@ -1777,13 +1855,13 @@ namespace Framework {
                 ImVec2 viewportSize = ImGui::GetContentRegionAvail();
                 float aspectRatio = 1280.0f / 720.0f; // Use the known FBO dimensions
                 float newWidth = viewportSize.x;
-                float newHeight = viewportSize.x / aspectRatio;
+                float newHeight = newWidth / aspectRatio;
 
                 // Adjust width and height to maintain the aspect ratio
                 if (newHeight > viewportSize.y)
                 {
                     newHeight = viewportSize.y;
-                    newWidth = viewportSize.y * aspectRatio;
+                    newWidth = newHeight * aspectRatio;
                 }
 
                 // Center the image in the available viewport space with black bars
@@ -1791,9 +1869,15 @@ namespace Framework {
                 ImGui::SetCursorPos(offset);
 
                 // Render the framebuffer texture within the calculated size
-                ImGui::Image((ImTextureID)(intptr_t)gameTexture, ImVec2(newWidth, newHeight), ImVec2(0, 1), ImVec2(1, 0));
-                
+                //int mainView = 0;
+                ImGui::Image(
+                    (ImTextureID)(intptr_t)GetGameTexture(g_MainViewIndex),
+                    ImVec2(newWidth, newHeight), ImVec2(0, 1), ImVec2(1, 0)
+                );
+
+                // jay handle mouse click and get UV coordinates
                 if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
+                    m_graphicsSystem->SetMouseTargetView(g_MainViewIndex);
                     ImVec2 min = ImGui::GetItemRectMin();
                     ImVec2 max = ImGui::GetItemRectMax();
                     ImVec2 pos = ImGui::GetIO().MousePos;
@@ -1802,7 +1886,15 @@ namespace Framework {
                     float v = (pos.y - min.y) / (max.y - min.y);
                     v = 1.0f - v;
 
-                    m_graphicsSystem->RequestPickUV(u, v);
+                    // hand normalized UV to Graphics for the readback
+                    m_graphicsSystem->SetPickViewIndex(g_MainViewIndex); // assuming view index 0 for main viewport
+                    if (g_MainViewIndex == 0) {
+                        m_graphicsSystem->RequestPickUV(u, v);
+                    }
+                    else {
+                        m_graphicsSystem->RequestPickUVSecondary(u, v);
+                    }
+
                 }
 
                 if (int id = m_graphicsSystem->ConsumeLastPickedId(); id >= 0)
@@ -1822,6 +1914,44 @@ namespace Framework {
                 glm::mat4 proj = cam->getProjectionMatrix(1280.0f, 720.0f);
 
                 RenderGizmoForSelected(view, proj, rectMin, vpSize);
+            }
+            ImGui::End();
+            //Debug second viewport window
+            if (ImGui::Begin("Secondary Viewport"))
+            {
+                ImVec2 viewportSize = ImGui::GetContentRegionAvail();
+                float aspectRatio = 1280.0f / 720.0f;
+                float newWidth = viewportSize.x;
+                float newHeight = newWidth / aspectRatio;
+                if (newHeight > viewportSize.y) {
+                    newHeight = viewportSize.y;
+                    newWidth = newHeight * aspectRatio;
+                }
+                ImVec2 offset((viewportSize.x - newWidth) * 0.5f, (viewportSize.y - newHeight) * 0.5f);
+                ImGui::SetCursorPos(offset);
+
+                // draw the second view’s texture
+                int secondaryView = (g_MainViewIndex == 0) ? 1 : 0;
+                ImGui::Image(
+                    (ImTextureID)(intptr_t)GetGameTexture(secondaryView),
+                    ImVec2(newWidth, newHeight), ImVec2(0, 1), ImVec2(1, 0)
+                );
+
+                // picking for second view
+                if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
+                    m_graphicsSystem->SetMouseTargetView(secondaryView);
+                    ImVec2 min = ImGui::GetItemRectMin();
+                    ImVec2 max = ImGui::GetItemRectMax();
+                    ImVec2 pos = ImGui::GetIO().MousePos;
+
+                    float u = (pos.x - min.x) / (max.x - min.x);
+                    float v = (pos.y - min.y) / (max.y - min.y);
+                    v = 1.0f - v; // flip because Image uses (0,1) to (1,0)
+
+                    m_graphicsSystem->SetPickViewIndex(secondaryView);
+                    if (secondaryView == 0) m_graphicsSystem->RequestPickUV(u, v);
+                    else                    m_graphicsSystem->RequestPickUVSecondary(u, v);
+                }
             }
             ImGui::End();
         }

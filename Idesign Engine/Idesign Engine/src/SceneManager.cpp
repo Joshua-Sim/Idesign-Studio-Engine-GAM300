@@ -70,6 +70,47 @@ namespace Framework {
         return "SceneManager";
     }
 
+    Entity SceneManager::SpawnPrefab(const std::string& prefabGUID)
+    {
+        Entity entity = InstantiatePrefab(prefabGUID);
+
+        if (entity != std::numeric_limits<Entity>::max())
+        {
+            // Register to current scene
+            if (!m_CurrentSceneName.empty())
+                RegisterEntityToScene(entity, m_CurrentSceneName);
+        }
+
+        return entity;
+    }
+
+    Entity SceneManager::SpawnPrefab(const std::string& prefabGUID, const glm::vec3& position)
+    {
+        Entity entity = InstantiatePrefab(prefabGUID, position);
+
+        if (entity != std::numeric_limits<Entity>::max())
+        {
+            if (!m_CurrentSceneName.empty())
+                RegisterEntityToScene(entity, m_CurrentSceneName);
+        }
+
+        return entity;
+    }
+
+    Entity SceneManager::SpawnPrefab(const std::string& prefabGUID, const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale)
+    {
+        Entity entity = InstantiatePrefab(prefabGUID, position, rotation, scale);
+
+        if (entity != std::numeric_limits<Entity>::max())
+        {
+            if (!m_CurrentSceneName.empty())
+                RegisterEntityToScene(entity, m_CurrentSceneName);
+        }
+
+        return entity;
+    }
+
+
     // Load scene from file, additive to not clear entities before loading, else it will do a full clear of entities
     void SceneManager::LoadScene(const std::string& path, bool additive) {
         // Extract clean scene name from path (strip directories and extension)

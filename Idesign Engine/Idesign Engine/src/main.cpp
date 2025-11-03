@@ -27,12 +27,12 @@
 #include <SignalHandler.h>
 #include "Scenemanager.h"
 #include "NavMeshSystem.h"
+#include "AnimationSystem.h"
 
 #include <WindowConfigProperties.h>
 #include "AudioLoader.h"
 #include "Audio.h"
 #include "ScriptingSystem.h"
-#include "ComponentList.h" 
 #include "lua.hpp"
 #include <FileCheckSystem.h>
 
@@ -50,7 +50,8 @@ void EnableMemoryLeakChecking(int breakAlloc = -1)
 }
 
 // Define global ptrs
-Coordinator ecsInterface;   // REQUIRED FOR ECS INTERFACE
+Coordinator
+ecsInterface;   // REQUIRED FOR ECS INTERFACE
 EngineState engineState;
 
 int main(void)
@@ -64,7 +65,7 @@ int main(void)
     // ------- Create systems below -------- 
     //  Windows
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
-    CompileSingleObject<WindowConfig>("Assets/JSON/WindowAsset.json", "Resource/WindowAsset.cfg", "Descriptor/WindowAsset.desc", g_WindowConfigProps);
+    //CompileSingleObject<WindowConfig>("Assets/JSON/WindowAsset.json", "Resource/WindowAsset.cfg", "Descriptor/WindowAsset.desc", g_WindowConfigProps);
     AssetManager::Instance().LoadBinary<WindowConfig>("Resource/WindowAsset.cfg", g_WindowConfigProps);
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     //  Audio
@@ -75,6 +76,13 @@ int main(void)
         {
             GlobalAudio.UE_LoadSound(props.name);
         });
+
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+    //  Prefabs
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+    //CompileArray<PrefabProperties>("Assets/JSON/PrefabAsset.json", "Resource/PrefabAsset.bin", "Descriptor/PrefabAsset.desc", g_PrefabProps, "prefabs");
+    AssetManager::Instance().LoadBinaryArray<PrefabProperties>("Resource/PrefabAsset.bin", g_PrefabProps);
+
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     //  Textures
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -82,7 +90,7 @@ int main(void)
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     //  Mesh
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
-    //CompileArray<MeshProperties>("Assets/JSON/MeshAsset.json", "Resource/MeshAsset.bin", "Descriptor/MeshProperties.meta", g_MeshProps, "mesh");
+    CompileArray<MeshProperties>("Assets/JSON/MeshAsset.json", "Resource/MeshAsset.bin", "Descriptor/MeshProperties.meta", g_MeshProps, "mesh");
 
     // Initialize global ECS interface and other singleton components
     ecsInterface.Init();
@@ -94,6 +102,7 @@ int main(void)
     auto graphicsSystem = ecsInterface.RegisterSystem<Graphics>();
     // Initialize the InputHandler singleton
     InputHandler::Initialize(graphicsSystem->GetWindow());
+    auto animationSystem = ecsInterface.RegisterSystem<AnimationSystem>();
 
     auto sceneSystem = ecsInterface.RegisterSystem<SceneManager>();
     auto imguiSystem = ecsInterface.RegisterSystem<ImguiManager>();
@@ -123,6 +132,7 @@ int main(void)
     // Registering systems in the ECS interface here
 
     // ------- Add systems to engine below -------- //
+    engine->AddSystem(animationSystem.get()); // Calculate bone matrices
     engine->AddSystem(graphicsSystem.get());
     engine->AddSystem(inputHandlerSystem);
     engine->AddSystem(imguiSystem.get());
@@ -149,7 +159,7 @@ int main(void)
             << lua_tostring(scriptingSystem->GetLuaState(), -1) << "\n";
     }
     scriptingSystem->CreateScriptEntity("Assets/Scripts/hello.lua");
-    //scriptingSystem->CreateScriptEntity("Assets/Scripts/controls.lua");
+    scriptingSystem->CreateScriptEntity("Assets/Scripts/controls.lua");
     //scriptingSystem->CreateScriptEntity("assets/scripts/prove_lua.lua");
 
     engine->GameLoop();

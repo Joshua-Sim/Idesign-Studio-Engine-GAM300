@@ -34,7 +34,8 @@ namespace Framework {
 
 		void SetGraphicsSystem(Framework::Graphics* graphicsSystem); // New "setter" function
 		GLuint GetGameFramebuffer();
-
+		GLuint GetGameFramebuffer(int viewIndex);
+		GLuint GetGameTexture(int viewIndex);
 		std::string OpenFileDialog();
 		std::string SaveFileDialog();
 		void DrawHotReloadPrompt();
@@ -48,6 +49,7 @@ namespace Framework {
 		void RenderGizmoForSelected(const glm::mat4& view, const glm::mat4& proj,
 			const ImVec2& viewportTopLeft, const ImVec2& viewportSize);
 
+		int GetMainViewIndex() const;
 	private:
 		Framework::Graphics* m_graphicsSystem = nullptr; // Pointer to store the connection
 		bool m_autoReload = true;

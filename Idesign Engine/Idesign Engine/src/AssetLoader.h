@@ -48,7 +48,7 @@ namespace Framework
             in.read(reinterpret_cast<char*>(&count), sizeof(count));
 
             // Valide array size and stream state
-            if (!in || count == 0) throw std::runtime_error("Invalid or empty binary array: " + binaryPath);
+            if (!in) throw std::runtime_error("Invalid or empty binary array: " + binaryPath);
 
             // Prepare result container
             std::vector<std::unique_ptr<T>> result;

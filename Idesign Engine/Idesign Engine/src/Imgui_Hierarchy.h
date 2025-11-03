@@ -513,6 +513,31 @@ void DrawEntityHierarchy(const std::string& guid, Entity& selectedEntity, bool& 
         isPropertiesWindowOpen = true;
     }
 
+    // Object right click save prefab
+       // Right-click context menu
+    if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+    {
+        ImGui::OpenPopup(("EntityContextMenu##" + guid).c_str());
+        selectedEntity = entity;  // Also select the entity on right-click
+    }
+
+    if (ImGui::BeginPopup(("EntityContextMenu##" + guid).c_str()))
+    {
+        ImGui::Text("Entity: %s", entityName.c_str());
+        ImGui::Separator();
+
+        if (ImGui::MenuItem("Create Prefab from Entity"))
+        {
+            std::string prefabName = entityName + "_Prefab";
+            Framework::CreatePrefabFromEntity(entity, prefabName);
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::EndPopup();
+    }
+    // end of right click prefab save
+
+
     // Begin drag
     if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
     {

@@ -36,17 +36,30 @@ namespace Framework
         std::vector<int> indices;         
         DebugShapeType debugShape = DebugShapeType::None;
         glm::vec3 debugcolor{ 1.f,1.f,0.0f };
+
+        // --- ADDED MATERIAL PROPERTIES ---
+        glm::vec3 ambient{ 0.1f, 0.1f, 0.1f };
+        glm::vec3 albedo{ 1.0f, 1.0f, 1.0f };    // This will be the tint for your texture
+        glm::vec3 specular{ 1.0f, 1.0f, 1.0f };   // Bright white specular for metals/plastics
+        float shininess = 32.0f;                // Common default shininess
+        float opacity = 1.0f;
     };
 
     inline const std::vector g_MeshPropsArray =
     {
-        PROP_GUID_READONLY(guid, MeshProperties),
-        PROP_STRING(name, MeshProperties),
-        PROP_STRING_READONLY(path, MeshProperties),
+        PROP_GUID_HIDDEN(guid, MeshProperties),
+        PROP_STRING_HIDDEN(name, MeshProperties),
+        PROP_STRING_HIDDEN(path, MeshProperties),
         PROP_UINT_READONLY(vao, MeshProperties),
         PROP_UINT_READONLY(vbo, MeshProperties),
         PROP_UINT_READONLY(ebo, MeshProperties),
         PROP_UINT_READONLY(indexCount, MeshProperties),
+
+        PROP_COLOR3(ambient,MeshProperties),
+        PROP_COLOR3(albedo,MeshProperties),
+        PROP_COLOR3(specular,MeshProperties),
+        PROP_DRAG_FLOAT(shininess,MeshProperties),
+        PROP_DRAG_FLOAT(opacity,MeshProperties)
     };
 
     inline const prop_list g_MeshProps{ "MeshProperties", g_MeshPropsArray };

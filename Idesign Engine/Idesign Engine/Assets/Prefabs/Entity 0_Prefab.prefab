@@ -1,0 +1,46 @@
+{
+    "entity": {
+        "name": "Entity 0",
+        "guid": "d3d0044f-983a-4cd7-8471-51adc7f96c6e",
+        "components": {
+            "TransformComponent": {
+                "position": [
+                    0.0,
+                    1.0,
+                    1.5
+                ],
+                "rotation": [
+                    30.0,
+                    280.0,
+                    30.0
+                ],
+                "scale": [
+                    3.0,
+                    3.0,
+                    3.0
+                ]
+            },
+            "HierarchyComponent": {
+                "parent": "",
+                "children": [],
+                "sortIndex": 0
+            },
+            "MeshReference": {
+                "guid": ""
+            },
+            "TextureComponent": {
+                "guid": ""
+            },
+            "NavMeshComponent": {
+                "guid": "",
+                "isNavMeshSource": true,
+                "runtimeGenerated": false,
+                "agentRadius": 0.5,
+                "agentHeight": 2.0,
+                "cellSize": 0.30000001192092896,
+                "cellHeight": 0.20000000298023224,
+                "maxSlope": 45.0
+            }
+        }
+    }
+}
