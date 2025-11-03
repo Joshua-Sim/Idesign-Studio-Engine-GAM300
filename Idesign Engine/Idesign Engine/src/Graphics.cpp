@@ -56,7 +56,8 @@
 #include "ComponentList.h"
 #include <NavMeshProperties.h>
 #include "FontSystem.h"
-#include <PrefabComponent.h>
+#include "PrefabComponent.h"
+#include "PrefabProperties.h"
 #include "TextureLoaderDDS.h"
 
 extern Framework::FontSystem fontSystem;
