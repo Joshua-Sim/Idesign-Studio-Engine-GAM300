@@ -159,7 +159,7 @@ namespace Framework
 
         char writeBuffer[65536];
         rapidjson::FileWriteStream os(descFp, writeBuffer, sizeof(writeBuffer));
-        rapidjson::Writer<rapidjson::FileWriteStream> writer(os);
+        rapidjson::PrettyWriter<rapidjson::FileWriteStream> writer(os);
         descDoc.Accept(writer);
         fclose(descFp);
 

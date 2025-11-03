@@ -54,6 +54,9 @@ PROPERTY_END(WindowConfig, WindowConfigProps)
 #define PROP_INT_READONLY(field, type) \
     PROP_INT_FLAGS(field, type, Framework::prop::READ_ONLY)
 
+#define PROP_INT_HIDDEN(field, type) \
+    PROP_INT_FLAGS(field, type, Framework::prop::HIDDEN)
+
 //------------------------------------------------------------------------------------------------------------------------------------
 //  FLOAT MACRO
 //------------------------------------------------------------------------------------------------------------------------------------
@@ -69,6 +72,9 @@ PROPERTY_END(WindowConfig, WindowConfigProps)
 #define PROP_FLOAT_READONLY(field, type) \
     PROP_FLOAT_FLAGS(field, type, Framework::prop::READ_ONLY)
 
+#define PROP_FLOAT_HIDDEN(field, type) \
+    PROP_FLOAT_FLAGS(field, type, Framework::prop::HIDDEN)
+
 //------------------------------------------------------------------------------------------------------------------------------------
 //  DOUBLE MACRO
 //------------------------------------------------------------------------------------------------------------------------------------
@@ -83,6 +89,9 @@ PROPERTY_END(WindowConfig, WindowConfigProps)
 
 #define PROP_DOUBLE_READONLY(field, type) \
     PROP_DOUBLE_FLAGS(field, type, Framework::prop::READ_ONLY)
+
+#define PROP_DOUBLE_HIDDEN(field, type) \
+    PROP_DOUBLE_FLAGS(field, type, Framework::prop::HIDDEN)
 
 //------------------------------------------------------------------------------------------------------------------------------------
 //  LONG MACRO
@@ -117,6 +126,9 @@ PROPERTY_END(WindowConfig, WindowConfigProps)
 #define PROP_STRING_READONLY(field, type) \
     PROP_STRING_FLAGS(field, type, Framework::prop::READ_ONLY)
 
+#define PROP_STRING_HIDDEN(field, type) \
+    PROP_STRING_FLAGS(field, type, Framework::prop::HIDDEN)
+
 #define PROP_STRING_DROPDOWN(field, type, optionsFn) \
     Framework::prop{ #field, Framework::prop::STRING_DROPDOWN, \
         [](void* pObj, const void* pData) { static_cast<type*>(pObj)->field = *static_cast<const std::string*>(pData); }, \
@@ -150,6 +162,9 @@ PROPERTY_END(WindowConfig, WindowConfigProps)
 #define PROP_CHAR_READONLY(field, type) \
     PROP_CHAR_FLAGS(field, type, Framework::prop::READ_ONLY)
 
+#define PROP_CHAR_HIDDEN(field, type) \
+    PROP_CHAR_FLAGS(field, type, Framework::prop::HIDDEN)
+
 //------------------------------------------------------------------------------------------------------------------------------------
 //  BOOL MACRO
 //------------------------------------------------------------------------------------------------------------------------------------
@@ -165,6 +180,9 @@ PROPERTY_END(WindowConfig, WindowConfigProps)
 #define PROP_BOOL_READONLY(field, type) \
     PROP_BOOL_FLAGS(field, type, Framework::prop::READ_ONLY)
 
+#define PROP_BOOL_HIDDEN(field, type) \
+    PROP_BOOL_FLAGS(field, type, Framework::prop::HIDDEN)
+
 //------------------------------------------------------------------------------------------------------------------------------------
 //  UNSIGNED INT MACRO
 //------------------------------------------------------------------------------------------------------------------------------------
@@ -179,6 +197,9 @@ PROPERTY_END(WindowConfig, WindowConfigProps)
 
 #define PROP_UINT_READONLY(field, type) \
     PROP_UINT_FLAGS(field, type, Framework::prop::READ_ONLY)
+
+#define PROP_UINT_HIDDEN(field, type) \
+    PROP_UINT_FLAGS(field, type, Framework::prop::HIDDEN)
 
 //------------------------------------------------------------------------------------------------------------------------------------
 //  VEC3 MACRO
@@ -210,6 +231,9 @@ PROPERTY_END(WindowConfig, WindowConfigProps)
 
 #define PROP_GUID_READONLY(field, type) \
     PROP_GUID_FLAGS(field, type, Framework::prop::READ_ONLY)
+
+#define PROP_GUID_HIDDEN(field, type) \
+    PROP_GUID_FLAGS(field, type, Framework::prop::HIDDEN)
 
 //------------------------------------------------------------------------------------------------------------------------------------
 //  TYPENAME MACRO

@@ -37,9 +37,9 @@ namespace Framework
 
     inline const std::vector g_AudioPropertiesPropsArray =
     {
-        PROP_GUID_READONLY(guid, AudioProperties),
-        PROP_STRING(name, AudioProperties),
-        PROP_STRING_READONLY(path, AudioProperties),
+        PROP_GUID_HIDDEN(guid, AudioProperties),
+        PROP_STRING_HIDDEN(name, AudioProperties),
+        PROP_STRING_HIDDEN(path, AudioProperties),
         PROP_STRING_READONLY(mode, AudioProperties),
         PROP_STRING_READONLY(soundType, AudioProperties),
         PROP_SLIDER_FLOAT(volume, AudioProperties, 0.0f, 1.0f)

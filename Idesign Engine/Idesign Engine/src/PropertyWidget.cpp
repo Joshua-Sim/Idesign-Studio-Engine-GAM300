@@ -239,6 +239,11 @@ namespace Framework
                 {
                     auto& mesh = *static_cast<MeshProperties*>(componentPtr);
                     DrawAssetDropdown<MeshProperties>("Select Mesh", mesh);
+
+                    if (ImGui::Button("Reload Mesh"))
+                    {
+                        MeshLoader::loadMesh(mesh.path, mesh);
+                    }
                 }
                 else if (typeName == "AudioProperties")
                 {
@@ -248,7 +253,22 @@ namespace Framework
                 else if (typeName == "NavMeshComponent")
                 {
                     auto& navMesh = *static_cast<NavMeshComponent*>(componentPtr);
-                    DrawAssetDropdown<NavMeshComponent>("Select navMesh", navMesh);
+
+                    // Unique ID suffix using entity or typeName
+                    std::string idSuffix = "##NavMesh_" + std::to_string(static_cast<uint32_t>(entity));
+
+                    DrawAssetDropdown("NavMesh Source" + idSuffix, navMesh);
+
+                    if (ImGui::Button(("Clear Runtime Buffers" + idSuffix).c_str()))
+                    {
+                        navMesh.positions.clear();
+                        navMesh.indices.clear();
+                    }
+
+                    if (ImGui::Button(("Reset NavMesh Component" + idSuffix).c_str()))
+                    {
+                        navMesh = NavMeshComponent{};
+                    }
                 }
 
                 DrawInspector(componentPtr, *propList);

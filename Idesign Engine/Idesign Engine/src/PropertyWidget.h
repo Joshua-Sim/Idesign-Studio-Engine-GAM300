@@ -42,6 +42,15 @@ namespace Framework
     //------------------------------------------------------------------------------------------------------------------------------------
     //  TEMPLATE FUNCTIONS FOR WIDGETS
     //------------------------------------------------------------------------------------------------------------------------------------
+    template<typename T, typename = void>
+    struct has_name_and_path : std::false_type {};
+
+    template<typename T>
+    struct has_name_and_path<T, std::void_t<
+        decltype(std::declval<T>().name),
+        decltype(std::declval<T>().path)
+        >> : std::true_type {};
+
     template<typename AssetType>
     void DrawAssetDropdown(const std::string& label, AssetType& component)
     {
@@ -55,20 +64,18 @@ namespace Framework
 
             auto* asset = static_cast<AssetType*>(entry.pObject.get());
 
-            if constexpr (requires(AssetType a) { a.name; a.path; })
+            if constexpr (has_name_and_path<AssetType>::value)
             {
                 if (asset->name.empty() && asset->path.empty())
-                    continue; // Skip assets with no identifying info
+                    continue;
 
                 std::string name = asset->name.empty() ? asset->path : asset->name;
                 assetNames.push_back(name);
             }
             else
             {
-                // Fallback label for types without name/path
-                assetNames.push_back(entry.typeName + " [" + std::to_string(guid) + "]");
+                continue;
             }
-
             assetGuids.push_back(guid);
         }
 
@@ -94,7 +101,7 @@ namespace Framework
 
             if (auto* asset = AssetManager::Instance().Get<AssetType>(component.guid))
             {
-                if constexpr (requires(AssetType a) { a.name; a.path; })
+                if constexpr (has_name_and_path<AssetType>::value)
                 {
                     if (asset->name.empty() && asset->path.empty())
                         return; // Skip if no identifying info
@@ -137,15 +144,59 @@ namespace Framework
         }
     }
 
+    // Overload for NavMeshComponent using MeshProperties as asset type
+    inline void DrawAssetDropdown(const std::string& label, NavMeshComponent& navComp)
+    {
+        std::vector<std::string> meshNames;
+        std::vector<AssetHandle> meshGuids;
+
+        for (const auto& [guid, entry] : AssetManager::Instance().GetAssets())
+        {
+            if (entry.typeName != TypeName<MeshProperties>::value)
+                continue;
+
+            auto* mesh = static_cast<MeshProperties*>(entry.pObject.get());
+            if (mesh->name.empty() && mesh->path.empty())
+                continue;
+
+            std::string name = mesh->name.empty() ? mesh->path : mesh->name;
+            meshNames.push_back(name);
+            meshGuids.push_back(guid);
+        }
+
+        std::vector<const char*> labelPtrs;
+        for (const auto& name : meshNames)
+            labelPtrs.push_back(name.c_str());
+
+        int currentIndex = -1;
+        for (size_t i = 0; i < meshGuids.size(); ++i)
+        {
+            if (meshGuids[i] == navComp.guid)
+            {
+                currentIndex = static_cast<int>(i);
+                break;
+            }
+        }
+
+        ImGui::Separator();
+        ImGui::Text("%s", label.c_str());
+        if (ImGui::Combo(label.c_str(), &currentIndex, labelPtrs.data(), static_cast<int>(labelPtrs.size())))
+        {
+            navComp.guid = meshGuids[currentIndex];
+        }
+    }
+
     inline void DrawTexturePreview(const TextureProperties& tex)
     {
-        if (tex.textureID != 0) {
+        if (tex.textureID != 0) 
+        {
             ImGui::Text("Preview:");
             ImGui::Image((ImTextureID)(uintptr_t)tex.textureID, ImVec2(128, 128), ImVec2(0, 1), ImVec2(1, 0)); // Flip both horizontally and vertically
             ImGui::Text("Size: %d x %d", tex.width, tex.height);
-            ImGui::Text("Path: %s", tex.path.c_str());
+            //ImGui::Text("Path: %s", tex.path.c_str());
         }
-        else {
+        else 
+        {
             ImGui::TextColored(ImVec4(1, 0.5f, 0.5f, 1), "No texture loaded.");
         }
     }

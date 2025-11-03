@@ -44,7 +44,7 @@ namespace Framework
     // Serialized properties (only these go into JSON)
     inline std::array g_NavMeshPropsArray =
     {
-        PROP_STRING_READONLY(guid, NavMeshComponent),
+        PROP_STRING_HIDDEN(guid, NavMeshComponent),
         PROP_BOOL(isNavMeshSource, NavMeshComponent),
         PROP_BOOL(runtimeGenerated, NavMeshComponent),
         PROP_DRAG_FLOAT(agentRadius, NavMeshComponent),
