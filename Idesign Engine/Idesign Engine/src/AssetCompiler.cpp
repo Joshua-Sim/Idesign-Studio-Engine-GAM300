@@ -1,8 +1,6 @@
 
 #include <pch.h>
 #include <AssetCompiler.h>
-#include "NavMeshProperties.h"
-#include "MeshLoader.h"
 #include "SceneManager.h"
 
 extern Framework::Coordinator ecsInterface;
@@ -104,59 +102,59 @@ namespace Framework
                 ecsInterface.AddComponent(entity, hierarchy);
             }
 
-            if (components.HasMember("MeshReference"))
+            // Mesh
+               // 1. Look for "MeshProperties", not "MeshReference"
+            if (components.HasMember("MeshProperties"))
             {
-                const auto& meshRef = components["MeshReference"];
-                if (meshRef.HasMember("guid") && meshRef["guid"].IsString())
+                // 2. Create a new, empty component
+                MeshProperties mesh;
+
+                // 3. Deserialize all saved data (guid, albedo, specular, etc.)
+                //    (Assumes g_MeshProps is available)
+                Deserialize(&mesh, g_MeshProps, components["MeshProperties"]);
+
+                // 4. Now, use the guid to get the *default asset*
+                const MeshProperties* defaultAsset = AssetManager::Instance().Get<MeshProperties>(mesh.guid);
+                if (defaultAsset)
                 {
-                    std::string guid = meshRef["guid"].GetString();
-                    MeshProperties* mesh = AssetManager::Instance().Get<MeshProperties>(guid);
-                    if (mesh)
-                    {
-                        // Ensure it has valid mesh data (path may be missing if deserialized incorrectly)
-                        if (!mesh->path.empty())
-                        {
-                            MeshLoader::loadMesh(mesh->path, *mesh); // Re-load VAO/VBO/EBO etc.
-                        }
-                        else
-                        {
-                            std::cerr << "Mesh found in AssetManager but has empty path!\n";
-                        }
-
-                        ecsInterface.AddComponent(entity, *mesh);
-                    }
-                    else
-                    {
-                        std::cerr << "Missing MeshProperties for GUID: " << guid << "\n";
-                    }
+                    // 5. Copy the RUNTIME data (VAO, VBO) from the asset
+                    //    This leaves your saved material colors intact.
+                    mesh.vao = defaultAsset->vao;
+                    mesh.vbo = defaultAsset->vbo;
+                    mesh.ebo = defaultAsset->ebo;
+                    mesh.indexCount = defaultAsset->indexCount;
                 }
-            }
+                else if (!mesh.guid.empty())
+                {
+                    std::cerr << "Missing MeshProperties asset for GUID: " << mesh.guid << "\n";
+                }
 
+                // 6. Add the final component (with its overrides) to the entity
+                ecsInterface.AddComponent(entity, mesh);
+            }
 
             // Texture
             if (components.HasMember("TextureComponent"))
             {
-                const auto& texRef = components["TextureComponent"];
-                if (texRef.HasMember("guid") && texRef["guid"].IsString())
+                TextureProperties tex;
+
+                // Deserialize all saved data (guid, name, etc.)
+                // (Assumes g_TexturePropertiesProps is available)
+                Deserialize(&tex, g_TexturePropertiesProps, components["TextureComponent"]);
+
+                // Get the default asset
+                const TextureProperties* defaultAsset = AssetManager::Instance().Get<TextureProperties>(tex.guid);
+                if (defaultAsset)
                 {
-                    std::string guid = texRef["guid"].GetString();
-                    const TextureProperties* tex = AssetManager::Instance().Get<TextureProperties>(guid);
-                    if (tex)
-                    {
-                        ecsInterface.AddComponent(entity, *tex);
-                    }
-                    else
-                    {
-                        std::cerr << "Missing TextureProperties for GUID: " << guid << "\n";
-                    }
+                    // Copy RUNTIME data (textureID, width, height)
+                    tex.textureID = defaultAsset->textureID;
+                    tex.width = defaultAsset->width;
+                    tex.height = defaultAsset->height;
                 }
-            }
-            
-            //Navmesh
-            if (components.HasMember("NavMeshComponent"))
-            {
-                const auto& navObj = components["NavMeshComponent"];
-                NavMeshComponent nav;
+                else if (!tex.guid.empty())
+                {
+                    std::cerr << "Missing TextureProperties asset for GUID: " << tex.guid << "\n";
+                }
 
                 if (navObj.HasMember("guid"))
                     nav.guid = navObj["guid"].GetString();
@@ -240,22 +238,26 @@ namespace Framework
                 componentsObj.AddMember("HierarchyComponent", hierarchyJson, allocator);
             }
 
-            // MeshProperties — write only GUID
+            // MeshProperties ï¿½ write only GUID
+          // MeshProperties
             if (ecsInterface.HasComponent<MeshProperties>(entity))
             {
                 const auto& mesh = ecsInterface.GetComponent<MeshProperties>(entity);
-                rapidjson::Value meshRef(rapidjson::kObjectType);
-                meshRef.AddMember("guid", rapidjson::Value(mesh.guid.id.c_str(), allocator), allocator);
-                componentsObj.AddMember("MeshReference", meshRef, allocator);
+                rapidjson::Value meshJson(rapidjson::kObjectType);
+                // Assumes g_MeshProps is available (from MeshProperties.h)
+                Serialize((void*)&mesh, g_MeshProps, meshJson, allocator);
+                componentsObj.AddMember("MeshProperties", meshJson, allocator);
             }
 
             // TextureProperties  write only GUID
+           // TextureProperties
             if (ecsInterface.HasComponent<TextureProperties>(entity))
             {
                 const auto& tex = ecsInterface.GetComponent<TextureProperties>(entity);
-                rapidjson::Value texRef(rapidjson::kObjectType);
-                texRef.AddMember("guid", rapidjson::Value(tex.guid.id.c_str(), allocator), allocator);
-                componentsObj.AddMember("TextureComponent", texRef, allocator);
+                rapidjson::Value texJson(rapidjson::kObjectType);
+                // Assumes g_TexturePropertiesProps is available (from TextureProperties.h)
+                Serialize((void*)&tex, g_TexturePropertiesProps, texJson, allocator);
+                componentsObj.AddMember("TextureComponent", texJson, allocator);
             }
             // Add more components here...
 

@@ -23,7 +23,17 @@
 #include "TextureProperties.h"
 #include "MeshProperties.h"
 #include "TransformProperties.h"
+// Note
+/*
+    Step 1: Read Json and populate object
+    Deserialize(&obj, props, doc);
+    Step 2: Serialize object to binary
+    JsonToBinary(out, obj, props);
+    Step 3: Load binary and reconsutruct object
+    BinaryToObject(in, obj, props);
 
+    Convert this function to scripting ?
+*/
 namespace fs = std::filesystem;
 namespace Framework
 {
@@ -43,7 +53,7 @@ namespace Framework
 
     // Compile a single object from JSON into binary format
     template<typename T>
-    bool CompileSingleObject(const std::string& jsonPath, const std::string& outPath, const std::string& descPath, const prop_list& props)
+    bool CompileSingleObject(const std::string& jsonPath, const std::string& outPath, const prop_list& props)
     {
         // Load and Parse JSON file
         FILE* fp = fopen(jsonPath.c_str(), "r");
@@ -71,33 +81,12 @@ namespace Framework
 
         JsonToBinary(out, *obj, props);
         out.close();
-
-        // Save descriptor file
-        rapidjson::Document descDoc;
-        descDoc.SetObject();
-        auto& allocator = descDoc.GetAllocator();
-
-        Serialize(obj.get(), props, descDoc, allocator);
-
-        FILE* descFp = fopen(descPath.c_str(), "wb");
-        if (!descFp)
-        {
-            std::cerr << "Failed to open descriptor file: " << descPath << "\n";
-            return false;
-        }
-
-        char writeBuffer[65536];
-        rapidjson::FileWriteStream os(descFp, writeBuffer, sizeof(writeBuffer));
-        rapidjson::Writer<rapidjson::FileWriteStream> writer(os);
-        descDoc.Accept(writer);
-        fclose(descFp);
-
         return true;
     }
 
     // Compile an array of objects from JSON into Binary Format
     template<typename T>
-    bool CompileArray(const std::string& jsonPath, const std::string& outPath, const std::string& descPath, const prop_list& props, const std::string& arrayKey)
+    bool CompileArray(const std::string& jsonPath, const std::string& outPath, const prop_list& props, const std::string& arrayKey)
     {
         // Load and Parse JSON file
         FILE* fp = fopen(jsonPath.c_str(), "r");
@@ -132,37 +121,6 @@ namespace Framework
             JsonToBinary(out, *obj, props);
         }
         out.close();
-
-        // Write descriptor file
-        rapidjson::Document descDoc;
-        descDoc.SetObject();
-        auto& allocator = descDoc.GetAllocator();
-
-        descDoc.AddMember("count", count, allocator);
-
-        rapidjson::Value entries(rapidjson::kArrayType);
-        for (const auto& item : arr) {
-            std::unique_ptr<T> obj = std::make_unique<T>();
-            Deserialize(obj.get(), props, item);
-
-            rapidjson::Value entry(rapidjson::kObjectType);
-            Serialize(obj.get(), props, entry, allocator);
-            entries.PushBack(entry, allocator);
-        }
-        descDoc.AddMember("entries", entries, allocator);
-
-        FILE* descFp = fopen(descPath.c_str(), "wb");
-        if (!descFp) {
-            std::cerr << "Failed to open descriptor file: " << descPath << "\n";
-            return false;
-        }
-
-        char writeBuffer[65536];
-        rapidjson::FileWriteStream os(descFp, writeBuffer, sizeof(writeBuffer));
-        rapidjson::Writer<rapidjson::FileWriteStream> writer(os);
-        descDoc.Accept(writer);
-        fclose(descFp);
-
         return true;
     }
 
