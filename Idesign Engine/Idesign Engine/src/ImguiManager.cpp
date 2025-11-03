@@ -427,6 +427,41 @@ namespace Framework {
                 }
 
 
+
+                ImGui::Separator();  // Visual separator
+
+                // === PREFAB TEST MENU ===
+                if (ImGui::MenuItem("Test Spawn Prefab"))
+                {
+                    // Find first available prefab and spawn it
+                    bool spawned = false;
+                    for (const auto& [guid, entry] : AssetManager::Instance().GetAssets())
+                    {
+                        if (entry.typeName != TypeName<PrefabProperties>::value)
+                            continue;
+
+                        auto* prefab = static_cast<PrefabProperties*>(entry.pObject.get());
+
+                        // Spawn at origin
+                        Entity entity = Framework::sceneManager.SpawnPrefab(
+                            prefab->guid.id
+                        );
+
+                        if (entity != std::numeric_limits<Entity>::max())
+                        {
+                            std::cout << "✓ Test spawned prefab: " << prefab->name
+                                << " (entity " << entity << ")" << std::endl;
+                            spawned = true;
+                        }
+                        break;  // Only spawn first prefab
+                    }
+
+                    if (!spawned)
+                    {
+                        std::cout << "⚠ No prefabs available to spawn. Create one first!" << std::endl;
+                    }
+                }
+
                 if (ImGui::MenuItem("Build Navmesh"))
                 {
                     auto navSystem = ecsInterface.GetSystem<NavMeshSystem>();
@@ -465,6 +500,7 @@ namespace Framework {
                         std::cout << "=========================\n" << std::endl;
                     }
                 }
+
 
                 if (ImGui::MenuItem("Agent Go"))
                 {
