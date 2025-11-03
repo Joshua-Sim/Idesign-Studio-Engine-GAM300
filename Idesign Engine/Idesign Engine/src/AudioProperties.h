@@ -18,15 +18,15 @@ namespace Framework
 {
     struct AudioProperties
     {
-        std::string guid;
+        AssetHandle guid;
         std::string name;
         std::string path;
         std::string mode;
         std::string soundType;
+        float volume = 1.0f;           // Range: 0.0 to 1.0
         bool isDirty = false;
 
         //  Runtime properties
-        float volume = 1.0f;           // Range: 0.0 to 1.0
         bool loop = false;             // Loop playback
         bool isPlaying = false;        // Playback status
         float duration = 0.0f;         // Duration in seconds
@@ -35,16 +35,17 @@ namespace Framework
         int channelID = -1;
     };
 
-    inline constexpr std::array g_AudioPropertiesPropsArray =
+    inline const std::vector g_AudioPropertiesPropsArray =
     {
-        PROP_STRING(guid, AudioProperties),
-        PROP_STRING(name, AudioProperties),
-        PROP_STRING(path, AudioProperties),
-        PROP_STRING(mode, AudioProperties),
-        PROP_STRING(soundType, AudioProperties),
+        PROP_GUID_HIDDEN(guid, AudioProperties),
+        PROP_STRING_HIDDEN(name, AudioProperties),
+        PROP_STRING_HIDDEN(path, AudioProperties),
+        PROP_STRING_READONLY(mode, AudioProperties),
+        PROP_STRING_READONLY(soundType, AudioProperties),
+        PROP_SLIDER_FLOAT(volume, AudioProperties, 0.0f, 1.0f)
     };
 
-    inline constexpr prop_list g_AudioPropertiesProps{ "AudioProperties", g_AudioPropertiesPropsArray };
+    inline const prop_list g_AudioPropertiesProps{ "AudioProperties", g_AudioPropertiesPropsArray };
     inline global_registration g_AudioPropertiesReg(&g_AudioPropertiesProps);
 }
 #endif // !_AUDIO_PROPERTIES_H_

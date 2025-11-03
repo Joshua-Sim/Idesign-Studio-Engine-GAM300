@@ -67,6 +67,17 @@ namespace Framework {
 			}
 		}
 
+		template<typename T>
+		std::shared_ptr<T> GetSystem()
+		{
+			const char* typeName = typeid(T).name();
+			auto it = mECSystem.find(typeName);
+			if (it != mECSystem.end())
+				return std::static_pointer_cast<T>(it->second);
+			return nullptr;
+		}
+
+
 		void EntitySignatureChanged(Entity entity, Signature entitySignature)
 		{
 			for (auto const& pair : mECSystem)

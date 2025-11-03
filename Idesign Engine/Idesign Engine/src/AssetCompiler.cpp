@@ -1,6 +1,8 @@
 
 #include <pch.h>
 #include <AssetCompiler.h>
+#include "NavMeshProperties.h"
+#include "MeshLoader.h"
 #include "SceneManager.h"
 
 extern Framework::Coordinator ecsInterface;
@@ -102,16 +104,25 @@ namespace Framework
                 ecsInterface.AddComponent(entity, hierarchy);
             }
 
-            // Mesh
             if (components.HasMember("MeshReference"))
             {
                 const auto& meshRef = components["MeshReference"];
                 if (meshRef.HasMember("guid") && meshRef["guid"].IsString())
                 {
                     std::string guid = meshRef["guid"].GetString();
-                    const MeshProperties* mesh = AssetManager::Instance().Get<MeshProperties>(guid);
+                    MeshProperties* mesh = AssetManager::Instance().Get<MeshProperties>(guid);
                     if (mesh)
                     {
+                        // Ensure it has valid mesh data (path may be missing if deserialized incorrectly)
+                        if (!mesh->path.empty())
+                        {
+                            MeshLoader::loadMesh(mesh->path, *mesh); // Re-load VAO/VBO/EBO etc.
+                        }
+                        else
+                        {
+                            std::cerr << "Mesh found in AssetManager but has empty path!\n";
+                        }
+
                         ecsInterface.AddComponent(entity, *mesh);
                     }
                     else
@@ -120,6 +131,7 @@ namespace Framework
                     }
                 }
             }
+
 
             // Texture
             if (components.HasMember("TextureComponent"))
@@ -138,6 +150,32 @@ namespace Framework
                         std::cerr << "Missing TextureProperties for GUID: " << guid << "\n";
                     }
                 }
+            }
+            
+            //Navmesh
+            if (components.HasMember("NavMeshComponent"))
+            {
+                const auto& navObj = components["NavMeshComponent"];
+                NavMeshComponent nav;
+
+                if (navObj.HasMember("guid"))
+                    nav.guid = navObj["guid"].GetString();
+                if (navObj.HasMember("isNavMeshSource"))
+                    nav.isNavMeshSource = navObj["isNavMeshSource"].GetBool();
+                if (navObj.HasMember("runtimeGenerated"))
+                    nav.runtimeGenerated = navObj["runtimeGenerated"].GetBool();
+                if (navObj.HasMember("agentRadius"))
+                    nav.agentRadius = navObj["agentRadius"].GetFloat();
+                if (navObj.HasMember("agentHeight"))
+                    nav.agentHeight = navObj["agentHeight"].GetFloat();
+                if (navObj.HasMember("cellSize"))
+                    nav.cellSize = navObj["cellSize"].GetFloat();
+                if (navObj.HasMember("cellHeight"))
+                    nav.cellHeight = navObj["cellHeight"].GetFloat();
+                if (navObj.HasMember("maxSlope"))
+                    nav.maxSlope = navObj["maxSlope"].GetFloat();
+
+                ecsInterface.AddComponent(entity, nav);
             }
 
             sceneManager.RegisterEntityToScene(entity, cleanName);
@@ -207,7 +245,7 @@ namespace Framework
             {
                 const auto& mesh = ecsInterface.GetComponent<MeshProperties>(entity);
                 rapidjson::Value meshRef(rapidjson::kObjectType);
-                meshRef.AddMember("guid", rapidjson::Value(mesh.guid.c_str(), allocator), allocator);
+                meshRef.AddMember("guid", rapidjson::Value(mesh.guid.id.c_str(), allocator), allocator);
                 componentsObj.AddMember("MeshReference", meshRef, allocator);
             }
 
@@ -216,10 +254,28 @@ namespace Framework
             {
                 const auto& tex = ecsInterface.GetComponent<TextureProperties>(entity);
                 rapidjson::Value texRef(rapidjson::kObjectType);
-                texRef.AddMember("guid", rapidjson::Value(tex.guid.c_str(), allocator), allocator);
+                texRef.AddMember("guid", rapidjson::Value(tex.guid.id.c_str(), allocator), allocator);
                 componentsObj.AddMember("TextureComponent", texRef, allocator);
             }
             // Add more components here...
+
+            // Navmesh Component
+            if (ecsInterface.HasComponent<NavMeshComponent>(entity))
+            {
+                const auto& nav = ecsInterface.GetComponent<NavMeshComponent>(entity);
+                rapidjson::Value navObj(rapidjson::kObjectType);
+
+                navObj.AddMember("guid", rapidjson::Value(nav.guid.c_str(), allocator), allocator);
+                navObj.AddMember("isNavMeshSource", nav.isNavMeshSource, allocator);
+                navObj.AddMember("runtimeGenerated", nav.runtimeGenerated, allocator);
+                navObj.AddMember("agentRadius", nav.agentRadius, allocator);
+                navObj.AddMember("agentHeight", nav.agentHeight, allocator);
+                navObj.AddMember("cellSize", nav.cellSize, allocator);
+                navObj.AddMember("cellHeight", nav.cellHeight, allocator);
+                navObj.AddMember("maxSlope", nav.maxSlope, allocator);
+
+                componentsObj.AddMember("NavMeshComponent", navObj, allocator);
+            }
 
             entityObj.AddMember("components", componentsObj, allocator);
             entitiesArray.PushBack(entityObj, allocator);
@@ -286,6 +342,7 @@ namespace Framework
             switch (p.m_Type)
             {
             case prop::INT:    if (v.IsInt())    { int          temp = v.GetInt();                            p.m_fnSet(pObject, &temp); } break;
+            case prop::SLIDER_FLOAT:
             case prop::FLOAT:  if (v.IsNumber()) { float        temp = static_cast<float>(v.GetDouble());     p.m_fnSet(pObject, &temp); } break;
             case prop::DOUBLE: if (v.IsNumber()) { double       temp = v.GetDouble();                         p.m_fnSet(pObject, &temp); } break;
             case prop::LONG:   if (v.IsInt64())  { long         temp = static_cast<long>(v.GetInt64());       p.m_fnSet(pObject, &temp); } break;
@@ -330,6 +387,7 @@ namespace Framework
             switch (p.m_Type)
             {
             case prop::INT:    { int          v; p.m_fnGet(pObject, &v); outObj.AddMember(key, v, allocator); break; }
+            case prop::SLIDER_FLOAT:
             case prop::FLOAT:  { float        v; p.m_fnGet(pObject, &v); outObj.AddMember(key, v, allocator); break; }
             case prop::DOUBLE: { double       v; p.m_fnGet(pObject, &v); outObj.AddMember(key, v, allocator); break; }
             case prop::LONG:   { long         v; p.m_fnGet(pObject, &v); outObj.AddMember(key, static_cast<int64_t>(v), allocator); break; }

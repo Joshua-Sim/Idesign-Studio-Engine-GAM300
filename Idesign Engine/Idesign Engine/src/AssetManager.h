@@ -31,6 +31,9 @@
 #include <WindowConfigProperties.h>
 #include "TextureProperties.h"
 #include "MeshProperties.h"
+#include "TextProperties.h"
+#include "NavMeshAgentProperties.h"
+#include "NavMeshProperties.h"
 
 // Asset Files
 #include <AssetLoader.h>
@@ -42,6 +45,9 @@ namespace Framework
     REGISTER_TYPE_NAME(AudioProperties);
     REGISTER_TYPE_NAME(TextureProperties);
     REGISTER_TYPE_NAME(MeshProperties);
+    REGISTER_TYPE_NAME(TextProperties);
+    REGISTER_TYPE_NAME(NavMeshComponent);
+    REGISTER_TYPE_NAME(NavMeshAgentComponent);
 
     /*  Struct Brief
         - Store any type of assets in a generic way
@@ -129,36 +135,6 @@ namespace Framework
             return static_cast<T*>(it->second.pObject.get());
         }
 
-        // For future Hot-Reload in Imgui (Testing required)
-        template<typename T>
-        T& Reload(const std::string& name) 
-        {
-            auto it = m_Assets.find(name);
-            if (it == m_Assets.end())
-                throw std::runtime_error("Asset not found: " + name);
-
-            if (it->second.typeName != TypeName<T>::value)
-                throw std::runtime_error("Type mismatch during reload for asset: " + name);
-
-            const prop_list* props = it->second.pProps;
-            const std::string& path = it->second.binaryPath;
-
-            std::ifstream in(path, std::ios::binary);
-            if (!in.is_open())
-                throw std::runtime_error("Failed to open binary file: " + path);
-
-            T* obj = new T{};
-            BinaryToObject(in, *obj, *props);
-
-            std::unique_ptr<void, void(*)(void*)> erasedPtr(
-                static_cast<void*>(obj),
-                [](void* ptr) { delete static_cast<T*>(ptr); }
-            ); 
-
-            it->second.pObject = std::move(erasedPtr);
-            return *obj;
-        }
-
         template<typename T>
         void RegisterAsset(std::unique_ptr<T> obj, const prop_list* props, const std::string& binaryPath)
         {
@@ -236,6 +212,22 @@ namespace Framework
         bool SaveToJson(void* pObject, const std::string& filePath, const prop_list& props);
         void SaveArrayToJson(const std::string& typeName, const std::string& filePath, const std::string& arrayKey);
         bool HasTextureByGUID(const std::string& guid) const;
+
+        std::vector<std::string> GetAvailableTextureNames()
+        {
+            std::vector<std::string> names;
+            for (const auto& [handle, entry] : m_Assets)
+            {
+                if (entry.typeName == "TextureProperties")
+                {
+                    const auto* tex = static_cast<const TextureProperties*>(entry.pObject.get());
+                    if (tex)
+                        names.push_back(tex->name); // or tex->guid, or tex->path
+                }
+            }
+            return names;
+        }
+
     private:
         AssetManager() = default;                                   // Private constructor
         std::unordered_map<AssetHandle, AssetEntry> m_Assets;       // Contains all types of Assets
