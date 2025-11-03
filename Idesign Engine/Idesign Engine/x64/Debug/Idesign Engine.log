@@ -1,1 +1,12 @@
-﻿  Idesign Engine.vcxproj -> C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe
+﻿  PhysicsSystem.cpp
+C:\Users\jason\OneDrive\Desktop\SIT\Year 3 Sem 1\GAM 300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.cpp(80,20): warning C4459: declaration of 'cMaxPhysicsJobs' hides global declaration
+  (compiling source file '/src/PhysicsSystem.cpp')
+      C:\Users\jason\OneDrive\Desktop\SIT\Year 3 Sem 1\GAM 300\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\Jolt\Physics\PhysicsSettings.h(22,15):
+      see declaration of 'JPH::cMaxPhysicsJobs'
+  
+C:\Users\jason\OneDrive\Desktop\SIT\Year 3 Sem 1\GAM 300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.cpp(81,20): warning C4459: declaration of 'cMaxPhysicsBarriers' hides global declaration
+  (compiling source file '/src/PhysicsSystem.cpp')
+      C:\Users\jason\OneDrive\Desktop\SIT\Year 3 Sem 1\GAM 300\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\Jolt\Physics\PhysicsSettings.h(25,15):
+      see declaration of 'JPH::cMaxPhysicsBarriers'
+  
+  Idesign Engine.vcxproj -> C:\Users\jason\OneDrive\Desktop\SIT\Year 3 Sem 1\GAM 300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe

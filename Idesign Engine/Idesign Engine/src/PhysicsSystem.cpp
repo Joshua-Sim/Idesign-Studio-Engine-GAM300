@@ -12,189 +12,179 @@
 
 #include "pch.h"
 #include "PhysicsSystem.h"
+#include <Jolt/Jolt.h>
+#include <Jolt/Core/Factory.h>
+#include <Jolt/Core/TempAllocator.h>
+#include <Jolt/Core/JobSystemThreadPool.h>
+#include <Jolt/Physics/PhysicsSystem.h>
+#include <Jolt/RegisterTypes.h>
+#include <Jolt/Physics/Collision/RayCast.h>
+#include <Jolt/Physics/Collision/NarrowPhaseQuery.h>
+#include <Jolt/Physics/Collision/CastResult.h>
+#include <Jolt/Physics/Collision/Shape/Shape.h>
+#include <Jolt/Physics/Collision/Shape/BoxShape.h>
+#include <Jolt/Physics/Body/BodyCreationSettings.h>
+#include <Jolt/Physics/Body/BodyInterface.h>
 #include <iostream>
-#include "Coordinator.h"
-#include "InputHandler.h"
-#include "FontSystem.h" 
 
-
-
-
-extern Framework::Coordinator ecsInterface;
+using namespace JPH;
 
 namespace Framework {
 
-
-    bool printed = false;
-    bool printed1 = false;
-
-
-    // Constructor
-    PhysicsSystem::PhysicsSystem()
-    {
-
+    namespace Layers {
+        static constexpr ObjectLayer NON_MOVING = 0;
+        static constexpr ObjectLayer MOVING = 1;
     }
 
-    // Destructor
-    PhysicsSystem::~PhysicsSystem() {
-
-    }
-
-    // Initialize the system
-    void PhysicsSystem::Initialize() {
-
-        InputHandlerInstance = InputHandler::GetInstance();
-
-
-        //ecsInterface.RegisterComponent<CollisionComponent>();
-        Signature signature;
-        ecsInterface.RegisterComponent<MovementComponent>();
-        signature.set(ecsInterface.GetComponentType<MovementComponent>());
-        // signature.set(ecsInterface.GetComponentType<CollisionComponent>());
-        ecsInterface.SetSystemSignature<PhysicsSystem>(signature);
-        std::cout << "Signature for Physics system is: " << signature << std::endl;
-
-
-
-    }
-    // Update the system
-    void PhysicsSystem::Update(float deltaTime) {
-        moveEntities(deltaTime);
-    }
-
-    // Get the name of the system
-    std::string PhysicsSystem::GetName() {
-        return "Collision";
-    }
-
-
-    glm::vec2 PhysicsSystem::UE_AABBPositionMax(glm::vec2 size, glm::vec2 position) {
-        glm::vec2 aabbMax;
-        aabbMax.x = position.x + (size.x / 2);
-        aabbMax.y = position.y - (size.y / 2);
-        return aabbMax;
-    }
-
-    glm::vec2 PhysicsSystem::UE_AABBPositionMin(float sizeX, float sizeY, float positionX, float positionY) {
-        glm::vec2 aabbMin;
-        aabbMin.x = positionX - (sizeX / 2);
-        aabbMin.y = positionY + (sizeY / 2);
-        return aabbMin;
-    }
-
-    void PhysicsSystem::moveEntities(float deltaTime) {
-
-        for (auto const& entityId : mEntities) {
-            UE_Vector::Vector2D customVectorSize;
-            UE_Vector::Vector2D customVectorPosition;
-
-            MovementComponent& movement = ecsInterface.GetComponent<MovementComponent>(entityId);
-            CollisionComponent& collision = ecsInterface.GetComponent<CollisionComponent>(entityId);
-            TransformComponent& transform = ecsInterface.GetComponent<TransformComponent>(entityId);
-            customVectorSize.x = transform.scale.x;
-            customVectorSize.y = transform.scale.y;
-            customVectorPosition.x = transform.position.x;
-            customVectorPosition.y = transform.position.y;
-            // Check and apply movement for player objects based on input
-            collision.aabb.max = UE_AABBPositionMax(transform.scale, transform.position);
-            collision.aabb.min = UE_AABBPositionMin(customVectorSize.x, customVectorSize.y, customVectorPosition.x, customVectorPosition.y);
-            if (collision.type == ObjectType::Player) {
-                static float baseX = abs(movement.velocity.x);
-                static float baseY = abs(movement.velocity.y);
-
-                // Handle movement and update AABB bounds based on player input
-                if (InputHandlerInstance->IsKeyHeld(GLFW_KEY_UP)) {
-                    movement.velocity.y = baseY;
-                    if (!(movement.velocity.y <= 0)) {
-                        movement.velocity.y = -(movement.velocity.y);
-                    }
-                }
-                else if (InputHandlerInstance->IsKeyHeld(GLFW_KEY_LEFT)) {
-                    movement.velocity.x = baseX;
-                    if (!(movement.velocity.x <= 0)) {
-                        movement.velocity.x = -(movement.velocity.x);
-                    }
-                }
-                else if (InputHandlerInstance->IsKeyHeld(GLFW_KEY_DOWN)) {
-                    movement.velocity.y = baseY;
-                    movement.velocity.y = abs(movement.velocity.y);
-                }
-                else if (InputHandlerInstance->IsKeyHeld(GLFW_KEY_RIGHT)) {
-                    movement.velocity.x = baseX;
-                    movement.velocity.x = abs(movement.velocity.x);
-                }
-                else {
-                    movement.velocity.x = 0;
-                    movement.velocity.y = 0;
-                }
-
-                transform.position.y += movement.velocity.y * deltaTime;
-                collision.aabb.max.y += movement.velocity.y * deltaTime;
-                collision.aabb.min.y += movement.velocity.y * deltaTime;
-                transform.position.x += movement.velocity.x * deltaTime;
-                collision.aabb.max.x += movement.velocity.x * deltaTime;
-                collision.aabb.min.x += movement.velocity.x * deltaTime;
-            }
-            else {
-                transform.position.y += movement.velocity.y * deltaTime;
-                collision.aabb.max.y += movement.velocity.y * deltaTime;
-                collision.aabb.min.y += movement.velocity.y * deltaTime;
-                transform.position.x += movement.velocity.x * deltaTime;
-                collision.aabb.max.x += movement.velocity.x * deltaTime;
-                collision.aabb.min.x += movement.velocity.x * deltaTime;
-            }
+    // Basic filters
+    class MyBroadPhaseLayerInterface final : public BroadPhaseLayerInterface {
+    public:
+        uint GetNumBroadPhaseLayers() const override { return 2; }
+        BroadPhaseLayer GetBroadPhaseLayer(ObjectLayer layer) const override {
+            return (layer == Layers::NON_MOVING) ? BroadPhaseLayer(0) : BroadPhaseLayer(1);
         }
+#if defined(JPH_EXTERNAL_PROFILE) || defined(JPH_PROFILE_ENABLED)
+        const char* GetBroadPhaseLayerName(BroadPhaseLayer layer) const override {
+            return layer.GetValue() == 0 ? "NON_MOVING" : "MOVING";
+        }
+#endif
+    };
+    class MyObjectVsBroadPhaseLayerFilter : public ObjectVsBroadPhaseLayerFilter {
+    public:
+        bool ShouldCollide(ObjectLayer, BroadPhaseLayer) const override { return true; }
+    };
+    class MyObjectLayerPairFilter : public ObjectLayerPairFilter {
+    public:
+        bool ShouldCollide(ObjectLayer, ObjectLayer) const override { return true; }
+    };
+
+    void PhysicsSystem::Init()
+    {
+        // =============================
+        // Jolt core setup
+        // =============================
+        RegisterDefaultAllocator();
+        Factory::sInstance = new Factory();
+        RegisterTypes();
+
+        const uint cMaxBodies = 1024;
+        const uint cNumBodyMutexes = 0;
+        const uint cMaxBodyPairs = 1024;
+        const uint cMaxContactConstraints = 1024;
+
+        m_Allocator = new TempAllocatorImpl(10 * 1024 * 1024);
+
+        uint ThreadCount = std::thread::hardware_concurrency();
+        if (ThreadCount == 0) ThreadCount = 4;
+
+        const uint cMaxPhysicsJobs = 1024;
+        const uint cMaxPhysicsBarriers = 8;
+
+        m_JobSystem = new JPH::JobSystemThreadPool(cMaxPhysicsJobs, cMaxPhysicsBarriers, ThreadCount);
+
+        // =============================
+        // Broadphase / collision filters
+        // =============================
+        static MyBroadPhaseLayerInterface broadPhase;
+        static MyObjectVsBroadPhaseLayerFilter broadPhaseFilter;
+        static MyObjectLayerPairFilter pairFilter;
+
+        m_System.Init(cMaxBodies, cNumBodyMutexes, cMaxBodyPairs, cMaxContactConstraints,
+            broadPhase, broadPhaseFilter, pairFilter);
+        m_System.SetGravity(Vec3(0, -9.81f, 0));
+
+        // =============================
+        // Create cube (for raycast demo)
+        // =============================
+        BodyInterface& bi = m_System.GetBodyInterface();
+
+        BoxShapeSettings cubeShape(Vec3(1.0f, 1.0f, 1.0f)); // 2x2x2 cube total
+        ShapeRefC shape = cubeShape.Create().Get();
+
+        BodyCreationSettings settings(
+            shape,
+            RVec3(0, 2, 0),            // position
+            Quat::sIdentity(),         // rotation
+            EMotionType::Static,       // not moving for now
+            Layers::NON_MOVING         // our layer
+        );
+
+        Body* cube = bi.CreateBody(settings);
+        bi.AddBody(cube->GetID(), EActivation::DontActivate);
+        m_CubeID = cube->GetID();
+
+        // Initialize face colors (all red)
+        for (auto& c : m_FaceColors)
+            c = Vec3(1, 0, 0);
+
+        std::cout << "[Physics] Jolt initialized successfully with cube demo.\n";
     }
 
-    bool PhysicsSystem::InRange3D(const glm::vec3& from,
-        const glm::vec3& to,
-        float maxDistance) const
-    {
-        const float maxDist2 = maxDistance * maxDistance;
-        const glm::vec3 d = to - from;
-        return glm::dot(d, d) <= maxDist2;
+
+    void PhysicsSystem::Update(float dt) {
+        m_System.Update(dt, 1, m_Allocator, m_JobSystem);
     }
 
-    bool PhysicsSystem::InSight3D(const glm::vec3& eyePos,
-        const glm::vec3& forwardDir,
-        const glm::vec3& targetPos,
-        float maxDistance,
-        float fovDegrees,
-        const std::function<bool(const glm::vec3&, const glm::vec3&, float&)>& raycast) const
+    bool Framework::PhysicsSystem::CastRay(const JPH::RVec3& origin, const JPH::Vec3& direction, float maxDistance, JPH::RayCastResult& outResult)
     {
-        // Vector and distance to target
-        glm::vec3 toT = targetPos - eyePos;
-        const float dist = glm::length(toT);
-        if (dist <= 0.0f) return true;               // same point
-        if (dist > maxDistance) return false;        // out of range
+        using namespace JPH;
 
-        // Normalize
-        toT /= dist;
+        // Create a ray definition (origin + direction * distance)
+        RRayCast ray(origin, direction * maxDistance);
+        RayCastResult result;
 
-        // FOV check (half-angle)
-        const float halfFovRad = glm::radians(fovDegrees * 0.5f);
-        const float cosHalfFov = std::cos(halfFovRad);
+        // Default filters (all optional in your version)
+        if (m_System.GetNarrowPhaseQuery().CastRay(ray, result))
+        {
+            outResult = result;
+            return true;
+        }
 
-        glm::vec3 fwd = forwardDir;
-        const float fwdLen = glm::length(fwd);
-        if (fwdLen <= 0.0f) return false;            // invalid forward
-        fwd /= fwdLen;
 
-        if (glm::dot(fwd, toT) < cosHalfFov) return false; // outside cone
+        return false; // No hit
+    }
 
-        // Optional occlusion (raycast): if something is hit BEFORE the target, LOS is blocked
-        if (raycast) {
-            float hitT = 0.0f;
-            if (raycast(eyePos, toT, hitT)) {
-                // If your raycast returns hitT in world units, compare with dist.
-                if (hitT > 0.0f && hitT < dist) {
-                    return false; // blocked
+    void PhysicsSystem::CubeInteraction(const RVec3& camPos, const Vec3& rayDir, bool click, bool hold, float deltaX, float deltaY)
+    {
+        RRayCast ray(camPos, rayDir * 100.0f);
+        RayCastResult hit;
+
+        if (m_System.GetNarrowPhaseQuery().CastRay(ray, hit))
+        {
+            if (hit.mBodyID == m_CubeID)
+            {
+                // ---- CLICK EVENT ----
+                if (click)
+                {
+                    std::cout << "Cube clicked! Face ID: " << hit.mSubShapeID2.GetValue() << std::endl;
+
+                    // Change color to green for clicked face
+                    int face = hit.mSubShapeID2.GetValue() % 6;
+                    m_FaceColors[face] = Vec3(0, 1, 0);
+                    m_Selected = true;
+                }
+
+                // ---- ROTATE WHILE HOLD ----
+                if (hold && m_Selected)
+                {
+                    BodyInterface& bi = m_System.GetBodyInterface();
+                    Quat rotation = Quat::sRotation(Vec3::sAxisY(), deltaX * 0.01f) *
+                        Quat::sRotation(Vec3::sAxisX(), deltaY * 0.01f);
+                    bi.SetRotation(m_CubeID, rotation * bi.GetRotation(m_CubeID), JPH::EActivation::DontActivate);
                 }
             }
         }
-
-        return true; // in range, inside FOV, and (optionally) unobstructed
+        else
+        {
+            m_Selected = false;
+        }
     }
 
+
+    void PhysicsSystem::Shutdown() {
+        delete m_Allocator;
+        delete m_JobSystem;
+        delete Factory::sInstance;
+    }
 
 }
