@@ -67,10 +67,12 @@ namespace Framework {
 
 		glfwPollEvents();  // Poll events for GLFW, key pressed and key released
 
-		if (IsKeyPressed(GLFW_KEY_TAB)) {
+		if (IsKeyPressed(GLFW_KEY_TAB)) 
+		{
 			isUIFocused = !isUIFocused; // Flip the state
 
-			if (isUIFocused) {
+			if (isUIFocused) 
+			{
 				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 			}
 			else {
@@ -99,10 +101,9 @@ namespace Framework {
 				//std::cout << "W key is being held down (move forward)" << std::endl;
 			}
 
-			if (IsKeyPressed(GLFW_KEY_F1))
+			if (IsKeyReleased(GLFW_KEY_F1))
 			{
 				engineState.SetPlay(!engineState.IsPlay());
-
 			}
 
 			if (IsKeyPressed(GLFW_KEY_F4))

@@ -1,0 +1,40 @@
+{
+    "textureAssets": [
+        {
+            "name": "globe",
+            "path": "images/test.png"
+        },
+        {
+            "name": "background",
+            "path": "images/background_main.png"
+        },
+        {
+            "name": "walkleft",
+            "path": "images/walkleft.png"
+        },
+        {
+            "name": "walkright",
+            "path": "images/walkright.png"
+        },
+        {
+            "name": "fire",
+            "path": "./images/armored_pro.png"
+        },
+        {
+            "name": "mainchar",
+            "path": "images/mainchar.png"
+        },
+        {
+            "name": "idle",
+            "path": "images/idle.png"
+        },
+        {
+            "name": "blackback",
+            "path": "images/BlackBack.png"
+        },
+        {
+            "name": "textbox",
+            "path": "./images/Textbox.png"
+        }
+    ]
+}
