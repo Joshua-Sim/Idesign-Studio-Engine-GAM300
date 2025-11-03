@@ -132,12 +132,12 @@ namespace Framework {
         glEnable(GL_DEPTH_TEST);
 
         //// set callbacks
-        //glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+        glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
         //// IMPORTANT: always store Graphics* as user pointer, not Camera*
-        //glfwSetWindowUserPointer(window, &camera);
-        ////glfwSetCursorPosCallback(window, mouse_callback);
-        //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        glfwSetWindowUserPointer(window, this);
+        glfwSetCursorPosCallback(window, mouse_callback);
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
         // Register Graphics related Component
         ecsInterface.RegisterComponent<TransformComponent>();
@@ -393,7 +393,7 @@ namespace Framework {
         glViewport(0, 0, w, h);
         glClearColor(0.07f, 0.09f, 0.12f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+        Camera& camera = gameCamera;
         glm::mat4 proj = camera.getProjectionMatrix((float)w, (float)h);
         glm::mat4 view = camera.getViewMatrix();
 
@@ -663,11 +663,25 @@ namespace Framework {
         }
 
 
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+       // glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         // rotate buffers so we read the *previous* one this frame
         std::swap(pickWrite, pickRead);
+        // READBACK for VIEW 0 (main viewport)
+        if (pendingPickUV0.x >= 0.0f && pendingPickUV0.y >= 0.0f) {
+            int pw = 1280, ph = 720;
+            int px = glm::clamp(int(pendingPickUV0.x * pw), 0, pw - 1);
+            int py = glm::clamp(int(pendingPickUV0.y * ph), 0, ph - 1);
 
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, pickFBO[pickRead]);
+            unsigned char rgb[3] = { 0,0,0 };
+            glReadPixels(px, py, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, rgb);
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+
+            uint32_t id = (uint32_t)rgb[0] | ((uint32_t)rgb[1] << 8) | ((uint32_t)rgb[2] << 16);
+            lastPickedId = (id == 0) ? -1 : int(id) - 1;
+            pendingPickUV0 = { -1.0f, -1.0f };
+        }
         // ====================================================================
         // 2. BLOOM PASS: Apply a two-pass Gaussian blur
         // ====================================================================
@@ -684,12 +698,13 @@ namespace Framework {
             horizontal = !horizontal;
             if (first_iteration) first_iteration = false;
         }
-
+        int mainIdx = m_imguiManager->GetMainViewIndex();
+        int secIdx = (mainIdx == 0) ? 1 : 0;
         // ====================================================================
         // 3. FINAL PASS: Render to screen with tone mapping and bloom
         // ====================================================================
 
-        glBindFramebuffer(GL_FRAMEBUFFER, m_imguiManager->GetGameFramebuffer());
+        glBindFramebuffer(GL_FRAMEBUFFER, m_imguiManager->GetGameFramebuffer(0));
         glViewport(0, 0, w, h);
         glClear(GL_COLOR_BUFFER_BIT);
 
@@ -754,6 +769,182 @@ namespace Framework {
                 std::cout << "Picked entity: " << lastPickedId << "\n";
             }
         }
+         // ======================= VIEW 1 : SCENE (free-fly) ==========================
+        {
+            // Scene pass -> HDR
+            glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
+            glEnable(GL_DEPTH_TEST);
+
+            // reuse the same w,h computed earlier
+            glViewport(0, 0, w, h);
+            glClearColor(0.07f, 0.09f, 0.12f, 1.f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            // Use the FREE-FLY camera for this pass
+            Camera& cam1 = sceneCamera;                 // <--- different camera
+            glm::mat4 proj1 = cam1.getProjectionMatrix((float)w, (float)h);
+            glm::mat4 view1 = cam1.getViewMatrix();
+
+            // (No groundMode lock for sceneCamera)
+
+            // --- Terrain ---
+            terrainShader.use();
+            terrainShader.setMat4("uProj", proj1);
+            terrainShader.setMat4("uView", view1);
+            terrainShader.setMat4("uModel", glm::mat4(1.f));
+            terrainShader.setVec3("uAlbedo", { 0.6f,0.4f,0.2f });
+            LightComponent::upload(terrainShader, sun, hasSun, pointLights, spotLights);
+            terrain.draw();
+
+            // --- Mesh (textured) ---
+            meshShader.use();
+            meshShader.setMat4("uProj", proj1);
+            meshShader.setMat4("uView", view1);
+
+            int sel1 = lastPickedId;
+            const glm::vec3 kNormalAlbedo(1.0f, 1.0f, 1.0f);
+            const glm::vec3 kHighlightAlbedo(1.0f, 0.85f, 0.3f);
+
+            for (auto const& entityId : mEntities) {
+                auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
+
+                glm::mat4 model(1.0f);
+                model = glm::translate(model, tr.position);
+                model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
+                model = glm::rotate(model, glm::radians(tr.rotation.y), { 0,1,0 });
+                model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
+                model = glm::scale(model, tr.scale);
+
+                if (ecsInterface.HasComponent<TextProperties>(entityId)) {
+                    auto& txt = ecsInterface.GetComponent<TextProperties>(entityId);
+                    fontSystem.RenderText3D(txt.text, model, view1, proj1, txt.scale, txt.color);
+                }
+
+                if (ecsInterface.HasComponent<MeshProperties>(entityId)) {
+                    auto& m = ecsInterface.GetComponent<MeshProperties>(entityId);
+                    if (m.debugShape == DebugShapeType::None) {
+                        meshShader.use();
+                        meshShader.setMat4("uProj", proj1);
+                        meshShader.setMat4("uView", view1);
+                        meshShader.setMat4("uModel", model);
+
+                        const bool isSelected = (int)entityId == sel1;
+                        meshShader.setVec3("uAlbedo", isSelected ? kHighlightAlbedo : kNormalAlbedo);
+                        LightComponent::upload(meshShader, sun, hasSun, pointLights, spotLights);
+
+                        glActiveTexture(GL_TEXTURE0);
+                        meshShader.setInt("uTexture", 0);
+                        if (ecsInterface.HasComponent<TextureProperties>(entityId)) {
+                            auto& tex = ecsInterface.GetComponent<TextureProperties>(entityId);
+                            glBindTexture(GL_TEXTURE_2D, tex.textureID);
+                        }
+                        else {
+                            glBindTexture(GL_TEXTURE_2D, 0);
+                        }
+
+                        glBindVertexArray(m.vao);
+                        glDrawElements(GL_TRIANGLES, m.indexCount, GL_UNSIGNED_INT, 0);
+                    }
+                    else {
+                        auto it = m_debugMeshes.find(m.debugShape);
+                        if (it != m_debugMeshes.end()) {
+                            DrawDebugMesh(it->second, m.debugcolor, model, proj1, view1);
+                        }
+                    }
+                }
+            }
+
+            // (Optional) your 5 primitives again for view 1
+            for (int i = 0; i < 5; ++i) {
+                glm::mat4 model(1.0f);
+                model = glm::translate(model, glm::vec3((i - 2) * 1.7f, 0.0f, 0.0f));
+                meshShader.setMat4("uModel", model);
+                cylinder.draw();
+            }
+
+            // --- PICK PASS for view 1 (reuses same pick FBOs sequentially) ---
+            glBindFramebuffer(GL_FRAMEBUFFER, pickFBO[pickWrite]);
+            glViewport(0, 0, w, h);
+            glEnable(GL_DEPTH_TEST);
+            glClearColor(0, 0, 0, 0);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            pickShader.use();
+            pickShader.setMat4("uProj", proj1);
+            pickShader.setMat4("uView", view1);
+
+            for (auto const& entityId : mEntities) {
+                auto& t = ecsInterface.GetComponent<TransformComponent>(entityId);
+                glm::mat4 model(1.0f);
+                model = glm::translate(model, t.position);
+                model = glm::rotate(model, t.rotation.x, glm::vec3(1, 0, 0));
+                model = glm::rotate(model, t.rotation.y, glm::vec3(0, 1, 0));
+                model = glm::rotate(model, t.rotation.z, glm::vec3(0, 0, 1));
+                model = glm::scale(model, t.scale);
+                pickShader.setMat4("uModel", model);
+
+                uint32_t id = static_cast<uint32_t>(entityId) + 1u;
+                glm::vec3 idColor = {
+                    ((id) & 0xFF) / 255.0f,
+                    ((id >> 8) & 0xFF) / 255.0f,
+                    ((id >> 16) & 0xFF) / 255.0f
+                };
+                pickShader.setVec3("uIdColor", idColor);
+
+                if (ecsInterface.HasComponent<MeshProperties>(entityId)) {
+                    auto& mc = ecsInterface.GetComponent<MeshProperties>(entityId);
+                    glBindVertexArray(mc.vao);
+                    glDrawElements(GL_TRIANGLES, mc.indexCount, GL_UNSIGNED_INT, 0);
+                }
+            }
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            std::swap(pickWrite, pickRead);
+
+            // --- BLOOM (reuse same code) ---
+            glDisable(GL_DEPTH_TEST);
+            bool horizontal1 = true, first_iteration1 = true;
+            unsigned int amount1 = 10;
+            blurShader.use();
+            for (unsigned int i = 0; i < amount1; i++) {
+                glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[horizontal1]);
+                blurShader.setBool("horizontal", horizontal1);
+                glBindTexture(GL_TEXTURE_2D, first_iteration1 ? colorBuffer : pingpongColorbuffers[!horizontal1]);
+                renderQuad();
+                horizontal1 = !horizontal1;
+                if (first_iteration1) first_iteration1 = false;
+            }
+
+            // --- FINAL PASS to SECOND ImGui target ---
+            glBindFramebuffer(GL_FRAMEBUFFER, m_imguiManager->GetGameFramebuffer(1));
+            glViewport(0, 0, w, h);
+            glClear(GL_COLOR_BUFFER_BIT);
+
+            finalShader.use();
+            glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, colorBuffer);
+            glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[!horizontal1]);
+            finalShader.setInt("sceneTexture", 0);
+            finalShader.setInt("bloomTexture", 1);
+            finalShader.setFloat("exposure", hdrExposure);
+            finalShader.setFloat("bloomStrength", bloomStrength);
+            renderQuad();
+
+            // Optional HUD for view 1
+            fontSystem.RenderText2D("Editor View", 10.f, 10.f, 1.f, { 1,1,0.5f }, (float)w, (float)h);
+            // 3D world-space text (needs depth test and the view1/proj1 matrices)
+            glEnable(GL_DEPTH_TEST);
+            glm::mat4 textModel1(1.0f);
+            textModel1 = glm::translate(textModel1, glm::vec3(0.0f, 5.0f, 0.0f));
+            fontSystem.RenderText3D("iDesign Engine by iDesign Studio",
+                textModel1, /*model*/
+                view1,      /*the secondary view's view matrix*/
+                proj1,      /*the secondary view's projection matrix*/
+                0.05f,
+                glm::vec3(1.0f, 1.0f, 0.5f));
+            glDisable(GL_DEPTH_TEST);
+            // Optional: handle a second view pick here if you use per-view pending UVs
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        }
+        // ===================== END VIEW 1 : SCENE (free-fly) ========================
 
         //Showing FPS
         double currentTime = glfwGetTime();
@@ -793,13 +984,13 @@ namespace Framework {
     // Get and return windows ptr for external system
     GLFWwindow* Graphics::GetWindow() {
         return window;
-        
+
     }
 
 
 
     Camera* Graphics::getCamera() {
-        return &camera;
+        return &cam;
     }
 
     void Graphics::framebuffer_size_callback(GLFWwindow* window, int w, int h)
@@ -807,7 +998,13 @@ namespace Framework {
         glViewport(0, 0, w, h);
     }
     void Graphics::RequestPickUV(float u, float v) {
-        pendingPickUV = glm::vec2(u, v);
+        pendingPickUV0 = glm::vec2(u, v);
+    }
+    void Graphics::RequestPickUVSecondary(float u, float v) {
+        pendingPickUV1 = glm::vec2(u, v);
+    }
+    void Graphics::SetPickViewIndex(int index) {
+        pickViewIndex = (index <= 0) ? 0 : 1;
     }
     // DO NOT CHANGE
     void Graphics::mouse_callback(GLFWwindow* window, double xpos, double ypos)
@@ -817,26 +1014,67 @@ namespace Framework {
         static float lastY = config->y * 0.5f;
 
         if (!mouseCaptured) return;
-        if (firstMouse) { lastX = (float)xpos; lastY = (float)ypos; firstMouse = false; }
+        if (firstMouse) {
+            lastX = (float)xpos;
+            lastY = (float)ypos;
+            firstMouse = false;
+            return;
+        }
         float xoffset = (float)xpos - lastX;
         float yoffset = lastY - (float)ypos; // reversed: y ranges bottom->top
-        lastX = (float)xpos; lastY = (float)ypos;
+        lastX = (float)xpos;
+        lastY = (float)ypos;
 
-        Camera* cam = reinterpret_cast<Camera*>(glfwGetWindowUserPointer(window));
-        cam->processMouseMovement(xoffset, yoffset);
+        auto* g = static_cast<Graphics*>(glfwGetWindowUserPointer(window));
+        if (!g) return;
+        if (!g->mouseCaptured) return;
+
+        Camera& cam = (g->m_mouseTargetView == 1) ? g->sceneCamera : g->gameCamera;
+        cam.processMouseMovement(xoffset, yoffset);
     }
 
     // FOR FUTURE REFERENCE
     // Can be pushed to input handler
     void Graphics::process_input(float dt)
     {
-        if (glfwGetKey(window, GLFW_KEY_F1) == GLFW_PRESS) groundMode = !groundMode;
+        const bool editorActive = (m_mouseTargetView == 1);       // 0 = grounded(game), 1 = editor
+        Camera& cam = editorActive ? sceneCamera : gameCamera;    // was: Camera& cam = GetActiveCamera();
 
-        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) camera.processKeyboard(Camera::Movement::Forward, dt, groundMode, terrain);
-        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) camera.processKeyboard(Camera::Movement::Backward, dt, groundMode, terrain);
-        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) camera.processKeyboard(Camera::Movement::Left, dt, groundMode, terrain);
-        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) camera.processKeyboard(Camera::Movement::Right, dt, groundMode, terrain);
+        // Switch between Scene <-> Game camera
+        if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS)
+        {
+            activeCameraMode = CameraMode::Scene;
+            groundMode = false;          // disable ground lock
+            std::cout << "Switched to Scene Camera (noclip)\n";
+        }
+        if (glfwGetKey(window, GLFW_KEY_F3) == GLFW_PRESS)
+        {
+            activeCameraMode = CameraMode::Game;
+            groundMode = true;           // enable ground stick
+            std::cout << "Switched to Game Camera (grounded)\n";
+        }
 
+        // Movement control
+        const bool useGround = (!editorActive) && groundMode;
+
+        // Movement control
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+            cam.processKeyboard(Camera::Movement::Forward, dt, useGround, terrain);
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+            cam.processKeyboard(Camera::Movement::Backward, dt, useGround, terrain);
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+            cam.processKeyboard(Camera::Movement::Left, dt, useGround, terrain);
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+            cam.processKeyboard(Camera::Movement::Right, dt, useGround, terrain);
+
+        //  CHANGED: free-fly vertical only when not grounded
+        if (!useGround)
+        {
+            if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+                cam.processKeyboard(Camera::Movement::Up, dt, false, terrain);
+            if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+                cam.processKeyboard(Camera::Movement::Down, dt, false, terrain);
+        }
 
         //lighting
         if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
@@ -862,18 +1100,18 @@ namespace Framework {
     }
 
     void Graphics::MoveCameraFromLua(const std::string& dir, float dt, bool gm) {
-        if (dir == "W") camera.processKeyboard(Camera::Movement::Forward, dt, gm, terrain);
-        else if (dir == "S") camera.processKeyboard(Camera::Movement::Backward, dt, gm, terrain);
-        else if (dir == "A") camera.processKeyboard(Camera::Movement::Left, dt, gm, terrain);
-        else if (dir == "D") camera.processKeyboard(Camera::Movement::Right, dt, gm, terrain);
+        //if (dir == "W") cam.processKeyboard(Camera::Movement::Forward, dt, gm, terrain);
+        //else if (dir == "S") cam.processKeyboard(Camera::Movement::Backward, dt, gm, terrain);
+        //else if (dir == "A") cam.processKeyboard(Camera::Movement::Left, dt, gm, terrain);
+        //else if (dir == "D") cam.processKeyboard(Camera::Movement::Right, dt, gm, terrain);
     }
 
     void Graphics::NudgeLightFromLua(const std::string& axis, float amount) {
-        if (pointLights.empty()) return;
-        if (axis == "up")    pointLights[0].position.z -= amount;
-        else if (axis == "down")  pointLights[0].position.z += amount;
-        else if (axis == "left")  pointLights[0].position.x -= amount;
-        else if (axis == "right") pointLights[0].position.x += amount;
+        //if (pointLights.empty()) return;
+        //if (axis == "up")    pointLights[0].position.z -= amount;
+        //else if (axis == "down")  pointLights[0].position.z += amount;
+        //else if (axis == "left")  pointLights[0].position.x -= amount;
+        //else if (axis == "right") pointLights[0].position.x += amount;
     }
 
     void Graphics::ToggleMainLightFromLua() {
@@ -881,13 +1119,19 @@ namespace Framework {
         pointLights[0].enabled = !pointLights[0].enabled;
     }
 
-    void Graphics::SetHDRFromLua(float delta) { hdrExposure = std::max(0.0f, hdrExposure + delta);}
-    void Graphics::SetBloomFromLua(float delta) { bloomStrength = std::max(0.0f, bloomStrength + delta);}
+    void Graphics::SetHDRFromLua(float delta) { hdrExposure = std::max(0.0f, hdrExposure + delta); }
+    void Graphics::SetBloomFromLua(float delta) { bloomStrength = std::max(0.0f, bloomStrength + delta); }
     void Graphics::SetGroundModeFromLua(bool gm) { groundMode = gm; }
     bool Graphics::GetGroundModeFromLua() const { return groundMode; }
 
     void Graphics::SetScriptControlEnabled(bool on) { scriptControl_ = on; }
     bool Graphics::IsScriptControlEnabled() const { return scriptControl_; }
+    int  Graphics::GetMouseTargetView() const { return m_mouseTargetView; }
+
+    void Graphics::CaptureMouse(bool on) {
+        mouseCaptured = on;
+        glfwSetInputMode(window, GLFW_CURSOR, on ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
+    }
 
     void Graphics::renderQuad()
     {
@@ -914,6 +1158,98 @@ namespace Framework {
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         glBindVertexArray(0);
     }
+    //JAY
+    void Graphics::RenderViewToFramebuffer(Camera& viewCam, GLuint imguiTargetFBO,
+        int screenW, int screenH, int viewIndex)
+    {
+        // === 1) Scene pass -> HDR ===
+        glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
+        glEnable(GL_DEPTH_TEST);
+        glViewport(0, 0, screenW, screenH);
+        glClearColor(0.07f, 0.09f, 0.12f, 1.f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glm::mat4 proj = viewCam.getProjectionMatrix((float)screenW, (float)screenH);
+        glm::mat4 view = viewCam.getViewMatrix();
+
+        // --- Terrain ---
+        terrainShader.use();
+        terrainShader.setMat4("uProj", proj);
+        terrainShader.setMat4("uView", view);
+        terrainShader.setMat4("uModel", glm::mat4(1.f));
+        terrainShader.setVec3("uAlbedo", { 0.6f,0.4f,0.2f });
+        LightComponent::upload(terrainShader, sun, hasSun, pointLights, spotLights);
+        terrain.draw();
+
+        // --- ECS meshes (copy your existing mesh draw loop here; use meshShader, etc.) ---
+        // ... (your ECS loop that sets uModel, uAlbedo, binds texture, glDrawElements)
+
+        // === PICK PASS for this view (render IDs to the per-view pick FBO) ===
+        glBindFramebuffer(GL_FRAMEBUFFER, pickFBO[pickWrite]);   // if you later split per-view, index by viewIndex
+        glViewport(0, 0, screenW, screenH);
+        glEnable(GL_DEPTH_TEST);
+        glClearColor(0, 0, 0, 0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        pickShader.use();
+        pickShader.setMat4("uProj", proj);
+        pickShader.setMat4("uView", view);
+
+        // ... (your ECS picking draw loop that encodes uIdColor and draws)
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        std::swap(pickWrite, pickRead);       // if you split per-view, swap pickWrite[viewIndex], pickRead[viewIndex]
+
+        // === 2) Bloom blur ===
+        glDisable(GL_DEPTH_TEST);
+        bool horizontal = true, first_iteration = true;
+        unsigned int amount = 10;
+        blurShader.use();
+        for (unsigned int i = 0; i < amount; i++) {
+            glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[horizontal]);
+            blurShader.setBool("horizontal", horizontal);
+            glBindTexture(GL_TEXTURE_2D, first_iteration ? colorBuffer : pingpongColorbuffers[!horizontal]);
+            renderQuad();
+            horizontal = !horizontal;
+            if (first_iteration) first_iteration = false;
+        }
+
+        // === 3) Final composite into the target ImGui FBO ===
+        glBindFramebuffer(GL_FRAMEBUFFER, imguiTargetFBO);
+        glViewport(0, 0, screenW, screenH);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        finalShader.use();
+        glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, colorBuffer);
+        glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[!horizontal]);
+        finalShader.setInt("sceneTexture", 0);
+        finalShader.setInt("bloomTexture", 1);
+        finalShader.setFloat("exposure", hdrExposure);
+        finalShader.setFloat("bloomStrength", bloomStrength);
+        renderQuad();
+
+        // === Optional: per-view HUD/text ===
+        // fontSystem.RenderText2D("Score: 100", 10.f, 10.f, 1.f, {1,1,0.5f}, (float)screenW, (float)screenH);
+
+        // === Handle a queued pick for THIS view ===
+        if (pendingPickUV.x >= 0.0f && pendingPickUV.y >= 0.0f) {
+            int px = glm::clamp(int(pendingPickUV.x * screenW), 0, screenW - 1);
+            int py = glm::clamp(int(pendingPickUV.y * screenH), 0, screenH - 1);
+            unsigned char rgb[3] = { 0,0,0 };
+
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, pickFBO[pickRead]); // per-view if split
+            glReadPixels(px, py, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, rgb);
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+
+            uint32_t id = (uint32_t)rgb[0] | ((uint32_t)rgb[1] << 8) | ((uint32_t)rgb[2] << 16);
+            lastPickedId = (id == 0) ? -1 : int(id) - 1;               // per-view if you track separate IDs
+            pendingPickUV = { -1.f, -1.f };
+        }
+
+        // leave bound to the ImGui target; ImGui will consume the texture later
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
 
     //For ImGUI 
     GLuint Graphics::CreateFramebuffer(int width, int height, GLuint& texture, GLuint& rbo_fb)
