@@ -21,6 +21,8 @@
 #include "NavMeshSystem.h"
 #include "Imgui_Hierarchy.h"
 #include "NavMeshProperties.h"
+#include <FileCheckSystem.h>
+#include <ScriptingSystem.h>
 
 extern Framework::Coordinator ecsInterface;
 
@@ -39,6 +41,7 @@ namespace Framework {
     GLuint gameFramebuffer{}, gameTexture{}, rbo{};
     bool print_out = false;
     static std::string filePath{};
+    static std::vector<Framework::FileEvent> pendingEvents;
 
     // Error message and flag for popup
     std::string errorMessage;
@@ -131,6 +134,70 @@ namespace Framework {
             return fullPath;
         }
         return "";
+    }
+
+    //FILE CHECKING
+    void ImguiManager::DrawHotReloadPrompt()
+    {
+        auto fileCheckSystem = ecsInterface.GetSystem<Framework::FileCheckSystem>();
+        auto scriptingSystem = ecsInterface.GetSystem<Framework::ScriptingSystem>();
+
+        // Step 1: poll new file events
+        Framework::FileEvent ev;
+        static std::unordered_map<std::string, double> lastHandled;
+        double now = ImGui::GetTime();
+        int pulled = 0;
+        while (fileCheckSystem->PopEvent(ev)) {
+            ++pulled;
+
+            if (m_autoReload)
+            {
+                // simple debounce (avoid multiple reloads per save)
+                if (now - lastHandled[ev.path] > 0.35)
+                {
+                    lastHandled[ev.path] = now;
+
+                    // Reload script files only
+                    if (std::filesystem::path(ev.path).extension() == ".lua")
+                    {
+                        if (scriptingSystem)
+                            scriptingSystem->HotReloadScript(ev.path);
+
+                        std::cout << "[AutoReload] " << ev.path << "\n";
+                    }
+                }
+            }
+            else
+            {
+                // Prompt mode → push to pending
+                pendingEvents.push_back(ev);
+            }
+        }
+
+        if (m_autoReload) return;
+        //std::cout << "[HotReload] pulled this frame: " << pulled << " | pendingEvents: " << pendingEvents.size() << "\n";
+
+        // Step 2: draw prompt if any
+        if (!pendingEvents.empty()) {
+            ImGui::OpenPopup("Hot Reload");
+        }
+        if (ImGui::BeginPopupModal("Hot Reload", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+            auto& ev = pendingEvents.front();
+            ImGui::TextWrapped("File changed:\n%s", ev.path.c_str());
+            if (ImGui::Button("Hot Reload")) {
+                if (auto scripting = ecsInterface.GetSystem<Framework::ScriptingSystem>()) {
+                    scripting->HotReloadScript(ev.path);
+                }
+                pendingEvents.erase(pendingEvents.begin());
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Ignore")) {
+                pendingEvents.erase(pendingEvents.begin());
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
+        }
     }
 
     // Error Detection for Audio
@@ -386,6 +453,7 @@ namespace Framework {
 
             RenderEntityMenu();
 
+            DrawHotReloadPrompt();
         }
         // Render ImGui
         ImGui::Render();

@@ -164,6 +164,7 @@
     <ClInclude Include="src\ECSystemManager.h" />
     <ClInclude Include="src\EngineState.h" />
     <ClInclude Include="src\EntityManager.h" />
+    <ClInclude Include="src\FileCheckSystem.h" />
     <ClInclude Include="src\FontShader.h" />
     <ClInclude Include="src\FontSystem.h" />
     <ClInclude Include="src\Graphics.h" />
@@ -313,6 +314,7 @@
     <ClCompile Include="src\DummySystem.cpp" />
     <ClCompile Include="src\EngineState.cpp" />
     <ClCompile Include="src\EntityManager.cpp" />
+    <ClCompile Include="src\FileCheckSystem.cpp" />
     <ClCompile Include="src\FontSystem.cpp" />
     <ClCompile Include="src\Graphics.cpp" />
     <ClCompile Include="src\GraphicsShader.cpp" />

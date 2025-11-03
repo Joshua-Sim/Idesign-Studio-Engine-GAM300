@@ -1,17 +1,23 @@
 local M = {}
 
+-- GLFW keycodes (you can move this table somewhere global later)
+local K = {
+  F = 70   -- F key
+}
+
 function M:on_init()
   print("[Lua] hello.lua on_init")
 end
 
 function M:on_update(dt)
-  -- print a heartbeat to prove it's running every frame
-  -- comment this out if it’s too spammy
-  -- print(string.format("[Lua] on_update dt=%.4f", dt))
+  -- Only trigger the message if key F is pressed
+  if IsKeyDown(K.F) then
+    self:on_event("F key pressed!")
+  end
 end
 
 function M:on_event(name)
-  print("What's Up My Niglets " .. tostring(name))
+  print("What's up my niglets! " .. tostring(name))
 end
 
 return M

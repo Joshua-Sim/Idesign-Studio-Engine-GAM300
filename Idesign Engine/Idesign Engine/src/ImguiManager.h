@@ -37,6 +37,7 @@ namespace Framework {
 
 		std::string OpenFileDialog();
 		std::string SaveFileDialog();
+		void DrawHotReloadPrompt();
 		void RenderErrorPopup();
 		void RenderMenuBar();
 		void RenderMeshAssets();
@@ -46,6 +47,7 @@ namespace Framework {
 
 	private:
 		Framework::Graphics* m_graphicsSystem = nullptr; // Pointer to store the connection
+		bool m_autoReload = true;
 	};
 }
 

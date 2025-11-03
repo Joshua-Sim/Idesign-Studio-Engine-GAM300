@@ -372,7 +372,7 @@ namespace Framework {
         
             float now = (float)glfwGetTime();
             float dt = now - lastTime; lastTime = now;
-            //process_input(dt);
+            process_input(dt);
 
             // ====================================================================
            // 1. SCENE PASS: Render the scene to the HDR framebuffer
