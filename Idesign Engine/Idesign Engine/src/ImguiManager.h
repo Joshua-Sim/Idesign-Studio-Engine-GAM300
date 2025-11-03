@@ -33,7 +33,8 @@ namespace Framework {
 
 		void SetGraphicsSystem(Framework::Graphics* graphicsSystem); // New "setter" function
 		GLuint GetGameFramebuffer();
-
+		GLuint GetGameFramebuffer(int viewIndex);
+		GLuint GetGameTexture(int viewIndex);
 		std::string OpenFileDialog();
 		std::string SaveFileDialog();
 		void RenderErrorPopup();
@@ -42,7 +43,7 @@ namespace Framework {
 		void RenderAssetBar();
 		void RenderAudioManager();
 		void RenderEntityMenu();
-
+		int GetMainViewIndex() const;
 	private:
 		Framework::Graphics* m_graphicsSystem = nullptr; // Pointer to store the connection
 	};
