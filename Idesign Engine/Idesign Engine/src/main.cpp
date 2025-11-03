@@ -27,6 +27,7 @@
 #include <SignalHandler.h>
 #include "Scenemanager.h"
 #include "NavMeshSystem.h"
+#include "AnimationSystem.h"
 
 #include <WindowConfigProperties.h>
 #include "AudioLoader.h"
@@ -92,6 +93,7 @@ int main(void)
     auto graphicsSystem = ecsInterface.RegisterSystem<Graphics>();
     // Initialize the InputHandler singleton
     InputHandler::Initialize(graphicsSystem->GetWindow());
+    auto animationSystem = ecsInterface.RegisterSystem<AnimationSystem>();
 
     auto sceneSystem = ecsInterface.RegisterSystem<SceneManager>();
     auto imguiSystem = ecsInterface.RegisterSystem<ImguiManager>();
@@ -117,6 +119,7 @@ int main(void)
     // Registering systems in the ECS interface here
 
     // ------- Add systems to engine below -------- //
+    engine->AddSystem(animationSystem.get()); // Calculate bone matrices
     engine->AddSystem(graphicsSystem.get());
     engine->AddSystem(inputHandlerSystem);
     engine->AddSystem(imguiSystem.get());

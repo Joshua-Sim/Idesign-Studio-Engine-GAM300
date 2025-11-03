@@ -106,6 +106,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)lib\glfw-3.4.bin.WIN64\include;$(SolutionDir)Idesign Engine\src;$(SolutionDir)\Idesign Engine;$(SolutionDir)lib\glfw\include;$(SolutionDir)lib\glew\include\GL;$(SolutionDir)lib\gleq;$(SolutionDir)lib\glm\glm;$(SolutionDir)lib\stb_image;$(SolutionDir)lib\freetype\include;$(SolutionDir)lib\imgui;$(SolutionDir)lib\FMOD_STUDIO\inc;$(SolutionDir)lib\FMOD_CORE\inc;$(SolutionDir)lib\imgui-docking\backends;$(SolutionDir)lib\imgui\backends;$(SolutionDir)Idesign Engine\lib\installed\x64-windows\include;$(SolutionDir)Idesign Engine\src\shaders;$(SolutionDir)lib\installed\x64-windows\include;$(SolutionDir)Idesign Engine\Assets\Font;$(SolutionDir)lib\lua-5.4.2\include;$(SolutionDir)lib\Jolt;$(SolutionDir)lib</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -126,6 +127,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)lib\glfw-3.4.bin.WIN64\include;$(SolutionDir)Idesign Engine\src;$(SolutionDir)\Idesign Engine;$(SolutionDir)lib\glfw\include;$(SolutionDir)lib\glew\include\GL;$(SolutionDir)lib\gleq;$(SolutionDir)lib\glm\glm;$(SolutionDir)lib\stb_image;$(SolutionDir)lib\freetype\include;$(SolutionDir)lib\imgui;$(SolutionDir)lib\FMOD_STUDIO\inc;$(SolutionDir)lib\FMOD_CORE\inc;$(SolutionDir)lib\imgui-docking\backends;$(SolutionDir)lib\imgui\backends;$(SolutionDir)Idesign Engine\lib\installed\x64-windows\include;$(SolutionDir)Idesign Engine\src\shaders;$(SolutionDir)lib\installed\x64-windows\include;$(SolutionDir)Idesign Engine\Assets\Font</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
