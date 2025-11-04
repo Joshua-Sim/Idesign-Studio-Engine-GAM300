@@ -1,0 +1,47 @@
+{
+    "Entities": [
+        {
+            "name": "Entity 13",
+            "guid": "95d26a40-f633-42e1-815f-f097e8d2546f",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        0.0028579235076904297,
+                        4.6059112548828125,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.009999999776482582,
+                        0.009999999776482582,
+                        0.009999999776482582
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 0
+                },
+                "MeshReference": {
+                    "guid": "3a68b780-632d-49d8-b45d-33b1ac035172"
+                },
+                "TextureComponent": {
+                    "guid": "b2d4bb99-3396-40de-8789-01d6cf083f4e"
+                }
+            }
+        },
+        {
+            "name": "Entity 13",
+            "guid": "9064f5c4-2279-4ebc-ab38-340c0c3bb69c",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "e71147b2-5b92-40e0-9209-bd970ecc9583"
+                }
+            }
+        }
+    ]
+}

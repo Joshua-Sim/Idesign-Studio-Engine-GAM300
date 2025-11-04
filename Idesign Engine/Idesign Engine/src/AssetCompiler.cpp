@@ -574,6 +574,14 @@ namespace Framework
             ecsInterface.AddComponent(newEntity, nav);
         }
 
+        // === ADD THIS AT THE END ===
+        if (newEntity != std::numeric_limits<Entity>::max())
+        {
+            PrefabComponent prefabComp;
+            prefabComp.prefabGUID.id = prefabGUID;
+            ecsInterface.AddComponent(newEntity, prefabComp);
+        }
+
         std::cout << "Spawned prefab: " << prefabProps->name << " as entity " << newEntity << std::endl;
         return newEntity;
     }
