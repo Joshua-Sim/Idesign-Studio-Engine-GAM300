@@ -1083,10 +1083,8 @@ namespace Framework {
 
     }
 
-
-
     Camera* Graphics::getCamera() {
-        return &camera;
+        return &cam;
     }
 
     void Graphics::framebuffer_size_callback(GLFWwindow* window, int w, int h)
