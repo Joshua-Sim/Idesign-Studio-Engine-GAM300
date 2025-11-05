@@ -111,7 +111,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)lib\glfw-3.4.bin.WIN64\lib-vc2022;$(SolutionDir)Idesign Engine;$(SolutionDir)Idesign Engine\src;$(SolutionDir)lib\glew\lib\Release\x64;$(SolutionDir)lib\glew\lib\Debug\x64;$(SolutionDir)Idesign Engine\x64\Debug;$(SolutionDir)Idesign Engine\x64\Release;$(SolutionDir)lib\freetype;$(SolutionDir)lib\FMOD_CORE\lib\x64;$(SolutionDir)lib\FMOD_STUDIO\lib\x64;$(SolutionDir)\Idesign Engine\x64\Debug;$(SolutionDir)lib\installed\x64-windows\lib;$(SolutionDir)lib\Jolt\out\build\x64-Debug;$(SolutionDir)lib\Jolt\out\build\x64-Release;$(SolutionDir)lib\lua-5.4.2</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;user32.lib;gdi32.lib;shell32.lib;%(AdditionalDependencies);glew32s.lib;freetype.lib;fmod_vc.lib;fmodL_vc.lib;glfw3.lib;assimp-vc143-mt.lib;glew32.lib;Jolt.lib;lua54.lib;rttr_core.lib</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;user32.lib;gdi32.lib;shell32.lib;%(AdditionalDependencies);glew32s.lib;freetype.lib;fmod_vc.lib;fmodL_vc.lib;fmodstudio_vc.lib;fmodstudioL_vc.lib;glfw3.lib;assimp-vc143-mt.lib;glew32.lib;Jolt.lib;lua54.lib;rttr_core.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -151,8 +151,10 @@
     <ClInclude Include="src\AssetLoader.h" />
     <ClInclude Include="src\AssetManager.h" />
     <ClInclude Include="src\Audio.h" />
+    <ClInclude Include="src\AudioComponent.h" />
     <ClInclude Include="src\AudioLoader.h" />
     <ClInclude Include="src\AudioProperties.h" />
+    <ClInclude Include="src\AudioSystem.h" />
     <ClInclude Include="src\backward.hpp" />
     <ClInclude Include="src\ButtonSystem.h" />
     <ClInclude Include="src\Camera.h" />
@@ -257,6 +259,7 @@
     <ClInclude Include="src\TextProperties.h" />
     <ClInclude Include="src\TextureAsset.h" />
     <ClInclude Include="src\TextureLoader.h" />
+    <ClInclude Include="src\TextureLoaderDDS.h" />
     <ClInclude Include="src\TextureProperties.h" />
     <ClInclude Include="src\TransformProperties.h" />
     <ClInclude Include="src\TypeRegistry.h" />
@@ -317,6 +320,7 @@
     <ClCompile Include="src\AssetManager.cpp" />
     <ClCompile Include="src\Audio.cpp" />
     <ClCompile Include="src\AudioLoader.cpp" />
+    <ClCompile Include="src\AudioSystem.cpp" />
     <ClCompile Include="src\ButtonSystem.cpp" />
     <ClCompile Include="src\Collision.cpp" />
     <ClCompile Include="src\ComponentManager.cpp" />
@@ -373,6 +377,7 @@
     <ClCompile Include="src\Terrain.cpp" />
     <ClCompile Include="src\TestSystem.cpp" />
     <ClCompile Include="src\TextureLoader.cpp" />
+    <ClCompile Include="src\TextureLoaderDDS.cpp" />
     <ClCompile Include="src\UndoRedoSystem.cpp" />
     <ClCompile Include="src\Vector2D.cpp" />
     <ClCompile Include="src\Vector3D.cpp" />

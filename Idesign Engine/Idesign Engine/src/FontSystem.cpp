@@ -12,6 +12,7 @@
 
 #include "pch.h"
 #include "FontSystem.h"
+#include "ImguiManager.h"
 #include <iostream>
 #include <glew.h>
 #include <glm.hpp>
@@ -37,9 +38,11 @@ namespace Framework {
 
     FontSystem::FontSystem() {
         if (FT_Init_FreeType(&ft)) {
+            ImguiManager::LogError("Failed to initialize FreeType Library", "FontSystem");
             std::cerr << "Error: Failed to initialize FreeType Library" << std::endl;
         }
         else {
+            ImguiManager::LogSuccess("FreeType Library initialized!", "FontSystem");
             std::cout << "INIT: FreeType Library initialized!" << std::endl;
         }
 
@@ -55,18 +58,23 @@ namespace Framework {
     }
 
     void FontSystem::Initialize() {
+        ImguiManager::Log("Loading font shaders...", "FontSystem");
+
         std::string vertexSource = LoadShaderFromFile("Assets/fontshaders/textvert.glsl");
         std::string fragmentSource = LoadShaderFromFile("Assets/fontshaders/textfrag.glsl");
         if (vertexSource.empty() || fragmentSource.empty()) {
+            ImguiManager::LogError("Failed to load text shaders!", "FontSystem");
             std::cerr << "Error loading text shaders!" << std::endl;
             return;
         }
 
         shader.Compile(vertexSource.c_str(), fragmentSource.c_str());
+        ImguiManager::LogSuccess("2D text shader compiled", "FontSystem");
 
         // --- Compile 3D Shader ---
         std::string vertex3DSource = LoadShaderFromFile("Assets/fontshaders/textvert3D.glsl");
         shader3D.Compile(vertex3DSource.c_str(), fragmentSource.c_str());
+        ImguiManager::LogSuccess("3D text shader compiled", "FontSystem");
 
         // Setup VAO/VBO
         glGenVertexArrays(1, &VAO);
@@ -79,6 +87,7 @@ namespace Framework {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
 
+        ImguiManager::LogSuccess("FontSystem initialized successfully", "FontSystem");
     }
 
     void FontSystem::Update(float deltaTime) {

@@ -1,7 +1,7 @@
 {
     "entity": {
         "name": "Entity 2",
-        "guid": "608085b7-b8fb-4e8c-9016-acff01a5430a",
+        "guid": "f08be819-bb70-4127-b64f-4ff59aab2fe6",
         "components": {
             "TransformComponent": {
                 "position": [

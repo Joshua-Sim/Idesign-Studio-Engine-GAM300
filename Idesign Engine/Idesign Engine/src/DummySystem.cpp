@@ -13,12 +13,15 @@
 #include "DummySystem.h"
 #include "ComponentList.h"
 #include "Coordinator.h"
+#include "ImguiManager.h"
 
 extern Framework::Coordinator ecsInterface;
+using Framework::ImguiManager;
 
 void DummySystem::Initialize()
 {
 	std::cout << "Dummy System Initialised" << std::endl;
+	ImguiManager::LogSuccess("Dummy System Initialised", "DummySystem");
 }
 
 void DummySystem::Update(float timeslice)

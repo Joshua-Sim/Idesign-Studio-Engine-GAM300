@@ -24,6 +24,9 @@
 #include <FileCheckSystem.h>
 #include <ScriptingSystem.h>
 #include "ImGuizmo.h"
+#include "fmod.h"
+#include "fmod_studio.h"
+
 
 extern Framework::Coordinator ecsInterface;
 
@@ -64,7 +67,7 @@ namespace Framework {
     {
         return "ImguiManager";
     }
-
+   
     //FILE OPENING / SAVING
     std::string ImguiManager::OpenFileDialog()
     {
@@ -371,8 +374,14 @@ namespace Framework {
             }
         }
     }
+    //Initialize static instance 
+    ImguiManager* ImguiManager::instance = nullptr;
 
-    ImguiManager::ImguiManager() {}
+    ImguiManager::ImguiManager() {
+        instance = this;
+        memset(filterBuffer, 0, sizeof(filterBuffer));
+    }
+
     ImguiManager::~ImguiManager() {
 
         ImGui_ImplOpenGL3_Shutdown();
@@ -424,6 +433,12 @@ namespace Framework {
             TextureLoader::loadTexture(g_ObjIcon, false);
             g_ObjIconLoaded = true;
         }
+
+        //Subsribe to console messages 
+        MessageBus::Get().Subscribe<ConsoleLogMessage>(
+            [this](const ConsoleLogMessage& msg) {OnConsoleLog(msg);});
+
+        Log("ImguiManager initialized", "ImGui");
     }
 
     void ImguiManager::Update(float deltaTime) {
@@ -496,6 +511,12 @@ namespace Framework {
             ImGui::End(); // End of main dockspace window
 
         }
+
+        //Render Console 
+        if (showConsole) {
+            RenderConsole();
+        }
+
         // Render ImGui
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -510,6 +531,149 @@ namespace Framework {
         glfwSetDropCallback(backup_current_context, DropCallback);
         glfwPollEvents();
         glfwSwapBuffers(m_graphicsSystem->GetWindow());
+    }
+
+    //Console Message handler 
+    void ImguiManager::OnConsoleLog(const ConsoleLogMessage& msg) {
+        ConsoleEntry entry;
+        entry.category = msg.category;
+        entry.message = msg.message;
+        entry.level = msg.level;
+
+        // GENERATE TIMESTAMP HERE (not copy from msg)
+        time_t now = time(nullptr);
+        char buffer[32];
+#ifdef _WIN32
+        struct tm timeInfo;
+        localtime_s(&timeInfo, &now);
+        strftime(buffer, sizeof(buffer), "%H:%M:%S", &timeInfo);
+#else
+        struct tm* timeInfo = localtime(&now);
+        strftime(buffer, sizeof(buffer), "%H:%M:%S", timeInfo);
+#endif
+        entry.timestamp = std::string(buffer);
+
+        consoleBuffer.push_back(entry);
+
+        //Maintain buffer size 
+        while (consoleBuffer.size() > maxBufferSize) {
+            consoleBuffer.pop_front();
+        }
+
+#ifdef _DEBUG
+        //Also print to stdout in debug builds 
+        std::cout << "[" << entry.timestamp << "] "
+            << entry.category << ": "  // FIX: Added space after colon
+            << entry.message << std::endl;
+#endif 
+
+    }
+
+    //Render Console Window 
+    void ImguiManager::RenderConsole() {
+        ImGui::Begin("Console Window", &showConsole, ImGuiWindowFlags_MenuBar);
+
+        //Menu Bar 
+        if (ImGui::BeginMenuBar()) {
+            if (ImGui::Button("Clear")) {
+                consoleBuffer.clear();
+            }
+
+            ImGui::Separator();
+            ImGui::Checkbox("Auto-scroll", &autoScroll);
+            ImGui::Separator();
+            ImGui::Checkbox("Info", &showInfo);
+            ImGui::SameLine();
+            ImGui::Checkbox("Warning", &showWarning);
+            ImGui::SameLine();
+            ImGui::Checkbox("Error", &showError);
+            ImGui::SameLine();
+            ImGui::Checkbox("Success", &showSuccess);
+            ImGui::EndMenuBar();
+        }
+
+        //Filter input 
+        ImGui::InputText("Filter", filterBuffer, sizeof(filterBuffer));
+        ImGui::Separator();
+
+        // Console output area
+        ImGui::BeginChild("ScrollingRegion", ImVec2(0, 0), false,
+            ImGuiWindowFlags_HorizontalScrollbar);
+
+        std::string filterStr(filterBuffer);
+
+        for (const auto& entry : consoleBuffer) {
+            // Apply level filters
+            if (entry.level == ConsoleLogMessage::LogLevel::INFO && !showInfo) continue;
+            if (entry.level == ConsoleLogMessage::LogLevel::WARNING && !showWarning) continue;
+            if (entry.level == ConsoleLogMessage::LogLevel::ERR && !showError) continue;
+            if (entry.level == ConsoleLogMessage::LogLevel::SUCCESS && !showSuccess) continue;
+
+            // Apply text filter
+            if (!filterStr.empty()) {
+                if (entry.message.find(filterStr) == std::string::npos &&
+                    entry.category.find(filterStr) == std::string::npos) {
+                    continue;
+                }
+            }
+
+            // Colorize based on level
+            glm::vec4 color = GetColorForLevel(entry.level);
+            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(color.r, color.g, color.b, color.a));
+
+            // Format: [timestamp] CATEGORY: message
+            std::string displayText = "[" + entry.timestamp + "] " +
+                entry.category + ": " +
+                entry.message;
+            ImGui::TextUnformatted(displayText.c_str());
+
+            ImGui::PopStyleColor();
+        }
+
+        if (autoScroll && ImGui::GetScrollY() >= ImGui::GetScrollMaxY()) {
+            ImGui::SetScrollHereY(1.0f);
+        }
+
+        ImGui::EndChild();
+        ImGui::End();
+    }
+
+    //Get color for log level 
+    glm::vec4 ImguiManager::GetColorForLevel(ConsoleLogMessage::LogLevel level) {
+        switch (level) {
+        case ConsoleLogMessage::LogLevel::INFO:
+            return glm::vec4(1.0f, 1.0f, 1.0f, 1.0f); //white 
+        case ConsoleLogMessage::LogLevel::WARNING:
+            return glm::vec4(1.0f, 1.0f, 0.0f, 1.0f); // Yellow
+        case ConsoleLogMessage::LogLevel::ERR:
+            return glm::vec4(1.0f, 0.2f, 0.2f, 1.0f); // Red
+        case ConsoleLogMessage::LogLevel::SUCCESS:
+            return glm::vec4(0.2f, 1.0f, 0.2f, 1.0f); // Green
+        default:
+            return glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+        }
+    }
+
+    //Static logging methods 
+    void ImguiManager::Log(const std::string& message, const std::string& category) {
+        MessageBus::Get().SendImmediate(
+            ConsoleLogMessage(message, ConsoleLogMessage::LogLevel::INFO, category));
+
+    }
+
+    void ImguiManager::LogWarning(const std::string& message, const std::string& category) {
+        MessageBus::Get().SendImmediate(
+            ConsoleLogMessage(message, ConsoleLogMessage::LogLevel::WARNING, category));
+    }
+
+    void ImguiManager::LogError(const std::string& message, const std::string& category) {
+        MessageBus::Get().SendImmediate(
+            ConsoleLogMessage(message, ConsoleLogMessage::LogLevel::ERR, category));
+    }
+
+    void ImguiManager::LogSuccess(const std::string& message, const std::string& category) {
+        MessageBus::Get().SendImmediate(
+            ConsoleLogMessage(message, ConsoleLogMessage::LogLevel::SUCCESS, category));
     }
 
     void ImguiManager::RenderMenuBar() {
@@ -733,6 +897,11 @@ namespace Framework {
                     }
                 }
                 ImGui::EndMenu();
+                //Add Windows menu to toggle console
+                if (ImGui::BeginMenu("Windows")) {
+                    ImGui::MenuItem("Console Window", nullptr, &showConsole);
+                    ImGui::EndMenu();
+                }
             }
             ImGui::EndMenuBar();
         }
@@ -1896,24 +2065,6 @@ namespace Framework {
                     }
 
                 }
-
-                if (int id = m_graphicsSystem->ConsumeLastPickedId(); id >= 0)
-                {
-                    selectedEntity = static_cast<Entity>(id);
-                    isPropertiesWindowOpen = true;  // open right panel automatically (optional)
-                    //std::cout << "Selected entity from viewport: " << selectedEntity << "\n"; // debug
-                }
-
-                // --- Gizmo overlay on top of the Main Viewport texture ---
-                ImVec2 rectMin = ImGui::GetItemRectMin();
-                ImVec2 rectMax = ImGui::GetItemRectMax();
-                ImVec2 vpSize = ImVec2(rectMax.x - rectMin.x, rectMax.y - rectMin.y);
-
-                Camera* cam = m_graphicsSystem->getCamera();
-                glm::mat4 view = cam->getViewMatrix();
-                glm::mat4 proj = cam->getProjectionMatrix(1280.0f, 720.0f);
-
-                RenderGizmoForSelected(view, proj, rectMin, vpSize);
             }
             ImGui::End();
             //Debug second viewport window
@@ -1952,6 +2103,24 @@ namespace Framework {
                     if (secondaryView == 0) m_graphicsSystem->RequestPickUV(u, v);
                     else                    m_graphicsSystem->RequestPickUVSecondary(u, v);
                 }
+
+                if (int id = m_graphicsSystem->ConsumeLastPickedId(); id >= 0)
+                {
+                    selectedEntity = static_cast<Entity>(id);
+                    isPropertiesWindowOpen = true;  // open right panel automatically (optional)
+                    //std::cout << "Selected entity from viewport: " << selectedEntity << "\n"; // debug
+                }
+
+                // --- Gizmo overlay on top of the Viewport texture ---
+                ImVec2 rectMin = ImGui::GetItemRectMin();
+                ImVec2 rectMax = ImGui::GetItemRectMax();
+                ImVec2 vpSize(rectMax.x - rectMin.x, rectMax.y - rectMin.y);
+
+                // Use the SECONDARY camera’s matrices
+                glm::mat4 view = m_graphicsSystem->GetViewMatrix(secondaryView);
+                glm::mat4 proj = m_graphicsSystem->GetProjectionMatrix(secondaryView, 1280.f, 720.f);
+
+                RenderGizmoForSelected(view, proj, rectMin, vpSize);
             }
             ImGui::End();
         }

@@ -269,7 +269,7 @@ namespace Framework
                     componentsObj.AddMember("HierarchyComponent", hierarchyJson, allocator);
                 }
 
-                // MeshProperties — write only GUID
+                // MeshProperties ï¿½ write only GUID
                 if (ecsInterface.HasComponent<MeshProperties>(entity))
                 {
                     const auto& mesh = ecsInterface.GetComponent<MeshProperties>(entity);
@@ -278,7 +278,7 @@ namespace Framework
                     componentsObj.AddMember("MeshReference", meshRef, allocator);
                 }
 
-                // TextureProperties — write only GUID
+                // TextureProperties ï¿½ write only GUID
                 if (ecsInterface.HasComponent<TextureProperties>(entity))
                 {
                     const auto& tex = ecsInterface.GetComponent<TextureProperties>(entity);
@@ -572,6 +572,14 @@ namespace Framework
             if (navObj.HasMember("cellHeight")) nav.cellHeight = navObj["cellHeight"].GetFloat();
             if (navObj.HasMember("maxSlope")) nav.maxSlope = navObj["maxSlope"].GetFloat();
             ecsInterface.AddComponent(newEntity, nav);
+        }
+
+        // === ADD THIS AT THE END ===
+        if (newEntity != std::numeric_limits<Entity>::max())
+        {
+            PrefabComponent prefabComp;
+            prefabComp.prefabGUID.id = prefabGUID;
+            ecsInterface.AddComponent(newEntity, prefabComp);
         }
 
         std::cout << "Spawned prefab: " << prefabProps->name << " as entity " << newEntity << std::endl;

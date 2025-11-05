@@ -58,6 +58,8 @@
 #include "FontSystem.h"
 #include "PrefabProperties.h"
 #include "PrefabComponent.h"
+#include "TextureLoaderDDS.h"
+
 
 extern Framework::FontSystem fontSystem;
 extern Framework::Coordinator ecsInterface;
@@ -128,6 +130,8 @@ namespace Framework {
     // Initialize the system
     void Graphics::Initialize()
     {
+        ImguiManager::Log("Initializing Graphics System...", "Graphics");
+
         WindowConfig* config = AssetManager::Instance().Get<WindowConfig>(AssetManager::Instance().FindGuid<WindowConfig>());
 
         // always enable for depth test framebuffering
@@ -142,6 +146,7 @@ namespace Framework {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
         // Register Graphics related Component
+        ImguiManager::Log("Registering graphics components...", "Graphics");
         ecsInterface.RegisterComponent<TransformComponent>();
         ecsInterface.RegisterComponent<HierarchyComponent>(); // Register in graphics as its default generic component allocated to all entities.
         ecsInterface.RegisterComponent<MeshProperties>();
@@ -151,6 +156,8 @@ namespace Framework {
         ecsInterface.RegisterComponent<NavMeshAgentComponent>(); // Move to navmesh sys after fixing load scene for mesh model
         ecsInterface.RegisterComponent<AudioProperties>();
         //test
+
+        ImguiManager::LogSuccess("Graphics components registered", "Graphics");
         ecsInterface.RegisterComponent<PrefabComponent>();
 
         //  ---- ECS INITIALIZATION --- 
@@ -158,7 +165,11 @@ namespace Framework {
         signature.set(ecsInterface.GetComponentType<TransformComponent>()); //Set mEntities to be populated with MeshComponent for now
 
         ecsInterface.SetSystemSignature<Graphics>(signature);
+
+        std::stringstream ss;
+        ss << signature;
         std::cout << "Signature for Graphics system is: " << signature << std::endl;
+        ImguiManager::Log("Graphics signature set: " + ss.str(), "Graphics");
         //  ---- ECS INITIALIZATION END --- 
 
 
@@ -185,7 +196,7 @@ namespace Framework {
 
         // Add and load a texture component
         Framework::TextureProperties textureComponent;
-        textureComponent.path = "Assets/PNG/test.png";
+        textureComponent.path = "Assets/PNG/test.png"; //can put any compressed texture
         TextureLoader::loadTexture(textureComponent, true);
 
         // Add NavMesh component to mark this as navmesh source
@@ -276,9 +287,10 @@ namespace Framework {
         triangle.initGL();
         //FONT SYSTEM
 
-        fontSystem.Initialize();
+        /*fontSystem.Initialize();
         fontSystem.LoadFont("Assets/Font/arial.ttf", 40, "Arial");
-        fontSystem.SetActiveFont("Arial");
+        fontSystem.SetActiveFont("Arial");*/
+
         m_debugMeshes[DebugShapeType::Box] = &cube;
         m_debugMeshes[DebugShapeType::Sphere] = &plane; // Remember 'plane' is your sphere mesh
         m_debugMeshes[DebugShapeType::Triangle] = &triangle;
@@ -359,6 +371,8 @@ namespace Framework {
 
         m_frameCount = 0;
         m_fpsLastTime = glfwGetTime(); // Start the timer
+
+        ImguiManager::LogSuccess("Graphics System initialized successfully", "Graphics");
     }
 
     void Graphics::SetImguiManager(ImguiManager* manager)
@@ -1212,6 +1226,23 @@ namespace Framework {
         int id = lastPickedId;
         lastPickedId = -1;
         return id;
+    }
+
+    glm::mat4 Graphics::GetViewMatrix(int viewIdx) const
+    {
+        const Camera& cam = (viewIdx == 1) ? sceneCamera : gameCamera;
+        return cam.getViewMatrix();
+    }
+
+    glm::mat4 Graphics::GetProjectionMatrix(int viewIdx, float w, float h) const
+    {
+        const Camera& cam = (viewIdx == 1) ? sceneCamera : gameCamera;
+        return cam.getProjectionMatrix(w, h);
+    }
+
+    Camera* Graphics::GetCameraByIndex(int viewIdx)
+    {
+        return (viewIdx == 1) ? &sceneCamera : &gameCamera;
     }
 
     void Graphics::renderQuad()

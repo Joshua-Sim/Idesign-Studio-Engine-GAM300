@@ -5,14 +5,16 @@
 ///          tasks using FMOD. Using asset manager to retrieve sound assets to
 ///          provide functionality to play and control both background music and
 ///          sound effects.
+///          This file is the audio system that is linked to the main engine.
 ///
-///	@Authors : Edwin Leow
+///	@Authors : Edwin Leow, Belinda Chua 
 ///	@Copyright 2024, Digipen Institute of Technology
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #include "pch.h"
 #include "Audio.h"
 #include "AssetManager.h"
+#include <filesystem>
 
 namespace Framework 
 {
@@ -21,16 +23,26 @@ namespace Framework
     // Constructor
     Audio::Audio() 
     {
-        System_Create(&pSystem);                            // Create the FMOD System Object
-        pSystem->init(512, FMOD_INIT_NORMAL | FMOD_INIT_3D_RIGHTHANDED, nullptr);       // Create 512 CHANNELS (FMOD_INIT_3D_RIGHTHANDED FOR 3D AUDIO SUPPORT)
+        //Create Studio System
+        FMOD_RESULT res = FMOD::Studio::System::create(&studioSystem);
 
-        //Initialize 3D settings with defaults
-        Configure3DSettings(current3DSettings);
+        if (res != FMOD_OK || !studioSystem) {
+            std::cerr << "Failed to create FMOD Studio system: " << res << std::endl;
+            return;
+        }
 
-        // Create Channel Groups on Initialization
-        UE_CreateChannelGroup("BackgroundMusic");
-        UE_CreateChannelGroup("SoundEffects");
-        UE_CreateChannelGroup("Ambient3D");
+        //Initialie studio system. Request core system pointer for DSP access
+		res = studioSystem->initialize(512, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_3D_RIGHTHANDED, nullptr);
+		if (res != FMOD_OK) {
+			std::cerr << "Failed to initialize FMOD Studio system: " << res << std::endl;
+			return;
+		}
+
+        //Get core system for DSP and low level features
+		studioSystem->getCoreSystem(&coreSystem);
+
+        //Configure 3D default settings 
+		Configure3DSettings(current3DSettings);
 
         //Initialize DSP effects for environmental audio 
         InitializeReverb();
@@ -39,6 +51,26 @@ namespace Framework
     // Destructor
     Audio::~Audio() 
     {
+        //Release active event instances 
+        for (auto& p : activeEventsById) {
+            if (p.second) {
+				p.second->stop(FMOD_STUDIO_STOP_IMMEDIATE);
+				p.second->release();
+            }
+        }
+		activeEventsById.clear();
+
+        for (auto& p : activeEvents) {
+            if (p.second) {
+                p.second->stop(FMOD_STUDIO_STOP_IMMEDIATE);
+                p.second->release();
+            }
+        }
+		activeEvents.clear();
+
+		//Release event descriptions (no explicit release required for EventDescription in many FMOD versions, but set map empty)
+		loadedEvents.clear();
+
         //Clean up DSP Effects
         if (reverbDSP) {
             reverbDSP->release();
@@ -49,39 +81,139 @@ namespace Framework
             lowPassFilter = nullptr;
         }
 
-        //Note: FMOD will automatically 
-        //  channel when sound is released, so dont nid to stop channel
-        for (auto& pair : loadedSounds)     // Loop through all loadedSounds
-        {
-            if (pair.second != nullptr)
-            {
-                pair.second->release();     // free the sound object
-            }
+		//Shutdown FMOD Studio system
+        if (studioSystem) {
+            studioSystem->unloadAll();
+            studioSystem->release();
+            studioSystem = nullptr;
         }
-        loadedSounds.clear();               // Clear loaded sounds map
-        activeChannels.clear();             // Clear active channels map
-        activeChannelGroup.clear();
-        activeChannelsById.clear();         //Clear additional 3D related maps 
-        channel3DInfo.clear();
-        audioZones.clear();
-        pSystem->release();                 // Free the FMOD System Object
+		coreSystem = nullptr;
+
+        
     }
 
     // Initialize the system
-    void Audio::Initialize() 
+    void Audio::Initialize()
     {
-        //System_Create(&pSystem);                            // Create the FMOD System Object
-        //pSystem->init(32, FMOD_INIT_NORMAL, nullptr);       // Create 32 Channels for 32 Audio
-    
-        //// Create Channel Groups on Initialization
-        //UE_CreateChannelGroup("BackgroundMusic");
-        //UE_CreateChannelGroup("SoundEffects");
+        std::cout << "Current working directory: "
+            << std::filesystem::current_path() << std::endl;
+        std::cout << "Audio (Studio) Initialized with 3D support." << std::endl;
 
-        //Log 3D audio initialization
-        std::cout << "Audio System Initialized with 3D support" << std::endl;
-        std::cout << "3D Settings - Doppler: " << current3DSettings.dopplerScale
-            << ", Distance Factor: " << current3DSettings.distanceFactor
-            << ", Rolloff: " << current3DSettings.rolloffScale << std::endl;
+        // Get FMOD version for diagnostics
+        unsigned int version = 0;
+        if (studioSystem) {
+            FMOD::System* coreSystem = nullptr;
+            studioSystem->getCoreSystem(&coreSystem);
+            if (coreSystem) {
+                coreSystem->getVersion(&version);
+                std::cout << "[Audio] FMOD Engine version: "
+                    << ((version >> 16) & 0xFFFF) << "."
+                    << ((version >> 8) & 0xFF) << "."
+                    << (version & 0xFF) << std::endl;
+            }
+        }
+
+        // Load the bank files
+        FMOD::Studio::Bank* masterBank = nullptr;
+        FMOD::Studio::Bank* stringsBank = nullptr;
+        FMOD::Studio::Bank* bgmBank = nullptr;
+        FMOD::Studio::Bank* sfxBank = nullptr;
+        FMOD::Studio::Bank* ambientBank = nullptr;
+        FMOD_RESULT result;
+
+        // ============================================================
+        // Load Master.strings.bank FIRST (required for event names)
+        // ============================================================
+        std::cout << "\n[Audio] Loading Master.strings.bank..." << std::endl;
+        result = studioSystem->loadBankFile("Master.strings.bank",
+            FMOD_STUDIO_LOAD_BANK_NORMAL, &stringsBank);
+
+        if (result != FMOD_OK) {
+            std::cerr << "[Audio] ? ERROR: Failed to load Master.strings.bank" << std::endl;
+            std::cerr << "[Audio] Error code: " << result << std::endl;
+        }
+        else {
+            std::cout << "[Audio] ? Master.strings.bank loaded successfully!" << std::endl;
+        }
+
+        // ============================================================
+        // Load Master.bank (contains metadata/structure)
+        // ============================================================
+        std::cout << "\n[Audio] Loading Master.bank..." << std::endl;
+        result = studioSystem->loadBankFile("Master.bank",
+            FMOD_STUDIO_LOAD_BANK_NORMAL, &masterBank);
+
+        if (result != FMOD_OK) {
+            std::cerr << "[Audio] ? ERROR: Failed to load Master.bank" << std::endl;
+            std::cerr << "[Audio] Error code: " << result << std::endl;
+        }
+        else {
+            std::cout << "[Audio] ? Master.bank loaded successfully!" << std::endl;
+        }
+
+        // ============================================================
+        // Load BGM.bank (background music)
+        // ============================================================
+        std::cout << "\n[Audio] Loading BGM.bank..." << std::endl;
+        result = studioSystem->loadBankFile("BGM.bank",
+            FMOD_STUDIO_LOAD_BANK_NORMAL, &bgmBank);
+
+        if (result != FMOD_OK) {
+            std::cerr << "[Audio] ? WARNING: Failed to load BGM.bank" << std::endl;
+            std::cerr << "[Audio] Error code: " << result << std::endl;
+        }
+        else {
+            std::cout << "[Audio] ? BGM.bank loaded successfully!" << std::endl;
+            int eventCount = 0;
+            bgmBank->getEventCount(&eventCount);
+            std::cout << "[Audio] ? BGM bank contains " << eventCount << " events" << std::endl;
+        }
+
+        // ============================================================
+        // Load SFX.bank (sound effects)
+        // ============================================================
+        std::cout << "\n[Audio] Loading SFX.bank..." << std::endl;
+        result = studioSystem->loadBankFile("SFX.bank",
+            FMOD_STUDIO_LOAD_BANK_NORMAL, &sfxBank);
+
+        if (result != FMOD_OK) {
+            std::cerr << "[Audio] ? WARNING: Failed to load SFX.bank" << std::endl;
+            std::cerr << "[Audio] Error code: " << result << std::endl;
+        }
+        else {
+            std::cout << "[Audio] ? SFX.bank loaded successfully!" << std::endl;
+            int eventCount = 0;
+            sfxBank->getEventCount(&eventCount);
+            std::cout << "[Audio] ? SFX bank contains " << eventCount << " events" << std::endl;
+        }
+
+        // ============================================================
+        // Load Ambient.bank (ambient sounds)
+        // ============================================================
+        std::cout << "\n[Audio] Loading Ambient.bank..." << std::endl;
+        result = studioSystem->loadBankFile("Ambient.bank",
+            FMOD_STUDIO_LOAD_BANK_NORMAL, &ambientBank);
+
+        if (result != FMOD_OK) {
+            std::cerr << "[Audio] ? WARNING: Failed to load Ambient.bank" << std::endl;
+            std::cerr << "[Audio] Error code: " << result << std::endl;
+        }
+        else {
+            std::cout << "[Audio] ? Ambient.bank loaded successfully!" << std::endl;
+            int eventCount = 0;
+            ambientBank->getEventCount(&eventCount);
+            std::cout << "[Audio] ? Ambient bank contains " << eventCount << " events" << std::endl;
+        }
+
+        std::cout << "\n[Audio] ========================================" << std::endl;
+        std::cout << "[Audio] All bank files loaded!" << std::endl;
+        std::cout << "[Audio] ========================================\n" << std::endl;
+
+        //Create references to common buses 
+        UE_CreateBus("bus:/");          //master bus 
+        UE_CreateBus("bus:/BGM");       //BGM bus
+        UE_CreateBus("bus:/SFX");       //SFX bus
+        UE_CreateBus("bus:/Ambient");   //Ambient bus
     }
 
     // Update the system
@@ -97,8 +229,8 @@ namespace Framework
 
             if (isFadingIn) {
                 float currentVolume = fadeStartVolume + (fadeTargetVolume - fadeStartVolume) * progress;
-                if (currentBGMChannel >= 0 && activeChannelsById.count(currentBGMChannel)) {
-                    activeChannelsById[currentBGMChannel]->setVolume(currentVolume * bgmVolume * masterVolume);
+                if (currentBGMChannel >= 0 && activeEventsById.count(currentBGMChannel)) {
+                    activeEventsById[currentBGMChannel]->setVolume(currentVolume * bgmVolume * masterVolume);
                 }
 
                 if (progress >= 1.0f) {
@@ -108,8 +240,8 @@ namespace Framework
             }
             else if (isFadingOut) {
                 float currentVolume = fadeStartVolume * (1.0f - progress);
-                if (currentBGMChannel >= 0 && activeChannelsById.count(currentBGMChannel)) {
-                    activeChannelsById[currentBGMChannel]->setVolume(currentVolume * bgmVolume * masterVolume);
+                if (currentBGMChannel >= 0 && activeEventsById.count(currentBGMChannel)) {
+                    activeEventsById[currentBGMChannel]->setVolume(currentVolume * bgmVolume * masterVolume);
                 }
 
                 if (progress >= 1.0f) {
@@ -127,129 +259,32 @@ namespace Framework
                 }
             }
         }
-        pSystem->update();          // Must keep updating, else audio will not play
-
+       
+        if (studioSystem) {
+            studioSystem->update();
+        }
     }
 
     // Get the name of the system
     std::string Audio::GetName() 
     {
-        return "Audio";
+        return "Audio (Studio)";
     }
 
     void Audio::PrintAudioInfo() const
     {
-        // Note: FMOD does not store the name or path of a sound file, only addresses, thus it printed out the addresses of the audio/channels
-        std::cout << "=== Audio Engine Information ===" << std::endl;
-
-        // Print Loaded Sounds Information
-        std::cout << "\nLoaded Sounds:" << std::endl;
-        if (loadedSounds.empty())
-        {
-            std::cout << "No sounds loaded." << std::endl;
-        }
-        else
-        {
-            for (const auto& soundEntry : loadedSounds)
-            {
-                std::cout << "Custom Name: " << soundEntry.first << std::endl;
-                std::cout << "FMOD::Sound*: " << soundEntry.second << std::endl;
-            }
-        }
-
-        // Print Active Channels Information
-        std::cout << "\nActive Channels:" << std::endl;
-        if (activeChannels.empty())
-        {
-            std::cout << "No channels active." << std::endl;
-        }
-        else
-        {
-            for (const auto& channelEntry : activeChannels)
-            {
-                std::cout << "Custom Name: " << channelEntry.first << std::endl;
-
-                bool isPlaying = false;
-                channelEntry.second->isPlaying(&isPlaying);
-
-                std::cout << "FMOD::Channel*: " << channelEntry.second << std::endl;
-                std::cout << "Is Playing: " << (isPlaying ? "Yes" : "No") << std::endl;
-
-                float volume = 0.0f;
-                channelEntry.second->getVolume(&volume);
-                std::cout << "Volume: " << volume << std::endl;
-
-                FMOD::ChannelGroup* group = nullptr;
-                channelEntry.second->getChannelGroup(&group);
-                if (group)
-                {
-                    char groupName[256];
-                    group->getName(groupName, 256);
-                    std::cout << "Channel Group: " << groupName << std::endl;
-                }
-                else
-                {
-                    std::cout << "Channel Group: None" << std::endl;
-                }
-            }
-        }
-
-        //Print 3D Channel Information
-        std::cout << "\n3D Channels:" << std::endl;
-        if (channel3DInfo.empty()) {
-            std::cout << "No 3D channels active." << std::endl;
-        }
-        else {
-            for (const auto& [id, info] : channel3DInfo) {
-                std::cout << "Channel ID: " << id << std::endl;
-                std::cout << "  Position: (" << info.position.x << ", "
-                    << info.position.y << ", " << info.position.z << ")" << std::endl;
-                std::cout << "  Velocity: (" << info.velocity.x << ", "
-                    << info.velocity.y << ", " << info.velocity.z << ")" << std::endl;
-                std::cout << "  Min Distance: " << info.minDistance << std::endl;
-                std::cout << "  Max Distance: " << info.maxDistance << std::endl;
-                std::cout << "  Type: ";
-                switch (info.type) {
-                case AudioSourceType::STEREO_2D: std::cout << "2D Stereo"; break;
-                case AudioSourceType::WORLD_3D: std::cout << "3D World"; break;
-                case AudioSourceType::AMBIENT_3D: std::cout << "3D Ambient"; break;
-                case AudioSourceType::HYBRID: std::cout << "Hybrid"; break;
-                }
-                std::cout << std::endl;
-            }
-        }
-
-        // Print Active Channel Groups Information
-        std::cout << "\nActive Channel Groups:" << std::endl;
-        if (activeChannelGroup.empty())
-        {
-            std::cout << "No channel groups active." << std::endl;
-        }
-        else
-        {
-            for (const auto& groupEntry : activeChannelGroup)
-            {
-                std::cout << "Group Name: " << groupEntry.first << std::endl;
-                std::cout << "FMOD::ChannelGroup*: " << groupEntry.second << std::endl;
-
-                float groupVolume = 0.0f;
-                groupEntry.second->getVolume(&groupVolume);
-                std::cout << "Group Volume: " << groupVolume << std::endl;
-
-                int numChannels = 0;
-                groupEntry.second->getNumChannels(&numChannels);
-                std::cout << "Number of Channels: " << numChannels << std::endl;
-            }
-        }
-
-        std::cout << "================================" << std::endl;
+        std::cout << "=== Audio Studio Engine Information ===" << std::endl;
+        std::cout << "Loaded Events: " << loadedEvents.size() << std::endl;
+        std::cout << "Active Events: " << activeEvents.size() << std::endl;
+        std::cout << "Active Events (by id): " << activeEventsById.size() << std::endl;
+        std::cout << "======================================" << std::endl;
     }
 
     Audio::SoundType Audio::ParseSoundType(const std::string& str)
     {
         if (str == "background") return Audio::SoundType::BACKGROUND_MUSIC;
         if (str == "effect") return Audio::SoundType::SOUND_EFFECT;
-        throw std::invalid_argument("Unknown SoundType: " + str);
+		return Audio::SoundType::EMPTY;
     }
 
     // Function to change from String to FMOD_MODE
@@ -261,7 +296,7 @@ namespace Framework
         }
         else if (mode == "oneshot")
         {
-            return FMOD_DEFAULT;            // One-shot playback
+            return FMOD_LOOP_OFF;            // One-shot playback
         }
         else
         {
@@ -269,111 +304,77 @@ namespace Framework
         }
     }
 
-    Sound* Audio::UE_LoadSound(const std::string& customName)
+    //Load an event description using the path stored in AudioProperties.path 
+    EventDescription* Audio::UE_LoadEvent(const std::string& customName) 
     {
-        Sound* pSound = nullptr;        // Initialize a Sound pointer to nullptr
+        //Check cache
+        if (loadedEvents.count(customName)) {
+            return loadedEvents[customName];
+        }
 
-        AudioProperties* audioProps = AssetManager::Instance().Get<AudioProperties>(AssetManager::Instance().FindGuid<AudioProperties>(customName));
-        if (!audioProps)
-        {
-            std::cout << "Error: AudioProperties not found for customName: " << customName << std::endl;
+        AudioProperties* audioProps = AssetManager::Instance().Get<AudioProperties>(
+            AssetManager::Instance().FindGuid<AudioProperties>(customName)
+        );
+        if (!audioProps) {
+			std::cout << "Error: AudioProperties not found for customName: " << customName << std::endl;
+			return nullptr;
+        }
+
+		const std::string& eventPath = audioProps->path;
+        if (eventPath.empty()) {
+            std::cout << "Error: Event path is empty for customName: " << customName << std::endl;
             return nullptr;
         }
 
-        const std::string& filePath = audioProps->path;
-        const std::string& modeString = audioProps->mode;
-
-        std::cout << "File path: " << filePath << std::endl;
-        std::cout << "Mode: " << modeString << std::endl;
-
-        FMOD_MODE mode = UE_GetModeFromString(modeString);
-        std::cout << "FMOD Mode: " << mode << std::endl;
-
-        FMOD_RESULT result = pSystem->createSound(filePath.c_str(), mode, nullptr, &pSound);
-        if (result != FMOD_OK)
-        {
-            std::cout << "Error: Failed to create sound for " << customName << " with FMOD result " << result << std::endl;
+		EventDescription* eventDesc = nullptr;
+		FMOD_RESULT res = studioSystem->getEvent(eventPath.c_str(), &eventDesc);
+        if (res != FMOD_OK || !eventDesc) {
+            std::cout << "Error: Failed to load event at path: " << eventPath << ", FMOD result: " << res << std::endl;
             return nullptr;
         }
 
-        unsigned int length = 0;
-        pSound->getLength(&length, FMOD_TIMEUNIT_MS);
-        audioProps->duration = length / 1000.0f;
-
-        loadedSounds[customName] = pSound;
-        return pSound;
+		loadedEvents[customName] = eventDesc;
+        return eventDesc;
     }
 
     void Audio::UE_PlaySound(const std::string& customName)
     {
-        Sound* pSound = UE_LoadSound(customName);  // Load sound from AudioProperties
-        if (!pSound)
-        {
-            std::cout << "Error: Sound " << customName << " could not be loaded." << std::endl;
-            return;
+
+        EventDescription* desc = UE_LoadEvent(customName);
+        if (!desc) return;
+
+        EventInstance* instance = nullptr;
+		FMOD_RESULT res = desc->createInstance(&instance);
+		if (res != FMOD_OK || !instance) {
+			std::cout << "Error: Failed to create event instance for " << customName << ", FMOD result: " << res << std::endl;
+			return;
+		}
+
+		//Assign to bus based on AudioProperties->soundType
+		AudioProperties* audioProps = AssetManager::Instance().Get<AudioProperties>(
+			AssetManager::Instance().FindGuid<AudioProperties>(customName)
+		);
+        Audio::SoundType st = ParseSoundType(audioProps ? audioProps->soundType : std::string());
+
+        //start playing 
+		instance->start();
+
+        //Create id and Track it 
+		int id = GetNextChannelId();
+        activeEvents[customName] = instance; 
+		activeEventsById[id] = instance;
+        if (audioProps) {
+			audioProps->channelID = id;
+			audioProps->isPlaying = true;
         }
 
-        AudioProperties* audioProps = AssetManager::Instance().Get<AudioProperties>(AssetManager::Instance().FindGuid<AudioProperties>(customName));
-        if (!audioProps)
-        {
-            std::cout << "Error: AudioProperties not found for customName: " << customName << std::endl;
-            return;
-        }
+        //set default volume scales 
+		float vol = (st == BACKGROUND_MUSIC) ? bgmVolume : sfxVolume;
+        vol *= masterVolume; 
+        instance->setVolume(vol);
+        
+        std::cout << "Playing event: " << customName << std::endl;
 
-        // Check for existing channel
-        auto it = activeChannels.find(customName);
-        if (it != activeChannels.end() && it->second != nullptr)
-        {
-            bool isPlaying = false;
-            it->second->isPlaying(&isPlaying);
-
-            if (isPlaying)
-            {
-                std::cout << "Audio " << customName << " is already playing." << std::endl;
-                return;
-            }
-
-            bool isPaused = false;
-            it->second->getPaused(&isPaused);
-
-            if (isPaused)
-            {
-                std::cout << "Resuming audio " << customName << "." << std::endl;
-                it->second->setPaused(false);
-                return;
-            }
-
-            std::cout << "Audio " << customName << " has finished, replaying." << std::endl;
-            activeChannels.erase(it);
-        }
-
-        // Play sound
-        FMOD::Channel* pChannel = nullptr;
-        FMOD_RESULT result = pSystem->playSound(pSound, nullptr, false, &pChannel);
-        SoundType soundType = ParseSoundType(audioProps->soundType);
-        if (result != FMOD_OK)
-        {
-            std::cout << "Error: Cannot play audio " << customName << ", FMOD result: " << result << std::endl;
-            return;
-        }
-
-        if (pChannel)
-        {
-            if (soundType == BACKGROUND_MUSIC)
-                pChannel->setChannelGroup(activeChannelGroup["BackgroundMusic"]);
-            else if (soundType == SOUND_EFFECT)
-                pChannel->setChannelGroup(activeChannelGroup["SoundEffects"]);
-
-            activeChannels[customName] = pChannel;
-
-            // Assign a unique channel ID and store it
-            static int nextChannelId = 1;
-            int assignedId = nextChannelId++;
-            activeChannelsById[assignedId] = pChannel;
-            audioProps->channelID = assignedId;
-            audioProps->isPlaying = true;
-            std::cout << "Playing audio " << customName << "." << std::endl;
-        }
     }
 
     //========================== NEW 3D AUDIO FUNCTIONS ==============================
@@ -387,126 +388,58 @@ namespace Framework
         AudioSourceType sourceType)
     {
         // Load the sound if not already loaded
-        Sound* pSound = nullptr;
-        auto it = loadedSounds.find(customName);
-        if (it != loadedSounds.end()) {
-            pSound = it->second;
-        }
-        else {
-            pSound = UE_LoadSound(customName);
-            if (!pSound) {
-                std::cerr << "Failed to load sound: " << customName << std::endl;
-                return -1;
-            }
-        }
+        EventDescription* desc = UE_LoadEvent(customName);
+        if (!desc) return -1;
 
-        AudioProperties* audioProps = AssetManager::Instance().Get<AudioProperties>(AssetManager::Instance().FindGuid<AudioProperties>(customName));
-        if (!audioProps)
-        {
-            std::cout << "Error: AudioProperties not found for customName: " << customName << std::endl;
+        EventInstance* instance = nullptr; 
+        FMOD_RESULT res = desc->createInstance(&instance);
+        if (res != FMOD_OK || !instance) {
+            std::cerr << "Failed to create event instance for " << customName << " res=" << res << std::endl;
             return -1;
         }
 
-        // Configure sound mode based on source type
-        FMOD_MODE mode = FMOD_DEFAULT;
-        bool is3D = (sourceType == AudioSourceType::WORLD_3D ||
-            sourceType == AudioSourceType::AMBIENT_3D);
+        //Set 3D attributes 
+        FMOD_3D_ATTRIBUTES attributes = {};
+        attributes.position = VectorToFmod(position);
+        attributes.velocity = VectorToFmod(velocity);
+        attributes.forward = { 0.0f, 0.0f, 1.0f };
+        attributes.up = { 0.0f, 1.0f, 0.0f };
+        instance->set3DAttributes(&attributes);
 
-        if (is3D) {
-            mode |= FMOD_3D | FMOD_3D_WORLDRELATIVE | FMOD_3D_INVERSEROLLOFF;
-        }
-        else {
-            mode |= FMOD_2D;
-        }
+        //Set looping based on properties
+        AudioProperties* audioProps = AssetManager::Instance().Get<AudioProperties>(
+            AssetManager::Instance().FindGuid<AudioProperties>(customName)
+        );
+        bool looping = audioProps ? (audioProps->mode == "loop") : false;
 
-        // Set looping mode
-        if (audioProps->mode == "loop") {
-            mode |= FMOD_LOOP_NORMAL;
-        }
-        else {
-            mode |= FMOD_LOOP_OFF;
-        }
+        //set volume 
+        float finalVolume = volume * masterVolume;
+        finalVolume *= (ParseSoundType(audioProps ? audioProps->soundType : std::string()) == BACKGROUND_MUSIC) ? bgmVolume : sfxVolume;
+        instance->setVolume(finalVolume);
 
-        pSound->setMode(mode);
+        //start
+        instance->start();
 
-        // Create and configure channel
-        FMOD::Channel* pChannel = nullptr;
-        FMOD_RESULT result = pSystem->playSound(pSound, nullptr, true, &pChannel);
+        //track
+        int id = GetNextChannelId();
+		activeEventsById[id] = instance;
+        activeEvents[customName] = instance;
+		if (audioProps) {
+			audioProps->channelID = id;
+			audioProps->isPlaying = true;
+		}
 
-        if (result != FMOD_OK || !pChannel) {
-            std::cerr << "Failed to create channel for: " << customName << std::endl;
-            return -1;
-        }
+        //store 3D information for later updates 
+		channel3DInfo[id] = { 
+            position, velocity, 
+            current3DSettings.minDistance, 
+            current3DSettings.maxDistance, 
+            sourceType, looping, volume };
 
-        // Get unique channel ID
-        int channelId = GetNextChannelId();
-
-        // Set 3D attributes if applicable
-        if (is3D) {
-            FMOD_VECTOR pos = VectorToFmod(position);
-            FMOD_VECTOR vel = VectorToFmod(velocity);
-            pChannel->set3DAttributes(&pos, &vel);
-
-            // Set distance parameters based on source type
-            if (sourceType == AudioSourceType::AMBIENT_3D) {
-                pChannel->set3DMinMaxDistance(5.0f, 200.0f);
-                pChannel->set3DLevel(0.7f); // Partial 3D for ambient sounds
-            }
-            else {
-                pChannel->set3DMinMaxDistance(
-                    current3DSettings.minDistance,
-                    current3DSettings.maxDistance);
-                pChannel->set3DLevel(1.0f); // Full 3D
-            }
-        }
-        
-        SoundType soundType = ParseSoundType(audioProps->soundType);
-
-        // Assign to appropriate channel group
-        if (soundType == BACKGROUND_MUSIC) {
-            pChannel->setChannelGroup(activeChannelGroup["BackgroundMusic"]);
-            currentBGMChannel = channelId;
-        }
-        else if (sourceType == AudioSourceType::AMBIENT_3D) {
-            pChannel->setChannelGroup(activeChannelGroup["Ambient3D"]);
-        }
-        else {
-            pChannel->setChannelGroup(activeChannelGroup["SoundEffects"]);
-        }
-
-        // Set volume with master/group volume scaling
-        float finalVolume = volume;
-        if (soundType == BACKGROUND_MUSIC) {
-            finalVolume *= bgmVolume;
-        }
-        else {
-            finalVolume *= sfxVolume;
-        }
-        finalVolume *= masterVolume;
-        pChannel->setVolume(finalVolume);
-
-        // Store channel info
-        activeChannelsById[channelId] = pChannel;
-        activeChannels[customName] = pChannel;
-
-        // Store 3D info for later updates
-        channel3DInfo[channelId] = {
-            position, velocity,
-            current3DSettings.minDistance,
-            current3DSettings.maxDistance,
-            sourceType,
-            audioProps->mode == "loop",
-            volume
-        };
-
-        // Start playing
-        pChannel->setPaused(false);
-
-        std::cout << "Playing 3D sound: " << customName << " at position ("
-            << position.x << ", " << position.y << ", " << position.z << ")" << std::endl;
-
-        return channelId;
-    }
+		std::cout << "Playing 3D event: " << customName << " at position ("
+			<< position.x << ", " << position.y << ", " << position.z << ")" << std::endl;
+		return id;
+    }   
 
     //Set the 3D listener position and orientation
     void Audio::Set3DListener(
@@ -515,12 +448,14 @@ namespace Framework
         const Vector3& forward,
         const Vector3& up)
     {
-        FMOD_VECTOR pos = VectorToFmod(position);
-        FMOD_VECTOR vel = VectorToFmod(velocity);
-        FMOD_VECTOR fwd = VectorToFmod(forward);
-        FMOD_VECTOR upVec = VectorToFmod(up);
-
-        pSystem->set3DListenerAttributes(0, &pos, &vel, &fwd, &upVec);
+		FMOD_3D_ATTRIBUTES attributes = {};
+		attributes.position = VectorToFmod(position);
+        attributes.velocity = VectorToFmod(velocity);
+        attributes.forward = VectorToFmod(forward);
+        attributes.up = VectorToFmod(up);
+        if (studioSystem) {
+            studioSystem->setListenerAttributes(0, &attributes);
+        }
     }
 
     //Support multiple listeners for split-screen
@@ -531,19 +466,20 @@ namespace Framework
         const Vector3& forward,
         const Vector3& up)
     {
-        // Set number of listeners if needed
-        int numListeners;
-        pSystem->get3DNumListeners(&numListeners);
-        if (listenerId >= numListeners) {
-            pSystem->set3DNumListeners(listenerId + 1);
+        FMOD_3D_ATTRIBUTES attributes = {};
+        attributes.position = VectorToFmod(position);
+        attributes.velocity = VectorToFmod(velocity);
+        attributes.forward = VectorToFmod(forward);
+        attributes.up = VectorToFmod(up);
+
+        int numListeners = 0;
+        if (studioSystem) {
+            studioSystem->getNumListeners(&numListeners);
+            if (listenerId >= numListeners) {
+                studioSystem->setNumListeners(listenerId + 1);
+            }
+            studioSystem->setListenerAttributes(listenerId, &attributes);
         }
-
-        FMOD_VECTOR pos = VectorToFmod(position);
-        FMOD_VECTOR vel = VectorToFmod(velocity);
-        FMOD_VECTOR fwd = VectorToFmod(forward);
-        FMOD_VECTOR upVec = VectorToFmod(up);
-
-        pSystem->set3DListenerAttributes(listenerId, &pos, &vel, &fwd, &upVec);
     }
 
     //Update 3D attributes for a moving sound 
@@ -552,12 +488,15 @@ namespace Framework
         const Vector3& position,
         const Vector3& velocity)
     {
-        auto it = activeChannelsById.find(channelId);
+        auto it = activeEventsById.find(channelId);
         if
-            (it != activeChannelsById.end() && it->second) {
-            FMOD_VECTOR pos = VectorToFmod(position);
-            FMOD_VECTOR vel = VectorToFmod(velocity);
-            it->second->set3DAttributes(&pos, &vel);
+            (it != activeEventsById.end() && it->second) {
+            FMOD_3D_ATTRIBUTES attributes = {};
+            attributes.position = VectorToFmod(position);
+            attributes.velocity = VectorToFmod(velocity);
+            attributes.forward = { 0.0f, 0.0f, 1.0f };
+            attributes.up = { 0.0f, 1.0f, 0.0f };
+            it->second->set3DAttributes(&attributes);
 
             // Update cached info
             if (channel3DInfo.count(channelId)) {
@@ -573,11 +512,14 @@ namespace Framework
         const Vector3& position,
         const Vector3& velocity)
     {
-        auto it = activeChannels.find(customName);
-        if (it != activeChannels.end() && it->second) {
-            FMOD_VECTOR pos = VectorToFmod(position);
-            FMOD_VECTOR vel = VectorToFmod(velocity);
-            it->second->set3DAttributes(&pos, &vel);
+        auto it = activeEvents.find(customName);
+        if (it != activeEvents.end() && it->second) {
+            FMOD_3D_ATTRIBUTES attributes = {};
+            attributes.position = VectorToFmod(position);
+            attributes.velocity = VectorToFmod(velocity);
+            attributes.forward = { 0.0f, 0.0f, 1.0f };
+            attributes.up = { 0.0f, 1.0f, 0.0f };
+            it->second->set3DAttributes(&attributes);
         }
     }
 
@@ -585,24 +527,19 @@ namespace Framework
     void Audio::Configure3DSettings(const Audio3DSettings& settings)
     {
         current3DSettings = settings;
-        pSystem->set3DSettings(
-            settings.dopplerScale,
-            settings.distanceFactor,
-            settings.rolloffScale);
+        if (coreSystem) {
+            coreSystem->set3DSettings(settings.dopplerScale, settings.distanceFactor, settings.rolloffScale);
+        }
     }
 
     //Set min/max distance for a specific channel
     void Audio::SetChannelMinMaxDistance(int channelId, float minDist, float maxDist)
     {
-        auto it = activeChannelsById.find(channelId);
-        if (it != activeChannelsById.end() && it->second) {
-            it->second->set3DMinMaxDistance(minDist, maxDist);
-
-            // Update cached info
-            if (channel3DInfo.count(channelId)) {
-                channel3DInfo[channelId].minDistance = minDist;
-                channel3DInfo[channelId].maxDistance = maxDist;
-            }
+        //Studio manages attentuation mostly via authoring inside FMOD Studio event
+        //We keep cached values so you can still query/update them 
+        if (channel3DInfo.count(channelId)) {
+            channel3DInfo[channelId].minDistance = minDist;
+            channel3DInfo[channelId].maxDistance = maxDist;
         }
     }
 
@@ -614,20 +551,24 @@ namespace Framework
         float outsideVolume,
         const Vector3& orientation)
     {
-        auto it = activeChannelsById.find(channelId);
-        if (it != activeChannelsById.end() && it->second) {
-            it->second->set3DConeSettings(insideConeAngle, outsideConeAngle, outsideVolume);
-            FMOD_VECTOR orient = VectorToFmod(orientation);
-            it->second->set3DConeOrientation(&orient);
-        }
+       //Studio's event emitter has cone settings authored in FMOD Studio 
+       //If dynamic cone settings is needed, can adjust the 3D attributes or parameters
+        (void)channelId;
+        (void)insideConeAngle;
+        (void)outsideConeAngle;
+        (void)outsideVolume;
+        (void)orientation; 
     }
 
     //Set occlusion for realistic sound blocking 
     void Audio::SetChannelOcclusion(int channelId, float directOcclusion, float reverbOcclusion)
     {
-        auto it = activeChannelsById.find(channelId);
-        if (it != activeChannelsById.end() && it->second) {
-            it->second->set3DOcclusion(directOcclusion, reverbOcclusion);
+        auto it = activeEventsById.find(channelId);
+        if (it != activeEventsById.end() && it->second) {
+            // Apply occlusion through a user parameter if authored in FMOD Studio (optional)
+            it->second->setParameterByName("Occlusion", directOcclusion);
+            it->second->setParameterByName("ReverbOcclusion", reverbOcclusion);
+
         }
     }
 
@@ -697,22 +638,29 @@ namespace Framework
     //Check if a position is within audible range
     bool Audio::IsPositionAudible(const Vector3& position, float maxAudibleDistance)
     {
-        FMOD_VECTOR listenerPos, listenerVel, listenerFwd, listenerUp;
-        pSystem->get3DListenerAttributes(0, &listenerPos, &listenerVel, &listenerFwd, &listenerUp);
+        //Query primary listener position via studio system 
+        FMOD_3D_ATTRIBUTES attributes = {};
 
-        float dx = position.x - listenerPos.x;
-        float dy = position.y - listenerPos.y;
-        float dz = position.z - listenerPos.z;
-        float distance = std::sqrt(dx * dx + dy * dy + dz * dz);
+        if (studioSystem) {
 
-        return distance <= maxAudibleDistance;
+            float dx = position.x - attributes.position.x;
+            float dy = position.y - attributes.position.y;
+            float dz = position.z - attributes.position.z;
+            float distance = std::sqrt(dx * dx + dy * dy + dz * dz);
+
+            return distance <= maxAudibleDistance;
+        }
+
+        return false;
     }
 
     //Initialize reverb and filter DSP effects
     void Audio::InitializeReverb()
     {
         // Create reverb DSP
-        pSystem->createDSPByType(FMOD_DSP_TYPE_SFXREVERB, &reverbDSP);
+        if (!coreSystem) return;
+        
+        coreSystem->createDSPByType(FMOD_DSP_TYPE_SFXREVERB, &reverbDSP);
         if (reverbDSP) {
             // Set default reverb properties (room-like)
             reverbDSP->setParameterFloat(FMOD_DSP_SFXREVERB_DECAYTIME, 1.5f);
@@ -731,18 +679,19 @@ namespace Framework
 
             // Add to master channel group but bypass initially
             FMOD::ChannelGroup* masterGroup;
-            pSystem->getMasterChannelGroup(&masterGroup);
+            coreSystem->getMasterChannelGroup(&masterGroup);
+            if (masterGroup) masterGroup->addDSP(0, reverbDSP);
             masterGroup->addDSP(0, reverbDSP);
             reverbDSP->setBypass(true);
         }
 
         // Create low-pass filter DSP
-        pSystem->createDSPByType(FMOD_DSP_TYPE_LOWPASS, &lowPassFilter);
+        coreSystem->createDSPByType(FMOD_DSP_TYPE_LOWPASS, &lowPassFilter);
         if (lowPassFilter) {
             lowPassFilter->setParameterFloat(FMOD_DSP_LOWPASS_CUTOFF, 22000.0f);
 
             FMOD::ChannelGroup* masterGroup;
-            pSystem->getMasterChannelGroup(&masterGroup);
+            coreSystem->getMasterChannelGroup(&masterGroup);
             masterGroup->addDSP(0, lowPassFilter);
             lowPassFilter->setBypass(true);
         }
@@ -751,27 +700,21 @@ namespace Framework
     //Apply reverb to a specific channel
     void Audio::ApplyReverbToChannel(int channelId, bool enable)
     {
-        auto it = activeChannelsById.find(channelId);
-        if (it != activeChannelsById.end() && it->second && reverbDSP) {
-            if (enable) {
-                it->second->addDSP(0, reverbDSP);
-            }
-            else {
-                it->second->removeDSP(reverbDSP);
-            }
-        }
+        // In FMOD Studio, reverb should be routed through buses or sends,
+        // not attached directly to event instances.
+        (void)channelId;
+        (void)enable;
+        std::cout << "[FMOD] ApplyReverbToChannel is handled via FMOD Studio routing instead." << std::endl;
     }
 
     //Check if a channel is currently playing 
     bool Audio::IsChannelPlaying(int channelId)
     {
-        auto it = activeChannelsById.find(channelId);
-        if (it != activeChannelsById.end() && it->second) {
-            bool isPlaying = false;
-            FMOD_RESULT result = it->second->isPlaying(&isPlaying);
-            if (result == FMOD_OK) {
-                return isPlaying;
-            }
+        auto it = activeEventsById.find(channelId);
+        if (it != activeEventsById.end() && it->second) {
+            FMOD_STUDIO_PLAYBACK_STATE state;
+            it->second->getPlaybackState(&state);
+            return state == FMOD_STUDIO_PLAYBACK_PLAYING || state == FMOD_STUDIO_PLAYBACK_SUSTAINING;
         }
         return false;
     }
@@ -779,13 +722,11 @@ namespace Framework
     //Get the current volume of a channel 
     float Audio::GetChannelVolume(int channelId)
     {
-        auto it = activeChannelsById.find(channelId);
-        if (it != activeChannelsById.end() && it->second) {
+        auto it = activeEventsById.find(channelId);
+        if (it != activeEventsById.end() && it->second) {
             float volume = 0.0f;
-            FMOD_RESULT result = it->second->getVolume(&volume);
-            if (result == FMOD_OK) {
-                return volume;
-            }
+            it->second->getVolume(&volume);
+            return volume;
         }
         return 0.0f;
     }
@@ -793,23 +734,25 @@ namespace Framework
     //Stop a specific channel by ID
     void Audio::StopChannel(int channelId)
     {
-        auto it = activeChannelsById.find(channelId);
-        if (it != activeChannelsById.end() && it->second) {
-            it->second->stop();
+        auto it = activeEventsById.find(channelId);
+        if (it != activeEventsById.end() && it->second) {
+            it->second->stop(FMOD_STUDIO_STOP_IMMEDIATE);
+            it->second->release();
 
             // Clean up the channel from our tracking maps
-            activeChannelsById.erase(it);
+            activeEventsById.erase(it);
 
-            // Also remove from channel3DInfo
-            auto infoIt = channel3DInfo.find(channelId);
-            if (infoIt != channel3DInfo.end()) {
-                channel3DInfo.erase(infoIt);
+           //Remove name mapping if present 
+            for (auto ait = activeEvents.begin(); ait != activeEvents.end(); ++ait) {
+                FMOD::Studio::EventInstance* inst = ait->second;
+                if (inst == it->second) {
+                    activeEvents.erase(ait);
+                    break;
+                }
             }
 
-            // If this was the BGM channel, reset it
-            if (channelId == currentBGMChannel) {
-                currentBGMChannel = -1;
-            }
+            if (channel3DInfo.count(channelId)) channel3DInfo.erase(channelId);
+            if (channelId == currentBGMChannel) currentBGMChannel = -1;
         }
     }
 
@@ -817,20 +760,22 @@ namespace Framework
     void Audio::StopAllChannels()
     {
         // Stop all channels by name
-        for (auto& channelEntry : activeChannels) {
-            if (channelEntry.second != nullptr) {
-                channelEntry.second->stop();
+        for (auto& channelEntry : activeEvents) {
+            if (channelEntry.second) {
+                channelEntry.second->stop(FMOD_STUDIO_STOP_IMMEDIATE);
+                channelEntry.second->release();
             }
         }
-        activeChannels.clear();
+        activeEvents.clear();
 
         // Stop all channels by ID
-        for (auto& channelEntry : activeChannelsById) {
-            if (channelEntry.second != nullptr) {
-                channelEntry.second->stop();
+        for (auto& channelEntry : activeEventsById) {
+            if (channelEntry.second) {
+                channelEntry.second->stop(FMOD_STUDIO_STOP_IMMEDIATE);
+                channelEntry.second->release();
             }
         }
-        activeChannelsById.clear();
+        activeEventsById.clear();
         channel3DInfo.clear();
 
         // Reset BGM channel
@@ -844,12 +789,14 @@ namespace Framework
     void Audio::SetMasterVolume(float volume)
     {
         masterVolume = std::max(0.0f, std::min(1.0f, volume));
+        Bus* masterBus = nullptr;
 
         // Apply to master channel group
-        FMOD::ChannelGroup* masterGroup = nullptr;
-        pSystem->getMasterChannelGroup(&masterGroup);
-        if (masterGroup) {
-            masterGroup->setVolume(masterVolume);
+        
+        if (studioSystem) {
+            studioSystem->getBus("bus:/", &masterBus);
+            if (masterBus)
+                masterBus->setVolume(masterVolume);
         }
         std::cout << "Master volume set to: " << masterVolume << std::endl;
     }
@@ -858,11 +805,12 @@ namespace Framework
     void Audio::SetBGMVolume(float volume)
     {
         bgmVolume = std::max(0.0f, std::min(1.0f, volume));
-
+        Bus* musicBus = nullptr;
         // Apply to BGM channel group
-        auto it = activeChannelGroup.find("BackgroundMusic");
-        if (it != activeChannelGroup.end() && it->second) {
-            it->second->setVolume(bgmVolume);
+        if (studioSystem) {
+            studioSystem->getBus("bus:/Music", &musicBus);
+            if (musicBus)
+                musicBus->setVolume(bgmVolume);
         }
         std::cout << "BGM volume set to: " << bgmVolume << std::endl;
     }
@@ -871,17 +819,13 @@ namespace Framework
     void Audio::SetSFXVolume(float volume)
     {
         sfxVolume = std::max(0.0f, std::min(1.0f, volume));
+        Bus* sfxBus = nullptr;
 
-        // Apply to SFX channel group
-        auto it = activeChannelGroup.find("SoundEffects");
-        if (it != activeChannelGroup.end() && it->second) {
-            it->second->setVolume(sfxVolume);
-        }
-
-        // Also apply to Ambient3D group
-        it = activeChannelGroup.find("Ambient3D");
-        if (it != activeChannelGroup.end() && it->second) {
-            it->second->setVolume(sfxVolume);
+        if (studioSystem) {
+            studioSystem->getBus("bus:/SFX", &sfxBus);
+            if (sfxBus) sfxBus->setVolume(sfxVolume);
+            studioSystem->getBus("bus:/Ambient", &sfxBus);
+            if (sfxBus) sfxBus->setVolume(sfxVolume);
         }
         std::cout << "SFX volume set to: " << sfxVolume << std::endl;
     }
@@ -889,7 +833,7 @@ namespace Framework
     //Fade in BGM over specified duration 
     void Audio::FadeBGMIn(float duration)
     {
-        if (currentBGMChannel >= 0 && activeChannelsById.count(currentBGMChannel)) {
+        if (currentBGMChannel >= 0 && activeEventsById.count(currentBGMChannel)) {
             fadeStartVolume = 0.0f;
             fadeTargetVolume = 1.0f;
             fadeDuration = duration;
@@ -898,7 +842,7 @@ namespace Framework
             isFadingOut = false;
 
             // Start at zero volume
-            activeChannelsById[currentBGMChannel]->setVolume(0.0f);
+            activeEventsById[currentBGMChannel]->setVolume(0.0f);
 
             // Enable low-pass filter for fade-in effect (optional)
             if (lowPassFilter) {
@@ -912,9 +856,9 @@ namespace Framework
     //Fade out BGM over specified duration 
     void Audio::FadeBGMOut(float duration)
     {
-        if (currentBGMChannel >= 0 && activeChannelsById.count(currentBGMChannel)) {
+        if (currentBGMChannel >= 0 && activeEventsById.count(currentBGMChannel)) {
             float currentVolume;
-            activeChannelsById[currentBGMChannel]->getVolume(&currentVolume);
+            activeEventsById[currentBGMChannel]->getVolume(&currentVolume);
 
             fadeStartVolume = currentVolume;
             fadeTargetVolume = 0.0f;
@@ -972,13 +916,12 @@ namespace Framework
 
     void Audio::UE_PauseSound(const std::string& customName)
     {
-        auto it = activeChannels.find(customName);      // Find the Channel based on the customName
-        if (it != activeChannels.end())
+        auto it = activeEvents.find(customName);      // Find the Channel based on the customName
+        if (it != activeEvents.end())
         {
-            bool isPaused;
-            it->second->getPaused(&isPaused);           // Get the current paused state
-            it->second->setPaused(!isPaused);           // Toggle the paused state
-            std::cout << (isPaused ? "Resuming " : "Pausing ") << customName << std::endl;
+            // Studio EventInstance generally supports setPaused
+            it->second->setPaused(true);
+            std::cout << "Pausing " << customName << std::endl;
         }
         else
         {
@@ -988,12 +931,11 @@ namespace Framework
 
     void Audio::UE_SetVolume(const std::string& customName, float volume)
     {
-        auto it = activeChannels.find(customName);              // Find the channel associated with the custom sound name
+        auto it = activeEvents.find(customName);              // Find the channel associated with the custom sound name
 
-        if (it != activeChannels.end() && it->second != nullptr)
+        if (it != activeEvents.end() && it->second != nullptr)
         {
-            FMOD::Channel* pChannel = it->second;               // Retrieve the Channel from customName 
-            pChannel->setVolume(volume);                        // Set the volume on the channel (0.0f is silent, 1.0f is max volume)
+            it->second->setVolume(volume);                      // Set the volume on the channel (0.0f is silent, 1.0f is max volume)
             std::cout << "Volume for " << customName << " set to " << volume << std::endl;
         }
         else
@@ -1002,141 +944,101 @@ namespace Framework
         }
     }
 
-    void Audio::UE_SetGroupVolume(FMOD::ChannelGroup* group, float volume)
+    void Audio::UE_SetGroupVolume(FMOD::ChannelGroup* bus, float volume)
     {
-        if (group != nullptr)
+        if (bus)
         {
-            group->setVolume(volume);       // Set the volume of the group to the given volume
+            bus->setVolume(volume);       // Set the volume of the group to the given volume
             std::cout << "Set volume for channel group to " << volume << std::endl;
         }
     }
 
-    void Audio::UE_PauseGroup(FMOD::ChannelGroup* group)
+    void Audio::UE_PauseGroup(FMOD::ChannelGroup* bus)
     {
-        if (group != nullptr)
-        {
-            bool isPaused;
-            group->getPaused(&isPaused);    // Retrieve the pause state for the group
-            group->setPaused(!isPaused);    // Toggle pause state for the group
-            std::cout << (isPaused ? "Resuming group." : "Pausing group.") << std::endl;
+        if (bus) {
+            bool paused = false;
+            bus->getPaused(&paused);
+            bus->setPaused(!paused);
+            std::cout << (paused ? "Resuming bus." : "Pausing bus.") << std::endl;
         }
     }
 
-    void Audio::UE_CreateChannelGroup(const std::string& groupName)
+    void Audio::UE_CreateBus(const std::string& busPath)
     {
-        FMOD::ChannelGroup* newGroup = nullptr;                         
-        pSystem->createChannelGroup(groupName.c_str(), &newGroup);      //  Create a new ChannelGroup with given groupName
-        if (newGroup != nullptr)
-        {
-            activeChannelGroup[groupName] = newGroup;                   // Store newGroup in Map of activeChannelGroup
-            //std::cout << "Channel group '" << groupName << "' created successfully." << std::endl;
+        Bus* bus = nullptr;
+        if (studioSystem) {
+            FMOD_RESULT res = studioSystem->getBus(busPath.c_str(), &bus);
+            if (res == FMOD_OK && bus) {
+                activeBuses[busPath] = bus;
+            }
+            else {
+                std::cout << "Warning: Bus " << busPath << " not found in FMOD project." << std::endl;
+            }
         }
     }
 
     void Audio::IncrementGroupVol(const std::string& groupName)
     {
-        auto it = activeChannelGroup.find(groupName);               // Search for GroupName
-        if (it != activeChannelGroup.end())                         // Iterate through the activeChannelGroups
-        {
-            FMOD::ChannelGroup* group = it->second;                 // Retrieve the group
-            float currentVolume;                                    // Create float to hold currentVolume
-            FMOD_RESULT result = group->getVolume(&currentVolume);  // Retrieve the currentVolume of the group
-            if (result == FMOD_OK) 
-            {
-                float newVolume = currentVolume + volChangeAmount;  // Increment the group's volume
-                newVolume = (newVolume > 1.0f) ? 1.0f : newVolume;  // Ensure volume does not exceed 1.0 (max volume)
-                group->setVolume(newVolume);                        // Set the group with the newVolume
-                std::cout << "Increased volume of " << groupName << " to " << newVolume << std::endl;
-            }
-            else 
-            {
-                std::cout << "Error getting volume for group " << groupName << std::endl;
+        Bus* bus = nullptr;
+        if (studioSystem) {
+            studioSystem->getBus(groupName.c_str(), &bus);
+            if (bus) {
+                float cur = 1.0f;
+                bus->getVolume(&cur);
+                float newV = std::min(1.0f, cur + volChangeAmount);
+                bus->setVolume(newV);
+                std::cout << "Increased volume of " << groupName << " to " << newV << std::endl;
+                return;
             }
         }
-        else 
-        {
-            std::cout << "Channel group " << groupName << " not found." << std::endl;
-        }
+        std::cout << "Bus " << groupName << " not found." << std::endl;
     }
 
     void Audio::DecrementGroupVol(const std::string& groupName)
     {
-        auto it = activeChannelGroup.find(groupName);               // Search for groupName
-        if (it != activeChannelGroup.end())                         // Iterate through the activeChannelGroups
-        {
-            FMOD::ChannelGroup* group = it->second;                 // Retrieve the group
-
-            float currentVolume;                                    // Create float to hold currentVolume
-            FMOD_RESULT result = group->getVolume(&currentVolume);  // Retrieve the currentVolume of the group          
-            if (result == FMOD_OK) 
-            {
-                float newVolume = currentVolume - volChangeAmount;  // Decrement the group's volume
-
-                newVolume = (newVolume < 0.0f) ? 0.0f : newVolume;  // Ensure volume does not fall below 0.0 (min volume)
-                group->setVolume(newVolume);                        // Set the group with the newVolume
-
-                std::cout << "Decreased volume of " << groupName << " to " << newVolume << std::endl;
-            }
-            else 
-            {
-                std::cout << "Error getting volume for group " << groupName << std::endl;
+        Bus* bus = nullptr;
+        if (studioSystem) {
+            studioSystem->getBus(groupName.c_str(), &bus);
+            if (bus) {
+                float cur = 1.0f;
+                bus->getVolume(&cur);
+                float newV = std::max(0.0f, cur - volChangeAmount);
+                bus->setVolume(newV);
+                std::cout << "Decreased volume of " << groupName << " to " << newV << std::endl;
+                return;
             }
         }
-        else 
-        {
-            std::cout << "Channel group " << groupName << " not found." << std::endl;
-        }
+        std::cout << "Bus " << groupName << " not found." << std::endl;
     }
 
     void Audio::PauseAllAudio()
     {
-        for (auto& channelEntry : activeChannels)   // Iterate through all active channel
-        {
-            FMOD::Channel* pChannel = channelEntry.second;
-            if (pChannel != nullptr)
-            {
-                bool isPlaying = false;
-                pChannel->isPlaying(&isPlaying);    // Check if channel is playing
-                if (isPlaying)
-                {
-                    pChannel->setPaused(true);      // Pause the channel if its playing
-                }
+        for (auto& kv : activeEvents) {
+            if (kv.second) {
+                kv.second->setPaused(true);
             }
         }
     }
 
     void Audio::ResumeAllAudio()
     {
-        for (auto& channelEntry : activeChannels)  // Iterate through all active channels
-        {
-            FMOD::Channel* pChannel = channelEntry.second;
-            if (pChannel != nullptr)
-            {
-                bool isPaused = false;
-                pChannel->getPaused(&isPaused);    // Check if the channel is paused
-                if (isPaused)
-                {
-                    pChannel->setPaused(false);    // Unpause the channel if it's paused
-                }
+        for (auto& kv : activeEvents) {
+            if (kv.second) {
+                kv.second->setPaused(false);
             }
         }
     }
 
     void Audio::Reset()
     {
-        PauseAllAudio();                    // Pause any current playing audio
-
-        // Iterate through active channels and stop/rewind each
-        for (auto& pair : activeChannels)
-        {
-            FMOD::Channel* channel = pair.second;
-            if (channel != nullptr)
-            {
-                channel->stop();  // Stop the sound
-                channel->setPosition(0, FMOD_TIMEUNIT_MS);  // Rewind to the beginning
+        PauseAllAudio();
+        for (auto& kv : activeEvents) {
+            if (kv.second) {
+                kv.second->stop(FMOD_STUDIO_STOP_IMMEDIATE);
+                
             }
         }
-        activeChannels.clear();  // Clear active channels but keep loaded sounds
-        std::cout << "Audio system has been reset by stopping and rewinding sounds." << std::endl;
+        activeEvents.clear();
+        std::cout << "Audio system has been reset by stopping events." << std::endl;
     }
 }

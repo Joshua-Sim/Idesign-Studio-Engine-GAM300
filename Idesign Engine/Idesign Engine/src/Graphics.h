@@ -75,6 +75,9 @@ namespace Framework {
         bool IsScriptControlEnabled() const;
 
         int  ConsumeLastPickedId();
+        glm::mat4 GetViewMatrix(int viewIdx) const;
+        glm::mat4 GetProjectionMatrix(int viewIdx, float w, float h) const;
+        Camera* GetCameraByIndex(int viewIdx);
 
 
         void SetMouseTargetView(int view) { m_mouseTargetView = (view <= 0) ? 0 : 1; }

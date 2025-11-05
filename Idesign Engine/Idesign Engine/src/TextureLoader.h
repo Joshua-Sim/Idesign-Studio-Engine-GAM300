@@ -7,5 +7,5 @@ using namespace Framework;
 class TextureLoader 
 {
 public:
-    static unsigned int loadTexture(TextureProperties& props, bool flip = true);
+    static unsigned int loadTexture(TextureProperties& props, bool flip);
 };
