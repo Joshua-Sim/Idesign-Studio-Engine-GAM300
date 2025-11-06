@@ -103,6 +103,27 @@ namespace Framework
         return true;
     }
 
+    inline void CompileAllPrefabs(const std::string& folderPath, const prop_list& props)
+    {
+        // Ensure output directories exist
+        std::filesystem::create_directories("Resource");
+        std::filesystem::create_directories("Descriptor");
+
+        for (const auto& entry : std::filesystem::directory_iterator(folderPath))
+        {
+            if (entry.path().extension() == ".prefab")
+            {
+                std::string jsonPath = entry.path().string();
+                std::string fileName = entry.path().stem().string(); // e.g., "Enemy"
+
+                std::string outPath = "Resource/" + fileName + ".bin";
+                std::string descPath = "Descriptor/" + fileName + ".desc.json";
+
+                CompileSingleObject<PrefabProperties>(jsonPath, outPath, descPath, props);
+            }
+        }
+    }
+
     // Compile an array of objects from JSON into Binary Format
     template<typename T>
     bool CompileArray(const std::string& jsonPath, const std::string& outPath, const std::string& descPath, const prop_list& props, const std::string& arrayKey)

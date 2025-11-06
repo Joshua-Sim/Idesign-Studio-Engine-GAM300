@@ -20,41 +20,6 @@ namespace Framework
         AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, "Assets/JSON/AudioAsset.json", "audio");
         AssetManager::Instance().SaveArrayToJson(TypeName<TextureProperties>::value, "Assets/JSON/TextureAsset.json", "textures");
         AssetManager::Instance().SaveArrayToJson(TypeName<PrefabProperties>::value, "Assets/JSON/PrefabAsset.json", "prefabs");
-        /*
-        for (const auto& guid : m_DirtyAssets)
-        {
-            auto it = m_Assets.find(guid);
-            if (it == m_Assets.end()) continue;
-
-            const auto& entry = it->second;
-            if (!entry.pObject || !entry.pProps) continue;
-
-            std::ofstream out(entry.binaryPath, std::ios::binary);
-
-            if (entry.typeName == TypeName<MeshProperties>::value)
-            {
-                auto* mesh = static_cast<MeshProperties*>(entry.pObject.get());
-                JsonToBinary(out, *mesh, *entry.pProps);
-            }
-            else if (entry.typeName == TypeName<AudioProperties>::value)
-            {
-                auto* audio = static_cast<AudioProperties*>(entry.pObject.get());
-                JsonToBinary(out, *audio, *entry.pProps);
-            }
-            else if (entry.typeName == TypeName<TextureProperties>::value)
-            {
-                auto* tex = static_cast<TextureProperties*>(entry.pObject.get());
-                JsonToBinary(out, *tex, *entry.pProps);
-            }
-            else
-            {
-                std::cerr << "SaveAssets Unknown asset type: " << entry.typeName << std::endl;
-            }
-            out.close();
-            std::cout << "SaveAssets Saved: " << guid << "  " << entry.binaryPath << std::endl;
-        }
-        m_DirtyAssets.clear(); // Reset after saving
-        */
     }
 
     void AssetManager::PrintAssetsOfType(const std::string& typeName)

@@ -124,6 +124,21 @@ namespace Framework
             }
         }
 
+        template<typename T>
+        void LoadBinaryArrayFromFolder(const std::string& folderPath, const prop_list& props, std::function<void(T&)> postInit = nullptr)
+        {
+            for (const auto& entry : std::filesystem::directory_iterator(folderPath))
+            {
+                if (!entry.is_regular_file()) continue;
+
+                const auto& path = entry.path();
+                if (path.extension() == ".bin")
+                {
+                    LoadBinaryArray<T>(path.string(), props, postInit);
+                }
+            }
+        }
+
         //------------------------------------------------------------------------------------------------------------------------------------
         //  General Functions
         //------------------------------------------------------------------------------------------------------------------------------------        

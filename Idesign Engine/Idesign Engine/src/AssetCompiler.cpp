@@ -10,7 +10,6 @@
 extern Framework::Coordinator ecsInterface;
 namespace Framework
 {
-  
     void loadScene(const std::string& scenePath)
     {
         // Parse JSON

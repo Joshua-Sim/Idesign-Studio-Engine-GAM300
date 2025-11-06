@@ -5,7 +5,6 @@
 #include "Graphics.h"
 
 #include <InputHandler.h>
-#include "ComponentList.h"
 #include "FontSystem.h"
 #include "Coordinator.h"
 #include <algorithm>
@@ -26,7 +25,6 @@
 #include "ImGuizmo.h"
 #include "fmod.h"
 #include "fmod_studio.h"
-
 
 extern Framework::Coordinator ecsInterface;
 
@@ -138,7 +136,6 @@ namespace Framework {
             {
                 fullPath += ".json"; // Add .json extension
             }
-
             return fullPath;
         }
         return "";
@@ -245,15 +242,16 @@ namespace Framework {
     {
         return (viewIndex == 0) ? gameTexture : gameTextureB;
     }
-    // Edwin, drag and drop Texture/Audio/Obj
+
     void DropCallback(GLFWwindow* window, int count, const char** paths)
     {
         (void)window;
-
         const std::string textureFolder = "Assets/Textures";
         const std::string audioFolder = "Assets/Audio";
         const std::string meshFolder = "Assets/Objects";
-
+        const std::string sceneFolder = "Scenes";
+        const std::string prefabFolder = "Assets/Prefabs";
+        const std::string scriptFolder = "Assets/Scripts";
         std::string finalPath;
         std::string error;
 
@@ -262,9 +260,9 @@ namespace Framework {
             std::string filePath = paths[i];
             std::string extension = filePath.substr(filePath.find_last_of('.') + 1);
             std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
-
             std::string fileName = filePath.substr(filePath.find_last_of("/\\") + 1);
 
+            // Texture Files
             if (extension == "png" || extension == "jpg" || extension == "jpeg" ||
                 extension == "bmp" || extension == "tga" || extension == "dds")
             {
@@ -302,7 +300,7 @@ namespace Framework {
                 }
             }
 
-            // Handle audio files
+            // Audio Files
             else if (extension == "mp3" || extension == "wav" || extension == "flac")
             {
                 auto existingGuid = AssetManager::Instance().FindGuid<AudioProperties>(fileName);
@@ -337,7 +335,7 @@ namespace Framework {
                 }
             }
 
-            // Handle obj files
+            // OBJ || Mesh Files
             else if (extension == "obj")
             {
                 auto existingGuid = AssetManager::Instance().FindGuid<MeshProperties>(fileName);
@@ -372,8 +370,119 @@ namespace Framework {
                     std::cout << "Mesh already exists: " << fileName << std::endl;
                 }
             }
+
+            // Scene Files
+            /*
+            else if (extension == "scene")
+            {
+                auto existingGuid = AssetManager::Instance().FindGuid<SceneProperties>(fileName);
+                if (existingGuid.empty())
+                {
+                    if (MoveFileToAssetFolder(filePath, sceneFolder, finalPath, error))
+                    {
+                        auto scenePtr = std::make_unique<SceneProperties>();
+                        scenePtr->name = std::filesystem::path(fileName).stem().string();
+                        scenePtr->path = finalPath;
+                        scenePtr->guid = GenerateGUID();
+
+                        // Optional: loadSceneMetadata(finalPath, *scenePtr);
+
+                        AssetManager::Instance().RegisterAsset<SceneProperties>(
+                            std::move(scenePtr),
+                            &g_ScenePropertiesProps,
+                            finalPath
+                        );
+                        AssetManager::Instance().SaveArrayToJson(TypeName<SceneProperties>::value, "Assets/JSON/SceneAsset.json", "scenes");
+                        std::cout << "Scene added: " << fileName << " to " << finalPath << std::endl;
+                    }
+                    else
+                    {
+                        errorMessage = "Failed to move scene:\n" + error;
+                        showErrorPopup = true;
+                        return;
+                    }
+                }
+                else
+                {
+                    std::cout << "Scene already exists: " << fileName << std::endl;
+                }
+            }
+
+            // Prefab Files
+            else if (extension == "prefab")
+            {
+                auto existingGuid = AssetManager::Instance().FindGuid<PrefabProperties>(fileName);
+                if (existingGuid.empty())
+                {
+                    if (MoveFileToAssetFolder(filePath, prefabFolder, finalPath, error))
+                    {
+                        auto prefabPtr = std::make_unique<PrefabProperties>();
+                        prefabPtr->name = std::filesystem::path(fileName).stem().string();
+                        prefabPtr->path = finalPath;
+                        prefabPtr->guid = GenerateGUID();
+
+                        // Optional: loadPrefabData(finalPath, *prefabPtr);
+
+                        AssetManager::Instance().RegisterAsset<PrefabProperties>(
+                            std::move(prefabPtr),
+                            &g_PrefabPropertiesProps,
+                            finalPath
+                        );
+                        AssetManager::Instance().SaveArrayToJson(TypeName<PrefabProperties>::value, "Assets/JSON/PrefabAsset.json", "prefabs");
+                        std::cout << "Prefab added: " << fileName << " to " << finalPath << std::endl;
+                    }
+                    else
+                    {
+                        errorMessage = "Failed to move prefab:\n" + error;
+                        showErrorPopup = true;
+                        return;
+                    }
+                }
+                else
+                {
+                    std::cout << "Prefab already exists: " << fileName << std::endl;
+                }
+            }
+
+            // Script Files
+            else if (extension == "lua")
+            {
+                auto existingGuid = AssetManager::Instance().FindGuid<ScriptProperties>(fileName);
+                if (existingGuid.empty())
+                {
+                    if (MoveFileToAssetFolder(filePath, scriptFolder, finalPath, error))
+                    {
+                        auto scriptPtr = std::make_unique<ScriptProperties>();
+                        scriptPtr->name = std::filesystem::path(fileName).stem().string();
+                        scriptPtr->path = finalPath;
+                        scriptPtr->guid = GenerateGUID();
+
+                        // Optional: parseScriptMetadata(finalPath, *scriptPtr);
+
+                        AssetManager::Instance().RegisterAsset<ScriptProperties>(
+                            std::move(scriptPtr),
+                            &g_ScriptPropertiesProps,
+                            finalPath
+                        );
+                        AssetManager::Instance().SaveArrayToJson(TypeName<ScriptProperties>::value, "Assets/JSON/ScriptAsset.json", "scripts");
+                        std::cout << "Script added: " << fileName << " to " << finalPath << std::endl;
+                    }
+                    else
+                    {
+                        errorMessage = "Failed to move script:\n" + error;
+                        showErrorPopup = true;
+                        return;
+                    }
+                }
+                else
+                {
+                    std::cout << "Script already exists: " << fileName << std::endl;
+                }
+            }
+            */
         }
     }
+
     //Initialize static instance 
     ImguiManager* ImguiManager::instance = nullptr;
 
@@ -496,26 +605,15 @@ namespace Framework {
             ImGui::DockSpace(dockspaceId, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
 
             RenderMenuBar();
-
-            RenderAssetBar();
-
-            RenderMeshAssets();
-
-            RenderAudioManager();
-
             RenderEntityMenu();
-
             DrawHotReloadPrompt();
-
             RenderGizmoPanel();
+            RenderAssetPanel();
             ImGui::End(); // End of main dockspace window
-
         }
 
         //Render Console 
-        if (showConsole) {
-            RenderConsole();
-        }
+        if (showConsole) RenderConsole();
 
         // Render ImGui
         ImGui::Render();
@@ -658,7 +756,6 @@ namespace Framework {
     void ImguiManager::Log(const std::string& message, const std::string& category) {
         MessageBus::Get().SendImmediate(
             ConsoleLogMessage(message, ConsoleLogMessage::LogLevel::INFO, category));
-
     }
 
     void ImguiManager::LogWarning(const std::string& message, const std::string& category) {
@@ -909,541 +1006,621 @@ namespace Framework {
         //ImGui::End();
     }
 
-    void ImguiManager::RenderMeshAssets() {
-        if (ImGui::Begin("Mesh Assets", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
+    void ImguiManager::RenderFolderTree(const AssetFolder& folder)
+    {
+        bool open = folder.children.empty()
+            ? ImGui::TreeNodeEx(folder.name.c_str(), ImGuiTreeNodeFlags_Leaf)
+            : ImGui::TreeNode(folder.name.c_str());
+
+        if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left) && folder.type != AssetTabType::None)
         {
-            ImGui::TextColored(helpYellow, "(❓)");
-            if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNone))
+            openTabs.push_back({ folder.type, folder.name });
+        }
+
+        if (open)
+        {
+            if (!folder.children.empty())
             {
-                ImGui::BeginTooltip();
-                ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-                ImGui::TextUnformatted(
-                    "- The Mesh panel lists all registered mesh assets (OBJ, FBX, etc.).\n"
-                    "- Each mesh uses a placeholder icon — right-click the icon to rename or delete.\n"
-                    "- You can undo or redo recent changes using the buttons at the bottom.\n\n"
-                    "- Hovering shows mesh details such as VAO/VBO handles, vertex count, and GUID.\n"
-                    "- Deleting a mesh unloads it from GPU memory and removes it from the Asset Manager.\n"
-                    "\nTip: Keep only necessary meshes loaded — unused geometry increases VRAM usage."
-                );
-                ImGui::PopTextWrapPos();
-                ImGui::EndTooltip();
+                for (const auto& child : folder.children)
+                    RenderFolderTree(child);
             }
-
-            float windowWidth = ImGui::GetContentRegionAvail().x;
-            float itemWidth = 80.0f;
-            int columns = std::max(1, static_cast<int>(windowWidth / itemWidth));
-
-            std::vector<std::string> meshesToDelete;
-            const auto& assets = AssetManager::Instance().GetAssets();
-            int count = 0;
-
-            static char nameBuffer[256] = {};
-            static bool initialized = false;
-
-            // Displaying each asset
-            for (const auto& [guid, entry] : assets)
-            {
-                if (entry.typeName != TypeName<MeshProperties>::value)
-                    continue;
-
-                auto* mesh = static_cast<MeshProperties*>(entry.pObject.get());
-                if (!mesh || mesh->guid.empty())
-                    continue;
-
-                std::string modalId = "EditMeshModal_" + mesh->guid;
-
-                ImGui::PushID(mesh->guid.id.c_str());
-                ImGui::BeginGroup();
-
-                // Centered placeholder image
-                float imageSize = 64.0f;
-                float imageX = (itemWidth - imageSize) * 0.5f;
-                ImGui::SetCursorPosX(ImGui::GetCursorPosX() + imageX);
-                ImGui::Image((ImTextureID)g_ObjIcon.textureID, ImVec2(imageSize, imageSize));
-
-                // Right-click on image
-                if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
-                {
-                    std::snprintf(nameBuffer, sizeof(nameBuffer), "%s", mesh->name.c_str());
-                    initialized = true;
-                    ImGui::OpenPopup(modalId.c_str());
-                }
-
-                // Centered mesh name
-                const int maxChars = 10;
-                std::string displayName = mesh->name;
-                if (displayName.length() > maxChars)
-                    displayName = displayName.substr(0, maxChars - 3) + "...";
-
-                // Center the truncated name
-                float textWidth = ImGui::CalcTextSize(displayName.c_str()).x;
-                float centerOffset = (itemWidth - textWidth) * 0.5f;
-                ImGui::SetCursorPosX(ImGui::GetCursorPosX() + centerOffset);
-
-                ImGui::PushTextWrapPos(ImGui::GetCursorPosX() + itemWidth);
-                ImGui::TextWrapped("%s", displayName.c_str());
-                ImGui::PopTextWrapPos();
-
-                // Modal popup
-                if (ImGui::BeginPopupModal(modalId.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
-                {
-                    ImGui::TextColored(ImVec4(0.9f, 0.7f, 0.2f, 1.0f), "Mesh Options");
-                    ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
-
-                    ImGui::Text("Edit Name:");
-                    ImGui::InputText("##Name", nameBuffer, IM_ARRAYSIZE(nameBuffer));
-
-                    ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
-
-                    float buttonWidth = 80.0f;
-                    float spacing = 10.0f;
-                    float totalWidth = buttonWidth * 3 + spacing * 2;
-                    float centerX = (ImGui::GetWindowSize().x - totalWidth) * 0.5f;
-                    ImGui::SetCursorPosX(centerX);
-
-                    if (ImGui::Button("Apply", ImVec2(buttonWidth, 0)))
-                    {
-                        std::string newName = nameBuffer;
-                        if (newName != mesh->name)
-                        {
-                            UndoRedoManager::Instance().PushAssetUndo
-                            (
-                                guid,
-                                "MeshProperties", // or TypeName<MeshProperties>::value if you use type traits
-                                mesh,
-                                *FindPropListByName("MeshProperties") // or use mesh->GetPropList() if available
-                            );
-                            mesh->name = newName;
-                            AssetManager::Instance().MarkDirty(guid);
-                        }
-                        initialized = false;
-                        ImGui::CloseCurrentPopup();
-                    }
-
-                    ImGui::SameLine(0, spacing);
-                    if (ImGui::Button("Delete", ImVec2(buttonWidth, 0)))
-                    {
-                        meshesToDelete.push_back(mesh->guid.id.c_str());
-                        initialized = false;
-                        ImGui::CloseCurrentPopup();
-                    }
-
-                    ImGui::SameLine(0, spacing);
-                    if (ImGui::Button("Cancel", ImVec2(buttonWidth, 0)))
-                    {
-                        initialized = false;
-                        ImGui::CloseCurrentPopup();
-                    }
-
-                    ImGui::EndPopup();
-                }
-
-                // Tooltip
-                if (ImGui::IsItemHovered())
-                {
-                    ImGui::BeginTooltip();
-                    ImGui::Text("Name: %s", mesh->name.c_str());
-                    ImGui::Text("Path: %s", mesh->path.c_str());
-                    ImGui::Text("GUID: %s", mesh->guid.id.c_str());
-                    ImGui::Text("VAO: %u", mesh->vao);
-                    ImGui::Text("VBO: %u", mesh->vbo);
-                    ImGui::Text("EBO: %u", mesh->ebo);
-                    ImGui::Text("Index Count: %u", mesh->indexCount);
-                    ImGui::EndTooltip();
-                }
-
-                ImGui::EndGroup();
-                ImGui::PopID();
-
-                count++;
-                if (count % columns != 0)
-                    ImGui::SameLine();
-            }
-
-            // Deferred deletion
-            for (const auto& guid : meshesToDelete)
-            {
-                AssetManager::Instance().Unload(guid);
-            }
-
-            //if (ImGui::Button("Undo"))
-            //    UndoRedoManager::Instance().UndoAsset();
-
-            //ImGui::SameLine();
-            //if (ImGui::Button("Redo"))
-            //    UndoRedoManager::Instance().RedoAsset();
-
-            ImGui::NewLine();
-            RenderErrorPopup();
-            ImGui::End();
+            ImGui::TreePop(); // Always pop if open
         }
     }
 
-    void ImguiManager::RenderAssetBar() {
-        //for edwin
-        if (ImGui::Begin("Assets", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
+    void ImguiManager::RenderAssetPanel()
+    {
+        ImGui::Begin("Project");
+
+        // Split the panel into two child regions: left (explorer) and right (tabs)
+        ImGui::Columns(2, "Asset Explorer", true);
+
+        // Left: Folder Explorer
+        ImGui::BeginChild("FolderExplorer", ImVec2(0, 0), true);
+        for (const auto& root : assetTree)
+            RenderFolderTree(root);
+        ImGui::EndChild();
+
+        ImGui::NextColumn();
+
+        // Right: Asset Tabs
+        ImGui::BeginChild("AssetTabs", ImVec2(0, 0), true);
+        if (ImGui::BeginTabBar("AssetTabBar")) 
         {
-            ImGui::TextColored(helpYellow, "(❓)");
-            if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNone))
+            for (int i = 0; i < openTabs.size(); ++i) 
+            {
+                const auto& tab = openTabs[i];
+                if (ImGui::BeginTabItem(tab.label.c_str())) 
+                {
+                    switch (tab.type) 
+                    {
+                    case AssetTabType::Mesh:
+                        RenderMeshAssets();
+                        break;
+                    case AssetTabType::Texture:
+                        RenderTextureAssets();
+                        break;
+                    case AssetTabType::Audio:
+                        RenderAudioAssets();
+                        break;
+                    case AssetTabType::Material:
+                        //RenderMaterialAssets(); // Add this when ready
+                        break;
+                    case AssetTabType::Prefab:
+                        //RenderPrefabAssets();   // Add this when ready
+                        break;
+                    case AssetTabType::Scene:
+                        //RenderSceneAssets();    // Add this when ready
+                        break;
+                    case AssetTabType::Scripts:
+                        //RenderScriptAssets();   // Add this when ready
+                    default:
+                        break;
+                    }
+                    ImGui::EndTabItem();
+                }
+            }
+            ImGui::EndTabBar();
+        }
+        ImGui::EndChild();
+        ImGui::End();
+    }
+
+    void ImguiManager::RenderMeshAssets() 
+    {
+        ImGui::TextColored(helpYellow, "(❓)");
+        if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNone))
+        {
+            ImGui::BeginTooltip();
+            ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+            ImGui::TextUnformatted(
+                "- The Mesh panel lists all registered mesh assets (OBJ, FBX, etc.).\n"
+                "- Each mesh uses a placeholder icon — right-click the icon to rename or delete.\n"
+                "- You can undo or redo recent changes using the buttons at the bottom.\n\n"
+                "- Hovering shows mesh details such as VAO/VBO handles, vertex count, and GUID.\n"
+                "- Deleting a mesh unloads it from GPU memory and removes it from the Asset Manager.\n"
+                "\nTip: Keep only necessary meshes loaded — unused geometry increases VRAM usage."
+            );
+            ImGui::PopTextWrapPos();
+            ImGui::EndTooltip();
+        }
+
+        float windowWidth = ImGui::GetContentRegionAvail().x;
+        float itemWidth = 80.0f;
+        int columns = std::max(1, static_cast<int>(windowWidth / itemWidth));
+
+        std::vector<std::string> meshesToDelete;
+        const auto& assets = AssetManager::Instance().GetAssets();
+        int count = 0;
+
+        static char nameBuffer[256] = {};
+        static bool initialized = false;
+
+        // Displaying each asset
+        for (const auto& [guid, entry] : assets)
+        {
+            if (entry.typeName != TypeName<MeshProperties>::value)
+                continue;
+
+            auto* mesh = static_cast<MeshProperties*>(entry.pObject.get());
+            if (!mesh || mesh->guid.empty())
+                continue;
+
+            std::string modalId = "EditMeshModal_" + mesh->guid;
+
+            ImGui::PushID(mesh->guid.id.c_str());
+            ImGui::BeginGroup();
+
+            // Centered placeholder image
+            float imageSize = 64.0f;
+            float imageX = (itemWidth - imageSize) * 0.5f;
+            ImGui::SetCursorPosX(ImGui::GetCursorPosX() + imageX);
+            ImGui::Image((ImTextureID)g_ObjIcon.textureID, ImVec2(imageSize, imageSize));
+
+            // Right-click on image
+            if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+            {
+                std::snprintf(nameBuffer, sizeof(nameBuffer), "%s", mesh->name.c_str());
+                initialized = true;
+                ImGui::OpenPopup(modalId.c_str());
+            }
+
+            // Centered mesh name
+            const int maxChars = 10;
+            std::string displayName = mesh->name;
+            if (displayName.length() > maxChars)
+                displayName = displayName.substr(0, maxChars - 3) + "...";
+
+            // Center the truncated name
+            float textWidth = ImGui::CalcTextSize(displayName.c_str()).x;
+            float centerOffset = (itemWidth - textWidth) * 0.5f;
+            ImGui::SetCursorPosX(ImGui::GetCursorPosX() + centerOffset);
+
+            ImGui::PushTextWrapPos(ImGui::GetCursorPosX() + itemWidth);
+            ImGui::TextWrapped("%s", displayName.c_str());
+            ImGui::PopTextWrapPos();
+
+            // Modal popup
+            if (ImGui::BeginPopupModal(modalId.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+            {
+                ImGui::TextColored(ImVec4(0.9f, 0.7f, 0.2f, 1.0f), "Mesh Options");
+                ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
+
+                ImGui::Text("Edit Name:");
+                ImGui::InputText("##Name", nameBuffer, IM_ARRAYSIZE(nameBuffer));
+
+                ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
+
+                float buttonWidth = 80.0f;
+                float spacing = 10.0f;
+                float totalWidth = buttonWidth * 3 + spacing * 2;
+                float centerX = (ImGui::GetWindowSize().x - totalWidth) * 0.5f;
+                ImGui::SetCursorPosX(centerX);
+
+                if (ImGui::Button("Apply", ImVec2(buttonWidth, 0)))
+                {
+                    std::string newName = nameBuffer;
+                    if (newName != mesh->name)
+                    {
+                        UndoRedoManager::Instance().PushAssetUndo
+                        (
+                            guid,
+                            "MeshProperties", // or TypeName<MeshProperties>::value if you use type traits
+                            mesh,
+                            *FindPropListByName("MeshProperties") // or use mesh->GetPropList() if available
+                        );
+                        mesh->name = newName;
+                        AssetManager::Instance().MarkDirty(guid);
+                    }
+                    initialized = false;
+                    ImGui::CloseCurrentPopup();
+                }
+
+                ImGui::SameLine(0, spacing);
+                if (ImGui::Button("Delete", ImVec2(buttonWidth, 0)))
+                {
+                    meshesToDelete.push_back(mesh->guid.id.c_str());
+                    initialized = false;
+                    ImGui::CloseCurrentPopup();
+                }
+
+                ImGui::SameLine(0, spacing);
+                if (ImGui::Button("Cancel", ImVec2(buttonWidth, 0)))
+                {
+                    initialized = false;
+                    ImGui::CloseCurrentPopup();
+                }
+
+                ImGui::EndPopup();
+            }
+
+            // Tooltip
+            if (ImGui::IsItemHovered())
             {
                 ImGui::BeginTooltip();
-                ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-                ImGui::TextUnformatted(
-                    "- The Texture panel displays all loaded texture assets as thumbnails.\n"
-                    "- Left-click a texture to view its details; right-click to open edit options.\n"
-                    "- Inside the popup you can:\n"
-                    "    - Rename the texture (updates its asset entry)\n"
-                    "    - Delete it (unloads it from the Asset Manager)\n\n"
-                    "- Hover over a texture to see metadata like path, GUID, and resolution.\n"
-                    "- Changes are auto-saved via the Asset Manager’s dirty-flag system.\n"
-                    "\nTip: Keep texture names short and descriptive (e.g. 'brick_diffuse')."
-                );
-                ImGui::PopTextWrapPos();
+                ImGui::Text("Name: %s", mesh->name.c_str());
+                ImGui::Text("Path: %s", mesh->path.c_str());
+                ImGui::Text("GUID: %s", mesh->guid.id.c_str());
+                ImGui::Text("VAO: %u", mesh->vao);
+                ImGui::Text("VBO: %u", mesh->vbo);
+                ImGui::Text("EBO: %u", mesh->ebo);
+                ImGui::Text("Index Count: %u", mesh->indexCount);
                 ImGui::EndTooltip();
             }
-            float windowWidth = ImGui::GetContentRegionAvail().x;
-            ImVec2 imageSize(64, 64);
-            float itemWidth = imageSize.x + 16.0f;
-            int columns = std::max(1, static_cast<int>(windowWidth / itemWidth));
 
-            std::vector<std::string> texturesToDelete;
+            ImGui::EndGroup();
+            ImGui::PopID();
 
-            const auto& assets = AssetManager::Instance().GetAssets();
-            int count = 0;
-
-            for (const auto& [guid, entry] : assets)
-            {
-                if (entry.typeName != TypeName<TextureProperties>::value)
-                    continue;
-
-                auto* tex = static_cast<TextureProperties*>(entry.pObject.get());
-                if (!tex || tex->textureID == 0 || tex->guid.empty())
-                    continue;
-
-                ImTextureID imguiTextureID = (ImTextureID)(intptr_t)tex->textureID;
-                std::string modalId = "EditModal_" + tex->guid;
-
-                ImGui::PushID(tex->guid.id.c_str());
-                ImGui::BeginGroup();
-
-                // Display texture
-                ImGui::Image(imguiTextureID, imageSize, ImVec2(0, 1), ImVec2(1, 0));
-
-                // Right-click to open modal
-                if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
-                    ImGui::OpenPopup(modalId.c_str());
-
-                // Modal dialog
-                if (ImGui::BeginPopupModal(modalId.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
-                {
-                    static std::unordered_map<std::string, char[256]> renameBuffers;
-                    if (renameBuffers.find(tex->guid.id.c_str()) == renameBuffers.end())
-                    {
-                        std::snprintf(renameBuffers[tex->guid.id.c_str()], sizeof(renameBuffers[tex->guid.id.c_str()]), "%s", tex->name.c_str());
-                    }
-
-                    ImGui::TextColored(ImVec4(0.9f, 0.7f, 0.2f, 1.0f), "Texture Options");
-                    ImGui::Spacing();
-                    ImGui::Separator();
-                    ImGui::Spacing();
-
-                    ImGui::Text("Rename Texture:");
-                    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
-                    ImGui::InputText("##Rename", renameBuffers[tex->guid.id.c_str()], IM_ARRAYSIZE(renameBuffers[tex->guid.id.c_str()]));
-
-                    ImGui::Spacing();
-                    ImGui::Separator();
-                    ImGui::Spacing();
-
-                    // Button row
-                    float buttonWidth = 80.0f;
-                    float spacing = 10.0f;
-                    float totalWidth = buttonWidth * 3 + spacing * 2;
-                    float centerX = (ImGui::GetWindowSize().x - totalWidth) * 0.5f;
-                    ImGui::SetCursorPosX(centerX);
-
-                    if (ImGui::Button("Apply", ImVec2(buttonWidth, 0)))
-                    {
-                        std::string newName = renameBuffers[tex->guid.id.c_str()];
-                        if (newName != tex->name)
-                        {
-                            tex->name = newName;
-                        }
-                        ImGui::CloseCurrentPopup();
-                    }
-
-                    ImGui::SameLine(0, spacing);
-                    if (ImGui::Button("Delete", ImVec2(buttonWidth, 0)))
-                    {
-                        texturesToDelete.push_back(tex->guid.id.c_str());
-                        ImGui::CloseCurrentPopup();
-                    }
-
-                    ImGui::SameLine(0, spacing);
-                    if (ImGui::Button("Cancel", ImVec2(buttonWidth, 0)))
-                    {
-                        ImGui::CloseCurrentPopup();
-                    }
-                    ImGui::EndPopup();
-                }
-
-                // Tooltip on hover
-                if (ImGui::IsItemHovered())
-                {
-                    ImGui::BeginTooltip();
-                    ImGui::Text("Name: %s", tex->name.c_str());
-                    ImGui::Text("Path: %s", tex->path.c_str());
-                    ImGui::Text("GUID: %s", tex->guid.id.c_str());
-                    ImGui::Text("Size: %d x %d", tex->width, tex->height);
-                    ImGui::EndTooltip();
-                }
-
-                // Texture name centered below image
-                const int maxChars = 10;
-                std::string displayName = tex->name;
-                if (displayName.length() > maxChars)
-                    displayName = displayName.substr(0, maxChars - 3) + "...";
-
-                // Now center based on the truncated name
-                float textWidth = ImGui::CalcTextSize(displayName.c_str()).x;
-                float centerOffset = (imageSize.x - textWidth) * 0.5f;
-                ImGui::SetCursorPosX(ImGui::GetCursorPosX() + centerOffset);
-
-                // Display
-                ImGui::PushTextWrapPos(ImGui::GetCursorPosX() + imageSize.x);
-                ImGui::TextWrapped("%s", displayName.c_str());
-                ImGui::PopTextWrapPos();
-
-                ImGui::EndGroup();
-                ImGui::PopID();
-
-                count++;
-                if (count % columns != 0)
-                    ImGui::SameLine();
-            }
-
-            for (const auto& guid : texturesToDelete)
-            {
-                AssetManager::Instance().Unload(guid);
-            }
-
-            ImGui::NewLine();
-            RenderErrorPopup();
-            ImGui::End();
+            count++;
+            if (count % columns != 0)
+                ImGui::SameLine();
         }
+
+        // Deferred deletion
+        for (const auto& guid : meshesToDelete)
+        {
+            AssetManager::Instance().Unload(guid);
+        }
+
+        ImGui::NewLine();
+        RenderErrorPopup();
+    }
+
+    void ImguiManager::RenderTextureAssets() 
+    {
+        ImGui::TextColored(helpYellow, "(❓)");
+        if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNone))
+        {
+            ImGui::BeginTooltip();
+            ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+            ImGui::TextUnformatted(
+                "- The Texture panel displays all loaded texture assets as thumbnails.\n"
+                "- Left-click a texture to view its details; right-click to open edit options.\n"
+                "- Inside the popup you can:\n"
+                "    - Rename the texture (updates its asset entry)\n"
+                "    - Delete it (unloads it from the Asset Manager)\n\n"
+                "- Hover over a texture to see metadata like path, GUID, and resolution.\n"
+                "- Changes are auto-saved via the Asset Manager’s dirty-flag system.\n"
+                "\nTip: Keep texture names short and descriptive (e.g. 'brick_diffuse')."
+            );
+            ImGui::PopTextWrapPos();
+            ImGui::EndTooltip();
+        }
+        float windowWidth = ImGui::GetContentRegionAvail().x;
+        ImVec2 imageSize(64, 64);
+        float itemWidth = imageSize.x + 16.0f;
+        int columns = std::max(1, static_cast<int>(windowWidth / itemWidth));
+
+        std::vector<std::string> texturesToDelete;
+
+        const auto& assets = AssetManager::Instance().GetAssets();
+        int count = 0;
+
+        for (const auto& [guid, entry] : assets)
+        {
+            if (entry.typeName != TypeName<TextureProperties>::value)
+                continue;
+
+            auto* tex = static_cast<TextureProperties*>(entry.pObject.get());
+            if (!tex || tex->textureID == 0 || tex->guid.empty())
+                continue;
+
+            ImTextureID imguiTextureID = (ImTextureID)(intptr_t)tex->textureID;
+            std::string modalId = "EditModal_" + tex->guid;
+
+            ImGui::PushID(tex->guid.id.c_str());
+            ImGui::BeginGroup();
+
+            // Display texture
+            ImGui::Image(imguiTextureID, imageSize, ImVec2(0, 1), ImVec2(1, 0));
+
+            // Right-click to open modal
+            if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+                ImGui::OpenPopup(modalId.c_str());
+
+            // Modal dialog
+            if (ImGui::BeginPopupModal(modalId.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+            {
+                static std::unordered_map<std::string, char[256]> renameBuffers;
+                if (renameBuffers.find(tex->guid.id.c_str()) == renameBuffers.end())
+                {
+                    std::snprintf(renameBuffers[tex->guid.id.c_str()], sizeof(renameBuffers[tex->guid.id.c_str()]), "%s", tex->name.c_str());
+                }
+
+                ImGui::TextColored(ImVec4(0.9f, 0.7f, 0.2f, 1.0f), "Texture Options");
+                ImGui::Spacing();
+                ImGui::Separator();
+                ImGui::Spacing();
+
+                ImGui::Text("Rename Texture:");
+                ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
+                ImGui::InputText("##Rename", renameBuffers[tex->guid.id.c_str()], IM_ARRAYSIZE(renameBuffers[tex->guid.id.c_str()]));
+
+                ImGui::Spacing();
+                ImGui::Separator();
+                ImGui::Spacing();
+
+                // Button row
+                float buttonWidth = 80.0f;
+                float spacing = 10.0f;
+                float totalWidth = buttonWidth * 3 + spacing * 2;
+                float centerX = (ImGui::GetWindowSize().x - totalWidth) * 0.5f;
+                ImGui::SetCursorPosX(centerX);
+
+                if (ImGui::Button("Apply", ImVec2(buttonWidth, 0)))
+                {
+                    std::string newName = renameBuffers[tex->guid.id.c_str()];
+                    if (newName != tex->name)
+                    {
+                        tex->name = newName;
+                    }
+                    ImGui::CloseCurrentPopup();
+                }
+
+                ImGui::SameLine(0, spacing);
+                if (ImGui::Button("Delete", ImVec2(buttonWidth, 0)))
+                {
+                    texturesToDelete.push_back(tex->guid.id.c_str());
+                    ImGui::CloseCurrentPopup();
+                }
+
+                ImGui::SameLine(0, spacing);
+                if (ImGui::Button("Cancel", ImVec2(buttonWidth, 0)))
+                {
+                    ImGui::CloseCurrentPopup();
+                }
+                ImGui::EndPopup();
+            }
+
+            // Tooltip on hover
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::BeginTooltip();
+                ImGui::Text("Name: %s", tex->name.c_str());
+                ImGui::Text("Path: %s", tex->path.c_str());
+                ImGui::Text("GUID: %s", tex->guid.id.c_str());
+                ImGui::Text("Size: %d x %d", tex->width, tex->height);
+                ImGui::EndTooltip();
+            }
+
+            // Texture name centered below image
+            const int maxChars = 10;
+            std::string displayName = tex->name;
+            if (displayName.length() > maxChars)
+                displayName = displayName.substr(0, maxChars - 3) + "...";
+
+            // Now center based on the truncated name
+            float textWidth = ImGui::CalcTextSize(displayName.c_str()).x;
+            float centerOffset = (imageSize.x - textWidth) * 0.5f;
+            ImGui::SetCursorPosX(ImGui::GetCursorPosX() + centerOffset);
+
+            // Display
+            ImGui::PushTextWrapPos(ImGui::GetCursorPosX() + imageSize.x);
+            ImGui::TextWrapped("%s", displayName.c_str());
+            ImGui::PopTextWrapPos();
+
+            ImGui::EndGroup();
+            ImGui::PopID();
+
+            count++;
+            if (count % columns != 0)
+                ImGui::SameLine();
+        }
+
+        for (const auto& guid : texturesToDelete)
+        {
+            AssetManager::Instance().Unload(guid);
+        }
+
+        ImGui::NewLine();
+        RenderErrorPopup();
+
 
     }
 
-    void ImguiManager::RenderAudioManager() {
-        if (ImGui::Begin("Audio Manager"))
+    void ImguiManager::RenderAudioAssets() 
+    {
+        ImGui::TextColored(helpYellow, "(❓)");
+        if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNone))
         {
+            ImGui::BeginTooltip();
+            ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+            ImGui::TextUnformatted(
+                "- The Audio Manager displays all imported audio clips.\n"
+                "- Right-click the audio icon to rename, change mode (oneshot / loop), or delete.\n"
+                "- You can control playback directly from this panel:\n"
+                "    - 'Play' to test the clip\n"
+                "    - 'Stop' to halt playback\n"
+                "    - Adjust volume with the slider\n\n"
+                "- Green text indicates that an audio clip is currently playing.\n"
+                "- Stopped clips return to idle state automatically when playback ends.\n"
+                "\nTip: Keep sound file names consistent with use-cases, e.g. "
+                "'ui_click', 'engine_loop', or 'explosion_short'.");
+            ImGui::PopTextWrapPos();
+            ImGui::EndTooltip();
+        }
+        const auto& assetsImgui = AssetManager::Instance().GetAssets();
 
-            ImGui::TextColored(helpYellow, "(❓)");
-            if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNone))
+        // Modal state
+        static std::string activeEditGuid;
+        static char nameBuffer[256] = {};
+        static char pathBuffer[256] = {};
+        static int currentMode = 0;
+        static float volumeBuffer = 1.0f;
+        std::vector<std::string> audioToDelete;
+
+        if (ImGui::BeginTable("AudioTable", 2, ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersInnerV))
+        {
+            ImGui::TableSetupColumn("Icon", ImGuiTableColumnFlags_WidthFixed, 40);
+            ImGui::TableSetupColumn("Details");
+            ImGui::TableHeadersRow();
+
+            for (const auto& [handle, entry] : assetsImgui)
             {
-                ImGui::BeginTooltip();
-                ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-                ImGui::TextUnformatted(
-                    "- The Audio Manager displays all imported audio clips.\n"
-                    "- Right-click the audio icon to rename, change mode (oneshot / loop), or delete.\n"
-                    "- You can control playback directly from this panel:\n"
-                    "    - 'Play' to test the clip\n"
-                    "    - 'Stop' to halt playback\n"
-                    "    - Adjust volume with the slider\n\n"
-                    "- Green text indicates that an audio clip is currently playing.\n"
-                    "- Stopped clips return to idle state automatically when playback ends.\n"
-                    "\nTip: Keep sound file names consistent with use-cases, e.g. "
-                    "'ui_click', 'engine_loop', or 'explosion_short'.");
-                ImGui::PopTextWrapPos();
-                ImGui::EndTooltip();
-            }
-            const auto& assetsImgui = AssetManager::Instance().GetAssets();
+                if (entry.typeName != "AudioProperties") continue;
+                auto* audioProps = static_cast<AudioProperties*>(entry.pObject.get());
+                if (!audioProps) continue;
+                std::string audioModal = "EditModal_" + audioProps->guid;
 
-            // Modal state
-            static std::string activeEditGuid;
-            static char nameBuffer[256] = {};
-            static char pathBuffer[256] = {};
-            static int currentMode = 0;
-            static float volumeBuffer = 1.0f;
-            std::vector<std::string> audioToDelete;
+                ImGui::TableNextRow();
 
-            if (ImGui::BeginTable("AudioTable", 2, ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersInnerV))
-            {
-                ImGui::TableSetupColumn("Icon", ImGuiTableColumnFlags_WidthFixed, 40);
-                ImGui::TableSetupColumn("Details");
-                ImGui::TableHeadersRow();
-
-                for (const auto& [handle, entry] : assetsImgui)
+                // Column 0: Icon
+                ImGui::TableSetColumnIndex(0);
+                if (g_AudioIcon.textureID != 0)
                 {
-                    if (entry.typeName != "AudioProperties") continue;
-                    auto* audioProps = static_cast<AudioProperties*>(entry.pObject.get());
-                    if (!audioProps) continue;
-                    std::string audioModal = "EditModal_" + audioProps->guid;
+                    ImGui::Image((ImTextureID)g_AudioIcon.textureID, ImVec2(32, 32));
 
-                    ImGui::TableNextRow();
+                    // Right-click to open modal
+                    if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+                        ImGui::OpenPopup(audioModal.c_str());
 
-                    // Column 0: Icon
-                    ImGui::TableSetColumnIndex(0);
-                    if (g_AudioIcon.textureID != 0)
+                    // Modal dialog
+                    if (ImGui::BeginPopupModal(audioModal.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
                     {
-                        ImGui::Image((ImTextureID)g_AudioIcon.textureID, ImVec2(32, 32));
+                        static char nameBuffer[256] = {};
+                        static float volumeBuffer = 1.0f;
+                        static int modeBuffer = 0;
+                        static bool initialized = false;
 
-                        // Right-click to open modal
-                        if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
-                            ImGui::OpenPopup(audioModal.c_str());
-
-                        // Modal dialog
-                        if (ImGui::BeginPopupModal(audioModal.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+                        if (!initialized)
                         {
-                            static char nameBuffer[256] = {};
-                            static float volumeBuffer = 1.0f;
-                            static int modeBuffer = 0;
-                            static bool initialized = false;
-
-                            if (!initialized)
-                            {
-                                std::snprintf(nameBuffer, sizeof(nameBuffer), "%s", audioProps->name.c_str());
-                                modeBuffer = (audioProps->mode == "loop") ? 1 : 0;
-                                initialized = true;
-                            }
-
-                            ImGui::TextColored(ImVec4(0.9f, 0.7f, 0.2f, 1.0f), "🎧 Audio Options");
-                            ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
-
-                            ImGui::Text("Rename Audio:");
-                            ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
-                            ImGui::InputText("##Rename", nameBuffer, IM_ARRAYSIZE(nameBuffer));
-
-                            ImGui::Spacing();
-                            ImGui::Text("Playback Mode:");
-                            ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
-                            static const char* modes[] = { "oneshot", "loop" };
-                            ImGui::Combo("##Mode", &modeBuffer, modes, IM_ARRAYSIZE(modes));
-
-                            ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
-
-                            // Button row
-                            float buttonWidth = 80.0f;
-                            float spacing = 10.0f;
-                            float totalWidth = buttonWidth * 3 + spacing * 2;
-                            float centerX = (ImGui::GetWindowSize().x - totalWidth) * 0.5f;
-                            ImGui::SetCursorPosX(centerX);
-
-                            if (ImGui::Button("Apply", ImVec2(buttonWidth, 0)))
-                            {
-                                std::string newName = nameBuffer;
-                                std::string newMode = modes[modeBuffer];
-
-                                bool changed = false;
-
-                                if (newName != audioProps->name)
-                                {
-                                    audioProps->name = newName;
-                                    changed = true;
-                                }
-
-                                if (newMode != audioProps->mode)
-                                {
-                                    audioProps->mode = newMode;
-                                    changed = true;
-                                }
-
-                                if (changed)
-                                    AssetManager::Instance().MarkDirty(audioProps->guid);
-
-                                initialized = false;
-                                ImGui::CloseCurrentPopup();
-                            }
-
-                            ImGui::SameLine(0, spacing);
-                            if (ImGui::Button("Delete", ImVec2(buttonWidth, 0)))
-                            {
-                                audioToDelete.push_back(audioProps->guid.id.c_str());
-                                initialized = false;
-                                ImGui::CloseCurrentPopup();
-                            }
-
-                            ImGui::SameLine(0, spacing);
-                            if (ImGui::Button("Cancel", ImVec2(buttonWidth, 0)))
-                            {
-                                initialized = false;
-                                ImGui::CloseCurrentPopup();
-                            }
-
-                            ImGui::EndPopup();
+                            std::snprintf(nameBuffer, sizeof(nameBuffer), "%s", audioProps->name.c_str());
+                            modeBuffer = (audioProps->mode == "loop") ? 1 : 0;
+                            initialized = true;
                         }
-                        if (ImGui::IsItemHovered())
+
+                        ImGui::TextColored(ImVec4(0.9f, 0.7f, 0.2f, 1.0f), "🎧 Audio Options");
+                        ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
+
+                        ImGui::Text("Rename Audio:");
+                        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
+                        ImGui::InputText("##Rename", nameBuffer, IM_ARRAYSIZE(nameBuffer));
+
+                        ImGui::Spacing();
+                        ImGui::Text("Playback Mode:");
+                        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
+                        static const char* modes[] = { "oneshot", "loop" };
+                        ImGui::Combo("##Mode", &modeBuffer, modes, IM_ARRAYSIZE(modes));
+
+                        ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
+
+                        // Button row
+                        float buttonWidth = 80.0f;
+                        float spacing = 10.0f;
+                        float totalWidth = buttonWidth * 3 + spacing * 2;
+                        float centerX = (ImGui::GetWindowSize().x - totalWidth) * 0.5f;
+                        ImGui::SetCursorPosX(centerX);
+
+                        if (ImGui::Button("Apply", ImVec2(buttonWidth, 0)))
                         {
-                            ImGui::BeginTooltip();
-                            ImGui::Text("GUID: %s", audioProps->guid.id.c_str());
-                            ImGui::Text("File: %s", audioProps->path.c_str());
-                            ImGui::Text("Volume: %.2f", audioProps->volume);
-                            ImGui::Text("Mode: %s", audioProps->mode.c_str());
-                            ImGui::EndTooltip();
+                            std::string newName = nameBuffer;
+                            std::string newMode = modes[modeBuffer];
+
+                            bool changed = false;
+
+                            if (newName != audioProps->name)
+                            {
+                                audioProps->name = newName;
+                                changed = true;
+                            }
+
+                            if (newMode != audioProps->mode)
+                            {
+                                audioProps->mode = newMode;
+                                changed = true;
+                            }
+
+                            if (changed) AssetManager::Instance().MarkDirty(audioProps->guid);
+                            initialized = false;
+                            ImGui::CloseCurrentPopup();
                         }
+
+                        ImGui::SameLine(0, spacing);
+                        if (ImGui::Button("Delete", ImVec2(buttonWidth, 0)))
+                        {
+                            audioToDelete.push_back(audioProps->guid.id.c_str());
+                            initialized = false;
+                            ImGui::CloseCurrentPopup();
+                        }
+
+                        ImGui::SameLine(0, spacing);
+                        if (ImGui::Button("Cancel", ImVec2(buttonWidth, 0)))
+                        {
+                            initialized = false;
+                            ImGui::CloseCurrentPopup();
+                        }
+
+                        ImGui::EndPopup();
                     }
-
-                    // Column 1: Details
-                    ImGui::TableSetColumnIndex(1);
-                    ImGui::Text("Name: %s", audioProps->name.c_str());
-                    ImGui::Text("Duration: %.2f sec", audioProps->duration);
-
-                    // Play/Stop buttons
-                    if (ImGui::Button(("Play##" + audioProps->guid.id).c_str()))
+                    if (ImGui::IsItemHovered())
                     {
-                        GlobalAudio.UE_PlaySound(audioProps->name);
-                        audioProps->isPlaying = true;
+                        ImGui::BeginTooltip();
+                        ImGui::Text("GUID: %s", audioProps->guid.id.c_str());
+                        ImGui::Text("File: %s", audioProps->path.c_str());
+                        ImGui::Text("Volume: %.2f", audioProps->volume);
+                        ImGui::Text("Mode: %s", audioProps->mode.c_str());
+                        ImGui::EndTooltip();
                     }
+                }
 
-                    ImGui::SameLine();
-                    if (ImGui::Button(("Stop##" + audioProps->guid.id).c_str()))
+                // Column 1: Details
+                ImGui::TableSetColumnIndex(1);
+                ImGui::Text("Name: %s", audioProps->name.c_str());
+                ImGui::Text("Duration: %.2f sec", audioProps->duration);
+
+                // Play/Stop buttons
+                if (ImGui::Button(("Play##" + audioProps->guid.id).c_str()))
+                {
+                    GlobalAudio.UE_PlaySound(audioProps->name);
+                    audioProps->isPlaying = true;
+                }
+
+                ImGui::SameLine();
+                if (ImGui::Button(("Stop##" + audioProps->guid.id).c_str()))
+                {
+                    GlobalAudio.Reset();
+                    audioProps->isPlaying = false;
+                    audioProps->channelID = -1;
+                }
+
+                // Volume slider
+                float volume = audioProps->volume;
+                if (ImGui::SliderFloat(("Volume##" + audioProps->guid.id).c_str(), &volume, 0.0f, 1.0f))
+                {
+                    audioProps->volume = std::clamp(volume, 0.0f, 1.0f);
+                    GlobalAudio.UE_SetVolume(audioProps->name, audioProps->volume);
+                }
+
+                // Playback status
+                if (audioProps->isPlaying)
+                {
+                    ImGui::TextColored(ImVec4(0.2f, 1.0f, 0.2f, 1.0f), "Status: Playing");
+                }
+                else
+                {
+                    ImGui::Text("Status: Stopped");
+                }
+
+                // Poll playback status
+                if (audioProps->isPlaying && audioProps->channelID != -1)
+                {
+                    if (!GlobalAudio.IsChannelPlaying(audioProps->channelID))
                     {
-                        GlobalAudio.Reset();
                         audioProps->isPlaying = false;
                         audioProps->channelID = -1;
                     }
-
-                    // Volume slider
-                    float volume = audioProps->volume;
-                    if (ImGui::SliderFloat(("Volume##" + audioProps->guid.id).c_str(), &volume, 0.0f, 1.0f))
-                    {
-                        audioProps->volume = std::clamp(volume, 0.0f, 1.0f);
-                        GlobalAudio.UE_SetVolume(audioProps->name, audioProps->volume);
-                    }
-
-                    // Playback status
-                    if (audioProps->isPlaying)
-                    {
-                        ImGui::TextColored(ImVec4(0.2f, 1.0f, 0.2f, 1.0f), "Status: Playing");
-                    }
-                    else
-                    {
-                        ImGui::Text("Status: Stopped");
-                    }
-
-                    // Poll playback status
-                    if (audioProps->isPlaying && audioProps->channelID != -1)
-                    {
-                        if (!GlobalAudio.IsChannelPlaying(audioProps->channelID))
-                        {
-                            audioProps->isPlaying = false;
-                            audioProps->channelID = -1;
-                        }
-                    }
                 }
-                ImGui::EndTable();
             }
-
-            for (const auto& guid : audioToDelete)
-            {
-                AssetManager::Instance().Unload(guid);
-            }
-            ImGui::End();
+            ImGui::EndTable();
+        }
+        for (const auto& guid : audioToDelete)
+        {
+            AssetManager::Instance().Unload(guid);
         }
     }
-    int ImguiManager::GetMainViewIndex() const {
-        return g_MainViewIndex;
+    
+    void ImguiManager::RenderPrefabAssets()
+    {
+        /*if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
+        {
+            ImGui::SetDragDropPayload("PREFAB_DRAG", prefab.guid.id.c_str(), prefab.guid.id.size() + 1);
+            ImGui::Text("Dragging %s", prefab.name.c_str());
+            ImGui::EndDragDropSource();
+        }*/
     }
+
+    void ImguiManager::RenderSceneAssets()
+    {
+
+    }
+
+    void ImguiManager::RenderScriptAssets()
+    {
+
+    }
+
+    int ImguiManager::GetMainViewIndex() const { return g_MainViewIndex; }
+
     void ImguiManager::RenderEntityMenu() {
         if (ImGui::Begin("Entity", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
         {
@@ -1597,7 +1774,6 @@ namespace Framework {
                 }
             }
 
-
             if (ImGui::Begin("Entity List [Hierarchy]"))
             {
                 ImGui::SameLine();
@@ -1618,9 +1794,7 @@ namespace Framework {
                     ImGui::EndTooltip();
                 }
             }
-
             // --- Help tooltip icon under Entity List header ---
-
 
             ImGui::Spacing();
 
@@ -1820,88 +1994,7 @@ namespace Framework {
                         }
                     }
 
-                    //Navmesh property
-                    if (ImGui::CollapsingHeader("NavMesh Component", ImGuiTreeNodeFlags_DefaultOpen))
-                    {
-                        if (ecsInterface.HasComponent<NavMeshComponent>(selectedEntity))
-                        {
-                            auto& navComp = ecsInterface.GetComponent<NavMeshComponent>(selectedEntity);
-
-                            // Display source mesh selection
-                            std::vector<std::string> meshNames;
-                            std::vector<AssetHandle> meshGuids;
-
-                            for (const auto& [guid, entry] : AssetManager::Instance().GetAssets())
-                            {
-                                if (entry.typeName != TypeName<MeshProperties>::value)
-                                    continue;
-
-                                auto* mesh = static_cast<MeshProperties*>(entry.pObject.get());
-                                std::string label = mesh->path.empty() ? "Unnamed Mesh" : mesh->path;
-                                meshNames.push_back(label);
-                                meshGuids.push_back(guid);
-                            }
-
-                            std::vector<const char*> labelPtrs;
-                            for (const auto& name : meshNames)
-                                labelPtrs.push_back(name.c_str());
-
-                            int currentIndex = -1;
-                            for (size_t i = 0; i < meshGuids.size(); ++i)
-                            {
-                                if (meshGuids[i] == navComp.guid)
-                                {
-                                    currentIndex = static_cast<int>(i);
-                                    break;
-                                }
-                            }
-
-                            ImGui::Separator();
-                            ImGui::Text("Source Mesh:");
-                            if (ImGui::Combo("NavMesh Source", &currentIndex, labelPtrs.data(), static_cast<int>(labelPtrs.size())))
-                            {
-                                navComp.guid = meshGuids[currentIndex];
-                            }
-
-                            ImGui::Separator();
-                            ImGui::Checkbox("Is NavMesh Source", &navComp.isNavMeshSource);
-                            ImGui::Checkbox("Runtime Generated", &navComp.runtimeGenerated);
-
-                            ImGui::Separator();
-                            ImGui::Text("Recast Parameters:");
-                            ImGui::DragFloat("Agent Radius", &navComp.agentRadius, 0.01f, 0.1f, 5.0f);
-                            ImGui::DragFloat("Agent Height", &navComp.agentHeight, 0.01f, 0.1f, 5.0f);
-                            ImGui::DragFloat("Cell Size", &navComp.cellSize, 0.01f, 0.05f, 1.0f);
-                            ImGui::DragFloat("Cell Height", &navComp.cellHeight, 0.01f, 0.05f, 1.0f);
-                            ImGui::DragFloat("Max Slope", &navComp.maxSlope, 1.0f, 1.0f, 85.0f);
-
-                            // Optional runtime debug
-                            ImGui::Separator();
-                            ImGui::Text("Runtime Mesh Data:");
-                            ImGui::Text("Vertices: %zu", navComp.positions.size());
-                            ImGui::Text("Indices: %zu", navComp.indices.size());
-
-                            if (ImGui::Button("Clear Runtime Buffers"))
-                            {
-                                navComp.positions.clear();
-                                navComp.indices.clear();
-                            }
-
-                            if (ImGui::Button("Reset NavMesh Component"))
-                            {
-                                navComp = NavMeshComponent{};
-                            }
-                        }
-                        else
-                        {
-                            ImGui::Text("No NavMesh Component attached.");
-                            if (ImGui::Button("Add NavMesh Component"))
-                            {
-                                ecsInterface.AddComponent<NavMeshComponent>(selectedEntity, NavMeshComponent{});
-                            }
-                        }
-                    }
-
+                    // Automate Generate Entity Inspector
                     DrawEntityInspector(selectedEntity, ecsInterface);
 
                     // Reset selectedEntity if the properties window is closed
@@ -1912,38 +2005,6 @@ namespace Framework {
                     ImGui::End();
                 }
             }
-            ImGui::End();
-
-            // Begin the DebugSystem ImGui window
-            if (ImGui::Begin("DebugSystem", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse)) {
-
-                // Retrieve the DebugSystem instance
-                Framework::DebugSystem* debugSystem = Framework::DebugSystem::GetInstance();
-
-                // Get the cached percentage values
-                std::unordered_map<std::string, double> systemPercentages = debugSystem->GetSystemUpdateTimes();
-
-                // Prepare data for histogram
-                std::vector<float> values;
-                std::vector<const char*> labels;
-
-                for (const auto& [systemName, percentage] : systemPercentages) {
-                    values.push_back(static_cast<float>(percentage)); // Add percentage as float for the histogram
-                    labels.push_back(systemName.c_str()); // Store the label for each system
-                }
-
-                // Display each system's update percentage as text
-                for (size_t i = 0; i < values.size(); ++i) {
-                    ImGui::Text("%s: %.2f%%", labels[i], values[i]);
-                }
-
-                // Plot the histogram for system performance percentages
-                if (!values.empty()) {
-                    ImGui::Text("System Performance Histogram");
-                    ImGui::PlotHistogram("##SystemUsage", values.data(), static_cast<int>(values.size()), 0, nullptr, 0.0f, 100.0f, ImVec2(0, 100));
-                }
-            }
-            // End the DebugSystem ImGui window
             ImGui::End();
 
             // Open a new window for game state controls (e.g., "Game Controls")
@@ -2065,8 +2126,25 @@ namespace Framework {
                     }
 
                 }
+
+                // Testing for drag and drop within imgui
+                if (ImGui::BeginDragDropTarget())
+                {
+                    if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("PREFAB_DRAG"))
+                    {
+                        const char* prefabId = (const char*)payload->Data;
+
+                        // Convert screen position to world position
+                        ImVec2 mousePos = ImGui::GetMousePos();
+                        //glm::vec3 worldPos = ScreenToWorld(mousePos); // You’ll need this function
+
+                        //SpawnEntityFromPrefab(prefabId, worldPos);
+                    }
+                    ImGui::EndDragDropTarget();
+                }
             }
             ImGui::End();
+
             //Debug second viewport window
             if (ImGui::Begin("Secondary Viewport"))
             {
@@ -2220,9 +2298,7 @@ namespace Framework {
                 tr.rotation = { r[0], r[1], r[2] };  // degrees
                 tr.scale = { s[0], s[1], s[2] };
             }
-
             tr.isDirty = true;
         }
     }
-
 }

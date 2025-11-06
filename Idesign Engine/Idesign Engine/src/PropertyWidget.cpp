@@ -290,7 +290,8 @@ namespace Framework
             if (attached.contains(propList->m_pName))
                 continue;
 
-            if (propList->m_pName == "WindowConfig" || propList->m_pName == "NavMeshAgentComponent") continue;
+            if (propList->m_pName == "WindowConfig" || propList->m_pName == "NavMeshAgentComponent" ||
+                propList->m_pName == "PrefabProperties" || propList->m_pName == "PrefabComponent") continue;
 
             if (ImGui::Button(std::string("Add ").append(propList->m_pName).c_str()))
             {

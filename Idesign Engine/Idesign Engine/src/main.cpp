@@ -21,6 +21,7 @@
 #include "TestSystem.h"
 #include "FontShader.h"
 #include "AssetManager.h"
+#include "AssetCompiler.h"
 #include "EngineState.h"
 #include "Collision.h"
 #include <ImguiManager.h>
@@ -74,52 +75,16 @@ int main(void)
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     //CompileSingleObject<WindowConfig>("src/Data/WindowAsset.json", "src/Data/WindowAsset.cfg", g_WindowConfigProps);
     AssetManager::Instance().LoadBinary<WindowConfig>("Resource/WindowAsset.cfg", g_WindowConfigProps);
-    //auto Window = std::make_unique<GraphicsWindows>(&config, engine.get());
-    
-    AssetManager::Instance().LoadBinaryArray<PrefabProperties>("Resource/PrefabAsset.bin", g_PrefabProps);
-    // ------------------------------------------------------------------------------------------------------------------------------------------------------
-    //  Audio
-    // ------------------------------------------------------------------------------------------------------------------------------------------------------
-    /*CompileArray<AudioProperties>("src/Data/AudioAsset.json", "src/Data/AudioAsset.bin", g_AudioPropertiesProps, "audio");
-    AssetManager::Instance().LoadBinaryArray<AudioProperties>("src/Data/AudioAsset.bin", g_AudioPropertiesProps,
-        [](AudioProperties& props)
-        {
-            GlobalAudio.UE_LoadEvent(props.name);
-        });*/
-    //AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, "src/Data/AudioAsset.json", "AudioProperties");
-    //GlobalAudio.UE_PlaySound("winloop");
-    std::cout << "Compiling AudioAsset.json..." << std::endl;
-    bool compileSuccess = CompileArray<AudioProperties>("Assets/JSON/AudioAsset.json", "Resource/AudioAsset.bin", "Descriptor/AudioAsset.desc", g_AudioPropertiesProps, "audio");
-    std::cout << "Audio compilation: " << (compileSuccess ? "SUCCESS" : "FAILED") << std::endl;
+    CompileAllPrefabs("Assets/Prefabs", g_PrefabProps);
+
+    //std::cout << "Compiling AudioAsset.json..." << std::endl;
+    //bool compileSuccess = CompileArray<AudioProperties>("Assets/JSON/AudioAsset.json", "Resource/AudioAsset.bin", "Descriptor/AudioAsset.desc", g_AudioPropertiesProps, "audio");
+    //std::cout << "Audio compilation: " << (compileSuccess ? "SUCCESS" : "FAILED") << std::endl;
     
     // Load audio properties into AssetManager first (WITHOUT calling UE_LoadEvent yet)
     std::cout << "Loading AudioAsset.bin into AssetManager..." << std::endl;
     AssetManager::Instance().LoadBinaryArray<AudioProperties>("Resource/AudioAsset.bin", g_AudioPropertiesProps);
     std::cout << "Audio assets registered in AssetManager!" << std::endl;
-  
-    // NOW load FMOD events - AssetManager has all AudioProperties registered, so lookups will work
-    std::cout << "Loading FMOD events..." << std::endl;
-    
-    for (const auto& [guid, entry] : AssetManager::Instance().GetAssets())
-    {
-        if (entry.typeName == TypeName<AudioProperties>::value)
-        {
-            AudioProperties* audioProps = static_cast<AudioProperties*>(entry.pObject.get());
-            std::cout << "  Loading FMOD event: " << audioProps->name << " (path: " << audioProps->path << ")" << std::endl;
-            GlobalAudio.UE_LoadEvent(audioProps->name);
-        }
-    }
-    std::cout << "All FMOD events loaded successfully!" << std::endl;
-   
-
-    // ------------------------------------------------------------------------------------------------------------------------------------------------------
-    //  Textures
-    // ------------------------------------------------------------------------------------------------------------------------------------------------------
-    //CompileArray<TextureProperties>("Assets/JSON/TextureAsset.json", "Resource/TextureAsset.bin", "Descriptor/TextureAsset.desc", g_TexturePropertiesProps, "textures");
-    // ------------------------------------------------------------------------------------------------------------------------------------------------------
-    //  Mesh
-    // ------------------------------------------------------------------------------------------------------------------------------------------------------
-    CompileArray<MeshProperties>("Assets/JSON/MeshAsset.json", "Resource/MeshAsset.bin", "Descriptor/MeshProperties.meta", g_MeshProps, "mesh");
 
     // Initialize global ECS interface and other singleton components
     ecsInterface.Init();
@@ -170,7 +135,6 @@ int main(void)
     engine->AddSystem(scriptingSystem.get());
     engine->AddSystem(navMeshSystem.get());
 	engine->AddSystem(audioSystem.get());
-	
 
     // Register scene manager last
     engine->AddSystem(sceneSystem.get());
@@ -182,6 +146,7 @@ int main(void)
     fileCheckSystem->WatchFolder("Assets/shaders", { ".glsl" });
     fileCheckSystem->WatchFolder("Assets/Textures", { ".png", ".jpg" });
     fileCheckSystem->WatchFolder("Scenes", { ".json" });
+    fileCheckSystem->WatchFolder("Assets/Prefabs", { ".prefab" });
 
     // Initialize the engine and run the main game loop
     engine->Initialize();

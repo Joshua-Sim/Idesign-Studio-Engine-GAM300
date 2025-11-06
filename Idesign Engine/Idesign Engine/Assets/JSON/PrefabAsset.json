@@ -1,9 +1,9 @@
 {
     "prefabs": [
         {
-            "guid": "5102524a-43d4-4626-845f-5a88be3d4668",
-            "name": "Entity 2_Prefab",
-            "path": "Assets/Prefabs/Entity 2_Prefab.prefab",
+            "guid": "4bf36eee-f278-4800-b83a-e67a6d1dc21c",
+            "name": "Entity 0_Prefab",
+            "path": "Assets/Prefabs/Entity 0_Prefab.prefab",
             "isScenePrefab": false
         }
     ]

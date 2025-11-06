@@ -13,7 +13,6 @@
 #ifndef _GRAPHICS_H_
 #define _GRAPHICS_H_
 
-//
 ////FILES
 #include "System.h"
 #include <InputHandler.h>
@@ -32,13 +31,13 @@
 #include "MeshProperties.h"
 #include "TextProperties.h"
 
-namespace Framework {
+namespace Framework 
+{
     class ImguiManager;
 }
 
-
-namespace Framework {
-
+namespace Framework 
+{
     class Graphics : public ISystem
     {
     public:
@@ -191,6 +190,5 @@ namespace Framework {
         double m_fpsLastTime;
         int m_frameCount;
     };
-
 }
 #endif // !_GRAPHICS_H_
