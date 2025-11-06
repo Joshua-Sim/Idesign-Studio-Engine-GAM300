@@ -48,11 +48,17 @@ namespace Framework {
     }
 
     void NavMeshSystem::Initialize() {
-        // Load settings or allocate navmesh objects
-        //Initialise and register a navmesh component
 
-     //   ecsInterface.RegisterComponent<NavMeshComponent>();
+        // REgister here next time
+        //ecsInterface.RegisterComponent<NavMeshComponent>();
 
+        auto navSystem = ecsInterface.GetSystem<NavMeshSystem>();
+        if (navSystem) {
+            navSystem->BuildNavMesh();
+        }
+
+        // Build immediately for demo
+        
         //  ---- ECS INITIALIZATION --- 
         Signature signature;
         signature.set(ecsInterface.GetComponentType<TransformComponent>()); // Register transform so i have access to all entities, then retrieve via checks agent and navmesh comp
