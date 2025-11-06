@@ -77,7 +77,7 @@ namespace Framework
 		static void LogSuccess(const std::string& message, const std::string& category = "APP");
 
 		// Asset Panel
-		enum AssetTabType { None, Mesh, Texture, Material, Audio, Prefab, Scene, Scripts };
+		enum AssetTabType { None, Mesh, Texture, Audio, Prefab, Scene, Scripts };
 
 		struct AssetTab
 		{
@@ -99,7 +99,6 @@ namespace Framework
 				{
 					{ "Meshes", AssetTabType::Mesh, {} },
 					{ "Textures", AssetTabType::Texture, {} },
-					{ "Material", AssetTabType::Material, {} },
 					{ "Audio", AssetTabType::Audio, {} },
 					{ "Prefabs", AssetTabType::Prefab, {} },
 					{ "Scenes", AssetTabType::Scene, {} },
@@ -117,20 +116,6 @@ namespace Framework
 		void RenderSceneAssets();
 		void RenderScriptAssets();
 
-		/*	// Nid check if there is such a function in the scenemanager or prefab
-		void SpawnEntityFromPrefab(const std::string& prefabId, const glm::vec3& position)
-		{
-			auto prefab = AssetManager::Instance().GetAsset<PrefabProperties>(prefabId);
-			if (!prefab) return;
-
-			Entity newEntity = Scene::Current().CreateEntity(prefab->name);
-			for (const auto& comp : prefab->components)
-			{
-				newEntity.AddComponent(comp); // Assuming you have a way to clone components
-			}
-			newEntity.GetTransform().SetPosition(position);
-		}
-		*/
 	private:
 		//Console members 
 		void OnConsoleLog(const ConsoleLogMessage& msg);

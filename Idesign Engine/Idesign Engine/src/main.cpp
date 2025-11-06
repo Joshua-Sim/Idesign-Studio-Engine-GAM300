@@ -71,11 +71,14 @@ int main(void)
     std::cout << "FMOD Studio Audio System initialized successfully!" << std::endl;
 
     // ------- Create systems below -------- 
-    //  Windows
-    // ------------------------------------------------------------------------------------------------------------------------------------------------------
     //CompileSingleObject<WindowConfig>("src/Data/WindowAsset.json", "src/Data/WindowAsset.cfg", g_WindowConfigProps);
     AssetManager::Instance().LoadBinary<WindowConfig>("Resource/WindowAsset.cfg", g_WindowConfigProps);
-    CompileAllPrefabs("Assets/Prefabs", g_PrefabProps);
+
+    //CompileArray<PrefabProperties>("Assets/JSON/PrefabAsset.json", "Resource/PrefabAsset.bin", "Descriptor/PrefabAsset.desc", g_PrefabProps, "prefabs");
+    AssetManager::Instance().LoadBinaryArray<PrefabProperties>("Resource/PrefabAsset.bin", g_PrefabProps);
+    
+    //CompileArray<SceneProperties>("Assets/JSON/SceneAsset.json", "Resource/SceneAsset.bin", "Descriptor/SceneAsset.desc", g_SceneProps, "scenes");
+    AssetManager::Instance().LoadBinaryArray<SceneProperties>("Resource/SceneAsset.bin", g_SceneProps);
 
     //std::cout << "Compiling AudioAsset.json..." << std::endl;
     //bool compileSuccess = CompileArray<AudioProperties>("Assets/JSON/AudioAsset.json", "Resource/AudioAsset.bin", "Descriptor/AudioAsset.desc", g_AudioPropertiesProps, "audio");
@@ -103,7 +106,6 @@ int main(void)
     imguiSystem->SetGraphicsSystem(graphicsSystem.get());
     graphicsSystem->SetImguiManager(imguiSystem.get());
     
-
     //Access the InputHandler instance from the singleton
     InputHandler* inputHandlerSystem = InputHandler::GetInstance();
     if (!inputHandlerSystem) {
@@ -145,7 +147,7 @@ int main(void)
     fileCheckSystem->WatchFolder("Assets/JSON", { ".json", ".cfg" });
     fileCheckSystem->WatchFolder("Assets/shaders", { ".glsl" });
     fileCheckSystem->WatchFolder("Assets/Textures", { ".png", ".jpg" });
-    fileCheckSystem->WatchFolder("Scenes", { ".json" });
+    fileCheckSystem->WatchFolder("Scenes", { ".scene" });
     fileCheckSystem->WatchFolder("Assets/Prefabs", { ".prefab" });
 
     // Initialize the engine and run the main game loop

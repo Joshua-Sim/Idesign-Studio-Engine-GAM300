@@ -525,6 +525,9 @@
     <ClInclude Include="src\AudioSystem.h">
       <Filter>Header Files\Audio</Filter>
     </ClInclude>
+    <ClInclude Include="src\SceneProperties.h">
+      <Filter>Header Files\Property</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

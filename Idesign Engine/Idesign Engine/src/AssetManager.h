@@ -34,7 +34,8 @@
 #include "TextProperties.h"
 #include "NavMeshAgentProperties.h"
 #include "NavMeshProperties.h"
-#include "PrefabProperties.h"  // Add this with other property includes
+#include "PrefabProperties.h"  
+#include "SceneProperties.h"
 
 // Asset Files
 #include <AssetLoader.h>
@@ -50,6 +51,7 @@ namespace Framework
     REGISTER_TYPE_NAME(NavMeshComponent);
     REGISTER_TYPE_NAME(NavMeshAgentComponent);
     REGISTER_TYPE_NAME(PrefabProperties);
+    REGISTER_TYPE_NAME(SceneProperties);
 
     /*  Struct Brief
         - Store any type of assets in a generic way

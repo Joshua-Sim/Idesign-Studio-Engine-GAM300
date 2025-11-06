@@ -248,6 +248,7 @@
     <ClInclude Include="src\Recast\RecastAlloc.h" />
     <ClInclude Include="src\Recast\RecastAssert.h" />
     <ClInclude Include="src\SceneManager.h" />
+    <ClInclude Include="src\SceneProperties.h" />
     <ClInclude Include="src\ScriptingSystem.h" />
     <ClInclude Include="src\ShaderProgram.h" />
     <ClInclude Include="src\SignalHandler.h" />

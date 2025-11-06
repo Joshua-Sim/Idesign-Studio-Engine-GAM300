@@ -1,4 +1,11 @@
 {
-    "count": 0,
-    "entries": []
+    "count": 1,
+    "entries": [
+        {
+            "guid": "4bf36eee-f278-4800-b83a-e67a6d1dc21c",
+            "name": "Entity 0_Prefab",
+            "path": "Assets/Prefabs/Entity 0_Prefab.prefab",
+            "isScenePrefab": false
+        }
+    ]
 }

@@ -20,6 +20,7 @@ namespace Framework
         AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, "Assets/JSON/AudioAsset.json", "audio");
         AssetManager::Instance().SaveArrayToJson(TypeName<TextureProperties>::value, "Assets/JSON/TextureAsset.json", "textures");
         AssetManager::Instance().SaveArrayToJson(TypeName<PrefabProperties>::value, "Assets/JSON/PrefabAsset.json", "prefabs");
+        AssetManager::Instance().SaveArrayToJson(TypeName<SceneProperties>::value, "Assets/JSON/SceneAsset.json", "scenes");
     }
 
     void AssetManager::PrintAssetsOfType(const std::string& typeName)

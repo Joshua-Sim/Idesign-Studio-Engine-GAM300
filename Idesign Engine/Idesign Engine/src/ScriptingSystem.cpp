@@ -162,6 +162,32 @@ namespace Framework {
             lua_pushboolean(L, ok);
             return 1;
         }
+
+        // Cook.Prefab(jsonPath, outPath [, key="prefabs"])
+        int l_Cook_Prefab(lua_State* L) {
+            const char* json = luaL_checkstring(L, 1);
+            const char* out = luaL_checkstring(L, 2);
+            const char* desc = luaL_checkstring(L, 3);
+            const char* key = luaL_optstring(L, 4, "prefabs");
+
+            bool skipped = prepare_output_and_skip_if_fresh(json, out);
+            bool ok = skipped ? true : CompileArray<PrefabProperties>(json, out, desc, g_PrefabProps, key);
+            lua_pushboolean(L, ok);
+            return 1;
+        }
+
+        // Cook.Scene(jsonPath, outPath [, key="scenes"])
+        int l_Cook_Scene(lua_State* L) {
+            const char* json = luaL_checkstring(L, 1);
+            const char* out = luaL_checkstring(L, 2);
+            const char* desc = luaL_checkstring(L, 3);
+            const char* key = luaL_optstring(L, 4, "scenes");
+
+            bool skipped = prepare_output_and_skip_if_fresh(json, out);
+            bool ok = skipped ? true : CompileArray<SceneProperties>(json, out, desc, g_SceneProps, key);
+            lua_pushboolean(L, ok);
+            return 1;
+        }
     
         static uint64_t FileTimeToTicks(const std::filesystem::file_time_type& ft) {
             return std::chrono::duration_cast<std::chrono::milliseconds>(ft.time_since_epoch()).count();

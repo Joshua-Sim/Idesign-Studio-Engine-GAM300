@@ -1063,18 +1063,17 @@ namespace Framework {
                     case AssetTabType::Audio:
                         RenderAudioAssets();
                         break;
-                    case AssetTabType::Material:
-                        //RenderMaterialAssets(); // Add this when ready
-                        break;
                     case AssetTabType::Prefab:
-                        //RenderPrefabAssets();   // Add this when ready
+                        RenderPrefabAssets();
                         break;
                     case AssetTabType::Scene:
-                        //RenderSceneAssets();    // Add this when ready
+                        RenderSceneAssets();
                         break;
                     case AssetTabType::Scripts:
-                        //RenderScriptAssets();   // Add this when ready
+                        RenderScriptAssets();
+                        break;
                     default:
+                        std::cerr << "Unknown AssetTabType: " << static_cast<int>(tab.type) << std::endl;
                         break;
                     }
                     ImGui::EndTabItem();
@@ -1601,17 +1600,59 @@ namespace Framework {
     
     void ImguiManager::RenderPrefabAssets()
     {
-        /*if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
+        const auto& assets = AssetManager::Instance().GetAssets();
+        for (const auto& [guid, entry] : assets)
         {
-            ImGui::SetDragDropPayload("PREFAB_DRAG", prefab.guid.id.c_str(), prefab.guid.id.size() + 1);
-            ImGui::Text("Dragging %s", prefab.name.c_str());
-            ImGui::EndDragDropSource();
-        }*/
+            if (entry.typeName != TypeName<PrefabProperties>::value)
+                continue;
+
+            const auto* prefab = static_cast<const PrefabProperties*>(entry.pObject.get());
+            if (!prefab) continue;
+
+            ImGui::BeginGroup();
+            ImGui::Text(prefab->name.c_str());
+
+            // Start drag source
+            if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
+            {
+                ImGui::SetDragDropPayload("PREFAB_GUID", prefab->guid.id.c_str(), prefab->guid.id.size() + 1);
+                ImGui::Text("Dragging: %s", prefab->name.c_str());
+                ImGui::EndDragDropSource();
+            }
+            ImGui::EndGroup();
+        }
     }
 
     void ImguiManager::RenderSceneAssets()
     {
+        const auto& assets = AssetManager::Instance().GetAssets();
+        for (const auto& [guid, entry] : assets)
+        {
+            if (entry.typeName != TypeName<SceneProperties>::value)
+                continue;
 
+            const auto* scene = static_cast<const SceneProperties*>(entry.pObject.get());
+            if (!scene) continue;
+
+            ImGui::BeginGroup();
+            ImGui::Text(scene->name.c_str());
+
+            // Drag-and-drop support
+            if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
+            {
+                ImGui::SetDragDropPayload("SCENE_GUID", scene->guid.id.c_str(), scene->guid.id.size() + 1);
+                ImGui::Text("Dragging: %s", scene->name.c_str());
+                ImGui::EndDragDropSource();
+            }
+
+            // Optional: double-click to open scene
+            if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
+            {
+                sceneManager.LoadScene(scene->path); // Your scene loading logic
+            }
+
+            ImGui::EndGroup();
+        }
     }
 
     void ImguiManager::RenderScriptAssets()
@@ -2127,18 +2168,19 @@ namespace Framework {
 
                 }
 
-                // Testing for drag and drop within imgui
                 if (ImGui::BeginDragDropTarget())
                 {
-                    if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("PREFAB_DRAG"))
+                    if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("PREFAB_GUID"))
                     {
-                        const char* prefabId = (const char*)payload->Data;
+                        const char* prefabGUID = static_cast<const char*>(payload->Data);
 
-                        // Convert screen position to world position
-                        ImVec2 mousePos = ImGui::GetMousePos();
-                        //glm::vec3 worldPos = ScreenToWorld(mousePos); // You’ll need this function
+                        // Optional: get mouse world position here
+                        // glm::vec3 dropPosition = GetMouseWorldPosition();
 
-                        //SpawnEntityFromPrefab(prefabId, worldPos);
+                        // Spawn the prefab
+                        sceneManager.SpawnPrefab(prefabGUID);
+
+                        // Optional: set transform position if needed
                     }
                     ImGui::EndDragDropTarget();
                 }
