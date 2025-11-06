@@ -21,6 +21,7 @@
 
 static bool sFirstMouse = true;
 static double sLastX = 0.0, sLastY = 0.0;
+static bool tabPressed = false;
 
 namespace Framework {
 
@@ -67,16 +68,25 @@ namespace Framework {
 
 		glfwPollEvents();  // Poll events for GLFW, key pressed and key released
 
-		if (IsKeyPressed(GLFW_KEY_TAB)) {
-			isUIFocused = !isUIFocused; // Flip the state
-
-			if (isUIFocused) {
-				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		if (IsKeyPressed(GLFW_KEY_TAB))
+		{
+			if (!tabPressed) // first frame key goes down
+			{
+				tabPressed = true;
+				isUIFocused = !isUIFocused; // flip once
+				if (isUIFocused)
+					glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+				else
+				{
+					glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+					sFirstMouse = true;
+				}
 			}
-			else {
-				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-				sFirstMouse = true;  // avoid first-frame mouse jump
-			}
+		}
+		else
+		{
+			// key released -> ready to detect next press
+			tabPressed = false;
 		}
 
 		ImGuiIO& io = ImGui::GetIO();
@@ -95,14 +105,13 @@ namespace Framework {
 
 		if (!isUIFocused) {
 			// polling for key held example
-			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-				//std::cout << "W key is being held down (move forward)" << std::endl;
-			}
+			//if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+			//	//std::cout << "W key is being held down (move forward)" << std::endl;
+			//}
 
 			if (IsKeyPressed(GLFW_KEY_F1))
 			{
 				engineState.SetPlay(!engineState.IsPlay());
-
 			}
 
 			if (IsKeyPressed(GLFW_KEY_F4))

@@ -1,318 +1,205 @@
-﻿  AssetCompiler.cpp
-  AssetManager.cpp
-  Audio.cpp
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Audio.cpp(105,27): warning C4458: declaration of 'coreSystem' hides class member
-  (compiling source file '/src/Audio.cpp')
-      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Audio.h(519,17):
-      see declaration of 'Framework::Audio::coreSystem'
+﻿  Core.cpp
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EngineState.h(31,39): error C2597: illegal reference to non-static member 'Framework::EngineState::IsPlayMode'
+  (compiling source file '/src/Core.cpp')
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EngineState.h(39,14):
+      see declaration of 'Framework::EngineState::IsPlayMode'
   
-  AudioLoader.cpp
-  AudioSystem.cpp
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AudioSystem.cpp(132,23): warning C4189: 'distance': local variable is initialized but not referenced
-  (compiling source file '/src/AudioSystem.cpp')
-  
-  ButtonSystem.cpp
-  Collision.cpp
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Collision.cpp(376,15): warning C4459: declaration of 'dt' hides global declaration
-  (compiling source file '/src/Collision.cpp')
-      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Collision.cpp(22,7):
-      see declaration of 'dt'
-  
-  Core.cpp
   DummySystem.cpp
+  EngineState.cpp
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EngineState.h(31,39): error C2597: illegal reference to non-static member 'Framework::EngineState::IsPlayMode'
+  (compiling source file '/src/EngineState.cpp')
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EngineState.h(39,14):
+      see declaration of 'Framework::EngineState::IsPlayMode'
+  
   FontSystem.cpp
-  Graphics.cpp
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(415,21): warning C4458: declaration of 'cam' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(117,17):
-      see declaration of 'Framework::Graphics::cam'
-  
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(448,27): warning C4458: declaration of 'mesh' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(136,24):
-      see declaration of 'Framework::Graphics::mesh'
-  
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(484,27): warning C4458: declaration of 'mesh' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(136,24):
-      see declaration of 'Framework::Graphics::mesh'
-  
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(517,35): warning C4458: declaration of 'tex' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(137,16):
-      see declaration of 'Framework::Graphics::tex'
-  
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(546,23): warning C4458: declaration of 'mesh' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(136,24):
-      see declaration of 'Framework::Graphics::mesh'
-  
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(586,31): warning C4458: declaration of 'tex' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(137,16):
-      see declaration of 'Framework::Graphics::tex'
-  
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(762,27): warning C4458: declaration of 'mesh' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(136,24):
-      see declaration of 'Framework::Graphics::mesh'
-  
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(798,27): warning C4458: declaration of 'mesh' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(136,24):
-      see declaration of 'Framework::Graphics::mesh'
-  
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(831,35): warning C4458: declaration of 'tex' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(137,16):
-      see declaration of 'Framework::Graphics::tex'
-  
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(860,23): warning C4458: declaration of 'mesh' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(136,24):
-      see declaration of 'Framework::Graphics::mesh'
-  
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(900,31): warning C4458: declaration of 'tex' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(137,16):
-      see declaration of 'Framework::Graphics::tex'
-  
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1093,58): warning C4100: 'window': unreferenced parameter
-  (compiling source file '/src/Graphics.cpp')
-  
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1138,17): warning C4458: declaration of 'cam' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(117,17):
-      see declaration of 'Framework::Graphics::cam'
-  
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1233,23): warning C4458: declaration of 'cam' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(117,17):
-      see declaration of 'Framework::Graphics::cam'
-  
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1239,23): warning C4458: declaration of 'cam' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(117,17):
-      see declaration of 'Framework::Graphics::cam'
-  
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1275,39): warning C4100: 'viewIndex': unreferenced parameter
-  (compiling source file '/src/Graphics.cpp')
-  
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1407,40): warning C4458: declaration of 'mesh' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(136,24):
-      see declaration of 'Framework::Graphics::mesh'
-  
   ImguiManager.cpp
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\minwindef.h(130,9): warning C4005: 'APIENTRY': macro redefinition
   (compiling source file '/src/ImguiManager.cpp')
-      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\glfw-3.4.bin.WIN64\include\GLFW\glfw3.h(123,11):
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\glfw-3.4.bin.WIN64\include\GLFW\glfw3.h(123,11):
       see previous definition of 'APIENTRY'
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(190,19): warning C4456: declaration of 'ev' hides previous local declaration
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EngineState.h(31,39): error C2597: illegal reference to non-static member 'Framework::EngineState::IsPlayMode'
   (compiling source file '/src/ImguiManager.cpp')
-      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(151,30):
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EngineState.h(39,14):
+      see declaration of 'Framework::EngineState::IsPlayMode'
+  
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(193,19): warning C4456: declaration of 'ev' hides previous local declaration
+  (compiling source file '/src/ImguiManager.cpp')
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(154,30):
       see declaration of 'ev'
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(260,25): warning C4459: declaration of 'filePath' hides global declaration
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(262,25): warning C4459: declaration of 'filePath' hides global declaration
   (compiling source file '/src/ImguiManager.cpp')
-      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(47,24):
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(49,24):
       see declaration of 'Framework::filePath'
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(272,33): warning C4456: declaration of 'finalPath' hides previous local declaration
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(274,33): warning C4456: declaration of 'finalPath' hides previous local declaration
   (compiling source file '/src/ImguiManager.cpp')
-      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(255,21):
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(257,21):
       see declaration of 'finalPath'
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(273,33): warning C4456: declaration of 'error' hides previous local declaration
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(275,33): warning C4456: declaration of 'error' hides previous local declaration
   (compiling source file '/src/ImguiManager.cpp')
-      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(256,21):
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(258,21):
       see declaration of 'error'
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(822,42): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(725,42): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(831,38): warning C4566: character represented by universal-character-name '\u26A0' cannot be represented in the current code page (1252)
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(734,38): warning C4566: character represented by universal-character-name '\u26A0' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(860,46): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(763,46): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(861,40): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(764,40): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(865,46): warning C4566: character represented by universal-character-name '\u2717' cannot be represented in the current code page (1252)
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(768,46): warning C4566: character represented by universal-character-name '\u2717' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(866,40): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(769,40): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(900,42): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(803,42): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(905,46): warning C4566: character represented by universal-character-name '\u26A0' cannot be represented in the current code page (1252)
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(808,46): warning C4566: character represented by universal-character-name '\u26A0' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(918,42): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(821,42): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(923,46): warning C4566: character represented by universal-character-name '\u26A0' cannot be represented in the current code page (1252)
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(826,46): warning C4566: character represented by universal-character-name '\u26A0' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(952,40): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(855,40): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(985,46): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(888,46): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1091,40): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(915,44): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1251,40): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1086,44): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1403,40): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1241,44): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1460,37): warning C4456: declaration of 'nameBuffer' hides previous local declaration
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1298,41): warning C4456: declaration of 'nameBuffer' hides previous local declaration
   (compiling source file '/src/ImguiManager.cpp')
-      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1426,21):
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1264,25):
       see declaration of 'nameBuffer'
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1461,38): warning C4456: declaration of 'volumeBuffer' hides previous local declaration
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1299,42): warning C4456: declaration of 'volumeBuffer' hides previous local declaration
   (compiling source file '/src/ImguiManager.cpp')
-      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1429,22):
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1267,26):
       see declaration of 'volumeBuffer'
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1472,76): warning C4566: character represented by universal-character-name '\U0001F3A7' cannot be represented in the current code page (1252)
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1310,80): warning C4566: character represented by universal-character-name '\U0001F3A7' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1634,48): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1457,48): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1780,48): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1604,48): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2135,37): warning C4189: 'prefabId': local variable is initialized but not referenced
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2156,39): warning C4459: declaration of 'ecsInterface' hides global declaration
   (compiling source file '/src/ImguiManager.cpp')
-  
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2234,39): warning C4459: declaration of 'ecsInterface' hides global declaration
-  (compiling source file '/src/ImguiManager.cpp')
-      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(29,31):
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(31,31):
       see declaration of 'ecsInterface'
   
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\algorithm(3799,24): warning C4244: '=': conversion from 'int' to 'char', possible loss of data
-  (compiling source file '/src/ImguiManager.cpp')
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\algorithm(3799,24):
-      the template instantiation context (the oldest one first) is
-          D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(262,18):
-          see reference to function template instantiation '_OutIt std::transform<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,int(__cdecl *)(int)>(const _InIt,const _InIt,_OutIt,_Fn)' being compiled
-          with
-          [
-              _OutIt=std::_String_iterator<std::_String_val<std::_Simple_types<char>>>,
-              _Elem=char,
-              _InIt=std::_String_iterator<std::_String_val<std::_Simple_types<char>>>,
-              _Fn=int (__cdecl *)(int)
-          ]
-  
   InputHandler.cpp
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EngineState.h(31,39): error C2597: illegal reference to non-static member 'Framework::EngineState::IsPlayMode'
+  (compiling source file '/src/InputHandler.cpp')
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EngineState.h(39,14):
+      see declaration of 'Framework::EngineState::IsPlayMode'
+  
   main.cpp
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EngineState.h(31,39): error C2597: illegal reference to non-static member 'Framework::EngineState::IsPlayMode'
+  (compiling source file '/src/main.cpp')
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EngineState.h(39,14):
+      see declaration of 'Framework::EngineState::IsPlayMode'
+  
   NavMeshSystem.cpp
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\Recast.h(115,7): warning C4099: 'rcContext': type name first seen using 'struct' now seen using 'class'
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\Recast.h(115,7): warning C4099: 'rcContext': type name first seen using 'struct' now seen using 'class'
   (compiling source file '/src/NavMeshSystem.cpp')
-      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\Recast.h(115,7):
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\Recast.h(115,7):
       see declaration of 'rcContext'
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\DetourNavMesh.h(338,7): warning C4099: 'dtNavMesh': type name first seen using 'struct' now seen using 'class'
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\DetourNavMesh.h(338,7): warning C4099: 'dtNavMesh': type name first seen using 'struct' now seen using 'class'
   (compiling source file '/src/NavMeshSystem.cpp')
-      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\DetourNavMesh.h(338,7):
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\DetourNavMesh.h(338,7):
       see declaration of 'dtNavMesh'
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\DetourNavMesh.h(676,15): warning C4099: 'dtNavMeshQuery': type name first seen using 'struct' now seen using 'class'
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\DetourNavMesh.h(676,15): warning C4099: 'dtNavMeshQuery': type name first seen using 'struct' now seen using 'class'
   (compiling source file '/src/NavMeshSystem.cpp')
-      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.h(22,8):
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.h(22,8):
       see declaration of 'dtNavMeshQuery'
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\DetourNavMeshQuery.h(165,7): warning C4099: 'dtNavMeshQuery': type name first seen using 'struct' now seen using 'class'
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\DetourNavMeshQuery.h(165,7): warning C4099: 'dtNavMeshQuery': type name first seen using 'struct' now seen using 'class'
   (compiling source file '/src/NavMeshSystem.cpp')
-      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\DetourNavMeshQuery.h(165,7):
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\DetourNavMeshQuery.h(165,7):
       see declaration of 'dtNavMeshQuery'
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(308,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(308,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
   (compiling source file '/src/NavMeshSystem.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(316,62): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(316,62): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
   (compiling source file '/src/NavMeshSystem.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(315,54): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(315,54): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
   (compiling source file '/src/NavMeshSystem.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(321,37): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(321,37): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
   (compiling source file '/src/NavMeshSystem.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(319,84): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(319,84): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
   (compiling source file '/src/NavMeshSystem.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(325,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(325,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
   (compiling source file '/src/NavMeshSystem.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(331,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(331,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
   (compiling source file '/src/NavMeshSystem.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(345,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(345,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
   (compiling source file '/src/NavMeshSystem.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(356,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(356,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
   (compiling source file '/src/NavMeshSystem.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(363,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(363,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
   (compiling source file '/src/NavMeshSystem.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(369,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(369,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
   (compiling source file '/src/NavMeshSystem.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(383,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(383,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
   (compiling source file '/src/NavMeshSystem.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(396,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(396,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
   (compiling source file '/src/NavMeshSystem.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(411,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(411,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
   (compiling source file '/src/NavMeshSystem.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(463,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(463,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
   (compiling source file '/src/NavMeshSystem.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(478,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(478,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
   (compiling source file '/src/NavMeshSystem.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(492,22): warning C4566: character represented by universal-character-name '\u2705' cannot be represented in the current code page (1252)
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(492,22): warning C4566: character represented by universal-character-name '\u2705' cannot be represented in the current code page (1252)
   (compiling source file '/src/NavMeshSystem.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(572,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(572,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
   (compiling source file '/src/NavMeshSystem.cpp')
   
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(544,18): warning C4189: 'pathStatus': local variable is initialized but not referenced
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(544,18): warning C4189: 'pathStatus': local variable is initialized but not referenced
   (compiling source file '/src/NavMeshSystem.cpp')
   
-  PropertyWidget.cpp
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PropertyWidget.cpp(16,55): warning C4244: 'argument': conversion from 'uintptr_t' to 'int', possible loss of data
-  (compiling source file '/src/PropertyWidget.cpp')
-  
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PropertyWidget.cpp(293,35): warning C4130: '==': logical operation on address of string constant
-  (compiling source file '/src/PropertyWidget.cpp')
-  
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PropertyWidget.cpp(293,74): warning C4130: '==': logical operation on address of string constant
-  (compiling source file '/src/PropertyWidget.cpp')
-  
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PropertyWidget.cpp(294,35): warning C4130: '==': logical operation on address of string constant
-  (compiling source file '/src/PropertyWidget.cpp')
-  
-D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PropertyWidget.cpp(294,78): warning C4130: '==': logical operation on address of string constant
-  (compiling source file '/src/PropertyWidget.cpp')
-  
-  SceneManager.cpp
-  ScriptingSystem.cpp
-  UndoRedoSystem.cpp
   Generating Code...
-  Idesign Engine.vcxproj -> D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe

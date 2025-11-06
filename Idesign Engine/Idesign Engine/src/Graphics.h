@@ -100,7 +100,7 @@ namespace Framework
         float lastTime = 0.0f;
 
         // camera & movement
-        Camera camera{ {0.f, 1.f, 3.f} };
+       Camera camera{ {0.f, 1.f, 3.f} };
         static bool mouseCaptured;
         bool groundMode = false;
 
