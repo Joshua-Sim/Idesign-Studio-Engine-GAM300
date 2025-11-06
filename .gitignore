@@ -129,3 +129,5 @@ Unnamed Studios/x64/Release/Unnamed Studios.tlog/Unnamed Studios.lastbuildstate
 x64/Debug/Unnamed Studios.exe
 x64/Debug/Unnamed Studios.pdb
 !Assets/Objects/**
+# Allow 3D model .obj files under Assets/Objects
+!Assets/Objects/*.obj
