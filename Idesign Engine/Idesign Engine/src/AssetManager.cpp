@@ -21,52 +21,7 @@ namespace Framework
         AssetManager::Instance().SaveArrayToJson(TypeName<TextureProperties>::value, "Assets/JSON/TextureAsset.json", "textures");
         AssetManager::Instance().SaveArrayToJson(TypeName<PrefabProperties>::value, "Assets/JSON/PrefabAsset.json", "prefabs");
         AssetManager::Instance().SaveArrayToJson(TypeName<SceneProperties>::value, "Assets/JSON/SceneAsset.json", "scenes");
-    }
-
-    void AssetManager::PrintAssetsOfType(const std::string& typeName)
-    {
-        std::cout << "=== Assets of Type: " << typeName << " ===\n";
-
-        for (const auto& [key, entry] : m_Assets)
-        {
-            if (entry.typeName != typeName) continue;
-
-            std::cout << "Asset GUID: " << entry.guid << "\n";
-            std::cout << "Binary Path: " << entry.binaryPath << "\n";
-
-            if (!entry.pProps || entry.pProps->m_Props.empty())
-            {
-                std::cout << "  [No properties registered]\n";
-                continue;
-            }
-
-            for (const auto& prop : entry.pProps->m_Props)
-            {
-                if (!prop.m_fnGet) continue;
-
-                std::cout << "  " << prop.m_pName << ": ";
-
-                switch (prop.m_Type)
-                {
-                    case prop::STRING:  { std::string value; prop.m_fnGet(entry.pObject.get(), &value); std::cout << value; break; }
-                    case prop::INT:     { int         value; prop.m_fnGet(entry.pObject.get(), &value); std::cout << value; break; }
-                    case prop::FLOAT:   { float       value; prop.m_fnGet(entry.pObject.get(), &value); std::cout << value; break; }
-                    case prop::DOUBLE:  { double      value; prop.m_fnGet(entry.pObject.get(), &value); std::cout << value; break; }
-                    case prop::BOOL:    { bool        value; prop.m_fnGet(entry.pObject.get(), &value); std::cout << (value ? "true" : "false"); break; }
-                    default:            std::cout << "[unsupported type]"; break;
-                }
-                std::cout << "\n";
-            }
-            // Optional: Print runtime-only fields if type matches
-            if (typeName == TypeName<TextureProperties>::value)
-            {
-                const auto* tex = static_cast<const TextureProperties*>(entry.pObject.get());
-                std::cout << "  [Runtime] TextureID: " << tex->textureID << "\n";
-                std::cout << "  [Runtime] Width: " << tex->width << "\n";
-                std::cout << "  [Runtime] Height: " << tex->height << "\n";
-            }
-            std::cout << "------------------------\n";
-        }
+        AssetManager::Instance().SaveArrayToJson(TypeName<MaterialMetadata>::value, "Assets/JSON/MaterialAsset.json", "materials");
     }
 
     void AssetManager::Unload(const std::string& guid)
@@ -75,7 +30,6 @@ namespace Framework
         if (it == m_Assets.end()) return;
 
         const AssetEntry& entry = it->second;
-
         std::string filePath;
 
         // Use reflection to find the "path" property
@@ -105,7 +59,6 @@ namespace Framework
                 std::cout << "Deleted file from disk: " << filePath << std::endl;
             }
         }
-
         // Remove from memory
         m_Assets.erase(it);
     }

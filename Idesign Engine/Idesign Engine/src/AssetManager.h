@@ -17,7 +17,7 @@
 #include "pch.h"
 
 // Standard Lib files
-#include "unordered_map"
+#include <unordered_map>
 #include <optional>
 #include <functional>
 
@@ -26,9 +26,9 @@
 #include "stb_image_resize2.h"
 
 // Properties Files
-#include <PropertySystem.h>
-#include <AudioProperties.h>
-#include <WindowConfigProperties.h>
+#include "PropertySystem.h"
+#include "AudioProperties.h"
+#include "WindowConfigProperties.h"
 #include "TextureProperties.h"
 #include "MeshProperties.h"
 #include "TextProperties.h"
@@ -36,6 +36,7 @@
 #include "NavMeshProperties.h"
 #include "PrefabProperties.h"  
 #include "SceneProperties.h"
+#include "MaterialProperties.h"
 
 // Asset Files
 #include <AssetLoader.h>
@@ -52,6 +53,8 @@ namespace Framework
     REGISTER_TYPE_NAME(NavMeshAgentComponent);
     REGISTER_TYPE_NAME(PrefabProperties);
     REGISTER_TYPE_NAME(SceneProperties);
+    REGISTER_TYPE_NAME(MaterialProperties);
+    REGISTER_TYPE_NAME(MaterialMetadata);
 
     /*  Struct Brief
         - Store any type of assets in a generic way
@@ -224,28 +227,10 @@ namespace Framework
             return m_Assets;
         }
 
-        void PrintAssetsOfType(const std::string& typeName);
-        // PrintAssetsOfType(TypeName<AudioProperties>::value);
-
         void Unload(const std::string& guid);
         bool SaveToJson(void* pObject, const std::string& filePath, const prop_list& props);
         void SaveArrayToJson(const std::string& typeName, const std::string& filePath, const std::string& arrayKey);
         bool HasTextureByGUID(const std::string& guid) const;
-
-        std::vector<std::string> GetAvailableTextureNames()
-        {
-            std::vector<std::string> names;
-            for (const auto& [handle, entry] : m_Assets)
-            {
-                if (entry.typeName == "TextureProperties")
-                {
-                    const auto* tex = static_cast<const TextureProperties*>(entry.pObject.get());
-                    if (tex)
-                        names.push_back(tex->name); // or tex->guid, or tex->path
-                }
-            }
-            return names;
-        }
 
     private:
         AssetManager() = default;                                   // Private constructor

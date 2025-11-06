@@ -38,7 +38,7 @@
 #include "ScriptingSystem.h"
 #include "lua.hpp"
 #include <FileCheckSystem.h>
-
+#include "MaterialLoader.h"
 using namespace Framework;
 
 void EnableMemoryLeakChecking(int breakAlloc = -1)
@@ -80,9 +80,32 @@ int main(void)
     //CompileArray<SceneProperties>("Assets/JSON/SceneAsset.json", "Resource/SceneAsset.bin", "Descriptor/SceneAsset.desc", g_SceneProps, "scenes");
     AssetManager::Instance().LoadBinaryArray<SceneProperties>("Resource/SceneAsset.bin", g_SceneProps);
 
-    //std::cout << "Compiling AudioAsset.json..." << std::endl;
-    //bool compileSuccess = CompileArray<AudioProperties>("Assets/JSON/AudioAsset.json", "Resource/AudioAsset.bin", "Descriptor/AudioAsset.desc", g_AudioPropertiesProps, "audio");
-    //std::cout << "Audio compilation: " << (compileSuccess ? "SUCCESS" : "FAILED") << std::endl;
+    CompileArray<MaterialMetadata>("Assets/JSON/MaterialAsset.json", "Resource/MaterialAsset.bin", "Descriptor/MaterialAsset.desc", g_MaterialMetaProps, "materials");
+    AssetManager::Instance().LoadBinaryArray<MaterialMetadata>("Resource/MaterialAsset.bin", g_MaterialMetaProps, [](MaterialMetadata& meta)
+        {
+            auto material = LoadMaterialAsset(meta.path, meta.guid);
+            if (material)
+            {
+                SetGuid(material.get(), g_MaterialProps);
+
+                // Always update material's GUID to match metadata
+                material->guid = meta.guid;
+                AssetManager::Instance().SaveToJson(material.get(), meta.path, g_MaterialProps);
+                AssetManager::Instance().RegisterAsset(std::move(material), &g_MaterialProps, meta.path);
+            }
+            else
+            {
+                std::cerr << "Failed to load material file: " << meta.path << " for GUID: " << meta.guid << "\n";
+            }
+        }
+    );
+
+    //CompileArray<MeshProperties>("Assets/JSON/MeshAsset.json", "Resource/MeshAsset.bin", "Descriptor/MeshAsset.desc", g_MeshProps, "mesh");
+
+    /*std::cout << "Compiling AudioAsset.json..." << std::endl;
+    bool compileSuccess = CompileArray<AudioProperties>("Assets/JSON/AudioAsset.json", "Resource/AudioAsset.bin", "Descriptor/AudioAsset.desc", g_AudioPropertiesProps, "audio");
+    std::cout << "Audio compilation: " << (compileSuccess ? "SUCCESS" : "FAILED") << std::endl;
+    */
     
     // Load audio properties into AssetManager first (WITHOUT calling UE_LoadEvent yet)
     std::cout << "Loading AudioAsset.bin into AssetManager..." << std::endl;
@@ -149,6 +172,7 @@ int main(void)
     fileCheckSystem->WatchFolder("Assets/Textures", { ".png", ".jpg" });
     fileCheckSystem->WatchFolder("Scenes", { ".scene" });
     fileCheckSystem->WatchFolder("Assets/Prefabs", { ".prefab" });
+    fileCheckSystem->WatchFolder("Assets/Materials", { ".material" });
 
     // Initialize the engine and run the main game loop
     engine->Initialize();

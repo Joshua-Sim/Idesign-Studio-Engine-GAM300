@@ -18,6 +18,7 @@
 #include "AssetManager.h"
 #include "MeshLoader.h"
 #include "TextureLoader.h"
+#include "MaterialLoader.h"
 
 // All Components || Properties
 #include "TextureProperties.h"
@@ -110,7 +111,7 @@ namespace Framework
                     component.path = asset->path;
                 }
 
-                if constexpr (std::is_same_v<AssetType, MeshProperties>)
+                else if constexpr (std::is_same_v<AssetType, MeshProperties>)
                 {
                     if (asset->vao == 0 && !asset->path.empty())
                     {
@@ -122,6 +123,7 @@ namespace Framework
                     component.ebo = asset->ebo;
                     component.indexCount = asset->indexCount;
                 }
+                
                 else if constexpr (std::is_same_v<AssetType, TextureProperties>)
                 {
                     if (asset->textureID == 0) 
@@ -130,15 +132,26 @@ namespace Framework
                     }
                     component.textureID = asset->textureID; // Reuse loaded texture
                 }
+                
                 else if constexpr (std::is_same_v<AssetType, AudioProperties>)
                 {
                     component.mode = asset->mode;
                     component.soundType = asset->soundType;
                 }
+               
                 else if constexpr (std::is_same_v<AssetType, NavMeshComponent>)
                 {
                     // The selected MeshProperties GUID is already stored in assetGuids[currentIndex]
                     component.guid = assetGuids[currentIndex];
+                }
+
+                else if constexpr (std::is_same_v<AssetType, MaterialMetadata>)
+                {
+                    component.ambient = asset->ambient;
+                    component.albedo = asset->albedo;
+                    component.specular = asset->specular;
+                    component.shininess = asset->shininess;
+                    component.opacity = asset->opacity;
                 }
             }
         }
@@ -198,6 +211,60 @@ namespace Framework
         else 
         {
             ImGui::TextColored(ImVec4(1, 0.5f, 0.5f, 1), "No texture loaded.");
+        }
+    }
+
+    inline void DrawMaterialSelector(MaterialProperties& component)
+    {
+        std::vector<std::string> assetNames;
+        std::vector<AssetHandle> assetGuids;
+
+        for (const auto& [guid, entry] : AssetManager::Instance().GetAssets())
+        {
+            if (entry.typeName != TypeName<MaterialMetadata>::value)
+                continue;
+
+            auto* meta = static_cast<MaterialMetadata*>(entry.pObject.get());
+            if (meta->name.empty() && meta->path.empty())
+                continue;
+
+            assetNames.push_back(meta->name.empty() ? meta->path : meta->name);
+            assetGuids.push_back(guid);
+        }
+
+        std::vector<const char*> labelPtrs;
+        for (const auto& name : assetNames)
+            labelPtrs.push_back(name.c_str());
+
+        int currentIndex = -1;
+        for (size_t i = 0; i < assetGuids.size(); ++i)
+        {
+            if (assetGuids[i] == component.guid)
+            {
+                currentIndex = static_cast<int>(i);
+                break;
+            }
+        }
+
+        ImGui::Separator();
+        ImGui::Text("Select Material");
+        if (ImGui::Combo("Select Material", &currentIndex, labelPtrs.data(), static_cast<int>(labelPtrs.size())))
+        {
+            component.guid = assetGuids[currentIndex];
+
+            auto* meta = AssetManager::Instance().Get<MaterialMetadata>(component.guid);
+            if (meta)
+            {
+                auto material = LoadMaterialAsset(meta->path, meta->guid);
+                if (material)
+                {
+                    component.ambient = material->ambient;
+                    component.albedo = material->albedo;
+                    component.specular = material->specular;
+                    component.shininess = material->shininess;
+                    component.opacity = material->opacity;
+                }
+            }
         }
     }
 }

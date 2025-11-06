@@ -145,7 +145,6 @@
     <ClInclude Include="..\lib\imgui\imstb_textedit.h" />
     <ClInclude Include="..\lib\imgui\imstb_truetype.h" />
     <ClInclude Include="AnimationSystem.h" />
-    <ClInclude Include="PrefabComponent.h" />
     <ClInclude Include="src\AssetCompiler.h" />
     <ClInclude Include="src\AssetHandler.h" />
     <ClInclude Include="src\AssetLoader.h" />
@@ -181,6 +180,8 @@
     <ClInclude Include="src\JsonSerialize.h" />
     <ClInclude Include="src\Lighting.h" />
     <ClInclude Include="src\MainMath.h" />
+    <ClInclude Include="src\MaterialLoader.h" />
+    <ClInclude Include="src\MaterialProperties.h" />
     <ClInclude Include="src\Matrix3x3.h" />
     <ClInclude Include="src\Matrix4x4.h" />
     <ClInclude Include="src\Mesh.h" />
@@ -316,7 +317,7 @@
     <ClCompile Include="..\lib\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="..\lib\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\lib\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="AnimationSystem.cpp" />
+    <ClCompile Include="src\AnimationSystem.cpp" />
     <ClCompile Include="src\AssetCompiler.cpp" />
     <ClCompile Include="src\AssetManager.cpp" />
     <ClCompile Include="src\Audio.cpp" />
@@ -340,6 +341,7 @@
     <ClCompile Include="src\Lighting.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\MainMath.cpp" />
+    <ClCompile Include="src\MaterialLoader.cpp" />
     <ClCompile Include="src\Matrix3x3.cpp" />
     <ClCompile Include="src\Matrix4x4.cpp" />
     <ClCompile Include="src\Mesh.cpp" />

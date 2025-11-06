@@ -2,9 +2,17 @@
     "count": 7,
     "entries": [
         {
-            "guid": "bgm-level1-001",
-            "name": "Level1BGM",
-            "path": "event:/Level1BGM",
+            "guid": "sfx-select-004",
+            "name": "selectbutton",
+            "path": "event:/selectbutton",
+            "mode": "oneshot",
+            "soundType": "effect",
+            "volume": 1.0
+        },
+        {
+            "guid": "bgm-piano-003",
+            "name": "piano",
+            "path": "event:/piano",
             "mode": "loop",
             "soundType": "background",
             "volume": 1.0
@@ -34,9 +42,9 @@
             "volume": 1.0
         },
         {
-            "guid": "bgm-piano-003",
-            "name": "piano",
-            "path": "event:/piano",
+            "guid": "bgm-level1-001",
+            "name": "Level1BGM",
+            "path": "event:/Level1BGM",
             "mode": "loop",
             "soundType": "background",
             "volume": 1.0
@@ -45,14 +53,6 @@
             "guid": "sfx-previous-006",
             "name": "previousbutton",
             "path": "event:/previousbutton",
-            "mode": "oneshot",
-            "soundType": "effect",
-            "volume": 1.0
-        },
-        {
-            "guid": "sfx-select-004",
-            "name": "selectbutton",
-            "path": "event:/selectbutton",
             "mode": "oneshot",
             "soundType": "effect",
             "volume": 1.0
