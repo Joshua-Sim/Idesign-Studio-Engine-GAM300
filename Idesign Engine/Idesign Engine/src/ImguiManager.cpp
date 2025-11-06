@@ -25,6 +25,7 @@
 #include "ImGuizmo.h"
 #include "fmod.h"
 #include "fmod_studio.h"
+#include <random> 
 
 extern Framework::Coordinator ecsInterface;
 
@@ -908,8 +909,16 @@ namespace Framework {
                             // Update agent position to snapped position
                             transform.position = snappedStart;
 
-                            // SNAP destination to navmesh
-                            glm::vec3 destination(-3.0f, 1.0f, 2.5f);
+                            // Random number generator setup
+                            std::random_device rd;
+                            std::mt19937 gen(rd());
+                            std::uniform_real_distribution<float> dist(-5.0f, 5.0f);
+
+                            glm::vec3 destination;
+                            destination.x = dist(gen); // random range between 5 and -5 for testing
+                            destination.y = 1.0f;
+                            destination.z = 2.5f;
+
                             std::cout << "Target destination: (" << destination.x << ", "
                                 << destination.y << ", " << destination.z << ")" << std::endl;
 
@@ -934,65 +943,6 @@ namespace Framework {
                     }
                 }
 
-                if (ImGui::MenuItem("Snap Agent to Navmesh"))
-                {
-                    auto navSystem = ecsInterface.GetSystem<NavMeshSystem>();
-                    if (navSystem) {
-                        const auto& allEntities = ecsInterface.GetEntities();
-                        if (allEntities.size() > 1) {
-                            Entity agentEntity = allEntities[1];
-
-                            if (ecsInterface.HasComponent<TransformComponent>(agentEntity)) {
-                                auto& transform = ecsInterface.GetComponent<TransformComponent>(agentEntity);
-                                glm::vec3 oldPos = transform.position;
-                                glm::vec3 newPos = navSystem->GetNearestPointOnNavmesh(oldPos);
-                                transform.position = newPos;
-
-                                std::cout << "Agent snapped: (" << oldPos.x << ", " << oldPos.y << ", " << oldPos.z
-                                    << ") → (" << newPos.x << ", " << newPos.y << ", " << newPos.z << ")" << std::endl;
-                            }
-                        }
-                    }
-                }
-
-                if (ImGui::MenuItem("Debug Navmesh Info"))
-                {
-                    auto navSystem = ecsInterface.GetSystem<NavMeshSystem>();
-                    if (navSystem) {
-                        navSystem->PrintNavMeshInfo();
-                    }
-                }
-
-                if (ImGui::MenuItem("Get Random Navmesh Point"))
-                {
-                    auto navSystem = ecsInterface.GetSystem<NavMeshSystem>();
-                    if (navSystem) {
-                        // Try a bunch of random points to find one on the navmesh
-                        std::cout << "Searching for random valid navmesh points..." << std::endl;
-
-                        int foundCount = 0;
-                        for (int i = 0; i < 20 && foundCount < 5; ++i) {
-                            glm::vec3 randomPos(
-                                ((rand() % 100) / 100.0f - 0.5f) * 10.0f,  // X: -5 to 5
-                                1.0f,                                         // Y: 1.0
-                                ((rand() % 100) / 100.0f - 0.5f) * 10.0f   // Z: -5 to 5
-                            );
-
-                            glm::vec3 snapped = navSystem->GetNearestPointOnNavmesh(randomPos);
-                            float dist = glm::distance(randomPos, snapped);
-
-                            if (dist < 2.0f) {
-                                std::cout << "  ✓ Valid point found: (" << snapped.x << ", "
-                                    << snapped.y << ", " << snapped.z << ")" << std::endl;
-                                foundCount++;
-                            }
-                        }
-
-                        if (foundCount == 0) {
-                            std::cout << "  No valid points found. Navmesh might be very small." << std::endl;
-                        }
-                    }
-                }
                 ImGui::EndMenu();
                 //Add Windows menu to toggle console
                 if (ImGui::BeginMenu("Windows")) {
@@ -1739,6 +1689,7 @@ namespace Framework {
                 {
                     Entity newEntity = ecsInterface.CreateEntity();
                     ecsInterface.AddComponent<TransformComponent>(newEntity, TransformComponent{});
+                    ecsInterface.AddComponent<HierarchyComponent>(newEntity, HierarchyComponent{}); // Default hierarchy
 
                     MeshProperties meshComponent{};
                     MeshLoader::loadMesh(meshComponent.path, meshComponent);

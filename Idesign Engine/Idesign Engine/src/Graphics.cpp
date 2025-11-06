@@ -173,14 +173,14 @@ namespace Framework {
         //  ---- ECS INITIALIZATION END --- 
 
 
-        // ---------------- Create one ECS object (Deserialized next time) -------------------- 
-        Entity newEntity = ecsInterface.CreateEntity();
+        // ---------------- Create one ECS object (Frog Agent) (Deserialized next time) -------------------- 
+        Entity newEntity = ecsInterface.CreateEntity(); // FROG ENTITY
 
         //Add transform
         TransformComponent transformComponent;
-        transformComponent.position = glm::vec3(0.0, 1.0, 1.5); // Instantiate location
-        transformComponent.scale = glm::vec3(3, 3, 3); // Size of my obj is big, change for test
-        transformComponent.rotation = glm::vec3(30, 280, 30);
+        transformComponent.position = glm::vec3(10, 0, -3); // Instantiate location
+        transformComponent.scale = glm::vec3(1, 1, 1); // Size of my obj is big, change for test
+        transformComponent.rotation = glm::vec3(0, 0, 0);
 
         ecsInterface.AddComponent<TransformComponent>(newEntity, transformComponent);
 
@@ -188,7 +188,7 @@ namespace Framework {
 
         // Add and load mesh , temporarily hard-code component data 
         MeshProperties meshComponent;
-        meshComponent.path = "Assets/Objects/casa.obj";
+        meshComponent.path = "Assets/Objects/layout2-0.obj";
 
         // Load mesh from its own path, again serialized for each obj in deserialization after.
         MeshLoader::loadMesh(meshComponent.path, meshComponent);
@@ -213,16 +213,16 @@ namespace Framework {
 
         // Add transform - position agent ON the navmesh floor
         TransformComponent agentTransform;
-        agentTransform.position = glm::vec3(0.5, 1.2, 1.5); // On the floor, slightly offset in X
-        agentTransform.scale = glm::vec3(0.1, 0.1, 0.1);    // Small visual size
-        agentTransform.rotation = glm::vec3(90, -20, 0);    // Rotated to orient correctly
+        agentTransform.position = glm::vec3(-2, 0.5, 0); // On the floor, slightly offset in X
+        agentTransform.scale = glm::vec3(1, 1, 1);    // Small visual size
+        agentTransform.rotation = glm::vec3(0, 0, 0);  // Rotated to orient correctly
         ecsInterface.AddComponent<TransformComponent>(agentEntity, agentTransform);
 
         ecsInterface.AddComponent<HierarchyComponent>(agentEntity, HierarchyComponent{});
 
         // Add mesh for agent (use cube, sphere, or character model)
         MeshProperties agentMesh;
-        agentMesh.path = "Assets/Objects/plane2.obj"; // Or "sphere.obj" or "character.obj"
+        agentMesh.path = "Assets/Objects/Frog.obj"; // Or "sphere.obj" or "character.obj"
         MeshLoader::loadMesh(agentMesh.path, agentMesh);
         ecsInterface.AddComponent<MeshProperties>(agentEntity, agentMesh);
 

@@ -271,13 +271,14 @@ namespace Framework {
         ::rcConfig config{};
         memset(&config, 0, sizeof(config));
         // In ConvertToRecastFormat(), try more aggressive settings:
-        config.cs = 0.2f;  // Smaller cell size
-        config.ch = 0.15f; // Smaller cell height
-        config.walkableSlopeAngle = 30.0f; // More strict slope
-        config.minRegionArea = (int)rcSqr(3); // Allow smaller regions
-        config.walkableHeight = (int)ceilf(2.0f / config.ch);
+        config.cs = 0.4f;  // Bigger cells = less detail but more robust
+        config.ch = 0.3f;
+        config.walkableSlopeAngle = 60.0f;  // Allow steeper slopes
+        config.walkableHeight = (int)ceilf(1.5f / config.ch);  // Lower height requirement
+        config.walkableRadius = (int)ceilf(0.4f / config.cs);  // Smaller radius
+        config.minRegionArea = (int)rcSqr(3);  // Allow smaller regions
         config.walkableClimb = (int)floorf(0.9f / config.ch);
-        config.walkableRadius = (int)ceilf(0.6f / config.cs);
+
         config.maxEdgeLen = (int)(12.0f / config.cs);
         config.maxSimplificationError = 1.3f;
         config.minRegionArea = (int)rcSqr(3);
