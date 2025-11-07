@@ -17,6 +17,14 @@
             "volume": 1.0
         },
         {
+            "guid": "sfx-previous-006",
+            "name": "previousbutton",
+            "path": "event:/previousbutton",
+            "mode": "oneshot",
+            "soundType": "effect",
+            "volume": 1.0
+        },
+        {
             "guid": "bgm-winloop-002",
             "name": "winloop",
             "path": "event:/winloop",
@@ -46,14 +54,6 @@
             "path": "event:/Level1BGM",
             "mode": "loop",
             "soundType": "background",
-            "volume": 1.0
-        },
-        {
-            "guid": "sfx-previous-006",
-            "name": "previousbutton",
-            "path": "event:/previousbutton",
-            "mode": "oneshot",
-            "soundType": "effect",
             "volume": 1.0
         }
     ]

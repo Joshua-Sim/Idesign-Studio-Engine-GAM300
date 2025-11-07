@@ -1,4 +1,10 @@
-﻿  Graphics.cpp
+﻿  AudioSystem.cpp
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AudioSystem.cpp(132,23): warning C4189: 'distance': local variable is initialized but not referenced
+  (compiling source file '/src/AudioSystem.cpp')
+  
+  DummySystem.cpp
+  FontSystem.cpp
+  Graphics.cpp
 D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(424,21): warning C4458: declaration of 'cam' hides class member
   (compiling source file '/src/Graphics.cpp')
       D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(117,17):
@@ -86,4 +92,137 @@ D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphic
       D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(136,24):
       see declaration of 'Framework::Graphics::mesh'
   
+  ImguiManager.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\minwindef.h(130,9): warning C4005: 'APIENTRY': macro redefinition
+  (compiling source file '/src/ImguiManager.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\glfw-3.4.bin.WIN64\include\GLFW\glfw3.h(123,11):
+      see previous definition of 'APIENTRY'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(190,19): warning C4456: declaration of 'ev' hides previous local declaration
+  (compiling source file '/src/ImguiManager.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(151,30):
+      see declaration of 'ev'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(260,25): warning C4459: declaration of 'filePath' hides global declaration
+  (compiling source file '/src/ImguiManager.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(47,24):
+      see declaration of 'Framework::filePath'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(272,33): warning C4456: declaration of 'finalPath' hides previous local declaration
+  (compiling source file '/src/ImguiManager.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(255,21):
+      see declaration of 'finalPath'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(273,33): warning C4456: declaration of 'error' hides previous local declaration
+  (compiling source file '/src/ImguiManager.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(256,21):
+      see declaration of 'error'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(816,42): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(825,38): warning C4566: character represented by universal-character-name '\u26A0' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(854,46): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(855,40): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(859,46): warning C4566: character represented by universal-character-name '\u2717' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(860,40): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(894,42): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(899,46): warning C4566: character represented by universal-character-name '\u26A0' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(912,42): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(917,46): warning C4566: character represented by universal-character-name '\u26A0' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(946,40): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(979,46): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1084,40): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1244,40): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1396,40): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1453,37): warning C4456: declaration of 'nameBuffer' hides previous local declaration
+  (compiling source file '/src/ImguiManager.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1419,21):
+      see declaration of 'nameBuffer'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1454,38): warning C4456: declaration of 'volumeBuffer' hides previous local declaration
+  (compiling source file '/src/ImguiManager.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1422,22):
+      see declaration of 'volumeBuffer'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1465,76): warning C4566: character represented by universal-character-name '\U0001F3A7' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1668,48): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1814,48): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2262,39): warning C4459: declaration of 'ecsInterface' hides global declaration
+  (compiling source file '/src/ImguiManager.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(29,31):
+      see declaration of 'ecsInterface'
+  
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\algorithm(3799,24): warning C4244: '=': conversion from 'int' to 'char', possible loss of data
+  (compiling source file '/src/ImguiManager.cpp')
+      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\algorithm(3799,24):
+      the template instantiation context (the oldest one first) is
+          D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(262,18):
+          see reference to function template instantiation '_OutIt std::transform<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,int(__cdecl *)(int)>(const _InIt,const _InIt,_OutIt,_Fn)' being compiled
+          with
+          [
+              _OutIt=std::_String_iterator<std::_String_val<std::_Simple_types<char>>>,
+              _Elem=char,
+              _InIt=std::_String_iterator<std::_String_val<std::_Simple_types<char>>>,
+              _Fn=int (__cdecl *)(int)
+          ]
+  
+  PropertyWidget.cpp
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PropertyWidget.cpp(16,55): warning C4244: 'argument': conversion from 'uintptr_t' to 'int', possible loss of data
+  (compiling source file '/src/PropertyWidget.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PropertyWidget.cpp(299,35): warning C4130: '==': logical operation on address of string constant
+  (compiling source file '/src/PropertyWidget.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PropertyWidget.cpp(299,74): warning C4130: '==': logical operation on address of string constant
+  (compiling source file '/src/PropertyWidget.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PropertyWidget.cpp(300,35): warning C4130: '==': logical operation on address of string constant
+  (compiling source file '/src/PropertyWidget.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PropertyWidget.cpp(300,78): warning C4130: '==': logical operation on address of string constant
+  (compiling source file '/src/PropertyWidget.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PropertyWidget.cpp(301,35): warning C4130: '==': logical operation on address of string constant
+  (compiling source file '/src/PropertyWidget.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PropertyWidget.cpp(301,78): warning C4130: '==': logical operation on address of string constant
+  (compiling source file '/src/PropertyWidget.cpp')
+  
+  main.cpp
+  Generating Code...
   Idesign Engine.vcxproj -> D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe

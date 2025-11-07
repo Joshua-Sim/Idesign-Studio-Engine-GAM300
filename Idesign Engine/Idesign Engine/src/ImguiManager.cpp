@@ -252,6 +252,7 @@ namespace Framework {
         const std::string sceneFolder = "Scenes";
         const std::string prefabFolder = "Assets/Prefabs";
         const std::string scriptFolder = "Assets/Scripts";
+        const std::string materialFolder = "Assets/Materials";
         std::string finalPath;
         std::string error;
 
@@ -372,7 +373,6 @@ namespace Framework {
             }
 
             // Scene Files
-            /*
             else if (extension == "scene")
             {
                 auto existingGuid = AssetManager::Instance().FindGuid<SceneProperties>(fileName);
@@ -384,12 +384,9 @@ namespace Framework {
                         scenePtr->name = std::filesystem::path(fileName).stem().string();
                         scenePtr->path = finalPath;
                         scenePtr->guid = GenerateGUID();
-
-                        // Optional: loadSceneMetadata(finalPath, *scenePtr);
-
                         AssetManager::Instance().RegisterAsset<SceneProperties>(
                             std::move(scenePtr),
-                            &g_ScenePropertiesProps,
+                            &g_SceneProps,
                             finalPath
                         );
                         AssetManager::Instance().SaveArrayToJson(TypeName<SceneProperties>::value, "Assets/JSON/SceneAsset.json", "scenes");
@@ -420,12 +417,11 @@ namespace Framework {
                         prefabPtr->name = std::filesystem::path(fileName).stem().string();
                         prefabPtr->path = finalPath;
                         prefabPtr->guid = GenerateGUID();
-
-                        // Optional: loadPrefabData(finalPath, *prefabPtr);
+                        prefabPtr->isScenePrefab = false;
 
                         AssetManager::Instance().RegisterAsset<PrefabProperties>(
                             std::move(prefabPtr),
-                            &g_PrefabPropertiesProps,
+                            &g_PrefabProps,
                             finalPath
                         );
                         AssetManager::Instance().SaveArrayToJson(TypeName<PrefabProperties>::value, "Assets/JSON/PrefabAsset.json", "prefabs");
@@ -444,6 +440,7 @@ namespace Framework {
                 }
             }
 
+            /*
             // Script Files
             else if (extension == "lua")
             {
@@ -479,7 +476,54 @@ namespace Framework {
                     std::cout << "Script already exists: " << fileName << std::endl;
                 }
             }
-            */
+             */
+
+            // Material Files
+            else if (extension == "material")
+            {
+                auto existingGuid = AssetManager::Instance().FindGuid<MaterialMetadata>(fileName);
+                if (existingGuid.empty())
+                {
+                    if (MoveFileToAssetFolder(filePath, materialFolder, finalPath, error))
+                    {
+                        auto materialPtr = std::make_unique<MaterialProperties>();
+                        materialPtr->guid = GenerateGUID();
+
+                        // Load material data from file
+                        auto loaded = LoadMaterialAsset(finalPath, materialPtr->guid);
+                        if (loaded)
+                        {
+                            materialPtr->ambient = loaded->ambient;
+                            materialPtr->albedo = loaded->albedo;
+                            materialPtr->specular = loaded->specular;
+                            materialPtr->shininess = loaded->shininess;
+                            materialPtr->opacity = loaded->opacity;
+                        }
+
+                        // Register metadata
+                        auto meta = std::make_unique<MaterialMetadata>();
+                        meta->guid = materialPtr->guid;
+                        meta->name = std::filesystem::path(fileName).stem().string();
+                        meta->path = finalPath;
+
+                        const prop_list* props = TypeRegistry::Instance().GetPropList(TypeName<MaterialMetadata>::value);
+                        AssetManager::Instance().RegisterAsset(std::move(meta), props, finalPath);
+                        AssetManager::Instance().SaveArrayToJson(TypeName<MaterialMetadata>::value, "Assets/JSON/MaterialAsset.json", "material");
+
+                        std::cout << "Material added: " << fileName << " to " << finalPath << std::endl;
+                    }
+                    else
+                    {
+                        errorMessage = "Failed to move material:\n" + error;
+                        showErrorPopup = true;
+                        return;
+                    }
+                }
+                else
+                {
+                    std::cout << "Material already exists: " << fileName << std::endl;
+                }
+            }
         }
     }
 
@@ -795,8 +839,6 @@ namespace Framework {
                     std::string savePath = SaveFileDialog();
                     Framework::sceneManager.SaveScene(savePath);
                 }
-
-
 
                 ImGui::Separator();  // Visual separator
 
@@ -1650,7 +1692,6 @@ namespace Framework {
             {
                 sceneManager.LoadScene(scene->path); // Your scene loading logic
             }
-
             ImGui::EndGroup();
         }
     }
@@ -2100,9 +2141,6 @@ namespace Framework {
                 {
                     // Stop the game by setting play to false
                     engineState.SetPlay(false);
-                    //ecsInterface.ClearEntities(); // Clear all entity and load json to reset scene
-                    //GlobalAssetManager.LoadEntities(filePath); // temporarily load this scene // cant load
-                    // GlobalAssetManager.LoadEntities.clear();   
                 }
                 ImGui::PopStyleColor(3); // Restore color
 
@@ -2168,19 +2206,15 @@ namespace Framework {
 
                 }
 
+                // Drag and drop Prefab to spawn in viewport
                 if (ImGui::BeginDragDropTarget())
                 {
                     if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("PREFAB_GUID"))
                     {
                         const char* prefabGUID = static_cast<const char*>(payload->Data);
 
-                        // Optional: get mouse world position here
-                        // glm::vec3 dropPosition = GetMouseWorldPosition();
-
                         // Spawn the prefab
                         sceneManager.SpawnPrefab(prefabGUID);
-
-                        // Optional: set transform position if needed
                     }
                     ImGui::EndDragDropTarget();
                 }

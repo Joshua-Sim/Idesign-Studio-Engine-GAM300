@@ -42,4 +42,63 @@ namespace Framework
 
         return material;
     }
+
+    void SaveMaterialAsset(const MaterialProperties& mat, const std::string& path, const AssetHandle& guid)
+    {
+        rapidjson::Document doc;
+        doc.SetObject();
+        auto& allocator = doc.GetAllocator();
+
+        doc.AddMember("guid", rapidjson::Value(guid.id.c_str(), allocator), allocator);
+
+        // Ambient
+        rapidjson::Value ambientArr(rapidjson::kArrayType);
+        ambientArr.PushBack(mat.ambient.x, allocator);
+        ambientArr.PushBack(mat.ambient.y, allocator);
+        ambientArr.PushBack(mat.ambient.z, allocator);
+        doc.AddMember("ambient", ambientArr, allocator);
+
+        // Albedo
+        rapidjson::Value albedoArr(rapidjson::kArrayType);
+        albedoArr.PushBack(mat.albedo.x, allocator);
+        albedoArr.PushBack(mat.albedo.y, allocator);
+        albedoArr.PushBack(mat.albedo.z, allocator);
+        doc.AddMember("albedo", albedoArr, allocator);
+
+        // Specular
+        rapidjson::Value specularArr(rapidjson::kArrayType);
+        specularArr.PushBack(mat.specular.x, allocator);
+        specularArr.PushBack(mat.specular.y, allocator);
+        specularArr.PushBack(mat.specular.z, allocator);
+        doc.AddMember("specular", specularArr, allocator);
+
+        // Scalars
+        doc.AddMember("shininess", mat.shininess, allocator);
+        doc.AddMember("opacity", mat.opacity, allocator);
+
+        // Write to file
+        FILE* fp = fopen(path.c_str(), "w");
+        if (!fp)
+        {
+            std::cerr << "Failed to open material file for writing: " << path << "\n";
+            return;
+        }
+
+        char buffer[65536];
+        rapidjson::FileWriteStream os(fp, buffer, sizeof(buffer));
+        rapidjson::PrettyWriter<rapidjson::FileWriteStream> writer(os);
+        doc.Accept(writer);
+        fclose(fp);
+    }
+
+    void RegisterMaterialMetadata(const AssetHandle& guid, const std::string& name, const std::string& path)
+    {
+        auto meta = std::make_unique<MaterialMetadata>();
+        meta->guid = guid;
+        meta->name = name;
+        meta->path = path;
+
+        const prop_list* props = TypeRegistry::Instance().GetPropList(TypeName<MaterialMetadata>::value);
+        AssetManager::Instance().RegisterAsset(std::move(meta), props, path);
+    }
 }

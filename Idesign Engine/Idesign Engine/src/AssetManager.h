@@ -39,8 +39,9 @@
 #include "MaterialProperties.h"
 
 // Asset Files
-#include <AssetLoader.h>
+#include "AssetLoader.h"
 #include "AssetHandler.h"
+#include "MaterialLoader.h"
 
 namespace Framework
 {
@@ -227,6 +228,9 @@ namespace Framework
             return m_Assets;
         }
 
+        void SaveAllAssets();
+        void CompileAllAssets();
+        void LoadAllAssets();
         void Unload(const std::string& guid);
         bool SaveToJson(void* pObject, const std::string& filePath, const prop_list& props);
         void SaveArrayToJson(const std::string& typeName, const std::string& filePath, const std::string& arrayKey);

@@ -14,14 +14,55 @@
 
 namespace Framework
 {
-    AssetManager::~AssetManager()
+    AssetManager::~AssetManager() {}
+
+    void AssetManager::SaveAllAssets()
     {
+        // Nvr include windowconfig here
         AssetManager::Instance().SaveArrayToJson(TypeName<MeshProperties>::value, "Assets/JSON/MeshAsset.json", "mesh");
         AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, "Assets/JSON/AudioAsset.json", "audio");
         AssetManager::Instance().SaveArrayToJson(TypeName<TextureProperties>::value, "Assets/JSON/TextureAsset.json", "textures");
         AssetManager::Instance().SaveArrayToJson(TypeName<PrefabProperties>::value, "Assets/JSON/PrefabAsset.json", "prefabs");
         AssetManager::Instance().SaveArrayToJson(TypeName<SceneProperties>::value, "Assets/JSON/SceneAsset.json", "scenes");
         AssetManager::Instance().SaveArrayToJson(TypeName<MaterialMetadata>::value, "Assets/JSON/MaterialAsset.json", "materials");
+    }
+
+    void AssetManager::CompileAllAssets()
+    {
+        //CompileSingleObject<WindowConfig>("src/Data/WindowAsset.json", "src/Data/WindowAsset.cfg", "Descriptor/WindowAsset.desc", g_WindowConfigProps);
+        CompileArray<MeshProperties>("Assets/JSON/MeshAsset.json", "Resource/MeshAsset.bin", "Descriptor/MeshAsset.desc", g_MeshProps, "mesh");
+        CompileArray<AudioProperties>("Assets/JSON/AudioAsset.json", "Resource/AudioAsset.bin", "Descriptor/AudioAsset.desc", g_AudioPropertiesProps, "audio");
+        CompileArray<TextureProperties>("Assets/JSON/TextureAsset.json", "Resrouce/TextureAsset.bin", "Descriptor/TextureAsset.desc", g_TexturePropertiesProps, "textures");
+        CompileArray<PrefabProperties>("Assets/JSON/PrefabAsset.json", "Resource/PrefabAsset.bin", "Descriptor/PrefabAsset.desc", g_PrefabProps, "prefabs");
+        CompileArray<SceneProperties>("Assets/JSON/SceneAsset.json", "Resource/SceneAsset.bin", "Descriptor/SceneAsset.desc", g_SceneProps, "scenes");
+        CompileArray<MaterialMetadata>("Assets/JSON/MaterialAsset.json", "Resource/MaterialAsset.bin", "Descriptor/MaterialAsset.desc", g_MaterialMetaProps, "materials");
+    }
+
+    void AssetManager::LoadAllAssets()
+    {
+        // Mesh & Texture is loaded under Graphics.cpp due to some initialization required under graphics.cpp
+        AssetManager::Instance().LoadBinary<WindowConfig>("Resource/WindowAsset.cfg", g_WindowConfigProps);
+        AssetManager::Instance().LoadBinaryArray<AudioProperties>("Resource/AudioAsset.bin", g_AudioPropertiesProps);
+        AssetManager::Instance().LoadBinaryArray<PrefabProperties>("Resource/PrefabAsset.bin", g_PrefabProps);
+        AssetManager::Instance().LoadBinaryArray<SceneProperties>("Resource/SceneAsset.bin", g_SceneProps);
+        AssetManager::Instance().LoadBinaryArray<MaterialMetadata>("Resource/MaterialAsset.bin", g_MaterialMetaProps, [](MaterialMetadata& meta)
+            {
+                auto material = LoadMaterialAsset(meta.path, meta.guid);
+                if (material)
+                {
+                    SetGuid(material.get(), g_MaterialProps);
+
+                    // Always update material's GUID to match metadata
+                    material->guid = meta.guid;
+                    AssetManager::Instance().SaveToJson(material.get(), meta.path, g_MaterialProps);
+                    AssetManager::Instance().RegisterAsset(std::move(material), &g_MaterialProps, meta.path);
+                }
+                else
+                {
+                    std::cerr << "Failed to load material file: " << meta.path << " for GUID: " << meta.guid << "\n";
+                }
+            }
+        );
     }
 
     void AssetManager::Unload(const std::string& guid)
