@@ -81,7 +81,7 @@ namespace Framework
         glm::mat4 GetViewMatrix(int viewIdx) const;
         glm::mat4 GetProjectionMatrix(int viewIdx, float w, float h) const;
         Camera* GetCameraByIndex(int viewIdx);
-
+        void OnResize(int w, int h);
 
         void SetMouseTargetView(int view) { m_mouseTargetView = (view <= 0) ? 0 : 1; }
         int  GetMouseTargetView() const;
@@ -193,6 +193,10 @@ namespace Framework
         // Add these new members for the FPS counter
         double m_fpsLastTime;
         int m_frameCount;
+
+        // For screen resizing
+        int m_fbW = 0, m_fbH = 0;      // current render size (window framebuffer)
+        int m_pickW = 0, m_pickH = 0;  // current size for pick FBOs
     };
 }
 #endif // !_GRAPHICS_H_

@@ -126,6 +126,7 @@ namespace Framework {
 
         // Finally, destroy GLFW window + terminate GLFW
         if (window) {
+            glfwSetFramebufferSizeCallback(window, nullptr); // stop resize callback
             glfwDestroyWindow(window);
             window = nullptr;
         }
@@ -378,7 +379,13 @@ namespace Framework {
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
             };
 
-        int w = 1280, h = 720;
+        //int w = 1280, h = 720;
+        int w = 0, h = 0;
+        glfwGetFramebufferSize(window, &w, &h);
+        if (w <= 0 || h <= 0) { w = 1280; h = 720; } // safe fallback, rarely used
+
+        m_fbW = w; m_fbH = h;
+        m_pickW = w; m_pickH = h;
 
         pickShader.initGL();
         makePickFBO(w, h, 0);
@@ -446,8 +453,13 @@ namespace Framework {
 
         int w, h;
         glfwGetFramebufferSize(window, &w, &h);
-        if (w == 0 || h == 0) {
-            return; // Don't render anything if the window is minimized
+        if (w == 0 || h == 0) return;
+
+        // If size changed (minimized/Restored or DPI change), update FBOs
+        if (w != m_fbW || h != m_fbH) {
+            m_fbW = w; m_fbH = h;
+            OnResize(m_fbW, m_fbH);
+            if (m_imguiManager) m_imguiManager->ResizeViewFBOs(m_fbW, m_fbH);
         }
 
         // ====================================================================
@@ -709,7 +721,7 @@ namespace Framework {
 
             // READBACK for VIEW 0
             if (pendingPickUV0.x >= 0.0f && pendingPickUV0.y >= 0.0f) {
-                int pw = 1280, ph = 720; // Use FBO size, not window size if different
+                int pw = m_pickW, ph = m_pickH;            // instead of 1280, 720
                 int px = glm::clamp(int(pendingPickUV0.x * pw), 0, pw - 1);
                 int py = glm::clamp(int(pendingPickUV0.y * ph), 0, ph - 1);
 
@@ -1021,7 +1033,7 @@ namespace Framework {
 
             // READBACK for VIEW 1
             if (pendingPickUV1.x >= 0.0f && pendingPickUV1.y >= 0.0f) {
-                int pw = 1280, ph = 720; // Use FBO size
+                int pw = m_pickW, ph = m_pickH;            // instead of 1280, 720
                 int px = glm::clamp(int(pendingPickUV1.x * pw), 0, pw - 1);
                 int py = glm::clamp(int(pendingPickUV1.y * ph), 0, ph - 1);
 
@@ -1085,7 +1097,7 @@ namespace Framework {
         // This pick UV logic seems to be for a single, non-view-specific pick
         // You may need to remove this if you only use pendingPickUV0 and pendingPickUV1
         if (pendingPickUV.x >= 0.0f && pendingPickUV.y >= 0.0f) {
-            int pw = 1280, ph = 720;
+            int pw = m_pickW, ph = m_pickH;            // instead of 1280, 720
             int px = glm::clamp(int(pendingPickUV.x * pw), 0, pw - 1);
             int py = glm::clamp(int(pendingPickUV.y * ph), 0, ph - 1);
 
@@ -1141,7 +1153,12 @@ namespace Framework {
 
     void Graphics::framebuffer_size_callback(GLFWwindow* window, int w, int h)
     {
-        glViewport(0, 0, w, h);
+        if (auto* gfx = static_cast<Graphics*>(glfwGetWindowUserPointer(window))) {
+            gfx->OnResize(w, h);
+            if (gfx->m_imguiManager) {
+                gfx->m_imguiManager->ResizeViewFBOs(w, h);
+            }
+        }
     }
     void Graphics::RequestPickUV(float u, float v) {
         pendingPickUV0 = glm::vec2(u, v);
@@ -1329,6 +1346,40 @@ namespace Framework {
         return (viewIdx == 1) ? &sceneCamera : &gameCamera;
     }
 
+    void Graphics::OnResize(int w, int h)
+    {
+        if (w <= 0 || h <= 0) return;
+
+        // 0) Record
+        m_fbW = w; m_fbH = h;
+        m_pickW = w; m_pickH = h;
+
+        // 1) Resize HDR FBO
+        glBindTexture(GL_TEXTURE_2D, colorBuffer);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, w, h, 0, GL_RGBA, GL_FLOAT, nullptr);
+        glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, w, h);
+
+        // 2) Resize Bloom ping-pong
+        for (int i = 0; i < 2; ++i) {
+            glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[i]);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, w, h, 0, GL_RGBA, GL_FLOAT, nullptr);
+        }
+
+        // 3) Resize Pick FBOs (color + depth)
+        for (int i = 0; i < 2; ++i) {
+            glBindTexture(GL_TEXTURE_2D, pickColor[i]);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, m_pickW, m_pickH, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+            glBindRenderbuffer(GL_RENDERBUFFER, pickDepth[i]);
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, m_pickW, m_pickH);
+        }
+
+        // 4) ImGui view FBOs (if you manage them here)
+        if (m_imguiManager) {
+            m_imguiManager->ResizeViewFBOs(w, h);
+        }
+    }
+
     void Graphics::renderQuad()
     {
         if (quadVAO == 0)
@@ -1446,7 +1497,6 @@ namespace Framework {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-
     //For ImGUI 
     GLuint Graphics::CreateFramebuffer(int width, int height, GLuint& texture, GLuint& rbo_fb)
     {
@@ -1488,6 +1538,7 @@ namespace Framework {
 
         return framebuffer;
     }
+    
     void Graphics::DrawDebugMesh(Mesh* mesh, const glm::vec3& color, const glm::mat4& model, const glm::mat4& projection, const glm::mat4& view) {
         if (!mesh) return;
 
