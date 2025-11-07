@@ -23,6 +23,7 @@
 #include <memory>
 #include <unordered_map>
 #include <type_traits>
+#include <any>
 
 namespace Framework {
 
@@ -98,9 +99,43 @@ namespace Framework {
 			}
 		}
 
+		std::vector<Entity> GetAllEntities() const {
+			std::vector<Entity> entities;
+			for (auto const& pair : mECSystem) {
+				for (auto const& e : pair.second->mEntities) {
+					if (std::find(entities.begin(), entities.end(), e) == entities.end()) {
+						entities.push_back(e);
+					}
+				}
+			}
+			return entities;
+		}
+
+		template<typename T>
+		bool HasComponent(Entity entity) {
+			const char* typeName = typeid(T).name();
+			auto it = mComponents.find(typeName);
+			if (it == mComponents.end()) {
+				return false;
+			}
+
+			return (it->second.find(entity) != it->second.end());
+		}
+
+		template<typename T>
+		T& GetComponent(Entity entity) {
+			const char* typeName = typeid(T).name();
+			auto it = mComponents.find(typeName);
+			assert(it != mComponents.end() && "Component type not registered!");
+			auto& componentPool = it->second;
+			assert(componentPool.find(entity) != componentPool.end() && "Entity does not have this component!");
+			return componentPool[entity];
+		}
+
 	private:
 		std::unordered_map<const char*, Signature> mSignatures{};
 		std::unordered_map<const char*, std::shared_ptr<ISystem>> mECSystem{};
+		std::unordered_map<const char*, std::unordered_map<Entity, std::any>> mComponents;
 	};
 
 }

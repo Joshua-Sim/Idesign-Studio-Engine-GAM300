@@ -31,6 +31,10 @@
 #include "MeshProperties.h"
 #include "TextProperties.h"
 
+extern Terrain      terrain;
+extern const int    TerrainSize;
+extern const float  TerrainScale;
+
 namespace Framework 
 {
     class ImguiManager;
@@ -127,7 +131,7 @@ namespace Framework
         //   END OF CAMERA FUNCTIONS //
 
         // scene content
-        Terrain terrain{ 128, 1.0f };
+        //Terrain terrain{ 128, 1.0f };
         Mesh cube;
         Mesh cone;
         Mesh plane;

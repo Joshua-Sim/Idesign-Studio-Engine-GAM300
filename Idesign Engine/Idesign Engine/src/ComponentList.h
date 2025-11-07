@@ -19,6 +19,10 @@
 #include "Types.h"
 #include "lua.hpp"
 #include "TransformProperties.h"
+#include "Jolt.h"
+#include <Jolt/Physics/Body/BodyID.h>
+#include <Jolt/Physics/Body/BodyCreationSettings.h>
+#include <Jolt/Physics/Body/BodyInterface.h>
 
 // ----- ENUMS & Structs for components ----
 
@@ -185,4 +189,10 @@ struct ScriptComponent
     ScriptComponent(const std::string& path)
         : scriptPath(path)
     {}
+};
+
+struct PhysicsBodyComponent {
+    JPH::BodyID ID;
+    JPH::ShapeRefC Shape;
+    bool active = true;
 };

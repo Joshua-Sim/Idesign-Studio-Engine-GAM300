@@ -38,6 +38,7 @@
 #include "ScriptingSystem.h"
 #include "lua.hpp"
 #include <FileCheckSystem.h>
+#include "PhysicsSystem.h"
 
 using namespace Framework;
 
@@ -126,6 +127,8 @@ int main(void)
     auto fileCheckSystem = ecsInterface.RegisterSystem<Framework::FileCheckSystem>();
     // Audio System
     auto audioSystem = ecsInterface.RegisterSystem<AudioSystem>();
+    //Physics System
+    auto physicsSystem = ecsInterface.RegisterSystem<PhysicsSystem>();
 
     // Registering systems in the ECS interface here
 
@@ -137,6 +140,7 @@ int main(void)
     engine->AddSystem(scriptingSystem.get());
     engine->AddSystem(navMeshSystem.get());
 	engine->AddSystem(audioSystem.get());
+    engine->AddSystem(physicsSystem.get());
 
     // Register scene manager last
     engine->AddSystem(sceneSystem.get());

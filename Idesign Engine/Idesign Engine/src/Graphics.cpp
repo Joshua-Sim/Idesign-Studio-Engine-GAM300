@@ -59,10 +59,15 @@
 #include "PrefabProperties.h"
 #include "PrefabComponent.h"
 #include "TextureLoaderDDS.h"
+#include "PhysicsSystem.h"
 
 
 extern Framework::FontSystem fontSystem;
 extern Framework::Coordinator ecsInterface;
+
+const int   TerrainSize = 128;
+const float TerrainScale = 1.0f;
+Terrain     terrain{ TerrainSize, TerrainScale };
 
 namespace Framework {
     bool Graphics::mouseCaptured = true;
@@ -154,6 +159,7 @@ namespace Framework {
         ecsInterface.RegisterComponent<NavMeshComponent>();
         ecsInterface.RegisterComponent<NavMeshAgentComponent>(); // Move to navmesh sys after fixing load scene for mesh model
         ecsInterface.RegisterComponent<AudioProperties>();
+        ecsInterface.RegisterComponent<PhysicsBodyComponent>();
         //test
 
         ImguiManager::LogSuccess("Graphics components registered", "Graphics");

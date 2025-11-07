@@ -1,44 +1,54 @@
-#pragma once
 ///////////////////////////////////////////////////////////////////////////////
 ///
 ///@file PhysicsSystem.h
 /// 
 /// @brief The creation of the physics class and the declaration of its functions and members
 ///  
-///@Authors: Dylan Lau
-///Copyright 2024, Digipen Institute of Technology
 ///
 ///////////////////////////////////////////////////////////////////////////////
+
 #pragma once
+#include "ECSystemManager.h"
+#include "ComponentList.h"
+#include "Terrain.h"
+
 #include <Jolt/Jolt.h>
+#include <Jolt/Core/TempAllocator.h>
+#include <Jolt/Core/JobSystemThreadPool.h>
 #include <Jolt/Physics/PhysicsSystem.h>
+#include <Jolt/RegisterTypes.h>
 #include <Jolt/Physics/Body/BodyInterface.h>
-#include <Jolt/Physics/Collision/RayCast.h>
-#include <Jolt/Physics/Collision/NarrowPhaseQuery.h>
-#include <array>
+#include <Jolt/Physics/Collision/Shape/BoxShape.h>
+#include <Jolt/Physics/Body/BodyCreationSettings.h>
+#include <Jolt/Physics/Collision/Shape/PlaneShape.h>
 
-namespace Framework {
-
-    class PhysicsSystem {
+namespace Framework
+{
+    class PhysicsSystem : public ISystem
+    {
     public:
-        void Init();
-        void Update(float dt);
+        void Initialize();
+        void Update(float dt) override;
+        std::string GetName() override;
         void Shutdown();
 
-        bool CastRay(const JPH::RVec3& origin, const JPH::Vec3& direction, float maxDistance, JPH::RayCastResult& outResult);
-        void CubeInteraction(const JPH::RVec3& camPos, const JPH::Vec3& rayDir, bool click, bool hold, float deltaX, float deltaY);
+        //JPH::BodyID     mPickedID;             // whichever body you clicked
+        //bool            mRotating = false;
+        //glm::vec2       mDragStart{ 0,0 };
+        //JPH::Quat       mStartRot;
+        //JPH::EMotionType mPrevMotionType = JPH::EMotionType::Static;
 
-        JPH::PhysicsSystem& Get() { return m_System; }
+        //void OnMouseDown(int button, float mx, float my,
+        //    const glm::mat4& view, const glm::mat4& proj,
+        //    int vpW, int vpH);
+        //void OnMouseDrag(float mx, float my,
+        //    const glm::vec3& camRight, const glm::vec3& camUp);
+        //void OnMouseUp(int button);
 
     private:
-        JPH::PhysicsSystem m_System;
-        JPH::TempAllocatorImpl* m_Allocator = nullptr;
-        JPH::JobSystem* m_JobSystem = nullptr; // base pointer, holds JobSystemThreadPool
-
-        JPH::BodyID m_CubeID;
-        std::array<JPH::Vec3, 6> m_FaceDots;     // Positions of dots
-        std::array<JPH::Vec3, 6> m_FaceColors;   // RGB color per face
-        bool m_Selected = false;
+        JPH::TempAllocatorImpl* tempAllocator = nullptr;
+        JPH::JobSystemThreadPool* jobSystem = nullptr;
+        JPH::PhysicsSystem physicsSystem;
+        JPH::BodyInterface* bodyInterface = nullptr;
     };
-
 }
