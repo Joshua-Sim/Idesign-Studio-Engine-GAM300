@@ -272,8 +272,8 @@ namespace Framework {
         // 1. Add transform component
         TransformComponent transformComponent1;
         transformComponent1.position = glm::vec3(10,0.0, 0.3); // Instantiate location
-        transformComponent1.scale = glm::vec3(0.03, 0.03, 0.03); // Size of my obj is big, change for test
-        transformComponent1.rotation = glm::vec3(90.0f, 0.0f, 0.0f);
+        transformComponent1.scale = glm::vec3(0.5, 0.5, 0.5); // Size of my obj is big, change for test
+        //transformComponent1.rotation = glm::vec3(90.0f, 0.0f, 0.0f);
         ecsInterface.AddComponent<TransformComponent>(animatedEntity, transformComponent1);
         // 2. Add hierarchy component (standard for your entities)
         ecsInterface.AddComponent<HierarchyComponent>(animatedEntity, HierarchyComponent{});
@@ -283,7 +283,7 @@ namespace Framework {
         Framework::AnimationProperties animProps;
 
         // --- !! IMPORTANT: Change this path to your animated model file !! ---
-        animMesh.path = "Assets/Objects/Dance.fbx";
+        animMesh.path = "Assets/Objects/knifechoppingwithBONEFIXED4.fbx";
 
         // 4. Use the new loader that loads mesh, skeleton, and animation data
         MeshLoader::loadMesh(animMesh.path, animMesh, animProps);

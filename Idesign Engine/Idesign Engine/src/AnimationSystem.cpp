@@ -58,27 +58,31 @@ namespace Framework
         return "AnimationSystem";
     }
 
+    // In AnimationSystem.cpp
+
     void AnimationSystem::Update(float deltaTime)
     {
-        // mEntities list is already filtered to only contain entities
-        // with the component(s) in this system's signature.
         for (auto const& entity : mEntities)
         {
             if (ecsInterface.HasComponent<AnimationProperties>(entity)) {
                 auto& animator = ecsInterface.GetComponent<AnimationProperties>(entity);
 
-                // If an animation is assigned, calculate transforms
+           
+                if (!animator.currentAnimation && animator.bPlayOnStart)
+                {
+                    
+                    animator.StartDefaultAnimation();
+                }
+
+
+                // Now, if an animation is (or just became) active, update its transforms
                 if (animator.currentAnimation)
                 {
-
-
                     CalculateBoneTransforms(animator, deltaTime);
                 }
             }
-
         }
     }
-
 
     int AnimationSystem::FindPositionKeyframe(const BoneAnimation* channel, float time)
     {
@@ -173,40 +177,40 @@ namespace Framework
         const Bone& bone = skeleton.bones[boneIndex];
         const auto* channel = animation.FindChannel(bone.name);
 
-        // This will print ONCE when the animation starts
-        static bool didDebugPrint = false;
-        if (!didDebugPrint)
-        {
-            // This part runs ONLY for the root bone to print a header
-            if (boneIndex == skeleton.rootBoneIndex)
-            {
-                std::cout << "--- BONE & CHANNEL NAME DEBUG ---" << std::endl;
-                std::cout << "Available Animation Channels:" << std::endl;
-                for (auto const& [name, anim] : animation.boneChannels)
-                {
-                    std::cout << "  - [\"" << name << "\"]" << std::endl;
-                }
-                std::cout << "\nMatching Skeleton Bones to Channels:" << std::endl;
-            }
+        //// This will print ONCE when the animation starts
+        //static bool didDebugPrint = false;
+        //if (!didDebugPrint)
+        //{
+        //   // // This part runs ONLY for the root bone to print a header
+        //   // if (boneIndex == skeleton.rootBoneIndex)
+        //   // {
+        //   ///*     std::cout << "--- BONE & CHANNEL NAME DEBUG ---" << std::endl;
+        //   //     std::cout << "Available Animation Channels:" << std::endl;
+        //   //     for (auto const& [name, anim] : animation.boneChannels)
+        //   //     {
+        //   //         std::cout << "  - [\"" << name << "\"]" << std::endl;
+        //   //     }
+        //   //     std::cout << "\nMatching Skeleton Bones to Channels:" << std::endl;*/
+        //   // }
 
-            // This part runs for EVERY bone
-            std::string boneName = "  - Bone: [\"" + bone.name + "\"]";
-            if (channel)
-            {
-                std::cout << boneName << " ... OK (Found Channel)" << std::endl;
-            }
-            else
-            {
-                std::cout << boneName << " ... FAILED (Channel Not Found)" << std::endl;
-            }
+        //   // // This part runs for EVERY bone
+        //   // std::string boneName = "  - Bone: [\"" + bone.name + "\"]";
+        //   // if (channel)
+        //   // {
+        //   //     std::cout << boneName << " ... OK (Found Channel)" << std::endl;
+        //   // }
+        //   // else
+        //   // {
+        //   //     std::cout << boneName << " ... FAILED (Channel Not Found)" << std::endl;
+        //   // }
 
-            // After the last bone, stop printing
-            if (boneIndex == skeleton.bones.size() - 1)
-            {
-                didDebugPrint = true;
-                std::cout << "---------------------------------" << std::endl;
-            }
-        }
+        //   // // After the last bone, stop printing
+        //   // if (boneIndex == skeleton.bones.size() - 1)
+        //   // {
+        //   //     didDebugPrint = true;
+        //   //     std::cout << "---------------------------------" << std::endl;
+        //   // }
+        //}
 
 
         // 1a. Decompose the bone's default (T-pose) transform
@@ -218,7 +222,7 @@ namespace Framework
         glm::decompose(bone.defaultLocalTransform, scale, rotation, position, skew, perspective);
 
         // 1b. Overwrite with animated keys IF they exist
-        if (channel) // <-- This is true, which is good!
+        if (channel) 
         {
             // But these are being called with `animator.currentTime = 0.0`
             if (!channel->positions.empty())
@@ -257,32 +261,22 @@ namespace Framework
     {
         const Skeleton& skeleton = animator.skeleton;
         const Animation& animation = *animator.currentAnimation;
-
-        // ---!!!--- ADD THIS NEW DEBUG BLOCK ---!!!---
-        static bool didPrintDuration = false;
-        if (!didPrintDuration)
-        {
-            std::cout << "--- ANIMATION DURATION DEBUG ---" << std::endl;
-            std::cout << "  Animation: " << animation.name << std::endl;
-            std::cout << "  Duration: " << animation.duration << " ticks" << std::endl;
-            std::cout << "  TicksPerSecond: " << animation.ticksPerSecond << std::endl;
-            std::cout << "---------------------------------" << std::endl;
-            didPrintDuration = true;
-        }
-        // ---!!!--- END OF NEW DEBUG BLOCK ---!!!---
-
-
         // 1. Update Time
         float ticksPerSecond = (animation.ticksPerSecond > 0.0f) ? animation.ticksPerSecond : 24.0f;
-        animator.currentTime += dt * ticksPerSecond;
-
-        // ---!!!--- THIS IS THE FIX ---!!!---
+        animator.currentTime += dt * animator.animationSpeed * ticksPerSecond;
         // Only loop the time if the duration is valid (greater than zero)
         if (animation.duration > 0.0f)
         {
-            animator.currentTime = fmod(animator.currentTime, animation.duration);
+            if (animator.bLoops)
+            {
+                animator.currentTime = fmod(animator.currentTime, animation.duration);
+            }
+            else
+            {
+                // We are not looping, so clamp the time to the end
+                animator.currentTime = std::min(animator.currentTime, animation.duration);
+            }
         }
-        // ---!!!--- END OF FIX ---!!!---
 
 
         // 2. Allocate space for this frame's global transforms
@@ -305,9 +299,9 @@ namespace Framework
             static int frameCount = 0;
             if (frameCount % 60 == 0) // Print once every 60 frames
             {
-                //std::cout << "=== Root Bone Matrix (Final) ===\n";
+                std::cout << "=== Root Bone Matrix (Final) ===\n";
                 // Print the final shader matrix for the *root bone*
-                //printMat4(animator.finalBoneMatrices[rootIndex]);
+                printMat4(animator.finalBoneMatrices[rootIndex]);
             }
             frameCount++;
             // --- END OF DEBUG CODE ---

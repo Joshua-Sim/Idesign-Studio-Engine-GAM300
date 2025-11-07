@@ -4,18 +4,18 @@
             "guid": "9e1fcb62-0699-4a0b-ae75-d0670af44b1b",
             "name": "plane2",
             "path": "Assets/Objects/plane2.obj",
-            "vao": 2,
-            "vbo": 3,
-            "ebo": 4,
+            "vao": 4,
+            "vbo": 7,
+            "ebo": 8,
             "indexCount": 231840
         },
         {
             "guid": "3a68b780-632d-49d8-b45d-33b1ac035172",
             "name": "plane",
             "path": "Assets/Objects/plane.obj",
-            "vao": 3,
-            "vbo": 5,
-            "ebo": 6,
+            "vao": 5,
+            "vbo": 9,
+            "ebo": 10,
             "indexCount": 76662
         }
     ]

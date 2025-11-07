@@ -1,31 +1,60 @@
+// AnimationProperties.h
 #pragma once
+#ifndef _ANIMATION_PROPERTIES_H_
+#define _ANIMATION_PROPERTIES_H_
 
-#include <glew.h> // For GLuint
+#include "PropertySystem.h"
+#include "PropertyMacro.h"
+#include "animation.h" // Contains your Skeleton and Animation structs
+#include <glew.h>
 #include <glm.hpp>
 #include <vector>
 #include <map>
 #include <string>
-#include "animation.h"
+
+// Forward-declare AssetHandle if not in PropertySystem.h
+// (Assuming it's in PropertySystem.h or PropertyMacro.h like in MeshProperties)
+// struct AssetHandle; 
 
 namespace Framework
 {
     /**
-         * @brief ECS Component for animated entities.
-         */
+     * @brief ECS Component for animated entities.
+     * Contains asset links, configurable fields, and runtime data.
+     */
     struct AnimationProperties
     {
-        Animation* currentAnimation = nullptr;
+        // --- ASSET FIELDS (Hidden from Inspector, managed by DrawAssetDropdown) ---
+        AssetHandle guid;
+        std::string name;
+        std::string path; // Path to the .fbx, .gltf, etc.
+
+        /**
+         * @brief The name of the animation to play by default.
+         * (e.g., "Armature|ArmatureAction")
+         */
+        std::string defaultAnimationName = "";
+
+        // ... (rest of the fields are the same) ...
+        float animationSpeed = 1.0f;
+        bool bLoops = true;
+        bool bPlayOnStart = true;
+
+        // --- RUNTIME FIELDS (Hidden from Inspector) ---
+        // These are managed live by the AnimationSystem.
+
         float currentTime = 0.0f;
+        Animation* currentAnimation = nullptr; // Pointer to the active animation
 
         unsigned int vbo_skinning = 0; // VBO for bone IDs/weights
 
+        // These are loaded from the file specified by 'path'
         std::vector<glm::mat4> finalBoneMatrices;
         std::map<std::string, Animation*> availableAnimations;
-
-        // This component OWNS the skeleton data.
-        // This line will now work because Skeleton is defined in "AnimationData.h"
         Skeleton skeleton;
 
+
+        // --- FUNCTIONS ---
         void PlayAnimation(const std::string& name)
         {
             auto it = availableAnimations.find(name);
@@ -38,5 +67,48 @@ namespace Framework
                 }
             }
         }
+
+        void StartDefaultAnimation()
+        {
+            if (bPlayOnStart && !defaultAnimationName.empty())
+            {
+                PlayAnimation(defaultAnimationName);
+            }
+            else if (bPlayOnStart && !availableAnimations.empty())
+            {
+                // Fallback: just play the first available animation
+                PlayAnimation(availableAnimations.begin()->first);
+            }
+        }
     };
-}
+
+    //
+    // --- PROPERTY REGISTRATION ---
+    //
+    inline const std::vector g_AnimationPropertiesPropsArray =
+    {
+        // --- Register the new asset fields as hidden ---
+        PROP_GUID_HIDDEN(guid, AnimationProperties),
+        PROP_STRING_HIDDEN(name, AnimationProperties),
+        PROP_STRING_HIDDEN(path, AnimationProperties),
+
+        // --- Expose the simple, configurable fields ---
+        PROP_STRING(defaultAnimationName, AnimationProperties),
+        PROP_DRAG_FLOAT(animationSpeed, AnimationProperties),
+        PROP_BOOL(bLoops, AnimationProperties),
+        PROP_BOOL(bPlayOnStart, AnimationProperties),
+
+        // --- Show runtime data as Read-Only for debugging ---
+        PROP_FLOAT_READONLY(currentTime, AnimationProperties),
+
+        // --- Hide complex/unsupported data ---
+        PROP_UINT_HIDDEN(vbo_skinning, AnimationProperties)
+    };
+
+    
+    inline const prop_list g_AnimationPropertiesProps{ "AnimationProperties", g_AnimationPropertiesPropsArray };
+    inline global_registration g_AnimationPropertiesPropsReg(&g_AnimationPropertiesProps);
+
+} // namespace Framework
+
+#endif // !_ANIMATION_PROPERTIES_H_

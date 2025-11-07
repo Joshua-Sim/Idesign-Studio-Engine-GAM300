@@ -374,6 +374,10 @@ void MeshLoader::loadMesh(const std::string& path,
  * @brief Loads all animation clips from the Assimp scene
  * and stores them in the AnimationProperties component.
  */
+ /**
+  * @brief Loads all animation clips from the Assimp scene
+  * and stores them in the AnimationProperties component.
+  */
 void MeshLoader::LoadAnimations(const aiScene* scene, Framework::AnimationProperties& animProps)
 {
     std::cout << "Loading " << scene->mNumAnimations << " animation(s)..." << std::endl;
@@ -395,6 +399,7 @@ void MeshLoader::LoadAnimations(const aiScene* scene, Framework::AnimationProper
             assimpAnim->mTicksPerSecond : 24.0f;
         newAnim->duration = assimpAnim->mDuration;
 
+
         // Loop through all bone channels in this animation
         for (unsigned int j = 0; j < assimpAnim->mNumChannels; j++)
         {
@@ -406,6 +411,14 @@ void MeshLoader::LoadAnimations(const aiScene* scene, Framework::AnimationProper
             {
                 continue;
             }
+
+            // ---!!!--- NEW DEBUG LINE ---!!!---
+           /* std::cout << "  - Found Channel: [" << boneName << "]"
+                << " (P: " << channel->mNumPositionKeys
+                << ", R: " << channel->mNumRotationKeys
+                << ", S: " << channel->mNumScalingKeys << ")" << std::endl;*/
+            // ---!!!--- END OF NEW DEBUG LINE ---!!!---
+
 
             Framework::BoneAnimation boneAnim;
             boneAnim.boneName = boneName;

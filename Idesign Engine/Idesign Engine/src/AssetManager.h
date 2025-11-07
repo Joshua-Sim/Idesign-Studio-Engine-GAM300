@@ -37,11 +37,13 @@
 #include "PrefabProperties.h"  
 #include "SceneProperties.h"
 #include "MaterialProperties.h"
+#include "AnimationProperties.h"
 
 // Asset Files
 #include "AssetLoader.h"
 #include "AssetHandler.h"
 #include "MaterialLoader.h"
+
 
 namespace Framework
 {
@@ -56,6 +58,7 @@ namespace Framework
     REGISTER_TYPE_NAME(SceneProperties);
     REGISTER_TYPE_NAME(MaterialProperties);
     REGISTER_TYPE_NAME(MaterialMetadata);
+    REGISTER_TYPE_NAME(AnimationProperties);
 
     /*  Struct Brief
         - Store any type of assets in a generic way

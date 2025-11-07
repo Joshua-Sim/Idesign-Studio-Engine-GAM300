@@ -28,6 +28,7 @@
 #include "TextProperties.h"
 #include "NavMeshProperties.h"
 #include "NavMeshAgentProperties.h"
+#include "AnimationProperties.h"
 
 extern Framework::Coordinator ecsInterface;
 namespace Framework
@@ -133,6 +134,26 @@ namespace Framework
                 {
                     // The selected MeshProperties GUID is already stored in assetGuids[currentIndex]
                     component.guid = assetGuids[currentIndex];
+                }
+                else if constexpr (std::is_same_v<AssetType, AnimationProperties>)
+                {
+                    // This is where you call your animation loader
+                    // You MUST create this loader, similar to MeshLoader.
+                    if (asset->path.empty())
+                        return;
+
+                    // Check if the master asset needs loading
+                    if (asset->skeleton.bones.empty() && !asset->path.empty())
+                    {
+                        // !!! --- YOU NEED TO IMPLEMENT THIS --- !!!
+                        // Example:
+                        // AnimationLoader::loadAnimation(asset->path, *asset); 
+                    }
+
+                    // Copy the loaded asset data into the component
+                    component.skeleton = asset->skeleton;
+                    component.availableAnimations = asset->availableAnimations;
+                    // The component's 'path' is already set by the has_name_and_path block
                 }
             }
         }
