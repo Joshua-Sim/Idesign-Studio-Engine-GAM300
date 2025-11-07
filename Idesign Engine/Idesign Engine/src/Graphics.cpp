@@ -247,6 +247,42 @@ namespace Framework {
         ecsInterface.AddComponent<Framework::NavMeshAgentComponent>(agentEntity, navAgent);
         // ----------------- End agent creation ------------------------------
         
+
+
+        //   //  // ---------------- Create one ANIMATED ECS object (FOR TESTING) --------------------
+        //Entity animatedEntity = ecsInterface.CreateEntity();
+
+        //// 1. Add transform component
+        //TransformComponent transformComponent1;
+        //transformComponent1.position = glm::vec3(0.0, 2.0, 0.0); // Instantiate location
+        //transformComponent1.scale = glm::vec3(0.03, 0.03, 0.03); // Size of my obj is big, change for test
+
+        //ecsInterface.AddComponent<TransformComponent>(animatedEntity, transformComponent1);
+        //// 2. Add hierarchy component (standard for your entities)
+        //ecsInterface.AddComponent<HierarchyComponent>(animatedEntity, HierarchyComponent{});
+
+        //// 3. Define the components we need to load into
+        //MeshProperties animMesh;
+        //Framework::AnimationProperties animProps;
+
+        //// --- !! IMPORTANT: Change this path to your animated model file !! ---
+        //animMesh.path = "Assets/Objects/Dance.fbx";
+
+        //// 4. Use the new loader that loads mesh, skeleton, and animation data
+        //MeshLoader::loadMesh(animMesh.path, animMesh, animProps);
+        //// 5. Add all the new components to the entity
+        //ecsInterface.AddComponent<MeshProperties>(animatedEntity, animMesh);
+        //ecsInterface.AddComponent<AnimationProperties>(animatedEntity, animProps);
+
+        //// 6. (Optional) Add a texture if your model uses one
+        //Framework::TextureProperties animTexture;
+        //// --- !! IMPORTANT: Change this path to your model's texture !! ---
+        //animTexture.path = "Assets/Textures/music.png";
+        //TextureLoader::loadTexture(animTexture, true);
+        //ecsInterface.AddComponent<Framework::TextureProperties>(animatedEntity, animTexture);
+        // ----------------- End animated object creation ---------------------
+
+
         // asset load / loading shape units
         // Testing (Edwin)
         AssetManager::Instance().LoadBinaryArray<TextureProperties>("Resource/TextureAsset.bin", g_TexturePropertiesProps,
@@ -603,19 +639,6 @@ namespace Framework {
             // ---- END ANIMATION/TRANSPARENCY RENDER LOGIC (VIEW 0) ----
 
 
-            // drawing of 5 objects (primitives) - This was in your old file
-            meshShader.use();
-            meshShader.setMat4("uProj", proj);
-            meshShader.setMat4("uView", view);
-            for (int i = 0; i < 5; ++i)
-            {
-                glm::mat4 model(1.0f);
-                model = glm::translate(model, glm::vec3((i - 2) * 1.7f, 0.0f, 0.0f));
-                meshShader.setMat4("uModel", model);
-                meshShader.setVec3("uAlbedo", { 1,1,1 }); // Set default albedo
-                cylinder.draw();
-            }
-
             // --- PICK PASS for view 0 ---
             glBindFramebuffer(GL_FRAMEBUFFER, pickFBO[pickWrite]);
             glViewport(0, 0, w, h);
@@ -914,20 +937,7 @@ namespace Framework {
             glDisable(GL_BLEND);
             glCullFace(GL_BACK); // Restore default
 
-            // ---- END ANIMATION/TRANSPARENCY RENDER LOGIC (VIEW 1) ----
-
-
-            // (Optional) your 5 primitives again for view 1
-            meshShader.use();
-            meshShader.setMat4("uProj", proj1);
-            meshShader.setMat4("uView", view1);
-            for (int i = 0; i < 5; ++i) {
-                glm::mat4 model(1.0f);
-                model = glm::translate(model, glm::vec3((i - 2) * 1.7f, 0.0f, 0.0f));
-                meshShader.setMat4("uModel", model);
-                meshShader.setVec3("uAlbedo", { 1,1,1 }); // Set default albedo
-                cylinder.draw();
-            }
+            // ---- END ANIMATION/TRANSPARENCY RENDER LOGIC (VIEW 1) ---
 
             // --- PICK PASS for view 1 ---
             glBindFramebuffer(GL_FRAMEBUFFER, pickFBO[pickWrite]);

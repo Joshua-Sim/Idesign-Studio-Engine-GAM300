@@ -20,7 +20,6 @@ namespace Framework
     private:
         // Calculates the final bone transforms for one entity
         void CalculateBoneTransforms(AnimationProperties& animator, float dt);
-
         // --- Interpolation Helpers ---
 
         // Finds the keyframes to interpolate between
@@ -32,5 +31,14 @@ namespace Framework
         glm::vec3 InterpolatePosition(const BoneAnimation* channel, float time);
         glm::quat InterpolateRotation(const BoneAnimation* channel, float time);
         glm::vec3 InterpolateScale(const BoneAnimation* channel, float time);
+
+        void UpdateBoneTransformsRecursive(AnimationProperties& animator,
+            const Skeleton& skeleton,
+            const Animation& animation,
+            int boneIndex,
+            const glm::mat4& parentTransform,
+            std::vector<glm::mat4>& globalTransforms);
+
+
     };
 }

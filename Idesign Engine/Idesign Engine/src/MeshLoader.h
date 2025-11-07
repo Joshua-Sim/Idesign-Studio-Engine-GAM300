@@ -15,12 +15,15 @@ class MeshLoader {
 
 static void ProcessNode(aiNode* node, const aiScene* scene,
         Framework::Skeleton& skeleton, int parentBoneIndex);
+
+static void LoadAnimations(const aiScene* scene,
+    Framework::AnimationProperties& animProps);
 public:
     static void loadMesh(const std::string& path, MeshProperties& mesh);
 
     /**
-     * @brief Loads an ANIMATED mesh (with skeleton and bones).
-     */
+    * @brief Loads an ANIMATED mesh (with skeleton and bones).
+    */
     static void loadMesh(const std::string& path,
         Framework::MeshProperties& mesh,
         Framework::AnimationProperties& animProps);

@@ -83,6 +83,8 @@ namespace Framework
 
         // The bone's default transformation relative to its parent bone
         glm::mat4 defaultLocalTransform{ 1.0f };
+        std::vector<int> childrenIndices;
+
     };
 
     // Represents the entire skeleton (armature) of a mesh
@@ -91,6 +93,8 @@ namespace Framework
         std::vector<Bone> bones;             // Flat list of all bones
         std::map<std::string, int> boneNameMap; // Map bone name to its index in the 'bones' vector
         int rootBoneIndex = -1;
+
+        glm::mat4 rootNodeTransform{ 1.0f };
         // Helper to quickly find a bone's index by its name
         int GetBoneIndex(const std::string& name) const
         {
