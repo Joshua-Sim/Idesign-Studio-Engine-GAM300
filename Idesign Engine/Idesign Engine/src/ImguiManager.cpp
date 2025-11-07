@@ -14,14 +14,14 @@
 #include "imgui_impl_opengl3.h"
 #include "EngineState.h"
 #include "Debugger.h"
-#include <ImguiManager.h>
+#include "ImguiManager.h"
 #include "SceneManager.h"
 #include "NavMeshAgentProperties.h"
 #include "NavMeshSystem.h"
 #include "Imgui_Hierarchy.h"
 #include "NavMeshProperties.h"
-#include <FileCheckSystem.h>
-#include <ScriptingSystem.h>
+#include "FileCheckSystem.h"
+#include "ScriptingSystem.h"
 #include "ImGuizmo.h"
 #include "fmod.h"
 #include "fmod_studio.h"
@@ -270,35 +270,48 @@ namespace Framework {
                 auto existingGuid = AssetManager::Instance().FindGuid<TextureProperties>(fileName);
                 if (existingGuid.empty())
                 {
-                    std::string finalPath;
-                    std::string error;
-
                     if (MoveFileToAssetFolder(filePath, textureFolder, finalPath, error))
                     {
                         auto texPtr = std::make_unique<TextureProperties>();
                         texPtr->name = std::filesystem::path(fileName).stem().string();
                         texPtr->path = finalPath;
-                        TextureLoader::loadTexture(*texPtr, true); // Load using reference
-                        AssetManager::Instance().RegisterAsset<TextureProperties>
-                            (
-                                std::move(texPtr),
-                                &g_TexturePropertiesProps,
-                                finalPath
-                            );
-                        AssetManager::Instance().SaveArrayToJson(TypeName<TextureProperties>::value, "Assets/JSON/TextureAsset.json", "textures");
-                        std::cout << "Texture added: " << fileName << " to " << finalPath << std::endl;
-                    }
-                    else
-                    {
-                        errorMessage = "Failed to move texture:\n" + error;
-                        showErrorPopup = true;
-                        return;
+
+                        bool loaded = false;
+                        if (extension == "dds")
+                        {
+                            GLuint texID = LoadDDS(finalPath);
+                            if (texID)
+                            {
+                                texPtr->textureID = texID;
+                                loaded = true;
+                            }
+                            else std::cerr << "[TextureLoader] Failed to load DDS: " << finalPath << std::endl;
+                        }
+                        else
+                        {
+                            GLuint texID = TextureLoader::loadTexture(*texPtr, true);
+                            if (texID)
+                            {
+                                loaded = true;
+                            }
+                            else std::cerr << "[TextureLoader] Failed to load texture: " << finalPath << std::endl;
+                        }
+
+                        if (loaded)
+                        {
+                            AssetManager::Instance().RegisterAsset<TextureProperties>(std::move(texPtr), &g_TexturePropertiesProps, finalPath);
+                            AssetManager::Instance().SaveArrayToJson(TypeName<TextureProperties>::value, "Assets/JSON/TextureAsset.json", "textures");
+                            std::cout << "Texture added: " << fileName << " to " << finalPath << std::endl;
+                        }
+                        else
+                        {
+                            errorMessage = "Failed to load texture:\n" + finalPath;
+                            showErrorPopup = true;
+                            return;
+                        }
                     }
                 }
-                else
-                {
-                    std::cout << "Texture already exists: " << fileName << std::endl;
-                }
+                else std::cout << "Texture already exists: " << fileName << std::endl;
             }
 
             // Audio Files
@@ -315,11 +328,7 @@ namespace Framework {
                         audioPtr->mode = "loop";
                         audioPtr->soundType = "background";
                         loadAudio(*audioPtr); // Load metadata
-                        AssetManager::Instance().RegisterAsset<AudioProperties>(
-                            std::move(audioPtr),
-                            &g_AudioPropertiesProps,
-                            finalPath
-                        );
+                        AssetManager::Instance().RegisterAsset<AudioProperties>(std::move(audioPtr), &g_AudioPropertiesProps, finalPath);
                         AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, "Assets/JSON/AudioAsset.json", "AudioProperties");
                         std::cout << "Audio added: " << fileName << " to " << finalPath << std::endl;
                     }
@@ -330,10 +339,7 @@ namespace Framework {
                         return;
                     }
                 }
-                else
-                {
-                    std::cout << "Audio already exists: " << fileName << std::endl;
-                }
+                else std::cout << "Audio already exists: " << fileName << std::endl;
             }
 
             // OBJ || Mesh Files
@@ -350,12 +356,7 @@ namespace Framework {
                         meshPtr->path = finalPath;
 
                         MeshLoader::loadMesh(finalPath, *meshPtr); // Load mesh data
-
-                        AssetManager::Instance().RegisterAsset<MeshProperties>(
-                            std::move(meshPtr),
-                            &g_MeshProps,
-                            finalPath
-                        );
+                        AssetManager::Instance().RegisterAsset<MeshProperties>(std::move(meshPtr),&g_MeshProps,finalPath);
                         AssetManager::Instance().SaveArrayToJson(TypeName<MeshProperties>::value, "Assets/JSON/MeshAsset.json", "mesh");
                         std::cout << "Mesh added: " << fileName << " to " << finalPath << std::endl;
                     }
@@ -366,10 +367,7 @@ namespace Framework {
                         return;
                     }
                 }
-                else
-                {
-                    std::cout << "Mesh already exists: " << fileName << std::endl;
-                }
+                else std::cout << "Mesh already exists: " << fileName << std::endl;
             }
 
             // Scene Files
@@ -384,11 +382,7 @@ namespace Framework {
                         scenePtr->name = std::filesystem::path(fileName).stem().string();
                         scenePtr->path = finalPath;
                         scenePtr->guid = GenerateGUID();
-                        AssetManager::Instance().RegisterAsset<SceneProperties>(
-                            std::move(scenePtr),
-                            &g_SceneProps,
-                            finalPath
-                        );
+                        AssetManager::Instance().RegisterAsset<SceneProperties>(std::move(scenePtr), &g_SceneProps, finalPath);
                         AssetManager::Instance().SaveArrayToJson(TypeName<SceneProperties>::value, "Assets/JSON/SceneAsset.json", "scenes");
                         std::cout << "Scene added: " << fileName << " to " << finalPath << std::endl;
                     }
@@ -399,10 +393,7 @@ namespace Framework {
                         return;
                     }
                 }
-                else
-                {
-                    std::cout << "Scene already exists: " << fileName << std::endl;
-                }
+                else std::cout << "Scene already exists: " << fileName << std::endl;
             }
 
             // Prefab Files
@@ -419,11 +410,7 @@ namespace Framework {
                         prefabPtr->guid = GenerateGUID();
                         prefabPtr->isScenePrefab = false;
 
-                        AssetManager::Instance().RegisterAsset<PrefabProperties>(
-                            std::move(prefabPtr),
-                            &g_PrefabProps,
-                            finalPath
-                        );
+                        AssetManager::Instance().RegisterAsset<PrefabProperties>(std::move(prefabPtr), &g_PrefabProps, finalPath);
                         AssetManager::Instance().SaveArrayToJson(TypeName<PrefabProperties>::value, "Assets/JSON/PrefabAsset.json", "prefabs");
                         std::cout << "Prefab added: " << fileName << " to " << finalPath << std::endl;
                     }
@@ -434,10 +421,7 @@ namespace Framework {
                         return;
                     }
                 }
-                else
-                {
-                    std::cout << "Prefab already exists: " << fileName << std::endl;
-                }
+                else std::cout << "Prefab already exists: " << fileName << std::endl;
             }
 
             /*
@@ -509,7 +493,6 @@ namespace Framework {
                         const prop_list* props = TypeRegistry::Instance().GetPropList(TypeName<MaterialMetadata>::value);
                         AssetManager::Instance().RegisterAsset(std::move(meta), props, finalPath);
                         AssetManager::Instance().SaveArrayToJson(TypeName<MaterialMetadata>::value, "Assets/JSON/MaterialAsset.json", "material");
-
                         std::cout << "Material added: " << fileName << " to " << finalPath << std::endl;
                     }
                     else
@@ -519,10 +502,7 @@ namespace Framework {
                         return;
                     }
                 }
-                else
-                {
-                    std::cout << "Material already exists: " << fileName << std::endl;
-                }
+                else std::cout << "Material already exists: " << fileName << std::endl;
             }
         }
     }
@@ -1242,6 +1222,13 @@ namespace Framework {
                 {
                     meshesToDelete.push_back(mesh->guid.id.c_str());
                     initialized = false;
+                    
+                    // Delete the actual mesh file
+                    if (!AssetManager::Instance().DeleteAssetFile(mesh->path))
+                    {
+                        errorMessage = "Failed to delete mesh file:\n" + mesh->path;
+                        showErrorPopup = true;
+                    }
                     ImGui::CloseCurrentPopup();
                 }
 
@@ -1277,12 +1264,14 @@ namespace Framework {
                 ImGui::SameLine();
         }
 
-        // Deferred deletion
-        for (const auto& guid : meshesToDelete)
+        if (!meshesToDelete.empty())
         {
-            AssetManager::Instance().Unload(guid);
+            for (const auto& guid : meshesToDelete)
+            {
+                AssetManager::Instance().Unload(guid);
+            }
+            AssetManager::Instance().SaveArrayToJson(TypeName<MeshProperties>::value, "Assets/JSON/MeshAsset.json", "mesh");
         }
-
         ImGui::NewLine();
         RenderErrorPopup();
     }
@@ -1382,6 +1371,13 @@ namespace Framework {
                 if (ImGui::Button("Delete", ImVec2(buttonWidth, 0)))
                 {
                     texturesToDelete.push_back(tex->guid.id.c_str());
+
+                    // Delete the actual file
+                    if (!AssetManager::Instance().DeleteAssetFile(tex->path))
+                    {
+                        errorMessage = "Failed to delete texture file:\n" + tex->path;
+                        showErrorPopup = true;
+                    }
                     ImGui::CloseCurrentPopup();
                 }
 
@@ -1392,7 +1388,6 @@ namespace Framework {
                 }
                 ImGui::EndPopup();
             }
-
             // Tooltip on hover
             if (ImGui::IsItemHovered())
             {
@@ -1428,15 +1423,16 @@ namespace Framework {
                 ImGui::SameLine();
         }
 
-        for (const auto& guid : texturesToDelete)
+        if (!texturesToDelete.empty())
         {
-            AssetManager::Instance().Unload(guid);
+            for (const auto& guid : texturesToDelete)
+            {
+                AssetManager::Instance().Unload(guid);
+            }
+            AssetManager::Instance().SaveArrayToJson(TypeName<TextureProperties>::value, "Assets/JSON/TextureAsset.json", "textures");
         }
-
         ImGui::NewLine();
         RenderErrorPopup();
-
-
     }
 
     void ImguiManager::RenderAudioAssets() 
@@ -1561,6 +1557,13 @@ namespace Framework {
                         {
                             audioToDelete.push_back(audioProps->guid.id.c_str());
                             initialized = false;
+
+                            // Delete the actual audio file
+                            if (!AssetManager::Instance().DeleteAssetFile(audioProps->path))
+                            {
+                                errorMessage = "Failed to delete audio file:\n" + audioProps->path;
+                                showErrorPopup = true;
+                            }
                             ImGui::CloseCurrentPopup();
                         }
 
@@ -1634,9 +1637,14 @@ namespace Framework {
             }
             ImGui::EndTable();
         }
-        for (const auto& guid : audioToDelete)
+
+        if (!audioToDelete.empty())
         {
-            AssetManager::Instance().Unload(guid);
+            for (const auto& guid : audioToDelete)
+            {
+                AssetManager::Instance().Unload(guid);
+            }
+            AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, "Assets/JSON/AudioAsset.json", "audio");
         }
     }
     
@@ -1698,7 +1706,35 @@ namespace Framework {
 
     void ImguiManager::RenderScriptAssets()
     {
+        /*
+        const auto& assets = AssetManager::Instance().GetAssets();
+        for (const auto& [guid, entry] : assets)
+        {
+            if (entry.typeName != TypeName<ScriptProperties>::value) continue;
 
+            const auto* script = static_cast<const ScriptProperties*>(entry.pObject.get());
+            if (!script) continue;
+
+            ImGui::BeginGroup();
+            ImGui::Text(script->name.c_str());
+
+            // Drag-and-drop support
+            if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
+            {
+                ImGui::SetDragDropPayload("SCRIPT_GUID", script->guid.id.c_str(), script->guid.id.size() + 1);
+                ImGui::Text("Dragging: %s", script->name.c_str());
+                ImGui::EndDragDropSource();
+            }
+
+            // Optional: double-click to open script
+            if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
+            {
+                scriptEditor.OpenScript(script->path); // Your script opening logic
+            }
+
+            ImGui::EndGroup();
+        }
+        */
     }
 
     int ImguiManager::GetMainViewIndex() const { return g_MainViewIndex; }

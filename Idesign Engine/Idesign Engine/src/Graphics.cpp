@@ -452,24 +452,27 @@ namespace Framework {
 
             for (auto const& entityId : mEntities)
             {
-                if (ecsInterface.HasComponent<MeshProperties>(entityId) &&
-                    ecsInterface.HasComponent<MaterialProperties>(entityId))
+                if (ecsInterface.HasComponent<MeshProperties>(entityId))
                 {
                     auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
-                    auto& material = ecsInterface.GetComponent<MaterialProperties>(entityId);
+                    
+                    if (ecsInterface.HasComponent<MaterialProperties>(entityId))
+                    {
+                        auto& material = ecsInterface.GetComponent<MaterialProperties>(entityId);
 
-                    if (material.opacity < 1.0f)
-                    {
-                        if (ecsInterface.HasComponent<TransformComponent>(entityId))
+                        if (material.opacity < 1.0f)
                         {
-                            auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
-                            float distance = glm::distance(tr.position, cam.position);
-                            transparentEntities.insert({ distance, entityId });
+                            if (ecsInterface.HasComponent<TransformComponent>(entityId))
+                            {
+                                auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
+                                float distance = glm::distance(tr.position, cam.position);
+                                transparentEntities.insert({ distance, entityId });
+                            }
                         }
-                    }
-                    else
-                    {
-                        opaqueEntities.push_back(entityId);
+                        else
+                        {
+                            opaqueEntities.push_back(entityId);
+                        }
                     }
                 }
             }
@@ -495,11 +498,9 @@ namespace Framework {
                 }
 
                 // Mesh 
-                if (ecsInterface.HasComponent<MeshProperties>(entityId) &&
-                    ecsInterface.HasComponent<MaterialProperties>(entityId))
+                if (ecsInterface.HasComponent<MeshProperties>(entityId))
                 {
                     auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
-                    auto& material = ecsInterface.GetComponent<MaterialProperties>(entityId);
 
                     if (mesh.debugShape == DebugShapeType::None) {
 
@@ -520,17 +521,21 @@ namespace Framework {
                             }
                         }
 
-                        const bool isSelected = (int)entityId == sel;
-                        glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : material.albedo; // Use mesh.albedo
-                        currentshader.setVec3("uAlbedo", finalAlbedo);
+                        if (ecsInterface.HasComponent<MaterialProperties>(entityId))
+                        {
+                            auto& material = ecsInterface.GetComponent<MaterialProperties>(entityId);
+                            const bool isSelected = (int)entityId == sel;
+                            glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : material.albedo; // Use mesh.albedo
+                            currentshader.setVec3("uAlbedo", finalAlbedo);
 
-                        glActiveTexture(GL_TEXTURE0);
-                        currentshader.setVec3("uMaterial.ambient", material.ambient);
-                        currentshader.setVec3("uMaterial.specular", material.specular);
-                        currentshader.setFloat("uMaterial.shininess", material.shininess);
-                        currentshader.setFloat("uMaterial.opacity", material.opacity);
-                        currentshader.setInt("uTexture", 0);
-
+                            glActiveTexture(GL_TEXTURE0);
+                            currentshader.setVec3("uMaterial.ambient", material.ambient);
+                            currentshader.setVec3("uMaterial.specular", material.specular);
+                            currentshader.setFloat("uMaterial.shininess", material.shininess);
+                            currentshader.setFloat("uMaterial.opacity", material.opacity);
+                            currentshader.setInt("uTexture", 0);
+                        }
+                        
                         if (ecsInterface.HasComponent<TextureProperties>(entityId)) {
                             auto& tex = ecsInterface.GetComponent<TextureProperties>(entityId);
                             glBindTexture(GL_TEXTURE_2D, tex.textureID);
@@ -776,21 +781,24 @@ namespace Framework {
 
             for (auto const& entityId : mEntities)
             {
-                if (ecsInterface.HasComponent<MeshProperties>(entityId) &&
-                    ecsInterface.HasComponent<MaterialProperties>(entityId))
+                if (ecsInterface.HasComponent<MeshProperties>(entityId))
                 {
                     auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
-                    auto& material = ecsInterface.GetComponent<MaterialProperties>(entityId);
 
-                    if (material.opacity < 1.0f)
+                    if (ecsInterface.HasComponent<MaterialProperties>(entityId))
                     {
-                        auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
-                        float distance = glm::distance(tr.position, cam1.position); // Use cam1
-                        transparentEntities.insert({ distance, entityId });
-                    }
-                    else
-                    {
-                        opaqueEntities.push_back(entityId);
+                        auto& material = ecsInterface.GetComponent<MaterialProperties>(entityId);
+
+                        if (material.opacity < 1.0f)
+                        {
+                            auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
+                            float distance = glm::distance(tr.position, cam1.position); // Use cam1
+                            transparentEntities.insert({ distance, entityId });
+                        }
+                        else
+                        {
+                            opaqueEntities.push_back(entityId);
+                        }
                     }
                 }
             }
@@ -816,12 +824,10 @@ namespace Framework {
                 }
 
                 // Mesh 
-                if (ecsInterface.HasComponent<MeshProperties>(entityId) &&
-                    ecsInterface.HasComponent<MaterialProperties>(entityId))
+                if (ecsInterface.HasComponent<MeshProperties>(entityId))
                 {
                     auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
-                    auto& material = ecsInterface.GetComponent<MaterialProperties>(entityId);
-
+                    
                     if (mesh.debugShape == DebugShapeType::None) {
 
                         bool isSkinned = ecsInterface.HasComponent<AnimationProperties>(entityId);
@@ -841,17 +847,21 @@ namespace Framework {
                             }
                         }
 
-                        const bool isSelected = (int)entityId == sel1;
-                        glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : material.albedo;
-                        currentshader.setVec3("uAlbedo", finalAlbedo);
+                        if (ecsInterface.HasComponent<MaterialProperties>(entityId))
+                        {
+                            auto& material = ecsInterface.GetComponent<MaterialProperties>(entityId);
+                            const bool isSelected = (int)entityId == sel1;
+                            glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : material.albedo;
+                            currentshader.setVec3("uAlbedo", finalAlbedo);
 
-                        glActiveTexture(GL_TEXTURE0);
-                        currentshader.setVec3("uMaterial.ambient", material.ambient);
-                        currentshader.setVec3("uMaterial.specular", material.specular);
-                        currentshader.setFloat("uMaterial.shininess", material.shininess);
-                        currentshader.setFloat("uMaterial.opacity", material.opacity);
-                        currentshader.setInt("uTexture", 0);
-
+                            glActiveTexture(GL_TEXTURE0);
+                            currentshader.setVec3("uMaterial.ambient", material.ambient);
+                            currentshader.setVec3("uMaterial.specular", material.specular);
+                            currentshader.setFloat("uMaterial.shininess", material.shininess);
+                            currentshader.setFloat("uMaterial.opacity", material.opacity);
+                            currentshader.setInt("uTexture", 0);
+                        }
+                        
                         if (ecsInterface.HasComponent<TextureProperties>(entityId)) {
                             auto& tex = ecsInterface.GetComponent<TextureProperties>(entityId);
                             glBindTexture(GL_TEXTURE_2D, tex.textureID);

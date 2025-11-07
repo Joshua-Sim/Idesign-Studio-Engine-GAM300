@@ -102,7 +102,7 @@ namespace Framework
                     component.path = asset->path;
                 }
 
-                else if constexpr (std::is_same_v<AssetType, MeshProperties>)
+                if constexpr (std::is_same_v<AssetType, MeshProperties>)
                 {
                     if (asset->vao == 0 && !asset->path.empty())
                     {
@@ -114,7 +114,7 @@ namespace Framework
                     component.indexCount = asset->indexCount;
                 }
                 
-                else if constexpr (std::is_same_v<AssetType, TextureProperties>)
+                if constexpr (std::is_same_v<AssetType, TextureProperties>)
                 {
                     if (asset->textureID == 0) 
                     {
@@ -123,25 +123,16 @@ namespace Framework
                     component.textureID = asset->textureID; // Reuse loaded texture
                 }
                 
-                else if constexpr (std::is_same_v<AssetType, AudioProperties>)
+                if constexpr (std::is_same_v<AssetType, AudioProperties>)
                 {
                     component.mode = asset->mode;
                     component.soundType = asset->soundType;
                 }
                
-                else if constexpr (std::is_same_v<AssetType, NavMeshComponent>)
+                if constexpr (std::is_same_v<AssetType, NavMeshComponent>)
                 {
                     // The selected MeshProperties GUID is already stored in assetGuids[currentIndex]
                     component.guid = assetGuids[currentIndex];
-                }
-
-                else if constexpr (std::is_same_v<AssetType, MaterialMetadata>)
-                {
-                    component.ambient = asset->ambient;
-                    component.albedo = asset->albedo;
-                    component.specular = asset->specular;
-                    component.shininess = asset->shininess;
-                    component.opacity = asset->opacity;
                 }
             }
         }

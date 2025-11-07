@@ -231,6 +231,7 @@ namespace Framework
         void SaveAllAssets();
         void CompileAllAssets();
         void LoadAllAssets();
+        bool DeleteAssetFile(const std::string& filePath);
         void Unload(const std::string& guid);
         bool SaveToJson(void* pObject, const std::string& filePath, const prop_list& props);
         void SaveArrayToJson(const std::string& typeName, const std::string& filePath, const std::string& arrayKey);

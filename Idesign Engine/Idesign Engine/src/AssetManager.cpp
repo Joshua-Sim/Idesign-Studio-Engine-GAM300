@@ -19,23 +19,25 @@ namespace Framework
     void AssetManager::SaveAllAssets()
     {
         // Nvr include windowconfig here
-        AssetManager::Instance().SaveArrayToJson(TypeName<MeshProperties>::value, "Assets/JSON/MeshAsset.json", "mesh");
-        AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, "Assets/JSON/AudioAsset.json", "audio");
+        AssetManager::Instance().SaveArrayToJson(TypeName<MeshProperties>::value,    "Assets/JSON/MeshAsset.json", "mesh");
+        AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value,   "Assets/JSON/AudioAsset.json", "audio");
         AssetManager::Instance().SaveArrayToJson(TypeName<TextureProperties>::value, "Assets/JSON/TextureAsset.json", "textures");
-        AssetManager::Instance().SaveArrayToJson(TypeName<PrefabProperties>::value, "Assets/JSON/PrefabAsset.json", "prefabs");
-        AssetManager::Instance().SaveArrayToJson(TypeName<SceneProperties>::value, "Assets/JSON/SceneAsset.json", "scenes");
-        AssetManager::Instance().SaveArrayToJson(TypeName<MaterialMetadata>::value, "Assets/JSON/MaterialAsset.json", "materials");
+        AssetManager::Instance().SaveArrayToJson(TypeName<PrefabProperties>::value,  "Assets/JSON/PrefabAsset.json", "prefabs");
+        AssetManager::Instance().SaveArrayToJson(TypeName<SceneProperties>::value,   "Assets/JSON/SceneAsset.json", "scenes");
+        AssetManager::Instance().SaveArrayToJson(TypeName<MaterialMetadata>::value,  "Assets/JSON/MaterialAsset.json", "materials");
+        std::cout << "Files are being saved" << std::endl;
     }
 
     void AssetManager::CompileAllAssets()
     {
         //CompileSingleObject<WindowConfig>("src/Data/WindowAsset.json", "src/Data/WindowAsset.cfg", "Descriptor/WindowAsset.desc", g_WindowConfigProps);
-        CompileArray<MeshProperties>("Assets/JSON/MeshAsset.json", "Resource/MeshAsset.bin", "Descriptor/MeshAsset.desc", g_MeshProps, "mesh");
-        CompileArray<AudioProperties>("Assets/JSON/AudioAsset.json", "Resource/AudioAsset.bin", "Descriptor/AudioAsset.desc", g_AudioPropertiesProps, "audio");
-        CompileArray<TextureProperties>("Assets/JSON/TextureAsset.json", "Resrouce/TextureAsset.bin", "Descriptor/TextureAsset.desc", g_TexturePropertiesProps, "textures");
-        CompileArray<PrefabProperties>("Assets/JSON/PrefabAsset.json", "Resource/PrefabAsset.bin", "Descriptor/PrefabAsset.desc", g_PrefabProps, "prefabs");
-        CompileArray<SceneProperties>("Assets/JSON/SceneAsset.json", "Resource/SceneAsset.bin", "Descriptor/SceneAsset.desc", g_SceneProps, "scenes");
-        CompileArray<MaterialMetadata>("Assets/JSON/MaterialAsset.json", "Resource/MaterialAsset.bin", "Descriptor/MaterialAsset.desc", g_MaterialMetaProps, "materials");
+        CompileArray<MeshProperties>("Assets/JSON/MeshAsset.json",       "Resource/MeshAsset.bin",      "Descriptor/MeshAsset.desc",     g_MeshProps, "mesh");
+        CompileArray<AudioProperties>("Assets/JSON/AudioAsset.json",     "Resource/AudioAsset.bin",     "Descriptor/AudioAsset.desc",    g_AudioPropertiesProps, "audio");
+        CompileArray<TextureProperties>("Assets/JSON/TextureAsset.json", "Resource/TextureAsset.bin",   "Descriptor/TextureAsset.desc",  g_TexturePropertiesProps, "textures");
+        CompileArray<PrefabProperties>("Assets/JSON/PrefabAsset.json",   "Resource/PrefabAsset.bin",    "Descriptor/PrefabAsset.desc",   g_PrefabProps, "prefabs");
+        CompileArray<SceneProperties>("Assets/JSON/SceneAsset.json",     "Resource/SceneAsset.bin",     "Descriptor/SceneAsset.desc",    g_SceneProps, "scenes");
+        CompileArray<MaterialMetadata>("Assets/JSON/MaterialAsset.json", "Resource/MaterialAsset.bin",  "Descriptor/MaterialAsset.desc", g_MaterialMetaProps, "materials");
+        std::cout << "Files are being compiled to .binary" << std::endl;
     }
 
     void AssetManager::LoadAllAssets()
@@ -63,6 +65,29 @@ namespace Framework
                 }
             }
         );
+    }
+
+    bool AssetManager::DeleteAssetFile(const std::string& filePath)
+    {
+        try
+        {
+            if (std::filesystem::exists(filePath))
+            {
+                std::filesystem::remove(filePath);
+                std::cout << "[AssetManager] Deleted file: " << filePath << std::endl;
+                return true;
+            }
+            else
+            {
+                std::cerr << "[AssetManager] File not found: " << filePath << std::endl;
+                return false;
+            }
+        }
+        catch (const std::filesystem::filesystem_error& e)
+        {
+            std::cerr << "[AssetManager] File deletion error: " << e.what() << std::endl;
+            return false;
+        }
     }
 
     void AssetManager::Unload(const std::string& guid)
