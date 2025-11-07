@@ -21,7 +21,7 @@
 
 static bool sFirstMouse = true;
 static double sLastX = 0.0, sLastY = 0.0;
-static bool tabPressed = false;
+static bool tabPressed = true;
 
 namespace Framework {
 

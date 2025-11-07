@@ -68,7 +68,7 @@ namespace Framework {
     bool Graphics::mouseCaptured = true;
     static bool firstMouse = true;
     static bool mouseCaptured = true;
-    bool groundMode = true; // toggle with a key (e.g., F1)
+    bool Graphics::groundMode = true; // toggle with a key (e.g., F1)
 
     const auto& assets = AssetManager::Instance().GetAssets();
 
@@ -143,7 +143,6 @@ namespace Framework {
         //// IMPORTANT: always store Graphics* as user pointer, not Camera*
         glfwSetWindowUserPointer(window, this);
         glfwSetCursorPosCallback(window, mouse_callback);
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
         // Register Graphics related Component
         ImguiManager::Log("Registering graphics components...", "Graphics");
@@ -1132,34 +1131,69 @@ namespace Framework {
     // Can be pushed to input handler
     void Graphics::process_input(float dt)
     {
-        const bool editorActive = (m_mouseTargetView == 1);       // 0 = grounded(game), 1 = editor
-        Camera& cam = editorActive ? sceneCamera : gameCamera;    // was: Camera& cam = GetActiveCamera();
+        const bool editorActive = (m_mouseTargetView == 1);   // 0 = game, 1 = editor
+        Camera& cam = editorActive ? sceneCamera : gameCamera;
 
-        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) camera.processKeyboard(Camera::Movement::Forward, dt, groundMode, terrain);
-        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) camera.processKeyboard(Camera::Movement::Backward, dt, groundMode, terrain);
-        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) camera.processKeyboard(Camera::Movement::Left, dt, groundMode, terrain);
-        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) camera.processKeyboard(Camera::Movement::Right, dt, groundMode, terrain);
+        // ============================================================
+        // EDITOR CAMERA SWIVEL (only when holding right-mouse)
+        // ============================================================
+        if (editorActive)
+        {
+            static bool firstMouse = true;
+            static double lastX = 0.0, lastY = 0.0;
 
-        // Movement control
+            // Check if right-mouse is held
+            int rightMouseState = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT);
+            if (rightMouseState == GLFW_PRESS)
+            {
+                // Lock cursor for smooth rotation
+
+                double xpos, ypos;
+                glfwGetCursorPos(window, &xpos, &ypos);
+
+                if (firstMouse)
+                {
+                    lastX = xpos;
+                    lastY = ypos;
+                    firstMouse = false;
+                }
+
+                float xoffset = static_cast<float>(xpos - lastX);
+                float yoffset = static_cast<float>(lastY - ypos); // reversed Y
+                lastX = xpos;
+                lastY = ypos;
+
+                // Rotate the editor (scene) camera
+                cam.processMouseMovement(xoffset, yoffset);
+            }
+            else
+            {
+                // When released: reset mouse state and free the cursor
+                firstMouse = true;
+            }
+        }
+
+        // ============================================================
+        // (Optional) movement — WASD or fly movement
+        // ============================================================
         const bool useGround = (!editorActive) && groundMode;
+        const float baseSpeed = editorActive ? 5.0f : 1.0f;
 
-        // Movement control
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-            cam.processKeyboard(Camera::Movement::Forward, dt, useGround, terrain);
+            cam.processKeyboard(Camera::Movement::Forward, dt * baseSpeed, useGround, terrain);
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-            cam.processKeyboard(Camera::Movement::Backward, dt, useGround, terrain);
+            cam.processKeyboard(Camera::Movement::Backward, dt * baseSpeed, useGround, terrain);
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-            cam.processKeyboard(Camera::Movement::Left, dt, useGround, terrain);
+            cam.processKeyboard(Camera::Movement::Left, dt * baseSpeed, useGround, terrain);
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-            cam.processKeyboard(Camera::Movement::Right, dt, useGround, terrain);
+            cam.processKeyboard(Camera::Movement::Right, dt * baseSpeed, useGround, terrain);
 
-        //  CHANGED: free-fly vertical only when not grounded
         if (!useGround)
         {
             if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-                cam.processKeyboard(Camera::Movement::Up, dt, false, terrain);
+                cam.processKeyboard(Camera::Movement::Up, dt * baseSpeed, false, terrain);
             if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-                cam.processKeyboard(Camera::Movement::Down, dt, false, terrain);
+                cam.processKeyboard(Camera::Movement::Down, dt * baseSpeed, false, terrain);
         }
 
         //lighting

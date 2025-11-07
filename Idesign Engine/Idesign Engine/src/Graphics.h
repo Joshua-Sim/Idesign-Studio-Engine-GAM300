@@ -102,7 +102,7 @@ namespace Framework
         // camera & movement
        Camera camera{ {0.f, 1.f, 3.f} };
         static bool mouseCaptured;
-        bool groundMode = false;
+        static bool groundMode;
 
         enum class CameraMode
         {
