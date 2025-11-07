@@ -189,6 +189,19 @@ namespace Framework {
             return 1;
         }
     
+        // Cook.Scene(jsonPath, outPath [, key="materials"])
+        int l_Cook_Material(lua_State* L) {
+            const char* json = luaL_checkstring(L, 1);
+            const char* out = luaL_checkstring(L, 2);
+            const char* desc = luaL_checkstring(L, 3);
+            const char* key = luaL_optstring(L, 4, "materials");
+
+            bool skipped = prepare_output_and_skip_if_fresh(json, out);
+            bool ok = skipped ? true : CompileArray<MaterialProperties>(json, out, desc, g_MaterialProps, key);
+            lua_pushboolean(L, ok);
+            return 1;
+        }
+
         static uint64_t FileTimeToTicks(const std::filesystem::file_time_type& ft) {
             return std::chrono::duration_cast<std::chrono::milliseconds>(ft.time_since_epoch()).count();
         }
@@ -232,6 +245,9 @@ namespace Framework {
         lua_pushcfunction(L, l_Cook_Audio);        lua_setfield(L, -2, "Audio");
         lua_pushcfunction(L, l_Cook_Textures);     lua_setfield(L, -2, "Textures");
         lua_pushcfunction(L, l_Cook_Meshes);       lua_setfield(L, -2, "Meshes");
+        lua_pushcfunction(L, l_Cook_Prefab);       lua_setfield(L, -2, "Prefabs");
+        lua_pushcfunction(L, l_Cook_Scene);        lua_setfield(L, -2, "Scenes");
+        lua_pushcfunction(L, l_Cook_Material);     lua_setfield(L, -2, "Materials");
         lua_setglobal(L, "Cook");
 
         std::cout << "[ScriptingSystem] Initialized (Lua VM ready)\n";

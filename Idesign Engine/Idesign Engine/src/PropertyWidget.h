@@ -18,6 +18,7 @@
 #include "AssetManager.h"
 #include "MeshLoader.h"
 #include "TextureLoader.h"
+#include "MaterialLoader.h"
 
 // All Components || Properties
 #include "TextureProperties.h"
@@ -59,23 +60,17 @@ namespace Framework
 
         for (const auto& [guid, entry] : AssetManager::Instance().GetAssets())
         {
-            if (entry.typeName != TypeName<AssetType>::value)
-                continue;
+            if (entry.typeName != TypeName<AssetType>::value) continue;
 
             auto* asset = static_cast<AssetType*>(entry.pObject.get());
 
             if constexpr (has_name_and_path<AssetType>::value)
             {
-                if (asset->name.empty() && asset->path.empty())
-                    continue;
-
+                if (asset->name.empty() && asset->path.empty()) continue;
                 std::string name = asset->name.empty() ? asset->path : asset->name;
                 assetNames.push_back(name);
             }
-            else
-            {
-                continue;
-            }
+            else continue;
             assetGuids.push_back(guid);
         }
 
@@ -92,7 +87,6 @@ namespace Framework
                 break;
             }
         }
-
         ImGui::Separator();
         ImGui::Text("%s", label.c_str());
         if (ImGui::Combo(label.c_str(), &currentIndex, labelPtrs.data(), static_cast<int>(labelPtrs.size())))
@@ -103,9 +97,7 @@ namespace Framework
             {
                 if constexpr (has_name_and_path<AssetType>::value)
                 {
-                    if (asset->name.empty() && asset->path.empty())
-                        return; // Skip if no identifying info
-
+                    if (asset->name.empty() && asset->path.empty()) return; // Skip if no identifying info
                     component.name = asset->name.empty() ? asset->path : asset->name;
                     component.path = asset->path;
                 }
@@ -116,13 +108,13 @@ namespace Framework
                     {
                         MeshLoader::loadMesh(asset->path, *asset); // Load once into asset
                     }
-
                     component.vao = asset->vao;
                     component.vbo = asset->vbo;
                     component.ebo = asset->ebo;
                     component.indexCount = asset->indexCount;
                 }
-                else if constexpr (std::is_same_v<AssetType, TextureProperties>)
+                
+                if constexpr (std::is_same_v<AssetType, TextureProperties>)
                 {
                     if (asset->textureID == 0) 
                     {
@@ -130,12 +122,14 @@ namespace Framework
                     }
                     component.textureID = asset->textureID; // Reuse loaded texture
                 }
-                else if constexpr (std::is_same_v<AssetType, AudioProperties>)
+                
+                if constexpr (std::is_same_v<AssetType, AudioProperties>)
                 {
                     component.mode = asset->mode;
                     component.soundType = asset->soundType;
                 }
-                else if constexpr (std::is_same_v<AssetType, NavMeshComponent>)
+               
+                if constexpr (std::is_same_v<AssetType, NavMeshComponent>)
                 {
                     // The selected MeshProperties GUID is already stored in assetGuids[currentIndex]
                     component.guid = assetGuids[currentIndex];
@@ -177,7 +171,6 @@ namespace Framework
                 break;
             }
         }
-
         ImGui::Separator();
         ImGui::Text("%s", label.c_str());
         if (ImGui::Combo(label.c_str(), &currentIndex, labelPtrs.data(), static_cast<int>(labelPtrs.size())))
@@ -190,14 +183,127 @@ namespace Framework
     {
         if (tex.textureID != 0) 
         {
-            ImGui::Text("Preview:");
-            ImGui::Image((ImTextureID)(uintptr_t)tex.textureID, ImVec2(128, 128), ImVec2(0, 1), ImVec2(1, 0)); // Flip both horizontally and vertically
-            ImGui::Text("Size: %d x %d", tex.width, tex.height);
-            //ImGui::Text("Path: %s", tex.path.c_str());
+             ImGui::Text("Preview:");
+             ImGui::Image((ImTextureID)(uintptr_t)tex.textureID, ImVec2(128, 128), ImVec2(0, 1), ImVec2(1, 0)); // Flip both horizontally and vertically
+             ImGui::Text("Size: %d x %d", tex.width, tex.height);
         }
-        else 
+        else ImGui::TextColored(ImVec4(1, 0.5f, 0.5f, 1), "No texture loaded.");
+    }
+
+    inline void DrawMaterialSelector(MaterialProperties& component)
+    {
+        static bool isCreatingNewMaterial = false;
+        static bool wasCreatingNewMaterial = false;
+        static MaterialProperties newMaterial;
+        static char newName[64] = "NewMaterial";
+        static int lastSelectedIndex = -1;
+
+        std::vector<std::string> assetNames;
+        std::vector<AssetHandle> assetGuids;
+
+        // Add placeholder for "No material assigned"
+        assetNames.push_back("No material assigned");
+        assetGuids.push_back(AssetHandle{}); // Null handle
+
+        // Populate existing materials
+        for (const auto& [guid, entry] : AssetManager::Instance().GetAssets())
         {
-            ImGui::TextColored(ImVec4(1, 0.5f, 0.5f, 1), "No texture loaded.");
+            if (entry.typeName != TypeName<MaterialMetadata>::value)
+                continue;
+
+            auto* meta = static_cast<MaterialMetadata*>(entry.pObject.get());
+            if (meta->name.empty() && meta->path.empty())
+                continue;
+
+            assetNames.push_back(meta->name.empty() ? meta->path : meta->name);
+            assetGuids.push_back(guid);
+        }
+
+        // Add "Create New..." option
+        assetNames.push_back("Create New...");
+        assetGuids.push_back(AssetHandle{}); // Placeholder
+
+        std::vector<const char*> labelPtrs;
+        for (const auto& name : assetNames)
+            labelPtrs.push_back(name.c_str());
+
+        // Find current selection
+        int currentIndex = 0;
+        for (size_t i = 0; i < assetGuids.size(); ++i)
+        {
+            if (assetGuids[i] == component.guid)
+            {
+                currentIndex = static_cast<int>(i);
+                break;
+            }
+        }
+
+        ImGui::Separator();
+        ImGui::Text("Select Material");
+
+        if (ImGui::Combo("Select Material", &currentIndex, labelPtrs.data(), static_cast<int>(labelPtrs.size())))
+        {
+            isCreatingNewMaterial = (currentIndex == static_cast<int>(assetGuids.size()) - 1);
+
+            if (isCreatingNewMaterial && !wasCreatingNewMaterial)
+            {
+                // First time entering creation mode
+                newMaterial = MaterialProperties{};
+                strcpy(newName, "NewMaterial");
+            }
+
+            if (!isCreatingNewMaterial && currentIndex != 0)
+            {
+                component.guid = assetGuids[currentIndex];
+                auto* meta = AssetManager::Instance().Get<MaterialMetadata>(component.guid);
+                if (meta)
+                {
+                    auto material = LoadMaterialAsset(meta->path, meta->guid);
+                    if (material)
+                    {
+                        component.ambient = material->ambient;
+                        component.albedo = material->albedo;
+                        component.specular = material->specular;
+                        component.shininess = material->shininess;
+                        component.opacity = material->opacity;
+                    }
+                }
+            }
+            else if (currentIndex == 0)
+            {
+                component.guid = AssetHandle{}; // Clear
+            }
+            lastSelectedIndex = currentIndex;
+        }
+        wasCreatingNewMaterial = isCreatingNewMaterial;
+
+        // Show creation UI
+        if (isCreatingNewMaterial)
+        {
+            ImGui::Separator();
+            ImGui::Text("Create New Material");
+
+            ImGui::InputText("New Material Name", newName, IM_ARRAYSIZE(newName));
+            ImGui::ColorEdit3("Ambient", glm::value_ptr(newMaterial.ambient));
+            ImGui::ColorEdit3("Albedo", glm::value_ptr(newMaterial.albedo));
+            ImGui::ColorEdit3("Specular", glm::value_ptr(newMaterial.specular));
+            ImGui::DragFloat("Shininess", &newMaterial.shininess, 0.1f, 0.0f, 128.0f);
+            ImGui::DragFloat("Opacity", &newMaterial.opacity, 0.01f, 0.0f, 1.0f);
+
+            if (ImGui::Button("Save Material"))
+            {
+                AssetHandle newGuid = GenerateGUID();
+                std::string path = "Assets/Materials/" + std::string(newName) + ".material";
+
+                SaveMaterialAsset(newMaterial, path, newGuid);
+                RegisterMaterialMetadata(newGuid, newName, path);
+
+                component = newMaterial;
+                component.guid = newGuid;
+
+                ImGui::TextColored(ImVec4(0, 1, 0, 1), "Material saved!");
+                isCreatingNewMaterial = false;
+            }
         }
     }
 }

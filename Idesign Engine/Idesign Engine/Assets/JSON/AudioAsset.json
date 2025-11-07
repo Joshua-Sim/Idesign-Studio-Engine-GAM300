@@ -1,35 +1,11 @@
 {
     "audio": [
         {
-            "guid": "ambient-forest-007",
-            "name": "ForestAmbient",
-            "path": "event:/ForestAmbient",
-            "mode": "loop",
-            "soundType": "background",
-            "volume": 1.0
-        },
-        {
-            "guid": "sfx-click-005",
-            "name": "buttonclick",
-            "path": "event:/buttonclick",
+            "guid": "sfx-select-004",
+            "name": "selectbutton",
+            "path": "event:/selectbutton",
             "mode": "oneshot",
             "soundType": "effect",
-            "volume": 1.0
-        },
-        {
-            "guid": "bgm-winloop-002",
-            "name": "winloop",
-            "path": "event:/winloop",
-            "mode": "loop",
-            "soundType": "background",
-            "volume": 1.0
-        },
-        {
-            "guid": "bgm-level1-001",
-            "name": "Level1BGM",
-            "path": "event:/Level1BGM",
-            "mode": "loop",
-            "soundType": "background",
             "volume": 1.0
         },
         {
@@ -49,11 +25,35 @@
             "volume": 1.0
         },
         {
-            "guid": "sfx-select-004",
-            "name": "selectbutton",
-            "path": "event:/selectbutton",
+            "guid": "bgm-winloop-002",
+            "name": "winloop",
+            "path": "event:/winloop",
+            "mode": "loop",
+            "soundType": "background",
+            "volume": 1.0
+        },
+        {
+            "guid": "sfx-click-005",
+            "name": "buttonclick",
+            "path": "event:/buttonclick",
             "mode": "oneshot",
             "soundType": "effect",
+            "volume": 1.0
+        },
+        {
+            "guid": "ambient-forest-007",
+            "name": "ForestAmbient",
+            "path": "event:/ForestAmbient",
+            "mode": "loop",
+            "soundType": "background",
+            "volume": 1.0
+        },
+        {
+            "guid": "bgm-level1-001",
+            "name": "Level1BGM",
+            "path": "event:/Level1BGM",
+            "mode": "loop",
+            "soundType": "background",
             "volume": 1.0
         }
     ]

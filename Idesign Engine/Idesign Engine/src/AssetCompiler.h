@@ -23,6 +23,7 @@
 #include "TextureProperties.h"
 #include "MeshProperties.h"
 #include "TransformProperties.h"
+#include "MaterialProperties.h"
 
 namespace fs = std::filesystem;
 namespace Framework
@@ -137,6 +138,9 @@ namespace Framework
         {
             std::unique_ptr<T> obj = std::make_unique<T>();
             Deserialize(obj.get(), props, item);
+
+            // Ensure GUID is set
+            SetGuid(obj.get(), props);
             JsonToBinary(out, *obj, props);
         }
         out.close();
@@ -153,6 +157,9 @@ namespace Framework
             std::unique_ptr<T> obj = std::make_unique<T>();
             Deserialize(obj.get(), props, item);
 
+            // Ensure GUID is set
+            SetGuid(obj.get(), props);
+            
             rapidjson::Value entry(rapidjson::kObjectType);
             Serialize(obj.get(), props, entry, allocator);
             entries.PushBack(entry, allocator);

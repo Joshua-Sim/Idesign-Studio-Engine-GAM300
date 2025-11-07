@@ -270,8 +270,14 @@ namespace Framework
                         navMesh = NavMeshComponent{};
                     }
                 }
+                else if (typeName == "MaterialProperties")
+                {
+                    auto& material = *static_cast<MaterialProperties*>(componentPtr);
+                    DrawMaterialSelector(material);
+                }
 
                 DrawInspector(componentPtr, *propList);
+
                 if (ImGui::Button(std::string("Remove ").append(typeName).c_str()))
                 {
                     TypeRegistry::Instance().RemoveComponent(typeName, ecs, entity);
@@ -291,7 +297,8 @@ namespace Framework
                 continue;
 
             if (propList->m_pName == "WindowConfig" || propList->m_pName == "NavMeshAgentComponent" ||
-                propList->m_pName == "PrefabProperties" || propList->m_pName == "PrefabComponent") continue;
+                propList->m_pName == "PrefabProperties" || propList->m_pName == "PrefabComponent" ||
+                propList->m_pName == "MaterialMetadata" || propList->m_pName == "SceneProperties") continue;
 
             if (ImGui::Button(std::string("Add ").append(propList->m_pName).c_str()))
             {
@@ -309,6 +316,8 @@ namespace Framework
         TypeRegistry::Instance().Register<TransformComponent>("TransformComponent", &g_TransformProps);
         TypeRegistry::Instance().Register<NavMeshComponent>("NavMeshComponent", &g_NavMeshProps);
         TypeRegistry::Instance().Register<NavMeshAgentComponent>("NavMeshAgentComponent", &g_NavMeshAgentProps);
+        TypeRegistry::Instance().Register<MaterialProperties>("MaterialProperties", &g_MaterialProps);
+        TypeRegistry::Instance().Register<MaterialMetadata>("MaterialMetadata", &g_MaterialMetaProps);
     }
 
     void AutoRegisterAllReflectedComponents(Coordinator& ecs)

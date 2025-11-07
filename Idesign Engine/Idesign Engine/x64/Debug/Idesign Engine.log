@@ -1,85 +1,100 @@
-﻿  Graphics.cpp
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(468,21): warning C4458: declaration of 'cam' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(121,17):
-      see declaration of 'Framework::Graphics::cam'
+﻿  ImguiManager.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\minwindef.h(130,9): warning C4005: 'APIENTRY': macro redefinition
+  (compiling source file '/src/ImguiManager.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\glfw-3.4.bin.WIN64\include\GLFW\glfw3.h(123,11):
+      see previous definition of 'APIENTRY'
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(501,27): warning C4458: declaration of 'mesh' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
-      see declaration of 'Framework::Graphics::mesh'
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(190,19): warning C4456: declaration of 'ev' hides previous local declaration
+  (compiling source file '/src/ImguiManager.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(151,30):
+      see declaration of 'ev'
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(537,27): warning C4458: declaration of 'mesh' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
-      see declaration of 'Framework::Graphics::mesh'
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(261,25): warning C4459: declaration of 'filePath' hides global declaration
+  (compiling source file '/src/ImguiManager.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(47,24):
+      see declaration of 'Framework::filePath'
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(570,35): warning C4458: declaration of 'tex' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(141,16):
-      see declaration of 'Framework::Graphics::tex'
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(844,42): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(599,23): warning C4458: declaration of 'mesh' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
-      see declaration of 'Framework::Graphics::mesh'
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(853,38): warning C4566: character represented by universal-character-name '\u26A0' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(639,31): warning C4458: declaration of 'tex' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(141,16):
-      see declaration of 'Framework::Graphics::tex'
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(882,46): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(802,27): warning C4458: declaration of 'mesh' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
-      see declaration of 'Framework::Graphics::mesh'
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(883,40): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(838,27): warning C4458: declaration of 'mesh' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
-      see declaration of 'Framework::Graphics::mesh'
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(887,46): warning C4566: character represented by universal-character-name '\u2717' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(871,35): warning C4458: declaration of 'tex' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(141,16):
-      see declaration of 'Framework::Graphics::tex'
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(888,40): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(900,23): warning C4458: declaration of 'mesh' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
-      see declaration of 'Framework::Graphics::mesh'
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(922,42): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(940,31): warning C4458: declaration of 'tex' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(141,16):
-      see declaration of 'Framework::Graphics::tex'
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(927,46): warning C4566: character represented by universal-character-name '\u26A0' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1168,17): warning C4458: declaration of 'cam' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(121,17):
-      see declaration of 'Framework::Graphics::cam'
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(940,42): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1175,25): warning C4459: declaration of 'firstMouse' hides global declaration
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(74,17):
-      see declaration of 'Framework::firstMouse'
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(945,46): warning C4566: character represented by universal-character-name '\u26A0' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1298,23): warning C4458: declaration of 'cam' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(121,17):
-      see declaration of 'Framework::Graphics::cam'
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(974,40): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1304,23): warning C4458: declaration of 'cam' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(121,17):
-      see declaration of 'Framework::Graphics::cam'
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1007,46): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1374,39): warning C4100: 'viewIndex': unreferenced parameter
-  (compiling source file '/src/Graphics.cpp')
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1112,40): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1506,40): warning C4458: declaration of 'mesh' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
-      see declaration of 'Framework::Graphics::mesh'
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1281,40): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
   
-  Idesign Engine.vcxproj -> C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1440,40): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1497,37): warning C4456: declaration of 'nameBuffer' hides previous local declaration
+  (compiling source file '/src/ImguiManager.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1463,21):
+      see declaration of 'nameBuffer'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1498,38): warning C4456: declaration of 'volumeBuffer' hides previous local declaration
+  (compiling source file '/src/ImguiManager.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1466,22):
+      see declaration of 'volumeBuffer'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1509,76): warning C4566: character represented by universal-character-name '\U0001F3A7' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1752,48): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1898,48): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2346,39): warning C4459: declaration of 'ecsInterface' hides global declaration
+  (compiling source file '/src/ImguiManager.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(29,31):
+      see declaration of 'ecsInterface'
+  
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\algorithm(3799,24): warning C4244: '=': conversion from 'int' to 'char', possible loss of data
+  (compiling source file '/src/ImguiManager.cpp')
+      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\algorithm(3799,24):
+      the template instantiation context (the oldest one first) is
+          D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(263,18):
+          see reference to function template instantiation '_OutIt std::transform<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,int(__cdecl *)(int)>(const _InIt,const _InIt,_OutIt,_Fn)' being compiled
+          with
+          [
+              _OutIt=std::_String_iterator<std::_String_val<std::_Simple_types<char>>>,
+              _Elem=char,
+              _InIt=std::_String_iterator<std::_String_val<std::_Simple_types<char>>>,
+              _Fn=int (__cdecl *)(int)
+          ]
+  
+  Idesign Engine.vcxproj -> D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe
