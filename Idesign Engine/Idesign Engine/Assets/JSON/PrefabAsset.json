@@ -5,6 +5,12 @@
             "name": "Entity 0_Prefab",
             "path": "Assets/Prefabs/Entity 0_Prefab.prefab",
             "isScenePrefab": false
+        },
+        {
+            "guid": "b3102692-1dd7-4c94-a7a3-67efa2e34d8b",
+            "name": "Test123123",
+            "path": "Assets/Prefabs/Test123123.prefab",
+            "isScenePrefab": false
         }
     ]
 }

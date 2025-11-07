@@ -14,15 +14,16 @@
 
 //FILES
 #include "System.h"
-#include <GraphicsShader.h>
-#include <InputHandler.h>
-#include <FontSystem.h>
+#include "GraphicsShader.h"
+#include "InputHandler.h"
+#include "FontSystem.h"
 #include "AssetManager.h"
-#include <ComponentList.h>
+#include "ComponentList.h"
 #include "AudioLoader.h"
 #include "UndoRedoSystem.h"
 #include "PropertyWidget.h"
 #include "MessageSystem.h"
+#include "TextureLoaderDDS.h"
 
 namespace Framework 
 {

@@ -48,13 +48,18 @@ namespace Framework
         AssetHandle() = default;
         AssetHandle(const std::string& identifier) : id(identifier) {}
 
+        AssetHandle(AssetHandle&&) noexcept = default;
+        AssetHandle& operator=(AssetHandle&&) noexcept = default;
+
+        AssetHandle(const AssetHandle&) = default;
+        AssetHandle& operator=(const AssetHandle&) = default;
+        
         // Equality comparison based on GUID string
         bool operator==(const AssetHandle& other) const { return id == other.id; }
         bool operator!=(const AssetHandle& other) const { return id != other.id; }
 
         // Allows AssetHandle to be used in boolean contexts (e.g., if (handle))
         operator bool() const { return !id.empty(); }
-
         bool empty() const { return id.empty(); }
     };
 }

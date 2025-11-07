@@ -14,58 +14,79 @@
 
 namespace Framework
 {
-    AssetManager::~AssetManager()
+    AssetManager::~AssetManager() {}
+
+    void AssetManager::SaveAllAssets()
     {
-        AssetManager::Instance().SaveArrayToJson(TypeName<MeshProperties>::value, "Assets/JSON/MeshAsset.json", "mesh");
-        AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, "Assets/JSON/AudioAsset.json", "audio");
+        // Nvr include windowconfig here
+        AssetManager::Instance().SaveArrayToJson(TypeName<MeshProperties>::value,    "Assets/JSON/MeshAsset.json", "mesh");
+        AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value,   "Assets/JSON/AudioAsset.json", "audio");
         AssetManager::Instance().SaveArrayToJson(TypeName<TextureProperties>::value, "Assets/JSON/TextureAsset.json", "textures");
-        AssetManager::Instance().SaveArrayToJson(TypeName<PrefabProperties>::value, "Assets/JSON/PrefabAsset.json", "prefabs");
-        AssetManager::Instance().SaveArrayToJson(TypeName<SceneProperties>::value, "Assets/JSON/SceneAsset.json", "scenes");
+        AssetManager::Instance().SaveArrayToJson(TypeName<PrefabProperties>::value,  "Assets/JSON/PrefabAsset.json", "prefabs");
+        AssetManager::Instance().SaveArrayToJson(TypeName<SceneProperties>::value,   "Assets/JSON/SceneAsset.json", "scenes");
+        AssetManager::Instance().SaveArrayToJson(TypeName<MaterialMetadata>::value,  "Assets/JSON/MaterialAsset.json", "materials");
+        std::cout << "Files are being saved" << std::endl;
     }
 
-    void AssetManager::PrintAssetsOfType(const std::string& typeName)
+    void AssetManager::CompileAllAssets()
     {
-        std::cout << "=== Assets of Type: " << typeName << " ===\n";
+        //CompileSingleObject<WindowConfig>("src/Data/WindowAsset.json", "src/Data/WindowAsset.cfg", "Descriptor/WindowAsset.desc", g_WindowConfigProps);
+        CompileArray<MeshProperties>("Assets/JSON/MeshAsset.json",       "Resource/MeshAsset.bin",      "Descriptor/MeshAsset.desc",     g_MeshProps, "mesh");
+        CompileArray<AudioProperties>("Assets/JSON/AudioAsset.json",     "Resource/AudioAsset.bin",     "Descriptor/AudioAsset.desc",    g_AudioPropertiesProps, "audio");
+        CompileArray<TextureProperties>("Assets/JSON/TextureAsset.json", "Resource/TextureAsset.bin",   "Descriptor/TextureAsset.desc",  g_TexturePropertiesProps, "textures");
+        CompileArray<PrefabProperties>("Assets/JSON/PrefabAsset.json",   "Resource/PrefabAsset.bin",    "Descriptor/PrefabAsset.desc",   g_PrefabProps, "prefabs");
+        CompileArray<SceneProperties>("Assets/JSON/SceneAsset.json",     "Resource/SceneAsset.bin",     "Descriptor/SceneAsset.desc",    g_SceneProps, "scenes");
+        CompileArray<MaterialMetadata>("Assets/JSON/MaterialAsset.json", "Resource/MaterialAsset.bin",  "Descriptor/MaterialAsset.desc", g_MaterialMetaProps, "materials");
+        std::cout << "Files are being compiled to .binary" << std::endl;
+    }
 
-        for (const auto& [key, entry] : m_Assets)
-        {
-            if (entry.typeName != typeName) continue;
-
-            std::cout << "Asset GUID: " << entry.guid << "\n";
-            std::cout << "Binary Path: " << entry.binaryPath << "\n";
-
-            if (!entry.pProps || entry.pProps->m_Props.empty())
+    void AssetManager::LoadAllAssets()
+    {
+        // Mesh & Texture is loaded under Graphics.cpp due to some initialization required under graphics.cpp
+        AssetManager::Instance().LoadBinary<WindowConfig>("Resource/WindowAsset.cfg", g_WindowConfigProps);
+        AssetManager::Instance().LoadBinaryArray<AudioProperties>("Resource/AudioAsset.bin", g_AudioPropertiesProps);
+        AssetManager::Instance().LoadBinaryArray<PrefabProperties>("Resource/PrefabAsset.bin", g_PrefabProps);
+        AssetManager::Instance().LoadBinaryArray<SceneProperties>("Resource/SceneAsset.bin", g_SceneProps);
+        AssetManager::Instance().LoadBinaryArray<MaterialMetadata>("Resource/MaterialAsset.bin", g_MaterialMetaProps, [](MaterialMetadata& meta)
             {
-                std::cout << "  [No properties registered]\n";
-                continue;
-            }
-
-            for (const auto& prop : entry.pProps->m_Props)
-            {
-                if (!prop.m_fnGet) continue;
-
-                std::cout << "  " << prop.m_pName << ": ";
-
-                switch (prop.m_Type)
+                auto material = LoadMaterialAsset(meta.path, meta.guid);
+                if (material)
                 {
-                    case prop::STRING:  { std::string value; prop.m_fnGet(entry.pObject.get(), &value); std::cout << value; break; }
-                    case prop::INT:     { int         value; prop.m_fnGet(entry.pObject.get(), &value); std::cout << value; break; }
-                    case prop::FLOAT:   { float       value; prop.m_fnGet(entry.pObject.get(), &value); std::cout << value; break; }
-                    case prop::DOUBLE:  { double      value; prop.m_fnGet(entry.pObject.get(), &value); std::cout << value; break; }
-                    case prop::BOOL:    { bool        value; prop.m_fnGet(entry.pObject.get(), &value); std::cout << (value ? "true" : "false"); break; }
-                    default:            std::cout << "[unsupported type]"; break;
+                    SetGuid(material.get(), g_MaterialProps);
+
+                    // Always update material's GUID to match metadata
+                    material->guid = meta.guid;
+                    AssetManager::Instance().SaveToJson(material.get(), meta.path, g_MaterialProps);
+                    AssetManager::Instance().RegisterAsset(std::move(material), &g_MaterialProps, meta.path);
                 }
-                std::cout << "\n";
+                else
+                {
+                    std::cerr << "Failed to load material file: " << meta.path << " for GUID: " << meta.guid << "\n";
+                }
             }
-            // Optional: Print runtime-only fields if type matches
-            if (typeName == TypeName<TextureProperties>::value)
+        );
+    }
+
+    bool AssetManager::DeleteAssetFile(const std::string& filePath)
+    {
+        try
+        {
+            if (std::filesystem::exists(filePath))
             {
-                const auto* tex = static_cast<const TextureProperties*>(entry.pObject.get());
-                std::cout << "  [Runtime] TextureID: " << tex->textureID << "\n";
-                std::cout << "  [Runtime] Width: " << tex->width << "\n";
-                std::cout << "  [Runtime] Height: " << tex->height << "\n";
+                std::filesystem::remove(filePath);
+                std::cout << "[AssetManager] Deleted file: " << filePath << std::endl;
+                return true;
             }
-            std::cout << "------------------------\n";
+            else
+            {
+                std::cerr << "[AssetManager] File not found: " << filePath << std::endl;
+                return false;
+            }
+        }
+        catch (const std::filesystem::filesystem_error& e)
+        {
+            std::cerr << "[AssetManager] File deletion error: " << e.what() << std::endl;
+            return false;
         }
     }
 
@@ -75,7 +96,6 @@ namespace Framework
         if (it == m_Assets.end()) return;
 
         const AssetEntry& entry = it->second;
-
         std::string filePath;
 
         // Use reflection to find the "path" property
@@ -105,7 +125,6 @@ namespace Framework
                 std::cout << "Deleted file from disk: " << filePath << std::endl;
             }
         }
-
         // Remove from memory
         m_Assets.erase(it);
     }

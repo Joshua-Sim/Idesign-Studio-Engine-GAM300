@@ -30,15 +30,14 @@
 #include "NavMeshSystem.h"
 #include "AnimationSystem.h"
 
-#include <WindowConfigProperties.h>
 #include "AudioLoader.h"
 #include "Audio.h"
 #include "AudioSystem.h"
 #include "AudioComponent.h"
 #include "ScriptingSystem.h"
 #include "lua.hpp"
-#include <FileCheckSystem.h>
 #include "PhysicsSystem.h"
+#include "FileCheckSystem.h"
 
 using namespace Framework;
 
@@ -72,36 +71,21 @@ int main(void)
     std::cout << "FMOD Studio Audio System initialized successfully!" << std::endl;
 
     // ------- Create systems below -------- 
-    //CompileSingleObject<WindowConfig>("src/Data/WindowAsset.json", "src/Data/WindowAsset.cfg", g_WindowConfigProps);
-    AssetManager::Instance().LoadBinary<WindowConfig>("Resource/WindowAsset.cfg", g_WindowConfigProps);
-
-    //CompileArray<PrefabProperties>("Assets/JSON/PrefabAsset.json", "Resource/PrefabAsset.bin", "Descriptor/PrefabAsset.desc", g_PrefabProps, "prefabs");
-    AssetManager::Instance().LoadBinaryArray<PrefabProperties>("Resource/PrefabAsset.bin", g_PrefabProps);
-    
-    //CompileArray<SceneProperties>("Assets/JSON/SceneAsset.json", "Resource/SceneAsset.bin", "Descriptor/SceneAsset.desc", g_SceneProps, "scenes");
-    AssetManager::Instance().LoadBinaryArray<SceneProperties>("Resource/SceneAsset.bin", g_SceneProps);
-
-    //std::cout << "Compiling AudioAsset.json..." << std::endl;
-    //bool compileSuccess = CompileArray<AudioProperties>("Assets/JSON/AudioAsset.json", "Resource/AudioAsset.bin", "Descriptor/AudioAsset.desc", g_AudioPropertiesProps, "audio");
-    //std::cout << "Audio compilation: " << (compileSuccess ? "SUCCESS" : "FAILED") << std::endl;
-    
-    // Load audio properties into AssetManager first (WITHOUT calling UE_LoadEvent yet)
-    std::cout << "Loading AudioAsset.bin into AssetManager..." << std::endl;
-    AssetManager::Instance().LoadBinaryArray<AudioProperties>("Resource/AudioAsset.bin", g_AudioPropertiesProps);
-    std::cout << "Audio assets registered in AssetManager!" << std::endl;
-
     // Initialize global ECS interface and other singleton components
     ecsInterface.Init();
 
+    AssetManager::Instance().LoadAllAssets();
+    
+    // To Connect Prop with ECS
     RegisterComponentTypes();                           // Step 1: Register known types
     AutoRegisterAllReflectedComponents(ecsInterface);   // Step 2: Hook them into ECS
 
     // Register graphics system and GLFW Window first 
     auto graphicsSystem = ecsInterface.RegisterSystem<Graphics>();
+
     // Initialize the InputHandler singleton
     InputHandler::Initialize(graphicsSystem->GetWindow());
     auto animationSystem = ecsInterface.RegisterSystem<AnimationSystem>();
-
     auto sceneSystem = ecsInterface.RegisterSystem<SceneManager>();
     auto imguiSystem = ecsInterface.RegisterSystem<ImguiManager>();
     imguiSystem->SetGraphicsSystem(graphicsSystem.get());
@@ -109,28 +93,24 @@ int main(void)
     
     //Access the InputHandler instance from the singleton
     InputHandler* inputHandlerSystem = InputHandler::GetInstance();
-    if (!inputHandlerSystem) {
+    if (!inputHandlerSystem) 
+    {
         std::cerr << "Failed to initialize InputHandler!" << std::endl;
         return -1; // Exit if InputHandler initialization failed
     }
+    
     // 3. Use the new getter to connect the camera to the input handler
     Camera* graphicsCamera = graphicsSystem.get()->getCamera();
     inputHandlerSystem->SetCamera(graphicsCamera);
 
-    // Scripting System
+    // Registering systems in the ECS interface here
     auto scriptingSystem = ecsInterface.RegisterSystem<ScriptingSystem>();
     scriptingSystem->SetGraphicsSystem(graphicsSystem.get());
-
     auto navMeshSystem = ecsInterface.RegisterSystem<NavMeshSystem>();
-
-    //File Checking System
     auto fileCheckSystem = ecsInterface.RegisterSystem<Framework::FileCheckSystem>();
-    // Audio System
     auto audioSystem = ecsInterface.RegisterSystem<AudioSystem>();
     //Physics System
     auto physicsSystem = ecsInterface.RegisterSystem<PhysicsSystem>();
-
-    // Registering systems in the ECS interface here
 
     // ------- Add systems to engine below -------- //
     engine->AddSystem(animationSystem.get()); // Calculate bone matrices
@@ -153,10 +133,10 @@ int main(void)
     fileCheckSystem->WatchFolder("Assets/Textures", { ".png", ".jpg" });
     fileCheckSystem->WatchFolder("Scenes", { ".scene" });
     fileCheckSystem->WatchFolder("Assets/Prefabs", { ".prefab" });
+    fileCheckSystem->WatchFolder("Assets/Materials", { ".material" });
 
     // Initialize the engine and run the main game loop
     engine->Initialize();
-
     ImguiManager::Log("Initializing FontSystem...", "FontSystem");
     fontSystem.Initialize();
     fontSystem.LoadFont("Assets/Font/arial.ttf", 40, "Arial");
@@ -164,15 +144,18 @@ int main(void)
     ImguiManager::LogSuccess("FontSystem ready", "FontSystem");
 
     // Run All Scripts
-    if (luaL_dofile(scriptingSystem->GetLuaState(), "Assets/Scripts/cook_all.lua") != LUA_OK) {
-        std::cerr << "[Cook] Lua error: "
-            << lua_tostring(scriptingSystem->GetLuaState(), -1) << "\n";
+    if (luaL_dofile(scriptingSystem->GetLuaState(), "Assets/Scripts/cook_all.lua") != LUA_OK) 
+    {
+        std::cerr << "[Cook] Lua error: " << lua_tostring(scriptingSystem->GetLuaState(), -1) << "\n";
     }
    //scriptingSystem->CreateScriptEntity("Assets/Scripts/hello.lua");
     //scriptingSystem->CreateScriptEntity("Assets/Scripts/controls.lua");
     //scriptingSystem->CreateScriptEntity("assets/scripts/prove_lua.lua");
 
     engine->GameLoop();
+
+    AssetManager::Instance().SaveAllAssets();
+    AssetManager::Instance().CompileAllAssets();
 
     // Clear all systems and other dynamically allocated resources
     engine->DestroySystems();

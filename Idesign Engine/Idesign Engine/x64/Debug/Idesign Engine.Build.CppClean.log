@@ -2,7 +2,6 @@ d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\i
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\vc143.pdb
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\vc143.idb
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\pch.obj
-d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\enginestate.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\dummysystem.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\debugger.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\core.obj
@@ -10,6 +9,7 @@ d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\c
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\componentmanager.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\collision.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\buttonsystem.obj
+d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\audiosystem.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\audioloader.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\audio.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\assetmanager.obj
@@ -22,7 +22,6 @@ d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\i
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imgui_draw.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imgui_demo.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imgui.obj
-d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\detourassert.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\detouralloc.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\propertywidget.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\physicssystem.obj
@@ -42,7 +41,7 @@ d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\g
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\fontsystem.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\filechecksystem.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\entitymanager.obj
-d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\signalhandler.obj
+d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\enginestate.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\shaderprogram.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\scriptingsystem.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\scenemanager.obj
@@ -62,20 +61,21 @@ d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\d
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\detournavmeshbuilder.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\detournavmesh.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\detourcommon.obj
+d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\detourassert.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\vector3d.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\vector2d.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\undoredosystem.obj
+d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\textureloaderdds.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\textureloader.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\testsystem.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\terrain.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\tagmanager.obj
+d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\signalhandler.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imguizmo.obj
-d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\audiosystem.obj
-d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\textureloaderdds.obj
+d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\materialloader.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\x64\debug\idesign engine.exe
 d:\github\idesign-studio-engine-gam300\idesign engine\x64\debug\idesign engine.pdb
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.ilk
-d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\animationloader.obj
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\cl.command.1.tlog
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\cl.items.tlog
 d:\github\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\cl.read.1.tlog
