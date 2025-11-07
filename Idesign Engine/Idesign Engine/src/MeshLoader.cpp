@@ -94,7 +94,7 @@ void MeshLoader::loadMesh(const std::string& path, Framework::MeshProperties& me
         }
     }
 
-    // --- FIX: OpenGL Buffers added for static mesh (prevents crash) ---
+    // OpenGL Buffers added for static mesh (prevents crash) ---
     glGenVertexArrays(1, &mesh.vao);
     glGenBuffers(1, &mesh.vbo);
     glGenBuffers(1, &mesh.ebo);
@@ -129,12 +129,12 @@ void MeshLoader::loadMesh(const std::string& path, Framework::MeshProperties& me
 }
 
 
-// --- HIERARCHY LOADER (NEW) ---
+// --- HIERARCHY LOADER --
 void MeshLoader::ProcessNode(aiNode* node, const aiScene* scene,
     Framework::Skeleton& skeleton, int parentBoneIndex)
 {
     std::string nodeName = node->mName.C_Str();
-    int currentBoneIndex = -1;
+    int currentBoneIndex = -1; // Default to "not a bone"
 
     // Check if this node is a bone we have already registered
     if (skeleton.boneNameMap.find(nodeName) != skeleton.boneNameMap.end())
@@ -147,14 +147,23 @@ void MeshLoader::ProcessNode(aiNode* node, const aiScene* scene,
         bone.parentIndex = parentBoneIndex;
         bone.defaultLocalTransform = ConvertAssimpMatrix(node->mTransformation);
 
-        // If this is the first bone we find with no parent, it's the root
-        if (parentBoneIndex == -1) {
+        // --- THIS IS THE MISSING LOGIC ---
+        // If this bone has no parent, it's a root bone
+        if (parentBoneIndex == -1)
+        {
             skeleton.rootBoneIndex = currentBoneIndex;
+        }
+        // --- END OF MISSING LOGIC ---
+
+        // Add this bone as a child of its parent (for the animation system)
+        if (parentBoneIndex != -1)
+        {
+            skeleton.bones[parentBoneIndex].childrenIndices.push_back(currentBoneIndex);
         }
     }
     else
     {
-        // This node is not a bone (e.g., just a transform group)
+        // This node is not a bone (e.g., "Armature" or a transform group)
         // Pass the parent's index down to children
         currentBoneIndex = parentBoneIndex;
     }
@@ -165,7 +174,6 @@ void MeshLoader::ProcessNode(aiNode* node, const aiScene* scene,
         ProcessNode(node->mChildren[i], scene, skeleton, currentBoneIndex);
     }
 }
-
 
 
 // --- ANIMATED MESH LOADER---

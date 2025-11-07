@@ -256,36 +256,36 @@ namespace Framework {
 
 
         //   //  // ---------------- Create one ANIMATED ECS object (FOR TESTING) --------------------
-        //Entity animatedEntity = ecsInterface.CreateEntity();
+        Entity animatedEntity = ecsInterface.CreateEntity();
 
-        //// 1. Add transform component
-        //TransformComponent transformComponent1;
-        //transformComponent1.position = glm::vec3(0.0, 2.0, 0.0); // Instantiate location
-        //transformComponent1.scale = glm::vec3(0.03, 0.03, 0.03); // Size of my obj is big, change for test
+        // 1. Add transform component
+        TransformComponent transformComponent1;
+        transformComponent1.position = glm::vec3(10,0.0, 0.3); // Instantiate location
+        transformComponent1.scale = glm::vec3(0.03, 0.03, 0.03); // Size of my obj is big, change for test
+        transformComponent1.rotation = glm::vec3(90.0f, 0.0f, 0.0f);
+        ecsInterface.AddComponent<TransformComponent>(animatedEntity, transformComponent1);
+        // 2. Add hierarchy component (standard for your entities)
+        ecsInterface.AddComponent<HierarchyComponent>(animatedEntity, HierarchyComponent{});
 
-        //ecsInterface.AddComponent<TransformComponent>(animatedEntity, transformComponent1);
-        //// 2. Add hierarchy component (standard for your entities)
-        //ecsInterface.AddComponent<HierarchyComponent>(animatedEntity, HierarchyComponent{});
+        // 3. Define the components we need to load into
+        MeshProperties animMesh;
+        Framework::AnimationProperties animProps;
 
-        //// 3. Define the components we need to load into
-        //MeshProperties animMesh;
-        //Framework::AnimationProperties animProps;
+        // --- !! IMPORTANT: Change this path to your animated model file !! ---
+        animMesh.path = "Assets/Objects/Dance.fbx";
 
-        //// --- !! IMPORTANT: Change this path to your animated model file !! ---
-        //animMesh.path = "Assets/Objects/Dance.fbx";
+        // 4. Use the new loader that loads mesh, skeleton, and animation data
+        MeshLoader::loadMesh(animMesh.path, animMesh, animProps);
+        // 5. Add all the new components to the entity
+        ecsInterface.AddComponent<MeshProperties>(animatedEntity, animMesh);
+        ecsInterface.AddComponent<AnimationProperties>(animatedEntity, animProps);
 
-        //// 4. Use the new loader that loads mesh, skeleton, and animation data
-        //MeshLoader::loadMesh(animMesh.path, animMesh, animProps);
-        //// 5. Add all the new components to the entity
-        //ecsInterface.AddComponent<MeshProperties>(animatedEntity, animMesh);
-        //ecsInterface.AddComponent<AnimationProperties>(animatedEntity, animProps);
-
-        //// 6. (Optional) Add a texture if your model uses one
-        //Framework::TextureProperties animTexture;
-        //// --- !! IMPORTANT: Change this path to your model's texture !! ---
-        //animTexture.path = "Assets/Textures/music.png";
-        //TextureLoader::loadTexture(animTexture, true);
-        //ecsInterface.AddComponent<Framework::TextureProperties>(animatedEntity, animTexture);
+        // 6. (Optional) Add a texture if your model uses one
+        Framework::TextureProperties animTexture;
+        // --- !! IMPORTANT: Change this path to your model's texture !! ---
+        animTexture.path = "Assets/Textures/music.png";
+        TextureLoader::loadTexture(animTexture, true);
+        ecsInterface.AddComponent<Framework::TextureProperties>(animatedEntity, animTexture);
         // ----------------- End animated object creation ---------------------
 
 
