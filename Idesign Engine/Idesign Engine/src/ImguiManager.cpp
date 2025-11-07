@@ -244,6 +244,26 @@ namespace Framework {
         return (viewIndex == 0) ? gameTexture : gameTextureB;
     }
 
+    void ImguiManager::ResizeViewFBOs(int w, int h)
+    {
+        if (!m_graphicsSystem) return;
+        if (w <= 0 || h <= 0)   return;
+        if (w == m_fboW && h == m_fboH) return;
+
+        m_fboW = w;
+        m_fboH = h;
+
+        auto recreate = [&](GLuint& fb, GLuint& tex, GLuint& rbo) {
+            if (fb)  glDeleteFramebuffers(1, &fb);
+            if (tex) glDeleteTextures(1, &tex);
+            if (rbo) glDeleteRenderbuffers(1, &rbo);
+            fb = m_graphicsSystem->CreateFramebuffer(m_fboW, m_fboH, tex, rbo);
+            };
+
+        recreate(gameFramebuffer, gameTexture, rbo);
+        recreate(gameFramebufferB, gameTextureB, rboB);
+    }
+
     void DropCallback(GLFWwindow* window, int count, const char** paths)
     {
         (void)window;
@@ -524,8 +544,16 @@ namespace Framework {
         // Set ImGui Style
         ImGui::StyleColorsDark();
 
-        gameFramebuffer = m_graphicsSystem->CreateFramebuffer(static_cast<int>(1280), static_cast<int>(720), gameTexture, rbo);
-        gameFramebufferB = m_graphicsSystem->CreateFramebuffer(static_cast<int>(1280), static_cast<int>(720), gameTextureB, rboB);
+        /*gameFramebuffer = m_graphicsSystem->CreateFramebuffer(static_cast<int>(1280), static_cast<int>(720), gameTexture, rbo);
+        gameFramebufferB = m_graphicsSystem->CreateFramebuffer(static_cast<int>(1280), static_cast<int>(720), gameTextureB, rboB);*/
+        int w = 0, h = 0;
+        glfwGetFramebufferSize(m_graphicsSystem->GetWindow(), &w, &h);
+        m_fboW = std::max(1, w);
+        m_fboH = std::max(1, h);
+
+        gameFramebuffer = m_graphicsSystem->CreateFramebuffer(m_fboW, m_fboH, gameTexture, rbo);
+        gameFramebufferB = m_graphicsSystem->CreateFramebuffer(m_fboW, m_fboH, gameTextureB, rboB);
+
         // Initialize backends
         ImGui_ImplGlfw_InitForOpenGL(m_graphicsSystem->GetWindow(), true);
         ImGui_ImplOpenGL3_Init("#version 450");
@@ -2075,7 +2103,7 @@ namespace Framework {
             {
                 // Get the available size in the ImGui window
                 ImVec2 viewportSize = ImGui::GetContentRegionAvail();
-                float aspectRatio = 1280.0f / 720.0f; // Use the known FBO dimensions
+                float aspectRatio = (m_fboH > 0) ? (float)m_fboW / (float)m_fboH : 16.0f / 9.0f;
                 float newWidth = viewportSize.x;
                 float newHeight = newWidth / aspectRatio;
 
@@ -2142,7 +2170,7 @@ namespace Framework {
             if (ImGui::Begin("Secondary Viewport"))
             {
                 ImVec2 viewportSize = ImGui::GetContentRegionAvail();
-                float aspectRatio = 1280.0f / 720.0f;
+                float aspectRatio = (m_fboH > 0) ? (float)m_fboW / (float)m_fboH : 16.0f / 9.0f;
                 float newWidth = viewportSize.x;
                 float newHeight = newWidth / aspectRatio;
                 if (newHeight > viewportSize.y) {
@@ -2189,7 +2217,7 @@ namespace Framework {
 
                 // Use the SECONDARY camera’s matrices
                 glm::mat4 view = m_graphicsSystem->GetViewMatrix(secondaryView);
-                glm::mat4 proj = m_graphicsSystem->GetProjectionMatrix(secondaryView, 1280.f, 720.f);
+                glm::mat4 proj = m_graphicsSystem->GetProjectionMatrix(secondaryView, static_cast<float>(m_fboW), static_cast<float>(m_fboH));
 
                 RenderGizmoForSelected(view, proj, rectMin, vpSize);
             }

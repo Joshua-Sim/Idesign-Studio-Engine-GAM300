@@ -23,6 +23,7 @@
 #include "UndoRedoSystem.h"
 #include "PropertyWidget.h"
 #include "MessageSystem.h"
+#include <Graphics.h>
 
 namespace Framework 
 {
@@ -60,6 +61,10 @@ namespace Framework
 		void RenderGizmoPanel();
 		void RenderGizmoForSelected(const glm::mat4& view, const glm::mat4& proj,
 			const ImVec2& viewportTopLeft, const ImVec2& viewportSize);
+		void ResizeViewFBOs(int w, int h);
+		int GetFboWidth() const { return m_fboW; }
+		int GetFboHeight() const { return m_fboH; }
+
 
 		int GetMainViewIndex() const;
 
@@ -131,6 +136,8 @@ namespace Framework
 		bool showSuccess = true;
 		bool showConsole = true; 
 		static ImguiManager* instance; 
+		int m_fboW = 1280;
+		int m_fboH = 720;
 	};
 }
 

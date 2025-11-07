@@ -1,105 +1,85 @@
 ﻿  Graphics.cpp
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(456,21): warning C4458: declaration of 'cam' hides class member
+C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(468,21): warning C4458: declaration of 'cam' hides class member
   (compiling source file '/src/Graphics.cpp')
-      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(121,17):
+      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(121,17):
       see declaration of 'Framework::Graphics::cam'
   
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(489,27): warning C4458: declaration of 'mesh' hides class member
+C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(501,27): warning C4458: declaration of 'mesh' hides class member
   (compiling source file '/src/Graphics.cpp')
-      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
+      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
       see declaration of 'Framework::Graphics::mesh'
   
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(525,27): warning C4458: declaration of 'mesh' hides class member
+C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(537,27): warning C4458: declaration of 'mesh' hides class member
   (compiling source file '/src/Graphics.cpp')
-      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
+      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
       see declaration of 'Framework::Graphics::mesh'
   
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(558,35): warning C4458: declaration of 'tex' hides class member
+C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(570,35): warning C4458: declaration of 'tex' hides class member
   (compiling source file '/src/Graphics.cpp')
-      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(141,16):
+      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(141,16):
       see declaration of 'Framework::Graphics::tex'
   
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(587,23): warning C4458: declaration of 'mesh' hides class member
+C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(599,23): warning C4458: declaration of 'mesh' hides class member
   (compiling source file '/src/Graphics.cpp')
-      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
+      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
       see declaration of 'Framework::Graphics::mesh'
   
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(627,31): warning C4458: declaration of 'tex' hides class member
+C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(639,31): warning C4458: declaration of 'tex' hides class member
   (compiling source file '/src/Graphics.cpp')
-      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(141,16):
+      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(141,16):
       see declaration of 'Framework::Graphics::tex'
   
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(790,27): warning C4458: declaration of 'mesh' hides class member
+C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(802,27): warning C4458: declaration of 'mesh' hides class member
   (compiling source file '/src/Graphics.cpp')
-      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
+      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
       see declaration of 'Framework::Graphics::mesh'
   
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(826,27): warning C4458: declaration of 'mesh' hides class member
+C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(838,27): warning C4458: declaration of 'mesh' hides class member
   (compiling source file '/src/Graphics.cpp')
-      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
+      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
       see declaration of 'Framework::Graphics::mesh'
   
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(859,35): warning C4458: declaration of 'tex' hides class member
+C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(871,35): warning C4458: declaration of 'tex' hides class member
   (compiling source file '/src/Graphics.cpp')
-      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(141,16):
+      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(141,16):
       see declaration of 'Framework::Graphics::tex'
   
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(888,23): warning C4458: declaration of 'mesh' hides class member
+C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(900,23): warning C4458: declaration of 'mesh' hides class member
   (compiling source file '/src/Graphics.cpp')
-      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
+      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
       see declaration of 'Framework::Graphics::mesh'
   
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(928,31): warning C4458: declaration of 'tex' hides class member
+C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(940,31): warning C4458: declaration of 'tex' hides class member
   (compiling source file '/src/Graphics.cpp')
-      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(141,16):
+      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(141,16):
       see declaration of 'Framework::Graphics::tex'
   
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1106,58): warning C4100: 'window': unreferenced parameter
+C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1168,17): warning C4458: declaration of 'cam' hides class member
   (compiling source file '/src/Graphics.cpp')
-  
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1151,17): warning C4458: declaration of 'cam' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(121,17):
+      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(121,17):
       see declaration of 'Framework::Graphics::cam'
   
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1158,25): warning C4459: declaration of 'firstMouse' hides global declaration
+C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1175,25): warning C4459: declaration of 'firstMouse' hides global declaration
   (compiling source file '/src/Graphics.cpp')
-      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(74,17):
+      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(74,17):
       see declaration of 'Framework::firstMouse'
   
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1281,23): warning C4458: declaration of 'cam' hides class member
+C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1298,23): warning C4458: declaration of 'cam' hides class member
   (compiling source file '/src/Graphics.cpp')
-      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(121,17):
+      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(121,17):
       see declaration of 'Framework::Graphics::cam'
   
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1287,23): warning C4458: declaration of 'cam' hides class member
+C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1304,23): warning C4458: declaration of 'cam' hides class member
   (compiling source file '/src/Graphics.cpp')
-      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(121,17):
+      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(121,17):
       see declaration of 'Framework::Graphics::cam'
   
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1323,39): warning C4100: 'viewIndex': unreferenced parameter
+C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1374,39): warning C4100: 'viewIndex': unreferenced parameter
   (compiling source file '/src/Graphics.cpp')
   
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1455,40): warning C4458: declaration of 'mesh' hides class member
+C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1506,40): warning C4458: declaration of 'mesh' hides class member
   (compiling source file '/src/Graphics.cpp')
-      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
+      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
       see declaration of 'Framework::Graphics::mesh'
   
-  MeshLoader.cpp
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\MeshLoader.cpp(394,67): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-  (compiling source file '/src/MeshLoader.cpp')
-  
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\MeshLoader.cpp(396,39): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-  (compiling source file '/src/MeshLoader.cpp')
-  
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\MeshLoader.cpp(417,28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  (compiling source file '/src/MeshLoader.cpp')
-  
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\MeshLoader.cpp(425,28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  (compiling source file '/src/MeshLoader.cpp')
-  
-C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\MeshLoader.cpp(433,28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  (compiling source file '/src/MeshLoader.cpp')
-  
-  Generating Code...
-  Idesign Engine.vcxproj -> C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe
+  Idesign Engine.vcxproj -> C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe
