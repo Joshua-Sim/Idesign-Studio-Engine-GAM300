@@ -167,19 +167,15 @@ namespace Framework {
     //{
     //    float nx = 2.0f * mx / float(W) - 1.0f;
     //    float ny = 1.0f - 2.0f * my / float(H);
-
     //    glm::mat4 invVP = glm::inverse(P * V);
     //    glm::vec4 p0 = invVP * glm::vec4(nx, ny, 0.0f, 1.0f);
     //    glm::vec4 p1 = invVP * glm::vec4(nx, ny, 1.0f, 1.0f);
     //    p0 /= p0.w; p1 /= p1.w;
-
     //    glm::vec3 o = glm::vec3(p0);
     //    glm::vec3 d = glm::normalize(glm::vec3(p1 - p0));
-
     //    outO = JPH::RVec3(o.x, o.y, o.z);
     //    outDirN = JPH::Vec3(d.x, d.y, d.z);
     //}
-
     //static bool RayCastClosest(JPH::PhysicsSystem& ps,
     //    const JPH::RVec3& o, const JPH::Vec3& dirN, float maxDist,
     //    JPH::RayCastResult& outHit)
@@ -189,14 +185,12 @@ namespace Framework {
     //    rc.mDirection = dirN * maxDist; // length-scaled
     //    return ps.GetNarrowPhaseQuery().CastRay(rc, outHit);
     //}
-
     //// figure which cube face got clicked (1..6)
     //static int FaceIndexForBox(const JPH::BodyInterface* bi, JPH::BodyID id, const JPH::RVec3& hitWS)
     //{
     //    JPH::RMat44 xf = bi->GetCenterOfMassTransform(id);
     //    JPH::RVec3  rel = hitWS - xf.GetTranslation();
     //    JPH::Vec3   local = xf.GetRotation().Conjugated() * JPH::Vec3(rel);
-
     //    JPH::Vec3 a(JPH::Abs(local.GetX()), JPH::Abs(local.GetY()), JPH::Abs(local.GetZ()));
     //    if (a.GetX() >= a.GetY() && a.GetX() >= a.GetZ()) return local.GetX() > 0 ? 1 : 4; // +X / -X
     //    if (a.GetY() >= a.GetZ())                         return local.GetY() > 0 ? 2 : 5; // +Y / -Y
@@ -225,6 +219,13 @@ namespace Framework {
         // Create Cube
         static int selectedShapeIndex = 1;
 
+        MaterialProperties materialComponent;
+        materialComponent.ambient = glm::vec3(0.05f, 0.07f, 0.1f);   // Slightly cool ambient tone
+        materialComponent.albedo = glm::vec3(0.8f, 0.6f, 0.3f);      // Warm diffuse color (like wood or bronze)
+        materialComponent.specular = glm::vec3(0.9f, 0.9f, 0.95f);   // Strong specular for shiny surface
+        materialComponent.shininess = 48.0f;                         // Fairly glossy
+        materialComponent.opacity = 1.0f;                           // Slightly transparent
+
         TransformComponent cube1Transform;
         cube1Transform.position = glm::vec3(50.5f, 5.0f, 1.5f);
         cube1Transform.scale = glm::vec3(5.0f);
@@ -237,6 +238,7 @@ namespace Framework {
         MeshLoader::loadMesh(cube1mesh.path, cube1mesh);
         cube1mesh.debugShape = static_cast<DebugShapeType>(selectedShapeIndex);
         ecsInterface.AddComponent<MeshProperties>(cube1, cube1mesh);
+        ecsInterface.AddComponent<MaterialProperties>(cube1, materialComponent);
 
         TransformComponent cube2Transform;
         cube2Transform.position = glm::vec3(60.5f, 5.0f, 1.5f);
@@ -250,6 +252,8 @@ namespace Framework {
         MeshLoader::loadMesh(cube2mesh.path, cube2mesh);
         cube2mesh.debugShape = static_cast<DebugShapeType>(selectedShapeIndex);
         ecsInterface.AddComponent<MeshProperties>(cube2, cube2mesh);
+        ecsInterface.AddComponent<MaterialProperties>(cube2, materialComponent);
+
 
         TransformComponent cube3Transform;
         cube3Transform.position = glm::vec3(50.0f, 15.0f, 15.5f);
@@ -263,6 +267,7 @@ namespace Framework {
         MeshLoader::loadMesh(cube3mesh.path, cube3mesh);
         cube3mesh.debugShape = static_cast<DebugShapeType>(selectedShapeIndex);
         ecsInterface.AddComponent<MeshProperties>(cube3, cube3mesh);
+        ecsInterface.AddComponent<MaterialProperties>(cube3, materialComponent);
 
         TransformComponent cube4Transform;
         cube4Transform.position = glm::vec3(40.0f, 10.0f, -5.5f);
@@ -276,6 +281,7 @@ namespace Framework {
         MeshLoader::loadMesh(cube4mesh.path, cube4mesh);
         cube4mesh.debugShape = static_cast<DebugShapeType>(selectedShapeIndex);
         ecsInterface.AddComponent<MeshProperties>(cube4, cube4mesh);
+        ecsInterface.AddComponent<MaterialProperties>(cube4, materialComponent);
 
         // Shared
         BoxShapeSettings cubeShapeSettings(Vec3(2.5f, 2.5f, 2.5f));
