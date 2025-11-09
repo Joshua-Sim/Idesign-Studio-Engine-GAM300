@@ -69,7 +69,7 @@ namespace Framework
 
 		int GetMainViewIndex() const;
 
-		Framework::Graphics* m_graphicsSystem = nullptr; // Pointer to store the connection
+		Graphics* m_graphicsSystem; // Pointer to store the connection
 		bool m_autoReload = true;
 		int m_gizmoOperation = 0; // 0=Translate, 1=Rotate, 2=Scale
 		int m_gizmoMode = 0; // 0=Local, 1=World
@@ -137,8 +137,8 @@ namespace Framework
 		bool showSuccess = true;
 		bool showConsole = true; 
 		static ImguiManager* instance; 
-		int m_fboW = 1280;
-		int m_fboH = 720;
+		int m_fboW;
+		int m_fboH;
 	};
 }
 

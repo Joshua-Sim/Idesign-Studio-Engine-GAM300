@@ -61,6 +61,25 @@ namespace Framework {
     static TextureProperties g_ObjIcon;
     static bool g_ObjIconLoaded = false;
 
+
+    //Initialize static instance 
+    ImguiManager* ImguiManager::instance = nullptr;
+
+    ImguiManager::ImguiManager() {
+        instance = this;
+        memset(filterBuffer, 0, sizeof(filterBuffer));
+        m_graphicsSystem = nullptr;
+        m_fboW = 1280;
+        m_fboH = 720;
+    }
+
+    ImguiManager::~ImguiManager() {
+
+        ImGui_ImplOpenGL3_Shutdown();
+        ImGui_ImplGlfw_Shutdown();
+        ImGui::DestroyContext();
+    }
+
     // Get the name of the system
     std::string ImguiManager::GetName()
     {
@@ -246,6 +265,7 @@ namespace Framework {
 
     void ImguiManager::ResizeViewFBOs(int w, int h)
     {
+        if (this == nullptr) return;
         if (!m_graphicsSystem) return;
         if (w <= 0 || h <= 0)   return;
         if (w == m_fboW && h == m_fboH) return;
@@ -526,21 +546,6 @@ namespace Framework {
                 else std::cout << "Material already exists: " << fileName << std::endl;
             }
         }
-    }
-
-    //Initialize static instance 
-    ImguiManager* ImguiManager::instance = nullptr;
-
-    ImguiManager::ImguiManager() {
-        instance = this;
-        memset(filterBuffer, 0, sizeof(filterBuffer));
-    }
-
-    ImguiManager::~ImguiManager() {
-
-        ImGui_ImplOpenGL3_Shutdown();
-        ImGui_ImplGlfw_Shutdown();
-        ImGui::DestroyContext();
     }
 
     void ImguiManager::SetGraphicsSystem(Framework::Graphics* graphicsSystem)
