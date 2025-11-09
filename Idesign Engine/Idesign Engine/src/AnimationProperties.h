@@ -11,6 +11,7 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <memory>
 
 namespace Framework
 {
@@ -37,12 +38,11 @@ namespace Framework
 
 
         float currentTime = 0.0f;
-        Animation* currentAnimation = nullptr; // Pointer to the active animation
-
+        std::shared_ptr<Animation> currentAnimation = nullptr;
         unsigned int vbo_skinning = 0; // VBO for bone IDs/weights
 
         std::vector<glm::mat4> finalBoneMatrices;
-        std::map<std::string, Animation*> availableAnimations;
+        std::map<std::string, std::shared_ptr<Animation>> availableAnimations;
         Skeleton skeleton;
 
 

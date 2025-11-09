@@ -147,13 +147,10 @@ void MeshLoader::ProcessNode(aiNode* node, const aiScene* scene,
         bone.parentIndex = parentBoneIndex;
         bone.defaultLocalTransform = ConvertAssimpMatrix(node->mTransformation);
 
-        // --- THIS IS THE MISSING LOGIC ---
-        // If this bone has no parent, it's a root bone
         if (parentBoneIndex == -1)
         {
             skeleton.rootBoneIndex = currentBoneIndex;
         }
-        // --- END OF MISSING LOGIC ---
 
         // Add this bone as a child of its parent (for the animation system)
         if (parentBoneIndex != -1)
@@ -333,18 +330,7 @@ void MeshLoader::loadMesh(const std::string& path,
     glEnableVertexAttribArray(2); // tex
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(AnimatedVertex), (void*)offsetof(AnimatedVertex, tex));
 
-    // VBO 2 (Skinning: Bone IDs, Weights)
-    // --- DELETE THIS ENTIRE BLOCK ---
-    /*
-    if (aimesh->HasBones())
-    {
-        glGenBuffers(1, &animProps.vbo_skinning);
-        glBindBuffer(GL_ARRAY_BUFFER, animProps.vbo_skinning);
-        glBufferData(GL_ARRAY_BUFFER, skinning_data.size() * sizeof(VertexSkinning), skinning_data.data(), GL_STATIC_DRAW);
-    */
-    // --------------------------------
 
-    // --- REPLACE WITH NEW ATTRIBS (pointing to the SAME VBO) ---
     glEnableVertexAttribArray(3); // boneIDs
     glVertexAttribIPointer( // Use 'I' for integers
         3, 4, GL_INT, sizeof(AnimatedVertex), (void*)offsetof(AnimatedVertex, boneIDs)
@@ -365,7 +351,6 @@ void MeshLoader::loadMesh(const std::string& path,
     std::cout << "  Total meshes in file: " << scene->mNumMeshes << std::endl;
     std::cout << "  Root bone index: " << animProps.skeleton.rootBoneIndex << std::endl; // <-- THIS IS VITAL
     std::cout << "---------------------------------" << std::endl;
-    // --- END OF DEBUG BLOCK ---
     std::cout << mesh.guid << " " << mesh.path << " was loaded into system" << std::endl;
 }
 
@@ -388,7 +373,7 @@ void MeshLoader::LoadAnimations(const aiScene* scene, Framework::AnimationProper
 
         // We must heap-allocate the new animation,
         // as AnimationProperties stores it as a pointer
-        Framework::Animation* newAnim = new Framework::Animation();
+        auto newAnim = std::make_shared<Framework::Animation>();
 
         newAnim->name = assimpAnim->mName.C_Str();
         if (newAnim->name.empty()) {
