@@ -3,13 +3,14 @@
 #include <iostream>
 #include <cmath>
 #include <algorithm>
+#include <iomanip>
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 #include <gtc/quaternion.hpp>
 #include <gtx/quaternion.hpp>
-#include <gtx/matrix_decompose.hpp> // <-- ADD THIS LINE
+#include <gtx/matrix_decompose.hpp> 
 
 #include "Coordinator.h"
 #include "ComponentList.h"
@@ -17,11 +18,10 @@
 #include "Animation.h"
 #include "MeshLoader.h"
 #include "TextureLoader.h"
-#include "AnimationProperties.h" // Make sure this is included
+#include "AnimationProperties.h"
 
 extern Framework::Coordinator ecsInterface;
 
-#include <iomanip> // To format the matrix output
 
 // Helper function to print a glm::mat4
 void printMat4(const glm::mat4& mat)
@@ -44,10 +44,7 @@ namespace Framework
 {
     void AnimationSystem::Initialize()
     {
-        // This registration should ideally be in your main engine setup,
-        // not in the system's Initialize()
         ecsInterface.RegisterComponent<AnimationProperties>();
-        std::cout << "AnimationSystem Initialized\n";
         Signature signature;
         signature.set(ecsInterface.GetComponentType<AnimationProperties>());
         ecsInterface.SetSystemSignature<AnimationSystem>(signature);
@@ -57,8 +54,6 @@ namespace Framework
     {
         return "AnimationSystem";
     }
-
-    // In AnimationSystem.cpp
 
     void AnimationSystem::Update(float deltaTime)
     {
@@ -73,7 +68,6 @@ namespace Framework
                     
                     animator.StartDefaultAnimation();
                 }
-
 
                 // Now, if an animation is (or just became) active, update its transforms
                 if (animator.currentAnimation)
@@ -172,12 +166,11 @@ namespace Framework
         const Animation& animation,
         int boneIndex,
         const glm::mat4& parentTransform,
-        std::vector<glm::mat4>& globalTransforms) // Pass globalTransforms as a reference
+        std::vector<glm::mat4>& globalTransforms) 
     {
         const Bone& bone = skeleton.bones[boneIndex];
         const auto* channel = animation.FindChannel(bone.name);
 
-        //// This will print ONCE when the animation starts
         //static bool didDebugPrint = false;
         //if (!didDebugPrint)
         //{
@@ -280,35 +273,27 @@ namespace Framework
 
 
         // 2. Allocate space for this frame's global transforms
-        //    (This is used by the recursive helper)
         std::vector<glm::mat4> globalTransforms(skeleton.bones.size(), glm::mat4(1.0f));
 
         // 3. Start recursion from the root bone
         int rootIndex = skeleton.rootBoneIndex;
         if (rootIndex != -1)
         {
-            // --- FIX: Pass the skeleton's rootNodeTransform ---
-            // The root node's transform (loaded from Assimp) must be the
-            // starting parentTransform, otherwise the entire animation
-            // may be mis-oriented or mis-scaled.
+
             UpdateBoneTransformsRecursive(animator, skeleton, animation,
                 rootIndex, skeleton.rootNodeTransform, globalTransforms);
-            // --- END FIX ---
 
-            // --- ADD THIS DEBUG CODE ---
-            static int frameCount = 0;
-            if (frameCount % 60 == 0) // Print once every 60 frames
-            {
-                std::cout << "=== Root Bone Matrix (Final) ===\n";
-                // Print the final shader matrix for the *root bone*
-                printMat4(animator.finalBoneMatrices[rootIndex]);
-            }
-            frameCount++;
-            // --- END OF DEBUG CODE ---
+            //static int frameCount = 0;
+            //if (frameCount % 60 == 0) // Print once every 60 frames
+            //{
+            //    //std::cout << "=== Root Bone Matrix (Final) ===\n";
+            //    // Print the final shader matrix for the *root bone*
+            //    //printMat4(animator.finalBoneMatrices[rootIndex]);
+            //}
+            //frameCount++;
         }
         else
         {
-            // This error will stop if you fixed ProcessNode in MeshLoader.cpp
             std::cerr << "Animation Error: No root bone found! (Index is -1)" << std::endl;
         }
     }

@@ -144,7 +144,9 @@
     <ClInclude Include="..\lib\imgui\imstb_rectpack.h" />
     <ClInclude Include="..\lib\imgui\imstb_textedit.h" />
     <ClInclude Include="..\lib\imgui\imstb_truetype.h" />
-    <ClInclude Include="AnimationSystem.h" />
+    <ClInclude Include="src\Animation.h" />
+    <ClInclude Include="src\AnimationProperties.h" />
+    <ClInclude Include="src\AnimationSystem.h" />
     <ClInclude Include="src\AssetCompiler.h" />
     <ClInclude Include="src\AssetHandler.h" />
     <ClInclude Include="src\AssetLoader.h" />

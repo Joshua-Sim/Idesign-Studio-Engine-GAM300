@@ -492,9 +492,6 @@
     <ClInclude Include="src\Recast\DetourNavMeshBuilder.h">
       <Filter>Header Files\NavMesh\Libraries</Filter>
     </ClInclude>
-    <ClInclude Include="src\Recast\DetourNavMeshQuery.h">
-      <Filter>Header Files\NavMesh\Libraries</Filter>
-    </ClInclude>
     <ClInclude Include="src\Recast\DetourNode.h">
       <Filter>Header Files\NavMesh\Libraries</Filter>
     </ClInclude>
@@ -542,6 +539,21 @@
     </ClInclude>
     <ClInclude Include="src\MaterialLoader.h">
       <Filter>Header Files\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Recast\DetourNavMeshQuery.h">
+      <Filter>Header Files\Property</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Animation.h">
+      <Filter>Header Files\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AnimationLoader.h">
+      <Filter>Header Files\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AnimationProperties.h">
+      <Filter>Header Files\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AnimationSystem.h">
+      <Filter>Header Files\Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -856,6 +868,9 @@
     </ClCompile>
     <ClCompile Include="src\MaterialLoader.cpp">
       <Filter>Source Files\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AnimationLoader.cpp">
+      <Filter>Source Files\Animation</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

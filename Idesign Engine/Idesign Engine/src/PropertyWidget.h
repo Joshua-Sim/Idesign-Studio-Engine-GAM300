@@ -113,6 +113,7 @@ namespace Framework
                     component.vbo = asset->vbo;
                     component.ebo = asset->ebo;
                     component.indexCount = asset->indexCount;
+
                 }
                 
                 if constexpr (std::is_same_v<AssetType, TextureProperties>)
@@ -137,18 +138,9 @@ namespace Framework
                 }
                 else if constexpr (std::is_same_v<AssetType, AnimationProperties>)
                 {
-                    // This is where you call your animation loader
-                    // You MUST create this loader, similar to MeshLoader.
+
                     if (asset->path.empty())
                         return;
-
-                    // Check if the master asset needs loading
-                    if (asset->skeleton.bones.empty() && !asset->path.empty())
-                    {
-                        // !!! --- YOU NEED TO IMPLEMENT THIS --- !!!
-                        // Example:
-                        // AnimationLoader::loadAnimation(asset->path, *asset); 
-                    }
 
                     // Copy the loaded asset data into the component
                     component.skeleton = asset->skeleton;

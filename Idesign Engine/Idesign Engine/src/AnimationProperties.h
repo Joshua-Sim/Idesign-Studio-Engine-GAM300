@@ -5,16 +5,12 @@
 
 #include "PropertySystem.h"
 #include "PropertyMacro.h"
-#include "animation.h" // Contains your Skeleton and Animation structs
+#include "animation.h"
 #include <glew.h>
 #include <glm.hpp>
 #include <vector>
 #include <map>
 #include <string>
-
-// Forward-declare AssetHandle if not in PropertySystem.h
-// (Assuming it's in PropertySystem.h or PropertyMacro.h like in MeshProperties)
-// struct AssetHandle; 
 
 namespace Framework
 {
@@ -24,7 +20,7 @@ namespace Framework
      */
     struct AnimationProperties
     {
-        // --- ASSET FIELDS (Hidden from Inspector, managed by DrawAssetDropdown) ---
+        // --- ASSET FIELDS ---
         AssetHandle guid;
         std::string name;
         std::string path; // Path to the .fbx, .gltf, etc.
@@ -35,20 +31,16 @@ namespace Framework
          */
         std::string defaultAnimationName = "";
 
-        // ... (rest of the fields are the same) ...
         float animationSpeed = 1.0f;
         bool bLoops = true;
         bool bPlayOnStart = true;
 
-        // --- RUNTIME FIELDS (Hidden from Inspector) ---
-        // These are managed live by the AnimationSystem.
 
         float currentTime = 0.0f;
         Animation* currentAnimation = nullptr; // Pointer to the active animation
 
         unsigned int vbo_skinning = 0; // VBO for bone IDs/weights
 
-        // These are loaded from the file specified by 'path'
         std::vector<glm::mat4> finalBoneMatrices;
         std::map<std::string, Animation*> availableAnimations;
         Skeleton skeleton;
@@ -87,12 +79,10 @@ namespace Framework
     //
     inline const std::vector g_AnimationPropertiesPropsArray =
     {
-        // --- Register the new asset fields as hidden ---
         PROP_GUID_HIDDEN(guid, AnimationProperties),
         PROP_STRING_HIDDEN(name, AnimationProperties),
         PROP_STRING_HIDDEN(path, AnimationProperties),
 
-        // --- Expose the simple, configurable fields ---
         PROP_STRING(defaultAnimationName, AnimationProperties),
         PROP_DRAG_FLOAT(animationSpeed, AnimationProperties),
         PROP_BOOL(bLoops, AnimationProperties),

@@ -289,6 +289,8 @@ namespace Framework {
         // 4. Use the new loader that loads mesh, skeleton, and animation data
         MeshLoader::loadMesh(animMesh.path, animMesh, animProps);
         // 5. Add all the new components to the entity
+        ecsInterface.AddComponent<MaterialProperties>(animatedEntity, materialComponent);
+
         ecsInterface.AddComponent<MeshProperties>(animatedEntity, animMesh);
         ecsInterface.AddComponent<AnimationProperties>(animatedEntity, animProps);
 
