@@ -21,28 +21,19 @@ namespace Framework
     {
         AssetHandle prefabGUID;  // References PrefabProperties in AssetManager
 
-        // === DELTA SYSTEM (Planned for Future Implementation) ===
-        // Uncomment when ready to implement full prefab override system
-
         // std::vector<std::string> addedComponents;      // Component types added to instance
         // std::vector<std::string> deletedComponents;    // Component types removed from prefab
+        
+        // For delta-on change
         // 
-        // struct PropertyOverride 
-        // {
-        //     std::string componentType;   // e.g., "TransformComponent"
-        //     std::string propertyName;    // e.g., "position"
-        //     std::string propertyValue;   // Serialized value as string
-        // };
         // std::vector<PropertyOverride> overriddenProperties;
-
-        // === END DELTA SYSTEM ===
     };
 
     inline const std::array g_PrefabComponentPropsArray =
     {
         PROP_STRING(prefabGUID.id, ::PrefabComponent),  // Access the string directly
 
-        // Delta properties (add when implementing):
+        // Delta properties 
         // PROP_STRING_ARRAY(addedComponents, PrefabComponent),
         // PROP_STRING_ARRAY(deletedComponents, PrefabComponent),
     };
