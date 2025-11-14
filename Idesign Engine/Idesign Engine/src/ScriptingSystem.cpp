@@ -28,6 +28,44 @@ namespace Framework {
             return self;
         }
 
+        static int lua_GetPosition(lua_State* L)
+        {
+            // 1st arg: entity id
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+
+            if (!ecsInterface.IsEntityValid(e) ||
+                !ecsInterface.HasComponent<TransformComponent>(e))
+            {
+                // no transform; return 0 values
+                return luaL_error(L, "GetPosition: entity %d has no TransformComponent", (int)e);
+            }
+
+            auto& tr = ecsInterface.GetComponent<TransformComponent>(e);
+
+            lua_pushnumber(L, tr.position.x);
+            lua_pushnumber(L, tr.position.y);
+            lua_pushnumber(L, tr.position.z);
+            return 3; // x, y, z
+        }
+
+        static int lua_SetPosition(lua_State* L)
+        {
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+            float x = static_cast<float>(luaL_checknumber(L, 2));
+            float y = static_cast<float>(luaL_checknumber(L, 3));
+            float z = static_cast<float>(luaL_checknumber(L, 4));
+
+            if (!ecsInterface.IsEntityValid(e) ||
+                !ecsInterface.HasComponent<TransformComponent>(e))
+            {
+                return luaL_error(L, "SetPosition: entity %d has no TransformComponent", (int)e);
+            }
+
+            auto& tr = ecsInterface.GetComponent<TransformComponent>(e);
+            tr.position = glm::vec3(x, y, z);
+            return 0;
+        }
+
         int l_IsKeyDown(lua_State* L) {
             auto* self = lua_self(L);
             Graphics* g = self ? self->GetGraphicsSystem() : nullptr;     // <-- use getter
@@ -238,6 +276,8 @@ namespace Framework {
         lua_register(L, "SetHDR", l_SetHDR);
         lua_register(L, "SetBloom", l_SetBloom);
         lua_register(L, "SetGroundMode", l_SetGround);
+        lua_register(L, "GetPosition", lua_GetPosition);
+        lua_register(L, "SetPosition", lua_SetPosition);
 
         // Create Cook table with our functions
         lua_newtable(L);                           // Cook
@@ -256,71 +296,71 @@ namespace Framework {
     void ScriptingSystem::Update(float dt) {
         for (auto const& e : mEntities) {
             if (!ecsInterface.HasComponent<ScriptComponent>(e)) continue;
-            auto& sc = ecsInterface.GetComponent<ScriptComponent>(e);
+            auto& comp = ecsInterface.GetComponent<ScriptComponent>(e);
 
-            if (sc.hotReload && !sc.scriptPath.empty()) {
-                try {
-                    auto nowTicks = FileTimeToTicks(std::filesystem::last_write_time(sc.scriptPath));
-                    if (nowTicks != sc.lastWriteTicks) {
-                        std::cout << "[HotReload] " << sc.scriptPath << "\n";
-                        if (LoadScriptTable(sc)) {
-                            // re-expose entity id
-                            lua_rawgeti(L, LUA_REGISTRYINDEX, sc.tableRef);
-                            lua_pushinteger(L, static_cast<lua_Integer>(e));
-                            lua_setfield(L, -2, "entity");
-                            lua_pop(L, 1);
+            for (auto& sc : comp.scripts) {         // <--- NEW
+                if (sc.scriptPath.empty()) continue;
 
-                            // run on_init again so the script can re-bind state
-                            CallHook(sc.tableRef, "on_init");
-                            sc.initialized = true;
+                if (sc.hotReload && !sc.scriptPath.empty()) {
+                    try {
+                        auto nowTicks = FileTimeToTicks(std::filesystem::last_write_time(sc.scriptPath));
+                        if (nowTicks != sc.lastWriteTicks) {
+                            std::cout << "[HotReload] " << sc.scriptPath << "\n";
+                            if (LoadScriptTable(sc)) {
+                                // re-expose entity id
+                                lua_rawgeti(L, LUA_REGISTRYINDEX, sc.tableRef);
+                                lua_pushinteger(L, static_cast<lua_Integer>(e));
+                                lua_setfield(L, -2, "entity");
+                                lua_pop(L, 1);
+
+                                // run on_init again so the script can re-bind state
+                                CallHook(sc.tableRef, "on_init");
+                                sc.initialized = true;
+                            }
+                            sc.lastWriteTicks = nowTicks; // remember the new time
                         }
-                        sc.lastWriteTicks = nowTicks; // remember the new time
+                    }
+                    catch (const std::exception& ex) {
+                        std::cerr << "[HotReload] check failed for " << sc.scriptPath << ": " << ex.what() << "\n";
                     }
                 }
-                catch (const std::exception& ex) {
-                    std::cerr << "[HotReload] check failed for " << sc.scriptPath << ": " << ex.what() << "\n";
+
+                if (sc.tableRef == LUA_NOREF) {
+                    if (!LoadScriptTable(sc)) continue;
+
+                    // expose entity id: self.entity
+                    lua_rawgeti(L, LUA_REGISTRYINDEX, sc.tableRef);
+                    lua_pushinteger(L, static_cast<lua_Integer>(e));
+                    lua_setfield(L, -2, "entity");
+                    lua_pop(L, 1);
                 }
+                if (!sc.initialized) { CallHook(sc.tableRef, "on_init"); sc.initialized = true; }
+                CallHook(sc.tableRef, "on_update", dt);
             }
-
-            if (sc.tableRef == LUA_NOREF) {
-                if (!LoadScriptTable(sc)) continue;
-
-                // expose entity id: self.entity
-                lua_rawgeti(L, LUA_REGISTRYINDEX, sc.tableRef);
-                lua_pushinteger(L, static_cast<lua_Integer>(e));
-                lua_setfield(L, -2, "entity");
-                lua_pop(L, 1);
-            }
-            if (!sc.initialized) { CallHook(sc.tableRef, "on_init"); sc.initialized = true; }
-            CallHook(sc.tableRef, "on_update", dt);
         }
     }
 
     std::string ScriptingSystem::GetName() { return "ScriptingSystem"; }
 
-    bool ScriptingSystem::LoadScriptTable(ScriptComponent& sc)
+    bool ScriptingSystem::LoadScriptTable(ScriptInstance& sc)
     {
-        // Clean any previous instance table
         if (sc.tableRef != LUA_NOREF) {
             luaL_unref(L, LUA_REGISTRYINDEX, sc.tableRef);
             sc.tableRef = LUA_NOREF;
         }
 
-        // Execute the Lua file (must return a table)
         if (luaL_dofile(L, sc.scriptPath.c_str()) != LUA_OK) {
-            std::cerr << "[Lua] load error in " << sc.scriptPath
-                << ": " << lua_tostring(L, -1) << "\n";
-            lua_pop(L, 1); // pop error
+            std::cerr << "[Lua] load error in " << sc.scriptPath << ": " << lua_tostring(L, -1) << "\n";
+            lua_pop(L, 1);
             return false;
         }
 
         if (!lua_istable(L, -1)) {
             std::cerr << "[Lua] script must `return` a table: " << sc.scriptPath << "\n";
-            lua_pop(L, 1); // pop non-table
+            lua_pop(L, 1);
             return false;
         }
 
-        // Store table in registry and reset lifecycle
         sc.tableRef = luaL_ref(L, LUA_REGISTRYINDEX);
         sc.initialized = false;
         return true;
@@ -363,8 +403,14 @@ namespace Framework {
     
     Entity ScriptingSystem::CreateScriptEntity(const std::string& path) {
         Entity e = ecsInterface.CreateEntity();
-        ecsInterface.AddComponent<ScriptComponent>(e, ScriptComponent{ path });
-        ecsInterface.AddComponent<TransformComponent>(e,TransformComponent{});
+
+        ScriptComponent comp;
+        ScriptInstance inst;
+        inst.scriptPath = path;
+        comp.scripts.push_back(inst);
+
+        ecsInterface.AddComponent<ScriptComponent>(e, comp);
+        ecsInterface.AddComponent<TransformComponent>(e, TransformComponent{});
         ecsInterface.AddComponent<HierarchyComponent>(e, HierarchyComponent{});
         return e;
     }
@@ -374,9 +420,9 @@ namespace Framework {
         namespace fs = std::filesystem;
         std::error_code ec;
 
-        // Normalize the changed path
         fs::path changedAbs = fs::weakly_canonical(changedPath, ec);
-        std::string changedNorm = (ec ? fs::path(changedPath) : changedAbs).lexically_normal().generic_string();
+        std::string changedNorm = (ec ? fs::path(changedPath) : changedAbs)
+            .lexically_normal().generic_string();
         std::string changedFile = fs::path(changedNorm).filename().string();
 
         std::cout << "[HotReload] request for: " << changedNorm << "\n";
@@ -386,59 +432,38 @@ namespace Framework {
         for (auto e : mEntities)
         {
             if (!ecsInterface.HasComponent<ScriptComponent>(e)) continue;
-            auto& sc = ecsInterface.GetComponent<ScriptComponent>(e);
-            if (sc.scriptPath.empty()) continue;
+            auto& comp = ecsInterface.GetComponent<ScriptComponent>(e);
 
-            // Normalize the stored script path
-            ec.clear();
-            fs::path scAbs = fs::weakly_canonical(sc.scriptPath, ec);
-            std::string scNorm = (ec ? fs::path(sc.scriptPath) : scAbs).lexically_normal().generic_string();
-            std::string scFile = fs::path(scNorm).filename().string();
-
-            // Match by absolute OR by filename (helps when one side is relative)
-            bool match = (scNorm == changedNorm) || (scFile == changedFile);
-
-            if (match)
-            {
-                std::cout << "  -> reloading entity " << e << " (" << scNorm << ")\n";
-                if (LoadScriptTable(sc))
-                {
-                    // re-expose entity id on the table and re-init
-                    lua_rawgeti(L, LUA_REGISTRYINDEX, sc.tableRef);
-                    lua_pushinteger(L, static_cast<lua_Integer>(e));
-                    lua_setfield(L, -2, "entity");
-                    lua_pop(L, 1);
-
-                    sc.initialized = false;
-                    CallHook(sc.tableRef, "on_init");
-                    any = true;
-                }
-                else
-                {
-                    std::cerr << "  !! reload failed for " << scNorm << "\n";
-                }
-            }
-        }
-
-        // Optional fallback: if nothing matched but it was a .lua file, reload ALL scripts
-        if (!any && fs::path(changedNorm).extension() == ".lua")
-        {
-            std::cout << "  (no direct match; reloading all scripts)\n";
-            for (auto e : mEntities)
-            {
-                if (!ecsInterface.HasComponent<ScriptComponent>(e)) continue;
-                auto& sc = ecsInterface.GetComponent<ScriptComponent>(e);
+            for (auto& sc : comp.scripts) {
                 if (sc.scriptPath.empty()) continue;
 
-                if (LoadScriptTable(sc))
-                {
-                    lua_rawgeti(L, LUA_REGISTRYINDEX, sc.tableRef);
-                    lua_pushinteger(L, static_cast<lua_Integer>(e));
-                    lua_setfield(L, -2, "entity");
-                    lua_pop(L, 1);
+                ec.clear();
+                fs::path scAbs = fs::weakly_canonical(sc.scriptPath, ec);
+                std::string scNorm = (ec ? fs::path(sc.scriptPath) : scAbs)
+                    .lexically_normal().generic_string();
+                std::string scFile = fs::path(scNorm).filename().string();
 
-                    sc.initialized = false;
-                    CallHook(sc.tableRef, "on_init");
+                bool match = (scNorm == changedNorm) || (scFile == changedFile);
+
+                if (match)
+                {
+                    std::cout << "  -> reloading entity " << e
+                        << " (" << scNorm << ")\n";
+                    if (LoadScriptTable(sc))
+                    {
+                        lua_rawgeti(L, LUA_REGISTRYINDEX, sc.tableRef);
+                        lua_pushinteger(L, static_cast<lua_Integer>(e));
+                        lua_setfield(L, -2, "entity");
+                        lua_pop(L, 1);
+
+                        sc.initialized = false;
+                        CallHook(sc.tableRef, "on_init");
+                        any = true;
+                    }
+                    else
+                    {
+                        std::cerr << "  !! reload failed for " << scNorm << "\n";
+                    }
                 }
             }
         }
