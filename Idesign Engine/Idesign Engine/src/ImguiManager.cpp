@@ -9,7 +9,8 @@
 #include "Coordinator.h"
 #include <algorithm>
 #include "AnimationLoader.h"
-
+#include "EnginePath.h" 
+#include <filesystem>   
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
@@ -275,9 +276,13 @@ namespace Framework {
         m_fboH = h;
 
         auto recreate = [&](GLuint& fb, GLuint& tex, GLuint& rbo) {
-            if (fb)  glDeleteFramebuffers(1, &fb);
-            if (tex) glDeleteTextures(1, &tex);
-            if (rbo) glDeleteRenderbuffers(1, &rbo);
+            // Delete the old objects AND zero out their handles
+            if (fb) { glDeleteFramebuffers(1, &fb);  fb = 0; }
+            if (tex) { glDeleteTextures(1, &tex);   tex = 0; }
+            if (rbo) { glDeleteRenderbuffers(1, &rbo); rbo = 0; }
+
+            // Now that tex and rbo are 0, CreateFramebuffer can
+            // safely generate new ones and assign them back to the references.
             fb = m_graphicsSystem->CreateFramebuffer(m_fboW, m_fboH, tex, rbo);
             };
 
@@ -285,17 +290,23 @@ namespace Framework {
         recreate(gameFramebufferB, gameTextureB, rboB);
     }
 
+
+
     void DropCallback(GLFWwindow* window, int count, const char** paths)
     {
         (void)window;
-        const std::string textureFolder = "Assets/Textures";
-        const std::string audioFolder = "Assets/Audio";
-        const std::string meshFolder = "Assets/Objects";
-        const std::string sceneFolder = "Scenes";
-        const std::string prefabFolder = "Assets/Prefabs";
-        const std::string scriptFolder = "Assets/Scripts";
-        const std::string materialFolder = "Assets/Materials";
-        std::string finalPath;
+        std::filesystem::path root = GetEngineRootPath(); // <-- FIX: Get the root path once
+
+        // <-- FIX: Define all destination folders as absolute paths
+        const std::string textureFolder = (root / "Assets/Textures").string();
+        const std::string audioFolder = (root / "Assets/Audio").string();
+        const std::string meshFolder = (root / "Assets/Objects").string();
+        const std::string sceneFolder = (root / "Scenes").string();
+        const std::string prefabFolder = (root / "Assets/Prefabs").string();
+        const std::string scriptFolder = (root / "Assets/Scripts").string();
+        const std::string materialFolder = (root / "Assets/Materials").string();
+
+        std::string finalAbsolutePath; // <-- FIX: Renamed for clarity
         std::string error;
 
         for (int i = 0; i < count; ++i)
@@ -312,42 +323,48 @@ namespace Framework {
                 auto existingGuid = AssetManager::Instance().FindGuid<TextureProperties>(fileName);
                 if (existingGuid.empty())
                 {
-                    if (MoveFileToAssetFolder(filePath, textureFolder, finalPath, error))
+                    if (MoveFileToAssetFolder(filePath, textureFolder, finalAbsolutePath, error)) // <-- FIX: Using absolute folder
                     {
+                        // <-- FIX: Create a relative path for the asset database
+                        std::string relativePath = std::filesystem::relative(finalAbsolutePath, root).string();
+
                         auto texPtr = std::make_unique<TextureProperties>();
                         texPtr->name = std::filesystem::path(fileName).stem().string();
-                        texPtr->path = finalPath;
+                        texPtr->path = relativePath; // <-- FIX: Store the relative path
 
                         bool loaded = false;
                         if (extension == "dds")
                         {
-                            GLuint texID = LoadDDS(finalPath);
+                            GLuint texID = LoadDDS(finalAbsolutePath); // <-- FIX: Load from the new absolute path
                             if (texID)
                             {
                                 texPtr->textureID = texID;
                                 loaded = true;
                             }
-                            else std::cerr << "[TextureLoader] Failed to load DDS: " << finalPath << std::endl;
+                            else std::cerr << "[TextureLoader] Failed to load DDS: " << finalAbsolutePath << std::endl;
                         }
                         else
                         {
+                            // Assumes loadTexture reads texPtr->path and builds its own absolute path
                             GLuint texID = TextureLoader::loadTexture(*texPtr, true);
                             if (texID)
                             {
                                 loaded = true;
                             }
-                            else std::cerr << "[TextureLoader] Failed to load texture: " << finalPath << std::endl;
+                            else std::cerr << "[TextureLoader] Failed to load texture: " << finalAbsolutePath << std::endl;
                         }
 
                         if (loaded)
                         {
-                            AssetManager::Instance().RegisterAsset<TextureProperties>(std::move(texPtr), &g_TexturePropertiesProps, finalPath);
-                            AssetManager::Instance().SaveArrayToJson(TypeName<TextureProperties>::value, "Assets/JSON/TextureAsset.json", "textures");
-                            std::cout << "Texture added: " << fileName << " to " << finalPath << std::endl;
+                            // <-- FIX: Register using the relative path as the key
+                            AssetManager::Instance().RegisterAsset<TextureProperties>(std::move(texPtr), &g_TexturePropertiesProps, relativePath);
+                            // <-- FIX: Save JSON to its absolute path
+                            AssetManager::Instance().SaveArrayToJson(TypeName<TextureProperties>::value, (root / "Assets/JSON/TextureAsset.json").string(), "textures");
+                            std::cout << "Texture added: " << fileName << " to " << relativePath << std::endl;
                         }
                         else
                         {
-                            errorMessage = "Failed to load texture:\n" + finalPath;
+                            errorMessage = "Failed to load texture:\n" + finalAbsolutePath;
                             showErrorPopup = true;
                             return;
                         }
@@ -362,17 +379,22 @@ namespace Framework {
                 auto existingGuid = AssetManager::Instance().FindGuid<AudioProperties>(fileName);
                 if (existingGuid.empty())
                 {
-                    if (MoveFileToAssetFolder(filePath, audioFolder, finalPath, error))
+                    if (MoveFileToAssetFolder(filePath, audioFolder, finalAbsolutePath, error)) // <-- FIX: Using absolute folder
                     {
+                        std::string relativePath = std::filesystem::relative(finalAbsolutePath, root).string(); // <-- FIX
+
                         auto audioPtr = std::make_unique<AudioProperties>();
                         audioPtr->name = std::filesystem::path(fileName).stem().string();
-                        audioPtr->path = finalPath;
+                        audioPtr->path = relativePath; // <-- FIX: Store the relative path
                         audioPtr->mode = "loop";
                         audioPtr->soundType = "background";
-                        loadAudio(*audioPtr); // Load metadata
-                        AssetManager::Instance().RegisterAsset<AudioProperties>(std::move(audioPtr), &g_AudioPropertiesProps, finalPath);
-                        AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, "Assets/JSON/AudioAsset.json", "AudioProperties");
-                        std::cout << "Audio added: " << fileName << " to " << finalPath << std::endl;
+
+                        loadAudio(*audioPtr); // Assumes this uses the relative path in audioPtr
+
+                        AssetManager::Instance().RegisterAsset<AudioProperties>(std::move(audioPtr), &g_AudioPropertiesProps, relativePath); // <-- FIX: Register with relative path
+                        // <-- FIX: Save JSON to its absolute path
+                        AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, (root / "Assets/JSON/AudioAsset.json").string(), "audio"); // <-- FIX: Changed key "AudioProperties" to "audio"
+                        std::cout << "Audio added: " << fileName << " to " << relativePath << std::endl;
                     }
                     else
                     {
@@ -385,22 +407,26 @@ namespace Framework {
             }
 
             // OBJ || Mesh Files
-            else if (extension == "obj" )
+            else if (extension == "obj")
             {
                 auto existingGuid = AssetManager::Instance().FindGuid<MeshProperties>(fileName);
                 if (existingGuid.empty())
                 {
-                    if (MoveFileToAssetFolder(filePath, meshFolder, finalPath, error))
+                    if (MoveFileToAssetFolder(filePath, meshFolder, finalAbsolutePath, error)) // <-- FIX: Using absolute folder
                     {
+                        std::string relativePath = std::filesystem::relative(finalAbsolutePath, root).string(); // <-- FIX
+
                         auto meshPtr = std::make_unique<MeshProperties>();
                         meshPtr->name = std::filesystem::path(fileName).stem().string();
-                        meshPtr->guid = GenerateGUID(); // Ensure GUID is set
-                        meshPtr->path = finalPath;
+                        meshPtr->guid = GenerateGUID();
+                        meshPtr->path = relativePath; // <-- FIX: Store the relative path
 
-                        MeshLoader::loadMesh(finalPath, *meshPtr); // Load mesh data
-                        AssetManager::Instance().RegisterAsset<MeshProperties>(std::move(meshPtr),&g_MeshProps,finalPath);
-                        AssetManager::Instance().SaveArrayToJson(TypeName<MeshProperties>::value, "Assets/JSON/MeshAsset.json", "mesh");
-                        std::cout << "Mesh added: " << fileName << " to " << finalPath << std::endl;
+                        MeshLoader::loadMesh(finalAbsolutePath, *meshPtr); // <-- FIX: Load from absolute path
+
+                        AssetManager::Instance().RegisterAsset<MeshProperties>(std::move(meshPtr), &g_MeshProps, relativePath); // <-- FIX: Register with relative path
+                        // <-- FIX: Save JSON to its absolute path
+                        AssetManager::Instance().SaveArrayToJson(TypeName<MeshProperties>::value, (root / "Assets/JSON/MeshAsset.json").string(), "mesh");
+                        std::cout << "Mesh added: " << fileName << " to " << relativePath << std::endl;
                     }
                     else
                     {
@@ -416,45 +442,49 @@ namespace Framework {
                 auto existingGuid = AssetManager::Instance().FindGuid<AnimationProperties>(fileName);
                 if (existingGuid.empty())
                 {
-                    if (MoveFileToAssetFolder(filePath, meshFolder, finalPath, error))
+                    if (MoveFileToAssetFolder(filePath, meshFolder, finalAbsolutePath, error)) // <-- FIX: Using absolute folder
                     {
+                        std::string relativePath = std::filesystem::relative(finalAbsolutePath, root).string(); // <-- FIX
+
                         auto meshPtr = std::make_unique<MeshProperties>();
                         auto AnimPtr = std::make_unique<AnimationProperties>();
 
                         meshPtr->name = std::filesystem::path(fileName).stem().string();
-                        meshPtr->guid = GenerateGUID(); // Assign its own GUID
-                        meshPtr->path = finalPath;
+                        meshPtr->guid = GenerateGUID();
+                        meshPtr->path = relativePath; // <-- FIX: Store the relative path
 
                         AnimPtr->name = std::filesystem::path(fileName).stem().string();
-                        AnimPtr->guid = GenerateGUID(); // Ensure GUID is set
-                        AnimPtr->path = finalPath;
-                        MeshLoader::loadAnimatedMesh(finalPath, *AnimPtr, *meshPtr);
-                        AnimationLoader::loadAnimation(finalPath, *AnimPtr);
+                        AnimPtr->guid = GenerateGUID();
+                        AnimPtr->path = relativePath; // <-- FIX: Store the relative path
+
+                        MeshLoader::loadAnimatedMesh(finalAbsolutePath, *AnimPtr, *meshPtr); // <-- FIX: Load from absolute
+                        AnimationLoader::loadAnimation(finalAbsolutePath, *AnimPtr); // <-- FIX: Load from absolute
+
                         AssetManager::Instance().RegisterAsset<MeshProperties>(
                             std::move(meshPtr),
                             &g_MeshProps,
-                            finalPath
+                            relativePath // <-- FIX: Register with relative path
                         );
                         // Save the MESH JSON
                         AssetManager::Instance().SaveArrayToJson(
                             TypeName<MeshProperties>::value,
-                            "Assets/JSON/MeshAsset.json",
+                            (root / "Assets/JSON/MeshAsset.json").string(), // <-- FIX: Absolute path
                             "mesh"
                         );
 
                         AssetManager::Instance().RegisterAsset<AnimationProperties>(
                             std::move(AnimPtr),
-                            &g_AnimationPropertiesProps, // Use the correct prop list
-                            finalPath
+                            &g_AnimationPropertiesProps,
+                            relativePath // <-- FIX: Register with relative path
                         );
 
                         // Save the ANIMATION JSON
                         AssetManager::Instance().SaveArrayToJson(
                             TypeName<AnimationProperties>::value,
-                            "Assets/JSON/AnimationAsset.json", // Save to its own file
-                            "animations"
+                            (root / "Assets/JSON/AnimationAsset.json").string(), // <-- FIX: Absolute path
+                            "animation" // <-- FIX: Changed key "animations" to "animation"
                         );
-                        std::cout << "Mesh added: " << fileName << " to " << finalPath << std::endl;
+                        std::cout << "Mesh added: " << fileName << " to " << relativePath << std::endl;
                     }
                     else
                     {
@@ -471,15 +501,18 @@ namespace Framework {
                 auto existingGuid = AssetManager::Instance().FindGuid<SceneProperties>(fileName);
                 if (existingGuid.empty())
                 {
-                    if (MoveFileToAssetFolder(filePath, sceneFolder, finalPath, error))
+                    if (MoveFileToAssetFolder(filePath, sceneFolder, finalAbsolutePath, error)) // <-- FIX: Using absolute folder
                     {
+                        std::string relativePath = std::filesystem::relative(finalAbsolutePath, root).string(); // <-- FIX
+
                         auto scenePtr = std::make_unique<SceneProperties>();
                         scenePtr->name = std::filesystem::path(fileName).stem().string();
-                        scenePtr->path = finalPath;
+                        scenePtr->path = relativePath; // <-- FIX: Store the relative path
                         scenePtr->guid = GenerateGUID();
-                        AssetManager::Instance().RegisterAsset<SceneProperties>(std::move(scenePtr), &g_SceneProps, finalPath);
-                        AssetManager::Instance().SaveArrayToJson(TypeName<SceneProperties>::value, "Assets/JSON/SceneAsset.json", "scenes");
-                        std::cout << "Scene added: " << fileName << " to " << finalPath << std::endl;
+                        AssetManager::Instance().RegisterAsset<SceneProperties>(std::move(scenePtr), &g_SceneProps, relativePath); // <-- FIX: Register with relative path
+                        // <-- FIX: Save JSON to its absolute path
+                        AssetManager::Instance().SaveArrayToJson(TypeName<SceneProperties>::value, (root / "Assets/JSON/SceneAsset.json").string(), "scenes");
+                        std::cout << "Scene added: " << fileName << " to " << relativePath << std::endl;
                     }
                     else
                     {
@@ -497,17 +530,20 @@ namespace Framework {
                 auto existingGuid = AssetManager::Instance().FindGuid<PrefabProperties>(fileName);
                 if (existingGuid.empty())
                 {
-                    if (MoveFileToAssetFolder(filePath, prefabFolder, finalPath, error))
+                    if (MoveFileToAssetFolder(filePath, prefabFolder, finalAbsolutePath, error)) // <-- FIX: Using absolute folder
                     {
+                        std::string relativePath = std::filesystem::relative(finalAbsolutePath, root).string(); // <-- FIX
+
                         auto prefabPtr = std::make_unique<PrefabProperties>();
                         prefabPtr->name = std::filesystem::path(fileName).stem().string();
-                        prefabPtr->path = finalPath;
+                        prefabPtr->path = relativePath; // <-- FIX: Store the relative path
                         prefabPtr->guid = GenerateGUID();
                         prefabPtr->isScenePrefab = false;
 
-                        AssetManager::Instance().RegisterAsset<PrefabProperties>(std::move(prefabPtr), &g_PrefabProps, finalPath);
-                        AssetManager::Instance().SaveArrayToJson(TypeName<PrefabProperties>::value, "Assets/JSON/PrefabAsset.json", "prefabs");
-                        std::cout << "Prefab added: " << fileName << " to " << finalPath << std::endl;
+                        AssetManager::Instance().RegisterAsset<PrefabProperties>(std::move(prefabPtr), &g_PrefabProps, relativePath); // <-- FIX: Register with relative path
+                        // <-- FIX: Save JSON to its absolute path
+                        AssetManager::Instance().SaveArrayToJson(TypeName<PrefabProperties>::value, (root / "Assets/JSON/PrefabAsset.json").string(), "prefabs");
+                        std::cout << "Prefab added: " << fileName << " to " << relativePath << std::endl;
                     }
                     else
                     {
@@ -526,22 +562,24 @@ namespace Framework {
                 auto existingGuid = AssetManager::Instance().FindGuid<ScriptProperties>(fileName);
                 if (existingGuid.empty())
                 {
-                    if (MoveFileToAssetFolder(filePath, scriptFolder, finalPath, error))
+                    if (MoveFileToAssetFolder(filePath, scriptFolder, finalAbsolutePath, error)) // <-- FIX
                     {
+                        std::string relativePath = std::filesystem::relative(finalAbsolutePath, root).string(); // <-- FIX
+
                         auto scriptPtr = std::make_unique<ScriptProperties>();
                         scriptPtr->name = std::filesystem::path(fileName).stem().string();
-                        scriptPtr->path = finalPath;
+                        scriptPtr->path = relativePath; // <-- FIX
                         scriptPtr->guid = GenerateGUID();
 
-                        // Optional: parseScriptMetadata(finalPath, *scriptPtr);
+                        // Optional: parseScriptMetadata(finalAbsolutePath, *scriptPtr); // <-- FIX
 
                         AssetManager::Instance().RegisterAsset<ScriptProperties>(
                             std::move(scriptPtr),
                             &g_ScriptPropertiesProps,
-                            finalPath
+                            relativePath // <-- FIX
                         );
-                        AssetManager::Instance().SaveArrayToJson(TypeName<ScriptProperties>::value, "Assets/JSON/ScriptAsset.json", "scripts");
-                        std::cout << "Script added: " << fileName << " to " << finalPath << std::endl;
+                        AssetManager::Instance().SaveArrayToJson(TypeName<ScriptProperties>::value, (root / "Assets/JSON/ScriptAsset.json").string(), "scripts"); // <-- FIX
+                        std::cout << "Script added: " << fileName << " to " << relativePath << std::endl;
                     }
                     else
                     {
@@ -557,19 +595,21 @@ namespace Framework {
             }
              */
 
-            // Material Files
+             // Material Files
             else if (extension == "material")
             {
                 auto existingGuid = AssetManager::Instance().FindGuid<MaterialMetadata>(fileName);
                 if (existingGuid.empty())
                 {
-                    if (MoveFileToAssetFolder(filePath, materialFolder, finalPath, error))
+                    if (MoveFileToAssetFolder(filePath, materialFolder, finalAbsolutePath, error)) // <-- FIX
                     {
+                        std::string relativePath = std::filesystem::relative(finalAbsolutePath, root).string(); // <-- FIX
+
                         auto materialPtr = std::make_unique<MaterialProperties>();
                         materialPtr->guid = GenerateGUID();
 
                         // Load material data from file
-                        auto loaded = LoadMaterialAsset(finalPath, materialPtr->guid);
+                        auto loaded = LoadMaterialAsset(finalAbsolutePath, materialPtr->guid); // <-- FIX
                         if (loaded)
                         {
                             materialPtr->ambient = loaded->ambient;
@@ -583,12 +623,13 @@ namespace Framework {
                         auto meta = std::make_unique<MaterialMetadata>();
                         meta->guid = materialPtr->guid;
                         meta->name = std::filesystem::path(fileName).stem().string();
-                        meta->path = finalPath;
+                        meta->path = relativePath; // <-- FIX
 
                         const prop_list* props = TypeRegistry::Instance().GetPropList(TypeName<MaterialMetadata>::value);
-                        AssetManager::Instance().RegisterAsset(std::move(meta), props, finalPath);
-                        AssetManager::Instance().SaveArrayToJson(TypeName<MaterialMetadata>::value, "Assets/JSON/MaterialAsset.json", "material");
-                        std::cout << "Material added: " << fileName << " to " << finalPath << std::endl;
+                        AssetManager::Instance().RegisterAsset(std::move(meta), props, relativePath); // <-- FIX
+                        // <-- FIX
+                        AssetManager::Instance().SaveArrayToJson(TypeName<MaterialMetadata>::value, (root / "Assets/JSON/MaterialAsset.json").string(), "materials"); // <-- FIX: Changed key "material" to "materials"
+                        std::cout << "Material added: " << fileName << " to " << relativePath << std::endl;
                     }
                     else
                     {
@@ -905,6 +946,9 @@ namespace Framework {
                 if (ImGui::MenuItem("Save"))
                 {
                     std::string savePath = SaveFileDialog();
+                    std::cout << "\n============================\n";
+                    std::cout << savePath;
+                    std::cout << "\n============================\n";
                     Framework::sceneManager.SaveScene(savePath);
                 }
 

@@ -1,9 +1,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 ///
-///	@File  : AssetManager.cpp
-/// @Brief : Manages assets, including textures, audio, fonts, dictionaries, 
-///          windows, entities, and shaders, with methods to load and retrieve 
-///          these assets in the Framework namespace.
+///	@File  : AssetManager.cpp
+/// @Brief : Manages assets, including textures, audio, fonts, dictionaries, 
+///          windows, entities, and shaders, with methods to load and retrieve 
+///          these assets in the Framework namespace.
 ///
 ///	@Authors : Edwin
 ///	@Copyright 2025, Digipen Institute of Technology
@@ -11,194 +11,277 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "pch.h"
 #include "AssetManager.h"
+#include "EnginePath.h" // <-- Added this
+#include <filesystem>   // <-- Added this
 
 namespace Framework
 {
-    AssetManager::~AssetManager() {}
+	AssetManager::~AssetManager() {}
 
-    void AssetManager::SaveAllAssets()
-    {
-        // Nvr include windowconfig here
-        AssetManager::Instance().SaveArrayToJson(TypeName<MeshProperties>::value,    "Assets/JSON/MeshAsset.json", "mesh");
-        AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value,   "Assets/JSON/AudioAsset.json", "audio");
-        AssetManager::Instance().SaveArrayToJson(TypeName<TextureProperties>::value, "Assets/JSON/TextureAsset.json", "textures");
-        AssetManager::Instance().SaveArrayToJson(TypeName<PrefabProperties>::value,  "Assets/JSON/PrefabAsset.json", "prefabs");
-        AssetManager::Instance().SaveArrayToJson(TypeName<SceneProperties>::value,   "Assets/JSON/SceneAsset.json", "scenes");
-        AssetManager::Instance().SaveArrayToJson(TypeName<MaterialMetadata>::value,  "Assets/JSON/MaterialAsset.json", "materials");
-        AssetManager::Instance().SaveArrayToJson(TypeName<AnimationProperties>::value, "Assets/JSON/AnimationAsset.json", "animation");
-        std::cout << "Files are being saved" << std::endl;
-    }
+	void AssetManager::SaveAllAssets()
+	{
+		std::filesystem::path root = GetEngineRootPath();
+		std::cout << "[AssetManager] SaveAllAssets using root path: " << root.string() << std::endl;
 
-    void AssetManager::CompileAllAssets()
-    {
-        //CompileSingleObject<WindowConfig>("src/Data/WindowAsset.json", "src/Data/WindowAsset.cfg", "Descriptor/WindowAsset.desc", g_WindowConfigProps);
-        CompileArray<MeshProperties>("Assets/JSON/MeshAsset.json",       "Resource/MeshAsset.bin",      "Descriptor/MeshAsset.desc",     g_MeshProps, "mesh");
-        CompileArray<AudioProperties>("Assets/JSON/AudioAsset.json",     "Resource/AudioAsset.bin",     "Descriptor/AudioAsset.desc",    g_AudioPropertiesProps, "audio");
-        CompileArray<TextureProperties>("Assets/JSON/TextureAsset.json", "Resource/TextureAsset.bin",   "Descriptor/TextureAsset.desc",  g_TexturePropertiesProps, "textures");
-        CompileArray<PrefabProperties>("Assets/JSON/PrefabAsset.json",   "Resource/PrefabAsset.bin",    "Descriptor/PrefabAsset.desc",   g_PrefabProps, "prefabs");
-        CompileArray<SceneProperties>("Assets/JSON/SceneAsset.json",     "Resource/SceneAsset.bin",     "Descriptor/SceneAsset.desc",    g_SceneProps, "scenes");
-        CompileArray<MaterialMetadata>("Assets/JSON/MaterialAsset.json", "Resource/MaterialAsset.bin",  "Descriptor/MaterialAsset.desc", g_MaterialMetaProps, "materials");
-        CompileArray<AnimationProperties>("Assets/JSON/AnimationAsset.json", "Resource/AnimationAsset.bin", "Descriptor/AnimationAsset.desc", g_AnimationPropertiesProps, "animation");
-        std::cout << "Files are being compiled to .binary" << std::endl;
-    }
+		// Nvr include windowconfig here
+		std::string meshPath = (root / "Assets/JSON/MeshAsset.json").string();
+		std::cout << "  Saving: " << meshPath << std::endl;
+		AssetManager::Instance().SaveArrayToJson(TypeName<MeshProperties>::value, meshPath, "mesh");
 
-    void AssetManager::LoadAllAssets()
-    {
-        // Mesh & Texture is loaded under Graphics.cpp due to some initialization required under graphics.cpp
-        AssetManager::Instance().LoadBinary<WindowConfig>("Resource/WindowAsset.cfg", g_WindowConfigProps);
-        AssetManager::Instance().LoadBinaryArray<AudioProperties>("Resource/AudioAsset.bin", g_AudioPropertiesProps);
-        AssetManager::Instance().LoadBinaryArray<PrefabProperties>("Resource/PrefabAsset.bin", g_PrefabProps);
-        AssetManager::Instance().LoadBinaryArray<SceneProperties>("Resource/SceneAsset.bin", g_SceneProps);
-        AssetManager::Instance().LoadBinaryArray<MaterialMetadata>(
-            "Resource/MaterialAsset.bin",
-            g_MaterialMetaProps,
-            [](MaterialMetadata& meta)
-            {
-                // Register metadata
-                AssetManager::Instance().RegisterAsset(
-                    std::make_unique<MaterialMetadata>(meta),
-                    &g_MaterialMetaProps,
-                    meta.path);
+		std::string audioPath = (root / "Assets/JSON/AudioAsset.json").string();
+		std::cout << "  Saving: " << audioPath << std::endl;
+		AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, audioPath, "audio");
 
-                // Load and register properties
-                auto material = LoadMaterialAsset(meta.path, meta.guid);
-                if (material)
-                {
-                    material->guid = meta.guid;
-                    std::cout << "[AssetManager] Registering MaterialProperties for GUID="
-                        << meta.guid.id << " at path=" << meta.path << std::endl;
-                    AssetManager::Instance().RegisterAsset(std::move(material), &g_MaterialProps, meta.path);
-                }
-                else
-                {
-                    std::cerr << "[AssetManager] Failed to load material file: "
-                        << meta.path << " for GUID=" << meta.guid << std::endl;
-                }
-            }
-        );
-    }
+		std::string texturePath = (root / "Assets/JSON/TextureAsset.json").string();
+		std::cout << "  Saving: " << texturePath << std::endl;
+		AssetManager::Instance().SaveArrayToJson(TypeName<TextureProperties>::value, texturePath, "textures");
 
-    bool AssetManager::DeleteAssetFile(const std::string& filePath)
-    {
-        try
-        {
-            if (std::filesystem::exists(filePath))
-            {
-                std::filesystem::remove(filePath);
-                std::cout << "[AssetManager] Deleted file: " << filePath << std::endl;
-                return true;
-            }
-            else
-            {
-                std::cerr << "[AssetManager] File not found: " << filePath << std::endl;
-                return false;
-            }
-        }
-        catch (const std::filesystem::filesystem_error& e)
-        {
-            std::cerr << "[AssetManager] File deletion error: " << e.what() << std::endl;
-            return false;
-        }
-    }
+		std::string prefabPath = (root / "Assets/JSON/PrefabAsset.json").string();
+		std::cout << "  Saving: " << prefabPath << std::endl;
+		AssetManager::Instance().SaveArrayToJson(TypeName<PrefabProperties>::value, prefabPath, "prefabs");
 
-    void AssetManager::Unload(const std::string& guid)
-    {
-        AssetHandle handle(guid);
+		std::string scenePath = (root / "Assets/JSON/SceneAsset.json").string();
+		std::cout << "  Saving: " << scenePath << std::endl;
+		AssetManager::Instance().SaveArrayToJson(TypeName<SceneProperties>::value, scenePath, "scenes");
 
-        // Collect all keys with this GUID
-        std::vector<AssetKey> keysToErase;
-        for (const auto& [key, entry] : m_Assets)
-        {
-            if (key.guid == handle)
-            {
-                // Delete file from disk if path property exists
-                std::string filePath;
-                if (entry.pProps)
-                {
-                    for (const auto& prop : entry.pProps->m_Props)
-                    {
-                        if (std::string(prop.m_pName) == "path" && prop.m_Type == prop::STRING && prop.m_fnGet)
-                        {
-                            prop.m_fnGet(entry.pObject.get(), &filePath);
-                            break;
-                        }
-                    }
-                }
+		std::string materialPath = (root / "Assets/JSON/MaterialAsset.json").string();
+		std::cout << "  Saving: " << materialPath << std::endl;
+		AssetManager::Instance().SaveArrayToJson(TypeName<MaterialMetadata>::value, materialPath, "materials");
 
-                if (!filePath.empty() && std::filesystem::exists(filePath))
-                {
-                    std::error_code ec;
-                    std::filesystem::remove(filePath, ec);
-                    if (ec)
-                        std::cerr << "Failed to delete file: " << filePath << "\nReason: " << ec.message() << std::endl;
-                    else
-                        std::cout << "Deleted file from disk: " << filePath << std::endl;
-                }
+		std::string animPath = (root / "Assets/JSON/AnimationAsset.json").string();
+		std::cout << "  Saving: " << animPath << std::endl;
+		AssetManager::Instance().SaveArrayToJson(TypeName<AnimationProperties>::value, animPath, "animation");
 
-                keysToErase.push_back(key);
-            }
-        }
+		std::cout << "Files are being saved" << std::endl;
+	}
 
-        // Erase all entries for this GUID
-        for (const auto& key : keysToErase)
-            m_Assets.erase(key);
-    }
+	void AssetManager::CompileAllAssets()
+	{
+		std::filesystem::path root = GetEngineRootPath();
+		std::cout << "[AssetManager] CompileAllAssets using root path: " << root.string() << std::endl;
 
-    bool AssetManager::SaveToJson(void* pObject, const std::string& filePath, const prop_list& props)
-    {
-        assert(pObject != nullptr);
-        assert(!props.m_Props.empty());
+		//CompileSingleObject<WindowConfig>("src/Data/WindowAsset.json", "src/Data/WindowAsset.cfg", "Descriptor/WindowAsset.desc", g_WindowConfigProps);
 
-        rapidjson::Document doc;
-        doc.SetObject();
-        auto& allocator = doc.GetAllocator();
+		std::cout << "  Compiling Mesh:\n    JSON: " << (root / "Assets/JSON/MeshAsset.json").string() << "\n    BIN: " << (root / "Resource/MeshAsset.bin").string() << std::endl;
+		CompileArray<MeshProperties>((root / "Assets/JSON/MeshAsset.json").string(), (root / "Resource/MeshAsset.bin").string(), (root / "Descriptor/MeshAsset.desc").string(), g_MeshProps, "mesh");
 
-        Serialize(pObject, props, doc, allocator);
-        std::ofstream ofs(filePath);
-        if (!ofs.is_open()) return false;
+		std::cout << "  Compiling Audio:\n    JSON: " << (root / "Assets/JSON/AudioAsset.json").string() << "\n    BIN: " << (root / "Resource/AudioAsset.bin").string() << std::endl;
+		CompileArray<AudioProperties>((root / "Assets/JSON/AudioAsset.json").string(), (root / "Resource/AudioAsset.bin").string(), (root / "Descriptor/AudioAsset.desc").string(), g_AudioPropertiesProps, "audio");
 
-        rapidjson::OStreamWrapper osw(ofs);
-        rapidjson::PrettyWriter<rapidjson::OStreamWrapper> writer(osw);
-        doc.Accept(writer);
-        return true;
-    }
+		std::cout << "  Compiling Texture:\n    JSON: " << (root / "Assets/JSON/TextureAsset.json").string() << "\n    BIN: " << (root / "Resource/TextureAsset.bin").string() << std::endl;
+		CompileArray<TextureProperties>((root / "Assets/JSON/TextureAsset.json").string(), (root / "Resource/TextureAsset.bin").string(), (root / "Descriptor/TextureAsset.desc").string(), g_TexturePropertiesProps, "textures");
 
-    void AssetManager::SaveArrayToJson(const std::string& typeName, const std::string& filePath, const std::string& arrayKey)
-    {
-        assert(!typeName.empty());
-        assert(!arrayKey.empty());
+		std::cout << "  Compiling Prefab:\n    JSON: " << (root / "Assets/JSON/PrefabAsset.json").string() << "\n    BIN: " << (root / "Resource/PrefabAsset.bin").string() << std::endl;
+		CompileArray<PrefabProperties>((root / "Assets/JSON/PrefabAsset.json").string(), (root / "Resource/PrefabAsset.bin").string(), (root / "Descriptor/PrefabAsset.desc").string(), g_PrefabProps, "prefabs");
 
-        const auto& assets = GetAssets();
-        rapidjson::Document doc;
-        doc.SetObject();
-        auto& allocator = doc.GetAllocator();
+		std::cout << "  Compiling Scene:\n    JSON: " << (root / "Assets/JSON/SceneAsset.json").string() << "\n    BIN: " << (root / "Resource/SceneAsset.bin").string() << std::endl;
+		CompileArray<SceneProperties>((root / "Assets/JSON/SceneAsset.json").string(), (root / "Resource/SceneAsset.bin").string(), (root / "Descriptor/SceneAsset.desc").string(), g_SceneProps, "scenes");
 
-        rapidjson::Value array(rapidjson::kArrayType);
+		std::cout << "  Compiling Material:\n    JSON: " << (root / "Assets/JSON/MaterialAsset.json").string() << "\n    BIN: " << (root / "Resource/MaterialAsset.bin").string() << std::endl;
+		CompileArray<MaterialMetadata>((root / "Assets/JSON/MaterialAsset.json").string(), (root / "Resource/MaterialAsset.bin").string(), (root / "Descriptor/MaterialAsset.desc").string(), g_MaterialMetaProps, "materials");
 
-        for (const auto& [key, entryObject] : assets)
-        {
-            if (entryObject.typeName != typeName) continue;
-            rapidjson::Value obj(rapidjson::kObjectType);
-            Serialize(entryObject.pObject.get(), *entryObject.pProps, obj, allocator);
-            array.PushBack(obj, allocator);
-        }
-        doc.AddMember(rapidjson::Value(arrayKey.c_str(), allocator), array, allocator);
-        std::ofstream ofs(filePath);
-        if (ofs.is_open())
-        {
-            rapidjson::OStreamWrapper osw(ofs);
-            rapidjson::PrettyWriter<rapidjson::OStreamWrapper> writer(osw);
-            writer.SetIndent(' ', 4);
-            doc.Accept(writer);
-        }
-    }
+		std::cout << "  Compiling Animation:\n    JSON: " << (root / "Assets/JSON/AnimationAsset.json").string() << "\n    BIN: " << (root / "Resource/AnimationAsset.bin").string() << std::endl;
+		CompileArray<AnimationProperties>((root / "Assets/JSON/AnimationAsset.json").string(), (root / "Resource/AnimationAsset.bin").string(), (root / "Descriptor/AnimationAsset.desc").string(), g_AnimationPropertiesProps, "animation");
 
-    bool AssetManager::HasTextureByGUID(const std::string& guid) const
-    {
-        AssetHandle handle(guid);
-        AssetKey key{ handle, TypeName<TextureProperties>::value };
+		std::cout << "Files are being compiled to .binary" << std::endl;
+	}
 
-        auto it = m_Assets.find(key);
-        return it != m_Assets.end();
-    }
+	void AssetManager::LoadAllAssets()
+	{
+		std::filesystem::path root = GetEngineRootPath();
+		std::cout << "[AssetManager] LoadAllAssets using root path: " << root.string() << std::endl;
+
+
+		// Mesh & Texture is loaded under Graphics.cpp due to some initialization required under graphics.cpp
+		std::string windowCfgPath = (root / "Resource/WindowAsset.cfg").string();
+		std::cout << "  Loading: " << windowCfgPath << std::endl;
+		AssetManager::Instance().LoadBinary<WindowConfig>(windowCfgPath, g_WindowConfigProps);
+
+		std::string audioBinPath = (root / "Resource/AudioAsset.bin").string();
+		std::cout << "  Loading: " << audioBinPath << std::endl;
+		AssetManager::Instance().LoadBinaryArray<AudioProperties>(audioBinPath, g_AudioPropertiesProps);
+
+		std::string prefabBinPath = (root / "Resource/PrefabAsset.bin").string();
+		std::cout << "  Loading: " << prefabBinPath << std::endl;
+		AssetManager::Instance().LoadBinaryArray<PrefabProperties>(prefabBinPath, g_PrefabProps);
+
+		std::string sceneBinPath = (root / "Resource/SceneAsset.bin").string();
+		std::cout << "  Loading: " << sceneBinPath << std::endl;
+		AssetManager::Instance().LoadBinaryArray<SceneProperties>(sceneBinPath, g_SceneProps);
+
+		std::string materialBinPath = (root / "Resource/MaterialAsset.bin").string();
+		std::cout << "  Loading: " << materialBinPath << std::endl;
+		AssetManager::Instance().LoadBinaryArray<MaterialMetadata>(
+			materialBinPath,
+			g_MaterialMetaProps,
+			[=](MaterialMetadata& meta) // Capture root by copy
+			{
+				// Register metadata
+				AssetManager::Instance().RegisterAsset(
+					std::make_unique<MaterialMetadata>(meta),
+					&g_MaterialMetaProps,
+					meta.path);
+
+				// Load and register properties
+				// IMPORTANT: Assumes meta.path is relative to the root
+				std::string fullMaterialPath = (root / meta.path).string();
+
+				// Added debug line here
+				std::cout << "    Loading individual material: " << fullMaterialPath << std::endl;
+
+				auto material = LoadMaterialAsset(fullMaterialPath, meta.guid);
+				if (material)
+				{
+					material->guid = meta.guid;
+					std::cout << "[AssetManager] Registering MaterialProperties for GUID="
+						<< meta.guid.id << " at path=" << meta.path << std::endl; // Changed meta.path to meta.key, assuming key is the intended identifier
+					AssetManager::Instance().RegisterAsset(std::move(material), &g_MaterialProps, meta.path); // Changed meta.path to meta.key
+				}
+				else
+				{
+					std::cerr << "[AssetManager] Failed to load material file: "
+						<< fullMaterialPath << " for GUID=" << meta.guid << std::endl;
+				}
+			}
+		);
+	}
+
+	bool AssetManager::DeleteAssetFile(const std::string& filePath)
+	{
+		// Assumes filePath is relative to the engine root
+		std::filesystem::path fullPath = std::filesystem::path(GetEngineRootPath()) / filePath;
+
+		try
+		{
+			if (std::filesystem::exists(fullPath))
+			{
+				std::filesystem::remove(fullPath);
+				std::cout << "[AssetManager] Deleted file: " << fullPath.string() << std::endl;
+				return true;
+			}
+			else
+			{
+				std::cerr << "[AssetManager] File not found: " << fullPath.string() << std::endl;
+				return false;
+			}
+		}
+		catch (const std::filesystem::filesystem_error& e)
+		{
+			std::cerr << "[AssetManager] File deletion error: " << e.what() << std::endl;
+			return false;
+		}
+	}
+
+	void AssetManager::Unload(const std::string& guid)
+	{
+		AssetHandle handle(guid);
+		std::filesystem::path root = GetEngineRootPath();
+
+		// Collect all keys with this GUID
+		std::vector<AssetKey> keysToErase;
+		for (auto& [key, entry] : m_Assets) // Note: removed const to allow prop.m_fnGet
+		{
+			if (key.guid == handle)
+			{
+				// Delete file from disk if path property exists
+				std::string filePath;
+				if (entry.pProps)
+				{
+					for (const auto& prop : entry.pProps->m_Props)
+					{
+						if (std::string(prop.m_pName) == "path" && prop.m_Type == prop::STRING && prop.m_fnGet)
+						{
+							prop.m_fnGet(entry.pObject.get(), &filePath);
+							break;
+						}
+					}
+				}
+
+				if (!filePath.empty())
+				{
+					// Assumes filePath is relative to the engine root
+					std::filesystem::path fullPath = root / filePath;
+					if (std::filesystem::exists(fullPath))
+					{
+						std::error_code ec;
+						std::filesystem::remove(fullPath, ec);
+						if (ec)
+							std::cerr << "Failed to delete file: " << fullPath.string() << "\nReason: " << ec.message() << std::endl;
+						else
+							std::cout << "Deleted file from disk: " << fullPath.string() << std::endl;
+					}
+				}
+
+				keysToErase.push_back(key);
+			}
+		}
+
+		// Erase all entries for this GUID
+		for (const auto& key : keysToErase)
+			m_Assets.erase(key);
+	}
+
+	bool AssetManager::SaveToJson(void* pObject, const std::string& filePath, const prop_list& props)
+	{
+		assert(pObject != nullptr);
+		assert(!props.m_Props.empty());
+
+		rapidjson::Document doc;
+		doc.SetObject();
+		auto& allocator = doc.GetAllocator();
+
+		Serialize(pObject, props, doc, allocator);
+
+		// Assumes filePath is relative to the engine root
+		std::filesystem::path fullPath = std::filesystem::path(GetEngineRootPath()) / filePath;
+		std::ofstream ofs(fullPath);
+		if (!ofs.is_open()) return false;
+
+		rapidjson::OStreamWrapper osw(ofs);
+		rapidjson::PrettyWriter<rapidjson::OStreamWrapper> writer(osw);
+		doc.Accept(writer);
+		return true;
+	}
+
+	void AssetManager::SaveArrayToJson(const std::string& typeName, const std::string& filePath, const std::string& arrayKey)
+	{
+		assert(!typeName.empty());
+		assert(!arrayKey.empty());
+
+		const auto& assets = GetAssets();
+		rapidjson::Document doc;
+		doc.SetObject();
+		auto& allocator = doc.GetAllocator();
+
+		rapidjson::Value array(rapidjson::kArrayType);
+
+		for (const auto& [key, entryObject] : assets)
+		{
+			if (entryObject.typeName != typeName) continue;
+			rapidjson::Value obj(rapidjson::kObjectType);
+			Serialize(entryObject.pObject.get(), *entryObject.pProps, obj, allocator);
+			array.PushBack(obj, allocator);
+		}
+		doc.AddMember(rapidjson::Value(arrayKey.c_str(), allocator), array, allocator);
+
+		// Assumes filePath is relative to the engine root
+		std::filesystem::path fullPath = std::filesystem::path(GetEngineRootPath()) / filePath;
+		std::ofstream ofs(fullPath);
+		if (ofs.is_open())
+		{
+			rapidjson::OStreamWrapper osw(ofs);
+			rapidjson::PrettyWriter<rapidjson::OStreamWrapper> writer(osw);
+			writer.SetIndent(' ', 4);
+			doc.Accept(writer);
+		}
+	}
+
+	bool AssetManager::HasTextureByGUID(const std::string& guid) const
+	{
+		AssetHandle handle(guid);
+		AssetKey key{ handle, TypeName<TextureProperties>::value };
+
+		auto it = m_Assets.find(key);
+		return it != m_Assets.end();
+	}
 }
