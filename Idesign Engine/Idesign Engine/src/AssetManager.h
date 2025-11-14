@@ -60,6 +60,27 @@ namespace Framework
     REGISTER_TYPE_NAME(MaterialMetadata);
     REGISTER_TYPE_NAME(AnimationProperties);
 
+    struct AssetKey 
+    {
+        AssetHandle guid;
+        std::string typeName;
+
+        bool operator==(const AssetKey& other) const 
+        {
+            return guid == other.guid && typeName == other.typeName;
+        }
+    };
+
+    struct AssetKeyHash 
+    {
+        std::size_t operator()(const AssetKey& k) const noexcept 
+        {
+            std::size_t h1 = std::hash<AssetHandle>()(k.guid);
+            std::size_t h2 = std::hash<std::string>()(k.typeName);
+            return h1 ^ (h2 + 0x9e3779b97f4a7c15ULL + (h1 << 6) + (h1 >> 2));
+        }
+    };
+
     /*  Struct Brief
         - Store any type of assets in a generic way
         - Track metadata for serialization and debugging
@@ -112,10 +133,16 @@ namespace Framework
             auto obj = AssetLoader<T>::Load(binaryPath, props);
             AssetHandle guidHandle(obj->guid);
 
-            if (postInit) postInit(*obj);
+            if (postInit)
+                postInit(*obj);
 
+            // Register using composite key
             RegisterAsset(std::move(obj), &props, binaryPath);
-            return *static_cast<T*>(m_Assets[guidHandle].pObject.get());
+
+            // Build composite key for lookup
+            AssetKey key{ guidHandle, TypeName<T>::value };
+
+            return *static_cast<T*>(m_Assets[key].pObject.get());
         }
 
         template<typename T>
@@ -128,8 +155,6 @@ namespace Framework
                     postInit(*obj); 
 
                 RegisterAsset(std::move(obj), &props, binaryPath); // Move after init
-
-                // Nid to find a way to load audio here tgt with audio obj to be able to display duration at first runtime
             }
         }
 
@@ -154,10 +179,9 @@ namespace Framework
         template<typename T>
         T* Get(const AssetHandle& guid)
         {
-            auto it = m_Assets.find(guid);
+            AssetKey key{ guid, TypeName<T>::value };
+            auto it = m_Assets.find(key);
             if (it == m_Assets.end()) return nullptr;
-
-            if (it->second.typeName != TypeName<T>::value) return nullptr;
             return static_cast<T*>(it->second.pObject.get());
         }
 
@@ -174,7 +198,8 @@ namespace Framework
                 [](void* ptr) { delete static_cast<T*>(ptr); }
             );
 
-            m_Assets[guidHandle] = AssetEntry(std::move(erasedPtr), props, TypeName<T>::value, binaryPath, guidHandle);
+            AssetKey key{ guidHandle, TypeName<T>::value };
+            m_Assets[key] = AssetEntry(std::move(erasedPtr), props, TypeName<T>::value, binaryPath, guidHandle);
         }
 
         // Template function to find the GUID of an asset of type T.
@@ -183,7 +208,7 @@ namespace Framework
         AssetHandle FindGuid(const std::optional<std::string>& name = std::nullopt)
         {
             // Loop through all registered assets in the AssetManager
-            for (const auto& [guid, entry] : AssetManager::Instance().GetAssets())
+            for (const auto& [key, entry] : AssetManager::Instance().GetAssets())
             {
                 // Skip entries that don't match the requested type
                 if (entry.typeName != TypeName<T>::value)
@@ -196,19 +221,20 @@ namespace Framework
                 // If a name was provided, try to match it against the asset's name
                 if constexpr (requires(T t) { t.name; })
                 {
-                    // Only compare if the object has a non-empty 
-
                     if (name.has_value())
                     {
                         if (obj->name == name.value())
-                            return guid;
+                            return key.guid;   // <-- use key.guid instead of guid
                     }
-                    else return guid;
+                    else
+                    {
+                        return key.guid;       // <-- use key.guid instead of guid
+                    }
                 }
                 else
                 {
                     if (!name.has_value())
-                        return guid;
+                        return key.guid;       // <-- use key.guid instead of guid
                 }
             }
             // No matching asset found — return an empty GUID
@@ -226,7 +252,7 @@ namespace Framework
         }
 
         // Access to Unordered Map of Assets
-        const std::unordered_map<AssetHandle, AssetEntry>& GetAssets() const
+        const std::unordered_map<AssetKey, AssetEntry, AssetKeyHash>& GetAssets() const
         {
             return m_Assets;
         }
@@ -242,7 +268,7 @@ namespace Framework
 
     private:
         AssetManager() = default;                                   // Private constructor
-        std::unordered_map<AssetHandle, AssetEntry> m_Assets;       // Contains all types of Assets
+        std::unordered_map<AssetKey, AssetEntry, AssetKeyHash> m_Assets;
         std::unordered_set<AssetHandle> m_DirtyAssets;              // Contains changed Assets
     };
 }

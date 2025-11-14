@@ -300,9 +300,6 @@
     <ClInclude Include="src\JsonSerialize.h">
       <Filter>Header Files\AssetManager</Filter>
     </ClInclude>
-    <ClInclude Include="src\UndoRedoSystem.h">
-      <Filter>Header Files\AssetManager</Filter>
-    </ClInclude>
     <ClInclude Include="src\ButtonSystem.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
@@ -775,9 +772,6 @@
     </ClCompile>
     <ClCompile Include="src\SceneManager.cpp">
       <Filter>Source Files\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\UndoRedoSystem.cpp">
-      <Filter>Source Files\AssetManager</Filter>
     </ClCompile>
     <ClCompile Include="src\NavMeshSystem.cpp">
       <Filter>Source Files\NavMesh</Filter>

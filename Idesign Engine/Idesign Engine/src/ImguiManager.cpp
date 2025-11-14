@@ -1243,15 +1243,7 @@ namespace Framework {
                     std::string newName = nameBuffer;
                     if (newName != mesh->name)
                     {
-                        UndoRedoManager::Instance().PushAssetUndo
-                        (
-                            guid,
-                            "MeshProperties", // or TypeName<MeshProperties>::value if you use type traits
-                            mesh,
-                            *FindPropListByName("MeshProperties") // or use mesh->GetPropList() if available
-                        );
                         mesh->name = newName;
-                        AssetManager::Instance().MarkDirty(guid);
                     }
                     initialized = false;
                     ImGui::CloseCurrentPopup();
@@ -1785,7 +1777,6 @@ namespace Framework {
                     if (newName != anim->name)
                     {
                         anim->name = newName;
-                        AssetManager::Instance().MarkDirty(guid); // Mark for saving
                     }
                     ImGui::CloseCurrentPopup();
                 }

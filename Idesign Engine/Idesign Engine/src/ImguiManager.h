@@ -20,7 +20,6 @@
 #include "AssetManager.h"
 #include "ComponentList.h"
 #include "AudioLoader.h"
-#include "UndoRedoSystem.h"
 #include "PropertyWidget.h"
 #include "MessageSystem.h"
 #include <Graphics.h>

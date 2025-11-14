@@ -137,7 +137,6 @@ namespace Framework {
     // Initialize the system
     void Graphics::Initialize()
     {
-
         // asset load / loading shape units
        // Testing (Edwin)
         AssetManager::Instance().LoadBinaryArray<AnimationProperties>("Resource/AnimationAsset.bin", g_AnimationPropertiesProps, [](AnimationProperties& props)
@@ -173,9 +172,6 @@ namespace Framework {
                     MeshLoader::loadMesh(props.path, props);
                 }
             });
-
-     
-
 
         ImguiManager::Log("Initializing Graphics System...", "Graphics");
 
@@ -545,12 +541,13 @@ namespace Framework {
                 if (ecsInterface.HasComponent<MeshProperties>(entityId))
                 {
                     auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
-                    
-                    if (ecsInterface.HasComponent<MaterialProperties>(entityId))
-                    {
-                        auto& material = ecsInterface.GetComponent<MaterialProperties>(entityId);
 
-                        if (material.opacity < 1.0f)
+                    // Look up material by guid
+                    auto* material = AssetManager::Instance().Get<MaterialProperties>(mesh.materialGuid);
+
+                    if (material) 
+                    {
+                        if (material->opacity < 1.0f)
                         {
                             if (ecsInterface.HasComponent<TransformComponent>(entityId))
                             {
@@ -563,6 +560,11 @@ namespace Framework {
                         {
                             opaqueEntities.push_back(entityId);
                         }
+                    }
+                    else
+                    {
+                        // No material assigned → treat as opaque by default
+                        opaqueEntities.push_back(entityId);
                     }
                 }
             }
@@ -611,18 +613,19 @@ namespace Framework {
                             }
                         }
 
-                        if (ecsInterface.HasComponent<MaterialProperties>(entityId))
+                        // NEW: fetch material via mesh.materialGuid
+                        auto* material = AssetManager::Instance().Get<MaterialProperties>(mesh.materialGuid);
+                        if (material)
                         {
-                            auto& material = ecsInterface.GetComponent<MaterialProperties>(entityId);
                             const bool isSelected = (int)entityId == sel;
-                            glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : material.albedo; // Use mesh.albedo
+                            glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : material->albedo;
                             currentshader.setVec3("uAlbedo", finalAlbedo);
 
                             glActiveTexture(GL_TEXTURE0);
-                            currentshader.setVec3("uMaterial.ambient", material.ambient);
-                            currentshader.setVec3("uMaterial.specular", material.specular);
-                            currentshader.setFloat("uMaterial.shininess", material.shininess);
-                            currentshader.setFloat("uMaterial.opacity", material.opacity);
+                            currentshader.setVec3("uMaterial.ambient", material->ambient);
+                            currentshader.setVec3("uMaterial.specular", material->specular);
+                            currentshader.setFloat("uMaterial.shininess", material->shininess);
+                            currentshader.setFloat("uMaterial.opacity", material->opacity);
                             currentshader.setInt("uTexture", 0);
                         }
                         
@@ -657,7 +660,9 @@ namespace Framework {
                 auto const& entityId = it->second;
                 auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
                 auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
-                auto& material = ecsInterface.GetComponent<MaterialProperties>(entityId);
+
+                // Look up material via mesh.materialGuid
+                auto* material = AssetManager::Instance().Get<MaterialProperties>(mesh.materialGuid);
 
                 glm::mat4 model(1.0f);
                 model = glm::translate(model, tr.position);
@@ -686,13 +691,16 @@ namespace Framework {
                         }
                     }
 
-                    const bool isSelected = (int)entityId == sel;
-                    glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : material.albedo;
-                    currentShader.setVec3("uAlbedo", finalAlbedo);
-                    currentShader.setVec3("uMaterial.ambient", material.ambient);
-                    currentShader.setVec3("uMaterial.specular", material.specular);
-                    currentShader.setFloat("uMaterial.shininess", material.shininess);
-                    currentShader.setFloat("uMaterial.opacity", material.opacity);
+                    if (material)
+                    {
+                        const bool isSelected = (int)entityId == sel;
+                        glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : material->albedo;
+                        currentShader.setVec3("uAlbedo", finalAlbedo);
+                        currentShader.setVec3("uMaterial.ambient", material->ambient);
+                        currentShader.setVec3("uMaterial.specular", material->specular);
+                        currentShader.setFloat("uMaterial.shininess", material->shininess);
+                        currentShader.setFloat("uMaterial.opacity", material->opacity);
+                    }
 
                     glActiveTexture(GL_TEXTURE0);
                     currentShader.setInt("uTexture", 0);
@@ -862,20 +870,29 @@ namespace Framework {
                 {
                     auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
 
-                    if (ecsInterface.HasComponent<MaterialProperties>(entityId))
-                    {
-                        auto& material = ecsInterface.GetComponent<MaterialProperties>(entityId);
+                    // Look up material via mesh.materialGuid
+                    auto* material = AssetManager::Instance().Get<MaterialProperties>(mesh.materialGuid);
 
-                        if (material.opacity < 1.0f)
+                    if (material)
+                    {
+                        if (material->opacity < 1.0f)
                         {
-                            auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
-                            float distance = glm::distance(tr.position, cam1.position); // Use cam1
-                            transparentEntities.insert({ distance, entityId });
+                            if (ecsInterface.HasComponent<TransformComponent>(entityId))
+                            {
+                                auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
+                                float distance = glm::distance(tr.position, cam1.position); // Use cam1
+                                transparentEntities.insert({ distance, entityId });
+                            }
                         }
                         else
                         {
                             opaqueEntities.push_back(entityId);
                         }
+                    }
+                    else
+                    {
+                        // No material assigned - treat as opaque by default
+                        opaqueEntities.push_back(entityId);
                     }
                 }
             }
@@ -924,18 +941,19 @@ namespace Framework {
                             }
                         }
 
-                        if (ecsInterface.HasComponent<MaterialProperties>(entityId))
+                        // NEW: fetch material via mesh.materialGuid
+                        auto* material = AssetManager::Instance().Get<MaterialProperties>(mesh.materialGuid);
+                        if (material)
                         {
-                            auto& material = ecsInterface.GetComponent<MaterialProperties>(entityId);
                             const bool isSelected = (int)entityId == sel1;
-                            glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : material.albedo;
+                            glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : material->albedo;
                             currentshader.setVec3("uAlbedo", finalAlbedo);
 
                             glActiveTexture(GL_TEXTURE0);
-                            currentshader.setVec3("uMaterial.ambient", material.ambient);
-                            currentshader.setVec3("uMaterial.specular", material.specular);
-                            currentshader.setFloat("uMaterial.shininess", material.shininess);
-                            currentshader.setFloat("uMaterial.opacity", material.opacity);
+                            currentshader.setVec3("uMaterial.ambient", material->ambient);
+                            currentshader.setVec3("uMaterial.specular", material->specular);
+                            currentshader.setFloat("uMaterial.shininess", material->shininess);
+                            currentshader.setFloat("uMaterial.opacity", material->opacity);
                             currentshader.setInt("uTexture", 0);
                         }
                         
@@ -970,7 +988,9 @@ namespace Framework {
                 auto const& entityId = it->second;
                 auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
                 auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
-                auto& material = ecsInterface.GetComponent<MaterialProperties>(entityId);
+
+                // Look up material via mesh.materialGuid
+                auto* material = AssetManager::Instance().Get<MaterialProperties>(mesh.materialGuid);
 
                 glm::mat4 model(1.0f);
                 model = glm::translate(model, tr.position);
@@ -999,13 +1019,16 @@ namespace Framework {
                         }
                     }
 
-                    const bool isSelected = (int)entityId == sel1;
-                    glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : material.albedo;
-                    currentShader.setVec3("uAlbedo", finalAlbedo);
-                    currentShader.setVec3("uMaterial.ambient", material.ambient);
-                    currentShader.setVec3("uMaterial.specular", material.specular);
-                    currentShader.setFloat("uMaterial.shininess", material.shininess);
-                    currentShader.setFloat("uMaterial.opacity", material.opacity);
+                    if (material)
+                    {
+                        const bool isSelected = (int)entityId == sel1;
+                        glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : material->albedo;
+                        currentShader.setVec3("uAlbedo", finalAlbedo);
+                        currentShader.setVec3("uMaterial.ambient", material->ambient);
+                        currentShader.setVec3("uMaterial.specular", material->specular);
+                        currentShader.setFloat("uMaterial.shininess", material->shininess);
+                        currentShader.setFloat("uMaterial.opacity", material->opacity);
+                    }
 
                     glActiveTexture(GL_TEXTURE0);
                     currentShader.setInt("uTexture", 0);

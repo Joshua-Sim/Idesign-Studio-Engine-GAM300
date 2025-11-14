@@ -136,17 +136,26 @@ namespace Framework
                 }
 
                 // Mesh
-                if (components.HasMember("MeshReference"))
+                if (components.HasMember("MeshComponent"))
                 {
-                    const auto& meshRef = components["MeshReference"];
+                    const auto& meshRef = components["MeshComponent"];
                     if (meshRef.HasMember("guid") && meshRef["guid"].IsString())
                     {
                         std::string guid = meshRef["guid"].GetString();
                         MeshProperties* mesh = AssetManager::Instance().Get<MeshProperties>(guid);
                         if (mesh)
                         {
+                            // Load mesh data if path is valid
                             if (!mesh->path.empty())
                                 MeshLoader::loadMesh(mesh->path, *mesh);
+
+                            // Restore material linkage if present
+                            if (meshRef.HasMember("materialGuid") && meshRef["materialGuid"].IsString())
+                            {
+                                std::string matGuid = meshRef["materialGuid"].GetString();
+                                mesh->materialGuid = AssetHandle(matGuid);
+                            }
+
                             ecsInterface.AddComponent(entity, *mesh);
                         }
                         else
@@ -156,21 +165,6 @@ namespace Framework
                     }
                 }
                 
-                // Material
-                if (components.HasMember("MaterialComponent"))
-                {
-                    const auto& materialRef = components["MaterialComponent"];
-                    if (materialRef.HasMember("guid") && materialRef["guid"].IsString())
-                    {
-                        std::string guid = materialRef["guid"].GetString();
-                        const MaterialProperties* material = AssetManager::Instance().Get<MaterialProperties>(guid);
-                        if (material)
-                            ecsInterface.AddComponent(entity, *material);
-                        else
-                            std::cerr << "Missing MaterialProperties for GUID: " << guid << "\n";
-                    }
-                }
-
                 // Texture
                 if (components.HasMember("TextureComponent"))
                 {
@@ -289,16 +283,13 @@ namespace Framework
                     const auto& mesh = ecsInterface.GetComponent<MeshProperties>(entity);
                     rapidjson::Value meshRef(rapidjson::kObjectType);
                     meshRef.AddMember("guid", rapidjson::Value(mesh.guid.id.c_str(), allocator), allocator);
-                    componentsObj.AddMember("MeshReference", meshRef, allocator);
-                }
-
-                // MaterialProperties � write only GUID
-                if (ecsInterface.HasComponent<MaterialProperties>(entity))
-                {
-                    const auto& material = ecsInterface.GetComponent<MaterialProperties>(entity);
-                    rapidjson::Value materialRef(rapidjson::kObjectType);
-                    materialRef.AddMember("guid", rapidjson::Value(material.guid.id.c_str(), allocator), allocator);
-                    componentsObj.AddMember("MaterialComponent", materialRef, allocator);
+                    
+                    // Linked Material GUID (if valid)
+                    if (!mesh.materialGuid.empty())
+                    {
+                        meshRef.AddMember("materialGuid", rapidjson::Value(mesh.materialGuid.id.c_str(), allocator), allocator);
+                    }
+                    componentsObj.AddMember("MeshComponent", meshRef, allocator);
                 }
 
                 // TextureProperties � write only GUID

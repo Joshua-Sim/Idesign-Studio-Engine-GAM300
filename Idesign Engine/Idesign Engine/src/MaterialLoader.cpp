@@ -7,40 +7,55 @@ namespace Framework
     std::unique_ptr<MaterialProperties> LoadMaterialAsset(const std::string& path, const AssetHandle& guid)
     {
         FILE* fp = fopen(path.c_str(), "r");
-        if (!fp) return nullptr;
+        if (!fp)
+        {
+            std::cerr << "[LoadMaterialAsset] Failed to open file: " << path << std::endl;
+            return nullptr;
+        }
 
-        std::unique_ptr<char[]> buffer = std::make_unique<char[]>(65536);
-        rapidjson::FileReadStream is(fp, buffer.get(), 65536);
+        char buffer[65536];
+        rapidjson::FileReadStream is(fp, buffer, sizeof(buffer));
         rapidjson::Document doc;
         doc.ParseStream(is);
         fclose(fp);
 
-        if (doc.HasParseError()) return nullptr;
+        if (doc.HasParseError())
+        {
+            std::cerr << "[LoadMaterialAsset] JSON parse error in " << path << std::endl;
+            return nullptr;
+        }
 
-        auto material = std::make_unique<MaterialProperties>();
-
-        // Read GUID from file if present
-        if (doc.HasMember("guid") && doc["guid"].IsString())
-            material->guid = AssetHandle(doc["guid"].GetString());
-        else
-            material->guid = guid; // fallback if file has no guid
+        auto mat = std::make_unique<MaterialProperties>();
+        mat->guid = guid;
 
         if (doc.HasMember("ambient") && doc["ambient"].IsArray())
-            material->ambient = glm::vec3(doc["ambient"][0].GetFloat(), doc["ambient"][1].GetFloat(), doc["ambient"][2].GetFloat());
+        {
+            mat->ambient.x = doc["ambient"][0].GetFloat();
+            mat->ambient.y = doc["ambient"][1].GetFloat();
+            mat->ambient.z = doc["ambient"][2].GetFloat();
+        }
 
         if (doc.HasMember("albedo") && doc["albedo"].IsArray())
-            material->albedo = glm::vec3(doc["albedo"][0].GetFloat(), doc["albedo"][1].GetFloat(), doc["albedo"][2].GetFloat());
+        {
+            mat->albedo.x = doc["albedo"][0].GetFloat();
+            mat->albedo.y = doc["albedo"][1].GetFloat();
+            mat->albedo.z = doc["albedo"][2].GetFloat();
+        }
 
         if (doc.HasMember("specular") && doc["specular"].IsArray())
-            material->specular = glm::vec3(doc["specular"][0].GetFloat(), doc["specular"][1].GetFloat(), doc["specular"][2].GetFloat());
+        {
+            mat->specular.x = doc["specular"][0].GetFloat();
+            mat->specular.y = doc["specular"][1].GetFloat();
+            mat->specular.z = doc["specular"][2].GetFloat();
+        }
 
         if (doc.HasMember("shininess"))
-            material->shininess = doc["shininess"].GetFloat();
+            mat->shininess = doc["shininess"].GetFloat();
 
         if (doc.HasMember("opacity"))
-            material->opacity = doc["opacity"].GetFloat();
+            mat->opacity = doc["opacity"].GetFloat();
 
-        return material;
+        return mat;
     }
 
     void SaveMaterialAsset(const MaterialProperties& mat, const std::string& path, const AssetHandle& guid)

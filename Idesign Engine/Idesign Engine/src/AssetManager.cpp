@@ -50,21 +50,30 @@ namespace Framework
         AssetManager::Instance().LoadBinaryArray<AudioProperties>("Resource/AudioAsset.bin", g_AudioPropertiesProps);
         AssetManager::Instance().LoadBinaryArray<PrefabProperties>("Resource/PrefabAsset.bin", g_PrefabProps);
         AssetManager::Instance().LoadBinaryArray<SceneProperties>("Resource/SceneAsset.bin", g_SceneProps);
-        AssetManager::Instance().LoadBinaryArray<MaterialMetadata>("Resource/MaterialAsset.bin", g_MaterialMetaProps, [](MaterialMetadata& meta)
+        AssetManager::Instance().LoadBinaryArray<MaterialMetadata>(
+            "Resource/MaterialAsset.bin",
+            g_MaterialMetaProps,
+            [](MaterialMetadata& meta)
             {
+                // Register metadata
+                AssetManager::Instance().RegisterAsset(
+                    std::make_unique<MaterialMetadata>(meta),
+                    &g_MaterialMetaProps,
+                    meta.path);
+
+                // Load and register properties
                 auto material = LoadMaterialAsset(meta.path, meta.guid);
                 if (material)
                 {
-                    SetGuid(material.get(), g_MaterialProps);
-
-                    // Always update material's GUID to match metadata
                     material->guid = meta.guid;
-                    AssetManager::Instance().SaveToJson(material.get(), meta.path, g_MaterialProps);
+                    std::cout << "[AssetManager] Registering MaterialProperties for GUID="
+                        << meta.guid.id << " at path=" << meta.path << std::endl;
                     AssetManager::Instance().RegisterAsset(std::move(material), &g_MaterialProps, meta.path);
                 }
                 else
                 {
-                    std::cerr << "Failed to load material file: " << meta.path << " for GUID: " << meta.guid << "\n";
+                    std::cerr << "[AssetManager] Failed to load material file: "
+                        << meta.path << " for GUID=" << meta.guid << std::endl;
                 }
             }
         );
@@ -95,41 +104,45 @@ namespace Framework
 
     void AssetManager::Unload(const std::string& guid)
     {
-        auto it = m_Assets.find(guid);
-        if (it == m_Assets.end()) return;
+        AssetHandle handle(guid);
 
-        const AssetEntry& entry = it->second;
-        std::string filePath;
-
-        // Use reflection to find the "path" property
-        if (entry.pProps)
+        // Collect all keys with this GUID
+        std::vector<AssetKey> keysToErase;
+        for (const auto& [key, entry] : m_Assets)
         {
-            for (const auto& prop : entry.pProps->m_Props)
+            if (key.guid == handle)
             {
-                if (std::string(prop.m_pName) == "path" && prop.m_Type == prop::STRING && prop.m_fnGet)
+                // Delete file from disk if path property exists
+                std::string filePath;
+                if (entry.pProps)
                 {
-                    prop.m_fnGet(entry.pObject.get(), &filePath);
-                    break;
+                    for (const auto& prop : entry.pProps->m_Props)
+                    {
+                        if (std::string(prop.m_pName) == "path" && prop.m_Type == prop::STRING && prop.m_fnGet)
+                        {
+                            prop.m_fnGet(entry.pObject.get(), &filePath);
+                            break;
+                        }
+                    }
                 }
+
+                if (!filePath.empty() && std::filesystem::exists(filePath))
+                {
+                    std::error_code ec;
+                    std::filesystem::remove(filePath, ec);
+                    if (ec)
+                        std::cerr << "Failed to delete file: " << filePath << "\nReason: " << ec.message() << std::endl;
+                    else
+                        std::cout << "Deleted file from disk: " << filePath << std::endl;
+                }
+
+                keysToErase.push_back(key);
             }
         }
 
-        // Delete file from disk
-        if (!filePath.empty() && std::filesystem::exists(filePath))
-        {
-            std::error_code ec;
-            std::filesystem::remove(filePath, ec);
-            if (ec)
-            {
-                std::cerr << "Failed to delete file: " << filePath << "\nReason: " << ec.message() << std::endl;
-            }
-            else
-            {
-                std::cout << "Deleted file from disk: " << filePath << std::endl;
-            }
-        }
-        // Remove from memory
-        m_Assets.erase(it);
+        // Erase all entries for this GUID
+        for (const auto& key : keysToErase)
+            m_Assets.erase(key);
     }
 
     bool AssetManager::SaveToJson(void* pObject, const std::string& filePath, const prop_list& props)
@@ -183,7 +196,10 @@ namespace Framework
 
     bool AssetManager::HasTextureByGUID(const std::string& guid) const
     {
-        auto it = m_Assets.find(guid);
-        return it != m_Assets.end() && it->second.typeName == TypeName<TextureProperties>::value;
+        AssetHandle handle(guid);
+        AssetKey key{ handle, TypeName<TextureProperties>::value };
+
+        auto it = m_Assets.find(key);
+        return it != m_Assets.end();
     }
 }

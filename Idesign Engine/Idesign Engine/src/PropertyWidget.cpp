@@ -244,6 +244,9 @@ namespace Framework
                     {
                         MeshLoader::loadMesh(mesh.path, mesh);
                     }
+
+                    DrawMaterialSelector(mesh.materialGuid);
+                    //std::cout << "[Inspector] mesh.materialGuid after selector = " << mesh.materialGuid.id << std::endl;
                 }
                 else if (typeName == "AudioProperties")
                 {
@@ -270,11 +273,6 @@ namespace Framework
                         navMesh = NavMeshComponent{};
                     }
                 }
-                else if (typeName == "MaterialProperties")
-                {
-                    auto& material = *static_cast<MaterialProperties*>(componentPtr);
-                    DrawMaterialSelector(material);
-                }
                 else if (typeName == "AnimationProperties")
                 {
                     auto& anim = *static_cast<AnimationProperties*>(componentPtr);
@@ -288,61 +286,59 @@ namespace Framework
                     TypeRegistry::Instance().RemoveComponent(typeName, ecs, entity);
                     break;
                 }
-                }
-            }
 
-            // Show "Add [Component]" buttons for missing ones
-            for (global_registration* reg = global_registration::m_pHead; reg; reg = reg->m_pNext)
-            {
-                const prop_list* propList = reg->m_pPopList;
-                if (!propList || !propList->m_pName || propList->m_Props.empty())
-                    continue;
-
-                if (attached.contains(propList->m_pName))
-                    continue;
-
-                if (propList->m_pName == "WindowConfig" || propList->m_pName == "NavMeshAgentComponent" ||
-                    propList->m_pName == "PrefabProperties" || propList->m_pName == "PrefabComponent" ||
-                    propList->m_pName == "MaterialMetadata" || propList->m_pName == "SceneProperties") continue;
-
-                if (ImGui::Button(std::string("Add ").append(propList->m_pName).c_str()))
-                {
-                    TypeRegistry::Instance().AddComponent(propList->m_pName, ecs, entity);
-                }
             }
         }
 
-        void RegisterComponentTypes()
+        // Show "Add [Component]" buttons for missing ones
+        for (global_registration* reg = global_registration::m_pHead; reg; reg = reg->m_pNext)
         {
-            TypeRegistry::Instance().Register<TextureProperties>("TextureProperties", &g_TexturePropertiesProps);
-            TypeRegistry::Instance().Register<MeshProperties>("MeshProperties", &g_MeshProps);
-            TypeRegistry::Instance().Register<AudioProperties>("AudioProperties", &g_AudioPropertiesProps);
-            TypeRegistry::Instance().Register<TextProperties>("TextProperties", &g_TextComponentProps);
-            TypeRegistry::Instance().Register<TransformComponent>("TransformComponent", &g_TransformProps);
-            TypeRegistry::Instance().Register<NavMeshComponent>("NavMeshComponent", &g_NavMeshProps);
-            TypeRegistry::Instance().Register<NavMeshAgentComponent>("NavMeshAgentComponent", &g_NavMeshAgentProps);
-            TypeRegistry::Instance().Register<MaterialProperties>("MaterialProperties", &g_MaterialProps);
-            TypeRegistry::Instance().Register<MaterialMetadata>("MaterialMetadata", &g_MaterialMetaProps);
-            TypeRegistry::Instance().Register<AnimationProperties>("AnimationProperties", &g_AnimationPropertiesProps);
+            const prop_list* propList = reg->m_pPopList;
+            if (!propList || !propList->m_pName || propList->m_Props.empty())
+                continue;
 
-        }
+            if (attached.contains(propList->m_pName))
+                continue;
 
-        void AutoRegisterAllReflectedComponents(Coordinator & ecs)
-        {
-            for (global_registration* reg = global_registration::m_pHead; reg; reg = reg->m_pNext)
+            if (propList->m_pName == "WindowConfig" || propList->m_pName == "NavMeshAgentComponent" ||
+                propList->m_pName == "PrefabProperties" || propList->m_pName == "PrefabComponent" ||
+                propList->m_pName == "MaterialMetadata" || propList->m_pName == "SceneProperties") continue;
+
+            if (ImGui::Button(std::string("Add ").append(propList->m_pName).c_str()))
             {
-                const prop_list* propList = reg->m_pPopList;
-                if (!propList || !propList->m_pName)
-                    continue;
+                TypeRegistry::Instance().AddComponent(propList->m_pName, ecs, entity);
+            }
+        }      
+    }
 
-                const std::string& typeName = propList->m_pName;
-                if (auto* getter = TypeRegistry::Instance().Get(typeName))
-                {
-                    ecs.RegisterRawGetter(typeName, [getter, &ecs](Entity e) -> void*
-                        {
-                            return (*getter)(ecs, e);
-                        });
-                }
+    void RegisterComponentTypes()
+    {
+        TypeRegistry::Instance().Register<TextureProperties>("TextureProperties", &g_TexturePropertiesProps);
+        TypeRegistry::Instance().Register<MeshProperties>("MeshProperties", &g_MeshProps);
+        TypeRegistry::Instance().Register<AudioProperties>("AudioProperties", &g_AudioPropertiesProps);
+        TypeRegistry::Instance().Register<TextProperties>("TextProperties", &g_TextComponentProps);
+        TypeRegistry::Instance().Register<TransformComponent>("TransformComponent", &g_TransformProps);
+        TypeRegistry::Instance().Register<NavMeshComponent>("NavMeshComponent", &g_NavMeshProps);
+        TypeRegistry::Instance().Register<NavMeshAgentComponent>("NavMeshAgentComponent", &g_NavMeshAgentProps);
+        TypeRegistry::Instance().Register<AnimationProperties>("AnimationProperties", &g_AnimationPropertiesProps);
+    }
+
+    void AutoRegisterAllReflectedComponents(Coordinator& ecs)
+    {
+        for (global_registration* reg = global_registration::m_pHead; reg; reg = reg->m_pNext)
+        {
+            const prop_list* propList = reg->m_pPopList;
+            if (!propList || !propList->m_pName)
+                continue;
+
+            const std::string& typeName = propList->m_pName;
+            if (auto* getter = TypeRegistry::Instance().Get(typeName))
+            {
+                ecs.RegisterRawGetter(typeName, [getter, &ecs](Entity e) -> void*
+                    {
+                        return (*getter)(ecs, e);
+                    });
             }
         }
     }
+}

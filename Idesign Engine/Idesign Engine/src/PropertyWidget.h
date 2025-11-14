@@ -59,20 +59,26 @@ namespace Framework
         std::vector<std::string> assetNames;
         std::vector<AssetHandle> assetGuids;
 
-        for (const auto& [guid, entry] : AssetManager::Instance().GetAssets())
+        // Iterate over AssetKey + AssetEntry
+        for (const auto& [key, entry] : AssetManager::Instance().GetAssets())
         {
-            if (entry.typeName != TypeName<AssetType>::value) continue;
+            if (entry.typeName != TypeName<AssetType>::value)
+                continue;
 
             auto* asset = static_cast<AssetType*>(entry.pObject.get());
 
             if constexpr (has_name_and_path<AssetType>::value)
             {
-                if (asset->name.empty() && asset->path.empty()) continue;
+                if (!asset || (asset->name.empty() && asset->path.empty()))
+                    continue;
+
                 std::string name = asset->name.empty() ? asset->path : asset->name;
                 assetNames.push_back(name);
             }
-            else continue;
-            assetGuids.push_back(guid);
+            else
+                continue;
+
+            assetGuids.push_back(key.guid); // <-- use key.guid instead of guid
         }
 
         std::vector<const char*> labelPtrs;
@@ -88,6 +94,7 @@ namespace Framework
                 break;
             }
         }
+
         ImGui::Separator();
         ImGui::Text("%s", label.c_str());
         if (ImGui::Combo(label.c_str(), &currentIndex, labelPtrs.data(), static_cast<int>(labelPtrs.size())))
@@ -113,39 +120,34 @@ namespace Framework
                     component.vbo = asset->vbo;
                     component.ebo = asset->ebo;
                     component.indexCount = asset->indexCount;
-
                 }
-                
+
                 if constexpr (std::is_same_v<AssetType, TextureProperties>)
                 {
-                    if (asset->textureID == 0) 
+                    if (asset->textureID == 0)
                     {
                         TextureLoader::loadTexture(*asset, true); // Load once
                     }
                     component.textureID = asset->textureID; // Reuse loaded texture
                 }
-                
+
                 if constexpr (std::is_same_v<AssetType, AudioProperties>)
                 {
                     component.mode = asset->mode;
                     component.soundType = asset->soundType;
                 }
-               
+
                 if constexpr (std::is_same_v<AssetType, NavMeshComponent>)
                 {
-                    // The selected MeshProperties GUID is already stored in assetGuids[currentIndex]
                     component.guid = assetGuids[currentIndex];
                 }
                 else if constexpr (std::is_same_v<AssetType, AnimationProperties>)
                 {
-
                     if (asset->path.empty())
                         return;
 
-                    // Copy the loaded asset data into the component
                     component.skeleton = asset->skeleton;
                     component.availableAnimations = asset->availableAnimations;
-                    // The component's 'path' is already set by the has_name_and_path block
                 }
             }
         }
@@ -157,18 +159,19 @@ namespace Framework
         std::vector<std::string> meshNames;
         std::vector<AssetHandle> meshGuids;
 
-        for (const auto& [guid, entry] : AssetManager::Instance().GetAssets())
+        // Iterate over AssetKey + AssetEntry
+        for (const auto& [key, entry] : AssetManager::Instance().GetAssets())
         {
             if (entry.typeName != TypeName<MeshProperties>::value)
                 continue;
 
             auto* mesh = static_cast<MeshProperties*>(entry.pObject.get());
-            if (mesh->name.empty() && mesh->path.empty())
+            if (!mesh || (mesh->name.empty() && mesh->path.empty()))
                 continue;
 
             std::string name = mesh->name.empty() ? mesh->path : mesh->name;
             meshNames.push_back(name);
-            meshGuids.push_back(guid);
+            meshGuids.push_back(key.guid); // <-- use key.guid
         }
 
         std::vector<const char*> labelPtrs;
@@ -184,6 +187,7 @@ namespace Framework
                 break;
             }
         }
+
         ImGui::Separator();
         ImGui::Text("%s", label.c_str());
         if (ImGui::Combo(label.c_str(), &currentIndex, labelPtrs.data(), static_cast<int>(labelPtrs.size())))
@@ -203,7 +207,7 @@ namespace Framework
         else ImGui::TextColored(ImVec4(1, 0.5f, 0.5f, 1), "No texture loaded.");
     }
 
-    inline void DrawMaterialSelector(MaterialProperties& component)
+    inline void DrawMaterialSelector(AssetHandle& materialGuid)
     {
         static bool isCreatingNewMaterial = false;
         static bool wasCreatingNewMaterial = false;
@@ -218,18 +222,18 @@ namespace Framework
         assetNames.push_back("No material assigned");
         assetGuids.push_back(AssetHandle{}); // Null handle
 
-        // Populate existing materials
-        for (const auto& [guid, entry] : AssetManager::Instance().GetAssets())
+        // Populate existing materials from MaterialMetadata (for names/paths)
+        for (const auto& [key, entry] : AssetManager::Instance().GetAssets())
         {
             if (entry.typeName != TypeName<MaterialMetadata>::value)
                 continue;
 
             auto* meta = static_cast<MaterialMetadata*>(entry.pObject.get());
-            if (meta->name.empty() && meta->path.empty())
+            if (!meta || (meta->name.empty() && meta->path.empty()))
                 continue;
 
             assetNames.push_back(meta->name.empty() ? meta->path : meta->name);
-            assetGuids.push_back(guid);
+            assetGuids.push_back(key.guid); // use key.guid instead of guid
         }
 
         // Add "Create New..." option
@@ -244,7 +248,7 @@ namespace Framework
         int currentIndex = 0;
         for (size_t i = 0; i < assetGuids.size(); ++i)
         {
-            if (assetGuids[i] == component.guid)
+            if (assetGuids[i] == materialGuid)
             {
                 currentIndex = static_cast<int>(i);
                 break;
@@ -267,24 +271,23 @@ namespace Framework
 
             if (!isCreatingNewMaterial && currentIndex != 0)
             {
-                component.guid = assetGuids[currentIndex];
-                auto* meta = AssetManager::Instance().Get<MaterialMetadata>(component.guid);
-                if (meta)
+                // Assign selected material guid
+                materialGuid = assetGuids[currentIndex];
+                std::cout << "[DrawMaterialSelector] Assigned GUID=" << materialGuid.id << std::endl;
+
+                // Resolve into MaterialProperties for editing
+                if (auto* material = AssetManager::Instance().Get<MaterialProperties>(materialGuid))
                 {
-                    auto material = LoadMaterialAsset(meta->path, meta->guid);
-                    if (material)
-                    {
-                        component.ambient = material->ambient;
-                        component.albedo = material->albedo;
-                        component.specular = material->specular;
-                        component.shininess = material->shininess;
-                        component.opacity = material->opacity;
-                    }
+                    ImGui::ColorEdit3("Albedo", glm::value_ptr(material->albedo));
+                    ImGui::ColorEdit3("Ambient", glm::value_ptr(material->ambient));
+                    ImGui::ColorEdit3("Specular", glm::value_ptr(material->specular));
+                    ImGui::DragFloat("Shininess", &material->shininess, 0.1f, 0.0f, 128.0f);
+                    ImGui::DragFloat("Opacity", &material->opacity, 0.01f, 0.0f, 1.0f);
                 }
             }
             else if (currentIndex == 0)
             {
-                component.guid = AssetHandle{}; // Clear
+                materialGuid = AssetHandle{}; // Clear
             }
             lastSelectedIndex = currentIndex;
         }
@@ -308,13 +311,21 @@ namespace Framework
                 AssetHandle newGuid = GenerateGUID();
                 std::string path = "Assets/Materials/" + std::string(newName) + ".material";
 
+                // Save to disk
                 SaveMaterialAsset(newMaterial, path, newGuid);
+
+                // Register metadata
                 RegisterMaterialMetadata(newGuid, newName, path);
 
-                component = newMaterial;
-                component.guid = newGuid;
+                // Register actual MaterialProperties asset
+                auto material = std::make_unique<MaterialProperties>(newMaterial);
+                material->guid = newGuid;
+                AssetManager::Instance().RegisterAsset(std::move(material), &g_MaterialProps, path);
 
-                ImGui::TextColored(ImVec4(0, 1, 0, 1), "Material saved!");
+                // Assign new material guid to mesh
+                materialGuid = newGuid;
+
+                ImGui::TextColored(ImVec4(0, 1, 0, 1), "Material saved and applied!");
                 isCreatingNewMaterial = false;
             }
         }
