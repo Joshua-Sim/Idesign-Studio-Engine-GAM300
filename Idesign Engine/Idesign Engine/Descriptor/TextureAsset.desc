@@ -22,14 +22,14 @@
             "path": "Assets/PNG/test.png"
         },
         {
-            "guid": "b79503fd-1af9-4ede-b8b5-00f58f89788d",
-            "name": "Backyard",
-            "path": "Assets/Textures/Backyard.png"
+            "guid": "0f2ece2c-6b29-43d9-a6ae-1f648d18d86d",
+            "name": "Wood",
+            "path": "Assets\\Textures\\Wood.png"
         },
         {
-            "guid": "7089cd06-5b5f-43bd-a72e-bc6a675b1563",
-            "name": "Backyard",
-            "path": "Assets/Textures/Backyard.png"
+            "guid": "b57b4683-8581-4256-9cc5-60c900acec67",
+            "name": "T_Brick_BaseColor",
+            "path": "Assets\\Textures\\T_Brick_BaseColor.png"
         }
     ]
 }

@@ -6,41 +6,50 @@
 #include <iostream>
 #include <algorithm> // for transform
 #include "TextureLoaderDDS.h"
+#include "EnginePath.h" 
+#include <filesystem>
 
 unsigned int TextureLoader::loadTexture(TextureProperties& props, bool flip)
 {
+    // <-- FIX: Build the absolute path from the relative path
+    std::filesystem::path root = GetEngineRootPath();
+    std::filesystem::path absolutePath = root / props.path;
+    std::string pathStr = absolutePath.string(); // Use this full path for loading
+
     // Detect file extension (lowercase)
-    std::string path = props.path;
     std::string ext;
-    size_t dot = path.find_last_of('.');
+    size_t dot = props.path.find_last_of('.'); // Use props.path (relative) for extension
     if (dot != std::string::npos)
     {
-        ext = path.substr(dot + 1);
+        ext = props.path.substr(dot + 1);
         std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
     }
 
     // 1. DDS compressed path
     if (ext == "dds")
     {
-        GLuint texID = LoadDDS(path);
+        GLuint texID = LoadDDS(pathStr); // <-- FIX: Use full path string
         if (texID)
         {
             props.textureID = texID;
             // width/height optional if your loader returns them
-            std::cout << "[TextureLoader] Loaded compressed DDS: " << path << std::endl;
+            std::cout << "[TextureLoader] Loaded compressed DDS: " << pathStr << std::endl;
             return texID;
         }
-        std::cerr << "[TextureLoader] Failed to load DDS: " << path << std::endl;
+        std::cerr << "[TextureLoader] Failed to load DDS: " << pathStr << std::endl;
         return 0;
     }
 
     // 2. Default (STB path)
     int width, height, channels;
     stbi_set_flip_vertically_on_load(flip);
-    unsigned char* data = stbi_load(path.c_str(), &width, &height, &channels, 0);
+
+    // <-- FIX: Use the .c_str() of the full path string
+    unsigned char* data = stbi_load(pathStr.c_str(), &width, &height, &channels, 0);
     if (!data)
     {
-        std::cerr << "Failed to load texture: " << path << std::endl;
+        // <-- FIX: Use full path in error message
+        std::cerr << "Failed to load texture: " << pathStr << std::endl;
         return 0;
     }
 
@@ -66,6 +75,6 @@ unsigned int TextureLoader::loadTexture(TextureProperties& props, bool flip)
     props.width = width;
     props.height = height;
 
-    std::cout << "[TextureLoader] Loaded raw image: " << path << std::endl;
+    std::cout << "[TextureLoader] Loaded raw image: " << pathStr << std::endl;
     return texID;
 }
