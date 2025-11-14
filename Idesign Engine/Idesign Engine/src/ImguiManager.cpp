@@ -27,6 +27,7 @@
 #include "fmod.h"
 #include "fmod_studio.h"
 #include <random> 
+#include <filesystem>
 
 extern Framework::Coordinator ecsInterface;
 
@@ -40,6 +41,14 @@ static bool isPropertiesWindowOpen = false;                         // Allows op
 static int  g_MainViewIndex = 0;                                   // Main view index for framebuffers
 static bool g_prevF2 = false;                                     // Previous state of F2 key
 static bool g_prevF3 = false;                                     // Previous state of F3 key
+
+namespace fs = std::filesystem;
+
+// Converts "Assets/Scripts/hello.lua" → "hello.lua"
+static std::string GetFileNameOnly(const std::string& p)
+{
+    return fs::path(p).filename().string();
+}
 
 namespace Framework {
     float projWidth{};
@@ -65,6 +74,8 @@ namespace Framework {
     // --- Script file browser helpers ---
     static std::vector<std::string> g_scriptFiles;
     static std::vector<const char*> g_scriptFileItems;
+    static std::vector<std::string> g_scriptDisplayNames; // short names: "hello.lua"
+
 
 
     //Initialize static instance 
@@ -234,6 +245,7 @@ namespace Framework {
     static void RefreshScriptFileList()
     {
         g_scriptFiles.clear();
+        g_scriptDisplayNames.clear();
         g_scriptFileItems.clear();
 
         namespace fs = std::filesystem;
@@ -242,19 +254,27 @@ namespace Framework {
         if (!fs::exists(scriptsDir))
             return;
 
+        // 1) Collect full paths
         for (auto& entry : fs::directory_iterator(scriptsDir))
         {
             if (!entry.is_regular_file()) continue;
             if (entry.path().extension() != ".lua") continue;
 
-            // store relative path like "Assets/Scripts/hello.lua"
-            std::string rel = entry.path().string();
-            std::replace(rel.begin(), rel.end(), '\\', '/'); // nice & consistent
+            std::string rel = entry.path().string();          // e.g. "Assets\\Scripts\\hello.lua"
+            std::replace(rel.begin(), rel.end(), '\\', '/');  // -> "Assets/Scripts/hello.lua"
             g_scriptFiles.push_back(rel);
         }
 
-        for (auto& s : g_scriptFiles)
-            g_scriptFileItems.push_back(s.c_str());
+        // 2) Build display names + ImGui labels (only "hello.lua")
+        for (auto& full : g_scriptFiles)
+        {
+            g_scriptDisplayNames.push_back(::GetFileNameOnly(full)); // "hello.lua"
+        }
+
+        for (auto& name : g_scriptDisplayNames)
+        {
+            g_scriptFileItems.push_back(name.c_str());
+        }
     }
 
     static int FindScriptIndex(const std::string& path)
@@ -2401,11 +2421,7 @@ namespace Framework {
 
                                 if (!g_scriptFileItems.empty())
                                 {
-                                    if (ImGui::Combo(
-                                        "##ScriptCombo",
-                                        &currentIndex,
-                                        g_scriptFileItems.data(),
-                                        (int)g_scriptFileItems.size()))
+                                    if (ImGui::Combo("##ScriptCombo", &currentIndex, g_scriptFileItems.data(), (int)g_scriptFileItems.size()))
                                     {
                                         if (currentIndex >= 0 && currentIndex < (int)g_scriptFiles.size())
                                         {

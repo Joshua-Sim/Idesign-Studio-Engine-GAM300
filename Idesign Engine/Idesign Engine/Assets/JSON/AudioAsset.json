@@ -9,14 +9,6 @@
             "volume": 1.0
         },
         {
-            "guid": "sfx-previous-006",
-            "name": "previousbutton",
-            "path": "event:/previousbutton",
-            "mode": "oneshot",
-            "soundType": "effect",
-            "volume": 1.0
-        },
-        {
             "guid": "bgm-piano-003",
             "name": "piano",
             "path": "event:/piano",
@@ -25,17 +17,17 @@
             "volume": 1.0
         },
         {
-            "guid": "bgm-level1-001",
-            "name": "Level1BGM",
-            "path": "event:/Level1BGM",
-            "mode": "loop",
-            "soundType": "background",
+            "guid": "sfx-previous-006",
+            "name": "previousbutton",
+            "path": "event:/previousbutton",
+            "mode": "oneshot",
+            "soundType": "effect",
             "volume": 1.0
         },
         {
-            "guid": "ambient-forest-007",
-            "name": "ForestAmbient",
-            "path": "event:/ForestAmbient",
+            "guid": "bgm-winloop-002",
+            "name": "winloop",
+            "path": "event:/winloop",
             "mode": "loop",
             "soundType": "background",
             "volume": 1.0
@@ -49,9 +41,17 @@
             "volume": 1.0
         },
         {
-            "guid": "bgm-winloop-002",
-            "name": "winloop",
-            "path": "event:/winloop",
+            "guid": "ambient-forest-007",
+            "name": "ForestAmbient",
+            "path": "event:/ForestAmbient",
+            "mode": "loop",
+            "soundType": "background",
+            "volume": 1.0
+        },
+        {
+            "guid": "bgm-level1-001",
+            "name": "Level1BGM",
+            "path": "event:/Level1BGM",
             "mode": "loop",
             "soundType": "background",
             "volume": 1.0
