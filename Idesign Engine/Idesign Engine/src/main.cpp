@@ -59,6 +59,10 @@ EngineState engineState;
 
 int main(void)
 {
+    // Save the initial working directory
+    std::filesystem::path initialCWD = std::filesystem::current_path();
+    std::cout << "Initial working directory: " << initialCWD << std::endl;
+
     SetupSignalHandlers();
     EnableMemoryLeakChecking(); // For memory check
 
@@ -153,6 +157,10 @@ int main(void)
     //scriptingSystem->CreateScriptEntity("assets/scripts/prove_lua.lua");
 
     engine->GameLoop();
+
+    // Restore the original directory before saving/compiling
+    std::filesystem::current_path(initialCWD);
+    std::cout << "Restored working directory: " << std::filesystem::current_path() << std::endl;
 
     AssetManager::Instance().SaveAllAssets();
     AssetManager::Instance().CompileAllAssets();

@@ -649,7 +649,6 @@ namespace Framework
         return entity;
     }
 
-
     bool MoveFileToAssetFolder(const std::string& sourcePath, const std::string& destinationFolder, std::string& outFinalPath, std::string& outError)
     {
         try 

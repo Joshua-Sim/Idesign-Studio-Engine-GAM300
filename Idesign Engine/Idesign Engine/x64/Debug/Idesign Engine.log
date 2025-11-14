@@ -4,4 +4,424 @@ D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Animati
       D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
       see declaration of 'Framework::AnimationProperties::name'
   
+  AssetManager.cpp
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
+  (compiling source file '/src/AssetManager.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
+      see declaration of 'Framework::AnimationProperties::name'
+  
+  Audio.cpp
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
+  (compiling source file '/src/Audio.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
+      see declaration of 'Framework::AnimationProperties::name'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Audio.cpp(105,27): warning C4458: declaration of 'coreSystem' hides class member
+  (compiling source file '/src/Audio.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Audio.h(519,17):
+      see declaration of 'Framework::Audio::coreSystem'
+  
+  AudioLoader.cpp
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
+  (compiling source file '/src/AudioLoader.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
+      see declaration of 'Framework::AnimationProperties::name'
+  
+  AudioSystem.cpp
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
+  (compiling source file '/src/AudioSystem.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
+      see declaration of 'Framework::AnimationProperties::name'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AudioSystem.cpp(132,23): warning C4189: 'distance': local variable is initialized but not referenced
+  (compiling source file '/src/AudioSystem.cpp')
+  
+  ButtonSystem.cpp
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
+  (compiling source file '/src/ButtonSystem.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
+      see declaration of 'Framework::AnimationProperties::name'
+  
+  Collision.cpp
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
+  (compiling source file '/src/Collision.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
+      see declaration of 'Framework::AnimationProperties::name'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Collision.cpp(376,15): warning C4459: declaration of 'dt' hides global declaration
+  (compiling source file '/src/Collision.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Collision.cpp(22,7):
+      see declaration of 'dt'
+  
+  Core.cpp
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
+  (compiling source file '/src/Core.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
+      see declaration of 'Framework::AnimationProperties::name'
+  
+  DummySystem.cpp
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
+  (compiling source file '/src/DummySystem.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
+      see declaration of 'Framework::AnimationProperties::name'
+  
+  FontSystem.cpp
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
+  (compiling source file '/src/FontSystem.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
+      see declaration of 'Framework::AnimationProperties::name'
+  
+  Graphics.cpp
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
+      see declaration of 'Framework::AnimationProperties::name'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(510,21): warning C4458: declaration of 'cam' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(121,17):
+      see declaration of 'Framework::Graphics::cam'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(543,27): warning C4458: declaration of 'mesh' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
+      see declaration of 'Framework::Graphics::mesh'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(595,27): warning C4458: declaration of 'mesh' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
+      see declaration of 'Framework::Graphics::mesh'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(633,35): warning C4458: declaration of 'tex' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(141,16):
+      see declaration of 'Framework::Graphics::tex'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(662,23): warning C4458: declaration of 'mesh' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
+      see declaration of 'Framework::Graphics::mesh'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(708,31): warning C4458: declaration of 'tex' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(141,16):
+      see declaration of 'Framework::Graphics::tex'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(871,27): warning C4458: declaration of 'mesh' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
+      see declaration of 'Framework::Graphics::mesh'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(923,27): warning C4458: declaration of 'mesh' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
+      see declaration of 'Framework::Graphics::mesh'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(961,35): warning C4458: declaration of 'tex' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(141,16):
+      see declaration of 'Framework::Graphics::tex'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(990,23): warning C4458: declaration of 'mesh' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
+      see declaration of 'Framework::Graphics::mesh'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1036,31): warning C4458: declaration of 'tex' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(141,16):
+      see declaration of 'Framework::Graphics::tex'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1264,17): warning C4458: declaration of 'cam' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(121,17):
+      see declaration of 'Framework::Graphics::cam'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1271,25): warning C4459: declaration of 'firstMouse' hides global declaration
+  (compiling source file '/src/Graphics.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(75,17):
+      see declaration of 'Framework::firstMouse'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1394,23): warning C4458: declaration of 'cam' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(121,17):
+      see declaration of 'Framework::Graphics::cam'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1400,23): warning C4458: declaration of 'cam' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(121,17):
+      see declaration of 'Framework::Graphics::cam'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1470,39): warning C4100: 'viewIndex': unreferenced parameter
+  (compiling source file '/src/Graphics.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1602,40): warning C4458: declaration of 'mesh' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
+      see declaration of 'Framework::Graphics::mesh'
+  
+  ImguiManager.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\minwindef.h(130,9): warning C4005: 'APIENTRY': macro redefinition
+  (compiling source file '/src/ImguiManager.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\glfw-3.4.bin.WIN64\include\GLFW\glfw3.h(123,11):
+      see previous definition of 'APIENTRY'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
+  (compiling source file '/src/ImguiManager.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
+      see declaration of 'Framework::AnimationProperties::name'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(211,19): warning C4456: declaration of 'ev' hides previous local declaration
+  (compiling source file '/src/ImguiManager.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(172,30):
+      see declaration of 'ev'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(277,62): warning C4459: declaration of 'rbo' hides global declaration
+  (compiling source file '/src/ImguiManager.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(47,46):
+      see declaration of 'Framework::rbo'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(303,25): warning C4459: declaration of 'filePath' hides global declaration
+  (compiling source file '/src/ImguiManager.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(49,24):
+      see declaration of 'Framework::filePath'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(932,42): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(941,38): warning C4566: character represented by universal-character-name '\u26A0' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(970,46): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(971,40): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(975,46): warning C4566: character represented by universal-character-name '\u2717' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(976,40): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1010,42): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1015,46): warning C4566: character represented by universal-character-name '\u26A0' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1036,42): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1041,46): warning C4566: character represented by universal-character-name '\u26A0' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1152,40): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1313,40): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1472,40): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1529,37): warning C4456: declaration of 'nameBuffer' hides previous local declaration
+  (compiling source file '/src/ImguiManager.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1495,21):
+      see declaration of 'nameBuffer'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1530,38): warning C4456: declaration of 'volumeBuffer' hides previous local declaration
+  (compiling source file '/src/ImguiManager.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1498,22):
+      see declaration of 'volumeBuffer'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1541,76): warning C4566: character represented by universal-character-name '\U0001F3A7' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1686,40): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1946,48): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2093,48): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+  (compiling source file '/src/ImguiManager.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2541,39): warning C4459: declaration of 'ecsInterface' hides global declaration
+  (compiling source file '/src/ImguiManager.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(31,31):
+      see declaration of 'ecsInterface'
+  
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\algorithm(3799,24): warning C4244: '=': conversion from 'int' to 'char', possible loss of data
+  (compiling source file '/src/ImguiManager.cpp')
+      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\algorithm(3799,24):
+      the template instantiation context (the oldest one first) is
+          D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(305,18):
+          see reference to function template instantiation '_OutIt std::transform<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,int(__cdecl *)(int)>(const _InIt,const _InIt,_OutIt,_Fn)' being compiled
+          with
+          [
+              _OutIt=std::_String_iterator<std::_String_val<std::_Simple_types<char>>>,
+              _Elem=char,
+              _InIt=std::_String_iterator<std::_String_val<std::_Simple_types<char>>>,
+              _Fn=int (__cdecl *)(int)
+          ]
+  
+  InputHandler.cpp
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
+  (compiling source file '/src/InputHandler.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
+      see declaration of 'Framework::AnimationProperties::name'
+  
+  MaterialLoader.cpp
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
+  (compiling source file '/src/MaterialLoader.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
+      see declaration of 'Framework::AnimationProperties::name'
+  
+  NavMeshSystem.cpp
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
+  (compiling source file '/src/NavMeshSystem.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
+      see declaration of 'Framework::AnimationProperties::name'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\Recast.h(115,7): warning C4099: 'rcContext': type name first seen using 'struct' now seen using 'class'
+  (compiling source file '/src/NavMeshSystem.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\Recast.h(115,7):
+      see declaration of 'rcContext'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\DetourNavMesh.h(338,7): warning C4099: 'dtNavMesh': type name first seen using 'struct' now seen using 'class'
+  (compiling source file '/src/NavMeshSystem.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\DetourNavMesh.h(338,7):
+      see declaration of 'dtNavMesh'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\DetourNavMesh.h(676,15): warning C4099: 'dtNavMeshQuery': type name first seen using 'struct' now seen using 'class'
+  (compiling source file '/src/NavMeshSystem.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.h(22,8):
+      see declaration of 'dtNavMeshQuery'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\DetourNavMeshQuery.h(165,7): warning C4099: 'dtNavMeshQuery': type name first seen using 'struct' now seen using 'class'
+  (compiling source file '/src/NavMeshSystem.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\DetourNavMeshQuery.h(165,7):
+      see declaration of 'dtNavMeshQuery'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(315,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(323,62): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(322,54): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(328,37): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(326,84): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(332,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(338,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(352,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(363,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(370,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(376,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(390,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(403,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(418,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(470,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(485,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(499,22): warning C4566: character represented by universal-character-name '\u2705' cannot be represented in the current code page (1252)
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(579,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(551,18): warning C4189: 'pathStatus': local variable is initialized but not referenced
+  (compiling source file '/src/NavMeshSystem.cpp')
+  
+  PhysicsSystem.cpp
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
+  (compiling source file '/src/PhysicsSystem.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
+      see declaration of 'Framework::AnimationProperties::name'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.cpp(41,66): warning C4100: 'inLayer': unreferenced parameter
+  (compiling source file '/src/PhysicsSystem.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.cpp(116,56): warning C4459: declaration of 'terrain' hides global declaration
+  (compiling source file '/src/PhysicsSystem.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(34,21):
+      see declaration of 'terrain'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.cpp(116,116): warning C4100: 'physics': unreferenced parameter
+  (compiling source file '/src/PhysicsSystem.cpp')
+  
+  PropertyWidget.cpp
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
+  (compiling source file '/src/PropertyWidget.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
+      see declaration of 'Framework::AnimationProperties::name'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PropertyWidget.cpp(16,55): warning C4244: 'argument': conversion from 'uintptr_t' to 'int', possible loss of data
+  (compiling source file '/src/PropertyWidget.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PropertyWidget.cpp(298,35): warning C4130: '==': logical operation on address of string constant
+  (compiling source file '/src/PropertyWidget.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PropertyWidget.cpp(298,74): warning C4130: '==': logical operation on address of string constant
+  (compiling source file '/src/PropertyWidget.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PropertyWidget.cpp(299,35): warning C4130: '==': logical operation on address of string constant
+  (compiling source file '/src/PropertyWidget.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PropertyWidget.cpp(299,78): warning C4130: '==': logical operation on address of string constant
+  (compiling source file '/src/PropertyWidget.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PropertyWidget.cpp(300,35): warning C4130: '==': logical operation on address of string constant
+  (compiling source file '/src/PropertyWidget.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PropertyWidget.cpp(300,78): warning C4130: '==': logical operation on address of string constant
+  (compiling source file '/src/PropertyWidget.cpp')
+  
+  SceneManager.cpp
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
+  (compiling source file '/src/SceneManager.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
+      see declaration of 'Framework::AnimationProperties::name'
+  
+  ScriptingSystem.cpp
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
+  (compiling source file '/src/ScriptingSystem.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
+      see declaration of 'Framework::AnimationProperties::name'
+  
+  main.cpp
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
+  (compiling source file '/src/main.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
+      see declaration of 'Framework::AnimationProperties::name'
+  
+  Generating Code...
   Idesign Engine.vcxproj -> D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe

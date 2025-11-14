@@ -26,7 +26,6 @@ namespace Framework
         AssetManager::Instance().SaveArrayToJson(TypeName<SceneProperties>::value,   "Assets/JSON/SceneAsset.json", "scenes");
         AssetManager::Instance().SaveArrayToJson(TypeName<MaterialMetadata>::value,  "Assets/JSON/MaterialAsset.json", "materials");
         AssetManager::Instance().SaveArrayToJson(TypeName<AnimationProperties>::value, "Assets/JSON/AnimationAsset.json", "animation");
-
         std::cout << "Files are being saved" << std::endl;
     }
 

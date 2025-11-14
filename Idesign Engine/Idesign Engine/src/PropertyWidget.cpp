@@ -244,9 +244,7 @@ namespace Framework
                     {
                         MeshLoader::loadMesh(mesh.path, mesh);
                     }
-
                     DrawMaterialSelector(mesh.materialGuid);
-                    //std::cout << "[Inspector] mesh.materialGuid after selector = " << mesh.materialGuid.id << std::endl;
                 }
                 else if (typeName == "AudioProperties")
                 {
@@ -294,11 +292,8 @@ namespace Framework
         for (global_registration* reg = global_registration::m_pHead; reg; reg = reg->m_pNext)
         {
             const prop_list* propList = reg->m_pPopList;
-            if (!propList || !propList->m_pName || propList->m_Props.empty())
-                continue;
-
-            if (attached.contains(propList->m_pName))
-                continue;
+            if (!propList || !propList->m_pName || propList->m_Props.empty()) continue;
+            if (attached.contains(propList->m_pName)) continue;
 
             if (propList->m_pName == "WindowConfig" || propList->m_pName == "NavMeshAgentComponent" ||
                 propList->m_pName == "PrefabProperties" || propList->m_pName == "PrefabComponent" ||
@@ -313,6 +308,7 @@ namespace Framework
 
     void RegisterComponentTypes()
     {
+        // Only if the component nids to be under the entity inspectorppppp
         TypeRegistry::Instance().Register<TextureProperties>("TextureProperties", &g_TexturePropertiesProps);
         TypeRegistry::Instance().Register<MeshProperties>("MeshProperties", &g_MeshProps);
         TypeRegistry::Instance().Register<AudioProperties>("AudioProperties", &g_AudioPropertiesProps);
