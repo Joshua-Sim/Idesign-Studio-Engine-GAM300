@@ -18,6 +18,14 @@
             "volume": 1.0
         },
         {
+            "guid": "sfx-click-005",
+            "name": "buttonclick",
+            "path": "event:/buttonclick",
+            "mode": "oneshot",
+            "soundType": "effect",
+            "volume": 1.0
+        },
+        {
             "guid": "bgm-piano-003",
             "name": "piano",
             "path": "event:/piano",
@@ -39,14 +47,6 @@
             "path": "event:/ForestAmbient",
             "mode": "loop",
             "soundType": "background",
-            "volume": 1.0
-        },
-        {
-            "guid": "sfx-click-005",
-            "name": "buttonclick",
-            "path": "event:/buttonclick",
-            "mode": "oneshot",
-            "soundType": "effect",
             "volume": 1.0
         },
         {

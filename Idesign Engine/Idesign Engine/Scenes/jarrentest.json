@@ -1,0 +1,251 @@
+{
+    "Entities": [
+        {
+            "name": "Backyard",
+            "guid": "baafee22-007e-41a1-a32e-a236685246ea",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -18.007776260375977,
+                        0.0,
+                        14.734742164611816
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 0
+                },
+                "MeshComponent": {
+                    "guid": "52f9947c-0b27-4f5a-9a18-cfef71bcfac3",
+                    "materialGuid": "2c12a0a9-b140-4b43-b447-295558cb1317"
+                },
+                "TextureComponent": {
+                    "guid": "b79503fd-1af9-4ede-b8b5-00f58f89788d"
+                },
+                "NavMeshComponent": {
+                    "guid": "",
+                    "isNavMeshSource": true,
+                    "runtimeGenerated": false,
+                    "agentRadius": 0.5,
+                    "agentHeight": 2.0,
+                    "cellSize": 0.30000001192092896,
+                    "cellHeight": 0.20000000298023224,
+                    "maxSlope": 45.0
+                }
+            }
+        },
+        {
+            "name": "Entity 1",
+            "guid": "1cd2cffd-c068-4cbd-8635-3b53213adcf4",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -10.33808708190918,
+                        0.5,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 2
+                }
+            }
+        },
+        {
+            "name": "Entity 2",
+            "guid": "46643a43-ef91-4c8f-8675-27e1d159b4e9",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        10.0,
+                        0.0,
+                        0.30000001192092896
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 3
+                },
+                "MeshComponent": {
+                    "guid": "6cbaa85b-562d-4b23-9f64-8639947659cc"
+                }
+            }
+        },
+        {
+            "name": "Entity 3",
+            "guid": "be4d333f-b3c9-4d23-b055-bd3e27bd62e2",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        50.5,
+                        5.0,
+                        1.5
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        5.0,
+                        5.0,
+                        5.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 4
+                }
+            }
+        },
+        {
+            "name": "Entity 4",
+            "guid": "c63e54b8-c77a-48aa-b80b-f80f8adcce9c",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        60.5,
+                        5.0,
+                        1.5
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        5.0,
+                        5.0,
+                        5.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 5
+                }
+            }
+        },
+        {
+            "name": "Entity 5",
+            "guid": "1903f796-c634-4f8c-97ab-541b544f926d",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        50.0,
+                        15.0,
+                        15.5
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        5.0,
+                        5.0,
+                        5.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 6
+                }
+            }
+        },
+        {
+            "name": "Entity 6",
+            "guid": "6f40e88d-3312-4fc7-ab58-64aa990c8d31",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        59.717838287353516,
+                        10.0,
+                        -5.5
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        5.0,
+                        5.0,
+                        5.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 7
+                }
+            }
+        },
+        {
+            "name": "Floor",
+            "guid": "1bb31b9b-4e34-4d02-a51f-7c7df73d7ba4",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -18.245712280273438,
+                        0.0,
+                        9.569385528564453
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.050000011920928955,
+                        0.005983388517051935,
+                        0.050000011920928955
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 0
+                },
+                "TextureComponent": {
+                    "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606"
+                }
+            }
+        }
+    ]
+}

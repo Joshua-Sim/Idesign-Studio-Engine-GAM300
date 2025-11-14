@@ -1,19 +1,24 @@
 {
     "textures": [
         {
-            "guid": "b2d4bb99-3396-40de-8789-01d6cf083f4e",
-            "name": "obj",
-            "path": "Assets/Textures/obj.png"
-        },
-        {
             "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606",
             "name": "music",
             "path": "Assets/Textures/music.png"
         },
         {
+            "guid": "b2d4bb99-3396-40de-8789-01d6cf083f4e",
+            "name": "obj",
+            "path": "Assets/Textures/obj.png"
+        },
+        {
             "guid": "4caccc21-6007-45d5-bb72-a14260f29a35",
             "name": "test",
             "path": "Assets/PNG/test.png"
+        },
+        {
+            "guid": "b79503fd-1af9-4ede-b8b5-00f58f89788d",
+            "name": "Backyard",
+            "path": "Assets/Textures/Backyard.png"
         }
     ]
 }
