@@ -4,27 +4,17 @@
 #include "MeshProperties.h"
 #include "AnimationProperties.h"
 
-
-
-// Forward declarations for Assimp types
-struct aiNode;
-struct aiScene;
-
 using namespace Framework;
 class MeshLoader {
 
-static void ProcessNode(aiNode* node, const aiScene* scene,
-        Framework::Skeleton& skeleton, int parentBoneIndex);
 
-static void LoadAnimations(const aiScene* scene,
-    Framework::AnimationProperties& animProps);
 public:
     static void loadMesh(const std::string& path, MeshProperties& mesh);
 
     /**
     * @brief Loads an ANIMATED mesh (with skeleton and bones).
     */
-    static void loadMesh(const std::string& path,
-        Framework::MeshProperties& mesh,
-        Framework::AnimationProperties& animProps);
+    static void loadAnimatedMesh(const std::string& path,
+        Framework::AnimationProperties& animProps,
+        Framework::MeshProperties& mesh);
 };

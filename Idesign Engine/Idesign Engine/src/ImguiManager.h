@@ -83,7 +83,7 @@ namespace Framework
 		static void LogSuccess(const std::string& message, const std::string& category = "APP");
 
 		// Asset Panel
-		enum AssetTabType { None, Mesh, Texture, Audio, Prefab, Scene, Scripts };
+		enum AssetTabType { None, Mesh,Animation, Texture, Audio, Prefab, Scene, Scripts };
 
 		struct AssetTab
 		{
@@ -104,6 +104,7 @@ namespace Framework
 			{ "Assets", AssetTabType::None, 
 				{
 					{ "Meshes", AssetTabType::Mesh, {} },
+					{ "Animations", AssetTabType::Animation, {} },
 					{ "Textures", AssetTabType::Texture, {} },
 					{ "Audio", AssetTabType::Audio, {} },
 					{ "Prefabs", AssetTabType::Prefab, {} },
@@ -121,6 +122,7 @@ namespace Framework
 		void RenderPrefabAssets();
 		void RenderSceneAssets();
 		void RenderScriptAssets();
+		void RenderAnimationAssets();
 
 	private:
 		//Console members 

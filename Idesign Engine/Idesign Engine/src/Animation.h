@@ -78,7 +78,8 @@ namespace Framework
         int boneID = -1;      // ID (index) in the final bone matrix array (0 to MAX_BONES-1)
         int parentIndex = -1; // Index of the parent bone in the Skeleton::bones vector (-1 for root)
 
-        // This matrix transforms vertices from mesh space to this bone's local space in the bind pose
+        // This matrix transforms vertices from mesh space to this bone's local space in the
+        // d pose
         glm::mat4 inverseBindPoseMatrix{ 1.0f };
 
         // The bone's default transformation relative to its parent bone

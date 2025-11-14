@@ -22,24 +22,6 @@
 
 extern Framework::Coordinator ecsInterface;
 
-
-// Helper function to print a glm::mat4
-void printMat4(const glm::mat4& mat)
-{
-    std::cout << std::fixed << std::setprecision(2);
-    for (int i = 0; i < 4; ++i)
-    {
-        for (int j = 0; j < 4; ++j)
-        {
-            std::cout << std::setw(8) << mat[j][i] << " ";
-        }
-        std::cout << std::endl;
-    }
-    std::cout << "---------------------------------" << std::endl;
-
-
-}
-
 namespace Framework
 {
     void AnimationSystem::Initialize()
@@ -62,10 +44,10 @@ namespace Framework
             if (ecsInterface.HasComponent<AnimationProperties>(entity)) {
                 auto& animator = ecsInterface.GetComponent<AnimationProperties>(entity);
 
-           
+
                 if (!animator.currentAnimation && animator.bPlayOnStart)
                 {
-                    
+
                     animator.StartDefaultAnimation();
                 }
 
@@ -166,45 +148,10 @@ namespace Framework
         const Animation& animation,
         int boneIndex,
         const glm::mat4& parentTransform,
-        std::vector<glm::mat4>& globalTransforms) 
+        std::vector<glm::mat4>& globalTransforms)
     {
         const Bone& bone = skeleton.bones[boneIndex];
         const auto* channel = animation.FindChannel(bone.name);
-
-        //static bool didDebugPrint = false;
-        //if (!didDebugPrint)
-        //{
-        //   // // This part runs ONLY for the root bone to print a header
-        //   // if (boneIndex == skeleton.rootBoneIndex)
-        //   // {
-        //   ///*     std::cout << "--- BONE & CHANNEL NAME DEBUG ---" << std::endl;
-        //   //     std::cout << "Available Animation Channels:" << std::endl;
-        //   //     for (auto const& [name, anim] : animation.boneChannels)
-        //   //     {
-        //   //         std::cout << "  - [\"" << name << "\"]" << std::endl;
-        //   //     }
-        //   //     std::cout << "\nMatching Skeleton Bones to Channels:" << std::endl;*/
-        //   // }
-
-        //   // // This part runs for EVERY bone
-        //   // std::string boneName = "  - Bone: [\"" + bone.name + "\"]";
-        //   // if (channel)
-        //   // {
-        //   //     std::cout << boneName << " ... OK (Found Channel)" << std::endl;
-        //   // }
-        //   // else
-        //   // {
-        //   //     std::cout << boneName << " ... FAILED (Channel Not Found)" << std::endl;
-        //   // }
-
-        //   // // After the last bone, stop printing
-        //   // if (boneIndex == skeleton.bones.size() - 1)
-        //   // {
-        //   //     didDebugPrint = true;
-        //   //     std::cout << "---------------------------------" << std::endl;
-        //   // }
-        //}
-
 
         // 1a. Decompose the bone's default (T-pose) transform
         glm::vec3 scale;
@@ -215,9 +162,9 @@ namespace Framework
         glm::decompose(bone.defaultLocalTransform, scale, rotation, position, skew, perspective);
 
         // 1b. Overwrite with animated keys IF they exist
-        if (channel) 
+        if (channel)
         {
-            // But these are being called with `animator.currentTime = 0.0`
+            // This logic will now run every frame as intended
             if (!channel->positions.empty())
                 position = InterpolatePosition(channel, animator.currentTime);
 
@@ -239,8 +186,8 @@ namespace Framework
         globalTransforms[boneIndex] = globalTransform; // Store it for children
 
         // 3. Store Final Matrix for the shader
-        // This is correct: (AnimatedBoneToModelSpace) * (ModelSpaceToBindPoseBoneSpace)
         animator.finalBoneMatrices[boneIndex] = globalTransform * bone.inverseBindPoseMatrix;
+
 
         // 4. Recurse for Children
         for (int childIndex : bone.childrenIndices)
@@ -257,6 +204,7 @@ namespace Framework
         // 1. Update Time
         float ticksPerSecond = (animation.ticksPerSecond > 0.0f) ? animation.ticksPerSecond : 24.0f;
         animator.currentTime += dt * animator.animationSpeed * ticksPerSecond;
+
         // Only loop the time if the duration is valid (greater than zero)
         if (animation.duration > 0.0f)
         {
@@ -271,6 +219,10 @@ namespace Framework
             }
         }
 
+        if (animator.finalBoneMatrices.size() != skeleton.bones.size())
+        {
+            animator.finalBoneMatrices.resize(skeleton.bones.size(), glm::mat4(1.0f));
+        }
 
         // 2. Allocate space for this frame's global transforms
         std::vector<glm::mat4> globalTransforms(skeleton.bones.size(), glm::mat4(1.0f));
@@ -282,19 +234,14 @@ namespace Framework
 
             UpdateBoneTransformsRecursive(animator, skeleton, animation,
                 rootIndex, skeleton.rootNodeTransform, globalTransforms);
-
-            //static int frameCount = 0;
-            //if (frameCount % 60 == 0) // Print once every 60 frames
-            //{
-            //    //std::cout << "=== Root Bone Matrix (Final) ===\n";
-            //    // Print the final shader matrix for the *root bone*
-            //    //printMat4(animator.finalBoneMatrices[rootIndex]);
-            //}
-            //frameCount++;
         }
         else
         {
-            std::cerr << "Animation Error: No root bone found! (Index is -1)" << std::endl;
+            static bool s_didError = false;
+            if (!s_didError) {
+                std::cerr << "Animation Error: No root bone found! (Index is -1)" << std::endl;
+                s_didError = true;
+            }
         }
     }
 }

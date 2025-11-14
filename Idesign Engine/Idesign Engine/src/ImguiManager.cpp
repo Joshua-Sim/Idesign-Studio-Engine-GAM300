@@ -8,6 +8,7 @@
 #include "FontSystem.h"
 #include "Coordinator.h"
 #include <algorithm>
+#include "AnimationLoader.h"
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
@@ -384,7 +385,7 @@ namespace Framework {
             }
 
             // OBJ || Mesh Files
-            else if (extension == "obj")
+            else if (extension == "obj" )
             {
                 auto existingGuid = AssetManager::Instance().FindGuid<MeshProperties>(fileName);
                 if (existingGuid.empty())
@@ -410,7 +411,60 @@ namespace Framework {
                 }
                 else std::cout << "Mesh already exists: " << fileName << std::endl;
             }
+            else if (extension == "fbx")
+            {
+                auto existingGuid = AssetManager::Instance().FindGuid<AnimationProperties>(fileName);
+                if (existingGuid.empty())
+                {
+                    if (MoveFileToAssetFolder(filePath, meshFolder, finalPath, error))
+                    {
+                        auto meshPtr = std::make_unique<MeshProperties>();
+                        auto AnimPtr = std::make_unique<AnimationProperties>();
 
+                        meshPtr->name = std::filesystem::path(fileName).stem().string();
+                        meshPtr->guid = GenerateGUID(); // Assign its own GUID
+                        meshPtr->path = finalPath;
+
+                        AnimPtr->name = std::filesystem::path(fileName).stem().string();
+                        AnimPtr->guid = GenerateGUID(); // Ensure GUID is set
+                        AnimPtr->path = finalPath;
+                        MeshLoader::loadAnimatedMesh(finalPath, *AnimPtr, *meshPtr);
+                        AnimationLoader::loadAnimation(finalPath, *AnimPtr);
+                        AssetManager::Instance().RegisterAsset<MeshProperties>(
+                            std::move(meshPtr),
+                            &g_MeshProps,
+                            finalPath
+                        );
+                        // Save the MESH JSON
+                        AssetManager::Instance().SaveArrayToJson(
+                            TypeName<MeshProperties>::value,
+                            "Assets/JSON/MeshAsset.json",
+                            "mesh"
+                        );
+
+                        AssetManager::Instance().RegisterAsset<AnimationProperties>(
+                            std::move(AnimPtr),
+                            &g_AnimationPropertiesProps, // Use the correct prop list
+                            finalPath
+                        );
+
+                        // Save the ANIMATION JSON
+                        AssetManager::Instance().SaveArrayToJson(
+                            TypeName<AnimationProperties>::value,
+                            "Assets/JSON/AnimationAsset.json", // Save to its own file
+                            "animations"
+                        );
+                        std::cout << "Mesh added: " << fileName << " to " << finalPath << std::endl;
+                    }
+                    else
+                    {
+                        errorMessage = "Failed to move mesh:\n" + error;
+                        showErrorPopup = true;
+                        return;
+                    }
+                }
+                else std::cout << "Mesh already exists: " << fileName << std::endl;
+            }
             // Scene Files
             else if (extension == "scene")
             {
@@ -1065,6 +1119,9 @@ namespace Framework {
                     case AssetTabType::Texture:
                         RenderTextureAssets();
                         break;
+                    case AssetTabType::Animation:
+                        RenderAnimationAssets();
+                        break;
                     case AssetTabType::Audio:
                         RenderAudioAssets();
                         break;
@@ -1629,6 +1686,169 @@ namespace Framework {
             }
             AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, "Assets/JSON/AudioAsset.json", "audio");
         }
+    }
+
+    void ImguiManager::RenderAnimationAssets()
+    {
+        // --- Help Tooltip ---
+        ImGui::TextColored(helpYellow, "(❓)");
+        if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNone))
+        {
+            ImGui::BeginTooltip();
+            ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+            ImGui::TextUnformatted(
+                "- The Animation panel lists all registered animation assets (FBX, GLTF, etc.).\n"
+                "- Right-click the icon to rename or delete the asset.\n"
+                "- Deleting an asset unloads it and removes it from the Asset Manager.\n\n"
+                "- Hovering shows animation details such as file path and GUID."
+            );
+            ImGui::PopTextWrapPos();
+            ImGui::EndTooltip();
+        }
+
+        // --- Grid/Column Setup ---
+        float windowWidth = ImGui::GetContentRegionAvail().x;
+        float itemWidth = 80.0f; // Width of each item
+        int columns = std::max(1, static_cast<int>(windowWidth / itemWidth));
+
+        std::vector<std::string> animsToDelete;
+        const auto& assets = AssetManager::Instance().GetAssets();
+        int count = 0;
+
+        static char nameBuffer[256] = {}; // Static buffer for renaming
+
+        // --- Displaying each asset ---
+        for (const auto& [guid, entry] : assets)
+        {
+            // Filter for AnimationProperties
+            if (entry.typeName != TypeName<AnimationProperties>::value)
+                continue;
+
+            auto* anim = static_cast<AnimationProperties*>(entry.pObject.get());
+            if (!anim || anim->guid.empty())
+                continue;
+
+            std::string modalId = "EditAnimModal_" + anim->guid;
+
+            ImGui::PushID(anim->guid.id.c_str());
+            ImGui::BeginGroup();
+
+            // --- Centered placeholder icon (using g_ObjIcon) ---
+            float imageSize = 64.0f;
+            float imageX = (itemWidth - imageSize) * 0.5f;
+            ImGui::SetCursorPosX(ImGui::GetCursorPosX() + imageX);
+            ImGui::Image((ImTextureID)g_ObjIcon.textureID, ImVec2(imageSize, imageSize));
+
+            // --- Right-click on image to open modal ---
+            if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+            {
+                // Initialize rename buffer with current name
+                std::snprintf(nameBuffer, sizeof(nameBuffer), "%s", anim->name.c_str());
+                ImGui::OpenPopup(modalId.c_str());
+            }
+
+            // --- Centered asset name ---
+            const int maxChars = 10;
+            std::string displayName = anim->name;
+            if (displayName.length() > maxChars)
+                displayName = displayName.substr(0, maxChars - 3) + "...";
+
+            float textWidth = ImGui::CalcTextSize(displayName.c_str()).x;
+            float centerOffset = (itemWidth - textWidth) * 0.5f;
+            ImGui::SetCursorPosX(ImGui::GetCursorPosX() + centerOffset);
+
+            ImGui::PushTextWrapPos(ImGui::GetCursorPosX() + itemWidth);
+            ImGui::TextWrapped("%s", displayName.c_str());
+            ImGui::PopTextWrapPos();
+
+            // --- Modal Popup Logic ---
+            if (ImGui::BeginPopupModal(modalId.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+            {
+                ImGui::TextColored(ImVec4(0.9f, 0.7f, 0.2f, 1.0f), "Animation Options");
+                ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
+
+                ImGui::Text("Edit Name:");
+                ImGui::InputText("##Name", nameBuffer, IM_ARRAYSIZE(nameBuffer));
+
+                ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
+
+                // Button row
+                float buttonWidth = 80.0f;
+                float spacing = 10.0f;
+                float totalWidth = buttonWidth * 3 + spacing * 2;
+                float centerX = (ImGui::GetWindowSize().x - totalWidth) * 0.5f;
+                ImGui::SetCursorPosX(centerX);
+
+                if (ImGui::Button("Apply", ImVec2(buttonWidth, 0)))
+                {
+                    std::string newName = nameBuffer;
+                    if (newName != anim->name)
+                    {
+                        anim->name = newName;
+                        AssetManager::Instance().MarkDirty(guid); // Mark for saving
+                    }
+                    ImGui::CloseCurrentPopup();
+                }
+
+                ImGui::SameLine(0, spacing);
+                if (ImGui::Button("Delete", ImVec2(buttonWidth, 0)))
+                {
+                    animsToDelete.push_back(anim->guid.id.c_str());
+
+                    // Delete the actual .fbx file
+                    if (!AssetManager::Instance().DeleteAssetFile(anim->path))
+                    {
+                        errorMessage = "Failed to delete animation file:\n" + anim->path;
+                        showErrorPopup = true;
+                    }
+                    ImGui::CloseCurrentPopup();
+                }
+
+                ImGui::SameLine(0, spacing);
+                if (ImGui::Button("Cancel", ImVec2(buttonWidth, 0)))
+                {
+                    ImGui::CloseCurrentPopup();
+                }
+
+                ImGui::EndPopup();
+            }
+
+            // --- Tooltip on hover ---
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::BeginTooltip();
+                ImGui::Text("Name: %s", anim->name.c_str());
+                ImGui::Text("Path: %s", anim->path.c_str());
+                ImGui::Text("GUID: %s", anim->guid.id.c_str());
+                ImGui::Text("Bones: %zu", anim->skeleton.bones.size());
+                ImGui::Text("Clips: %zu", anim->availableAnimations.size());
+                ImGui::EndTooltip();
+            }
+
+            ImGui::EndGroup();
+            ImGui::PopID();
+
+            count++;
+            if (count % columns != 0)
+                ImGui::SameLine();
+        }
+
+        // --- Deletion Logic ---
+        if (!animsToDelete.empty())
+        {
+            for (const auto& guid : animsToDelete)
+            {
+                AssetManager::Instance().Unload(guid); // Unload from memory
+            }
+            // Save the updated JSON file
+            AssetManager::Instance().SaveArrayToJson(
+                TypeName<AnimationProperties>::value,
+                "Assets/JSON/AnimationAsset.json",
+                "animations" // This MUST match your CompileArray key
+            );
+        }
+        ImGui::NewLine();
+        RenderErrorPopup(); // Show popup if file deletion failed
     }
     
     void ImguiManager::RenderPrefabAssets()

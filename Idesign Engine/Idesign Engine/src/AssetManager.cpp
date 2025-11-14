@@ -25,6 +25,8 @@ namespace Framework
         AssetManager::Instance().SaveArrayToJson(TypeName<PrefabProperties>::value,  "Assets/JSON/PrefabAsset.json", "prefabs");
         AssetManager::Instance().SaveArrayToJson(TypeName<SceneProperties>::value,   "Assets/JSON/SceneAsset.json", "scenes");
         AssetManager::Instance().SaveArrayToJson(TypeName<MaterialMetadata>::value,  "Assets/JSON/MaterialAsset.json", "materials");
+        AssetManager::Instance().SaveArrayToJson(TypeName<AnimationProperties>::value, "Assets/JSON/AnimationAsset.json", "animation");
+
         std::cout << "Files are being saved" << std::endl;
     }
 
@@ -37,6 +39,7 @@ namespace Framework
         CompileArray<PrefabProperties>("Assets/JSON/PrefabAsset.json",   "Resource/PrefabAsset.bin",    "Descriptor/PrefabAsset.desc",   g_PrefabProps, "prefabs");
         CompileArray<SceneProperties>("Assets/JSON/SceneAsset.json",     "Resource/SceneAsset.bin",     "Descriptor/SceneAsset.desc",    g_SceneProps, "scenes");
         CompileArray<MaterialMetadata>("Assets/JSON/MaterialAsset.json", "Resource/MaterialAsset.bin",  "Descriptor/MaterialAsset.desc", g_MaterialMetaProps, "materials");
+        CompileArray<AnimationProperties>("Assets/JSON/AnimationAsset.json", "Resource/AnimationAsset.bin", "Descriptor/AnimationAsset.desc", g_AnimationPropertiesProps, "animation");
         std::cout << "Files are being compiled to .binary" << std::endl;
     }
 

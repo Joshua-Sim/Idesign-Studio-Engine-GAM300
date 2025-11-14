@@ -10,6 +10,7 @@
 #include <glm.hpp>
 #include <assimp/matrix4x4.h>
 #include "AnimationProperties.h" // Includes Skeleton.h
+#include "AnimationLoader.h"
 
 #define MAX_BONES_PER_VERTEX 4
 
@@ -94,7 +95,7 @@ void MeshLoader::loadMesh(const std::string& path, Framework::MeshProperties& me
         }
     }
 
-    // OpenGL Buffers added for static mesh (prevents crash) ---
+    // OpenGL Buffers added for static mesh
     glGenVertexArrays(1, &mesh.vao);
     glGenBuffers(1, &mesh.vbo);
     glGenBuffers(1, &mesh.ebo);
@@ -129,89 +130,45 @@ void MeshLoader::loadMesh(const std::string& path, Framework::MeshProperties& me
 }
 
 
-// --- HIERARCHY LOADER --
-void MeshLoader::ProcessNode(aiNode* node, const aiScene* scene,
-    Framework::Skeleton& skeleton, int parentBoneIndex)
-{
-    std::string nodeName = node->mName.C_Str();
-    int currentBoneIndex = -1; // Default to "not a bone"
-
-    // Check if this node is a bone we have already registered
-    if (skeleton.boneNameMap.find(nodeName) != skeleton.boneNameMap.end())
-    {
-        // This node IS a bone
-        currentBoneIndex = skeleton.boneNameMap[nodeName];
-        Framework::Bone& bone = skeleton.bones[currentBoneIndex];
-
-        // Set its parent and local transform
-        bone.parentIndex = parentBoneIndex;
-        bone.defaultLocalTransform = ConvertAssimpMatrix(node->mTransformation);
-
-        if (parentBoneIndex == -1)
-        {
-            skeleton.rootBoneIndex = currentBoneIndex;
-        }
-
-        // Add this bone as a child of its parent (for the animation system)
-        if (parentBoneIndex != -1)
-        {
-            skeleton.bones[parentBoneIndex].childrenIndices.push_back(currentBoneIndex);
-        }
-    }
-    else
-    {
-        // This node is not a bone (e.g., "Armature" or a transform group)
-        // Pass the parent's index down to children
-        currentBoneIndex = parentBoneIndex;
-    }
-
-    // Recurse for all children
-    for (unsigned int i = 0; i < node->mNumChildren; i++)
-    {
-        ProcessNode(node->mChildren[i], scene, skeleton, currentBoneIndex);
-    }
-}
-
-
 // --- ANIMATED MESH LOADER---
-void MeshLoader::loadMesh(const std::string& path,
-    Framework::MeshProperties& mesh,
-    Framework::AnimationProperties& animProps) {
+void MeshLoader::loadAnimatedMesh(const std::string& path,
+    Framework::AnimationProperties& animProps,
+    Framework::MeshProperties& mesh)
+{
+    // Check if skeleton is ready. If not, this whole process will fail.
+    if (animProps.skeleton.bones.empty()) {
+        // Fallback to static loader to prevent crash
+        loadMesh(path, mesh);
+        return;
+    }
+
     Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(
-        path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals
+    const aiScene* scene = importer.ReadFile(path,
+        aiProcess_Triangulate |
+        aiProcess_FlipUVs |
+        aiProcess_GenNormals |
+        aiProcess_PopulateArmatureData 
     );
 
-
-
-    if (scene->mNumMeshes == 0) {
-        std::cerr << "No meshes found in file: " << path << std::endl;
+    if (!scene || !scene->mRootNode || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) {
+        std::cerr << "ASSIMP error: " << importer.GetErrorString() << std::endl;
         return;
     }
 
     aiMesh* aimesh = nullptr;
-    std::cout << "Searching " << scene->mNumMeshes << " meshes for a renderable mesh..." << std::endl;
     for (unsigned int i = 0; i < scene->mNumMeshes; i++)
     {
-        aiMesh* tempMesh = scene->mMeshes[i];
-        std::cout << "  - Checking mesh " << i << ": "
-            << tempMesh->mName.C_Str()
-            << " (Vertices: " << tempMesh->mNumVertices
-            << ", Bones: " << tempMesh->mNumBones << ")" << std::endl;
-
-        // We need the mesh that has both vertices AND bones
-        if (tempMesh->mNumVertices > 0 && tempMesh->HasBones())
-        {
-            aimesh = tempMesh;
-            std::cout << "  >> Found renderable mesh at index: " << i << std::endl;
-            break; // Stop searching
+        if (scene->mMeshes[i]->HasBones()) {
+            aimesh = scene->mMeshes[i];
+        /*    std::cout << "[MeshLoader] Found skinned mesh '"
+                << aimesh->mName.C_Str() << "' at index " << i << std::endl;*/
+            break;
         }
     }
 
-    // If no suitable mesh was found, error out
-    if (aimesh == nullptr)
-    {
-        std::cerr << "ASSIMP error: No mesh with both vertices and bones found in file: " << path << std::endl;
+    if (aimesh == nullptr) {
+        std::cerr << "ASSIMP error: No mesh with bones found in file: " << path << std::endl;
+        loadMesh(path, mesh); // Fallback to static
         return;
     }
 
@@ -219,26 +176,23 @@ void MeshLoader::loadMesh(const std::string& path,
     std::vector<unsigned int> indices;
     std::vector<VertexSkinning> skinning_data(aimesh->mNumVertices);
 
+    // --- Load Vertices (Pos, Normal, UV) ---
     for (unsigned int i = 0; i < aimesh->mNumVertices; i++) {
         vertices[i].pos[0] = aimesh->mVertices[i].x;
         vertices[i].pos[1] = aimesh->mVertices[i].y;
         vertices[i].pos[2] = aimesh->mVertices[i].z;
-
         if (aimesh->HasNormals()) {
             vertices[i].normal[0] = aimesh->mNormals[i].x;
             vertices[i].normal[1] = aimesh->mNormals[i].y;
             vertices[i].normal[2] = aimesh->mNormals[i].z;
         }
-
         if (aimesh->HasTextureCoords(0)) {
             vertices[i].tex[0] = aimesh->mTextureCoords[0][i].x;
             vertices[i].tex[1] = aimesh->mTextureCoords[0][i].y;
         }
-        else {
-            vertices[i].tex[0] = vertices[i].tex[1] = 0.0f;
-        }
     }
-    // Load Indices
+
+    // --- Load Indices ---
     for (unsigned int i = 0; i < aimesh->mNumFaces; i++) {
         aiFace face = aimesh->mFaces[i];
         for (unsigned int j = 0; j < face.mNumIndices; j++) {
@@ -246,91 +200,60 @@ void MeshLoader::loadMesh(const std::string& path,
         }
     }
 
-    // --- Load Skinning Data ---
-    if (aimesh->HasBones())
+
+    for (unsigned int i = 0; i < aimesh->mNumBones; ++i)
     {
-        // PASS 1: Read aiBone data (Name, ID, Inverse Bind Matrix)
-        for (unsigned int i = 0; i < aimesh->mNumBones; ++i)
-        {
-            aiBone* bone = aimesh->mBones[i];
-            std::string boneName = bone->mName.C_Str();
+        aiBone* bone = aimesh->mBones[i];
+        std::string boneName = bone->mName.C_Str();
 
-            if (animProps.skeleton.boneNameMap.find(boneName) == animProps.skeleton.boneNameMap.end())
-            {
-                Framework::Bone newBone;
-                newBone.name = boneName;
-                newBone.inverseBindPoseMatrix = ConvertAssimpMatrix(bone->mOffsetMatrix);
-                newBone.boneID = static_cast<int>(animProps.skeleton.bones.size());
+        // Get the boneID from the skeleton 
+        int boneID = animProps.skeleton.GetBoneIndex(boneName);
 
-                animProps.skeleton.bones.push_back(newBone);
-                animProps.skeleton.boneNameMap[boneName] = newBone.boneID;
-            }
+        if (boneID == -1) {
+            std::cout << "Warning [MeshLoader]: Bone '" << boneName << "' (from mesh) not found in final skeleton. Skipping." << std::endl;
+            continue; // Skip this bone; its weights will be 0
         }
 
-        // Resize final matrices vector to match the *exact* bone count
-        animProps.finalBoneMatrices.resize(animProps.skeleton.bones.size(), glm::mat4(1.0f));
-
-
-        animProps.skeleton.rootNodeTransform = ConvertAssimpMatrix(scene->mRootNode->mTransformation);
-        // PASS 2: Read aiNode hierarchy (Parenting, Local Transforms)
-        // We start from the root node, passing -1 as the parent index
-        ProcessNode(scene->mRootNode, scene, animProps.skeleton, -1);
-
-        // PASS 3: Assign vertex weights
-        for (unsigned int i = 0; i < aimesh->mNumBones; ++i)
+        // Assign weights to vertices 
+        for (unsigned int j = 0; j < bone->mNumWeights; ++j)
         {
-            aiBone* bone = aimesh->mBones[i];
-            int boneID = animProps.skeleton.GetBoneIndex(bone->mName.C_Str());
-            if (boneID == -1) continue;
-
-            for (unsigned int j = 0; j < bone->mNumWeights; ++j)
-            {
-                const aiVertexWeight& weight = bone->mWeights[j];
-                skinning_data[weight.mVertexId].AddBoneData(boneID, weight.mWeight);
-            }
+            const aiVertexWeight& weight = bone->mWeights[j];
+            skinning_data[weight.mVertexId].AddBoneData(boneID, weight.mWeight);
         }
     }
+    std::cout << "[MeshLoader] Bone mapping complete." << std::endl;
 
+
+    // Copy skinning data into the main vertex buffer
     for (unsigned int i = 0; i < aimesh->mNumVertices; i++) {
         vertices[i].boneIDs = skinning_data[i].boneIDs;
         vertices[i].weights = skinning_data[i].weights;
     }
 
-    if (scene->HasAnimations())
-    {
-        LoadAnimations(scene, animProps);
-    }
-    mesh.path = path;
-
-
-    // --- OpenGL buffers ---
+    // --- Create OpenGL Buffers ---
     glGenVertexArrays(1, &mesh.vao);
     glGenBuffers(1, &mesh.vbo);
     glGenBuffers(1, &mesh.ebo);
     glBindVertexArray(mesh.vao);
 
-    // VBO 1 (Vertices: Pos, Normal, UV, Bones, Weights)
+    // VBO (AnimatedVertex)
     glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-    // --- CHANGE THIS LINE ---
-    // glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW); // <-- DELETE THIS
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(AnimatedVertex), vertices.data(), GL_STATIC_DRAW); // <-- REPLACE WITH THIS
-    // ----------------------
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(AnimatedVertex), vertices.data(), GL_STATIC_DRAW);
 
     // EBO
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
 
-    // --- VBO 1 Attrib Pointers (ALL FROM ONE VBO) ---
+    // --- VBO Attrib Pointers ---
+    // (Pos, Normal, UV)
     glEnableVertexAttribArray(0); // pos
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(AnimatedVertex), (void*)offsetof(AnimatedVertex, pos));
-
     glEnableVertexAttribArray(1); // normal
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(AnimatedVertex), (void*)offsetof(AnimatedVertex, normal));
-
     glEnableVertexAttribArray(2); // tex
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(AnimatedVertex), (void*)offsetof(AnimatedVertex, tex));
 
-
+    // --- Attrib Pointers for Skinning ---
     glEnableVertexAttribArray(3); // boneIDs
     glVertexAttribIPointer( // Use 'I' for integers
         3, 4, GL_INT, sizeof(AnimatedVertex), (void*)offsetof(AnimatedVertex, boneIDs)
@@ -344,106 +267,5 @@ void MeshLoader::loadMesh(const std::string& path,
     glBindVertexArray(0);
     mesh.indexCount = static_cast<unsigned int>(indices.size());
 
-    // --- ADD THIS DEBUG BLOCK ---
-    std::cout << "--- MESH LOADER STATS (FINAL) ---" << std::endl;
-    std::cout << "  Vertices loaded: " << vertices.size() << std::endl;
-    std::cout << "  Indices loaded: " << mesh.indexCount << std::endl;
-    std::cout << "  Total meshes in file: " << scene->mNumMeshes << std::endl;
-    std::cout << "  Root bone index: " << animProps.skeleton.rootBoneIndex << std::endl; // <-- THIS IS VITAL
-    std::cout << "---------------------------------" << std::endl;
-    std::cout << mesh.guid << " " << mesh.path << " was loaded into system" << std::endl;
-}
-
-
-/**
- * @brief Loads all animation clips from the Assimp scene
- * and stores them in the AnimationProperties component.
- */
- /**
-  * @brief Loads all animation clips from the Assimp scene
-  * and stores them in the AnimationProperties component.
-  */
-void MeshLoader::LoadAnimations(const aiScene* scene, Framework::AnimationProperties& animProps)
-{
-    std::cout << "Loading " << scene->mNumAnimations << " animation(s)..." << std::endl;
-
-    for (unsigned int i = 0; i < scene->mNumAnimations; i++)
-    {
-        aiAnimation* assimpAnim = scene->mAnimations[i];
-
-        // We must heap-allocate the new animation,
-        // as AnimationProperties stores it as a pointer
-        auto newAnim = std::make_shared<Framework::Animation>();
-
-        newAnim->name = assimpAnim->mName.C_Str();
-        if (newAnim->name.empty()) {
-            newAnim->name = "Animation_" + std::to_string(i);
-        }
-
-        newAnim->ticksPerSecond = assimpAnim->mTicksPerSecond > 0 ?
-            assimpAnim->mTicksPerSecond : 24.0f;
-        newAnim->duration = assimpAnim->mDuration;
-
-
-        // Loop through all bone channels in this animation
-        for (unsigned int j = 0; j < assimpAnim->mNumChannels; j++)
-        {
-            aiNodeAnim* channel = assimpAnim->mChannels[j];
-            std::string boneName = channel->mNodeName.C_Str();
-
-            // Only load data for bones that are actually in our skeleton
-            if (animProps.skeleton.boneNameMap.find(boneName) == animProps.skeleton.boneNameMap.end())
-            {
-                continue;
-            }
-
-            // ---!!!--- NEW DEBUG LINE ---!!!---
-           /* std::cout << "  - Found Channel: [" << boneName << "]"
-                << " (P: " << channel->mNumPositionKeys
-                << ", R: " << channel->mNumRotationKeys
-                << ", S: " << channel->mNumScalingKeys << ")" << std::endl;*/
-            // ---!!!--- END OF NEW DEBUG LINE ---!!!---
-
-
-            Framework::BoneAnimation boneAnim;
-            boneAnim.boneName = boneName;
-
-            // Load Position Keyframes
-            for (unsigned int k = 0; k < channel->mNumPositionKeys; k++)
-            {
-                aiVector3D pos = channel->mPositionKeys[k].mValue;
-                float time = channel->mPositionKeys[k].mTime;
-                boneAnim.positions.push_back({ time, {pos.x, pos.y, pos.z} });
-            }
-
-            // Load Rotation Keyframes
-            for (unsigned int k = 0; k < channel->mNumRotationKeys; k++)
-            {
-                aiQuaternion rot = channel->mRotationKeys[k].mValue;
-                float time = channel->mRotationKeys[k].mTime;
-                boneAnim.rotations.push_back({ time, {rot.w, rot.x, rot.y, rot.z} });
-            }
-
-            // Load Scale Keyframes
-            for (unsigned int k = 0; k < channel->mNumScalingKeys; k++)
-            {
-                aiVector3D scale = channel->mScalingKeys[k].mValue;
-                float time = channel->mScalingKeys[k].mTime;
-                boneAnim.scales.push_back({ time, {scale.x, scale.y, scale.z} });
-            }
-
-            newAnim->boneChannels[boneName] = boneAnim;
-        }
-
-        // Store the new animation in the component's map
-        animProps.availableAnimations[newAnim->name] = newAnim;
-        std::cout << "  Loaded clip: " << newAnim->name << std::endl;
-    }
-
-    // Set the first animation as the default
-    if (!animProps.availableAnimations.empty())
-    {
-        animProps.currentAnimation = animProps.availableAnimations.begin()->second;
-        std::cout << "Set default animation to: " << animProps.currentAnimation->name << std::endl;
-    }
+    std::cout << "[MeshLoader] Loaded ANIMATED mesh: " << path << std::endl;
 }

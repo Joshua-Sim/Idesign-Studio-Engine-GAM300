@@ -4,19 +4,46 @@
             "guid": "9e1fcb62-0699-4a0b-ae75-d0670af44b1b",
             "name": "plane2",
             "path": "Assets/Objects/plane2.obj",
-            "vao": 4,
-            "vbo": 7,
-            "ebo": 8,
+            "vao": 1,
+            "vbo": 1,
+            "ebo": 2,
             "indexCount": 231840
         },
         {
             "guid": "3a68b780-632d-49d8-b45d-33b1ac035172",
             "name": "plane",
             "path": "Assets/Objects/plane.obj",
+            "vao": 2,
+            "vbo": 3,
+            "ebo": 4,
+            "indexCount": 76662
+        },
+        {
+            "guid": "239cddd5-6733-44a1-927a-e3b13152a09a",
+            "name": "Frog",
+            "path": "Assets/Objects/Frog.obj",
+            "vao": 3,
+            "vbo": 5,
+            "ebo": 6,
+            "indexCount": 780
+        },
+        {
+            "guid": "52f9947c-0b27-4f5a-9a18-cfef71bcfac3",
+            "name": "layout2-0",
+            "path": "Assets/Objects/layout2-0.obj",
+            "vao": 4,
+            "vbo": 7,
+            "ebo": 8,
+            "indexCount": 40356
+        },
+        {
+            "guid": "6cbaa85b-562d-4b23-9f64-8639947659cc",
+            "name": "knifechoppingwithBONEFIXED4",
+            "path": "Assets/Objects/knifechoppingwithBONEFIXED4.fbx",
             "vao": 5,
             "vbo": 9,
             "ebo": 10,
-            "indexCount": 76662
+            "indexCount": 312
         }
     ]
 }

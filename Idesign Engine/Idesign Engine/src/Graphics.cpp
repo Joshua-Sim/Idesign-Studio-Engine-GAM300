@@ -60,6 +60,7 @@
 #include "PrefabComponent.h"
 #include "TextureLoaderDDS.h"
 #include "PhysicsSystem.h"
+#include "AnimationLoader.h"
 
 
 extern Framework::FontSystem fontSystem;
@@ -136,6 +137,46 @@ namespace Framework {
     // Initialize the system
     void Graphics::Initialize()
     {
+
+        // asset load / loading shape units
+       // Testing (Edwin)
+        AssetManager::Instance().LoadBinaryArray<AnimationProperties>("Resource/AnimationAsset.bin", g_AnimationPropertiesProps, [](AnimationProperties& props)
+            {
+                AnimationLoader::loadAnimation(props.path, props);
+            });
+        AssetManager::Instance().LoadBinaryArray<TextureProperties>("Resource/TextureAsset.bin", g_TexturePropertiesProps, [](TextureProperties& props)
+            {
+                TextureLoader::loadTexture(props, true);
+            });
+
+        AssetManager::Instance().LoadBinaryArray<MeshProperties>("Resource/MeshAsset.bin", g_MeshProps, [](MeshProperties& props)
+            {
+                auto animGUID = AssetManager::Instance().FindGuid<AnimationProperties>(props.name);
+                Framework::AnimationProperties* animProps = nullptr;
+
+                if (!animGUID.empty()) {
+                    animProps = AssetManager::Instance().Get<AnimationProperties>(animGUID);
+                }
+
+                // If we found a corresponding animation asset, use the animated loader
+                if (animProps)
+                {
+                    std::cout << "[Graphics Init] Found anim data for mesh '" << props.name << "'. Loading as animated." << std::endl;
+
+                    // *** Pass the animProps (with skeleton) to the animated mesh loader ***
+                    MeshLoader::loadAnimatedMesh(props.path, *animProps, props);
+                }
+                else
+                {
+                    // No anim data found, load as a static mesh
+                    std::cout << "[Graphics Init] No anim data for mesh '" << props.name << "'. Loading as static." << std::endl;
+                    MeshLoader::loadMesh(props.path, props);
+                }
+            });
+
+     
+
+
         ImguiManager::Log("Initializing Graphics System...", "Graphics");
 
         WindowConfig* config = AssetManager::Instance().Get<WindowConfig>(AssetManager::Instance().FindGuid<WindowConfig>());
@@ -282,19 +323,26 @@ namespace Framework {
         // 3. Define the components we need to load into
         MeshProperties animMesh;
         Framework::AnimationProperties animProps;
+        auto meshGUID = AssetManager::Instance().FindGuid<MeshProperties>("knifechoppingwithBONEFIXED4");
+        auto animGUID = AssetManager::Instance().FindGuid<AnimationProperties>("knifechoppingwithBONEFIXED4");
+      
+        
+        if (!meshGUID.empty() && !animGUID.empty())
+        {
+            // 3. Get the actual asset data
+            auto* meshAsset = AssetManager::Instance().Get<MeshProperties>(meshGUID);
+            auto* animAsset = AssetManager::Instance().Get<AnimationProperties>(animGUID);
 
-        // --- !! IMPORTANT: Change this path to your animated model file !! ---
-        animMesh.path = "Assets/Objects/knifechoppingwithBONEFIXED4.fbx";
+            // 4. Add components by COPYING the asset data
+            // This is instant - no file loading!
+            ecsInterface.AddComponent<MeshProperties>(animatedEntity, *meshAsset);
+            ecsInterface.AddComponent<AnimationProperties>(animatedEntity, *animAsset);
 
-        // 4. Use the new loader that loads mesh, skeleton, and animation data
-        MeshLoader::loadMesh(animMesh.path, animMesh, animProps);
-        // 5. Add all the new components to the entity
+            // (You would also add a MaterialProperties component here)
+        }
+
         ecsInterface.AddComponent<MaterialProperties>(animatedEntity, materialComponent);
 
-        ecsInterface.AddComponent<MeshProperties>(animatedEntity, animMesh);
-        ecsInterface.AddComponent<AnimationProperties>(animatedEntity, animProps);
-
-        // 6. (Optional) Add a texture if your model uses one
         Framework::TextureProperties animTexture;
         // --- !! IMPORTANT: Change this path to your model's texture !! ---
         animTexture.path = "Assets/Textures/music.png";
@@ -303,18 +351,7 @@ namespace Framework {
         // ----------------- End animated object creation ---------------------
 
 
-        // asset load / loading shape units
-        // Testing (Edwin)
-        AssetManager::Instance().LoadBinaryArray<TextureProperties>("Resource/TextureAsset.bin", g_TexturePropertiesProps, [](TextureProperties& props)
-            {
-                TextureLoader::loadTexture(props, true);
-            });
-
-        AssetManager::Instance().LoadBinaryArray<MeshProperties>("Resource/MeshAsset.bin", g_MeshProps, [](MeshProperties& props)
-            {
-                MeshLoader::loadMesh(props.path, props);
-            });
-
+       
         cube = Mesh::CreateUnitCubeData();
         plane = Mesh::CreateUnitSphereData();
         cone = Mesh::CreateUnitConeData();
@@ -340,9 +377,7 @@ namespace Framework {
         triangle.initGL();
         //FONT SYSTEM
 
-        /*fontSystem.Initialize();
-        fontSystem.LoadFont("Assets/Font/arial.ttf", 40, "Arial");
-        fontSystem.SetActiveFont("Arial");*/
+
 
         m_debugMeshes[DebugShapeType::Box] = &cube;
         m_debugMeshes[DebugShapeType::Sphere] = &plane; // Remember 'plane' is your sphere mesh
