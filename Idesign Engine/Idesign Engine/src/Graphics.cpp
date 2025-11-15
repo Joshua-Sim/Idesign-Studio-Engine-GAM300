@@ -47,7 +47,6 @@
 #include "Camera.h"
 #include "Mesh.h"
 #include "Terrain.h"
-#include "Lighting.h"
 #include "MeshLoader.h"
 #include "TextureLoader.h"
 #include "NavMeshAgentProperties.h"
@@ -200,6 +199,8 @@ namespace Framework {
         ecsInterface.RegisterComponent<PhysicsBodyComponent>();
         ecsInterface.RegisterComponent<MaterialProperties>();
         ecsInterface.RegisterComponent<MaterialMetadata>();
+        ecsInterface.RegisterComponent<LightProperties>();
+
         //test
 
         ImguiManager::LogSuccess("Graphics components registered", "Graphics");
@@ -346,7 +347,29 @@ namespace Framework {
         ecsInterface.AddComponent<Framework::TextureProperties>(animatedEntity, animTexture);
         // ----------------- End animated object creation ---------------------
 
+        // ====================================================================
+        // --- CREATE A TEST LIGHT ENTITY ---
+        // ====================================================================
+        Entity lightEntity = ecsInterface.CreateEntity();
 
+        // 1. Add a Transform for the light's position
+        TransformComponent lightTransform;
+        lightTransform.position = glm::vec3(0.0f, 5.0f, 2.0f); // Position it above the scene
+        ecsInterface.AddComponent<TransformComponent>(lightEntity, lightTransform);
+
+        // 2. Add the LightProperties component
+        LightProperties pointLight;
+        pointLight.type = LightType::Point;
+        pointLight.color = glm::vec3(1.0f, 1.0f, 1.0f); // White light
+        pointLight.intensity = 10.0f; // Make it nice and bright
+        pointLight.radius = 20.0f;    // Give it a large radius
+        pointLight.enabled = true;
+        ecsInterface.AddComponent<LightProperties>(lightEntity, pointLight);
+
+        // 3. Add a Hierarchy component (since your other entities have it)
+        ecsInterface.AddComponent<HierarchyComponent>(lightEntity, HierarchyComponent{});
+
+        // ====================================================================
        
         cube = Mesh::CreateUnitCubeData();
         plane = Mesh::CreateUnitSphereData();
@@ -373,18 +396,10 @@ namespace Framework {
         triangle.initGL();
         //FONT SYSTEM
 
-
-
         m_debugMeshes[DebugShapeType::Box] = &cube;
         m_debugMeshes[DebugShapeType::Sphere] = &plane; // Remember 'plane' is your sphere mesh
         m_debugMeshes[DebugShapeType::Triangle] = &triangle;
 
-        // lights (use member containers)
-        sun = DirectionalLightCPU{};
-        pointLights.push_back({ {5,3,0},  {1,0.2f,0.2f}, 1.5f, 12.0f, true });
-        pointLights.push_back({ {-3,2,-5},{0.2f,0.2f,1}, 1.2f, 14.0f, true });
-        spotLights.push_back({ {0,3,0}, {0,-1,0}, {1,1,1}, 2.0f, 18.0f,
-                               glm::radians(10.f), glm::radians(15.f), true });
 
         //jay double buffer pick fbo
         auto makePickFBO = [&](int w, int h, int idx) {
@@ -484,6 +499,14 @@ namespace Framework {
         float dt = now - lastTime; lastTime = now;
         process_input(dt);
 
+        DirectionalLightCPU frameSun;
+        bool frameHasSun = false;
+        std::vector<PointLightCPU> framePointLights;
+        std::vector<SpotLightCPU>  frameSpotLights;
+
+        // Call the helper to fill the light lists
+        GatherLights(frameSun, frameHasSun, framePointLights, frameSpotLights);
+
         int w, h;
         glfwGetFramebufferSize(window, &w, &h);
         if (w == 0 || h == 0) return;
@@ -524,7 +547,7 @@ namespace Framework {
             terrainShader.setMat4("uView", view);
             terrainShader.setMat4("uModel", glm::mat4(1.f));
             terrainShader.setVec3("uAlbedo", { 0.6f,0.4f,0.2f }); //terrain color
-            LightComponent::upload(terrainShader, sun, hasSun, pointLights, spotLights);
+            LightProperties::upload(terrainShader, frameSun, frameHasSun, framePointLights, frameSpotLights);
             terrain.draw();
 
 
@@ -637,7 +660,7 @@ namespace Framework {
                             glBindTexture(GL_TEXTURE_2D, 0);
                         }
 
-                        LightComponent::upload(currentshader, sun, hasSun, pointLights, spotLights);
+                        LightProperties::upload(currentshader, frameSun, frameHasSun, framePointLights, frameSpotLights);
                         glBindVertexArray(mesh.vao);
                         glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
                     }
@@ -712,7 +735,7 @@ namespace Framework {
                         glBindTexture(GL_TEXTURE_2D, 0);
                     }
 
-                    LightComponent::upload(currentShader, sun, hasSun, pointLights, spotLights);
+                    LightProperties::upload(currentShader, frameSun, frameHasSun, framePointLights, frameSpotLights);
                     glBindVertexArray(mesh.vao);
                     glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
                 }
@@ -853,7 +876,7 @@ namespace Framework {
             terrainShader.setMat4("uView", view1);
             terrainShader.setMat4("uModel", glm::mat4(1.f));
             terrainShader.setVec3("uAlbedo", { 0.6f,0.4f,0.2f });
-            LightComponent::upload(terrainShader, sun, hasSun, pointLights, spotLights);
+            LightProperties::upload(terrainShader, frameSun, frameHasSun, framePointLights, frameSpotLights);
             terrain.draw();
 
             // ---- START ANIMATION/TRANSPARENCY RENDER LOGIC (VIEW 1) ----
@@ -965,7 +988,7 @@ namespace Framework {
                             glBindTexture(GL_TEXTURE_2D, 0);
                         }
 
-                        LightComponent::upload(currentshader, sun, hasSun, pointLights, spotLights);
+                        LightProperties::upload(currentshader, frameSun, frameHasSun, framePointLights, frameSpotLights);
                         glBindVertexArray(mesh.vao);
                         glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
                     }
@@ -1040,7 +1063,7 @@ namespace Framework {
                         glBindTexture(GL_TEXTURE_2D, 0);
                     }
 
-                    LightComponent::upload(currentShader, sun, hasSun, pointLights, spotLights);
+                    LightProperties::upload(currentShader, frameSun, frameHasSun, framePointLights, frameSpotLights);
                     glBindVertexArray(mesh.vao);
                     glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
                 }
@@ -1325,22 +1348,6 @@ namespace Framework {
                 cam.processKeyboard(Camera::Movement::Down, dt * baseSpeed, false, terrain);
         }
 
-        //lighting
-        if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-            pointLights[0].position.z -= 5.0f * dt;
-        if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-            pointLights[0].position.z += 5.0f * dt;
-        if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-            pointLights[0].position.x -= 5.0f * dt;
-        if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-            pointLights[0].position.x += 5.0f * dt;
-
-        // Toggle light on/off
-        if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
-        {
-            pointLights[0].enabled = !pointLights[0].enabled;
-        }
-
         // HDR and Bloom control
         if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS) hdrExposure += 1.0f * dt;
         if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) if (hdrExposure > 0.0f) hdrExposure -= 1.0f * dt;
@@ -1355,17 +1362,17 @@ namespace Framework {
         else if (dir == "D") camera.processKeyboard(Camera::Movement::Right, dt, gm, terrain);
     }
 
-    void Graphics::NudgeLightFromLua(const std::string& axis, float amount) {
-        if (pointLights.empty()) return;
-        if (axis == "up")    pointLights[0].position.z -= amount;
-        else if (axis == "down")  pointLights[0].position.z += amount;
-        else if (axis == "left")  pointLights[0].position.x -= amount;
-        else if (axis == "right") pointLights[0].position.x += amount;
+   void Graphics::NudgeLightFromLua(const std::string& axis, float amount) {
+        //if (pointLights.empty()) return;
+        //if (axis == "up")    pointLights[0].position.z -= amount;
+        //else if (axis == "down")  pointLights[0].position.z += amount;
+        //else if (axis == "left")  pointLights[0].position.x -= amount;
+        //else if (axis == "right") pointLights[0].position.x += amount;
     }
 
     void Graphics::ToggleMainLightFromLua() {
-        if (pointLights.empty()) return;
-        pointLights[0].enabled = !pointLights[0].enabled;
+      /*  if (pointLights.empty()) return;
+        pointLights[0].enabled = !pointLights[0].enabled;*/
     }
 
     void Graphics::SetHDRFromLua(float delta) { hdrExposure = std::max(0.0f, hdrExposure + delta); }
@@ -1479,17 +1486,22 @@ namespace Framework {
         glm::mat4 proj = viewCam.getProjectionMatrix((float)screenW, (float)screenH);
         glm::mat4 view = viewCam.getViewMatrix();
 
+        DirectionalLightCPU frameSun;
+        bool frameHasSun = false;
+        std::vector<PointLightCPU> framePointLights;
+        std::vector<SpotLightCPU>  frameSpotLights;
+
+        // Call the helper to fill the light lists
+        GatherLights(frameSun, frameHasSun, framePointLights, frameSpotLights);
+
         // --- Terrain ---
         terrainShader.use();
         terrainShader.setMat4("uProj", proj);
         terrainShader.setMat4("uView", view);
         terrainShader.setMat4("uModel", glm::mat4(1.f));
         terrainShader.setVec3("uAlbedo", { 0.6f,0.4f,0.2f });
-        LightComponent::upload(terrainShader, sun, hasSun, pointLights, spotLights);
+        LightProperties::upload(terrainShader, frameSun, frameHasSun, framePointLights, frameSpotLights);
         terrain.draw();
-
-        // --- ECS meshes (copy your existing mesh draw loop here; use meshShader, etc.) ---
-        // ... (your ECS loop that sets uModel, uAlbedo, binds texture, glDrawElements)
 
         // === PICK PASS for this view (render IDs to the per-view pick FBO) ===
         glBindFramebuffer(GL_FRAMEBUFFER, pickFBO[pickWrite]);   // if you later split per-view, index by viewIndex
@@ -1613,5 +1625,81 @@ namespace Framework {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         mesh->draw();
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    }
+
+    // In Graphics.cpp
+
+    void Graphics::GatherLights(
+        DirectionalLightCPU& outSun,
+        bool& outHasSun,
+        std::vector<PointLightCPU>& outPointLights,
+        std::vector<SpotLightCPU>& outSpotLights)
+    {
+        // Clear the lists from the previous frame
+        outHasSun = false;
+        outPointLights.clear();
+        outSpotLights.clear();
+
+        // Iterate over all entities managed by the Graphics system
+        for (auto const& entity : mEntities)
+        {
+            // Check if this entity ALSO has a LightComponent
+            if (ecsInterface.HasComponent<LightProperties>(entity))
+            {
+                auto& light = ecsInterface.GetComponent<LightProperties>(entity);
+                auto& transform = ecsInterface.GetComponent<TransformComponent>(entity);
+
+                if (!light.enabled)
+                {
+                    continue;
+                }
+
+                // --- Inlined GetForwardVector() ---
+                glm::vec3 forward;
+                float yaw = glm::radians(transform.rotation.y);
+                float pitch = glm::radians(transform.rotation.x);
+                forward.x = cos(yaw) * cos(pitch);
+                forward.y = sin(pitch);
+                forward.z = sin(yaw) * cos(pitch);
+                forward = glm::normalize(forward);
+                // --- End ---
+
+                switch (light.type)
+                {
+                case LightType::Directional:
+                    if (!outHasSun) // Only one sun
+                    {
+                        outSun.direction = forward;
+                        outSun.color = light.color;
+                        outSun.intensity = light.intensity;
+                        outHasSun = true;
+                    }
+                    break;
+
+                case LightType::Point:
+                    outPointLights.push_back({
+                        transform.position,
+                        light.color,
+                        light.intensity,
+                        light.radius,
+                        true // enabled
+                        });
+                    break;
+
+                case LightType::Spot:
+                    outSpotLights.push_back({
+                        transform.position,
+                        forward, // direction
+                        light.color,
+                        light.intensity,
+                        light.radius,
+                        light.innerCutOffAngle,
+                        light.outerCutOffAngle,
+                        true // enabled
+                        });
+                    break;
+                }
+            }
+        }
     }
 }

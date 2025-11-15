@@ -321,6 +321,7 @@ namespace Framework
         TypeRegistry::Instance().Register<NavMeshComponent>("NavMeshComponent", &g_NavMeshProps);
         TypeRegistry::Instance().Register<NavMeshAgentComponent>("NavMeshAgentComponent", &g_NavMeshAgentProps);
         TypeRegistry::Instance().Register<AnimationProperties>("AnimationProperties", &g_AnimationPropertiesProps);
+        TypeRegistry::Instance().Register<LightProperties>("LightProperties", &g_LightProps);
     }
 
     void AutoRegisterAllReflectedComponents(Coordinator& ecs)

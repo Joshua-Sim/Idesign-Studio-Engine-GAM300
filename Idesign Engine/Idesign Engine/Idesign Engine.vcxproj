@@ -145,6 +145,7 @@
     <ClInclude Include="..\lib\imgui\imstb_textedit.h" />
     <ClInclude Include="..\lib\imgui\imstb_truetype.h" />
     <ClInclude Include="AnimationLoader.h" />
+    <ClInclude Include="LightProperties.h" />
     <ClInclude Include="src\Animation.h" />
     <ClInclude Include="src\AnimationProperties.h" />
     <ClInclude Include="src\AnimationSystem.h" />

@@ -29,6 +29,7 @@
 #include "NavMeshProperties.h"
 #include "NavMeshAgentProperties.h"
 #include "AnimationProperties.h"
+#include "LightProperties.h"
 
 extern Framework::Coordinator ecsInterface;
 namespace Framework
