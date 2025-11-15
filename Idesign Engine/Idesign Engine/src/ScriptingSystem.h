@@ -4,6 +4,7 @@
 
 struct lua_State;
 struct ScriptComponent;
+struct ScriptInstance;
 
 namespace Framework {
 
@@ -34,7 +35,7 @@ namespace Framework {
         lua_State* L = nullptr;
         Graphics* graphics_ = nullptr;
 
-        bool LoadScriptTable(ScriptComponent& sc);
+        bool LoadScriptTable(ScriptInstance& inst);
         bool CallHook(int tableRef, const char* fn, float arg = 0.0f);
     };
 

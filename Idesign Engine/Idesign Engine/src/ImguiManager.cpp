@@ -28,6 +28,7 @@
 #include "fmod.h"
 #include "fmod_studio.h"
 #include <random> 
+#include <filesystem>
 
 extern Framework::Coordinator ecsInterface;
 
@@ -41,6 +42,14 @@ static bool isPropertiesWindowOpen = false;                         // Allows op
 static int  g_MainViewIndex = 0;                                   // Main view index for framebuffers
 static bool g_prevF2 = false;                                     // Previous state of F2 key
 static bool g_prevF3 = false;                                     // Previous state of F3 key
+
+namespace fs = std::filesystem;
+
+// Converts "Assets/Scripts/hello.lua" → "hello.lua"
+static std::string GetFileNameOnly(const std::string& p)
+{
+    return fs::path(p).filename().string();
+}
 
 namespace Framework {
     float projWidth{};
@@ -62,6 +71,12 @@ namespace Framework {
 
     static TextureProperties g_ObjIcon;
     static bool g_ObjIconLoaded = false;
+
+    // --- Script file browser helpers ---
+    static std::vector<std::string> g_scriptFiles;
+    static std::vector<const char*> g_scriptFileItems;
+    static std::vector<std::string> g_scriptDisplayNames; // short names: "hello.lua"
+
 
 
     //Initialize static instance 
@@ -225,6 +240,52 @@ namespace Framework {
             }
             ImGui::EndPopup();
         }
+    }
+
+    // Scipt Folder Loader
+    static void RefreshScriptFileList()
+    {
+        g_scriptFiles.clear();
+        g_scriptDisplayNames.clear();
+        g_scriptFileItems.clear();
+
+        namespace fs = std::filesystem;
+        fs::path scriptsDir = "Assets/Scripts";
+
+        if (!fs::exists(scriptsDir))
+            return;
+
+        // 1) Collect full paths
+        for (auto& entry : fs::directory_iterator(scriptsDir))
+        {
+            if (!entry.is_regular_file()) continue;
+            if (entry.path().extension() != ".lua") continue;
+
+            std::string rel = entry.path().string();          // e.g. "Assets\\Scripts\\hello.lua"
+            std::replace(rel.begin(), rel.end(), '\\', '/');  // -> "Assets/Scripts/hello.lua"
+            g_scriptFiles.push_back(rel);
+        }
+
+        // 2) Build display names + ImGui labels (only "hello.lua")
+        for (auto& full : g_scriptFiles)
+        {
+            g_scriptDisplayNames.push_back(::GetFileNameOnly(full)); // "hello.lua"
+        }
+
+        for (auto& name : g_scriptDisplayNames)
+        {
+            g_scriptFileItems.push_back(name.c_str());
+        }
+    }
+
+    static int FindScriptIndex(const std::string& path)
+    {
+        for (int i = 0; i < (int)g_scriptFiles.size(); ++i)
+        {
+            if (g_scriptFiles[i] == path)
+                return i;
+        }
+        return -1;
     }
 
     // Error Detection for Audio
@@ -2354,6 +2415,83 @@ namespace Framework {
                     // Automate Generate Entity Inspector
                     DrawEntityInspector(selectedEntity, ecsInterface);
 
+                    // -------- Script Component UI --------
+                    if (ImGui::CollapsingHeader("Script Component", ImGuiTreeNodeFlags_DefaultOpen))
+                    {
+                        // Ensure the script list is populated
+                        static bool scriptsScanned = false;
+                        if (!scriptsScanned)
+                        {
+                            RefreshScriptFileList();
+                            scriptsScanned = true;
+                        }
+
+                        // Allow manual refresh (in case you add new .lua files while engine is running)
+                        if (ImGui::Button("Refresh Script List"))
+                        {
+                            RefreshScriptFileList();
+                        }
+
+                        // If entity has no ScriptComponent yet
+                        if (!ecsInterface.HasComponent<ScriptComponent>(selectedEntity))
+                        {
+                            if (ImGui::Button("Add Script Component"))
+                            {
+                                ecsInterface.AddComponent<ScriptComponent>(selectedEntity, ScriptComponent{});
+                            }
+                        }
+                        else
+                        {
+                            auto& sc = ecsInterface.GetComponent<ScriptComponent>(selectedEntity);
+
+                            // Show each script slot
+                            for (size_t i = 0; i < sc.scripts.size(); ++i)
+                            {
+                                auto& slot = sc.scripts[i];
+                                ImGui::PushID((int)i);
+
+                                int currentIndex = FindScriptIndex(slot.scriptPath);
+
+                                ImGui::Text("Script %d", (int)i);
+
+                                if (!g_scriptFileItems.empty())
+                                {
+                                    if (ImGui::Combo("##ScriptCombo", &currentIndex, g_scriptFileItems.data(), (int)g_scriptFileItems.size()))
+                                    {
+                                        if (currentIndex >= 0 && currentIndex < (int)g_scriptFiles.size())
+                                        {
+                                            slot.scriptPath = g_scriptFiles[currentIndex];
+                                            slot.initialized = false;
+                                            slot.lastWriteTicks = 0;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    ImGui::TextDisabled("No Lua scripts in Assets/Scripts");
+                                }
+
+                                if (ImGui::Button("Remove Script"))
+                                {
+                                    sc.scripts.erase(sc.scripts.begin() + i);
+                                    ImGui::PopID();
+                                    break;
+                                }
+
+                                ImGui::Separator();
+                                ImGui::PopID();
+                            }
+
+                            if (ImGui::Button("Add Script Slot"))
+                            {
+                                ScriptInstance newSlot;
+                                newSlot.scriptPath.clear(); // user will pick from combo
+                                sc.scripts.push_back(newSlot);
+                            }
+                        }
+                    }
+
+
                     // Reset selectedEntity if the properties window is closed
                     if (!isPropertiesWindowOpen)
                     {
@@ -2552,6 +2690,8 @@ namespace Framework {
                 RenderGizmoForSelected(view, proj, rectMin, vpSize);
             }
             ImGui::End();
+
+
         }
     }
 
