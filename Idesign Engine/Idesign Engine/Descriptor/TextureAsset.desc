@@ -1,5 +1,5 @@
 {
-    "count": 6,
+    "count": 7,
     "entries": [
         {
             "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606",
@@ -30,6 +30,11 @@
             "guid": "b57b4683-8581-4256-9cc5-60c900acec67",
             "name": "T_Brick_BaseColor",
             "path": "Assets\\Textures\\T_Brick_BaseColor.png"
+        },
+        {
+            "guid": "add88db8-22f2-4599-ad64-d9abc2f87fa9",
+            "name": "Chest",
+            "path": "Assets\\Textures\\Chest.png"
         }
     ]
 }
