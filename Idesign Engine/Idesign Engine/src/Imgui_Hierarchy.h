@@ -532,6 +532,13 @@ void DrawEntityHierarchy(const std::string& guid, Entity& selectedEntity, bool& 
             Framework::CreatePrefabFromEntity(entity, prefabName);
             ImGui::CloseCurrentPopup();
         }
+        // In your ImGui menu code where 'entity' is the selected entity
+        if (ImGui::MenuItem("Duplicate Entity"))
+        {
+            // 'ecsInterface' is your Coordinator, which you pass to DuplicateEntity
+            Framework::DuplicateEntity(ecsInterface, entity);
+            ImGui::CloseCurrentPopup();
+        }
 
         ImGui::EndPopup();
     }

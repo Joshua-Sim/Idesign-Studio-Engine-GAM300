@@ -33,6 +33,7 @@ namespace Framework
 
     void saveEntityToPrefab(Entity entity, const std::string& prefabPath);
     void CreatePrefabFromEntity(Entity entity, const std::string& prefabName);
+    void DuplicateEntity(Framework::Coordinator& ecs, Entity sourceEntity);
 
     //Prefab and overloads
     Entity InstantiatePrefab(const std::string& prefabGUID);

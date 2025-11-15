@@ -180,6 +180,33 @@ namespace Framework
                     }
                 }
 
+                if (components.HasMember("LightProperties"))
+                {
+                    LightProperties light;
+                    Deserialize(&light, g_LightProps, components["LightProperties"]);
+                    ecsInterface.AddComponent(entity, light);
+                }
+
+         
+
+                if (components.HasMember("AnimationProperties"))
+                {
+                    const auto& animRef = components["AnimationProperties"];
+                    if (animRef.HasMember("guid") && animRef["guid"].IsString())
+                    {
+                        std::string guid = animRef["guid"].GetString();
+                        AnimationProperties* anim = AssetManager::Instance().Get<AnimationProperties>(guid);
+                        if (anim)
+                        {
+                            ecsInterface.AddComponent(entity, *anim);
+                        }
+                        else
+                        {
+                            std::cerr << "Missing AnimationProperties for GUID: " << guid << "\n";
+                        }
+                    }
+                }
+
                 // Navmesh
                 if (components.HasMember("NavMeshComponent"))
                 {
@@ -292,6 +319,22 @@ namespace Framework
                     componentsObj.AddMember("MeshComponent", meshRef, allocator);
                 }
 
+                if (ecsInterface.HasComponent<LightProperties>(entity))
+                {
+                    const auto& light = ecsInterface.GetComponent<LightProperties>(entity);
+                    rapidjson::Value lightJson(rapidjson::kObjectType);
+                    Serialize((void*)&light, g_LightProps, lightJson, allocator);
+                    componentsObj.AddMember("LightProperties", lightJson, allocator);
+                }
+
+                if (ecsInterface.HasComponent<AnimationProperties>(entity))
+                {
+                    const auto& anim = ecsInterface.GetComponent<AnimationProperties>(entity);
+                    rapidjson::Value animRef(rapidjson::kObjectType);
+                    animRef.AddMember("guid", rapidjson::Value(anim.guid.id.c_str(), allocator), allocator);
+                    componentsObj.AddMember("AnimationProperties", animRef, allocator);
+                }
+
                 // TextureProperties � write only GUID
                 if (ecsInterface.HasComponent<TextureProperties>(entity))
                 {
@@ -339,6 +382,80 @@ namespace Framework
         doc.Accept(writer);
         fclose(fp);
         std::cout << "Scene saved to: " << outputPath << "\n";
+    }
+
+    void DuplicateEntity(Framework::Coordinator& ecs, Entity sourceEntity)
+    {
+        // 1. Create a new entity. This automatically gives it a new, unique GUID.
+        Entity newEntity = ecs.CreateEntity();
+
+        // 2. Get the source entity's name and set the new name
+        //    (I'm assuming your ecs interface has functions like this)
+        std::string sourceName = ecs.GetEntityName(sourceEntity);
+        ecs.SetEntityName(newEntity, sourceName + " (Copy)");
+
+        std::cout << "Duplicating entity " << sourceEntity << " (" << sourceName
+            << ") to new entity " << newEntity << "..." << std::endl;
+
+        // 3. Go through every component type, check if the source has it,
+        //    and add a copy of it to the new entity.
+
+        // --- (Copy logic for each component) ---
+
+        if (ecs.HasComponent<TransformComponent>(sourceEntity))
+        {
+            ecs.AddComponent(newEntity, ecs.GetComponent<TransformComponent>(sourceEntity));
+        }
+
+        if (ecs.HasComponent<HierarchyComponent>(sourceEntity))
+        {
+            auto hierarchy = ecs.GetComponent<HierarchyComponent>(sourceEntity);
+            // A duplicated entity should not have the original's children.
+            // It will share the same parent, becoming a new sibling.
+            hierarchy.childrenGUIDs.clear();
+            ecs.AddComponent(newEntity, hierarchy);
+        }
+
+        if (ecs.HasComponent<MeshProperties>(sourceEntity))
+        {
+            ecs.AddComponent(newEntity, ecs.GetComponent<MeshProperties>(sourceEntity));
+        }
+
+        if (ecs.HasComponent<MaterialProperties>(sourceEntity))
+        {
+            ecs.AddComponent(newEntity, ecs.GetComponent<MaterialProperties>(sourceEntity));
+        }
+
+        if (ecs.HasComponent<TextureProperties>(sourceEntity))
+        {
+            ecs.AddComponent(newEntity, ecs.GetComponent<TextureProperties>(sourceEntity));
+        }
+
+        if (ecs.HasComponent<NavMeshComponent>(sourceEntity))
+        {
+            ecs.AddComponent(newEntity, ecs.GetComponent<NavMeshComponent>(sourceEntity));
+        }
+
+        if (ecs.HasComponent<LightProperties>(sourceEntity))
+        {
+            ecs.AddComponent(newEntity, ecs.GetComponent<LightProperties>(sourceEntity));
+        }
+
+        if (ecs.HasComponent<AnimationProperties>(sourceEntity))
+        {
+            ecs.AddComponent(newEntity, ecs.GetComponent<AnimationProperties>(sourceEntity));
+        }
+
+        if (ecs.HasComponent<PrefabComponent>(sourceEntity))
+        {
+            ecs.AddComponent(newEntity, ecs.GetComponent<PrefabComponent>(sourceEntity));
+        }
+
+        // !! IMPORTANT !!
+        // Add any other components your engine uses here!
+        // (e.g., Rigidbody, Collider, ScriptComponent, etc.)
+
+        std::cout << "Successfully duplicated entity." << std::endl;
     }
 
     void saveEntityToPrefab(Entity entity, const std::string& prefabPath)
@@ -421,6 +538,22 @@ namespace Framework
             navObj.AddMember("maxSlope", nav.maxSlope, allocator);
 
             componentsObj.AddMember("NavMeshComponent", navObj, allocator);
+        }
+
+        if (ecsInterface.HasComponent<LightProperties>(entity))
+        {
+            const auto& light = ecsInterface.GetComponent<LightProperties>(entity);
+            rapidjson::Value lightJson(rapidjson::kObjectType);
+            Serialize((void*)&light, g_LightProps, lightJson, allocator);
+            componentsObj.AddMember("LightProperties", lightJson, allocator);
+        }
+
+        if (ecsInterface.HasComponent<AnimationProperties>(entity))
+        {
+            const auto& anim = ecsInterface.GetComponent<AnimationProperties>(entity);
+            rapidjson::Value animRef(rapidjson::kObjectType);
+            animRef.AddMember("guid", rapidjson::Value(anim.guid.id.c_str(), allocator), allocator);
+            componentsObj.AddMember("AnimationProperties", animRef, allocator);
         }
 
         entityObj.AddMember("components", componentsObj, allocator);
@@ -597,6 +730,25 @@ namespace Framework
             if (navObj.HasMember("cellHeight")) nav.cellHeight = navObj["cellHeight"].GetFloat();
             if (navObj.HasMember("maxSlope")) nav.maxSlope = navObj["maxSlope"].GetFloat();
             ecsInterface.AddComponent(newEntity, nav);
+        }
+
+
+        if (components.HasMember("LightProperties"))
+        {
+            LightProperties light;
+            Deserialize(&light, g_LightProps, components["LightProperties"]);
+            ecsInterface.AddComponent(newEntity, light);
+        }
+
+        if (components.HasMember("AnimationProperties"))
+        {
+            const auto& animRef = components["AnimationProperties"];
+            if (animRef.HasMember("guid") && animRef["guid"].IsString())
+            {
+                std::string guid = animRef["guid"].GetString();
+                AnimationProperties* anim = AssetManager::Instance().Get<AnimationProperties>(guid);
+                if (anim) ecsInterface.AddComponent(newEntity, *anim);
+            }
         }
 
         // === ADD THIS AT THE END ===

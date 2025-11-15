@@ -1,16 +1,7 @@
-﻿  TextureLoader.cpp
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\algorithm(3799,24): warning C4244: '=': conversion from 'int' to 'char', possible loss of data
-  (compiling source file '/src/TextureLoader.cpp')
-      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\algorithm(3799,24):
-      the template instantiation context (the oldest one first) is
-          C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\TextureLoader.cpp(25,14):
-          see reference to function template instantiation '_OutIt std::transform<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,int(__cdecl *)(int)>(const _InIt,const _InIt,_OutIt,_Fn)' being compiled
-          with
-          [
-              _OutIt=std::_String_iterator<std::_String_val<std::_Simple_types<char>>>,
-              _Elem=char,
-              _InIt=std::_String_iterator<std::_String_val<std::_Simple_types<char>>>,
-              _Fn=int (__cdecl *)(int)
-          ]
+﻿  MeshLoader.cpp
+C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
+  (compiling source file '/src/MeshLoader.cpp')
+      C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
+      see declaration of 'Framework::AnimationProperties::name'
   
   Idesign Engine.vcxproj -> C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe

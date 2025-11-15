@@ -34,6 +34,11 @@
             "guid": "add88db8-22f2-4599-ad64-d9abc2f87fa9",
             "name": "Chest",
             "path": "Assets\\Textures\\Chest.png"
+        },
+        {
+            "guid": "d4899207-ea5e-473b-870f-aade76e8a7ff",
+            "name": "Door",
+            "path": "Assets\\Textures\\Door.png"
         }
     ]
 }

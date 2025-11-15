@@ -6,7 +6,8 @@
 #include <assimp/postprocess.h>
 #include <iostream>
 #include <vector>
-
+#include "EnginePath.h" // <-- Add this include
+#include <filesystem>    // <-- Make sure this is included for path joining
 #include <glm.hpp>
 #include <assimp/matrix4x4.h>
 #include "AnimationProperties.h" // Includes Skeleton.h
@@ -46,18 +47,29 @@ struct VertexSkinning
     }
 };
 
+
+
 void MeshLoader::loadMesh(const std::string& path, Framework::MeshProperties& mesh) {
     Assimp::Importer importer;
+
+    // --- 1. Construct the full, absolute path ---
+    std::filesystem::path root = GetEngineRootPath();
+    std::filesystem::path absolutePath = root / path;
+    // ---------------------------------------------
+
     const aiScene* scene = importer.ReadFile(
-        path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals
+        absolutePath.string(), // <-- 2. Use the absolute path here
+        aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals
     );
 
     if (!scene || !scene->mRootNode || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) {
-        std::cerr << "ASSIMP error: " << importer.GetErrorString() << std::endl;
+        // 3. (Optional) Improve error message to show the path it tried
+        std::cerr << "ASSIMP error loading " << absolutePath.string() << ": "
+            << importer.GetErrorString() << std::endl;
         return;
     }
     if (scene->mNumMeshes == 0) {
-        std::cerr << "No meshes found in file: " << path << std::endl;
+        std::cerr << "No meshes found in file: " << absolutePath.string() << std::endl;
         return;
     }
 
@@ -95,7 +107,7 @@ void MeshLoader::loadMesh(const std::string& path, Framework::MeshProperties& me
         }
     }
 
-    // OpenGL Buffers added for static mesh
+    // (OpenGL Buffer loading... this part is fine)
     glGenVertexArrays(1, &mesh.vao);
     glGenBuffers(1, &mesh.vbo);
     glGenBuffers(1, &mesh.ebo);
@@ -106,7 +118,6 @@ void MeshLoader::loadMesh(const std::string& path, Framework::MeshProperties& me
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
 
-    // Vertex Attrib Pointers
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
     glEnableVertexAttribArray(1);
@@ -117,8 +128,7 @@ void MeshLoader::loadMesh(const std::string& path, Framework::MeshProperties& me
     glBindVertexArray(0);
     mesh.indexCount = static_cast<unsigned int>(indices.size());
 
-
-   // Store geometry for navmesh or other CPU use
+    // Store geometry for navmesh or other CPU use
     mesh.positions.clear();
     mesh.indices.clear();
     for (const auto& v : vertices) {
@@ -128,7 +138,6 @@ void MeshLoader::loadMesh(const std::string& path, Framework::MeshProperties& me
 
     std::cout << mesh.guid << " " << mesh.path << " was loaded into system" << std::endl;
 }
-
 
 // --- ANIMATED MESH LOADER---
 void MeshLoader::loadAnimatedMesh(const std::string& path,

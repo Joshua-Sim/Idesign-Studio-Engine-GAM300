@@ -6,9 +6,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -42.04396057128906,
-                        5.620218276977539,
-                        14.734742164611816
+                        -42.0021858215332,
+                        5.756143569946289,
+                        14.715734481811523
                     ],
                     "rotation": [
                         0.0,
@@ -16,9 +16,9 @@
                         0.0
                     ],
                     "scale": [
-                        1.0,
-                        1.0,
-                        1.0
+                        1.0471999645233154,
+                        1.0471999645233154,
+                        1.0471999645233154
                     ]
                 },
                 "HierarchyComponent": {
@@ -222,9 +222,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -23.96219825744629,
+                        -30.696361541748047,
                         5.944138526916504,
-                        9.090885162353516
+                        9.240556716918945
                     ],
                     "rotation": [
                         0.0,
@@ -232,15 +232,15 @@
                         0.0
                     ],
                     "scale": [
-                        0.46469900012016296,
-                        0.0010000000474974513,
-                        0.20694811642169952
+                        0.34852421283721924,
+                        0.000750000006519258,
+                        0.22487787902355194
                     ]
                 },
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 2
+                    "sortIndex": 9
                 },
                 "MeshComponent": {
                     "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941"
@@ -256,9 +256,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -24.120651245117188,
-                        11.288789749145508,
-                        -0.14004731178283691
+                        -29.277143478393555,
+                        8.311403274536133,
+                        -0.742485761642456
                     ],
                     "rotation": [
                         0.0,
@@ -266,7 +266,7 @@
                         0.0
                     ],
                     "scale": [
-                        0.4709283411502838,
+                        0.3904722332954407,
                         0.10825313627719879,
                         0.005319627933204174
                     ]
@@ -274,7 +274,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 1
+                    "sortIndex": 10
                 },
                 "MeshComponent": {
                     "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941"
@@ -290,25 +290,25 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -23.501157760620117,
-                        11.28902816772461,
-                        19.48112678527832
+                        -30.027019500732422,
+                        8.331247329711914,
+                        20.250329971313477
                     ],
                     "rotation": [
-                        179.99989318847656,
-                        -0.000005051002062828047,
-                        179.99989318847656
+                        0.0,
+                        89.99994659423828,
+                        0.0
                     ],
                     "scale": [
-                        0.47099998593330383,
-                        0.1080000028014183,
-                        0.004999999888241291
+                        0.005693023093044758,
+                        0.09739581495523453,
+                        0.3545520603656769
                     ]
                 },
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 0
+                    "sortIndex": 12
                 },
                 "MeshComponent": {
                     "guid": "eac3e6f4-1bf2-415f-aef8-8f1269d91560"
@@ -319,14 +319,14 @@
             }
         },
         {
-            "name": "Entity 27",
+            "name": "Chest",
             "guid": "753610d8-7f01-4be6-bacd-9d723b302316",
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -4.452934265136719,
-                        6.040380477905273,
-                        3.783374786376953
+                        -16.0,
+                        6.093570709228516,
+                        1.600000023841858
                     ],
                     "rotation": [
                         0.0,
@@ -334,21 +334,203 @@
                         0.0
                     ],
                     "scale": [
-                        0.011400014162063599,
-                        0.0114000104367733,
-                        0.011399989947676659
+                        0.012000000104308128,
+                        0.012000000104308128,
+                        0.012000000104308128
                     ]
                 },
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 0
+                    "sortIndex": 13
                 },
                 "MeshComponent": {
                     "guid": "da032094-6e5c-40fe-b6f0-39a9d542ffe5"
                 },
                 "TextureComponent": {
                     "guid": "add88db8-22f2-4599-ad64-d9abc2f87fa9"
+                }
+            }
+        },
+        {
+            "name": "Entity 20",
+            "guid": "a5959674-8c2b-442d-a3ee-f088e94eede2",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -18.945058822631836,
+                        19.008686065673828,
+                        9.419546127319336
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.006000001449137926,
+                        0.006000001449137926,
+                        0.006125030107796192
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 14
+                },
+                "MeshComponent": {
+                    "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941"
+                },
+                "LightProperties": {
+                    "enabled": true,
+                    "color": [
+                        0.9035369753837585,
+                        0.8855151534080505,
+                        0.617160975933075
+                    ],
+                    "intensity": 1.0,
+                    "radius": 100.0,
+                    "innerCutOffAngle": 0.21816615760326385,
+                    "outerCutOffAngle": 0.2617993950843811
+                },
+                "TextureComponent": {
+                    "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606"
+                }
+            }
+        },
+        {
+            "name": "Window",
+            "guid": "88b10393-f1ce-43ec-b1ed-1e3655666008",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -13.912982940673828,
+                        8.949725151062012,
+                        4.382748126983643
+                    ],
+                    "rotation": [
+                        0.0,
+                        89.99994659423828,
+                        0.0
+                    ],
+                    "scale": [
+                        0.02209661900997162,
+                        0.021748846396803856,
+                        0.031897157430648804
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 15
+                },
+                "MeshComponent": {
+                    "guid": "62fa60bd-a3d0-4575-851f-e6d04a326345"
+                },
+                "TextureComponent": {
+                    "guid": "b57b4683-8581-4256-9cc5-60c900acec67"
+                }
+            }
+        },
+        {
+            "name": "Front Wall",
+            "guid": "9dc62558-aae7-4cda-8f90-f91df19e289a",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -13.913000106811523,
+                        8.94261360168457,
+                        17.60236358642578
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.005579162854701281,
+                        0.09544789046049118,
+                        0.055340882390737534
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 11
+                },
+                "MeshComponent": {
+                    "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941"
+                },
+                "TextureComponent": {
+                    "guid": "b57b4683-8581-4256-9cc5-60c900acec67"
+                }
+            }
+        },
+        {
+            "name": "Door",
+            "guid": "79b82f01-7281-4ba6-89e4-94e4064592a2",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -14.218849182128906,
+                        5.599999904632568,
+                        12.92231273651123
+                    ],
+                    "rotation": [
+                        180.0,
+                        -89.99994659423828,
+                        180.0
+                    ],
+                    "scale": [
+                        1.0,
+                        0.9999999403953552,
+                        0.9999996423721313
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 2
+                },
+                "MeshComponent": {
+                    "guid": "814c3cff-9da8-4ad4-8a05-009b99a4ea2b"
+                },
+                "TextureComponent": {
+                    "guid": "d4899207-ea5e-473b-870f-aade76e8a7ff"
+                }
+            }
+        },
+        {
+            "name": "Pillar",
+            "guid": "5538beba-3f06-4398-aac9-5b9e301f1147",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -14.0,
+                        8.682190895080566,
+                        16.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.011312635615468025,
+                        0.04952094703912735,
+                        0.012584984302520752
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 1
+                },
+                "MeshComponent": {
+                    "guid": "e902f0d7-a022-45fc-9c17-2a98cbdb793e"
+                },
+                "TextureComponent": {
+                    "guid": "b57b4683-8581-4256-9cc5-60c900acec67"
                 }
             }
         }
