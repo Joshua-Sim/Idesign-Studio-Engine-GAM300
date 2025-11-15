@@ -38,6 +38,7 @@
 #include "SceneProperties.h"
 #include "MaterialProperties.h"
 #include "AnimationProperties.h"
+#include "LightProperties.h"
 
 // Asset Files
 #include "AssetLoader.h"
@@ -59,6 +60,8 @@ namespace Framework
     REGISTER_TYPE_NAME(MaterialProperties);
     REGISTER_TYPE_NAME(MaterialMetadata);
     REGISTER_TYPE_NAME(AnimationProperties);
+    REGISTER_TYPE_NAME(LightProperties);
+
 
     struct AssetKey 
     {

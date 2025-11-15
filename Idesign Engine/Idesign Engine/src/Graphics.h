@@ -22,9 +22,9 @@
 #include "Camera.h"
 #include "Mesh.h"
 #include "Terrain.h"
-#include "Lighting.h"
 #include "MeshLoader.h"
 #include "TextureLoader.h"
+#include "ShaderProgram.h"
 
 #include "AssetManager.h"
 #include "WindowConfigProperties.h"
@@ -148,13 +148,6 @@ namespace Framework
         ShaderProgram debugShader{ "Assets/shaders/debugVertexShader.glsl", "Assets/shaders/debugFragmentShader.glsl" };
         ShaderProgram skinnedShader{ "Assets/shaders/SkinnedVert.glsl", "Assets/shaders/meshfrag.glsl" };
 
-        // lighting
-        DirectionalLightCPU sun;
-        bool hasSun = true;
-        std::vector<PointLightCPU> pointLights;
-        std::vector<SpotLightCPU>  spotLights;
-
-
         // ADD HDR & BLOOM VARIABLES
         float hdrExposure = 1.0f;
         float bloomStrength = 1.0f;
@@ -197,6 +190,12 @@ namespace Framework
         // For screen resizing
         int m_fbW = 0, m_fbH = 0;      // current render size (window framebuffer)
         int m_pickW = 0, m_pickH = 0;  // current size for pick FBOs
+
+        void GatherLights(
+            DirectionalLightCPU& outSun,
+            bool& outHasSun,
+            std::vector<PointLightCPU>& outPointLights,
+            std::vector<SpotLightCPU>& outSpotLights);
     };
 }
 #endif // !_GRAPHICS_H_
