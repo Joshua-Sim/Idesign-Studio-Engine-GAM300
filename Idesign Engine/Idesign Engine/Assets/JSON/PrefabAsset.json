@@ -1,18 +1,6 @@
 {
     "prefabs": [
         {
-            "guid": "b3102692-1dd7-4c94-a7a3-67efa2e34d8b",
-            "name": "Test123123",
-            "path": "Assets/Prefabs/Test123123.prefab",
-            "isScenePrefab": false
-        },
-        {
-            "guid": "4bf36eee-f278-4800-b83a-e67a6d1dc21c",
-            "name": "Entity 0_Prefab",
-            "path": "Assets/Prefabs/Entity 0_Prefab.prefab",
-            "isScenePrefab": false
-        },
-        {
             "guid": "46b1c817-73fc-437e-bde5-5137870a20c7",
             "name": "Sidewall1_Prefab",
             "path": "Assets/Prefabs/Sidewall1_Prefab.prefab",

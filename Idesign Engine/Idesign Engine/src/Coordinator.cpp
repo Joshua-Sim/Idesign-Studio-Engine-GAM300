@@ -216,6 +216,17 @@ namespace Framework {
         entityNames[entity] = name;
     }
 
+    Entity Coordinator ::GetEntityByName(const std::string& name)
+    {
+        for (const auto& [entity, entityName] : entityNames)
+        {
+            if (entityName == name)
+                return entity;
+        }
+        return -1; // -1 is invalid
+    }
+
+
     std::string Coordinator::GetEntityName(Entity entity) const
     {
         auto it = entityNames.find(entity);

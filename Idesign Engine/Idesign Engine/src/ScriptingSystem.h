@@ -30,10 +30,17 @@ namespace Framework {
 
         lua_State* GetLuaState() const { return L; }
 
+        // for directory
 
+        static inline std::string s_ProjectRoot;  
+
+        static void SetProjectRoot(const std::string& root);
+
+        static std::string GetProjectRoot();
     private:
         lua_State* L = nullptr;
         Graphics* graphics_ = nullptr;
+
 
         bool LoadScriptTable(ScriptInstance& inst);
         bool CallHook(int tableRef, const char* fn, float arg = 0.0f);

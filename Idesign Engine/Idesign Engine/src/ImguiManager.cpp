@@ -250,10 +250,15 @@ namespace Framework {
         g_scriptFileItems.clear();
 
         namespace fs = std::filesystem;
-        fs::path scriptsDir = "Assets/Scripts";
+
+        // BUILD ABSOLUTE PATH FROM PROJECT ROOT
+        fs::path scriptsDir = fs::path(Framework::ScriptingSystem::GetProjectRoot()) / "Assets/Scripts";
 
         if (!fs::exists(scriptsDir))
+        {
+            std::cout << "[RefreshScriptFileList] Scripts directory doesn't exist: " << scriptsDir << std::endl;
             return;
+        }
 
         // 1) Collect full paths
         for (auto& entry : fs::directory_iterator(scriptsDir))
@@ -261,21 +266,23 @@ namespace Framework {
             if (!entry.is_regular_file()) continue;
             if (entry.path().extension() != ".lua") continue;
 
-            std::string rel = entry.path().string();          // e.g. "Assets\\Scripts\\hello.lua"
-            std::replace(rel.begin(), rel.end(), '\\', '/');  // -> "Assets/Scripts/hello.lua"
+            std::string rel = entry.path().string();
+            std::replace(rel.begin(), rel.end(), '\\', '/');
             g_scriptFiles.push_back(rel);
         }
 
         // 2) Build display names + ImGui labels (only "hello.lua")
         for (auto& full : g_scriptFiles)
         {
-            g_scriptDisplayNames.push_back(::GetFileNameOnly(full)); // "hello.lua"
+            g_scriptDisplayNames.push_back(::GetFileNameOnly(full));
         }
 
         for (auto& name : g_scriptDisplayNames)
         {
             g_scriptFileItems.push_back(name.c_str());
         }
+
+        std::cout << "[RefreshScriptFileList] Found " << g_scriptFiles.size() << " Lua scripts\n";
     }
 
     static int FindScriptIndex(const std::string& path)
@@ -2618,19 +2625,6 @@ namespace Framework {
                     }
 
                 }
-
-                // Drag and drop Prefab to spawn in viewport
-                if (ImGui::BeginDragDropTarget())
-                {
-                    if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("PREFAB_GUID"))
-                    {
-                        const char* prefabGUID = static_cast<const char*>(payload->Data);
-
-                        // Spawn the prefab
-                        sceneManager.SpawnPrefab(prefabGUID);
-                    }
-                    ImGui::EndDragDropTarget();
-                }
             }
             ImGui::End();
 
@@ -2688,6 +2682,19 @@ namespace Framework {
                 glm::mat4 proj = m_graphicsSystem->GetProjectionMatrix(secondaryView, static_cast<float>(m_fboW), static_cast<float>(m_fboH));
 
                 RenderGizmoForSelected(view, proj, rectMin, vpSize);
+            }
+
+            // Drag and drop Prefab to spawn in viewport
+            if (ImGui::BeginDragDropTarget())
+            {
+                if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("PREFAB_GUID"))
+                {
+                    const char* prefabGUID = static_cast<const char*>(payload->Data);
+
+                    // Spawn the prefab
+                    sceneManager.SpawnPrefab(prefabGUID);
+                }
+                ImGui::EndDragDropTarget();
             }
             ImGui::End();
 

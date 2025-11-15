@@ -276,6 +276,39 @@ namespace Framework
                     auto& anim = *static_cast<AnimationProperties*>(componentPtr);
                     DrawAssetDropdown<AnimationProperties>("Select Animation", anim);
                 }
+                else if (typeName == "NavMeshAgentComponent")
+                {
+                    auto& agent = *static_cast<NavMeshAgentComponent*>(componentPtr);
+                    std::string idSuffix = "##Agent_" + std::to_string(static_cast<uint32_t>(entity));
+
+                    if (ImGui::Button(("Reset Agent Data" + idSuffix).c_str()))
+                    {
+                        agent.currentPath.clear();
+                        agent.currentWaypointIndex = 0;
+                        agent.hasPath = false;
+                        agent.isMoving = false;
+                        agent.currentSpeed = 0.0f;
+                    }
+
+                    if (agent.hasPath)
+                    {
+                        ImGui::Text("Current Waypoint: %d / %d", agent.currentWaypointIndex + 1, static_cast<int>(agent.currentPath.size()));
+                        if (ImGui::TreeNode("Path Preview"))
+                        {
+                            for (size_t i = 0; i < agent.currentPath.size(); ++i)
+                            {
+                                ImGui::BulletText("Waypoint %zu: (%.2f, %.2f, %.2f)", i,
+                                    agent.currentPath[i].x, agent.currentPath[i].y, agent.currentPath[i].z);
+                            }
+                            ImGui::TreePop();
+                        }
+                    }
+                    else
+                    {
+                        ImGui::TextDisabled("No active path.");
+                    }
+                }
+
 
                 DrawInspector(componentPtr, *propList);
 
@@ -295,7 +328,7 @@ namespace Framework
             if (!propList || !propList->m_pName || propList->m_Props.empty()) continue;
             if (attached.contains(propList->m_pName)) continue;
 
-            if (propList->m_pName == "WindowConfig" || propList->m_pName == "NavMeshAgentComponent" ||
+            if (propList->m_pName == "WindowConfig" ||
                 propList->m_pName == "PrefabProperties" || propList->m_pName == "PrefabComponent" ||
                 propList->m_pName == "MaterialMetadata" || propList->m_pName == "SceneProperties") continue;
 

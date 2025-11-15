@@ -9,6 +9,7 @@
 #include "WindowConfigProperties.h"  // g_WindowConfigProps
 #include "AudioLoader.h"             // g_AudioPropertiesProps
 #include "TextureLoader.h"           // g_TexturePropertiesProps
+#include "NavMeshSystem.h"
 #include "MeshProperties.h"          // g_MeshPropertiesProps
 #include <filesystem>
 
@@ -110,22 +111,79 @@ namespace Framework {
         int l_SetBloom(lua_State* L) { auto* s = lua_self(L); auto* g = s ? s->GetGraphicsSystem() : nullptr; if (g) g->SetBloomFromLua((float)luaL_checknumber(L, 1)); return 0; }
         int l_SetGround(lua_State* L) { auto* s = lua_self(L); auto* g = s ? s->GetGraphicsSystem() : nullptr; if (g) g->SetGroundModeFromLua(lua_toboolean(L, 1) != 0);   return 0; }
 
+        // Engine LUA exposed utility functions (Get entity, get by component, get by name, tag , create prefab, setactive -deactive etc
+
+        
+        int lua_FindEntityByName(lua_State* L)
+        {
+            const char* name = luaL_checkstring(L, 1);
+            Entity e = ecsInterface.GetEntityByName(name);
+            if (ecsInterface.IsEntityValid(e)) {
+                lua_pushinteger(L, static_cast<int>(e));
+            }
+            else {
+                lua_pushnil(L);
+            }
+            return 1;
+        }
+
+        // NavMesh Exposed funcs for path-finding
+
+        void ScriptPathfindTo(const std::string& agentName, const std::string& targetName)
+        {
+            auto& ecs = ecsInterface;
+            auto navSystem = ecs.GetSystem<Framework::NavMeshSystem>();
+            if (!navSystem)
+                return;
+
+            Entity agent = ecs.GetEntityByName(agentName);
+            Entity target = ecs.GetEntityByName(targetName);
+
+            if (!ecs.IsEntityValid(agent) || !ecs.IsEntityValid(target))
+            {
+                std::cerr << "[Lua] Invalid agent or target name!" << std::endl;
+                return;
+            }
+
+            if (!ecs.HasComponent<NavMeshAgentComponent>(agent) ||
+                !ecs.HasComponent<TransformComponent>(agent) ||
+                !ecs.HasComponent<TransformComponent>(target))
+            {
+                std::cerr << "[Lua] Missing required components!" << std::endl;
+                return;
+            }
+
+            auto& agentXform = ecs.GetComponent<TransformComponent>(agent);
+            auto& targetXform = ecs.GetComponent<TransformComponent>(target);
+
+            glm::vec3 from = navSystem->GetNearestPointOnNavmesh(agentXform.position);
+            glm::vec3 to = navSystem->GetNearestPointOnNavmesh(targetXform.position);
+
+            std::cout << "[Lua] Pathfinding from '" << agentName << "' to '" << targetName << "'..." << std::endl;
+
+            navSystem->SetAgentDestination(agent, to);
+        }
+
+
         namespace fs = std::filesystem;
 
         // Join a relative path with fallback prefixes until a file is found.
         static std::string resolve_path(const std::string& rel) {
-            const char* roots[] = {
-                ".",                // current working dir
-                "..",               // one up
-                "../..",            // two up (depending on VS layout)
-            };
+            // First try from project root
+            fs::path fromRoot = fs::path(ScriptingSystem::GetProjectRoot()) / rel;
+            std::error_code ec;
+            if (fs::exists(fromRoot, ec)) {
+                return fs::weakly_canonical(fromRoot, ec).string();
+            }
 
+            // Fallback to old behavior for backwards compatibility
+            const char* roots[] = { ".", "..", "../.." };
             for (auto r : roots) {
                 fs::path p = fs::path(r) / rel;
-                std::error_code ec;
                 if (fs::exists(p, ec)) return fs::weakly_canonical(p, ec).string();
             }
-            // if not found, return as-is (fopen will fail; we’ll log)
+
+            // If not found, return as-is
             return rel;
         }
 
@@ -279,6 +337,18 @@ namespace Framework {
         lua_register(L, "GetPosition", lua_GetPosition);
         lua_register(L, "SetPosition", lua_SetPosition);
 
+        // Engine utility
+        lua_register(L, "FindEntityByName", lua_FindEntityByName);
+
+        // Navmesh
+        lua_register(L, "PathfindTo", [](lua_State* L) -> int {
+            const char* agentName = luaL_checkstring(L, 1);
+            const char* targetName = luaL_checkstring(L, 2);
+
+            ScriptPathfindTo(agentName, targetName);
+            return 0;
+            });
+
         // Create Cook table with our functions
         lua_newtable(L);                           // Cook
         lua_pushcfunction(L, l_Cook_WindowConfig); lua_setfield(L, -2, "WindowConfig");
@@ -340,6 +410,17 @@ namespace Framework {
         }
     }
 
+    void ScriptingSystem:: SetProjectRoot(const std::string& root) {
+        std::error_code ec;
+        auto canonical = std::filesystem::canonical(root, ec);
+        if (!ec) {
+            s_ProjectRoot = canonical.generic_string();
+            std::cout << "[ScriptingSystem] Project root: " << s_ProjectRoot << "\n";
+        }
+    }
+
+     std::string ScriptingSystem::GetProjectRoot() { return s_ProjectRoot; }
+
     std::string ScriptingSystem::GetName() { return "ScriptingSystem"; }
 
     bool ScriptingSystem::LoadScriptTable(ScriptInstance& sc)
@@ -349,7 +430,28 @@ namespace Framework {
             sc.tableRef = LUA_NOREF;
         }
 
-        if (luaL_dofile(L, sc.scriptPath.c_str()) != LUA_OK) {
+        // BUILD ABSOLUTE PATH FROM PROJECT ROOT
+        std::filesystem::path scriptPath;
+        if (std::filesystem::path(sc.scriptPath).is_absolute()) {
+            scriptPath = sc.scriptPath;
+        }
+        else {
+            scriptPath = std::filesystem::path(s_ProjectRoot) / sc.scriptPath;
+        }
+
+        std::error_code ec;
+        auto canonicalPath = std::filesystem::weakly_canonical(scriptPath, ec);
+
+        if (ec || !std::filesystem::exists(canonicalPath)) {
+            std::cerr << "[Lua] script file not found: " << sc.scriptPath
+                << " (resolved to: " << scriptPath << ")\n";
+            return false;
+        }
+
+        std::string absoluteScriptPath = canonicalPath.generic_string();
+
+        // USE ABSOLUTE PATH
+        if (luaL_dofile(L, absoluteScriptPath.c_str()) != LUA_OK) {
             std::cerr << "[Lua] load error in " << sc.scriptPath << ": " << lua_tostring(L, -1) << "\n";
             lua_pop(L, 1);
             return false;
