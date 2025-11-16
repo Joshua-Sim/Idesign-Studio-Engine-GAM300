@@ -2496,60 +2496,90 @@ namespace Framework {
             }
             ImGui::End();
 
-            //Debug second viewport window
+            // Debug second viewport window
             if (ImGui::Begin("Secondary Viewport"))
             {
+                // --- 1. Viewport Sizing and Letterboxing ---
                 ImVec2 viewportSize = ImGui::GetContentRegionAvail();
                 float aspectRatio = (m_fboH > 0) ? (float)m_fboW / (float)m_fboH : 16.0f / 9.0f;
+
                 float newWidth = viewportSize.x;
                 float newHeight = newWidth / aspectRatio;
+
                 if (newHeight > viewportSize.y) {
                     newHeight = viewportSize.y;
                     newWidth = newHeight * aspectRatio;
                 }
+
+                // Calculate offset for centering the image
                 ImVec2 offset((viewportSize.x - newWidth) * 0.5f, (viewportSize.y - newHeight) * 0.5f);
                 ImGui::SetCursorPos(offset);
 
-                // draw the second view’s texture
+                // --- 2. Draw the Viewport Image ---
                 int secondaryView = (g_MainViewIndex == 0) ? 1 : 0;
                 ImGui::Image(
                     (ImTextureID)(intptr_t)GetGameTexture(secondaryView),
-                    ImVec2(newWidth, newHeight), ImVec2(0, 1), ImVec2(1, 0)
+                    ImVec2(newWidth, newHeight),
+                    ImVec2(0, 1), // UV Coords: Top-Left
+                    ImVec2(1, 0)  // UV Coords: Bottom-Right (flips V)
                 );
 
-                // picking for second view
-                if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
-                    m_graphicsSystem->SetMouseTargetView(secondaryView);
-                    ImVec2 min = ImGui::GetItemRectMin();
-                    ImVec2 max = ImGui::GetItemRectMax();
-                    ImVec2 pos = ImGui::GetIO().MousePos;
-
-                    float u = (pos.x - min.x) / (max.x - min.x);
-                    float v = (pos.y - min.y) / (max.y - min.y);
-                    v = 1.0f - v; // flip because Image uses (0,1) to (1,0)
-
-                    m_graphicsSystem->SetPickViewIndex(secondaryView);
-                    if (secondaryView == 0) m_graphicsSystem->RequestPickUV(u, v);
-                    else                    m_graphicsSystem->RequestPickUVSecondary(u, v);
-                }
-
-                if (int id = m_graphicsSystem->ConsumeLastPickedId(); id >= 0)
-                {
-                    selectedEntity = static_cast<Entity>(id);
-                    isPropertiesWindowOpen = true;  // open right panel automatically (optional)
-                    //std::cout << "Selected entity from viewport: " << selectedEntity << "\n"; // debug
-                }
-
-                // --- Gizmo overlay on top of the Viewport texture ---
+                // --- 3. Render Gizmo FIRST ---
+                // Get the screen-space rectangle of the image we just drew
                 ImVec2 rectMin = ImGui::GetItemRectMin();
                 ImVec2 rectMax = ImGui::GetItemRectMax();
                 ImVec2 vpSize(rectMax.x - rectMin.x, rectMax.y - rectMin.y);
 
-                // Use the SECONDARY camera’s matrices
+                // Get the camera matrices for the secondary view
                 glm::mat4 view = m_graphicsSystem->GetViewMatrix(secondaryView);
                 glm::mat4 proj = m_graphicsSystem->GetProjectionMatrix(secondaryView, static_cast<float>(m_fboW), static_cast<float>(m_fboH));
 
+                // Render the gizmo (this calls ImGuizmo::Manipulate)
                 RenderGizmoForSelected(view, proj, rectMin, vpSize);
+
+                // --- 4. Check Gizmo State ---
+                // Check if the mouse is hovering or actively dragging a gizmo handle
+                bool isGizmoActive = ImGuizmo::IsUsing() || ImGuizmo::IsOver();
+
+                // --- 5. Conditional Picking Logic ---
+                // Only perform entity picking if:
+                // 1. The mouse is over the viewport image
+                // 2. The left mouse button is clicked
+                // 3. The mouse is NOT interacting with the gizmo
+                if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left) && !isGizmoActive)
+                {
+                    m_graphicsSystem->SetMouseTargetView(secondaryView);
+
+                    // Get mouse position relative to the image
+                    ImVec2 min = ImGui::GetItemRectMin();
+                    ImVec2 max = ImGui::GetItemRectMax();
+                    ImVec2 pos = ImGui::GetIO().MousePos;
+
+                    // Calculate UV coordinates (0.0 to 1.0)
+                    float u = (pos.x - min.x) / (max.x - min.x);
+                    float v = (pos.y - min.y) / (max.y - min.y);
+                    v = 1.0f - v; // Flip V-coordinate to match OpenGL/texture convention
+
+                    // Request the pick
+                    m_graphicsSystem->SetPickViewIndex(secondaryView);
+                    if (secondaryView == 0)
+                        m_graphicsSystem->RequestPickUV(u, v);
+                    else
+                        m_graphicsSystem->RequestPickUVSecondary(u, v);
+                }
+
+                // --- 6. Conditional Selection Logic ---
+                // Check if the graphics system has a new picked ID for us
+                if (int id = m_graphicsSystem->ConsumeLastPickedId(); id >= 0)
+                {
+                    // IMPORTANT: Only change the selected entity if the user is
+                    // NOT in the middle of dragging the gizmo.
+                    if (!ImGuizmo::IsUsing())
+                    {
+                        selectedEntity = static_cast<Entity>(id);
+                        isPropertiesWindowOpen = true; // Optional: auto-open properties
+                    }
+                }
             }
             ImGui::End();
         }
