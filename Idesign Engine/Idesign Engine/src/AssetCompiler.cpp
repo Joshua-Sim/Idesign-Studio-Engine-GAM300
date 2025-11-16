@@ -187,8 +187,6 @@ namespace Framework
                     ecsInterface.AddComponent(entity, light);
                 }
 
-         
-
                 if (components.HasMember("AnimationProperties"))
                 {
                     const auto& animRef = components["AnimationProperties"];
@@ -231,6 +229,39 @@ namespace Framework
                         nav.maxSlope = navObj["maxSlope"].GetFloat();
 
                     ecsInterface.AddComponent(entity, nav);
+                }
+
+                // Scripting
+                if (components.HasMember("ScriptProperties"))
+                {
+                    const auto& scriptObj = components["ScriptProperties"];
+                    ScriptProperties sp;
+
+                    if (scriptObj.HasMember("scripts") && scriptObj["scripts"].IsArray())
+                    {
+                        const auto& arr = scriptObj["scripts"].GetArray();
+                        for (const auto& s : arr)
+                        {
+                            ScriptEntry entry;
+
+                            if (s.HasMember("scriptPath") && s["scriptPath"].IsString())
+                                entry.scriptPath = s["scriptPath"].GetString();
+
+                            if (s.HasMember("hotReload") && s["hotReload"].IsBool())
+                                entry.hotReload = s["hotReload"].GetBool();
+
+                            // runtime fields stay at defaults:
+                            // entry.initialized    = false;
+                            // entry.lastWriteTicks = 0;
+                            // entry.tableRef       = -1;
+                            sp.scripts.push_back(entry);
+                        }
+                    }
+
+                    if (!sp.scripts.empty())
+                    {
+                        ecsInterface.AddComponent(entity, sp);
+                    }
                 }
 
                 sceneManager.RegisterEntityToScene(entity, cleanName);
@@ -360,6 +391,34 @@ namespace Framework
                     navObj.AddMember("maxSlope", nav.maxSlope, allocator);
 
                     componentsObj.AddMember("NavMeshComponent", navObj, allocator);
+                }
+            
+                if (ecsInterface.HasComponent<ScriptProperties>(entity))
+                {
+                    const auto& sp = ecsInterface.GetComponent<ScriptProperties>(entity);
+
+                    rapidjson::Value scriptObj(rapidjson::kObjectType);
+                    rapidjson::Value scriptsArr(rapidjson::kArrayType);
+
+                    for (const auto& entry : sp.scripts)
+                    {
+                        rapidjson::Value entryObj(rapidjson::kObjectType);
+
+                        entryObj.AddMember(
+                            "scriptPath",
+                            rapidjson::Value(entry.scriptPath.c_str(), allocator),
+                            allocator
+                        );
+
+                        entryObj.AddMember("hotReload", entry.hotReload, allocator);
+
+                        // If later you add more saved fields (e.g. hotReload), add them here.
+
+                        scriptsArr.PushBack(entryObj, allocator);
+                    }
+
+                    scriptObj.AddMember("scripts", scriptsArr, allocator);
+                    componentsObj.AddMember("ScriptProperties", scriptObj, allocator);
                 }
             }
 

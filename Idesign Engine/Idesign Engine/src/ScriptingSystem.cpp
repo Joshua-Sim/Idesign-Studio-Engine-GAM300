@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "ScriptingSystem.h"
 #include "Coordinator.h"
-#include "ComponentList.h"
+//#include "ComponentList.h"
 #include "Graphics.h"          // to call Graphics* methods
 #include <lua.hpp>
 #include <iostream>
@@ -11,6 +11,7 @@
 #include "TextureLoader.h"           // g_TexturePropertiesProps
 #include "MeshProperties.h"          // g_MeshPropertiesProps
 #include <filesystem>
+#include "ScriptProperties.h"
 
 extern Framework::Coordinator ecsInterface;
 
@@ -252,11 +253,11 @@ namespace Framework {
 
     void ScriptingSystem::Initialize() {
         // 1) Register ScriptComponent (your engine’s pattern)
-        ecsInterface.RegisterComponent<ScriptComponent>();
+        ecsInterface.RegisterComponent<ScriptProperties>();
 
         // 2) Set system signature
         Signature sig;
-        sig.set(ecsInterface.GetComponentType<ScriptComponent>(), true);
+        sig.set(ecsInterface.GetComponentType<ScriptProperties>(), true);
         ecsInterface.SetSystemSignature<ScriptingSystem>(sig);
         std::cout << "Signature for Scripting system is: " << sig << std::endl;
 
@@ -295,17 +296,20 @@ namespace Framework {
 
     void ScriptingSystem::Update(float dt) {
         for (auto const& e : mEntities) {
-            if (!ecsInterface.HasComponent<ScriptComponent>(e)) continue;
-            auto& comp = ecsInterface.GetComponent<ScriptComponent>(e);
+            if (!ecsInterface.HasComponent<ScriptProperties>(e)) continue;
+            auto& comp = ecsInterface.GetComponent<ScriptProperties>(e);
 
             for (auto& sc : comp.scripts) {         // <--- NEW
                 if (sc.scriptPath.empty()) continue;
 
                 if (sc.hotReload && !sc.scriptPath.empty()) {
                     try {
-                        auto nowTicks = FileTimeToTicks(std::filesystem::last_write_time(sc.scriptPath));
+                        auto nowTicks = FileTimeToTicks(
+                            std::filesystem::last_write_time(sc.scriptPath));
+
                         if (nowTicks != sc.lastWriteTicks) {
                             std::cout << "[HotReload] " << sc.scriptPath << "\n";
+
                             if (LoadScriptTable(sc)) {
                                 // re-expose entity id
                                 lua_rawgeti(L, LUA_REGISTRYINDEX, sc.tableRef);
@@ -317,6 +321,7 @@ namespace Framework {
                                 CallHook(sc.tableRef, "on_init");
                                 sc.initialized = true;
                             }
+
                             sc.lastWriteTicks = nowTicks; // remember the new time
                         }
                     }
@@ -342,7 +347,7 @@ namespace Framework {
 
     std::string ScriptingSystem::GetName() { return "ScriptingSystem"; }
 
-    bool ScriptingSystem::LoadScriptTable(ScriptInstance& sc)
+    bool ScriptingSystem::LoadScriptTable(ScriptEntry& sc)
     {
         if (sc.tableRef != LUA_NOREF) {
             luaL_unref(L, LUA_REGISTRYINDEX, sc.tableRef);
@@ -404,12 +409,12 @@ namespace Framework {
     Entity ScriptingSystem::CreateScriptEntity(const std::string& path) {
         Entity e = ecsInterface.CreateEntity();
 
-        ScriptComponent comp;
-        ScriptInstance inst;
+        ScriptProperties comp;
+        ScriptEntry inst;
         inst.scriptPath = path;
         comp.scripts.push_back(inst);
 
-        ecsInterface.AddComponent<ScriptComponent>(e, comp);
+        ecsInterface.AddComponent<ScriptProperties>(e, comp);
         ecsInterface.AddComponent<TransformComponent>(e, TransformComponent{});
         ecsInterface.AddComponent<HierarchyComponent>(e, HierarchyComponent{});
         return e;
@@ -431,8 +436,8 @@ namespace Framework {
 
         for (auto e : mEntities)
         {
-            if (!ecsInterface.HasComponent<ScriptComponent>(e)) continue;
-            auto& comp = ecsInterface.GetComponent<ScriptComponent>(e);
+            if (!ecsInterface.HasComponent<ScriptProperties>(e)) continue;
+            auto& comp = ecsInterface.GetComponent<ScriptProperties>(e);
 
             for (auto& sc : comp.scripts) {
                 if (sc.scriptPath.empty()) continue;

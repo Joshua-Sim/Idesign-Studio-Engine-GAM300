@@ -1,0 +1,295 @@
+{
+    "Entities": [
+        {
+            "name": "Entity 0",
+            "guid": "0fdfa022-630c-42e1-886f-5eb06eb5efe2",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        8.16667366027832,
+                        0.0,
+                        -4.166666030883789
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 0
+                },
+                "MeshComponent": {
+                    "guid": ""
+                },
+                "TextureComponent": {
+                    "guid": ""
+                },
+                "NavMeshComponent": {
+                    "guid": "",
+                    "isNavMeshSource": true,
+                    "runtimeGenerated": false,
+                    "agentRadius": 0.5,
+                    "agentHeight": 2.0,
+                    "cellSize": 0.30000001192092896,
+                    "cellHeight": 0.20000000298023224,
+                    "maxSlope": 45.0
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "scriptPath": "Assets/Scripts/hello.lua",
+                            "hotReload": true
+                        },
+                        {
+                            "scriptPath": "Assets/Scripts/numpad_move.lua",
+                            "hotReload": true
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Entity 1",
+            "guid": "4cf09f14-5eeb-4945-9ce4-b94fd5b204a7",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -2.0,
+                        0.5,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 0
+                },
+                "MeshComponent": {
+                    "guid": ""
+                },
+                "TextureComponent": {
+                    "guid": ""
+                }
+            }
+        },
+        {
+            "name": "Entity 2",
+            "guid": "682ed2a4-23f9-4a72-ad77-76f0c98a76b6",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        10.0,
+                        0.0,
+                        0.30000001192092896
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 0
+                },
+                "MeshComponent": {
+                    "guid": "6cbaa85b-562d-4b23-9f64-8639947659cc"
+                },
+                "AnimationProperties": {
+                    "guid": "e4d836ef-c0bc-46bb-914c-c1e05246eb81"
+                },
+                "TextureComponent": {
+                    "guid": ""
+                }
+            }
+        },
+        {
+            "name": "Entity 3",
+            "guid": "85c5c309-4891-44e5-9512-905f61d36be1",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        0.0,
+                        5.0,
+                        2.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 0
+                },
+                "LightProperties": {
+                    "enabled": true,
+                    "color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "intensity": 10.0,
+                    "radius": 20.0,
+                    "innerCutOffAngle": 0.21816615760326385,
+                    "outerCutOffAngle": 0.2617993950843811
+                }
+            }
+        },
+        {
+            "name": "Entity 4",
+            "guid": "5af2a894-0f5b-4383-a9c3-416ea31e9c48",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        53.01003646850586,
+                        5.0,
+                        1.5
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        5.0,
+                        5.0,
+                        5.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 0
+                },
+                "MeshComponent": {
+                    "guid": ""
+                }
+            }
+        },
+        {
+            "name": "Entity 5",
+            "guid": "c2a0aa1f-b2a8-444f-a3bd-2e5a2ad91739",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        57.98996353149414,
+                        5.0,
+                        1.5
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        5.0,
+                        5.0,
+                        5.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 0
+                },
+                "MeshComponent": {
+                    "guid": ""
+                }
+            }
+        },
+        {
+            "name": "Entity 6",
+            "guid": "07818ad8-b4a3-4579-8856-0e89a65657be",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        36.02788543701172,
+                        1.3164609670639038,
+                        15.580432891845703
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        5.0,
+                        5.0,
+                        5.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 0
+                },
+                "MeshComponent": {
+                    "guid": ""
+                }
+            }
+        },
+        {
+            "name": "Entity 7",
+            "guid": "a38c0091-dc73-4d8e-a068-392ae495cb6f",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        40.0,
+                        10.0,
+                        -5.5
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        5.0,
+                        5.0,
+                        5.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 0
+                },
+                "MeshComponent": {
+                    "guid": ""
+                }
+            }
+        }
+    ]
+}

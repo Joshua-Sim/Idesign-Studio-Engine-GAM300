@@ -243,42 +243,42 @@ namespace Framework {
     }
 
     // Scipt Folder Loader
-    static void RefreshScriptFileList()
-    {
-        g_scriptFiles.clear();
-        g_scriptDisplayNames.clear();
-        g_scriptFileItems.clear();
+    //static void RefreshScriptFileList()
+    //{
+    //    g_scriptFiles.clear();
+    //    g_scriptDisplayNames.clear();
+    //    g_scriptFileItems.clear();
 
-        namespace fs = std::filesystem;
-        fs::path scriptsDir = "Assets/Scripts";
+    //    namespace fs = std::filesystem;
+    //    fs::path scriptsDir = "Assets/Scripts";
 
-        if (!fs::exists(scriptsDir))
-            return;
+    //    if (!fs::exists(scriptsDir))
+    //        return;
 
-        // 1) Collect full paths
-        for (auto& entry : fs::directory_iterator(scriptsDir))
-        {
-            if (!entry.is_regular_file()) continue;
-            if (entry.path().extension() != ".lua") continue;
+    //    // 1) Collect full paths
+    //    for (auto& entry : fs::directory_iterator(scriptsDir))
+    //    {
+    //        if (!entry.is_regular_file()) continue;
+    //        if (entry.path().extension() != ".lua") continue;
 
-            std::string rel = entry.path().string();          // e.g. "Assets\\Scripts\\hello.lua"
-            std::replace(rel.begin(), rel.end(), '\\', '/');  // -> "Assets/Scripts/hello.lua"
-            g_scriptFiles.push_back(rel);
-        }
+    //        std::string rel = entry.path().string();          // e.g. "Assets\\Scripts\\hello.lua"
+    //        std::replace(rel.begin(), rel.end(), '\\', '/');  // -> "Assets/Scripts/hello.lua"
+    //        g_scriptFiles.push_back(rel);
+    //    }
 
-        // 2) Build display names + ImGui labels (only "hello.lua")
-        for (auto& full : g_scriptFiles)
-        {
-            g_scriptDisplayNames.push_back(::GetFileNameOnly(full)); // "hello.lua"
-        }
+    //    // 2) Build display names + ImGui labels (only "hello.lua")
+    //    for (auto& full : g_scriptFiles)
+    //    {
+    //        g_scriptDisplayNames.push_back(::GetFileNameOnly(full)); // "hello.lua"
+    //    }
 
-        for (auto& name : g_scriptDisplayNames)
-        {
-            g_scriptFileItems.push_back(name.c_str());
-        }
-    }
+    //    for (auto& name : g_scriptDisplayNames)
+    //    {
+    //        g_scriptFileItems.push_back(name.c_str());
+    //    }
+    //}
 
-    static int FindScriptIndex(const std::string& path)
+    /*static int FindScriptIndex(const std::string& path)
     {
         for (int i = 0; i < (int)g_scriptFiles.size(); ++i)
         {
@@ -286,7 +286,7 @@ namespace Framework {
                 return i;
         }
         return -1;
-    }
+    }*/
 
     // Error Detection for Audio
     void ImguiManager::RenderErrorPopup()
@@ -2416,80 +2416,80 @@ namespace Framework {
                     DrawEntityInspector(selectedEntity, ecsInterface);
 
                     // -------- Script Component UI --------
-                    if (ImGui::CollapsingHeader("Script Component", ImGuiTreeNodeFlags_DefaultOpen))
-                    {
-                        // Ensure the script list is populated
-                        static bool scriptsScanned = false;
-                        if (!scriptsScanned)
-                        {
-                            RefreshScriptFileList();
-                            scriptsScanned = true;
-                        }
+                    //if (ImGui::CollapsingHeader("Script Component", ImGuiTreeNodeFlags_DefaultOpen))
+                    //{
+                    //    // Ensure the script list is populated
+                    //    static bool scriptsScanned = false;
+                    //    if (!scriptsScanned)
+                    //    {
+                    //        RefreshScriptFileList();
+                    //        scriptsScanned = true;
+                    //    }
 
-                        // Allow manual refresh (in case you add new .lua files while engine is running)
-                        if (ImGui::Button("Refresh Script List"))
-                        {
-                            RefreshScriptFileList();
-                        }
+                    //    // Allow manual refresh (in case you add new .lua files while engine is running)
+                    //    if (ImGui::Button("Refresh Script List"))
+                    //    {
+                    //        RefreshScriptFileList();
+                    //    }
 
-                        // If entity has no ScriptComponent yet
-                        if (!ecsInterface.HasComponent<ScriptComponent>(selectedEntity))
-                        {
-                            if (ImGui::Button("Add Script Component"))
-                            {
-                                ecsInterface.AddComponent<ScriptComponent>(selectedEntity, ScriptComponent{});
-                            }
-                        }
-                        else
-                        {
-                            auto& sc = ecsInterface.GetComponent<ScriptComponent>(selectedEntity);
+                    //    // If entity has no ScriptComponent yet
+                    //    if (!ecsInterface.HasComponent<ScriptComponent>(selectedEntity))
+                    //    {
+                    //        if (ImGui::Button("Add Script Component"))
+                    //        {
+                    //            ecsInterface.AddComponent<ScriptComponent>(selectedEntity, ScriptComponent{});
+                    //        }
+                    //    }
+                    //    else
+                    //    {
+                    //        auto& sc = ecsInterface.GetComponent<ScriptComponent>(selectedEntity);
 
-                            // Show each script slot
-                            for (size_t i = 0; i < sc.scripts.size(); ++i)
-                            {
-                                auto& slot = sc.scripts[i];
-                                ImGui::PushID((int)i);
+                    //        // Show each script slot
+                    //        for (size_t i = 0; i < sc.scripts.size(); ++i)
+                    //        {
+                    //            auto& slot = sc.scripts[i];
+                    //            ImGui::PushID((int)i);
 
-                                int currentIndex = FindScriptIndex(slot.scriptPath);
+                    //            int currentIndex = FindScriptIndex(slot.scriptPath);
 
-                                ImGui::Text("Script %d", (int)i);
+                    //            ImGui::Text("Script %d", (int)i);
 
-                                if (!g_scriptFileItems.empty())
-                                {
-                                    if (ImGui::Combo("##ScriptCombo", &currentIndex, g_scriptFileItems.data(), (int)g_scriptFileItems.size()))
-                                    {
-                                        if (currentIndex >= 0 && currentIndex < (int)g_scriptFiles.size())
-                                        {
-                                            slot.scriptPath = g_scriptFiles[currentIndex];
-                                            slot.initialized = false;
-                                            slot.lastWriteTicks = 0;
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    ImGui::TextDisabled("No Lua scripts in Assets/Scripts");
-                                }
+                    //            if (!g_scriptFileItems.empty())
+                    //            {
+                    //                if (ImGui::Combo("##ScriptCombo", &currentIndex, g_scriptFileItems.data(), (int)g_scriptFileItems.size()))
+                    //                {
+                    //                    if (currentIndex >= 0 && currentIndex < (int)g_scriptFiles.size())
+                    //                    {
+                    //                        slot.scriptPath = g_scriptFiles[currentIndex];
+                    //                        slot.initialized = false;
+                    //                        slot.lastWriteTicks = 0;
+                    //                    }
+                    //                }
+                    //            }
+                    //            else
+                    //            {
+                    //                ImGui::TextDisabled("No Lua scripts in Assets/Scripts");
+                    //            }
 
-                                if (ImGui::Button("Remove Script"))
-                                {
-                                    sc.scripts.erase(sc.scripts.begin() + i);
-                                    ImGui::PopID();
-                                    break;
-                                }
+                    //            if (ImGui::Button("Remove Script"))
+                    //            {
+                    //                sc.scripts.erase(sc.scripts.begin() + i);
+                    //                ImGui::PopID();
+                    //                break;
+                    //            }
 
-                                ImGui::Separator();
-                                ImGui::PopID();
-                            }
+                    //            ImGui::Separator();
+                    //            ImGui::PopID();
+                    //        }
 
-                            if (ImGui::Button("Add Script Slot"))
-                            {
-                                ScriptInstance newSlot;
-                                newSlot.scriptPath.clear(); // user will pick from combo
-                                sc.scripts.push_back(newSlot);
-                            }
-                        }
-                    }
+                    //        if (ImGui::Button("Add Script Slot"))
+                    //        {
+                    //            ScriptInstance newSlot;
+                    //            newSlot.scriptPath.clear(); // user will pick from combo
+                    //            sc.scripts.push_back(newSlot);
+                    //        }
+                    //    }
+                    //}
 
 
                     // Reset selectedEntity if the properties window is closed

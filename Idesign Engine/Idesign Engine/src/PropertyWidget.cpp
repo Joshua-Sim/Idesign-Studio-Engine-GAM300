@@ -276,7 +276,18 @@ namespace Framework
                     auto& anim = *static_cast<AnimationProperties*>(componentPtr);
                     DrawAssetDropdown<AnimationProperties>("Select Animation", anim);
                 }
+                else if (typeName == "ScriptProperties")
+                {
+                    auto& scripts = *static_cast<ScriptProperties*>(componentPtr);
+                    DrawScriptPropertiesWidget(scripts);
 
+                    // We fully handle this component ourselves, so we DON'T call DrawInspector
+                    if (ImGui::Button("Remove ScriptProperties"))
+                    {
+                        TypeRegistry::Instance().RemoveComponent(typeName, ecs, entity);
+                    }
+                    continue;   
+                }
                 DrawInspector(componentPtr, *propList);
 
                 if (ImGui::Button(std::string("Remove ").append(typeName).c_str()))
@@ -318,6 +329,8 @@ namespace Framework
         TypeRegistry::Instance().Register<NavMeshAgentComponent>("NavMeshAgentComponent", &g_NavMeshAgentProps);
         TypeRegistry::Instance().Register<AnimationProperties>("AnimationProperties", &g_AnimationPropertiesProps);
         TypeRegistry::Instance().Register<LightProperties>("LightProperties", &g_LightProps);
+        TypeRegistry::Instance().Register<ScriptProperties>("ScriptProperties", &g_ScriptPropertiesProps);
+
     }
 
     void AutoRegisterAllReflectedComponents(Coordinator& ecs)
