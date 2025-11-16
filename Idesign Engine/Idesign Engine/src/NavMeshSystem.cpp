@@ -661,4 +661,40 @@ namespace Framework {
         if (!isNavMeshBuilt) return;
         // Optional: use ImGui or debug renderer to show navmesh polygons
     }
+
+    void ScriptPathfindTo(const std::string& agentName, const std::string& targetName)
+    {
+
+        auto navSystem = ecsInterface.GetSystem<Framework::NavMeshSystem>();
+        if (!navSystem)
+            return;
+
+        Entity agent = ecsInterface.GetEntityByName(agentName);
+        Entity target = ecsInterface.GetEntityByName(targetName);
+
+        if (!ecsInterface.IsEntityValid(agent) || !ecsInterface.IsEntityValid(target))
+        {
+            std::cerr << "[Lua] Invalid agent or target name!" << std::endl;
+            return;
+        }
+
+        if (!ecsInterface.HasComponent<NavMeshAgentComponent>(agent) ||
+            !ecsInterface.HasComponent<TransformComponent>(agent) ||
+            !ecsInterface.HasComponent<TransformComponent>(target))
+        {
+            std::cerr << "[Lua] Missing required components!" << std::endl;
+            return;
+        }
+
+        auto& agentXform = ecsInterface.GetComponent<TransformComponent>(agent);
+        auto& targetXform = ecsInterface.GetComponent<TransformComponent>(target);
+
+        glm::vec3 from = navSystem->GetNearestPointOnNavmesh(agentXform.position);
+        glm::vec3 to = navSystem->GetNearestPointOnNavmesh(targetXform.position);
+
+        std::cout << "[Lua] Pathfinding from '" << agentName << "' to '" << targetName << "'..." << std::endl;
+
+        navSystem->SetAgentDestination(agent, to);
+    }
+
 }

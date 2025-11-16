@@ -23,6 +23,17 @@ namespace Framework {
         void WatchFolder(const std::string& folder, const std::vector<std::string>& extensions);
         bool PopEvent(FileEvent& outEvent);
 
+        static inline std::string s_ProjectRoot;
+
+        static void SetProjectRoot(const std::string& root) {
+            std::error_code ec;
+            auto canonical = std::filesystem::canonical(root, ec);
+            if (!ec) {
+                s_ProjectRoot = canonical.generic_string();
+                std::cout << "[FileCheckSystem] Project root: " << s_ProjectRoot << "\n";
+            }
+        }
+
     private:
         struct WatchRule {
             std::string folder;

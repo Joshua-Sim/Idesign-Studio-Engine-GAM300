@@ -65,6 +65,11 @@ int main(void)
     std::filesystem::path initialCWD = std::filesystem::current_path();
     std::cout << "Initial working directory: " << initialCWD << std::endl;
 
+    // SET PROJECT ROOT FOR ALL SYSTEMS THAT NEED IT
+    Framework::FileCheckSystem::SetProjectRoot(initialCWD.string());
+    Framework::ScriptingSystem::SetProjectRoot(initialCWD.string());
+
+
     SetupSignalHandlers();
     EnableMemoryLeakChecking(); // For memory check
 

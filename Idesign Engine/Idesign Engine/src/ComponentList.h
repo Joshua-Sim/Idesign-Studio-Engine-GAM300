@@ -177,7 +177,7 @@ public:
     }
 };
 
-struct ScriptComponent
+struct ScriptInstance
 {
     std::string scriptPath;   // e.g. "scripts/player.lua"
     int tableRef = LUA_NOREF; // reference to the Lua table (instance)
@@ -185,10 +185,15 @@ struct ScriptComponent
     bool hotReload = false;    // enable/disable live reload
     uint64_t lastWriteTicks = 0; // file modification time cache
 
-    ScriptComponent() = default;
+    /*ScriptComponent() = default;
     ScriptComponent(const std::string& path)
         : scriptPath(path)
-    {}
+    {}*/
+};
+
+struct ScriptComponent
+{
+    std::vector<ScriptInstance> scripts;
 };
 
 struct PhysicsBodyComponent {

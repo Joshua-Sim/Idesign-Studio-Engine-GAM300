@@ -199,7 +199,9 @@ namespace Framework {
 		// Entity Name Stuff
 		// Takes in an entity and a string, setting the name of the entity to be the string
 		void SetEntityName(Entity entity, const std::string& name);
-		
+
+		Entity GetEntityByName(const std::string& name);
+
 		// Returns the name of the given entity
 		std::string GetEntityName(Entity entity) const;
 
@@ -259,6 +261,7 @@ namespace Framework {
 			}
 			return result;
 		}
+
 
 	private:
 		std::unique_ptr<ComponentManager> mComponentManager;	// A shared pointer of the Component Manager

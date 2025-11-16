@@ -9,6 +9,7 @@
 #include "WindowConfigProperties.h"  // g_WindowConfigProps
 #include "AudioLoader.h"             // g_AudioPropertiesProps
 #include "TextureLoader.h"           // g_TexturePropertiesProps
+#include "NavMeshSystem.h"
 #include "MeshProperties.h"          // g_MeshPropertiesProps
 #include <filesystem>
 
@@ -26,6 +27,44 @@ namespace Framework {
             auto* self = static_cast<ScriptingSystem*>(lua_touserdata(L, -1));
             lua_pop(L, 1);
             return self;
+        }
+
+        static int lua_GetPosition(lua_State* L)
+        {
+            // 1st arg: entity id
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+
+            if (!ecsInterface.IsEntityValid(e) ||
+                !ecsInterface.HasComponent<TransformComponent>(e))
+            {
+                // no transform; return 0 values
+                return luaL_error(L, "GetPosition: entity %d has no TransformComponent", (int)e);
+            }
+
+            auto& tr = ecsInterface.GetComponent<TransformComponent>(e);
+
+            lua_pushnumber(L, tr.position.x);
+            lua_pushnumber(L, tr.position.y);
+            lua_pushnumber(L, tr.position.z);
+            return 3; // x, y, z
+        }
+
+        static int lua_SetPosition(lua_State* L)
+        {
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+            float x = static_cast<float>(luaL_checknumber(L, 2));
+            float y = static_cast<float>(luaL_checknumber(L, 3));
+            float z = static_cast<float>(luaL_checknumber(L, 4));
+
+            if (!ecsInterface.IsEntityValid(e) ||
+                !ecsInterface.HasComponent<TransformComponent>(e))
+            {
+                return luaL_error(L, "SetPosition: entity %d has no TransformComponent", (int)e);
+            }
+
+            auto& tr = ecsInterface.GetComponent<TransformComponent>(e);
+            tr.position = glm::vec3(x, y, z);
+            return 0;
         }
 
         int l_IsKeyDown(lua_State* L) {
@@ -72,22 +111,79 @@ namespace Framework {
         int l_SetBloom(lua_State* L) { auto* s = lua_self(L); auto* g = s ? s->GetGraphicsSystem() : nullptr; if (g) g->SetBloomFromLua((float)luaL_checknumber(L, 1)); return 0; }
         int l_SetGround(lua_State* L) { auto* s = lua_self(L); auto* g = s ? s->GetGraphicsSystem() : nullptr; if (g) g->SetGroundModeFromLua(lua_toboolean(L, 1) != 0);   return 0; }
 
+        // Engine LUA exposed utility functions (Get entity, get by component, get by name, tag , create prefab, setactive -deactive etc
+
+        
+        int lua_FindEntityByName(lua_State* L)
+        {
+            const char* name = luaL_checkstring(L, 1);
+            Entity e = ecsInterface.GetEntityByName(name);
+            if (ecsInterface.IsEntityValid(e)) {
+                lua_pushinteger(L, static_cast<int>(e));
+            }
+            else {
+                lua_pushnil(L);
+            }
+            return 1;
+        }
+
+        // NavMesh Exposed funcs for path-finding
+
+        void ScriptPathfindTo(const std::string& agentName, const std::string& targetName)
+        {
+            auto& ecs = ecsInterface;
+            auto navSystem = ecs.GetSystem<Framework::NavMeshSystem>();
+            if (!navSystem)
+                return;
+
+            Entity agent = ecs.GetEntityByName(agentName);
+            Entity target = ecs.GetEntityByName(targetName);
+
+            if (!ecs.IsEntityValid(agent) || !ecs.IsEntityValid(target))
+            {
+                std::cerr << "[Lua] Invalid agent or target name!" << std::endl;
+                return;
+            }
+
+            if (!ecs.HasComponent<NavMeshAgentComponent>(agent) ||
+                !ecs.HasComponent<TransformComponent>(agent) ||
+                !ecs.HasComponent<TransformComponent>(target))
+            {
+                std::cerr << "[Lua] Missing required components!" << std::endl;
+                return;
+            }
+
+            auto& agentXform = ecs.GetComponent<TransformComponent>(agent);
+            auto& targetXform = ecs.GetComponent<TransformComponent>(target);
+
+            glm::vec3 from = navSystem->GetNearestPointOnNavmesh(agentXform.position);
+            glm::vec3 to = navSystem->GetNearestPointOnNavmesh(targetXform.position);
+
+            std::cout << "[Lua] Pathfinding from '" << agentName << "' to '" << targetName << "'..." << std::endl;
+
+            navSystem->SetAgentDestination(agent, to);
+        }
+
+
         namespace fs = std::filesystem;
 
         // Join a relative path with fallback prefixes until a file is found.
         static std::string resolve_path(const std::string& rel) {
-            const char* roots[] = {
-                ".",                // current working dir
-                "..",               // one up
-                "../..",            // two up (depending on VS layout)
-            };
+            // First try from project root
+            fs::path fromRoot = fs::path(ScriptingSystem::GetProjectRoot()) / rel;
+            std::error_code ec;
+            if (fs::exists(fromRoot, ec)) {
+                return fs::weakly_canonical(fromRoot, ec).string();
+            }
 
+            // Fallback to old behavior for backwards compatibility
+            const char* roots[] = { ".", "..", "../.." };
             for (auto r : roots) {
                 fs::path p = fs::path(r) / rel;
-                std::error_code ec;
                 if (fs::exists(p, ec)) return fs::weakly_canonical(p, ec).string();
             }
-            // if not found, return as-is (fopen will fail; we’ll log)
+
+            // If not found, return as-is
             return rel;
         }
 
@@ -238,6 +334,20 @@ namespace Framework {
         lua_register(L, "SetHDR", l_SetHDR);
         lua_register(L, "SetBloom", l_SetBloom);
         lua_register(L, "SetGroundMode", l_SetGround);
+        lua_register(L, "GetPosition", lua_GetPosition);
+        lua_register(L, "SetPosition", lua_SetPosition);
+
+        // Engine utility
+        lua_register(L, "FindEntityByName", lua_FindEntityByName);
+
+        // Navmesh
+        lua_register(L, "PathfindTo", [](lua_State* L) -> int {
+            const char* agentName = luaL_checkstring(L, 1);
+            const char* targetName = luaL_checkstring(L, 2);
+
+            ScriptPathfindTo(agentName, targetName);
+            return 0;
+            });
 
         // Create Cook table with our functions
         lua_newtable(L);                           // Cook
@@ -256,71 +366,103 @@ namespace Framework {
     void ScriptingSystem::Update(float dt) {
         for (auto const& e : mEntities) {
             if (!ecsInterface.HasComponent<ScriptComponent>(e)) continue;
-            auto& sc = ecsInterface.GetComponent<ScriptComponent>(e);
+            auto& comp = ecsInterface.GetComponent<ScriptComponent>(e);
 
-            if (sc.hotReload && !sc.scriptPath.empty()) {
-                try {
-                    auto nowTicks = FileTimeToTicks(std::filesystem::last_write_time(sc.scriptPath));
-                    if (nowTicks != sc.lastWriteTicks) {
-                        std::cout << "[HotReload] " << sc.scriptPath << "\n";
-                        if (LoadScriptTable(sc)) {
-                            // re-expose entity id
-                            lua_rawgeti(L, LUA_REGISTRYINDEX, sc.tableRef);
-                            lua_pushinteger(L, static_cast<lua_Integer>(e));
-                            lua_setfield(L, -2, "entity");
-                            lua_pop(L, 1);
+            for (auto& sc : comp.scripts) {         // <--- NEW
+                if (sc.scriptPath.empty()) continue;
 
-                            // run on_init again so the script can re-bind state
-                            CallHook(sc.tableRef, "on_init");
-                            sc.initialized = true;
+                if (sc.hotReload && !sc.scriptPath.empty()) {
+                    try {
+                        auto nowTicks = FileTimeToTicks(std::filesystem::last_write_time(sc.scriptPath));
+                        if (nowTicks != sc.lastWriteTicks) {
+                            std::cout << "[HotReload] " << sc.scriptPath << "\n";
+                            if (LoadScriptTable(sc)) {
+                                // re-expose entity id
+                                lua_rawgeti(L, LUA_REGISTRYINDEX, sc.tableRef);
+                                lua_pushinteger(L, static_cast<lua_Integer>(e));
+                                lua_setfield(L, -2, "entity");
+                                lua_pop(L, 1);
+
+                                // run on_init again so the script can re-bind state
+                                CallHook(sc.tableRef, "on_init");
+                                sc.initialized = true;
+                            }
+                            sc.lastWriteTicks = nowTicks; // remember the new time
                         }
-                        sc.lastWriteTicks = nowTicks; // remember the new time
+                    }
+                    catch (const std::exception& ex) {
+                        std::cerr << "[HotReload] check failed for " << sc.scriptPath << ": " << ex.what() << "\n";
                     }
                 }
-                catch (const std::exception& ex) {
-                    std::cerr << "[HotReload] check failed for " << sc.scriptPath << ": " << ex.what() << "\n";
+
+                if (sc.tableRef == LUA_NOREF) {
+                    if (!LoadScriptTable(sc)) continue;
+
+                    // expose entity id: self.entity
+                    lua_rawgeti(L, LUA_REGISTRYINDEX, sc.tableRef);
+                    lua_pushinteger(L, static_cast<lua_Integer>(e));
+                    lua_setfield(L, -2, "entity");
+                    lua_pop(L, 1);
                 }
+                if (!sc.initialized) { CallHook(sc.tableRef, "on_init"); sc.initialized = true; }
+                CallHook(sc.tableRef, "on_update", dt);
             }
-
-            if (sc.tableRef == LUA_NOREF) {
-                if (!LoadScriptTable(sc)) continue;
-
-                // expose entity id: self.entity
-                lua_rawgeti(L, LUA_REGISTRYINDEX, sc.tableRef);
-                lua_pushinteger(L, static_cast<lua_Integer>(e));
-                lua_setfield(L, -2, "entity");
-                lua_pop(L, 1);
-            }
-            if (!sc.initialized) { CallHook(sc.tableRef, "on_init"); sc.initialized = true; }
-            CallHook(sc.tableRef, "on_update", dt);
         }
     }
 
+    void ScriptingSystem:: SetProjectRoot(const std::string& root) {
+        std::error_code ec;
+        auto canonical = std::filesystem::canonical(root, ec);
+        if (!ec) {
+            s_ProjectRoot = canonical.generic_string();
+            std::cout << "[ScriptingSystem] Project root: " << s_ProjectRoot << "\n";
+        }
+    }
+
+     std::string ScriptingSystem::GetProjectRoot() { return s_ProjectRoot; }
+
     std::string ScriptingSystem::GetName() { return "ScriptingSystem"; }
 
-    bool ScriptingSystem::LoadScriptTable(ScriptComponent& sc)
+    bool ScriptingSystem::LoadScriptTable(ScriptInstance& sc)
     {
-        // Clean any previous instance table
         if (sc.tableRef != LUA_NOREF) {
             luaL_unref(L, LUA_REGISTRYINDEX, sc.tableRef);
             sc.tableRef = LUA_NOREF;
         }
 
-        // Execute the Lua file (must return a table)
-        if (luaL_dofile(L, sc.scriptPath.c_str()) != LUA_OK) {
-            std::cerr << "[Lua] load error in " << sc.scriptPath
-                << ": " << lua_tostring(L, -1) << "\n";
-            lua_pop(L, 1); // pop error
+        // BUILD ABSOLUTE PATH FROM PROJECT ROOT
+        std::filesystem::path scriptPath;
+        if (std::filesystem::path(sc.scriptPath).is_absolute()) {
+            scriptPath = sc.scriptPath;
+        }
+        else {
+            scriptPath = std::filesystem::path(s_ProjectRoot) / sc.scriptPath;
+        }
+
+        std::error_code ec;
+        auto canonicalPath = std::filesystem::weakly_canonical(scriptPath, ec);
+
+        if (ec || !std::filesystem::exists(canonicalPath)) {
+            std::cerr << "[Lua] script file not found: " << sc.scriptPath
+                << " (resolved to: " << scriptPath << ")\n";
+            return false;
+        }
+
+        std::string absoluteScriptPath = canonicalPath.generic_string();
+
+        // USE ABSOLUTE PATH
+        if (luaL_dofile(L, absoluteScriptPath.c_str()) != LUA_OK) {
+            std::cerr << "[Lua] load error in " << sc.scriptPath << ": " << lua_tostring(L, -1) << "\n";
+            lua_pop(L, 1);
             return false;
         }
 
         if (!lua_istable(L, -1)) {
             std::cerr << "[Lua] script must `return` a table: " << sc.scriptPath << "\n";
-            lua_pop(L, 1); // pop non-table
+            lua_pop(L, 1);
             return false;
         }
 
-        // Store table in registry and reset lifecycle
         sc.tableRef = luaL_ref(L, LUA_REGISTRYINDEX);
         sc.initialized = false;
         return true;
@@ -363,8 +505,14 @@ namespace Framework {
     
     Entity ScriptingSystem::CreateScriptEntity(const std::string& path) {
         Entity e = ecsInterface.CreateEntity();
-        ecsInterface.AddComponent<ScriptComponent>(e, ScriptComponent{ path });
-        ecsInterface.AddComponent<TransformComponent>(e,TransformComponent{});
+
+        ScriptComponent comp;
+        ScriptInstance inst;
+        inst.scriptPath = path;
+        comp.scripts.push_back(inst);
+
+        ecsInterface.AddComponent<ScriptComponent>(e, comp);
+        ecsInterface.AddComponent<TransformComponent>(e, TransformComponent{});
         ecsInterface.AddComponent<HierarchyComponent>(e, HierarchyComponent{});
         return e;
     }
@@ -374,9 +522,9 @@ namespace Framework {
         namespace fs = std::filesystem;
         std::error_code ec;
 
-        // Normalize the changed path
         fs::path changedAbs = fs::weakly_canonical(changedPath, ec);
-        std::string changedNorm = (ec ? fs::path(changedPath) : changedAbs).lexically_normal().generic_string();
+        std::string changedNorm = (ec ? fs::path(changedPath) : changedAbs)
+            .lexically_normal().generic_string();
         std::string changedFile = fs::path(changedNorm).filename().string();
 
         std::cout << "[HotReload] request for: " << changedNorm << "\n";
@@ -386,59 +534,38 @@ namespace Framework {
         for (auto e : mEntities)
         {
             if (!ecsInterface.HasComponent<ScriptComponent>(e)) continue;
-            auto& sc = ecsInterface.GetComponent<ScriptComponent>(e);
-            if (sc.scriptPath.empty()) continue;
+            auto& comp = ecsInterface.GetComponent<ScriptComponent>(e);
 
-            // Normalize the stored script path
-            ec.clear();
-            fs::path scAbs = fs::weakly_canonical(sc.scriptPath, ec);
-            std::string scNorm = (ec ? fs::path(sc.scriptPath) : scAbs).lexically_normal().generic_string();
-            std::string scFile = fs::path(scNorm).filename().string();
-
-            // Match by absolute OR by filename (helps when one side is relative)
-            bool match = (scNorm == changedNorm) || (scFile == changedFile);
-
-            if (match)
-            {
-                std::cout << "  -> reloading entity " << e << " (" << scNorm << ")\n";
-                if (LoadScriptTable(sc))
-                {
-                    // re-expose entity id on the table and re-init
-                    lua_rawgeti(L, LUA_REGISTRYINDEX, sc.tableRef);
-                    lua_pushinteger(L, static_cast<lua_Integer>(e));
-                    lua_setfield(L, -2, "entity");
-                    lua_pop(L, 1);
-
-                    sc.initialized = false;
-                    CallHook(sc.tableRef, "on_init");
-                    any = true;
-                }
-                else
-                {
-                    std::cerr << "  !! reload failed for " << scNorm << "\n";
-                }
-            }
-        }
-
-        // Optional fallback: if nothing matched but it was a .lua file, reload ALL scripts
-        if (!any && fs::path(changedNorm).extension() == ".lua")
-        {
-            std::cout << "  (no direct match; reloading all scripts)\n";
-            for (auto e : mEntities)
-            {
-                if (!ecsInterface.HasComponent<ScriptComponent>(e)) continue;
-                auto& sc = ecsInterface.GetComponent<ScriptComponent>(e);
+            for (auto& sc : comp.scripts) {
                 if (sc.scriptPath.empty()) continue;
 
-                if (LoadScriptTable(sc))
-                {
-                    lua_rawgeti(L, LUA_REGISTRYINDEX, sc.tableRef);
-                    lua_pushinteger(L, static_cast<lua_Integer>(e));
-                    lua_setfield(L, -2, "entity");
-                    lua_pop(L, 1);
+                ec.clear();
+                fs::path scAbs = fs::weakly_canonical(sc.scriptPath, ec);
+                std::string scNorm = (ec ? fs::path(sc.scriptPath) : scAbs)
+                    .lexically_normal().generic_string();
+                std::string scFile = fs::path(scNorm).filename().string();
 
-                    sc.initialized = false;
-                    CallHook(sc.tableRef, "on_init");
+                bool match = (scNorm == changedNorm) || (scFile == changedFile);
+
+                if (match)
+                {
+                    std::cout << "  -> reloading entity " << e
+                        << " (" << scNorm << ")\n";
+                    if (LoadScriptTable(sc))
+                    {
+                        lua_rawgeti(L, LUA_REGISTRYINDEX, sc.tableRef);
+                        lua_pushinteger(L, static_cast<lua_Integer>(e));
+                        lua_setfield(L, -2, "entity");
+                        lua_pop(L, 1);
+
+                        sc.initialized = false;
+                        CallHook(sc.tableRef, "on_init");
+                        any = true;
+                    }
+                    else
+                    {
+                        std::cerr << "  !! reload failed for " << scNorm << "\n";
+                    }
                 }
             }
         }

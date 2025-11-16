@@ -2,23 +2,48 @@
 #include <pch.h>
 #include <AssetCompiler.h>
 #include "NavMeshProperties.h"
+#include "NavMeshAgentProperties.h"
 #include "MeshLoader.h"
 #include "SceneManager.h"
 #include "PrefabProperties.h"
 #include "PrefabComponent.h"
+#include "ScriptingSystem.h"
 
 extern Framework::Coordinator ecsInterface;
 namespace Framework
 {
     void loadScene(const std::string& scenePath)
     {
+
+        // BUILD ABSOLUTE PATH FIRST
+        std::filesystem::path absoluteScenePath;
+        if (std::filesystem::path(scenePath).is_absolute())
+        {
+            absoluteScenePath = scenePath;
+        }
+        else
+        {
+            absoluteScenePath = std::filesystem::path(Framework::ScriptingSystem::GetProjectRoot()) / scenePath;
+        }
+
+        std::error_code ec;
+        auto canonical = std::filesystem::weakly_canonical(absoluteScenePath, ec);
+        if (ec || !std::filesystem::exists(canonical))
+        {
+            std::cerr << "Failed to find scene file: " << scenePath
+                << " (resolved to: " << absoluteScenePath << ")\n";
+            return;
+        }
+
+        std::string finalPath = canonical.string();
+
         // Parse JSON
         rapidjson::Document doc;
         {
-            FILE* fp = fopen(scenePath.c_str(), "r");
+            FILE* fp = fopen(finalPath.c_str(), "r");  // <-- USE ABSOLUTE PATH
             if (!fp)
             {
-                std::cerr << "Failed to open scene file: " << scenePath << "\n";
+                std::cerr << "Failed to open scene file: " << finalPath << "\n";
                 return;
             }
 
@@ -233,6 +258,29 @@ namespace Framework
                     ecsInterface.AddComponent(entity, nav);
                 }
 
+                // NavMeshAgentComponent
+                if (components.HasMember("NavMeshAgentComponent"))
+                {
+                    NavMeshAgentComponent agent;
+                    Deserialize(&agent, g_NavMeshAgentProps, components["NavMeshAgentComponent"]);
+                    ecsInterface.AddComponent(entity, agent);
+                }
+
+                // Script Component
+                if (components.HasMember("ScriptComponent")) {
+                    ScriptComponent script;
+
+                    const auto& scArr = components["ScriptComponent"]["scripts"];
+                    for (auto& s : scArr.GetArray()) {
+                        ScriptInstance inst;
+                        inst.scriptPath = s.GetString();
+                        script.scripts.push_back(inst);
+                    }
+
+                    ecsInterface.AddComponent(entity, script);
+                }
+
+
                 sceneManager.RegisterEntityToScene(entity, cleanName);
             }
         }
@@ -361,6 +409,31 @@ namespace Framework
 
                     componentsObj.AddMember("NavMeshComponent", navObj, allocator);
                 }
+                // NavMeshAgentComponent
+                if (ecsInterface.HasComponent<NavMeshAgentComponent>(entity))
+                {
+                    const auto& agent = ecsInterface.GetComponent<NavMeshAgentComponent>(entity);
+                    rapidjson::Value agentJson(rapidjson::kObjectType);
+                    Serialize((void*)&agent, g_NavMeshAgentProps, agentJson, allocator);
+                    componentsObj.AddMember("NavMeshAgentComponent", agentJson, allocator);
+                }
+                // Scripts
+                if (ecsInterface.HasComponent<ScriptComponent>(entity)) {
+                    const auto& script = ecsInterface.GetComponent<ScriptComponent>(entity);
+                    rapidjson::Value scriptJson(rapidjson::kObjectType);
+
+                    // Save array of script paths
+                    rapidjson::Value arr(rapidjson::kArrayType);
+                    for (const auto& sc : script.scripts) {
+                        rapidjson::Value path;
+                        path.SetString(sc.scriptPath.c_str(), allocator);
+                        arr.PushBack(path, allocator);
+                    }
+
+                    scriptJson.AddMember("scripts", arr, allocator);
+                    componentsObj.AddMember("ScriptComponent", scriptJson, allocator);
+                }
+
             }
 
             entityObj.AddMember("components", componentsObj, allocator);
@@ -446,9 +519,27 @@ namespace Framework
             ecs.AddComponent(newEntity, ecs.GetComponent<AnimationProperties>(sourceEntity));
         }
 
+        if (ecs.HasComponent<NavMeshAgentComponent>(sourceEntity))
+        {
+            ecs.AddComponent(newEntity, ecs.GetComponent<NavMeshAgentComponent>(sourceEntity));
+        }
+
         if (ecs.HasComponent<PrefabComponent>(sourceEntity))
         {
             ecs.AddComponent(newEntity, ecs.GetComponent<PrefabComponent>(sourceEntity));
+        }
+
+        if (ecs.HasComponent<ScriptComponent>(sourceEntity))
+        {
+            ScriptComponent original = ecs.GetComponent<ScriptComponent>(sourceEntity);
+            ScriptComponent copy;
+            for (const auto& inst : original.scripts)
+            {
+                ScriptInstance newInst;
+                newInst.scriptPath = inst.scriptPath;
+                copy.scripts.push_back(newInst);
+            }
+            ecs.AddComponent(newEntity, copy);
         }
 
         // !! IMPORTANT !!
@@ -540,6 +631,16 @@ namespace Framework
             componentsObj.AddMember("NavMeshComponent", navObj, allocator);
         }
 
+        // NavMeshAgentComponent
+        if (ecsInterface.HasComponent<NavMeshAgentComponent>(entity))
+        {
+            const auto& agent = ecsInterface.GetComponent<NavMeshAgentComponent>(entity);
+            rapidjson::Value agentJson(rapidjson::kObjectType);
+            Serialize((void*)&agent, g_NavMeshAgentProps, agentJson, allocator);
+            componentsObj.AddMember("NavMeshAgentComponent", agentJson, allocator);
+        }
+
+
         if (ecsInterface.HasComponent<LightProperties>(entity))
         {
             const auto& light = ecsInterface.GetComponent<LightProperties>(entity);
@@ -555,15 +656,43 @@ namespace Framework
             animRef.AddMember("guid", rapidjson::Value(anim.guid.id.c_str(), allocator), allocator);
             componentsObj.AddMember("AnimationProperties", animRef, allocator);
         }
+        
+        //Scripts
+        if (ecsInterface.HasComponent<ScriptComponent>(entity)) {
+            const auto& script = ecsInterface.GetComponent<ScriptComponent>(entity);
+            rapidjson::Value scriptJson(rapidjson::kObjectType);
+            rapidjson::Value arr(rapidjson::kArrayType);
+            for (const auto& sc : script.scripts) {
+                rapidjson::Value path;
+                path.SetString(sc.scriptPath.c_str(), allocator);
+                arr.PushBack(path, allocator);
+            }
+            scriptJson.AddMember("scripts", arr, allocator);
+            componentsObj.AddMember("ScriptComponent", scriptJson, allocator);
+        }
+
 
         entityObj.AddMember("components", componentsObj, allocator);
         doc.AddMember("entity", entityObj, allocator);  // Note: "entity" not "Entities"
 
-        // Write to file
-        FILE* fp = fopen(prefabPath.c_str(), "w");
+        // BUILD ABSOLUTE PATH if needed
+        std::filesystem::path absolutePath;
+        if (std::filesystem::path(prefabPath).is_absolute())
+        {
+            absolutePath = prefabPath;
+        }
+        else
+        {
+            absolutePath = std::filesystem::path(Framework::ScriptingSystem::GetProjectRoot()) / prefabPath;
+        }
+
+        std::string finalPath = absolutePath.string();
+
+        // Write to file using ABSOLUTE PATH
+        FILE* fp = fopen(finalPath.c_str(), "w");
         if (!fp)
         {
-            std::cerr << "Failed to create prefab file: " << prefabPath << std::endl;
+            std::cerr << "Failed to create prefab file: " << finalPath << std::endl;
             return;
         }
 
@@ -574,43 +703,58 @@ namespace Framework
         doc.Accept(writer);
         fclose(fp);
 
-        std::cout << "Prefab saved to: " << prefabPath << "\n";
+        std::cout << "Prefab saved to: " << finalPath << "\n";
     }
 
     void CreatePrefabFromEntity(Entity entity, const std::string& prefabName)
     {
         // 1. Generate GUID for new prefab
         std::string prefabGUID = GenerateGUID();
-        std::string prefabPath = "Assets/Prefabs/" + prefabName + ".prefab";
 
-        // 2. Ensure directory exists
-        std::filesystem::create_directories("Assets/Prefabs");
+        // 2. BUILD ABSOLUTE PATHS
+        std::filesystem::path projectRoot = Framework::ScriptingSystem::GetProjectRoot();
+        std::filesystem::path prefabFolder = projectRoot / "Assets/Prefabs";
+        std::filesystem::path prefabPath = prefabFolder / (prefabName + ".prefab");
 
-        // 3. Serialize entity to prefab file
-        saveEntityToPrefab(entity, prefabPath);
+        // 3. Ensure directory exists (using absolute path)
+        std::error_code ec;
+        std::filesystem::create_directories(prefabFolder, ec);
+        if (ec)
+        {
+            std::cerr << "Failed to create prefab directory: " << ec.message() << "\n";
+            return;
+        }
 
-        // 4. Create PrefabProperties entry
+        // 4. Serialize entity to prefab file (use absolute path)
+        std::string absolutePrefabPath = prefabPath.string();
+        saveEntityToPrefab(entity, absolutePrefabPath);
+
+        // 5. Create PrefabProperties entry with RELATIVE path for storage
+        std::string relativePath = std::filesystem::relative(absolutePrefabPath, projectRoot).string();
+
         auto prefabProps = std::make_unique<PrefabProperties>();
         prefabProps->guid = prefabGUID;
         prefabProps->name = prefabName;
-        prefabProps->path = prefabPath;
-        prefabProps->isScenePrefab = false; // Single entity prefab
+        prefabProps->path = relativePath; // Store relative path
+        prefabProps->isScenePrefab = false;
 
-        // 5. Register in AssetManager
+        // 6. Register in AssetManager (use relative path as key)
         AssetManager::Instance().RegisterAsset(
             std::move(prefabProps),
             &g_PrefabProps,
-            "Resource/PrefabAsset.bin"
+            relativePath
         );
 
-        // 6. Save to JSON (will be written on shutdown, but we can force it now)
+        // 7. Save to JSON (use absolute path for JSON file)
+        std::string jsonPath = (projectRoot / "Assets/JSON/PrefabAsset.json").string();
         AssetManager::Instance().SaveArrayToJson(
             TypeName<PrefabProperties>::value,
-            "Assets/JSON/PrefabAsset.json",
+            jsonPath,
             "prefabs"
         );
 
         std::cout << "Created prefab: " << prefabName << " (GUID: " << prefabGUID << ")\n";
+        std::cout << "  Saved to: " << absolutePrefabPath << "\n";
     }
 
     Entity InstantiatePrefab(const std::string& prefabGUID)
@@ -623,11 +767,35 @@ namespace Framework
             return std::numeric_limits<Entity>::max();
         }
 
-        // 2. Load the prefab file
-        FILE* fp = fopen(prefabProps->path.c_str(), "r");
+        // 2. BUILD ABSOLUTE PATH
+        std::filesystem::path prefabPath;
+        if (std::filesystem::path(prefabProps->path).is_absolute())
+        {
+            prefabPath = prefabProps->path;
+        }
+        else
+        {
+            // Assume project root is stored somewhere accessible
+            prefabPath = std::filesystem::path(Framework::ScriptingSystem::GetProjectRoot()) / prefabProps->path;
+        }
+
+        std::error_code ec;
+        auto canonicalPath = std::filesystem::weakly_canonical(prefabPath, ec);
+
+        if (ec || !std::filesystem::exists(canonicalPath))
+        {
+            std::cerr << "Prefab file not found: " << prefabProps->path
+                << " (resolved to: " << prefabPath << ")" << std::endl;
+            return std::numeric_limits<Entity>::max();
+        }
+
+        std::string absolutePrefabPath = canonicalPath.string();
+
+        // 3. Load the prefab file using ABSOLUTE PATH
+        FILE* fp = fopen(absolutePrefabPath.c_str(), "r");
         if (!fp)
         {
-            std::cerr << "Failed to open prefab file: " << prefabProps->path << std::endl;
+            std::cerr << "Failed to open prefab file: " << absolutePrefabPath << std::endl;
             return std::numeric_limits<Entity>::max();
         }
 
@@ -732,6 +900,13 @@ namespace Framework
             ecsInterface.AddComponent(newEntity, nav);
         }
 
+        if (components.HasMember("NavMeshAgentComponent"))
+        {
+            NavMeshAgentComponent agent;
+            Deserialize(&agent, g_NavMeshAgentProps, components["NavMeshAgentComponent"]);
+            ecsInterface.AddComponent(newEntity, agent);
+        }
+
 
         if (components.HasMember("LightProperties"))
         {
@@ -751,7 +926,17 @@ namespace Framework
             }
         }
 
-        // === ADD THIS AT THE END ===
+        if (components.HasMember("ScriptComponent")) {
+            ScriptComponent script;
+            const auto& scArr = components["ScriptComponent"]["scripts"];
+            for (auto& s : scArr.GetArray()) {
+                ScriptInstance inst;
+                inst.scriptPath = s.GetString();
+                script.scripts.push_back(inst);
+            }
+            ecsInterface.AddComponent(newEntity, script);
+        }
+
         if (newEntity != std::numeric_limits<Entity>::max())
         {
             PrefabComponent prefabComp;

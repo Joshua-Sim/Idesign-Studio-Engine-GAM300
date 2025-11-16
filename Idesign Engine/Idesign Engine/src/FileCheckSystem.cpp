@@ -20,8 +20,20 @@ namespace Framework {
     }
 
     void FileCheckSystem::WatchFolder(const std::string& folder, const std::vector<std::string>& extensions) {
-        rules_.push_back({ folder, extensions });
-        std::cout << "[FileCheckSystem] Watching " << folder << "\n";
+        std::error_code ec;
+
+        // Build absolute path from project root
+        auto fullPath = std::filesystem::path(s_ProjectRoot) / folder;
+        auto canonicalPath = std::filesystem::canonical(fullPath, ec);
+
+        if (ec || !std::filesystem::exists(canonicalPath)) {
+            std::cout << "[FileCheckSystem] Warning: Cannot watch folder: " << folder
+                << " (resolved to: " << fullPath << ")\n";
+            return;
+        }
+
+        rules_.push_back({ canonicalPath.generic_string(), extensions });
+        std::cout << "[FileCheckSystem] Watching " << canonicalPath.generic_string() << "\n";
     }
 
     void FileCheckSystem::Update(float dt) {
