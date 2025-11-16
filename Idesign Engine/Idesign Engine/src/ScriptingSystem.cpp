@@ -228,7 +228,7 @@ namespace Framework {
             const char* key = luaL_optstring(L, 4, "AudioProperties");
 
             bool skipped = prepare_output_and_skip_if_fresh(json, out);
-            bool ok = skipped ? true : CompileArray<AudioProperties>(json, out, desc, g_AudioPropertiesProps, key);
+            bool ok = skipped ? true : CompileArray<AudioMetadata>(json, out, desc, g_AudioMetadataProps, key);
             lua_pushboolean(L, ok);
             return 1;
         }

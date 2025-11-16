@@ -20,17 +20,6 @@
 #include "TextureLoader.h"
 #include "MaterialLoader.h"
 
-// All Components || Properties
-#include "TextureProperties.h"
-#include "MeshProperties.h"
-#include "AudioProperties.h"
-#include "TransformProperties.h"
-#include "TextProperties.h"
-#include "NavMeshProperties.h"
-#include "NavMeshAgentProperties.h"
-#include "AnimationProperties.h"
-#include "LightProperties.h"
-
 extern Framework::Coordinator ecsInterface;
 namespace Framework
 {
@@ -130,12 +119,6 @@ namespace Framework
                         TextureLoader::loadTexture(*asset, true); // Load once
                     }
                     component.textureID = asset->textureID; // Reuse loaded texture
-                }
-
-                if constexpr (std::is_same_v<AssetType, AudioProperties>)
-                {
-                    component.mode = asset->mode;
-                    component.soundType = asset->soundType;
                 }
 
                 if constexpr (std::is_same_v<AssetType, NavMeshComponent>)

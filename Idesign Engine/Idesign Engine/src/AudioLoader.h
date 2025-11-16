@@ -1,9 +1,9 @@
 
 #pragma once
 #include "Audio.h"
-#include "AudioProperties.h"
+#include "AudioComponent.h"
 
 namespace Framework
 {
-    bool loadAudio(AudioProperties& audioProps);
+    bool loadAudio(AudioMetadata& audioProps);
 }

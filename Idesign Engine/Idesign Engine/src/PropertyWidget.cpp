@@ -248,8 +248,8 @@ namespace Framework
                 }
                 else if (typeName == "AudioProperties")
                 {
-                    auto& audio = *static_cast<AudioProperties*>(componentPtr);
-                    DrawAssetDropdown<AudioProperties>("Select Audio", audio);
+                    //auto& audio = *static_cast<AudioProperties*>(componentPtr);
+                    //DrawAssetDropdown<AudioProperties>("Select Audio", audio);
                 }
                 else if (typeName == "NavMeshComponent")
                 {
@@ -344,7 +344,8 @@ namespace Framework
         // Only if the component nids to be under the entity inspectorppppp
         TypeRegistry::Instance().Register<TextureProperties>("TextureProperties", &g_TexturePropertiesProps);
         TypeRegistry::Instance().Register<MeshProperties>("MeshProperties", &g_MeshProps);
-        TypeRegistry::Instance().Register<AudioProperties>("AudioProperties", &g_AudioPropertiesProps);
+        TypeRegistry::Instance().Register<AudioComponent>("AudioComponent", &g_AudioComponentProps);
+        TypeRegistry::Instance().Register<ListenerComponent>("ListenerComponent", &g_ListenerComponentProps);
         TypeRegistry::Instance().Register<TextProperties>("TextProperties", &g_TextComponentProps);
         TypeRegistry::Instance().Register<TransformComponent>("TransformComponent", &g_TransformProps);
         TypeRegistry::Instance().Register<NavMeshComponent>("NavMeshComponent", &g_NavMeshProps);

@@ -30,7 +30,7 @@ namespace Framework
 
 		std::string audioPath = (root / "Assets/JSON/AudioAsset.json").string();
 		std::cout << "  Saving: " << audioPath << std::endl;
-		AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, audioPath, "audio");
+		AssetManager::Instance().SaveArrayToJson(TypeName<AudioMetadata>::value, audioPath, "audio");
 
 		std::string texturePath = (root / "Assets/JSON/TextureAsset.json").string();
 		std::cout << "  Saving: " << texturePath << std::endl;
@@ -66,7 +66,7 @@ namespace Framework
 		CompileArray<MeshProperties>((root / "Assets/JSON/MeshAsset.json").string(), (root / "Resource/MeshAsset.bin").string(), (root / "Descriptor/MeshAsset.desc").string(), g_MeshProps, "mesh");
 
 		std::cout << "  Compiling Audio:\n    JSON: " << (root / "Assets/JSON/AudioAsset.json").string() << "\n    BIN: " << (root / "Resource/AudioAsset.bin").string() << std::endl;
-		CompileArray<AudioProperties>((root / "Assets/JSON/AudioAsset.json").string(), (root / "Resource/AudioAsset.bin").string(), (root / "Descriptor/AudioAsset.desc").string(), g_AudioPropertiesProps, "audio");
+		CompileArray<AudioMetadata>((root / "Assets/JSON/AudioAsset.json").string(), (root / "Resource/AudioAsset.bin").string(), (root / "Descriptor/AudioAsset.desc").string(), g_AudioMetadataProps, "audio");
 
 		std::cout << "  Compiling Texture:\n    JSON: " << (root / "Assets/JSON/TextureAsset.json").string() << "\n    BIN: " << (root / "Resource/TextureAsset.bin").string() << std::endl;
 		CompileArray<TextureProperties>((root / "Assets/JSON/TextureAsset.json").string(), (root / "Resource/TextureAsset.bin").string(), (root / "Descriptor/TextureAsset.desc").string(), g_TexturePropertiesProps, "textures");
@@ -99,7 +99,7 @@ namespace Framework
 
 		std::string audioBinPath = (root / "Resource/AudioAsset.bin").string();
 		std::cout << "  Loading: " << audioBinPath << std::endl;
-		AssetManager::Instance().LoadBinaryArray<AudioProperties>(audioBinPath, g_AudioPropertiesProps);
+		AssetManager::Instance().LoadBinaryArray<AudioMetadata>(audioBinPath, g_AudioMetadataProps);
 
 		std::string prefabBinPath = (root / "Resource/PrefabAsset.bin").string();
 		std::cout << "  Loading: " << prefabBinPath << std::endl;

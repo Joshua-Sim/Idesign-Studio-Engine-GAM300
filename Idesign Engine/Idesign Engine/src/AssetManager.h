@@ -27,7 +27,6 @@
 
 // Properties Files
 #include "PropertySystem.h"
-#include "AudioProperties.h"
 #include "WindowConfigProperties.h"
 #include "TextureProperties.h"
 #include "MeshProperties.h"
@@ -39,6 +38,7 @@
 #include "MaterialProperties.h"
 #include "AnimationProperties.h"
 #include "LightProperties.h"
+#include "AudioComponent.h"
 
 // Asset Files
 #include "AssetLoader.h"
@@ -49,7 +49,9 @@
 namespace Framework
 {
     REGISTER_TYPE_NAME(WindowConfig);
-    REGISTER_TYPE_NAME(AudioProperties);
+    REGISTER_TYPE_NAME(AudioComponent);
+    REGISTER_TYPE_NAME(ListenerComponent);
+    REGISTER_TYPE_NAME(AudioMetadata);
     REGISTER_TYPE_NAME(TextureProperties);
     REGISTER_TYPE_NAME(MeshProperties);
     REGISTER_TYPE_NAME(TextProperties);

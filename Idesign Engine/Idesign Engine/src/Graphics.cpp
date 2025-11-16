@@ -195,7 +195,7 @@ namespace Framework {
         ecsInterface.RegisterComponent<TextProperties>();
         ecsInterface.RegisterComponent<NavMeshComponent>();
         ecsInterface.RegisterComponent<NavMeshAgentComponent>(); // Move to navmesh sys after fixing load scene for mesh model
-        ecsInterface.RegisterComponent<AudioProperties>();
+        ecsInterface.RegisterComponent<ListenerComponent>();
         ecsInterface.RegisterComponent<PhysicsBodyComponent>();
         ecsInterface.RegisterComponent<MaterialProperties>();
         ecsInterface.RegisterComponent<MaterialMetadata>();

@@ -426,6 +426,7 @@ namespace Framework {
                         {
                             // <-- FIX: Register using the relative path as the key
                             AssetManager::Instance().RegisterAsset<TextureProperties>(std::move(texPtr), &g_TexturePropertiesProps, relativePath);
+
                             // <-- FIX: Save JSON to its absolute path
                             AssetManager::Instance().SaveArrayToJson(TypeName<TextureProperties>::value, (root / "Assets/JSON/TextureAsset.json").string(), "textures");
                             std::cout << "Texture added: " << fileName << " to " << relativePath << std::endl;
@@ -444,14 +445,14 @@ namespace Framework {
             // Audio Files
             else if (extension == "mp3" || extension == "wav" || extension == "flac")
             {
-                auto existingGuid = AssetManager::Instance().FindGuid<AudioProperties>(fileName);
+                auto existingGuid = AssetManager::Instance().FindGuid<AudioMetadata>(fileName);
                 if (existingGuid.empty())
                 {
                     if (MoveFileToAssetFolder(filePath, audioFolder, finalAbsolutePath, error)) // <-- FIX: Using absolute folder
                     {
                         std::string relativePath = std::filesystem::relative(finalAbsolutePath, root).string(); // <-- FIX
 
-                        auto audioPtr = std::make_unique<AudioProperties>();
+                        auto audioPtr = std::make_unique<AudioMetadata>();
                         audioPtr->name = std::filesystem::path(fileName).stem().string();
                         audioPtr->path = relativePath; // <-- FIX: Store the relative path
                         audioPtr->mode = "loop";
@@ -459,9 +460,10 @@ namespace Framework {
 
                         loadAudio(*audioPtr); // Assumes this uses the relative path in audioPtr
 
-                        AssetManager::Instance().RegisterAsset<AudioProperties>(std::move(audioPtr), &g_AudioPropertiesProps, relativePath); // <-- FIX: Register with relative path
+                        AssetManager::Instance().RegisterAsset<AudioMetadata>(std::move(audioPtr), &g_AudioMetadataProps, relativePath); // <-- FIX: Register with relative path
+
                         // <-- FIX: Save JSON to its absolute path
-                        AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, (root / "Assets/JSON/AudioAsset.json").string(), "audio"); // <-- FIX: Changed key "AudioProperties" to "audio"
+                        AssetManager::Instance().SaveArrayToJson(TypeName<AudioMetadata>::value, (root / "Assets/JSON/AudioAsset.json").string(), "audio"); // <-- FIX: Changed key "AudioProperties" to "audio"
                         std::cout << "Audio added: " << fileName << " to " << relativePath << std::endl;
                     }
                     else
@@ -1618,9 +1620,12 @@ namespace Framework {
 
             for (const auto& [handle, entry] : assetsImgui)
             {
-                if (entry.typeName != "AudioProperties") continue;
-                auto* audioProps = static_cast<AudioProperties*>(entry.pObject.get());
+                if (entry.typeName != "AudioMetadata") continue;
+                auto* audioProps = static_cast<AudioMetadata*>(entry.pObject.get());
                 if (!audioProps) continue;
+
+                // Lookup runtime AudioComponent by GUID
+                AudioComponent* comp = AssetManager::Instance().Get<AudioComponent>(audioProps->guid);
                 std::string audioModal = "EditModal_" + audioProps->guid;
 
                 ImGui::TableNextRow();
@@ -1725,8 +1730,8 @@ namespace Framework {
                         ImGui::BeginTooltip();
                         ImGui::Text("GUID: %s", audioProps->guid.id.c_str());
                         ImGui::Text("File: %s", audioProps->path.c_str());
-                        ImGui::Text("Volume: %.2f", audioProps->volume);
                         ImGui::Text("Mode: %s", audioProps->mode.c_str());
+                        ImGui::Text("Duration: %.2f sec", audioProps->duration);
                         ImGui::EndTooltip();
                     }
                 }
@@ -1740,42 +1745,48 @@ namespace Framework {
                 if (ImGui::Button(("Play##" + audioProps->guid.id).c_str()))
                 {
                     GlobalAudio.UE_PlaySound(audioProps->name);
-                    audioProps->isPlaying = true;
+                    if (comp) comp->isPlaying = true;
                 }
 
                 ImGui::SameLine();
                 if (ImGui::Button(("Stop##" + audioProps->guid.id).c_str()))
                 {
                     GlobalAudio.Reset();
-                    audioProps->isPlaying = false;
-                    audioProps->channelID = -1;
-                }
-
-                // Volume slider
-                float volume = audioProps->volume;
-                if (ImGui::SliderFloat(("Volume##" + audioProps->guid.id).c_str(), &volume, 0.0f, 1.0f))
-                {
-                    audioProps->volume = std::clamp(volume, 0.0f, 1.0f);
-                    GlobalAudio.UE_SetVolume(audioProps->name, audioProps->volume);
-                }
-
-                // Playback status
-                if (audioProps->isPlaying)
-                {
-                    ImGui::TextColored(ImVec4(0.2f, 1.0f, 0.2f, 1.0f), "Status: Playing");
-                }
-                else
-                {
-                    ImGui::Text("Status: Stopped");
-                }
-
-                // Poll playback status
-                if (audioProps->isPlaying && audioProps->channelID != -1)
-                {
-                    if (!GlobalAudio.IsChannelPlaying(audioProps->channelID))
+                    if (comp) 
                     {
-                        audioProps->isPlaying = false;
-                        audioProps->channelID = -1;
+                        comp->isPlaying = false;
+                        comp->channelID = -1;
+                    }
+                }
+
+                // Volume slider (runtime state lives in AudioComponent now)
+                if (comp)
+                {
+                    float volume = comp->volume;
+                    if (ImGui::SliderFloat(("Volume##" + audioProps->guid.id).c_str(), &volume, 0.0f, 1.0f))
+                    {
+                        comp->volume = std::clamp(volume, 0.0f, 1.0f);
+                        GlobalAudio.UE_SetVolume(audioProps->name, comp->volume);
+                    }
+
+                    // Playback status
+                    if (comp->isPlaying)
+                    {
+                        ImGui::TextColored(ImVec4(0.2f, 1.0f, 0.2f, 1.0f), "Status: Playing");
+                    }
+                    else
+                    {
+                        ImGui::Text("Status: Stopped");
+                    }
+
+                    // Poll playback status
+                    if (comp->isPlaying && comp->channelID != -1)
+                    {
+                        if (!GlobalAudio.IsChannelPlaying(comp->channelID))
+                        {
+                            comp->isPlaying = false;
+                            comp->channelID = -1;
+                        }
                     }
                 }
             }
@@ -1788,7 +1799,7 @@ namespace Framework {
             {
                 AssetManager::Instance().Unload(guid);
             }
-            AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, "Assets/JSON/AudioAsset.json", "audio");
+            AssetManager::Instance().SaveArrayToJson(TypeName<AudioMetadata>::value, "Assets/JSON/AudioAsset.json", "audio");
         }
     }
 

@@ -26,14 +26,16 @@ namespace Framework
         //Create Studio System
         FMOD_RESULT res = FMOD::Studio::System::create(&studioSystem);
 
-        if (res != FMOD_OK || !studioSystem) {
+        if (res != FMOD_OK || !studioSystem) 
+        {
             std::cerr << "Failed to create FMOD Studio system: " << res << std::endl;
             return;
         }
 
         //Initialie studio system. Request core system pointer for DSP access
 		res = studioSystem->initialize(512, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_3D_RIGHTHANDED, nullptr);
-		if (res != FMOD_OK) {
+		if (res != FMOD_OK) 
+        {
 			std::cerr << "Failed to initialize FMOD Studio system: " << res << std::endl;
 			return;
 		}
@@ -52,16 +54,20 @@ namespace Framework
     Audio::~Audio() 
     {
         //Release active event instances 
-        for (auto& p : activeEventsById) {
-            if (p.second) {
+        for (auto& p : activeEventsById) 
+        {
+            if (p.second) 
+            {
 				p.second->stop(FMOD_STUDIO_STOP_IMMEDIATE);
 				p.second->release();
             }
         }
 		activeEventsById.clear();
 
-        for (auto& p : activeEvents) {
-            if (p.second) {
+        for (auto& p : activeEvents) 
+        {
+            if (p.second) 
+            {
                 p.second->stop(FMOD_STUDIO_STOP_IMMEDIATE);
                 p.second->release();
             }
@@ -72,24 +78,25 @@ namespace Framework
 		loadedEvents.clear();
 
         //Clean up DSP Effects
-        if (reverbDSP) {
+        if (reverbDSP) 
+        {
             reverbDSP->release();
             reverbDSP = nullptr;
         }
-        if (lowPassFilter) {
+        if (lowPassFilter) 
+        {
             lowPassFilter->release();
             lowPassFilter = nullptr;
         }
 
 		//Shutdown FMOD Studio system
-        if (studioSystem) {
+        if (studioSystem) 
+        {
             studioSystem->unloadAll();
             studioSystem->release();
             studioSystem = nullptr;
         }
 		coreSystem = nullptr;
-
-        
     }
 
     // Initialize the system
@@ -104,7 +111,8 @@ namespace Framework
         if (studioSystem) {
             FMOD::System* coreSystem = nullptr;
             studioSystem->getCoreSystem(&coreSystem);
-            if (coreSystem) {
+            if (coreSystem) 
+            {
                 coreSystem->getVersion(&version);
                 std::cout << "[Audio] FMOD Engine version: "
                     << ((version >> 16) & 0xFFFF) << "."
@@ -128,11 +136,13 @@ namespace Framework
         result = studioSystem->loadBankFile("Master.strings.bank",
             FMOD_STUDIO_LOAD_BANK_NORMAL, &stringsBank);
 
-        if (result != FMOD_OK) {
+        if (result != FMOD_OK) 
+        {
             std::cerr << "[Audio] ? ERROR: Failed to load Master.strings.bank" << std::endl;
             std::cerr << "[Audio] Error code: " << result << std::endl;
         }
-        else {
+        else 
+        {
             std::cout << "[Audio] ? Master.strings.bank loaded successfully!" << std::endl;
         }
 
@@ -143,11 +153,13 @@ namespace Framework
         result = studioSystem->loadBankFile("Master.bank",
             FMOD_STUDIO_LOAD_BANK_NORMAL, &masterBank);
 
-        if (result != FMOD_OK) {
+        if (result != FMOD_OK) 
+        {
             std::cerr << "[Audio] ? ERROR: Failed to load Master.bank" << std::endl;
             std::cerr << "[Audio] Error code: " << result << std::endl;
         }
-        else {
+        else 
+        {
             std::cout << "[Audio] ? Master.bank loaded successfully!" << std::endl;
         }
 
@@ -158,11 +170,13 @@ namespace Framework
         result = studioSystem->loadBankFile("BGM.bank",
             FMOD_STUDIO_LOAD_BANK_NORMAL, &bgmBank);
 
-        if (result != FMOD_OK) {
+        if (result != FMOD_OK) 
+        {
             std::cerr << "[Audio] ? WARNING: Failed to load BGM.bank" << std::endl;
             std::cerr << "[Audio] Error code: " << result << std::endl;
         }
-        else {
+        else 
+        {
             std::cout << "[Audio] ? BGM.bank loaded successfully!" << std::endl;
             int eventCount = 0;
             bgmBank->getEventCount(&eventCount);
@@ -176,11 +190,13 @@ namespace Framework
         result = studioSystem->loadBankFile("SFX.bank",
             FMOD_STUDIO_LOAD_BANK_NORMAL, &sfxBank);
 
-        if (result != FMOD_OK) {
+        if (result != FMOD_OK) 
+        {
             std::cerr << "[Audio] ? WARNING: Failed to load SFX.bank" << std::endl;
             std::cerr << "[Audio] Error code: " << result << std::endl;
         }
-        else {
+        else 
+        {
             std::cout << "[Audio] ? SFX.bank loaded successfully!" << std::endl;
             int eventCount = 0;
             sfxBank->getEventCount(&eventCount);
@@ -194,11 +210,13 @@ namespace Framework
         result = studioSystem->loadBankFile("Ambient.bank",
             FMOD_STUDIO_LOAD_BANK_NORMAL, &ambientBank);
 
-        if (result != FMOD_OK) {
+        if (result != FMOD_OK) 
+        {
             std::cerr << "[Audio] ? WARNING: Failed to load Ambient.bank" << std::endl;
             std::cerr << "[Audio] Error code: " << result << std::endl;
         }
-        else {
+        else 
+        {
             std::cout << "[Audio] ? Ambient.bank loaded successfully!" << std::endl;
             int eventCount = 0;
             ambientBank->getEventCount(&eventCount);
@@ -222,36 +240,43 @@ namespace Framework
         //(void)deltaTime;            // Suprress unused parameter warning
 
         //Handle fade effects for smooth BGM transitions
-        if (isFadingIn || isFadingOut) {
+        if (isFadingIn || isFadingOut) 
+        {
             fadeTimer += deltaTime;
             float progress = fadeTimer / fadeDuration;
             progress = std::min(1.0f, std::max(0.0f, progress));
 
-            if (isFadingIn) {
+            if (isFadingIn) 
+            {
                 float currentVolume = fadeStartVolume + (fadeTargetVolume - fadeStartVolume) * progress;
                 if (currentBGMChannel >= 0 && activeEventsById.count(currentBGMChannel)) {
                     activeEventsById[currentBGMChannel]->setVolume(currentVolume * bgmVolume * masterVolume);
                 }
 
-                if (progress >= 1.0f) {
+                if (progress >= 1.0f) 
+                {
                     isFadingIn = false;
                     std::cout << "Fade in complete" << std::endl;
                 }
             }
-            else if (isFadingOut) {
+            else if (isFadingOut) 
+            {
                 float currentVolume = fadeStartVolume * (1.0f - progress);
                 if (currentBGMChannel >= 0 && activeEventsById.count(currentBGMChannel)) {
                     activeEventsById[currentBGMChannel]->setVolume(currentVolume * bgmVolume * masterVolume);
                 }
 
-                if (progress >= 1.0f) {
+                if (progress >= 1.0f) 
+                {
                     isFadingOut = false;
-                    if (currentBGMChannel >= 0) {
+                    if (currentBGMChannel >= 0) 
+                    {
                         StopChannel(currentBGMChannel);
                     }
 
                     // Switch to pending BGM if crossfading
-                    if (pendingBGMChannel >= 0) {
+                    if (pendingBGMChannel >= 0) 
+                    {
                         currentBGMChannel = pendingBGMChannel;
                         pendingBGMChannel = -1;
                         FadeBGMIn(fadeDuration);
@@ -260,7 +285,8 @@ namespace Framework
             }
         }
        
-        if (studioSystem) {
+        if (studioSystem) 
+        {
             studioSystem->update();
         }
     }
@@ -292,11 +318,11 @@ namespace Framework
     {
         if (mode == "loop")         
         {   
-            return FMOD_LOOP_NORMAL;        // Looping Mode
+            return FMOD_LOOP_NORMAL;    // Looping Mode
         }
         else if (mode == "oneshot")
         {
-            return FMOD_LOOP_OFF;            // One-shot playback
+            return FMOD_LOOP_OFF;       // One-shot playback
         }
         else
         {
@@ -308,27 +334,31 @@ namespace Framework
     EventDescription* Audio::UE_LoadEvent(const std::string& customName) 
     {
         //Check cache
-        if (loadedEvents.count(customName)) {
+        if (loadedEvents.count(customName)) 
+        {
             return loadedEvents[customName];
         }
 
-        AudioProperties* audioProps = AssetManager::Instance().Get<AudioProperties>(
-            AssetManager::Instance().FindGuid<AudioProperties>(customName)
+        AudioMetadata* audioProps = AssetManager::Instance().Get<AudioMetadata>(
+            AssetManager::Instance().FindGuid<AudioMetadata>(customName)
         );
-        if (!audioProps) {
+        if (!audioProps) 
+        {
 			std::cout << "Error: AudioProperties not found for customName: " << customName << std::endl;
 			return nullptr;
         }
 
 		const std::string& eventPath = audioProps->path;
-        if (eventPath.empty()) {
+        if (eventPath.empty()) 
+        {
             std::cout << "Error: Event path is empty for customName: " << customName << std::endl;
             return nullptr;
         }
 
 		EventDescription* eventDesc = nullptr;
 		FMOD_RESULT res = studioSystem->getEvent(eventPath.c_str(), &eventDesc);
-        if (res != FMOD_OK || !eventDesc) {
+        if (res != FMOD_OK || !eventDesc) 
+        {
             std::cout << "Error: Failed to load event at path: " << eventPath << ", FMOD result: " << res << std::endl;
             return nullptr;
         }
@@ -339,42 +369,46 @@ namespace Framework
 
     void Audio::UE_PlaySound(const std::string& customName)
     {
-
+        // 1. Load event description from FMOD
         EventDescription* desc = UE_LoadEvent(customName);
         if (!desc) return;
 
         EventInstance* instance = nullptr;
-		FMOD_RESULT res = desc->createInstance(&instance);
-		if (res != FMOD_OK || !instance) {
-			std::cout << "Error: Failed to create event instance for " << customName << ", FMOD result: " << res << std::endl;
-			return;
-		}
-
-		//Assign to bus based on AudioProperties->soundType
-		AudioProperties* audioProps = AssetManager::Instance().Get<AudioProperties>(
-			AssetManager::Instance().FindGuid<AudioProperties>(customName)
-		);
-        Audio::SoundType st = ParseSoundType(audioProps ? audioProps->soundType : std::string());
-
-        //start playing 
-		instance->start();
-
-        //Create id and Track it 
-		int id = GetNextChannelId();
-        activeEvents[customName] = instance; 
-		activeEventsById[id] = instance;
-        if (audioProps) {
-			audioProps->channelID = id;
-			audioProps->isPlaying = true;
+        FMOD_RESULT res = desc->createInstance(&instance);
+        if (res != FMOD_OK || !instance) {
+            std::cout << "Error: Failed to create event instance for " << customName
+                << ", FMOD result: " << res << std::endl;
+            return;
         }
 
-        //set default volume scales 
-		float vol = (st == BACKGROUND_MUSIC) ? bgmVolume : sfxVolume;
-        vol *= masterVolume; 
-        instance->setVolume(vol);
-        
-        std::cout << "Playing event: " << customName << std::endl;
+        // 2. Resolve GUID and fetch metadata
+        AssetHandle guid = AssetManager::Instance().FindGuid<AudioMetadata>(customName);
+        AudioMetadata* meta = AssetManager::Instance().Get<AudioMetadata>(guid);
 
+        // 3. Parse sound type from metadata
+        Audio::SoundType st = ParseSoundType(meta ? meta->soundType : std::string());
+
+        // 4. Start playing
+        instance->start();
+
+        // 5. Track runtime state in AudioComponent
+        int id = GetNextChannelId();
+        activeEvents[customName] = instance;
+        activeEventsById[id] = instance;
+
+        AudioComponent* comp = AssetManager::Instance().Get<AudioComponent>(guid);
+        if (comp) {
+            comp->eventInstance = instance;
+            comp->channelID = id;
+            comp->isPlaying = true;
+        }
+
+        // 6. Set volume based on sound type
+        float vol = (st == BACKGROUND_MUSIC) ? bgmVolume : sfxVolume;
+        vol *= masterVolume;
+        instance->setVolume(vol);
+
+        std::cout << "Playing event: " << customName << std::endl;
     }
 
     //========================== NEW 3D AUDIO FUNCTIONS ==============================
@@ -387,18 +421,20 @@ namespace Framework
         float volume,
         AudioSourceType sourceType)
     {
-        // Load the sound if not already loaded
+        // 1. Load the sound if not already loaded
         EventDescription* desc = UE_LoadEvent(customName);
         if (!desc) return -1;
 
-        EventInstance* instance = nullptr; 
+        EventInstance* instance = nullptr;
         FMOD_RESULT res = desc->createInstance(&instance);
-        if (res != FMOD_OK || !instance) {
-            std::cerr << "Failed to create event instance for " << customName << " res=" << res << std::endl;
+        if (res != FMOD_OK || !instance)
+        {
+            std::cerr << "Failed to create event instance for " << customName
+                << " res=" << res << std::endl;
             return -1;
         }
 
-        //Set 3D attributes 
+        // 2. Set 3D attributes
         FMOD_3D_ATTRIBUTES attributes = {};
         attributes.position = VectorToFmod(position);
         attributes.velocity = VectorToFmod(velocity);
@@ -406,40 +442,47 @@ namespace Framework
         attributes.up = { 0.0f, 1.0f, 0.0f };
         instance->set3DAttributes(&attributes);
 
-        //Set looping based on properties
-        AudioProperties* audioProps = AssetManager::Instance().Get<AudioProperties>(
-            AssetManager::Instance().FindGuid<AudioProperties>(customName)
-        );
-        bool looping = audioProps ? (audioProps->mode == "loop") : false;
+        // 3. Resolve metadata
+        AssetHandle guid = AssetManager::Instance().FindGuid<AudioMetadata>(customName);
+        AudioMetadata* meta = AssetManager::Instance().Get<AudioMetadata>(guid);
 
-        //set volume 
+        bool looping = meta ? (meta->mode == "loop") : false;
+        Audio::SoundType st = ParseSoundType(meta ? meta->soundType : std::string());
+
+        // 4. Set volume
         float finalVolume = volume * masterVolume;
-        finalVolume *= (ParseSoundType(audioProps ? audioProps->soundType : std::string()) == BACKGROUND_MUSIC) ? bgmVolume : sfxVolume;
+        finalVolume *= (st == BACKGROUND_MUSIC) ? bgmVolume : sfxVolume;
         instance->setVolume(finalVolume);
 
-        //start
+        // 5. Start playback
         instance->start();
 
-        //track
+        // 6. Track runtime state in AudioComponent
         int id = GetNextChannelId();
-		activeEventsById[id] = instance;
+        activeEventsById[id] = instance;
         activeEvents[customName] = instance;
-		if (audioProps) {
-			audioProps->channelID = id;
-			audioProps->isPlaying = true;
-		}
 
-        //store 3D information for later updates 
-		channel3DInfo[id] = { 
-            position, velocity, 
-            current3DSettings.minDistance, 
-            current3DSettings.maxDistance, 
+        AudioComponent* comp = AssetManager::Instance().Get<AudioComponent>(guid);
+        if (comp) 
+        {
+            comp->eventInstance = instance;
+            comp->channelID = id;
+            comp->isPlaying = true;
+            comp->lastPosition = { position.x, position.y, position.z };
+        }
+
+        // 7. Store 3D info for later updates
+        channel3DInfo[id] = 
+        {
+            position, velocity,
+            current3DSettings.minDistance,
+            current3DSettings.maxDistance,
             sourceType, looping, volume };
 
-		std::cout << "Playing 3D event: " << customName << " at position ("
-			<< position.x << ", " << position.y << ", " << position.z << ")" << std::endl;
-		return id;
-    }   
+        std::cout << "Playing 3D event: " << customName << " at position ("
+            << position.x << ", " << position.y << ", " << position.z << ")" << std::endl;
+        return id;
+    }
 
     //Set the 3D listener position and orientation
     void Audio::Set3DListener(
@@ -453,7 +496,8 @@ namespace Framework
         attributes.velocity = VectorToFmod(velocity);
         attributes.forward = VectorToFmod(forward);
         attributes.up = VectorToFmod(up);
-        if (studioSystem) {
+        if (studioSystem) 
+        {
             studioSystem->setListenerAttributes(0, &attributes);
         }
     }
@@ -473,9 +517,11 @@ namespace Framework
         attributes.up = VectorToFmod(up);
 
         int numListeners = 0;
-        if (studioSystem) {
+        if (studioSystem) 
+        {
             studioSystem->getNumListeners(&numListeners);
-            if (listenerId >= numListeners) {
+            if (listenerId >= numListeners) 
+            {
                 studioSystem->setNumListeners(listenerId + 1);
             }
             studioSystem->setListenerAttributes(listenerId, &attributes);
@@ -489,8 +535,8 @@ namespace Framework
         const Vector3& velocity)
     {
         auto it = activeEventsById.find(channelId);
-        if
-            (it != activeEventsById.end() && it->second) {
+        if  (it != activeEventsById.end() && it->second) 
+        {
             FMOD_3D_ATTRIBUTES attributes = {};
             attributes.position = VectorToFmod(position);
             attributes.velocity = VectorToFmod(velocity);
@@ -499,7 +545,8 @@ namespace Framework
             it->second->set3DAttributes(&attributes);
 
             // Update cached info
-            if (channel3DInfo.count(channelId)) {
+            if (channel3DInfo.count(channelId)) 
+            {
                 channel3DInfo[channelId].position = position;
                 channel3DInfo[channelId].velocity = velocity;
             }
@@ -513,7 +560,8 @@ namespace Framework
         const Vector3& velocity)
     {
         auto it = activeEvents.find(customName);
-        if (it != activeEvents.end() && it->second) {
+        if (it != activeEvents.end() && it->second) 
+        {
             FMOD_3D_ATTRIBUTES attributes = {};
             attributes.position = VectorToFmod(position);
             attributes.velocity = VectorToFmod(velocity);
@@ -527,7 +575,8 @@ namespace Framework
     void Audio::Configure3DSettings(const Audio3DSettings& settings)
     {
         current3DSettings = settings;
-        if (coreSystem) {
+        if (coreSystem) 
+        {
             coreSystem->set3DSettings(settings.dopplerScale, settings.distanceFactor, settings.rolloffScale);
         }
     }
@@ -537,7 +586,8 @@ namespace Framework
     {
         //Studio manages attentuation mostly via authoring inside FMOD Studio event
         //We keep cached values so you can still query/update them 
-        if (channel3DInfo.count(channelId)) {
+        if (channel3DInfo.count(channelId)) 
+        {
             channel3DInfo[channelId].minDistance = minDist;
             channel3DInfo[channelId].maxDistance = maxDist;
         }
@@ -564,7 +614,8 @@ namespace Framework
     void Audio::SetChannelOcclusion(int channelId, float directOcclusion, float reverbOcclusion)
     {
         auto it = activeEventsById.find(channelId);
-        if (it != activeEventsById.end() && it->second) {
+        if (it != activeEventsById.end() && it->second) 
+        {
             // Apply occlusion through a user parameter if authored in FMOD Studio (optional)
             it->second->setParameterByName("Occlusion", directOcclusion);
             it->second->setParameterByName("ReverbOcclusion", reverbOcclusion);
@@ -590,44 +641,52 @@ namespace Framework
         std::string newZone = "";
 
         // Check which zone the listener is in
-        for (const auto& [name, zone] : audioZones) {
+        for (const auto& [name, zone] : audioZones) 
+        {
             if (listenerPos.x >= zone.minBounds.x && listenerPos.x <= zone.maxBounds.x &&
                 listenerPos.y >= zone.minBounds.y && listenerPos.y <= zone.maxBounds.y &&
-                listenerPos.z >= zone.minBounds.z && listenerPos.z <= zone.maxBounds.z) {
+                listenerPos.z >= zone.minBounds.z && listenerPos.z <= zone.maxBounds.z) 
+            {
                 newZone = name;
                 break;
             }
         }
 
         // If zone changed, apply new zone settings
-        if (newZone != currentZone) {
+        if (newZone != currentZone) 
+        {
             currentZone = newZone;
 
-            if (!newZone.empty() && audioZones.count(newZone)) {
+            if (!newZone.empty() && audioZones.count(newZone)) 
+            {
                 const AudioZone& zone = audioZones[newZone];
 
                 // Apply reverb settings
-                if (reverbDSP) {
+                if (reverbDSP) 
+                {
                     reverbDSP->setBypass(false);
                     reverbDSP->setParameterFloat(FMOD_DSP_SFXREVERB_WETLEVEL,
                         -12.0f + (zone.reverbAmount * 12.0f));
                 }
 
                 // Apply low-pass filter
-                if (lowPassFilter) {
+                if (lowPassFilter) 
+                {
                     if (zone.lowPassFilter < 1.0f) {
                         lowPassFilter->setBypass(false);
                         lowPassFilter->setParameterFloat(FMOD_DSP_LOWPASS_CUTOFF,
                             zone.lowPassFilter * 22000.0f);
                     }
-                    else {
+                    else 
+                    {
                         lowPassFilter->setBypass(true);
                     }
                 }
 
                 std::cout << "Entered audio zone: " << newZone << std::endl;
             }
-            else {
+            else 
+            {
                 // No zone - disable effects
                 if (reverbDSP) reverbDSP->setBypass(true);
                 if (lowPassFilter) lowPassFilter->setBypass(true);
@@ -641,8 +700,8 @@ namespace Framework
         //Query primary listener position via studio system 
         FMOD_3D_ATTRIBUTES attributes = {};
 
-        if (studioSystem) {
-
+        if (studioSystem) 
+        {
             float dx = position.x - attributes.position.x;
             float dy = position.y - attributes.position.y;
             float dz = position.z - attributes.position.z;
@@ -650,7 +709,6 @@ namespace Framework
 
             return distance <= maxAudibleDistance;
         }
-
         return false;
     }
 
@@ -661,7 +719,8 @@ namespace Framework
         if (!coreSystem) return;
         
         coreSystem->createDSPByType(FMOD_DSP_TYPE_SFXREVERB, &reverbDSP);
-        if (reverbDSP) {
+        if (reverbDSP) 
+        {
             // Set default reverb properties (room-like)
             reverbDSP->setParameterFloat(FMOD_DSP_SFXREVERB_DECAYTIME, 1.5f);
             reverbDSP->setParameterFloat(FMOD_DSP_SFXREVERB_EARLYDELAY, 0.02f);
@@ -687,7 +746,8 @@ namespace Framework
 
         // Create low-pass filter DSP
         coreSystem->createDSPByType(FMOD_DSP_TYPE_LOWPASS, &lowPassFilter);
-        if (lowPassFilter) {
+        if (lowPassFilter) 
+        {
             lowPassFilter->setParameterFloat(FMOD_DSP_LOWPASS_CUTOFF, 22000.0f);
 
             FMOD::ChannelGroup* masterGroup;
@@ -711,7 +771,8 @@ namespace Framework
     bool Audio::IsChannelPlaying(int channelId)
     {
         auto it = activeEventsById.find(channelId);
-        if (it != activeEventsById.end() && it->second) {
+        if (it != activeEventsById.end() && it->second) 
+        {
             FMOD_STUDIO_PLAYBACK_STATE state;
             it->second->getPlaybackState(&state);
             return state == FMOD_STUDIO_PLAYBACK_PLAYING || state == FMOD_STUDIO_PLAYBACK_SUSTAINING;
@@ -723,7 +784,8 @@ namespace Framework
     float Audio::GetChannelVolume(int channelId)
     {
         auto it = activeEventsById.find(channelId);
-        if (it != activeEventsById.end() && it->second) {
+        if (it != activeEventsById.end() && it->second) 
+        {
             float volume = 0.0f;
             it->second->getVolume(&volume);
             return volume;
@@ -735,7 +797,8 @@ namespace Framework
     void Audio::StopChannel(int channelId)
     {
         auto it = activeEventsById.find(channelId);
-        if (it != activeEventsById.end() && it->second) {
+        if (it != activeEventsById.end() && it->second) 
+        {
             it->second->stop(FMOD_STUDIO_STOP_IMMEDIATE);
             it->second->release();
 
@@ -743,14 +806,15 @@ namespace Framework
             activeEventsById.erase(it);
 
            //Remove name mapping if present 
-            for (auto ait = activeEvents.begin(); ait != activeEvents.end(); ++ait) {
+            for (auto ait = activeEvents.begin(); ait != activeEvents.end(); ++ait) 
+            {
                 FMOD::Studio::EventInstance* inst = ait->second;
-                if (inst == it->second) {
+                if (inst == it->second) 
+                {
                     activeEvents.erase(ait);
                     break;
                 }
             }
-
             if (channel3DInfo.count(channelId)) channel3DInfo.erase(channelId);
             if (channelId == currentBGMChannel) currentBGMChannel = -1;
         }
@@ -760,8 +824,10 @@ namespace Framework
     void Audio::StopAllChannels()
     {
         // Stop all channels by name
-        for (auto& channelEntry : activeEvents) {
-            if (channelEntry.second) {
+        for (auto& channelEntry : activeEvents) 
+        {
+            if (channelEntry.second)
+            {
                 channelEntry.second->stop(FMOD_STUDIO_STOP_IMMEDIATE);
                 channelEntry.second->release();
             }
@@ -769,8 +835,10 @@ namespace Framework
         activeEvents.clear();
 
         // Stop all channels by ID
-        for (auto& channelEntry : activeEventsById) {
-            if (channelEntry.second) {
+        for (auto& channelEntry : activeEventsById) 
+        {
+            if (channelEntry.second) 
+            {
                 channelEntry.second->stop(FMOD_STUDIO_STOP_IMMEDIATE);
                 channelEntry.second->release();
             }
@@ -793,7 +861,8 @@ namespace Framework
 
         // Apply to master channel group
         
-        if (studioSystem) {
+        if (studioSystem) 
+        {
             studioSystem->getBus("bus:/", &masterBus);
             if (masterBus)
                 masterBus->setVolume(masterVolume);
@@ -807,7 +876,8 @@ namespace Framework
         bgmVolume = std::max(0.0f, std::min(1.0f, volume));
         Bus* musicBus = nullptr;
         // Apply to BGM channel group
-        if (studioSystem) {
+        if (studioSystem) 
+        {
             studioSystem->getBus("bus:/Music", &musicBus);
             if (musicBus)
                 musicBus->setVolume(bgmVolume);
@@ -821,7 +891,8 @@ namespace Framework
         sfxVolume = std::max(0.0f, std::min(1.0f, volume));
         Bus* sfxBus = nullptr;
 
-        if (studioSystem) {
+        if (studioSystem) 
+        {
             studioSystem->getBus("bus:/SFX", &sfxBus);
             if (sfxBus) sfxBus->setVolume(sfxVolume);
             studioSystem->getBus("bus:/Ambient", &sfxBus);
@@ -833,7 +904,8 @@ namespace Framework
     //Fade in BGM over specified duration 
     void Audio::FadeBGMIn(float duration)
     {
-        if (currentBGMChannel >= 0 && activeEventsById.count(currentBGMChannel)) {
+        if (currentBGMChannel >= 0 && activeEventsById.count(currentBGMChannel)) 
+        {
             fadeStartVolume = 0.0f;
             fadeTargetVolume = 1.0f;
             fadeDuration = duration;
@@ -845,7 +917,8 @@ namespace Framework
             activeEventsById[currentBGMChannel]->setVolume(0.0f);
 
             // Enable low-pass filter for fade-in effect (optional)
-            if (lowPassFilter) {
+            if (lowPassFilter) 
+            {
                 lowPassFilter->setBypass(false);
                 lowPassFilter->setParameterFloat(FMOD_DSP_LOWPASS_CUTOFF, 500.0f);
             }
@@ -856,7 +929,8 @@ namespace Framework
     //Fade out BGM over specified duration 
     void Audio::FadeBGMOut(float duration)
     {
-        if (currentBGMChannel >= 0 && activeEventsById.count(currentBGMChannel)) {
+        if (currentBGMChannel >= 0 && activeEventsById.count(currentBGMChannel)) 
+        {
             float currentVolume;
             activeEventsById[currentBGMChannel]->getVolume(&currentVolume);
 
@@ -868,7 +942,8 @@ namespace Framework
             isFadingIn = false;
 
             // Enable low-pass filter for fade-out effect (optional)
-            if (lowPassFilter) {
+            if (lowPassFilter) 
+            {
                 lowPassFilter->setBypass(false);
                 lowPassFilter->setParameterFloat(FMOD_DSP_LOWPASS_CUTOFF, 22000.0f);
             }
@@ -883,15 +958,18 @@ namespace Framework
         int newChannelId = PlaySound3D(newBGM, Vector3(0, 0, 0), Vector3(0, 0, 0),
             0.0f, AudioSourceType::STEREO_2D);
 
-        if (newChannelId >= 0) {
+        if (newChannelId >= 0) 
+        {
             // Store as pending BGM
             pendingBGMChannel = newChannelId;
 
             // If there's a current BGM, fade it out
-            if (currentBGMChannel >= 0) {
+            if (currentBGMChannel >= 0) 
+            {
                 FadeBGMOut(duration);
             }
-            else {
+            else 
+            {
                 // No current BGM, just fade in the new one
                 currentBGMChannel = newChannelId;
                 pendingBGMChannel = -1;
@@ -904,7 +982,8 @@ namespace Framework
     //Set reverb properties for environmental effects 
     void Audio::SetReverbProperties(float decayTime, float wetLevel, float dryLevel)
     {
-        if (reverbDSP) {
+        if (reverbDSP) 
+        {
             reverbDSP->setParameterFloat(FMOD_DSP_SFXREVERB_DECAYTIME, decayTime);
             reverbDSP->setParameterFloat(FMOD_DSP_SFXREVERB_WETLEVEL, wetLevel);
             reverbDSP->setParameterFloat(FMOD_DSP_SFXREVERB_DRYLEVEL, dryLevel);
@@ -931,11 +1010,11 @@ namespace Framework
 
     void Audio::UE_SetVolume(const std::string& customName, float volume)
     {
-        auto it = activeEvents.find(customName);              // Find the channel associated with the custom sound name
+        auto it = activeEvents.find(customName);                 // Find the channel associated with the custom sound name
 
         if (it != activeEvents.end() && it->second != nullptr)
         {
-            it->second->setVolume(volume);                      // Set the volume on the channel (0.0f is silent, 1.0f is max volume)
+            it->second->setVolume(volume);                       // Set the volume on the channel (0.0f is silent, 1.0f is max volume)
             std::cout << "Volume for " << customName << " set to " << volume << std::endl;
         }
         else
@@ -955,7 +1034,8 @@ namespace Framework
 
     void Audio::UE_PauseGroup(FMOD::ChannelGroup* bus)
     {
-        if (bus) {
+        if (bus) 
+        {
             bool paused = false;
             bus->getPaused(&paused);
             bus->setPaused(!paused);
@@ -966,12 +1046,14 @@ namespace Framework
     void Audio::UE_CreateBus(const std::string& busPath)
     {
         Bus* bus = nullptr;
-        if (studioSystem) {
+        if (studioSystem) 
+        {
             FMOD_RESULT res = studioSystem->getBus(busPath.c_str(), &bus);
             if (res == FMOD_OK && bus) {
                 activeBuses[busPath] = bus;
             }
-            else {
+            else 
+            {
                 std::cout << "Warning: Bus " << busPath << " not found in FMOD project." << std::endl;
             }
         }
@@ -980,9 +1062,11 @@ namespace Framework
     void Audio::IncrementGroupVol(const std::string& groupName)
     {
         Bus* bus = nullptr;
-        if (studioSystem) {
+        if (studioSystem) 
+        {
             studioSystem->getBus(groupName.c_str(), &bus);
-            if (bus) {
+            if (bus) 
+            {
                 float cur = 1.0f;
                 bus->getVolume(&cur);
                 float newV = std::min(1.0f, cur + volChangeAmount);
@@ -997,9 +1081,11 @@ namespace Framework
     void Audio::DecrementGroupVol(const std::string& groupName)
     {
         Bus* bus = nullptr;
-        if (studioSystem) {
+        if (studioSystem) 
+        {
             studioSystem->getBus(groupName.c_str(), &bus);
-            if (bus) {
+            if (bus) 
+            {
                 float cur = 1.0f;
                 bus->getVolume(&cur);
                 float newV = std::max(0.0f, cur - volChangeAmount);
@@ -1013,8 +1099,10 @@ namespace Framework
 
     void Audio::PauseAllAudio()
     {
-        for (auto& kv : activeEvents) {
-            if (kv.second) {
+        for (auto& kv : activeEvents) 
+        {
+            if (kv.second) 
+            {
                 kv.second->setPaused(true);
             }
         }
@@ -1022,8 +1110,10 @@ namespace Framework
 
     void Audio::ResumeAllAudio()
     {
-        for (auto& kv : activeEvents) {
-            if (kv.second) {
+        for (auto& kv : activeEvents) 
+        {
+            if (kv.second) 
+            {
                 kv.second->setPaused(false);
             }
         }
@@ -1032,8 +1122,10 @@ namespace Framework
     void Audio::Reset()
     {
         PauseAllAudio();
-        for (auto& kv : activeEvents) {
-            if (kv.second) {
+        for (auto& kv : activeEvents) 
+        {
+            if (kv.second) 
+            {
                 kv.second->stop(FMOD_STUDIO_STOP_IMMEDIATE);
                 
             }

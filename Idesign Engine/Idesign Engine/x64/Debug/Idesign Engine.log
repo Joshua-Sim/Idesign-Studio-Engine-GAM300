@@ -1,1 +1,96 @@
-﻿  Idesign Engine.vcxproj -> C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe
+﻿  Graphics.cpp
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
+      see declaration of 'Framework::AnimationProperties::name'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(533,21): warning C4458: declaration of 'cam' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(121,17):
+      see declaration of 'Framework::Graphics::cam'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(566,27): warning C4458: declaration of 'mesh' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
+      see declaration of 'Framework::Graphics::mesh'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(618,27): warning C4458: declaration of 'mesh' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
+      see declaration of 'Framework::Graphics::mesh'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(656,35): warning C4458: declaration of 'tex' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(141,16):
+      see declaration of 'Framework::Graphics::tex'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(685,23): warning C4458: declaration of 'mesh' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
+      see declaration of 'Framework::Graphics::mesh'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(731,31): warning C4458: declaration of 'tex' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(141,16):
+      see declaration of 'Framework::Graphics::tex'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(894,27): warning C4458: declaration of 'mesh' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
+      see declaration of 'Framework::Graphics::mesh'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(946,27): warning C4458: declaration of 'mesh' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
+      see declaration of 'Framework::Graphics::mesh'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(984,35): warning C4458: declaration of 'tex' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(141,16):
+      see declaration of 'Framework::Graphics::tex'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1013,23): warning C4458: declaration of 'mesh' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
+      see declaration of 'Framework::Graphics::mesh'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1059,31): warning C4458: declaration of 'tex' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(141,16):
+      see declaration of 'Framework::Graphics::tex'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1287,17): warning C4458: declaration of 'cam' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(121,17):
+      see declaration of 'Framework::Graphics::cam'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1294,25): warning C4459: declaration of 'firstMouse' hides global declaration
+  (compiling source file '/src/Graphics.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(74,17):
+      see declaration of 'Framework::firstMouse'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1365,68): warning C4100: 'amount': unreferenced parameter
+  (compiling source file '/src/Graphics.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1365,56): warning C4100: 'axis': unreferenced parameter
+  (compiling source file '/src/Graphics.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1401,23): warning C4458: declaration of 'cam' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(121,17):
+      see declaration of 'Framework::Graphics::cam'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1407,23): warning C4458: declaration of 'cam' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(121,17):
+      see declaration of 'Framework::Graphics::cam'
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1477,39): warning C4100: 'viewIndex': unreferenced parameter
+  (compiling source file '/src/Graphics.cpp')
+  
+D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1614,40): warning C4458: declaration of 'mesh' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
+      see declaration of 'Framework::Graphics::mesh'
+  
+  Idesign Engine.vcxproj -> D:\github\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe
