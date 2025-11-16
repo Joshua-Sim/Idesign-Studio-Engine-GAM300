@@ -2,49 +2,49 @@
     "count": 15,
     "entries": [
         {
-            "guid": "6cbaa85b-562d-4b23-9f64-8639947659cc",
-            "name": "knifechoppingwithBONEFIXED4",
-            "path": "Assets/Objects/knifechoppingwithBONEFIXED4.fbx",
-            "vao": 2,
-            "vbo": 3,
-            "ebo": 4,
-            "indexCount": 312
-        },
-        {
-            "guid": "62fa60bd-a3d0-4575-851f-e6d04a326345",
-            "name": "Window Frame",
-            "path": "Assets\\Objects\\Window Frame.obj",
-            "vao": 1,
-            "vbo": 1,
-            "ebo": 2,
-            "indexCount": 774
-        },
-        {
-            "guid": "814c3cff-9da8-4ad4-8a05-009b99a4ea2b",
-            "name": "Door",
-            "path": "Assets\\Objects\\Door.obj",
-            "vao": 3,
-            "vbo": 5,
-            "ebo": 6,
-            "indexCount": 324
-        },
-        {
             "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941",
             "name": "Cube",
             "path": "Assets/Objects/Cube.obj",
-            "vao": 4,
-            "vbo": 7,
-            "ebo": 8,
+            "vao": 1,
+            "vbo": 1,
+            "ebo": 2,
             "indexCount": 36
         },
         {
             "guid": "1cc97700-7326-4df8-b677-80233b030807",
             "name": "Back Wall",
             "path": "Assets\\Objects\\Back Wall.obj",
+            "vao": 2,
+            "vbo": 3,
+            "ebo": 4,
+            "indexCount": 591
+        },
+        {
+            "guid": "6cbaa85b-562d-4b23-9f64-8639947659cc",
+            "name": "knifechoppingwithBONEFIXED4",
+            "path": "Assets/Objects/knifechoppingwithBONEFIXED4.fbx",
+            "vao": 4,
+            "vbo": 7,
+            "ebo": 8,
+            "indexCount": 312
+        },
+        {
+            "guid": "62fa60bd-a3d0-4575-851f-e6d04a326345",
+            "name": "Window Frame",
+            "path": "Assets\\Objects\\Window Frame.obj",
+            "vao": 3,
+            "vbo": 5,
+            "ebo": 6,
+            "indexCount": 774
+        },
+        {
+            "guid": "814c3cff-9da8-4ad4-8a05-009b99a4ea2b",
+            "name": "Door",
+            "path": "Assets\\Objects\\Door.obj",
             "vao": 5,
             "vbo": 9,
             "ebo": 10,
-            "indexCount": 591
+            "indexCount": 324
         },
         {
             "guid": "9e1fcb62-0699-4a0b-ae75-d0670af44b1b",

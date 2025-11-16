@@ -83,11 +83,13 @@ int main(void)
     // Initialize global ECS interface and other singleton components
     ecsInterface.Init();
 
-    AssetManager::Instance().LoadAllAssets();
+    
     
     // To Connect Prop with ECS
     RegisterComponentTypes();                           // Step 1: Register known types
     AutoRegisterAllReflectedComponents(ecsInterface);   // Step 2: Hook them into ECS
+
+	AssetManager::Instance().LoadWindowConfig(); // Load WindowConfig before Graphics system is created
 
     // Register graphics system and GLFW Window first 
     auto graphicsSystem = ecsInterface.RegisterSystem<Graphics>();
@@ -99,6 +101,8 @@ int main(void)
     auto imguiSystem = ecsInterface.RegisterSystem<ImguiManager>();
     imguiSystem->SetGraphicsSystem(graphicsSystem.get());
     graphicsSystem->SetImguiManager(imguiSystem.get());
+    
+    //AssetManager::Instance().LoadAllAssets();
     
     //Access the InputHandler instance from the singleton
     InputHandler* inputHandlerSystem = InputHandler::GetInstance();
@@ -146,6 +150,8 @@ int main(void)
 
     // Initialize the engine and run the main game loop
     engine->Initialize();
+	AssetManager::Instance().LoadRemainingAssets(); // Load remaining assets after OpenGL initialization
+
     ImguiManager::Log("Initializing FontSystem...", "FontSystem");
     fontSystem.Initialize();
     fontSystem.LoadFont("Assets/Font/arial.ttf", 40, "Arial");

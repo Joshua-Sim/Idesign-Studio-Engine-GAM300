@@ -3,6 +3,7 @@
 #include "AnimationLoader.h"
 #include "AnimationProperties.h" // Include the full struct
 #include "MessageSystem.h"
+#include "ImguiManager.h"
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -60,6 +61,7 @@ static void LoadAnimations(const aiScene* scene, Framework::AnimationProperties&
         Framework::ConsoleLogMessage::LogLevel::INFO,
         "AnimationLoader"
     ));
+    Framework::ImguiManager::Log("Loading " + std::to_string(scene->mNumAnimations) + " animation(s)...", "AnimationLoader");
 
     for (unsigned int i = 0; i < scene->mNumAnimations; i++)
     {
@@ -120,6 +122,7 @@ static void LoadAnimations(const aiScene* scene, Framework::AnimationProperties&
             Framework::ConsoleLogMessage::LogLevel::INFO,
             "AnimationLoader"
         ));
+        Framework::ImguiManager::Log("  Loaded clip: " + newAnim->name, "AnimationLoader");
     }
 }
 
@@ -140,6 +143,7 @@ bool AnimationLoader::loadAnimation(const std::string& path, Framework::Animatio
             Framework::ConsoleLogMessage::LogLevel::ERR,
             "AnimationLoader"
         ));
+        Framework::ImguiManager::LogError("ASSIMP error (AnimationLoader): " + std::string(importer.GetErrorString()), "AnimationLoader");
         return false;
     }
 
@@ -163,6 +167,7 @@ bool AnimationLoader::loadAnimation(const std::string& path, Framework::Animatio
             Framework::ConsoleLogMessage::LogLevel::ERR,
             "AnimationLoader"
         ));
+        Framework::ImguiManager::LogError("AnimationLoader error: No mesh with bones found in file: " + path, "AnimationLoader");
         // Don't return false, it might be a valid file with no *skinned* mesh
         // but we need to check for animations.
     }

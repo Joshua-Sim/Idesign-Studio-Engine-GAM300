@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "AnimationSystem.h"
+#include "ImguiManager.h"
 #include <iostream>
 #include <cmath>
 #include <algorithm>
@@ -246,6 +247,7 @@ namespace Framework
                     ConsoleLogMessage::LogLevel::ERR,
                     "AnimationSystem"
                 ));
+                ImguiManager::LogError("Animation Error: No root bone found! (Index is -1)", "AnimationSystem");
                 s_didError = true;
             }
         }

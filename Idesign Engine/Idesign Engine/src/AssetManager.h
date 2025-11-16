@@ -269,6 +269,9 @@ namespace Framework
         void SaveArrayToJson(const std::string& typeName, const std::string& filePath, const std::string& arrayKey);
         bool HasTextureByGUID(const std::string& guid) const;
 
+        void LoadWindowConfig();
+		void LoadRemainingAssets();
+
     private:
         AssetManager() = default;                                   // Private constructor
         std::unordered_map<AssetKey, AssetEntry, AssetKeyHash> m_Assets;

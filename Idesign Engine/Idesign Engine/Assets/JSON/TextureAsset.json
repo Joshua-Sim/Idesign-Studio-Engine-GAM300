@@ -6,6 +6,11 @@
             "path": "Assets/Textures/music.png"
         },
         {
+            "guid": "0f2ece2c-6b29-43d9-a6ae-1f648d18d86d",
+            "name": "Wood",
+            "path": "Assets\\Textures\\Wood.png"
+        },
+        {
             "guid": "aa40e4be-e3ce-4b7d-8806-dc0f46d34ee8",
             "name": "Backyard",
             "path": "Assets/Textures/Backyard.png"
@@ -19,11 +24,6 @@
             "guid": "4caccc21-6007-45d5-bb72-a14260f29a35",
             "name": "test",
             "path": "Assets/PNG/test.png"
-        },
-        {
-            "guid": "0f2ece2c-6b29-43d9-a6ae-1f648d18d86d",
-            "name": "Wood",
-            "path": "Assets\\Textures\\Wood.png"
         },
         {
             "guid": "b57b4683-8581-4256-9cc5-60c900acec67",
