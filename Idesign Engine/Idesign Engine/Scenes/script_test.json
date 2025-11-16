@@ -2,13 +2,13 @@
     "Entities": [
         {
             "name": "Entity 0",
-            "guid": "0fdfa022-630c-42e1-886f-5eb06eb5efe2",
+            "guid": "5b9263cd-88f5-4bbb-b8fc-e6dd0f6ec619",
             "components": {
                 "TransformComponent": {
                     "position": [
-                        8.16667366027832,
+                        10.249999046325684,
                         0.0,
-                        -4.166666030883789
+                        -3.749999523162842
                     ],
                     "rotation": [
                         0.0,
@@ -45,11 +45,13 @@
                 "ScriptProperties": {
                     "scripts": [
                         {
-                            "scriptPath": "Assets/Scripts/hello.lua",
+                            "guid": "",
+                            "scriptPath": "Assets/Scripts/numpad_move.lua",
                             "hotReload": true
                         },
                         {
-                            "scriptPath": "Assets/Scripts/numpad_move.lua",
+                            "guid": "",
+                            "scriptPath": "Assets/Scripts/hello.lua",
                             "hotReload": true
                         }
                     ]
@@ -58,7 +60,7 @@
         },
         {
             "name": "Entity 1",
-            "guid": "4cf09f14-5eeb-4945-9ce4-b94fd5b204a7",
+            "guid": "d451ce44-4058-4064-8e18-eef2966520c2",
             "components": {
                 "TransformComponent": {
                     "position": [
@@ -92,7 +94,7 @@
         },
         {
             "name": "Entity 2",
-            "guid": "682ed2a4-23f9-4a72-ad77-76f0c98a76b6",
+            "guid": "52c5bf3d-4f45-4839-bc22-045505bbecaf",
             "components": {
                 "TransformComponent": {
                     "position": [
@@ -129,7 +131,7 @@
         },
         {
             "name": "Entity 3",
-            "guid": "85c5c309-4891-44e5-9512-905f61d36be1",
+            "guid": "36de7a4a-6b18-4536-a5be-382796e79ac3",
             "components": {
                 "TransformComponent": {
                     "position": [
@@ -169,7 +171,7 @@
         },
         {
             "name": "Entity 4",
-            "guid": "5af2a894-0f5b-4383-a9c3-416ea31e9c48",
+            "guid": "448d39f1-e8c6-4c03-b433-7050e7dce9a2",
             "components": {
                 "TransformComponent": {
                     "position": [
@@ -200,7 +202,7 @@
         },
         {
             "name": "Entity 5",
-            "guid": "c2a0aa1f-b2a8-444f-a3bd-2e5a2ad91739",
+            "guid": "cb3c1006-8ec1-49a0-adb3-f8dc3ea4212f",
             "components": {
                 "TransformComponent": {
                     "position": [
@@ -231,7 +233,7 @@
         },
         {
             "name": "Entity 6",
-            "guid": "07818ad8-b4a3-4579-8856-0e89a65657be",
+            "guid": "c5b78d5e-3e2e-4439-bcd4-26dc329f0e08",
             "components": {
                 "TransformComponent": {
                     "position": [
@@ -262,7 +264,7 @@
         },
         {
             "name": "Entity 7",
-            "guid": "a38c0091-dc73-4d8e-a068-392ae495cb6f",
+            "guid": "440e953d-a0f5-423c-979a-6b5d5b0cbefb",
             "components": {
                 "TransformComponent": {
                     "position": [

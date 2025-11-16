@@ -237,7 +237,7 @@ namespace Framework
                     const auto& scriptObj = components["ScriptProperties"];
                     ScriptProperties sp;
 
-                    if (scriptObj.HasMember("scripts") && scriptObj["scripts"].IsArray())
+                    if (scriptObj.HasMember("guid") && scriptObj["guid"].IsString())
                     {
                         const auto& arr = scriptObj["scripts"].GetArray();
                         for (const auto& s : arr)
@@ -250,18 +250,14 @@ namespace Framework
                             if (s.HasMember("hotReload") && s["hotReload"].IsBool())
                                 entry.hotReload = s["hotReload"].GetBool();
 
-                            // runtime fields stay at defaults:
-                            // entry.initialized    = false;
-                            // entry.lastWriteTicks = 0;
-                            // entry.tableRef       = -1;
                             sp.scripts.push_back(entry);
                         }
                     }
 
-                    if (!sp.scripts.empty())
+                    /*if (!sp.scripts.empty())
                     {
                         ecsInterface.AddComponent(entity, sp);
-                    }
+                    }*/
                 }
 
                 sceneManager.RegisterEntityToScene(entity, cleanName);
@@ -404,11 +400,9 @@ namespace Framework
                     {
                         rapidjson::Value entryObj(rapidjson::kObjectType);
 
-                        entryObj.AddMember(
-                            "scriptPath",
-                            rapidjson::Value(entry.scriptPath.c_str(), allocator),
-                            allocator
-                        );
+                        entryObj.AddMember("guid", rapidjson::Value(entry.guid.id.c_str(), allocator), allocator);
+
+                        entryObj.AddMember("scriptPath", rapidjson::Value(entry.scriptPath.c_str(), allocator), allocator);
 
                         entryObj.AddMember("hotReload", entry.hotReload, allocator);
 

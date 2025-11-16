@@ -373,36 +373,36 @@ namespace Framework {
 
     bool ScriptingSystem::CallHook(int tableRef, const char* fn, float arg)
     {
-        if (tableRef == LUA_NOREF || fn == nullptr) return false;
+        if (tableRef <= 0 || fn == nullptr)
+            return false;
 
         // Push the instance table
-        lua_rawgeti(L, LUA_REGISTRYINDEX, tableRef);      // [tbl]
-        // Push the method from the table
-        lua_getfield(L, -1, fn);                          // [tbl, fn]
+        lua_rawgeti(L, LUA_REGISTRYINDEX, tableRef);  // [tbl]
+        lua_getfield(L, -1, fn);                      // [tbl, fn]
 
         if (!lua_isfunction(L, -1)) {
-            lua_pop(L, 2);                                // pop fn, tbl
+            lua_pop(L, 2);                            // pop fn, tbl
             return false;
         }
 
         // self (the table) as first arg
-        lua_pushvalue(L, -2);                             // [tbl, fn, tbl]
+        lua_pushvalue(L, -2);                         // [tbl, fn, tbl]
         int nargs = 1;
 
         if (std::strcmp(fn, "on_update") == 0) {
-            lua_pushnumber(L, arg);                       // [tbl, fn, tbl, dt]
+            lua_pushnumber(L, arg);                  // [tbl, fn, tbl, dt]
             nargs = 2;
         }
 
         if (lua_pcall(L, nargs, 0, 0) != LUA_OK) {
-            std::cerr << "[Lua] call " << fn << " error: "
-                << lua_tostring(L, -1) << "\n";
-            lua_pop(L, 1);                                // pop error
-            lua_pop(L, 1);                                // pop tbl
+            const char* err = lua_tostring(L, -1);
+            std::cerr << "[Lua Error] in " << fn << ": " << (err ? err : "(unknown)") << "\n";
+            lua_pop(L, 1); // pop error
+            lua_pop(L, 1); // pop tbl
             return false;
         }
 
-        lua_pop(L, 1);                                    // pop tbl
+        lua_pop(L, 1); // pop tbl
         return true;
     }
     
@@ -464,6 +464,13 @@ namespace Framework {
                         sc.initialized = false;
                         CallHook(sc.tableRef, "on_init");
                         any = true;
+
+                        std::error_code ecc;
+                        auto ft = std::filesystem::last_write_time(sc.scriptPath, ecc);
+                        if (!ecc)
+                        {
+                            sc.lastWriteTicks = FileTimeToTicks(ft);
+                        }
                     }
                     else
                     {

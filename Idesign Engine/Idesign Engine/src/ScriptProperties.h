@@ -13,6 +13,7 @@ namespace Framework
     // ------------------ Per-script entry ------------------
     struct ScriptEntry
     {
+        AssetHandle guid;
         std::string scriptPath;   // which .lua file
         bool        hotReload = true;
 
@@ -25,6 +26,7 @@ namespace Framework
     // Properties for ScriptEntry (only what we want reflected/serialized)
     inline const std::array g_ScriptEntryPropsArray =
     {
+        PROP_GUID_HIDDEN(guid, ScriptEntry),
         PROP_STRING(scriptPath, ScriptEntry),
         PROP_BOOL(hotReload,    ScriptEntry),
 
