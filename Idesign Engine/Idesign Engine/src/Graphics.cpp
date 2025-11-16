@@ -201,7 +201,6 @@ namespace Framework {
         ecsInterface.RegisterComponent<MaterialProperties>();
         ecsInterface.RegisterComponent<MaterialMetadata>();
         ecsInterface.RegisterComponent<LightProperties>();
-        //ecsInterface.RegisterComponent<ScriptProperties>();
         
         //test
 

@@ -33,7 +33,7 @@
 #include "TextProperties.h"
 #include "NavMeshAgentProperties.h"
 #include "NavMeshProperties.h"
-#include "PrefabProperties.h"  
+#include "PrefabProperties.h" 
 #include "SceneProperties.h"
 #include "MaterialProperties.h"
 #include "AnimationProperties.h"
@@ -65,6 +65,7 @@ namespace Framework
     REGISTER_TYPE_NAME(AnimationProperties);
     REGISTER_TYPE_NAME(LightProperties);
     REGISTER_TYPE_NAME(ScriptProperties);
+    REGISTER_TYPE_NAME(ScriptEntry);
 
     struct AssetKey 
     {
