@@ -2,22 +2,22 @@
     "count": 15,
     "entries": [
         {
-            "guid": "62fa60bd-a3d0-4575-851f-e6d04a326345",
-            "name": "Window Frame",
-            "path": "Assets\\Objects\\Window Frame.obj",
-            "vao": 2,
-            "vbo": 3,
-            "ebo": 4,
-            "indexCount": 774
-        },
-        {
             "guid": "6cbaa85b-562d-4b23-9f64-8639947659cc",
             "name": "knifechoppingwithBONEFIXED4",
             "path": "Assets/Objects/knifechoppingwithBONEFIXED4.fbx",
+            "vao": 2,
+            "vbo": 3,
+            "ebo": 4,
+            "indexCount": 312
+        },
+        {
+            "guid": "62fa60bd-a3d0-4575-851f-e6d04a326345",
+            "name": "Window Frame",
+            "path": "Assets\\Objects\\Window Frame.obj",
             "vao": 1,
             "vbo": 1,
             "ebo": 2,
-            "indexCount": 312
+            "indexCount": 774
         },
         {
             "guid": "814c3cff-9da8-4ad4-8a05-009b99a4ea2b",
@@ -47,40 +47,40 @@
             "indexCount": 591
         },
         {
-            "guid": "e902f0d7-a022-45fc-9c17-2a98cbdb793e",
-            "name": "Cylinder",
-            "path": "Assets/Objects/Cylinder.obj",
-            "vao": 7,
-            "vbo": 13,
-            "ebo": 14,
-            "indexCount": 240
-        },
-        {
             "guid": "9e1fcb62-0699-4a0b-ae75-d0670af44b1b",
             "name": "plane2",
             "path": "Assets/Objects/plane2.obj",
-            "vao": 6,
-            "vbo": 11,
-            "ebo": 12,
+            "vao": 7,
+            "vbo": 13,
+            "ebo": 14,
             "indexCount": 231840
         },
         {
-            "guid": "eac3e6f4-1bf2-415f-aef8-8f1269d91560",
-            "name": "Cube",
-            "path": "Assets/Objects/Cube.obj",
-            "vao": 9,
-            "vbo": 17,
-            "ebo": 18,
-            "indexCount": 36
+            "guid": "e902f0d7-a022-45fc-9c17-2a98cbdb793e",
+            "name": "Cylinder",
+            "path": "Assets/Objects/Cylinder.obj",
+            "vao": 6,
+            "vbo": 11,
+            "ebo": 12,
+            "indexCount": 240
         },
         {
             "guid": "3a68b780-632d-49d8-b45d-33b1ac035172",
             "name": "plane",
             "path": "Assets/Objects/plane.obj",
+            "vao": 9,
+            "vbo": 17,
+            "ebo": 18,
+            "indexCount": 76662
+        },
+        {
+            "guid": "eac3e6f4-1bf2-415f-aef8-8f1269d91560",
+            "name": "Cube",
+            "path": "Assets/Objects/Cube.obj",
             "vao": 8,
             "vbo": 15,
             "ebo": 16,
-            "indexCount": 76662
+            "indexCount": 36
         },
         {
             "guid": "239cddd5-6733-44a1-927a-e3b13152a09a",

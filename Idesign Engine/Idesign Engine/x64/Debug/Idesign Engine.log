@@ -1,22 +1,7 @@
-﻿  AnimationLoader.cpp
+﻿  AssetManager.cpp
 C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/AnimationLoader.cpp')
+  (compiling source file '/src/AssetManager.cpp')
       C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
       see declaration of 'Framework::AnimationProperties::name'
-  
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\AnimationLoader.cpp(76,67): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-  (compiling source file '/AnimationLoader.cpp')
-  
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\AnimationLoader.cpp(78,39): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-  (compiling source file '/AnimationLoader.cpp')
-  
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\AnimationLoader.cpp(96,28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  (compiling source file '/AnimationLoader.cpp')
-  
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\AnimationLoader.cpp(102,28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  (compiling source file '/AnimationLoader.cpp')
-  
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\AnimationLoader.cpp(108,28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  (compiling source file '/AnimationLoader.cpp')
   
   Idesign Engine.vcxproj -> C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe

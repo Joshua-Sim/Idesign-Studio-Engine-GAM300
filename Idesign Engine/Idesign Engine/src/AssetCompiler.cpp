@@ -8,6 +8,7 @@
 #include "PrefabProperties.h"
 #include "PrefabComponent.h"
 #include "ScriptingSystem.h"
+#include "MessageSystem.h"
 
 extern Framework::Coordinator ecsInterface;
 namespace Framework
@@ -32,6 +33,11 @@ namespace Framework
         {
             std::cerr << "Failed to find scene file: " << scenePath
                 << " (resolved to: " << absoluteScenePath << ")\n";
+            Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage(
+                "Failed to find scene file: " + scenePath + " (resolved to: " + absoluteScenePath.string() + ")\n",
+                Framework::ConsoleLogMessage::LogLevel::ERR,
+                "AssetCompiler"
+            ));
             return;
         }
 
@@ -44,6 +50,11 @@ namespace Framework
             if (!fp)
             {
                 std::cerr << "Failed to open scene file: " << finalPath << "\n";
+                Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage(
+                    "Failed to open scene file: " + finalPath,
+                    Framework::ConsoleLogMessage::LogLevel::ERR,
+                    "AssetCompiler"
+                ));
                 return;
             }
 
@@ -56,6 +67,11 @@ namespace Framework
         if (!doc.IsObject() || !doc.HasMember("Entities") || !doc["Entities"].IsArray())
         {
             std::cerr << "Invalid scene format: missing Entities array\n";
+            Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage(
+                "Invalid scene format: missing Entities array\n",
+                Framework::ConsoleLogMessage::LogLevel::ERR,
+                "AssetCompiler"
+            ));
             return;
         }
 
@@ -87,6 +103,11 @@ namespace Framework
                 if (entity == std::numeric_limits<Entity>::max())
                 {
                     std::cerr << "Failed to instantiate prefab: " << prefabComp.prefabGUID.id << "\n";
+                    Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage(
+                        "Failed to instantiate prefab: " + prefabComp.prefabGUID.id,
+                        Framework::ConsoleLogMessage::LogLevel::ERR,
+                        "AssetCompiler"
+                    ));
                     continue;
                 }
 
@@ -186,6 +207,11 @@ namespace Framework
                         else
                         {
                             std::cerr << "Missing MeshProperties for GUID: " << guid << "\n";
+                            Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage(
+                                "Missing MeshProperties for GUID: " + guid,
+                                Framework::ConsoleLogMessage::LogLevel::ERR,
+                                "AssetCompiler"
+                            ));
                         }
                     }
                 }
@@ -198,10 +224,17 @@ namespace Framework
                     {
                         std::string guid = texRef["guid"].GetString();
                         const TextureProperties* tex = AssetManager::Instance().Get<TextureProperties>(guid);
-                        if (tex)
+                        if (tex) {
                             ecsInterface.AddComponent(entity, *tex);
-                        else
+                        }
+                        else {
                             std::cerr << "Missing TextureProperties for GUID: " << guid << "\n";
+                            Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage(
+                                "Missing TextureProperties for GUID: " + guid,
+                                Framework::ConsoleLogMessage::LogLevel::ERR,
+                                "AssetCompiler"
+                            ));
+                        }
                     }
                 }
 
@@ -228,6 +261,11 @@ namespace Framework
                         else
                         {
                             std::cerr << "Missing AnimationProperties for GUID: " << guid << "\n";
+                            Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage(
+                                "Missing AnimationProperties for GUID: " + guid,
+                                Framework::ConsoleLogMessage::LogLevel::ERR,
+                                "AssetCompiler"
+                            ));
                         }
                     }
                 }
@@ -447,6 +485,11 @@ namespace Framework
         if (!fp)
         {
             std::cerr << "Failed to open file for writing, save cancelled" << std::endl;
+            Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage(
+                "Failed to open file for writing, save cancelled",
+                Framework::ConsoleLogMessage::LogLevel::ERR,
+                "AssetCompiler"
+            ));
             return;
         }
         auto buffer = std::make_unique<char[]>(65536);
@@ -455,6 +498,11 @@ namespace Framework
         doc.Accept(writer);
         fclose(fp);
         std::cout << "Scene saved to: " << outputPath << "\n";
+        Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage(
+            "Scene saved to: " + outputPath,
+            Framework::ConsoleLogMessage::LogLevel::SUCCESS,
+            "AssetCompiler"
+        ));
     }
 
     void DuplicateEntity(Framework::Coordinator& ecs, Entity sourceEntity)
@@ -468,7 +516,13 @@ namespace Framework
         ecs.SetEntityName(newEntity, sourceName + " (Copy)");
 
         std::cout << "Duplicating entity " << sourceEntity << " (" << sourceName
-            << ") to new entity " << newEntity << "..." << std::endl;
+            << ") to new entity " << newEntity << "..." << std::endl; 
+        
+        Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage(
+            "Duplicating entity " + std::to_string(sourceEntity) + " (" + sourceName + ") to new entity " + std::to_string(newEntity) + "...",
+            Framework::ConsoleLogMessage::LogLevel::INFO,
+            "AssetCompiler"
+        ));
 
         // 3. Go through every component type, check if the source has it,
         //    and add a copy of it to the new entity.
@@ -547,6 +601,11 @@ namespace Framework
         // (e.g., Rigidbody, Collider, ScriptComponent, etc.)
 
         std::cout << "Successfully duplicated entity." << std::endl;
+        Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage(
+            "Successfully duplicated entity.",
+            Framework::ConsoleLogMessage::LogLevel::SUCCESS,
+            "AssetCompiler"
+        ));
     }
 
     void saveEntityToPrefab(Entity entity, const std::string& prefabPath)
@@ -693,6 +752,11 @@ namespace Framework
         if (!fp)
         {
             std::cerr << "Failed to create prefab file: " << finalPath << std::endl;
+            Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage(
+                "Failed to create prefab file: " + finalPath,
+                Framework::ConsoleLogMessage::LogLevel::ERR,
+                "AssetCompiler"
+            ));
             return;
         }
 
@@ -704,6 +768,11 @@ namespace Framework
         fclose(fp);
 
         std::cout << "Prefab saved to: " << finalPath << "\n";
+        Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage(
+            "Prefab saved to: " + finalPath,
+            Framework::ConsoleLogMessage::LogLevel::SUCCESS,
+            "AssetCompiler"
+        ));
     }
 
     void CreatePrefabFromEntity(Entity entity, const std::string& prefabName)
@@ -722,6 +791,11 @@ namespace Framework
         if (ec)
         {
             std::cerr << "Failed to create prefab directory: " << ec.message() << "\n";
+            Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage(
+                "Failed to create prefab directory: " + ec.message(),
+                Framework::ConsoleLogMessage::LogLevel::ERR,
+                "AssetCompiler"
+            ));
             return;
         }
 
@@ -754,7 +828,18 @@ namespace Framework
         );
 
         std::cout << "Created prefab: " << prefabName << " (GUID: " << prefabGUID << ")\n";
+        Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage(
+            "Created prefab: " + prefabName + " (GUID: " + prefabGUID + ")\n",
+            Framework::ConsoleLogMessage::LogLevel::SUCCESS,
+            "AssetCompiler"
+        ));
+
         std::cout << "  Saved to: " << absolutePrefabPath << "\n";
+        Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage(
+            "  Saved to: " + absolutePrefabPath,
+            Framework::ConsoleLogMessage::LogLevel::INFO,
+            "AssetCompiler"
+        ));
     }
 
     Entity InstantiatePrefab(const std::string& prefabGUID)
@@ -764,6 +849,11 @@ namespace Framework
         if (!prefabProps)
         {
             std::cerr << "Prefab not found: " << prefabGUID << std::endl;
+            Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage(
+                "Prefab not found: " + prefabGUID,
+                Framework::ConsoleLogMessage::LogLevel::ERR,
+                "AssetCompiler"
+            ));
             return std::numeric_limits<Entity>::max();
         }
 
@@ -786,6 +876,11 @@ namespace Framework
         {
             std::cerr << "Prefab file not found: " << prefabProps->path
                 << " (resolved to: " << prefabPath << ")" << std::endl;
+            Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage(
+                "Prefab file not found: " + prefabProps->path + " (resolved to: " + prefabPath.string() + ")",
+                Framework::ConsoleLogMessage::LogLevel::ERR,
+                "AssetCompiler"
+            ));
             return std::numeric_limits<Entity>::max();
         }
 
@@ -796,6 +891,11 @@ namespace Framework
         if (!fp)
         {
             std::cerr << "Failed to open prefab file: " << absolutePrefabPath << std::endl;
+            Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage(
+                "Failed to open prefab file: " + absolutePrefabPath,
+                Framework::ConsoleLogMessage::LogLevel::ERR,
+                "AssetCompiler"
+            ));
             return std::numeric_limits<Entity>::max();
         }
 
@@ -808,6 +908,11 @@ namespace Framework
         if (!doc.HasMember("entity"))
         {
             std::cerr << "Invalid prefab format\n";
+            Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage(
+                "Invalid prefab format\n",
+                Framework::ConsoleLogMessage::LogLevel::ERR,
+                "AssetCompiler"
+            ));
             return std::numeric_limits<Entity>::max();
         }
 
@@ -945,6 +1050,12 @@ namespace Framework
         }
 
         std::cout << "Spawned prefab: " << prefabProps->name << " as entity " << newEntity << std::endl;
+        Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage(
+            "Spawned prefab: " + prefabProps->name + " as entity " + std::to_string(newEntity),
+            Framework::ConsoleLogMessage::LogLevel::INFO,
+            "AssetCompiler"
+        ));
+
         return newEntity;
     }
 
@@ -1054,11 +1165,21 @@ namespace Framework
                 else
                 {
                     std::cerr << "Invalid vec3 format for property: " << p.m_pName << std::endl;
+                    Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage(
+                        "Invalid vec3 format for property: " + std::string(p.m_pName),
+                        Framework::ConsoleLogMessage::LogLevel::ERR,
+                        "AssetCompiler"
+                    ));
                 }
                 break;
             }
             default:
                 std::cerr << "Unsupported or mismatched type for property: " << p.m_pName << std::endl;
+                Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage(
+                    "Unsupported or mismatched type for property: " + std::string(p.m_pName),
+                    Framework::ConsoleLogMessage::LogLevel::ERR,
+                    "AssetCompiler"
+                ));
                 break;
             }
         }
@@ -1117,6 +1238,11 @@ namespace Framework
 
             default:
                 std::cerr << "Unsupported type during serialization: " << p.m_pName << std::endl;
+                Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage(
+                    "Unsupported type during serialization: " + std::string(p.m_pName),
+                    Framework::ConsoleLogMessage::LogLevel::ERR,
+                    "AssetCompiler"
+                ));
                 break;
             }
         }
