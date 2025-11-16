@@ -24,6 +24,7 @@
 #include "MeshProperties.h"
 #include "TransformProperties.h"
 #include "MaterialProperties.h"
+#include "ScriptProperties.h"
 
 namespace fs = std::filesystem;
 namespace Framework

@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "ScriptingSystem.h"
 #include "Coordinator.h"
-#include "ComponentList.h"
+//#include "ComponentList.h"
 #include "Graphics.h"          // to call Graphics* methods
 #include <lua.hpp>
 #include <iostream>
@@ -12,6 +12,7 @@
 #include "NavMeshSystem.h"
 #include "MeshProperties.h"          // g_MeshPropertiesProps
 #include <filesystem>
+#include "ScriptProperties.h"
 
 extern Framework::Coordinator ecsInterface;
 
@@ -310,11 +311,11 @@ namespace Framework {
 
     void ScriptingSystem::Initialize() {
         // 1) Register ScriptComponent (your engine’s pattern)
-        ecsInterface.RegisterComponent<ScriptComponent>();
+        ecsInterface.RegisterComponent<ScriptProperties>();
 
         // 2) Set system signature
         Signature sig;
-        sig.set(ecsInterface.GetComponentType<ScriptComponent>(), true);
+        sig.set(ecsInterface.GetComponentType<ScriptProperties>(), true);
         ecsInterface.SetSystemSignature<ScriptingSystem>(sig);
         std::cout << "Signature for Scripting system is: " << sig << std::endl;
 
@@ -365,17 +366,20 @@ namespace Framework {
 
     void ScriptingSystem::Update(float dt) {
         for (auto const& e : mEntities) {
-            if (!ecsInterface.HasComponent<ScriptComponent>(e)) continue;
-            auto& comp = ecsInterface.GetComponent<ScriptComponent>(e);
+            if (!ecsInterface.HasComponent<ScriptProperties>(e)) continue;
+            auto& comp = ecsInterface.GetComponent<ScriptProperties>(e);
 
             for (auto& sc : comp.scripts) {         // <--- NEW
                 if (sc.scriptPath.empty()) continue;
 
                 if (sc.hotReload && !sc.scriptPath.empty()) {
                     try {
-                        auto nowTicks = FileTimeToTicks(std::filesystem::last_write_time(sc.scriptPath));
+                        auto nowTicks = FileTimeToTicks(
+                            std::filesystem::last_write_time(sc.scriptPath));
+
                         if (nowTicks != sc.lastWriteTicks) {
                             std::cout << "[HotReload] " << sc.scriptPath << "\n";
+
                             if (LoadScriptTable(sc)) {
                                 // re-expose entity id
                                 lua_rawgeti(L, LUA_REGISTRYINDEX, sc.tableRef);
@@ -387,6 +391,7 @@ namespace Framework {
                                 CallHook(sc.tableRef, "on_init");
                                 sc.initialized = true;
                             }
+
                             sc.lastWriteTicks = nowTicks; // remember the new time
                         }
                     }
@@ -423,7 +428,7 @@ namespace Framework {
 
     std::string ScriptingSystem::GetName() { return "ScriptingSystem"; }
 
-    bool ScriptingSystem::LoadScriptTable(ScriptInstance& sc)
+    bool ScriptingSystem::LoadScriptTable(ScriptEntry& sc)
     {
         if (sc.tableRef != LUA_NOREF) {
             luaL_unref(L, LUA_REGISTRYINDEX, sc.tableRef);
@@ -470,48 +475,48 @@ namespace Framework {
 
     bool ScriptingSystem::CallHook(int tableRef, const char* fn, float arg)
     {
-        if (tableRef == LUA_NOREF || fn == nullptr) return false;
+        if (tableRef <= 0 || fn == nullptr)
+            return false;
 
         // Push the instance table
-        lua_rawgeti(L, LUA_REGISTRYINDEX, tableRef);      // [tbl]
-        // Push the method from the table
-        lua_getfield(L, -1, fn);                          // [tbl, fn]
+        lua_rawgeti(L, LUA_REGISTRYINDEX, tableRef);  // [tbl]
+        lua_getfield(L, -1, fn);                      // [tbl, fn]
 
         if (!lua_isfunction(L, -1)) {
-            lua_pop(L, 2);                                // pop fn, tbl
+            lua_pop(L, 2);                            // pop fn, tbl
             return false;
         }
 
         // self (the table) as first arg
-        lua_pushvalue(L, -2);                             // [tbl, fn, tbl]
+        lua_pushvalue(L, -2);                         // [tbl, fn, tbl]
         int nargs = 1;
 
         if (std::strcmp(fn, "on_update") == 0) {
-            lua_pushnumber(L, arg);                       // [tbl, fn, tbl, dt]
+            lua_pushnumber(L, arg);                  // [tbl, fn, tbl, dt]
             nargs = 2;
         }
 
         if (lua_pcall(L, nargs, 0, 0) != LUA_OK) {
-            std::cerr << "[Lua] call " << fn << " error: "
-                << lua_tostring(L, -1) << "\n";
-            lua_pop(L, 1);                                // pop error
-            lua_pop(L, 1);                                // pop tbl
+            const char* err = lua_tostring(L, -1);
+            std::cerr << "[Lua Error] in " << fn << ": " << (err ? err : "(unknown)") << "\n";
+            lua_pop(L, 1); // pop error
+            lua_pop(L, 1); // pop tbl
             return false;
         }
 
-        lua_pop(L, 1);                                    // pop tbl
+        lua_pop(L, 1); // pop tbl
         return true;
     }
     
     Entity ScriptingSystem::CreateScriptEntity(const std::string& path) {
         Entity e = ecsInterface.CreateEntity();
 
-        ScriptComponent comp;
-        ScriptInstance inst;
+        ScriptProperties comp;
+        ScriptEntry inst;
         inst.scriptPath = path;
         comp.scripts.push_back(inst);
 
-        ecsInterface.AddComponent<ScriptComponent>(e, comp);
+        ecsInterface.AddComponent<ScriptProperties>(e, comp);
         ecsInterface.AddComponent<TransformComponent>(e, TransformComponent{});
         ecsInterface.AddComponent<HierarchyComponent>(e, HierarchyComponent{});
         return e;
@@ -533,8 +538,8 @@ namespace Framework {
 
         for (auto e : mEntities)
         {
-            if (!ecsInterface.HasComponent<ScriptComponent>(e)) continue;
-            auto& comp = ecsInterface.GetComponent<ScriptComponent>(e);
+            if (!ecsInterface.HasComponent<ScriptProperties>(e)) continue;
+            auto& comp = ecsInterface.GetComponent<ScriptProperties>(e);
 
             for (auto& sc : comp.scripts) {
                 if (sc.scriptPath.empty()) continue;
@@ -561,6 +566,13 @@ namespace Framework {
                         sc.initialized = false;
                         CallHook(sc.tableRef, "on_init");
                         any = true;
+
+                        std::error_code ecc;
+                        auto ft = std::filesystem::last_write_time(sc.scriptPath, ecc);
+                        if (!ecc)
+                        {
+                            sc.lastWriteTicks = FileTimeToTicks(ft);
+                        }
                     }
                     else
                     {

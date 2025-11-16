@@ -60,6 +60,7 @@
 #include "TextureLoaderDDS.h"
 #include "PhysicsSystem.h"
 #include "AnimationLoader.h"
+#include <ScriptProperties.h>
 
 
 extern Framework::FontSystem fontSystem;
@@ -200,7 +201,8 @@ namespace Framework {
         ecsInterface.RegisterComponent<MaterialProperties>();
         ecsInterface.RegisterComponent<MaterialMetadata>();
         ecsInterface.RegisterComponent<LightProperties>();
-
+        //ecsInterface.RegisterComponent<ScriptProperties>();
+        
         //test
 
         ImguiManager::LogSuccess("Graphics components registered", "Graphics");
