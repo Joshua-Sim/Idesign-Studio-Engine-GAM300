@@ -14,6 +14,8 @@
 #include "EnginePath.h" // <-- Added this
 #include <filesystem>   // <-- Added this
 
+#include "MessageSystem.h"
+
 namespace Framework
 {
 	AssetManager::~AssetManager() {}
@@ -22,95 +24,119 @@ namespace Framework
 	{
 		std::filesystem::path root = GetEngineRootPath();
 		std::cout << "[AssetManager] SaveAllAssets using root path: " << root.string() << std::endl;
+		MessageBus::Get().SendImmediate(ConsoleLogMessage("[AssetManager] SaveAllAssets using root path: " + root.string(), ConsoleLogMessage::LogLevel::INFO, "AssetManager"));
 
 		// Nvr include windowconfig here
 		std::string meshPath = (root / "Assets/JSON/MeshAsset.json").string();
 		std::cout << "  Saving: " << meshPath << std::endl;
+		MessageBus::Get().SendImmediate(ConsoleLogMessage("  Saving: " + meshPath, ConsoleLogMessage::LogLevel::INFO, "AssetManager"));
 		AssetManager::Instance().SaveArrayToJson(TypeName<MeshProperties>::value, meshPath, "mesh");
 
 		std::string audioPath = (root / "Assets/JSON/AudioAsset.json").string();
 		std::cout << "  Saving: " << audioPath << std::endl;
+		MessageBus::Get().SendImmediate(ConsoleLogMessage("  Saving: " + audioPath, ConsoleLogMessage::LogLevel::INFO, "AssetManager"));
 		AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, audioPath, "audio");
 
 		std::string texturePath = (root / "Assets/JSON/TextureAsset.json").string();
 		std::cout << "  Saving: " << texturePath << std::endl;
+		MessageBus::Get().SendImmediate(ConsoleLogMessage("  Saving: " + texturePath, ConsoleLogMessage::LogLevel::INFO, "AssetManager"));
 		AssetManager::Instance().SaveArrayToJson(TypeName<TextureProperties>::value, texturePath, "textures");
 
 		std::string prefabPath = (root / "Assets/JSON/PrefabAsset.json").string();
 		std::cout << "  Saving: " << prefabPath << std::endl;
+		MessageBus::Get().SendImmediate(ConsoleLogMessage("  Saving: " + prefabPath, ConsoleLogMessage::LogLevel::INFO, "AssetManager"));
 		AssetManager::Instance().SaveArrayToJson(TypeName<PrefabProperties>::value, prefabPath, "prefabs");
 
 		std::string scenePath = (root / "Assets/JSON/SceneAsset.json").string();
 		std::cout << "  Saving: " << scenePath << std::endl;
+		MessageBus::Get().SendImmediate(ConsoleLogMessage("  Saving: " + scenePath, ConsoleLogMessage::LogLevel::INFO, "AssetManager"));
 		AssetManager::Instance().SaveArrayToJson(TypeName<SceneProperties>::value, scenePath, "scenes");
 
 		std::string materialPath = (root / "Assets/JSON/MaterialAsset.json").string();
 		std::cout << "  Saving: " << materialPath << std::endl;
+		MessageBus::Get().SendImmediate(ConsoleLogMessage("  Saving: " + materialPath, ConsoleLogMessage::LogLevel::INFO, "AssetManager"));
 		AssetManager::Instance().SaveArrayToJson(TypeName<MaterialMetadata>::value, materialPath, "materials");
 
 		std::string animPath = (root / "Assets/JSON/AnimationAsset.json").string();
 		std::cout << "  Saving: " << animPath << std::endl;
+		MessageBus::Get().SendImmediate(ConsoleLogMessage("  Saving: " + animPath, ConsoleLogMessage::LogLevel::INFO, "AssetManager"));
 		AssetManager::Instance().SaveArrayToJson(TypeName<AnimationProperties>::value, animPath, "animation");
 
 		std::cout << "Files are being saved" << std::endl;
+		MessageBus::Get().SendImmediate(ConsoleLogMessage("Files are being saved", ConsoleLogMessage::LogLevel::INFO, "AssetManager"));
 	}
 
 	void AssetManager::CompileAllAssets()
 	{
 		std::filesystem::path root = GetEngineRootPath();
 		std::cout << "[AssetManager] CompileAllAssets using root path: " << root.string() << std::endl;
+		MessageBus::Get().SendImmediate(ConsoleLogMessage("[AssetManager] CompileAllAssets using root path: " + root.string(), ConsoleLogMessage::LogLevel::INFO, "AssetManager"));
 
 		//CompileSingleObject<WindowConfig>("src/Data/WindowAsset.json", "src/Data/WindowAsset.cfg", "Descriptor/WindowAsset.desc", g_WindowConfigProps);
 
 		std::cout << "  Compiling Mesh:\n    JSON: " << (root / "Assets/JSON/MeshAsset.json").string() << "\n    BIN: " << (root / "Resource/MeshAsset.bin").string() << std::endl;
+		MessageBus::Get().SendImmediate(ConsoleLogMessage("  Compiling Mesh:\n    JSON: " + (root / "Assets/JSON/MeshAsset.json").string() + "\n    BIN: " + (root / "Resource/MeshAsset.bin").string(), ConsoleLogMessage::LogLevel::INFO, "AssetManager"));
 		CompileArray<MeshProperties>((root / "Assets/JSON/MeshAsset.json").string(), (root / "Resource/MeshAsset.bin").string(), (root / "Descriptor/MeshAsset.desc").string(), g_MeshProps, "mesh");
 
 		std::cout << "  Compiling Audio:\n    JSON: " << (root / "Assets/JSON/AudioAsset.json").string() << "\n    BIN: " << (root / "Resource/AudioAsset.bin").string() << std::endl;
+		MessageBus::Get().SendImmediate(ConsoleLogMessage("  Compiling Audio:\n    JSON: " + (root / "Assets/JSON/AudioAsset.json").string() + "\n    BIN: " + (root / "Resource/AudioAsset.bin").string(), ConsoleLogMessage::LogLevel::INFO, "AssetManager"));
 		CompileArray<AudioProperties>((root / "Assets/JSON/AudioAsset.json").string(), (root / "Resource/AudioAsset.bin").string(), (root / "Descriptor/AudioAsset.desc").string(), g_AudioPropertiesProps, "audio");
 
 		std::cout << "  Compiling Texture:\n    JSON: " << (root / "Assets/JSON/TextureAsset.json").string() << "\n    BIN: " << (root / "Resource/TextureAsset.bin").string() << std::endl;
+		MessageBus::Get().SendImmediate(ConsoleLogMessage("  Compiling Texture:\n    JSON: " + (root / "Assets/JSON/TextureAsset.json").string() + "\n    BIN: " + (root / "Resource/TextureAsset.bin").string(), ConsoleLogMessage::LogLevel::INFO, "AssetManager"));
 		CompileArray<TextureProperties>((root / "Assets/JSON/TextureAsset.json").string(), (root / "Resource/TextureAsset.bin").string(), (root / "Descriptor/TextureAsset.desc").string(), g_TexturePropertiesProps, "textures");
 
 		std::cout << "  Compiling Prefab:\n    JSON: " << (root / "Assets/JSON/PrefabAsset.json").string() << "\n    BIN: " << (root / "Resource/PrefabAsset.bin").string() << std::endl;
+		MessageBus::Get().SendImmediate(ConsoleLogMessage("  Compiling Prefab:\n    JSON: " + (root / "Assets/JSON/PrefabAsset.json").string() + "\n    BIN: " + (root / "Resource/PrefabAsset.bin").string(), ConsoleLogMessage::LogLevel::INFO, "AssetManager"));
 		CompileArray<PrefabProperties>((root / "Assets/JSON/PrefabAsset.json").string(), (root / "Resource/PrefabAsset.bin").string(), (root / "Descriptor/PrefabAsset.desc").string(), g_PrefabProps, "prefabs");
 
 		std::cout << "  Compiling Scene:\n    JSON: " << (root / "Assets/JSON/SceneAsset.json").string() << "\n    BIN: " << (root / "Resource/SceneAsset.bin").string() << std::endl;
+		MessageBus::Get().SendImmediate(ConsoleLogMessage("  Compiling Scene:\n    JSON: " + (root / "Assets/JSON/SceneAsset.json").string() + "\n    BIN: " + (root / "Resource/SceneAsset.bin").string(), ConsoleLogMessage::LogLevel::INFO, "AssetManager"));
 		CompileArray<SceneProperties>((root / "Assets/JSON/SceneAsset.json").string(), (root / "Resource/SceneAsset.bin").string(), (root / "Descriptor/SceneAsset.desc").string(), g_SceneProps, "scenes");
 
 		std::cout << "  Compiling Material:\n    JSON: " << (root / "Assets/JSON/MaterialAsset.json").string() << "\n    BIN: " << (root / "Resource/MaterialAsset.bin").string() << std::endl;
+		MessageBus::Get().SendImmediate(ConsoleLogMessage("  Compiling Material:\n    JSON: " + (root / "Assets/JSON/MaterialAsset.json").string() + "\n    BIN: " + (root / "Resource/MaterialAsset.bin").string(), ConsoleLogMessage::LogLevel::INFO, "AssetManager"));
 		CompileArray<MaterialMetadata>((root / "Assets/JSON/MaterialAsset.json").string(), (root / "Resource/MaterialAsset.bin").string(), (root / "Descriptor/MaterialAsset.desc").string(), g_MaterialMetaProps, "materials");
 
 		std::cout << "  Compiling Animation:\n    JSON: " << (root / "Assets/JSON/AnimationAsset.json").string() << "\n    BIN: " << (root / "Resource/AnimationAsset.bin").string() << std::endl;
+		MessageBus::Get().SendImmediate(ConsoleLogMessage("  Compiling Animation:\n    JSON: " + (root / "Assets/JSON/AnimationAsset.json").string() + "\n    BIN: " + (root / "Resource/AnimationAsset.bin").string(), ConsoleLogMessage::LogLevel::INFO, "AssetManager"));
 		CompileArray<AnimationProperties>((root / "Assets/JSON/AnimationAsset.json").string(), (root / "Resource/AnimationAsset.bin").string(), (root / "Descriptor/AnimationAsset.desc").string(), g_AnimationPropertiesProps, "animation");
 
 		std::cout << "Files are being compiled to .binary" << std::endl;
+		MessageBus::Get().SendImmediate(ConsoleLogMessage("Files are being compiled to .binary", ConsoleLogMessage::LogLevel::INFO, "AssetManager"));
 	}
 
 	void AssetManager::LoadAllAssets()
 	{
 		std::filesystem::path root = GetEngineRootPath();
 		std::cout << "[AssetManager] LoadAllAssets using root path: " << root.string() << std::endl;
+		MessageBus::Get().SendImmediate(ConsoleLogMessage("[AssetManager] LoadAllAssets using root path: " + root.string(), ConsoleLogMessage::LogLevel::INFO, "AssetManager"));
 
 
 		// Mesh & Texture is loaded under Graphics.cpp due to some initialization required under graphics.cpp
 		std::string windowCfgPath = (root / "Resource/WindowAsset.cfg").string();
 		std::cout << "  Loading: " << windowCfgPath << std::endl;
+		MessageBus::Get().SendImmediate(ConsoleLogMessage("  Loading: " + windowCfgPath, ConsoleLogMessage::LogLevel::INFO, "AssetManager"));
 		AssetManager::Instance().LoadBinary<WindowConfig>(windowCfgPath, g_WindowConfigProps);
 
 		std::string audioBinPath = (root / "Resource/AudioAsset.bin").string();
 		std::cout << "  Loading: " << audioBinPath << std::endl;
+		MessageBus::Get().SendImmediate(ConsoleLogMessage("  Loading: " + audioBinPath, ConsoleLogMessage::LogLevel::INFO, "AssetManager"));
 		AssetManager::Instance().LoadBinaryArray<AudioProperties>(audioBinPath, g_AudioPropertiesProps);
 
 		std::string prefabBinPath = (root / "Resource/PrefabAsset.bin").string();
 		std::cout << "  Loading: " << prefabBinPath << std::endl;
+		MessageBus::Get().SendImmediate(ConsoleLogMessage("  Loading: " + prefabBinPath, ConsoleLogMessage::LogLevel::INFO, "AssetManager"));
 		AssetManager::Instance().LoadBinaryArray<PrefabProperties>(prefabBinPath, g_PrefabProps);
 
 		std::string sceneBinPath = (root / "Resource/SceneAsset.bin").string();
 		std::cout << "  Loading: " << sceneBinPath << std::endl;
+		MessageBus::Get().SendImmediate(ConsoleLogMessage("  Loading: " + sceneBinPath, ConsoleLogMessage::LogLevel::INFO, "AssetManager"));
 		AssetManager::Instance().LoadBinaryArray<SceneProperties>(sceneBinPath, g_SceneProps);
 
 		std::string materialBinPath = (root / "Resource/MaterialAsset.bin").string();
 		std::cout << "  Loading: " << materialBinPath << std::endl;
+		MessageBus::Get().SendImmediate(ConsoleLogMessage("  Loading: " + materialBinPath, ConsoleLogMessage::LogLevel::INFO, "AssetManager"));
 		AssetManager::Instance().LoadBinaryArray<MaterialMetadata>(
 			materialBinPath,
 			g_MaterialMetaProps,
@@ -128,6 +154,7 @@ namespace Framework
 
 				// Added debug line here
 				std::cout << "    Loading individual material: " << fullMaterialPath << std::endl;
+				MessageBus::Get().SendImmediate(ConsoleLogMessage("    Loading individual material: " + fullMaterialPath, ConsoleLogMessage::LogLevel::INFO, "AssetManager"));
 
 				auto material = LoadMaterialAsset(fullMaterialPath, meta.guid);
 				if (material)
@@ -135,12 +162,14 @@ namespace Framework
 					material->guid = meta.guid;
 					std::cout << "[AssetManager] Registering MaterialProperties for GUID="
 						<< meta.guid.id << " at path=" << meta.path << std::endl; // Changed meta.path to meta.key, assuming key is the intended identifier
+					MessageBus::Get().SendImmediate(ConsoleLogMessage("[AssetManager] Registering MaterialProperties for GUID=" + meta.guid.id + " at path=" + meta.path, ConsoleLogMessage::LogLevel::INFO, "AssetManager"));
 					AssetManager::Instance().RegisterAsset(std::move(material), &g_MaterialProps, meta.path); // Changed meta.path to meta.key
 				}
 				else
 				{
 					std::cerr << "[AssetManager] Failed to load material file: "
 						<< fullMaterialPath << " for GUID=" << meta.guid << std::endl;
+					MessageBus::Get().SendImmediate(ConsoleLogMessage("[AssetManager] Failed to load material file: " + fullMaterialPath + " for GUID=", ConsoleLogMessage::LogLevel::ERR, "AssetManager"));
 				}
 			}
 		);
@@ -157,17 +186,20 @@ namespace Framework
 			{
 				std::filesystem::remove(fullPath);
 				std::cout << "[AssetManager] Deleted file: " << fullPath.string() << std::endl;
+				MessageBus::Get().SendImmediate(ConsoleLogMessage("[AssetManager] Deleted file: " + fullPath.string(), ConsoleLogMessage::LogLevel::SUCCESS, "AssetManager"));
 				return true;
 			}
 			else
 			{
 				std::cerr << "[AssetManager] File not found: " << fullPath.string() << std::endl;
+				MessageBus::Get().SendImmediate(ConsoleLogMessage("[AssetManager] File not found: " + fullPath.string(), ConsoleLogMessage::LogLevel::ERR, "AssetManager"));
 				return false;
 			}
 		}
 		catch (const std::filesystem::filesystem_error& e)
 		{
 			std::cerr << "[AssetManager] File deletion error: " << e.what() << std::endl;
+			MessageBus::Get().SendImmediate(ConsoleLogMessage("[AssetManager] File deletion error: " + std::string(e.what()), ConsoleLogMessage::LogLevel::ERR, "AssetManager"));
 			return false;
 		}
 	}
@@ -205,10 +237,14 @@ namespace Framework
 					{
 						std::error_code ec;
 						std::filesystem::remove(fullPath, ec);
-						if (ec)
+						if (ec) {
 							std::cerr << "Failed to delete file: " << fullPath.string() << "\nReason: " << ec.message() << std::endl;
-						else
+							MessageBus::Get().SendImmediate(ConsoleLogMessage("Failed to delete file: " + fullPath.string() + "\nReason: " + ec.message(), ConsoleLogMessage::LogLevel::ERR, "AssetManager"));
+						}
+						else{
 							std::cout << "Deleted file from disk: " << fullPath.string() << std::endl;
+							MessageBus::Get().SendImmediate(ConsoleLogMessage("Deleted file from disk: " + fullPath.string(), ConsoleLogMessage::LogLevel::SUCCESS, "AssetManager"));
+						}
 					}
 				}
 

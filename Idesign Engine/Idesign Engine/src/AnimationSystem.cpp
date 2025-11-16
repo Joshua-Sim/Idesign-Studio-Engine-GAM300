@@ -19,6 +19,7 @@
 #include "MeshLoader.h"
 #include "TextureLoader.h"
 #include "AnimationProperties.h"
+#include "MessageSystem.h"
 
 extern Framework::Coordinator ecsInterface;
 
@@ -240,6 +241,11 @@ namespace Framework
             static bool s_didError = false;
             if (!s_didError) {
                 std::cerr << "Animation Error: No root bone found! (Index is -1)" << std::endl;
+                MessageBus::Get().SendImmediate(ConsoleLogMessage(
+                    "Animation Error: No root bone found! (Index is -1)",
+                    ConsoleLogMessage::LogLevel::ERR,
+                    "AnimationSystem"
+                ));
                 s_didError = true;
             }
         }

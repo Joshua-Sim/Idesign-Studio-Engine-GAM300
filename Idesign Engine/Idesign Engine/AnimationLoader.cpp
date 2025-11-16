@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "AnimationLoader.h"
 #include "AnimationProperties.h" // Include the full struct
+#include "MessageSystem.h"
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -54,6 +55,12 @@ static void ProcessNode(aiNode* node, const aiScene* scene,
 static void LoadAnimations(const aiScene* scene, Framework::AnimationProperties& animProps)
 {
     std::cout << "Loading " << scene->mNumAnimations << " animation(s)..." << std::endl;
+    Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage(
+        "Loading " + std::to_string(scene->mNumAnimations) + " animation(s)...",
+        Framework::ConsoleLogMessage::LogLevel::INFO,
+        "AnimationLoader"
+    ));
+
     for (unsigned int i = 0; i < scene->mNumAnimations; i++)
     {
         aiAnimation* assimpAnim = scene->mAnimations[i];
@@ -108,6 +115,11 @@ static void LoadAnimations(const aiScene* scene, Framework::AnimationProperties&
         // availableAnimations should store std::shared_ptr)
         animProps.availableAnimations[newAnim->name] = newAnim;
         std::cout << "  Loaded clip: " << newAnim->name << std::endl;
+        Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage(
+            "  Loaded clip: " + newAnim->name,
+            Framework::ConsoleLogMessage::LogLevel::INFO,
+            "AnimationLoader"
+        ));
     }
 }
 
@@ -123,6 +135,11 @@ bool AnimationLoader::loadAnimation(const std::string& path, Framework::Animatio
 
     if (!scene || !scene->mRootNode || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) {
         std::cerr << "ASSIMP error (AnimationLoader): " << importer.GetErrorString() << std::endl;
+        Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage(
+            "ASSIMP error (AnimationLoader): " + std::string(importer.GetErrorString()),
+            Framework::ConsoleLogMessage::LogLevel::ERR,
+            "AnimationLoader"
+        ));
         return false;
     }
 
@@ -141,6 +158,11 @@ bool AnimationLoader::loadAnimation(const std::string& path, Framework::Animatio
     if (aimesh == nullptr)
     {
         std::cerr << "AnimationLoader error: No mesh with bones found in file: " << path << std::endl;
+        Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage(
+            "AnimationLoader error: No mesh with bones found in file: " + path,
+            Framework::ConsoleLogMessage::LogLevel::ERR,
+            "AnimationLoader"
+        ));
         // Don't return false, it might be a valid file with no *skinned* mesh
         // but we need to check for animations.
     }
