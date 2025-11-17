@@ -337,10 +337,36 @@ namespace Framework
         }
     }
 
-    inline void DrawScriptPropertiesWidget(ScriptProperties& comp)
+    inline void DrawScriptPropertiesWidget(ScriptProperties& comp, Entity entity)
     {
         ImGui::Separator();
         ImGui::Text("Attached Scripts");
+
+        // Make a visible drop zone
+        ImGui::Button("Drop Script Here", ImVec2(200, 30));
+        if (ImGui::BeginDragDropTarget())
+        {
+            if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("SCRIPT_GUID"))
+            {
+                std::string guidStr((const char*)payload->Data, payload->DataSize - 1);
+                AssetHandle guid{ guidStr };
+
+                if (ecsInterface.HasComponent<ScriptProperties>(entity))
+                {
+                    auto& sp = ecsInterface.GetComponent<ScriptProperties>(entity);
+                    auto* asset = AssetManager::Instance().Get<ScriptEntry>(guid);
+                    if (asset)
+                    {
+                        ScriptEntry newEntry;
+                        newEntry.guid = guid;
+                        newEntry.scriptPath = asset->scriptPath;
+                        newEntry.hotReload = true;
+                        sp.scripts.push_back(newEntry);
+                    }
+                }
+            }
+            ImGui::EndDragDropTarget();
+        }
 
         // Build dropdown list from AssetManager (all ScriptAssets)
         std::vector<std::string> assetNames;

@@ -319,7 +319,7 @@ namespace Framework
                 else if (typeName == "ScriptProperties")
                 {
                     auto& scripts = *static_cast<ScriptProperties*>(componentPtr);
-                    DrawScriptPropertiesWidget(scripts);
+                    DrawScriptPropertiesWidget(scripts, entity);
 
                     // We fully handle this component ourselves, so we DON'T call DrawInspector
                     if (ImGui::Button("Remove ScriptProperties"))
