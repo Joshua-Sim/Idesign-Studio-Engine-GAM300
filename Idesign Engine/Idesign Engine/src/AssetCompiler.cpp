@@ -457,13 +457,14 @@ namespace Framework
         std::cout << "Scene saved to: " << outputPath << "\n";
     }
 
+
+
     void DuplicateEntity(Framework::Coordinator& ecs, Entity sourceEntity)
     {
         // 1. Create a new entity. This automatically gives it a new, unique GUID.
         Entity newEntity = ecs.CreateEntity();
 
         // 2. Get the source entity's name and set the new name
-        //    (I'm assuming your ecs interface has functions like this)
         std::string sourceName = ecs.GetEntityName(sourceEntity);
         ecs.SetEntityName(newEntity, sourceName + " (Copy)");
 
@@ -531,6 +532,7 @@ namespace Framework
 
         if (ecs.HasComponent<ScriptComponent>(sourceEntity))
         {
+            // (Your script copy logic is correct)
             ScriptComponent original = ecs.GetComponent<ScriptComponent>(sourceEntity);
             ScriptComponent copy;
             for (const auto& inst : original.scripts)
@@ -542,9 +544,40 @@ namespace Framework
             ecs.AddComponent(newEntity, copy);
         }
 
-        // !! IMPORTANT !!
-        // Add any other components your engine uses here!
-        // (e.g., Rigidbody, Collider, ScriptComponent, etc.)
+        // --- [FIX #1: REGISTER THE NEW ENTITY WITH THE SCENEMANAGER] ---
+        // We add it to the currently active scene, just like SpawnPrefab does.
+        std::string currentScene = sceneManager.GetCurrentSceneName();
+        if (!currentScene.empty())
+        {
+            sceneManager.RegisterEntityToScene(newEntity, currentScene);
+            std::cout << "Registered new entity " << newEntity << " to scene: " << currentScene << std::endl;
+        }
+        // ---------------------------------------------------------------
+
+
+        // --- [FIX #2: UPDATE THE PARENT'S HIERARCHY] ---
+        // Tell the parent entity that this new child exists.
+        if (ecs.HasComponent<HierarchyComponent>(newEntity))
+        {
+            // Get the hierarchy component we just added to the new entity
+            auto& newHierarchy = ecs.GetComponent<HierarchyComponent>(newEntity);
+
+            // Check if it actually has a parent
+            if (!newHierarchy.parentGUID.empty())
+            {
+                std::string newGuid = ecs.GetEntityGUID(newEntity);
+                Entity parentEntity = ecs.GetEntityByGUID(newHierarchy.parentGUID);
+
+                // Find the parent and add this new entity to its children list
+                if (ecs.IsEntityValid(parentEntity) && ecs.HasComponent<HierarchyComponent>(parentEntity))
+                {
+                    auto& parentHierarchy = ecs.GetComponent<HierarchyComponent>(parentEntity);
+                    parentHierarchy.childrenGUIDs.push_back(newGuid);
+                    std::cout << "Added new entity " << newGuid << " to parent's child list (" << newHierarchy.parentGUID << ")" << std::endl;
+                }
+            }
+        }
+        // ----------------------------------------------------
 
         std::cout << "Successfully duplicated entity." << std::endl;
     }

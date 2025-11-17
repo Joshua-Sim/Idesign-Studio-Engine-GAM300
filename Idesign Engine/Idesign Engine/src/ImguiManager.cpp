@@ -419,7 +419,7 @@ namespace Framework {
                             {
                                 loaded = true;
                             }
-                            else std::cerr << "[TextureLoader] Failed to load texture: " << finalAbsolutePath << std::endl;
+                            else std::cerr << "\n===============================\n[TextureLoader] Failed to load texture: " << finalAbsolutePath << "\n=======================\n" << std::endl;
                         }
 
                         if (loaded)
