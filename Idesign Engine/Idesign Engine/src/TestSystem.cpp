@@ -10,6 +10,8 @@
 
 #include "pch.h"
 #include "TestSystem.h"
+#include "ImguiManager.h"
+
 
 namespace Framework {
 
@@ -43,6 +45,7 @@ namespace Framework {
     ********************************************************************/
     void TestSystem::Initialize() {
         std::cout << "TestSystem initialized" << std::endl;
+		ImguiManager::LogSuccess("TestSystem initialized", "TestSystem");
     }
 
     /********************************************************************
@@ -67,6 +70,7 @@ namespace Framework {
         // Only process if it's the first press
         if (!keyHandled[msg->keyCode]) {
             std::cout << "TestSystem received key press message: " << msg->keyCode << std::endl;
+			ImguiManager::Log("TestSystem received key press message: " + std::to_string(msg->keyCode), "TestSystem");
             keyHandled[msg->keyCode] = true;  // Mark the key as handled
         }
 
@@ -84,6 +88,7 @@ namespace Framework {
     ********************************************************************/
     void TestSystem::OnMouseClick(MessageMouseClick* msg) {
         std::cout << "TestSystem received mouse click message: Button " << msg->button << std::endl;
+		ImguiManager::Log("TestSystem received mouse click message: Button " + std::to_string(msg->button), "TestSystem");
     }
 
     /********************************************************************
@@ -93,6 +98,7 @@ namespace Framework {
     ********************************************************************/
     void TestSystem::OnMouseMoved(MessageMouseMove* msg) {
         std::cout << "Mouse moved to position: (" << msg->x << ", " << msg->y << ")" << std::endl;
+		ImguiManager::Log("Mouse moved to position: (" + std::to_string(msg->x) + ", " + std::to_string(msg->y) + ")", "TestSystem");
     }
 
 }

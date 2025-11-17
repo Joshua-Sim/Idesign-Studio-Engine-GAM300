@@ -27,6 +27,7 @@ PlayerComponent 7
 #include "Coordinator.h"
 #include "ComponentList.h"
 #include "AssetHandler.h"
+#include "ImguiManager.h"
 
 namespace Framework {
 
@@ -318,6 +319,7 @@ namespace Framework {
         }
         return -0; // Define INVALID_ENTITY = ~0 if you don't already
         std::cout << "Returning -0 , invalid entity guid retrieved" << std::endl;
+		ImguiManager::LogWarning("Returning -0, invalid guid retrieved", "Coordinator");
     }
 
     void Coordinator::SetEntityGUID(Entity entity, const std::string& guid)
