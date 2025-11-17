@@ -81,6 +81,10 @@ namespace Framework
 		static void LogError(const std::string& message, const std::string& category = "APP");
 		static void LogSuccess(const std::string& message, const std::string& category = "APP");
 
+		//Audio Panel and Inspector Methods 
+		void RenderAudioComponentProperties(Entity entity);
+		void RenderListenerComponentProperties(Entity entity);
+
 		// Asset Panel
 		enum AssetTabType { None, Mesh,Animation, Texture, Audio, Prefab, Scene, Scripts };
 

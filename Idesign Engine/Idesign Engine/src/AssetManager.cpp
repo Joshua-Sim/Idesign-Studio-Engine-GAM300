@@ -92,7 +92,6 @@ namespace Framework
 		std::cout << "  Compiling Audio:\n    JSON: " << (root / "Assets/JSON/AudioAsset.json").string() << "\n    BIN: " << (root / "Resource/AudioAsset.bin").string() << std::endl;
 		Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage("  Compiling Audio:\n    JSON: " + (root / "Assets/JSON/AudioAsset.json").string() + "\n    BIN: " + (root / "Resource/AudioAsset.bin").string(), Framework::ConsoleLogMessage::LogLevel::INFO, "AssetManager"));
 		ImguiManager::Log("  Compiling Audio: JSON: " + (root / "Assets/JSON/AudioAsset.json").string() + " BIN: " + (root / "Resource/AudioAsset.bin").string(), "AssetManager");
-		//CompileArray<AudioProperties>((root / "Assets/JSON/AudioAsset.json").string(), (root / "Resource/AudioAsset.bin").string(), (root / "Descriptor/AudioAsset.desc").string(), g_AudioPropertiesProps, "audio");
 		CompileArray<AudioMetadata>((root / "Assets/JSON/AudioAsset.json").string(), (root / "Resource/AudioAsset.bin").string(), (root / "Descriptor/AudioAsset.desc").string(), g_AudioMetadataProps, "audio");
 
 		std::cout << "  Compiling Texture:\n    JSON: " << (root / "Assets/JSON/TextureAsset.json").string() << "\n    BIN: " << (root / "Resource/TextureAsset.bin").string() << std::endl;
@@ -145,7 +144,6 @@ namespace Framework
 		std::cout << "  Loading: " << audioBinPath << std::endl;
 		Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage("  Loading: " + audioBinPath, Framework::ConsoleLogMessage::LogLevel::INFO, "AssetManager"));
 		ImguiManager::Log("  Loading: " + audioBinPath, "AssetManager");
-		//AssetManager::Instance().LoadBinaryArray<AudioProperties>(audioBinPath, g_AudioPropertiesProps);
 		AssetManager::Instance().LoadBinaryArray<AudioMetadata>(audioBinPath, g_AudioMetadataProps);
 
 		std::string prefabBinPath = (root / "Resource/PrefabAsset.bin").string();
@@ -353,7 +351,7 @@ namespace Framework
 		return it != m_Assets.end();
 	}
 
-	// NEW FUNCTION - Load WindowConfig before Graphics system is created
+	// Load WindowConfig before Graphics system is created
 	void AssetManager::LoadWindowConfig()
 	{
 		std::filesystem::path root = GetEngineRootPath();
@@ -368,7 +366,7 @@ namespace Framework
 		AssetManager::Instance().LoadBinary<WindowConfig>(windowCfgPath, g_WindowConfigProps);
 	}
 
-	// NEW FUNCTION - Load remaining assets after OpenGL initialization
+	// Load remaining assets after OpenGL initialization
 	void AssetManager::LoadRemainingAssets()
 	{
 		std::filesystem::path root = GetEngineRootPath();
@@ -382,7 +380,7 @@ namespace Framework
 		std::cout << "  Loading: " << audioBinPath << std::endl;
 		Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage("  Loading: " + audioBinPath, Framework::ConsoleLogMessage::LogLevel::INFO, "AssetManager"));
 		ImguiManager::Log("  Loading: " + audioBinPath, "AssetManager");
-		//AssetManager::Instance().LoadBinaryArray<AudioProperties>(audioBinPath, g_AudioPropertiesProps);
+		AssetManager::Instance().LoadBinaryArray<AudioMetadata>(audioBinPath, g_AudioMetadataProps);
 
 		std::string prefabBinPath = (root / "Resource/PrefabAsset.bin").string();
 		std::cout << "  Loading: " << prefabBinPath << std::endl;

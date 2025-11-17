@@ -14,6 +14,7 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "imgui_internal.h"
 #include "EngineState.h"
 #include "Debugger.h"
 #include "ImguiManager.h"
@@ -29,6 +30,9 @@
 #include "fmod_studio.h"
 #include <random> 
 #include <filesystem>
+#include "AudioSystem.h"
+#include "AudioComponent.h"
+
 
 extern Framework::Coordinator ecsInterface;
 
@@ -1574,225 +1578,877 @@ namespace Framework {
         RenderErrorPopup();
     }
 
-    void ImguiManager::RenderAudioAssets() 
+    // Enhanced RenderAudioAssets method for ImguiManager.cpp
+// Replace the existing RenderAudioAssets method (lines 1577-1797) with this code:
+
+    void ImguiManager::RenderAudioAssets()
     {
-        ImGui::TextColored(helpYellow, "(❓)");
+        // Enhanced Unity-like Audio Panel Header
+        ImGui::TextColored(helpYellow, "(❓) Unity-Style Audio Manager");
         if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNone))
         {
             ImGui::BeginTooltip();
             ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
             ImGui::TextUnformatted(
-                "- The Audio Manager displays all imported audio clips.\n"
-                "- Right-click the audio icon to rename, change mode (oneshot / loop), or delete.\n"
-                "- You can control playback directly from this panel:\n"
-                "    - 'Play' to test the clip\n"
-                "    - 'Stop' to halt playback\n"
-                "    - Adjust volume with the slider\n\n"
-                "- Green text indicates that an audio clip is currently playing.\n"
-                "- Stopped clips return to idle state automatically when playback ends.\n"
-                "\nTip: Keep sound file names consistent with use-cases, e.g. "
-                "'ui_click', 'engine_loop', or 'explosion_short'.");
+                "Unity-Style Audio Management:\n\n"
+                "- Audio Browser displays all imported audio clips with metadata\n"
+                "- Search and filter by type (Music, SFX, Ambient, UI)\n"
+                "- Preview Panel with play/stop and volume control\n"
+                "- Right-click to:\n"
+                "    • Add to selected entity (creates AudioComponent)\n"
+                "    • Edit properties (name, mode, type)\n"
+                "    • Delete audio asset\n\n"
+                "3D Audio Testing:\n"
+                "- Add AudioComponent to entities for 3D positioning\n"
+                "- Configure min/max distance for falloff\n"
+                "- Add ListenerComponent to player for spatial audio\n\n"
+                "Status Indicators:\n"
+                "- 🟢 Green = Currently playing\n"
+                "- 🔵 Blue = 3D audio source\n"
+                "- 🟡 Yellow = Looping audio\n");
             ImGui::PopTextWrapPos();
             ImGui::EndTooltip();
         }
-        const auto& assetsImgui = AssetManager::Instance().GetAssets();
 
-        // Modal state
-        static std::string activeEditGuid;
-        static char nameBuffer[256] = {};
-        static char pathBuffer[256] = {};
-        static int currentMode = 0;
-        static float volumeBuffer = 1.0f;
-        std::vector<std::string> audioToDelete;
+        // Search and Filter Bar
+        static char searchFilter[256] = "";
+        static int audioTypeFilter = 0; // 0=All, 1=Music, 2=SFX, 3=Ambient, 4=UI
+        static AssetHandle selectedAudioGuid;
+        static FMOD::Studio::EventInstance* previewInstance = nullptr;
+        static float previewVolume = 1.0f;
+        static bool isPlaying = false;
 
-        if (ImGui::BeginTable("AudioTable", 2, ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersInnerV))
+        ImGui::Separator();
+
+        // Search Bar
+        ImGui::SetNextItemWidth(300);
+        ImGui::InputTextWithHint("##AudioSearch", "🔍 Search audio files...", searchFilter, sizeof(searchFilter));
+        ImGui::SameLine();
+
+        // Type Filter
+        const char* audioTypes[] = { "All", "Music", "SFX", "Ambient", "UI" };
+        ImGui::SetNextItemWidth(100);
+        ImGui::Combo("Type Filter", &audioTypeFilter, audioTypes, IM_ARRAYSIZE(audioTypes));
+        ImGui::SameLine();
+
+        // Add to Entity Button (Unity-style)
+        if (ImGui::Button("Add to Selected Entity"))
         {
-            ImGui::TableSetupColumn("Icon", ImGuiTableColumnFlags_WidthFixed, 40);
-            ImGui::TableSetupColumn("Details");
-            ImGui::TableHeadersRow();
-
-            for (const auto& [handle, entry] : assetsImgui)
+            if (selectedAudioGuid && selectedEntity != std::numeric_limits<Entity>::max())
             {
-                if (entry.typeName != "AudioMetadata") continue;
-                auto* audioProps = static_cast<AudioMetadata*>(entry.pObject.get());
-                if (!audioProps) continue;
-
-                // Lookup runtime AudioComponent by GUID
-                AudioComponent* comp = AssetManager::Instance().Get<AudioComponent>(audioProps->guid);
-                std::string audioModal = "EditModal_" + audioProps->guid;
-
-                ImGui::TableNextRow();
-
-                // Column 0: Icon
-                ImGui::TableSetColumnIndex(0);
-                if (g_AudioIcon.textureID != 0)
+                if (!ecsInterface.HasComponent<AudioComponent>(selectedEntity))
                 {
-                    ImGui::Image((ImTextureID)g_AudioIcon.textureID, ImVec2(32, 32));
-
-                    // Right-click to open modal
-                    if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
-                        ImGui::OpenPopup(audioModal.c_str());
-
-                    // Modal dialog
-                    if (ImGui::BeginPopupModal(audioModal.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+                    AudioMetadata* meta = AssetManager::Instance().Get<AudioMetadata>(selectedAudioGuid);
+                    if (meta)
                     {
-                        static char nameBuffer[256] = {};
-                        static float volumeBuffer = 1.0f;
-                        static int modeBuffer = 0;
-                        static bool initialized = false;
+                        AudioComponent audioComp;
+                        audioComp.guid = selectedAudioGuid;
+                        audioComp.eventName = meta->name;
+                        audioComp.is3D = true;
+                        audioComp.minDistance = 1.0f;
+                        audioComp.maxDistance = 50.0f;
+                        audioComp.volume = 1.0f;
+                        audioComp.playOnStart = false;
+                        ecsInterface.AddComponent(selectedEntity, audioComp);
 
-                        if (!initialized)
-                        {
-                            std::snprintf(nameBuffer, sizeof(nameBuffer), "%s", audioProps->name.c_str());
-                            modeBuffer = (audioProps->mode == "loop") ? 1 : 0;
-                            initialized = true;
-                        }
-
-                        ImGui::TextColored(ImVec4(0.9f, 0.7f, 0.2f, 1.0f), "🎧 Audio Options");
-                        ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
-
-                        ImGui::Text("Rename Audio:");
-                        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
-                        ImGui::InputText("##Rename", nameBuffer, IM_ARRAYSIZE(nameBuffer));
-
-                        ImGui::Spacing();
-                        ImGui::Text("Playback Mode:");
-                        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
-                        static const char* modes[] = { "oneshot", "loop" };
-                        ImGui::Combo("##Mode", &modeBuffer, modes, IM_ARRAYSIZE(modes));
-
-                        ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
-
-                        // Button row
-                        float buttonWidth = 80.0f;
-                        float spacing = 10.0f;
-                        float totalWidth = buttonWidth * 3 + spacing * 2;
-                        float centerX = (ImGui::GetWindowSize().x - totalWidth) * 0.5f;
-                        ImGui::SetCursorPosX(centerX);
-
-                        if (ImGui::Button("Apply", ImVec2(buttonWidth, 0)))
-                        {
-                            std::string newName = nameBuffer;
-                            std::string newMode = modes[modeBuffer];
-
-                            bool changed = false;
-
-                            if (newName != audioProps->name)
-                            {
-                                audioProps->name = newName;
-                                changed = true;
-                            }
-
-                            if (newMode != audioProps->mode)
-                            {
-                                audioProps->mode = newMode;
-                                changed = true;
-                            }
-
-                            if (changed) AssetManager::Instance().MarkDirty(audioProps->guid);
-                            initialized = false;
-                            ImGui::CloseCurrentPopup();
-                        }
-
-                        ImGui::SameLine(0, spacing);
-                        if (ImGui::Button("Delete", ImVec2(buttonWidth, 0)))
-                        {
-                            audioToDelete.push_back(audioProps->guid.id.c_str());
-                            initialized = false;
-
-                            // Delete the actual audio file
-                            if (!AssetManager::Instance().DeleteAssetFile(audioProps->path))
-                            {
-                                errorMessage = "Failed to delete audio file:\n" + audioProps->path;
-                                showErrorPopup = true;
-                            }
-                            ImGui::CloseCurrentPopup();
-                        }
-
-                        ImGui::SameLine(0, spacing);
-                        if (ImGui::Button("Cancel", ImVec2(buttonWidth, 0)))
-                        {
-                            initialized = false;
-                            ImGui::CloseCurrentPopup();
-                        }
-
-                        ImGui::EndPopup();
-                    }
-                    if (ImGui::IsItemHovered())
-                    {
-                        ImGui::BeginTooltip();
-                        ImGui::Text("GUID: %s", audioProps->guid.id.c_str());
-                        ImGui::Text("File: %s", audioProps->path.c_str());
-                        ImGui::Text("Mode: %s", audioProps->mode.c_str());
-                        ImGui::Text("Duration: %.2f sec", audioProps->duration);
-                        ImGui::EndTooltip();
+                        LogSuccess("Added AudioComponent to entity " + std::to_string(selectedEntity), "Audio");
                     }
                 }
-
-                // Column 1: Details
-                ImGui::TableSetColumnIndex(1);
-                ImGui::Text("Name: %s", audioProps->name.c_str());
-                ImGui::Text("Duration: %.2f sec", audioProps->duration);
-
-                // Play/Stop buttons
-                if (ImGui::Button(("Play##" + audioProps->guid.id).c_str()))
+                else
                 {
-                    GlobalAudio.UE_PlaySound(audioProps->name);
-                    if (comp) comp->isPlaying = true;
+                    LogWarning("Entity already has an AudioComponent", "Audio");
                 }
+            }
+            else
+            {
+                LogWarning("Select both an audio file and an entity first", "Audio");
+            }
+        }
 
-                ImGui::SameLine();
-                if (ImGui::Button(("Stop##" + audioProps->guid.id).c_str()))
+        ImGui::Separator();
+
+        // Preview Controls Bar
+        if (ImGui::BeginChild("AudioPreviewControls", ImVec2(0, 70), true))
+        {
+            // Play/Stop button
+            if (ImGui::Button(isPlaying ? "⏹ Stop" : "▶ Play", ImVec2(80, 40)))
+            {
+                if (isPlaying && previewInstance)
                 {
-                    GlobalAudio.Reset();
-                    if (comp) 
-                    {
-                        comp->isPlaying = false;
-                        comp->channelID = -1;
-                    }
+                    previewInstance->stop(FMOD_STUDIO_STOP_IMMEDIATE);
+                    previewInstance->release();
+                    previewInstance = nullptr;
+                    isPlaying = false;
                 }
-
-                // Volume slider (runtime state lives in AudioComponent now)
-                if (comp)
+                else if (selectedAudioGuid)
                 {
-                    float volume = comp->volume;
-                    if (ImGui::SliderFloat(("Volume##" + audioProps->guid.id).c_str(), &volume, 0.0f, 1.0f))
+                    AudioMetadata* audioMeta = AssetManager::Instance().Get<AudioMetadata>(selectedAudioGuid);
+                    if (audioMeta)
                     {
-                        comp->volume = std::clamp(volume, 0.0f, 1.0f);
-                        GlobalAudio.UE_SetVolume(audioProps->name, comp->volume);
-                    }
-
-                    // Playback status
-                    if (comp->isPlaying)
-                    {
-                        ImGui::TextColored(ImVec4(0.2f, 1.0f, 0.2f, 1.0f), "Status: Playing");
-                    }
-                    else
-                    {
-                        ImGui::Text("Status: Stopped");
-                    }
-
-                    // Poll playback status
-                    if (comp->isPlaying && comp->channelID != -1)
-                    {
-                        if (!GlobalAudio.IsChannelPlaying(comp->channelID))
+                        FMOD::Studio::EventDescription* eventDesc = GlobalAudio.UE_LoadEvent(audioMeta->name);
+                        if (eventDesc)
                         {
-                            comp->isPlaying = false;
-                            comp->channelID = -1;
+                            eventDesc->createInstance(&previewInstance);
+                            previewInstance->setVolume(previewVolume);
+                            previewInstance->start();
+                            isPlaying = true;
                         }
                     }
                 }
             }
-            ImGui::EndTable();
-        }
 
+            ImGui::SameLine();
+            ImGui::BeginGroup();
+            ImGui::Text("Preview Volume:");
+            ImGui::SetNextItemWidth(200);
+            if (ImGui::SliderFloat("##PreviewVolume", &previewVolume, 0.0f, 1.0f, "%.2f"))
+            {
+                if (previewInstance)
+                {
+                    previewInstance->setVolume(previewVolume);
+                }
+            }
+            ImGui::EndGroup();
+
+            ImGui::SameLine(0, 20);
+            ImGui::BeginGroup();
+            ImGui::Text("Selected: %s",
+                selectedAudioGuid ?
+                AssetManager::Instance().Get<AudioMetadata>(selectedAudioGuid)->name.c_str() :
+                "None");
+            if (selectedAudioGuid)
+            {
+                AudioMetadata* meta = AssetManager::Instance().Get<AudioMetadata>(selectedAudioGuid);
+                if (meta)
+                {
+                    ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f),
+                        "Duration: %.2fs | Type: %s | Mode: %s",
+                        meta->duration, meta->soundType.c_str(), meta->mode.c_str());
+                }
+            }
+            ImGui::EndGroup();
+        }
+        ImGui::EndChild();
+
+        ImGui::Separator();
+
+        // Audio Asset Table (Unity-style)
+        const auto& assetsImgui = AssetManager::Instance().GetAssets();
+        std::vector<std::string> audioToDelete;
+
+        if (ImGui::BeginChild("AudioAssetList", ImVec2(0, 0), true))
+        {
+            if (ImGui::BeginTable("AudioTable", 5,
+                ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersInnerV |
+                ImGuiTableFlags_Resizable | ImGuiTableFlags_ScrollY))
+            {
+                // Column setup
+                ImGui::TableSetupColumn("Icon", ImGuiTableColumnFlags_WidthFixed, 40);
+                ImGui::TableSetupColumn("Name", ImGuiTableColumnFlags_WidthStretch);
+                ImGui::TableSetupColumn("Type", ImGuiTableColumnFlags_WidthFixed, 80);
+                ImGui::TableSetupColumn("Duration", ImGuiTableColumnFlags_WidthFixed, 80);
+                ImGui::TableSetupColumn("Actions", ImGuiTableColumnFlags_WidthFixed, 200);
+                ImGui::TableHeadersRow();
+
+                for (const auto& [key, entry] : assetsImgui)
+                {
+                    if (entry.typeName != TypeName<AudioMetadata>::value)
+                        continue;
+
+                    AudioMetadata* audioMeta = static_cast<AudioMetadata*>(entry.pObject.get());
+                    if (!audioMeta) continue;
+
+                    // Apply search filter
+                    if (searchFilter[0] != '\0')
+                    {
+                        std::string nameLower = audioMeta->name;
+                        std::string filterLower = searchFilter;
+                        std::transform(nameLower.begin(), nameLower.end(), nameLower.begin(), ::tolower);
+                        std::transform(filterLower.begin(), filterLower.end(), filterLower.begin(), ::tolower);
+                        if (nameLower.find(filterLower) == std::string::npos)
+                            continue;
+                    }
+
+                    // Apply type filter
+                    if (audioTypeFilter > 0)
+                    {
+                        const char* typeNames[] = { "", "Music", "SFX", "Ambient", "UI" };
+                        if (audioMeta->soundType != typeNames[audioTypeFilter])
+                            continue;
+                    }
+
+                    ImGui::TableNextRow();
+                    ImGui::PushID(audioMeta->guid.id.c_str());
+
+                    // Column 0: Icon
+                    ImGui::TableSetColumnIndex(0);
+                    bool isSelected = (selectedAudioGuid == key.guid);
+
+                    // Selectable icon
+                    if (ImGui::Selectable("##sel", isSelected,
+                        ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowDoubleClick,
+                        ImVec2(0, 32)))
+                    {
+                        selectedAudioGuid = key.guid;
+
+                        // Double click to play
+                        if (ImGui::IsMouseDoubleClicked(0))
+                        {
+                            if (previewInstance)
+                            {
+                                previewInstance->stop(FMOD_STUDIO_STOP_IMMEDIATE);
+                                previewInstance->release();
+                                previewInstance = nullptr;
+                            }
+
+                            FMOD::Studio::EventDescription* eventDesc = GlobalAudio.UE_LoadEvent(audioMeta->name);
+                            if (eventDesc)
+                            {
+                                eventDesc->createInstance(&previewInstance);
+                                previewInstance->setVolume(previewVolume);
+                                previewInstance->start();
+                                isPlaying = true;
+                            }
+                        }
+                    }
+
+                    // ✅ ATTACH CONTEXT MENU TO THE SELECTABLE (before SameLine!)
+                    if (ImGui::BeginPopupContextItem())
+                    {
+                        ImGui::Text("Audio: %s", audioMeta->name.c_str());
+                        ImGui::Separator();
+
+                        if (ImGui::MenuItem("▶ Play"))
+                        {
+                            GlobalAudio.UE_PlaySound(audioMeta->name);
+                        }
+
+                        if (ImGui::MenuItem("➕ Add to Selected Entity"))
+                        {
+                            if (selectedEntity != std::numeric_limits<Entity>::max())
+                            {
+                                if (!ecsInterface.HasComponent<AudioComponent>(selectedEntity))
+                                {
+                                    AudioComponent audioComp;
+                                    audioComp.guid = key.guid;
+                                    audioComp.eventName = audioMeta->name;
+                                    audioComp.is3D = true;
+                                    audioComp.playOnStart = false;
+                                    ecsInterface.AddComponent(selectedEntity, audioComp);
+                                    LogSuccess("Added audio to entity " + std::to_string(selectedEntity), "Audio");
+                                }
+                            }
+                        }
+
+                        ImGui::Separator();
+
+                        // Edit name
+                        static char renameBuffer[256];
+                        strcpy_s(renameBuffer, audioMeta->name.c_str());
+                        if (ImGui::InputText("Rename", renameBuffer, sizeof(renameBuffer)))
+                        {
+                            audioMeta->name = renameBuffer;
+                            AssetManager::Instance().MarkDirty(audioMeta->guid);
+                        }
+
+                        // Edit type
+                        int typeIndex = 0;
+                        if (audioMeta->soundType == "Music") typeIndex = 1;
+                        else if (audioMeta->soundType == "SFX") typeIndex = 2;
+                        else if (audioMeta->soundType == "Ambient") typeIndex = 3;
+                        else if (audioMeta->soundType == "UI") typeIndex = 4;
+
+                        if (ImGui::Combo("Type", &typeIndex, audioTypes, IM_ARRAYSIZE(audioTypes)))
+                        {
+                            audioMeta->soundType = audioTypes[typeIndex];
+                            AssetManager::Instance().MarkDirty(audioMeta->guid);
+                        }
+
+                        // Edit mode
+                        int modeIndex = (audioMeta->mode == "loop") ? 1 : 0;
+                        const char* modes[] = { "oneshot", "loop" };
+                        if (ImGui::Combo("Mode", &modeIndex, modes, 2))
+                        {
+                            audioMeta->mode = modes[modeIndex];
+                            AssetManager::Instance().MarkDirty(audioMeta->guid);
+                        }
+
+                        ImGui::Separator();
+
+                        if (ImGui::MenuItem("🗑 Delete", nullptr, false, true))
+                        {
+                            audioToDelete.push_back(audioMeta->guid.id);
+                        }
+
+                        ImGui::EndPopup();
+                    }
+
+                    // Draw icon on top of selectable
+                    ImGui::SameLine();
+                    if (g_AudioIconLoaded && g_AudioIcon.textureID != 0)
+                    {
+                        ImGui::Image((ImTextureID)(intptr_t)g_AudioIcon.textureID, ImVec2(32, 32));
+                    }
+                    else
+                    {
+                        ImGui::Text("🔊");
+                    }
+
+                    // Tooltip on hover
+                    if (ImGui::IsItemHovered() && !ImGui::IsPopupOpen(nullptr))
+                    {
+                        ImGui::BeginTooltip();
+                        ImGui::Text("GUID: %s", audioMeta->guid.id.c_str());
+                        ImGui::Text("Path: %s", audioMeta->path.c_str());
+                        ImGui::Text("Mode: %s", audioMeta->mode.c_str());
+                        ImGui::Text("Type: %s", audioMeta->soundType.c_str());
+                        ImGui::Text("Duration: %.2f seconds", audioMeta->duration);
+                        ImGui::EndTooltip();
+                    }
+
+                    // Column 1: Name
+                    ImGui::TableSetColumnIndex(1);
+                    ImGui::Text("%s", audioMeta->name.c_str());
+                    if (isPlaying && selectedAudioGuid == key.guid)
+                    {
+                        ImGui::SameLine();
+                        ImGui::TextColored(ImVec4(0.2f, 1.0f, 0.2f, 1.0f), "♫");
+                    }
+
+                    // Column 2: Type
+                    ImGui::TableSetColumnIndex(2);
+                    ImVec4 typeColor = ImVec4(1, 1, 1, 1);
+                    if (audioMeta->soundType == "Music") typeColor = ImVec4(0.5f, 0.8f, 1.0f, 1.0f);
+                    else if (audioMeta->soundType == "SFX") typeColor = ImVec4(1.0f, 0.8f, 0.5f, 1.0f);
+                    else if (audioMeta->soundType == "Ambient") typeColor = ImVec4(0.8f, 1.0f, 0.5f, 1.0f);
+                    else if (audioMeta->soundType == "UI") typeColor = ImVec4(1.0f, 0.5f, 0.8f, 1.0f);
+                    ImGui::TextColored(typeColor, "%s", audioMeta->soundType.c_str());
+
+                    // Column 3: Duration
+                    ImGui::TableSetColumnIndex(3);
+                    ImGui::Text("%.2fs", audioMeta->duration);
+
+                    // Column 4: Actions
+                    ImGui::TableSetColumnIndex(4);
+
+                    // Inline play button
+                    if (ImGui::SmallButton("Play"))
+                    {
+                        GlobalAudio.UE_PlaySound(audioMeta->name);
+                    }
+
+                    ImGui::SameLine();
+                    if (ImGui::SmallButton("Stop"))
+                    {
+                        GlobalAudio.Reset();
+                    }
+
+                    ImGui::SameLine();
+                    if (ImGui::SmallButton("Add to Entity"))
+                    {
+                        if (selectedEntity != std::numeric_limits<Entity>::max())
+                        {
+                            if (!ecsInterface.HasComponent<AudioComponent>(selectedEntity))
+                            {
+                                AudioComponent audioComp;
+                                audioComp.guid = key.guid;
+                                audioComp.eventName = audioMeta->name;
+                                ecsInterface.AddComponent(selectedEntity, audioComp);
+                                LogSuccess("Added audio component", "Audio");
+                            }
+                        }
+                        else
+                        {
+                            LogWarning("Select an entity first", "Audio");
+                        }
+                    }
+
+                    ImGui::PopID();
+                }
+
+                ImGui::EndTable();
+            }
+        }
+        ImGui::EndChild();
+
+        // Handle deletions
         if (!audioToDelete.empty())
         {
             for (const auto& guid : audioToDelete)
             {
                 AssetManager::Instance().Unload(guid);
             }
-            AssetManager::Instance().SaveArrayToJson(TypeName<AudioMetadata>::value, "Assets/JSON/AudioAsset.json", "audio");
+            AssetManager::Instance().SaveArrayToJson(TypeName<AudioMetadata>::value,
+                "Assets/JSON/AudioAsset.json", "audio");
+        }
+
+        // Cleanup preview instance on tab switch
+        static int lastTabIndex = -1;
+        if (ImGui::GetCurrentWindow()->DC.StateStorage->GetInt(ImGui::GetID("AssetTabType")) != AssetTabType::Audio)
+        {
+            if (previewInstance)
+            {
+                previewInstance->stop(FMOD_STUDIO_STOP_IMMEDIATE);
+                previewInstance->release();
+                previewInstance = nullptr;
+                isPlaying = false;
+            }
+        }
+    }
+
+    // Add these methods to ImguiManager.cpp for entity inspector audio components
+// These should be called from your existing entity property rendering code
+
+// Add this method to render AudioComponent properties in the entity inspector
+    void ImguiManager::RenderAudioComponentProperties(Entity entity)
+    {
+        if (!ecsInterface.HasComponent<AudioComponent>(entity))
+            return;
+
+        auto& audioComp = ecsInterface.GetComponent<AudioComponent>(entity);
+
+        if (ImGui::CollapsingHeader("🔊 Audio Source", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            ImGui::PushID("AudioComponent");
+
+            // Audio clip selection combo
+            if (ImGui::BeginCombo("Audio Clip", audioComp.eventName.c_str()))
+            {
+                for (const auto& [key, entry] : AssetManager::Instance().GetAssets())
+                {
+                    if (entry.typeName != TypeName<AudioMetadata>::value)
+                        continue;
+
+                    AudioMetadata* audioMeta = static_cast<AudioMetadata*>(entry.pObject.get());
+                    if (audioMeta)
+                    {
+                        bool isSelected = (audioComp.guid == key.guid);
+                        if (ImGui::Selectable(audioMeta->name.c_str(), isSelected))
+                        {
+                            audioComp.guid = key.guid;
+                            audioComp.eventName = audioMeta->name;
+
+                            // Stop current playback if changing clips
+                            if (audioComp.eventInstance)
+                            {
+                                audioComp.eventInstance->stop(FMOD_STUDIO_STOP_IMMEDIATE);
+                                audioComp.eventInstance->release();
+                                audioComp.eventInstance = nullptr;
+                                audioComp.isPlaying = false;
+                            }
+                        }
+
+                        if (isSelected)
+                            ImGui::SetItemDefaultFocus();
+                    }
+                }
+                ImGui::EndCombo();
+            }
+
+            ImGui::Separator();
+
+            // Playback Controls Section
+            ImGui::Text("Playback Controls");
+
+            // Play/Stop/Pause buttons in a row
+            if (audioComp.isPlaying)
+            {
+                if (ImGui::Button("⏹ Stop", ImVec2(80, 0)))
+                {
+                    auto audioSystem = ecsInterface.GetSystem<AudioSystem>();
+                    if (audioSystem)
+                    {
+                        audioSystem->StopEntitySound(entity);
+                    }
+                }
+                ImGui::SameLine();
+                ImGui::TextColored(ImVec4(0.2f, 1.0f, 0.2f, 1.0f), "Status: Playing");
+            }
+            else
+            {
+                if (ImGui::Button("▶ Play", ImVec2(80, 0)))
+                {
+                    auto audioSystem = ecsInterface.GetSystem<AudioSystem>();
+                    if (audioSystem)
+                    {
+                        audioSystem->PlayEntitySound(entity);
+                    }
+                }
+                ImGui::SameLine();
+                ImGui::Text("Status: Stopped");
+            }
+
+            // Playback settings
+            ImGui::Checkbox("Play On Start", &audioComp.playOnStart);
+            ImGui::SameLine(200);
+            ImGui::Checkbox("Loop", &audioComp.loop);
+
+            // Volume control with visualization
+            ImGui::Text("Volume");
+            ImGui::SetNextItemWidth(-1);
+            if (ImGui::SliderFloat("##Volume", &audioComp.volume, 0.0f, 1.0f, "%.2f"))
+            {
+                if (audioComp.eventInstance)
+                {
+                    audioComp.eventInstance->setVolume(audioComp.volume);
+                }
+            }
+
+            // Volume meter visualization
+            ImDrawList* drawList = ImGui::GetWindowDrawList();
+            ImVec2 pos = ImGui::GetCursorScreenPos();
+            float width = ImGui::GetContentRegionAvail().x;
+            float height = 10.0f;
+
+            // Background
+            drawList->AddRectFilled(pos, ImVec2(pos.x + width, pos.y + height),
+                IM_COL32(50, 50, 50, 255));
+
+            // Volume bar
+            float volumeWidth = width * audioComp.volume;
+            ImU32 volumeColor = IM_COL32(
+                (1.0f - audioComp.volume) * 255,
+                audioComp.volume * 255,
+                50, 255);
+            drawList->AddRectFilled(pos, ImVec2(pos.x + volumeWidth, pos.y + height), volumeColor);
+
+            ImGui::Dummy(ImVec2(0, height + 5));
+
+            ImGui::Separator();
+
+            // 3D Sound Settings Section
+            ImGui::Text("3D Sound Settings");
+
+            if (ImGui::Checkbox("Is 3D Sound", &audioComp.is3D))
+            {
+                // Update FMOD properties when toggling
+                if (audioComp.eventInstance)
+                {
+                    // You may need to recreate the instance with different settings
+                }
+            }
+
+            if (audioComp.is3D)
+            {
+                ImGui::Indent();
+
+                // Min Distance
+                ImGui::Text("Min Distance (Full Volume)");
+                ImGui::SetNextItemWidth(-1);
+                if (ImGui::DragFloat("##MinDist", &audioComp.minDistance, 0.1f, 0.1f, 1000.0f, "%.1f meters"))
+                {
+                    // Clamp min distance
+                    if (audioComp.minDistance >= audioComp.maxDistance)
+                    {
+                        audioComp.minDistance = audioComp.maxDistance - 0.1f;
+                    }
+
+                    if (audioComp.eventInstance)
+                    {
+                        audioComp.eventInstance->setProperty(
+                            FMOD_STUDIO_EVENT_PROPERTY_MINIMUM_DISTANCE, audioComp.minDistance);
+                    }
+                }
+
+                // Max Distance
+                ImGui::Text("Max Distance (Silent)");
+                ImGui::SetNextItemWidth(-1);
+                if (ImGui::DragFloat("##MaxDist", &audioComp.maxDistance, 0.5f, 1.0f, 1000.0f, "%.1f meters"))
+                {
+                    // Clamp max distance
+                    if (audioComp.maxDistance <= audioComp.minDistance)
+                    {
+                        audioComp.maxDistance = audioComp.minDistance + 0.1f;
+                    }
+
+                    if (audioComp.eventInstance)
+                    {
+                        audioComp.eventInstance->setProperty(
+                            FMOD_STUDIO_EVENT_PROPERTY_MAXIMUM_DISTANCE, audioComp.maxDistance);
+                    }
+                }
+
+                // Visual Range Preview
+                if (ImGui::TreeNode("Audio Range Preview"))
+                {
+                    ImDrawList* drawList = ImGui::GetWindowDrawList();
+                    ImVec2 canvasPos = ImGui::GetCursorScreenPos();
+                    ImVec2 canvasSize(250, 250);
+
+                    // Draw background
+                    drawList->AddRectFilled(canvasPos,
+                        ImVec2(canvasPos.x + canvasSize.x, canvasPos.y + canvasSize.y),
+                        IM_COL32(30, 30, 30, 255));
+
+                    // Draw grid
+                    for (int i = 0; i <= 10; i++)
+                    {
+                        float t = i / 10.0f;
+                        float x = canvasPos.x + t * canvasSize.x;
+                        float y = canvasPos.y + t * canvasSize.y;
+                        ImU32 gridColor = (i == 5) ? IM_COL32(80, 80, 80, 255) : IM_COL32(50, 50, 50, 255);
+
+                        drawList->AddLine(ImVec2(x, canvasPos.y), ImVec2(x, canvasPos.y + canvasSize.y), gridColor);
+                        drawList->AddLine(ImVec2(canvasPos.x, y), ImVec2(canvasPos.x + canvasSize.x, y), gridColor);
+                    }
+
+                    // Center point (audio source)
+                    ImVec2 center(canvasPos.x + canvasSize.x * 0.5f, canvasPos.y + canvasSize.y * 0.5f);
+
+                    // Scale factor for visualization
+                    float maxRange = std::max(audioComp.maxDistance * 1.2f, 10.0f);
+                    float scale = (canvasSize.x * 0.45f) / maxRange;
+
+                    // Draw max distance circle (red)
+                    drawList->AddCircle(center, audioComp.maxDistance * scale,
+                        IM_COL32(255, 50, 50, 150), 64, 2.0f);
+
+                    // Draw falloff gradient circles
+                    int gradientSteps = 5;
+                    for (int i = 0; i < gradientSteps; i++)
+                    {
+                        float t = (float)i / gradientSteps;
+                        float radius = audioComp.minDistance + (audioComp.maxDistance - audioComp.minDistance) * t;
+                        int alpha = 100 - (int)(t * 80);
+                        drawList->AddCircle(center, radius * scale,
+                            IM_COL32(100, 200, 100, alpha), 32);
+                    }
+
+                    // Draw min distance circle (green)
+                    drawList->AddCircle(center, audioComp.minDistance * scale,
+                        IM_COL32(50, 255, 50, 200), 48, 2.0f);
+
+                    // Draw audio source (yellow dot)
+                    drawList->AddCircleFilled(center, 5, IM_COL32(255, 255, 0, 255));
+                    drawList->AddCircle(center, 5, IM_COL32(255, 200, 0, 255), 12, 2.0f);
+
+                    // Draw listener position if available
+                    if (ecsInterface.HasComponent<TransformComponent>(entity))
+                    {
+                        // You could show relative listener position here if needed
+                    }
+
+                    ImGui::Dummy(canvasSize);
+
+                    // Labels
+                    ImGui::TextColored(ImVec4(0.2f, 1.0f, 0.2f, 1.0f), "● Min Distance: %.1fm (Full Volume)",
+                        audioComp.minDistance);
+                    ImGui::TextColored(ImVec4(1.0f, 0.2f, 0.2f, 1.0f), "● Max Distance: %.1fm (Silent)",
+                        audioComp.maxDistance);
+                    ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f),
+                        "Falloff: Linear | Range: %.1fm", audioComp.maxDistance - audioComp.minDistance);
+
+                    ImGui::TreePop();
+                }
+
+                ImGui::Unindent();
+            }
+
+            ImGui::Separator();
+
+            // Debug Information
+            if (ImGui::TreeNode("Debug Info"))
+            {
+                ImGui::Text("GUID: %s", audioComp.guid.id.c_str());
+                ImGui::Text("Event Name: %s", audioComp.eventName.c_str());
+                ImGui::Text("Is Playing: %s", audioComp.isPlaying ? "Yes" : "No");
+                ImGui::Text("Channel ID: %d", audioComp.channelID);
+                ImGui::Text("Event Instance: %p", audioComp.eventInstance);
+                ImGui::Text("Last Position: (%.2f, %.2f, %.2f)",
+                    audioComp.lastPosition.x, audioComp.lastPosition.y, audioComp.lastPosition.z);
+
+                // Real-time distance to listener (if available)
+                auto audioSystem = ecsInterface.GetSystem<AudioSystem>();
+                if (audioSystem && ecsInterface.HasComponent<TransformComponent>(entity))
+                {
+                    auto& transform = ecsInterface.GetComponent<TransformComponent>(entity);
+                    // You'd need to expose listener position from AudioSystem
+                    // float distance = glm::length(transform.position - listenerPosition);
+                    // ImGui::Text("Distance to Listener: %.2fm", distance);
+                }
+
+                ImGui::TreePop();
+            }
+
+            ImGui::PopID();
+        }
+    }
+
+    // Add this method to render ListenerComponent properties in the entity inspector
+    void ImguiManager::RenderListenerComponentProperties(Entity entity)
+    {
+        if (!ecsInterface.HasComponent<ListenerComponent>(entity))
+            return;
+
+        auto& listener = ecsInterface.GetComponent<ListenerComponent>(entity);
+
+        if (ImGui::CollapsingHeader("🎧 Audio Listener", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            ImGui::PushID("ListenerComponent");
+
+            // Active state
+            if (ImGui::Checkbox("Active", &listener.active))
+            {
+                // Update audio system when toggling
+                auto audioSystem = ecsInterface.GetSystem<AudioSystem>();
+                if (audioSystem && listener.active)
+                {
+                    audioSystem->SetListenerPosition(listener.position, listener.forward, listener.up);
+                }
+            }
+
+            if (!listener.active)
+            {
+                ImGui::TextColored(ImVec4(1.0f, 0.5f, 0.0f, 1.0f),
+                    "⚠ Listener is inactive - no 3D audio will be heard");
+            }
+
+            ImGui::Text("Listener Index: %d", listener.listenerIndex);
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::SetTooltip("Index for multi-listener support (e.g., split-screen)");
+            }
+
+            ImGui::Separator();
+
+            // Transform Section
+            ImGui::Text("Transform");
+
+            // Position
+            if (ImGui::DragFloat3("Position", &listener.position.x, 0.1f))
+            {
+                if (listener.active)
+                {
+                    auto audioSystem = ecsInterface.GetSystem<AudioSystem>();
+                    if (audioSystem)
+                    {
+                        audioSystem->SetListenerPosition(listener.position, listener.forward, listener.up);
+                    }
+                }
+            }
+
+            // Orientation
+            ImGui::Text("Orientation");
+            ImGui::Indent();
+
+            if (ImGui::DragFloat3("Forward", &listener.forward.x, 0.01f, -1.0f, 1.0f))
+            {
+                // Keep normalized
+                listener.forward = glm::normalize(listener.forward);
+                if (listener.active)
+                {
+                    auto audioSystem = ecsInterface.GetSystem<AudioSystem>();
+                    if (audioSystem)
+                    {
+                        audioSystem->SetListenerPosition(listener.position, listener.forward, listener.up);
+                    }
+                }
+            }
+
+            if (ImGui::DragFloat3("Up", &listener.up.x, 0.01f, -1.0f, 1.0f))
+            {
+                // Keep normalized
+                listener.up = glm::normalize(listener.up);
+                if (listener.active)
+                {
+                    auto audioSystem = ecsInterface.GetSystem<AudioSystem>();
+                    if (audioSystem)
+                    {
+                        audioSystem->SetListenerPosition(listener.position, listener.forward, listener.up);
+                    }
+                }
+            }
+
+            if (ImGui::Button("Normalize Orientation"))
+            {
+                listener.forward = glm::normalize(listener.forward);
+                listener.up = glm::normalize(listener.up);
+
+                // Ensure orthogonal
+                glm::vec3 right = glm::normalize(glm::cross(listener.forward, listener.up));
+                listener.up = glm::normalize(glm::cross(right, listener.forward));
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Reset to Default"))
+            {
+                listener.forward = glm::vec3(0.0f, 0.0f, -1.0f);
+                listener.up = glm::vec3(0.0f, 1.0f, 0.0f);
+            }
+
+            ImGui::Unindent();
+
+            ImGui::Separator();
+
+            // Physics Section (for Doppler effect)
+            ImGui::Text("Physics");
+            ImGui::DragFloat3("Velocity", &listener.velocity.x, 0.1f);
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::SetTooltip("Velocity for Doppler effect calculation");
+            }
+
+            // Velocity magnitude
+            float speed = glm::length(listener.velocity);
+            ImGui::Text("Speed: %.2f m/s", speed);
+
+            ImGui::Separator();
+
+            // Visualization
+            if (ImGui::TreeNode("Listener Orientation Preview"))
+            {
+                ImDrawList* drawList = ImGui::GetWindowDrawList();
+                ImVec2 canvasPos = ImGui::GetCursorScreenPos();
+                ImVec2 canvasSize(200, 200);
+
+                // Draw background
+                drawList->AddRectFilled(canvasPos,
+                    ImVec2(canvasPos.x + canvasSize.x, canvasPos.y + canvasSize.y),
+                    IM_COL32(30, 30, 30, 255));
+
+                // Center point
+                ImVec2 center(canvasPos.x + canvasSize.x * 0.5f, canvasPos.y + canvasSize.y * 0.5f);
+
+                // Draw axes
+                float axisLength = 80.0f;
+
+                // Forward vector (blue arrow)
+                ImVec2 forwardEnd(
+                    center.x + listener.forward.x * axisLength,
+                    center.y - listener.forward.z * axisLength  // Flip Z for 2D view
+                );
+                drawList->AddLine(center, forwardEnd, IM_COL32(100, 150, 255, 255), 3.0f);
+                drawList->AddTriangleFilled(
+                    forwardEnd,
+                    ImVec2(forwardEnd.x - 5, forwardEnd.y - 8),
+                    ImVec2(forwardEnd.x + 5, forwardEnd.y - 8),
+                    IM_COL32(100, 150, 255, 255)
+                );
+
+                // Up vector (green arrow)
+                ImVec2 upEnd(
+                    center.x + listener.up.x * axisLength * 0.6f,
+                    center.y - listener.up.y * axisLength * 0.6f
+                );
+                drawList->AddLine(center, upEnd, IM_COL32(100, 255, 100, 255), 2.0f);
+
+                // Listener head (circle)
+                drawList->AddCircleFilled(center, 10, IM_COL32(255, 200, 100, 255));
+
+                // Draw "ears" (semicircles)
+                drawList->AddCircle(ImVec2(center.x - 12, center.y), 5, IM_COL32(255, 255, 255, 255), 12, 2.0f);
+                drawList->AddCircle(ImVec2(center.x + 12, center.y), 5, IM_COL32(255, 255, 255, 255), 12, 2.0f);
+
+                ImGui::Dummy(canvasSize);
+
+                // Legend
+                ImGui::TextColored(ImVec4(0.4f, 0.6f, 1.0f, 1.0f), "→ Forward");
+                ImGui::SameLine();
+                ImGui::TextColored(ImVec4(0.4f, 1.0f, 0.4f, 1.0f), "↑ Up");
+
+                ImGui::TreePop();
+            }
+
+            ImGui::PopID();
         }
     }
 
