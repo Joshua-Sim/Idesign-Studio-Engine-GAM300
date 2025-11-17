@@ -1,9 +1,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 ///
-///	@File  : AssetManager.cpp
-/// @Brief : Manages assets, including textures, audio, fonts, dictionaries, 
-///          windows, entities, and shaders, with methods to load and retrieve 
-///          these assets in the Framework namespace.
+///	@Fileï¿½ : AssetManager.cpp
+/// @Brief : Manages assets, including textures, audio, fonts, dictionaries,ï¿½
+///ï¿½ ï¿½ ï¿½ ï¿½ ï¿½ windows, entities, and shaders, with methods to load and retrieveï¿½
+///ï¿½ ï¿½ ï¿½ ï¿½ ï¿½ these assets in the Framework namespace.
 ///
 ///	@Authors : Edwin
 ///	@Copyright 2025, Digipen Institute of Technology
@@ -39,7 +39,8 @@ namespace Framework
 		std::cout << "  Saving: " << audioPath << std::endl;
 		Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage("  Saving: " + audioPath, Framework::ConsoleLogMessage::LogLevel::INFO, "AssetManager"));
 		ImguiManager::Log("  Saving: " + audioPath, "AssetManager");
-		AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, audioPath, "audio");
+		//AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, audioPath, "audio");
+		AssetManager::Instance().SaveArrayToJson(TypeName<AudioMetadata>::value, audioPath, "audio");
 
 		std::string texturePath = (root / "Assets/JSON/TextureAsset.json").string();
 		std::cout << "  Saving: " << texturePath << std::endl;
@@ -91,7 +92,8 @@ namespace Framework
 		std::cout << "  Compiling Audio:\n    JSON: " << (root / "Assets/JSON/AudioAsset.json").string() << "\n    BIN: " << (root / "Resource/AudioAsset.bin").string() << std::endl;
 		Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage("  Compiling Audio:\n    JSON: " + (root / "Assets/JSON/AudioAsset.json").string() + "\n    BIN: " + (root / "Resource/AudioAsset.bin").string(), Framework::ConsoleLogMessage::LogLevel::INFO, "AssetManager"));
 		ImguiManager::Log("  Compiling Audio: JSON: " + (root / "Assets/JSON/AudioAsset.json").string() + " BIN: " + (root / "Resource/AudioAsset.bin").string(), "AssetManager");
-		CompileArray<AudioProperties>((root / "Assets/JSON/AudioAsset.json").string(), (root / "Resource/AudioAsset.bin").string(), (root / "Descriptor/AudioAsset.desc").string(), g_AudioPropertiesProps, "audio");
+		//CompileArray<AudioProperties>((root / "Assets/JSON/AudioAsset.json").string(), (root / "Resource/AudioAsset.bin").string(), (root / "Descriptor/AudioAsset.desc").string(), g_AudioPropertiesProps, "audio");
+		CompileArray<AudioMetadata>((root / "Assets/JSON/AudioAsset.json").string(), (root / "Resource/AudioAsset.bin").string(), (root / "Descriptor/AudioAsset.desc").string(), g_AudioMetadataProps, "audio");
 
 		std::cout << "  Compiling Texture:\n    JSON: " << (root / "Assets/JSON/TextureAsset.json").string() << "\n    BIN: " << (root / "Resource/TextureAsset.bin").string() << std::endl;
 		Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage("  Compiling Texture:\n    JSON: " + (root / "Assets/JSON/TextureAsset.json").string() + "\n    BIN: " + (root / "Resource/TextureAsset.bin").string(), Framework::ConsoleLogMessage::LogLevel::INFO, "AssetManager"));
@@ -143,7 +145,8 @@ namespace Framework
 		std::cout << "  Loading: " << audioBinPath << std::endl;
 		Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage("  Loading: " + audioBinPath, Framework::ConsoleLogMessage::LogLevel::INFO, "AssetManager"));
 		ImguiManager::Log("  Loading: " + audioBinPath, "AssetManager");
-		AssetManager::Instance().LoadBinaryArray<AudioProperties>(audioBinPath, g_AudioPropertiesProps);
+		//AssetManager::Instance().LoadBinaryArray<AudioProperties>(audioBinPath, g_AudioPropertiesProps);
+		AssetManager::Instance().LoadBinaryArray<AudioMetadata>(audioBinPath, g_AudioMetadataProps);
 
 		std::string prefabBinPath = (root / "Resource/PrefabAsset.bin").string();
 		std::cout << "  Loading: " << prefabBinPath << std::endl;
@@ -379,7 +382,7 @@ namespace Framework
 		std::cout << "  Loading: " << audioBinPath << std::endl;
 		Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage("  Loading: " + audioBinPath, Framework::ConsoleLogMessage::LogLevel::INFO, "AssetManager"));
 		ImguiManager::Log("  Loading: " + audioBinPath, "AssetManager");
-		AssetManager::Instance().LoadBinaryArray<AudioProperties>(audioBinPath, g_AudioPropertiesProps);
+		//AssetManager::Instance().LoadBinaryArray<AudioProperties>(audioBinPath, g_AudioPropertiesProps);
 
 		std::string prefabBinPath = (root / "Resource/PrefabAsset.bin").string();
 		std::cout << "  Loading: " << prefabBinPath << std::endl;

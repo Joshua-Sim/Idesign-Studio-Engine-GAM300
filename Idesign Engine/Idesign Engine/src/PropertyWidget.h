@@ -6,6 +6,8 @@
 // STL Library 
 #include <algorithm>  // for std::copy, std::sort, etc.
 #include <iterator>   // for std::begin, std::end, etc.
+#include <filesystem>
+#include <algorithm>
 
 // ImGui Stuff
 #include "imgui.h"
@@ -20,20 +22,17 @@
 #include "TextureLoader.h"
 #include "MaterialLoader.h"
 
-// All Components || Properties
-#include "TextureProperties.h"
-#include "MeshProperties.h"
-#include "AudioProperties.h"
-#include "TransformProperties.h"
-#include "TextProperties.h"
-#include "NavMeshProperties.h"
-#include "NavMeshAgentProperties.h"
-#include "AnimationProperties.h"
-#include "LightProperties.h"
-
 extern Framework::Coordinator ecsInterface;
 namespace Framework
 {
+    // Scripting Stuff
+    namespace fs = std::filesystem;
+
+    // Script file lists
+    static std::vector<std::string> g_scriptFullPaths;   // "Assets/Scripts/hello.lua"
+    static std::vector<std::string> g_scriptLabels;      // "hello.lua"
+    static std::vector<const char*> g_scriptLabelItems;  // ImGui items
+
 	// For Entity Inspector
 	void DrawInspector(void* pObject, const prop_list& propList);
 	void DrawEntityInspector(Entity entity, Coordinator& ecs);
@@ -132,12 +131,6 @@ namespace Framework
                     component.textureID = asset->textureID; // Reuse loaded texture
                 }
 
-                if constexpr (std::is_same_v<AssetType, AudioProperties>)
-                {
-                    component.mode = asset->mode;
-                    component.soundType = asset->soundType;
-                }
-
                 if constexpr (std::is_same_v<AssetType, NavMeshComponent>)
                 {
                     component.guid = assetGuids[currentIndex];
@@ -149,6 +142,11 @@ namespace Framework
 
                     component.skeleton = asset->skeleton;
                     component.availableAnimations = asset->availableAnimations;
+                }
+
+                if constexpr (std::is_same_v<AssetType, ScriptProperties>)
+                {
+                    component.script = asset->script;
                 }
             }
         }
@@ -329,6 +327,120 @@ namespace Framework
                 ImGui::TextColored(ImVec4(0, 1, 0, 1), "Material saved and applied!");
                 isCreatingNewMaterial = false;
             }
+        }
+    }
+
+    static void RefreshScriptFileList()
+    {
+        g_scriptFullPaths.clear();
+        g_scriptLabels.clear();
+        g_scriptLabelItems.clear();
+
+        fs::path scriptsDir = "Assets/Scripts";
+
+        if (!fs::exists(scriptsDir))
+            return;
+
+        for (auto& entry : fs::directory_iterator(scriptsDir))
+        {
+            if (!entry.is_regular_file()) continue;
+            if (entry.path().extension() != ".lua") continue;
+
+            std::string full = entry.path().string();
+            std::replace(full.begin(), full.end(), '\\', '/');  // normalize
+
+            g_scriptFullPaths.push_back(full);
+            g_scriptLabels.push_back(entry.path().filename().string());
+        }
+
+        for (auto& label : g_scriptLabels)
+            g_scriptLabelItems.push_back(label.c_str());
+    }
+
+    static int FindScriptIndex(const std::string& scriptPath)
+    {
+        // first try full path
+        for (int i = 0; i < (int)g_scriptFullPaths.size(); ++i)
+        {
+            if (g_scriptFullPaths[i] == scriptPath)
+                return i;
+        }
+
+        // fallback: match by filename
+        fs::path p(scriptPath);
+        std::string file = p.filename().string();
+        for (int i = 0; i < (int)g_scriptLabels.size(); ++i)
+        {
+            if (g_scriptLabels[i] == file)
+                return i;
+        }
+        return -1;
+    }
+
+    static void DrawScriptPropertiesWidget(Framework::ScriptProperties& comp)
+    {
+        // Ensure list is filled once
+        static bool scriptsScanned = false;
+        if (!scriptsScanned)
+        {
+            RefreshScriptFileList();
+            scriptsScanned = true;
+        }
+
+        if (ImGui::Button("Refresh Script List"))
+            RefreshScriptFileList();
+
+        ImGui::Separator();
+
+        // One block per ScriptEntry
+        for (size_t i = 0; i < comp.scripts.size(); ++i)
+        {
+            auto& entry = comp.scripts[i];
+            ImGui::PushID((int)i);
+
+            ImGui::Text("Script %d", (int)i);
+
+            int currentIndex = FindScriptIndex(entry.scriptPath);
+
+            if (!g_scriptLabelItems.empty())
+            {
+                // Show only filename in the dropdown
+                if (ImGui::Combo("##ScriptCombo",
+                    &currentIndex,
+                    g_scriptLabelItems.data(),
+                    (int)g_scriptLabelItems.size()))
+                {
+                    if (currentIndex >= 0 &&
+                        currentIndex < (int)g_scriptFullPaths.size())
+                    {
+                        // store full path in the component
+                        entry.scriptPath = g_scriptFullPaths[currentIndex];
+                        entry.initialized = false;
+                        entry.lastWriteTicks = 0;
+                    }
+                }
+            }
+            else
+            {
+                ImGui::TextDisabled("No Lua scripts in Assets/Scripts");
+            }          
+
+            if (ImGui::Button("Remove Script"))
+            {
+                comp.scripts.erase(comp.scripts.begin() + i);
+                ImGui::PopID();
+                break;      // list changed, bail out of loop this frame
+            }
+
+            ImGui::Separator();
+            ImGui::PopID();
+        }
+
+        if (ImGui::Button("Add Script Slot"))
+        {
+            ScriptEntry newEntry;
+            newEntry.scriptPath.clear();    // user will pick from combo
+            comp.scripts.push_back(newEntry);
         }
     }
 }

@@ -7,6 +7,7 @@
 #include "SceneManager.h"
 #include "PrefabProperties.h"
 #include "PrefabComponent.h"
+#include "ScriptProperties.h"
 #include "ScriptingSystem.h"
 #include "MessageSystem.h"
 
@@ -245,8 +246,6 @@ namespace Framework
                     ecsInterface.AddComponent(entity, light);
                 }
 
-         
-
                 if (components.HasMember("AnimationProperties"))
                 {
                     const auto& animRef = components["AnimationProperties"];
@@ -304,20 +303,34 @@ namespace Framework
                     ecsInterface.AddComponent(entity, agent);
                 }
 
-                // Script Component
-                if (components.HasMember("ScriptComponent")) {
-                    ScriptComponent script;
+                // Scripting
+                if (components.HasMember("ScriptProperties"))
+                {
+                    const auto& scriptObj = components["ScriptProperties"];
+                    ScriptProperties sp;
 
-                    const auto& scArr = components["ScriptComponent"]["scripts"];
-                    for (auto& s : scArr.GetArray()) {
-                        ScriptInstance inst;
-                        inst.scriptPath = s.GetString();
-                        script.scripts.push_back(inst);
+                    if (scriptObj.HasMember("guid") && scriptObj["guid"].IsString())
+                    {
+                        const auto& arr = scriptObj["scripts"].GetArray();
+                        for (const auto& s : arr)
+                        {
+                            ScriptEntry entry;
+
+                            if (s.HasMember("scriptPath") && s["scriptPath"].IsString())
+                                entry.scriptPath = s["scriptPath"].GetString();
+
+                            if (s.HasMember("hotReload") && s["hotReload"].IsBool())
+                                entry.hotReload = s["hotReload"].GetBool();
+
+                            sp.scripts.push_back(entry);
+                        }
                     }
 
-                    ecsInterface.AddComponent(entity, script);
+                    /*if (!sp.scripts.empty())
+                    {
+                        ecsInterface.AddComponent(entity, sp);
+                    }*/
                 }
-
 
                 sceneManager.RegisterEntityToScene(entity, cleanName);
             }
@@ -455,23 +468,33 @@ namespace Framework
                     Serialize((void*)&agent, g_NavMeshAgentProps, agentJson, allocator);
                     componentsObj.AddMember("NavMeshAgentComponent", agentJson, allocator);
                 }
-                // Scripts
-                if (ecsInterface.HasComponent<ScriptComponent>(entity)) {
-                    const auto& script = ecsInterface.GetComponent<ScriptComponent>(entity);
-                    rapidjson::Value scriptJson(rapidjson::kObjectType);
+                
+                // Scripts            
+                if (ecsInterface.HasComponent<ScriptProperties>(entity))
+                {
+                    const auto& sp = ecsInterface.GetComponent<ScriptProperties>(entity);
 
-                    // Save array of script paths
-                    rapidjson::Value arr(rapidjson::kArrayType);
-                    for (const auto& sc : script.scripts) {
-                        rapidjson::Value path;
-                        path.SetString(sc.scriptPath.c_str(), allocator);
-                        arr.PushBack(path, allocator);
+                    rapidjson::Value scriptObj(rapidjson::kObjectType);
+                    rapidjson::Value scriptsArr(rapidjson::kArrayType);
+
+                    for (const auto& entry : sp.scripts)
+                    {
+                        rapidjson::Value entryObj(rapidjson::kObjectType);
+
+                        entryObj.AddMember("guid", rapidjson::Value(entry.guid.id.c_str(), allocator), allocator);
+
+                        entryObj.AddMember("scriptPath", rapidjson::Value(entry.scriptPath.c_str(), allocator), allocator);
+
+                        entryObj.AddMember("hotReload", entry.hotReload, allocator);
+
+                        // If later you add more saved fields (e.g. hotReload), add them here.
+
+                        scriptsArr.PushBack(entryObj, allocator);
                     }
 
-                    scriptJson.AddMember("scripts", arr, allocator);
-                    componentsObj.AddMember("ScriptComponent", scriptJson, allocator);
+                    scriptObj.AddMember("scripts", scriptsArr, allocator);
+                    componentsObj.AddMember("ScriptProperties", scriptObj, allocator);
                 }
-
             }
 
             entityObj.AddMember("components", componentsObj, allocator);
@@ -583,17 +606,22 @@ namespace Framework
             ecs.AddComponent(newEntity, ecs.GetComponent<PrefabComponent>(sourceEntity));
         }
 
-        if (ecs.HasComponent<ScriptComponent>(sourceEntity))
+        if (ecs.HasComponent<ScriptProperties>(sourceEntity))
         {
-            ScriptComponent original = ecs.GetComponent<ScriptComponent>(sourceEntity);
-            ScriptComponent copy;
+            const auto& original = ecs.GetComponent<ScriptProperties>(sourceEntity);
+            ScriptProperties copy;
+
             for (const auto& inst : original.scripts)
             {
-                ScriptInstance newInst;
+                Framework::ScriptEntry newInst;
                 newInst.scriptPath = inst.scriptPath;
+                newInst.hotReload = inst.hotReload;   // copy other fields if needed
                 copy.scripts.push_back(newInst);
             }
-            ecs.AddComponent(newEntity, copy);
+
+            copy.scriptCount = static_cast<int>(copy.scripts.size());
+
+            ecs.AddComponent<ScriptProperties>(newEntity, copy);
         }
 
         // !! IMPORTANT !!
@@ -717,19 +745,25 @@ namespace Framework
         }
         
         //Scripts
-        if (ecsInterface.HasComponent<ScriptComponent>(entity)) {
-            const auto& script = ecsInterface.GetComponent<ScriptComponent>(entity);
+        if (ecsInterface.HasComponent<ScriptProperties>(entity))
+        {
+            const auto& script = ecsInterface.GetComponent<ScriptProperties>(entity);
+
             rapidjson::Value scriptJson(rapidjson::kObjectType);
             rapidjson::Value arr(rapidjson::kArrayType);
-            for (const auto& sc : script.scripts) {
+
+            for (const auto& sc : script.scripts)
+            {
                 rapidjson::Value path;
                 path.SetString(sc.scriptPath.c_str(), allocator);
                 arr.PushBack(path, allocator);
             }
-            scriptJson.AddMember("scripts", arr, allocator);
-            componentsObj.AddMember("ScriptComponent", scriptJson, allocator);
-        }
 
+            scriptJson.AddMember("scripts", arr, allocator);
+
+            // Use "ScriptProperties" as the JSON key to match your struct name
+            componentsObj.AddMember("ScriptProperties", scriptJson, allocator);
+        }
 
         entityObj.AddMember("components", componentsObj, allocator);
         doc.AddMember("entity", entityObj, allocator);  // Note: "entity" not "Entities"
@@ -1031,15 +1065,18 @@ namespace Framework
             }
         }
 
-        if (components.HasMember("ScriptComponent")) {
-            ScriptComponent script;
-            const auto& scArr = components["ScriptComponent"]["scripts"];
-            for (auto& s : scArr.GetArray()) {
-                ScriptInstance inst;
+        if (components.HasMember("ScriptProperties")) 
+        {
+            ScriptProperties script;
+            const auto& scArr = components["ScriptProperties"]["scripts"];
+            for (auto& s : scArr.GetArray()) 
+            {
+                ScriptEntry inst;
                 inst.scriptPath = s.GetString();
                 script.scripts.push_back(inst);
             }
-            ecsInterface.AddComponent(newEntity, script);
+            script.scriptCount = static_cast<int>(script.scripts.size());
+            ecsInterface.AddComponent<ScriptProperties>(newEntity, script);
         }
 
         if (newEntity != std::numeric_limits<Entity>::max())

@@ -243,49 +243,42 @@ namespace Framework {
     }
 
     // Scipt Folder Loader
-    static void RefreshScriptFileList()
-    {
-        g_scriptFiles.clear();
-        g_scriptDisplayNames.clear();
-        g_scriptFileItems.clear();
+    //static void RefreshScriptFileList()
+    //{
+    //    g_scriptFiles.clear();
+    //    g_scriptDisplayNames.clear();
+    //    g_scriptFileItems.clear();
 
-        namespace fs = std::filesystem;
+    //    namespace fs = std::filesystem;
+    //    fs::path scriptsDir = "Assets/Scripts";
 
-        // BUILD ABSOLUTE PATH FROM PROJECT ROOT
-        fs::path scriptsDir = fs::path(Framework::ScriptingSystem::GetProjectRoot()) / "Assets/Scripts";
+    //    if (!fs::exists(scriptsDir))
+    //        return;
 
-        if (!fs::exists(scriptsDir))
-        {
-            std::cout << "[RefreshScriptFileList] Scripts directory doesn't exist: " << scriptsDir << std::endl;
-            return;
-        }
+    //    // 1) Collect full paths
+    //    for (auto& entry : fs::directory_iterator(scriptsDir))
+    //    {
+    //        if (!entry.is_regular_file()) continue;
+    //        if (entry.path().extension() != ".lua") continue;
 
-        // 1) Collect full paths
-        for (auto& entry : fs::directory_iterator(scriptsDir))
-        {
-            if (!entry.is_regular_file()) continue;
-            if (entry.path().extension() != ".lua") continue;
+    //        std::string rel = entry.path().string();          // e.g. "Assets\\Scripts\\hello.lua"
+    //        std::replace(rel.begin(), rel.end(), '\\', '/');  // -> "Assets/Scripts/hello.lua"
+    //        g_scriptFiles.push_back(rel);
+    //    }
 
-            std::string rel = entry.path().string();
-            std::replace(rel.begin(), rel.end(), '\\', '/');
-            g_scriptFiles.push_back(rel);
-        }
+    //    // 2) Build display names + ImGui labels (only "hello.lua")
+    //    for (auto& full : g_scriptFiles)
+    //    {
+    //        g_scriptDisplayNames.push_back(::GetFileNameOnly(full)); // "hello.lua"
+    //    }
 
-        // 2) Build display names + ImGui labels (only "hello.lua")
-        for (auto& full : g_scriptFiles)
-        {
-            g_scriptDisplayNames.push_back(::GetFileNameOnly(full));
-        }
+    //    for (auto& name : g_scriptDisplayNames)
+    //    {
+    //        g_scriptFileItems.push_back(name.c_str());
+    //    }
+    //}
 
-        for (auto& name : g_scriptDisplayNames)
-        {
-            g_scriptFileItems.push_back(name.c_str());
-        }
-
-        std::cout << "[RefreshScriptFileList] Found " << g_scriptFiles.size() << " Lua scripts\n";
-    }
-
-    static int FindScriptIndex(const std::string& path)
+    /*static int FindScriptIndex(const std::string& path)
     {
         for (int i = 0; i < (int)g_scriptFiles.size(); ++i)
         {
@@ -293,7 +286,7 @@ namespace Framework {
                 return i;
         }
         return -1;
-    }
+    }*/
 
     // Error Detection for Audio
     void ImguiManager::RenderErrorPopup()
@@ -426,6 +419,7 @@ namespace Framework {
                         {
                             // <-- FIX: Register using the relative path as the key
                             AssetManager::Instance().RegisterAsset<TextureProperties>(std::move(texPtr), &g_TexturePropertiesProps, relativePath);
+
                             // <-- FIX: Save JSON to its absolute path
                             AssetManager::Instance().SaveArrayToJson(TypeName<TextureProperties>::value, (root / "Assets/JSON/TextureAsset.json").string(), "textures");
                             std::cout << "Texture added: " << fileName << " to " << relativePath << std::endl;
@@ -444,14 +438,14 @@ namespace Framework {
             // Audio Files
             else if (extension == "mp3" || extension == "wav" || extension == "flac")
             {
-                auto existingGuid = AssetManager::Instance().FindGuid<AudioProperties>(fileName);
+                auto existingGuid = AssetManager::Instance().FindGuid<AudioMetadata>(fileName);
                 if (existingGuid.empty())
                 {
                     if (MoveFileToAssetFolder(filePath, audioFolder, finalAbsolutePath, error)) // <-- FIX: Using absolute folder
                     {
                         std::string relativePath = std::filesystem::relative(finalAbsolutePath, root).string(); // <-- FIX
 
-                        auto audioPtr = std::make_unique<AudioProperties>();
+                        auto audioPtr = std::make_unique<AudioMetadata>();
                         audioPtr->name = std::filesystem::path(fileName).stem().string();
                         audioPtr->path = relativePath; // <-- FIX: Store the relative path
                         audioPtr->mode = "loop";
@@ -459,9 +453,10 @@ namespace Framework {
 
                         loadAudio(*audioPtr); // Assumes this uses the relative path in audioPtr
 
-                        AssetManager::Instance().RegisterAsset<AudioProperties>(std::move(audioPtr), &g_AudioPropertiesProps, relativePath); // <-- FIX: Register with relative path
+                        AssetManager::Instance().RegisterAsset<AudioMetadata>(std::move(audioPtr), &g_AudioMetadataProps, relativePath); // <-- FIX: Register with relative path
+
                         // <-- FIX: Save JSON to its absolute path
-                        AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, (root / "Assets/JSON/AudioAsset.json").string(), "audio"); // <-- FIX: Changed key "AudioProperties" to "audio"
+                        AssetManager::Instance().SaveArrayToJson(TypeName<AudioMetadata>::value, (root / "Assets/JSON/AudioAsset.json").string(), "audio"); // <-- FIX: Changed key "AudioProperties" to "audio"
                         std::cout << "Audio added: " << fileName << " to " << relativePath << std::endl;
                     }
                     else
@@ -1618,9 +1613,12 @@ namespace Framework {
 
             for (const auto& [handle, entry] : assetsImgui)
             {
-                if (entry.typeName != "AudioProperties") continue;
-                auto* audioProps = static_cast<AudioProperties*>(entry.pObject.get());
+                if (entry.typeName != "AudioMetadata") continue;
+                auto* audioProps = static_cast<AudioMetadata*>(entry.pObject.get());
                 if (!audioProps) continue;
+
+                // Lookup runtime AudioComponent by GUID
+                AudioComponent* comp = AssetManager::Instance().Get<AudioComponent>(audioProps->guid);
                 std::string audioModal = "EditModal_" + audioProps->guid;
 
                 ImGui::TableNextRow();
@@ -1725,8 +1723,8 @@ namespace Framework {
                         ImGui::BeginTooltip();
                         ImGui::Text("GUID: %s", audioProps->guid.id.c_str());
                         ImGui::Text("File: %s", audioProps->path.c_str());
-                        ImGui::Text("Volume: %.2f", audioProps->volume);
                         ImGui::Text("Mode: %s", audioProps->mode.c_str());
+                        ImGui::Text("Duration: %.2f sec", audioProps->duration);
                         ImGui::EndTooltip();
                     }
                 }
@@ -1740,42 +1738,48 @@ namespace Framework {
                 if (ImGui::Button(("Play##" + audioProps->guid.id).c_str()))
                 {
                     GlobalAudio.UE_PlaySound(audioProps->name);
-                    audioProps->isPlaying = true;
+                    if (comp) comp->isPlaying = true;
                 }
 
                 ImGui::SameLine();
                 if (ImGui::Button(("Stop##" + audioProps->guid.id).c_str()))
                 {
                     GlobalAudio.Reset();
-                    audioProps->isPlaying = false;
-                    audioProps->channelID = -1;
-                }
-
-                // Volume slider
-                float volume = audioProps->volume;
-                if (ImGui::SliderFloat(("Volume##" + audioProps->guid.id).c_str(), &volume, 0.0f, 1.0f))
-                {
-                    audioProps->volume = std::clamp(volume, 0.0f, 1.0f);
-                    GlobalAudio.UE_SetVolume(audioProps->name, audioProps->volume);
-                }
-
-                // Playback status
-                if (audioProps->isPlaying)
-                {
-                    ImGui::TextColored(ImVec4(0.2f, 1.0f, 0.2f, 1.0f), "Status: Playing");
-                }
-                else
-                {
-                    ImGui::Text("Status: Stopped");
-                }
-
-                // Poll playback status
-                if (audioProps->isPlaying && audioProps->channelID != -1)
-                {
-                    if (!GlobalAudio.IsChannelPlaying(audioProps->channelID))
+                    if (comp) 
                     {
-                        audioProps->isPlaying = false;
-                        audioProps->channelID = -1;
+                        comp->isPlaying = false;
+                        comp->channelID = -1;
+                    }
+                }
+
+                // Volume slider (runtime state lives in AudioComponent now)
+                if (comp)
+                {
+                    float volume = comp->volume;
+                    if (ImGui::SliderFloat(("Volume##" + audioProps->guid.id).c_str(), &volume, 0.0f, 1.0f))
+                    {
+                        comp->volume = std::clamp(volume, 0.0f, 1.0f);
+                        GlobalAudio.UE_SetVolume(audioProps->name, comp->volume);
+                    }
+
+                    // Playback status
+                    if (comp->isPlaying)
+                    {
+                        ImGui::TextColored(ImVec4(0.2f, 1.0f, 0.2f, 1.0f), "Status: Playing");
+                    }
+                    else
+                    {
+                        ImGui::Text("Status: Stopped");
+                    }
+
+                    // Poll playback status
+                    if (comp->isPlaying && comp->channelID != -1)
+                    {
+                        if (!GlobalAudio.IsChannelPlaying(comp->channelID))
+                        {
+                            comp->isPlaying = false;
+                            comp->channelID = -1;
+                        }
                     }
                 }
             }
@@ -1788,7 +1792,7 @@ namespace Framework {
             {
                 AssetManager::Instance().Unload(guid);
             }
-            AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, "Assets/JSON/AudioAsset.json", "audio");
+            AssetManager::Instance().SaveArrayToJson(TypeName<AudioMetadata>::value, "Assets/JSON/AudioAsset.json", "audio");
         }
     }
 
@@ -2423,80 +2427,80 @@ namespace Framework {
                     DrawEntityInspector(selectedEntity, ecsInterface);
 
                     // -------- Script Component UI --------
-                    if (ImGui::CollapsingHeader("Script Component", ImGuiTreeNodeFlags_DefaultOpen))
-                    {
-                        // Ensure the script list is populated
-                        static bool scriptsScanned = false;
-                        if (!scriptsScanned)
-                        {
-                            RefreshScriptFileList();
-                            scriptsScanned = true;
-                        }
+                    //if (ImGui::CollapsingHeader("Script Component", ImGuiTreeNodeFlags_DefaultOpen))
+                    //{
+                    //    // Ensure the script list is populated
+                    //    static bool scriptsScanned = false;
+                    //    if (!scriptsScanned)
+                    //    {
+                    //        RefreshScriptFileList();
+                    //        scriptsScanned = true;
+                    //    }
 
-                        // Allow manual refresh (in case you add new .lua files while engine is running)
-                        if (ImGui::Button("Refresh Script List"))
-                        {
-                            RefreshScriptFileList();
-                        }
+                    //    // Allow manual refresh (in case you add new .lua files while engine is running)
+                    //    if (ImGui::Button("Refresh Script List"))
+                    //    {
+                    //        RefreshScriptFileList();
+                    //    }
 
-                        // If entity has no ScriptComponent yet
-                        if (!ecsInterface.HasComponent<ScriptComponent>(selectedEntity))
-                        {
-                            if (ImGui::Button("Add Script Component"))
-                            {
-                                ecsInterface.AddComponent<ScriptComponent>(selectedEntity, ScriptComponent{});
-                            }
-                        }
-                        else
-                        {
-                            auto& sc = ecsInterface.GetComponent<ScriptComponent>(selectedEntity);
+                    //    // If entity has no ScriptComponent yet
+                    //    if (!ecsInterface.HasComponent<ScriptComponent>(selectedEntity))
+                    //    {
+                    //        if (ImGui::Button("Add Script Component"))
+                    //        {
+                    //            ecsInterface.AddComponent<ScriptComponent>(selectedEntity, ScriptComponent{});
+                    //        }
+                    //    }
+                    //    else
+                    //    {
+                    //        auto& sc = ecsInterface.GetComponent<ScriptComponent>(selectedEntity);
 
-                            // Show each script slot
-                            for (size_t i = 0; i < sc.scripts.size(); ++i)
-                            {
-                                auto& slot = sc.scripts[i];
-                                ImGui::PushID((int)i);
+                    //        // Show each script slot
+                    //        for (size_t i = 0; i < sc.scripts.size(); ++i)
+                    //        {
+                    //            auto& slot = sc.scripts[i];
+                    //            ImGui::PushID((int)i);
 
-                                int currentIndex = FindScriptIndex(slot.scriptPath);
+                    //            int currentIndex = FindScriptIndex(slot.scriptPath);
 
-                                ImGui::Text("Script %d", (int)i);
+                    //            ImGui::Text("Script %d", (int)i);
 
-                                if (!g_scriptFileItems.empty())
-                                {
-                                    if (ImGui::Combo("##ScriptCombo", &currentIndex, g_scriptFileItems.data(), (int)g_scriptFileItems.size()))
-                                    {
-                                        if (currentIndex >= 0 && currentIndex < (int)g_scriptFiles.size())
-                                        {
-                                            slot.scriptPath = g_scriptFiles[currentIndex];
-                                            slot.initialized = false;
-                                            slot.lastWriteTicks = 0;
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    ImGui::TextDisabled("No Lua scripts in Assets/Scripts");
-                                }
+                    //            if (!g_scriptFileItems.empty())
+                    //            {
+                    //                if (ImGui::Combo("##ScriptCombo", &currentIndex, g_scriptFileItems.data(), (int)g_scriptFileItems.size()))
+                    //                {
+                    //                    if (currentIndex >= 0 && currentIndex < (int)g_scriptFiles.size())
+                    //                    {
+                    //                        slot.scriptPath = g_scriptFiles[currentIndex];
+                    //                        slot.initialized = false;
+                    //                        slot.lastWriteTicks = 0;
+                    //                    }
+                    //                }
+                    //            }
+                    //            else
+                    //            {
+                    //                ImGui::TextDisabled("No Lua scripts in Assets/Scripts");
+                    //            }
 
-                                if (ImGui::Button("Remove Script"))
-                                {
-                                    sc.scripts.erase(sc.scripts.begin() + i);
-                                    ImGui::PopID();
-                                    break;
-                                }
+                    //            if (ImGui::Button("Remove Script"))
+                    //            {
+                    //                sc.scripts.erase(sc.scripts.begin() + i);
+                    //                ImGui::PopID();
+                    //                break;
+                    //            }
 
-                                ImGui::Separator();
-                                ImGui::PopID();
-                            }
+                    //            ImGui::Separator();
+                    //            ImGui::PopID();
+                    //        }
 
-                            if (ImGui::Button("Add Script Slot"))
-                            {
-                                ScriptInstance newSlot;
-                                newSlot.scriptPath.clear(); // user will pick from combo
-                                sc.scripts.push_back(newSlot);
-                            }
-                        }
-                    }
+                    //        if (ImGui::Button("Add Script Slot"))
+                    //        {
+                    //            ScriptInstance newSlot;
+                    //            newSlot.scriptPath.clear(); // user will pick from combo
+                    //            sc.scripts.push_back(newSlot);
+                    //        }
+                    //    }
+                    //}
 
 
                     // Reset selectedEntity if the properties window is closed

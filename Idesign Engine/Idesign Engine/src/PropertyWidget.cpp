@@ -248,8 +248,8 @@ namespace Framework
                 }
                 else if (typeName == "AudioProperties")
                 {
-                    auto& audio = *static_cast<AudioProperties*>(componentPtr);
-                    DrawAssetDropdown<AudioProperties>("Select Audio", audio);
+                    //auto& audio = *static_cast<AudioProperties*>(componentPtr);
+                    //DrawAssetDropdown<AudioProperties>("Select Audio", audio);
                 }
                 else if (typeName == "NavMeshComponent")
                 {
@@ -309,7 +309,18 @@ namespace Framework
                     }
                 }
 
+                else if (typeName == "ScriptProperties")
+                {
+                    auto& scripts = *static_cast<ScriptProperties*>(componentPtr);
+                    DrawScriptPropertiesWidget(scripts);
 
+                    // We fully handle this component ourselves, so we DON'T call DrawInspector
+                    if (ImGui::Button("Remove ScriptProperties"))
+                    {
+                        TypeRegistry::Instance().RemoveComponent(typeName, ecs, entity);
+                    }
+                    continue;   
+                }
                 DrawInspector(componentPtr, *propList);
 
                 if (ImGui::Button(std::string("Remove ").append(typeName).c_str()))
@@ -344,13 +355,16 @@ namespace Framework
         // Only if the component nids to be under the entity inspectorppppp
         TypeRegistry::Instance().Register<TextureProperties>("TextureProperties", &g_TexturePropertiesProps);
         TypeRegistry::Instance().Register<MeshProperties>("MeshProperties", &g_MeshProps);
-        TypeRegistry::Instance().Register<AudioProperties>("AudioProperties", &g_AudioPropertiesProps);
+        TypeRegistry::Instance().Register<AudioComponent>("AudioComponent", &g_AudioComponentProps);
+        TypeRegistry::Instance().Register<ListenerComponent>("ListenerComponent", &g_ListenerComponentProps);
         TypeRegistry::Instance().Register<TextProperties>("TextProperties", &g_TextComponentProps);
         TypeRegistry::Instance().Register<TransformComponent>("TransformComponent", &g_TransformProps);
         TypeRegistry::Instance().Register<NavMeshComponent>("NavMeshComponent", &g_NavMeshProps);
         TypeRegistry::Instance().Register<NavMeshAgentComponent>("NavMeshAgentComponent", &g_NavMeshAgentProps);
         TypeRegistry::Instance().Register<AnimationProperties>("AnimationProperties", &g_AnimationPropertiesProps);
         TypeRegistry::Instance().Register<LightProperties>("LightProperties", &g_LightProps);
+        TypeRegistry::Instance().Register<ScriptProperties>("ScriptProperties", &g_ScriptPropertiesProps);
+
     }
 
     void AutoRegisterAllReflectedComponents(Coordinator& ecs)

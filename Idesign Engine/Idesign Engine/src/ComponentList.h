@@ -177,24 +177,24 @@ public:
     }
 };
 
-struct ScriptInstance
-{
-    std::string scriptPath;   // e.g. "scripts/player.lua"
-    int tableRef = LUA_NOREF; // reference to the Lua table (instance)
-    bool initialized = false; // if on_init() has been called
-    bool hotReload = false;    // enable/disable live reload
-    uint64_t lastWriteTicks = 0; // file modification time cache
-
-    /*ScriptComponent() = default;
-    ScriptComponent(const std::string& path)
-        : scriptPath(path)
-    {}*/
-};
-
-struct ScriptComponent
-{
-    std::vector<ScriptInstance> scripts;
-};
+//struct ScriptInstance
+//{
+//    std::string scriptPath;   // e.g. "scripts/player.lua"
+//    int tableRef = LUA_NOREF; // reference to the Lua table (instance)
+//    bool initialized = false; // if on_init() has been called
+//    bool hotReload = false;    // enable/disable live reload
+//    uint64_t lastWriteTicks = 0; // file modification time cache
+//
+//    /*ScriptComponent() = default;
+//    ScriptComponent(const std::string& path)
+//        : scriptPath(path)
+//    {}*/
+//};
+//
+//struct ScriptComponent
+//{
+//    std::vector<ScriptInstance> scripts;
+//};
 
 struct PhysicsBodyComponent {
     JPH::BodyID ID;
