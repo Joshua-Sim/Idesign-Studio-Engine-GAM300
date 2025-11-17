@@ -234,7 +234,7 @@ namespace Framework
                     auto& tex = *static_cast<TextureProperties*>(componentPtr);
                     DrawAssetDropdown<TextureProperties>("Select Texture", tex);
                     DrawTexturePreview(tex);
-                }
+                } 
                 else if (typeName == "MeshProperties")
                 {
                     auto& mesh = *static_cast<MeshProperties*>(componentPtr);
@@ -275,6 +275,13 @@ namespace Framework
                 {
                     auto& anim = *static_cast<AnimationProperties*>(componentPtr);
                     DrawAssetDropdown<AnimationProperties>("Select Animation", anim);
+                }
+                else if (typeName == "PhysicsProperties")
+                {
+                    auto& phys = *static_cast<PhysicsProperties*>(componentPtr);
+
+                    DrawEnumDropdown("Motion Type", &phys.motionType, Framework::kMotionTypeNames);
+                    DrawEnumDropdown("Category", &phys.category, Framework::kPhysicsCategoryNames);
                 }
 
                 DrawInspector(componentPtr, *propList);
@@ -318,6 +325,7 @@ namespace Framework
         TypeRegistry::Instance().Register<NavMeshAgentComponent>("NavMeshAgentComponent", &g_NavMeshAgentProps);
         TypeRegistry::Instance().Register<AnimationProperties>("AnimationProperties", &g_AnimationPropertiesProps);
         TypeRegistry::Instance().Register<LightProperties>("LightProperties", &g_LightProps);
+        TypeRegistry::Instance().Register<PhysicsProperties>("PhysicsProperties", &g_PhysicsProps);
     }
 
     void AutoRegisterAllReflectedComponents(Coordinator& ecs)

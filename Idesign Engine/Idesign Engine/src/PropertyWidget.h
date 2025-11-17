@@ -30,6 +30,7 @@
 #include "NavMeshAgentProperties.h"
 #include "AnimationProperties.h"
 #include "LightProperties.h"
+#include "PhysicsProperties.h"
 
 extern Framework::Coordinator ecsInterface;
 namespace Framework
@@ -152,6 +153,24 @@ namespace Framework
                 }
             }
         }
+    }
+
+    template <size_t N>
+    bool DrawEnumDropdown(const char* label, int* value, const char* const (&names)[N]) {
+        int idx = std::max(0, std::min<int>(*value, (int)N - 1));
+        bool changed = false;
+        if (ImGui::BeginCombo(label, names[idx])) {
+            for (int i = 0; i < (int)N; ++i) {
+                bool selected = (i == idx);
+                if (ImGui::Selectable(names[i], selected)) {
+                    *value = i;
+                    changed = true;
+                }
+                if (selected) ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
+        return changed;
     }
 
     // Overload for NavMeshComponent using MeshProperties as asset type
