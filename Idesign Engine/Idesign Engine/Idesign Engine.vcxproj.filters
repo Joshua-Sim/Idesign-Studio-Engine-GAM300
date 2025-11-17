@@ -549,6 +549,15 @@
     <ClInclude Include="AnimationLoader.h">
       <Filter>Header Files\Animation</Filter>
     </ClInclude>
+    <ClInclude Include="EnginePath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CameraComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CameraSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />
@@ -862,6 +871,9 @@
     </ClCompile>
     <ClCompile Include="AnimationLoader.cpp">
       <Filter>Source Files\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CameraSystem.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

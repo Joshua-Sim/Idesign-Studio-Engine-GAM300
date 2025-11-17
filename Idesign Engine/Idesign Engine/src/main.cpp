@@ -39,7 +39,9 @@
 #include "PhysicsSystem.h"
 #include "FileCheckSystem.h"
 #include "EnginePath.h"
+#include "CameraSystem.h"
 #include <filesystem>
+
 
 using namespace Framework;
 
@@ -120,6 +122,7 @@ int main(void)
     auto navMeshSystem = ecsInterface.RegisterSystem<NavMeshSystem>();
     auto fileCheckSystem = ecsInterface.RegisterSystem<Framework::FileCheckSystem>();
     auto audioSystem = ecsInterface.RegisterSystem<AudioSystem>();
+    auto camSystem = ecsInterface.RegisterSystem<CameraSystem>();
     //Physics System
     auto physicsSystem = ecsInterface.RegisterSystem<PhysicsSystem>();
 
@@ -132,6 +135,7 @@ int main(void)
     engine->AddSystem(navMeshSystem.get());
 	engine->AddSystem(audioSystem.get());
     engine->AddSystem(physicsSystem.get());
+    engine->AddSystem(camSystem.get());
 
     // Register scene manager last
     engine->AddSystem(sceneSystem.get());

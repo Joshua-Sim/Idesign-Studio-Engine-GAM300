@@ -2422,6 +2422,21 @@ namespace Framework {
                     // Automate Generate Entity Inspector
                     DrawEntityInspector(selectedEntity, ecsInterface);
 
+                    if (ImGui::Button("Add Camera Properties"))
+                    {
+                        CameraComponent cam;
+                        cam.active = true;
+
+                        // deactivate all other cameras
+                        for (auto const& entity : mEntities)
+                        {
+                            ecsInterface.GetComponent<CameraComponent>(entity).active = false;
+                        }
+
+                        ecsInterface.AddComponent(selectedEntity, cam);
+                    }
+
+
                     // -------- Script Component UI --------
                     if (ImGui::CollapsingHeader("Script Component", ImGuiTreeNodeFlags_DefaultOpen))
                     {

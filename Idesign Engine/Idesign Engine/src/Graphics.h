@@ -86,25 +86,9 @@ namespace Framework
         void SetMouseTargetView(int view) { m_mouseTargetView = (view <= 0) ? 0 : 1; }
         int  GetMouseTargetView() const;
         void CaptureMouse(bool on);
-    private:
-        static void framebuffer_size_callback(GLFWwindow*, int, int);
-        static void mouse_callback(GLFWwindow*, double, double);
-        glm::vec2 pendingPickUV0{ -1.f, -1.f };  // main viewport
-        glm::vec2 pendingPickUV1{ -1.f, -1.f };  // secondary viewport
-        int pickViewIndex = 0; // 0 = Grounded, 1 = debug
-        void process_input(float dt);
-        void renderQuad();
-        void RenderViewToFramebuffer(Camera& viewCam, GLuint imguiTargetFBO,
-            int screenW, int screenH, int viewIndex);
-
-        bool scriptControl_ = false;
-        int m_mouseTargetView = 0; // 0 = main/game view, 1 = secondary/scene view
-        // window & timing
-        GLFWwindow* window = nullptr;
-        float lastTime = 0.0f;
 
         // camera & movement
-       Camera camera{ {0.f, 1.f, 3.f} };
+        static Camera camera;
         static bool mouseCaptured;
         static bool groundMode;
 
@@ -126,6 +110,23 @@ namespace Framework
         }
         void SetCameraMode(CameraMode mode) { activeCameraMode = mode; }
         CameraMode GetCameraMode() const { return activeCameraMode; }
+
+    private:
+        static void framebuffer_size_callback(GLFWwindow*, int, int);
+        static void mouse_callback(GLFWwindow*, double, double);
+        glm::vec2 pendingPickUV0{ -1.f, -1.f };  // main viewport
+        glm::vec2 pendingPickUV1{ -1.f, -1.f };  // secondary viewport
+        int pickViewIndex = 0; // 0 = Grounded, 1 = debug
+        void process_input(float dt);
+        void renderQuad();
+        void RenderViewToFramebuffer(Camera& viewCam, GLuint imguiTargetFBO,
+            int screenW, int screenH, int viewIndex);
+
+        bool scriptControl_ = false;
+        int m_mouseTargetView = 0; // 0 = main/game view, 1 = secondary/scene view
+        // window & timing
+        GLFWwindow* window = nullptr;
+        float lastTime = 0.0f;
 
         // ========================== //
         //   END OF CAMERA FUNCTIONS //

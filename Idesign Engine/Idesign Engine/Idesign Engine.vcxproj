@@ -161,6 +161,8 @@
     <ClInclude Include="src\backward.hpp" />
     <ClInclude Include="src\ButtonSystem.h" />
     <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\CameraComponent.h" />
+    <ClInclude Include="src\CameraSystem.h" />
     <ClInclude Include="src\Collision.h" />
     <ClInclude Include="src\ComponentArray.h" />
     <ClInclude Include="src\ComponentList.h" />
@@ -328,6 +330,7 @@
     <ClCompile Include="src\AudioLoader.cpp" />
     <ClCompile Include="src\AudioSystem.cpp" />
     <ClCompile Include="src\ButtonSystem.cpp" />
+    <ClCompile Include="src\CameraSystem.cpp" />
     <ClCompile Include="src\Collision.cpp" />
     <ClCompile Include="src\ComponentManager.cpp" />
     <ClCompile Include="src\Coordinator.cpp" />

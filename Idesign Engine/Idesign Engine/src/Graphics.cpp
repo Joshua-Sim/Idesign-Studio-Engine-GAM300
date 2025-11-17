@@ -74,6 +74,7 @@ namespace Framework {
     static bool firstMouse = true;
     static bool mouseCaptured = true;
     bool Graphics::groundMode = true; // toggle with a key (e.g., F1)
+    Camera Graphics::camera{ {0.f, 1.f, 3.f} };
 
     const auto& assets = AssetManager::Instance().GetAssets();
 
