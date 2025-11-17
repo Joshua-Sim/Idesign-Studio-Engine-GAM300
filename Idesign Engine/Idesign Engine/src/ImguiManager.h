@@ -24,6 +24,7 @@
 #include "MessageSystem.h"
 #include <Graphics.h>
 #include "TextureLoaderDDS.h"
+#include "EnginePath.h"
 
 namespace Framework 
 {
@@ -142,4 +143,3 @@ namespace Framework
 		int m_fboH;
 	};
 }
-

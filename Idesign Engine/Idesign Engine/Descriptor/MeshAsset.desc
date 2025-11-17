@@ -2,40 +2,40 @@
     "count": 15,
     "entries": [
         {
-            "guid": "62fa60bd-a3d0-4575-851f-e6d04a326345",
-            "name": "Window Frame",
-            "path": "Assets\\Objects\\Window Frame.obj",
-            "vao": 33,
-            "vbo": 61,
-            "ebo": 62,
-            "indexCount": 774
+            "guid": "239cddd5-6733-44a1-927a-e3b13152a09a",
+            "name": "Frog",
+            "path": "Assets/Objects/Frog.obj",
+            "vao": 10,
+            "vbo": 19,
+            "ebo": 20,
+            "indexCount": 780
         },
         {
             "guid": "6cbaa85b-562d-4b23-9f64-8639947659cc",
             "name": "knifechoppingwithBONEFIXED4",
             "path": "Assets/Objects/knifechoppingwithBONEFIXED4.fbx",
-            "vao": 27,
-            "vbo": 49,
-            "ebo": 50,
+            "vao": 2,
+            "vbo": 3,
+            "ebo": 4,
             "indexCount": 312
+        },
+        {
+            "guid": "62fa60bd-a3d0-4575-851f-e6d04a326345",
+            "name": "Window Frame",
+            "path": "Assets\\Objects\\Window Frame.obj",
+            "vao": 1,
+            "vbo": 1,
+            "ebo": 2,
+            "indexCount": 774
         },
         {
             "guid": "814c3cff-9da8-4ad4-8a05-009b99a4ea2b",
             "name": "Door",
             "path": "Assets\\Objects\\Door.obj",
-            "vao": 35,
-            "vbo": 65,
-            "ebo": 66,
+            "vao": 3,
+            "vbo": 5,
+            "ebo": 6,
             "indexCount": 324
-        },
-        {
-            "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941",
-            "name": "Cube",
-            "path": "Assets/Objects/Cube.obj",
-            "vao": 34,
-            "vbo": 63,
-            "ebo": 64,
-            "indexCount": 36
         },
         {
             "guid": "1cc97700-7326-4df8-b677-80233b030807",
@@ -47,57 +47,57 @@
             "indexCount": 591
         },
         {
-            "guid": "e902f0d7-a022-45fc-9c17-2a98cbdb793e",
-            "name": "Cylinder",
-            "path": "Assets/Objects/Cylinder.obj",
-            "vao": 36,
-            "vbo": 67,
-            "ebo": 68,
-            "indexCount": 240
+            "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941",
+            "name": "Cube",
+            "path": "Assets/Objects/Cube.obj",
+            "vao": 4,
+            "vbo": 7,
+            "ebo": 8,
+            "indexCount": 36
         },
         {
             "guid": "9e1fcb62-0699-4a0b-ae75-d0670af44b1b",
             "name": "plane2",
             "path": "Assets/Objects/plane2.obj",
-            "vao": 6,
-            "vbo": 11,
-            "ebo": 12,
+            "vao": 7,
+            "vbo": 13,
+            "ebo": 14,
             "indexCount": 231840
         },
         {
-            "guid": "eac3e6f4-1bf2-415f-aef8-8f1269d91560",
-            "name": "Cube",
-            "path": "Assets/Objects/Cube.obj",
-            "vao": 30,
-            "vbo": 55,
-            "ebo": 56,
-            "indexCount": 36
+            "guid": "e902f0d7-a022-45fc-9c17-2a98cbdb793e",
+            "name": "Cylinder",
+            "path": "Assets/Objects/Cylinder.obj",
+            "vao": 6,
+            "vbo": 11,
+            "ebo": 12,
+            "indexCount": 240
         },
         {
             "guid": "3a68b780-632d-49d8-b45d-33b1ac035172",
             "name": "plane",
             "path": "Assets/Objects/plane.obj",
-            "vao": 8,
-            "vbo": 15,
-            "ebo": 16,
+            "vao": 9,
+            "vbo": 17,
+            "ebo": 18,
             "indexCount": 76662
         },
         {
-            "guid": "239cddd5-6733-44a1-927a-e3b13152a09a",
-            "name": "Frog",
-            "path": "Assets/Objects/Frog.obj",
-            "vao": 10,
-            "vbo": 19,
-            "ebo": 20,
-            "indexCount": 780
+            "guid": "eac3e6f4-1bf2-415f-aef8-8f1269d91560",
+            "name": "Cube",
+            "path": "Assets/Objects/Cube.obj",
+            "vao": 8,
+            "vbo": 15,
+            "ebo": 16,
+            "indexCount": 36
         },
         {
             "guid": "52f9947c-0b27-4f5a-9a18-cfef71bcfac3",
             "name": "layout2-0",
             "path": "Assets/Objects/layout2-0.obj",
-            "vao": 26,
-            "vbo": 47,
-            "ebo": 48,
+            "vao": 11,
+            "vbo": 21,
+            "ebo": 22,
             "indexCount": 40356
         },
         {
@@ -131,9 +131,9 @@
             "guid": "da032094-6e5c-40fe-b6f0-39a9d542ffe5",
             "name": "Chest",
             "path": "Assets\\Objects\\Chest.obj",
-            "vao": 31,
-            "vbo": 57,
-            "ebo": 58,
+            "vao": 15,
+            "vbo": 29,
+            "ebo": 30,
             "indexCount": 1116
         }
     ]

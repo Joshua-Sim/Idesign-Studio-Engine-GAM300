@@ -7,15 +7,7 @@
             "path": "event:/buttonclick",
             "mode": "oneshot",
             "soundType": "effect",
-            "volume": 1.0
-        },
-        {
-            "guid": "sfx-previous-006",
-            "name": "previousbutton",
-            "path": "event:/previousbutton",
-            "mode": "oneshot",
-            "soundType": "effect",
-            "volume": 1.0
+            "duration": 0.0
         },
         {
             "guid": "sfx-select-004",
@@ -23,7 +15,15 @@
             "path": "event:/selectbutton",
             "mode": "oneshot",
             "soundType": "effect",
-            "volume": 1.0
+            "duration": 0.0
+        },
+        {
+            "guid": "sfx-previous-006",
+            "name": "previousbutton",
+            "path": "event:/previousbutton",
+            "mode": "oneshot",
+            "soundType": "effect",
+            "duration": 0.0
         },
         {
             "guid": "bgm-piano-003",
@@ -31,7 +31,7 @@
             "path": "event:/piano",
             "mode": "loop",
             "soundType": "background",
-            "volume": 1.0
+            "duration": 0.0
         },
         {
             "guid": "bgm-level1-001",
@@ -39,15 +39,7 @@
             "path": "event:/Level1BGM",
             "mode": "loop",
             "soundType": "background",
-            "volume": 1.0
-        },
-        {
-            "guid": "bgm-winloop-002",
-            "name": "winloop",
-            "path": "event:/winloop",
-            "mode": "loop",
-            "soundType": "background",
-            "volume": 1.0
+            "duration": 0.0
         },
         {
             "guid": "ambient-forest-007",
@@ -55,7 +47,15 @@
             "path": "event:/ForestAmbient",
             "mode": "loop",
             "soundType": "background",
-            "volume": 1.0
+            "duration": 0.0
+        },
+        {
+            "guid": "bgm-winloop-002",
+            "name": "winloop",
+            "path": "event:/winloop",
+            "mode": "loop",
+            "soundType": "background",
+            "duration": 0.0
         }
     ]
 }

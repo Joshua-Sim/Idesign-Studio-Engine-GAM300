@@ -2,24 +2,29 @@
     "count": 8,
     "entries": [
         {
-            "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606",
-            "name": "music",
-            "path": "Assets/Textures/music.png"
-        },
-        {
             "guid": "aa40e4be-e3ce-4b7d-8806-dc0f46d34ee8",
             "name": "Backyard",
             "path": "Assets/Textures/Backyard.png"
         },
         {
-            "guid": "b2d4bb99-3396-40de-8789-01d6cf083f4e",
-            "name": "obj",
-            "path": "Assets/Textures/obj.png"
-        },
-        {
             "guid": "4caccc21-6007-45d5-bb72-a14260f29a35",
             "name": "test",
             "path": "Assets/PNG/test.png"
+        },
+        {
+            "guid": "add88db8-22f2-4599-ad64-d9abc2f87fa9",
+            "name": "Chest",
+            "path": "Assets\\Textures\\Chest.png"
+        },
+        {
+            "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606",
+            "name": "music",
+            "path": "Assets/Textures/music.png"
+        },
+        {
+            "guid": "b2d4bb99-3396-40de-8789-01d6cf083f4e",
+            "name": "obj",
+            "path": "Assets/Textures/obj.png"
         },
         {
             "guid": "0f2ece2c-6b29-43d9-a6ae-1f648d18d86d",
@@ -30,11 +35,6 @@
             "guid": "b57b4683-8581-4256-9cc5-60c900acec67",
             "name": "T_Brick_BaseColor",
             "path": "Assets\\Textures\\T_Brick_BaseColor.png"
-        },
-        {
-            "guid": "add88db8-22f2-4599-ad64-d9abc2f87fa9",
-            "name": "Chest",
-            "path": "Assets\\Textures\\Chest.png"
         },
         {
             "guid": "d4899207-ea5e-473b-870f-aade76e8a7ff",

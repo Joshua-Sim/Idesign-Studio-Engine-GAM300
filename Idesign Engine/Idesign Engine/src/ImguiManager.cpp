@@ -1005,6 +1005,8 @@ namespace Framework {
                         // Load non additive
                         Framework::sceneManager.LoadScene(filePath);
                     }
+
+                    std::filesystem::current_path(GetEngineRootPath());
                 }
                 if (ImGui::MenuItem("Save"))
                 {

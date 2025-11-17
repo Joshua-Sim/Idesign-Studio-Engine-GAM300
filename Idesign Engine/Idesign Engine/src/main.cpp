@@ -29,7 +29,7 @@
 #include "Scenemanager.h"
 #include "NavMeshSystem.h"
 #include "AnimationSystem.h"
-
+#include "EnginePath.h"
 #include "AudioLoader.h"
 #include "Audio.h"
 #include "AudioSystem.h"
@@ -64,9 +64,8 @@ int main(void)
     std::cout << "Initial working directory: " << initialCWD << std::endl;
 
     // SET PROJECT ROOT FOR ALL SYSTEMS THAT NEED IT
-    Framework::FileCheckSystem::SetProjectRoot(initialCWD.string());
-    Framework::ScriptingSystem::SetProjectRoot(initialCWD.string());
-
+    FileCheckSystem::SetProjectRoot(initialCWD.string());
+    ScriptingSystem::SetProjectRoot(initialCWD.string());
 
     SetupSignalHandlers();
     EnableMemoryLeakChecking(); // For memory check
@@ -83,6 +82,8 @@ int main(void)
     // Initialize global ECS interface and other singleton components
     ecsInterface.Init();
 
+    //AssetManager::Instance().CompileAllAssets();
+    //AssetManager::Instance().SaveAllAssets();
     AssetManager::Instance().LoadAllAssets();
     
     // To Connect Prop with ECS
@@ -134,6 +135,8 @@ int main(void)
     // Register scene manager last
     engine->AddSystem(sceneSystem.get());
     engine->AddSystem(fileCheckSystem.get());
+
+    std::filesystem::path root = GetEngineRootPath();
 
     //Folders and filetypes to check for external change
     fileCheckSystem->WatchFolder("Assets/Scripts", { ".lua" });

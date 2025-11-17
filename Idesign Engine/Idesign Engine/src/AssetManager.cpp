@@ -52,6 +52,10 @@ namespace Framework
 		std::cout << "  Saving: " << animPath << std::endl;
 		AssetManager::Instance().SaveArrayToJson(TypeName<AnimationProperties>::value, animPath, "animation");
 
+		std::string scriptPath = (root / "Assets/JSON/ScriptAsset.json").string();
+		std::cout << "  Saving: " << scriptPath << std::endl;
+		AssetManager::Instance().SaveArrayToJson(TypeName<ScriptEntry>::value, scriptPath, "scripts");
+
 		std::cout << "Files are being saved" << std::endl;
 	}
 
@@ -82,6 +86,9 @@ namespace Framework
 
 		std::cout << "  Compiling Animation:\n    JSON: " << (root / "Assets/JSON/AnimationAsset.json").string() << "\n    BIN: " << (root / "Resource/AnimationAsset.bin").string() << std::endl;
 		CompileArray<AnimationProperties>((root / "Assets/JSON/AnimationAsset.json").string(), (root / "Resource/AnimationAsset.bin").string(), (root / "Descriptor/AnimationAsset.desc").string(), g_AnimationPropertiesProps, "animation");
+
+		std::cout << "  Compiling Scripts:\n    JSON: " << (root / "Assets/JSON/ScriptAsset.json").string() << "\n    BIN: " << (root / "Resource/ScriptAsset.bin").string() << std::endl;
+		CompileArray<ScriptEntry>((root / "Assets/JSON/ScriptAsset.json").string(), (root / "Resource/ScriptAsset.bin").string(), (root / "Descriptor/ScriptAsset.desc").string(), g_ScriptEntryProps, "scripts");
 
 		std::cout << "Files are being compiled to .binary" << std::endl;
 	}
@@ -144,6 +151,10 @@ namespace Framework
 				}
 			}
 		);
+
+		std::string scriptBinPath = (root / "Resource/ScriptAsset.bin").string();
+		std::cout << "  Loading: " << scriptBinPath << std::endl;
+		AssetManager::Instance().LoadBinaryArray<ScriptEntry>(scriptBinPath, g_ScriptEntryProps);
 	}
 
 	bool AssetManager::DeleteAssetFile(const std::string& filePath)

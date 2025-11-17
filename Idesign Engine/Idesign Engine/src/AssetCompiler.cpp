@@ -15,6 +15,9 @@ namespace Framework
 {
     void loadScene(const std::string& scenePath)
     {
+        auto originalCwd = std::filesystem::current_path();
+
+        std::cout << std::filesystem::current_path() << "path before loading " << std::endl;
 
         // BUILD ABSOLUTE PATH FIRST
         std::filesystem::path absoluteScenePath;
@@ -24,7 +27,7 @@ namespace Framework
         }
         else
         {
-            absoluteScenePath = std::filesystem::path(Framework::ScriptingSystem::GetProjectRoot()) / scenePath;
+            absoluteScenePath = std::filesystem::path(ScriptingSystem::GetProjectRoot()) / scenePath;
         }
 
         std::error_code ec;
@@ -293,10 +296,11 @@ namespace Framework
                         ecsInterface.AddComponent(entity, sp);
                     }*/
                 }
-
                 sceneManager.RegisterEntityToScene(entity, cleanName);
             }
         }
+        std::filesystem::current_path(originalCwd);
+        std::cout << std::filesystem::current_path() << std::endl;
     }
 
     void saveScene(const std::string& outputPath)
@@ -496,7 +500,7 @@ namespace Framework
         // 3. Go through every component type, check if the source has it,
         //    and add a copy of it to the new entity.
 
-        // --- (Copy logic for each component) ---
+        // --- (Copy logic for each component) --- 
 
         if (ecs.HasComponent<TransformComponent>(sourceEntity))
         {
