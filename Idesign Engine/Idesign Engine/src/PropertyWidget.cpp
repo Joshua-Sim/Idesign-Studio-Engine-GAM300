@@ -235,10 +235,13 @@ namespace Framework
                     DrawAssetDropdown<TextureProperties>("Select Texture", tex);
                     DrawTexturePreview(tex);
                 }
+                
                 else if (typeName == "MeshProperties")
                 {
                     auto& mesh = *static_cast<MeshProperties*>(componentPtr);
                     DrawAssetDropdown<MeshProperties>("Select Mesh", mesh);
+
+                    mesh.materialGuid = GetDefaultMaterial();
 
                     if (ImGui::Button("Reload Mesh"))
                     {
@@ -246,11 +249,13 @@ namespace Framework
                     }
                     DrawMaterialSelector(mesh.materialGuid);
                 }
-                else if (typeName == "AudioProperties")
+                
+                else if (typeName == "AudioComponent")
                 {
-                    //auto& audio = *static_cast<AudioProperties*>(componentPtr);
-                    //DrawAssetDropdown<AudioProperties>("Select Audio", audio);
+                    auto& audio = *static_cast<AudioMetadata*>(componentPtr);
+                    DrawAssetDropdown<AudioMetadata>("Select Audio", audio);
                 }
+                
                 else if (typeName == "NavMeshComponent")
                 {
                     auto& navMesh = *static_cast<NavMeshComponent*>(componentPtr);
@@ -271,11 +276,13 @@ namespace Framework
                         navMesh = NavMeshComponent{};
                     }
                 }
+                
                 else if (typeName == "AnimationProperties")
                 {
                     auto& anim = *static_cast<AnimationProperties*>(componentPtr);
                     DrawAssetDropdown<AnimationProperties>("Select Animation", anim);
                 }
+
                 else if (typeName == "NavMeshAgentComponent")
                 {
                     auto& agent = *static_cast<NavMeshAgentComponent*>(componentPtr);
@@ -321,14 +328,14 @@ namespace Framework
                     }
                     continue;   
                 }
+
                 DrawInspector(componentPtr, *propList);
 
                 if (ImGui::Button(std::string("Remove ").append(typeName).c_str()))
                 {
-                    TypeRegistry::Instance().RemoveComponent(typeName, ecs, entity);
+                    TypeRegistry::Instance().RemoveComponent(typeName, ecs, entity); 
                     break;
                 }
-
             }
         }
 
@@ -338,10 +345,7 @@ namespace Framework
             const prop_list* propList = reg->m_pPopList;
             if (!propList || !propList->m_pName || propList->m_Props.empty()) continue;
             if (attached.contains(propList->m_pName)) continue;
-
-            if (propList->m_pName == "WindowConfig" ||
-                propList->m_pName == "PrefabProperties" || propList->m_pName == "PrefabComponent" ||
-                propList->m_pName == "MaterialMetadata" || propList->m_pName == "SceneProperties") continue;
+            if (excludedComponents.count(propList->m_pName)) continue;
 
             if (ImGui::Button(std::string("Add ").append(propList->m_pName).c_str()))
             {
@@ -352,7 +356,7 @@ namespace Framework
 
     void RegisterComponentTypes()
     {
-        // Only if the component nids to be under the entity inspectorppppp
+        // Only if the component nids to be under the entity inspector
         TypeRegistry::Instance().Register<TextureProperties>("TextureProperties", &g_TexturePropertiesProps);
         TypeRegistry::Instance().Register<MeshProperties>("MeshProperties", &g_MeshProps);
         TypeRegistry::Instance().Register<AudioComponent>("AudioComponent", &g_AudioComponentProps);
@@ -364,7 +368,7 @@ namespace Framework
         TypeRegistry::Instance().Register<AnimationProperties>("AnimationProperties", &g_AnimationPropertiesProps);
         TypeRegistry::Instance().Register<LightProperties>("LightProperties", &g_LightProps);
         TypeRegistry::Instance().Register<ScriptProperties>("ScriptProperties", &g_ScriptPropertiesProps);
-
+        TypeRegistry::Instance().Register<ScriptEntry>("ScriptEntry", &g_ScriptEntryProps);
     }
 
     void AutoRegisterAllReflectedComponents(Coordinator& ecs)
@@ -372,8 +376,7 @@ namespace Framework
         for (global_registration* reg = global_registration::m_pHead; reg; reg = reg->m_pNext)
         {
             const prop_list* propList = reg->m_pPopList;
-            if (!propList || !propList->m_pName)
-                continue;
+            if (!propList || !propList->m_pName) continue;
 
             const std::string& typeName = propList->m_pName;
             if (auto* getter = TypeRegistry::Instance().Get(typeName))

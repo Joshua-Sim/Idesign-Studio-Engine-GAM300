@@ -28,11 +28,6 @@ namespace Framework
     // Scripting Stuff
     namespace fs = std::filesystem;
 
-    // Script file lists
-    static std::vector<std::string> g_scriptFullPaths;   // "Assets/Scripts/hello.lua"
-    static std::vector<std::string> g_scriptLabels;      // "hello.lua"
-    static std::vector<const char*> g_scriptLabelItems;  // ImGui items
-
 	// For Entity Inspector
 	void DrawInspector(void* pObject, const prop_list& propList);
 	void DrawEntityInspector(Entity entity, Coordinator& ecs);
@@ -41,6 +36,18 @@ namespace Framework
 	void RegisterComponentTypes();
 	void AutoRegisterAllReflectedComponents(Coordinator& ecs);
     
+    static const std::unordered_set<std::string> excludedComponents = 
+    {
+        "WindowConfig",
+        "PrefabProperties",
+        "PrefabComponent",
+        "MaterialMetadata",
+        "MaterialProperties",
+        "SceneProperties",
+        "AudioMetadata",
+        "ScriptEntry"
+    };
+
     //------------------------------------------------------------------------------------------------------------------------------------
     //  TEMPLATE FUNCTIONS FOR WIDGETS
     //------------------------------------------------------------------------------------------------------------------------------------
@@ -330,69 +337,32 @@ namespace Framework
         }
     }
 
-    static void RefreshScriptFileList()
+    inline void DrawScriptPropertiesWidget(ScriptProperties& comp)
     {
-        g_scriptFullPaths.clear();
-        g_scriptLabels.clear();
-        g_scriptLabelItems.clear();
-
-        fs::path scriptsDir = "Assets/Scripts";
-
-        if (!fs::exists(scriptsDir))
-            return;
-
-        for (auto& entry : fs::directory_iterator(scriptsDir))
-        {
-            if (!entry.is_regular_file()) continue;
-            if (entry.path().extension() != ".lua") continue;
-
-            std::string full = entry.path().string();
-            std::replace(full.begin(), full.end(), '\\', '/');  // normalize
-
-            g_scriptFullPaths.push_back(full);
-            g_scriptLabels.push_back(entry.path().filename().string());
-        }
-
-        for (auto& label : g_scriptLabels)
-            g_scriptLabelItems.push_back(label.c_str());
-    }
-
-    static int FindScriptIndex(const std::string& scriptPath)
-    {
-        // first try full path
-        for (int i = 0; i < (int)g_scriptFullPaths.size(); ++i)
-        {
-            if (g_scriptFullPaths[i] == scriptPath)
-                return i;
-        }
-
-        // fallback: match by filename
-        fs::path p(scriptPath);
-        std::string file = p.filename().string();
-        for (int i = 0; i < (int)g_scriptLabels.size(); ++i)
-        {
-            if (g_scriptLabels[i] == file)
-                return i;
-        }
-        return -1;
-    }
-
-    static void DrawScriptPropertiesWidget(Framework::ScriptProperties& comp)
-    {
-        // Ensure list is filled once
-        static bool scriptsScanned = false;
-        if (!scriptsScanned)
-        {
-            RefreshScriptFileList();
-            scriptsScanned = true;
-        }
-
-        if (ImGui::Button("Refresh Script List"))
-            RefreshScriptFileList();
-
         ImGui::Separator();
+        ImGui::Text("Attached Scripts");
 
-        // One block per ScriptEntry
+        // Build dropdown list from AssetManager (all ScriptAssets)
+        std::vector<std::string> assetNames;
+        std::vector<AssetHandle> assetGuids;
+        for (const auto& [key, entry] : AssetManager::Instance().GetAssets())
+        {
+            if (entry.typeName != TypeName<ScriptEntry>::value) // <-- use your ScriptAsset type
+                continue;
+
+            auto* asset = static_cast<ScriptEntry*>(entry.pObject.get());
+            if (!asset) continue;
+
+            std::string name = asset->scriptPath;
+            assetNames.push_back(name);
+            assetGuids.push_back(key.guid);
+        }
+
+        std::vector<const char*> labelPtrs;
+        for (auto& s : assetNames)
+            labelPtrs.push_back(s.c_str());
+
+        // Now draw one dropdown per ScriptEntry
         for (size_t i = 0; i < comp.scripts.size(); ++i)
         {
             auto& entry = comp.scripts[i];
@@ -400,36 +370,47 @@ namespace Framework
 
             ImGui::Text("Script %d", (int)i);
 
-            int currentIndex = FindScriptIndex(entry.scriptPath);
-
-            if (!g_scriptLabelItems.empty())
+            int currentIndex = -1;
+            for (size_t j = 0; j < assetGuids.size(); ++j)
             {
-                // Show only filename in the dropdown
-                if (ImGui::Combo("##ScriptCombo",
-                    &currentIndex,
-                    g_scriptLabelItems.data(),
-                    (int)g_scriptLabelItems.size()))
+                if (assetGuids[j] == entry.guid)
                 {
-                    if (currentIndex >= 0 &&
-                        currentIndex < (int)g_scriptFullPaths.size())
+                    currentIndex = static_cast<int>(j);
+                    break;
+                }
+            }
+
+            if (!labelPtrs.empty())
+            {
+                if (ImGui::Combo("##ScriptCombo", &currentIndex, labelPtrs.data(), (int)labelPtrs.size()))
+                {
+                    if (currentIndex >= 0 && currentIndex < (int)assetGuids.size())
                     {
-                        // store full path in the component
-                        entry.scriptPath = g_scriptFullPaths[currentIndex];
-                        entry.initialized = false;
-                        entry.lastWriteTicks = 0;
+                        if (entry.guid != assetGuids[currentIndex]) // only if changed
+                        {
+                            entry.guid = assetGuids[currentIndex];
+                            auto* asset = AssetManager::Instance().Get<ScriptEntry>(entry.guid);
+                            if (asset)
+                                entry.scriptPath = asset->scriptPath;
+
+                            entry.initialized = false;
+                            entry.lastWriteTicks = 0;
+                        }
                     }
                 }
             }
             else
             {
-                ImGui::TextDisabled("No Lua scripts in Assets/Scripts");
-            }          
+                ImGui::TextDisabled("No ScriptAssets loaded");
+            }
+
+            ImGui::Checkbox("Hot Reload", &entry.hotReload);
 
             if (ImGui::Button("Remove Script"))
             {
                 comp.scripts.erase(comp.scripts.begin() + i);
                 ImGui::PopID();
-                break;      // list changed, bail out of loop this frame
+                break;
             }
 
             ImGui::Separator();
@@ -439,7 +420,8 @@ namespace Framework
         if (ImGui::Button("Add Script Slot"))
         {
             ScriptEntry newEntry;
-            newEntry.scriptPath.clear();    // user will pick from combo
+            newEntry.guid = AssetHandle{};   // empty until user picks
+            newEntry.scriptPath.clear();
             comp.scripts.push_back(newEntry);
         }
     }

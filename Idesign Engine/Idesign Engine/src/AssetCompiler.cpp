@@ -274,12 +274,15 @@ namespace Framework
                     const auto& scriptObj = components["ScriptProperties"];
                     ScriptProperties sp;
 
-                    if (scriptObj.HasMember("guid") && scriptObj["guid"].IsString())
+                    if (scriptObj.HasMember("scripts") && scriptObj["scripts"].IsArray())
                     {
                         const auto& arr = scriptObj["scripts"].GetArray();
                         for (const auto& s : arr)
                         {
                             ScriptEntry entry;
+
+                            if (s.HasMember("guid") && s["guid"].IsString())
+                                entry.guid = AssetHandle{ s["guid"].GetString() };
 
                             if (s.HasMember("scriptPath") && s["scriptPath"].IsString())
                                 entry.scriptPath = s["scriptPath"].GetString();
@@ -291,10 +294,10 @@ namespace Framework
                         }
                     }
 
-                    /*if (!sp.scripts.empty())
+                    if (!sp.scripts.empty())
                     {
                         ecsInterface.AddComponent(entity, sp);
-                    }*/
+                    }
                 }
                 sceneManager.RegisterEntityToScene(entity, cleanName);
             }

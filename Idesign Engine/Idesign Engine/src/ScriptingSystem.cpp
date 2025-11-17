@@ -311,6 +311,7 @@ namespace Framework {
 
     void ScriptingSystem::Initialize() {
         // 1) Register ScriptComponent (your engine’s pattern)
+        ecsInterface.RegisterComponent<ScriptEntry>();
         ecsInterface.RegisterComponent<ScriptProperties>();
 
         // 2) Set system signature

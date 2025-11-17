@@ -202,7 +202,6 @@ namespace Framework {
         ecsInterface.RegisterComponent<MaterialProperties>();
         ecsInterface.RegisterComponent<MaterialMetadata>();
         ecsInterface.RegisterComponent<LightProperties>();
-        
         //test
 
         ImguiManager::LogSuccess("Graphics components registered", "Graphics");
