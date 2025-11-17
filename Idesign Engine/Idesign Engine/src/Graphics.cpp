@@ -87,12 +87,19 @@ namespace Framework {
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
         window = glfwCreateWindow(config->x, config->y, config->programName.c_str(), nullptr, nullptr);
-        if (!window) { std::cerr << "Window creation failed\n"; glfwTerminate(); return; }
+        if (!window) { 
+            std::cerr << "Window creation failed\n"; glfwTerminate(); 
+			ImguiManager::LogError("Window creation failed", "Graphics");
+            return; 
+        }
         glfwMakeContextCurrent(window);
         glfwSwapInterval(0); //disable V Sync
 
         //glewExperimental = GL_TRUE; //optional to include can remove
-        if (glewInit() != GLEW_OK) { std::cerr << "GLEW init failed\n"; return; }
+        if (glewInit() != GLEW_OK) { 
+            std::cerr << "GLEW init failed\n"; 
+			ImguiManager::LogError("GLEW init failed", "Graphics");
+            return; }
     }
 
     // Destructor
@@ -160,6 +167,7 @@ namespace Framework {
                 if (animProps)
                 {
                     std::cout << "[Graphics Init] Found anim data for mesh '" << props.name << "'. Loading as animated." << std::endl;
+					ImguiManager::Log("[Graphics Init] Found anim data for mesh '" + props.name + "'. Loading as animated.", "Graphics");
 
                     // *** Pass the animProps (with skeleton) to the animated mesh loader ***
                     MeshLoader::loadAnimatedMesh(props.path, *animProps, props);
@@ -168,6 +176,7 @@ namespace Framework {
                 {
                     // No anim data found, load as a static mesh
                     std::cout << "[Graphics Init] No anim data for mesh '" << props.name << "'. Loading as static." << std::endl;
+					ImguiManager::Log("[Graphics Init] No anim data for mesh '" + props.name + "'. Loading as static.", "Graphics");
                     MeshLoader::loadMesh(props.path, props);
                 }
             });

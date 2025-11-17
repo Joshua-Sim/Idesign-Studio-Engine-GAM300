@@ -16,6 +16,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include "ImguiManager.h"
 
 GLint
 UE_Shader::GetUniformLocation(GLchar const* name, bool exit_on_error) 
@@ -24,6 +25,7 @@ UE_Shader::GetUniformLocation(GLchar const* name, bool exit_on_error)
     if (location < 0) 
     {
         std::cout << "Uniform variable " << name << " doesn't exist" << std::endl;
+		ImguiManager::Log("Uniform variable " + std::string(name) + " doesn't exist", "GraphicsShader");
 
         if (exit_on_error) std::exit(EXIT_FAILURE);
     }
@@ -68,12 +70,14 @@ bool UE_Shader::LoadFromFiles(const std::string& vertexPath, const std::string& 
     for (const auto& shader : shaders) {
         if (!CompileShaderFromFile(shader.first, shader.second)) {
             std::cout << "Failed to load shader: " << shader.second << std::endl;
+			ImguiManager::Log("Failed to load shader: " + shader.second, "GraphicsShader");
             return false;
         }
     }
 
     if (!Link() || !Validate()) {
         std::cout << "Shader program linking or validation failed!" << std::endl;
+		ImguiManager::Log("Shader program linking or validation failed!", "GraphicsShader");
         return false;
     }
 
@@ -271,6 +275,8 @@ void UE_Shader::PrintActiveAttribs() const {
   GLchar* pname = new GLchar[max_length];
   std::cout << "Index\t|\tName\n";
   std::cout << "----------------------------------------------------------------------\n";
+  ImguiManager::Log("Index\t|\tName", "GraphicsShader");
+  ImguiManager::Log("----------------------------------------------------------------------", "GraphicsShader");
   for (GLint i = 0; i < num_attribs; ++i) {
     GLsizei written;
     GLint size;
@@ -278,8 +284,10 @@ void UE_Shader::PrintActiveAttribs() const {
     glGetActiveAttrib(pgm_handle, i, max_length, &written, &size, &type, pname);
     GLint loc = glGetAttribLocation(pgm_handle, pname);
     std::cout << loc << "\t\t" << pname << std::endl;
+	ImguiManager::Log(std::to_string(loc) + "\t\t" + std::string(pname), "GraphicsShader");
   }
   std::cout << "----------------------------------------------------------------------\n";
+  ImguiManager::Log("----------------------------------------------------------------------", "GraphicsShader");
   delete[] pname;
 #else
   GLint numAttribs;
@@ -295,6 +303,7 @@ void UE_Shader::PrintActiveAttribs() const {
     glGetProgramResourceName(pgm_handle, GL_PROGRAM_INPUT, i, nameBufSize, NULL, pname);
     //   std::cout << results[2] << " " << pname << " " << getTypeString(results[1]) << std::endl;
     std::cout << results[2] << " " << pname << " " << results[1] << std::endl;
+	ImguiManager::Log(std::to_string(results[2]) + " " + std::string(pname) + " " + std::to_string(results[1]), "GraphicsShader");
     delete[] pname;
   }
 #endif
@@ -307,7 +316,9 @@ void UE_Shader::PrintActiveUniforms() const {
   GLint num_uniforms;
   glGetProgramiv(pgm_handle, GL_ACTIVE_UNIFORMS, &num_uniforms);
   std::cout << "Location\t|\tName\n";
+  ImguiManager::Log("Location\t|\tName", "GraphicsShader");
   std::cout << "----------------------------------------------------------------------\n";
+  ImguiManager::Log("----------------------------------------------------------------------", "GraphicsShader");
   for (GLint i = 0; i < num_uniforms; ++i) {
     GLsizei written;
     GLint size;
@@ -315,7 +326,9 @@ void UE_Shader::PrintActiveUniforms() const {
     glGetActiveUniform(pgm_handle, i, max_length, &written, &size, &type, pname);
     GLint loc = glGetUniformLocation(pgm_handle, pname);
     std::cout << loc << "\t\t" << pname << std::endl;
+	ImguiManager::Log(std::to_string(loc) + "\t\t" + std::string(pname), "GraphicsShader");
   }
   std::cout << "----------------------------------------------------------------------\n";
+  ImguiManager::Log("----------------------------------------------------------------------", "GraphicsShader");
   delete[] pname;
 }
