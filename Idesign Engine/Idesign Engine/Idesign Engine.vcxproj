@@ -175,6 +175,7 @@
     <ClInclude Include="src\FileCheckSystem.h" />
     <ClInclude Include="src\FontShader.h" />
     <ClInclude Include="src\FontSystem.h" />
+    <ClInclude Include="src\GameHUD.h" />
     <ClInclude Include="src\Graphics.h" />
     <ClInclude Include="src\GraphicsShader.h" />
     <ClInclude Include="src\GraphicsWindows.h" />
@@ -338,6 +339,7 @@
     <ClCompile Include="src\EntityManager.cpp" />
     <ClCompile Include="src\FileCheckSystem.cpp" />
     <ClCompile Include="src\FontSystem.cpp" />
+    <ClCompile Include="src\GameHUD.cpp" />
     <ClCompile Include="src\Graphics.cpp" />
     <ClCompile Include="src\GraphicsShader.cpp" />
     <ClCompile Include="src\ImguiManager.cpp" />

@@ -60,7 +60,7 @@
 #include "TextureLoaderDDS.h"
 #include "PhysicsSystem.h"
 #include "AnimationLoader.h"
-
+#include "EngineState.h"
 
 extern Framework::FontSystem fontSystem;
 extern Framework::Coordinator ecsInterface;
@@ -74,7 +74,7 @@ namespace Framework {
     static bool firstMouse = true;
     static bool mouseCaptured = true;
     bool Graphics::groundMode = true; // toggle with a key (e.g., F1)
-
+   // EngineState engineState;
     const auto& assets = AssetManager::Instance().GetAssets();
 
     // Constructor
@@ -90,7 +90,7 @@ namespace Framework {
         if (!window) { std::cerr << "Window creation failed\n"; glfwTerminate(); return; }
         glfwMakeContextCurrent(window);
         glfwSwapInterval(0); //disable V Sync
-
+        
         //glewExperimental = GL_TRUE; //optional to include can remove
         if (glewInit() != GLEW_OK) { std::cerr << "GLEW init failed\n"; return; }
     }
@@ -400,7 +400,8 @@ namespace Framework {
         m_debugMeshes[DebugShapeType::Sphere] = &plane; // Remember 'plane' is your sphere mesh
         m_debugMeshes[DebugShapeType::Triangle] = &triangle;
 
-
+        //jay game hud
+        m_gameHUD.Initialize(window);
         //jay double buffer pick fbo
         auto makePickFBO = [&](int w, int h, int idx) {
             glGenFramebuffers(1, &pickFBO[idx]);
@@ -496,7 +497,15 @@ namespace Framework {
         }
 
         float now = (float)glfwGetTime();
-        float dt = now - lastTime; lastTime = now;
+        float dt = now - lastTime; 
+        lastTime = now;
+       // process_input(dt);
+        // NEW: only move the game when in Play mode
+      
+        if (!engineState.IsPlay()||engineState.IsPaused())
+        {
+            dt = 0.0f;
+        }
         process_input(dt);
 
         DirectionalLightCPU frameSun;
@@ -833,7 +842,8 @@ namespace Framework {
             finalShader.setFloat("exposure", hdrExposure);
             finalShader.setFloat("bloomStrength", bloomStrength);
             renderQuad();
-
+            // >>> In-game HUD drawn directly into the game framebuffer <<<
+            m_gameHUD.Draw(fontSystem, w, h);
             // HUD text for view 0
             fontSystem.RenderText2D("Score: 100", 10.f, 10.0f, 1.f,
                 glm::vec3(1.0f, 1.0f, 0.5f), (float)w, (float)h);
@@ -1258,7 +1268,14 @@ namespace Framework {
         WindowConfig* config = AssetManager::Instance().Get<WindowConfig>(AssetManager::Instance().FindGuid<WindowConfig>());
         static float lastX = config->x * 0.5f;
         static float lastY = config->y * 0.5f;
-
+        auto* g = static_cast<Graphics*>(glfwGetWindowUserPointer(window));
+        if (!g) return;
+        if (!g->mouseCaptured) return;
+        // m_mouseTargetView == 0  → grounded / game camera
+        if (!engineState.IsPlay())
+        {
+            return;
+        }
         if (!mouseCaptured) return;
         if (firstMouse) {
             lastX = (float)xpos;
@@ -1271,10 +1288,6 @@ namespace Framework {
         lastX = (float)xpos;
         lastY = (float)ypos;
 
-        auto* g = static_cast<Graphics*>(glfwGetWindowUserPointer(window));
-        if (!g) return;
-        if (!g->mouseCaptured) return;
-
         Camera& cam = (g->m_mouseTargetView == 1) ? g->sceneCamera : g->gameCamera;
         cam.processMouseMovement(xoffset, yoffset);
     }
@@ -1283,6 +1296,10 @@ namespace Framework {
     // Can be pushed to input handler
     void Graphics::process_input(float dt)
     {
+        if (!engineState.IsPlay())
+        {
+            return;
+        }
         const bool editorActive = (m_mouseTargetView == 1);   // 0 = game, 1 = editor
         Camera& cam = editorActive ? sceneCamera : gameCamera;
 
@@ -1299,7 +1316,6 @@ namespace Framework {
             if (rightMouseState == GLFW_PRESS)
             {
                 // Lock cursor for smooth rotation
-
                 double xpos, ypos;
                 glfwGetCursorPos(window, &xpos, &ypos);
 
@@ -1548,7 +1564,7 @@ namespace Framework {
         renderQuad();
 
         // === Optional: per-view HUD/text ===
-        // fontSystem.RenderText2D("Score: 100", 10.f, 10.f, 1.f, {1,1,0.5f}, (float)screenW, (float)screenH);
+         //fontSystem.RenderText2D("Score: 100", 10.f, 10.f, 1.f, {1,1,0.5f}, (float)screenW, (float)screenH);
 
         // === Handle a queued pick for THIS view ===
         if (pendingPickUV.x >= 0.0f && pendingPickUV.y >= 0.0f) {

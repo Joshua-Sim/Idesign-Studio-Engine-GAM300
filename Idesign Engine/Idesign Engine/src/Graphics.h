@@ -25,8 +25,7 @@
 #include "MeshLoader.h"
 #include "TextureLoader.h"
 #include "ShaderProgram.h"
-
-#include "AssetManager.h"
+#include "GameHUD.h"
 #include "WindowConfigProperties.h"
 #include "MeshProperties.h"
 #include "TextProperties.h"
@@ -87,6 +86,7 @@ namespace Framework
         int  GetMouseTargetView() const;
         void CaptureMouse(bool on);
     private:
+        GameHUD m_gameHUD;
         static void framebuffer_size_callback(GLFWwindow*, int, int);
         static void mouse_callback(GLFWwindow*, double, double);
         glm::vec2 pendingPickUV0{ -1.f, -1.f };  // main viewport

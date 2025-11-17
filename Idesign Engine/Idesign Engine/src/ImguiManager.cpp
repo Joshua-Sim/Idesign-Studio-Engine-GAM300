@@ -2599,32 +2599,110 @@ namespace Framework {
 
                 // Render the framebuffer texture within the calculated size
                 //int mainView = 0;
+                // This draws your game framebuffer into the ImGui window
                 ImGui::Image(
                     (ImTextureID)(intptr_t)GetGameTexture(g_MainViewIndex),
                     ImVec2(newWidth, newHeight), ImVec2(0, 1), ImVec2(1, 0)
                 );
 
-                // jay handle mouse click and get UV coordinates
-                if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
-                    m_graphicsSystem->SetMouseTargetView(g_MainViewIndex);
-                    ImVec2 min = ImGui::GetItemRectMin();
-                    ImVec2 max = ImGui::GetItemRectMax();
-                    ImVec2 pos = ImGui::GetIO().MousePos;
+                //ImVec2 imageMin = ImGui::GetItemRectMin();
+                //ImVec2 imageMax = ImGui::GetItemRectMax();
 
-                    float u = (pos.x - min.x) / (max.x - min.x);
-                    float v = (pos.y - min.y) / (max.y - min.y);
-                    v = 1.0f - v;
+                //if (!engineState.IsPlay()) {
+                //    ImDrawList* drawList = ImGui::GetWindowDrawList();
+                //    //Dim the background over the game view
+                //    drawList->AddRectFilled(
+                //        imageMin,
+                //        imageMax,
+                //        IM_COL32(0, 0, 0, 160) 
+                //    );
 
-                    // hand normalized UV to Graphics for the readback
-                    m_graphicsSystem->SetPickViewIndex(g_MainViewIndex); // assuming view index 0 for main viewport
-                    if (g_MainViewIndex == 0) {
-                        m_graphicsSystem->RequestPickUV(u, v);
-                    }
-                    else {
-                        m_graphicsSystem->RequestPickUVSecondary(u, v);
-                    }
+                //    //Center a big Play button in the middle of the image
+                //    ImVec2 buttonSize(150.0f, 60.0f);
+                //    ImVec2 center(
+                //        (imageMin.x + imageMax.x) * 0.5f,
+                //        (imageMin.y + imageMax.y) * 0.5f
+                //    );
+                //    ImVec2 buttonPos(
+                //        center.x - buttonSize.x * 0.5f,
+                //        center.y - buttonSize.y * 0.5f
+                //    );
+                //    // Position cursor in screen space so the button sits on top of the image
+                //    ImGui::SetCursorScreenPos(buttonPos);
 
-                }
+                //    if (ImGui::Button("Play", buttonSize))
+                //    {
+                //        engineState.SetPlay(true);
+                //        engineState.SetPaused(false);
+                //    }
+
+
+                //}
+                //else
+                //{
+                //    // pause and restart shown top right
+                //    bool clickConsumedByUI = false;
+                //    ImVec2 buttonSize(90.0f, 30.0f);
+                //    float padding = 10.0f;
+
+                //    // Pause / Resume in top-right
+                //    ImVec2 pausePos(
+                //        imageMax.x - buttonSize.x - padding,
+                //        imageMin.y + padding
+                //    );
+                //    ImGui::SetCursorScreenPos(pausePos);
+
+                //    const char* pauseLabel = engineState.IsPaused() ? "Resume" : "Pause";
+                //    if (ImGui::Button(pauseLabel, buttonSize))
+                //    {
+                //        engineState.SetPaused(!engineState.IsPaused());
+                //        clickConsumedByUI = true;
+                //    }
+
+
+                //    // Restart just below Pause
+                //    ImVec2 restartPos(
+                //        pausePos.x,
+                //        pausePos.y + buttonSize.y + 5.0f
+                //    );
+                //    ImGui::SetCursorScreenPos(restartPos);
+
+                //    if (ImGui::Button("Restart", buttonSize))
+                //    {
+                //        engineState.SetPaused(false);
+                //        engineState.SetPlay(false);  // go back to Play screen
+
+                //     
+
+                //        clickConsumedByUI = true;
+                //    }
+
+                   // if (!clickConsumedByUI) {
+                        // jay handle mouse click and get UV coordinates
+                        if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
+                            m_graphicsSystem->SetMouseTargetView(g_MainViewIndex);
+                            ImVec2 min = ImGui::GetItemRectMin();
+                            ImVec2 max = ImGui::GetItemRectMax();
+                            ImVec2 pos = ImGui::GetIO().MousePos;
+
+                            float u = (pos.x - min.x) / (max.x - min.x);
+                            float v = (pos.y - min.y) / (max.y - min.y);
+                            v = 1.0f - v;
+
+                            // hand normalized UV to Graphics for the readback
+                            m_graphicsSystem->SetPickViewIndex(g_MainViewIndex); // assuming view index 0 for main viewport
+                            if (g_MainViewIndex == 0) {
+                                m_graphicsSystem->RequestPickUV(u, v);
+                            }
+                            else {
+                                m_graphicsSystem->RequestPickUVSecondary(u, v);
+                            }
+
+                        }
+                    //}
+
+                
+                
             }
             ImGui::End();
 
