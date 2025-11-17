@@ -38,6 +38,8 @@
 #include "lua.hpp"
 #include "PhysicsSystem.h"
 #include "FileCheckSystem.h"
+#include "EnginePath.h"
+#include <filesystem>
 
 using namespace Framework;
 
@@ -62,6 +64,11 @@ int main(void)
     // Save the initial working directory
     std::filesystem::path initialCWD = std::filesystem::current_path();
     std::cout << "Initial working directory: " << initialCWD << std::endl;
+
+    // SET PROJECT ROOT FOR ALL SYSTEMS THAT NEED IT
+    Framework::FileCheckSystem::SetProjectRoot(initialCWD.string());
+    Framework::ScriptingSystem::SetProjectRoot(initialCWD.string());
+
 
     SetupSignalHandlers();
     EnableMemoryLeakChecking(); // For memory check
@@ -130,14 +137,17 @@ int main(void)
     engine->AddSystem(sceneSystem.get());
     engine->AddSystem(fileCheckSystem.get());
 
-    //Folders and filetypes to check for external change
-    fileCheckSystem->WatchFolder("Assets/Scripts", { ".lua" });
-    fileCheckSystem->WatchFolder("Assets/JSON", { ".json", ".cfg" });
-    fileCheckSystem->WatchFolder("Assets/shaders", { ".glsl" });
-    fileCheckSystem->WatchFolder("Assets/Textures", { ".png", ".jpg" });
-    fileCheckSystem->WatchFolder("Scenes", { ".scene" });
-    fileCheckSystem->WatchFolder("Assets/Prefabs", { ".prefab" });
-    fileCheckSystem->WatchFolder("Assets/Materials", { ".material" });
+    // Get the absolute root path of the engine
+    std::filesystem::path root = GetEngineRootPath();
+
+    // Folders and filetypes to check for external change
+    fileCheckSystem->WatchFolder((root / "Assets/Scripts").string(), { ".lua" });
+    fileCheckSystem->WatchFolder((root / "Assets/JSON").string(), { ".json", ".cfg" });
+    fileCheckSystem->WatchFolder((root / "Assets/shaders").string(), { ".glsl" });
+    fileCheckSystem->WatchFolder((root / "Assets/Textures").string(), { ".png", ".jpg" });
+    fileCheckSystem->WatchFolder((root / "Scenes").string(), { ".scene" });
+    fileCheckSystem->WatchFolder((root / "Assets/Prefabs").string(), { ".prefab" });
+    fileCheckSystem->WatchFolder((root / "Assets/Materials").string(), { ".material" });
 
     // Initialize the engine and run the main game loop
     engine->Initialize();

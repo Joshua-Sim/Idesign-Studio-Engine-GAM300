@@ -28,6 +28,7 @@
 #include "fmod.h"
 #include "fmod_studio.h"
 #include <random> 
+#include <filesystem>
 
 extern Framework::Coordinator ecsInterface;
 
@@ -41,6 +42,14 @@ static bool isPropertiesWindowOpen = false;                         // Allows op
 static int  g_MainViewIndex = 0;                                   // Main view index for framebuffers
 static bool g_prevF2 = false;                                     // Previous state of F2 key
 static bool g_prevF3 = false;                                     // Previous state of F3 key
+
+namespace fs = std::filesystem;
+
+// Converts "Assets/Scripts/hello.lua" → "hello.lua"
+static std::string GetFileNameOnly(const std::string& p)
+{
+    return fs::path(p).filename().string();
+}
 
 namespace Framework {
     float projWidth{};
@@ -62,6 +71,12 @@ namespace Framework {
 
     static TextureProperties g_ObjIcon;
     static bool g_ObjIconLoaded = false;
+
+    // --- Script file browser helpers ---
+    static std::vector<std::string> g_scriptFiles;
+    static std::vector<const char*> g_scriptFileItems;
+    static std::vector<std::string> g_scriptDisplayNames; // short names: "hello.lua"
+
 
 
     //Initialize static instance 
@@ -227,6 +242,59 @@ namespace Framework {
         }
     }
 
+    // Scipt Folder Loader
+    static void RefreshScriptFileList()
+    {
+        g_scriptFiles.clear();
+        g_scriptDisplayNames.clear();
+        g_scriptFileItems.clear();
+
+        namespace fs = std::filesystem;
+
+        // BUILD ABSOLUTE PATH FROM PROJECT ROOT
+        fs::path scriptsDir = fs::path(Framework::ScriptingSystem::GetProjectRoot()) / "Assets/Scripts";
+
+        if (!fs::exists(scriptsDir))
+        {
+            std::cout << "[RefreshScriptFileList] Scripts directory doesn't exist: " << scriptsDir << std::endl;
+            return;
+        }
+
+        // 1) Collect full paths
+        for (auto& entry : fs::directory_iterator(scriptsDir))
+        {
+            if (!entry.is_regular_file()) continue;
+            if (entry.path().extension() != ".lua") continue;
+
+            std::string rel = entry.path().string();
+            std::replace(rel.begin(), rel.end(), '\\', '/');
+            g_scriptFiles.push_back(rel);
+        }
+
+        // 2) Build display names + ImGui labels (only "hello.lua")
+        for (auto& full : g_scriptFiles)
+        {
+            g_scriptDisplayNames.push_back(::GetFileNameOnly(full));
+        }
+
+        for (auto& name : g_scriptDisplayNames)
+        {
+            g_scriptFileItems.push_back(name.c_str());
+        }
+
+        std::cout << "[RefreshScriptFileList] Found " << g_scriptFiles.size() << " Lua scripts\n";
+    }
+
+    static int FindScriptIndex(const std::string& path)
+    {
+        for (int i = 0; i < (int)g_scriptFiles.size(); ++i)
+        {
+            if (g_scriptFiles[i] == path)
+                return i;
+        }
+        return -1;
+    }
+
     // Error Detection for Audio
     void ImguiManager::RenderErrorPopup()
     {
@@ -351,7 +419,7 @@ namespace Framework {
                             {
                                 loaded = true;
                             }
-                            else std::cerr << "[TextureLoader] Failed to load texture: " << finalAbsolutePath << std::endl;
+                            else std::cerr << "\n===============================\n[TextureLoader] Failed to load texture: " << finalAbsolutePath << "\n=======================\n" << std::endl;
                         }
 
                         if (loaded)
@@ -2354,6 +2422,83 @@ namespace Framework {
                     // Automate Generate Entity Inspector
                     DrawEntityInspector(selectedEntity, ecsInterface);
 
+                    // -------- Script Component UI --------
+                    if (ImGui::CollapsingHeader("Script Component", ImGuiTreeNodeFlags_DefaultOpen))
+                    {
+                        // Ensure the script list is populated
+                        static bool scriptsScanned = false;
+                        if (!scriptsScanned)
+                        {
+                            RefreshScriptFileList();
+                            scriptsScanned = true;
+                        }
+
+                        // Allow manual refresh (in case you add new .lua files while engine is running)
+                        if (ImGui::Button("Refresh Script List"))
+                        {
+                            RefreshScriptFileList();
+                        }
+
+                        // If entity has no ScriptComponent yet
+                        if (!ecsInterface.HasComponent<ScriptComponent>(selectedEntity))
+                        {
+                            if (ImGui::Button("Add Script Component"))
+                            {
+                                ecsInterface.AddComponent<ScriptComponent>(selectedEntity, ScriptComponent{});
+                            }
+                        }
+                        else
+                        {
+                            auto& sc = ecsInterface.GetComponent<ScriptComponent>(selectedEntity);
+
+                            // Show each script slot
+                            for (size_t i = 0; i < sc.scripts.size(); ++i)
+                            {
+                                auto& slot = sc.scripts[i];
+                                ImGui::PushID((int)i);
+
+                                int currentIndex = FindScriptIndex(slot.scriptPath);
+
+                                ImGui::Text("Script %d", (int)i);
+
+                                if (!g_scriptFileItems.empty())
+                                {
+                                    if (ImGui::Combo("##ScriptCombo", &currentIndex, g_scriptFileItems.data(), (int)g_scriptFileItems.size()))
+                                    {
+                                        if (currentIndex >= 0 && currentIndex < (int)g_scriptFiles.size())
+                                        {
+                                            slot.scriptPath = g_scriptFiles[currentIndex];
+                                            slot.initialized = false;
+                                            slot.lastWriteTicks = 0;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    ImGui::TextDisabled("No Lua scripts in Assets/Scripts");
+                                }
+
+                                if (ImGui::Button("Remove Script"))
+                                {
+                                    sc.scripts.erase(sc.scripts.begin() + i);
+                                    ImGui::PopID();
+                                    break;
+                                }
+
+                                ImGui::Separator();
+                                ImGui::PopID();
+                            }
+
+                            if (ImGui::Button("Add Script Slot"))
+                            {
+                                ScriptInstance newSlot;
+                                newSlot.scriptPath.clear(); // user will pick from combo
+                                sc.scripts.push_back(newSlot);
+                            }
+                        }
+                    }
+
+
                     // Reset selectedEntity if the properties window is closed
                     if (!isPropertiesWindowOpen)
                     {
@@ -2480,78 +2625,110 @@ namespace Framework {
                     }
 
                 }
-
-                // Drag and drop Prefab to spawn in viewport
-                if (ImGui::BeginDragDropTarget())
-                {
-                    if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("PREFAB_GUID"))
-                    {
-                        const char* prefabGUID = static_cast<const char*>(payload->Data);
-
-                        // Spawn the prefab
-                        sceneManager.SpawnPrefab(prefabGUID);
-                    }
-                    ImGui::EndDragDropTarget();
-                }
             }
             ImGui::End();
 
-            //Debug second viewport window
+            // Debug second viewport window
             if (ImGui::Begin("Secondary Viewport"))
             {
+                // --- 1. Viewport Sizing and Letterboxing ---
                 ImVec2 viewportSize = ImGui::GetContentRegionAvail();
                 float aspectRatio = (m_fboH > 0) ? (float)m_fboW / (float)m_fboH : 16.0f / 9.0f;
+
                 float newWidth = viewportSize.x;
                 float newHeight = newWidth / aspectRatio;
+
                 if (newHeight > viewportSize.y) {
                     newHeight = viewportSize.y;
                     newWidth = newHeight * aspectRatio;
                 }
+
+                // Calculate offset for centering the image
                 ImVec2 offset((viewportSize.x - newWidth) * 0.5f, (viewportSize.y - newHeight) * 0.5f);
                 ImGui::SetCursorPos(offset);
 
-                // draw the second view’s texture
+                // --- 2. Draw the Viewport Image ---
                 int secondaryView = (g_MainViewIndex == 0) ? 1 : 0;
                 ImGui::Image(
                     (ImTextureID)(intptr_t)GetGameTexture(secondaryView),
-                    ImVec2(newWidth, newHeight), ImVec2(0, 1), ImVec2(1, 0)
+                    ImVec2(newWidth, newHeight),
+                    ImVec2(0, 1), // UV Coords: Top-Left
+                    ImVec2(1, 0)  // UV Coords: Bottom-Right (flips V)
                 );
 
-                // picking for second view
-                if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
-                    m_graphicsSystem->SetMouseTargetView(secondaryView);
-                    ImVec2 min = ImGui::GetItemRectMin();
-                    ImVec2 max = ImGui::GetItemRectMax();
-                    ImVec2 pos = ImGui::GetIO().MousePos;
-
-                    float u = (pos.x - min.x) / (max.x - min.x);
-                    float v = (pos.y - min.y) / (max.y - min.y);
-                    v = 1.0f - v; // flip because Image uses (0,1) to (1,0)
-
-                    m_graphicsSystem->SetPickViewIndex(secondaryView);
-                    if (secondaryView == 0) m_graphicsSystem->RequestPickUV(u, v);
-                    else                    m_graphicsSystem->RequestPickUVSecondary(u, v);
-                }
-
-                if (int id = m_graphicsSystem->ConsumeLastPickedId(); id >= 0)
-                {
-                    selectedEntity = static_cast<Entity>(id);
-                    isPropertiesWindowOpen = true;  // open right panel automatically (optional)
-                    //std::cout << "Selected entity from viewport: " << selectedEntity << "\n"; // debug
-                }
-
-                // --- Gizmo overlay on top of the Viewport texture ---
+                // --- 3. Render Gizmo FIRST ---
+                // Get the screen-space rectangle of the image we just drew
                 ImVec2 rectMin = ImGui::GetItemRectMin();
                 ImVec2 rectMax = ImGui::GetItemRectMax();
                 ImVec2 vpSize(rectMax.x - rectMin.x, rectMax.y - rectMin.y);
 
-                // Use the SECONDARY camera’s matrices
+                // Get the camera matrices for the secondary view
                 glm::mat4 view = m_graphicsSystem->GetViewMatrix(secondaryView);
                 glm::mat4 proj = m_graphicsSystem->GetProjectionMatrix(secondaryView, static_cast<float>(m_fboW), static_cast<float>(m_fboH));
 
+                // Render the gizmo (this calls ImGuizmo::Manipulate)
                 RenderGizmoForSelected(view, proj, rectMin, vpSize);
+
+                // --- 4. Check Gizmo State ---
+                // Check if the mouse is hovering or actively dragging a gizmo handle
+                bool isGizmoActive = ImGuizmo::IsUsing() || ImGuizmo::IsOver();
+
+                // --- 5. Conditional Picking Logic ---
+                // Only perform entity picking if:
+                // 1. The mouse is over the viewport image
+                // 2. The left mouse button is clicked
+                // 3. The mouse is NOT interacting with the gizmo
+                if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left) && !isGizmoActive)
+                {
+                    m_graphicsSystem->SetMouseTargetView(secondaryView);
+
+                    // Get mouse position relative to the image
+                    ImVec2 min = ImGui::GetItemRectMin();
+                    ImVec2 max = ImGui::GetItemRectMax();
+                    ImVec2 pos = ImGui::GetIO().MousePos;
+
+                    // Calculate UV coordinates (0.0 to 1.0)
+                    float u = (pos.x - min.x) / (max.x - min.x);
+                    float v = (pos.y - min.y) / (max.y - min.y);
+                    v = 1.0f - v; // Flip V-coordinate to match OpenGL/texture convention
+
+                    // Request the pick
+                    m_graphicsSystem->SetPickViewIndex(secondaryView);
+                    if (secondaryView == 0)
+                        m_graphicsSystem->RequestPickUV(u, v);
+                    else
+                        m_graphicsSystem->RequestPickUVSecondary(u, v);
+                }
+
+                // --- 6. Conditional Selection Logic ---
+                // Check if the graphics system has a new picked ID for us
+                if (int id = m_graphicsSystem->ConsumeLastPickedId(); id >= 0)
+                {
+                    // IMPORTANT: Only change the selected entity if the user is
+                    // NOT in the middle of dragging the gizmo.
+                    if (!ImGuizmo::IsUsing())
+                    {
+                        selectedEntity = static_cast<Entity>(id);
+                        isPropertiesWindowOpen = true; // Optional: auto-open properties
+                    }
+                }
+            }
+
+            // Drag and drop Prefab to spawn in viewport
+            if (ImGui::BeginDragDropTarget())
+            {
+                if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("PREFAB_GUID"))
+                {
+                    const char* prefabGUID = static_cast<const char*>(payload->Data);
+
+                    // Spawn the prefab
+                    sceneManager.SpawnPrefab(prefabGUID);
+                }
+                ImGui::EndDragDropTarget();
             }
             ImGui::End();
+
+
         }
     }
 
