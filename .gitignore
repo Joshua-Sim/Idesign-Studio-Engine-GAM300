@@ -1,7 +1,10 @@
 .vs
 .tmp
 bin
-*.obj
+x64/
+bin/
+Debug/
+Release/
 Unnamed Studios/Unnamed Studios.vcxproj
 Unnamed Studios/Unnamed Studios.vcxproj.filters
 Unnamed Studios/x64/Debug/Core.obj
