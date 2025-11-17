@@ -9,6 +9,18 @@
 #include "PrefabComponent.h"
 #include "ScriptingSystem.h"
 
+static const std::map<std::string, LightType> s_stringToLightType = {
+    { "Directional", LightType::Directional },
+    { "Point",       LightType::Point },
+    { "Spot",        LightType::Spot }
+};
+
+static const std::map<LightType, std::string> s_lightTypeToString = {
+    { LightType::Directional, "Directional" },
+    { LightType::Point,       "Point" },
+    { LightType::Spot,        "Spot" }
+};
+
 extern Framework::Coordinator ecsInterface;
 namespace Framework
 {
@@ -208,6 +220,17 @@ namespace Framework
                 if (components.HasMember("LightProperties"))
                 {
                     LightProperties light;
+                    const auto& lightJson = components["LightProperties"];
+
+                    // Manually read the 'type' string and convert it
+                    if (lightJson.HasMember("type") && lightJson["type"].IsString())
+                    {
+                        std::string typeStr = lightJson["type"].GetString();
+                        if (s_stringToLightType.count(typeStr))
+                        {
+                            light.type = s_stringToLightType.at(typeStr);
+                        }
+                    }
                     Deserialize(&light, g_LightProps, components["LightProperties"]);
                     ecsInterface.AddComponent(entity, light);
                 }
@@ -367,13 +390,7 @@ namespace Framework
                     componentsObj.AddMember("MeshComponent", meshRef, allocator);
                 }
 
-                if (ecsInterface.HasComponent<LightProperties>(entity))
-                {
-                    const auto& light = ecsInterface.GetComponent<LightProperties>(entity);
-                    rapidjson::Value lightJson(rapidjson::kObjectType);
-                    Serialize((void*)&light, g_LightProps, lightJson, allocator);
-                    componentsObj.AddMember("LightProperties", lightJson, allocator);
-                }
+          
 
                 if (ecsInterface.HasComponent<AnimationProperties>(entity))
                 {
@@ -432,6 +449,23 @@ namespace Framework
 
                     scriptJson.AddMember("scripts", arr, allocator);
                     componentsObj.AddMember("ScriptComponent", scriptJson, allocator);
+                }
+                if (ecsInterface.HasComponent<LightProperties>(entity))
+                {
+                    const auto& light = ecsInterface.GetComponent<LightProperties>(entity);
+                    rapidjson::Value lightJson(rapidjson::kObjectType);
+
+                    // 1. Run the generic serializer for color, intensity, etc.
+                    Serialize((void*)&light, g_LightProps, lightJson, allocator);
+
+                    // 2. Manually add the 'type' string to the SAME json object
+                    if (s_lightTypeToString.count(light.type))
+                    {
+                        lightJson.AddMember("type", rapidjson::Value(s_lightTypeToString.at(light.type).c_str(), allocator), allocator);
+                    }
+
+                    // 3. Add the complete object to the component list
+                    componentsObj.AddMember("LightProperties", lightJson, allocator);
                 }
 
             }

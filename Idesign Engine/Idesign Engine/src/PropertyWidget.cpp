@@ -283,6 +283,18 @@ namespace Framework
                     DrawEnumDropdown("Motion Type", &phys.motionType, Framework::kMotionTypeNames);
                     DrawEnumDropdown("Category", &phys.category, Framework::kPhysicsCategoryNames);
                 }
+                else if (typeName == "LightProperties")
+                {
+                    auto& light = *static_cast<LightProperties*>(componentPtr);
+
+                    const char* lightTypes[] = { "Directional", "Point", "Spot" };
+                    int currentType = static_cast<int>(light.type);
+
+                    if (ImGui::Combo("type", &currentType, lightTypes, IM_ARRAYSIZE(lightTypes)))
+                    {
+                        light.type = static_cast<LightType>(currentType);
+                    }
+                }
                 else if (typeName == "NavMeshAgentComponent")
                 {
                     auto& agent = *static_cast<NavMeshAgentComponent*>(componentPtr);

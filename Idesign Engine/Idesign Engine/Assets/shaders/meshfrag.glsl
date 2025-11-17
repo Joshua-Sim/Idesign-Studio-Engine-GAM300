@@ -6,11 +6,14 @@ out vec4 FragColor;
 in vec3 vNormal;
 in vec3 vWorldPos;
 in vec2 vTex;
+in vec4 v_FragPosLightSpace;
 
 struct DirectionalLight {
     vec3 direction;
     vec3 color;
     float intensity;
+    float shadowBiasConst;
+    float shadowBiasFactor;
 };
 
 struct PointLight {
@@ -18,6 +21,9 @@ struct PointLight {
     vec3 color;
     float intensity;
     float radius;
+    bool castsShadow;
+    float shadowBiasConst;
+    float shadowBiasFactor;
 };
 
 struct SpotLight {
@@ -51,15 +57,87 @@ uniform PointLight uPointLights[MAX_POINT_LIGHTS];
 uniform int uNumSpotLights;
 uniform SpotLight uSpotLights[MAX_SPOT_LIGHTS];
 
-uniform vec3 uAlbedo; // This will come from MeshProperties.albedo (or highlight color)
+uniform samplerCube uPointShadowMaps[MAX_POINT_LIGHTS];
+
+uniform vec3 uAlbedo; 
 uniform sampler2D uTexture;
 uniform vec3 uViewPos; // We need the camera position for specular
 uniform Material uMaterial; // New material uniforms
+uniform sampler2D uShadowMap;
+
+
+float CalculatePointShadow(int index, vec3 L, vec3 N, vec3 Lnorm)
+{
+    // 1. Sample the cubemap using the direction vector L
+    //    .r contains the normalized distance [0,1]
+    float closestNormalizedDepth = texture(uPointShadowMaps[index], L).r;
+    
+    if (closestNormalizedDepth <= 0.001 || closestNormalizedDepth >= 1.0)
+    {
+        return 0.0; // Not in shadow
+    }
+
+    // 2. Un-normalize it back to world-space distance
+    float closestDepth = closestNormalizedDepth * uPointLights[index].radius;
+    
+    // 3. Get the *current* fragment's distance from the light
+    float currentDepth = length(L);
+    
+    // 4. Add a bias to fix shadow acne
+   float bias = max(uPointLights[index].shadowBiasFactor * (1.0 - dot(N, Lnorm)), 
+                     uPointLights[index].shadowBiasConst);                     
+                     
+    // 5. Compare
+    float shadow = (currentDepth - bias) > closestDepth ? 1.0 : 0.0;
+        
+    return shadow;
+}
+
+float CalculateShadow(vec4 fragPosLightSpace, vec3 normal, vec3 lightDir)
+{
+    // 1. Perspective divide
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    
+    // 2. Transform from [-1,1] to [0,1] range
+    projCoords = projCoords * 0.5 + 0.5;
+
+    // 3. Get closest depth from shadow map
+    float closestDepth = texture(uShadowMap, projCoords.xy).r; 
+
+    // 4. Get current fragment's depth
+    float currentDepth = projCoords.z;
+
+    // 5. Check if outside the shadow map (should be lit)
+    if(projCoords.z > 1.0)
+        return 0.0; // 0.0 shadow = fully lit
+
+    // 6. Fix "shadow acne" with a bias based on surface angle
+    float bias = max(uDirLight.shadowBiasFactor * (1.0 - dot(normal, lightDir)), 
+                     uDirLight.shadowBiasConst);
+    
+    // 7. PCF (Percentage-Closer Filtering) for soft shadows
+    float shadow = 0.0;
+    vec2 texelSize = 1.0 / textureSize(uShadowMap, 0); // e.g., 1.0 / 2048.0
+    for(int x = -1; x <= 1; ++x)
+    {
+        for(int y = -1; y <= 1; ++y)
+        {
+            float pcfDepth = texture(uShadowMap, projCoords.xy + vec2(x, y) * texelSize).r; 
+            shadow += (currentDepth - bias) > pcfDepth ? 1.0 : 0.0; // 1.0 = in shadow
+        }    
+    }
+    shadow /= 9.0;
+    
+    return shadow; // 0.0 = no shadow, 1.0 = full shadow
+}
 
 void main() {
+
+
+
     vec3 N = normalize(vNormal);
     vec3 V = normalize(uViewPos - vWorldPos); // View direction
-
+    float shadow=0.0;
     // --- We will sum diffuse and specular components separately ---
     vec3 totalDiffuse = vec3(0.0);
     vec3 totalSpecular = vec3(0.0);
@@ -69,14 +147,16 @@ void main() {
     if (uHasDirLight && uDirLight.intensity > 0.0) {
         vec3 Ld = normalize(-uDirLight.direction);
         
+        // Calculate shadow
+        shadow = CalculateShadow(v_FragPosLightSpace, N, Ld);
+
         // Diffuse
         float diff = max(dot(N, Ld), 0.0);
-        totalDiffuse += uDirLight.color * uDirLight.intensity * diff;
-        
+        totalDiffuse += uDirLight.color * uDirLight.intensity * diff * (1.0 - shadow);         
         // Specular (Blinn-Phong)
         vec3 H = normalize(Ld + V);
         float spec = pow(max(dot(N, H), 0.0), uMaterial.shininess);
-        totalSpecular += uMaterial.specular * spec * uDirLight.color * uDirLight.intensity;
+        totalSpecular += uMaterial.specular * spec * uDirLight.color * uDirLight.intensity * (1.0 - shadow); 
     }
 
     for (int i = 0; i < uNumPointLights; ++i) {
@@ -89,14 +169,20 @@ void main() {
             vec3 Lnorm = normalize(L);
             float atten = 1.0 - (dist / uPointLights[i].radius);
             
+            float shadow = 0.0;
+            if(uPointLights[i].castsShadow)
+            {
+                // Pass L (fragment-to-light vector), not Lnorm
+                shadow = CalculatePointShadow(i, L, N, Lnorm); 
+            }
+
             // Diffuse
             float d = max(dot(N, Lnorm), 0.0);
-            totalDiffuse += uPointLights[i].color * uPointLights[i].intensity * d * atten;
-
+            totalDiffuse += uPointLights[i].color * uPointLights[i].intensity * d * atten * (1.0 - shadow); 
             // Specular (Blinn-Phong)
             vec3 H = normalize(Lnorm + V);
             float spec = pow(max(dot(N, H), 0.0), uMaterial.shininess);
-            totalSpecular += uMaterial.specular * spec * uPointLights[i].color * uPointLights[i].intensity * atten;
+            totalSpecular += uMaterial.specular * spec * uPointLights[i].color * uPointLights[i].intensity * atten* (1.0 - shadow);
         }
     }
 
