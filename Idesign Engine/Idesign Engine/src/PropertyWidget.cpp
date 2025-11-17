@@ -315,7 +315,38 @@ namespace Framework
                         ImGui::TextDisabled("No active path.");
                     }
                 }
+                else if (typeName == "EventSenderComponent")
+                {
+                    auto& sender = *static_cast<Framework::EventSenderComponent*>(componentPtr);
 
+                    DrawEnumDropdown("OnTrigger", (int*)&sender.onTrigger, Framework::kEventTriggerTypeNames);
+                    char messageBuffer[256];
+                    strncpy_s(messageBuffer, sizeof(messageBuffer), sender.messageName.c_str(), _TRUNCATE);
+
+                    if (ImGui::InputText("Message", messageBuffer, sizeof(messageBuffer)))
+                    {
+                        sender.messageName = messageBuffer;
+                    }
+                }
+                else if (typeName == "EventReceiverComponent")
+                {
+                    auto& receiver = *static_cast<Framework::EventReceiverComponent*>(componentPtr);
+                    char msgListenBuffer[256];
+                    strncpy_s(msgListenBuffer, sizeof(msgListenBuffer), receiver.messageToListenFor.c_str(), _TRUNCATE);
+
+                    if (ImGui::InputText("Message", msgListenBuffer, sizeof(msgListenBuffer)))
+                    {
+                        receiver.messageToListenFor = msgListenBuffer;
+                    }
+
+                    char onRecvBuffer[256];
+                    strncpy_s(onRecvBuffer, sizeof(onRecvBuffer), receiver.onReceiveFunction.c_str(), _TRUNCATE);
+
+                    if (ImGui::InputText("On Receive", onRecvBuffer, sizeof(onRecvBuffer)))
+                    {
+                        receiver.onReceiveFunction = onRecvBuffer;
+                    }
+                }
 
                 DrawInspector(componentPtr, *propList);
 
@@ -359,6 +390,8 @@ namespace Framework
         TypeRegistry::Instance().Register<AnimationProperties>("AnimationProperties", &g_AnimationPropertiesProps);
         TypeRegistry::Instance().Register<LightProperties>("LightProperties", &g_LightProps);
         TypeRegistry::Instance().Register<PhysicsProperties>("PhysicsProperties", &g_PhysicsProps);
+        TypeRegistry::Instance().Register<EventReceiverComponent>("EventReceiverComponent", &g_EventReceiverProps);
+        TypeRegistry::Instance().Register<EventSenderComponent>("EventSenderComponent", &g_EventSenderProps);
     }
 
     void AutoRegisterAllReflectedComponents(Coordinator& ecs)

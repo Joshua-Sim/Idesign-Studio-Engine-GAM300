@@ -220,6 +220,22 @@ namespace Framework {
             return 1;
         }
 
+        // This function implements the "IsMouseButtonDown(button)" for Lua
+        static int l_IsMouseButtonDown(lua_State* L) {
+            // Get the 'self' object (ScriptingSystem or ScriptInstance)
+            auto* self = lua_self(L);
+            Graphics* g = self ? self->GetGraphicsSystem() : nullptr;
+            if (!g) {
+                lua_pushboolean(L, 0);
+                return 1; // Return 1 value (the boolean false)
+            }
+            GLFWwindow* win = g->GetWindow();
+            int button = (int)luaL_checkinteger(L, 1);
+            int down = (win && glfwGetMouseButton(win, button) == GLFW_PRESS) ? 1 : 0;
+            lua_pushboolean(L, down);
+            return 1;
+        }
+
         // Cook.Audio(jsonPath, outPath [, key="AudioProperties"])
         int l_Cook_Audio(lua_State* L) {
             const char* json = luaL_checkstring(L, 1);
@@ -336,6 +352,7 @@ namespace Framework {
         lua_register(L, "SetGroundMode", l_SetGround);
         lua_register(L, "GetPosition", lua_GetPosition);
         lua_register(L, "SetPosition", lua_SetPosition);
+        lua_register(L, "IsMouseButtonDown", l_IsMouseButtonDown); // <-- ADD THIS
 
         // Engine utility
         lua_register(L, "FindEntityByName", lua_FindEntityByName);
@@ -420,6 +437,52 @@ namespace Framework {
     }
 
      std::string ScriptingSystem::GetProjectRoot() { return s_ProjectRoot; }
+
+     void ScriptingSystem::CallEntityFunction(Entity entity, const std::string& functionName, Entity arg1, Entity arg2)
+     {
+         // 1. Check if entity is valid and has a script component
+         if (!ecsInterface.IsEntityValid(entity) || !ecsInterface.HasComponent<ScriptComponent>(entity)) {
+             return;
+         }
+
+         auto& comp = ecsInterface.GetComponent<ScriptComponent>(entity);
+
+         // 2. Loop through all script instances on that entity
+         for (auto& sc : comp.scripts) {
+             if (sc.tableRef == LUA_NOREF) continue; // Script not loaded
+
+             // 3. Get the Lua function (based on CallHook)
+             // Push the instance table
+             lua_rawgeti(L, LUA_REGISTRYINDEX, sc.tableRef);  // [stack: tbl]
+             // Push the method from the table
+             lua_getfield(L, -1, functionName.c_str());       // [stack: tbl, fn]
+
+             // Check if it's a valid function
+             if (!lua_isfunction(L, -1)) {
+                 lua_pop(L, 2); // pop non-function and tbl
+                 continue;      // Try the next script on this entity
+             }
+
+             // 4. Push arguments
+             // 'self' (the table) as first arg
+             lua_pushvalue(L, -2); // [stack: tbl, fn, tbl]
+             // Push our custom args
+             lua_pushinteger(L, static_cast<lua_Integer>(arg1)); // [stack: tbl, fn, tbl, arg1]
+             lua_pushinteger(L, static_cast<lua_Integer>(arg2)); // [stack: tbl, fn, tbl, arg1, arg2]
+
+             int nargs = 3; // 3 arguments: self, arg1, arg2
+
+             // 5. Call the function (based on CallHook)
+             if (lua_pcall(L, nargs, 0, 0) != LUA_OK) {
+                 std::cerr << "[Lua] call " << functionName << " error: "
+                     << lua_tostring(L, -1) << "\n";
+                 lua_pop(L, 1); // pop error
+             }
+
+             // 6. Clean up stack
+             lua_pop(L, 1); // pop tbl
+         }
+     }
 
     std::string ScriptingSystem::GetName() { return "ScriptingSystem"; }
 
