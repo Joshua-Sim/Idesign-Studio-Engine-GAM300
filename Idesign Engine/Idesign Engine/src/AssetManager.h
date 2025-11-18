@@ -43,6 +43,8 @@
 #include "PhysicsProperties.h"
 #include "AudioComponent.h"
 #include "ScriptProperties.h"
+#include "EventReceiverComponent.h"
+#include "EventSenderComponent.h"
 
 // Asset Files
 #include "AssetLoader.h"
@@ -70,6 +72,8 @@ namespace Framework
     REGISTER_TYPE_NAME(PhysicsProperties);
     REGISTER_TYPE_NAME(ScriptProperties);
     REGISTER_TYPE_NAME(ScriptEntry);
+    REGISTER_TYPE_NAME(EventReceiverComponent);
+    REGISTER_TYPE_NAME(EventSenderComponent);
 
     struct AssetKey 
     {

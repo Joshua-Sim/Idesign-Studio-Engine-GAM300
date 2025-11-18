@@ -38,6 +38,9 @@ namespace Framework {
         static void SetProjectRoot(const std::string& root);
 
         static std::string GetProjectRoot();
+
+        void CallEntityFunction(Entity entity, const std::string & functionName, Entity arg1, Entity arg2);
+
     private:
         lua_State* L = nullptr;
         Graphics* graphics_ = nullptr;

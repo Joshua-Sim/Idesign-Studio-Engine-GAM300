@@ -327,6 +327,37 @@ namespace Framework
                     }
                     continue;   
                 }
+                else if (typeName == "EventReceiverComponent")
+                {
+                    auto& receiver = *static_cast<Framework::EventReceiverComponent*>(componentPtr);
+                    char msgListenBuffer[256];
+                    strncpy_s(msgListenBuffer, sizeof(msgListenBuffer), receiver.messageToListenFor.c_str(), _TRUNCATE);
+
+                    if (ImGui::InputText("Message", msgListenBuffer, sizeof(msgListenBuffer)))
+                    {
+                        receiver.messageToListenFor = msgListenBuffer;
+                    }
+
+                    char onRecvBuffer[256];
+                    strncpy_s(onRecvBuffer, sizeof(onRecvBuffer), receiver.onReceiveFunction.c_str(), _TRUNCATE);
+
+                    if (ImGui::InputText("On Receive", onRecvBuffer, sizeof(onRecvBuffer)))
+                    {
+                        receiver.onReceiveFunction = onRecvBuffer;
+                    }
+                    else if (typeName == "ScriptProperties")
+                    {
+                        auto& scripts = *static_cast<ScriptProperties*>(componentPtr);
+                        DrawScriptPropertiesWidget(scripts, entity);
+
+                        // We fully handle this component ourselves, so we DON'T call DrawInspector
+                        if (ImGui::Button("Remove ScriptProperties"))
+                        {
+                            TypeRegistry::Instance().RemoveComponent(typeName, ecs, entity);
+                        }
+                        continue;
+                    }
+                }
 
                 DrawInspector(componentPtr, *propList);
 
@@ -367,6 +398,8 @@ namespace Framework
         TypeRegistry::Instance().Register<AnimationProperties>("AnimationProperties", &g_AnimationPropertiesProps);
         TypeRegistry::Instance().Register<LightProperties>("LightProperties", &g_LightProps);
         TypeRegistry::Instance().Register<PhysicsProperties>("PhysicsProperties", &g_PhysicsProps);
+        TypeRegistry::Instance().Register<EventReceiverComponent>("EventReceiverComponent", &g_EventReceiverProps);
+        TypeRegistry::Instance().Register<EventSenderComponent>("EventSenderComponent", &g_EventSenderProps);
         TypeRegistry::Instance().Register<ScriptProperties>("ScriptProperties", &g_ScriptPropertiesProps);
         TypeRegistry::Instance().Register<ScriptEntry>("ScriptEntry", &g_ScriptEntryProps);
     }

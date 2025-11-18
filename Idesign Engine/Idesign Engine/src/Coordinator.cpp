@@ -27,6 +27,9 @@ PlayerComponent 7
 #include "Coordinator.h"
 #include "ComponentList.h"
 #include "AssetHandler.h"
+#include "EventSenderComponent.h"
+#include "MessageSystem.h"
+#include <GameMessages.h>
 
 namespace Framework {
 
@@ -323,6 +326,36 @@ namespace Framework {
     void Coordinator::SetEntityGUID(Entity entity, const std::string& guid)
     {
         guidMap[entity] = guid;
+    }
+
+    // Event System
+    void Coordinator::FireTrigger(Entity entity, Entity otherEntity, EEventTriggerType triggerType)
+    {
+        if (!mComponentManager->HasComponent<EventSenderComponent>(entity)) {
+            return;
+        }
+
+        auto& sender = mComponentManager->GetComponent<EventSenderComponent>(entity);
+
+        // Compare the event that *just happened* (triggerType)
+        // with the event the component is *waiting for* (sender.onTrigger).
+        if (static_cast<int>(sender.onTrigger) == static_cast<int>(triggerType)) {
+
+            // --- This block is the mapping ---
+            if (sender.messageName == "PlayerInteractedWithItem") {
+
+                MessageBus::Get().QueueMessage(
+                    PlayerInteractedWithItem{ otherEntity, entity }
+                );
+            }
+
+            else if (sender.messageName == "click") {
+
+                MessageBus::Get().QueueMessage(
+                    EntityClickedMessage{ otherEntity, entity }
+                );
+            }
+        }
     }
 
 }

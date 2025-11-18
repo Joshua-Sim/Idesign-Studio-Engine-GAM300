@@ -19,6 +19,7 @@
 #include "ComponentManager.h"
 #include "EntityManager.h"
 #include "ECSystemManager.h"
+#include "EventSenderComponent.h"
 #include "TagManager.h"
 #include "Types.h"
 #include <memory>
@@ -261,6 +262,9 @@ namespace Framework {
 			}
 			return result;
 		}
+
+		//Event System (To Fire Triggers)
+		void FireTrigger(Entity entity, Entity otherEntity, EEventTriggerType triggerType);
 
 
 	private:
