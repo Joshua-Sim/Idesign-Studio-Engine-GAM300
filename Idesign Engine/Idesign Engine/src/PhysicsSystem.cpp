@@ -24,6 +24,7 @@
 #include <Jolt/Physics/Collision/Shape/BoxShape.h>
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
 #include <Jolt/Physics/Collision/Shape/MeshShape.h>
+#include <Jolt/Physics/Collision/Shape/OffsetCenterOfMassShape.h>
 
 #include <glm/glm/glm.hpp>
 #include <glm/glm/gtc/quaternion.hpp>
@@ -183,52 +184,92 @@ namespace Framework {
         return id;
     }
 
-    // Ensure a Jolt body exists for (Transform + PhysicsProperties)
+    // This function is now correctly decoupled.
+// It will ONLY create a Jolt body if it finds:
+// 1. TransformComponent
+// 2. PhysicsProperties
+// 3. A Collider Component (e.g., BoxColliderComponent)
+    // This function will only create a Jolt body if it finds:
+// 1. TransformComponent
+// 2. PhysicsProperties
+// 3. A Collider Component (e.g., BoxColliderComponent)
     static void EnsureBodyForEntity(Entity e, Framework::Coordinator& ecs, JPH::BodyInterface* bi, std::vector<JPH::BodyID>& created_list) {
-        if (!ecs.HasComponent<TransformComponent>(e) || !ecs.HasComponent<PhysicsProperties>(e)) {
-            return;
+
+        // 1. Check for "rigidbody" intent and transform
+        if (!ecs.HasComponent<TransformComponent>(e) ||
+            !ecs.HasComponent<PhysicsProperties>(e)) {
+            return; // Not a physics object
         }
 
+        // 2. Don't re-create if a body already exists
         if (ecs.HasComponent<PhysicsBodyComponent>(e)) {
             return;
         }
 
-        auto& tf = ecs.GetComponent<TransformComponent>(e);
+        // --- 3. Find a shape defined by a collider component ---
+        JPH::ShapeRefC shape = nullptr;
+        auto& tf = ecs.GetComponent<TransformComponent>(e); // Get transform for scale
+
+        if (ecs.HasComponent<BoxColliderComponent>(e)) {
+            auto& collider = ecs.GetComponent<BoxColliderComponent>(e);
+
+            // Calculate final half-extents (collider size * transform scale)
+            JPH::Vec3 half_extents(
+                0.5f * collider.size.x * tf.scale.x,
+                0.5f * collider.size.y * tf.scale.y,
+                0.5f * collider.size.z * tf.scale.z
+            );
+            JPH::BoxShapeSettings bs(half_extents);
+            shape = bs.Create().Get();
+
+            // Handle the "Center" offset
+            if (collider.center != glm::vec3(0.0f)) {
+                JPH::Vec3 jolt_center(collider.center.x, collider.center.y, collider.center.z);
+                shape = new JPH::OffsetCenterOfMassShape(shape, jolt_center);
+            }
+        }
+        // else if (ecs.HasComponent<SphereColliderComponent>(e)) {
+        //     // ... logic for sphere collider ...
+        // }
+        // else if (ecs.HasComponent<CapsuleColliderComponent>(e)) {
+        //     // ... logic for capsule collider ...
+        // }
+
+        // 4. If no collider component was found, we can't create a body.
+        if (shape == nullptr) {
+            // This entity has PhysicsProperties, but no collider,
+            // so we don't create a Jolt body. This is the correct behavior.
+            return;
+        }
+
+        // 5. Create the Jolt Body
         auto& prop = ecs.GetComponent<PhysicsProperties>(e);
 
-        // Build shape from scale (or your own debugShape switch)
-        JPH::ShapeRefC shape = MakeBoxShapeFromScale(tf.scale);
-
-        // Body settings from properties
         JPH::BodyCreationSettings bcs(
             shape,
             JPH::RVec3(tf.position.x, tf.position.y, tf.position.z),
-            JPH::Quat::sIdentity(),
+            MakeQuatFromEuler(tf.rotation), // Use your existing helper
             ToJoltMotionType(prop.motionType),
             ToObjectLayer(prop.category)
         );
 
         bcs.mGravityFactor = prop.gravityFactor;
-
         JPH::EActivation act = prop.startAwake ? JPH::EActivation::Activate
             : JPH::EActivation::DontActivate;
 
         JPH::BodyID id = bi->CreateAndAddBody(bcs, act);
 
-        // Initial velocities (once at creation)
+        // 6. Apply initial velocities
         if (prop.linearVelocity != glm::vec3(0.0f)) {
             bi->SetLinearVelocity(id, JPH::Vec3(prop.linearVelocity.x, prop.linearVelocity.y, prop.linearVelocity.z));
         }
-        if (prop.angularVelocity != glm::vec3(0.0f)){
+        if (prop.angularVelocity != glm::vec3(0.0f)) {
             bi->SetAngularVelocity(id, JPH::Vec3(prop.angularVelocity.x, prop.angularVelocity.y, prop.angularVelocity.z));
         }
 
+        // 7. Store ECS linkage and seed caches
         created_list.push_back(id);
-
-        // Store ECS linkage
         ecs.AddComponent<PhysicsBodyComponent>(e, PhysicsBodyComponent{ id, shape, true });
-
-        // Seed caches to current values so we don't re-apply immediately
         s_lastLin[e] = prop.linearVelocity;
         s_lastAng[e] = prop.angularVelocity;
     }

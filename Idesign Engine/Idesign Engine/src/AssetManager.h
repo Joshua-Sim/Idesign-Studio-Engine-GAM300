@@ -45,6 +45,7 @@
 #include "ScriptProperties.h"
 #include "EventReceiverComponent.h"
 #include "EventSenderComponent.h"
+#include "BoxColliderComponent.h"
 
 // Asset Files
 #include "AssetLoader.h"
@@ -74,6 +75,7 @@ namespace Framework
     REGISTER_TYPE_NAME(ScriptEntry);
     REGISTER_TYPE_NAME(EventReceiverComponent);
     REGISTER_TYPE_NAME(EventSenderComponent);
+    REGISTER_TYPE_NAME(BoxColliderComponent);
 
     struct AssetKey 
     {

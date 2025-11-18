@@ -61,6 +61,7 @@
 #include "PhysicsSystem.h"
 #include "AnimationLoader.h"
 #include <ScriptProperties.h>
+#include <BoxColliderComponent.h>
 
 
 extern Framework::FontSystem fontSystem;
@@ -209,6 +210,8 @@ namespace Framework {
         ecsInterface.RegisterComponent<PhysicsProperties>();
         ecsInterface.RegisterComponent<EventSenderComponent>();
         ecsInterface.RegisterComponent<EventReceiverComponent>();
+        ecsInterface.RegisterComponent<BoxColliderComponent>();
+
 
         //test
 

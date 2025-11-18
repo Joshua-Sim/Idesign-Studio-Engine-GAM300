@@ -357,9 +357,12 @@ namespace Framework
                         }
                         continue;
                     }
+                    }
+                else {
+                    DrawInspector(componentPtr, *propList);
                 }
 
-                DrawInspector(componentPtr, *propList);
+                
 
                 if (ImGui::Button(std::string("Remove ").append(typeName).c_str()))
                 {
@@ -402,6 +405,7 @@ namespace Framework
         TypeRegistry::Instance().Register<EventSenderComponent>("EventSenderComponent", &g_EventSenderProps);
         TypeRegistry::Instance().Register<ScriptProperties>("ScriptProperties", &g_ScriptPropertiesProps);
         TypeRegistry::Instance().Register<ScriptEntry>("ScriptEntry", &g_ScriptEntryProps);
+        TypeRegistry::Instance().Register<BoxColliderComponent>("BoxColliderComponent", &g_BoxColliderProps);
     }
 
     void AutoRegisterAllReflectedComponents(Coordinator& ecs)
