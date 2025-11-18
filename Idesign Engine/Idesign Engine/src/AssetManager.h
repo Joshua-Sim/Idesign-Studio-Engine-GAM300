@@ -20,6 +20,8 @@
 #include <unordered_map>
 #include <optional>
 #include <functional>
+#include "EnginePath.h" // <-- Added this
+#include <filesystem>   // <-- Added this
 
 // Graphics Header Files
 #include "stb_image.h"

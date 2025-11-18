@@ -117,13 +117,12 @@ int main(void)
     auto scriptingSystem = ecsInterface.RegisterSystem<ScriptingSystem>();
     scriptingSystem->SetGraphicsSystem(graphicsSystem.get());
     auto navMeshSystem = ecsInterface.RegisterSystem<NavMeshSystem>();
-    auto fileCheckSystem = ecsInterface.RegisterSystem<Framework::FileCheckSystem>();
+    auto fileCheckSystem = ecsInterface.RegisterSystem<FileCheckSystem>();
     auto audioSystem = ecsInterface.RegisterSystem<AudioSystem>();
-    //Physics System
     auto physicsSystem = ecsInterface.RegisterSystem<PhysicsSystem>();
 
     // ------- Add systems to engine below -------- //
-    engine->AddSystem(animationSystem.get()); // Calculate bone matrices
+    engine->AddSystem(animationSystem.get());   // Calculate bone matrices
     engine->AddSystem(graphicsSystem.get());
     engine->AddSystem(inputHandlerSystem);
     engine->AddSystem(imguiSystem.get());
@@ -131,21 +130,11 @@ int main(void)
     engine->AddSystem(navMeshSystem.get());
 	engine->AddSystem(audioSystem.get());
     engine->AddSystem(physicsSystem.get());
-
-    // Register scene manager last
-    engine->AddSystem(sceneSystem.get());
+    engine->AddSystem(sceneSystem.get());       // Register scene manager last
     engine->AddSystem(fileCheckSystem.get());
 
     std::filesystem::path root = GetEngineRootPath();
-
-    //Folders and filetypes to check for external change
-    fileCheckSystem->WatchFolder("Assets/Scripts", { ".lua" });
-    fileCheckSystem->WatchFolder("Assets/JSON", { ".json", ".cfg" });
-    fileCheckSystem->WatchFolder("Assets/shaders", { ".glsl" });
-    fileCheckSystem->WatchFolder("Assets/Textures", { ".png", ".jpg" });
-    fileCheckSystem->WatchFolder("Scenes", { ".scene" });
-    fileCheckSystem->WatchFolder("Assets/Prefabs", { ".prefab" });
-    fileCheckSystem->WatchFolder("Assets/Materials", { ".material" });
+    fileCheckSystem->WatchAllFolders();
 
     // Initialize the engine and run the main game loop
     engine->Initialize();

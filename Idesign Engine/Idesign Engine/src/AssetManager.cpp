@@ -11,8 +11,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "pch.h"
 #include "AssetManager.h"
-#include "EnginePath.h" // <-- Added this
-#include <filesystem>   // <-- Added this
 
 namespace Framework
 {
@@ -98,7 +96,6 @@ namespace Framework
 		std::filesystem::path root = GetEngineRootPath();
 		std::cout << "[AssetManager] LoadAllAssets using root path: " << root.string() << std::endl;
 
-
 		// Mesh & Texture is loaded under Graphics.cpp due to some initialization required under graphics.cpp
 		std::string windowCfgPath = (root / "Resource/WindowAsset.cfg").string();
 		std::cout << "  Loading: " << windowCfgPath << std::endl;
@@ -124,10 +121,7 @@ namespace Framework
 			[=](MaterialMetadata& meta) // Capture root by copy
 			{
 				// Register metadata
-				AssetManager::Instance().RegisterAsset(
-					std::make_unique<MaterialMetadata>(meta),
-					&g_MaterialMetaProps,
-					meta.path);
+				AssetManager::Instance().RegisterAsset(std::make_unique<MaterialMetadata>(meta), &g_MaterialMetaProps, meta.path);
 
 				// Load and register properties
 				// IMPORTANT: Assumes meta.path is relative to the root
@@ -144,11 +138,7 @@ namespace Framework
 						<< meta.guid.id << " at path=" << meta.path << std::endl; // Changed meta.path to meta.key, assuming key is the intended identifier
 					AssetManager::Instance().RegisterAsset(std::move(material), &g_MaterialProps, meta.path); // Changed meta.path to meta.key
 				}
-				else
-				{
-					std::cerr << "[AssetManager] Failed to load material file: "
-						<< fullMaterialPath << " for GUID=" << meta.guid << std::endl;
-				}
+				else std::cerr << "[AssetManager] Failed to load material file: " << fullMaterialPath << " for GUID=" << meta.guid << std::endl;
 			}
 		);
 
@@ -228,8 +218,7 @@ namespace Framework
 		}
 
 		// Erase all entries for this GUID
-		for (const auto& key : keysToErase)
-			m_Assets.erase(key);
+		for (const auto& key : keysToErase) m_Assets.erase(key);
 	}
 
 	bool AssetManager::SaveToJson(void* pObject, const std::string& filePath, const prop_list& props)
