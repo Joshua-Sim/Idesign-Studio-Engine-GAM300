@@ -144,8 +144,8 @@
     <ClInclude Include="..\lib\imgui\imstb_rectpack.h" />
     <ClInclude Include="..\lib\imgui\imstb_textedit.h" />
     <ClInclude Include="..\lib\imgui\imstb_truetype.h" />
-    <ClInclude Include="AnimationLoader.h" />
-    <ClInclude Include="EnginePath.h" />
+    <ClInclude Include="src\AnimationLoader.h" />
+    <ClInclude Include="src\EnginePath.h" />
     <ClInclude Include="src\Animation.h" />
     <ClInclude Include="src\AnimationProperties.h" />
     <ClInclude Include="src\AnimationSystem.h" />
@@ -156,7 +156,6 @@
     <ClInclude Include="src\Audio.h" />
     <ClInclude Include="src\AudioComponent.h" />
     <ClInclude Include="src\AudioLoader.h" />
-    <ClInclude Include="src\AudioProperties.h" />
     <ClInclude Include="src\AudioSystem.h" />
     <ClInclude Include="src\backward.hpp" />
     <ClInclude Include="src\ButtonSystem.h" />
@@ -255,6 +254,7 @@
     <ClInclude Include="src\SceneManager.h" />
     <ClInclude Include="src\SceneProperties.h" />
     <ClInclude Include="src\ScriptingSystem.h" />
+    <ClInclude Include="src\ScriptProperties.h" />
     <ClInclude Include="src\ShaderProgram.h" />
     <ClInclude Include="src\SignalHandler.h" />
     <ClInclude Include="src\System.h" />
@@ -320,7 +320,7 @@
     <ClCompile Include="..\lib\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="..\lib\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\lib\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="AnimationLoader.cpp" />
+    <ClCompile Include="src\AnimationLoader.cpp" />
     <ClCompile Include="src\AnimationSystem.cpp" />
     <ClCompile Include="src\AssetCompiler.cpp" />
     <ClCompile Include="src\AssetManager.cpp" />

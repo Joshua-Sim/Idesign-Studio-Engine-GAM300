@@ -1,11 +1,10 @@
 
 #include "pch.h"
 #include "AudioLoader.h"
-#include "AudioProperties.h"
 
 namespace Framework
 {
-    bool loadAudio(AudioProperties& audioProps) 
+    bool loadAudio(AudioMetadata& audioProps)
     {
         // Load sound using your Audio system
         FMOD::Studio::EventDescription* eventDesc = GlobalAudio.UE_LoadEvent(audioProps.name);

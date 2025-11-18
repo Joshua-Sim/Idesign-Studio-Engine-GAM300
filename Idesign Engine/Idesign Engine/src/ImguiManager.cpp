@@ -32,16 +32,16 @@
 
 extern Framework::Coordinator ecsInterface;
 
-ImVec4 helpYellow = ImVec4(1.0f, 0.9f, 0.4f, 1.0f); // soft golden-yellow
+ImVec4 helpYellow = ImVec4(1.0f, 0.9f, 0.4f, 1.0f);                 // soft golden-yellow
 // "Global variables" For Victor and Joel for IMGUI portion
 static int selectedModelIndex = -1;
-static char meshNameBuffer[128] = "";  // Buffer for the mesh name
-static char imagePathBuffer[256] = "";  // Buffer for the image path
+static char meshNameBuffer[128] = "";                               // Buffer for the mesh name
+static char imagePathBuffer[256] = "";                              // Buffer for the image path
 static Entity selectedEntity = std::numeric_limits<Entity>::max();  // Sets a selected entity to be a non existent entity out of range
 static bool isPropertiesWindowOpen = false;                         // Allows opening and closing of the name editor? might want to remove
-static int  g_MainViewIndex = 0;                                   // Main view index for framebuffers
-static bool g_prevF2 = false;                                     // Previous state of F2 key
-static bool g_prevF3 = false;                                     // Previous state of F3 key
+static int  g_MainViewIndex = 0;                                    // Main view index for framebuffers
+static bool g_prevF2 = false;                                       // Previous state of F2 key
+static bool g_prevF3 = false;                                       // Previous state of F3 key
 
 namespace fs = std::filesystem;
 
@@ -76,8 +76,6 @@ namespace Framework {
     static std::vector<std::string> g_scriptFiles;
     static std::vector<const char*> g_scriptFileItems;
     static std::vector<std::string> g_scriptDisplayNames; // short names: "hello.lua"
-
-
 
     //Initialize static instance 
     ImguiManager* ImguiManager::instance = nullptr;
@@ -242,59 +240,6 @@ namespace Framework {
         }
     }
 
-    // Scipt Folder Loader
-    static void RefreshScriptFileList()
-    {
-        g_scriptFiles.clear();
-        g_scriptDisplayNames.clear();
-        g_scriptFileItems.clear();
-
-        namespace fs = std::filesystem;
-
-        // BUILD ABSOLUTE PATH FROM PROJECT ROOT
-        fs::path scriptsDir = fs::path(Framework::ScriptingSystem::GetProjectRoot()) / "Assets/Scripts";
-
-        if (!fs::exists(scriptsDir))
-        {
-            std::cout << "[RefreshScriptFileList] Scripts directory doesn't exist: " << scriptsDir << std::endl;
-            return;
-        }
-
-        // 1) Collect full paths
-        for (auto& entry : fs::directory_iterator(scriptsDir))
-        {
-            if (!entry.is_regular_file()) continue;
-            if (entry.path().extension() != ".lua") continue;
-
-            std::string rel = entry.path().string();
-            std::replace(rel.begin(), rel.end(), '\\', '/');
-            g_scriptFiles.push_back(rel);
-        }
-
-        // 2) Build display names + ImGui labels (only "hello.lua")
-        for (auto& full : g_scriptFiles)
-        {
-            g_scriptDisplayNames.push_back(::GetFileNameOnly(full));
-        }
-
-        for (auto& name : g_scriptDisplayNames)
-        {
-            g_scriptFileItems.push_back(name.c_str());
-        }
-
-        std::cout << "[RefreshScriptFileList] Found " << g_scriptFiles.size() << " Lua scripts\n";
-    }
-
-    static int FindScriptIndex(const std::string& path)
-    {
-        for (int i = 0; i < (int)g_scriptFiles.size(); ++i)
-        {
-            if (g_scriptFiles[i] == path)
-                return i;
-        }
-        return -1;
-    }
-
     // Error Detection for Audio
     void ImguiManager::RenderErrorPopup()
     {
@@ -357,8 +302,6 @@ namespace Framework {
         recreate(gameFramebuffer, gameTexture, rbo);
         recreate(gameFramebufferB, gameTextureB, rboB);
     }
-
-
 
     void DropCallback(GLFWwindow* window, int count, const char** paths)
     {
@@ -426,6 +369,7 @@ namespace Framework {
                         {
                             // <-- FIX: Register using the relative path as the key
                             AssetManager::Instance().RegisterAsset<TextureProperties>(std::move(texPtr), &g_TexturePropertiesProps, relativePath);
+
                             // <-- FIX: Save JSON to its absolute path
                             AssetManager::Instance().SaveArrayToJson(TypeName<TextureProperties>::value, (root / "Assets/JSON/TextureAsset.json").string(), "textures");
                             std::cout << "Texture added: " << fileName << " to " << relativePath << std::endl;
@@ -444,14 +388,14 @@ namespace Framework {
             // Audio Files
             else if (extension == "mp3" || extension == "wav" || extension == "flac")
             {
-                auto existingGuid = AssetManager::Instance().FindGuid<AudioProperties>(fileName);
+                auto existingGuid = AssetManager::Instance().FindGuid<AudioMetadata>(fileName);
                 if (existingGuid.empty())
                 {
                     if (MoveFileToAssetFolder(filePath, audioFolder, finalAbsolutePath, error)) // <-- FIX: Using absolute folder
                     {
                         std::string relativePath = std::filesystem::relative(finalAbsolutePath, root).string(); // <-- FIX
 
-                        auto audioPtr = std::make_unique<AudioProperties>();
+                        auto audioPtr = std::make_unique<AudioMetadata>();
                         audioPtr->name = std::filesystem::path(fileName).stem().string();
                         audioPtr->path = relativePath; // <-- FIX: Store the relative path
                         audioPtr->mode = "loop";
@@ -459,9 +403,10 @@ namespace Framework {
 
                         loadAudio(*audioPtr); // Assumes this uses the relative path in audioPtr
 
-                        AssetManager::Instance().RegisterAsset<AudioProperties>(std::move(audioPtr), &g_AudioPropertiesProps, relativePath); // <-- FIX: Register with relative path
+                        AssetManager::Instance().RegisterAsset<AudioMetadata>(std::move(audioPtr), &g_AudioMetadataProps, relativePath); // <-- FIX: Register with relative path
+
                         // <-- FIX: Save JSON to its absolute path
-                        AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, (root / "Assets/JSON/AudioAsset.json").string(), "audio"); // <-- FIX: Changed key "AudioProperties" to "audio"
+                        AssetManager::Instance().SaveArrayToJson(TypeName<AudioMetadata>::value, (root / "Assets/JSON/AudioAsset.json").string(), "audio"); // <-- FIX: Changed key "AudioProperties" to "audio"
                         std::cout << "Audio added: " << fileName << " to " << relativePath << std::endl;
                     }
                     else
@@ -505,6 +450,7 @@ namespace Framework {
                 }
                 else std::cout << "Mesh already exists: " << fileName << std::endl;
             }
+
             else if (extension == "fbx")
             {
                 auto existingGuid = AssetManager::Instance().FindGuid<AnimationProperties>(fileName);
@@ -528,30 +474,15 @@ namespace Framework {
                         MeshLoader::loadAnimatedMesh(finalAbsolutePath, *AnimPtr, *meshPtr); // <-- FIX: Load from absolute
                         AnimationLoader::loadAnimation(finalAbsolutePath, *AnimPtr); // <-- FIX: Load from absolute
 
-                        AssetManager::Instance().RegisterAsset<MeshProperties>(
-                            std::move(meshPtr),
-                            &g_MeshProps,
-                            relativePath // <-- FIX: Register with relative path
-                        );
+                        AssetManager::Instance().RegisterAsset<MeshProperties>(std::move(meshPtr), &g_MeshProps, relativePath); // <-- FIX: Register with relative path
                         // Save the MESH JSON
-                        AssetManager::Instance().SaveArrayToJson(
-                            TypeName<MeshProperties>::value,
-                            (root / "Assets/JSON/MeshAsset.json").string(), // <-- FIX: Absolute path
-                            "mesh"
-                        );
-
-                        AssetManager::Instance().RegisterAsset<AnimationProperties>(
-                            std::move(AnimPtr),
-                            &g_AnimationPropertiesProps,
-                            relativePath // <-- FIX: Register with relative path
-                        );
+                        AssetManager::Instance().SaveArrayToJson(TypeName<MeshProperties>::value, (root / "Assets/JSON/MeshAsset.json").string(), "mesh"); // <-- FIX: Absolute path
+                        AssetManager::Instance().RegisterAsset<AnimationProperties>(std::move(AnimPtr), &g_AnimationPropertiesProps,relativePath ); // <-- FIX: Register with relative path
 
                         // Save the ANIMATION JSON
-                        AssetManager::Instance().SaveArrayToJson(
-                            TypeName<AnimationProperties>::value,
-                            (root / "Assets/JSON/AnimationAsset.json").string(), // <-- FIX: Absolute path
-                            "animation" // <-- FIX: Changed key "animations" to "animation"
-                        );
+                        // <-- FIX: Changed key "animations" to "animation" 
+                        // <-- FIX: Absolute path
+                        AssetManager::Instance().SaveArrayToJson(TypeName<AnimationProperties>::value,(root / "Assets/JSON/AnimationAsset.json").string(), "animation" );
                         std::cout << "Mesh added: " << fileName << " to " << relativePath << std::endl;
                     }
                     else
@@ -563,6 +494,7 @@ namespace Framework {
                 }
                 else std::cout << "Mesh already exists: " << fileName << std::endl;
             }
+
             // Scene Files
             else if (extension == "scene")
             {
@@ -623,30 +555,22 @@ namespace Framework {
                 else std::cout << "Prefab already exists: " << fileName << std::endl;
             }
 
-            /*
             // Script Files
             else if (extension == "lua")
             {
-                auto existingGuid = AssetManager::Instance().FindGuid<ScriptProperties>(fileName);
+                auto existingGuid = AssetManager::Instance().FindGuid<ScriptEntry>(fileName);
                 if (existingGuid.empty())
                 {
-                    if (MoveFileToAssetFolder(filePath, scriptFolder, finalAbsolutePath, error)) // <-- FIX
+                    if (MoveFileToAssetFolder(filePath, scriptFolder, finalAbsolutePath, error))
                     {
-                        std::string relativePath = std::filesystem::relative(finalAbsolutePath, root).string(); // <-- FIX
+                        std::string relativePath = std::filesystem::relative(finalAbsolutePath, root).string();
 
-                        auto scriptPtr = std::make_unique<ScriptProperties>();
-                        scriptPtr->name = std::filesystem::path(fileName).stem().string();
-                        scriptPtr->path = relativePath; // <-- FIX
+                        auto scriptPtr = std::make_unique<ScriptEntry>();
+                        scriptPtr->scriptPath = relativePath;
                         scriptPtr->guid = GenerateGUID();
 
-                        // Optional: parseScriptMetadata(finalAbsolutePath, *scriptPtr); // <-- FIX
-
-                        AssetManager::Instance().RegisterAsset<ScriptProperties>(
-                            std::move(scriptPtr),
-                            &g_ScriptPropertiesProps,
-                            relativePath // <-- FIX
-                        );
-                        AssetManager::Instance().SaveArrayToJson(TypeName<ScriptProperties>::value, (root / "Assets/JSON/ScriptAsset.json").string(), "scripts"); // <-- FIX
+                        AssetManager::Instance().RegisterAsset<ScriptEntry>(std::move(scriptPtr), &g_ScriptEntryProps, relativePath);
+                        AssetManager::Instance().SaveArrayToJson(TypeName<ScriptEntry>::value, (root / "Assets/JSON/ScriptAsset.json").string(), "scripts");
                         std::cout << "Script added: " << fileName << " to " << relativePath << std::endl;
                     }
                     else
@@ -656,12 +580,8 @@ namespace Framework {
                         return;
                     }
                 }
-                else
-                {
-                    std::cout << "Script already exists: " << fileName << std::endl;
-                }
+                else std::cout << "Script already exists: " << fileName << std::endl;
             }
-             */
 
              // Material Files
             else if (extension == "material")
@@ -1010,6 +930,8 @@ namespace Framework {
                         // Load non additive
                         Framework::sceneManager.LoadScene(filePath);
                     }
+
+                    std::filesystem::current_path(GetEngineRootPath());
                 }
                 if (ImGui::MenuItem("Save"))
                 {
@@ -1208,8 +1130,7 @@ namespace Framework {
 
         // Left: Folder Explorer
         ImGui::BeginChild("FolderExplorer", ImVec2(0, 0), true);
-        for (const auto& root : assetTree)
-            RenderFolderTree(root);
+        for (const auto& root : assetTree) RenderFolderTree(root);
         ImGui::EndChild();
 
         ImGui::NextColumn();
@@ -1618,9 +1539,12 @@ namespace Framework {
 
             for (const auto& [handle, entry] : assetsImgui)
             {
-                if (entry.typeName != "AudioProperties") continue;
-                auto* audioProps = static_cast<AudioProperties*>(entry.pObject.get());
+                if (entry.typeName != "AudioMetadata") continue;
+                auto* audioProps = static_cast<AudioMetadata*>(entry.pObject.get());
                 if (!audioProps) continue;
+
+                // Lookup runtime AudioComponent by GUID
+                AudioComponent* comp = AssetManager::Instance().Get<AudioComponent>(audioProps->guid);
                 std::string audioModal = "EditModal_" + audioProps->guid;
 
                 ImGui::TableNextRow();
@@ -1725,8 +1649,8 @@ namespace Framework {
                         ImGui::BeginTooltip();
                         ImGui::Text("GUID: %s", audioProps->guid.id.c_str());
                         ImGui::Text("File: %s", audioProps->path.c_str());
-                        ImGui::Text("Volume: %.2f", audioProps->volume);
                         ImGui::Text("Mode: %s", audioProps->mode.c_str());
+                        ImGui::Text("Duration: %.2f sec", audioProps->duration);
                         ImGui::EndTooltip();
                     }
                 }
@@ -1740,42 +1664,48 @@ namespace Framework {
                 if (ImGui::Button(("Play##" + audioProps->guid.id).c_str()))
                 {
                     GlobalAudio.UE_PlaySound(audioProps->name);
-                    audioProps->isPlaying = true;
+                    if (comp) comp->isPlaying = true;
                 }
 
                 ImGui::SameLine();
                 if (ImGui::Button(("Stop##" + audioProps->guid.id).c_str()))
                 {
                     GlobalAudio.Reset();
-                    audioProps->isPlaying = false;
-                    audioProps->channelID = -1;
-                }
-
-                // Volume slider
-                float volume = audioProps->volume;
-                if (ImGui::SliderFloat(("Volume##" + audioProps->guid.id).c_str(), &volume, 0.0f, 1.0f))
-                {
-                    audioProps->volume = std::clamp(volume, 0.0f, 1.0f);
-                    GlobalAudio.UE_SetVolume(audioProps->name, audioProps->volume);
-                }
-
-                // Playback status
-                if (audioProps->isPlaying)
-                {
-                    ImGui::TextColored(ImVec4(0.2f, 1.0f, 0.2f, 1.0f), "Status: Playing");
-                }
-                else
-                {
-                    ImGui::Text("Status: Stopped");
-                }
-
-                // Poll playback status
-                if (audioProps->isPlaying && audioProps->channelID != -1)
-                {
-                    if (!GlobalAudio.IsChannelPlaying(audioProps->channelID))
+                    if (comp) 
                     {
-                        audioProps->isPlaying = false;
-                        audioProps->channelID = -1;
+                        comp->isPlaying = false;
+                        comp->channelID = -1;
+                    }
+                }
+
+                // Volume slider (runtime state lives in AudioComponent now)
+                if (comp)
+                {
+                    float volume = comp->volume;
+                    if (ImGui::SliderFloat(("Volume##" + audioProps->guid.id).c_str(), &volume, 0.0f, 1.0f))
+                    {
+                        comp->volume = std::clamp(volume, 0.0f, 1.0f);
+                        GlobalAudio.UE_SetVolume(audioProps->name, comp->volume);
+                    }
+
+                    // Playback status
+                    if (comp->isPlaying)
+                    {
+                        ImGui::TextColored(ImVec4(0.2f, 1.0f, 0.2f, 1.0f), "Status: Playing");
+                    }
+                    else
+                    {
+                        ImGui::Text("Status: Stopped");
+                    }
+
+                    // Poll playback status
+                    if (comp->isPlaying && comp->channelID != -1)
+                    {
+                        if (!GlobalAudio.IsChannelPlaying(comp->channelID))
+                        {
+                            comp->isPlaying = false;
+                            comp->channelID = -1;
+                        }
                     }
                 }
             }
@@ -1788,7 +1718,7 @@ namespace Framework {
             {
                 AssetManager::Instance().Unload(guid);
             }
-            AssetManager::Instance().SaveArrayToJson(TypeName<AudioProperties>::value, "Assets/JSON/AudioAsset.json", "audio");
+            AssetManager::Instance().SaveArrayToJson(TypeName<AudioMetadata>::value, "Assets/JSON/AudioAsset.json", "audio");
         }
     }
 
@@ -2012,35 +1942,30 @@ namespace Framework {
 
     void ImguiManager::RenderScriptAssets()
     {
-        /*
         const auto& assets = AssetManager::Instance().GetAssets();
         for (const auto& [guid, entry] : assets)
         {
-            if (entry.typeName != TypeName<ScriptProperties>::value) continue;
+            if (entry.typeName != TypeName<ScriptEntry>::value) // <-- use your ScriptAsset type
+                continue;
 
-            const auto* script = static_cast<const ScriptProperties*>(entry.pObject.get());
+            const auto* script = static_cast<const ScriptEntry*>(entry.pObject.get());
             if (!script) continue;
 
             ImGui::BeginGroup();
-            ImGui::Text(script->name.c_str());
+            ImGui::Text("%s", script->scriptPath.c_str());
 
             // Drag-and-drop support
             if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
             {
-                ImGui::SetDragDropPayload("SCRIPT_GUID", script->guid.id.c_str(), script->guid.id.size() + 1);
-                ImGui::Text("Dragging: %s", script->name.c_str());
+                // Send GUID as payload
+                ImGui::SetDragDropPayload("SCRIPT_GUID",
+                    script->guid.id.c_str(),
+                    script->guid.id.size() + 1);
+                ImGui::Text("Dragging: %s", script->scriptPath.c_str());
                 ImGui::EndDragDropSource();
             }
-
-            // Optional: double-click to open script
-            if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
-            {
-                scriptEditor.OpenScript(script->path); // Your script opening logic
-            }
-
             ImGui::EndGroup();
         }
-        */
     }
 
     int ImguiManager::GetMainViewIndex() const { return g_MainViewIndex; }
@@ -2391,8 +2316,8 @@ namespace Framework {
                 }
                 else
                 {
-                    ImGui::Begin("Entity Properties", &isPropertiesWindowOpen);
-                    if (ImGui::CollapsingHeader("Name", ImGuiTreeNodeFlags_DefaultOpen))
+                    ImGui::Begin("Entity Properties", &isPropertiesWindowOpen);                
+                   if (ImGui::CollapsingHeader("Name", ImGuiTreeNodeFlags_DefaultOpen))
                     {
                         std::string selectedEntityName = ecsInterface.GetEntityName(selectedEntity);
                         char buffer[256];
@@ -2421,83 +2346,6 @@ namespace Framework {
 
                     // Automate Generate Entity Inspector
                     DrawEntityInspector(selectedEntity, ecsInterface);
-
-                    // -------- Script Component UI --------
-                    if (ImGui::CollapsingHeader("Script Component", ImGuiTreeNodeFlags_DefaultOpen))
-                    {
-                        // Ensure the script list is populated
-                        static bool scriptsScanned = false;
-                        if (!scriptsScanned)
-                        {
-                            RefreshScriptFileList();
-                            scriptsScanned = true;
-                        }
-
-                        // Allow manual refresh (in case you add new .lua files while engine is running)
-                        if (ImGui::Button("Refresh Script List"))
-                        {
-                            RefreshScriptFileList();
-                        }
-
-                        // If entity has no ScriptComponent yet
-                        if (!ecsInterface.HasComponent<ScriptComponent>(selectedEntity))
-                        {
-                            if (ImGui::Button("Add Script Component"))
-                            {
-                                ecsInterface.AddComponent<ScriptComponent>(selectedEntity, ScriptComponent{});
-                            }
-                        }
-                        else
-                        {
-                            auto& sc = ecsInterface.GetComponent<ScriptComponent>(selectedEntity);
-
-                            // Show each script slot
-                            for (size_t i = 0; i < sc.scripts.size(); ++i)
-                            {
-                                auto& slot = sc.scripts[i];
-                                ImGui::PushID((int)i);
-
-                                int currentIndex = FindScriptIndex(slot.scriptPath);
-
-                                ImGui::Text("Script %d", (int)i);
-
-                                if (!g_scriptFileItems.empty())
-                                {
-                                    if (ImGui::Combo("##ScriptCombo", &currentIndex, g_scriptFileItems.data(), (int)g_scriptFileItems.size()))
-                                    {
-                                        if (currentIndex >= 0 && currentIndex < (int)g_scriptFiles.size())
-                                        {
-                                            slot.scriptPath = g_scriptFiles[currentIndex];
-                                            slot.initialized = false;
-                                            slot.lastWriteTicks = 0;
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    ImGui::TextDisabled("No Lua scripts in Assets/Scripts");
-                                }
-
-                                if (ImGui::Button("Remove Script"))
-                                {
-                                    sc.scripts.erase(sc.scripts.begin() + i);
-                                    ImGui::PopID();
-                                    break;
-                                }
-
-                                ImGui::Separator();
-                                ImGui::PopID();
-                            }
-
-                            if (ImGui::Button("Add Script Slot"))
-                            {
-                                ScriptInstance newSlot;
-                                newSlot.scriptPath.clear(); // user will pick from combo
-                                sc.scripts.push_back(newSlot);
-                            }
-                        }
-                    }
-
 
                     // Reset selectedEntity if the properties window is closed
                     if (!isPropertiesWindowOpen)

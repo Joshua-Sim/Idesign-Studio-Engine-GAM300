@@ -24,6 +24,7 @@
 #include "MessageSystem.h"
 #include <Graphics.h>
 #include "TextureLoaderDDS.h"
+#include "EnginePath.h"
 
 namespace Framework 
 {
@@ -102,13 +103,13 @@ namespace Framework
 		{
 			{ "Assets", AssetTabType::None, 
 				{
-					{ "Meshes", AssetTabType::Mesh, {} },
+					{ "Meshes",		AssetTabType::Mesh, {} },
 					{ "Animations", AssetTabType::Animation, {} },
-					{ "Textures", AssetTabType::Texture, {} },
-					{ "Audio", AssetTabType::Audio, {} },
-					{ "Prefabs", AssetTabType::Prefab, {} },
-					{ "Scenes", AssetTabType::Scene, {} },
-					{ "Scripts", AssetTabType::Scripts, {} }
+					{ "Textures",	AssetTabType::Texture, {} },
+					{ "Audio",		AssetTabType::Audio, {} },
+					{ "Prefabs",	AssetTabType::Prefab, {} },
+					{ "Scenes",		AssetTabType::Scene, {} },
+					{ "Scripts",	AssetTabType::Scripts, {} }
 				}
 			}
 		};
@@ -142,4 +143,3 @@ namespace Framework
 		int m_fboH;
 	};
 }
-

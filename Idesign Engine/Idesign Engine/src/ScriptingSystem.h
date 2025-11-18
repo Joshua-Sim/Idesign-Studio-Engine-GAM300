@@ -1,6 +1,7 @@
 #pragma once
 #include "System.h"
 #include <string>
+#include "ScriptProperties.h"
 
 struct lua_State;
 struct ScriptComponent;
@@ -41,8 +42,7 @@ namespace Framework {
         lua_State* L = nullptr;
         Graphics* graphics_ = nullptr;
 
-
-        bool LoadScriptTable(ScriptInstance& inst);
+        bool LoadScriptTable(ScriptEntry& inst);
         bool CallHook(int tableRef, const char* fn, float arg = 0.0f);
     };
 

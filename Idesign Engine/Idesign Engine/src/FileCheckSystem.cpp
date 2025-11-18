@@ -94,4 +94,16 @@ namespace Framework {
         return true;
     }
 
+    void FileCheckSystem::WatchAllFolders()
+    {
+        //Folders and filetypes to check for external change
+        WatchFolder("Assets/Scripts", { ".lua" });
+        WatchFolder("Assets/JSON", { ".json", ".cfg" });
+        WatchFolder("Assets/shaders", { ".glsl" });
+        WatchFolder("Assets/Textures", { ".png", ".jpg" });
+        WatchFolder("Scenes", { ".scene" });
+        WatchFolder("Assets/Prefabs", { ".prefab" });
+        WatchFolder("Assets/Materials", { ".material" });
+    }
+
 } // namespace Framework

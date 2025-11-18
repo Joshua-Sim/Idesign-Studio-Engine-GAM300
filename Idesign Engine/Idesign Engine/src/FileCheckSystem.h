@@ -22,6 +22,7 @@ namespace Framework {
 
         void WatchFolder(const std::string& folder, const std::vector<std::string>& extensions);
         bool PopEvent(FileEvent& outEvent);
+        void WatchAllFolders();
 
         static inline std::string s_ProjectRoot;
 

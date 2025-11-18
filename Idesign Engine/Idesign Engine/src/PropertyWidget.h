@@ -6,6 +6,8 @@
 // STL Library 
 #include <algorithm>  // for std::copy, std::sort, etc.
 #include <iterator>   // for std::begin, std::end, etc.
+#include <filesystem>
+#include <algorithm>
 
 // ImGui Stuff
 #include "imgui.h"
@@ -35,6 +37,9 @@
 extern Framework::Coordinator ecsInterface;
 namespace Framework
 {
+    // Scripting Stuff
+    namespace fs = std::filesystem;
+
 	// For Entity Inspector
 	void DrawInspector(void* pObject, const prop_list& propList);
 	void DrawEntityInspector(Entity entity, Coordinator& ecs);
@@ -43,6 +48,18 @@ namespace Framework
 	void RegisterComponentTypes();
 	void AutoRegisterAllReflectedComponents(Coordinator& ecs);
     
+    static const std::unordered_set<std::string> excludedComponents = 
+    {
+        "WindowConfig",
+        "PrefabProperties",
+        "PrefabComponent",
+        "MaterialMetadata",
+        "MaterialProperties",
+        "SceneProperties",
+        "AudioMetadata",
+        "ScriptEntry"
+    };
+
     //------------------------------------------------------------------------------------------------------------------------------------
     //  TEMPLATE FUNCTIONS FOR WIDGETS
     //------------------------------------------------------------------------------------------------------------------------------------
@@ -133,12 +150,6 @@ namespace Framework
                     component.textureID = asset->textureID; // Reuse loaded texture
                 }
 
-                if constexpr (std::is_same_v<AssetType, AudioProperties>)
-                {
-                    component.mode = asset->mode;
-                    component.soundType = asset->soundType;
-                }
-
                 if constexpr (std::is_same_v<AssetType, NavMeshComponent>)
                 {
                     component.guid = assetGuids[currentIndex];
@@ -150,6 +161,11 @@ namespace Framework
 
                     component.skeleton = asset->skeleton;
                     component.availableAnimations = asset->availableAnimations;
+                }
+
+                if constexpr (std::is_same_v<AssetType, ScriptProperties>)
+                {
+                    component.script = asset->script;
                 }
             }
         }
@@ -348,6 +364,121 @@ namespace Framework
                 ImGui::TextColored(ImVec4(0, 1, 0, 1), "Material saved and applied!");
                 isCreatingNewMaterial = false;
             }
+        }
+    }
+
+    inline void DrawScriptPropertiesWidget(ScriptProperties& comp, Entity entity)
+    {
+        ImGui::Separator();
+        ImGui::Text("Attached Scripts");
+
+        // Make a visible drop zone
+        ImGui::Button("Drop Script Here", ImVec2(200, 30));
+        if (ImGui::BeginDragDropTarget())
+        {
+            if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("SCRIPT_GUID"))
+            {
+                std::string guidStr((const char*)payload->Data, payload->DataSize - 1);
+                AssetHandle guid{ guidStr };
+
+                if (ecsInterface.HasComponent<ScriptProperties>(entity))
+                {
+                    auto& sp = ecsInterface.GetComponent<ScriptProperties>(entity);
+                    auto* asset = AssetManager::Instance().Get<ScriptEntry>(guid);
+                    if (asset)
+                    {
+                        ScriptEntry newEntry;
+                        newEntry.guid = guid;
+                        newEntry.scriptPath = asset->scriptPath;
+                        newEntry.hotReload = true;
+                        sp.scripts.push_back(newEntry);
+                    }
+                }
+            }
+            ImGui::EndDragDropTarget();
+        }
+
+        // Build dropdown list from AssetManager (all ScriptAssets)
+        std::vector<std::string> assetNames;
+        std::vector<AssetHandle> assetGuids;
+        for (const auto& [key, entry] : AssetManager::Instance().GetAssets())
+        {
+            if (entry.typeName != TypeName<ScriptEntry>::value) // <-- use your ScriptAsset type
+                continue;
+
+            auto* asset = static_cast<ScriptEntry*>(entry.pObject.get());
+            if (!asset) continue;
+
+            std::string name = asset->scriptPath;
+            assetNames.push_back(name);
+            assetGuids.push_back(key.guid);
+        }
+
+        std::vector<const char*> labelPtrs;
+        for (auto& s : assetNames)
+            labelPtrs.push_back(s.c_str());
+
+        // Now draw one dropdown per ScriptEntry
+        for (size_t i = 0; i < comp.scripts.size(); ++i)
+        {
+            auto& entry = comp.scripts[i];
+            ImGui::PushID((int)i);
+
+            ImGui::Text("Script %d", (int)i);
+
+            int currentIndex = -1;
+            for (size_t j = 0; j < assetGuids.size(); ++j)
+            {
+                if (assetGuids[j] == entry.guid)
+                {
+                    currentIndex = static_cast<int>(j);
+                    break;
+                }
+            }
+
+            if (!labelPtrs.empty())
+            {
+                if (ImGui::Combo("##ScriptCombo", &currentIndex, labelPtrs.data(), (int)labelPtrs.size()))
+                {
+                    if (currentIndex >= 0 && currentIndex < (int)assetGuids.size())
+                    {
+                        if (entry.guid != assetGuids[currentIndex]) // only if changed
+                        {
+                            entry.guid = assetGuids[currentIndex];
+                            auto* asset = AssetManager::Instance().Get<ScriptEntry>(entry.guid);
+                            if (asset)
+                                entry.scriptPath = asset->scriptPath;
+
+                            entry.initialized = false;
+                            entry.lastWriteTicks = 0;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                ImGui::TextDisabled("No ScriptAssets loaded");
+            }
+
+            ImGui::Checkbox("Hot Reload", &entry.hotReload);
+
+            if (ImGui::Button("Remove Script"))
+            {
+                comp.scripts.erase(comp.scripts.begin() + i);
+                ImGui::PopID();
+                break;
+            }
+
+            ImGui::Separator();
+            ImGui::PopID();
+        }
+
+        if (ImGui::Button("Add Script Slot"))
+        {
+            ScriptEntry newEntry;
+            newEntry.guid = AssetHandle{};   // empty until user picks
+            newEntry.scriptPath.clear();
+            comp.scripts.push_back(newEntry);
         }
     }
 }

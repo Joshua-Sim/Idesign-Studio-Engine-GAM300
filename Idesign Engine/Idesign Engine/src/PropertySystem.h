@@ -40,6 +40,8 @@ namespace Framework
             BOOL,
             VEC3,
             UINT,
+            OBJECT,         // a nested struct described by a prop_list
+            VECTOR_OBJECT,
 
             SLIDER_FLOAT,   // Volume, Brightness
             DRAG_FLOAT,     // Scale, Physics, Tuning

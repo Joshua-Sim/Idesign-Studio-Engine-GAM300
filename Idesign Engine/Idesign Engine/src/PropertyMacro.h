@@ -264,4 +264,16 @@ struct TypeName;
         [](const void* obj, void* out) { *static_cast<float*>(out) = static_cast<const type*>(obj)->field; }, \
         min, max, true)
 
+//------------------------------------------------------------------------------------------------------------------------------------
+//  SCRIPT MACROS
+//------------------------------------------------------------------------------------------------------------------------------------
+#define PROP_VECTOR_OBJECT(field, ElementType, ElementProps)           \
+    Framework::prop{                                                         \
+        #field,                                                        \
+        Framework::prop::VECTOR_OBJECT,                                        \
+        offsetof(Framework::ScriptProperties, field),                  \
+        0, ElementProps, sizeof(ElementType)                           \
+    }
+
+
 #endif // !_PROPERTY_MACRO_H_
