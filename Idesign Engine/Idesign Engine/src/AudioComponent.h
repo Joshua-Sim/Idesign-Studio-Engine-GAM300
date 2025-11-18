@@ -15,8 +15,10 @@
 #include <string>
 #include <fmod_studio.hpp>
 #include <glm.hpp>
+#include "AssetHandler.h"
+#include "PropertyMacro.h"
 
-namespace Framework 
+namespace Framework
 {
     struct AudioMetadata
     {
@@ -29,12 +31,11 @@ namespace Framework
     };
 
     // Property registration for AudioMetadata
-    // In AudioComponent.h, update the property registration:
     inline const std::vector g_AudioMetadataPropsArray =
     {
         PROP_GUID_HIDDEN(guid,          AudioMetadata),
         PROP_STRING(name,               AudioMetadata),
-        PROP_STRING(path,               AudioMetadata),  // FMOD event path (e.g., "event:/piano")
+        PROP_STRING(path,               AudioMetadata),
         PROP_STRING_READONLY(mode,      AudioMetadata),
         PROP_STRING_READONLY(soundType, AudioMetadata),
         PROP_FLOAT_READONLY(duration,   AudioMetadata)
@@ -48,13 +49,13 @@ namespace Framework
     // Player's "Ears"
     struct ListenerComponent
     {
-        glm::vec3 position = glm::vec3(0.0f);               // Listener position
-        glm::vec3 forward = glm::vec3(0.0f, 0.0f, -1.0f);   // Orientation forward
-        glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);         // Orientation up
-        glm::vec3 velocity = glm::vec3(0.0f);               // Velocity for Doppler
+        glm::vec3 position = glm::vec3(0.0f);
+        glm::vec3 forward = glm::vec3(0.0f, 0.0f, -1.0f);
+        glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+        glm::vec3 velocity = glm::vec3(0.0f);
 
-        bool active = true;                                 // Check if this listener is active
-        int listenerIndex = 0;                              // FMOD listener index
+        bool active = true;
+        int listenerIndex = 0;
     };
 
     // Property registration for ListenerComponent
@@ -74,25 +75,25 @@ namespace Framework
     //------------------------------------------------------------------------------------------------------------------//
 
     // Audio Source || Sound Emitter
-    struct AudioComponent 
+    struct AudioComponent
     {
-        AssetHandle guid;                                       // Asset reference to audio event/clip from AudioMetadata
-        std::string eventName;                                  // Name of the FMOD event to play
-        FMOD::Studio::EventInstance* eventInstance = nullptr;   // Instance of the playing sound
+        AssetHandle guid;
+        std::string eventName;
+        FMOD::Studio::EventInstance* eventInstance = nullptr;
 
         // 3D audio properties
-        bool is3D = true;                              // Whether this is a 3D sound
-        float minDistance = 1.0f;                      // Distance where sound is at full volume
-        float maxDistance = 100.0f;                    // Distance where sound is inaudible
+        bool is3D = true;
+        float minDistance = 1.0f;
+        float maxDistance = 100.0f;
 
         // Playback properties
-        float volume = 1.0f;                           // Volume multiplier (0.0 to 1.0)
-        bool isPlaying = false;                        // Current playback state
-        bool loop = false;                             // Whether sound should loop
-        bool playOnStart = true;                       // Auto-play when entity is created
+        float volume = 1.0f;
+        bool isPlaying = false;
+        bool loop = false;
+        bool playOnStart = true;
 
         // Runtime data
-        glm::vec3 lastPosition = glm::vec3(0.0f);     // Last known position for velocity calculation
+        glm::vec3 lastPosition = glm::vec3(0.0f);
 
         // Optional: internal ID or handle for audio system
         int channelID = -1;

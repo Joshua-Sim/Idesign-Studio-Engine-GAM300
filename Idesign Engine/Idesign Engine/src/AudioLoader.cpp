@@ -1,13 +1,20 @@
-
 #include "pch.h"
 #include "AudioLoader.h"
+#include "AudioSystem.h"
 
 namespace Framework
 {
     bool loadAudio(AudioMetadata& audioProps)
     {
+        // Check if AudioSystem is available
+        if (!g_AudioSystem)
+        {
+            std::cerr << "[AudioLoader] AudioSystem not initialized!" << std::endl;
+            return false;
+        }
+
         // Use the path field which contains the event path
-        FMOD::Studio::EventDescription* eventDesc = GlobalAudio.UE_LoadEvent(audioProps.path);
+        FMOD::Studio::EventDescription* eventDesc = g_AudioSystem->LoadEvent(audioProps.path);
         if (!eventDesc)
         {
             std::cerr << "[AudioLoader] Failed to load sound: " << audioProps.name

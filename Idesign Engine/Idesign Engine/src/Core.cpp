@@ -14,7 +14,7 @@
 #include "EngineState.h"
 #include "Debugger.h"
 #include "InputHandler.h"
-#include "Audio.h"
+#include "AudioSystem.h"
 #include <chrono>
 #include <thread>
 namespace Framework
@@ -109,7 +109,12 @@ namespace Framework
             }
 
             // Update FMOD every frame regardless of play state
-            GlobalAudio.Update(0.0f);
+            if (g_AudioSystem) {
+                FMOD::Studio::System* studioSystem = g_AudioSystem->GetStudioSystem();
+                if (studioSystem) {
+                    studioSystem->update();
+                }
+            }
 
             if (debugSystem) {
                 debugSystem->SetSystemTimes(systemTimes);

@@ -1691,7 +1691,7 @@ namespace Framework {
                         std::cout << "[UI] Preview Play - Path: " << audioMeta->path << std::endl;
 
                         // Load event
-                        FMOD::Studio::EventDescription* eventDesc = GlobalAudio.UE_LoadEvent(audioMeta->path);
+                        FMOD::Studio::EventDescription* eventDesc = g_AudioSystem->LoadEvent(audioMeta->path);
                         if (eventDesc)
                         {
                             // Create instance
@@ -1727,7 +1727,9 @@ namespace Framework {
                                     // ✅ CRITICAL: Give FMOD time to process
                                     for (int i = 0; i < 5; i++)
                                     {
-                                        GlobalAudio.Update(0.016f);
+                                        if (g_AudioSystem && g_AudioSystem->GetStudioSystem()) {
+                                            g_AudioSystem->GetStudioSystem()->update();
+                                        }
                                     }
 
                                     // Check state
@@ -1862,7 +1864,7 @@ namespace Framework {
                             }
 
                             // Use the path field for the full event path
-                            FMOD::Studio::EventDescription* eventDesc = GlobalAudio.UE_LoadEvent(audioMeta->path);
+                            FMOD::Studio::EventDescription* eventDesc = g_AudioSystem->LoadEvent(audioMeta->path);
                             if (eventDesc)
                             {
                                 FMOD_RESULT result = eventDesc->createInstance(&previewInstance);
@@ -1906,7 +1908,7 @@ namespace Framework {
                             std::cout << "[UI] Event path: " << audioMeta->path << std::endl;
 
                             // Use the path field which has the full FMOD event path (e.g., "event:/ForestAmbient")
-                            GlobalAudio.UE_PlaySound(audioMeta->path);
+                            g_AudioSystem->PlayAudio(audioMeta->path);
                         }
 
                         if (ImGui::MenuItem("➕ Add to Selected Entity"))
@@ -2020,13 +2022,13 @@ namespace Framework {
                     // Inline play button
                     if (ImGui::SmallButton("Play"))
                     {
-                        GlobalAudio.UE_PlaySound(audioMeta->name);
+                        g_AudioSystem->PlayAudio(audioMeta->path);
                     }
 
                     ImGui::SameLine();
                     if (ImGui::SmallButton("Stop"))
                     {
-                        GlobalAudio.Reset();
+                        g_AudioSystem->Reset();
                     }
 
                     ImGui::SameLine();
@@ -2083,9 +2085,9 @@ namespace Framework {
     }
 
     // Add these methods to ImguiManager.cpp for entity inspector audio components
-// These should be called from your existing entity property rendering code
+    // These should be called from your existing entity property rendering code
 
-// Add this method to render AudioComponent properties in the entity inspector
+    // Add this method to render AudioComponent properties in the entity inspector
     void ImguiManager::RenderAudioComponentProperties(Entity entity)
     {
         if (!ecsInterface.HasComponent<AudioComponent>(entity))
