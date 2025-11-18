@@ -243,7 +243,8 @@
                     "sortIndex": 0
                 },
                 "MeshComponent": {
-                    "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941"
+                    "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "0f2ece2c-6b29-43d9-a6ae-1f648d18d86d"
@@ -277,7 +278,8 @@
                     "sortIndex": 3
                 },
                 "MeshComponent": {
-                    "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941"
+                    "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "b57b4683-8581-4256-9cc5-60c900acec67"
@@ -311,7 +313,8 @@
                     "sortIndex": 4
                 },
                 "MeshComponent": {
-                    "guid": "eac3e6f4-1bf2-415f-aef8-8f1269d91560"
+                    "guid": "eac3e6f4-1bf2-415f-aef8-8f1269d91560",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "b57b4683-8581-4256-9cc5-60c900acec67"
@@ -379,7 +382,11 @@
                     "sortIndex": 12
                 },
                 "MeshComponent": {
-                    "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941"
+                    "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606"
                 },
                 "LightProperties": {
                     "enabled": true,
@@ -391,10 +398,11 @@
                     "intensity": 0.15800000727176666,
                     "radius": 100.0,
                     "innerCutOffAngle": 0.21816615760326385,
-                    "outerCutOffAngle": 0.2617993950843811
-                },
-                "TextureComponent": {
-                    "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606"
+                    "outerCutOffAngle": 0.2617993950843811,
+                    "castsShadow": false,
+                    "shadowBiasConst": 0.004999999888241291,
+                    "shadowBiasFactor": 0.05000000074505806,
+                    "type": "Point"
                 }
             }
         },
@@ -459,7 +467,8 @@
                     "sortIndex": 1
                 },
                 "MeshComponent": {
-                    "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941"
+                    "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "b57b4683-8581-4256-9cc5-60c900acec67"
@@ -561,7 +570,8 @@
                     "sortIndex": 8
                 },
                 "MeshComponent": {
-                    "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941"
+                    "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "0f2ece2c-6b29-43d9-a6ae-1f648d18d86d"
@@ -799,7 +809,8 @@
                     "sortIndex": 2
                 },
                 "MeshComponent": {
-                    "guid": "0bfc0f47-64aa-4521-b9fa-08ff8aed994b"
+                    "guid": "0bfc0f47-64aa-4521-b9fa-08ff8aed994b",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "4cf1bf23-4fbd-4a08-9abb-f662145f2134"
@@ -833,7 +844,8 @@
                     "sortIndex": 13
                 },
                 "MeshComponent": {
-                    "guid": "239cddd5-6733-44a1-927a-e3b13152a09a"
+                    "guid": "239cddd5-6733-44a1-927a-e3b13152a09a",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0"
@@ -901,7 +913,8 @@
                     "sortIndex": 15
                 },
                 "MeshComponent": {
-                    "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941"
+                    "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "b57b4683-8581-4256-9cc5-60c900acec67"
@@ -935,7 +948,11 @@
                     "sortIndex": 14
                 },
                 "MeshComponent": {
-                    "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941"
+                    "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606"
                 },
                 "LightProperties": {
                     "enabled": true,
@@ -947,10 +964,11 @@
                     "intensity": 1.0,
                     "radius": 100.0,
                     "innerCutOffAngle": 0.21816615760326385,
-                    "outerCutOffAngle": 0.2617993950843811
-                },
-                "TextureComponent": {
-                    "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606"
+                    "outerCutOffAngle": 0.2617993950843811,
+                    "castsShadow": false,
+                    "shadowBiasConst": 0.004999999888241291,
+                    "shadowBiasFactor": 0.05000000074505806,
+                    "type": "Point"
                 }
             }
         },
@@ -1629,9 +1647,34 @@
                         "51315770-51ee-4179-8c2f-6f04b11153ff"
                     ],
                     "sortIndex": 11
+                }
+            }
+        },
+        {
+            "name": "Player",
+            "guid": "ac6128ea-238e-4050-8de6-27e47348b309",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -33.45267868041992,
+                        9.0,
+                        13.076478958129883
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
                 },
-                "MeshComponent": {
-                    "guid": ""
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 0
                 }
             }
         }

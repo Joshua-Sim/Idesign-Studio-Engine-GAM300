@@ -707,8 +707,17 @@ namespace Framework {
         // ====================================================================
         if (groundMode)
         {
-            float groundY = terrain.getHeightAt(gameCamera.position.x, gameCamera.position.z);
-            gameCamera.position.y = groundY + 1.8f;
+            //float groundY = terrain.getHeightAt(gameCamera.position.x, gameCamera.position.z);
+            gameCamera.position.y = 9;
+            for (auto const& entityId : mEntities) {
+                if (ecsInterface.GetEntityName(entityId) == "Player") {
+                    if (ecsInterface.HasComponent<TransformComponent>(entityId)) {
+                        auto& transform = ecsInterface.GetComponent<TransformComponent>(entityId);
+                        transform.position = gameCamera.position;
+                       
+                    }
+                }
+            }
         }
         RenderView(
             gameCamera, 0, w, h,
