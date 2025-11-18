@@ -115,7 +115,7 @@ namespace Framework
         };
 
         Camera sceneCamera{ {0.f, 3.f, 8.f} }; // Free-fly editor camera
-        Camera gameCamera{ {0.f, 1.8f, 3.f} }; // Gameplay camera
+        Camera gameCamera{ {-33, 7.631, 14} }; // Gameplay camera
         CameraMode activeCameraMode;
 
         Camera& cam = GetActiveCamera();
