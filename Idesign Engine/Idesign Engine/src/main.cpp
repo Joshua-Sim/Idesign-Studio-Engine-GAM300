@@ -77,6 +77,61 @@ int main(void)
 	// Initialize FMOD Studio Audio System
     std::cout << "Initializing FMOD Studio Audio System..." << std::endl;
     GlobalAudio.Initialize();
+
+    // Quick inline test
+    std::cout << "\n[QUICK TEST] Testing audio playback..." << std::endl;
+    auto testDesc = GlobalAudio.UE_LoadEvent("event:/ForestAmbient");
+    if (testDesc)
+    {
+        FMOD::Studio::EventInstance* testInst = nullptr;
+        if (testDesc->createInstance(&testInst) == FMOD_OK)
+        {
+            // Check if 3D
+            bool is3D = false;
+            testDesc->is3D(&is3D);
+            std::cout << "[QUICK TEST] Is 3D: " << (is3D ? "YES" : "NO") << std::endl;
+
+            // Set 3D position if needed
+            if (is3D)
+            {
+                FMOD_3D_ATTRIBUTES attr = {};
+                attr.position = { 0, 0, 0 };
+                attr.velocity = { 0, 0, 0 };
+                attr.forward = { 0, 0, 1 };
+                attr.up = { 0, 1, 0 };
+                testInst->set3DAttributes(&attr);
+            }
+
+            testInst->setVolume(1.0f);
+            testInst->start();
+
+            // Let it play for a bit
+            for (int i = 0; i < 30; i++)
+            {
+                GlobalAudio.Update(0.1f);
+                std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            }
+
+            testInst->stop(FMOD_STUDIO_STOP_IMMEDIATE);
+            testInst->release();
+            std::cout << "[QUICK TEST] Did you hear audio? (played for 3 seconds)" << std::endl;
+        }
+    }
+
+    // Set maximum volumes
+    GlobalAudio.SetMasterVolume(1.0f);
+    GlobalAudio.SetBGMVolume(1.0f);
+    GlobalAudio.SetSFXVolume(1.0f);
+
+    // Set 3D listener position (required for 3D audio!)
+    GlobalAudio.Set3DListener(
+        Framework::Vector3(0, 0, 0),     // Position at origin
+        Framework::Vector3(0, 0, 0),     // No velocity
+        Framework::Vector3(0, 0, -1),    // Looking forward
+        Framework::Vector3(0, 1, 0)      // Up is +Y
+    );
+
+    std::cout << "[Audio] Volumes and 3D listener configured!" << std::endl;
     std::cout << "FMOD Studio Audio System initialized successfully!" << std::endl;
 
     // ------- Create systems below -------- 

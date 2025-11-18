@@ -44,6 +44,10 @@ namespace Framework {
         void OnEntityDestroyed(const EntityDestroyedMessage& msg);
         void OnPlaySound(const PlaySoundMessage& msg);
 
+        void OnEnterPlayMode();
+        void OnExitPlayMode();
+
+
     private:
         // Update 3D attributes for a specific entity's sound
         void Update3DAttributes(Entity entity, const glm::vec3& position, const glm::vec3& velocity);

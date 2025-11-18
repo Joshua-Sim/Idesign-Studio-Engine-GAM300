@@ -14,6 +14,7 @@
 #include "EngineState.h"
 #include "Debugger.h"
 #include "InputHandler.h"
+#include "Audio.h"
 #include <chrono>
 #include <thread>
 namespace Framework
@@ -106,6 +107,9 @@ namespace Framework
                 }
                 accumulator -= fixedDt;
             }
+
+            // Update FMOD every frame regardless of play state
+            GlobalAudio.Update(0.0f);
 
             if (debugSystem) {
                 debugSystem->SetSystemTimes(systemTimes);

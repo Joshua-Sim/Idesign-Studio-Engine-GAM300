@@ -6,14 +6,14 @@
             "path": "Assets/Textures/music.png"
         },
         {
-            "guid": "aa40e4be-e3ce-4b7d-8806-dc0f46d34ee8",
-            "name": "Backyard",
-            "path": "Assets/Textures/Backyard.png"
-        },
-        {
             "guid": "0f2ece2c-6b29-43d9-a6ae-1f648d18d86d",
             "name": "Wood",
             "path": "Assets\\Textures\\Wood.png"
+        },
+        {
+            "guid": "aa40e4be-e3ce-4b7d-8806-dc0f46d34ee8",
+            "name": "Backyard",
+            "path": "Assets/Textures/Backyard.png"
         },
         {
             "guid": "b2d4bb99-3396-40de-8789-01d6cf083f4e",

@@ -29,11 +29,12 @@ namespace Framework
     };
 
     // Property registration for AudioMetadata
+    // In AudioComponent.h, update the property registration:
     inline const std::vector g_AudioMetadataPropsArray =
     {
         PROP_GUID_HIDDEN(guid,          AudioMetadata),
         PROP_STRING(name,               AudioMetadata),
-        PROP_STRING(path,               AudioMetadata),
+        PROP_STRING(path,               AudioMetadata),  // FMOD event path (e.g., "event:/piano")
         PROP_STRING_READONLY(mode,      AudioMetadata),
         PROP_STRING_READONLY(soundType, AudioMetadata),
         PROP_FLOAT_READONLY(duration,   AudioMetadata)

@@ -471,6 +471,8 @@ namespace Framework
             }
         }
 
+        void ListAllEvents();
+
         // Check if a sound is 3D
         bool IsEvent3D(const std::string& eventName) {
             FMOD::Studio::EventDescription* eventDesc = UE_LoadEvent(eventName);

@@ -100,6 +100,12 @@ namespace Framework
     }
 
     // Initialize the system
+    // =============================================================================
+// FIX FOR Audio.cpp - Initialize() Function
+// The Problem: Banks are loaded but sample data is not loaded, so no audio plays
+// The Solution: Load sample data after loading banks
+// =============================================================================
+
     void Audio::Initialize()
     {
         std::cout << "Current working directory: "
@@ -111,7 +117,7 @@ namespace Framework
         if (studioSystem) {
             FMOD::System* coreSystem = nullptr;
             studioSystem->getCoreSystem(&coreSystem);
-            if (coreSystem) 
+            if (coreSystem)
             {
                 coreSystem->getVersion(&version);
                 std::cout << "[Audio] FMOD Engine version: "
@@ -136,14 +142,14 @@ namespace Framework
         result = studioSystem->loadBankFile("Master.strings.bank",
             FMOD_STUDIO_LOAD_BANK_NORMAL, &stringsBank);
 
-        if (result != FMOD_OK) 
+        if (result != FMOD_OK)
         {
-            std::cerr << "[Audio] ? ERROR: Failed to load Master.strings.bank" << std::endl;
+            std::cerr << "[Audio] ERROR: Failed to load Master.strings.bank" << std::endl;
             std::cerr << "[Audio] Error code: " << result << std::endl;
         }
-        else 
+        else
         {
-            std::cout << "[Audio] ? Master.strings.bank loaded successfully!" << std::endl;
+            std::cout << "[Audio] Master.strings.bank loaded successfully!" << std::endl;
         }
 
         // ============================================================
@@ -153,14 +159,14 @@ namespace Framework
         result = studioSystem->loadBankFile("Master.bank",
             FMOD_STUDIO_LOAD_BANK_NORMAL, &masterBank);
 
-        if (result != FMOD_OK) 
+        if (result != FMOD_OK)
         {
-            std::cerr << "[Audio] ? ERROR: Failed to load Master.bank" << std::endl;
+            std::cerr << "[Audio] ERROR: Failed to load Master.bank" << std::endl;
             std::cerr << "[Audio] Error code: " << result << std::endl;
         }
-        else 
+        else
         {
-            std::cout << "[Audio] ? Master.bank loaded successfully!" << std::endl;
+            std::cout << "[Audio] Master.bank loaded successfully!" << std::endl;
         }
 
         // ============================================================
@@ -170,17 +176,28 @@ namespace Framework
         result = studioSystem->loadBankFile("BGM.bank",
             FMOD_STUDIO_LOAD_BANK_NORMAL, &bgmBank);
 
-        if (result != FMOD_OK) 
+        if (result != FMOD_OK)
         {
-            std::cerr << "[Audio] ? WARNING: Failed to load BGM.bank" << std::endl;
+            std::cerr << "[Audio] WARNING: Failed to load BGM.bank" << std::endl;
             std::cerr << "[Audio] Error code: " << result << std::endl;
         }
-        else 
+        else
         {
-            std::cout << "[Audio] ? BGM.bank loaded successfully!" << std::endl;
+            std::cout << "[Audio] BGM.bank loaded successfully!" << std::endl;
             int eventCount = 0;
             bgmBank->getEventCount(&eventCount);
-            std::cout << "[Audio] ? BGM bank contains " << eventCount << " events" << std::endl;
+            std::cout << "[Audio] BGM bank contains " << eventCount << " events" << std::endl;
+
+            // ? CRITICAL FIX: Load sample data for BGM bank
+            result = bgmBank->loadSampleData();
+            if (result != FMOD_OK)
+            {
+                std::cerr << "[Audio] WARNING: Failed to load BGM sample data. Error: " << result << std::endl;
+            }
+            else
+            {
+                std::cout << "[Audio] ? BGM sample data loaded!" << std::endl;
+            }
         }
 
         // ============================================================
@@ -190,17 +207,28 @@ namespace Framework
         result = studioSystem->loadBankFile("SFX.bank",
             FMOD_STUDIO_LOAD_BANK_NORMAL, &sfxBank);
 
-        if (result != FMOD_OK) 
+        if (result != FMOD_OK)
         {
-            std::cerr << "[Audio] ? WARNING: Failed to load SFX.bank" << std::endl;
+            std::cerr << "[Audio] WARNING: Failed to load SFX.bank" << std::endl;
             std::cerr << "[Audio] Error code: " << result << std::endl;
         }
-        else 
+        else
         {
-            std::cout << "[Audio] ? SFX.bank loaded successfully!" << std::endl;
+            std::cout << "[Audio] SFX.bank loaded successfully!" << std::endl;
             int eventCount = 0;
             sfxBank->getEventCount(&eventCount);
-            std::cout << "[Audio] ? SFX bank contains " << eventCount << " events" << std::endl;
+            std::cout << "[Audio] SFX bank contains " << eventCount << " events" << std::endl;
+
+            // ? CRITICAL FIX: Load sample data for SFX bank
+            result = sfxBank->loadSampleData();
+            if (result != FMOD_OK)
+            {
+                std::cerr << "[Audio] WARNING: Failed to load SFX sample data. Error: " << result << std::endl;
+            }
+            else
+            {
+                std::cout << "[Audio] ? SFX sample data loaded!" << std::endl;
+            }
         }
 
         // ============================================================
@@ -210,21 +238,32 @@ namespace Framework
         result = studioSystem->loadBankFile("Ambient.bank",
             FMOD_STUDIO_LOAD_BANK_NORMAL, &ambientBank);
 
-        if (result != FMOD_OK) 
+        if (result != FMOD_OK)
         {
-            std::cerr << "[Audio] ? WARNING: Failed to load Ambient.bank" << std::endl;
+            std::cerr << "[Audio] WARNING: Failed to load Ambient.bank" << std::endl;
             std::cerr << "[Audio] Error code: " << result << std::endl;
         }
-        else 
+        else
         {
-            std::cout << "[Audio] ? Ambient.bank loaded successfully!" << std::endl;
+            std::cout << "[Audio] Ambient.bank loaded successfully!" << std::endl;
             int eventCount = 0;
             ambientBank->getEventCount(&eventCount);
-            std::cout << "[Audio] ? Ambient bank contains " << eventCount << " events" << std::endl;
+            std::cout << "[Audio] Ambient bank contains " << eventCount << " events" << std::endl;
+
+            // ? CRITICAL FIX: Load sample data for Ambient bank
+            result = ambientBank->loadSampleData();
+            if (result != FMOD_OK)
+            {
+                std::cerr << "[Audio] WARNING: Failed to load Ambient sample data. Error: " << result << std::endl;
+            }
+            else
+            {
+                std::cout << "[Audio] ? Ambient sample data loaded!" << std::endl;
+            }
         }
 
         std::cout << "\n[Audio] ========================================" << std::endl;
-        std::cout << "[Audio] All bank files loaded!" << std::endl;
+        std::cout << "[Audio] All bank files and sample data loaded!" << std::endl;
         std::cout << "[Audio] ========================================\n" << std::endl;
 
         //Create references to common buses 
@@ -233,6 +272,16 @@ namespace Framework
         UE_CreateBus("bus:/SFX");       //SFX bus
         UE_CreateBus("bus:/Ambient");   //Ambient bus
     }
+
+    // =============================================================================
+    // WHAT THIS FIX DOES:
+    // =============================================================================
+    // After each bank is loaded, we call bank->loadSampleData() to actually load
+    // the audio samples into memory. Without this, FMOD knows about the events
+    // but has no actual audio data to play!
+    //
+    // This is the most common reason for "silent audio" in FMOD Studio.
+    // =============================================================================
 
     // Update the system
     void Audio::Update(float deltaTime) 
@@ -331,84 +380,113 @@ namespace Framework
     }
 
     //Load an event description using the path stored in AudioProperties.path 
-    EventDescription* Audio::UE_LoadEvent(const std::string& customName) 
+    FMOD::Studio::EventDescription* Audio::UE_LoadEvent(const std::string& name)
     {
-        //Check cache
-        if (loadedEvents.count(customName)) 
+        std::cout << "[Audio] UE_LoadEvent called for: " << name << std::endl;
+
+        // Check if already loaded
+        auto it = loadedEvents.find(name);
+        if (it != loadedEvents.end())
         {
-            return loadedEvents[customName];
+            std::cout << "[Audio] Event already loaded: " << name << std::endl;
+            return it->second;
         }
 
-        AudioMetadata* audioProps = AssetManager::Instance().Get<AudioMetadata>(
-            AssetManager::Instance().FindGuid<AudioMetadata>(customName)
-        );
-        if (!audioProps) 
+        // Check if the name already has the "event:/" prefix
+        std::string eventPath = name;
+        if (name.find("event:/") == std::string::npos)
         {
-			std::cout << "Error: AudioProperties not found for customName: " << customName << std::endl;
-			return nullptr;
+            // Add prefix only if it's not there
+            eventPath = "event:/" + name;
+            std::cout << "[Audio] Added event prefix: " << eventPath << std::endl;
+        }
+        else
+        {
+            std::cout << "[Audio] Using provided path: " << eventPath << std::endl;
         }
 
-		const std::string& eventPath = audioProps->path;
-        if (eventPath.empty()) 
+        FMOD::Studio::EventDescription* eventDesc = nullptr;
+        FMOD_RESULT result = studioSystem->getEvent(eventPath.c_str(), &eventDesc);
+
+        if (result != FMOD_OK)
         {
-            std::cout << "Error: Event path is empty for customName: " << customName << std::endl;
+            std::cerr << "[Audio] Failed to get event '" << eventPath << "'. Error code: " << result << std::endl;
+
+            // List all available events for debugging
+            ListAllEvents();
             return nullptr;
         }
 
-		EventDescription* eventDesc = nullptr;
-		FMOD_RESULT res = studioSystem->getEvent(eventPath.c_str(), &eventDesc);
-        if (res != FMOD_OK || !eventDesc) 
-        {
-            std::cout << "Error: Failed to load event at path: " << eventPath << ", FMOD result: " << res << std::endl;
-            return nullptr;
-        }
+        // Cache the loaded event using the ORIGINAL name passed in
+        loadedEvents[name] = eventDesc;
+        std::cout << "[Audio] Event loaded and cached: " << name << std::endl;
 
-		loadedEvents[customName] = eventDesc;
         return eventDesc;
     }
 
-    void Audio::UE_PlaySound(const std::string& customName)
+    void Audio::UE_PlaySound(const std::string& name)
     {
-        // 1. Load event description from FMOD
-        EventDescription* desc = UE_LoadEvent(customName);
-        if (!desc) return;
+        std::cout << "[Audio] UE_PlaySound called for: " << name << std::endl;
 
-        EventInstance* instance = nullptr;
-        FMOD_RESULT res = desc->createInstance(&instance);
-        if (res != FMOD_OK || !instance) {
-            std::cout << "Error: Failed to create event instance for " << customName
-                << ", FMOD result: " << res << std::endl;
+        // First check if event is already loaded
+        auto it = loadedEvents.find(name);
+        if (it == loadedEvents.end())
+        {
+            std::cout << "[Audio] Event not in cache, loading: " << name << std::endl;
+
+            // Try to load the event
+            FMOD::Studio::EventDescription* eventDesc = UE_LoadEvent(name);
+            if (!eventDesc)
+            {
+                std::cerr << "[Audio] Failed to load event: " << name << std::endl;
+                return;
+            }
+            std::cout << "[Audio] Event loaded successfully: " << name << std::endl;
+        }
+        else
+        {
+            std::cout << "[Audio] Event found in cache: " << name << std::endl;
+        }
+
+        // Get or retrieve the event description
+        FMOD::Studio::EventDescription* eventDesc = nullptr;
+        auto loadedIt = loadedEvents.find(name);
+        if (loadedIt != loadedEvents.end())
+        {
+            eventDesc = loadedIt->second;
+        }
+
+        if (!eventDesc)
+        {
+            std::cerr << "[Audio] Event description is null!" << std::endl;
             return;
         }
 
-        // 2. Resolve GUID and fetch metadata
-        AssetHandle guid = AssetManager::Instance().FindGuid<AudioMetadata>(customName);
-        AudioMetadata* meta = AssetManager::Instance().Get<AudioMetadata>(guid);
+        // Create an instance
+        FMOD::Studio::EventInstance* eventInstance = nullptr;
+        FMOD_RESULT result = eventDesc->createInstance(&eventInstance);
 
-        // 3. Parse sound type from metadata
-        Audio::SoundType st = ParseSoundType(meta ? meta->soundType : std::string());
-
-        // 4. Start playing
-        instance->start();
-
-        // 5. Track runtime state in AudioComponent
-        int id = GetNextChannelId();
-        activeEvents[customName] = instance;
-        activeEventsById[id] = instance;
-
-        AudioComponent* comp = AssetManager::Instance().Get<AudioComponent>(guid);
-        if (comp) {
-            comp->eventInstance = instance;
-            comp->channelID = id;
-            comp->isPlaying = true;
+        if (result != FMOD_OK)
+        {
+            std::cerr << "[Audio] Failed to create instance. Error: " << result << std::endl;
+            return;
         }
 
-        // 6. Set volume based on sound type
-        float vol = (st == BACKGROUND_MUSIC) ? bgmVolume : sfxVolume;
-        vol *= masterVolume;
-        instance->setVolume(vol);
+        std::cout << "[Audio] Instance created successfully" << std::endl;
 
-        std::cout << "Playing event: " << customName << std::endl;
+        // Start the instance
+        result = eventInstance->start();
+        if (result != FMOD_OK)
+        {
+            std::cerr << "[Audio] Failed to start instance. Error: " << result << std::endl;
+            eventInstance->release();
+            return;
+        }
+
+        std::cout << "[Audio] Sound started playing: " << name << std::endl;
+
+        // Store the instance
+        activeEvents[name] = eventInstance;
     }
 
     //========================== NEW 3D AUDIO FUNCTIONS ==============================
@@ -1133,4 +1211,67 @@ namespace Framework
         activeEvents.clear();
         std::cout << "Audio system has been reset by stopping events." << std::endl;
     }
-}
+
+    void Audio::ListAllEvents()
+    {
+        std::cout << "\n[Audio] === Available Events in Banks ===" << std::endl;
+
+        int bankCapacity = 0;
+        FMOD_RESULT result;
+
+        // First call: get number of banks
+        result = studioSystem->getBankList(nullptr, 0, &bankCapacity);
+        if (result != FMOD_OK || bankCapacity == 0)
+        {
+            std::cout << "[Audio] No banks found or error occurred.\n" << std::endl;
+            return;
+        }
+
+        // Allocate array
+        std::vector<FMOD::Studio::Bank*> banks(bankCapacity);
+
+        // Second call: actually retrieve bank list
+        result = studioSystem->getBankList(banks.data(), bankCapacity, nullptr);
+        if (result != FMOD_OK)
+        {
+            std::cout << "[Audio] Failed to retrieve bank list.\n" << std::endl;
+            return;
+        }
+
+        // Iterate through each bank
+        for (auto* bank : banks)
+        {
+            if (!bank) continue;
+
+            char bankPath[256];
+            int pathLen = 0;
+            bank->getPath(bankPath, sizeof(bankPath), &pathLen);
+
+            std::cout << "[Audio] Bank: " << bankPath << std::endl;
+
+            int eventCount = 0;
+            bank->getEventCount(&eventCount);
+
+            if (eventCount > 0)
+            {
+                std::vector<FMOD::Studio::EventDescription*> eventList(eventCount);
+                bank->getEventList(eventList.data(), eventCount, nullptr);
+
+                for (auto* eventDesc : eventList)
+                {
+                    if (!eventDesc) continue;
+
+                    char eventPath[256];
+                    int pathSize = 0;
+                    eventDesc->getPath(eventPath, sizeof(eventPath), &pathSize);
+
+                    std::cout << "[Audio]   - " << eventPath << std::endl;
+                }
+            }
+        }
+
+        std::cout << "[Audio] ==========================\n" << std::endl;
+    }
+
+   
+} // namespace

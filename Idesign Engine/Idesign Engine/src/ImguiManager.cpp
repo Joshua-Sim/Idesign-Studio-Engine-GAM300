@@ -32,6 +32,7 @@
 #include <filesystem>
 #include "AudioSystem.h"
 #include "AudioComponent.h"
+#include "MessageSystem.h"
 
 
 extern Framework::Coordinator ecsInterface;
@@ -1679,19 +1680,76 @@ namespace Framework {
                     previewInstance->release();
                     previewInstance = nullptr;
                     isPlaying = false;
+                    std::cout << "[UI] Stopped preview playback" << std::endl;
                 }
                 else if (selectedAudioGuid)
                 {
                     AudioMetadata* audioMeta = AssetManager::Instance().Get<AudioMetadata>(selectedAudioGuid);
                     if (audioMeta)
                     {
-                        FMOD::Studio::EventDescription* eventDesc = GlobalAudio.UE_LoadEvent(audioMeta->name);
+                        std::cout << "[UI] Preview Play - Name: " << audioMeta->name << std::endl;
+                        std::cout << "[UI] Preview Play - Path: " << audioMeta->path << std::endl;
+
+                        // Load event
+                        FMOD::Studio::EventDescription* eventDesc = GlobalAudio.UE_LoadEvent(audioMeta->path);
                         if (eventDesc)
                         {
-                            eventDesc->createInstance(&previewInstance);
-                            previewInstance->setVolume(previewVolume);
-                            previewInstance->start();
-                            isPlaying = true;
+                            // Create instance
+                            FMOD_RESULT result = eventDesc->createInstance(&previewInstance);
+                            if (result == FMOD_OK && previewInstance)
+                            {
+                                // ✅ Check if 3D and set position
+                                bool is3D = false;
+                                eventDesc->is3D(&is3D);
+                                std::cout << "[UI] Event is 3D: " << (is3D ? "Yes" : "No") << std::endl;
+
+                                if (is3D)
+                                {
+                                    // Set position at listener (origin)
+                                    FMOD_3D_ATTRIBUTES attributes = {};
+                                    attributes.position = { 0.0f, 0.0f, 0.0f };
+                                    attributes.velocity = { 0.0f, 0.0f, 0.0f };
+                                    attributes.forward = { 0.0f, 0.0f, 1.0f };
+                                    attributes.up = { 0.0f, 1.0f, 0.0f };
+                                    previewInstance->set3DAttributes(&attributes);
+                                }
+
+                                // Set volume
+                                previewInstance->setVolume(previewVolume);
+
+                                // Start playback
+                                result = previewInstance->start();
+                                if (result == FMOD_OK)
+                                {
+                                    isPlaying = true;
+                                    std::cout << "[UI] Preview started successfully" << std::endl;
+
+                                    // ✅ CRITICAL: Give FMOD time to process
+                                    for (int i = 0; i < 5; i++)
+                                    {
+                                        GlobalAudio.Update(0.016f);
+                                    }
+
+                                    // Check state
+                                    FMOD_STUDIO_PLAYBACK_STATE state;
+                                    previewInstance->getPlaybackState(&state);
+                                    std::cout << "[UI] Playback state: " << state << std::endl;
+                                }
+                                else
+                                {
+                                    std::cerr << "[UI] Failed to start. Error: " << result << std::endl;
+                                    previewInstance->release();
+                                    previewInstance = nullptr;
+                                }
+                            }
+                            else
+                            {
+                                std::cerr << "[UI] Failed to create instance. Error: " << result << std::endl;
+                            }
+                        }
+                        else
+                        {
+                            std::cerr << "[UI] Failed to load event description" << std::endl;
                         }
                     }
                 }
@@ -1784,7 +1842,7 @@ namespace Framework {
                     ImGui::TableSetColumnIndex(0);
                     bool isSelected = (selectedAudioGuid == key.guid);
 
-                    // Selectable icon
+                    // Selectable row - THIS WAS MISSING!
                     if (ImGui::Selectable("##sel", isSelected,
                         ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowDoubleClick,
                         ImVec2(0, 32)))
@@ -1794,6 +1852,8 @@ namespace Framework {
                         // Double click to play
                         if (ImGui::IsMouseDoubleClicked(0))
                         {
+                            std::cout << "[UI] Double-clicked: " << audioMeta->name << std::endl;
+
                             if (previewInstance)
                             {
                                 previewInstance->stop(FMOD_STUDIO_STOP_IMMEDIATE);
@@ -1801,18 +1861,40 @@ namespace Framework {
                                 previewInstance = nullptr;
                             }
 
-                            FMOD::Studio::EventDescription* eventDesc = GlobalAudio.UE_LoadEvent(audioMeta->name);
+                            // Use the path field for the full event path
+                            FMOD::Studio::EventDescription* eventDesc = GlobalAudio.UE_LoadEvent(audioMeta->path);
                             if (eventDesc)
                             {
-                                eventDesc->createInstance(&previewInstance);
-                                previewInstance->setVolume(previewVolume);
-                                previewInstance->start();
-                                isPlaying = true;
+                                FMOD_RESULT result = eventDesc->createInstance(&previewInstance);
+                                if (result == FMOD_OK && previewInstance)
+                                {
+                                    previewInstance->setVolume(previewVolume);
+                                    result = previewInstance->start();
+                                    if (result == FMOD_OK)
+                                    {
+                                        isPlaying = true;
+                                        std::cout << "[UI] Double-click play successful" << std::endl;
+                                    }
+                                    else
+                                    {
+                                        std::cerr << "[UI] Double-click failed to start. Error: " << result << std::endl;
+                                        previewInstance->release();
+                                        previewInstance = nullptr;
+                                    }
+                                }
+                                else
+                                {
+                                    std::cerr << "[UI] Double-click failed to create instance. Error: " << result << std::endl;
+                                }
+                            }
+                            else
+                            {
+                                std::cerr << "[UI] Double-click failed to load event" << std::endl;
                             }
                         }
                     }
 
-                    // ✅ ATTACH CONTEXT MENU TO THE SELECTABLE (before SameLine!)
+                    // ✅ ATTACH CONTEXT MENU TO THE SELECTABLE
                     if (ImGui::BeginPopupContextItem())
                     {
                         ImGui::Text("Audio: %s", audioMeta->name.c_str());
@@ -1820,7 +1902,11 @@ namespace Framework {
 
                         if (ImGui::MenuItem("▶ Play"))
                         {
-                            GlobalAudio.UE_PlaySound(audioMeta->name);
+                            std::cout << "[UI] Play button clicked for: " << audioMeta->name << std::endl;
+                            std::cout << "[UI] Event path: " << audioMeta->path << std::endl;
+
+                            // Use the path field which has the full FMOD event path (e.g., "event:/ForestAmbient")
+                            GlobalAudio.UE_PlaySound(audioMeta->path);
                         }
 
                         if (ImGui::MenuItem("➕ Add to Selected Entity"))
@@ -1895,7 +1981,7 @@ namespace Framework {
                     }
 
                     // Tooltip on hover
-                    if (ImGui::IsItemHovered() && !ImGui::IsPopupOpen(nullptr))
+                    if (ImGui::IsItemHovered())
                     {
                         ImGui::BeginTooltip();
                         ImGui::Text("GUID: %s", audioMeta->guid.id.c_str());
@@ -3192,6 +3278,9 @@ namespace Framework {
                 {
                     // Set engine state to play mode
                     engineState.SetPlay(true);
+
+					//Send message to start audio and other play-mode systems
+                    MessageBus::Get().SendImmediate(EnterPlayModeMessage());
                 }
                 ImGui::PopStyleColor(3); // Restore color
 
@@ -3207,6 +3296,9 @@ namespace Framework {
                     if (engineState.IsPlay())
                     {
                         engineState.SetPlay(false);
+                        
+                        //Send message to pause/stop audio
+						MessageBus::Get().SendImmediate(ExitPlayModeMessage());
                     }
                 }
                 ImGui::PopStyleColor(3); // Restore color
@@ -3221,6 +3313,9 @@ namespace Framework {
                 {
                     // Stop the game by setting play to false
                     engineState.SetPlay(false);
+
+					//Send message to stop all audio
+					MessageBus::Get().SendImmediate(ExitPlayModeMessage());
                 }
                 ImGui::PopStyleColor(3); // Restore color
 

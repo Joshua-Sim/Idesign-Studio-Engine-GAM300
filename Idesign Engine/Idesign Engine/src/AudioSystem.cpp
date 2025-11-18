@@ -85,6 +85,19 @@ namespace Framework {
         MessageBus::Get().Subscribe<PlaySoundMessage>(
             [this](const PlaySoundMessage& msg) { OnPlaySound(msg); });
 
+        // Subscribe to play mode message
+        MessageBus::Get().Subscribe<EnterPlayModeMessage>(
+            [this](const EnterPlayModeMessage& msg) {
+                (void)msg;  // Suppress unused warning
+                OnEnterPlayMode();
+            });
+
+        MessageBus::Get().Subscribe<ExitPlayModeMessage>(
+            [this](const ExitPlayModeMessage& msg) {
+                (void)msg;
+                OnExitPlayMode();
+            });
+
         std::cout << "[AudioSystem] Initialized with 3D audio support" << std::endl;
         ImguiManager::LogSuccess("Initialized with 3D audio support", "AudioSystem");
     }
@@ -250,32 +263,58 @@ namespace Framework {
     }
 
     void AudioSystem::OnPlaySound(const PlaySoundMessage& msg) {
-        if (msg.is3D) {
-            // For 3D sounds without an entity, create a temporary event at position
-            FMOD::Studio::EventDescription* eventDesc = GlobalAudio.UE_LoadEvent(msg.soundId);
-            if (eventDesc) {
-                FMOD::Studio::EventInstance* instance = nullptr;
-                if (eventDesc->createInstance(&instance) == FMOD_OK) {
-                    // Set 3D attributes
-                    FMOD_3D_ATTRIBUTES attributes = {};
-                    attributes.position = { msg.position.x, msg.position.y, msg.position.z };
-                    attributes.velocity = { 0.0f, 0.0f, 0.0f };
-                    attributes.forward = { 0.0f, 0.0f, 1.0f };
-                    attributes.up = { 0.0f, 1.0f, 0.0f };
+        std::cout << "[AudioSystem] OnPlaySound called for: " << msg.soundId << std::endl;
 
-                    instance->set3DAttributes(&attributes);
-                    instance->setVolume(msg.volume);
-                    instance->start();
+        FMOD::Studio::EventDescription* eventDesc = GlobalAudio.UE_LoadEvent(msg.soundId);
+        if (!eventDesc) {
+            std::cerr << "[AudioSystem] Failed to load event: " << msg.soundId << std::endl;
+            return;
+        }
 
-                    // Note: This instance won't be tracked, so it will play once and stop
-                    // For persistent sounds, attach to an entity instead
-                }
-            }
+        // Check if event is 3D
+        bool eventIs3D = false;
+        eventDesc->is3D(&eventIs3D);
+        std::cout << "[AudioSystem] Event is 3D: " << (eventIs3D ? "Yes" : "No") << std::endl;
+
+        FMOD::Studio::EventInstance* instance = nullptr;
+        FMOD_RESULT result = eventDesc->createInstance(&instance);
+
+        if (result != FMOD_OK || !instance) {
+            std::cerr << "[AudioSystem] Failed to create instance for: " << msg.soundId << std::endl;
+            return;
+        }
+
+        // Set volume
+        instance->setVolume(msg.volume);
+        std::cout << "[AudioSystem] Set volume to: " << msg.volume << std::endl;
+
+        // Only set 3D attributes if BOTH the message wants 3D AND the event supports 3D
+        if (msg.is3D && eventIs3D) {
+            FMOD_3D_ATTRIBUTES attributes = {};
+            attributes.position = { msg.position.x, msg.position.y, msg.position.z };
+            attributes.velocity = { 0.0f, 0.0f, 0.0f };
+            attributes.forward = { 0.0f, 0.0f, 1.0f };
+            attributes.up = { 0.0f, 1.0f, 0.0f };
+
+            instance->set3DAttributes(&attributes);
+            std::cout << "[AudioSystem] Set 3D position: ("
+                << msg.position.x << ", " << msg.position.y << ", " << msg.position.z << ")" << std::endl;
         }
         else {
-            // Play as 2D sound
-            GlobalAudio.UE_PlaySound(msg.soundId);
+            std::cout << "[AudioSystem] Playing as 2D sound" << std::endl;
         }
+
+        // Start playback
+        result = instance->start();
+        if (result == FMOD_OK) {
+            std::cout << "[AudioSystem] Successfully started playback" << std::endl;
+        }
+        else {
+            std::cerr << "[AudioSystem] Failed to start playback, error code: " << result << std::endl;
+        }
+
+        // Note: Instance will auto-release after playing if it's a one-shot sound
+        // For looping sounds, you need to track and release them manually
     }
 
     void AudioSystem::Update3DAttributes(Entity entity, const glm::vec3& position, const glm::vec3& velocity) {
@@ -306,6 +345,36 @@ namespace Framework {
             float range = maxDist - minDist;
             float distFromMin = distance - minDist;
             return 1.0f - (distFromMin / range);
+        }
+    }
+
+    void AudioSystem::OnEnterPlayMode() {
+        std::cout << "[AudioSystem] Entering play mode - starting auto-play sounds..." << std::endl;
+
+        // Start all sounds that should play on start
+        for (Entity entity : mEntities) {
+            if (!ecsInterface.HasComponent<AudioComponent>(entity)) continue;
+
+            auto& audioComp = ecsInterface.GetComponent<AudioComponent>(entity);
+            if (audioComp.playOnStart && !audioComp.eventName.empty()) {
+                std::cout << "[AudioSystem] Auto-playing: " << audioComp.eventName
+                    << " for entity " << entity << std::endl;
+                PlayEntitySound(entity);
+            }
+        }
+    }
+
+    void AudioSystem::OnExitPlayMode() {
+        std::cout << "[AudioSystem] Exiting play mode - stopping all sounds..." << std::endl;
+
+        // Stop all playing sounds
+        for (Entity entity : mEntities) {
+            if (!ecsInterface.HasComponent<AudioComponent>(entity)) continue;
+
+            auto& audioComp = ecsInterface.GetComponent<AudioComponent>(entity);
+            if (audioComp.isPlaying) {
+                StopEntitySound(entity);
+            }
         }
     }
 
