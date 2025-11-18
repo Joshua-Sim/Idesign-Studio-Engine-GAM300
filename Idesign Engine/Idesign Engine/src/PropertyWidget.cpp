@@ -357,9 +357,12 @@ namespace Framework
                         }
                         continue;
                     }
+                    }
+                else {
+                    DrawInspector(componentPtr, *propList);
                 }
-
-                DrawInspector(componentPtr, *propList);
+                
+                
 
                 if (ImGui::Button(std::string("Remove ").append(typeName).c_str()))
                 {
@@ -380,6 +383,28 @@ namespace Framework
             if (ImGui::Button(std::string("Add ").append(propList->m_pName).c_str()))
             {
                 TypeRegistry::Instance().AddComponent(propList->m_pName, ecs, entity);
+
+                if (std::string(propList->m_pName) == "BoxColliderComponent")
+                {
+                    if (!ecs.HasComponent<MeshProperties>(entity))
+                    {
+                        std::cout << "yee";
+                        MeshProperties meshComponent{};
+                        meshComponent.debugShape = DebugShapeType::Box;
+                        meshComponent.debugcolor = glm::vec3(0.0f, 1.0f, 0.0f); // Green
+                        MeshLoader::loadMesh(meshComponent.path, meshComponent);
+
+                        ecs.AddComponent<MeshProperties>(entity, meshComponent);
+
+                        std::cout << "[Editor] Auto-added Debug Mesh for BoxCollider on Entity " << entity << std::endl;
+                    }
+                    else {
+                        MeshProperties& meshComponent = ecs.GetComponent<MeshProperties>(entity);
+                        meshComponent.debugShape = DebugShapeType::Box;
+                        meshComponent.debugcolor = glm::vec3(0.0f, 1.0f, 0.0f); // Green
+                        MeshLoader::loadMesh(meshComponent.path, meshComponent);
+                    }
+                }
             }
         }      
     }
@@ -402,6 +427,7 @@ namespace Framework
         TypeRegistry::Instance().Register<EventSenderComponent>("EventSenderComponent", &g_EventSenderProps);
         TypeRegistry::Instance().Register<ScriptProperties>("ScriptProperties", &g_ScriptPropertiesProps);
         TypeRegistry::Instance().Register<ScriptEntry>("ScriptEntry", &g_ScriptEntryProps);
+        TypeRegistry::Instance().Register<BoxColliderComponent>("BoxColliderComponent", &g_BoxColliderProps);
     }
 
     void AutoRegisterAllReflectedComponents(Coordinator& ecs)
@@ -411,12 +437,22 @@ namespace Framework
             const prop_list* propList = reg->m_pPopList;
             if (!propList || !propList->m_pName) continue;
 
-            const std::string& typeName = propList->m_pName;
-            if (auto* getter = TypeRegistry::Instance().Get(typeName))
+            const std::string typeName = propList->m_pName;
+
+            // 1. Get the pointer to the function in the registry
+            if (auto* getterPtr = TypeRegistry::Instance().Get(typeName))
             {
-                ecs.RegisterRawGetter(typeName, [getter, &ecs](Entity e) -> void*
+                // 2. [FIX] Create a local COPY of the std::function.
+                // This decouples it from the TypeRegistry map's memory address.
+                TypeGetter getterCopy = *getterPtr;
+
+                // 3. [FIX] Capture the COPY by value 'getterCopy'
+                // We capture &ecs by reference because ecs outlives this lambda.
+                ecs.RegisterRawGetter(typeName, [getterCopy, &ecs](Entity e) -> void*
                     {
-                        return (*getter)(ecs, e);
+                        // 4. Call the copied function directly. 
+                        // This is safe because the function lives inside this lambda now.
+                        return getterCopy(ecs, e);
                     });
             }
         }

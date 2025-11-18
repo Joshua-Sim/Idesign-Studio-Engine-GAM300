@@ -217,6 +217,11 @@ namespace Framework
             const std::vector<PointLightCPU>& points,
             const std::vector<SpotLightCPU>& spots
         );
+
+        // Add these variables
+        bool m_resizePending = false;
+        int m_newWidth = 0;
+        int m_newHeight = 0;
     };
     
 }

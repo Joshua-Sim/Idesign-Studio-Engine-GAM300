@@ -320,3 +320,15 @@ Mesh Mesh::CreateUnitTriangleData()
 
     return triangle;
 }
+
+const float* Mesh::GetRawVertexData() const {
+    return vertices.data();
+}
+
+size_t Mesh::GetRawDataSize() const {
+    return vertices.size();
+}
+
+unsigned int Mesh::GetVertexCount() const {
+    return vertexCount;
+}

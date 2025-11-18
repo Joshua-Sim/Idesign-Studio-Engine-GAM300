@@ -52,12 +52,8 @@ namespace Framework {
         entityNames.clear(); // Clear entity names during initialisation
     }
 
-    // ---------------------------- //
-/**
-* @brief Destructor for memory clean-up.
-*
-*/
-    Coordinator::~Coordinator()
+    // Made to stop crashes
+    void Coordinator::Shutdown()
     {
         if (mComponentManager)
             mComponentManager->Clear();
@@ -70,10 +66,21 @@ namespace Framework {
 
         if (mTagManager)
             mTagManager->Clear();   // Optional if defined
-
+        // Clear your containers manually here
         entityNames.clear();
         entityList.clear();
-        componentNamesList.clear(); // Optional, since these are value types
+        componentNamesList.clear();
+    
+    }
+
+    // ---------------------------- //
+/**
+* @brief Destructor for memory clean-up.
+*
+*/
+    Coordinator::~Coordinator()
+    {
+        Shutdown();
     }
 
     /**

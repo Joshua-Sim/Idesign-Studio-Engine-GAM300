@@ -166,7 +166,7 @@ int main(void)
 
     // Clear all systems and other dynamically allocated resources
     engine->DestroySystems();
-
+    Framework::TypeRegistry::Instance().Shutdown();
     // Clean up smart pointers as they go out of scope
     // No need to manually delete as unique_ptr will handle it
     return 0;

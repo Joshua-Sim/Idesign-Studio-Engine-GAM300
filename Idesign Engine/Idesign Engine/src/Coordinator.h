@@ -36,6 +36,9 @@ namespace Framework {
 
 		void Init();
 
+		// To Stop Crashes
+		void Shutdown();
+
 		// Entity Functions
 		Entity CreateEntity();
 
