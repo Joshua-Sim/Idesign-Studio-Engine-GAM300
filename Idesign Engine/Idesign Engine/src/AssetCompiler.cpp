@@ -11,11 +11,26 @@
 #include "ScriptingSystem.h"
 #include "MessageSystem.h"
 
+static const std::map<std::string, LightType> s_stringToLightType = {
+    { "Directional", LightType::Directional },
+    { "Point",       LightType::Point },
+    { "Spot",        LightType::Spot }
+};
+
+static const std::map<LightType, std::string> s_lightTypeToString = {
+    { LightType::Directional, "Directional" },
+    { LightType::Point,       "Point" },
+    { LightType::Spot,        "Spot" }
+};
+
 extern Framework::Coordinator ecsInterface;
 namespace Framework
 {
     void loadScene(const std::string& scenePath)
     {
+        auto originalCwd = std::filesystem::current_path();
+
+        std::cout << std::filesystem::current_path() << "path before loading " << std::endl;
 
         // BUILD ABSOLUTE PATH FIRST
         std::filesystem::path absoluteScenePath;
@@ -25,7 +40,7 @@ namespace Framework
         }
         else
         {
-            absoluteScenePath = std::filesystem::path(Framework::ScriptingSystem::GetProjectRoot()) / scenePath;
+            absoluteScenePath = std::filesystem::path(ScriptingSystem::GetProjectRoot()) / scenePath;
         }
 
         std::error_code ec;
@@ -242,6 +257,17 @@ namespace Framework
                 if (components.HasMember("LightProperties"))
                 {
                     LightProperties light;
+                    const auto& lightJson = components["LightProperties"];
+
+                    // Manually read the 'type' string and convert it
+                    if (lightJson.HasMember("type") && lightJson["type"].IsString())
+                    {
+                        std::string typeStr = lightJson["type"].GetString();
+                        if (s_stringToLightType.count(typeStr))
+                        {
+                            light.type = s_stringToLightType.at(typeStr);
+                        }
+                    }
                     Deserialize(&light, g_LightProps, components["LightProperties"]);
                     ecsInterface.AddComponent(entity, light);
                 }
@@ -309,12 +335,15 @@ namespace Framework
                     const auto& scriptObj = components["ScriptProperties"];
                     ScriptProperties sp;
 
-                    if (scriptObj.HasMember("guid") && scriptObj["guid"].IsString())
+                    if (scriptObj.HasMember("scripts") && scriptObj["scripts"].IsArray())
                     {
                         const auto& arr = scriptObj["scripts"].GetArray();
                         for (const auto& s : arr)
                         {
                             ScriptEntry entry;
+
+                            if (s.HasMember("guid") && s["guid"].IsString())
+                                entry.guid = AssetHandle{ s["guid"].GetString() };
 
                             if (s.HasMember("scriptPath") && s["scriptPath"].IsString())
                                 entry.scriptPath = s["scriptPath"].GetString();
@@ -326,15 +355,16 @@ namespace Framework
                         }
                     }
 
-                    /*if (!sp.scripts.empty())
+                    if (!sp.scripts.empty())
                     {
                         ecsInterface.AddComponent(entity, sp);
-                    }*/
+                    }
                 }
-
                 sceneManager.RegisterEntityToScene(entity, cleanName);
             }
         }
+        std::filesystem::current_path(originalCwd);
+        std::cout << std::filesystem::current_path() << std::endl;
     }
 
     void saveScene(const std::string& outputPath)
@@ -418,13 +448,7 @@ namespace Framework
                     componentsObj.AddMember("MeshComponent", meshRef, allocator);
                 }
 
-                if (ecsInterface.HasComponent<LightProperties>(entity))
-                {
-                    const auto& light = ecsInterface.GetComponent<LightProperties>(entity);
-                    rapidjson::Value lightJson(rapidjson::kObjectType);
-                    Serialize((void*)&light, g_LightProps, lightJson, allocator);
-                    componentsObj.AddMember("LightProperties", lightJson, allocator);
-                }
+          
 
                 if (ecsInterface.HasComponent<AnimationProperties>(entity))
                 {
@@ -495,6 +519,23 @@ namespace Framework
                     scriptObj.AddMember("scripts", scriptsArr, allocator);
                     componentsObj.AddMember("ScriptProperties", scriptObj, allocator);
                 }
+                if (ecsInterface.HasComponent<LightProperties>(entity))
+                {
+                    const auto& light = ecsInterface.GetComponent<LightProperties>(entity);
+                    rapidjson::Value lightJson(rapidjson::kObjectType);
+
+                    // 1. Run the generic serializer for color, intensity, etc.
+                    Serialize((void*)&light, g_LightProps, lightJson, allocator);
+
+                    // 2. Manually add the 'type' string to the SAME json object
+                    if (s_lightTypeToString.count(light.type))
+                    {
+                        lightJson.AddMember("type", rapidjson::Value(s_lightTypeToString.at(light.type).c_str(), allocator), allocator);
+                    }
+
+                    // 3. Add the complete object to the component list
+                    componentsObj.AddMember("LightProperties", lightJson, allocator);
+                }
             }
 
             entityObj.AddMember("components", componentsObj, allocator);
@@ -528,13 +569,14 @@ namespace Framework
         ));
     }
 
+
+
     void DuplicateEntity(Framework::Coordinator& ecs, Entity sourceEntity)
     {
         // 1. Create a new entity. This automatically gives it a new, unique GUID.
         Entity newEntity = ecs.CreateEntity();
 
         // 2. Get the source entity's name and set the new name
-        //    (I'm assuming your ecs interface has functions like this)
         std::string sourceName = ecs.GetEntityName(sourceEntity);
         ecs.SetEntityName(newEntity, sourceName + " (Copy)");
 
@@ -550,7 +592,7 @@ namespace Framework
         // 3. Go through every component type, check if the source has it,
         //    and add a copy of it to the new entity.
 
-        // --- (Copy logic for each component) ---
+        // --- (Copy logic for each component) --- 
 
         if (ecs.HasComponent<TransformComponent>(sourceEntity))
         {
@@ -624,9 +666,40 @@ namespace Framework
             ecs.AddComponent<ScriptProperties>(newEntity, copy);
         }
 
-        // !! IMPORTANT !!
-        // Add any other components your engine uses here!
-        // (e.g., Rigidbody, Collider, ScriptComponent, etc.)
+        // --- [FIX #1: REGISTER THE NEW ENTITY WITH THE SCENEMANAGER] ---
+        // We add it to the currently active scene, just like SpawnPrefab does.
+        std::string currentScene = sceneManager.GetCurrentSceneName();
+        if (!currentScene.empty())
+        {
+            sceneManager.RegisterEntityToScene(newEntity, currentScene);
+            std::cout << "Registered new entity " << newEntity << " to scene: " << currentScene << std::endl;
+        }
+        // ---------------------------------------------------------------
+
+
+        // --- [FIX #2: UPDATE THE PARENT'S HIERARCHY] ---
+        // Tell the parent entity that this new child exists.
+        if (ecs.HasComponent<HierarchyComponent>(newEntity))
+        {
+            // Get the hierarchy component we just added to the new entity
+            auto& newHierarchy = ecs.GetComponent<HierarchyComponent>(newEntity);
+
+            // Check if it actually has a parent
+            if (!newHierarchy.parentGUID.empty())
+            {
+                std::string newGuid = ecs.GetEntityGUID(newEntity);
+                Entity parentEntity = ecs.GetEntityByGUID(newHierarchy.parentGUID);
+
+                // Find the parent and add this new entity to its children list
+                if (ecs.IsEntityValid(parentEntity) && ecs.HasComponent<HierarchyComponent>(parentEntity))
+                {
+                    auto& parentHierarchy = ecs.GetComponent<HierarchyComponent>(parentEntity);
+                    parentHierarchy.childrenGUIDs.push_back(newGuid);
+                    std::cout << "Added new entity " << newGuid << " to parent's child list (" << newHierarchy.parentGUID << ")" << std::endl;
+                }
+            }
+        }
+        // ----------------------------------------------------
 
         std::cout << "Successfully duplicated entity." << std::endl;
         Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage(

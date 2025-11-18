@@ -131,6 +131,10 @@ namespace Framework {
         blurShader.destroy();
         finalShader.destroy();
         skinnedShader.destroy();
+        shadowShader.destroy();
+        pointShadowShader.destroy();
+        if (m_shadowFBO) glDeleteFramebuffers(1, &m_shadowFBO);
+        if (m_shadowDepthTexture) glDeleteTextures(1, &m_shadowDepthTexture);
 
         // Finally, destroy GLFW window + terminate GLFW
         if (window) {
@@ -206,11 +210,15 @@ namespace Framework {
         ecsInterface.RegisterComponent<NavMeshComponent>();
         ecsInterface.RegisterComponent<NavMeshAgentComponent>(); // Move to navmesh sys after fixing load scene for mesh model
         ecsInterface.RegisterComponent<ListenerComponent>();
+        ecsInterface.RegisterComponent<AudioMetadata>();
         ecsInterface.RegisterComponent<PhysicsBodyComponent>();
         ecsInterface.RegisterComponent<MaterialProperties>();
         ecsInterface.RegisterComponent<MaterialMetadata>();
         ecsInterface.RegisterComponent<LightProperties>();
-        
+        ecsInterface.RegisterComponent<PhysicsProperties>();
+        ecsInterface.RegisterComponent<EventSenderComponent>();
+        ecsInterface.RegisterComponent<EventReceiverComponent>();
+
         //test
 
         ImguiManager::LogSuccess("Graphics components registered", "Graphics");
@@ -398,6 +406,8 @@ namespace Framework {
         terrain.initGL();
         debugShader.initGL();
         skinnedShader.initGL();
+        shadowShader.initGL();
+        pointShadowShader.initGL();
         //initialise geometry objects
         cube.initGL();
         plane.initGL();
@@ -410,32 +420,8 @@ namespace Framework {
         m_debugMeshes[DebugShapeType::Sphere] = &plane; // Remember 'plane' is your sphere mesh
         m_debugMeshes[DebugShapeType::Triangle] = &triangle;
 
-
-        //jay double buffer pick fbo
-        auto makePickFBO = [&](int w, int h, int idx) {
-            glGenFramebuffers(1, &pickFBO[idx]);
-            glBindFramebuffer(GL_FRAMEBUFFER, pickFBO[idx]);
-
-            glGenTextures(1, &pickColor[idx]);
-            glBindTexture(GL_TEXTURE_2D, pickColor[idx]);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, pickColor[idx], 0);
-
-            glGenRenderbuffers(1, &pickDepth[idx]);
-            glBindRenderbuffer(GL_RENDERBUFFER, pickDepth[idx]);
-            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, w, h);
-            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, pickDepth[idx]);
-
-            GLenum drawBuf = GL_COLOR_ATTACHMENT0;
-            glDrawBuffers(1, &drawBuf);
-
-            if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-                std::cout << "ERROR: pick FBO " << idx << " incomplete!\n";
-
-            glBindFramebuffer(GL_FRAMEBUFFER, 0);
-            };
+        sceneCamera.position = glm::vec3(0.0f, 5.0f, 10.0f); // Or any valid position
+        // This forces the camera to update its internal vectors
 
         //int w = 1280, h = 720;
         int w = 0, h = 0;
@@ -445,43 +431,8 @@ namespace Framework {
         m_fbW = w; m_fbH = h;
         m_pickW = w; m_pickH = h;
 
-        pickShader.initGL();
-        makePickFBO(w, h, 0);
-        makePickFBO(w, h, 1);
+        InitializeFramebuffers(w, h);
 
-        // --- HDR FRAMEBUFFER SETUP ---
-        glGenFramebuffers(1, &hdrFBO);
-        glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
-        glGenTextures(1, &colorBuffer);
-        glBindTexture(GL_TEXTURE_2D, colorBuffer);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, config->x, config->y, 0, GL_RGBA, GL_FLOAT, NULL);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBuffer, 0);
-        glGenRenderbuffers(1, &rboDepth);
-        glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, config->x, config->y);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
-        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-            std::cout << "ERROR::FRAMEBUFFER:: HDR Framebuffer is not complete!\n";
-
-        // --- BLOOM (PINGPONG) FRAMEBUFFER SETUP ---
-        glGenFramebuffers(2, pingpongFBO);
-        glGenTextures(2, pingpongColorbuffers);
-        for (unsigned int i = 0; i < 2; i++)
-        {
-            glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[i]);
-            glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[i]);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, config->x, config->y, 0, GL_RGBA, GL_FLOAT, NULL);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, pingpongColorbuffers[i], 0);
-            if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-                std::cout << "ERROR::FRAMEBUFFER:: Ping-pong FBO is not complete!\n";
-        }
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
         lastTime = (float)glfwGetTime();
 
         m_frameCount = 0;
@@ -494,8 +445,9 @@ namespace Framework {
     {
         m_imguiManager = manager;
     }
+    // In Graphics.cpp
+    // REPLACE your entire Update function with this:
 
-    // Update the system
     void Graphics::Update(float deltaTime)
     {
         (void)deltaTime;
@@ -509,19 +461,20 @@ namespace Framework {
         float dt = now - lastTime; lastTime = now;
         process_input(dt);
 
-        DirectionalLightCPU frameSun;
+        // ====================================================================
+        // 0. LIGHT GATHERING PASS
+        // ====================================================================
+        Framework::DirectionalLightCPU frameSun;
         bool frameHasSun = false;
-        std::vector<PointLightCPU> framePointLights;
-        std::vector<SpotLightCPU>  frameSpotLights;
-
-        // Call the helper to fill the light lists
+        std::vector<Framework::PointLightCPU> framePointLights;
+        std::vector<Framework::SpotLightCPU>  frameSpotLights;
         GatherLights(frameSun, frameHasSun, framePointLights, frameSpotLights);
 
+        // Get window size and check for resize
         int w, h;
         glfwGetFramebufferSize(window, &w, &h);
         if (w == 0 || h == 0) return;
 
-        // If size changed (minimized/Restored or DPI change), update FBOs
         if (w != m_fbW || h != m_fbH) {
             m_fbW = w; m_fbH = h;
             OnResize(m_fbW, m_fbH);
@@ -529,668 +482,238 @@ namespace Framework {
         }
 
         // ====================================================================
-        // 1. RENDER VIEW 0: GAME (grounded)
+        // 0.5. SHADOW PASS (Render from Sun's perspective)
         // ====================================================================
+        if (frameHasSun)
         {
-            glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
+            // 1. Calculate the Light's View/Projection matrix
+            float near_plane = 1.0f, far_plane = 200.0f;
+            float ortho_size = 100.0f;
+            glm::mat4 lightProjection = glm::ortho(-ortho_size, ortho_size, -ortho_size, ortho_size, near_plane, far_plane);
+            //glm::vec3 lightPos = frameSun.position - frameSun.direction * 20.0f;
+            glm::vec3 lookTarget = glm::vec3(0.0f, 0.0f, 0.0f);
+
+            // 2. Position the light *relative to the target*, far enough back to see everything
+            //    (frameSun.direction is the vector the light shines *along*)
+            float shadow_distance = 80.0f; // Pulls the camera back
+            glm::vec3 lightPos = lookTarget - frameSun.direction * shadow_distance;
+
+            // 3. Create the view matrix
+            glm::mat4 lightView = glm::lookAt(lightPos, lookTarget, glm::vec3(0.0f, 1.0f, 0.0f));
+            m_lightSpaceMatrix = lightProjection * lightView;
+            // 2. Bind the shadow shader and FBO
+            shadowShader.use();
+            shadowShader.setMat4("uLightSpaceMatrix", m_lightSpaceMatrix);
+            glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+            glBindFramebuffer(GL_FRAMEBUFFER, m_shadowFBO);
             glEnable(GL_DEPTH_TEST);
-            glDisable(GL_CULL_FACE); // Added
+            glClear(GL_DEPTH_BUFFER_BIT);
 
-            glViewport(0, 0, w, h);
-            glClearColor(0.07f, 0.09f, 0.12f, 1.f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-            Camera& cam = gameCamera;
-            glm::mat4 proj = cam.getProjectionMatrix((float)w, (float)h);
-            glm::mat4 view = cam.getViewMatrix();
-
-            // stick to ground
-            if (groundMode)
-            {
-                float groundY = terrain.getHeightAt(cam.position.x, cam.position.z);
-                cam.position.y = groundY + 1.8f;
-            }
-
-            // --- Terrain (no texture)
-            terrainShader.use();
-            terrainShader.setMat4("uProj", proj);
-            terrainShader.setMat4("uView", view);
-            terrainShader.setMat4("uModel", glm::mat4(1.f));
-            terrainShader.setVec3("uAlbedo", { 0.6f,0.4f,0.2f }); //terrain color
-            LightProperties::upload(terrainShader, frameSun, frameHasSun, framePointLights, frameSpotLights);
+            // 3. Render all shadow-casting objects
+            glDisable(GL_CULL_FACE);
+            // Render Terrain
+            shadowShader.setMat4("uModel", glm::mat4(1.0f));
             terrain.draw();
-
-
-            // ---- START ANIMATION/TRANSPARENCY RENDER LOGIC (VIEW 0) ----
-
-            int sel = lastPickedId; // Use the main picked ID
-            const glm::vec3 kHighlightAlbedo(1.0f, 0.85f, 0.3f);
-
-            std::vector<Entity> opaqueEntities;
-            std::multimap<float, Entity> transparentEntities;
 
             for (auto const& entityId : mEntities)
             {
-                if (ecsInterface.HasComponent<MeshProperties>(entityId))
+                if (ecsInterface.HasComponent<MeshProperties>(entityId) &&
+                    ecsInterface.HasComponent<TransformComponent>(entityId))
                 {
+                    // 1. Get the MESH component
                     auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
+                    bool isTransparent = false;
 
-                    // Look up material by guid
-                    auto* material = AssetManager::Instance().Get<MaterialProperties>(mesh.materialGuid);
-
-                    if (material) 
+                    // 2. Check for a MATERIAL component to determine opacity
+                    if (ecsInterface.HasComponent<MaterialProperties>(entityId))
                     {
-                        if (material->opacity < 1.0f)
-                        {
-                            if (ecsInterface.HasComponent<TransformComponent>(entityId))
-                            {
-                                auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
-                                float distance = glm::distance(tr.position, cam.position);
-                                transparentEntities.insert({ distance, entityId });
-                            }
-                        }
-                        else
-                        {
-                            opaqueEntities.push_back(entityId);
-                        }
+                        auto& material = ecsInterface.GetComponent<MaterialProperties>(entityId);
+                        isTransparent = material.opacity < 1.0f;
                     }
-                    else
+                    // 3. Draw based on the MESH component's data
+                    if (mesh.debugShape == DebugShapeType::None && mesh.vao != 0 && !isTransparent)
                     {
-                        // No material assigned → treat as opaque by default
-                        opaqueEntities.push_back(entityId);
-                    }
-                }
-            }
+                        auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
+                        glm::mat4 model(1.0f);
+                        model = glm::translate(model, tr.position);
+                        model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
+                        model = glm::rotate(model, glm::radians(tr.rotation.y), { 0,1,0 });
+                        model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
+                        model = glm::scale(model, tr.scale);
 
-            // --- 1. OPAQUE PASS (VIEW 0) ---
-            glDisable(GL_BLEND);
-            glDepthMask(GL_TRUE);
-
-            for (auto const& entityId : opaqueEntities)
-            {
-                auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
-                glm::mat4 model(1.0f);
-                model = glm::translate(model, tr.position);
-                model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
-                model = glm::rotate(model, glm::radians(tr.rotation.y), { 0,1,0 });
-                model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
-                model = glm::scale(model, tr.scale);
-
-                // Text 
-                if (ecsInterface.HasComponent<TextProperties>(entityId)) {
-                    auto& txt = ecsInterface.GetComponent<TextProperties>(entityId);
-                    fontSystem.RenderText3D(txt.text, model, view, proj, txt.scale, txt.color);
-                }
-
-                // Mesh 
-                if (ecsInterface.HasComponent<MeshProperties>(entityId))
-                {
-                    auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
-
-                    if (mesh.debugShape == DebugShapeType::None) {
-
-                        bool isSkinned = ecsInterface.HasComponent<AnimationProperties>(entityId);
-                        ShaderProgram& currentshader = isSkinned ? skinnedShader : meshShader;
-
-                        currentshader.use();
-                        currentshader.setMat4("uProj", proj);
-                        currentshader.setMat4("uView", view);
-                        currentshader.setVec3("uViewPos", cam.position);
-                        currentshader.setMat4("uModel", model);
-
-                        if (isSkinned) {
-                            auto& animator = ecsInterface.GetComponent<AnimationProperties>(entityId);
-                            for (size_t i = 0; i < animator.finalBoneMatrices.size(); ++i)
-                            {
-                                currentshader.setMat4(("uBoneMatrices[" + std::to_string(i) + "]").c_str(), animator.finalBoneMatrices[i]);
-                            }
-                        }
-
-                        // NEW: fetch material via mesh.materialGuid
-                        auto* material = AssetManager::Instance().Get<MaterialProperties>(mesh.materialGuid);
-                        if (material)
-                        {
-                            const bool isSelected = (int)entityId == sel;
-                            glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : material->albedo;
-                            currentshader.setVec3("uAlbedo", finalAlbedo);
-
-                            glActiveTexture(GL_TEXTURE0);
-                            currentshader.setVec3("uMaterial.ambient", material->ambient);
-                            currentshader.setVec3("uMaterial.specular", material->specular);
-                            currentshader.setFloat("uMaterial.shininess", material->shininess);
-                            currentshader.setFloat("uMaterial.opacity", material->opacity);
-                            currentshader.setInt("uTexture", 0);
-                        }
-                        
-                        if (ecsInterface.HasComponent<TextureProperties>(entityId)) {
-                            auto& tex = ecsInterface.GetComponent<TextureProperties>(entityId);
-                            glBindTexture(GL_TEXTURE_2D, tex.textureID);
-                        }
-                        else {
-                            glBindTexture(GL_TEXTURE_2D, 0);
-                        }
-
-                        LightProperties::upload(currentshader, frameSun, frameHasSun, framePointLights, frameSpotLights);
+                        shadowShader.setMat4("uModel", model);
                         glBindVertexArray(mesh.vao);
                         glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
                     }
-                    else {
-                        auto it = m_debugMeshes.find(mesh.debugShape);
-                        if (it != m_debugMeshes.end()) {
-                            DrawDebugMesh(it->second, mesh.debugcolor, model, proj, view);
-                        }
-                    }
                 }
             }
-
-            // --- 2. TRANSPARENT PASS (VIEW 0) ---
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            glDepthMask(GL_FALSE);
-
-            for (auto it = transparentEntities.rbegin(); it != transparentEntities.rend(); ++it)
-            {
-                auto const& entityId = it->second;
-                auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
-                auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
-
-                // Look up material via mesh.materialGuid
-                auto* material = AssetManager::Instance().Get<MaterialProperties>(mesh.materialGuid);
-
-                glm::mat4 model(1.0f);
-                model = glm::translate(model, tr.position);
-                model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
-                model = glm::rotate(model, glm::radians(tr.rotation.y), { 0,1,0 });
-                model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
-                model = glm::scale(model, tr.scale);
-
-                if (mesh.debugShape == DebugShapeType::None)
-                {
-                    bool isSkinned = ecsInterface.HasComponent<AnimationProperties>(entityId);
-                    ShaderProgram& currentShader = isSkinned ? skinnedShader : meshShader;
-
-                    currentShader.use();
-                    currentShader.setMat4("uProj", proj);
-                    currentShader.setMat4("uView", view);
-                    currentShader.setVec3("uViewPos", cam.position);
-                    currentShader.setMat4("uModel", model);
-
-                    if (isSkinned)
-                    {
-                        auto& animator = ecsInterface.GetComponent<AnimationProperties>(entityId);
-                        for (size_t i = 0; i < animator.finalBoneMatrices.size(); ++i)
-                        {
-                            currentShader.setMat4(("uBoneMatrices[" + std::to_string(i) + "]").c_str(), animator.finalBoneMatrices[i]);
-                        }
-                    }
-
-                    if (material)
-                    {
-                        const bool isSelected = (int)entityId == sel;
-                        glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : material->albedo;
-                        currentShader.setVec3("uAlbedo", finalAlbedo);
-                        currentShader.setVec3("uMaterial.ambient", material->ambient);
-                        currentShader.setVec3("uMaterial.specular", material->specular);
-                        currentShader.setFloat("uMaterial.shininess", material->shininess);
-                        currentShader.setFloat("uMaterial.opacity", material->opacity);
-                    }
-
-                    glActiveTexture(GL_TEXTURE0);
-                    currentShader.setInt("uTexture", 0);
-                    if (ecsInterface.HasComponent<TextureProperties>(entityId)) {
-                        auto& tex = ecsInterface.GetComponent<TextureProperties>(entityId);
-                        glBindTexture(GL_TEXTURE_2D, tex.textureID);
-                    }
-                    else {
-                        glBindTexture(GL_TEXTURE_2D, 0);
-                    }
-
-                    LightProperties::upload(currentShader, frameSun, frameHasSun, framePointLights, frameSpotLights);
-                    glBindVertexArray(mesh.vao);
-                    glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
-                }
-            }
-
-            // --- 3. CLEANUP STATE ---
-            glDepthMask(GL_TRUE);
-            glDisable(GL_BLEND);
-            glCullFace(GL_BACK); // Restore default
-
-            // ---- END ANIMATION/TRANSPARENCY RENDER LOGIC (VIEW 0) ----
-
-
-            // --- PICK PASS for view 0 ---
-            glBindFramebuffer(GL_FRAMEBUFFER, pickFBO[pickWrite]);
-            glViewport(0, 0, w, h);
-            glEnable(GL_DEPTH_TEST);
-            glClearColor(0, 0, 0, 0); // id=0 => "no hit"
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-            pickShader.use();
-            pickShader.setMat4("uProj", proj);
-            pickShader.setMat4("uView", view);
-
-            for (auto const& entityId : mEntities) {
-                auto& transformComponent = ecsInterface.GetComponent<TransformComponent>(entityId);
-                glm::mat4 model(1.0f);
-                model = glm::translate(model, transformComponent.position);
-                model = glm::rotate(model, transformComponent.rotation.x, glm::vec3(1, 0, 0));
-                model = glm::rotate(model, transformComponent.rotation.y, glm::vec3(0, 1, 0));
-                model = glm::rotate(model, transformComponent.rotation.z, glm::vec3(0, 0, 1));
-                model = glm::scale(model, transformComponent.scale);
-                pickShader.setMat4("uModel", model);
-
-                uint32_t id = static_cast<uint32_t>(entityId) + 1u;
-                glm::vec3 idColor = {
-                    ((id) & 0xFF) / 255.0f,
-                    ((id >> 8) & 0xFF) / 255.0f,
-                    ((id >> 16) & 0xFF) / 255.0f
-                };
-                pickShader.setVec3("uIdColor", idColor);
-                if (ecsInterface.HasComponent<MeshProperties>(entityId))
-                {
-                    auto& meshComponent = ecsInterface.GetComponent<MeshProperties>(entityId);
-                    glBindVertexArray(meshComponent.vao);
-                    glDrawElements(GL_TRIANGLES, meshComponent.indexCount, GL_UNSIGNED_INT, 0);
-                }
-            }
-            glBindFramebuffer(GL_FRAMEBUFFER, 0); // Unbind pick FBO
-            std::swap(pickWrite, pickRead);
-
-            // READBACK for VIEW 0
-            if (pendingPickUV0.x >= 0.0f && pendingPickUV0.y >= 0.0f) {
-                int pw = m_pickW, ph = m_pickH;            // instead of 1280, 720
-                int px = glm::clamp(int(pendingPickUV0.x * pw), 0, pw - 1);
-                int py = glm::clamp(int(pendingPickUV0.y * ph), 0, ph - 1);
-
-                glBindFramebuffer(GL_READ_FRAMEBUFFER, pickFBO[pickRead]);
-                unsigned char rgb[3] = { 0,0,0 };
-                glReadPixels(px, py, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, rgb);
-                glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-
-                uint32_t id = (uint32_t)rgb[0] | ((uint32_t)rgb[1] << 8) | ((uint32_t)rgb[2] << 16);
-                lastPickedId = (id == 0) ? -1 : int(id) - 1;
-                pendingPickUV0 = { -1.0f, -1.0f };
-            }
-
-            // --- BLOOM PASS (for view 0) ---
-            glDisable(GL_DEPTH_TEST);
-            bool horizontal = true, first_iteration = true;
-            unsigned int amount = 10;
-            blurShader.use();
-            for (unsigned int i = 0; i < amount; i++)
-            {
-                glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[horizontal]);
-                blurShader.setBool("horizontal", horizontal);
-                glBindTexture(GL_TEXTURE_2D, first_iteration ? colorBuffer : pingpongColorbuffers[!horizontal]);
-                renderQuad();
-                horizontal = !horizontal;
-                if (first_iteration) first_iteration = false;
-            }
-
-            // --- FINAL PASS (for view 0) ---
-            glBindFramebuffer(GL_FRAMEBUFFER, m_imguiManager->GetGameFramebuffer(0));
-            glViewport(0, 0, w, h);
-            glClear(GL_COLOR_BUFFER_BIT);
-
-            finalShader.use();
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, colorBuffer);
-            glActiveTexture(GL_TEXTURE1);
-            glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[!horizontal]);
-            finalShader.setInt("sceneTexture", 0);
-            finalShader.setInt("bloomTexture", 1);
-            finalShader.setFloat("exposure", hdrExposure);
-            finalShader.setFloat("bloomStrength", bloomStrength);
-            renderQuad();
-
-            // HUD text for view 0
-            fontSystem.RenderText2D("Score: 100", 10.f, 10.0f, 1.f,
-                glm::vec3(1.0f, 1.0f, 0.5f), (float)w, (float)h);
-
-            // 3D text for view 0
-            glEnable(GL_DEPTH_TEST); // Re-enable depth for 3D text
-            glm::mat4 textModel = glm::mat4(1.0f);
-            textModel = glm::translate(textModel, glm::vec3(0.0f, 5.0f, 0.0f));
-            fontSystem.RenderText3D("iDesign Engine by iDesign Studio",
-                textModel,
-                view, // Use game view
-                proj, // Use game proj
-                0.05f,
-                glm::vec3(1.0f, 1.0f, 0.5f));
-            glDisable(GL_DEPTH_TEST); // Disable again for UI
+            // 4. Restore state
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            glCullFace(GL_BACK);
         }
-        // ======================= END VIEW 0 ==========================
 
+        // ====================================================================
+        //  POINT LIGHT SHADOW PASSES 
+        // ====================================================================
+        glDisable(GL_CULL_FACE); 
+        pointShadowShader.use();
+
+        const unsigned int POINT_SHADOW_WIDTH = 1024, POINT_SHADOW_HEIGHT = 1024;
+
+        for (auto const& entityId : mEntities)
+        {
+            if (!ecsInterface.HasComponent<LightProperties>(entityId)) continue;
+
+            auto& light = ecsInterface.GetComponent<LightProperties>(entityId);
+            if (light.type != LightType::Point || !light.castsShadow) continue;
+
+            auto& transform = ecsInterface.GetComponent<TransformComponent>(entityId);
+
+            // Store the far plane (radius) for the shader
+            light.shadowFarPlane = light.radius;
+            pointShadowShader.setFloat("uFarPlane", light.shadowFarPlane);
+            pointShadowShader.setVec3("uLightPos", transform.position);
+
+            if (light.shadowFBO == 0)
+            {
+                glGenFramebuffers(1, &light.shadowFBO);
+                glBindFramebuffer(GL_FRAMEBUFFER, light.shadowFBO);
+
+                // Create the CUBEMAP to store linear depth (as a color buffer)
+                glGenTextures(1, &light.shadowDepthCubeMap);
+                glBindTexture(GL_TEXTURE_CUBE_MAP, light.shadowDepthCubeMap);
+                for (unsigned int i = 0; i < 6; ++i)
+                {
+                    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_R32F,
+                        POINT_SHADOW_WIDTH, POINT_SHADOW_HEIGHT, 0, GL_RED, GL_FLOAT, NULL);
+                }
+                glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+                glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+                glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+                glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+                glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+                // Create a DEPTH buffer for depth testing *during* this pass
+                glGenRenderbuffers(1, &light.shadowDepthRBO);
+                glBindRenderbuffer(GL_RENDERBUFFER, light.shadowDepthRBO);
+                glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24,
+                    POINT_SHADOW_WIDTH, POINT_SHADOW_HEIGHT);
+                glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+                    GL_RENDERBUFFER, light.shadowDepthRBO);
+
+                // Attach one face so we can check FBO status
+                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                    GL_TEXTURE_CUBE_MAP_POSITIVE_X, light.shadowDepthCubeMap, 0);
+                glDrawBuffer(GL_COLOR_ATTACHMENT0); // We are writing to the color buffer
+                glReadBuffer(GL_NONE);
+
+                if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+                    std::cout << "ERROR: Point light Shadow FBO is not complete!" << std::endl;
+
+                glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            }
+
+            // --- 2. Calculate the 6 View matrices and 1 Projection matrix ---
+            float near_plane = 0.1f;
+            glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f),
+                (float)POINT_SHADOW_WIDTH / (float)POINT_SHADOW_HEIGHT,
+                near_plane, light.shadowFarPlane);
+
+            std::vector<glm::mat4> shadowTransforms;
+            glm::vec3 lightPos = transform.position;
+            shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0))); // +X
+            shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(-1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0))); // -X
+            shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 1.0, 0.0), glm::vec3(0.0, 0.0, 1.0))); // +Y
+            shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, -1.0, 0.0), glm::vec3(0.0, 0.0, -1.0))); // -Y
+            shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0, -1.0, 0.0))); // +Z
+            shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, -1.0, 0.0))); // -Z
+
+            // --- 3. Render the scene 6 times ---
+            glViewport(0, 0, POINT_SHADOW_WIDTH, POINT_SHADOW_HEIGHT);
+            glBindFramebuffer(GL_FRAMEBUFFER, light.shadowFBO);
+            glEnable(GL_DEPTH_TEST);
+
+            for (unsigned int i = 0; i < 6; ++i)
+            {
+                // Attach the correct cubemap face for rendering
+                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                    GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, light.shadowDepthCubeMap, 0);
+
+                // Clear *both* the color (our distance) and depth (for testing)
+                glClearColor(FLT_MAX, 0.0, 0.0, 1.0); // Clear distance to max
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+                pointShadowShader.setMat4("uLightSpaceMatrix", shadowTransforms[i]);
+
+                // --- Render the entire scene (terrain + entities) ---
+                pointShadowShader.setMat4("uModel", glm::mat4(1.0f));
+                terrain.draw();
+
+                for (auto const& entityId_inner : mEntities)
+                {
+                    if (ecsInterface.HasComponent<MeshProperties>(entityId_inner) &&
+                        ecsInterface.HasComponent<TransformComponent>(entityId_inner))
+                    {
+
+                        if (entityId_inner == entityId)
+                        {
+                            continue;
+                        }
+                        auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId_inner);
+                        bool isTransparent = false;
+                        if (ecsInterface.HasComponent<MaterialProperties>(entityId_inner))
+                        {
+                            isTransparent = ecsInterface.GetComponent<MaterialProperties>(entityId_inner).opacity < 1.0f;
+                        }
+                        if (mesh.debugShape == DebugShapeType::None && mesh.vao != 0 && !isTransparent)
+                        {
+                            auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId_inner);
+                            glm::mat4 model = glm::translate(glm::mat4(1.0f), tr.position);
+                            model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
+                            model = glm::rotate(model, glm::radians(tr.rotation.y), { 0,1,0 });
+                            model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
+                            model = glm::scale(model, tr.scale);
+
+                            pointShadowShader.setMat4("uModel", model);
+                            glBindVertexArray(mesh.vao);
+                            glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
+                        }
+                    }
+                }
+            }
+        } 
+
+        // --- 4. Restore default state ---
+        glCullFace(GL_BACK);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        // ====================================================================
+        // 1. RENDER VIEW 0: GAME (grounded)
+        // ====================================================================
+        if (groundMode)
+        {
+            float groundY = terrain.getHeightAt(gameCamera.position.x, gameCamera.position.z);
+            gameCamera.position.y = groundY + 1.8f;
+        }
+        RenderView(
+            gameCamera, 0, w, h,
+            frameSun, frameHasSun, framePointLights, frameSpotLights
+        );
 
         // ====================================================================
         // 2. RENDER VIEW 1: SCENE (free-fly)
         // ====================================================================
-        {
-            // Scene pass -> HDR
-            glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
-            glEnable(GL_DEPTH_TEST);
-            glDisable(GL_CULL_FACE); // Added
+        RenderView(
+            sceneCamera, 1, w, h,
+            frameSun, frameHasSun, framePointLights, frameSpotLights
+        );
 
-            glViewport(0, 0, w, h);
-            glClearColor(0.07f, 0.09f, 0.12f, 1.f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        // ====================================================================
+        // 3. FINAL/SHARED LOGIC
+        // ====================================================================
 
-            Camera& cam1 = sceneCamera;
-            glm::mat4 proj1 = cam1.getProjectionMatrix((float)w, (float)h);
-            glm::mat4 view1 = cam1.getViewMatrix();
-
-            // --- Terrain ---
-            terrainShader.use();
-            terrainShader.setMat4("uProj", proj1);
-            terrainShader.setMat4("uView", view1);
-            terrainShader.setMat4("uModel", glm::mat4(1.f));
-            terrainShader.setVec3("uAlbedo", { 0.6f,0.4f,0.2f });
-            LightProperties::upload(terrainShader, frameSun, frameHasSun, framePointLights, frameSpotLights);
-            terrain.draw();
-
-            // ---- START ANIMATION/TRANSPARENCY RENDER LOGIC (VIEW 1) ----
-
-            int sel1 = lastPickedId; // You might want a separate lastPickedId1
-            const glm::vec3 kHighlightAlbedo(1.0f, 0.85f, 0.3f);
-
-            std::vector<Entity> opaqueEntities;
-            std::multimap<float, Entity> transparentEntities;
-
-            for (auto const& entityId : mEntities)
-            {
-                if (ecsInterface.HasComponent<MeshProperties>(entityId))
-                {
-                    auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
-
-                    // Look up material via mesh.materialGuid
-                    auto* material = AssetManager::Instance().Get<MaterialProperties>(mesh.materialGuid);
-
-                    if (material)
-                    {
-                        if (material->opacity < 1.0f)
-                        {
-                            if (ecsInterface.HasComponent<TransformComponent>(entityId))
-                            {
-                                auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
-                                float distance = glm::distance(tr.position, cam1.position); // Use cam1
-                                transparentEntities.insert({ distance, entityId });
-                            }
-                        }
-                        else
-                        {
-                            opaqueEntities.push_back(entityId);
-                        }
-                    }
-                    else
-                    {
-                        // No material assigned - treat as opaque by default
-                        opaqueEntities.push_back(entityId);
-                    }
-                }
-            }
-
-            // --- 1. OPAQUE PASS (VIEW 1) ---
-            glDisable(GL_BLEND);
-            glDepthMask(GL_TRUE);
-
-            for (auto const& entityId : opaqueEntities)
-            {
-                auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
-                glm::mat4 model(1.0f);
-                model = glm::translate(model, tr.position);
-                model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
-                model = glm::rotate(model, glm::radians(tr.rotation.y), { 0,1,0 });
-                model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
-                model = glm::scale(model, tr.scale);
-
-                // Text 
-                if (ecsInterface.HasComponent<TextProperties>(entityId)) {
-                    auto& txt = ecsInterface.GetComponent<TextProperties>(entityId);
-                    fontSystem.RenderText3D(txt.text, model, view1, proj1, txt.scale, txt.color);
-                }
-
-                // Mesh 
-                if (ecsInterface.HasComponent<MeshProperties>(entityId))
-                {
-                    auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
-                    
-                    if (mesh.debugShape == DebugShapeType::None) {
-
-                        bool isSkinned = ecsInterface.HasComponent<AnimationProperties>(entityId);
-                        ShaderProgram& currentshader = isSkinned ? skinnedShader : meshShader;
-
-                        currentshader.use();
-                        currentshader.setMat4("uProj", proj1);
-                        currentshader.setMat4("uView", view1);
-                        currentshader.setVec3("uViewPos", cam1.position);
-                        currentshader.setMat4("uModel", model);
-
-                        if (isSkinned) {
-                            auto& animator = ecsInterface.GetComponent<AnimationProperties>(entityId);
-                            for (size_t i = 0; i < animator.finalBoneMatrices.size(); ++i)
-                            {
-                                currentshader.setMat4(("uBoneMatrices[" + std::to_string(i) + "]").c_str(), animator.finalBoneMatrices[i]);
-                            }
-                        }
-
-                        // NEW: fetch material via mesh.materialGuid
-                        auto* material = AssetManager::Instance().Get<MaterialProperties>(mesh.materialGuid);
-                        if (material)
-                        {
-                            const bool isSelected = (int)entityId == sel1;
-                            glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : material->albedo;
-                            currentshader.setVec3("uAlbedo", finalAlbedo);
-
-                            glActiveTexture(GL_TEXTURE0);
-                            currentshader.setVec3("uMaterial.ambient", material->ambient);
-                            currentshader.setVec3("uMaterial.specular", material->specular);
-                            currentshader.setFloat("uMaterial.shininess", material->shininess);
-                            currentshader.setFloat("uMaterial.opacity", material->opacity);
-                            currentshader.setInt("uTexture", 0);
-                        }
-                        
-                        if (ecsInterface.HasComponent<TextureProperties>(entityId)) {
-                            auto& tex = ecsInterface.GetComponent<TextureProperties>(entityId);
-                            glBindTexture(GL_TEXTURE_2D, tex.textureID);
-                        }
-                        else {
-                            glBindTexture(GL_TEXTURE_2D, 0);
-                        }
-
-                        LightProperties::upload(currentshader, frameSun, frameHasSun, framePointLights, frameSpotLights);
-                        glBindVertexArray(mesh.vao);
-                        glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
-                    }
-                    else {
-                        auto it = m_debugMeshes.find(mesh.debugShape);
-                        if (it != m_debugMeshes.end()) {
-                            DrawDebugMesh(it->second, mesh.debugcolor, model, proj1, view1);
-                        }
-                    }
-                }
-            }
-
-            // --- 2. TRANSPARENT PASS (VIEW 1) ---
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            glDepthMask(GL_FALSE);
-
-            for (auto it = transparentEntities.rbegin(); it != transparentEntities.rend(); ++it)
-            {
-                auto const& entityId = it->second;
-                auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
-                auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
-
-                // Look up material via mesh.materialGuid
-                auto* material = AssetManager::Instance().Get<MaterialProperties>(mesh.materialGuid);
-
-                glm::mat4 model(1.0f);
-                model = glm::translate(model, tr.position);
-                model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
-                model = glm::rotate(model, glm::radians(tr.rotation.y), { 0,1,0 });
-                model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
-                model = glm::scale(model, tr.scale);
-
-                if (mesh.debugShape == DebugShapeType::None)
-                {
-                    bool isSkinned = ecsInterface.HasComponent<AnimationProperties>(entityId);
-                    ShaderProgram& currentShader = isSkinned ? skinnedShader : meshShader;
-
-                    currentShader.use();
-                    currentShader.setMat4("uProj", proj1);
-                    currentShader.setMat4("uView", view1);
-                    currentShader.setVec3("uViewPos", cam1.position);
-                    currentShader.setMat4("uModel", model);
-
-                    if (isSkinned)
-                    {
-                        auto& animator = ecsInterface.GetComponent<AnimationProperties>(entityId);
-                        for (size_t i = 0; i < animator.finalBoneMatrices.size(); ++i)
-                        {
-                            currentShader.setMat4(("uBoneMatrices[" + std::to_string(i) + "]").c_str(), animator.finalBoneMatrices[i]);
-                        }
-                    }
-
-                    if (material)
-                    {
-                        const bool isSelected = (int)entityId == sel1;
-                        glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : material->albedo;
-                        currentShader.setVec3("uAlbedo", finalAlbedo);
-                        currentShader.setVec3("uMaterial.ambient", material->ambient);
-                        currentShader.setVec3("uMaterial.specular", material->specular);
-                        currentShader.setFloat("uMaterial.shininess", material->shininess);
-                        currentShader.setFloat("uMaterial.opacity", material->opacity);
-                    }
-
-                    glActiveTexture(GL_TEXTURE0);
-                    currentShader.setInt("uTexture", 0);
-                    if (ecsInterface.HasComponent<TextureProperties>(entityId)) {
-                        auto& tex = ecsInterface.GetComponent<TextureProperties>(entityId);
-                        glBindTexture(GL_TEXTURE_2D, tex.textureID);
-                    }
-                    else {
-                        glBindTexture(GL_TEXTURE_2D, 0);
-                    }
-
-                    LightProperties::upload(currentShader, frameSun, frameHasSun, framePointLights, frameSpotLights);
-                    glBindVertexArray(mesh.vao);
-                    glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
-                }
-            }
-
-            // --- 3. CLEANUP STATE ---
-            glDepthMask(GL_TRUE);
-            glDisable(GL_BLEND);
-            glCullFace(GL_BACK); // Restore default
-
-            // ---- END ANIMATION/TRANSPARENCY RENDER LOGIC (VIEW 1) ---
-
-            // --- PICK PASS for view 1 ---
-            glBindFramebuffer(GL_FRAMEBUFFER, pickFBO[pickWrite]);
-            glViewport(0, 0, w, h);
-            glEnable(GL_DEPTH_TEST);
-            glClearColor(0, 0, 0, 0);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-            pickShader.use();
-            pickShader.setMat4("uProj", proj1);
-            pickShader.setMat4("uView", view1);
-
-            for (auto const& entityId : mEntities) {
-                auto& t = ecsInterface.GetComponent<TransformComponent>(entityId);
-                glm::mat4 model(1.0f);
-                model = glm::translate(model, t.position);
-                model = glm::rotate(model, t.rotation.x, glm::vec3(1, 0, 0));
-                model = glm::rotate(model, t.rotation.y, glm::vec3(0, 1, 0));
-                model = glm::rotate(model, t.rotation.z, glm::vec3(0, 0, 1));
-                model = glm::scale(model, t.scale);
-                pickShader.setMat4("uModel", model);
-
-                uint32_t id = static_cast<uint32_t>(entityId) + 1u;
-                glm::vec3 idColor = {
-                    ((id) & 0xFF) / 255.0f,
-                    ((id >> 8) & 0xFF) / 255.0f,
-                    ((id >> 16) & 0xFF) / 255.0f
-                };
-                pickShader.setVec3("uIdColor", idColor);
-
-                if (ecsInterface.HasComponent<MeshProperties>(entityId)) {
-                    auto& mc = ecsInterface.GetComponent<MeshProperties>(entityId);
-                    glBindVertexArray(mc.vao);
-                    glDrawElements(GL_TRIANGLES, mc.indexCount, GL_UNSIGNED_INT, 0);
-                }
-            }
-            glBindFramebuffer(GL_FRAMEBUFFER, 0); // Unbind pick FBO
-            std::swap(pickWrite, pickRead);
-
-            // READBACK for VIEW 1
-            if (pendingPickUV1.x >= 0.0f && pendingPickUV1.y >= 0.0f) {
-                int pw = m_pickW, ph = m_pickH;            // instead of 1280, 720
-                int px = glm::clamp(int(pendingPickUV1.x * pw), 0, pw - 1);
-                int py = glm::clamp(int(pendingPickUV1.y * ph), 0, ph - 1);
-
-                glBindFramebuffer(GL_READ_FRAMEBUFFER, pickFBO[pickRead]);
-                unsigned char rgb[3] = { 0,0,0 };
-                glReadPixels(px, py, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, rgb);
-                glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-
-                uint32_t id = (uint32_t)rgb[0] | ((uint32_t)rgb[1] << 8) | ((uint32_t)rgb[2] << 16);
-                lastPickedId = (id == 0) ? -1 : int(id) - 1; // Or set lastPickedId1
-                pendingPickUV1 = { -1.0f, -1.0f };
-            }
-
-
-            // --- BLOOM (reuse same code) ---
-            glDisable(GL_DEPTH_TEST);
-            bool horizontal1 = true, first_iteration1 = true;
-            unsigned int amount1 = 10;
-            blurShader.use();
-            for (unsigned int i = 0; i < amount1; i++) {
-                glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[horizontal1]);
-                blurShader.setBool("horizontal", horizontal1);
-                glBindTexture(GL_TEXTURE_2D, first_iteration1 ? colorBuffer : pingpongColorbuffers[!horizontal1]);
-                renderQuad();
-                horizontal1 = !horizontal1;
-                if (first_iteration1) first_iteration1 = false;
-            }
-
-            // --- FINAL PASS to SECOND ImGui target ---
-            glBindFramebuffer(GL_FRAMEBUFFER, m_imguiManager->GetGameFramebuffer(1));
-            glViewport(0, 0, w, h);
-            glClear(GL_COLOR_BUFFER_BIT);
-
-            finalShader.use();
-            glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, colorBuffer);
-            glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[!horizontal1]);
-            finalShader.setInt("sceneTexture", 0);
-            finalShader.setInt("bloomTexture", 1);
-            finalShader.setFloat("exposure", hdrExposure);
-            finalShader.setFloat("bloomStrength", bloomStrength);
-            renderQuad();
-
-            // Optional HUD for view 1
-            fontSystem.RenderText2D("Editor View", 10.f, 10.f, 1.f, { 1,1,0.5f }, (float)w, (float)h);
-
-            // 3D world-space text
-            glEnable(GL_DEPTH_TEST);
-            glm::mat4 textModel1(1.0f);
-            textModel1 = glm::translate(textModel1, glm::vec3(0.0f, 5.0f, 0.0f));
-            fontSystem.RenderText3D("iDesign Engine by iDesign Studio",
-                textModel1, /*model*/
-                view1,      /*the secondary view's view matrix*/
-                proj1,      /*the secondary view's projection matrix*/
-                0.05f,
-                glm::vec3(1.0f, 1.0f, 0.5f));
-            glDisable(GL_DEPTH_TEST);
-        }
-        // ===================== END VIEW 1 : SCENE (free-fly) ========================
-
-
-        // This pick UV logic seems to be for a single, non-view-specific pick
-        // You may need to remove this if you only use pendingPickUV0 and pendingPickUV1
         if (pendingPickUV.x >= 0.0f && pendingPickUV.y >= 0.0f) {
-            int pw = m_pickW, ph = m_pickH;            // instead of 1280, 720
+            int pw = m_pickW, ph = m_pickH;
             int px = glm::clamp(int(pendingPickUV.x * pw), 0, pw - 1);
             int py = glm::clamp(int(pendingPickUV.y * ph), 0, ph - 1);
 
@@ -1201,14 +724,11 @@ namespace Framework {
 
             uint32_t id = (uint32_t)rgb[0] | ((uint32_t)rgb[1] << 8) | ((uint32_t)rgb[2] << 16);
             lastPickedId = (id == 0) ? -1 : int(id) - 1;
-
             pendingPickUV = { -1.0f, -1.0f };
-
             if (lastPickedId >= 0) {
                 std::cout << "Picked entity: " << lastPickedId << "\n";
             }
         }
-
 
         //Showing FPS
         double currentTime = glfwGetTime();
@@ -1227,7 +747,6 @@ namespace Framework {
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
-
     // Get the name of the system
     std::string Graphics::GetName()
     {
@@ -1682,6 +1201,11 @@ namespace Framework {
                         outSun.direction = forward;
                         outSun.color = light.color;
                         outSun.intensity = light.intensity;
+                        outSun.position = transform.position;
+                        outHasSun = true;
+                        outSun.position = transform.position;
+                        outSun.shadowBiasConst = light.shadowBiasConst;
+                        outSun.shadowBiasFactor = light.shadowBiasFactor;
                         outHasSun = true;
                     }
                     break;
@@ -1692,7 +1216,10 @@ namespace Framework {
                         light.color,
                         light.intensity,
                         light.radius,
-                        true // enabled
+                        true,// enabled
+                        light.castsShadow,
+                        light.shadowBiasConst,
+                        light.shadowBiasFactor
                         });
                     break;
 
@@ -1712,4 +1239,559 @@ namespace Framework {
             }
         }
     }
-}
+
+    void Graphics::InitializeFramebuffers(int width, int height)
+    {
+        // --- 1. PICKING FBO SETUP ---
+        // (Moved lambda definition inside)
+        auto makePickFBO = [&](int w, int h, int idx) {
+            glGenFramebuffers(1, &pickFBO[idx]);
+            glBindFramebuffer(GL_FRAMEBUFFER, pickFBO[idx]);
+
+            glGenTextures(1, &pickColor[idx]);
+            glBindTexture(GL_TEXTURE_2D, pickColor[idx]);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, pickColor[idx], 0);
+
+            glGenRenderbuffers(1, &pickDepth[idx]);
+            glBindRenderbuffer(GL_RENDERBUFFER, pickDepth[idx]);
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, w, h);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, pickDepth[idx]);
+
+            GLenum drawBuf = GL_COLOR_ATTACHMENT0;
+            glDrawBuffers(1, &drawBuf);
+
+            if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+                std::cout << "ERROR: pick FBO " << idx << " incomplete!\n";
+
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            };
+
+        pickShader.initGL(); // Init the shader used by this FBO
+        makePickFBO(width, height, 0);
+        makePickFBO(width, height, 1);
+
+        // --- 2. HDR FRAMEBUFFER SETUP ---
+        glGenFramebuffers(1, &hdrFBO);
+        glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
+        glGenTextures(1, &colorBuffer);
+        glBindTexture(GL_TEXTURE_2D, colorBuffer);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, NULL); // Use parameters
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBuffer, 0);
+        glGenRenderbuffers(1, &rboDepth);
+        glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height); // Use parameters
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
+        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+            std::cout << "ERROR::FRAMEBUFFER:: HDR Framebuffer is not complete!\n";
+
+        // --- 3. BLOOM (PINGPONG) FRAMEBUFFER SETUP ---
+        glGenFramebuffers(2, pingpongFBO);
+        glGenTextures(2, pingpongColorbuffers);
+        for (unsigned int i = 0; i < 2; i++)
+        {
+            glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[i]);
+            glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[i]);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, NULL); // Use parameters
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, pingpongColorbuffers[i], 0);
+            if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+                std::cout << "ERROR::FRAMEBUFFER:: Ping-pong FBO is not complete!\n";
+        }
+
+        // --- 4. SHADOW MAP FBO SETUP ---
+        glGenFramebuffers(1, &m_shadowFBO);
+        glGenTextures(1, &m_shadowDepthTexture);
+        glBindTexture(GL_TEXTURE_2D, m_shadowDepthTexture);
+        // Note: Shadow FBO uses its own fixed size
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
+            SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+        float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+        glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, m_shadowFBO);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_shadowDepthTexture, 0);
+        glDrawBuffer(GL_NONE);
+        glReadBuffer(GL_NONE);
+
+        // Unbind last FBO
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
+    // In Graphics.cpp
+// REPLACE your entire RenderView function with this:
+
+    void Graphics::RenderView(
+        Camera& cam,
+        int viewIndex,
+        int width, int height,
+        const DirectionalLightCPU& sun, bool hasSun,
+        const std::vector<PointLightCPU>& points,
+        const std::vector<SpotLightCPU>& spots)
+    {
+        // Get the correct pick UV for this view
+        glm::vec2& pickUV = (viewIndex == 0) ? pendingPickUV0 : pendingPickUV1;
+
+        // 1. SCENE PASS
+        glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
+        glEnable(GL_DEPTH_TEST);
+        glDisable(GL_CULL_FACE);
+
+        glViewport(0, 0, width, height);
+        glClearColor(0.07f, 0.09f, 0.12f, 1.f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glm::mat4 proj = cam.getProjectionMatrix((float)width, (float)height);
+        glm::mat4 view = cam.getViewMatrix();
+
+        // --- Terrain ---
+        terrainShader.use();
+        terrainShader.setMat4("uProj", proj);
+        terrainShader.setMat4("uView", view);
+        terrainShader.setMat4("uModel", glm::mat4(1.f));
+        terrainShader.setVec3("uAlbedo", { 0.6f,0.4f,0.2f });
+
+        // Bind shadow map for terrain
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, m_shadowDepthTexture);
+        terrainShader.setInt("uShadowMap", 1);
+        terrainShader.setMat4("uLightSpaceMatrix", m_lightSpaceMatrix);
+
+        LightProperties::upload(terrainShader, sun, hasSun, points, spots);
+        int pointShadowUnit = 2;
+        int pointShadowCount = 0;
+        for (int i = 0; i < (int)points.size(); ++i)
+        {
+            if (points[i].castsShadow && pointShadowCount < MAX_POINT_LIGHTS)
+            {
+                GLuint textureID = 0;
+                for (auto const& entityId : mEntities)
+                {
+                    if (!ecsInterface.HasComponent<LightProperties>(entityId)) continue;
+                    auto& light = ecsInterface.GetComponent<LightProperties>(entityId);
+                    auto& transform = ecsInterface.GetComponent<TransformComponent>(entityId);
+                    if (light.type == LightType::Point && transform.position == points[i].position)
+                    {
+                        textureID = light.shadowDepthCubeMap;
+                        break;
+                    }
+                }
+
+                if (textureID != 0)
+                {
+                    glActiveTexture(GL_TEXTURE0 + pointShadowUnit);
+                    glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+                    
+                    std::string samplerName = "uPointShadowMaps[" + std::to_string(pointShadowCount) + "]";
+                    // Make sure to use 'terrainShader' here!
+                    terrainShader.setInt(samplerName.c_str(), pointShadowUnit);
+
+                    pointShadowUnit++;
+                    pointShadowCount++;
+                }
+            }
+        }
+        terrain.draw();
+
+
+        // --- ENTITY SORTING ---
+        int sel = lastPickedId;
+        const glm::vec3 kHighlightAlbedo(1.0f, 0.85f, 0.3f);
+        std::vector<Entity> opaqueEntities;
+        std::multimap<float, Entity> transparentEntities;
+
+        for (auto const& entityId : mEntities)
+        {
+            if (ecsInterface.HasComponent<MeshProperties>(entityId))
+            {
+                float opacity = 1.0f;
+                if (ecsInterface.HasComponent<MaterialProperties>(entityId))
+                {
+                    opacity = ecsInterface.GetComponent<MaterialProperties>(entityId).opacity;
+                }
+
+                if (opacity < 1.0f)
+                {
+                    if (ecsInterface.HasComponent<TransformComponent>(entityId))
+                    {
+                        auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
+                        float distance = glm::distance(tr.position, cam.position);
+                        transparentEntities.insert({ distance, entityId });
+                    }
+                }
+                else
+                {
+                    opaqueEntities.push_back(entityId);
+                }
+            }
+        }
+
+        // --- 1. OPAQUE PASS ---
+        glDisable(GL_BLEND);
+        glDepthMask(GL_TRUE);
+
+        for (auto const& entityId : opaqueEntities)
+        {
+            auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
+            glm::mat4 model(1.0f);
+            model = glm::translate(model, tr.position);
+            model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
+            model = glm::rotate(model, glm::radians(tr.rotation.y), { 0,1,0 });
+            model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
+            model = glm::scale(model, tr.scale);
+
+            if (ecsInterface.HasComponent<TextProperties>(entityId)) {
+                auto& txt = ecsInterface.GetComponent<TextProperties>(entityId);
+                fontSystem.RenderText3D(txt.text, model, view, proj, txt.scale, txt.color);
+            }
+
+            if (ecsInterface.HasComponent<MeshProperties>(entityId))
+            {
+                auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
+
+                if (mesh.debugShape == DebugShapeType::None && mesh.vao != 0) {
+                    bool isSkinned = ecsInterface.HasComponent<AnimationProperties>(entityId);
+                    ShaderProgram& currentshader = isSkinned ? skinnedShader : meshShader;
+
+                    currentshader.use();
+                    currentshader.setMat4("uProj", proj);
+                    currentshader.setMat4("uView", view);
+                    currentshader.setVec3("uViewPos", cam.position);
+                    currentshader.setMat4("uModel", model);
+
+                    // Bind shadow map for meshes
+                    glActiveTexture(GL_TEXTURE1);
+                    glBindTexture(GL_TEXTURE_2D, m_shadowDepthTexture);
+                    currentshader.setInt("uShadowMap", 1);
+                    currentshader.setMat4("uLightSpaceMatrix", m_lightSpaceMatrix);
+
+                    int pointShadowUnit = 2;
+                    int pointShadowCount = 0;
+
+                    // 'points' is the std::vector<PointLightCPU> passed into RenderView
+                    for (int i = 0; i < (int)points.size(); ++i)
+                    {
+                        // The 'points' vector is already packed with only enabled lights.
+                        // We just need to check if this enabled light also casts a shadow.
+                        if (points[i].castsShadow && pointShadowCount < MAX_POINT_LIGHTS)
+                        {
+                            // We need to find the *actual* LightProperties component
+                            // to get the shadowDepthCubeMap texture ID.
+                            // This is a bit tricky, but we can search by position.
+
+                            // This is inefficient, but will prove the fix.
+                            // A better long-term fix is to add the textureID to PointLightCPU.
+                            GLuint textureID = 0;
+                            for (auto const& entityId : mEntities)
+                            {
+                                if (!ecsInterface.HasComponent<LightProperties>(entityId)) continue;
+                                auto& light = ecsInterface.GetComponent<LightProperties>(entityId);
+                                auto& transform = ecsInterface.GetComponent<TransformComponent>(entityId);
+
+                                // Check if this is the same light
+                                if (light.type == LightType::Point && transform.position == points[i].position)
+                                {
+                                    textureID = light.shadowDepthCubeMap;
+                                    break;
+                                }
+                            }
+
+                            if (textureID != 0)
+                            {
+                                glActiveTexture(GL_TEXTURE0 + pointShadowUnit);
+                                glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+
+                                // 'pointShadowCount' will now match the shader's 'i' index
+                                std::string samplerName = "uPointShadowMaps[" + std::to_string(pointShadowCount) + "]";
+                                currentshader.setInt(samplerName.c_str(), pointShadowUnit);
+
+                                pointShadowUnit++;
+                                pointShadowCount++;
+                            }
+                        }
+                    }
+
+
+                    if (isSkinned) {
+                        auto& animator = ecsInterface.GetComponent<AnimationProperties>(entityId);
+                        for (size_t i = 0; i < animator.finalBoneMatrices.size(); ++i)
+                        {
+                            currentshader.setMat4(("uBoneMatrices[" + std::to_string(i) + "]").c_str(), animator.finalBoneMatrices[i]);
+                        }
+                    }
+
+                    if (ecsInterface.HasComponent<MaterialProperties>(entityId))
+                    {
+                        auto& material = ecsInterface.GetComponent<MaterialProperties>(entityId);
+                        const bool isSelected = (int)entityId == sel;
+                        glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : material.albedo;
+                        currentshader.setVec3("uAlbedo", finalAlbedo);
+
+                        glActiveTexture(GL_TEXTURE0);
+                        currentshader.setVec3("uMaterial.ambient", material.ambient);
+                        currentshader.setVec3("uMaterial.specular", material.specular);
+                        currentshader.setFloat("uMaterial.shininess", material.shininess);
+                        currentshader.setFloat("uMaterial.opacity", material.opacity);
+                        currentshader.setInt("uTexture", 0);
+                    }
+
+                    glActiveTexture(GL_TEXTURE0);
+                    if (ecsInterface.HasComponent<TextureProperties>(entityId)) {
+                        auto& tex = ecsInterface.GetComponent<TextureProperties>(entityId);
+                        glBindTexture(GL_TEXTURE_2D, tex.textureID);
+                    }
+                    else {
+                        glBindTexture(GL_TEXTURE_2D, 0);
+                    }
+
+                    LightProperties::upload(currentshader, sun, hasSun, points, spots);
+                    glBindVertexArray(mesh.vao);
+                    glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
+                }
+                else if (mesh.debugShape != DebugShapeType::None) {
+                    auto it = m_debugMeshes.find(mesh.debugShape);
+                    if (it != m_debugMeshes.end()) {
+                        DrawDebugMesh(it->second, mesh.debugcolor, model, proj, view);
+                    }
+                }
+            }
+        }
+
+        // --- 2. TRANSPARENT PASS ---
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glDepthMask(GL_FALSE);
+
+        for (auto it = transparentEntities.rbegin(); it != transparentEntities.rend(); ++it)
+        {
+            auto const& entityId = it->second;
+            auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
+            auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
+
+            glm::mat4 model(1.0f);
+            model = glm::translate(model, tr.position);
+            model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
+            model = glm::rotate(model, glm::radians(tr.rotation.y), { 0,1,0 });
+            model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
+            model = glm::scale(model, tr.scale);
+
+            if (mesh.debugShape == DebugShapeType::None && mesh.vao != 0)
+            {
+                bool isSkinned = ecsInterface.HasComponent<AnimationProperties>(entityId);
+                ShaderProgram& currentShader = isSkinned ? skinnedShader : meshShader;
+
+                currentShader.use();
+                currentShader.setMat4("uProj", proj);
+                currentShader.setMat4("uView", view);
+                currentShader.setVec3("uViewPos", cam.position);
+                currentShader.setMat4("uModel", model);
+
+                glActiveTexture(GL_TEXTURE1);
+                glBindTexture(GL_TEXTURE_2D, m_shadowDepthTexture);
+                currentShader.setInt("uShadowMap", 1);
+                currentShader.setMat4("uLightSpaceMatrix", m_lightSpaceMatrix);
+                int pointShadowUnit = 2; // Start at texture unit 2
+                int pointShadowCount = 0;
+
+
+                // 'points' is the std::vector<PointLightCPU> passed into RenderView
+                for (int i = 0; i < (int)points.size(); ++i)
+                {
+                    // The 'points' vector is already packed with only enabled lights.
+                    // We just need to check if this enabled light also casts a shadow.
+                    if (points[i].castsShadow && pointShadowCount < MAX_POINT_LIGHTS)
+                    {
+                        // We need to find the *actual* LightProperties component
+                        // to get the shadowDepthCubeMap texture ID.
+                        // This is a bit tricky, but we can search by position.
+
+                        // This is inefficient, but will prove the fix.
+                        // A better long-term fix is to add the textureID to PointLightCPU.
+                        GLuint textureID = 0;
+                        for (auto const& entityId : mEntities)
+                        {
+                            if (!ecsInterface.HasComponent<LightProperties>(entityId)) continue;
+                            auto& light = ecsInterface.GetComponent<LightProperties>(entityId);
+                            auto& transform = ecsInterface.GetComponent<TransformComponent>(entityId);
+
+                            // Check if this is the same light
+                            if (light.type == LightType::Point && transform.position == points[i].position)
+                            {
+                                textureID = light.shadowDepthCubeMap;
+                                break;
+                            }
+                        }
+
+                        if (textureID != 0)
+                        {
+                            glActiveTexture(GL_TEXTURE0 + pointShadowUnit);
+                            glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+
+                            // 'pointShadowCount' will now match the shader's 'i' index
+                            std::string samplerName = "uPointShadowMaps[" + std::to_string(pointShadowCount) + "]";
+                            currentShader.setInt(samplerName.c_str(), pointShadowUnit);
+
+                            pointShadowUnit++;
+                            pointShadowCount++;
+                        }
+                    }
+                }
+                if (isSkinned)
+                {
+                    auto& animator = ecsInterface.GetComponent<AnimationProperties>(entityId);
+                    for (size_t i = 0; i < animator.finalBoneMatrices.size(); ++i)
+                    {
+                        currentShader.setMat4(("uBoneMatrices[" + std::to_string(i) + "]").c_str(), animator.finalBoneMatrices[i]);
+                    }
+                }
+
+                // **FIX**: Fetch material from the ECS component
+                if (ecsInterface.HasComponent<MaterialProperties>(entityId))
+                {
+                    auto& material = ecsInterface.GetComponent<MaterialProperties>(entityId);
+                    const bool isSelected = (int)entityId == sel;
+                    glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : material.albedo;
+                    currentShader.setVec3("uAlbedo", finalAlbedo);
+                    currentShader.setVec3("uMaterial.ambient", material.ambient);
+                    currentShader.setVec3("uMaterial.specular", material.specular);
+                    currentShader.setFloat("uMaterial.shininess", material.shininess);
+                    currentShader.setFloat("uMaterial.opacity", material.opacity);
+                }
+
+                glActiveTexture(GL_TEXTURE0);
+                currentShader.setInt("uTexture", 0);
+                if (ecsInterface.HasComponent<TextureProperties>(entityId)) {
+                    auto& tex = ecsInterface.GetComponent<TextureProperties>(entityId);
+                    glBindTexture(GL_TEXTURE_2D, tex.textureID);
+                }
+                else {
+                    glBindTexture(GL_TEXTURE_2D, 0);
+                }
+
+                LightProperties::upload(currentShader, sun, hasSun, points, spots);
+                glBindVertexArray(mesh.vao);
+                glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
+            }
+        }
+
+        // --- 3. CLEANUP STATE ---
+        glDepthMask(GL_TRUE);
+        glDisable(GL_BLEND);
+        glCullFace(GL_BACK);
+
+        // --- 4. PICK PASS ---
+        glBindFramebuffer(GL_FRAMEBUFFER, pickFBO[pickWrite]);
+        glViewport(0, 0, width, height);
+        glEnable(GL_DEPTH_TEST);
+        glClearColor(0, 0, 0, 0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        pickShader.use();
+        pickShader.setMat4("uProj", proj);
+        pickShader.setMat4("uView", view);
+
+        for (auto const& entityId : mEntities) {
+            if (ecsInterface.HasComponent<MeshProperties>(entityId) && ecsInterface.GetComponent<MeshProperties>(entityId).vao != 0)
+            {
+                auto& transformComponent = ecsInterface.GetComponent<TransformComponent>(entityId);
+                glm::mat4 model(1.0f);
+                model = glm::translate(model, transformComponent.position);
+                model = glm::rotate(model, transformComponent.rotation.x, glm::vec3(1, 0, 0));
+                model = glm::rotate(model, transformComponent.rotation.y, glm::vec3(0, 1, 0));
+                model = glm::rotate(model, transformComponent.rotation.z, glm::vec3(0, 0, 1));
+                model = glm::scale(model, transformComponent.scale);
+                pickShader.setMat4("uModel", model);
+
+                uint32_t id = static_cast<uint32_t>(entityId) + 1u;
+                glm::vec3 idColor = {
+                    ((id) & 0xFF) / 255.0f,
+                    ((id >> 8) & 0xFF) / 255.0f,
+                    ((id >> 16) & 0xFF) / 255.0f
+                };
+                pickShader.setVec3("uIdColor", idColor);
+
+                auto& meshComponent = ecsInterface.GetComponent<MeshProperties>(entityId);
+                glBindVertexArray(meshComponent.vao);
+                glDrawElements(GL_TRIANGLES, meshComponent.indexCount, GL_UNSIGNED_INT, 0);
+            }
+        }
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        std::swap(pickWrite, pickRead);
+
+        // --- 5. PICK READBACK ---
+        if (pickUV.x >= 0.0f && pickUV.y >= 0.0f) {
+            int pw = m_pickW, ph = m_pickH;
+            int px = glm::clamp(int(pickUV.x * pw), 0, pw - 1);
+            int py = glm::clamp(int(pickUV.y * ph), 0, ph - 1);
+
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, pickFBO[pickRead]);
+            unsigned char rgb[3] = { 0,0,0 };
+            glReadPixels(px, py, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, rgb);
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+
+            uint32_t id = (uint32_t)rgb[0] | ((uint32_t)rgb[1] << 8) | ((uint32_t)rgb[2] << 16);
+            lastPickedId = (id == 0) ? -1 : int(id) - 1;
+            pickUV = { -1.0f, -1.0f }; // Reset this view's pick request
+        }
+
+        // --- 6. BLOOM PASS ---
+        glDisable(GL_DEPTH_TEST);
+        bool horizontal = true, first_iteration = true;
+        unsigned int amount = 10;
+        blurShader.use();
+        for (unsigned int i = 0; i < amount; i++)
+        {
+            glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[horizontal]);
+            blurShader.setBool("horizontal", horizontal);
+            glBindTexture(GL_TEXTURE_2D, first_iteration ? colorBuffer : pingpongColorbuffers[!horizontal]);
+            renderQuad();
+            horizontal = !horizontal;
+            if (first_iteration) first_iteration = false;
+        }
+
+        // --- 7. FINAL PASS ---
+        glBindFramebuffer(GL_FRAMEBUFFER, m_imguiManager->GetGameFramebuffer(viewIndex));
+        glViewport(0, 0, width, height);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        finalShader.use();
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, colorBuffer);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[!horizontal]);
+        finalShader.setInt("sceneTexture", 0);
+        finalShader.setInt("bloomTexture", 1);
+        finalShader.setFloat("exposure", hdrExposure);
+        finalShader.setFloat("bloomStrength", bloomStrength);
+        renderQuad();
+
+        // --- 8. HUD/TEXT PASS ---
+        if (viewIndex == 0)
+        {
+            fontSystem.RenderText2D("Score: 100", 10.f, 10.0f, 1.f,
+                glm::vec3(1.0f, 1.0f, 0.5f), (float)width, (float)height);
+        }
+        else
+        {
+            fontSystem.RenderText2D("Editor View", 10.f, 10.f, 1.f, { 1,1,0.5f }, (float)width, (float)height);
+        }
+
+        glEnable(GL_DEPTH_TEST);
+        glm::mat4 textModel = glm::mat4(1.0f);
+        textModel = glm::translate(textModel, glm::vec3(0.0f, 5.0f, 0.0f));
+        fontSystem.RenderText3D("iDesign Engine by iDesign Studio",
+            textModel, view, proj, 0.05f, glm::vec3(1.0f, 1.0f, 0.5f));
+        glDisable(GL_DEPTH_TEST);
+    }
+ }

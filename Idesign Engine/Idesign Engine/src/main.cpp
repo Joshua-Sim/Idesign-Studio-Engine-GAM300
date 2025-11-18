@@ -29,7 +29,7 @@
 #include "Scenemanager.h"
 #include "NavMeshSystem.h"
 #include "AnimationSystem.h"
-
+#include "EnginePath.h"
 #include "AudioLoader.h"
 
 #include "AudioSystem.h"
@@ -38,6 +38,8 @@
 #include "lua.hpp"
 #include "PhysicsSystem.h"
 #include "FileCheckSystem.h"
+#include "EnginePath.h"
+#include <filesystem>
 
 using namespace Framework;
 
@@ -64,9 +66,8 @@ int main(void)
     std::cout << "Initial working directory: " << initialCWD << std::endl;
 
     // SET PROJECT ROOT FOR ALL SYSTEMS THAT NEED IT
-    Framework::FileCheckSystem::SetProjectRoot(initialCWD.string());
-    Framework::ScriptingSystem::SetProjectRoot(initialCWD.string());
-
+    FileCheckSystem::SetProjectRoot(initialCWD.string());
+    ScriptingSystem::SetProjectRoot(initialCWD.string());
 
     SetupSignalHandlers();
     EnableMemoryLeakChecking(); // For memory check
@@ -121,13 +122,12 @@ int main(void)
     auto scriptingSystem = ecsInterface.RegisterSystem<ScriptingSystem>();
     scriptingSystem->SetGraphicsSystem(graphicsSystem.get());
     auto navMeshSystem = ecsInterface.RegisterSystem<NavMeshSystem>();
-    auto fileCheckSystem = ecsInterface.RegisterSystem<Framework::FileCheckSystem>();
+    auto fileCheckSystem = ecsInterface.RegisterSystem<FileCheckSystem>();
     auto audioSystem = ecsInterface.RegisterSystem<AudioSystem>();
-    //Physics System
     auto physicsSystem = ecsInterface.RegisterSystem<PhysicsSystem>();
 
     // ------- Add systems to engine below -------- //
-    engine->AddSystem(animationSystem.get()); // Calculate bone matrices
+    engine->AddSystem(animationSystem.get());   // Calculate bone matrices
     engine->AddSystem(graphicsSystem.get());
     engine->AddSystem(inputHandlerSystem);
     engine->AddSystem(imguiSystem.get());
@@ -135,19 +135,11 @@ int main(void)
     engine->AddSystem(navMeshSystem.get());
 	engine->AddSystem(audioSystem.get());
     engine->AddSystem(physicsSystem.get());
-
-    // Register scene manager last
-    engine->AddSystem(sceneSystem.get());
+    engine->AddSystem(sceneSystem.get());       // Register scene manager last
     engine->AddSystem(fileCheckSystem.get());
 
-    //Folders and filetypes to check for external change
-    fileCheckSystem->WatchFolder("Assets/Scripts", { ".lua" });
-    fileCheckSystem->WatchFolder("Assets/JSON", { ".json", ".cfg" });
-    fileCheckSystem->WatchFolder("Assets/shaders", { ".glsl" });
-    fileCheckSystem->WatchFolder("Assets/Textures", { ".png", ".jpg" });
-    fileCheckSystem->WatchFolder("Scenes", { ".scene" });
-    fileCheckSystem->WatchFolder("Assets/Prefabs", { ".prefab" });
-    fileCheckSystem->WatchFolder("Assets/Materials", { ".material" });
+    std::filesystem::path root = GetEngineRootPath();
+    fileCheckSystem->WatchAllFolders();
 
     // Initialize the engine and run the main game loop
     engine->Initialize();

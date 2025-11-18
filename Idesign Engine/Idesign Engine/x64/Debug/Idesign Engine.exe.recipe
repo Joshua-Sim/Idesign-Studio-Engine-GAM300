@@ -2,7 +2,11 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
+<<<<<<< HEAD
       <FullPath>C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe</FullPath>
+=======
+      <FullPath>C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe</FullPath>
+>>>>>>> main
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

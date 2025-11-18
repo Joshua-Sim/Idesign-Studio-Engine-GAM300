@@ -116,4 +116,23 @@ namespace Framework
         const prop_list* props = TypeRegistry::Instance().GetPropList(TypeName<MaterialMetadata>::value);
         AssetManager::Instance().RegisterAsset(std::move(meta), props, path);
     }
+
+    AssetHandle GetDefaultMaterial()
+    {
+        // Search for a material named "WoodPlank"
+        for (const auto& [handle, entry] : AssetManager::Instance().GetAssets())
+        {
+            if (entry.typeName == TypeName<MaterialMetadata>::value)
+            {
+                auto* meta = static_cast<MaterialMetadata*>(entry.pObject.get());
+                if (meta && meta->name == "WoodPlank")
+                {
+                    return handle.guid; // Found WoodPlank
+                }
+            }
+        }
+
+        // Fallback: if not found, return null handle
+        return AssetHandle{};
+    }
 }
