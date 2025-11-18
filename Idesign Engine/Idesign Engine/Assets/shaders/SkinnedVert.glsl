@@ -9,6 +9,7 @@ layout(location = 4) in vec4 aWeights;
 out vec3 vNormal;   // Was 'Normal'
 out vec3 vWorldPos; // Was 'FragPos'
 out vec2 vTex;      // Was 'TexCoords'
+out vec4 v_FragPosLightSpace;
 
 uniform mat4 uProj;
 uniform mat4 uView;
@@ -16,6 +17,7 @@ uniform mat4 uModel;
 
 #define MAX_BONES 100
 uniform mat4 uBoneMatrices[MAX_BONES];
+uniform mat4 uLightSpaceMatrix;
 
 void main()
 {
@@ -84,6 +86,6 @@ void main()
 
     vWorldPos = worldPos.xyz;
     vTex = aTex;
-    
+    v_FragPosLightSpace = uLightSpaceMatrix * worldPos; 
     gl_Position = uProj * uView * worldPos;
 }

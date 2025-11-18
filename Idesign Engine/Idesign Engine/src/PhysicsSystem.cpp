@@ -13,6 +13,7 @@
 #include "ImguiManager.h"
 #include "Terrain.h"
 #include "Graphics.h"
+#include "PhysicsProperties.h"
 
 #include <Jolt/Jolt.h>
 #include <Jolt/Core/TempAllocator.h>
@@ -22,11 +23,15 @@
 #include <Jolt/Physics/Body/BodyInterface.h>
 #include <Jolt/Physics/Collision/Shape/BoxShape.h>
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
-#include <Jolt/Physics/Collision/Shape/PlaneShape.h>
 #include <Jolt/Physics/Collision/Shape/MeshShape.h>
 
+#include <glm/glm/glm.hpp>
+#include <glm/glm/gtc/quaternion.hpp>
+
+#include <unordered_map>
 #include <iostream>
 #include <cmath>
+#include <vector>
 
 extern Framework::Coordinator ecsInterface;
 std::vector<JPH::BodyID> m_createdBodies;
@@ -35,100 +40,119 @@ namespace Layers {
     static constexpr JPH::ObjectLayer MOVING = 0;
 }
 
+// ---------- Small helpers ----------
+
+// UI enum -> Jolt motion type
+static inline JPH::EMotionType ToJoltMotionType(int motionType) {
+    switch (motionType) {
+    case 0:  return JPH::EMotionType::Static;
+    case 2:  return JPH::EMotionType::Kinematic;
+    case 1:
+    default: return JPH::EMotionType::Dynamic;
+    }
+}
+
+// UI "category" -> object layer (expand as needed)
+static inline JPH::ObjectLayer ToObjectLayer(int category) {
+    // example mapping; change to what your game needs
+    switch (category) {
+    case 0: return 1; // Wall
+    case 1: return 2; // Collectible
+    case 2: return 3; // Player
+    case 3: return 4; // Customer
+    default: return Layers::MOVING; // fallback
+    }
+}
+
+// Build a Jolt box from ECS scale (half-extents)
+static inline JPH::ShapeRefC MakeBoxShapeFromScale(const glm::vec3& scale) {
+    JPH::Vec3 half(0.5f * scale.x, 0.5f * scale.y, 0.5f * scale.z);
+    JPH::BoxShapeSettings bs(half);
+    return bs.Create().Get();
+}
+
+static inline float DegToRad(float deg) { return deg * 0.01745329251994329577f; }
+
+// Editor Euler (deg) -> Jolt quaternion
+static inline JPH::Quat MakeQuatFromEuler(const glm::vec3& deg) {
+    glm::quat qx = glm::angleAxis(DegToRad(deg.x), glm::vec3(1, 0, 0));
+    glm::quat qy = glm::angleAxis(DegToRad(deg.y), glm::vec3(0, 1, 0));
+    glm::quat qz = glm::angleAxis(DegToRad(deg.z), glm::vec3(0, 0, 1));
+    glm::quat gq = qy * qx * qz;
+    return JPH::Quat(gq.x, gq.y, gq.z, gq.w);
+}
+
+static inline glm::vec3 QuatToEulerDegrees_Jolt(const JPH::Quat& qj)
+{
+    const float x = qj.GetX(), y = qj.GetY(), z = qj.GetZ(), w = qj.GetW();
+
+    // Pitch (X)
+    float sinp = 2.0f * (w * x - z * y);
+    float pitch = std::abs(sinp) >= 1.0f ? std::copysign(0.5f * 3.1415926535f, sinp) : std::asin(sinp);
+
+    // Yaw (Y)
+    float siny_cosp = 2.0f * (w * y + x * z);
+    float cosy_cosp = 1.0f - 2.0f * (x * x + y * y);
+    float yaw = std::atan2(siny_cosp, cosy_cosp);
+
+    // Roll (Z)
+    float sinr_cosp = 2.0f * (w * z + x * y);
+    float cosr_cosp = 1.0f - 2.0f * (y * y + z * z);
+    float roll = std::atan2(sinr_cosp, cosr_cosp);
+
+    const float R2D = 57.2957795f;
+    return glm::vec3(pitch * R2D, yaw * R2D, roll * R2D);
+}
+
+
+// Apply props that are safe every frame (no velocity stamping here)
+static inline void ApplyPropsToBody(JPH::BodyInterface* bi, JPH::BodyID id, const Framework::PhysicsProperties& p) {
+    using namespace JPH;
+    const auto want = ToJoltMotionType(p.motionType);
+    if (bi->GetMotionType(id) != want) {
+        bi->SetMotionType(id, want, EActivation::Activate);
+    }
+    bi->SetGravityFactor(id, p.gravityFactor);
+}
+
+// Broadphase layers (simple 1-layer world)
 class BPLayerInterfaceImpl final : public JPH::BroadPhaseLayerInterface {
     public:
         JPH::uint GetNumBroadPhaseLayers() const override { return 1; }
-        JPH::BroadPhaseLayer GetBroadPhaseLayer(JPH::ObjectLayer inLayer) const override { return JPH::BroadPhaseLayer(0); }
+        JPH::BroadPhaseLayer GetBroadPhaseLayer(JPH::ObjectLayer) const override { return JPH::BroadPhaseLayer(0); }
         const char* GetBroadPhaseLayerName(JPH::BroadPhaseLayer) const { return "MOVING"; }
 };
 
 class AllowAllObjVsBP final : public JPH::ObjectVsBroadPhaseLayerFilter {
     public:
         bool ShouldCollide(JPH::ObjectLayer, JPH::BroadPhaseLayer) const override { return true; }
-    };
+};
 
 class AllowAllPairFilter final : public JPH::ObjectLayerPairFilter {
     public:
         bool ShouldCollide(JPH::ObjectLayer, JPH::ObjectLayer) const override { return true; }
-    };
-
-//void PhysicsSystem::OnMouseDown(int button, float mx, float my,
-//    const glm::mat4& V, const glm::mat4& P,
-//    int W, int H)
-//{
-//    JPH::RVec3 o; JPH::Vec3 d;
-//    MakeRay(mx, my, W, H, V, P, o, d);
-//
-//    JPH::RayCastResult hit;
-//    if (!RayCastClosest(physicsSystem, o, d, 1000.0f, hit)) return;
-//
-//    // Optional: ignore terrain / non-box shapes
-//    JPH::ShapeRefC shape = bodyInterface->GetShape(hit.mBodyID);
-//    if (shape->GetSubType() != JPH::EShapeSubType::Box) return;
-//
-//    if (button == 0) { // LMB: report which face we clicked
-//        JPH::RVec3 hitWS = o + JPH::RVec3(d * hit.mFraction);
-//        int face = FaceIndexForBox(bodyInterface, hit.mBodyID, hitWS);
-//        std::cout << "[Pick] Body " << hit.mBodyID.GetIndex() << " face " << face << "\n";
-//        return;
-//    }
-//
-//    if (button == 1) { // RMB: begin drag-rotate
-//        mPickedID = hit.mBodyID;
-//        // remember original motion type, switch to kinematic so we can set transforms directly
-//        mPrevMotionType = bodyInterface->GetMotionType(mPickedID);
-//        bodyInterface->SetMotionType(mPickedID, JPH::EMotionType::Kinematic, JPH::EActivation::Activate);
-//
-//        mRotating = true;
-//        mDragStart = { mx, my };
-//        mStartRot = bodyInterface->GetRotation(mPickedID);
-//        bodyInterface->ActivateBody(mPickedID);
-//    }
-//}
-//
-//void PhysicsSystem::OnMouseDrag(float mx, float my,
-//    const glm::vec3& camRight, const glm::vec3& camUp)
-//{
-//    if (!mRotating || mPickedID.IsInvalid()) return;
-//
-//    float dx = (mx - mDragStart.x) * 0.005f;
-//    float dy = (my - mDragStart.y) * 0.005f;
-//
-//    JPH::Quat qYaw = JPH::Quat::sRotation(JPH::Vec3(camUp.x, camUp.y, camUp.z), -dx);
-//    JPH::Quat qPitch = JPH::Quat::sRotation(JPH::Vec3(camRight.x, camRight.y, camRight.z), -dy);
-//    JPH::Quat target = qYaw * qPitch * mStartRot;
-//
-//    JPH::RVec3 pos = bodyInterface->GetPosition(mPickedID);
-//    bodyInterface->SetPositionAndRotation(mPickedID, pos, target, JPH::EActivation::Activate);
-//}
-//
-//void PhysicsSystem::OnMouseUp(int button)
-//{
-//    if (button == 1 && !mPickedID.IsInvalid()) {
-//        // restore original motion type
-//        bodyInterface->SetMotionType(mPickedID, mPrevMotionType, JPH::EActivation::Activate);
-//        mRotating = false;
-//        mPickedID = JPH::BodyID(); // invalidate
-//    }
-//}
+};
 
 namespace Framework {
-    static JPH::BodyID AddTerrainGround(const Terrain& terrain, int gridSize, float cellScale, JPH::PhysicsSystem& physics, JPH::BodyInterface* bi,
-    std::vector<JPH::BodyID>& out_createdBodies,const JPH::RVec3& worldOffset = JPH::RVec3(0, 0, 0)) {
+    // ---- Per-entity caches so editor velocity changes apply once ----
+    static std::unordered_map<Entity, glm::vec3> s_lastLin, s_lastAng;
+
+    // Terrain -> static triangle mesh
+    static JPH::BodyID AddTerrainGround(const Terrain& terrain, int gridSize, float cellScale, JPH::PhysicsSystem& physics, JPH::BodyInterface* bi, 
+    std::vector<JPH::BodyID>& out_createdBodies, const JPH::RVec3& worldOffset = JPH::RVec3(0, 0, 0)) {
         using namespace JPH;
 
         VertexList verts;
         verts.reserve(static_cast<size_t>(gridSize) * gridSize);
 
-        auto idx = [gridSize](int x, int z) { 
-            return z * gridSize + x; 
-        };
+        auto idx = [gridSize](int x, int z) { return z * gridSize + x; };
 
         for (int z = 0; z < gridSize; ++z) {
             float worldZ = z * cellScale + (float)worldOffset.GetZ();
             for (int x = 0; x < gridSize; ++x) {
                 float worldX = x * cellScale + (float)worldOffset.GetX();
-                float h = terrain.getHeightAt(worldX - (float)worldOffset.GetX(), worldZ - (float)worldOffset.GetZ());
+                float h = terrain.getHeightAt(worldX - (float)worldOffset.GetX(),
+                    worldZ - (float)worldOffset.GetZ());
                 float worldY = h + (float)worldOffset.GetY();
                 verts.emplace_back(worldX, worldY, worldZ);
             }
@@ -152,183 +176,229 @@ namespace Framework {
         ShapeRefC shape = ms.Create().Get();
 
         BodyCreationSettings bcs(shape, worldOffset, Quat::sIdentity(), EMotionType::Static, Layers::MOVING);
-
         BodyID id = bi->CreateAndAddBody(bcs, EActivation::DontActivate);
         out_createdBodies.push_back(id);
-        
+
         std::cout << "[Physics] Terrain ground added: tris=" << tris.size() << "\n";
         return id;
     }
 
-    // screen -> world ray
-    //static void MakeRay(float mx, float my, int W, int H,
-    //    const glm::mat4& V, const glm::mat4& P,
-    //    JPH::RVec3& outO, JPH::Vec3& outDirN)
-    //{
-    //    float nx = 2.0f * mx / float(W) - 1.0f;
-    //    float ny = 1.0f - 2.0f * my / float(H);
-    //    glm::mat4 invVP = glm::inverse(P * V);
-    //    glm::vec4 p0 = invVP * glm::vec4(nx, ny, 0.0f, 1.0f);
-    //    glm::vec4 p1 = invVP * glm::vec4(nx, ny, 1.0f, 1.0f);
-    //    p0 /= p0.w; p1 /= p1.w;
-    //    glm::vec3 o = glm::vec3(p0);
-    //    glm::vec3 d = glm::normalize(glm::vec3(p1 - p0));
-    //    outO = JPH::RVec3(o.x, o.y, o.z);
-    //    outDirN = JPH::Vec3(d.x, d.y, d.z);
-    //}
-    //static bool RayCastClosest(JPH::PhysicsSystem& ps,
-    //    const JPH::RVec3& o, const JPH::Vec3& dirN, float maxDist,
-    //    JPH::RayCastResult& outHit)
-    //{
-    //    JPH::RayCast rc;
-    //    rc.mOrigin = o;
-    //    rc.mDirection = dirN * maxDist; // length-scaled
-    //    return ps.GetNarrowPhaseQuery().CastRay(rc, outHit);
-    //}
-    //// figure which cube face got clicked (1..6)
-    //static int FaceIndexForBox(const JPH::BodyInterface* bi, JPH::BodyID id, const JPH::RVec3& hitWS)
-    //{
-    //    JPH::RMat44 xf = bi->GetCenterOfMassTransform(id);
-    //    JPH::RVec3  rel = hitWS - xf.GetTranslation();
-    //    JPH::Vec3   local = xf.GetRotation().Conjugated() * JPH::Vec3(rel);
-    //    JPH::Vec3 a(JPH::Abs(local.GetX()), JPH::Abs(local.GetY()), JPH::Abs(local.GetZ()));
-    //    if (a.GetX() >= a.GetY() && a.GetX() >= a.GetZ()) return local.GetX() > 0 ? 1 : 4; // +X / -X
-    //    if (a.GetY() >= a.GetZ())                         return local.GetY() > 0 ? 2 : 5; // +Y / -Y
-    //    return local.GetZ() > 0 ? 3 : 6;   // +Z / -Z
-    //}
+    // Ensure a Jolt body exists for (Transform + PhysicsProperties)
+    static void EnsureBodyForEntity(Entity e, Framework::Coordinator& ecs, JPH::BodyInterface* bi, std::vector<JPH::BodyID>& created_list) {
+        if (!ecs.HasComponent<TransformComponent>(e) || !ecs.HasComponent<PhysicsProperties>(e)) {
+            return;
+        }
+
+        if (ecs.HasComponent<PhysicsBodyComponent>(e)) {
+            return;
+        }
+
+        auto& tf = ecs.GetComponent<TransformComponent>(e);
+        auto& prop = ecs.GetComponent<PhysicsProperties>(e);
+
+        // Build shape from scale (or your own debugShape switch)
+        JPH::ShapeRefC shape = MakeBoxShapeFromScale(tf.scale);
+
+        // Body settings from properties
+        JPH::BodyCreationSettings bcs(
+            shape,
+            JPH::RVec3(tf.position.x, tf.position.y, tf.position.z),
+            JPH::Quat::sIdentity(),
+            ToJoltMotionType(prop.motionType),
+            ToObjectLayer(prop.category)
+        );
+
+        bcs.mGravityFactor = prop.gravityFactor;
+
+        JPH::EActivation act = prop.startAwake ? JPH::EActivation::Activate
+            : JPH::EActivation::DontActivate;
+
+        JPH::BodyID id = bi->CreateAndAddBody(bcs, act);
+
+        // Initial velocities (once at creation)
+        if (prop.linearVelocity != glm::vec3(0.0f)) {
+            bi->SetLinearVelocity(id, JPH::Vec3(prop.linearVelocity.x, prop.linearVelocity.y, prop.linearVelocity.z));
+        }
+        if (prop.angularVelocity != glm::vec3(0.0f)){
+            bi->SetAngularVelocity(id, JPH::Vec3(prop.angularVelocity.x, prop.angularVelocity.y, prop.angularVelocity.z));
+        }
+
+        created_list.push_back(id);
+
+        // Store ECS linkage
+        ecs.AddComponent<PhysicsBodyComponent>(e, PhysicsBodyComponent{ id, shape, true });
+
+        // Seed caches to current values so we don't re-apply immediately
+        s_lastLin[e] = prop.linearVelocity;
+        s_lastAng[e] = prop.angularVelocity;
+    }
 
     void PhysicsSystem::Initialize() {
         using namespace JPH;
 
+        // --- Jolt world bootstrap ---
         RegisterDefaultAllocator();
         Factory::sInstance = new Factory();
         RegisterTypes();
 
         tempAllocator = new TempAllocatorImpl(10 * 1024 * 1024);
         jobSystem = new JobSystemThreadPool(cMaxPhysicsJobs, cMaxPhysicsBarriers, std::thread::hardware_concurrency() - 1);
-        static BPLayerInterfaceImpl broadPhaseInterface;
-        static AllowAllObjVsBP    objVsBP;
-        static AllowAllPairFilter pairFilter;
 
-        physicsSystem.Init(1024, 0, 1024, 1024,broadPhaseInterface,objVsBP,pairFilter); 
+        static BPLayerInterfaceImpl broadPhaseInterface;
+        static AllowAllObjVsBP      objVsBP;
+        static AllowAllPairFilter   pairFilter;
+
+        physicsSystem.Init(1024, 0, 1024, 1024, broadPhaseInterface, objVsBP, pairFilter);
         bodyInterface = &physicsSystem.GetBodyInterface();
         physicsSystem.SetGravity(JPH::Vec3(0, -9.81f, 0));
 
-        AddTerrainGround(terrain, TerrainSize, TerrainScale, physicsSystem, bodyInterface, m_createdBodies, JPH::RVec3(0, 0, 0) );
+        // --- Terrain as static triangle mesh ground ---
+        AddTerrainGround(terrain, TerrainSize, TerrainScale, physicsSystem, bodyInterface,
+            m_createdBodies, JPH::RVec3(0, 0, 0));
 
-        // Create Cube
+        // ===== Create 4 cubes (ECS) =====
         static int selectedShapeIndex = 1;
 
-        MaterialProperties materialComponent;
-        materialComponent.ambient = glm::vec3(0.05f, 0.07f, 0.1f);   // Slightly cool ambient tone
-        materialComponent.albedo = glm::vec3(0.8f, 0.6f, 0.3f);      // Warm diffuse color (like wood or bronze)
-        materialComponent.specular = glm::vec3(0.9f, 0.9f, 0.95f);   // Strong specular for shiny surface
-        materialComponent.shininess = 48.0f;                         // Fairly glossy
-        materialComponent.opacity = 1.0f;                           // Slightly transparent
+        auto makeMaterial = [] {
+            MaterialProperties m{};
+            m.ambient = glm::vec3(0.05f, 0.07f, 0.10f);
+            m.albedo = glm::vec3(0.80f, 0.60f, 0.30f);
+            m.specular = glm::vec3(0.90f, 0.90f, 0.95f);
+            m.shininess = 48.0f;
+            m.opacity = 1.0f;
+            return m;
+            };
+        MaterialProperties materialComponent = makeMaterial();
 
-        TransformComponent cube1Transform;
-        cube1Transform.position = glm::vec3(50.5f, 5.0f, 1.5f);
-        cube1Transform.scale = glm::vec3(5.0f);
-        cube1Transform.rotation = glm::vec3(0);
+        struct Spawn {
+            glm::vec3 pos;
+            glm::vec3 scale;
+            int       motionType;    // 0=Static, 1=Dynamic, 2=Kinematic
+            int       category;      // your layer mapping
+            glm::vec3 linVel;
+            glm::vec3 angVel;
+            float     gravityFactor;
+        };
 
-        Entity cube1 = ecsInterface.CreateEntity();
-        ecsInterface.AddComponent<HierarchyComponent>(cube1, HierarchyComponent{});
-        ecsInterface.AddComponent<TransformComponent>(cube1, cube1Transform);
-        MeshProperties cube1mesh{};
-        MeshLoader::loadMesh(cube1mesh.path, cube1mesh);
-        cube1mesh.debugShape = static_cast<DebugShapeType>(selectedShapeIndex);
-        ecsInterface.AddComponent<MeshProperties>(cube1, cube1mesh);
-        ecsInterface.AddComponent<MaterialProperties>(cube1, materialComponent);
+        const Spawn spawns[4]{
+            { glm::vec3{50.5f,  5.0f,  1.5f}, glm::vec3{5.0f}, 1, 2, glm::vec3{ 5.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.0f },
+            { glm::vec3{60.5f,  5.0f,  1.5f}, glm::vec3{5.0f}, 1, 2, glm::vec3{-5.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.0f },
+            { glm::vec3{50.0f, 15.0f, 15.5f}, glm::vec3{5.0f}, 1, 2, glm::vec3{ 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 1.0f },
+            { glm::vec3{40.0f, 10.0f, -5.5f}, glm::vec3{5.0f}, 1, 1, glm::vec3{ 0.0f, 0.0f, 0.0f}, {2.0f, 1.0f, 2.0f}, 0.0f },
+        };
 
-        TransformComponent cube2Transform;
-        cube2Transform.position = glm::vec3(60.5f, 5.0f, 1.5f);
-        cube2Transform.scale = glm::vec3(5.0f);
-        cube2Transform.rotation = glm::vec3(0);
+        auto makeCubeEntity = [&](const Spawn& s) -> Entity {
+            TransformComponent tf{};
+            tf.position = s.pos;
+            tf.scale = s.scale;
+            tf.rotation = glm::vec3(0);
 
-        Entity cube2 = ecsInterface.CreateEntity();
-        ecsInterface.AddComponent<HierarchyComponent>(cube2, HierarchyComponent{});
-        ecsInterface.AddComponent<TransformComponent>(cube2, cube2Transform);
-        MeshProperties cube2mesh{};
-        MeshLoader::loadMesh(cube2mesh.path, cube2mesh);
-        cube2mesh.debugShape = static_cast<DebugShapeType>(selectedShapeIndex);
-        ecsInterface.AddComponent<MeshProperties>(cube2, cube2mesh);
-        ecsInterface.AddComponent<MaterialProperties>(cube2, materialComponent);
+            Entity e = ecsInterface.CreateEntity();
+            ecsInterface.AddComponent<HierarchyComponent>(e, HierarchyComponent{});
+            ecsInterface.AddComponent<TransformComponent>(e, tf);
 
+            MeshProperties mesh{};
+            MeshLoader::loadMesh(mesh.path, mesh);
+            mesh.debugShape = static_cast<DebugShapeType>(selectedShapeIndex);
+            ecsInterface.AddComponent<MeshProperties>(e, mesh);
+            ecsInterface.AddComponent<MaterialProperties>(e, materialComponent);
 
-        TransformComponent cube3Transform;
-        cube3Transform.position = glm::vec3(50.0f, 15.0f, 15.5f);
-        cube3Transform.scale = glm::vec3(5.0f);
-        cube3Transform.rotation = glm::vec3(0);
+            // PhysicsProperties for editor + Jolt creation
+            PhysicsProperties phys{};
+            phys.motionType = s.motionType;
+            phys.category = s.category;
+            phys.gravityFactor = s.gravityFactor;
+            phys.linearVelocity = s.linVel;
+            phys.angularVelocity = s.angVel;
+            phys.startAwake = true;
 
-        Entity cube3 = ecsInterface.CreateEntity();
-        ecsInterface.AddComponent<HierarchyComponent>(cube3, HierarchyComponent{});
-        ecsInterface.AddComponent<TransformComponent>(cube3, cube3Transform);
-        MeshProperties cube3mesh{};
-        MeshLoader::loadMesh(cube3mesh.path, cube3mesh);
-        cube3mesh.debugShape = static_cast<DebugShapeType>(selectedShapeIndex);
-        ecsInterface.AddComponent<MeshProperties>(cube3, cube3mesh);
-        ecsInterface.AddComponent<MaterialProperties>(cube3, materialComponent);
+            ecsInterface.AddComponent<PhysicsProperties>(e, phys);
 
-        TransformComponent cube4Transform;
-        cube4Transform.position = glm::vec3(40.0f, 10.0f, -5.5f);
-        cube4Transform.scale = glm::vec3(5.0f);
-        cube4Transform.rotation = glm::vec3(0);
+            // Spawn the body now
+            EnsureBodyForEntity(e, ecsInterface, bodyInterface, m_createdBodies);
+            return e;
+            };
 
-        Entity cube4 = ecsInterface.CreateEntity();
-        ecsInterface.AddComponent<HierarchyComponent>(cube4, HierarchyComponent{});
-        ecsInterface.AddComponent<TransformComponent>(cube4, cube4Transform);
-        MeshProperties cube4mesh{};
-        MeshLoader::loadMesh(cube4mesh.path, cube4mesh);
-        cube4mesh.debugShape = static_cast<DebugShapeType>(selectedShapeIndex);
-        ecsInterface.AddComponent<MeshProperties>(cube4, cube4mesh);
-        ecsInterface.AddComponent<MaterialProperties>(cube4, materialComponent);
+        Entity cube1 = makeCubeEntity(spawns[0]);
+        Entity cube2 = makeCubeEntity(spawns[1]);
+        Entity cube3 = makeCubeEntity(spawns[2]);
+        Entity cube4 = makeCubeEntity(spawns[3]);
 
-        // Shared
-        BoxShapeSettings cubeShapeSettings(Vec3(2.5f, 2.5f, 2.5f));
-        ShapeRefC cubeShape = cubeShapeSettings.Create().Get();
-
-        // Linked
-        BodyCreationSettings body1Settings( cubeShape, RVec3(cube1Transform.position.x, cube1Transform.position.y, cube1Transform.position.z), Quat::sIdentity(), EMotionType::Dynamic, Layers::MOVING);
-        body1Settings.mGravityFactor = 0.0f;
-        BodyID body1ID = bodyInterface->CreateAndAddBody(body1Settings, EActivation::Activate);
-        m_createdBodies.push_back(body1ID);
-        bodyInterface->SetLinearVelocity(body1ID, Vec3(5.0f, 0.0f, 0.0f));
-
-        BodyCreationSettings body2Settings(cubeShape, RVec3(cube2Transform.position.x, cube2Transform.position.y, cube2Transform.position.z), Quat::sIdentity(), EMotionType::Dynamic, Layers::MOVING);
-        body2Settings.mGravityFactor = 0.0f;
-        BodyID body2ID = bodyInterface->CreateAndAddBody(body2Settings, EActivation::Activate);
-        m_createdBodies.push_back(body2ID);
-        bodyInterface->SetLinearVelocity(body2ID, Vec3(-5.0f, 0.0f, 0.0f));
-
-        BodyCreationSettings body3Settings(cubeShape, RVec3(cube3Transform.position.x, cube3Transform.position.y, cube3Transform.position.z), Quat::sIdentity(), EMotionType::Dynamic, Layers::MOVING);
-        BodyID body3ID = bodyInterface->CreateAndAddBody(body3Settings, EActivation::Activate);
-        m_createdBodies.push_back(body3ID);
-        bodyInterface->SetLinearVelocity(body3ID, Vec3(0.0f, 0.0f, 0.0f));
-
-        BodyCreationSettings body4Settings(cubeShape, RVec3(cube4Transform.position.x, cube4Transform.position.y, cube4Transform.position.z), Quat::sIdentity(), EMotionType::Kinematic, Layers::MOVING);
-        BodyID body4ID = bodyInterface->CreateAndAddBody(body4Settings, EActivation::Activate);
-        m_createdBodies.push_back(body4ID);
-        bodyInterface->SetLinearVelocity(body4ID, Vec3(0.0f, 0.0f, 0.0f));
-
-        ecsInterface.AddComponent<PhysicsBodyComponent>(cube1, PhysicsBodyComponent{ body1ID, cubeShape });
-        ecsInterface.AddComponent<PhysicsBodyComponent>(cube2, PhysicsBodyComponent{ body2ID, cubeShape });
-        ecsInterface.AddComponent<PhysicsBodyComponent>(cube3, PhysicsBodyComponent{ body3ID, cubeShape });
-        ecsInterface.AddComponent<PhysicsBodyComponent>(cube4, PhysicsBodyComponent{ body4ID, cubeShape });
+        // In case other scene entities already had PhysicsProperties:
+        for (Entity e : ecsInterface.GetEntities())
+            EnsureBodyForEntity(e, ecsInterface, bodyInterface, m_createdBodies);
 
         std::cout << "[Physics] Linked ECS cubes and Jolt bodies.\n";
     }
 
     void PhysicsSystem::Update(float dt) {
+        // Make sure new entities that just got PhysicsProperties receive a body.
+        for (Entity e : ecsInterface.GetEntities()) {
+            EnsureBodyForEntity(e, ecsInterface, bodyInterface, m_createdBodies);
+        }
+
+        // ===== ECS -> Jolt: apply inspector edits before stepping =====
+        auto changed = [](const glm::vec3& a, const glm::vec3& b) {
+                glm::vec3 d = a - b;
+                return (d.x * d.x + d.y * d.y + d.z * d.z) > 1e-12f;
+            };
+
+        for (Entity e : ecsInterface.GetEntities()) {
+            if (!ecsInterface.HasComponent<PhysicsBodyComponent>(e) || !ecsInterface.HasComponent<PhysicsProperties>(e)) {
+                continue;
+            }
+
+            auto& pb = ecsInterface.GetComponent<PhysicsBodyComponent>(e);
+            auto& prop = ecsInterface.GetComponent<PhysicsProperties>(e);
+
+            // Safe props each frame
+            ApplyPropsToBody(bodyInterface, pb.ID, prop);
+
+            // Dynamic: apply new velocities only when they change
+            if (prop.motionType == 1) {
+                auto itL = s_lastLin.find(e);
+                if (itL == s_lastLin.end() || changed(itL->second, prop.linearVelocity)) {
+                    bodyInterface->SetLinearVelocity(pb.ID, JPH::Vec3(prop.linearVelocity.x, prop.linearVelocity.y, prop.linearVelocity.z));
+                    s_lastLin[e] = prop.linearVelocity;
+                }
+
+                auto itA = s_lastAng.find(e);
+                if (itA == s_lastAng.end() || changed(itA->second, prop.angularVelocity)) {
+                    bodyInterface->SetAngularVelocity(pb.ID, JPH::Vec3(prop.angularVelocity.x, prop.angularVelocity.y, prop.angularVelocity.z));
+                    s_lastAng[e] = prop.angularVelocity;
+                }
+            }
+            else {
+                // Not Dynamic: drive pose from Transform to respect editor moves
+                if (ecsInterface.HasComponent<TransformComponent>(e)) {
+                    auto& tf = ecsInterface.GetComponent<TransformComponent>(e);
+                    bodyInterface->SetPositionAndRotation(
+                        pb.ID,
+                        JPH::RVec3(tf.position.x, tf.position.y, tf.position.z),
+                        MakeQuatFromEuler(tf.rotation),
+                        JPH::EActivation::Activate
+                    );
+                }
+            }
+        }
+
+        // ===== Step physics =====
         physicsSystem.Update(dt, 1, tempAllocator, jobSystem);
 
-        for (Entity entity : ecsInterface.GetEntities()) {
-            if (ecsInterface.HasComponent<TransformComponent>(entity) && ecsInterface.HasComponent<PhysicsBodyComponent>(entity)) {
-                auto& transform = ecsInterface.GetComponent<TransformComponent>(entity);
-                auto& phys = ecsInterface.GetComponent<PhysicsBodyComponent>(entity);
-
-                const JPH::RVec3 pos = bodyInterface->GetPosition(phys.ID);
-                transform.position = glm::vec3(pos.GetX(), pos.GetY(), pos.GetZ());
+        // ===== Jolt -> ECS: sync back for rendering =====
+        for (Entity e : ecsInterface.GetEntities()) {
+            if (!ecsInterface.HasComponent<PhysicsBodyComponent>(e) || !ecsInterface.HasComponent<TransformComponent>(e)) {
+                continue;
             }
+
+            auto& tf = ecsInterface.GetComponent<TransformComponent>(e);
+            auto& pb = ecsInterface.GetComponent<PhysicsBodyComponent>(e);
+
+            const JPH::RVec3 p = bodyInterface->GetPosition(pb.ID);
+            tf.position = glm::vec3(p.GetX(), p.GetY(), p.GetZ());
+
+            JPH::Quat q = bodyInterface->GetRotation(pb.ID);
+            tf.rotation = QuatToEulerDegrees_Jolt(q);
         }
     }
 
@@ -349,6 +419,10 @@ namespace Framework {
             bodyInterface = nullptr;
         }
 
+        // Clear velocity caches
+        s_lastLin.clear();
+        s_lastAng.clear();
+
         delete jobSystem;
         delete tempAllocator;
 
@@ -358,3 +432,4 @@ namespace Framework {
         JPH::Factory::sInstance = nullptr;
     }
 }
+

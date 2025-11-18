@@ -147,6 +147,16 @@ namespace Framework
         ShaderProgram finalShader{ "Assets/shaders/postprocess.glsl", "Assets/shaders/final.glsl" };
         ShaderProgram debugShader{ "Assets/shaders/debugVertexShader.glsl", "Assets/shaders/debugFragmentShader.glsl" };
         ShaderProgram skinnedShader{ "Assets/shaders/SkinnedVert.glsl", "Assets/shaders/meshfrag.glsl" };
+        ShaderProgram shadowShader{ "Assets/shaders/shadowvert.glsl", "Assets/shaders/shadowfrag.glsl" };
+        ShaderProgram pointShadowShader{ "Assets/shaders/point_shadow_vert.glsl", "Assets/shaders/point_shadow_frag.glsl" };
+
+        //shadow
+        GLuint m_shadowFBO = 0;
+        GLuint m_shadowDepthTexture = 0;
+        glm::mat4 m_lightSpaceMatrix;
+        const unsigned int SHADOW_WIDTH = 2048, SHADOW_HEIGHT = 2048;
+        const unsigned int MAX_POINT_LIGHTS = 8;
+        const unsigned int MAX_SPOT_LIGHTS = 4;
 
         // ADD HDR & BLOOM VARIABLES
         float hdrExposure = 1.0f;
@@ -196,6 +206,18 @@ namespace Framework
             bool& outHasSun,
             std::vector<PointLightCPU>& outPointLights,
             std::vector<SpotLightCPU>& outSpotLights);
+
+        void InitializeFramebuffers(int width, int height);
+
+        void RenderView(
+            Camera& cam,
+            int viewIndex,
+            int width, int height,
+            const DirectionalLightCPU& sun, bool hasSun,
+            const std::vector<PointLightCPU>& points,
+            const std::vector<SpotLightCPU>& spots
+        );
     };
+    
 }
 #endif // !_GRAPHICS_H_

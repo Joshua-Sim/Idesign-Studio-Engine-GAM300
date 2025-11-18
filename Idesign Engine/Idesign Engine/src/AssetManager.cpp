@@ -11,8 +11,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "pch.h"
 #include "AssetManager.h"
-#include "EnginePath.h" // <-- Added this
-#include <filesystem>   // <-- Added this
 
 #include "ImguiManager.h"
 #include "MessageSystem.h"
@@ -72,6 +70,10 @@ namespace Framework
 		ImguiManager::Log("  Saving: " + animPath, "AssetManager");
 		AssetManager::Instance().SaveArrayToJson(TypeName<AnimationProperties>::value, animPath, "animation");
 
+		std::string scriptPath = (root / "Assets/JSON/ScriptAsset.json").string();
+		std::cout << "  Saving: " << scriptPath << std::endl;
+		AssetManager::Instance().SaveArrayToJson(TypeName<ScriptEntry>::value, scriptPath, "scripts");
+
 		std::cout << "Files are being saved" << std::endl;
 		Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage("Files are being saved", Framework::ConsoleLogMessage::LogLevel::SUCCESS, "AssetManager"));
 		ImguiManager::LogSuccess("Files are being saved", "AssetManager");
@@ -119,6 +121,9 @@ namespace Framework
 		ImguiManager::Log("  Compiling Animation: JSON: " + (root / "Assets/JSON/AnimationAsset.json").string() + " BIN: " + (root / "Resource/AnimationAsset.bin").string(), "AssetManager");
 		CompileArray<AnimationProperties>((root / "Assets/JSON/AnimationAsset.json").string(), (root / "Resource/AnimationAsset.bin").string(), (root / "Descriptor/AnimationAsset.desc").string(), g_AnimationPropertiesProps, "animation");
 
+		std::cout << "  Compiling Scripts:\n    JSON: " << (root / "Assets/JSON/ScriptAsset.json").string() << "\n    BIN: " << (root / "Resource/ScriptAsset.bin").string() << std::endl;
+		CompileArray<ScriptEntry>((root / "Assets/JSON/ScriptAsset.json").string(), (root / "Resource/ScriptAsset.bin").string(), (root / "Descriptor/ScriptAsset.desc").string(), g_ScriptEntryProps, "scripts");
+
 		std::cout << "Files are being compiled to .binary" << std::endl;
 		Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage("Files are being compiled to .binary", Framework::ConsoleLogMessage::LogLevel::SUCCESS, "AssetManager"));
 		ImguiManager::LogSuccess("Files are being compiled to .binary", "AssetManager");
@@ -131,7 +136,6 @@ namespace Framework
 		std::cout << "[AssetManager] LoadAllAssets using root path: " << root.string() << std::endl;
 		Framework::MessageBus::Get().SendImmediate(Framework::ConsoleLogMessage("[AssetManager] LoadAllAssets using root path: " + root.string(), Framework::ConsoleLogMessage::LogLevel::INFO, "AssetManager"));
 		ImguiManager::Log("LoadAllAssets using root path: " + root.string(), "AssetManager");
-
 
 		// Mesh & Texture is loaded under Graphics.cpp due to some initialization required under graphics.cpp
 		std::string windowCfgPath = (root / "Resource/WindowAsset.cfg").string();
@@ -168,10 +172,7 @@ namespace Framework
 			[=](MaterialMetadata& meta) // Capture root by copy
 			{
 				// Register metadata
-				AssetManager::Instance().RegisterAsset(
-					std::make_unique<MaterialMetadata>(meta),
-					&g_MaterialMetaProps,
-					meta.path);
+				AssetManager::Instance().RegisterAsset(std::make_unique<MaterialMetadata>(meta), &g_MaterialMetaProps, meta.path);
 
 				// Load and register properties
 				// IMPORTANT: Assumes meta.path is relative to the root
@@ -198,6 +199,10 @@ namespace Framework
 				}
 			}
 		);
+
+		std::string scriptBinPath = (root / "Resource/ScriptAsset.bin").string();
+		std::cout << "  Loading: " << scriptBinPath << std::endl;
+		AssetManager::Instance().LoadBinaryArray<ScriptEntry>(scriptBinPath, g_ScriptEntryProps);
 	}
 
 	bool AssetManager::DeleteAssetFile(const std::string& filePath)
@@ -283,8 +288,7 @@ namespace Framework
 		}
 
 		// Erase all entries for this GUID
-		for (const auto& key : keysToErase)
-			m_Assets.erase(key);
+		for (const auto& key : keysToErase) m_Assets.erase(key);
 	}
 
 	bool AssetManager::SaveToJson(void* pObject, const std::string& filePath, const prop_list& props)

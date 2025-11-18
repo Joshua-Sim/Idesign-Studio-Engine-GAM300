@@ -31,6 +31,9 @@ namespace Framework
         glm::vec3 direction{ 0.0f, -0.707f, -0.707f };
         float intensity{ 1.0f };
         glm::vec3 color{ 1.0f, 1.0f, 1.0f };
+        glm::vec3 position{ 0.f, 0.f, 0.f };
+        float shadowBiasConst{ 0.005f };
+        float shadowBiasFactor{ 0.05f };
     };
 
     struct PointLightCPU {
@@ -39,6 +42,9 @@ namespace Framework
         float intensity{ 1.0f };
         float radius{ 10.0f };
         bool enabled{ true };
+        bool castsShadow{ false };
+        float shadowBiasConst{ 0.005f };
+        float shadowBiasFactor{ 0.05f };
     };
 
     struct SpotLightCPU {
@@ -51,6 +57,8 @@ namespace Framework
         float innerCutOffAngle{ glm::radians(12.5f) };
         float outerCutOffAngle{ glm::radians(15.0f) };
         bool enabled{ true };
+ 
+
     };
 
     // ========================================================================
@@ -76,7 +84,21 @@ namespace Framework
         float radius = 10.0f;
         float innerCutOffAngle = glm::radians(12.5f);
         float outerCutOffAngle = glm::radians(15.0f);
+        bool castsShadow = false;
+        float shadowBiasConst{ 0.005f };
+        float shadowBiasFactor{ 0.05f };
+        // --- Shadow Resources ---
+        // share the FBO ID for all light types)
+        GLuint    shadowFBO = 0;
 
+        // For Dir/Spot lights (sampler2D)
+        GLuint    shadowDepthTexture = 0;
+        glm::mat4 lightSpaceMatrix;
+
+        // For Point lights (samplerCube)
+        GLuint    shadowDepthCubeMap = 0; // The 6-sided texture
+        GLuint    shadowDepthRBO = 0;     // Depth buffer for the FBO
+        float     shadowFarPlane = 0.0f;  // Store the radius here
 
 
         static void upload(ShaderProgram& shader,
@@ -105,7 +127,9 @@ namespace Framework
                 shader.setVec3((base + ".color").c_str(), pointLights[i].color);
                 shader.setFloat((base + ".intensity").c_str(), pointLights[i].intensity);
                 shader.setFloat((base + ".radius").c_str(), pointLights[i].radius);
-
+                shader.setBool((base + ".castsShadow").c_str(), pointLights[i].castsShadow);
+                shader.setFloat((base + ".shadowBiasConst").c_str(), pointLights[i].shadowBiasConst);
+                shader.setFloat((base + ".shadowBiasFactor").c_str(), pointLights[i].shadowBiasFactor);
                 activePoints++;
             }
             shader.setInt("uNumPointLights", activePoints);
@@ -126,6 +150,7 @@ namespace Framework
                 shader.setFloat((base + ".innerCutoff").c_str(), std::cos(spotLights[i].innerCutOffAngle));
                 shader.setFloat((base + ".outerCutoff").c_str(), std::cos(spotLights[i].outerCutOffAngle));
 
+
                 activeSpots++;
             }
             shader.setInt("uNumSpotLights", activeSpots);
@@ -140,7 +165,10 @@ namespace Framework
         PROP_SLIDER_FLOAT(intensity, LightProperties, 0.0f, 20.0f),
         PROP_DRAG_FLOAT(radius, LightProperties),
         PROP_SLIDER_FLOAT(innerCutOffAngle, LightProperties, 0.0f, 1.5708f), // 0-90 deg
-        PROP_SLIDER_FLOAT(outerCutOffAngle, LightProperties, 0.0f, 1.5708f)	 // 0-90 deg
+        PROP_SLIDER_FLOAT(outerCutOffAngle, LightProperties, 0.0f, 1.5708f), // 0-90 deg
+        PROP_BOOL(castsShadow, LightProperties),
+        PROP_DRAG_FLOAT(shadowBiasConst, LightProperties, 0.0f, 0.01f),
+        PROP_DRAG_FLOAT(shadowBiasFactor, LightProperties, 0.0f, 0.1f)
     };
 
     inline const prop_list g_LightProps{ "LightProperties", g_LightPropsArray };

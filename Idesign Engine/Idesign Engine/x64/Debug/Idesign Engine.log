@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿  Core.cpp
 C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
   (compiling source file '/src/Core.cpp')
@@ -5,3 +6,313 @@ C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign 
       see declaration of 'Framework::AnimationProperties::name'
   
   Idesign Engine.vcxproj -> C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe
+=======
+﻿  imgui.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\minwindef.h(130,9): warning C4005: 'APIENTRY': macro redefinition
+  (compiling source file '/lib/imgui/imgui.cpp')
+      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\glfw-3.4.bin.WIN64\include\GLFW\glfw3.h(123,11):
+      see previous definition of 'APIENTRY'
+  
+  Debugger.cpp
+  DummySystem.cpp
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
+  (compiling source file '/src/DummySystem.cpp')
+      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
+      see declaration of 'Framework::AnimationProperties::name'
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
+  (compiling source file '/src/DummySystem.cpp')
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
+  (compiling source file '/src/DummySystem.cpp')
+  
+  Graphics.cpp
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
+      see declaration of 'Framework::AnimationProperties::name'
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
+  (compiling source file '/src/Graphics.cpp')
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
+  (compiling source file '/src/Graphics.cpp')
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(181,23): warning C4189: 'config': local variable is initialized but not referenced
+  (compiling source file '/src/Graphics.cpp')
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(511,27): warning C4458: declaration of 'mesh' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
+      see declaration of 'Framework::Graphics::mesh'
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(649,31): warning C4458: declaration of 'mesh' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
+      see declaration of 'Framework::Graphics::mesh'
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(803,17): warning C4458: declaration of 'cam' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(121,17):
+      see declaration of 'Framework::Graphics::cam'
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(810,25): warning C4459: declaration of 'firstMouse' hides global declaration
+  (compiling source file '/src/Graphics.cpp')
+      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(74,17):
+      see declaration of 'Framework::firstMouse'
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(881,68): warning C4100: 'amount': unreferenced parameter
+  (compiling source file '/src/Graphics.cpp')
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(881,56): warning C4100: 'axis': unreferenced parameter
+  (compiling source file '/src/Graphics.cpp')
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(917,23): warning C4458: declaration of 'cam' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(121,17):
+      see declaration of 'Framework::Graphics::cam'
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(923,23): warning C4458: declaration of 'cam' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(121,17):
+      see declaration of 'Framework::Graphics::cam'
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(993,39): warning C4100: 'viewIndex': unreferenced parameter
+  (compiling source file '/src/Graphics.cpp')
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1130,40): warning C4458: declaration of 'mesh' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
+      see declaration of 'Framework::Graphics::mesh'
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1323,17): warning C4458: declaration of 'cam' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(121,17):
+      see declaration of 'Framework::Graphics::cam'
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1363,59): warning C4018: '<': signed/unsigned mismatch
+  (compiling source file '/src/Graphics.cpp')
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1448,23): warning C4458: declaration of 'mesh' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
+      see declaration of 'Framework::Graphics::mesh'
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1466,25): warning C4456: declaration of 'pointShadowUnit' hides previous local declaration
+  (compiling source file '/src/Graphics.cpp')
+      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1359,13):
+      see declaration of 'pointShadowUnit'
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1467,25): warning C4456: declaration of 'pointShadowCount' hides previous local declaration
+  (compiling source file '/src/Graphics.cpp')
+      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1360,13):
+      see declaration of 'pointShadowCount'
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1474,71): warning C4018: '<': signed/unsigned mismatch
+  (compiling source file '/src/Graphics.cpp')
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1483,46): warning C4456: declaration of 'entityId' hides previous local declaration
+  (compiling source file '/src/Graphics.cpp')
+      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1431,26):
+      see declaration of 'entityId'
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1538,31): warning C4458: declaration of 'tex' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(141,16):
+      see declaration of 'Framework::Graphics::tex'
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1567,19): warning C4458: declaration of 'mesh' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(140,24):
+      see declaration of 'Framework::Graphics::mesh'
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1591,21): warning C4456: declaration of 'pointShadowUnit' hides previous local declaration
+  (compiling source file '/src/Graphics.cpp')
+      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1359,13):
+      see declaration of 'pointShadowUnit'
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1592,21): warning C4456: declaration of 'pointShadowCount' hides previous local declaration
+  (compiling source file '/src/Graphics.cpp')
+      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1360,13):
+      see declaration of 'pointShadowCount'
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1600,67): warning C4018: '<': signed/unsigned mismatch
+  (compiling source file '/src/Graphics.cpp')
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1609,42): warning C4456: declaration of 'entityId' hides previous local declaration
+  (compiling source file '/src/Graphics.cpp')
+      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1565,25):
+      see declaration of 'entityId'
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1662,27): warning C4458: declaration of 'tex' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(141,16):
+      see declaration of 'Framework::Graphics::tex'
+  
+  main.cpp
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
+  (compiling source file '/src/main.cpp')
+      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
+      see declaration of 'Framework::AnimationProperties::name'
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
+  (compiling source file '/src/main.cpp')
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
+  (compiling source file '/src/main.cpp')
+  
+  PropertyWidget.cpp
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
+  (compiling source file '/src/PropertyWidget.cpp')
+      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
+      see declaration of 'Framework::AnimationProperties::name'
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
+  (compiling source file '/src/PropertyWidget.cpp')
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
+  (compiling source file '/src/PropertyWidget.cpp')
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PropertyWidget.cpp(16,55): warning C4244: 'argument': conversion from 'uintptr_t' to 'int', possible loss of data
+  (compiling source file '/src/PropertyWidget.cpp')
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PropertyWidget.cpp(350,35): warning C4130: '==': logical operation on address of string constant
+  (compiling source file '/src/PropertyWidget.cpp')
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PropertyWidget.cpp(351,35): warning C4130: '==': logical operation on address of string constant
+  (compiling source file '/src/PropertyWidget.cpp')
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PropertyWidget.cpp(351,78): warning C4130: '==': logical operation on address of string constant
+  (compiling source file '/src/PropertyWidget.cpp')
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PropertyWidget.cpp(352,35): warning C4130: '==': logical operation on address of string constant
+  (compiling source file '/src/PropertyWidget.cpp')
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PropertyWidget.cpp(352,78): warning C4130: '==': logical operation on address of string constant
+  (compiling source file '/src/PropertyWidget.cpp')
+  
+  DetourAlloc.cpp
+  ScriptingSystem.cpp
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
+  (compiling source file '/src/ScriptingSystem.cpp')
+      C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
+      see declaration of 'Framework::AnimationProperties::name'
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
+  (compiling source file '/src/ScriptingSystem.cpp')
+  
+C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
+  (compiling source file '/src/ScriptingSystem.cpp')
+  
+  Generating Code...
+  ImGuizmo.cpp
+glew32s.lib(glew.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'glew32s.lib(glew.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\vc120.pdb'; linking object as if no debug info
+Jolt.lib(BodyManager.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(BodyManager.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(ContactConstraintManager.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(ContactConstraintManager.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(IslandBuilder.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(IslandBuilder.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(LargeIslandSplitter.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(LargeIslandSplitter.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(PhysicsSystem.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(PhysicsSystem.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(Memory.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(Memory.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(IssueReporting.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(IssueReporting.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(SerializableObject.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(SerializableObject.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(Shape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(Shape.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(BodyInterface.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(BodyInterface.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(JobSystemThreadPool.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(JobSystemThreadPool.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(ConvexShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(ConvexShape.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(RegisterTypes.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(RegisterTypes.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(BoxShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(BoxShape.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(MeshShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(MeshShape.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(Factory.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(Factory.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(MotionProperties.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(MotionProperties.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(Body.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(Body.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(BodyCreationSettings.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(BodyCreationSettings.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(SoftBodyMotionProperties.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(SoftBodyMotionProperties.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(SoftBodyShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(SoftBodyShape.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(Color.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(Color.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(TransformedShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(TransformedShape.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(ManifoldBetweenTwoFaces.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(ManifoldBetweenTwoFaces.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(ConstraintManager.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(ConstraintManager.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(BroadPhase.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(BroadPhase.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(PhysicsUpdateContext.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(PhysicsUpdateContext.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(BroadPhaseQuadTree.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(BroadPhaseQuadTree.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(CollisionDispatch.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(CollisionDispatch.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(RTTI.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(RTTI.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(DecoratedShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(DecoratedShape.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(ScaledShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(ScaledShape.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(CompoundShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(CompoundShape.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(StaticCompoundShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(StaticCompoundShape.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(PhysicsMaterial.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(PhysicsMaterial.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(CollisionGroup.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(CollisionGroup.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(Semaphore.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(Semaphore.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(JobSystemWithBarrier.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(JobSystemWithBarrier.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(OrientedBox.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(OrientedBox.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(TriangleShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(TriangleShape.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(PlaneShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(PlaneShape.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(SphereShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(SphereShape.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(CapsuleShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(CapsuleShape.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(TaperedCapsuleShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(TaperedCapsuleShape.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(CylinderShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(CylinderShape.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(TaperedCylinderShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(TaperedCylinderShape.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(ConvexHullShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(ConvexHullShape.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(HeightFieldShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(HeightFieldShape.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(RotatedTranslatedShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(RotatedTranslatedShape.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(OffsetCenterOfMassShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(OffsetCenterOfMassShape.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(MutableCompoundShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(MutableCompoundShape.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(EmptyShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(EmptyShape.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(PhysicsMaterialSimple.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(PhysicsMaterialSimple.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(Skeleton.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(Skeleton.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(SkeletalAnimation.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(SkeletalAnimation.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(Ragdoll.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(Ragdoll.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(PointConstraint.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(PointConstraint.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(SixDOFConstraint.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(SixDOFConstraint.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(SliderConstraint.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(SliderConstraint.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(SwingTwistConstraint.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(SwingTwistConstraint.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(DistanceConstraint.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(DistanceConstraint.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(HingeConstraint.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(HingeConstraint.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(FixedConstraint.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(FixedConstraint.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(ConeConstraint.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(ConeConstraint.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(PathConstraint.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(PathConstraint.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(PathConstraintPath.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(PathConstraintPath.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(PathConstraintPathHermite.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(PathConstraintPathHermite.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(VehicleConstraint.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(VehicleConstraint.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(WheeledVehicleController.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(WheeledVehicleController.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(TrackedVehicleController.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(TrackedVehicleController.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(MotorcycleController.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(MotorcycleController.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(RackAndPinionConstraint.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(RackAndPinionConstraint.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(GearConstraint.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(GearConstraint.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(PulleyConstraint.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(PulleyConstraint.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(MotorSettings.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(MotorSettings.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(PhysicsScene.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(PhysicsScene.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(GroupFilter.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(GroupFilter.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(GroupFilterTable.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(GroupFilterTable.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(SoftBodyCreationSettings.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(SoftBodyCreationSettings.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(MassProperties.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(MassProperties.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(CollideConvexVsTriangles.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(CollideConvexVsTriangles.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(CollideSphereVsTriangles.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(CollideSphereVsTriangles.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(CastConvexVsTriangles.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(CastConvexVsTriangles.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(CastSphereVsTriangles.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(CastSphereVsTriangles.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(StringTools.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(StringTools.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(Indexify.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(Indexify.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(TriangleSplitterBinning.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(TriangleSplitterBinning.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(TriangleSplitterMean.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(TriangleSplitterMean.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(AABBTreeBuilder.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(AABBTreeBuilder.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(QuadTree.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(QuadTree.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(ConvexHullBuilder.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(ConvexHullBuilder.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(Constraint.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(Constraint.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(TwoBodyConstraint.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(TwoBodyConstraint.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(SpringSettings.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(SpringSettings.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(VehicleAntiRollBar.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(VehicleAntiRollBar.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(Wheel.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(Wheel.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(VehicleController.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(VehicleController.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(LinearCurve.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(LinearCurve.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(VehicleEngine.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(VehicleEngine.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(VehicleTransmission.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(VehicleTransmission.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(VehicleDifferential.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(VehicleDifferential.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(VehicleTrack.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(VehicleTrack.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(SoftBodySharedSettings.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(SoftBodySharedSettings.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(TriangleSplitter.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(TriangleSplitter.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+Jolt.lib(ConvexHullBuilder2D.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(ConvexHullBuilder2D.cpp.obj)' or at 'C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
+LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+  Idesign Engine.vcxproj -> C:\Users\simru\Desktop\SIT\y3\gam300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe
+>>>>>>> main

@@ -20,6 +20,8 @@
 #include <unordered_map>
 #include <optional>
 #include <functional>
+#include "EnginePath.h" // <-- Added this
+#include <filesystem>   // <-- Added this
 
 // Graphics Header Files
 #include "stb_image.h"
@@ -38,8 +40,11 @@
 #include "MaterialProperties.h"
 #include "AnimationProperties.h"
 #include "LightProperties.h"
+#include "PhysicsProperties.h"
 #include "AudioComponent.h"
 #include "ScriptProperties.h"
+#include "EventReceiverComponent.h"
+#include "EventSenderComponent.h"
 
 // Asset Files
 #include "AssetLoader.h"
@@ -64,8 +69,11 @@ namespace Framework
     REGISTER_TYPE_NAME(MaterialMetadata);
     REGISTER_TYPE_NAME(AnimationProperties);
     REGISTER_TYPE_NAME(LightProperties);
+    REGISTER_TYPE_NAME(PhysicsProperties);
     REGISTER_TYPE_NAME(ScriptProperties);
     REGISTER_TYPE_NAME(ScriptEntry);
+    REGISTER_TYPE_NAME(EventReceiverComponent);
+    REGISTER_TYPE_NAME(EventSenderComponent);
 
     struct AssetKey 
     {

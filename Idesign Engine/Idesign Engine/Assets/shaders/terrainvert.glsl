@@ -5,9 +5,11 @@ layout(location=1) in vec3 aNormal;
 uniform mat4 uModel;
 uniform mat4 uView;
 uniform mat4 uProj;
+uniform mat4 uLightSpaceMatrix;
 
 out vec3 vNormal;
 out vec3 vWorldPos;
+out vec4 v_FragPosLightSpace;
 
 void main() {
     vec4 worldPos = uModel * vec4(aPos, 1.0);
@@ -15,6 +17,7 @@ void main() {
 
     mat3 N = mat3(transpose(inverse(uModel)));
     vNormal = normalize(N * aNormal);
+    v_FragPosLightSpace = uLightSpaceMatrix * worldPos;
 
     gl_Position = uProj * uView * worldPos;
 }
