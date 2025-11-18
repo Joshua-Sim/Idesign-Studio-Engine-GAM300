@@ -25,6 +25,11 @@ public:
 
     void cleanupGL();
     static Mesh CreateUnitTriangleData();
+
+    const float* GetRawVertexData() const;
+    size_t GetRawDataSize() const;
+    unsigned int GetVertexCount() const;
+
 private:
     std::vector<float> vertices;   // CPU-side vertex data (pos+normal interleaved)
     GLuint vao = 0, vbo = 0;

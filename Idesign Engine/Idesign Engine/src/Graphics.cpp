@@ -451,6 +451,27 @@ namespace Framework {
             return;
         }
 
+        if (m_resizePending)
+        {
+            m_resizePending = false;
+
+            // Only resize if dimensions are valid
+            if (m_newWidth > 0 && m_newHeight > 0)
+            {
+                // Updates internal size variables
+                m_fbW = m_newWidth;
+                m_fbH = m_newHeight;
+
+                // Call your existing resize logic safely
+                OnResize(m_fbW, m_fbH);
+
+                // Call ImGui resize safely
+                if (m_imguiManager) {
+                    m_imguiManager->ResizeViewFBOs(m_fbW, m_fbH);
+                }
+            }
+        }
+
         float now = (float)glfwGetTime();
         float dt = now - lastTime; lastTime = now;
         process_input(dt);
@@ -759,11 +780,13 @@ namespace Framework {
 
     void Graphics::framebuffer_size_callback(GLFWwindow* window, int w, int h)
     {
-        if (auto* gfx = static_cast<Graphics*>(glfwGetWindowUserPointer(window))) {
-            gfx->OnResize(w, h);
-            if (gfx->m_imguiManager) {
-                gfx->m_imguiManager->ResizeViewFBOs(w, h);
-            }
+        if (auto* gfx = static_cast<Graphics*>(glfwGetWindowUserPointer(window)))
+        {
+            // DO NOT call OnResize here. It causes the crash.
+            // Just flag it for the next frame.
+            gfx->m_resizePending = true;
+            gfx->m_newWidth = w;
+            gfx->m_newHeight = h;
         }
     }
     void Graphics::RequestPickUV(float u, float v) {
@@ -1438,12 +1461,37 @@ namespace Framework {
         for (auto const& entityId : opaqueEntities)
         {
             auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
+
+            glm::vec3 drawScale = tr.scale;
+
+            if (ecsInterface.HasComponent<BoxColliderComponent>(entityId))
+            {
+                // If the visual says "None", but we have a Collider...
+                        // FORCE IT TO BE A BOX.
+                if (mesh.debugShape == DebugShapeType::None)
+                {
+                    mesh.debugShape = DebugShapeType::Box;
+                    mesh.debugcolor = glm::vec3(0.0f, 1.0f, 0.0f); // Green
+
+                    // Important: Clear VAO so it doesn't use the "Ghost Mesh" path
+                    mesh.vao = 0;
+
+                    std::cout << "FIXED Entity " << entityId << ": DebugShape forced to BOX" << std::endl;
+                }
+            }
+
             glm::mat4 model(1.0f);
             model = glm::translate(model, tr.position);
             model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
             model = glm::rotate(model, glm::radians(tr.rotation.y), { 0,1,0 });
             model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
             model = glm::scale(model, tr.scale);
+
+            if (mesh.debugShape == DebugShapeType::Box && ecsInterface.HasComponent<BoxColliderComponent>(entityId)) {
+                auto& collider = ecsInterface.GetComponent<BoxColliderComponent>(entityId);
+                model = glm::translate(model, collider.center);
+                model = glm::scale(model, collider.size);
+            }
 
             if (ecsInterface.HasComponent<TextProperties>(entityId)) {
                 auto& txt = ecsInterface.GetComponent<TextProperties>(entityId);
@@ -1572,6 +1620,8 @@ namespace Framework {
             auto const& entityId = it->second;
             auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
             auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
+
+
 
             glm::mat4 model(1.0f);
             model = glm::translate(model, tr.position);

@@ -12,6 +12,7 @@
 #include <assimp/matrix4x4.h>
 #include "AnimationProperties.h" // Includes Skeleton.h
 #include "AnimationLoader.h"
+#include "Mesh.h" // Make sure your Mesh class is included here
 
 #define MAX_BONES_PER_VERTEX 4
 

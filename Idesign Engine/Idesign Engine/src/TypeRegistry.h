@@ -24,6 +24,15 @@ namespace Framework
         using TypeAdder = std::function<void(Coordinator&, Entity)>;
         using TypeRemover = std::function<void(Coordinator&, Entity)>;
 
+        // To Stop Crashes
+        void Shutdown()
+        {
+            registry.clear();
+            adders.clear();
+            removers.clear();
+            propLists.clear();
+        }
+
         template<typename T>
         void Register(const std::string& typeName, const prop_list* props)
         {
