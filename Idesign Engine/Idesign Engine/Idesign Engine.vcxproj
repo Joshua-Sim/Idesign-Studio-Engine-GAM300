@@ -172,8 +172,10 @@
     <ClInclude Include="src\ECSystemManager.h" />
     <ClInclude Include="src\EngineState.h" />
     <ClInclude Include="src\EntityManager.h" />
+    <ClInclude Include="src\EventManager.h" />
     <ClInclude Include="src\EventReceiverComponent.h" />
     <ClInclude Include="src\EventSenderComponent.h" />
+    <ClInclude Include="src\EventSystem.h" />
     <ClInclude Include="src\FileCheckSystem.h" />
     <ClInclude Include="src\FontShader.h" />
     <ClInclude Include="src\FontSystem.h" />
@@ -184,7 +186,6 @@
     <ClInclude Include="src\ImguiManager.h" />
     <ClInclude Include="src\Imgui_Hierarchy.h" />
     <ClInclude Include="src\InputHandler.h" />
-    <ClInclude Include="src\InteractionSystem.h" />
     <ClInclude Include="src\JsonSerialize.h" />
     <ClInclude Include="src\Lighting.h" />
     <ClInclude Include="src\MainMath.h" />
@@ -341,6 +342,8 @@
     <ClCompile Include="src\DummySystem.cpp" />
     <ClCompile Include="src\EngineState.cpp" />
     <ClCompile Include="src\EntityManager.cpp" />
+    <ClCompile Include="src\EventManager.cpp" />
+    <ClCompile Include="src\EventSystem.cpp" />
     <ClCompile Include="src\FileCheckSystem.cpp" />
     <ClCompile Include="src\FontSystem.cpp" />
     <ClCompile Include="src\Graphics.cpp" />

@@ -2422,8 +2422,12 @@ namespace Framework {
                 ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.3f, 0.7f, 1.0f));  // Darker blue when active
                 if (ImGui::Button("Debug", buttonSize))
                 {
-                    // Toggle debug state while in play mode
+                    // 1. Toggle your engine state (existing logic)
                     engineState.SetInDebugMode(!engineState.IsInDebugMode());
+
+                    // 2. Toggle the Graphics debug flag
+                    // This flips the boolean (true -> false, or false -> true)
+                    Framework::Graphics::s_RenderDebugColliders = !Framework::Graphics::s_RenderDebugColliders;
                 }
                 ImGui::PopStyleColor(3); // Restore color
             }

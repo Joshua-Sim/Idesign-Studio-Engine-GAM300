@@ -40,6 +40,8 @@
 #include "FileCheckSystem.h"
 #include "EnginePath.h"
 #include <filesystem>
+#include "EventSystem.h" 
+#include "EventManager.h"
 
 using namespace Framework;
 
@@ -123,6 +125,16 @@ int main(void)
     auto audioSystem = ecsInterface.RegisterSystem<AudioSystem>();
     auto physicsSystem = ecsInterface.RegisterSystem<PhysicsSystem>();
 
+    auto eventSystem = ecsInterface.RegisterSystem<EventSystem>();
+    ecsInterface.RegisterComponent<EventSenderComponent>();
+    ecsInterface.RegisterComponent<EventReceiverComponent>();
+    {
+        Signature signature;
+        // Tell ECS: "This system only cares about entities with EventReceiverComponent"
+        signature.set(ecsInterface.GetComponentType<EventReceiverComponent>());
+        ecsInterface.SetSystemSignature<EventSystem>(signature);
+    }
+
     // ------- Add systems to engine below -------- //
     engine->AddSystem(animationSystem.get());   // Calculate bone matrices
     engine->AddSystem(graphicsSystem.get());
@@ -134,6 +146,7 @@ int main(void)
     engine->AddSystem(physicsSystem.get());
     engine->AddSystem(sceneSystem.get());       // Register scene manager last
     engine->AddSystem(fileCheckSystem.get());
+    engine->AddSystem(eventSystem.get());
 
     std::filesystem::path root = GetEngineRootPath();
     fileCheckSystem->WatchAllFolders();
@@ -166,6 +179,7 @@ int main(void)
 
     // Clear all systems and other dynamically allocated resources
     engine->DestroySystems();
+    Framework::EventManager::Instance().Reset();
     Framework::TypeRegistry::Instance().Shutdown();
     // Clean up smart pointers as they go out of scope
     // No need to manually delete as unique_ptr will handle it

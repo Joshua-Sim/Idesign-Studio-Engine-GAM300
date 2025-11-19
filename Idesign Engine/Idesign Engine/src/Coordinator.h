@@ -266,9 +266,6 @@ namespace Framework {
 			return result;
 		}
 
-		//Event System (To Fire Triggers)
-		void FireTrigger(Entity entity, Entity otherEntity, EEventTriggerType triggerType);
-
 
 	private:
 		std::unique_ptr<ComponentManager> mComponentManager;	// A shared pointer of the Component Manager
