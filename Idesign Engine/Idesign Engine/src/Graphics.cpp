@@ -833,7 +833,7 @@ namespace Framework {
         }
     }
     void Graphics::RequestPickUV(float u, float v) {
-        pendingPickUV0 = glm::vec2(u, v);
+        pendingPickUV0 = glm::vec2(u, v);   
     }
     void Graphics::RequestPickUVSecondary(float u, float v) {
         pendingPickUV1 = glm::vec2(u, v);
@@ -866,6 +866,10 @@ namespace Framework {
 
         Camera& cam = (g->m_mouseTargetView == 1) ? g->sceneCamera : g->gameCamera;
         cam.processMouseMovement(xoffset, yoffset);
+    }
+
+    void Graphics::SetGroundMode(bool state) {
+        groundMode = state;
     }
 
     // FOR FUTURE REFERENCE
@@ -920,8 +924,12 @@ namespace Framework {
         const bool useGround = (!editorActive) && groundMode;
         const float baseSpeed = editorActive ? 5.0f : 1.0f;
 
-        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+            std::cout << "hi";
             cam.processKeyboard(Camera::Movement::Forward, dt * baseSpeed, useGround, terrain);
+        }
+            
+            
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
             cam.processKeyboard(Camera::Movement::Backward, dt * baseSpeed, useGround, terrain);
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)

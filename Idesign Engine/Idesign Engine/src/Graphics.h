@@ -83,12 +83,16 @@ namespace Framework
         Camera* GetCameraByIndex(int viewIdx);
         void OnResize(int w, int h);
 
+        // To allow cam to move again when swap
+        void SetGroundMode(bool state);
+
         void SetMouseTargetView(int view) { m_mouseTargetView = (view <= 0) ? 0 : 1; }
         int  GetMouseTargetView() const;
         void CaptureMouse(bool on);
     private:
         static void framebuffer_size_callback(GLFWwindow*, int, int);
         static void mouse_callback(GLFWwindow*, double, double);
+
         glm::vec2 pendingPickUV0{ -1.f, -1.f };  // main viewport
         glm::vec2 pendingPickUV1{ -1.f, -1.f };  // secondary viewport
         int pickViewIndex = 0; // 0 = Grounded, 1 = debug
@@ -192,6 +196,8 @@ namespace Framework
         void DrawDebugBox(const TransformComponent& transform, const glm::vec3& color);
         // Draws a wireframe sphere using the transform's position and scale as radius
         void DrawDebugMesh(Mesh* mesh, const glm::vec3& color, const glm::mat4& model, const glm::mat4& projection, const glm::mat4& view);
+
+
 
         // Add these new members for the FPS counter
         double m_fpsLastTime;

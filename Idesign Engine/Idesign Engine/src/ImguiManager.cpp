@@ -704,20 +704,23 @@ namespace Framework {
         bool nowF2 = (glfwGetKey(win, GLFW_KEY_F2) == GLFW_PRESS);
         bool nowF3 = (glfwGetKey(win, GLFW_KEY_F3) == GLFW_PRESS);
 
-        // On rising edge of F2: main shows view 0
+        // On rising edge of F2: Switch to EDITOR (View 1)
         if (nowF2 && !g_prevF2) {
-            g_MainViewIndex = 1;                     // main = view 1 (your grounded/game view)
-            m_graphicsSystem->SetMouseTargetView(1); // route mouse-look to view 1
-            m_graphicsSystem->SetPickViewIndex(g_MainViewIndex);   // default pick to view 1
+            g_MainViewIndex = 1;
+
+            m_graphicsSystem->SetMouseTargetView(1);
+            m_graphicsSystem->SetGroundMode(false);
+            m_graphicsSystem->SetPickViewIndex(1);
         }
 
-        // On rising edge of F3: main shows view 0
+        // On rising edge of F3: Switch to GAME (View 0)
         if (nowF3 && !g_prevF3) {
             g_MainViewIndex = 0;
-            m_graphicsSystem->SetMouseTargetView(0); // route mouse-look to view 0
-            m_graphicsSystem->SetPickViewIndex(g_MainViewIndex);   // default pick to view 0
-        }
 
+            m_graphicsSystem->SetMouseTargetView(0);
+            m_graphicsSystem->SetGroundMode(true);
+            m_graphicsSystem->SetPickViewIndex(0);
+        }
         g_prevF2 = nowF2;
         g_prevF3 = nowF3;
 
@@ -2465,6 +2468,7 @@ namespace Framework {
 
                     // hand normalized UV to Graphics for the readback
                     m_graphicsSystem->SetPickViewIndex(g_MainViewIndex); // assuming view index 0 for main viewport
+                    m_graphicsSystem->SetGroundMode(true);
                     if (g_MainViewIndex == 0) {
                         m_graphicsSystem->RequestPickUV(u, v);
                     }
@@ -2542,6 +2546,7 @@ namespace Framework {
 
                     // Request the pick
                     m_graphicsSystem->SetPickViewIndex(secondaryView);
+                    m_graphicsSystem->SetGroundMode(false);
                     if (secondaryView == 0)
                         m_graphicsSystem->RequestPickUV(u, v);
                     else
