@@ -186,7 +186,6 @@
     <ClInclude Include="src\ImguiManager.h" />
     <ClInclude Include="src\Imgui_Hierarchy.h" />
     <ClInclude Include="src\InputHandler.h" />
-    <ClInclude Include="src\InteractionSystem.h" />
     <ClInclude Include="src\JsonSerialize.h" />
     <ClInclude Include="src\Lighting.h" />
     <ClInclude Include="src\MainMath.h" />

@@ -202,6 +202,8 @@ namespace Framework
                         else
                         {
                             std::cerr << "Missing MeshProperties for GUID: " << guid << "\n";
+                            Framework::MeshProperties defaultMesh;
+                            ecsInterface.AddComponent(entity, defaultMesh);
                         }
                     }
                 }
@@ -322,6 +324,36 @@ namespace Framework
                         ecsInterface.AddComponent(entity, sp);
                     }
                 }
+                if (components.HasMember("BoxColliderComponent"))
+                {
+                    // 1. Create a default instance of the component
+                    Framework::BoxColliderComponent boxCollider;
+
+                    // 2. Deserialize the saved values ('size' and 'center') 
+                    //    from the JSON object into the component instance.
+                    //    (Note: The runtime state 'wasInsideLastFrame' remains 'false' as intended)
+                    Deserialize(&boxCollider, g_BoxColliderProps, components["BoxColliderComponent"]);
+
+                    // 3. Add the fully loaded component to the entity
+                    ecsInterface.AddComponent(entity, boxCollider);
+                }
+                // PhysicsProperties
+                if (components.HasMember("PhysicsProperties"))
+                {
+                    Framework::PhysicsProperties phys;
+                    const auto& physJson = components["PhysicsProperties"];
+
+                    // 1. Load 'isImmovable' and all other float properties
+                    Deserialize(&phys, g_PhysicsProps, physJson);
+
+                    if (phys.isImmovable)
+                    {
+                        phys.motionType = 0; // Set to Static
+                    }
+
+                    ecsInterface.AddComponent(entity, phys);
+                }
+
                 sceneManager.RegisterEntityToScene(entity, cleanName);
             }
         }
@@ -410,8 +442,6 @@ namespace Framework
                     componentsObj.AddMember("MeshComponent", meshRef, allocator);
                 }
 
-          
-
                 if (ecsInterface.HasComponent<AnimationProperties>(entity))
                 {
                     const auto& anim = ecsInterface.GetComponent<AnimationProperties>(entity);
@@ -497,6 +527,31 @@ namespace Framework
 
                     // 3. Add the complete object to the component list
                     componentsObj.AddMember("LightProperties", lightJson, allocator);
+                }
+                if (ecsInterface.HasComponent<BoxColliderComponent>(entity))
+                {
+                    const auto& collider = ecsInterface.GetComponent<BoxColliderComponent>(entity);
+                    rapidjson::Value colliderJson(rapidjson::kObjectType);
+
+                    // 1. Run the generic serializer 
+                    // This automatically handles 'size' and 'center' based on g_BoxColliderProps
+                    Serialize((void*)&collider, g_BoxColliderProps, colliderJson, allocator);
+
+                    // 2. Add the complete object to the component list
+                    componentsObj.AddMember("BoxColliderComponent", colliderJson, allocator);
+                }
+                // PhysicsProperties
+                if (ecsInterface.HasComponent<PhysicsProperties>(entity))
+                {
+                    const auto& phys = ecsInterface.GetComponent<PhysicsProperties>(entity);
+                    rapidjson::Value physJson(rapidjson::kObjectType);
+
+                    // 1. Serialize standard properties (floats, friction, mass, etc.)
+                    Serialize((void*)&phys, g_PhysicsProps, physJson, allocator);
+
+                    // 3. DO NOT save 'motionType'. We rely purely on the boolean.
+
+                    componentsObj.AddMember("PhysicsProperties", physJson, allocator);
                 }
             }
 

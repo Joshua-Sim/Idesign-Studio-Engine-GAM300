@@ -549,9 +549,6 @@
     <ClInclude Include="src\GameMessages.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\InteractionSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\EventSystem.h">
       <Filter>Header Files\EventSystem</Filter>
     </ClInclude>

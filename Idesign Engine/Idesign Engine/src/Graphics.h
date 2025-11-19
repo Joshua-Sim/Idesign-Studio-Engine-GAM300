@@ -90,6 +90,10 @@ namespace Framework
         void SetMouseTargetView(int view) { m_mouseTargetView = (view <= 0) ? 0 : 1; }
         int  GetMouseTargetView() const;
         void CaptureMouse(bool on);
+
+        // Static flag so we can access it anywhere without an instance
+        static bool s_RenderDebugColliders;
+
     private:
         static void framebuffer_size_callback(GLFWwindow*, int, int);
         static void mouse_callback(GLFWwindow*, double, double);
