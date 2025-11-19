@@ -75,6 +75,8 @@ namespace Framework
 		int m_gizmoMode = 0; // 0=Local, 1=World
 		bool m_gizmoEnabled = true;
 
+		bool m_showEditor = true;
+
 		//Console Methods 
 		void RenderConsole();
 		static void Log(const std::string& message, const std::string& category = "APP");

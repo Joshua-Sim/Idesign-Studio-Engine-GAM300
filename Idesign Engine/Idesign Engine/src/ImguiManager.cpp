@@ -697,12 +697,34 @@ namespace Framework {
     }
 
     void ImguiManager::Update(float deltaTime) {
+
+
         (void)deltaTime;
+
+        // Toggle editor visibility with Backspace key
+        static bool backspaceWasPressed = false;
+        bool backspaceIsPressed = InputHandler::GetInstance()->IsKeyHeld(GLFW_KEY_BACKSPACE);
+
+        if (backspaceIsPressed && !backspaceWasPressed)
+        {
+            m_showEditor = !m_showEditor;
+            if (m_showEditor) {
+                std::cout << "[ImGui] Editor enabled" << std::endl;
+            }
+            else {
+                std::cout << "[ImGui] Editor disabled - Game only mode" << std::endl;
+            }
+        }
+        backspaceWasPressed = backspaceIsPressed;
+
+        // Always start a new ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+
         int w, h;
         glfwGetFramebufferSize(m_graphicsSystem->GetWindow(), &w, &h);
+
         // JAY
         // Handle F2 / F3 to swap which view is "Main"
         GLFWwindow* win = m_graphicsSystem->GetWindow();
@@ -711,67 +733,114 @@ namespace Framework {
 
         // On rising edge of F2: main shows view 0
         if (nowF2 && !g_prevF2) {
-            g_MainViewIndex = 1;                     // main = view 1 (your grounded/game view)
-            m_graphicsSystem->SetMouseTargetView(1); // route mouse-look to view 1
-            m_graphicsSystem->SetPickViewIndex(g_MainViewIndex);   // default pick to view 1
+            g_MainViewIndex = 1;
+            m_graphicsSystem->SetMouseTargetView(1);
+            m_graphicsSystem->SetPickViewIndex(g_MainViewIndex);
         }
 
         // On rising edge of F3: main shows view 0
         if (nowF3 && !g_prevF3) {
             g_MainViewIndex = 0;
-            m_graphicsSystem->SetMouseTargetView(0); // route mouse-look to view 0
-            m_graphicsSystem->SetPickViewIndex(g_MainViewIndex);   // default pick to view 0
+            m_graphicsSystem->SetMouseTargetView(0);
+            m_graphicsSystem->SetPickViewIndex(g_MainViewIndex);
         }
 
         g_prevF2 = nowF2;
         g_prevF3 = nowF3;
 
-        // 3. Only draw your UI if the window has a valid size
-        if (w > 0 && h > 0)
+        // Render based on editor visibility
+        if (m_showEditor)
         {
-            // Create a full-screen dockspace
-            ImGuiWindowFlags windowFlags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-            ImGuiViewport* viewport = ImGui::GetMainViewport();
+            // === EDITOR MODE: Render full ImGui UI ===
+            if (w > 0 && h > 0)
+            {
+                // Create a full-screen dockspace
+                ImGuiWindowFlags windowFlags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+                ImGuiViewport* viewport = ImGui::GetMainViewport();
 
-            ImGui::SetNextWindowPos(viewport->WorkPos);
-            ImGui::SetNextWindowSize(viewport->WorkSize);
-            ImGui::SetNextWindowViewport(viewport->ID);
-            ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-            ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+                ImGui::SetNextWindowPos(viewport->WorkPos);
+                ImGui::SetNextWindowSize(viewport->WorkSize);
+                ImGui::SetNextWindowViewport(viewport->ID);
+                ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+                ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 
-            // Add flags to prevent moving and resizing
-            windowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-            windowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+                windowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+                windowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 
-            // Begin the main dockspace window
-            ImGui::Begin("DockSpace Demo", nullptr, windowFlags);
-            ImGui::PopStyleVar(2);
+                ImGui::Begin("DockSpace Demo", nullptr, windowFlags);
+                ImGui::PopStyleVar(2);
 
-            ImGuiID dockspaceId = ImGui::GetID("MyDockSpace");
-            ImGui::DockSpace(dockspaceId, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
+                ImGuiID dockspaceId = ImGui::GetID("MyDockSpace");
+                ImGui::DockSpace(dockspaceId, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
 
-            RenderMenuBar();
-            RenderEntityMenu();
-            DrawHotReloadPrompt();
-            RenderGizmoPanel();
-            RenderAssetPanel();
-            ImGui::End(); // End of main dockspace window
+                RenderMenuBar();
+                RenderEntityMenu();
+                DrawHotReloadPrompt();
+                RenderGizmoPanel();
+                RenderAssetPanel();
+                ImGui::End();
+            }
+
+            if (showConsole) RenderConsole();
+        }
+        else
+        {
+            // === GAME ONLY MODE: Render game fullscreen ===
+            if (w > 0 && h > 0)
+            {
+                // Create a fullscreen window with no decorations
+                ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
+                    ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar |
+                    ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoBringToFrontOnFocus;
+
+                ImGuiViewport* viewport = ImGui::GetMainViewport();
+                ImGui::SetNextWindowPos(viewport->WorkPos);
+                ImGui::SetNextWindowSize(viewport->WorkSize);
+
+                ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+                ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+
+                ImGui::Begin("GameFullscreen", nullptr, windowFlags);
+
+                // Get the available size
+                ImVec2 viewportSize = ImGui::GetContentRegionAvail();
+                float aspectRatio = (m_fboH > 0) ? (float)m_fboW / (float)m_fboH : 16.0f / 9.0f;
+                float newWidth = viewportSize.x;
+                float newHeight = newWidth / aspectRatio;
+
+                if (newHeight > viewportSize.y)
+                {
+                    newHeight = viewportSize.y;
+                    newWidth = newHeight * aspectRatio;
+                }
+
+                // Center the image
+                ImVec2 offset((viewportSize.x - newWidth) * 0.5f, (viewportSize.y - newHeight) * 0.5f);
+                ImGui::SetCursorPos(offset);
+
+                // Render the game texture fullscreen
+                ImGui::Image(
+                    (ImTextureID)(intptr_t)GetGameTexture(g_MainViewIndex),
+                    ImVec2(newWidth, newHeight),
+                    ImVec2(0, 1),
+                    ImVec2(1, 0)
+                );
+
+                ImGui::End();
+                ImGui::PopStyleVar(2);
+            }
         }
 
-        //Render Console 
-        if (showConsole) RenderConsole();
-
-        // Render ImGui
+        // Always render ImGui
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-        // Handle multiple viewports (for multi-window applications)
+        // Handle multiple viewports
         GLFWwindow* backup_current_context = glfwGetCurrentContext();
         ImGui::UpdatePlatformWindows();
         ImGui::RenderPlatformWindowsDefault();
         glfwMakeContextCurrent(backup_current_context);
 
-        // edwin testing
         glfwSetDropCallback(backup_current_context, DropCallback);
         glfwPollEvents();
         glfwSwapBuffers(m_graphicsSystem->GetWindow());
