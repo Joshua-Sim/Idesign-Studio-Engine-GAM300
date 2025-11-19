@@ -23,6 +23,8 @@ namespace Framework
         std::string path;
         bool isDirty = false;
 
+
+        bool isUI = false;
         // Runtime-only
         unsigned int textureID = 0;
         int width = 0;
@@ -34,6 +36,7 @@ namespace Framework
         PROP_GUID_HIDDEN(guid, TextureProperties),
         PROP_STRING_HIDDEN(name, TextureProperties),
         PROP_STRING_HIDDEN(path, TextureProperties),
+        PROP_BOOL(isUI, TextureProperties)
     };
 
     inline const prop_list g_TexturePropertiesProps{ "TextureProperties", g_TexturePropertiesPropsArray };

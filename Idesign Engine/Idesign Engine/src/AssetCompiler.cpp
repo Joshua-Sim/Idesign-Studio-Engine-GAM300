@@ -217,9 +217,23 @@ namespace Framework
                         std::string guid = texRef["guid"].GetString();
                         const TextureProperties* tex = AssetManager::Instance().Get<TextureProperties>(guid);
                         if (tex)
-                            ecsInterface.AddComponent(entity, *tex);
+                        {
+                            // 1. Create a local copy of the asset data
+                            TextureProperties instanceTex = *tex;
+
+                            // 2. [FIX] Check if the JSON has the isUI override and apply it
+                            if (texRef.HasMember("isUI") && texRef["isUI"].IsBool())
+                            {
+                                instanceTex.isUI = texRef["isUI"].GetBool();
+                            }
+
+                            // 3. Add the modified component
+                            ecsInterface.AddComponent(entity, instanceTex);
+                        }
                         else
+                        {
                             std::cerr << "Missing TextureProperties for GUID: " << guid << "\n";
+                        }
                     }
                 }
 
@@ -456,6 +470,7 @@ namespace Framework
                     const auto& tex = ecsInterface.GetComponent<TextureProperties>(entity);
                     rapidjson::Value texRef(rapidjson::kObjectType);
                     texRef.AddMember("guid", rapidjson::Value(tex.guid.id.c_str(), allocator), allocator);
+                    texRef.AddMember("isUI", tex.isUI, allocator);
                     componentsObj.AddMember("TextureComponent", texRef, allocator);
                 }
 
@@ -766,6 +781,7 @@ namespace Framework
             const auto& tex = ecsInterface.GetComponent<TextureProperties>(entity);
             rapidjson::Value texRef(rapidjson::kObjectType);
             texRef.AddMember("guid", rapidjson::Value(tex.guid.id.c_str(), allocator), allocator);
+            texRef.AddMember("isUI", tex.isUI, allocator);
             componentsObj.AddMember("TextureComponent", texRef, allocator);
         }
 
@@ -1043,7 +1059,18 @@ namespace Framework
             {
                 std::string guid = texRef["guid"].GetString();
                 const TextureProperties* tex = AssetManager::Instance().Get<TextureProperties>(guid);
-                if (tex) ecsInterface.AddComponent(newEntity, *tex);
+                if (tex)
+                {
+                    // 1. Copy
+                    TextureProperties instanceTex = *tex;
+
+                    if (texRef.HasMember("isUI") && texRef["isUI"].IsBool())
+                    {
+                        instanceTex.isUI = texRef["isUI"].GetBool();
+                    }
+
+                    ecsInterface.AddComponent(newEntity, instanceTex);
+                }
             }
         }
 

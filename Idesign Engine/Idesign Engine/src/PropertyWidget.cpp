@@ -234,6 +234,7 @@ namespace Framework
                     auto& tex = *static_cast<TextureProperties*>(componentPtr);
                     DrawAssetDropdown<TextureProperties>("Select Texture", tex);
                     DrawTexturePreview(tex);
+
                 }
                 
                 else if (typeName == "MeshProperties")
@@ -281,6 +282,20 @@ namespace Framework
                 {
                     auto& anim = *static_cast<AnimationProperties*>(componentPtr);
                     DrawAssetDropdown<AnimationProperties>("Select Animation", anim);
+                }
+                else if (typeName == "LightProperties")
+                {
+                    auto& light = *static_cast<LightProperties*>(componentPtr);
+                    const char* lightTypeNames[] = { "Directional", "Point", "Spot" };
+                    int currentTypeIndex = static_cast<int>(light.type);
+
+                    // Draw the Dropdown
+                    if (ImGui::Combo("Light Type", &currentTypeIndex, lightTypeNames, IM_ARRAYSIZE(lightTypeNames)))
+                    {
+                        // Cast the selected int back to the Enum Class
+                        light.type = static_cast<LightType>(currentTypeIndex);
+                    }
+                    DrawInspector(componentPtr, *propList);
                 }
                 else if (typeName == "NavMeshAgentComponent")
                 {

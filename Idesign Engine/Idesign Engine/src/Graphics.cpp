@@ -27,7 +27,7 @@
 //#include "ComponentList.h"
 //#include "FontSystem.h"
 //#include "Coordinator.h"
-//#include <algorithm>
+#include <algorithm>
 //
 //#include "imgui.h"
 //#include "imgui_impl_glfw.h"
@@ -167,7 +167,7 @@ namespace Framework {
                 // If we found a corresponding animation asset, use the animated loader
                 if (animProps)
                 {
-                    std::cout << "[Graphics Init] Found anim data for mesh '" << props.name << "'. Loading as animated." << std::endl;
+                    //std::cout << "[Graphics Init] Found anim data for mesh '" << props.name << "'. Loading as animated." << std::endl;
 
                     // *** Pass the animProps (with skeleton) to the animated mesh loader ***
                     MeshLoader::loadAnimatedMesh(props.path, *animProps, props);
@@ -175,7 +175,7 @@ namespace Framework {
                 else
                 {
                     // No anim data found, load as a static mesh
-                    std::cout << "[Graphics Init] No anim data for mesh '" << props.name << "'. Loading as static." << std::endl;
+                    //std::cout << "[Graphics Init] No anim data for mesh '" << props.name << "'. Loading as static." << std::endl;
                     MeshLoader::loadMesh(props.path, props);
                 }
             });
@@ -403,6 +403,7 @@ namespace Framework {
         skinnedShader.initGL();
         shadowShader.initGL();
         pointShadowShader.initGL();
+        uiShader.initGL();
         //initialise geometry objects
         cube.initGL();
         plane.initGL();
@@ -1439,9 +1440,6 @@ namespace Framework {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-    // In Graphics.cpp
-// REPLACE your entire RenderView function with this:
-
     void Graphics::RenderView(
         Camera& cam,
         int viewIndex,
@@ -1520,11 +1518,22 @@ namespace Framework {
         const glm::vec3 kHighlightAlbedo(1.0f, 0.85f, 0.3f);
         std::vector<Entity> opaqueEntities;
         std::multimap<float, Entity> transparentEntities;
+        std::vector<Entity> uiEntities;
 
         for (auto const& entityId : mEntities)
         {
             if (ecsInterface.HasComponent<MeshProperties>(entityId))
             {
+
+                bool isUI = false;
+                if (ecsInterface.HasComponent<TextureProperties>(entityId)) {
+                    isUI = ecsInterface.GetComponent<TextureProperties>(entityId).isUI;
+                }
+
+                if (isUI) {
+                    uiEntities.push_back(entityId); // Add to UI list
+                    continue; 
+                }
                 float opacity = 1.0f;
                 if (ecsInterface.HasComponent<MaterialProperties>(entityId))
                 {
@@ -1967,6 +1976,49 @@ namespace Framework {
             fontSystem.RenderText2D("Editor View", 10.f, 10.f, 1.f, { 1,1,0.5f }, (float)width, (float)height);
         }
 
+        uiShader.use();
+        const float DESIGN_WIDTH = 1920.0f;
+        const float DESIGN_HEIGHT = 1080.0f;
+        glm::mat4 projection = glm::ortho(0.0f, DESIGN_WIDTH, 0.0f, DESIGN_HEIGHT);
+        uiShader.setMat4("uProjection", projection);
+        uiShader.setVec3("uColor", glm::vec3(1.0f, 1.0f, 1.0f));
+        uiShader.setFloat("uAlpha", 1.0f);
+        std::sort(uiEntities.begin(), uiEntities.end(),
+            [](Framework::Entity a, Framework::Entity b)
+            {
+                // Get transforms to compare Z values
+                // Note: We use the global 'ecsInterface' here
+                auto& posA = ecsInterface.GetComponent<TransformComponent>(a).position;
+                auto& posB = ecsInterface.GetComponent<TransformComponent>(b).position;
+                return posA.z < posB.z;
+            }
+        );
+        glDisable(GL_DEPTH_TEST); // UI is always on top
+        glEnable(GL_BLEND);       // UI usually has transparency
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        for (auto const& entityId : uiEntities)
+        {
+            // 1. Check for required components
+            if (!ecsInterface.HasComponent<TransformComponent>(entityId) ||
+                !ecsInterface.HasComponent<TextureProperties>(entityId))
+                continue;
+
+            auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
+            auto& tex = ecsInterface.GetComponent<TextureProperties>(entityId);
+
+            // 2. Bind Texture
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, tex.textureID);
+            uiShader.setInt("uTexture", 0);
+
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, tr.position);
+            model = glm::scale(model, glm::vec3(tr.scale.x * 0.5f, tr.scale.y * 0.5f, 1.0f));
+
+            uiShader.setMat4("uModel", model);
+            renderQuad();
+        }
         glEnable(GL_DEPTH_TEST);
         glm::mat4 textModel = glm::mat4(1.0f);
         textModel = glm::translate(textModel, glm::vec3(0.0f, 5.0f, 0.0f));
