@@ -327,38 +327,63 @@ namespace Framework
                     }
                     continue;   
                 }
-                else if (typeName == "EventReceiverComponent")
+                // 1. Handle EVENT RECEIVER (Updated variable names)
+                if (typeName == "EventReceiverComponent")
                 {
                     auto& receiver = *static_cast<Framework::EventReceiverComponent*>(componentPtr);
+
+                    // --- Input 1: Message to Listen For ---
                     char msgListenBuffer[256];
                     strncpy_s(msgListenBuffer, sizeof(msgListenBuffer), receiver.messageToListenFor.c_str(), _TRUNCATE);
-
-                    if (ImGui::InputText("Message", msgListenBuffer, sizeof(msgListenBuffer)))
+                    if (ImGui::InputText("Listen For (Msg)", msgListenBuffer, sizeof(msgListenBuffer)))
                     {
                         receiver.messageToListenFor = msgListenBuffer;
                     }
 
-                    char onRecvBuffer[256];
-                    strncpy_s(onRecvBuffer, sizeof(onRecvBuffer), receiver.onReceiveFunction.c_str(), _TRUNCATE);
-
-                    if (ImGui::InputText("On Receive", onRecvBuffer, sizeof(onRecvBuffer)))
+                    // --- Input 2: Lua Function to Call ---
+                    char luaFuncBuffer[256];
+                    strncpy_s(luaFuncBuffer, sizeof(luaFuncBuffer), receiver.luaFunctionToCall.c_str(), _TRUNCATE);
+                    // Note: Changed label to match new variable name
+                    if (ImGui::InputText("Lua Function", luaFuncBuffer, sizeof(luaFuncBuffer)))
                     {
-                        receiver.onReceiveFunction = onRecvBuffer;
+                        receiver.luaFunctionToCall = luaFuncBuffer;
                     }
-                    else if (typeName == "ScriptProperties")
-                    {
-                        auto& scripts = *static_cast<ScriptProperties*>(componentPtr);
-                        DrawScriptPropertiesWidget(scripts, entity);
+                }
+                // 2. Handle EVENT SENDER (New! Needs to handle strings now, not enums)
+                else if (typeName == "EventSenderComponent")
+                {
+                    auto& sender = *static_cast<Framework::EventSenderComponent*>(componentPtr);
 
-                        // We fully handle this component ourselves, so we DON'T call DrawInspector
-                        if (ImGui::Button("Remove ScriptProperties"))
-                        {
-                            TypeRegistry::Instance().RemoveComponent(typeName, ecs, entity);
-                        }
-                        continue;
+                    // --- Input 1: Trigger Name (e.g. "OnCollision") ---
+                    char triggerBuffer[256];
+                    strncpy_s(triggerBuffer, sizeof(triggerBuffer), sender.triggerName.c_str(), _TRUNCATE);
+                    if (ImGui::InputText("Trigger On", triggerBuffer, sizeof(triggerBuffer)))
+                    {
+                        sender.triggerName = triggerBuffer;
                     }
+
+                    // --- Input 2: Message to Send (e.g. "ShowPrompt") ---
+                    char msgSendBuffer[256];
+                    strncpy_s(msgSendBuffer, sizeof(msgSendBuffer), sender.messageName.c_str(), _TRUNCATE);
+                    if (ImGui::InputText("Send Message", msgSendBuffer, sizeof(msgSendBuffer)))
+                    {
+                        sender.messageName = msgSendBuffer;
                     }
-                else {
+                }
+                // 3. Handle SCRIPTS (Existing logic)
+                else if (typeName == "ScriptProperties")
+                {
+                    auto& scripts = *static_cast<ScriptProperties*>(componentPtr);
+                    DrawScriptPropertiesWidget(scripts, entity);
+
+                    if (ImGui::Button("Remove ScriptProperties"))
+                    {
+                        TypeRegistry::Instance().RemoveComponent(typeName, ecs, entity);
+                    }
+                }
+                // 4. Handle EVERYTHING ELSE (Default Inspector)
+                else
+                {
                     DrawInspector(componentPtr, *propList);
                 }
                 

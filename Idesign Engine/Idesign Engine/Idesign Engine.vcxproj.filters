@@ -136,6 +136,9 @@
     <Filter Include="Source Files\Material">
       <UniqueIdentifier>{061a7e33-2c7b-4e1e-9ba2-bbc3f2b6a35f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Event">
+      <UniqueIdentifier>{03c7a3ec-6c07-4ebb-aff3-6cc470cc906c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\rapidjson\allocators.h">
@@ -324,9 +327,6 @@
     <ClInclude Include="src\Debugger.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="src\DummySystem.h">
-      <Filter>Header Files\EventSystem</Filter>
-    </ClInclude>
     <ClInclude Include="src\ECSystemManager.h">
       <Filter>Header Files\ECS</Filter>
     </ClInclude>
@@ -398,15 +398,6 @@
     </ClInclude>
     <ClInclude Include="src\MeshLoader.h">
       <Filter>Header Files\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Message.h">
-      <Filter>Header Files\EventSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="src\MessageSystem.h">
-      <Filter>Header Files\EventSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="src\TestSystem.h">
-      <Filter>Header Files\EventSystem</Filter>
     </ClInclude>
     <ClInclude Include="src\Types.h">
       <Filter>Header Files\Graphics</Filter>
@@ -551,6 +542,39 @@
     </ClInclude>
     <ClInclude Include="src\ScriptProperties.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BoxColliderComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameMessages.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\InteractionSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EventSystem.h">
+      <Filter>Header Files\EventSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EventReceiverComponent.h">
+      <Filter>Header Files\EventSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EventSenderComponent.h">
+      <Filter>Header Files\EventSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TestSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Message.h">
+      <Filter>Header Files\EventSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MessageSystem.h">
+      <Filter>Header Files\EventSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DummySystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EventManager.h">
+      <Filter>Header Files\EventSystem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -865,6 +889,12 @@
     </ClCompile>
     <ClCompile Include="src\AnimationLoader.cpp">
       <Filter>Source Files\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EventSystem.cpp">
+      <Filter>Source Files\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EventManager.cpp">
+      <Filter>Source Files\Event</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

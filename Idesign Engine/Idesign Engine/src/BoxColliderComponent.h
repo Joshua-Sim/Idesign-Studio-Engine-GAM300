@@ -11,11 +11,11 @@ namespace Framework {
 
     // 1. The component struct
     struct BoxColliderComponent {
-        // The local-space size of the box (like Unity's "Size")
         glm::vec3 size{ 1.0f, 1.0f, 1.0f };
-
-        // The local-space offset of the collider (like Unity's "Center")
         glm::vec3 center{ 0.0f, 0.0f, 0.0f };
+
+        // Track state to prevent spamming events every frame while inside
+        bool wasInsideLastFrame = false;
     };
 
 

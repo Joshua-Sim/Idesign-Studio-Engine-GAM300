@@ -1,136 +1,135 @@
 .vs
 .tmp
 bin
-
 bin/
 Debug/
 Release/
-Unnamed Studios/Unnamed Studios.vcxproj
-Unnamed Studios/Unnamed Studios.vcxproj.filters
-Unnamed Studios/x64/Debug/Core.obj
-Unnamed Studios/x64/Debug/Graphics.obj
-Unnamed Studios/x64/Debug/GraphicsWindows.obj
-Unnamed Studios/x64/Debug/InputHandler.obj
-Unnamed Studios/x64/Debug/main.obj
-Unnamed Studios/x64/Debug/Matrix3x3.obj
-Unnamed Studios/x64/Debug/ObjectFactory.obj
-Unnamed Studios/x64/Debug/pch.obj
-Unnamed Studios/x64/Debug/Unnamed Studios.exe.recipe
-Unnamed Studios/x64/Debug/Unnamed Studios.ilk
-Unnamed Studios/x64/Debug/Unnamed Studios.log
-Unnamed Studios/x64/Debug/Unnamed Studios.pch
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/CL.command.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/Cl.items.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/CL.read.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/CL.write.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/link.command.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/link.read.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/link.write.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/Unnamed Studios.lastbuildstate
-Unnamed Studios/x64/Debug/vc143.idb
-Unnamed Studios/x64/Debug/vc143.pdb
-Unnamed Studios/x64/Debug/Vector2D.obj
-Unnamed Studios/x64/Release/Unnamed Studios.log
-Unnamed Studios/x64/Release/Unnamed Studios.pch
-Unnamed Studios/x64/Release/Unnamed Studios.tlog/CL.command.1.tlog
-Unnamed Studios/x64/Release/Unnamed Studios.tlog/CL.read.1.tlog
-Unnamed Studios/x64/Release/Unnamed Studios.tlog/CL.write.1.tlog
-Unnamed Studios/x64/Release/Unnamed Studios.tlog/link.command.1.tlog
-Unnamed Studios/x64/Release/Unnamed Studios.tlog/Unnamed Studios.lastbuildstate
-Unnamed Studios/x64/Release/vc143.pdb
-x64/Debug/Unnamed Studios.exe
-x64/Debug/Unnamed Studios.pdb
-x64/Release/Unnamed Studios.exe
-Unnamed Studios/Unnamed Studios.vcxproj
-Unnamed Studios/Unnamed Studios.vcxproj.filters
-Unnamed Studios/x64/Debug/Core.obj
-Unnamed Studios/x64/Debug/Graphics.obj
-Unnamed Studios/x64/Debug/GraphicsWindows.obj
-Unnamed Studios/x64/Debug/InputHandler.obj
-Unnamed Studios/x64/Debug/main.obj
-Unnamed Studios/x64/Debug/Matrix3x3.obj
-Unnamed Studios/x64/Debug/ObjectFactory.obj
-Unnamed Studios/x64/Debug/pch.obj
-Unnamed Studios/x64/Debug/Unnamed Studios.exe.recipe
-Unnamed Studios/x64/Debug/Unnamed Studios.ilk
-Unnamed Studios/x64/Debug/Unnamed Studios.log
-Unnamed Studios/x64/Debug/Unnamed Studios.pch
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/CL.command.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/Cl.items.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/CL.read.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/CL.write.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/link.command.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/link.read.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/link.write.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/Unnamed Studios.lastbuildstate
-Unnamed Studios/x64/Debug/vc143.idb
-Unnamed Studios/x64/Debug/vc143.pdb
-Unnamed Studios/x64/Debug/Vector2D.obj
-Unnamed Studios/x64/Release/Unnamed Studios.log
-Unnamed Studios/x64/Release/Unnamed Studios.tlog/CL.command.1.tlog
-Unnamed Studios/x64/Release/Unnamed Studios.tlog/Unnamed Studios.lastbuildstate
-x64/Debug/Unnamed Studios.exe
-x64/Debug/Unnamed Studios.pdb
-Unnamed Studios/Unnamed Studios.vcxproj
-Unnamed Studios/Unnamed Studios.vcxproj.filters
-Unnamed Studios/x64/Debug/Core.obj
-Unnamed Studios/x64/Debug/Graphics.obj
-Unnamed Studios/x64/Debug/GraphicsWindows.obj
-Unnamed Studios/x64/Debug/InputHandler.obj
-Unnamed Studios/x64/Debug/main.obj
-Unnamed Studios/x64/Debug/Matrix3x3.obj
-Unnamed Studios/x64/Debug/ObjectFactory.obj
-Unnamed Studios/x64/Debug/pch.obj
-Unnamed Studios/x64/Debug/Unnamed Studios.exe.recipe
-Unnamed Studios/x64/Debug/Unnamed Studios.ilk
-Unnamed Studios/x64/Debug/Unnamed Studios.log
-Unnamed Studios/x64/Debug/Unnamed Studios.pch
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/CL.command.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/Cl.items.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/CL.read.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/CL.write.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/link.command.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/link.read.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/link.write.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/Unnamed Studios.lastbuildstate
-Unnamed Studios/x64/Debug/vc143.idb
-Unnamed Studios/x64/Debug/vc143.pdb
-Unnamed Studios/x64/Debug/Vector2D.obj
-Unnamed Studios/x64/Release/Unnamed Studios.log
-Unnamed Studios/x64/Release/Unnamed Studios.tlog/CL.command.1.tlog
-Unnamed Studios/x64/Release/Unnamed Studios.tlog/Unnamed Studios.lastbuildstate
-x64/Debug/Unnamed Studios.exe
-x64/Debug/Unnamed Studios.pdb
-Unnamed Studios/Unnamed Studios.vcxproj
-Unnamed Studios/Unnamed Studios.vcxproj.filters
-Unnamed Studios/x64/Debug/Core.obj
-Unnamed Studios/x64/Debug/Graphics.obj
-Unnamed Studios/x64/Debug/GraphicsWindows.obj
-Unnamed Studios/x64/Debug/InputHandler.obj
-Unnamed Studios/x64/Debug/main.obj
-Unnamed Studios/x64/Debug/Matrix3x3.obj
-Unnamed Studios/x64/Debug/ObjectFactory.obj
-Unnamed Studios/x64/Debug/pch.obj
-Unnamed Studios/x64/Debug/Unnamed Studios.exe.recipe
-Unnamed Studios/x64/Debug/Unnamed Studios.ilk
-Unnamed Studios/x64/Debug/Unnamed Studios.log
-Unnamed Studios/x64/Debug/Unnamed Studios.pch
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/CL.command.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/Cl.items.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/CL.read.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/CL.write.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/link.command.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/link.read.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/link.write.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/Unnamed Studios.lastbuildstate
-Unnamed Studios/x64/Debug/vc143.idb
-Unnamed Studios/x64/Debug/vc143.pdb
-Unnamed Studios/x64/Debug/Vector2D.obj
-Unnamed Studios/x64/Release/Unnamed Studios.log
-Unnamed Studios/x64/Release/Unnamed Studios.tlog/CL.command.1.tlog
-Unnamed Studios/x64/Release/Unnamed Studios.tlog/Unnamed Studios.lastbuildstate
-x64/Debug/Unnamed Studios.exe
-x64/Debug/Unnamed Studios.pdb
+Idesign Engine/Idesign Engine/Idesign Engine.vcxproj
+Idesign Engine/Idesign Engine/Idesign Engine.vcxproj.filters
+Idesign Engine/Idesign Engine/x64/Debug/Core.obj
+Idesign Engine/Idesign Engine/x64/Debug/Graphics.obj
+Idesign Engine/Idesign Engine/x64/Debug/GraphicsWindows.obj
+Idesign Engine/Idesign Engine/x64/Debug/InputHandler.obj
+Idesign Engine/Idesign Engine/x64/Debug/main.obj
+Idesign Engine/Idesign Engine/x64/Debug/Matrix3x3.obj
+Idesign Engine/Idesign Engine/x64/Debug/ObjectFactory.obj
+Idesign Engine/Idesign Engine/x64/Debug/pch.obj
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.exe.recipe
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.ilk
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.log
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.pch
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.tlog/CL.command.1.tlog
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.tlog/Cl.items.tlog
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.tlog/CL.read.1.tlog
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.tlog/CL.write.1.tlog
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.tlog/link.command.1.tlog
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.tlog/link.read.1.tlog
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.tlog/link.write.1.tlog
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.tlog/Idesign Engine.lastbuildstate
+Idesign Engine/Idesign Engine/x64/Debug/vc143.idb
+Idesign Engine/Idesign Engine/x64/Debug/vc143.pdb
+Idesign Engine/Idesign Engine/x64/Debug/Vector2D.obj
+Idesign Engine/Idesign Engine/x64/Release/Idesign Engine.log
+Idesign Engine/Idesign Engine/x64/Release/Idesign Engine.pch
+Idesign Engine/Idesign Engine/x64/Release/Idesign Engine.tlog/CL.command.1.tlog
+Idesign Engine/Idesign Engine/x64/Release/Idesign Engine.tlog/CL.read.1.tlog
+Idesign Engine/Idesign Engine/x64/Release/Idesign Engine.tlog/CL.write.1.tlog
+Idesign Engine/Idesign Engine/x64/Release/Idesign Engine.tlog/link.command.1.tlog
+Idesign Engine/Idesign Engine/x64/Release/Idesign Engine.tlog/Idesign Engine.lastbuildstate
+Idesign Engine/Idesign Engine/x64/Release/vc143.pdb
+x64/Debug/Idesign Engine.exe
+x64/Debug/Idesign Engine.pdb
+x64/Release/Idesign Engine.exe
+Idesign Engine/Idesign Engine/Idesign Engine.vcxproj
+Idesign Engine/Idesign Engine/Idesign Engine.vcxproj.filters
+Idesign Engine/Idesign Engine/x64/Debug/Core.obj
+Idesign Engine/Idesign Engine/x64/Debug/Graphics.obj
+Idesign Engine/Idesign Engine/x64/Debug/GraphicsWindows.obj
+Idesign Engine/Idesign Engine/x64/Debug/InputHandler.obj
+Idesign Engine/Idesign Engine/x64/Debug/main.obj
+Idesign Engine/Idesign Engine/x64/Debug/Matrix3x3.obj
+Idesign Engine/Idesign Engine/x64/Debug/ObjectFactory.obj
+Idesign Engine/Idesign Engine/x64/Debug/pch.obj
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.exe.recipe
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.ilk
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.log
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.pch
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.tlog/CL.command.1.tlog
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.tlog/Cl.items.tlog
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.tlog/CL.read.1.tlog
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.tlog/CL.write.1.tlog
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.tlog/link.command.1.tlog
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.tlog/link.read.1.tlog
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.tlog/link.write.1.tlog
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.tlog/Idesign Engine.lastbuildstate
+Idesign Engine/Idesign Engine/x64/Debug/vc143.idb
+Idesign Engine/Idesign Engine/x64/Debug/vc143.pdb
+Idesign Engine/Idesign Engine/x64/Debug/Vector2D.obj
+Idesign Engine/Idesign Engine/x64/Release/Idesign Engine.log
+Idesign Engine/Idesign Engine/x64/Release/Idesign Engine.tlog/CL.command.1.tlog
+Idesign Engine/Idesign Engine/x64/Release/Idesign Engine.tlog/Idesign Engine.lastbuildstate
+x64/Debug/Idesign Engine.exe
+x64/Debug/Idesign Engine.pdb
+Idesign Engine/Idesign Engine/Idesign Engine.vcxproj
+Idesign Engine/Idesign Engine/Idesign Engine.vcxproj.filters
+Idesign Engine/Idesign Engine/x64/Debug/Core.obj
+Idesign Engine/Idesign Engine/x64/Debug/Graphics.obj
+Idesign Engine/Idesign Engine/x64/Debug/GraphicsWindows.obj
+Idesign Engine/Idesign Engine/x64/Debug/InputHandler.obj
+Idesign Engine/Idesign Engine/x64/Debug/main.obj
+Idesign Engine/Idesign Engine/x64/Debug/Matrix3x3.obj
+Idesign Engine/Idesign Engine/x64/Debug/ObjectFactory.obj
+Idesign Engine/Idesign Engine/x64/Debug/pch.obj
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.exe.recipe
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.ilk
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.log
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.pch
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.tlog/CL.command.1.tlog
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.tlog/Cl.items.tlog
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.tlog/CL.read.1.tlog
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.tlog/CL.write.1.tlog
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.tlog/link.command.1.tlog
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.tlog/link.read.1.tlog
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.tlog/link.write.1.tlog
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.tlog/Idesign Engine.lastbuildstate
+Idesign Engine/Idesign Engine/x64/Debug/vc143.idb
+Idesign Engine/Idesign Engine/x64/Debug/vc143.pdb
+Idesign Engine/Idesign Engine/x64/Debug/Vector2D.obj
+Idesign Engine/Idesign Engine/x64/Release/Idesign Engine.log
+Idesign Engine/Idesign Engine/x64/Release/Idesign Engine.tlog/CL.command.1.tlog
+Idesign Engine/Idesign Engine/x64/Release/Idesign Engine.tlog/Idesign Engine.lastbuildstate
+x64/Debug/Idesign Engine.exe
+x64/Debug/Idesign Engine.pdb
+Idesign Engine/Idesign Engine/Idesign Engine.vcxproj
+Idesign Engine/Idesign Engine/Idesign Engine.vcxproj.filters
+Idesign Engine/Idesign Engine/x64/Debug/Core.obj
+Idesign Engine/Idesign Engine/x64/Debug/Graphics.obj
+Idesign Engine/Idesign Engine/x64/Debug/GraphicsWindows.obj
+Idesign Engine/Idesign Engine/x64/Debug/InputHandler.obj
+Idesign Engine/Idesign Engine/x64/Debug/main.obj
+Idesign Engine/Idesign Engine/x64/Debug/Matrix3x3.obj
+Idesign Engine/Idesign Engine/x64/Debug/ObjectFactory.obj
+Idesign Engine/Idesign Engine/x64/Debug/pch.obj
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.exe.recipe
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.ilk
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.log
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.pch
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.tlog/CL.command.1.tlog
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.tlog/Cl.items.tlog
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.tlog/CL.read.1.tlog
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.tlog/CL.write.1.tlog
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.tlog/link.command.1.tlog
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.tlog/link.read.1.tlog
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.tlog/link.write.1.tlog
+Idesign Engine/Idesign Engine/x64/Debug/Idesign Engine.tlog/Idesign Engine.lastbuildstate
+Idesign Engine/Idesign Engine/x64/Debug/vc143.idb
+Idesign Engine/Idesign Engine/x64/Debug/vc143.pdb
+Idesign Engine/Idesign Engine/x64/Debug/Vector2D.obj
+Idesign Engine/Idesign Engine/x64/Release/Idesign Engine.log
+Idesign Engine/Idesign Engine/x64/Release/Idesign Engine.tlog/CL.command.1.tlog
+Idesign Engine/Idesign Engine/x64/Release/Idesign Engine.tlog/Idesign Engine.lastbuildstate
+x64/Debug/Idesign Engine.exe
+x64/Debug/Idesign Engine.pdb
 !Assets/Objects/**
 # Allow 3D model .obj files under Assets/Objects
 !Assets/Objects/*.obj

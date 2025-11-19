@@ -62,6 +62,7 @@
 #include "AnimationLoader.h"
 #include <ScriptProperties.h>
 #include <BoxColliderComponent.h>
+#include "EventManager.h"
 
 
 extern Framework::FontSystem fontSystem;
@@ -208,8 +209,7 @@ namespace Framework {
         ecsInterface.RegisterComponent<MaterialMetadata>();
         ecsInterface.RegisterComponent<LightProperties>();
         ecsInterface.RegisterComponent<PhysicsProperties>();
-        ecsInterface.RegisterComponent<EventSenderComponent>();
-        ecsInterface.RegisterComponent<EventReceiverComponent>();
+
         ecsInterface.RegisterComponent<BoxColliderComponent>();
 
 
@@ -444,7 +444,7 @@ namespace Framework {
 
 
     // To test collision (can delete)
-    bool IsPointInsideBox(const glm::vec3& point, const TransformComponent& tf, const BoxColliderComponent& box)
+    bool Graphics::IsPointInsideBox(const glm::vec3& point, const TransformComponent& tf, const BoxColliderComponent& box)
     {
         // 1. Build the Model Matrix for the Entity
         glm::mat4 model = glm::mat4(1.0f);
@@ -925,7 +925,6 @@ namespace Framework {
         const float baseSpeed = editorActive ? 5.0f : 1.0f;
 
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-            std::cout << "hi";
             cam.processKeyboard(Camera::Movement::Forward, dt * baseSpeed, useGround, terrain);
         }
             
@@ -1538,6 +1537,7 @@ namespace Framework {
             model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
             model = glm::scale(model, tr.scale);
 
+            // BOXCOLLIDER COLLISION (NEEDA MOVE IT OUTTA GRAPHICS :SKULL:)
             if (mesh.debugShape == DebugShapeType::Box && ecsInterface.HasComponent<BoxColliderComponent>(entityId)) {
                 auto& collider = ecsInterface.GetComponent<BoxColliderComponent>(entityId);
                 model = glm::translate(model, collider.center);
@@ -1547,11 +1547,21 @@ namespace Framework {
                 const bool editorActive = (m_mouseTargetView == 1);
                 Camera& cam = editorActive ? sceneCamera : gameCamera;
 
-                if (IsPointInsideBox(cam.position, transform, collider))
-                {
-                    std::cout << "\r[COLLISION] Camera is inside Entity " << entityId << "      " << std::flush;
+                // 2. Run the Math
+                bool isInside = IsPointInsideBox(cam.position, transform, collider);
+                // 3. Handle "OnEnter" Events
+                if (isInside && !collider.wasInsideLastFrame) {
+                    // CHECK IF WE NEED TO SEND AN EVENT
+                    if (ecsInterface.HasComponent<EventSenderComponent>(entityId)) {
+                        auto& sender = ecsInterface.GetComponent<EventSenderComponent>(entityId);
+                        if (sender.triggerName == "OnCollision") {
+                            std::cout << "Entered Trigger: " << entityId << std::endl;
+                            EventManager::Instance().Fire(sender.messageName, nullptr);
+                        }
+                    }
                 }
-                
+                // 4. Save state for next frame (so we don't fire 60 times a second)
+                collider.wasInsideLastFrame = isInside;
             }
 
             if (ecsInterface.HasComponent<TextProperties>(entityId)) {
