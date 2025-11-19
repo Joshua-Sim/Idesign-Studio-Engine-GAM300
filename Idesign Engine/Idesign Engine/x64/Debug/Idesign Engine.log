@@ -30,123 +30,126 @@ C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign 
       C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(64,24):
       see declaration of 'Framework::filePath'
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1040,42): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(699,37): warning C4100: 'deltaTime': unreferenced parameter
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1049,38): warning C4566: character represented by universal-character-name '\u26A0' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1053,42): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1078,46): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1062,38): warning C4566: character represented by universal-character-name '\u26A0' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1079,40): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1091,46): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1083,46): warning C4566: character represented by universal-character-name '\u2717' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1092,40): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1084,40): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1096,46): warning C4566: character represented by universal-character-name '\u2717' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1118,42): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1097,40): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1123,46): warning C4566: character represented by universal-character-name '\u26A0' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1131,42): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1144,42): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1136,46): warning C4566: character represented by universal-character-name '\u26A0' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1149,46): warning C4566: character represented by universal-character-name '\u26A0' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1157,42): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1259,40): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1162,46): warning C4566: character represented by universal-character-name '\u26A0' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1420,40): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1272,40): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1583,40): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1433,40): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1602,17): warning C4566: character represented by universal-character-name '\U0001F7E2' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1596,40): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1603,17): warning C4566: character represented by universal-character-name '\U0001F535' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1615,17): warning C4566: character represented by universal-character-name '\U0001F7E2' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1604,17): warning C4566: character represented by universal-character-name '\U0001F7E1' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1616,17): warning C4566: character represented by universal-character-name '\U0001F535' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1621,51): warning C4566: character represented by universal-character-name '\U0001F50D' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1617,17): warning C4566: character represented by universal-character-name '\U0001F7E1' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1670,43): warning C4566: character represented by universal-character-name '\u23F9' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1634,51): warning C4566: character represented by universal-character-name '\U0001F50D' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1670,56): warning C4566: character represented by universal-character-name '\u25B6' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1683,43): warning C4566: character represented by universal-character-name '\u23F9' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1900,45): warning C4566: character represented by universal-character-name '\u25B6' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1683,56): warning C4566: character represented by universal-character-name '\u25B6' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1909,45): warning C4566: character represented by universal-character-name '\u2795' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1913,45): warning C4566: character represented by universal-character-name '\u25B6' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1961,45): warning C4566: character represented by universal-character-name '\U0001F5D1' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1922,45): warning C4566: character represented by universal-character-name '\u2795' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1977,37): warning C4566: character represented by universal-character-name '\U0001F50A' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1974,45): warning C4566: character represented by universal-character-name '\U0001F5D1' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1998,76): warning C4566: character represented by universal-character-name '\u266B' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1990,37): warning C4566: character represented by universal-character-name '\U0001F50A' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2093,37): warning C4566: character represented by universal-character-name '\U0001F50A' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2011,76): warning C4566: character represented by universal-character-name '\u266B' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2139,35): warning C4566: character represented by universal-character-name '\u23F9' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2106,37): warning C4566: character represented by universal-character-name '\U0001F50A' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2152,35): warning C4566: character represented by universal-character-name '\u25B6' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2152,35): warning C4566: character represented by universal-character-name '\u23F9' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2257,33): warning C4456: declaration of 'drawList' hides previous local declaration
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2165,35): warning C4566: character represented by universal-character-name '\u25B6' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
-      C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2181,25):
+  
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2270,33): warning C4456: declaration of 'drawList' hides previous local declaration
+  (compiling source file '/src/ImguiManager.cpp')
+      C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2194,25):
       see declaration of 'drawList'
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2317,72): warning C4566: character represented by universal-character-name '\u25CF' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2330,72): warning C4566: character represented by universal-character-name '\u25CF' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2319,72): warning C4566: character represented by universal-character-name '\u25CF' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2332,72): warning C4566: character represented by universal-character-name '\u25CF' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2347,27): warning C4189: 'transform': local variable is initialized but not referenced
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2360,27): warning C4189: 'transform': local variable is initialized but not referenced
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2368,37): warning C4566: character represented by universal-character-name '\U0001F3A7' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2381,37): warning C4566: character represented by universal-character-name '\U0001F3A7' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2386,21): warning C4566: character represented by universal-character-name '\u26A0' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2399,21): warning C4566: character represented by universal-character-name '\u26A0' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2527,68): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2540,68): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2529,68): warning C4566: character represented by universal-character-name '\u2191' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2542,68): warning C4566: character represented by universal-character-name '\u2191' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2541,40): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2554,40): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2796,48): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2809,48): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2943,48): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2956,48): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
   (compiling source file '/src/ImguiManager.cpp')
   
-C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(3466,39): warning C4459: declaration of 'ecsInterface' hides global declaration
+C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(3479,39): warning C4459: declaration of 'ecsInterface' hides global declaration
   (compiling source file '/src/ImguiManager.cpp')
       C:\Users\belin\source\repos\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(38,31):
       see declaration of 'ecsInterface'

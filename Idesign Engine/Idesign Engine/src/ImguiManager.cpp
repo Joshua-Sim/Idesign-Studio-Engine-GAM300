@@ -699,8 +699,6 @@ namespace Framework {
     void ImguiManager::Update(float deltaTime) {
 
 
-        (void)deltaTime;
-
         // Toggle editor visibility with Backspace key
         static bool backspaceWasPressed = false;
         bool backspaceIsPressed = InputHandler::GetInstance()->IsKeyHeld(GLFW_KEY_BACKSPACE);
@@ -710,9 +708,24 @@ namespace Framework {
             m_showEditor = !m_showEditor;
             if (m_showEditor) {
                 std::cout << "[ImGui] Editor enabled" << std::endl;
+
+                // Stop BGM when returning to editor
+                if (g_AudioSystem) {
+                    g_AudioSystem->Reset();
+                    std::cout << "[Audio] BGM Stopped (returned to editor)" << std::endl;
+                }
             }
             else {
                 std::cout << "[ImGui] Editor disabled - Game only mode" << std::endl;
+
+                // Start BGM when entering fullscreen game mode
+                if (g_AudioSystem) {
+                    std::string bgmPath = sceneManager.GetCurrentSceneBGMPath();
+                    if (!bgmPath.empty()) {
+                        g_AudioSystem->PlayAudio(bgmPath);
+                        std::cout << "[Audio] Playing BGM: " << bgmPath << std::endl;
+                    }
+                }
             }
         }
         backspaceWasPressed = backspaceIsPressed;
