@@ -1,6 +1,12 @@
 {
-    "count": 2,
+    "count": 3,
     "entries": [
+        {
+            "guid": "2711051d-316f-41fe-98e8-09b0f6cd9152",
+            "name": "Customer_Pathfinding_Objs_Prefab",
+            "path": "Assets\\Prefabs\\Customer_Pathfinding_Objs_Prefab.prefab",
+            "isScenePrefab": false
+        },
         {
             "guid": "46b1c817-73fc-437e-bde5-5137870a20c7",
             "name": "Sidewall1_Prefab",

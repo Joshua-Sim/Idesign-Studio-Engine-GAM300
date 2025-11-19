@@ -61,14 +61,14 @@
             "path": "Assets\\Textures\\Potion1.png"
         },
         {
-            "guid": "add88db8-22f2-4599-ad64-d9abc2f87fa9",
-            "name": "Chest",
-            "path": "Assets\\Textures\\Chest.png"
-        },
-        {
             "guid": "0e3df122-8a0d-4926-bc68-1cc4f4acfa1f",
             "name": "Drawer",
             "path": "Assets\\Textures\\Drawer.png"
+        },
+        {
+            "guid": "add88db8-22f2-4599-ad64-d9abc2f87fa9",
+            "name": "Chest",
+            "path": "Assets\\Textures\\Chest.png"
         },
         {
             "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",

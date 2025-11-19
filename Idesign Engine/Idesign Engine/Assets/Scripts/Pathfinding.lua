@@ -14,21 +14,21 @@ function M:on_update(dt)
     if not didPath then
         -- Test: find both entities by name
         local agent = FindEntityByName("Customer")
-        local target = FindEntityByName("Target")
+        local target = FindEntityByName("CustomerWaitingPoint")
 
         if agent == nil then
             print("[Lua] Entity 'Customer' not found!")
             return
         end
         if target == nil then
-            print("[Lua] Entity 'Target' not found!")
+            print("[Lua] Entity 'CustomerWaitingPoint' not found!")
             return
         end
 
-        print("[Lua] Found entities: Customer = " .. tostring(agent) .. ", Target = " .. tostring(target))
+        print("[Lua] Found entities: Customer = " .. tostring(agent) .. ", CustomerWaitingPoint = " .. tostring(target))
 
         -- Pathfind from Frog to Target
-        PathfindTo("Customer", "Target")
+        PathfindTo("Customer", "CustomerWaitingPoint")
         print("[Lua] Pathfinding triggered once.")
 
         didPath = true
