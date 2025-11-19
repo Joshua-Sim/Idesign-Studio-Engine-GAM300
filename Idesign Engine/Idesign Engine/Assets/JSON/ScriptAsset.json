@@ -1,3 +1,53 @@
 {
-    "scripts": []
+    "scripts": [
+        {
+            "guid": "78bee47a-d444-4c29-a687-a272fd50e5b3",
+            "scriptPath": "Assets/Scripts/prove_lua.lua",
+            "hotReload": false,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "d922d53f-3ff6-4f93-b646-3e2249c228b8",
+            "scriptPath": "Assets/Scripts/hello.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "2f3321b6-3682-49be-8ee2-5dea0ad6ced9",
+            "scriptPath": "Assets/Scripts/controls.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "c602f641-2748-4e0a-8fe7-2df7e8c401a2",
+            "scriptPath": "Assets/Scripts/cook_all.lua",
+            "hotReload": false,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "cab5a340-58ee-40d0-8e34-f85a330fcf87",
+            "scriptPath": "Assets/Scripts/FindEntityExample.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "3fec6498-cd0e-40c0-8b7c-6e6d78cc6d5f",
+            "scriptPath": "Assets/Scripts/numpad_Move.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "e7535686-93e2-4aa2-8052-4abfe9e7deda",
+            "scriptPath": "Assets/Scripts/Pathfinding.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        }
+    ]
 }

@@ -2,12 +2,44 @@
     "count": 7,
     "entries": [
         {
+<<<<<<< HEAD
             "guid": "{6e538d8f-7934-4a55-bb86-f14eed76df94}",
+=======
+            "guid": "sfx-previous-006",
+            "name": "previousbutton",
+            "path": "event:/previousbutton",
+            "mode": "oneshot",
+            "soundType": "effect",
+            "duration": 0.0
+        },
+        {
+            "guid": "sfx-click-005",
+            "name": "buttonclick",
+            "path": "event:/buttonclick",
+            "mode": "oneshot",
+            "soundType": "effect",
+            "duration": 0.0
+        },
+        {
+            "guid": "sfx-select-004",
+            "name": "selectbutton",
+            "path": "event:/selectbutton",
+            "mode": "oneshot",
+            "soundType": "effect",
+            "duration": 0.0
+        },
+        {
+            "guid": "bgm-piano-003",
+>>>>>>> main
             "name": "piano",
             "path": "event:/piano",
             "mode": "loop",
             "soundType": "background",
+<<<<<<< HEAD
             "duration": 1.0
+=======
+            "duration": 0.0
+>>>>>>> main
         },
         {
             "guid": "{133800eb-c2d9-43ff-8cf8-b737a68ef397}",
@@ -23,14 +55,30 @@
             "path": "event:/Level1BGM",
             "mode": "loop",
             "soundType": "background",
+<<<<<<< HEAD
             "duration": 1.0
         },
         {
             "guid": "{c2a095d5-c89c-4658-ae91-5ac8e3728077}",
+=======
+            "duration": 0.0
+        },
+        {
+            "guid": "bgm-winloop-002",
+            "name": "winloop",
+            "path": "event:/winloop",
+            "mode": "loop",
+            "soundType": "background",
+            "duration": 0.0
+        },
+        {
+            "guid": "ambient-forest-007",
+>>>>>>> main
             "name": "ForestAmbient",
             "path": "event:/ForestAmbient",
             "mode": "loop",
             "soundType": "background",
+<<<<<<< HEAD
             "duration": 1.0
         },
         {
@@ -56,6 +104,9 @@
             "mode": "loop",
             "soundType": "background",
             "duration": 1.0
+=======
+            "duration": 0.0
+>>>>>>> main
         }
     ]
 }

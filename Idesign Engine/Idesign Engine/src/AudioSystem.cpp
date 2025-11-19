@@ -30,13 +30,6 @@ namespace Framework {
     // Constructor / Destructor
     //==========================================================================
 
-   /**
-     * @brief Constructs the AudioSystem, initializes FMOD Studio & Core systems,
-     *        configures 3D audio, DSP effects, and assigns global reference.
-     *
-     * @note Must be created before any other audio requests are made.
-     * @warning If FMOD initialization fails, AudioSystem will be non-functional.
-     */
     AudioSystem::AudioSystem()
         : listenerPosition(0.0f),
         listenerForward(0.0f, 0.0f, -1.0f),
@@ -71,12 +64,6 @@ namespace Framework {
         g_AudioSystem = this;
     }
 
-   /**
-     * @brief Cleans up and releases all FMOD instances, DSP effects, events,
-     *        and shuts down FMOD Studio and Core systems.
-     *
-     * @warning All event and DSP pointers are immediately invalid after execution.
-     */
     AudioSystem::~AudioSystem() {
         // Clean up entity audio instances
         for (auto& pair : activeInstances) {
@@ -131,12 +118,6 @@ namespace Framework {
     // ISystem Interface Implementation
     //==========================================================================
 
-   /**
-     * @brief Initializes ECS audio components, system signatures, and subscribes
-     *        to audio-related engine messages.
-     *
-     * @note Must be called once during engine startup before Update().
-     */
     void AudioSystem::Initialize() {
         std::cout << "[AudioSystem] Initializing..." << std::endl;
         ImguiManager::Log("Initializing...", "AudioSystem");
@@ -194,12 +175,6 @@ namespace Framework {
         ImguiManager::LogSuccess("Initialized with 3D audio support", "AudioSystem");
     }
 
-    /**
-     * @brief Updates the audio system each frame, handling BGM fades,
-     *        listener attributes, and 3D audio positions for entities.
-     *
-     * @param deltaTime Time elapsed since last update (in seconds).
-	 */
     void AudioSystem::Update(float deltaTime) {
         // Handle fade effects for smooth BGM transitions
         if (isFadingIn || isFadingOut) {
@@ -285,12 +260,6 @@ namespace Framework {
     // FMOD System Management
     //==========================================================================
 
-    /**
-     * @brief Initializes FMOD audio banks, loads sample data and creates bus paths.
-     *
-     * @note Requires AudioSystem to be successfully constructed first.
-     * @warning Missing bank files will result in limited audio functionality.
-     */
     void AudioSystem::InitializeFMOD() {
         std::cout << "Current working directory: " << std::filesystem::current_path() << std::endl;
         std::cout << "[AudioSystem] Initializing FMOD with 3D support." << std::endl;
@@ -402,10 +371,6 @@ namespace Framework {
         CreateBus("bus:/Ambient");
     }
 
-    /**
-     * @brief Prints debug information such as volume levels, active events count
-     *        and loaded audio resources.
-     */
     void AudioSystem::PrintAudioInfo() const {
         std::cout << "\n=== Audio System Info ===" << std::endl;
         std::cout << "Master Volume: " << masterVolume << std::endl;
@@ -421,36 +386,18 @@ namespace Framework {
     // Event Loading and Playback
     //==========================================================================
 
-    /**
-     * @brief Converts audio mode string into FMOD playback mode flag.
-     *
-     * @param mode String representing playback mode ("loop", "stream", etc.).
-     * @return FMOD_MODE associated with the provided string.
-     */
     FMOD_MODE AudioSystem::GetModeFromString(const std::string& mode) {
         if (mode == "loop") return FMOD_LOOP_NORMAL;
         if (mode == "stream") return FMOD_CREATESTREAM;
         return FMOD_DEFAULT;
     }
 
-    /**
-     * @brief Converts string identifier into enumerated SoundType.
-     *
-     * @param str String identifying sound category ("BGM", "SFX", etc.).
-     * @return Parsed SoundType value or EMPTY if unrecognized.
-     */
     AudioSystem::SoundType AudioSystem::ParseSoundType(const std::string& str) {
         if (str == "BGM" || str == "Music") return BACKGROUND_MUSIC;
         if (str == "SFX" || str == "Effect") return SOUND_EFFECT;
         return EMPTY;
     }
 
-    /**
-     * @brief Loads an FMOD event by path, caching it for future use.
-     *
-     * @param eventPath Event name or FMOD path (e.g., "event:/SFX/Explosion").
-     * @return Pointer to FMOD event description, or nullptr if load fails.
-     */
     FMOD::Studio::EventDescription* AudioSystem::LoadEvent(const std::string& eventPath) {
         std::cout << "[AudioSystem] LoadEvent called for: " << eventPath << std::endl;
 
@@ -486,12 +433,6 @@ namespace Framework {
         return eventDesc;
     }
 
-    /**
-     * @brief Plays a non-entity, global audio event from cache or FMOD project.
-     *
-     * @param eventPath Event path to play.
-     * @note Supports automatic handling of 3D events at listener position.
-     */
     void AudioSystem::PlayAudio(const std::string& eventPath) {
         std::cout << "[AudioSystem] PlayAudio called with: " << eventPath << std::endl;
 
@@ -549,11 +490,6 @@ namespace Framework {
         std::cout << "[AudioSystem] Playback state after start: " << state << std::endl;
     }
 
-    /**
-     * @brief Pauses a playing event instance referenced by custom name.
-     *
-     * @param customName Key used in activeEvents map.
-     */
     void AudioSystem::PauseSound(const std::string& customName) {
         auto it = activeEvents.find(customName);
         if (it != activeEvents.end() && it->second) {
@@ -565,12 +501,6 @@ namespace Framework {
         }
     }
 
-    /**
-     * @brief Sets volume for a currently active event instance.
-     *
-     * @param customName Map identifier for event instance.
-     * @param volume Normalized volume [0.0 - 1.0].
-     */
     void AudioSystem::SetVolume(const std::string& customName, float volume) {
         auto it = activeEvents.find(customName);
         if (it != activeEvents.end() && it->second) {
@@ -582,11 +512,6 @@ namespace Framework {
         }
     }
 
-    /**
-     * @brief Stops and releases an active channel instance by ID.
-     *
-     * @param channelId Unique playback channel identifier.
-     */
     void AudioSystem::StopChannel(int channelId) {
         auto it = activeEventsById.find(channelId);
         if (it != activeEventsById.end() && it->second) {
@@ -601,17 +526,6 @@ namespace Framework {
     // 3D Audio Functions
     //==========================================================================
 
-    /**
-     * @brief Plays a 3D spatialized audio event at a world-space position.
-     *
-     * @param customName Event identifier.
-     * @param position World-space vector location.
-     * @param velocity Source velocity for doppler simulation.
-     * @param volume Base volume before modifiers [0.0 - 1.0].
-     * @param sourceType Enum describing audio source behavior.
-     *
-     * @return Assigned channel ID or -1 on failure.
-     */
     int AudioSystem::PlaySound3D(
         const std::string& customName,
         const Vector3& position,
@@ -652,14 +566,6 @@ namespace Framework {
         return channelId;
     }
 
-    /**
-     * @brief Updates the global FMOD listener attributes.
-     *
-     * @param position World-space position of listener.
-     * @param velocity Listener movement vector for Doppler effects.
-     * @param forward Listener facing direction.
-     * @param up Listener orientation up vector.
-     */
     void AudioSystem::Set3DListener(
         const Vector3& position,
         const Vector3& velocity,
@@ -699,13 +605,6 @@ namespace Framework {
         }
     }
 
-    /**
-     * @brief Updates real-time 3D attributes for a specific playback channel.
-     *
-     * @param channelId ID returned by PlaySound3D.
-     * @param position New 3D position.
-     * @param velocity New movement vector.
-     */
     void AudioSystem::UpdateChannel3DAttributes(
         int channelId,
         const Vector3& position,

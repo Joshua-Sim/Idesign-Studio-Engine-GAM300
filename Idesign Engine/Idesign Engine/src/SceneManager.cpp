@@ -16,7 +16,6 @@
 #include "Coordinator.h"
 #include <iostream>
 #include "AssetCompiler.h"
-#include "AudioSystem.h"
 
 // extern ECS interface
 extern Framework::Coordinator ecsInterface;
