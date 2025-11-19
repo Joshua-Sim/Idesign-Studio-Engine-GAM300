@@ -62,6 +62,7 @@
 #include "AnimationLoader.h"
 #include <ScriptProperties.h>
 #include <BoxColliderComponent.h>
+#include "EventManager.h"
 
 
 extern Framework::FontSystem fontSystem;
@@ -76,6 +77,7 @@ namespace Framework {
     static bool firstMouse = true;
     static bool mouseCaptured = true;
     bool Graphics::groundMode = true; // toggle with a key (e.g., F1)
+    bool Graphics::s_RenderDebugColliders = false;
 
     const auto& assets = AssetManager::Instance().GetAssets();
 
@@ -208,8 +210,7 @@ namespace Framework {
         ecsInterface.RegisterComponent<MaterialMetadata>();
         ecsInterface.RegisterComponent<LightProperties>();
         ecsInterface.RegisterComponent<PhysicsProperties>();
-        ecsInterface.RegisterComponent<EventSenderComponent>();
-        ecsInterface.RegisterComponent<EventReceiverComponent>();
+
         ecsInterface.RegisterComponent<BoxColliderComponent>();
 
 
@@ -444,7 +445,7 @@ namespace Framework {
 
 
     // To test collision (can delete)
-    bool IsPointInsideBox(const glm::vec3& point, const TransformComponent& tf, const BoxColliderComponent& box)
+    bool Graphics::IsPointInsideBox(const glm::vec3& point, const TransformComponent& tf, const BoxColliderComponent& box)
     {
         // 1. Build the Model Matrix for the Entity
         glm::mat4 model = glm::mat4(1.0f);
@@ -747,7 +748,7 @@ namespace Framework {
                 if (ecsInterface.GetEntityName(entityId) == "Player") {
                     if (ecsInterface.HasComponent<TransformComponent>(entityId)) {
                         auto& transform = ecsInterface.GetComponent<TransformComponent>(entityId);
-                        transform.position = gameCamera.position;
+                        gameCamera.position = transform.position;
                        
                     }
                 }
@@ -872,27 +873,34 @@ namespace Framework {
         groundMode = state;
     }
 
-    // FOR FUTURE REFERENCE
-    // Can be pushed to input handler
     void Graphics::process_input(float dt)
     {
-        const bool editorActive = (m_mouseTargetView == 1);   // 0 = game, 1 = editor
-        Camera& cam = editorActive ? sceneCamera : gameCamera;
+        const bool editorActive = (m_mouseTargetView == 1);   // 1 = Editor/Scene, 0 = Game
 
         // ============================================================
-        // EDITOR CAMERA SWIVEL (only when holding right-mouse)
-        // ============================================================
+                // MODE A: EDITOR / FREE FLY
+                // ============================================================
         if (editorActive)
         {
+            Camera& cam = sceneCamera;
+            const float baseSpeed = 5.0f;
+
+            // Keyboard Movement
+            if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+                cam.processKeyboard(Camera::Movement::Forward, dt * baseSpeed, false, terrain);
+            if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+                cam.processKeyboard(Camera::Movement::Backward, dt * baseSpeed, false, terrain);
+            if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+                cam.processKeyboard(Camera::Movement::Left, dt * baseSpeed, false, terrain);
+            if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+                cam.processKeyboard(Camera::Movement::Right, dt * baseSpeed, false, terrain);
+
+            // Mouse Rotation Logic
             static bool firstMouse = true;
             static double lastX = 0.0, lastY = 0.0;
 
-            // Check if right-mouse is held
-            int rightMouseState = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT);
-            if (rightMouseState == GLFW_PRESS)
+            if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
             {
-                // Lock cursor for smooth rotation
-
                 double xpos, ypos;
                 glfwGetCursorPos(window, &xpos, &ypos);
 
@@ -900,48 +908,83 @@ namespace Framework {
                 {
                     lastX = xpos;
                     lastY = ypos;
-                    firstMouse = false;
+                    firstMouse = false; // We have established a starting point
                 }
 
                 float xoffset = static_cast<float>(xpos - lastX);
-                float yoffset = static_cast<float>(lastY - ypos); // reversed Y
+                float yoffset = static_cast<float>(lastY - ypos);
+
                 lastX = xpos;
                 lastY = ypos;
 
-                // Rotate the editor (scene) camera
                 cam.processMouseMovement(xoffset, yoffset);
             }
             else
             {
-                // When released: reset mouse state and free the cursor
+                // !!! THIS IS THE FIX !!!
+                // When we release the button, we reset firstMouse.
+                // The next time we click, we will treat that position as the new 0,0
+                // instead of calculating the distance from where we last let go.
                 firstMouse = true;
             }
         }
 
         // ============================================================
-        // (Optional) movement � WASD or fly movement
+        // MODE B: GAME MODE / PLAYER PHYSICS
+        // (We DO NOT use processKeyboard. We drive the Physics Body.)
         // ============================================================
-        const bool useGround = (!editorActive) && groundMode;
-        const float baseSpeed = editorActive ? 5.0f : 1.0f;
-
-        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-            cam.processKeyboard(Camera::Movement::Forward, dt * baseSpeed, useGround, terrain);
-        }
-            
-            
-        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-            cam.processKeyboard(Camera::Movement::Backward, dt * baseSpeed, useGround, terrain);
-        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-            cam.processKeyboard(Camera::Movement::Left, dt * baseSpeed, useGround, terrain);
-        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-            cam.processKeyboard(Camera::Movement::Right, dt * baseSpeed, useGround, terrain);
-
-        if (!useGround)
+        else
         {
-            if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-                cam.processKeyboard(Camera::Movement::Up, dt * baseSpeed, false, terrain);
-            if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-                cam.processKeyboard(Camera::Movement::Down, dt * baseSpeed, false, terrain);
+            // 1. Find the Player
+            Entity player = ecsInterface.GetEntityByName("Player");
+
+            if (ecsInterface.IsEntityValid(player) && ecsInterface.HasComponent<PhysicsProperties>(player))
+            {
+                auto& phys = ecsInterface.GetComponent<PhysicsProperties>(player);
+                auto& trans = ecsInterface.GetComponent<TransformComponent>(player);
+
+                // 2. Calculate Direction based on Camera Facing
+                // We want "W" to mean "Forward relative to where I am looking"
+                glm::vec3 camForward = gameCamera.front;
+                camForward.y = 0.0f; // Flatten so we don't fly up/down
+                camForward = glm::normalize(camForward);
+
+                glm::vec3 camRight = gameCamera.right;
+                camRight.y = 0.0f;
+                camRight = glm::normalize(camRight);
+
+                glm::vec3 targetVelocity(0.0f);
+                float moveSpeed = 5.0f; // Adjust this speed!
+
+                // 3. Input -> Velocity
+                if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) targetVelocity += camForward;
+                if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) targetVelocity -= camForward;
+                if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) targetVelocity -= camRight;
+                if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) targetVelocity += camRight;
+
+                // Normalize if moving diagonally so we don't move faster
+                if (glm::length(targetVelocity) > 0.1f) {
+                    targetVelocity = glm::normalize(targetVelocity) * moveSpeed;
+                }
+
+                // 4. Apply to Physics Component
+                // PRESERVE Y VELOCITY (Gravity needs to pull us down!)
+                phys.linearVelocity.x = targetVelocity.x;
+                phys.linearVelocity.z = targetVelocity.z;
+                // Do NOT touch phys.linearVelocity.y here, let Jolt handle gravity.
+
+                // 5. IMPORTANT: Wake up the body
+                // If the player was standing still, Jolt puts it to sleep to save CPU.
+                // We must wake it up to move it.
+                if (glm::length(targetVelocity) > 0.01f) {
+                    phys.startAwake = true;
+                }
+
+                // 6. CAMERA FOLLOW LOGIC (Snap Camera to Player)
+                // We update the camera position to sit inside/above the player
+                glm::vec3 eyeOffset(0.0f, 1.8f, 0.0f); // 1.8 units high
+                gameCamera.position = trans.position + eyeOffset;
+            }
         }
 
         // HDR and Bloom control
@@ -1514,22 +1557,6 @@ namespace Framework {
 
             glm::vec3 drawScale = tr.scale;
 
-            if (ecsInterface.HasComponent<BoxColliderComponent>(entityId))
-            {
-                // If the visual says "None", but we have a Collider...
-                        // FORCE IT TO BE A BOX.
-                if (mesh.debugShape == DebugShapeType::None)
-                {
-                    mesh.debugShape = DebugShapeType::Box;
-                    mesh.debugcolor = glm::vec3(0.0f, 1.0f, 0.0f); // Green
-
-                    // Important: Clear VAO so it doesn't use the "Ghost Mesh" path
-                    mesh.vao = 0;
-
-                    std::cout << "FIXED Entity " << entityId << ": DebugShape forced to BOX" << std::endl;
-                }
-            }
-
             glm::mat4 model(1.0f);
             model = glm::translate(model, tr.position);
             model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
@@ -1537,6 +1564,7 @@ namespace Framework {
             model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
             model = glm::scale(model, tr.scale);
 
+            // BOXCOLLIDER COLLISION (NEEDA MOVE IT OUTTA GRAPHICS :SKULL:)
             if (mesh.debugShape == DebugShapeType::Box && ecsInterface.HasComponent<BoxColliderComponent>(entityId)) {
                 auto& collider = ecsInterface.GetComponent<BoxColliderComponent>(entityId);
                 model = glm::translate(model, collider.center);
@@ -1546,11 +1574,21 @@ namespace Framework {
                 const bool editorActive = (m_mouseTargetView == 1);
                 Camera& cam = editorActive ? sceneCamera : gameCamera;
 
-                if (IsPointInsideBox(cam.position, transform, collider))
-                {
-                    std::cout << "\r[COLLISION] Camera is inside Entity " << entityId << "      " << std::flush;
+                // 2. Run the Math
+                bool isInside = IsPointInsideBox(cam.position, transform, collider);
+                // 3. Handle "OnEnter" Events
+                if (isInside && !collider.wasInsideLastFrame) {
+                    // CHECK IF WE NEED TO SEND AN EVENT
+                    if (ecsInterface.HasComponent<EventSenderComponent>(entityId)) {
+                        auto& sender = ecsInterface.GetComponent<EventSenderComponent>(entityId);
+                        if (sender.triggerName == "OnCollision") {
+                            std::cout << "Entered Trigger: " << entityId << std::endl;
+                            EventManager::Instance().Fire(sender.messageName, nullptr);
+                        }
+                    }
                 }
-                
+                // 4. Save state for next frame (so we don't fire 60 times a second)
+                collider.wasInsideLastFrame = isInside;
             }
 
             if (ecsInterface.HasComponent<TextProperties>(entityId)) {
@@ -1562,7 +1600,7 @@ namespace Framework {
             {
                 auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
 
-                if (mesh.debugShape == DebugShapeType::None && mesh.vao != 0) {
+                if (mesh.vao != 0) {
                     bool isSkinned = ecsInterface.HasComponent<AnimationProperties>(entityId);
                     ShaderProgram& currentshader = isSkinned ? skinnedShader : meshShader;
 
@@ -1667,6 +1705,44 @@ namespace Framework {
                         DrawDebugMesh(it->second, mesh.debugcolor, model, proj, view);
                     }
                 }
+            }
+            // 2. SEPARATE DEBUG RENDERING FOR COLLIDER
+            if (Framework::Graphics::s_RenderDebugColliders && ecsInterface.HasComponent<BoxColliderComponent>(entityId))
+            {
+                auto& collider = ecsInterface.GetComponent<BoxColliderComponent>(entityId);
+
+                // --- 1. Calculate the Collider's World Transform ---
+                glm::mat4 colliderModel = glm::mat4(1.0f);
+
+                // A. Move to Entity Position
+                colliderModel = glm::translate(colliderModel, tr.position);
+
+                // B. Rotate (Match Entity Rotation)
+                colliderModel = glm::rotate(colliderModel, glm::radians(tr.rotation.x), { 1,0,0 });
+                colliderModel = glm::rotate(colliderModel, glm::radians(tr.rotation.y), { 0,1,0 });
+                colliderModel = glm::rotate(colliderModel, glm::radians(tr.rotation.z), { 0,0,1 });
+
+                // C. Scale (Match Entity Scale)
+                colliderModel = glm::scale(colliderModel, tr.scale);
+
+                // D. Offset & Size (Apply Collider specific properties)
+                //    Translate by center *after* scaling the entity so the offset scales with it
+                colliderModel = glm::translate(colliderModel, collider.center);
+                colliderModel = glm::scale(colliderModel, collider.size);
+
+                // --- 2. Draw using your existing Helper Function ---
+                // This ensures the correct shader uniforms ("view", "projection") are used
+                if (m_debugMeshes.find(DebugShapeType::Box) != m_debugMeshes.end())
+                {
+                    DrawDebugMesh(
+                        m_debugMeshes[DebugShapeType::Box],
+                        glm::vec3(0.0f, 1.0f, 0.0f), // Green Color
+                        colliderModel,               // The matrix we just built
+                        proj,                        // Current Projection
+                        view                         // Current View
+                    );
+                }
+                
             }
         }
 

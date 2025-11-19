@@ -458,51 +458,61 @@ namespace Framework {
 
      std::string ScriptingSystem::GetProjectRoot() { return s_ProjectRoot; }
 
+     // For Event
      void ScriptingSystem::CallEntityFunction(Entity entity, const std::string& functionName, Entity arg1, Entity arg2)
      {
-         //// 1. Check if entity is valid and has a script component
-         //if (!ecsInterface.IsEntityValid(entity) || !ecsInterface.HasComponent<ScriptComponent>(entity)) {
-         //    return;
-         //}
+         // 1. Check if entity is valid and has the correct component
+         if (!ecsInterface.IsEntityValid(entity) || !ecsInterface.HasComponent<ScriptProperties>(entity)) {
+             return;
+         }
 
-         //auto& comp = ecsInterface.GetComponent<ScriptProper>(entity);
+         auto& comp = ecsInterface.GetComponent<ScriptProperties>(entity);
 
-         //// 2. Loop through all script instances on that entity
-         //for (auto& sc : comp.scripts) {
-         //    if (sc.tableRef == LUA_NOREF) continue; // Script not loaded
+         // 2. Loop through all script instances on that entity
+         for (auto& sc : comp.scripts) {
+             if (sc.tableRef == LUA_NOREF) continue; // Script not loaded
 
-         //    // 3. Get the Lua function (based on CallHook)
-         //    // Push the instance table
-         //    lua_rawgeti(L, LUA_REGISTRYINDEX, sc.tableRef);  // [stack: tbl]
-         //    // Push the method from the table
-         //    lua_getfield(L, -1, functionName.c_str());       // [stack: tbl, fn]
+             // 3. Get the Lua function
+             // Push the instance table
+             lua_rawgeti(L, LUA_REGISTRYINDEX, sc.tableRef);  // [stack: tbl]
 
-         //    // Check if it's a valid function
-         //    if (!lua_isfunction(L, -1)) {
-         //        lua_pop(L, 2); // pop non-function and tbl
-         //        continue;      // Try the next script on this entity
-         //    }
+             // Push the method from the table
+             lua_getfield(L, -1, functionName.c_str());       // [stack: tbl, fn]
 
-         //    // 4. Push arguments
-         //    // 'self' (the table) as first arg
-         //    lua_pushvalue(L, -2); // [stack: tbl, fn, tbl]
-         //    // Push our custom args
-         //    lua_pushinteger(L, static_cast<lua_Integer>(arg1)); // [stack: tbl, fn, tbl, arg1]
-         //    lua_pushinteger(L, static_cast<lua_Integer>(arg2)); // [stack: tbl, fn, tbl, arg1, arg2]
+             // Check if it's a valid function
+             if (!lua_isfunction(L, -1)) {
+                 lua_pop(L, 2); // pop non-function and tbl
+                 continue;      // Try the next script on this entity
+             }
 
-         //    int nargs = 3; // 3 arguments: self, arg1, arg2
+             // 4. Push arguments
+             // 'self' (the table) as first arg
+             lua_pushvalue(L, -2); // [stack: tbl, fn, tbl]
 
-         //    // 5. Call the function (based on CallHook)
-         //    if (lua_pcall(L, nargs, 0, 0) != LUA_OK) {
-         //        std::cerr << "[Lua] call " << functionName << " error: "
-         //            << lua_tostring(L, -1) << "\n";
-         //        lua_pop(L, 1); // pop error
-         //    }
+             // Push our custom args
+             lua_pushinteger(L, static_cast<lua_Integer>(arg1)); // [stack: tbl, fn, tbl, arg1]
+             lua_pushinteger(L, static_cast<lua_Integer>(arg2)); // [stack: tbl, fn, tbl, arg1, arg2]
 
-         //    // 6. Clean up stack
-         //    lua_pop(L, 1); // pop tbl
-         //}
+             int nargs = 3; // 3 arguments: self, arg1, arg2
+
+             // 5. Call the function
+             if (lua_pcall(L, nargs, 0, 0) != LUA_OK) {
+                 std::cerr << "[Lua] call " << functionName << " error: "
+                     << lua_tostring(L, -1) << "\n";
+                 lua_pop(L, 1); // pop error
+             }
+
+             // 6. Clean up stack (pop the original table)
+             lua_pop(L, 1); // pop tbl
+         }
      }
+
+     void ScriptingSystem::CallEntityFunction(Entity entity, const std::string& functionName, Entity arg1)
+     {
+         CallEntityFunction(entity, functionName, arg1, -1);
+     }
+
+
 
     std::string ScriptingSystem::GetName() { return "ScriptingSystem"; }
 
