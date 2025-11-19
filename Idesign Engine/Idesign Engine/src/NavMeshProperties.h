@@ -23,8 +23,8 @@ namespace Framework
     struct NavMeshComponent
     {
         std::string guid;  // Reference to MeshProperties
-        bool isNavMeshSource = false;
-        bool runtimeGenerated = false;
+        bool isNavMeshSource = true; //default to true
+        bool runtimeGenerated = true;
 
         // Recast config settings
         float agentRadius = 0.5f;

@@ -7,7 +7,7 @@ local M = {}
 
 function M:on_update(dt)
 
-    local e = FindEntityByName("Frog")
+    local e = FindEntityByName("Customer")
     if e then
         local x, y, z = GetPosition(e)
         print(string.format("[Lua] Frog found at position: (%.2f, %.2f, %.2f)", x, y, z))

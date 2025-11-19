@@ -146,13 +146,27 @@ namespace Framework {
                 return;
             }
 
-            if (!ecs.HasComponent<NavMeshAgentComponent>(agent) ||
-                !ecs.HasComponent<TransformComponent>(agent) ||
-                !ecs.HasComponent<TransformComponent>(target))
-            {
-                std::cerr << "[Lua] Missing required components!" << std::endl;
+            bool missing = false;
+
+            if (!ecs.HasComponent<NavMeshAgentComponent>(agent)) {
+                std::cerr << "[Lua] Missing NavMeshAgentComponent on agent!" << std::endl;
+                missing = true;
+            }
+
+            if (!ecs.HasComponent<TransformComponent>(agent)) {
+                std::cerr << "[Lua] Missing TransformComponent on agent!" << std::endl;
+                missing = true;
+            }
+
+            if (!ecs.HasComponent<TransformComponent>(target)) {
+                std::cerr << "[Lua] Missing TransformComponent on target!" << std::endl;
+                missing = true;
+            }
+
+            if (missing) {
                 return;
             }
+
 
             auto& agentXform = ecs.GetComponent<TransformComponent>(agent);
             auto& targetXform = ecs.GetComponent<TransformComponent>(target);

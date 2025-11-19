@@ -79,6 +79,12 @@ namespace Framework {
             auto& agent = ecsInterface.GetComponent<NavMeshAgentComponent>(entity);
             auto& transform = ecsInterface.GetComponent<TransformComponent>(entity);
 
+            if (isNavMeshBuilt && navQuery) {
+                glm::vec3 currentXZ = transform.position;
+                glm::vec3 snapped = GetNearestPointOnNavmesh(currentXZ);
+                transform.position.y = snapped.y;
+            }
+
             // If agent doesn't have a path, skip
             if (!agent.hasPath || agent.currentPath.empty()) {
                 agent.isMoving = false;

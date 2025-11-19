@@ -925,7 +925,6 @@ namespace Framework {
         const float baseSpeed = editorActive ? 5.0f : 1.0f;
 
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-            std::cout << "hi";
             cam.processKeyboard(Camera::Movement::Forward, dt * baseSpeed, useGround, terrain);
         }
             

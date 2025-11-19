@@ -1022,6 +1022,8 @@ namespace Framework {
                 if (ImGui::MenuItem("Agent Go"))
                 {
                     auto navSystem = ecsInterface.GetSystem<NavMeshSystem>();
+
+                  
                     if (navSystem) {
                         const auto& allEntities = ecsInterface.GetEntities();
                         if (allEntities.size() > 1) {
