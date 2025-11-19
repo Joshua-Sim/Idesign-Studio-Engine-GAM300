@@ -158,7 +158,7 @@ namespace Framework
         ShaderProgram skinnedShader{ "Assets/shaders/SkinnedVert.glsl", "Assets/shaders/meshfrag.glsl" };
         ShaderProgram shadowShader{ "Assets/shaders/shadowvert.glsl", "Assets/shaders/shadowfrag.glsl" };
         ShaderProgram pointShadowShader{ "Assets/shaders/point_shadow_vert.glsl", "Assets/shaders/point_shadow_frag.glsl" };
-
+        ShaderProgram uiShader{ "Assets/shaders/Shader2dvert.glsl", "Assets/shaders/Shader2dfrag.glsl" };
         //shadow
         GLuint m_shadowFBO = 0;
         GLuint m_shadowDepthTexture = 0;
