@@ -205,6 +205,10 @@ int main(void)
     std::cout << "[Audio] Volumes and 3D listener configured!" << std::endl;
     std::cout << "FMOD Studio Audio System initialized successfully!" << std::endl;
 
+    
+    sceneManager.SetSceneBGM("jarrentest", "event:/Level1BGM");
+    
+
 	AssetManager::Instance().LoadRemainingAssets(); // Load remaining assets after OpenGL initialization
 
     ImguiManager::Log("Initializing FontSystem...", "FontSystem");

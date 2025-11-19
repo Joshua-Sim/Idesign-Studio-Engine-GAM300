@@ -41,6 +41,14 @@ namespace Framework {
         void SaveScene(const std::string& path);     // Save current scene to JSON
         void UnloadScene(const std::string& name);   // Unload entities belonging to a scene (Replace with guid in input afterwards or load via properties? inside func maybe)
     
+		//BGM functions
+        void SetSceneBGM(const std::string& sceneName, const std::string& bgmEventPath) {
+			m_SceneBGM[sceneName] = bgmEventPath;
+        }
+        std::string GetCurrentSceneBGMPath() const {
+			return m_CurrentSceneBGMPath;
+		}
+
         // Scene access
         std::string GetCurrentSceneName() const;
 
@@ -71,6 +79,10 @@ namespace Framework {
 
 
         std::vector<PendingLoad> m_PendingSceneLoads;
+
+		//For BGM music change on scene load
+		std::unordered_map <std::string, std::string> m_SceneBGM; // sceneName -> bgmFilePath
+        std::string m_CurrentSceneBGMPath;
     };
 
     // Declare the single global SceneManager
