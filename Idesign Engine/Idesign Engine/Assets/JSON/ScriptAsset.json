@@ -15,6 +15,13 @@
             "tableRef": -1
         },
         {
+            "guid": "c8af2bda-527b-474b-98d2-cfa9e88a8f06",
+            "scriptPath": "Assets\\Scripts\\footsteps.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
             "guid": "78bee47a-d444-4c29-a687-a272fd50e5b3",
             "scriptPath": "Assets/Scripts/prove_lua.lua",
             "hotReload": false,
@@ -45,6 +52,27 @@
         {
             "guid": "e7535686-93e2-4aa2-8052-4abfe9e7deda",
             "scriptPath": "Assets/Scripts/Pathfinding.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "5ba3254a-3f6d-46f8-87b2-7a33f0d68fd3",
+            "scriptPath": "Assets\\Scripts\\footsteps.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "b17d9890-9e5c-4ac6-87b5-2f7ba8823fa8",
+            "scriptPath": "Assets\\Scripts\\footsteps.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "cb274bd8-4bf0-4e07-bb4c-fd1ed2708f09",
+            "scriptPath": "Assets\\Scripts\\footsteps.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1

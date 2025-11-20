@@ -13,6 +13,7 @@
 #include "MeshProperties.h"          // g_MeshPropertiesProps
 #include <filesystem>
 #include "ScriptProperties.h"
+#include "AudioSystem.h"
 
 extern Framework::Coordinator ecsInterface;
 
@@ -128,6 +129,57 @@ namespace Framework {
             return 1;
         }
 
+        //============================= AUDIO LUA BINDINGS ========================================
+        static int lua_AudioPlay(lua_State* L) {
+			const char* eventPath = luaL_checkstring(L, 1);
+            if (g_AudioSystem) {
+                g_AudioSystem->PlayAudio(eventPath);
+            }
+            return 0;
+        }
+
+        static int lua_AudioStop(lua_State* L) {
+            if (g_AudioSystem) {
+                g_AudioSystem->Reset();
+            }
+            return 0;
+        }
+
+        static int lua_AudioPause(lua_State* L) {
+            if (g_AudioSystem) {
+                g_AudioSystem->PauseAllAudio();
+            }
+            return 0;
+        }
+
+        static int lua_AudioResume(lua_State* L) {
+            if (g_AudioSystem) {
+                g_AudioSystem->ResumeAllAudio();
+            }
+            return 0;
+        }
+
+        static int lua_AudioSetVolume(lua_State* L) {
+            float volume = (float)luaL_checknumber(L, 1);
+            if (g_AudioSystem) {
+                g_AudioSystem->SetMasterVolume(volume);
+            }
+            return 0;
+        }
+
+        static int lua_AudioPlay3D(lua_State* L) {
+            const char* eventPath = luaL_checkstring(L, 1);
+            float x = (float)luaL_checknumber(L, 2);
+            float y = (float)luaL_checknumber(L, 3);
+            float z = (float)luaL_checknumber(L, 4);
+
+            if (g_AudioSystem) {
+                g_AudioSystem->PlaySound3D(eventPath, Framework::Vector3(x, y, z));
+            }
+            return 0;
+        }
+        // ========================= END AUDIO LUA BINDINGS ===================================
+        
         // NavMesh Exposed funcs for path-finding
 
         void ScriptPathfindTo(const std::string& agentName, const std::string& targetName)
@@ -381,6 +433,16 @@ namespace Framework {
             ScriptPathfindTo(agentName, targetName);
             return 0;
             });
+
+        // Create Audio table with playback functions 
+        lua_newtable(L);
+        lua_pushcfunction(L, lua_AudioPlay);      lua_setfield(L, -2, "Play");
+        lua_pushcfunction(L, lua_AudioStop);      lua_setfield(L, -2, "Stop");
+        lua_pushcfunction(L, lua_AudioPause);     lua_setfield(L, -2, "Pause");
+        lua_pushcfunction(L, lua_AudioResume);    lua_setfield(L, -2, "Resume");
+        lua_pushcfunction(L, lua_AudioSetVolume); lua_setfield(L, -2, "SetVolume");
+        lua_pushcfunction(L, lua_AudioPlay3D);    lua_setfield(L, -2, "Play3D");
+        lua_setglobal(L, "Audio");
 
         // Create Cook table with our functions
         lua_newtable(L);                           // Cook

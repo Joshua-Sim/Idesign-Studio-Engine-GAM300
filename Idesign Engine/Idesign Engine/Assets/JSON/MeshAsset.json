@@ -10,15 +10,6 @@
             "indexCount": 324
         },
         {
-            "guid": "62fa60bd-a3d0-4575-851f-e6d04a326345",
-            "name": "Window Frame",
-            "path": "Assets\\Objects\\Window Frame.obj",
-            "vao": 50,
-            "vbo": 95,
-            "ebo": 96,
-            "indexCount": 774
-        },
-        {
             "guid": "6cbaa85b-562d-4b23-9f64-8639947659cc",
             "name": "knifechoppingwithBONEFIXED4",
             "path": "Assets/Objects/knifechoppingwithBONEFIXED4.fbx",
@@ -37,12 +28,21 @@
             "indexCount": 591
         },
         {
+            "guid": "62fa60bd-a3d0-4575-851f-e6d04a326345",
+            "name": "Window Frame",
+            "path": "Assets\\Objects\\Window Frame.obj",
+            "vao": 50,
+            "vbo": 95,
+            "ebo": 96,
+            "indexCount": 774
+        },
+        {
             "guid": "2d0d1073-79fb-44de-9d09-86af64b2aabb",
             "name": "GreenPotion2",
             "path": "Assets\\Objects\\GreenPotion2.obj",
-            "vao": 1,
-            "vbo": 1,
-            "ebo": 2,
+            "vao": 5,
+            "vbo": 9,
+            "ebo": 10,
             "indexCount": 924
         },
         {

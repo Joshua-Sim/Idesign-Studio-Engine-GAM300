@@ -80,15 +80,21 @@
             "isUI": false
         },
         {
+            "guid": "0e3df122-8a0d-4926-bc68-1cc4f4acfa1f",
+            "name": "Drawer",
+            "path": "Assets\\Textures\\Drawer.png",
+            "isUI": false
+        },
+        {
             "guid": "add88db8-22f2-4599-ad64-d9abc2f87fa9",
             "name": "Chest",
             "path": "Assets\\Textures\\Chest.png",
             "isUI": false
         },
         {
-            "guid": "0e3df122-8a0d-4926-bc68-1cc4f4acfa1f",
-            "name": "Drawer",
-            "path": "Assets\\Textures\\Drawer.png",
+            "guid": "af9689d0-8e06-4356-9d0c-32b2c6767b4f",
+            "name": "",
+            "path": "Assets/PNG/test.png",
             "isUI": false
         },
         {
@@ -107,12 +113,6 @@
             "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
             "name": "Frog",
             "path": "Assets\\Textures\\Frog.png",
-            "isUI": false
-        },
-        {
-            "guid": "af9689d0-8e06-4356-9d0c-32b2c6767b4f",
-            "name": "",
-            "path": "Assets/PNG/test.png",
             "isUI": false
         },
         {

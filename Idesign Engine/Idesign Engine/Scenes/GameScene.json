@@ -31,7 +31,8 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "aa40e4be-e3ce-4b7d-8806-dc0f46d34ee8"
+                    "guid": "aa40e4be-e3ce-4b7d-8806-dc0f46d34ee8",
+                    "isUI": false
                 },
                 "NavMeshComponent": {
                     "guid": "",
@@ -108,7 +109,8 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "0f2ece2c-6b29-43d9-a6ae-1f648d18d86d"
+                    "guid": "0f2ece2c-6b29-43d9-a6ae-1f648d18d86d",
+                    "isUI": false
                 },
                 "NavMeshComponent": {
                     "guid": "",
@@ -183,7 +185,8 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "b57b4683-8581-4256-9cc5-60c900acec67"
+                    "guid": "b57b4683-8581-4256-9cc5-60c900acec67",
+                    "isUI": false
                 },
                 "PhysicsProperties": {
                     "isImmovable": true,
@@ -236,7 +239,8 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "b57b4683-8581-4256-9cc5-60c900acec67"
+                    "guid": "b57b4683-8581-4256-9cc5-60c900acec67",
+                    "isUI": false
                 }
             }
         },
@@ -271,7 +275,8 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "add88db8-22f2-4599-ad64-d9abc2f87fa9"
+                    "guid": "add88db8-22f2-4599-ad64-d9abc2f87fa9",
+                    "isUI": false
                 }
             }
         },
@@ -306,7 +311,8 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606"
+                    "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606",
+                    "isUI": false
                 },
                 "LightProperties": {
                     "enabled": true,
@@ -357,7 +363,8 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "b57b4683-8581-4256-9cc5-60c900acec67"
+                    "guid": "b57b4683-8581-4256-9cc5-60c900acec67",
+                    "isUI": false
                 }
             }
         },
@@ -392,7 +399,8 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "b57b4683-8581-4256-9cc5-60c900acec67"
+                    "guid": "b57b4683-8581-4256-9cc5-60c900acec67",
+                    "isUI": false
                 }
             }
         },
@@ -426,7 +434,8 @@
                     "guid": "814c3cff-9da8-4ad4-8a05-009b99a4ea2b"
                 },
                 "TextureComponent": {
-                    "guid": "d4899207-ea5e-473b-870f-aade76e8a7ff"
+                    "guid": "d4899207-ea5e-473b-870f-aade76e8a7ff",
+                    "isUI": false
                 }
             }
         },
@@ -460,7 +469,8 @@
                     "guid": "e902f0d7-a022-45fc-9c17-2a98cbdb793e"
                 },
                 "TextureComponent": {
-                    "guid": "b57b4683-8581-4256-9cc5-60c900acec67"
+                    "guid": "b57b4683-8581-4256-9cc5-60c900acec67",
+                    "isUI": false
                 }
             }
         },
@@ -495,7 +505,8 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "0f2ece2c-6b29-43d9-a6ae-1f648d18d86d"
+                    "guid": "0f2ece2c-6b29-43d9-a6ae-1f648d18d86d",
+                    "isUI": false
                 }
             }
         },
@@ -529,7 +540,8 @@
                     "guid": "90a63915-c3e8-40b9-8c48-b8fe58a9bd67"
                 },
                 "TextureComponent": {
-                    "guid": "0e3df122-8a0d-4926-bc68-1cc4f4acfa1f"
+                    "guid": "0e3df122-8a0d-4926-bc68-1cc4f4acfa1f",
+                    "isUI": false
                 }
             }
         },
@@ -563,7 +575,8 @@
                     "guid": "e902f0d7-a022-45fc-9c17-2a98cbdb793e"
                 },
                 "TextureComponent": {
-                    "guid": "b57b4683-8581-4256-9cc5-60c900acec67"
+                    "guid": "b57b4683-8581-4256-9cc5-60c900acec67",
+                    "isUI": false
                 }
             }
         },
@@ -598,7 +611,8 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "312bdb54-477d-47bb-a1ce-2224bc3ec5e3"
+                    "guid": "312bdb54-477d-47bb-a1ce-2224bc3ec5e3",
+                    "isUI": false
                 }
             }
         },
@@ -633,7 +647,8 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "312bdb54-477d-47bb-a1ce-2224bc3ec5e3"
+                    "guid": "312bdb54-477d-47bb-a1ce-2224bc3ec5e3",
+                    "isUI": false
                 }
             }
         },
@@ -667,7 +682,8 @@
                     "guid": "90a63915-c3e8-40b9-8c48-b8fe58a9bd67"
                 },
                 "TextureComponent": {
-                    "guid": "0e3df122-8a0d-4926-bc68-1cc4f4acfa1f"
+                    "guid": "0e3df122-8a0d-4926-bc68-1cc4f4acfa1f",
+                    "isUI": false
                 }
             }
         },
@@ -702,7 +718,8 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "312bdb54-477d-47bb-a1ce-2224bc3ec5e3"
+                    "guid": "312bdb54-477d-47bb-a1ce-2224bc3ec5e3",
+                    "isUI": false
                 },
                 "BoxColliderComponent": {
                     "size": [
@@ -767,7 +784,8 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "4cf1bf23-4fbd-4a08-9abb-f662145f2134"
+                    "guid": "4cf1bf23-4fbd-4a08-9abb-f662145f2134",
+                    "isUI": false
                 },
                 "NavMeshComponent": {
                     "guid": "",
@@ -812,7 +830,8 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0"
+                    "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
+                    "isUI": false
                 }
             }
         },
@@ -846,7 +865,8 @@
                     "guid": "1cc97700-7326-4df8-b677-80233b030807"
                 },
                 "TextureComponent": {
-                    "guid": "b57b4683-8581-4256-9cc5-60c900acec67"
+                    "guid": "b57b4683-8581-4256-9cc5-60c900acec67",
+                    "isUI": false
                 }
             }
         },
@@ -881,7 +901,8 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "b57b4683-8581-4256-9cc5-60c900acec67"
+                    "guid": "b57b4683-8581-4256-9cc5-60c900acec67",
+                    "isUI": false
                 }
             }
         },
@@ -916,7 +937,8 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606"
+                    "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606",
+                    "isUI": false
                 },
                 "LightProperties": {
                     "enabled": true,
@@ -967,7 +989,8 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "c3eb9787-d36c-4380-a39f-78737901cda2"
+                    "guid": "c3eb9787-d36c-4380-a39f-78737901cda2",
+                    "isUI": false
                 }
             }
         },
@@ -1001,7 +1024,8 @@
                     "guid": "6fa52b14-d79c-4815-aaff-767eb40b32ca"
                 },
                 "TextureComponent": {
-                    "guid": "a3d6570b-a168-4e13-9ecc-6abb2ed62b18"
+                    "guid": "a3d6570b-a168-4e13-9ecc-6abb2ed62b18",
+                    "isUI": false
                 }
             }
         },
@@ -1036,7 +1060,8 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "add88db8-22f2-4599-ad64-d9abc2f87fa9"
+                    "guid": "add88db8-22f2-4599-ad64-d9abc2f87fa9",
+                    "isUI": false
                 }
             }
         },
@@ -1071,7 +1096,8 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "add88db8-22f2-4599-ad64-d9abc2f87fa9"
+                    "guid": "add88db8-22f2-4599-ad64-d9abc2f87fa9",
+                    "isUI": false
                 }
             }
         },
@@ -1105,7 +1131,8 @@
                     "guid": "97635846-7fcd-4674-b730-21d672c2f510"
                 },
                 "TextureComponent": {
-                    "guid": "4647cf55-032f-4bd2-952f-0ae059337c19"
+                    "guid": "4647cf55-032f-4bd2-952f-0ae059337c19",
+                    "isUI": false
                 }
             }
         },
@@ -1140,7 +1167,8 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc"
+                    "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
+                    "isUI": false
                 }
             }
         },
@@ -1175,7 +1203,8 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc"
+                    "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
+                    "isUI": false
                 }
             }
         },
@@ -1210,7 +1239,8 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc"
+                    "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
+                    "isUI": false
                 }
             }
         },
@@ -1257,7 +1287,8 @@
                     "sortIndex": 36
                 },
                 "TextureComponent": {
-                    "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0"
+                    "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
+                    "isUI": false
                 }
             }
         },
@@ -1292,7 +1323,8 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "7bd3846d-4142-4b26-ab54-85667861258f"
+                    "guid": "7bd3846d-4142-4b26-ab54-85667861258f",
+                    "isUI": false
                 }
             }
         },
@@ -1327,7 +1359,8 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "7bd3846d-4142-4b26-ab54-85667861258f"
+                    "guid": "7bd3846d-4142-4b26-ab54-85667861258f",
+                    "isUI": false
                 }
             }
         },
@@ -1362,7 +1395,8 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "7bd3846d-4142-4b26-ab54-85667861258f"
+                    "guid": "7bd3846d-4142-4b26-ab54-85667861258f",
+                    "isUI": false
                 }
             }
         },
@@ -1397,7 +1431,8 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "7bd3846d-4142-4b26-ab54-85667861258f"
+                    "guid": "7bd3846d-4142-4b26-ab54-85667861258f",
+                    "isUI": false
                 },
                 "PhysicsProperties": {
                     "isImmovable": false,
@@ -1450,7 +1485,8 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "7bd3846d-4142-4b26-ab54-85667861258f"
+                    "guid": "7bd3846d-4142-4b26-ab54-85667861258f",
+                    "isUI": false
                 }
             }
         },
@@ -1484,7 +1520,8 @@
                     "guid": "76f36163-789f-4c71-87b4-76fdccaa8408"
                 },
                 "TextureComponent": {
-                    "guid": "5548bb23-a8a5-467b-ac1b-af16f9d2cfa2"
+                    "guid": "5548bb23-a8a5-467b-ac1b-af16f9d2cfa2",
+                    "isUI": false
                 }
             }
         },
@@ -1518,7 +1555,8 @@
                     "guid": "76f36163-789f-4c71-87b4-76fdccaa8408"
                 },
                 "TextureComponent": {
-                    "guid": "5548bb23-a8a5-467b-ac1b-af16f9d2cfa2"
+                    "guid": "5548bb23-a8a5-467b-ac1b-af16f9d2cfa2",
+                    "isUI": false
                 }
             }
         },
@@ -1552,7 +1590,8 @@
                     "guid": "76f36163-789f-4c71-87b4-76fdccaa8408"
                 },
                 "TextureComponent": {
-                    "guid": "5548bb23-a8a5-467b-ac1b-af16f9d2cfa2"
+                    "guid": "5548bb23-a8a5-467b-ac1b-af16f9d2cfa2",
+                    "isUI": false
                 }
             }
         },
@@ -1586,7 +1625,8 @@
                     "guid": "76f36163-789f-4c71-87b4-76fdccaa8408"
                 },
                 "TextureComponent": {
-                    "guid": "5548bb23-a8a5-467b-ac1b-af16f9d2cfa2"
+                    "guid": "5548bb23-a8a5-467b-ac1b-af16f9d2cfa2",
+                    "isUI": false
                 }
             }
         },
@@ -1649,14 +1689,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -34.799015045166016,
-                        7.7092790603637695,
-                        11.336045265197754
+                        -21.456926345825195,
+                        7.709787368774414,
+                        9.043935775756836
                     ],
                     "rotation": [
-                        -0.019654134288430214,
-                        -0.0038980641402304173,
-                        0.02668358013033867
+                        0.010534591972827911,
+                        -0.11602041125297546,
+                        -0.004671338014304638
                     ],
                     "scale": [
                         1.0,
@@ -1670,7 +1710,17 @@
                     "sortIndex": 48
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "c8af2bda-527b-474b-98d2-cfa9e88a8f06",
+                            "scriptPath": "Assets\\Scripts\\footsteps.lua",
+                            "hotReload": true
+                        }
+                    ]
                 },
                 "BoxColliderComponent": {
                     "size": [
@@ -1735,11 +1785,11 @@
                     "sortIndex": 46
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
-                    "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc"
+                    "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
+                    "isUI": false
                 }
             }
         },
@@ -1774,7 +1824,8 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc"
+                    "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
+                    "isUI": false
                 },
                 "NavMeshAgentComponent": {
                     "agentHeight": 10.0,
@@ -1786,8 +1837,8 @@
                     "autoRepath": false,
                     "stopOnTargetReached": true,
                     "targetPosition": [
-                        -25.943675994873047,
-                        5.900000095367432,
+                        -25.987422943115234,
+                        6.886701583862305,
                         13.040227890014648
                     ]
                 },
@@ -1832,7 +1883,8 @@
                     "guid": ""
                 },
                 "TextureComponent": {
-                    "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc"
+                    "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
+                    "isUI": false
                 }
             }
         },
@@ -1863,11 +1915,11 @@
                     "sortIndex": 2
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
-                    "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc"
+                    "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
+                    "isUI": false
                 }
             }
         }
