@@ -75,6 +75,6 @@ unsigned int TextureLoader::loadTexture(TextureProperties& props, bool flip)
     props.width = width;
     props.height = height;
 
-    std::cout << "[TextureLoader] Loaded raw image: " << pathStr << std::endl;
+    //std::cout << "[TextureLoader] Loaded raw image: " << pathStr << std::endl;
     return texID;
 }

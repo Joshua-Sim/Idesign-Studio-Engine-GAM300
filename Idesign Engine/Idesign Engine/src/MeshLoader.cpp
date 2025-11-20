@@ -137,7 +137,7 @@ void MeshLoader::loadMesh(const std::string& path, Framework::MeshProperties& me
     }
     mesh.indices.assign(indices.begin(), indices.end());
 
-    std::cout << mesh.guid << " " << mesh.path << " was loaded into system" << std::endl;
+    //std::cout << mesh.guid << " " << mesh.path << " was loaded into system" << std::endl;
 }
 
 // --- ANIMATED MESH LOADER---

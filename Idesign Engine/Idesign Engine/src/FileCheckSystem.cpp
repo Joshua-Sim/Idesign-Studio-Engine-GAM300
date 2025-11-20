@@ -33,7 +33,7 @@ namespace Framework {
         }
 
         rules_.push_back({ canonicalPath.generic_string(), extensions });
-        std::cout << "[FileCheckSystem] Watching " << canonicalPath.generic_string() << "\n";
+        //std::cout << "[FileCheckSystem] Watching " << canonicalPath.generic_string() << "\n";
     }
 
     void FileCheckSystem::Update(float dt) {
