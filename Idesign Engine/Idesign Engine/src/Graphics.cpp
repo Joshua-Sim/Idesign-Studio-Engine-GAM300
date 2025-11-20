@@ -1549,6 +1549,39 @@ namespace Framework {
             if (ecsInterface.HasComponent<TextProperties>(entityId)) {
                 auto& txt = ecsInterface.GetComponent<TextProperties>(entityId);
               
+                if (txt.isBillboard)
+                {
+                    // To face the camera, we set the Model's rotation axes to match 
+                    // the Camera's View Matrix axes.
+                    // (We ignore the entity's own rotation here).
+
+                    // Right Vector
+                    model[0][0] = view[0][0];
+                    model[0][1] = view[1][0];
+                    model[0][2] = view[2][0];
+
+                    // Up Vector
+                    model[1][0] = view[0][1];
+                    model[1][1] = view[1][1];
+                    model[1][2] = view[2][1];
+
+                    // Forward Vector
+                    model[2][0] = view[0][2];
+                    model[2][1] = view[1][2];
+                    model[2][2] = view[2][2];
+                }
+                else
+                {
+                    // Normal Rotation (If NOT billboarding, use the entity's rotation)
+                    model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
+                    model = glm::rotate(model, glm::radians(tr.rotation.y), { 0,1,0 });
+                    model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
+                }
+
+                // 3. Apply Scale LAST (so it applies to the new rotation)
+                model = glm::scale(model, tr.scale);
+
+                      
 
                 // Render
                 fontSystem.RenderText3D(txt.text, model, view, proj, txt.scale, txt.color, txt.alignment);

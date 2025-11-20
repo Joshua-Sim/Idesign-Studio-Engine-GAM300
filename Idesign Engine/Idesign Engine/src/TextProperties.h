@@ -23,6 +23,7 @@ namespace Framework
 
         // [NEW] 0=Left, 1=Center, 2=Right
         int alignment = 0;
+        bool isBillboard = false;
     };
 
     // 1. Define an array that lists each property
@@ -36,6 +37,7 @@ namespace Framework
         // Note: If your property system doesn't support Enums directly, 
         // we register it as an INT here, and handle the Dropdown in the Editor logic (Step 2).
         PROP_INT(alignment, TextProperties)
+        PROP_BOOL(isBillboard, TextProperties)
     };
 
     inline const prop_list g_TextComponentProps{ "TextProperties", g_TextComponentPropsArray };
