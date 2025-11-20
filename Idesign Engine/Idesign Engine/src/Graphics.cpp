@@ -1585,18 +1585,33 @@ namespace Framework {
 
                 // 2. Run the Math
                 bool isInside = IsPointInsideBox(cam.position, transform, collider);
+
                 // 3. Handle "OnEnter" Events
                 if (isInside && !collider.wasInsideLastFrame) {
-                    // CHECK IF WE NEED TO SEND AN EVENT
+
                     if (ecsInterface.HasComponent<EventSenderComponent>(entityId)) {
                         auto& sender = ecsInterface.GetComponent<EventSenderComponent>(entityId);
+
+                        // CHECK TRIGGER NAME
                         if (sender.triggerName == "OnCollision") {
                             std::cout << "Entered Trigger: " << entityId << std::endl;
-                            EventManager::Instance().Fire(sender.messageName, nullptr);
+
+                            // --- [FIX START] --- 
+                            // Create the payload on the stack
+                            CollisionEventData payload;
+                            payload.senderID = entityId; // THIS IS THE BOX
+
+                            // Assuming 'm_playerEntity' exists in your system. 
+
+                            payload.targetID = ecsInterface.GetEntityByName("Player");
+
+                            // Send the address of the payload (&payload) instead of nullptr
+                            EventManager::Instance().Fire(sender.messageName, &payload);
+                            // --- [FIX END] ---
                         }
                     }
                 }
-                // 4. Save state for next frame (so we don't fire 60 times a second)
+                // 4. Save state
                 collider.wasInsideLastFrame = isInside;
             }
 

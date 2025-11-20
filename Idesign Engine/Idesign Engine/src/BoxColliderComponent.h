@@ -17,6 +17,10 @@ namespace Framework {
         bool canPassThrough = false; // New field
     };
 
+    struct CollisionEventData {
+        Entity senderID;   // The Box (Chest/Door)
+        Entity targetID;   // The Player
+    };
 
     // 2. --- REGISTRATION FOR IMGUI ---
     // (This assumes you have a PROP_VEC3 macro in PropertyMacro.h)
