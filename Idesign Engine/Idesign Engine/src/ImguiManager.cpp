@@ -3215,22 +3215,22 @@ namespace Framework {
 					//Send message to start audio and other play-mode systems
                     MessageBus::Get().SendImmediate(EnterPlayModeMessage());
 
-                    if (g_AudioSystem) {
-                        std::string bgmPath = sceneManager.GetCurrentSceneBGMPath();
-                        if (!bgmPath.empty()) {
-                            if (bgmWasPaused) {
-                                // Just resume the paused audio
-                                g_AudioSystem->ResumeAllAudio();
-                                std::cout << "[Audio] Resuming BGM: " << bgmPath << std::endl;
-                                bgmWasPaused = false;
-                            }
-                            else {
-                                // Start fresh BGM
-                                g_AudioSystem->PlayAudio(bgmPath);
-                                std::cout << "[Audio] Playing BGM: " << bgmPath << std::endl;
-                            }
-                        }
-                    }
+                    //if (g_AudioSystem) {
+                    //    std::string bgmPath = sceneManager.GetCurrentSceneBGMPath();
+                    //    if (!bgmPath.empty()) {
+                    //        if (bgmWasPaused) {
+                    //            // Just resume the paused audio
+                    //            g_AudioSystem->ResumeAllAudio();
+                    //            std::cout << "[Audio] Resuming BGM: " << bgmPath << std::endl;
+                    //            bgmWasPaused = false;
+                    //        }
+                    //        else {
+                    //            // Start fresh BGM
+                    //            g_AudioSystem->PlayAudio(bgmPath);
+                    //            std::cout << "[Audio] Playing BGM: " << bgmPath << std::endl;
+                    //        }
+                    //    }
+                    //}
                 }
                 ImGui::PopStyleColor(3); // Restore color
 
@@ -3251,11 +3251,11 @@ namespace Framework {
 						//MessageBus::Get().SendImmediate(ExitPlayModeMessage());
 
                         //Pause BGM 
-                        if (g_AudioSystem) {
+                        /*if (g_AudioSystem) {
 							g_AudioSystem->PauseAllAudio();
                             bgmWasPaused = true;
 							std::cout << "[Audio] BGM Paused" << std::endl;
-                        }
+                        }*/
                     }
                 }
                 ImGui::PopStyleColor(3); // Restore color
@@ -3275,11 +3275,11 @@ namespace Framework {
 					MessageBus::Get().SendImmediate(ExitPlayModeMessage());
 
                     //Stop BGM immediately 
-                    if (g_AudioSystem) {
+                    /*if (g_AudioSystem) {
                         g_AudioSystem->Reset();
                         bgmWasPaused = false;
                         std::cout << "[Audio] BGM Stopped" << std::endl;
-                    }
+                    }*/
                 }
                 ImGui::PopStyleColor(3); // Restore color
 
