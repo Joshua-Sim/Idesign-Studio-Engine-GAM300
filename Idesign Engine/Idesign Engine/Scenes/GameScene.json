@@ -132,8 +132,7 @@
                         0.0,
                         0.0,
                         0.0
-                    ],
-                    "canPassThrough": false
+                    ]
                 },
                 "PhysicsProperties": {
                     "isImmovable": true,
@@ -732,8 +731,7 @@
                         0.0,
                         1.5,
                         0.0
-                    ],
-                    "canPassThrough": true
+                    ]
                 },
                 "PhysicsProperties": {
                     "isImmovable": true,
@@ -1692,14 +1690,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -34.799015045166016,
-                        7.7092790603637695,
-                        11.336045265197754
+                        -34.91619873046875,
+                        7.709928035736084,
+                        10.060279846191406
                     ],
                     "rotation": [
-                        -0.019654134288430214,
-                        -0.0038980641402304173,
-                        0.02668358013033867
+                        0.003190054092556238,
+                        -0.23685167729854584,
+                        -0.0019257694948464632
                     ],
                     "scale": [
                         1.0,
@@ -1713,7 +1711,17 @@
                     "sortIndex": 43
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "c8af2bda-527b-474b-98d2-cfa9e88a8f06",
+                            "scriptPath": "Assets\\Scripts\\footsteps.lua",
+                            "hotReload": true
+                        }
+                    ]
                 },
                 "BoxColliderComponent": {
                     "size": [
@@ -1725,8 +1733,7 @@
                         0.0,
                         0.0,
                         0.0
-                    ],
-                    "canPassThrough": false
+                    ]
                 },
                 "PhysicsProperties": {
                     "isImmovable": false,
@@ -1745,10 +1752,6 @@
                         0.0
                     ],
                     "startAwake": true
-                },
-                "EventSenderComponent": {
-                    "triggerName": "OnCollision",
-                    "messageName": "deez"
                 }
             }
         },
@@ -1948,12 +1951,7 @@
                     "sortIndex": 1
                 },
                 "MeshComponent": {
-                    "guid": "e40538da-1955-44a8-bb38-ddbc8805d083",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "06b3101c-c40c-438e-be69-13555a22d44f",
-                    "isUI": false
+                    "guid": ""
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -1974,8 +1972,7 @@
                         0.0,
                         2.0,
                         0.0
-                    ],
-                    "canPassThrough": true
+                    ]
                 },
                 "PhysicsProperties": {
                     "isImmovable": true,
@@ -1994,10 +1991,6 @@
                         0.0
                     ],
                     "startAwake": true
-                },
-                "EventReceiverComponent": {
-                    "messageToListenFor": "deez",
-                    "luaFunctionToCall": "OnInteract"
                 }
             }
         }
