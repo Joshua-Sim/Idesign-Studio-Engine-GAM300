@@ -14,6 +14,8 @@
 #include "Terrain.h"
 #include "Graphics.h"
 #include "PhysicsProperties.h"
+#include "EventManager.h"
+#include "BoxColliderComponent.h"
 
 #include <Jolt/Jolt.h>
 #include <Jolt/Core/TempAllocator.h>
@@ -115,7 +117,7 @@ static inline void ApplyPropsToBody(JPH::BodyInterface* bi, JPH::BodyID id, cons
         // Based on your 'ToObjectLayer', you map categories to layers. 
         // You usually don't need to change layers if your Broadphase is simple (1 layer),
         // but if you have issues, you simply Reactivate the body:
-
+        
         if (wantMotion != EMotionType::Static) {
             bi->ActivateBody(id);
         }
@@ -151,6 +153,26 @@ namespace Framework {
         // ... (Assuming you kept your Terrain logic, commented out or not) ...
         // For brevity, assuming standard implementation or commented out as discussed
         return JPH::BodyID();
+    }
+
+
+    static bool IsPointInsideBox(const glm::vec3& point, const Framework::TransformComponent& boxTrans, const Framework::BoxColliderComponent& collider) {
+        // 1. World Center of Box
+        glm::vec3 boxWorldCenter = boxTrans.position + collider.center;
+
+        // 2. Half Extents (Size * Scale * 0.5)
+        glm::vec3 halfSize = glm::vec3(
+            std::abs(collider.size.x * boxTrans.scale.x),
+            std::abs(collider.size.y * boxTrans.scale.y),
+            std::abs(collider.size.z * boxTrans.scale.z)
+        ) * 0.5f;
+
+        // 3. AABB Check
+        bool x = std::abs(point.x - boxWorldCenter.x) <= halfSize.x;
+        bool y = std::abs(point.y - boxWorldCenter.y) <= halfSize.y;
+        bool z = std::abs(point.z - boxWorldCenter.z) <= halfSize.z;
+
+        return x && y && z;
     }
 
     static void EnsureBodyForEntity(Entity e, Framework::Coordinator& ecs, JPH::BodyInterface* bi, std::vector<JPH::BodyID>& created_list) {
@@ -342,6 +364,51 @@ namespace Framework {
             EnsureBodyForEntity(e, ecsInterface, bodyInterface, m_createdBodies);
         }
 
+        Entity playerEntity = ecsInterface.GetEntityByName("Player");
+
+        if (ecsInterface.IsEntityValid(playerEntity) && ecsInterface.HasComponent<TransformComponent>(playerEntity)) {
+            auto& playerTrans = ecsInterface.GetComponent<TransformComponent>(playerEntity);
+
+            for (Entity e : ecsInterface.GetEntities()) {
+                // Skip the player itself
+                if (e == playerEntity) continue;
+
+                // Check components specifically
+                bool hasColl = ecsInterface.HasComponent<BoxColliderComponent>(e);
+                bool hasTrans = ecsInterface.HasComponent<TransformComponent>(e);
+                bool hasSend = ecsInterface.HasComponent<EventSenderComponent>(e);
+
+                if (!hasColl || !hasTrans || !hasSend) {
+                    continue;
+                }
+
+                auto& collider = ecsInterface.GetComponent<BoxColliderComponent>(e);
+                auto& transform = ecsInterface.GetComponent<TransformComponent>(e);
+
+                // Run the Math
+                bool isInside = IsPointInsideBox(playerTrans.position, transform, collider);
+
+                if (isInside && !collider.wasInsideLastFrame) {
+                    auto& sender = ecsInterface.GetComponent<EventSenderComponent>(e);
+
+                    if (sender.triggerName == "OnCollision") {
+                        std::cout << "[Physics] FIRING EVENT for Entity: " << e << std::endl;
+
+                        CollisionEventData payload;
+                        payload.senderID = e;
+                        payload.targetID = playerEntity;
+
+                        EventManager::Instance().Fire(sender.messageName, &payload);
+                    }
+                    else {
+                        std::cout << "[Physics] Name Mismatch. Expected 'OnCollision', got '" << sender.triggerName << "'" << std::endl;
+                    }
+                }
+
+                collider.wasInsideLastFrame = isInside;
+            }
+        }
+
         // 2. Pre-Physics: Apply ECS properties to Jolt
         for (Entity e : ecsInterface.GetEntities()) {
             if (!ecsInterface.HasComponent<PhysicsBodyComponent>(e) ||
@@ -489,4 +556,5 @@ namespace Framework {
         delete JPH::Factory::sInstance;
         JPH::Factory::sInstance = nullptr;
     }
+
 }

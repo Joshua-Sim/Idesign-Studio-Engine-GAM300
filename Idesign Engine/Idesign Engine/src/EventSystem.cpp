@@ -2,60 +2,66 @@
 #include "EventSystem.h"
 #include "EventManager.h"
 #include "ScriptingSystem.h"
-#include <EventReceiverComponent.h>
+#include <EventReceiverComponent.h> // Ensure this path is correct
 
 extern Framework::Coordinator ecsInterface;
 
 namespace Framework {
 
-    // 1. FIX: Renamed to Initialize
     void EventSystem::Initialize() {
-        // 1. Get all entities that the Coordinator knows have an EventReceiver
+        // Leave this empty now. 
+        // We cannot trust that entities exist during Initialize.
+    }
+
+    void EventSystem::Update(float timeslice) {
+        // 1. Iterate over all entities that this system cares about
         for (auto const& entity : mEntities) {
-            // ADD THIS SAFETY CHECK
+
+            // Safety check
             if (!ecsInterface.HasComponent<EventReceiverComponent>(entity)) {
                 continue;
             }
 
             auto& receiver = ecsInterface.GetComponent<EventReceiverComponent>(entity);
 
-            // 2. The Wiring
-            // We tell the Manager: "When [messageToListenFor] happens, run this lambda."
-            EventManager::Instance().Subscribe(receiver.messageToListenFor,
+            // 2. CHECK THE FLAG
+            // Only wire up if we haven't done so already
+            if (!receiver.isSubscribed) {
 
+                // 3. Subscribe
+                EventManager::Instance().Subscribe(receiver.messageToListenFor,
+                    [entity, this](void* data) { // Capture 'this' to access ecsInterface if needed, or capture 'scriptingSystem' if you get it earlier
 
+                        // Re-get component inside lambda to be safe, or capture necessary strings by value
+                        // Note: Capturing 'entity' by value is safe. 
 
-                // THE LAMBDA (The actual logic that runs later)
-                [entity, receiver](void* data) { // Capture entity by value, receiver by copy (safety)
+                        // Use 'ecsInterface' (global) to get the component to ensure we have fresh data
+                        if (!ecsInterface.IsEntityValid(entity)) return;
+                        auto& r = ecsInterface.GetComponent<EventReceiverComponent>(entity);
 
+                        std::cout << "[EventSystem] RECEIVED Event: " << r.messageToListenFor
+                            << " on Entity: " << entity << std::endl;
 
-                    std::cout << "[EventSystem] RECEIVED Event: " << receiver.messageToListenFor
-                        << " on Entity: " << entity << std::endl;
+                        auto scriptingSystem = ecsInterface.GetSystem<ScriptingSystem>();
+                        if (scriptingSystem) {
+                            Entity* otherEntity = static_cast<Entity*>(data);
 
-                    auto scriptingSystem = ecsInterface.GetSystem<ScriptingSystem>();
-
-                    if (scriptingSystem) {
-                        // B. Decode the payload
-                        // In your diagram, the Sender passes the "other" entity (e.g., who hit the box)
-                        Entity* otherEntity = static_cast<Entity*>(data);
-
-                        // C. Call Lua
-                        // "Entity [ID] runs function [Lua_ShowPrompt]"
-                        // We pass -1 (or 0) as the 4th argument because the function signature requires it
-                        scriptingSystem->CallEntityFunction(
-                            entity,
-                            receiver.luaFunctionToCall,
-                            (otherEntity ? *otherEntity : -1)
-                        );
+                            // Use 'r.luaFunctionToCall' from the fresh component ref
+                            scriptingSystem->CallEntityFunction(
+                                entity,
+                                r.luaFunctionToCall,
+                                (otherEntity ? *otherEntity : -1)
+                            );
+                        }
                     }
-                }
-            );
+                );
+
+                // 4. MARK AS DONE
+                // Crucial: Prevent re-subscribing next frame
+                receiver.isSubscribed = true;
+
+                std::cout << "[EventSystem] Wired up entity " << entity << " to listener " << receiver.messageToListenFor << "\n";
+            }
         }
-    }
-
-
-    // 2. FIX: Empty body for Update
-    void EventSystem::Update(float timeslice) {
-        return;
     }
 }

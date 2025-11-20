@@ -444,40 +444,6 @@ namespace Framework {
     // In Graphics.cpp
     // REPLACE your entire Update function with this:
 
-
-    // To test collision (can delete)
-    bool Graphics::IsPointInsideBox(const glm::vec3& point, const TransformComponent& tf, const BoxColliderComponent& box)
-    {
-        // 1. Build the Model Matrix for the Entity
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, tf.position);
-        // Apply rotation (Z * Y * X standard order)
-        model = glm::rotate(model, glm::radians(tf.rotation.z), glm::vec3(0, 0, 1));
-        model = glm::rotate(model, glm::radians(tf.rotation.y), glm::vec3(0, 1, 0));
-        model = glm::rotate(model, glm::radians(tf.rotation.x), glm::vec3(1, 0, 0));
-        // Apply scale
-        model = glm::scale(model, tf.scale);
-
-        // 2. Convert World Point (Camera) to Local Point
-        // We invert the matrix to go "backwards" from World -> Object Local Space
-        glm::mat4 invModel = glm::inverse(model);
-        glm::vec4 localPointV4 = invModel * glm::vec4(point, 1.0f);
-        glm::vec3 localP = glm::vec3(localPointV4);
-
-        // 3. Define the Bounds in Local Space
-        // Center is usually offset, size is full width/height/depth
-        glm::vec3 halfSize = box.size * 0.5f;
-        glm::vec3 minBound = box.center - halfSize;
-        glm::vec3 maxBound = box.center + halfSize;
-
-        // 4. Simple AABB Check
-        bool insideX = (localP.x >= minBound.x && localP.x <= maxBound.x);
-        bool insideY = (localP.y >= minBound.y && localP.y <= maxBound.y);
-        bool insideZ = (localP.z >= minBound.z && localP.z <= maxBound.z);
-
-        return insideX && insideY && insideZ;
-    }
-
     void Graphics::Update(float deltaTime)
     {
         (void)deltaTime;
@@ -1578,41 +1544,6 @@ namespace Framework {
                 auto& collider = ecsInterface.GetComponent<BoxColliderComponent>(entityId);
                 model = glm::translate(model, collider.center);
                 model = glm::scale(model, collider.size);
-
-                auto& transform = ecsInterface.GetComponent<TransformComponent>(entityId);
-                const bool editorActive = (m_mouseTargetView == 1);
-                Camera& cam = editorActive ? sceneCamera : gameCamera;
-
-                // 2. Run the Math
-                bool isInside = IsPointInsideBox(cam.position, transform, collider);
-
-                // 3. Handle "OnEnter" Events
-                if (isInside && !collider.wasInsideLastFrame) {
-
-                    if (ecsInterface.HasComponent<EventSenderComponent>(entityId)) {
-                        auto& sender = ecsInterface.GetComponent<EventSenderComponent>(entityId);
-
-                        // CHECK TRIGGER NAME
-                        if (sender.triggerName == "OnCollision") {
-                            std::cout << "Entered Trigger: " << entityId << std::endl;
-
-                            // --- [FIX START] --- 
-                            // Create the payload on the stack
-                            CollisionEventData payload;
-                            payload.senderID = entityId; // THIS IS THE BOX
-
-                            // Assuming 'm_playerEntity' exists in your system. 
-
-                            payload.targetID = ecsInterface.GetEntityByName("Player");
-
-                            // Send the address of the payload (&payload) instead of nullptr
-                            EventManager::Instance().Fire(sender.messageName, &payload);
-                            // --- [FIX END] ---
-                        }
-                    }
-                }
-                // 4. Save state
-                collider.wasInsideLastFrame = isInside;
             }
 
             if (ecsInterface.HasComponent<TextProperties>(entityId)) {

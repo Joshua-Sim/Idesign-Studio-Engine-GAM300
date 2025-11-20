@@ -11,6 +11,7 @@
 #include "ECSystemManager.h"
 #include "ComponentList.h"
 #include "Terrain.h"
+#include "BoxColliderComponent.h"
 
 #include <Jolt/Jolt.h>
 #include <Jolt/Core/TempAllocator.h>
