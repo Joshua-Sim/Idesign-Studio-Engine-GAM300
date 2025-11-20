@@ -102,7 +102,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 7
+                    "sortIndex": 3
                 },
                 "MeshComponent": {
                     "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941",
@@ -132,7 +132,8 @@
                         0.0,
                         0.0,
                         0.0
-                    ]
+                    ],
+                    "canPassThrough": false
                 },
                 "PhysicsProperties": {
                     "isImmovable": true,
@@ -178,7 +179,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 8
+                    "sortIndex": 4
                 },
                 "MeshComponent": {
                     "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941",
@@ -232,7 +233,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 9
+                    "sortIndex": 5
                 },
                 "MeshComponent": {
                     "guid": "eac3e6f4-1bf2-415f-aef8-8f1269d91560",
@@ -268,7 +269,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 10
+                    "sortIndex": 6
                 },
                 "MeshComponent": {
                     "guid": "da032094-6e5c-40fe-b6f0-39a9d542ffe5",
@@ -304,7 +305,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 11
+                    "sortIndex": 7
                 },
                 "MeshComponent": {
                     "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941",
@@ -356,7 +357,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 12
+                    "sortIndex": 8
                 },
                 "MeshComponent": {
                     "guid": "62fa60bd-a3d0-4575-851f-e6d04a326345",
@@ -392,7 +393,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 13
+                    "sortIndex": 9
                 },
                 "MeshComponent": {
                     "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941",
@@ -428,7 +429,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 14
+                    "sortIndex": 10
                 },
                 "MeshComponent": {
                     "guid": "814c3cff-9da8-4ad4-8a05-009b99a4ea2b"
@@ -463,7 +464,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 15
+                    "sortIndex": 11
                 },
                 "MeshComponent": {
                     "guid": "e902f0d7-a022-45fc-9c17-2a98cbdb793e"
@@ -498,7 +499,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 16
+                    "sortIndex": 12
                 },
                 "MeshComponent": {
                     "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941",
@@ -534,7 +535,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 17
+                    "sortIndex": 13
                 },
                 "MeshComponent": {
                     "guid": "90a63915-c3e8-40b9-8c48-b8fe58a9bd67"
@@ -569,7 +570,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 18
+                    "sortIndex": 14
                 },
                 "MeshComponent": {
                     "guid": "e902f0d7-a022-45fc-9c17-2a98cbdb793e"
@@ -604,7 +605,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 19
+                    "sortIndex": 15
                 },
                 "MeshComponent": {
                     "guid": "d51dc95c-5066-4fd5-a31c-e51faf79cdd2",
@@ -640,7 +641,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 20
+                    "sortIndex": 16
                 },
                 "MeshComponent": {
                     "guid": "d51dc95c-5066-4fd5-a31c-e51faf79cdd2",
@@ -676,7 +677,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 21
+                    "sortIndex": 17
                 },
                 "MeshComponent": {
                     "guid": "90a63915-c3e8-40b9-8c48-b8fe58a9bd67"
@@ -711,7 +712,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 22
+                    "sortIndex": 18
                 },
                 "MeshComponent": {
                     "guid": "d51dc95c-5066-4fd5-a31c-e51faf79cdd2",
@@ -731,7 +732,8 @@
                         0.0,
                         1.5,
                         0.0
-                    ]
+                    ],
+                    "canPassThrough": true
                 },
                 "PhysicsProperties": {
                     "isImmovable": true,
@@ -777,7 +779,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 23
+                    "sortIndex": 19
                 },
                 "MeshComponent": {
                     "guid": "0bfc0f47-64aa-4521-b9fa-08ff8aed994b",
@@ -823,7 +825,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 24
+                    "sortIndex": 20
                 },
                 "MeshComponent": {
                     "guid": "239cddd5-6733-44a1-927a-e3b13152a09a",
@@ -859,10 +861,11 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 25
+                    "sortIndex": 21
                 },
                 "MeshComponent": {
-                    "guid": "1cc97700-7326-4df8-b677-80233b030807"
+                    "guid": "1cc97700-7326-4df8-b677-80233b030807",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "b57b4683-8581-4256-9cc5-60c900acec67",
@@ -894,7 +897,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 26
+                    "sortIndex": 22
                 },
                 "MeshComponent": {
                     "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941",
@@ -930,7 +933,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 27
+                    "sortIndex": 23
                 },
                 "MeshComponent": {
                     "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941",
@@ -982,7 +985,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 28
+                    "sortIndex": 24
                 },
                 "MeshComponent": {
                     "guid": "177fa052-079f-42bb-b225-97be34770804",
@@ -1018,7 +1021,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 29
+                    "sortIndex": 25
                 },
                 "MeshComponent": {
                     "guid": "6fa52b14-d79c-4815-aaff-767eb40b32ca"
@@ -1053,7 +1056,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 30
+                    "sortIndex": 26
                 },
                 "MeshComponent": {
                     "guid": "da032094-6e5c-40fe-b6f0-39a9d542ffe5",
@@ -1089,7 +1092,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 31
+                    "sortIndex": 27
                 },
                 "MeshComponent": {
                     "guid": "da032094-6e5c-40fe-b6f0-39a9d542ffe5",
@@ -1125,7 +1128,7 @@
                 "HierarchyComponent": {
                     "parent": "59cca078-d956-4d13-b89e-4f92455afb42",
                     "children": [],
-                    "sortIndex": 32
+                    "sortIndex": 28
                 },
                 "MeshComponent": {
                     "guid": "97635846-7fcd-4674-b730-21d672c2f510"
@@ -1160,7 +1163,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 33
+                    "sortIndex": 29
                 },
                 "MeshComponent": {
                     "guid": "4658a6a6-5858-4b7b-bf14-feea255d368c",
@@ -1196,7 +1199,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 34
+                    "sortIndex": 30
                 },
                 "MeshComponent": {
                     "guid": "4658a6a6-5858-4b7b-bf14-feea255d368c",
@@ -1232,7 +1235,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 35
+                    "sortIndex": 31
                 },
                 "MeshComponent": {
                     "guid": "4658a6a6-5858-4b7b-bf14-feea255d368c",
@@ -1284,7 +1287,7 @@
                         "eb2198cf-50c0-4855-835e-f9a81a2b3fe8",
                         "91e173de-50e4-4332-a01a-42e823a288b3"
                     ],
-                    "sortIndex": 36
+                    "sortIndex": 32
                 },
                 "TextureComponent": {
                     "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
@@ -1316,7 +1319,7 @@
                 "HierarchyComponent": {
                     "parent": "59cca078-d956-4d13-b89e-4f92455afb42",
                     "children": [],
-                    "sortIndex": 37
+                    "sortIndex": 33
                 },
                 "MeshComponent": {
                     "guid": "bf7c3abb-d8d4-4fa5-bd45-019e80216f61",
@@ -1352,7 +1355,7 @@
                 "HierarchyComponent": {
                     "parent": "59cca078-d956-4d13-b89e-4f92455afb42",
                     "children": [],
-                    "sortIndex": 38
+                    "sortIndex": 34
                 },
                 "MeshComponent": {
                     "guid": "bf7c3abb-d8d4-4fa5-bd45-019e80216f61",
@@ -1388,7 +1391,7 @@
                 "HierarchyComponent": {
                     "parent": "59cca078-d956-4d13-b89e-4f92455afb42",
                     "children": [],
-                    "sortIndex": 39
+                    "sortIndex": 35
                 },
                 "MeshComponent": {
                     "guid": "bf7c3abb-d8d4-4fa5-bd45-019e80216f61",
@@ -1424,7 +1427,7 @@
                 "HierarchyComponent": {
                     "parent": "59cca078-d956-4d13-b89e-4f92455afb42",
                     "children": [],
-                    "sortIndex": 40
+                    "sortIndex": 36
                 },
                 "MeshComponent": {
                     "guid": "bf7c3abb-d8d4-4fa5-bd45-019e80216f61",
@@ -1478,7 +1481,7 @@
                 "HierarchyComponent": {
                     "parent": "59cca078-d956-4d13-b89e-4f92455afb42",
                     "children": [],
-                    "sortIndex": 41
+                    "sortIndex": 37
                 },
                 "MeshComponent": {
                     "guid": "bf7c3abb-d8d4-4fa5-bd45-019e80216f61",
@@ -1514,7 +1517,7 @@
                 "HierarchyComponent": {
                     "parent": "59cca078-d956-4d13-b89e-4f92455afb42",
                     "children": [],
-                    "sortIndex": 42
+                    "sortIndex": 38
                 },
                 "MeshComponent": {
                     "guid": "76f36163-789f-4c71-87b4-76fdccaa8408"
@@ -1549,7 +1552,7 @@
                 "HierarchyComponent": {
                     "parent": "59cca078-d956-4d13-b89e-4f92455afb42",
                     "children": [],
-                    "sortIndex": 43
+                    "sortIndex": 39
                 },
                 "MeshComponent": {
                     "guid": "76f36163-789f-4c71-87b4-76fdccaa8408"
@@ -1584,7 +1587,7 @@
                 "HierarchyComponent": {
                     "parent": "59cca078-d956-4d13-b89e-4f92455afb42",
                     "children": [],
-                    "sortIndex": 44
+                    "sortIndex": 40
                 },
                 "MeshComponent": {
                     "guid": "76f36163-789f-4c71-87b4-76fdccaa8408"
@@ -1619,7 +1622,7 @@
                 "HierarchyComponent": {
                     "parent": "59cca078-d956-4d13-b89e-4f92455afb42",
                     "children": [],
-                    "sortIndex": 45
+                    "sortIndex": 41
                 },
                 "MeshComponent": {
                     "guid": "76f36163-789f-4c71-87b4-76fdccaa8408"
@@ -1679,7 +1682,7 @@
                         "76664a7c-73ef-49ba-b2da-6d39e08e6c61",
                         "51315770-51ee-4179-8c2f-6f04b11153ff"
                     ],
-                    "sortIndex": 47
+                    "sortIndex": 42
                 }
             }
         },
@@ -1689,14 +1692,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -21.456926345825195,
-                        7.709787368774414,
-                        9.043935775756836
+                        -34.799015045166016,
+                        7.7092790603637695,
+                        11.336045265197754
                     ],
                     "rotation": [
-                        0.010534591972827911,
-                        -0.11602041125297546,
-                        -0.004671338014304638
+                        -0.019654134288430214,
+                        -0.0038980641402304173,
+                        0.02668358013033867
                     ],
                     "scale": [
                         1.0,
@@ -1707,20 +1710,10 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 48
+                    "sortIndex": 43
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "ScriptProperties": {
-                    "scripts": [
-                        {
-                            "guid": "c8af2bda-527b-474b-98d2-cfa9e88a8f06",
-                            "scriptPath": "Assets\\Scripts\\footsteps.lua",
-                            "hotReload": true
-                        }
-                    ]
+                    "guid": ""
                 },
                 "BoxColliderComponent": {
                     "size": [
@@ -1732,7 +1725,8 @@
                         0.0,
                         0.0,
                         0.0
-                    ]
+                    ],
+                    "canPassThrough": false
                 },
                 "PhysicsProperties": {
                     "isImmovable": false,
@@ -1751,6 +1745,10 @@
                         0.0
                     ],
                     "startAwake": true
+                },
+                "EventSenderComponent": {
+                    "triggerName": "OnCollision",
+                    "messageName": "deez"
                 }
             }
         },
@@ -1782,7 +1780,7 @@
                         "f3ac9264-85f2-4433-bbe3-24f57fc60ca3",
                         "c121b678-c782-4205-b20e-9695226e60ca"
                     ],
-                    "sortIndex": 46
+                    "sortIndex": 44
                 },
                 "MeshComponent": {
                     "guid": ""
@@ -1817,7 +1815,7 @@
                 "HierarchyComponent": {
                     "parent": "c9cb3c57-08a0-40e1-99ff-364fba30c505",
                     "children": [],
-                    "sortIndex": 0
+                    "sortIndex": 45
                 },
                 "MeshComponent": {
                     "guid": "e902f0d7-a022-45fc-9c17-2a98cbdb793e",
@@ -1877,7 +1875,7 @@
                 "HierarchyComponent": {
                     "parent": "c9cb3c57-08a0-40e1-99ff-364fba30c505",
                     "children": [],
-                    "sortIndex": 1
+                    "sortIndex": 46
                 },
                 "MeshComponent": {
                     "guid": ""
@@ -1912,7 +1910,7 @@
                 "HierarchyComponent": {
                     "parent": "c9cb3c57-08a0-40e1-99ff-364fba30c505",
                     "children": [],
-                    "sortIndex": 2
+                    "sortIndex": 47
                 },
                 "MeshComponent": {
                     "guid": ""
@@ -1920,6 +1918,86 @@
                 "TextureComponent": {
                     "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
                     "isUI": false
+                }
+            }
+        },
+        {
+            "name": "Herb",
+            "guid": "cacae5c6-d63c-4a92-9a65-b512e4eb2fa0",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -42.63027572631836,
+                        5.769213676452637,
+                        9.310661315917969
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 1
+                },
+                "MeshComponent": {
+                    "guid": "e40538da-1955-44a8-bb38-ddbc8805d083",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "06b3101c-c40c-438e-be69-13555a22d44f",
+                    "isUI": false
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "998e8733-cf17-48d4-96be-ab700322c93c",
+                            "scriptPath": "Assets\\Scripts\\spawnPrompt.lua",
+                            "hotReload": true
+                        }
+                    ]
+                },
+                "BoxColliderComponent": {
+                    "size": [
+                        5.0,
+                        4.0,
+                        5.0
+                    ],
+                    "center": [
+                        0.0,
+                        2.0,
+                        0.0
+                    ],
+                    "canPassThrough": true
+                },
+                "PhysicsProperties": {
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 0.5,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "startAwake": true
+                },
+                "EventReceiverComponent": {
+                    "messageToListenFor": "deez",
+                    "luaFunctionToCall": "OnInteract"
                 }
             }
         }
