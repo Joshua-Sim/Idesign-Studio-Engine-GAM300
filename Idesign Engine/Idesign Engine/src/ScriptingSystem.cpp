@@ -155,6 +155,21 @@ namespace Framework {
             return 1;
         }
 
+        static int l_DestroyEntity(lua_State* L) {
+            // 1. Get Entity ID from Lua
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+
+            // 2. Check validity
+            if (ecsInterface.IsEntityValid(e)) {
+                ecsInterface.DestroyEntity(e);
+                // std::cout << "[Lua] Destroyed Entity " << e << std::endl;
+            }
+            else {
+                std::cout << "[Lua Warning] Tried to destroy invalid entity: " << e << std::endl;
+            }
+            return 0;
+        }
+
         int l_ToggleLight(lua_State* L) {
             auto* self = lua_self(L);
             Graphics* g = self ? self->GetGraphicsSystem() : nullptr;
@@ -424,7 +439,8 @@ namespace Framework {
         lua_register(L, "GetPosition", lua_GetPosition);
         lua_register(L, "SetPosition", lua_SetPosition);
         lua_register(L, "SpawnPrompt", l_spawnPrompt);
-        lua_register(L, "IsMouseButtonDown", l_IsMouseButtonDown); // <-- ADD THIS
+        lua_register(L, "DestroyEntity", l_DestroyEntity);
+        lua_register(L, "IsMouseButtonDown", l_IsMouseButtonDown); 
 
         // Engine utility
         lua_register(L, "FindEntityByName", lua_FindEntityByName);

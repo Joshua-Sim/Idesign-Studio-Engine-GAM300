@@ -1,32 +1,32 @@
 local M = {}
 
-M.spawnedTextID = -1 -- Store ID to delete it later
+-- We store the text ID inside the table so we remember it
+M.spawnedTextID = -1 
 
-function M:on_init()
-    -- Nothing needed here yet
-end
-
-function M:on_update(dt)
-    -- Nothing needed here yet
-end
-
--- This is the function name you type in the Editor inside "Lua Function"
-function M:OnInteract(otherEntityID)
+-- action: 1 = Enter, 0 = Exit
+function M:OnInteract(targetID, action)
     
-    print("Lua: Interaction Triggered by Entity " .. tostring(otherEntityID))
+    -- 1. Security Check (Am I the one being hit?)
+    if self.entity ~= targetID then return end
 
-    -- Only spawn if we haven't already
-    if M.spawnedTextID == -1 then
+    -- 2. ENTER Logic
+    if action == 1 then
+        print("Player Entered Box! Spawning Text.")
         
-        -- CALL C++ FUNCTION
-        -- Arg 1: self.entity (The Box's ID)
-        -- Arg 2: The String
-        -- Arg 3: Height Offset
-        M.spawnedTextID = SpawnPrompt(self.entity, "Press E to Interact", 2.5)
-        
-        print("Lua: Spawned Prompt ID: " .. M.spawnedTextID)
-    else
-        print("Lua: Prompt already exists.")
+        -- Only spawn if we don't have one already
+        if M.spawnedTextID == -1 then
+            M.spawnedTextID = SpawnPrompt(self.entity, "Press E", 2.5)
+        end
+
+    -- 3. EXIT Logic
+    elseif action == 0 then
+        print("Player Exited Box! Destroying Text.")
+
+        -- Only destroy if we actually have one
+        if M.spawnedTextID ~= -1 then
+            DestroyEntity(M.spawnedTextID)
+            M.spawnedTextID = -1 -- Reset ID so we can spawn again later
+        end
     end
 end
 

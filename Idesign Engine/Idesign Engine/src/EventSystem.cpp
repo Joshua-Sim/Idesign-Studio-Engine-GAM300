@@ -78,11 +78,12 @@ namespace Framework {
                             if (payload) {
                                 target = payload->targetID;
                             }
-
+                            int action = payload->actionType; // [NEW] Get 1 or 0
                             scriptingSystem->CallEntityFunction(
                                 entity,
                                 currentReceiver.luaFunctionToCall,
-                                target
+                                target,
+                                action // <--- PASS THIS! (It was -1 before)
                             );
                         }
 

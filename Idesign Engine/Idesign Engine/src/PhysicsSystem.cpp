@@ -386,21 +386,34 @@ namespace Framework {
                 auto& collider = ecsInterface.GetComponent<BoxColliderComponent>(e);
                 auto& transform = ecsInterface.GetComponent<TransformComponent>(e);
 
-                // Run Math
+                // Run the Math
                 bool isInside = IsPointInsideBox(playerTrans.position, transform, collider);
 
+                // CHECK 1: ENTERING (isInside = true, wasInside = false)
                 if (isInside && !collider.wasInsideLastFrame) {
-
-                    // CHECK TRIGGER NAME ON THE PLAYER
                     if (playerSender.triggerName == "OnCollision") {
 
-                        std::cout << "[Physics] Player hit Entity " << e << ". Firing: " << playerSender.messageName << std::endl;
+                        CollisionEventData payload;
+                        payload.senderID = playerEntity;
+                        payload.targetID = e;
+                        payload.actionType = 1; // [NEW] 1 means ENTER
+
+                        EventManager::Instance().Fire(playerSender.messageName, &payload);
+                    }
+                }
+                // CHECK 2: EXITING (isInside = false, wasInside = true)
+                else if (!isInside && collider.wasInsideLastFrame) {
+                    if (playerSender.triggerName == "OnCollision") {
+
+                        std::cout << "[Physics] Player EXITED Entity " << e << std::endl;
 
                         CollisionEventData payload;
-                        payload.senderID = playerEntity; // The Sender is now the Player
-                        payload.targetID = e;            // The Target is the Box
+                        payload.senderID = playerEntity;
+                        payload.targetID = e;
+                        payload.actionType = 0; // [NEW] 0 means EXIT
 
-                        // We fire the message defined on the PLAYER (e.g., "PlayerHitObject")
+                        // We fire the SAME message ("PlayerInteraction")
+                        // The Receiver listens to the same channel, but reacts differently based on the data.
                         EventManager::Instance().Fire(playerSender.messageName, &payload);
                     }
                 }

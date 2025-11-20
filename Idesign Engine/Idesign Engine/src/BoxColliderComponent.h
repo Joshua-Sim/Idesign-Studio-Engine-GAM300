@@ -18,12 +18,10 @@ namespace Framework {
     };
 
     struct CollisionEventData {
-        Entity senderID;   // The Box (Chest/Door)
-        Entity targetID;   // The Player
+        Entity senderID;
+        Entity targetID;
+        int actionType; // [NEW] 1 = Enter, 0 = Exit
     };
-
-    // 2. --- REGISTRATION FOR IMGUI ---
-    // (This assumes you have a PROP_VEC3 macro in PropertyMacro.h)
 
     inline const std::vector g_BoxColliderPropsArray =
     {
