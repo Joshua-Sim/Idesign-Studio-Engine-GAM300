@@ -37,7 +37,6 @@ namespace Framework
         // Note: If your property system doesn't support Enums directly, 
         // we register it as an INT here, and handle the Dropdown in the Editor logic (Step 2).
         PROP_INT(alignment, TextProperties),
-        PROP_INT(alignment, TextProperties),
         PROP_BOOL(isBillboard, TextProperties)
     };
 
