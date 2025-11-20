@@ -23,35 +23,35 @@ namespace Framework
 
 		// Nvr include windowconfig here
 		std::string meshPath = (root / "Assets/JSON/MeshAsset.json").string();
-		std::cout << "  Saving: " << meshPath << std::endl;
+		//std::cout << "  Saving: " << meshPath << std::endl;
 		AssetManager::Instance().SaveArrayToJson(TypeName<MeshProperties>::value, meshPath, "mesh");
 
 		std::string audioPath = (root / "Assets/JSON/AudioAsset.json").string();
-		std::cout << "  Saving: " << audioPath << std::endl;
+		//std::cout << "  Saving: " << audioPath << std::endl;
 		AssetManager::Instance().SaveArrayToJson(TypeName<AudioMetadata>::value, audioPath, "audio");
 
 		std::string texturePath = (root / "Assets/JSON/TextureAsset.json").string();
-		std::cout << "  Saving: " << texturePath << std::endl;
+		//std::cout << "  Saving: " << texturePath << std::endl;
 		AssetManager::Instance().SaveArrayToJson(TypeName<TextureProperties>::value, texturePath, "textures");
 
 		std::string prefabPath = (root / "Assets/JSON/PrefabAsset.json").string();
-		std::cout << "  Saving: " << prefabPath << std::endl;
+		//std::cout << "  Saving: " << prefabPath << std::endl;
 		AssetManager::Instance().SaveArrayToJson(TypeName<PrefabProperties>::value, prefabPath, "prefabs");
 
 		std::string scenePath = (root / "Assets/JSON/SceneAsset.json").string();
-		std::cout << "  Saving: " << scenePath << std::endl;
+		//std::cout << "  Saving: " << scenePath << std::endl;
 		AssetManager::Instance().SaveArrayToJson(TypeName<SceneProperties>::value, scenePath, "scenes");
 
 		std::string materialPath = (root / "Assets/JSON/MaterialAsset.json").string();
-		std::cout << "  Saving: " << materialPath << std::endl;
+		//std::cout << "  Saving: " << materialPath << std::endl;
 		AssetManager::Instance().SaveArrayToJson(TypeName<MaterialMetadata>::value, materialPath, "materials");
 
 		std::string animPath = (root / "Assets/JSON/AnimationAsset.json").string();
-		std::cout << "  Saving: " << animPath << std::endl;
+		//std::cout << "  Saving: " << animPath << std::endl;
 		AssetManager::Instance().SaveArrayToJson(TypeName<AnimationProperties>::value, animPath, "animation");
 
 		std::string scriptPath = (root / "Assets/JSON/ScriptAsset.json").string();
-		std::cout << "  Saving: " << scriptPath << std::endl;
+		//std::cout << "  Saving: " << scriptPath << std::endl;
 		AssetManager::Instance().SaveArrayToJson(TypeName<ScriptEntry>::value, scriptPath, "scripts");
 
 		std::cout << "Files are being saved" << std::endl;
@@ -64,28 +64,28 @@ namespace Framework
 
 		//CompileSingleObject<WindowConfig>("src/Data/WindowAsset.json", "src/Data/WindowAsset.cfg", "Descriptor/WindowAsset.desc", g_WindowConfigProps);
 
-		std::cout << "  Compiling Mesh:\n    JSON: " << (root / "Assets/JSON/MeshAsset.json").string() << "\n    BIN: " << (root / "Resource/MeshAsset.bin").string() << std::endl;
+		//std::cout << "  Compiling Mesh:\n    JSON: " << (root / "Assets/JSON/MeshAsset.json").string() << "\n    BIN: " << (root / "Resource/MeshAsset.bin").string() << std::endl;
 		CompileArray<MeshProperties>((root / "Assets/JSON/MeshAsset.json").string(), (root / "Resource/MeshAsset.bin").string(), (root / "Descriptor/MeshAsset.desc").string(), g_MeshProps, "mesh");
 
-		std::cout << "  Compiling Audio:\n    JSON: " << (root / "Assets/JSON/AudioAsset.json").string() << "\n    BIN: " << (root / "Resource/AudioAsset.bin").string() << std::endl;
+		//std::cout << "  Compiling Audio:\n    JSON: " << (root / "Assets/JSON/AudioAsset.json").string() << "\n    BIN: " << (root / "Resource/AudioAsset.bin").string() << std::endl;
 		CompileArray<AudioMetadata>((root / "Assets/JSON/AudioAsset.json").string(), (root / "Resource/AudioAsset.bin").string(), (root / "Descriptor/AudioAsset.desc").string(), g_AudioMetadataProps, "audio");
 
-		std::cout << "  Compiling Texture:\n    JSON: " << (root / "Assets/JSON/TextureAsset.json").string() << "\n    BIN: " << (root / "Resource/TextureAsset.bin").string() << std::endl;
+		//std::cout << "  Compiling Texture:\n    JSON: " << (root / "Assets/JSON/TextureAsset.json").string() << "\n    BIN: " << (root / "Resource/TextureAsset.bin").string() << std::endl;
 		CompileArray<TextureProperties>((root / "Assets/JSON/TextureAsset.json").string(), (root / "Resource/TextureAsset.bin").string(), (root / "Descriptor/TextureAsset.desc").string(), g_TexturePropertiesProps, "textures");
 
-		std::cout << "  Compiling Prefab:\n    JSON: " << (root / "Assets/JSON/PrefabAsset.json").string() << "\n    BIN: " << (root / "Resource/PrefabAsset.bin").string() << std::endl;
+		//std::cout << "  Compiling Prefab:\n    JSON: " << (root / "Assets/JSON/PrefabAsset.json").string() << "\n    BIN: " << (root / "Resource/PrefabAsset.bin").string() << std::endl;
 		CompileArray<PrefabProperties>((root / "Assets/JSON/PrefabAsset.json").string(), (root / "Resource/PrefabAsset.bin").string(), (root / "Descriptor/PrefabAsset.desc").string(), g_PrefabProps, "prefabs");
 
-		std::cout << "  Compiling Scene:\n    JSON: " << (root / "Assets/JSON/SceneAsset.json").string() << "\n    BIN: " << (root / "Resource/SceneAsset.bin").string() << std::endl;
+		//std::cout << "  Compiling Scene:\n    JSON: " << (root / "Assets/JSON/SceneAsset.json").string() << "\n    BIN: " << (root / "Resource/SceneAsset.bin").string() << std::endl;
 		CompileArray<SceneProperties>((root / "Assets/JSON/SceneAsset.json").string(), (root / "Resource/SceneAsset.bin").string(), (root / "Descriptor/SceneAsset.desc").string(), g_SceneProps, "scenes");
 
-		std::cout << "  Compiling Material:\n    JSON: " << (root / "Assets/JSON/MaterialAsset.json").string() << "\n    BIN: " << (root / "Resource/MaterialAsset.bin").string() << std::endl;
+		//std::cout << "  Compiling Material:\n    JSON: " << (root / "Assets/JSON/MaterialAsset.json").string() << "\n    BIN: " << (root / "Resource/MaterialAsset.bin").string() << std::endl;
 		CompileArray<MaterialMetadata>((root / "Assets/JSON/MaterialAsset.json").string(), (root / "Resource/MaterialAsset.bin").string(), (root / "Descriptor/MaterialAsset.desc").string(), g_MaterialMetaProps, "materials");
 
-		std::cout << "  Compiling Animation:\n    JSON: " << (root / "Assets/JSON/AnimationAsset.json").string() << "\n    BIN: " << (root / "Resource/AnimationAsset.bin").string() << std::endl;
+		//std::cout << "  Compiling Animation:\n    JSON: " << (root / "Assets/JSON/AnimationAsset.json").string() << "\n    BIN: " << (root / "Resource/AnimationAsset.bin").string() << std::endl;
 		CompileArray<AnimationProperties>((root / "Assets/JSON/AnimationAsset.json").string(), (root / "Resource/AnimationAsset.bin").string(), (root / "Descriptor/AnimationAsset.desc").string(), g_AnimationPropertiesProps, "animation");
 
-		std::cout << "  Compiling Scripts:\n    JSON: " << (root / "Assets/JSON/ScriptAsset.json").string() << "\n    BIN: " << (root / "Resource/ScriptAsset.bin").string() << std::endl;
+		//std::cout << "  Compiling Scripts:\n    JSON: " << (root / "Assets/JSON/ScriptAsset.json").string() << "\n    BIN: " << (root / "Resource/ScriptAsset.bin").string() << std::endl;
 		CompileArray<ScriptEntry>((root / "Assets/JSON/ScriptAsset.json").string(), (root / "Resource/ScriptAsset.bin").string(), (root / "Descriptor/ScriptAsset.desc").string(), g_ScriptEntryProps, "scripts");
 
 		std::cout << "Files are being compiled to .binary" << std::endl;
@@ -98,23 +98,23 @@ namespace Framework
 
 		// Mesh & Texture is loaded under Graphics.cpp due to some initialization required under graphics.cpp
 		std::string windowCfgPath = (root / "Resource/WindowAsset.cfg").string();
-		std::cout << "  Loading: " << windowCfgPath << std::endl;
+		//std::cout << "  Loading: " << windowCfgPath << std::endl;
 		AssetManager::Instance().LoadBinary<WindowConfig>(windowCfgPath, g_WindowConfigProps);
 
 		std::string audioBinPath = (root / "Resource/AudioAsset.bin").string();
-		std::cout << "  Loading: " << audioBinPath << std::endl;
+		//std::cout << "  Loading: " << audioBinPath << std::endl;
 		AssetManager::Instance().LoadBinaryArray<AudioMetadata>(audioBinPath, g_AudioMetadataProps);
 
 		std::string prefabBinPath = (root / "Resource/PrefabAsset.bin").string();
-		std::cout << "  Loading: " << prefabBinPath << std::endl;
+		//std::cout << "  Loading: " << prefabBinPath << std::endl;
 		AssetManager::Instance().LoadBinaryArray<PrefabProperties>(prefabBinPath, g_PrefabProps);
 
 		std::string sceneBinPath = (root / "Resource/SceneAsset.bin").string();
-		std::cout << "  Loading: " << sceneBinPath << std::endl;
+		//std::cout << "  Loading: " << sceneBinPath << std::endl;
 		AssetManager::Instance().LoadBinaryArray<SceneProperties>(sceneBinPath, g_SceneProps);
 
 		std::string materialBinPath = (root / "Resource/MaterialAsset.bin").string();
-		std::cout << "  Loading: " << materialBinPath << std::endl;
+		//std::cout << "  Loading: " << materialBinPath << std::endl;
 		AssetManager::Instance().LoadBinaryArray<MaterialMetadata>(
 			materialBinPath,
 			g_MaterialMetaProps,
@@ -128,14 +128,13 @@ namespace Framework
 				std::string fullMaterialPath = (root / meta.path).string();
 
 				// Added debug line here
-				std::cout << "    Loading individual material: " << fullMaterialPath << std::endl;
-
+				//std::cout << "    Loading individual material: " << fullMaterialPath << std::endl;
+				
 				auto material = LoadMaterialAsset(fullMaterialPath, meta.guid);
 				if (material)
 				{
 					material->guid = meta.guid;
-					std::cout << "[AssetManager] Registering MaterialProperties for GUID="
-						<< meta.guid.id << " at path=" << meta.path << std::endl; // Changed meta.path to meta.key, assuming key is the intended identifier
+					//std::cout << "[AssetManager] Registering MaterialProperties for GUID=" << meta.guid.id << " at path=" << meta.path << std::endl; // Changed meta.path to meta.key, assuming key is the intended identifier
 					AssetManager::Instance().RegisterAsset(std::move(material), &g_MaterialProps, meta.path); // Changed meta.path to meta.key
 				}
 				else std::cerr << "[AssetManager] Failed to load material file: " << fullMaterialPath << " for GUID=" << meta.guid << std::endl;
@@ -143,7 +142,7 @@ namespace Framework
 		);
 
 		std::string scriptBinPath = (root / "Resource/ScriptAsset.bin").string();
-		std::cout << "  Loading: " << scriptBinPath << std::endl;
+		//std::cout << "  Loading: " << scriptBinPath << std::endl;
 		AssetManager::Instance().LoadBinaryArray<ScriptEntry>(scriptBinPath, g_ScriptEntryProps);
 	}
 
