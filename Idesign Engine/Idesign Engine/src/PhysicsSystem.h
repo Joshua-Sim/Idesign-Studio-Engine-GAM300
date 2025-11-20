@@ -22,8 +22,22 @@
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
 #include <Jolt/Physics/Collision/Shape/PlaneShape.h>
 
+#include <glm.hpp> // --- NEW --- Added for glm::vec3 in RaycastHit
+
 namespace Framework
 {
+    // --- NEW ---
+    /// @brief Holds information about a raycast intersection.
+    struct RaycastHit
+    {
+        Entity    entity = 0;      // The entity that was hit.
+        glm::vec3 point{ 0.0f };   // The world-space point of impact.
+        glm::vec3 normal{ 0.0f };  // The world-space normal of the surface hit.
+        float     distance = 0.0f; // The distance from the ray's origin to the hit point.
+        bool      hit = false;     // True if the raycast hit something.
+    };
+    // --- END NEW ---
+
     class PhysicsSystem : public ISystem
     {
     public:
@@ -31,6 +45,18 @@ namespace Framework
         void Update(float dt) override;
         std::string GetName() override;
         void Shutdown();
+
+        // --- NEW ---
+        /// @brief Performs a raycast against the physics world.
+        /// @param origin The starting point of the ray in world space.
+        /// @param direction The direction of the ray (should be normalized).
+        /// @param maxDistance The maximum length of the ray.
+        /// @param outHit The structure to store hit information.
+        /// @param targetCategory (Optional) The specific category (from PhysicsProperties) to hit. -1 means hit anything.
+        /// @return True if the ray hit something, false otherwise.
+        bool Raycast(const glm::vec3& origin, const glm::vec3& direction, float maxDistance, RaycastHit& outHit, int targetCategory = -1);
+        // --- END NEW ---
+
 
         //JPH::BodyID     mPickedID;             // whichever body you clicked
         //bool            mRotating = false;
@@ -112,6 +138,6 @@ namespace Framework
 
             std::cout << "[Physics] Contact START: " << e1 << " & " << e2 << std::endl;
         }
-        
+
     };
 }

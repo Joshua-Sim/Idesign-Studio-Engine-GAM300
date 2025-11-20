@@ -26,6 +26,15 @@
 #include <Jolt/Physics/Collision/Shape/MeshShape.h>
 #include <Jolt/Physics/Collision/Shape/OffsetCenterOfMassShape.h>
 
+// --- NEW ---
+#include <Jolt/Physics/Collision/RayCast.h>
+#include <Jolt/Physics/Collision/CollisionCollector.h>
+#include <Jolt/Physics/Collision/CastResult.h>
+#include <Jolt/Physics/Collision/ObjectLayer.h>
+#include <Jolt/Physics/Collision/BroadPhase/BroadPhaseLayer.h> // <-- ADD THIS INCLUDE
+// --- END NEW ---
+
+
 #include <glm/glm/glm.hpp>
 #include <glm/glm/gtc/quaternion.hpp>
 
@@ -126,6 +135,32 @@ class AllowAllPairFilter final : public JPH::ObjectLayerPairFilter {
 public:
     bool ShouldCollide(JPH::ObjectLayer, JPH::ObjectLayer) const override { return true; }
 };
+
+namespace {
+    /// Filter that allows collision with all broadphase layers
+    class AllowAllBroadPhaseFilter : public JPH::BroadPhaseLayerFilter {
+    public:
+        virtual bool ShouldCollide(JPH::BroadPhaseLayer) const override { return true; }
+    };
+
+    /// Filter that allows collision with all object layers
+    class AllowAllObjectFilter : public JPH::ObjectLayerFilter {
+    public:
+        virtual bool ShouldCollide(JPH::ObjectLayer) const override { return true; }
+    };
+
+    /// Filter that allows collision ONLY with a specific object layer
+    class SpecificCategoryFilter : public JPH::ObjectLayerFilter {
+    public:
+        SpecificCategoryFilter(JPH::ObjectLayer layer) : mLayer(layer) {}
+        virtual bool ShouldCollide(JPH::ObjectLayer inLayer) const override {
+            return mLayer == inLayer;
+        }
+    private:
+        JPH::ObjectLayer mLayer;
+    };
+} // namespace
+// --- END NEW (REVISED HELPER CLASSES) ---
 
 namespace Framework {
     static std::unordered_map<Entity, glm::vec3> s_lastLin, s_lastAng;
@@ -228,6 +263,12 @@ namespace Framework {
         static AllowAllPairFilter   pairFilter;
 
         physicsSystem.Init(1024, 0, 1024, 1024, broadPhaseInterface, objVsBP, pairFilter);
+
+        // --- NEW ---
+        // Set the contact listener's body lock interface
+        g_ContactListener.mBodyLockInterface = &physicsSystem.GetBodyLockInterface();
+        // --- END NEW ---
+
         bodyInterface = &physicsSystem.GetBodyInterface();
         g_ContactListener.mBodyInterface = bodyInterface;
         physicsSystem.SetContactListener(&g_ContactListener);
@@ -412,6 +453,87 @@ namespace Framework {
             }
         }
     }
+
+    // --- NEW (REVISED FUNCTION V4) ---
+    bool PhysicsSystem::Raycast(const glm::vec3& origin, const glm::vec3& direction, float maxDistance, RaycastHit& outHit, int targetCategory)
+    {
+        // Get the Jolt query interface
+        auto* narrowPhaseQuery = &physicsSystem.GetNarrowPhaseQuery();
+
+        // Jolt's RRayCast takes a direction vector scaled by the max distance
+        JPH::RRayCast ray(
+            JPH::RVec3(origin.x, origin.y, origin.z),
+            JPH::Vec3(direction.x, direction.y, direction.z) * maxDistance
+        );
+
+        JPH::RayCastResult hit_result; // <-- This line will now compile (C2079 fix)
+        bool did_hit = false;
+
+        // --- REVISED LOGIC ---
+        // Always allow all broadphase layers
+        AllowAllBroadPhaseFilter bp_filter;
+
+        if (targetCategory == -1)
+        {
+            // Category -1 means hit anything. Use the "AllowAll" object filter.
+            AllowAllObjectFilter obj_filter;
+            did_hit = narrowPhaseQuery->CastRay( // <-- This line will now compile (C2665 fix)
+                ray,
+                hit_result,
+                bp_filter,
+                obj_filter
+            );
+        }
+        else
+        {
+            // We have a specific category. Use our custom "SpecificCategory" filter.
+            SpecificCategoryFilter obj_filter(ToObjectLayer(targetCategory));
+            did_hit = narrowPhaseQuery->CastRay( // <-- This line will now compile (C2665 fix)
+                ray,
+                hit_result,
+                bp_filter,
+                obj_filter // Pass our specific filter
+            );
+        }
+        // --- END REVISED LOGIC ---
+
+        if (did_hit)
+        {
+            // A hit occurred, now get the body ID
+            JPH::BodyID body_id = hit_result.mBodyID;
+
+            // We need to lock the body to safely read its user data (our Entity ID)
+            auto& body_lock_interface = physicsSystem.GetBodyLockInterface();
+            JPH::BodyLockRead lock(body_lock_interface, body_id);
+
+            if (lock.Succeeded())
+            {
+                const JPH::Body& body = lock.GetBody();
+
+                // Populate the outHit struct
+                outHit.entity = static_cast<Entity>(body.GetUserData());
+                outHit.hit = true;
+
+                // Calculate the world space hit point
+                JPH::RVec3 hit_point_world = ray.mOrigin + ray.mDirection * hit_result.mFraction;
+                outHit.point = glm::vec3(hit_point_world.GetX(), hit_point_world.GetY(), hit_point_world.GetZ());
+
+                // Calculate the world space normal
+                JPH::Vec3 normal_world = body.GetWorldSpaceSurfaceNormal(hit_result.mSubShapeID2, hit_point_world);
+                outHit.normal = glm::vec3(normal_world.GetX(), normal_world.GetY(), normal_world.GetZ());
+
+                // The distance is the fraction multiplied by the original max distance
+                outHit.distance = hit_result.mFraction * maxDistance;
+
+                return true;
+            }
+        }
+
+        // No hit or lock failed
+        outHit.hit = false;
+        return false;
+    }
+    // --- END NEW (REVISED FUNCTION V4) ---
 
     std::string PhysicsSystem::GetName() {
         return "PhysicsSystem";
