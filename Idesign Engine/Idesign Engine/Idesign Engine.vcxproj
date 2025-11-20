@@ -335,7 +335,6 @@
     <ClCompile Include="src\AnimationSystem.cpp" />
     <ClCompile Include="src\AssetCompiler.cpp" />
     <ClCompile Include="src\AssetManager.cpp" />
-    <ClCompile Include="src\Audio.cpp" />
     <ClCompile Include="src\AudioLoader.cpp" />
     <ClCompile Include="src\AudioSystem.cpp" />
     <ClCompile Include="src\ButtonSystem.cpp" />

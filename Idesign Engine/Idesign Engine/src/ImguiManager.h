@@ -75,12 +75,18 @@ namespace Framework
 		int m_gizmoMode = 0; // 0=Local, 1=World
 		bool m_gizmoEnabled = true;
 
+		bool m_showEditor = true;
+
 		//Console Methods 
 		void RenderConsole();
 		static void Log(const std::string& message, const std::string& category = "APP");
 		static void LogWarning(const std::string& message, const std::string& category = "APP");
 		static void LogError(const std::string& message, const std::string& category = "APP");
 		static void LogSuccess(const std::string& message, const std::string& category = "APP");
+
+		//Audio Panel and Inspector Methods 
+		void RenderAudioComponentProperties(Entity entity);
+		void RenderListenerComponentProperties(Entity entity);
 
 		// Asset Panel
 		enum AssetTabType { None, Mesh,Animation, Texture, Audio, Prefab, Scene, Scripts };

@@ -31,7 +31,7 @@
 #include "AnimationSystem.h"
 #include "EnginePath.h"
 #include "AudioLoader.h"
-#include "Audio.h"
+#include "MessageSystem.h"
 #include "AudioSystem.h"
 #include "AudioComponent.h"
 #include "ScriptingSystem.h"
@@ -40,8 +40,8 @@
 #include "FileCheckSystem.h"
 #include "EnginePath.h"
 #include <filesystem>
-#include "EventSystem.h" 
-#include "EventManager.h"
+#include <EventSystem.h>
+#include <EventManager.h>
 
 using namespace Framework;
 
@@ -79,8 +79,9 @@ int main(void)
 
 	// Initialize FMOD Studio Audio System
     std::cout << "Initializing FMOD Studio Audio System..." << std::endl;
-    GlobalAudio.Initialize();
-    std::cout << "FMOD Studio Audio System initialized successfully!" << std::endl;
+    
+
+    
 
     // ------- Create systems below -------- 
     // Initialize global ECS interface and other singleton components
@@ -94,6 +95,8 @@ int main(void)
     RegisterComponentTypes();                           // Step 1: Register known types
     AutoRegisterAllReflectedComponents(ecsInterface);   // Step 2: Hook them into ECS
 
+	//AssetManager::Instance().LoadWindowConfig(); // Load WindowConfig before Graphics system is created
+
     // Register graphics system and GLFW Window first 
     auto graphicsSystem = ecsInterface.RegisterSystem<Graphics>();
 
@@ -104,6 +107,8 @@ int main(void)
     auto imguiSystem = ecsInterface.RegisterSystem<ImguiManager>();
     imguiSystem->SetGraphicsSystem(graphicsSystem.get());
     graphicsSystem->SetImguiManager(imguiSystem.get());
+    
+    //AssetManager::Instance().LoadAllAssets();
     
     //Access the InputHandler instance from the singleton
     InputHandler* inputHandlerSystem = InputHandler::GetInstance();
@@ -146,13 +151,78 @@ int main(void)
     engine->AddSystem(physicsSystem.get());
     engine->AddSystem(sceneSystem.get());       // Register scene manager last
     engine->AddSystem(fileCheckSystem.get());
-    engine->AddSystem(eventSystem.get());
 
     std::filesystem::path root = GetEngineRootPath();
     fileCheckSystem->WatchAllFolders();
 
     // Initialize the engine and run the main game loop
     engine->Initialize();
+
+    // Initialize FMOD and load banks (after engine Initialize so AudioSystem::Initialize runs first)
+    std::cout << "Initializing FMOD Studio Audio System..." << std::endl;
+    audioSystem->InitializeFMOD();
+
+    // Quick inline test
+    std::cout << "\n[QUICK TEST] Testing audio playback..." << std::endl;
+    auto testDesc = audioSystem->LoadEvent("event:/ForestAmbient");
+    if (testDesc)
+    {
+        FMOD::Studio::EventInstance* testInst = nullptr;
+        if (testDesc->createInstance(&testInst) == FMOD_OK)
+        {
+            // Check if 3D
+            bool is3D = false;
+            testDesc->is3D(&is3D);
+            std::cout << "[QUICK TEST] Is 3D: " << (is3D ? "YES" : "NO") << std::endl;
+
+            // Set 3D position if needed
+            if (is3D)
+            {
+                FMOD_3D_ATTRIBUTES attr = {};
+                attr.position = { 0, 0, 0 };
+                attr.velocity = { 0, 0, 0 };
+                attr.forward = { 0, 0, 1 };
+                attr.up = { 0, 1, 0 };
+                testInst->set3DAttributes(&attr);
+            }
+
+            testInst->setVolume(1.0f);
+            testInst->start();
+
+            // Let it play for a bit
+            FMOD::Studio::System* studioSys = audioSystem->GetStudioSystem();
+            for (int i = 0; i < 30; i++)
+            {
+                if (studioSys) studioSys->update();
+                std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            }
+
+            testInst->stop(FMOD_STUDIO_STOP_IMMEDIATE);
+            testInst->release();
+            std::cout << "[QUICK TEST] Did you hear audio? (played for 3 seconds)" << std::endl;
+        }
+    }
+
+    // Set maximum volumes
+    audioSystem->SetMasterVolume(1.0f);
+    audioSystem->SetBGMVolume(1.0f);
+    audioSystem->SetSFXVolume(1.0f);
+
+    // Set 3D listener position (required for 3D audio!)
+    audioSystem->Set3DListener(
+        Framework::Vector3(0, 0, 0),     // Position at origin
+        Framework::Vector3(0, 0, 0),     // No velocity
+        Framework::Vector3(0, 0, -1),    // Looking forward
+        Framework::Vector3(0, 1, 0)      // Up is +Y
+    );
+
+    std::cout << "[Audio] Volumes and 3D listener configured!" << std::endl;
+    std::cout << "FMOD Studio Audio System initialized successfully!" << std::endl;
+
+    
+    sceneManager.SetSceneBGM("jarrentest", "event:/Level1BGM");
+   
+
     ImguiManager::Log("Initializing FontSystem...", "FontSystem");
     fontSystem.Initialize();
     fontSystem.LoadFont("Assets/Font/arial.ttf", 40, "Arial");
@@ -181,6 +251,7 @@ int main(void)
     engine->DestroySystems();
     Framework::EventManager::Instance().Reset();
     Framework::TypeRegistry::Instance().Shutdown();
+
     // Clean up smart pointers as they go out of scope
     // No need to manually delete as unique_ptr will handle it
     return 0;

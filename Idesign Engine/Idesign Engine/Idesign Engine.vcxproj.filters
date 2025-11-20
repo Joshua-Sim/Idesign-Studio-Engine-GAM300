@@ -267,9 +267,6 @@
     <ClInclude Include="src\WindowConfigProperties.h">
       <Filter>Header Files\Property</Filter>
     </ClInclude>
-    <ClInclude Include="src\Audio.h">
-      <Filter>Header Files\Audio</Filter>
-    </ClInclude>
     <ClInclude Include="src\AudioLoader.h">
       <Filter>Header Files\Audio</Filter>
     </ClInclude>
@@ -679,9 +676,6 @@
     </ClCompile>
     <ClCompile Include="src\AssetManager.cpp">
       <Filter>Source Files\AssetManager</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Audio.cpp">
-      <Filter>Source Files\Audio</Filter>
     </ClCompile>
     <ClCompile Include="src\AudioLoader.cpp">
       <Filter>Source Files\Audio</Filter>

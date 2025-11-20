@@ -16,6 +16,7 @@
 #include "Coordinator.h"
 #include <iostream>
 #include "AssetCompiler.h"
+#include "AudioSystem.h"
 
 // extern ECS interface
 extern Framework::Coordinator ecsInterface;
@@ -60,6 +61,17 @@ namespace Framework {
 
             sceneManager.m_CurrentSceneName = load.sceneName;
 
+            // Set the BGM path for this scene - USE sceneManager. prefix!
+            auto it = sceneManager.m_SceneBGM.find(load.sceneName);
+            if (it != sceneManager.m_SceneBGM.end() && !it->second.empty()) {
+                sceneManager.m_CurrentSceneBGMPath = it->second;
+                std::cout << "[SceneManager] Scene BGM set to: " << it->second << std::endl;
+            }
+            else {
+                // Use default BGM instead of clearing
+                sceneManager.m_CurrentSceneBGMPath = "event:/Level1BGM";  // Default BGM for any scene
+                std::cout << "[SceneManager] Using default BGM for scene: " << load.sceneName << std::endl;
+            }
         }
         sceneManager.m_PendingSceneLoads.clear();
     }
