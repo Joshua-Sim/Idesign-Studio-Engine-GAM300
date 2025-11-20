@@ -100,6 +100,61 @@ namespace Framework {
             return 0;
         }
 
+        // In ScriptingSystem.cpp, inside the anonymous namespace or static helpers
+
+        static int l_spawnPrompt(lua_State* L) {
+            // Argument 1: The Entity ID (The Box/Receiver) - so we know WHERE to spawn
+            Entity parentID = static_cast<Entity>(luaL_checkinteger(L, 1));
+
+            // Argument 2: The Text to display
+            const char* textContent = luaL_checkstring(L, 2);
+
+            // Argument 3: (Optional) Y Offset
+            float yOffset = (float)luaL_optnumber(L, 3, 2.0); // Default to 2.0 units high
+
+            // 1. Safety Check
+            if (!ecsInterface.IsEntityValid(parentID) ||
+                !ecsInterface.HasComponent<TransformComponent>(parentID)) {
+                std::cout << "[Lua Error] SpawnPrompt: Invalid entity or missing transform.\n";
+                return 0;
+            }
+
+            // 2. Get Parent Position
+            auto& parentTrans = ecsInterface.GetComponent<TransformComponent>(parentID);
+            glm::vec3 spawnPos = parentTrans.position;
+            spawnPos.y += yOffset;
+
+            // 3. Create New Entity
+            Entity promptEntity = ecsInterface.CreateEntity();
+
+            // 4. Add Transform
+            TransformComponent tf;
+            tf.position = spawnPos;
+            tf.scale = glm::vec3(1.0f);
+            tf.rotation = glm::vec3(0.0f, 90.0f, 0.0f);
+            ecsInterface.AddComponent(promptEntity, tf);
+
+            HierarchyComponent hc;
+            ecsInterface.AddComponent(promptEntity, hc);
+
+            TextProperties tp;
+            tp.text = std::string(textContent);
+            tp.color = glm::vec3(1.0f, 1.0f, 1.0f); // White text
+            tp.alignment = 1;
+            tp.scale = 0.03f;
+            ecsInterface.AddComponent(promptEntity, tp);
+
+            MeshProperties mp;
+            ecsInterface.AddComponent(promptEntity, mp);
+
+            MaterialProperties mp2;
+            ecsInterface.AddComponent(promptEntity, mp2);
+
+            // Optional: Return the new ID to Lua so we can delete it later?
+            lua_pushinteger(L, static_cast<lua_Integer>(promptEntity));
+            return 1;
+        }
+
         int l_ToggleLight(lua_State* L) {
             auto* self = lua_self(L);
             Graphics* g = self ? self->GetGraphicsSystem() : nullptr;
@@ -368,6 +423,7 @@ namespace Framework {
         lua_register(L, "SetGroundMode", l_SetGround);
         lua_register(L, "GetPosition", lua_GetPosition);
         lua_register(L, "SetPosition", lua_SetPosition);
+        lua_register(L, "SpawnPrompt", l_spawnPrompt);
         lua_register(L, "IsMouseButtonDown", l_IsMouseButtonDown); // <-- ADD THIS
 
         // Engine utility

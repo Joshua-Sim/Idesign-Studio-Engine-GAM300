@@ -132,7 +132,8 @@
                         0.0,
                         0.0,
                         0.0
-                    ]
+                    ],
+                    "canPassThrough": false
                 },
                 "PhysicsProperties": {
                     "isImmovable": true,
@@ -731,7 +732,8 @@
                         0.0,
                         1.5,
                         0.0
-                    ]
+                    ],
+                    "canPassThrough": true
                 },
                 "PhysicsProperties": {
                     "isImmovable": true,
@@ -1723,7 +1725,8 @@
                         0.0,
                         0.0,
                         0.0
-                    ]
+                    ],
+                    "canPassThrough": false
                 },
                 "PhysicsProperties": {
                     "isImmovable": false,
@@ -1742,6 +1745,10 @@
                         0.0
                     ],
                     "startAwake": true
+                },
+                "EventSenderComponent": {
+                    "triggerName": "OnCollision",
+                    "messageName": "deez"
                 }
             }
         },
@@ -1947,6 +1954,50 @@
                 "TextureComponent": {
                     "guid": "06b3101c-c40c-438e-be69-13555a22d44f",
                     "isUI": false
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "998e8733-cf17-48d4-96be-ab700322c93c",
+                            "scriptPath": "Assets\\Scripts\\spawnPrompt.lua",
+                            "hotReload": true
+                        }
+                    ]
+                },
+                "BoxColliderComponent": {
+                    "size": [
+                        5.0,
+                        4.0,
+                        5.0
+                    ],
+                    "center": [
+                        0.0,
+                        2.0,
+                        0.0
+                    ],
+                    "canPassThrough": true
+                },
+                "PhysicsProperties": {
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 0.5,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "startAwake": true
+                },
+                "EventReceiverComponent": {
+                    "messageToListenFor": "deez",
+                    "luaFunctionToCall": "OnInteract"
                 }
             }
         }

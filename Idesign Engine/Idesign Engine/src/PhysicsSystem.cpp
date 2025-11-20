@@ -366,42 +366,42 @@ namespace Framework {
 
         Entity playerEntity = ecsInterface.GetEntityByName("Player");
 
-        if (ecsInterface.IsEntityValid(playerEntity) && ecsInterface.HasComponent<TransformComponent>(playerEntity)) {
+        if (ecsInterface.IsEntityValid(playerEntity) &&
+            ecsInterface.HasComponent<TransformComponent>(playerEntity) &&
+            ecsInterface.HasComponent<EventSenderComponent>(playerEntity)) // CHECK PLAYER FOR SENDER
+        {
             auto& playerTrans = ecsInterface.GetComponent<TransformComponent>(playerEntity);
+            auto& playerSender = ecsInterface.GetComponent<EventSenderComponent>(playerEntity); // GET SENDER
 
             for (Entity e : ecsInterface.GetEntities()) {
-                // Skip the player itself
+                // Skip player
                 if (e == playerEntity) continue;
 
-                // Check components specifically
-                bool hasColl = ecsInterface.HasComponent<BoxColliderComponent>(e);
-                bool hasTrans = ecsInterface.HasComponent<TransformComponent>(e);
-                bool hasSend = ecsInterface.HasComponent<EventSenderComponent>(e);
-
-                if (!hasColl || !hasTrans || !hasSend) {
+                // Check Box components (Box does NOT need a Sender anymore)
+                if (!ecsInterface.HasComponent<BoxColliderComponent>(e) ||
+                    !ecsInterface.HasComponent<TransformComponent>(e)) {
                     continue;
                 }
 
                 auto& collider = ecsInterface.GetComponent<BoxColliderComponent>(e);
                 auto& transform = ecsInterface.GetComponent<TransformComponent>(e);
 
-                // Run the Math
+                // Run Math
                 bool isInside = IsPointInsideBox(playerTrans.position, transform, collider);
 
                 if (isInside && !collider.wasInsideLastFrame) {
-                    auto& sender = ecsInterface.GetComponent<EventSenderComponent>(e);
 
-                    if (sender.triggerName == "OnCollision") {
-                        std::cout << "[Physics] FIRING EVENT for Entity: " << e << std::endl;
+                    // CHECK TRIGGER NAME ON THE PLAYER
+                    if (playerSender.triggerName == "OnCollision") {
+
+                        std::cout << "[Physics] Player hit Entity " << e << ". Firing: " << playerSender.messageName << std::endl;
 
                         CollisionEventData payload;
-                        payload.senderID = e;
-                        payload.targetID = playerEntity;
+                        payload.senderID = playerEntity; // The Sender is now the Player
+                        payload.targetID = e;            // The Target is the Box
 
-                        EventManager::Instance().Fire(sender.messageName, &payload);
-                    }
-                    else {
-                        std::cout << "[Physics] Name Mismatch. Expected 'OnCollision', got '" << sender.triggerName << "'" << std::endl;
+                        // We fire the message defined on the PLAYER (e.g., "PlayerHitObject")
+                        EventManager::Instance().Fire(playerSender.messageName, &payload);
                     }
                 }
 

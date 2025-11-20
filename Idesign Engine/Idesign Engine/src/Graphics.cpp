@@ -1551,7 +1551,7 @@ namespace Framework {
               
 
                 // Render
-                fontSystem.RenderText3D(txt.text, model, view, proj, txt.scale, txt.color);
+                fontSystem.RenderText3D(txt.text, model, view, proj, txt.scale, txt.color, txt.alignment);
 
             }
 
@@ -1972,8 +1972,7 @@ namespace Framework {
         glEnable(GL_DEPTH_TEST);
         glm::mat4 textModel = glm::mat4(1.0f);
         textModel = glm::translate(textModel, glm::vec3(0.0f, 5.0f, 0.0f));
-        fontSystem.RenderText3D("iDesign Engine by iDesign Studio",
-            textModel, view, proj, 0.05f, glm::vec3(1.0f, 1.0f, 0.5f));
+        fontSystem.RenderText3D("iDesign Engine by iDesign Studio", textModel, view, proj, 0.05f, glm::vec3(1.0f, 1.0f, 0.5f), 0);
         glDisable(GL_DEPTH_TEST);
     }
  }

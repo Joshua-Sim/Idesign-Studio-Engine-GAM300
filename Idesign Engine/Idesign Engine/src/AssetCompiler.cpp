@@ -273,6 +273,7 @@ namespace Framework
                     }
                 }
 
+
                 // Navmesh
                 if (components.HasMember("NavMeshComponent"))
                 {
@@ -366,6 +367,43 @@ namespace Framework
                     }
 
                     ecsInterface.AddComponent(entity, phys);
+                }
+                // --- Event Sender ---
+                if (components.HasMember("EventSenderComponent"))
+                {
+                    const auto& jsonVal = components["EventSenderComponent"];
+                    EventSenderComponent sender;
+
+                    // Manual extraction for safety with strings
+                    if (jsonVal.HasMember("triggerName") && jsonVal["triggerName"].IsString()) {
+                        sender.triggerName = jsonVal["triggerName"].GetString();
+                    }
+                    if (jsonVal.HasMember("messageName") && jsonVal["messageName"].IsString()) {
+                        sender.messageName = jsonVal["messageName"].GetString();
+                    }
+
+                    ecsInterface.AddComponent(entity, sender);
+                }
+
+                // --- Event Receiver ---
+                if (components.HasMember("EventReceiverComponent"))
+                {
+                    const auto& jsonVal = components["EventReceiverComponent"];
+                    EventReceiverComponent receiver;
+
+                    // Manual extraction
+                    if (jsonVal.HasMember("messageToListenFor") && jsonVal["messageToListenFor"].IsString()) {
+                        receiver.messageToListenFor = jsonVal["messageToListenFor"].GetString();
+                    }
+                    if (jsonVal.HasMember("luaFunctionToCall") && jsonVal["luaFunctionToCall"].IsString()) {
+                        receiver.luaFunctionToCall = jsonVal["luaFunctionToCall"].GetString();
+                    }
+
+                    // IMPORTANT: Explicitly ensure isSubscribed is false on load
+                    // The EventSystem::Update loop will see this is false and automatically subscribe it.
+                    receiver.isSubscribed = false;
+
+                    ecsInterface.AddComponent(entity, receiver);
                 }
 
                 sceneManager.RegisterEntityToScene(entity, cleanName);
@@ -567,6 +605,31 @@ namespace Framework
                     // 3. DO NOT save 'motionType'. We rely purely on the boolean.
 
                     componentsObj.AddMember("PhysicsProperties", physJson, allocator);
+                }
+                // --- Event Sender ---
+                if (ecsInterface.HasComponent<EventSenderComponent>(entity))
+                {
+                    const auto& sender = ecsInterface.GetComponent<EventSenderComponent>(entity);
+                    rapidjson::Value senderJson(rapidjson::kObjectType);
+
+                    // Use the generic serializer (Uses g_EventSenderProps)
+                    Serialize((void*)&sender, g_EventSenderProps, senderJson, allocator);
+
+                    componentsObj.AddMember("EventSenderComponent", senderJson, allocator);
+                }
+
+                // --- Event Receiver ---
+                if (ecsInterface.HasComponent<EventReceiverComponent>(entity))
+                {
+                    const auto& receiver = ecsInterface.GetComponent<EventReceiverComponent>(entity);
+                    rapidjson::Value receiverJson(rapidjson::kObjectType);
+
+                    // Use the generic serializer (Uses g_EventReceiverProps)
+                    // Note: This works perfectly because 'isSubscribed' is NOT in the 
+                    // g_EventReceiverProps array, so it won't be saved (which is what we want).
+                    Serialize((void*)&receiver, g_EventReceiverProps, receiverJson, allocator);
+
+                    componentsObj.AddMember("EventReceiverComponent", receiverJson, allocator);
                 }
             }
 

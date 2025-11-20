@@ -1,125 +1,16 @@
-﻿  PhysicsSystem.cpp
-C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(110,151): warning C4100: 'ioSettings': unreferenced parameter
-  (compiling source file '/src/PhysicsSystem.cpp')
-  
-C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(110,117): warning C4100: 'inManifold': unreferenced parameter
-  (compiling source file '/src/PhysicsSystem.cpp')
-  
+﻿  ScriptingSystem.cpp
 C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/PhysicsSystem.cpp')
+  (compiling source file '/src/ScriptingSystem.cpp')
       C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
       see declaration of 'Framework::AnimationProperties::name'
   
 C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/PhysicsSystem.cpp')
+  (compiling source file '/src/ScriptingSystem.cpp')
   
 C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/PhysicsSystem.cpp')
+  (compiling source file '/src/ScriptingSystem.cpp')
   
-C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.cpp(151,56): warning C4459: declaration of 'terrain' hides global declaration
-  (compiling source file '/src/PhysicsSystem.cpp')
-      C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(34,21):
-      see declaration of 'terrain'
+C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(569,57): warning C4245: 'argument': conversion from 'int' to 'Framework::Entity', signed/unsigned mismatch
+  (compiling source file '/src/ScriptingSystem.cpp')
   
-C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.cpp(152,72): warning C4100: 'worldOffset': unreferenced parameter
-  (compiling source file '/src/PhysicsSystem.cpp')
-  
-C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.cpp(152,35): warning C4100: 'out_createdBodies': unreferenced parameter
-  (compiling source file '/src/PhysicsSystem.cpp')
-  
-C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.cpp(151,145): warning C4100: 'bi': unreferenced parameter
-  (compiling source file '/src/PhysicsSystem.cpp')
-  
-C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.cpp(151,116): warning C4100: 'physics': unreferenced parameter
-  (compiling source file '/src/PhysicsSystem.cpp')
-  
-C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.cpp(151,85): warning C4100: 'cellScale': unreferenced parameter
-  (compiling source file '/src/PhysicsSystem.cpp')
-  
-C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.cpp(151,69): warning C4100: 'gridSize': unreferenced parameter
-  (compiling source file '/src/PhysicsSystem.cpp')
-  
-C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.cpp(151,56): warning C4100: 'terrain': unreferenced parameter
-  (compiling source file '/src/PhysicsSystem.cpp')
-  
-C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.cpp(151,24): warning C4505: 'Framework::AddTerrainGround': unreferenced function with internal linkage has been removed
-  (compiling source file '/src/PhysicsSystem.cpp')
-  
-Jolt.lib(AABBTreeBuilder.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(AABBTreeBuilder.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(Factory.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(Factory.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(RTTI.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(RTTI.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(ConvexHullBuilder.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(ConvexHullBuilder.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(ConvexHullBuilder2D.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(ConvexHullBuilder2D.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(Indexify.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(Indexify.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(Body.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(Body.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(BodyCreationSettings.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(BodyCreationSettings.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(BodyInterface.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(BodyInterface.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(BodyManager.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(BodyManager.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(BroadPhaseQuadTree.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(BroadPhaseQuadTree.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(QuadTree.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(QuadTree.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(CastConvexVsTriangles.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(CastConvexVsTriangles.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(CollideConvexVsTriangles.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(CollideConvexVsTriangles.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(CollideSphereVsTriangles.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(CollideSphereVsTriangles.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(CollisionDispatch.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(CollisionDispatch.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(GroupFilterTable.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(GroupFilterTable.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(ManifoldBetweenTwoFaces.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(ManifoldBetweenTwoFaces.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(PhysicsMaterial.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(PhysicsMaterial.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(PhysicsMaterialSimple.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(PhysicsMaterialSimple.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(BoxShape.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(BoxShape.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(CapsuleShape.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(CapsuleShape.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(CompoundShape.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(CompoundShape.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(ConvexHullShape.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(ConvexHullShape.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(ConvexShape.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(ConvexShape.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(CylinderShape.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(CylinderShape.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(DecoratedShape.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(DecoratedShape.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(EmptyShape.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(EmptyShape.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(HeightFieldShape.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(HeightFieldShape.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(MeshShape.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(MeshShape.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(MutableCompoundShape.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(MutableCompoundShape.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(OffsetCenterOfMassShape.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(OffsetCenterOfMassShape.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(PlaneShape.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(PlaneShape.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(RotatedTranslatedShape.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(RotatedTranslatedShape.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(ScaledShape.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(ScaledShape.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(Shape.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(Shape.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(SphereShape.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(SphereShape.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(StaticCompoundShape.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(StaticCompoundShape.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(TaperedCapsuleShape.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(TaperedCapsuleShape.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(TaperedCylinderShape.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(TaperedCylinderShape.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(TriangleShape.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(TriangleShape.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(ConeConstraint.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(ConeConstraint.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(Constraint.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(Constraint.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(ConstraintManager.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(ConstraintManager.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(ContactConstraintManager.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(ContactConstraintManager.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(DistanceConstraint.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(DistanceConstraint.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(FixedConstraint.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(FixedConstraint.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(GearConstraint.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(GearConstraint.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(HingeConstraint.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(HingeConstraint.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(PathConstraint.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(PathConstraint.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(PathConstraintPathHermite.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(PathConstraintPathHermite.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(PointConstraint.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(PointConstraint.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(PulleyConstraint.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(PulleyConstraint.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(RackAndPinionConstraint.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(RackAndPinionConstraint.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(SixDOFConstraint.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(SixDOFConstraint.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(SliderConstraint.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(SliderConstraint.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(SwingTwistConstraint.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(SwingTwistConstraint.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(LargeIslandSplitter.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(LargeIslandSplitter.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(PhysicsScene.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(PhysicsScene.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(PhysicsSystem.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(PhysicsSystem.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(Ragdoll.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(Ragdoll.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(SoftBodyCreationSettings.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(SoftBodyCreationSettings.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(SoftBodyMotionProperties.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(SoftBodyMotionProperties.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(SoftBodyShape.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(SoftBodyShape.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(SoftBodySharedSettings.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(SoftBodySharedSettings.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(MotorcycleController.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(MotorcycleController.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(TrackedVehicleController.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(TrackedVehicleController.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(VehicleConstraint.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(VehicleConstraint.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(VehicleTransmission.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(VehicleTransmission.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(Wheel.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(Wheel.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(WheeledVehicleController.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(WheeledVehicleController.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(RegisterTypes.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(RegisterTypes.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(SkeletalAnimation.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(SkeletalAnimation.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(Skeleton.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(Skeleton.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(TriangleSplitter.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(TriangleSplitter.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(TriangleSplitterBinning.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(TriangleSplitterBinning.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(TriangleSplitterMean.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(TriangleSplitterMean.obj)' or at 'C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Jolt.pdb'; linking object as if no debug info
   Idesign Engine.vcxproj -> C:\Users\JarrenTan\Desktop\Y3T1\GAMe\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe
