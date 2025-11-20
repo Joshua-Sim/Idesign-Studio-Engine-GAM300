@@ -201,8 +201,6 @@ namespace Framework
         void DrawDebugBox(const TransformComponent& transform, const glm::vec3& color);
         // Draws a wireframe sphere using the transform's position and scale as radius
         void DrawDebugMesh(Mesh* mesh, const glm::vec3& color, const glm::mat4& model, const glm::mat4& projection, const glm::mat4& view);
-        // Checks whether cam is in box
-        bool IsPointInsideBox(const glm::vec3& point, const TransformComponent& tf, const BoxColliderComponent& box);
 
         // Add these new members for the FPS counter
         double m_fpsLastTime;

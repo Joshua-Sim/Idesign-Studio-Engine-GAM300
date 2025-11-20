@@ -227,7 +227,8 @@ namespace Framework {
         const glm::mat4& view,
         const glm::mat4& projection,
         float scale,
-        glm::vec3 color) {
+        glm::vec3 color, 
+        int alignment) {
 
         // --- SETUP & STATE CHANGES ---
         shader3D.Use();
@@ -243,10 +244,27 @@ namespace Framework {
         glBindVertexArray(VAO);
 
         auto font_it = FontCache.find(activeFont);
-        if (font_it == FontCache.end()) { /* ... cleanup and return ... */ }
+        if (font_it == FontCache.end()) return;
         auto& characters = font_it->second;
 
+        //  measure text width
+        float totalWidth = 0.0f;
+        if (alignment != 0) { // Only needed for Center/Right
+            for (char c : text) {
+                // Add Advance (stored in 1/64th pixels) * scale
+                totalWidth += (characters.at(c).Advance >> 6) * scale;
+            }
+        }
+
+        // offset
         float x_cursor = 0.0f;
+
+        if (alignment == 1) {      // Center
+            x_cursor = -(totalWidth * 0.5f);
+        }
+        else if (alignment == 2) { // Right
+            x_cursor = -totalWidth;
+        }
 
         // --- RENDER LOOP ---
         for (char c : text) {

@@ -48,6 +48,13 @@
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
+        },
+        {
+            "guid": "998e8733-cf17-48d4-96be-ab700322c93c",
+            "scriptPath": "Assets\\Scripts\\spawnPrompt.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
         }
     ]
 }

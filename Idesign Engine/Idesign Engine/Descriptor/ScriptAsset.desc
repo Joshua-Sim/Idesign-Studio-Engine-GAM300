@@ -1,5 +1,5 @@
 {
-    "count": 7,
+    "count": 8,
     "entries": [
         {
             "guid": "c602f641-2748-4e0a-8fe7-2df7e8c401a2",
@@ -46,6 +46,13 @@
         {
             "guid": "e7535686-93e2-4aa2-8052-4abfe9e7deda",
             "scriptPath": "Assets/Scripts/Pathfinding.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "998e8733-cf17-48d4-96be-ab700322c93c",
+            "scriptPath": "Assets\\Scripts\\spawnPrompt.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1

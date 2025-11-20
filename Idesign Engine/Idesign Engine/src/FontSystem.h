@@ -48,7 +48,8 @@ namespace Framework {
             const glm::mat4& view,
             const glm::mat4& projection,
             float scale,
-            glm::vec3 color);
+            glm::vec3 color,
+            int alignment);
 
     private:
         FT_Library ft;
