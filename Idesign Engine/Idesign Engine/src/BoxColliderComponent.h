@@ -13,9 +13,8 @@ namespace Framework {
     struct BoxColliderComponent {
         glm::vec3 size{ 1.0f, 1.0f, 1.0f };
         glm::vec3 center{ 0.0f, 0.0f, 0.0f };
-
-        // Track state to prevent spamming events every frame while inside
         bool wasInsideLastFrame = false;
+        bool canPassThrough = false; // New field
     };
 
 
@@ -25,7 +24,8 @@ namespace Framework {
     inline const std::vector g_BoxColliderPropsArray =
     {
         PROP_VEC3(size, BoxColliderComponent),
-        PROP_VEC3(center, BoxColliderComponent)
+        PROP_VEC3(center, BoxColliderComponent),
+        PROP_BOOL(canPassThrough, BoxColliderComponent) // <--- NEW
     };
 
     inline const prop_list g_BoxColliderProps{ "BoxColliderComponent", g_BoxColliderPropsArray };

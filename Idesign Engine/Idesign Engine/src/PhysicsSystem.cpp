@@ -97,15 +97,31 @@ static inline glm::vec3 QuatToEulerDegrees_Jolt(const JPH::Quat& qj)
 static inline void ApplyPropsToBody(JPH::BodyInterface* bi, JPH::BodyID id, const Framework::PhysicsProperties& p) {
     using namespace JPH;
 
-    // --- IMPLEMENTING IMMOVABLE LOGIC HERE ---
-    // We use the Integer 'motionType' to determine if it's static.
-    const auto want = ToJoltMotionType(p.motionType);
+    const auto wantMotion = ToJoltMotionType(p.motionType);
+    EMotionType currentMotion = bi->GetMotionType(id);
 
-    if (bi->GetMotionType(id) != want) {
-        // This switches the body between Static (Immovable) and Dynamic (Movable)
-        // in real-time if you change the value in the editor.
-        bi->SetMotionType(id, want, EActivation::Activate);
+    if (currentMotion != wantMotion) {
+        // 1. Helper: If becoming Static, ensure it's not active to prevent jitter
+        if (wantMotion == EMotionType::Static) {
+            bi->DeactivateBody(id);
+        }
+
+        // 2. Set the Motion Type (This is where it was crashing)
+        bi->SetMotionType(id, wantMotion, EActivation::DontActivate);
+
+        // 3. CRITICAL: Switch Object Layer if necessary
+        // Jolt gets angry if a Static body is on a "Moving" layer or vice versa.
+        // Assuming Layer 0 is MOVING and Layer 1 is NON_MOVING (or similar setup).
+        // Based on your 'ToObjectLayer', you map categories to layers. 
+        // You usually don't need to change layers if your Broadphase is simple (1 layer),
+        // but if you have issues, you simply Reactivate the body:
+
+        if (wantMotion != EMotionType::Static) {
+            bi->ActivateBody(id);
+        }
     }
+
+    // Update Gravity
     bi->SetGravityFactor(id, p.gravityFactor);
 }
 
@@ -146,8 +162,15 @@ namespace Framework {
         JPH::ShapeRefC shape = nullptr;
         auto& tf = ecs.GetComponent<TransformComponent>(e);
 
+        // [NEW] Variable to store the trigger state
+        bool isSensor = false;
+
         if (ecs.HasComponent<BoxColliderComponent>(e)) {
             auto& collider = ecs.GetComponent<BoxColliderComponent>(e);
+
+            // [NEW] Read the trigger flag
+            isSensor = collider.canPassThrough;
+
             JPH::Vec3 half_extents(
                 std::abs(0.5f * collider.size.x * tf.scale.x),
                 std::abs(0.5f * collider.size.y * tf.scale.y),
@@ -179,12 +202,17 @@ namespace Framework {
             shape,
             JPH::RVec3(tf.position.x, tf.position.y, tf.position.z),
             MakeQuatFromEuler(tf.rotation),
-            ToJoltMotionType(prop.motionType), // <--- Determines Immovable vs Movable on creation
+            ToJoltMotionType(prop.motionType),
             ToObjectLayer(prop.category)
         );
 
+        // [NEW] Apply the sensor flag to Jolt
+        bcs.mIsSensor = isSensor;
+
         bcs.mGravityFactor = prop.gravityFactor;
         bcs.mUserData = static_cast<JPH::uint64>(e);
+
+        bcs.mAllowDynamicOrKinematic = true;
 
         if (prop.motionType == 1) { // Dynamic
             bcs.mMotionQuality = JPH::EMotionQuality::LinearCast;
@@ -325,6 +353,15 @@ namespace Framework {
 
             auto& pb = ecsInterface.GetComponent<PhysicsBodyComponent>(e);
             auto& prop = ecsInterface.GetComponent<PhysicsProperties>(e);
+
+
+            if (ecsInterface.HasComponent<BoxColliderComponent>(e)) {
+                auto& collider = ecsInterface.GetComponent<BoxColliderComponent>(e);
+
+                // This function updates the sensor flag on the existing Jolt Body
+                // effectively toggling it between Solid and Trigger at runtime.
+                bodyInterface->SetIsSensor(pb.ID, collider.canPassThrough);
+            }
 
             // If your component still has the 'bool isImmovable' member:
             if (prop.isImmovable == true) {
