@@ -1602,7 +1602,11 @@ namespace Framework {
 
             if (ecsInterface.HasComponent<TextProperties>(entityId)) {
                 auto& txt = ecsInterface.GetComponent<TextProperties>(entityId);
+              
+
+                // Render
                 fontSystem.RenderText3D(txt.text, model, view, proj, txt.scale, txt.color);
+
             }
 
             if (ecsInterface.HasComponent<MeshProperties>(entityId))

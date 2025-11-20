@@ -295,7 +295,6 @@ namespace Framework
                         // Cast the selected int back to the Enum Class
                         light.type = static_cast<LightType>(currentTypeIndex);
                     }
-                    DrawInspector(componentPtr, *propList);
                 }
                 else if (typeName == "NavMeshAgentComponent")
                 {
