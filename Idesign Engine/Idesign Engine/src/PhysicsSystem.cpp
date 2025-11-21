@@ -14,6 +14,8 @@
 #include "Terrain.h"
 #include "Graphics.h"
 #include "PhysicsProperties.h"
+#include "EventManager.h"
+#include "BoxColliderComponent.h"
 
 #include <Jolt/Jolt.h>
 #include <Jolt/Core/TempAllocator.h>
@@ -97,15 +99,31 @@ static inline glm::vec3 QuatToEulerDegrees_Jolt(const JPH::Quat& qj)
 static inline void ApplyPropsToBody(JPH::BodyInterface* bi, JPH::BodyID id, const Framework::PhysicsProperties& p) {
     using namespace JPH;
 
-    // --- IMPLEMENTING IMMOVABLE LOGIC HERE ---
-    // We use the Integer 'motionType' to determine if it's static.
-    const auto want = ToJoltMotionType(p.motionType);
+    const auto wantMotion = ToJoltMotionType(p.motionType);
+    EMotionType currentMotion = bi->GetMotionType(id);
 
-    if (bi->GetMotionType(id) != want) {
-        // This switches the body between Static (Immovable) and Dynamic (Movable)
-        // in real-time if you change the value in the editor.
-        bi->SetMotionType(id, want, EActivation::Activate);
+    if (currentMotion != wantMotion) {
+        // 1. Helper: If becoming Static, ensure it's not active to prevent jitter
+        if (wantMotion == EMotionType::Static) {
+            bi->DeactivateBody(id);
+        }
+
+        // 2. Set the Motion Type (This is where it was crashing)
+        bi->SetMotionType(id, wantMotion, EActivation::DontActivate);
+
+        // 3. CRITICAL: Switch Object Layer if necessary
+        // Jolt gets angry if a Static body is on a "Moving" layer or vice versa.
+        // Assuming Layer 0 is MOVING and Layer 1 is NON_MOVING (or similar setup).
+        // Based on your 'ToObjectLayer', you map categories to layers. 
+        // You usually don't need to change layers if your Broadphase is simple (1 layer),
+        // but if you have issues, you simply Reactivate the body:
+
+        if (wantMotion != EMotionType::Static) {
+            bi->ActivateBody(id);
+        }
     }
+
+    // Update Gravity
     bi->SetGravityFactor(id, p.gravityFactor);
 }
 
@@ -137,6 +155,26 @@ namespace Framework {
         return JPH::BodyID();
     }
 
+
+    static bool IsPointInsideBox(const glm::vec3& point, const Framework::TransformComponent& boxTrans, const Framework::BoxColliderComponent& collider) {
+        // 1. World Center of Box
+        glm::vec3 boxWorldCenter = boxTrans.position + collider.center;
+
+        // 2. Half Extents (Size * Scale * 0.5)
+        glm::vec3 halfSize = glm::vec3(
+            std::abs(collider.size.x * boxTrans.scale.x),
+            std::abs(collider.size.y * boxTrans.scale.y),
+            std::abs(collider.size.z * boxTrans.scale.z)
+        ) * 0.5f;
+
+        // 3. AABB Check
+        bool x = std::abs(point.x - boxWorldCenter.x) <= halfSize.x;
+        bool y = std::abs(point.y - boxWorldCenter.y) <= halfSize.y;
+        bool z = std::abs(point.z - boxWorldCenter.z) <= halfSize.z;
+
+        return x && y && z;
+    }
+
     static void EnsureBodyForEntity(Entity e, Framework::Coordinator& ecs, JPH::BodyInterface* bi, std::vector<JPH::BodyID>& created_list) {
         if (bi == nullptr) return;
 
@@ -146,8 +184,15 @@ namespace Framework {
         JPH::ShapeRefC shape = nullptr;
         auto& tf = ecs.GetComponent<TransformComponent>(e);
 
+        // [NEW] Variable to store the trigger state
+        bool isSensor = false;
+
         if (ecs.HasComponent<BoxColliderComponent>(e)) {
             auto& collider = ecs.GetComponent<BoxColliderComponent>(e);
+
+            // [NEW] Read the trigger flag
+            isSensor = collider.canPassThrough;
+
             JPH::Vec3 half_extents(
                 std::abs(0.5f * collider.size.x * tf.scale.x),
                 std::abs(0.5f * collider.size.y * tf.scale.y),
@@ -179,12 +224,17 @@ namespace Framework {
             shape,
             JPH::RVec3(tf.position.x, tf.position.y, tf.position.z),
             MakeQuatFromEuler(tf.rotation),
-            ToJoltMotionType(prop.motionType), // <--- Determines Immovable vs Movable on creation
+            ToJoltMotionType(prop.motionType),
             ToObjectLayer(prop.category)
         );
 
+        // [NEW] Apply the sensor flag to Jolt
+        bcs.mIsSensor = isSensor;
+
         bcs.mGravityFactor = prop.gravityFactor;
         bcs.mUserData = static_cast<JPH::uint64>(e);
+
+        bcs.mAllowDynamicOrKinematic = true;
 
         if (prop.motionType == 1) { // Dynamic
             bcs.mMotionQuality = JPH::EMotionQuality::LinearCast;
@@ -314,6 +364,64 @@ namespace Framework {
             EnsureBodyForEntity(e, ecsInterface, bodyInterface, m_createdBodies);
         }
 
+        Entity playerEntity = ecsInterface.GetEntityByName("Player");
+
+        if (ecsInterface.IsEntityValid(playerEntity) &&
+            ecsInterface.HasComponent<TransformComponent>(playerEntity) &&
+            ecsInterface.HasComponent<EventSenderComponent>(playerEntity)) // CHECK PLAYER FOR SENDER
+        {
+            auto& playerTrans = ecsInterface.GetComponent<TransformComponent>(playerEntity);
+            auto& playerSender = ecsInterface.GetComponent<EventSenderComponent>(playerEntity); // GET SENDER
+
+            for (Entity e : ecsInterface.GetEntities()) {
+                // Skip player
+                if (e == playerEntity) continue;
+
+                // Check Box components (Box does NOT need a Sender anymore)
+                if (!ecsInterface.HasComponent<BoxColliderComponent>(e) ||
+                    !ecsInterface.HasComponent<TransformComponent>(e)) {
+                    continue;
+                }
+
+                auto& collider = ecsInterface.GetComponent<BoxColliderComponent>(e);
+                auto& transform = ecsInterface.GetComponent<TransformComponent>(e);
+
+                // Run the Math
+                bool isInside = IsPointInsideBox(playerTrans.position, transform, collider);
+
+                // CHECK 1: ENTERING (isInside = true, wasInside = false)
+                if (isInside && !collider.wasInsideLastFrame) {
+                    if (playerSender.triggerName == "OnCollision") {
+
+                        CollisionEventData payload;
+                        payload.senderID = playerEntity;
+                        payload.targetID = e;
+                        payload.actionType = 1; // [NEW] 1 means ENTER
+
+                        EventManager::Instance().Fire(playerSender.messageName, &payload);
+                    }
+                }
+                // CHECK 2: EXITING (isInside = false, wasInside = true)
+                else if (!isInside && collider.wasInsideLastFrame) {
+                    if (playerSender.triggerName == "OnCollision") {
+
+                        std::cout << "[Physics] Player EXITED Entity " << e << std::endl;
+
+                        CollisionEventData payload;
+                        payload.senderID = playerEntity;
+                        payload.targetID = e;
+                        payload.actionType = 0; // [NEW] 0 means EXIT
+
+                        // We fire the SAME message ("PlayerInteraction")
+                        // The Receiver listens to the same channel, but reacts differently based on the data.
+                        EventManager::Instance().Fire(playerSender.messageName, &payload);
+                    }
+                }
+
+                collider.wasInsideLastFrame = isInside;
+            }
+        }
+
         // 2. Pre-Physics: Apply ECS properties to Jolt
         for (Entity e : ecsInterface.GetEntities()) {
             if (!ecsInterface.HasComponent<PhysicsBodyComponent>(e) ||
@@ -325,6 +433,15 @@ namespace Framework {
 
             auto& pb = ecsInterface.GetComponent<PhysicsBodyComponent>(e);
             auto& prop = ecsInterface.GetComponent<PhysicsProperties>(e);
+
+
+            if (ecsInterface.HasComponent<BoxColliderComponent>(e)) {
+                auto& collider = ecsInterface.GetComponent<BoxColliderComponent>(e);
+
+                // This function updates the sensor flag on the existing Jolt Body
+                // effectively toggling it between Solid and Trigger at runtime.
+                bodyInterface->SetIsSensor(pb.ID, collider.canPassThrough);
+            }
 
             // If your component still has the 'bool isImmovable' member:
             if (prop.isImmovable == true) {
@@ -452,4 +569,5 @@ namespace Framework {
         delete JPH::Factory::sInstance;
         JPH::Factory::sInstance = nullptr;
     }
+
 }
