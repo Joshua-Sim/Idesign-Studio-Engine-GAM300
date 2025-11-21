@@ -403,7 +403,7 @@ namespace Framework
                         TypeRegistry::Instance().RemoveComponent(typeName, ecs, entity);
                     }
                 }
-                else if (typeName == "TextComponent")
+                else if (typeName == "TextProperties")
                 {
                     // Cast to your specific component type
                     auto& textComp = *static_cast<TextProperties*>(componentPtr);
@@ -418,6 +418,8 @@ namespace Framework
                     if (ImGui::InputText("Text Content", textBuffer, sizeof(textBuffer))) {
                         textComp.text = textBuffer;
                     }
+
+                    ImGui::DragFloat("Scale", &textComp.scale, 0.01f, 0.0f, 100.0f);
 
                     // --- Manual Color Input (If needed) ---
                     ImGui::ColorEdit3("Color", &textComp.color.x);
@@ -439,6 +441,10 @@ namespace Framework
                         // STEP 3: Convert the 'int' back to Enum
                         // We use static_cast to force the Int back into the Enum storage
                         textComp.alignment = tempAlign;
+                    }
+                    ImGui::Checkbox("Billboard Mode", &textComp.isBillboard);
+                    if (ImGui::IsItemHovered()) {
+                        ImGui::SetTooltip("If checked, text always faces the camera.");
                     }
                 }
                 // 4. Handle EVERYTHING ELSE (Default Inspector)

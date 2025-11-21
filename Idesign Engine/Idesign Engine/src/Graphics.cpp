@@ -1548,7 +1548,8 @@ namespace Framework {
 
             if (ecsInterface.HasComponent<TextProperties>(entityId)) {
                 auto& txt = ecsInterface.GetComponent<TextProperties>(entityId);
-              
+                glm::mat4 model(1.0f);
+                model = glm::translate(model, tr.position);
                 if (txt.isBillboard)
                 {
                     // To face the camera, we set the Model's rotation axes to match 
@@ -1570,18 +1571,10 @@ namespace Framework {
                     model[2][1] = view[1][2];
                     model[2][2] = view[2][2];
                 }
-                else
-                {
-                    // Normal Rotation (If NOT billboarding, use the entity's rotation)
-                    model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
-                    model = glm::rotate(model, glm::radians(tr.rotation.y), { 0,1,0 });
-                    model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
-                }
+               
 
                 // 3. Apply Scale LAST (so it applies to the new rotation)
                 model = glm::scale(model, tr.scale);
-
-                      
 
                 // Render
                 fontSystem.RenderText3D(txt.text, model, view, proj, txt.scale, txt.color, txt.alignment);

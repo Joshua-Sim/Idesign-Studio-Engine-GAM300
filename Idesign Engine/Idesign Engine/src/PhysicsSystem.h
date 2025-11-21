@@ -80,65 +80,44 @@ namespace Framework
         JPH::BodyInterface* bodyInterface = nullptr;
     };
 
-    // Change 'class' to 'struct' to guarantee all members are public accessible
+    // Define the Queue and Mutex globally or in the class
+    struct TriggerEvent {
+        enum Type { ENTER, EXIT };
+        Type type;
+        JPH::BodyID b1;
+        JPH::BodyID b2;
+    };
+
+    static std::mutex s_TriggerMutex;
+    static std::vector<TriggerEvent> s_TriggerEvents;
+
     struct GameContactListener : public JPH::ContactListener
     {
-        // 1. Use the BASE interface type (const JPH::BodyLockInterface*)
-        //    This matches what GetBodyLockInterface() returns.
-        const JPH::BodyLockInterface* mBodyLockInterface = nullptr;
-
-        // (Optional) Keep this if you need it for other things, 
-        // but for locking, we rely on mBodyLockInterface.
-        JPH::BodyInterface* mBodyInterface = nullptr;
+        // We don't need ANY interfaces here anymore.
 
         // -----------------------------------------------------------------------
-        // CONTACT REMOVED
+        // CONTACT REMOVED (Safe Version)
         // -----------------------------------------------------------------------
-        virtual void OnContactRemoved(const JPH::SubShapeIDPair& inSubShapePair) override
-        {
-            // Check safety on the LOCK interface, not the general interface
-            if (mBodyLockInterface == nullptr) return;
-
+        virtual void OnContactRemoved(const JPH::SubShapeIDPair& inSubShapePair) override {
             JPH::BodyID b1 = inSubShapePair.GetBody1ID();
             JPH::BodyID b2 = inSubShapePair.GetBody2ID();
 
-            Entity e1 = 0;
-            Entity e2 = 0;
+            std::lock_guard<std::mutex> lock(s_TriggerMutex);
 
-            // --- Safely read Body 1 ---
-            {
-                // Dereference the pointer (*mBodyLockInterface) to get the interface
-                JPH::BodyLockRead lock1(*mBodyLockInterface, b1);
-                if (lock1.Succeeded()) {
-                    e1 = static_cast<Entity>(lock1.GetBody().GetUserData());
-                }
-                else {
-                    return; // Body 1 invalid
-                }
-            }
-
-            // --- Safely read Body 2 ---
-            {
-                JPH::BodyLockRead lock2(*mBodyLockInterface, b2);
-                if (lock2.Succeeded()) {
-                    e2 = static_cast<Entity>(lock2.GetBody().GetUserData());
-                }
-                else {
-                    return; // Body 2 invalid
-                }
-            }
-
-            std::cout << "[Physics] Contact END: " << e1 << " & " << e2 << std::endl;
+            // [FIX] Add 'TriggerEvent' before the curly braces
+            s_TriggerEvents.push_back(TriggerEvent{ TriggerEvent::EXIT, b1, b2 });
         }
+
         // -----------------------------------------------------------------------
-        // CONTACT ADDED (The one you already have)
+        // CONTACT ADDED
         // -----------------------------------------------------------------------
         virtual void OnContactAdded(const JPH::Body& inBody1, const JPH::Body& inBody2, const JPH::ContactManifold& inManifold, JPH::ContactSettings& ioSettings) override {
-            Entity e1 = static_cast<Entity>(inBody1.GetUserData());
-            Entity e2 = static_cast<Entity>(inBody2.GetUserData());
+            if (inBody1.IsSensor() || inBody2.IsSensor()) {
+                std::lock_guard<std::mutex> lock(s_TriggerMutex);
 
-            std::cout << "[Physics] Contact START: " << e1 << " & " << e2 << std::endl;
+                // [FIX] Add 'TriggerEvent' before the curly braces
+                s_TriggerEvents.push_back(TriggerEvent{ TriggerEvent::ENTER, inBody1.GetID(), inBody2.GetID() });
+            }
         }
-
     };
 }

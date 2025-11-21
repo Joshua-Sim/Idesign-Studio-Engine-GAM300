@@ -23,7 +23,7 @@ namespace Framework
 
         // [NEW] 0=Left, 1=Center, 2=Right
         int alignment = 0;
-        bool isBillboard = false;
+        bool isBillboard=false;
     };
 
     // 1. Define an array that lists each property
