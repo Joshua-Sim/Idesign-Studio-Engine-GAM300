@@ -151,6 +151,7 @@ int main(void)
     engine->AddSystem(physicsSystem.get());
     engine->AddSystem(sceneSystem.get());       // Register scene manager last
     engine->AddSystem(fileCheckSystem.get());
+    engine->AddSystem(eventSystem.get());
 
     std::filesystem::path root = GetEngineRootPath();
     fileCheckSystem->WatchAllFolders();

@@ -2,60 +2,101 @@
 #include "EventSystem.h"
 #include "EventManager.h"
 #include "ScriptingSystem.h"
-#include <EventReceiverComponent.h>
+#include <EventReceiverComponent.h> // Ensure this path is correct
+#include <BoxColliderComponent.h>
 
 extern Framework::Coordinator ecsInterface;
 
 namespace Framework {
 
-    // 1. FIX: Renamed to Initialize
     void EventSystem::Initialize() {
-        // 1. Get all entities that the Coordinator knows have an EventReceiver
+        // Leave this empty now. 
+        // We cannot trust that entities exist during Initialize.
+    }
+
+    void EventSystem::Update(float timeslice) {
+        // 1. Confirm the System is active (Prints once every 60 frames)
+        static int frameCount = 0;
+        frameCount++;
+
+        int entityCount = 0;
+
         for (auto const& entity : mEntities) {
-            // ADD THIS SAFETY CHECK
-            if (!ecsInterface.HasComponent<EventReceiverComponent>(entity)) {
-                continue;
-            }
+            if (!ecsInterface.HasComponent<EventReceiverComponent>(entity)) continue;
+            entityCount++;
 
             auto& receiver = ecsInterface.GetComponent<EventReceiverComponent>(entity);
 
-            // 2. The Wiring
-            // We tell the Manager: "When [messageToListenFor] happens, run this lambda."
-            EventManager::Instance().Subscribe(receiver.messageToListenFor,
+            // Inside EventSystem::Update loop...
 
+            if (!receiver.isSubscribed) {
 
+                // Capture the string BY VALUE
+                std::string expectedChannel = receiver.messageToListenFor;
 
-                // THE LAMBDA (The actual logic that runs later)
-                [entity, receiver](void* data) { // Capture entity by value, receiver by copy (safety)
+                // [DEBUG] 1. Confirm we found a new listener in the scene
+                std::cout << "[EventSystem] (+) New Listener detected: Entity " << entity
+                    << " is now listening for channel '" << expectedChannel << "'" << std::endl;
 
+                EventManager::Instance().Subscribe(receiver.messageToListenFor,
+                    [entity, expectedChannel](void* data) -> bool {
 
-                    std::cout << "[EventSystem] RECEIVED Event: " << receiver.messageToListenFor
-                        << " on Entity: " << entity << std::endl;
+                        // 1. CHECK: Is the Entity dead?
+                        if (!ecsInterface.IsEntityValid(entity)) {
+                            std::cout << "[EventSystem] (-) Unsubscribing Entity " << entity << " (Entity Invalid/Dead)" << std::endl;
+                            return false;
+                        }
 
-                    auto scriptingSystem = ecsInterface.GetSystem<ScriptingSystem>();
+                        // 2. CHECK: Was the component removed?
+                        if (!ecsInterface.HasComponent<EventReceiverComponent>(entity)) {
+                            std::cout << "[EventSystem] (-) Unsubscribing Entity " << entity << " (Component Removed)" << std::endl;
+                            return false;
+                        }
 
-                    if (scriptingSystem) {
-                        // B. Decode the payload
-                        // In your diagram, the Sender passes the "other" entity (e.g., who hit the box)
-                        Entity* otherEntity = static_cast<Entity*>(data);
+                        // 3. CHECK: Did the user change the text in ImGui?
+                        auto& currentReceiver = ecsInterface.GetComponent<EventReceiverComponent>(entity);
+                        if (currentReceiver.messageToListenFor != expectedChannel) {
+                            std::cout << "[EventSystem] (-) Unsubscribing Entity " << entity
+                                << " (Channel changed from '" << expectedChannel
+                                << "' to '" << currentReceiver.messageToListenFor << "')" << std::endl;
+                            return false;
+                        }
 
-                        // C. Call Lua
-                        // "Entity [ID] runs function [Lua_ShowPrompt]"
-                        // We pass -1 (or 0) as the 4th argument because the function signature requires it
-                        scriptingSystem->CallEntityFunction(
-                            entity,
-                            receiver.luaFunctionToCall,
-                            (otherEntity ? *otherEntity : -1)
-                        );
+                        // --- LOGIC IS SAFE TO RUN ---
+                        auto scriptingSystem = ecsInterface.GetSystem<ScriptingSystem>();
+                        if (scriptingSystem) {
+
+                            // [DEBUG] 2. Confirm the event hit the specific entity
+                            std::cout << "[EventSystem] [>>>] Event '" << expectedChannel << "' received by Entity " << entity
+                                << ". Executing Lua: " << currentReceiver.luaFunctionToCall << std::endl;
+
+                            // [CRITICAL FIX] Cast to the struct, not Entity* directly!
+                            // Ensure you have #include "PhysicsSystem.h" or wherever CollisionEventData is defined
+                            auto* payload = static_cast<CollisionEventData*>(data);
+
+                            Entity target = -1;
+                            if (payload) {
+                                target = payload->targetID;
+                            }
+                            int action = payload->actionType; // [NEW] Get 1 or 0
+                            scriptingSystem->CallEntityFunction(
+                                entity,
+                                currentReceiver.luaFunctionToCall,
+                                target,
+                                action // <--- PASS THIS! (It was -1 before)
+                            );
+                        }
+
+                        return true;
                     }
-                }
-            );
+                );
+
+                receiver.isSubscribed = true;
+            }
+            // Optional: If you really want to see existing listeners every frame (WARNING: SPAMMY)
+            // else {
+            //    // std::cout << "Entity " << entity << " is already subscribed." << std::endl;
+            // }
         }
-    }
-
-
-    // 2. FIX: Empty body for Update
-    void EventSystem::Update(float timeslice) {
-        return;
     }
 }

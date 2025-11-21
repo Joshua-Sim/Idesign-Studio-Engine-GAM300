@@ -9,7 +9,7 @@ namespace Framework {
 
     class EventManager {
     public:
-        using EventCallback = std::function<void(void*)>;
+        using EventCallback = std::function<bool(void*)>;
 
         // RENAMED FROM Get() TO Instance() TO MATCH YOUR CODE
         static EventManager& Instance() {

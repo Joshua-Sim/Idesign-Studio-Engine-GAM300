@@ -341,7 +341,7 @@ namespace Framework
                     }
                     continue;   
                 }
-                // 1. Handle EVENT RECEIVER (Updated variable names)
+                // 1. Handle EVENT RECEIVER
                 if (typeName == "EventReceiverComponent")
                 {
                     auto& receiver = *static_cast<Framework::EventReceiverComponent*>(componentPtr);
@@ -349,18 +349,26 @@ namespace Framework
                     // --- Input 1: Message to Listen For ---
                     char msgListenBuffer[256];
                     strncpy_s(msgListenBuffer, sizeof(msgListenBuffer), receiver.messageToListenFor.c_str(), _TRUNCATE);
+
+                    // Returns TRUE only if you changed the text
                     if (ImGui::InputText("Listen For (Msg)", msgListenBuffer, sizeof(msgListenBuffer)))
                     {
                         receiver.messageToListenFor = msgListenBuffer;
+
+                        // [CRITICAL FIX]
+                        // Force the EventSystem to re-subscribe to this new name next frame
+                        receiver.isSubscribed = false;
                     }
 
                     // --- Input 2: Lua Function to Call ---
                     char luaFuncBuffer[256];
                     strncpy_s(luaFuncBuffer, sizeof(luaFuncBuffer), receiver.luaFunctionToCall.c_str(), _TRUNCATE);
-                    // Note: Changed label to match new variable name
+
                     if (ImGui::InputText("Lua Function", luaFuncBuffer, sizeof(luaFuncBuffer)))
                     {
                         receiver.luaFunctionToCall = luaFuncBuffer;
+                        // Note: We don't technically need to re-subscribe for this one since 
+                        // the lambda looks up the component dynamically, but resetting is safer.
                     }
                 }
                 // 2. Handle EVENT SENDER (New! Needs to handle strings now, not enums)
@@ -393,6 +401,50 @@ namespace Framework
                     if (ImGui::Button("Remove ScriptProperties"))
                     {
                         TypeRegistry::Instance().RemoveComponent(typeName, ecs, entity);
+                    }
+                }
+                else if (typeName == "TextProperties")
+                {
+                    // Cast to your specific component type
+                    auto& textComp = *static_cast<TextProperties*>(componentPtr);
+
+                    // Draw the standard stuff using your helper (Text string, Color, etc.)
+                    // Note: If you don't have a helper for TextComponent, you can draw inputs manually here.
+                    // Assuming DrawInspector handles the string/color automatically, we just handle alignment manually.
+
+                    // --- Manual String Input (If needed) ---
+                    char textBuffer[256];
+                    strncpy_s(textBuffer, sizeof(textBuffer), textComp.text.c_str(), _TRUNCATE);
+                    if (ImGui::InputText("Text Content", textBuffer, sizeof(textBuffer))) {
+                        textComp.text = textBuffer;
+                    }
+
+                    ImGui::DragFloat("Scale", &textComp.scale, 0.01f, 0.0f, 100.0f);
+
+                    // --- Manual Color Input (If needed) ---
+                    ImGui::ColorEdit3("Color", &textComp.color.x);
+
+                    // --- ALIGNMENT DROPDOWN ---
+                    const char* alignOptions[] = { "Left", "Center", "Right" };
+
+                    // STEP 1: Create a temporary 'int' copy of the value
+                    // We use static_cast to force the Enum to become an Int for ImGui
+                    int tempAlign = static_cast<int>(textComp.alignment);
+
+                    // Safety clamp to prevent crashes if data is corrupt
+                    if (tempAlign < 0) tempAlign = 0;
+                    if (tempAlign > 2) tempAlign = 0;
+
+                    // STEP 2: Pass the address of the 'int' to ImGui
+                    if (ImGui::Combo("Alignment", &tempAlign, alignOptions, IM_ARRAYSIZE(alignOptions)))
+                    {
+                        // STEP 3: Convert the 'int' back to Enum
+                        // We use static_cast to force the Int back into the Enum storage
+                        textComp.alignment = tempAlign;
+                    }
+                    ImGui::Checkbox("Billboard Mode", &textComp.isBillboard);
+                    if (ImGui::IsItemHovered()) {
+                        ImGui::SetTooltip("If checked, text always faces the camera.");
                     }
                 }
                 // 4. Handle EVERYTHING ELSE (Default Inspector)

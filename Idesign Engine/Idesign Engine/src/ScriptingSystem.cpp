@@ -13,7 +13,6 @@
 #include "MeshProperties.h"          // g_MeshPropertiesProps
 #include <filesystem>
 #include "ScriptProperties.h"
-#include "AudioSystem.h"
 
 extern Framework::Coordinator ecsInterface;
 
@@ -101,6 +100,76 @@ namespace Framework {
             return 0;
         }
 
+        // In ScriptingSystem.cpp, inside the anonymous namespace or static helpers
+
+        static int l_spawnPrompt(lua_State* L) {
+            // Argument 1: The Entity ID (The Box/Receiver) - so we know WHERE to spawn
+            Entity parentID = static_cast<Entity>(luaL_checkinteger(L, 1));
+
+            // Argument 2: The Text to display
+            const char* textContent = luaL_checkstring(L, 2);
+
+            // Argument 3: (Optional) Y Offset
+            float yOffset = (float)luaL_optnumber(L, 3, 2.0); // Default to 2.0 units high
+
+            // 1. Safety Check
+            if (!ecsInterface.IsEntityValid(parentID) ||
+                !ecsInterface.HasComponent<TransformComponent>(parentID)) {
+                std::cout << "[Lua Error] SpawnPrompt: Invalid entity or missing transform.\n";
+                return 0;
+            }
+
+            // 2. Get Parent Position
+            auto& parentTrans = ecsInterface.GetComponent<TransformComponent>(parentID);
+            glm::vec3 spawnPos = parentTrans.position;
+            spawnPos.y += yOffset;
+
+            // 3. Create New Entity
+            Entity promptEntity = ecsInterface.CreateEntity();
+
+            // 4. Add Transform
+            TransformComponent tf;
+            tf.position = spawnPos;
+            tf.scale = glm::vec3(1.0f);
+            tf.rotation = glm::vec3(0.0f, 90.0f, 0.0f);
+            ecsInterface.AddComponent(promptEntity, tf);
+
+            HierarchyComponent hc;
+            ecsInterface.AddComponent(promptEntity, hc);
+
+            TextProperties tp;
+            tp.text = std::string(textContent);
+            tp.color = glm::vec3(1.0f, 1.0f, 1.0f); // White text
+            tp.alignment = 1;
+            tp.scale = 0.03f;
+            ecsInterface.AddComponent(promptEntity, tp);
+
+            MeshProperties mp;
+            ecsInterface.AddComponent(promptEntity, mp);
+
+            MaterialProperties mp2;
+            ecsInterface.AddComponent(promptEntity, mp2);
+
+            // Optional: Return the new ID to Lua so we can delete it later?
+            lua_pushinteger(L, static_cast<lua_Integer>(promptEntity));
+            return 1;
+        }
+
+        static int l_DestroyEntity(lua_State* L) {
+            // 1. Get Entity ID from Lua
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+
+            // 2. Check validity
+            if (ecsInterface.IsEntityValid(e)) {
+                ecsInterface.DestroyEntity(e);
+                // std::cout << "[Lua] Destroyed Entity " << e << std::endl;
+            }
+            else {
+                std::cout << "[Lua Warning] Tried to destroy invalid entity: " << e << std::endl;
+            }
+            return 0;
+        }
+
         int l_ToggleLight(lua_State* L) {
             auto* self = lua_self(L);
             Graphics* g = self ? self->GetGraphicsSystem() : nullptr;
@@ -129,57 +198,6 @@ namespace Framework {
             return 1;
         }
 
-        //============================= AUDIO LUA BINDINGS ========================================
-        static int lua_AudioPlay(lua_State* L) {
-			const char* eventPath = luaL_checkstring(L, 1);
-            if (g_AudioSystem) {
-                g_AudioSystem->PlayAudio(eventPath);
-            }
-            return 0;
-        }
-
-        static int lua_AudioStop(lua_State* L) {
-            if (g_AudioSystem) {
-                g_AudioSystem->Reset();
-            }
-            return 0;
-        }
-
-        static int lua_AudioPause(lua_State* L) {
-            if (g_AudioSystem) {
-                g_AudioSystem->PauseAllAudio();
-            }
-            return 0;
-        }
-
-        static int lua_AudioResume(lua_State* L) {
-            if (g_AudioSystem) {
-                g_AudioSystem->ResumeAllAudio();
-            }
-            return 0;
-        }
-
-        static int lua_AudioSetVolume(lua_State* L) {
-            float volume = (float)luaL_checknumber(L, 1);
-            if (g_AudioSystem) {
-                g_AudioSystem->SetMasterVolume(volume);
-            }
-            return 0;
-        }
-
-        static int lua_AudioPlay3D(lua_State* L) {
-            const char* eventPath = luaL_checkstring(L, 1);
-            float x = (float)luaL_checknumber(L, 2);
-            float y = (float)luaL_checknumber(L, 3);
-            float z = (float)luaL_checknumber(L, 4);
-
-            if (g_AudioSystem) {
-                g_AudioSystem->PlaySound3D(eventPath, Framework::Vector3(x, y, z));
-            }
-            return 0;
-        }
-        // ========================= END AUDIO LUA BINDINGS ===================================
-        
         // NavMesh Exposed funcs for path-finding
 
         void ScriptPathfindTo(const std::string& agentName, const std::string& targetName)
@@ -420,7 +438,9 @@ namespace Framework {
         lua_register(L, "SetGroundMode", l_SetGround);
         lua_register(L, "GetPosition", lua_GetPosition);
         lua_register(L, "SetPosition", lua_SetPosition);
-        lua_register(L, "IsMouseButtonDown", l_IsMouseButtonDown); // <-- ADD THIS
+        lua_register(L, "SpawnPrompt", l_spawnPrompt);
+        lua_register(L, "DestroyEntity", l_DestroyEntity);
+        lua_register(L, "IsMouseButtonDown", l_IsMouseButtonDown); 
 
         // Engine utility
         lua_register(L, "FindEntityByName", lua_FindEntityByName);
@@ -433,16 +453,6 @@ namespace Framework {
             ScriptPathfindTo(agentName, targetName);
             return 0;
             });
-
-        // Create Audio table with playback functions 
-        lua_newtable(L);
-        lua_pushcfunction(L, lua_AudioPlay);      lua_setfield(L, -2, "Play");
-        lua_pushcfunction(L, lua_AudioStop);      lua_setfield(L, -2, "Stop");
-        lua_pushcfunction(L, lua_AudioPause);     lua_setfield(L, -2, "Pause");
-        lua_pushcfunction(L, lua_AudioResume);    lua_setfield(L, -2, "Resume");
-        lua_pushcfunction(L, lua_AudioSetVolume); lua_setfield(L, -2, "SetVolume");
-        lua_pushcfunction(L, lua_AudioPlay3D);    lua_setfield(L, -2, "Play3D");
-        lua_setglobal(L, "Audio");
 
         // Create Cook table with our functions
         lua_newtable(L);                           // Cook

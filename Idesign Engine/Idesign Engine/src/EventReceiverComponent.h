@@ -18,6 +18,8 @@ namespace Framework {
 
         // The Lua function to run when that channel fires (e.g., "Lua_ShowPrompt")
         std::string luaFunctionToCall;
+
+        bool isSubscribed = false;
     };
 
     // --- REGISTRATION FOR IMGUI ---

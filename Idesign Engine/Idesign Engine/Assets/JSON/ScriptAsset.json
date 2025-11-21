@@ -8,13 +8,6 @@
             "tableRef": -1
         },
         {
-            "guid": "c8af2bda-527b-474b-98d2-cfa9e88a8f06",
-            "scriptPath": "Assets\\Scripts\\footsteps.lua",
-            "hotReload": true,
-            "initialized": false,
-            "tableRef": -1
-        },
-        {
             "guid": "d922d53f-3ff6-4f93-b646-3e2249c228b8",
             "scriptPath": "Assets/Scripts/hello.lua",
             "hotReload": true,
@@ -52,6 +45,13 @@
         {
             "guid": "e7535686-93e2-4aa2-8052-4abfe9e7deda",
             "scriptPath": "Assets/Scripts/Pathfinding.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "998e8733-cf17-48d4-96be-ab700322c93c",
+            "scriptPath": "Assets\\Scripts\\spawnPrompt.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
