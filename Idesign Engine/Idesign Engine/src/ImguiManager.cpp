@@ -701,7 +701,7 @@ namespace Framework {
 
         // Toggle editor visibility with Backspace key
         static bool backspaceWasPressed = false;
-        bool backspaceIsPressed = InputHandler::GetInstance()->IsKeyHeld(GLFW_KEY_BACKSPACE);
+        bool backspaceIsPressed = InputHandler::GetInstance()->IsKeyHeld(GLFW_KEY_1);
 
         if (backspaceIsPressed && !backspaceWasPressed)
         {
