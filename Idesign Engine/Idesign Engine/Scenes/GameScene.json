@@ -1024,11 +1024,21 @@
                     "sortIndex": 25
                 },
                 "MeshComponent": {
-                    "guid": "6fa52b14-d79c-4815-aaff-767eb40b32ca"
+                    "guid": "6fa52b14-d79c-4815-aaff-767eb40b32ca",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "a3d6570b-a168-4e13-9ecc-6abb2ed62b18",
                     "isUI": false
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "851d7200-aa2c-49c2-9f32-9a3f3fdc16fd",
+                            "scriptPath": "Assets\\Scripts\\ChoppingBoard.lua",
+                            "hotReload": true
+                        }
+                    ]
                 }
             }
         },
@@ -1692,14 +1702,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -34.799015045166016,
-                        7.7092790603637695,
-                        11.336045265197754
+                        -32.22384262084961,
+                        7.709913730621338,
+                        13.007275581359863
                     ],
                     "rotation": [
-                        -0.019654134288430214,
-                        -0.0038980641402304173,
-                        0.02668358013033867
+                        0.001884553232230246,
+                        -0.19242499768733978,
+                        0.00018291687592864037
                     ],
                     "scale": [
                         1.0,
@@ -1927,9 +1937,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -42.63027572631836,
-                        5.769213676452637,
-                        9.310661315917969
+                        -42.68813705444336,
+                        5.748683452606201,
+                        9.54386043548584
                     ],
                     "rotation": [
                         0.0,

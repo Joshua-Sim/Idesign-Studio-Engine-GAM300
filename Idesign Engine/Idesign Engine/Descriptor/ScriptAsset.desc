@@ -1,5 +1,5 @@
 {
-    "count": 8,
+    "count": 9,
     "entries": [
         {
             "guid": "c602f641-2748-4e0a-8fe7-2df7e8c401a2",
@@ -53,6 +53,13 @@
         {
             "guid": "998e8733-cf17-48d4-96be-ab700322c93c",
             "scriptPath": "Assets\\Scripts\\spawnPrompt.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "851d7200-aa2c-49c2-9f32-9a3f3fdc16fd",
+            "scriptPath": "Assets\\Scripts\\ChoppingBoard.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1

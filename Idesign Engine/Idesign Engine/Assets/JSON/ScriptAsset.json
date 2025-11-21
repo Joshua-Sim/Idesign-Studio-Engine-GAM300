@@ -55,6 +55,13 @@
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
+        },
+        {
+            "guid": "851d7200-aa2c-49c2-9f32-9a3f3fdc16fd",
+            "scriptPath": "Assets\\Scripts\\ChoppingBoard.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
         }
     ]
 }

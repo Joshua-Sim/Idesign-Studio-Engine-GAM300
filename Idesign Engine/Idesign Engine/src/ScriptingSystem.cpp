@@ -198,6 +198,43 @@ namespace Framework {
             return 1;
         }
 
+        static int lua_SetMesh(lua_State* L)
+        {
+            // 1. Get arguments: Entity ID and Mesh Path
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+            const char* path = luaL_checkstring(L, 2);
+
+            // 2. Validate Entity & Component
+            if (ecsInterface.IsEntityValid(e) && ecsInterface.HasComponent<MeshProperties>(e)) {
+                auto& mesh = ecsInterface.GetComponent<MeshProperties>(e);
+
+                // 3. Update Path
+                mesh.path = path;
+
+                // 4. Reload Mesh Data Immediately
+                MeshLoader::loadMesh(mesh.path, mesh);
+            }
+            return 0;
+        }
+
+        static int lua_SetTexture(lua_State* L)
+        {
+            // 1. Get arguments: Entity ID and Texture Path
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+            const char* path = luaL_checkstring(L, 2);
+
+            // 2. Validate Entity & Component
+            if (ecsInterface.IsEntityValid(e) && ecsInterface.HasComponent<TextureProperties>(e)) {
+                auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
+
+                // 3. Update Path
+                tex.path = path;
+
+                // 4. Reload Texture Data Immediately
+                TextureLoader::loadTexture(tex, true);
+            }
+            return 0;
+        }
         // NavMesh Exposed funcs for path-finding
 
         void ScriptPathfindTo(const std::string& agentName, const std::string& targetName)
@@ -444,6 +481,8 @@ namespace Framework {
 
         // Engine utility
         lua_register(L, "FindEntityByName", lua_FindEntityByName);
+        lua_register(L, "SetMesh", lua_SetMesh);
+        lua_register(L, "SetTexture", lua_SetTexture);
 
         // Navmesh
         lua_register(L, "PathfindTo", [](lua_State* L) -> int {
