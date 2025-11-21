@@ -4,6 +4,7 @@
 #include "ScriptingSystem.h"
 #include <EventReceiverComponent.h> // Ensure this path is correct
 #include <BoxColliderComponent.h>
+#include <AudioSystem.h>
 
 extern Framework::Coordinator ecsInterface;
 
@@ -87,6 +88,15 @@ namespace Framework {
                             );
                         }
 
+                        // NEW: Trigger audio if this entity has an AudioComponent
+                        if (ecsInterface.HasComponent<AudioComponent>(entity)) 
+                        {
+                            auto audioSystem = ecsInterface.GetSystem<AudioSystem>();
+                            if (audioSystem) {
+                                audioSystem->PlayEntitySound(entity);
+                                std::cout << "[EventSystem] [AUDIO] Playing sound for entity " << entity << " on channel '" << expectedChannel << "'" << std::endl;
+                            }
+                        }
                         return true;
                     }
                 );

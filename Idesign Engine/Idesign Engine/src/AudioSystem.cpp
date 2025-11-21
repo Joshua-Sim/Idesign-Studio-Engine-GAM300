@@ -177,6 +177,34 @@ namespace Framework {
     }
 
     void AudioSystem::Update(float deltaTime) {
+
+        Entity activeListenerEntity;
+        bool foundListener = false;
+
+        for (Entity e : mEntities) {
+            if (ecsInterface.GetEntityName(e) != "Player") continue;
+            if (!ecsInterface.HasComponent<ListenerComponent>(e)) continue;
+            if (!ecsInterface.HasComponent<TransformComponent>(e)) continue;
+
+            auto& listener = ecsInterface.GetComponent<ListenerComponent>(e);
+            auto& transform = ecsInterface.GetComponent<TransformComponent>(e);
+            if (listener.active) {
+                activeListenerEntity = e;
+                listenerPosition = transform.position;
+                listenerForward = listener.forward;
+                listenerUp = listener.up;
+                foundListener = true;
+                break;
+            }
+        }
+
+        if (!foundListener) {
+            // fallback: default listener at origin
+            listenerPosition = glm::vec3(0.0f);
+            listenerForward = glm::vec3(0.0f, 0.0f, -1.0f);
+            listenerUp = glm::vec3(0.0f, 1.0f, 0.0f);
+        }
+
         // Handle fade effects for smooth BGM transitions
         if (isFadingIn || isFadingOut) {
             fadeTimer += deltaTime;
