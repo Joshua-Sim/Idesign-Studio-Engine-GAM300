@@ -2,6 +2,8 @@
 .tmp
 bin
 bin/
+"Idesign Engine/x64"
+"Idesign Engine/Idesign Engine/x64"
 Unnamed Studios/Unnamed Studios.vcxproj
 Unnamed Studios/Unnamed Studios.vcxproj.filters
 Unnamed Studios/x64/Debug/Core.obj
