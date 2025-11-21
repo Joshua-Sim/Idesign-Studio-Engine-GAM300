@@ -1948,11 +1948,11 @@
                     "sortIndex": 1
                 },
                 "MeshComponent": {
-                    "guid": "e40538da-1955-44a8-bb38-ddbc8805d083",
+                    "guid": "4bf0356c-3b1b-4e45-a327-5a7f573a20ef",
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "06b3101c-c40c-438e-be69-13555a22d44f",
+                    "guid": "afd25b76-dddc-4c4f-bae4-a6c9a22931e5",
                     "isUI": false
                 },
                 "ScriptProperties": {

@@ -10,15 +10,6 @@
             "indexCount": 324
         },
         {
-            "guid": "62fa60bd-a3d0-4575-851f-e6d04a326345",
-            "name": "Window Frame",
-            "path": "Assets\\Objects\\Window Frame.obj",
-            "vao": 50,
-            "vbo": 95,
-            "ebo": 96,
-            "indexCount": 774
-        },
-        {
             "guid": "6cbaa85b-562d-4b23-9f64-8639947659cc",
             "name": "knifechoppingwithBONEFIXED4",
             "path": "Assets/Objects/knifechoppingwithBONEFIXED4.fbx",
@@ -26,6 +17,15 @@
             "vbo": 83,
             "ebo": 84,
             "indexCount": 312
+        },
+        {
+            "guid": "62fa60bd-a3d0-4575-851f-e6d04a326345",
+            "name": "Window Frame",
+            "path": "Assets\\Objects\\Window Frame.obj",
+            "vao": 50,
+            "vbo": 95,
+            "ebo": 96,
+            "indexCount": 774
         },
         {
             "guid": "1cc97700-7326-4df8-b677-80233b030807",
@@ -40,9 +40,9 @@
             "guid": "2d0d1073-79fb-44de-9d09-86af64b2aabb",
             "name": "GreenPotion2",
             "path": "Assets\\Objects\\GreenPotion2.obj",
-            "vao": 1,
-            "vbo": 1,
-            "ebo": 2,
+            "vao": 5,
+            "vbo": 9,
+            "ebo": 10,
             "indexCount": 924
         },
         {
@@ -100,6 +100,15 @@
             "indexCount": 2304
         },
         {
+            "guid": "9e1fcb62-0699-4a0b-ae75-d0670af44b1b",
+            "name": "plane2",
+            "path": "Assets/Objects/plane2.obj",
+            "vao": 13,
+            "vbo": 25,
+            "ebo": 26,
+            "indexCount": 231840
+        },
+        {
             "guid": "e902f0d7-a022-45fc-9c17-2a98cbdb793e",
             "name": "Cylinder",
             "path": "Assets/Objects/Cylinder.obj",
@@ -107,15 +116,6 @@
             "vbo": 161,
             "ebo": 162,
             "indexCount": 240
-        },
-        {
-            "guid": "9e1fcb62-0699-4a0b-ae75-d0670af44b1b",
-            "name": "plane2",
-            "path": "Assets/Objects/plane2.obj",
-            "vao": 12,
-            "vbo": 23,
-            "ebo": 24,
-            "indexCount": 231840
         },
         {
             "guid": "eac3e6f4-1bf2-415f-aef8-8f1269d91560",
@@ -145,22 +145,22 @@
             "indexCount": 40356
         },
         {
-            "guid": "a25723a2-f9bf-4939-b80d-962eb537dd2e",
-            "name": "RedPotion",
-            "path": "Assets\\Objects\\RedPotion.obj",
-            "vao": 18,
-            "vbo": 35,
-            "ebo": 36,
-            "indexCount": 924
-        },
-        {
             "guid": "fe86c54b-7cc2-471c-9d7e-0bce31089b5a",
             "name": "Cylinder",
             "path": "Assets/Objects/Cylinder.obj",
+            "vao": 18,
+            "vbo": 35,
+            "ebo": 36,
+            "indexCount": 240
+        },
+        {
+            "guid": "a25723a2-f9bf-4939-b80d-962eb537dd2e",
+            "name": "RedPotion",
+            "path": "Assets\\Objects\\RedPotion.obj",
             "vao": 17,
             "vbo": 33,
             "ebo": 34,
-            "indexCount": 240
+            "indexCount": 924
         },
         {
             "guid": "da032094-6e5c-40fe-b6f0-39a9d542ffe5",
@@ -296,6 +296,15 @@
             "vbo": 141,
             "ebo": 142,
             "indexCount": 816
+        },
+        {
+            "guid": "4bf0356c-3b1b-4e45-a327-5a7f573a20ef",
+            "name": "Herb",
+            "path": "Assets\\Objects\\Herb.obj",
+            "vao": 84,
+            "vbo": 163,
+            "ebo": 164,
+            "indexCount": 1836
         }
     ]
 }
