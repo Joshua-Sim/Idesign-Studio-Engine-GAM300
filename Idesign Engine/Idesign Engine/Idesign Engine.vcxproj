@@ -266,6 +266,7 @@
     <ClInclude Include="src\ScriptProperties.h" />
     <ClInclude Include="src\ShaderProgram.h" />
     <ClInclude Include="src\SignalHandler.h" />
+    <ClInclude Include="src\Skybox.h" />
     <ClInclude Include="src\System.h" />
     <ClInclude Include="src\SystemInclude.h" />
     <ClInclude Include="src\TagManager.h" />
@@ -300,6 +301,8 @@
     <None Include="Assets\shaders\pickfrag.glsl" />
     <None Include="Assets\shaders\pickvert.glsl" />
     <None Include="Assets\shaders\postprocess.glsl" />
+    <None Include="Assets\shaders\skybox_frag.glsl" />
+    <None Include="Assets\shaders\skybox_vert.glsl" />
     <None Include="Assets\shaders\terrainfrag.glsl" />
     <None Include="Assets\shaders\terrainvert.glsl" />
     <None Include="Assets\shaders\vertex.glsl" />
@@ -392,6 +395,7 @@
     <ClCompile Include="src\ScriptingSystem.cpp" />
     <ClCompile Include="src\ShaderProgram.cpp" />
     <ClCompile Include="src\SignalHandler.cpp" />
+    <ClCompile Include="src\Skybox.cpp" />
     <ClCompile Include="src\TagManager.cpp" />
     <ClCompile Include="src\Terrain.cpp" />
     <ClCompile Include="src\TestSystem.cpp" />

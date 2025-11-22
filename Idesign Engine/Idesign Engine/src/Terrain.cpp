@@ -6,31 +6,27 @@
 Terrain::Terrain(int size, float scale)
     : size(size), scale(scale), heights(size* size)
 {
-    // generate heights
-    for (int z = 0; z < size; ++z) {
-        for (int x = 0; x < size; ++x) {
-            float worldX = (float)x * scale;
-            float worldZ = (float)z * scale;
-            float h = sinf(worldX * 0.2f) * cosf(worldZ * 0.2f) * 2.0f;
-            heights[z * size + x] = h;
+    // All flat height = 0
+    for (int z = 0; z < size; ++z)
+    {
+        for (int x = 0; x < size; ++x)
+        {
+            heights[z * size + x] = 0.0f; // flat
         }
     }
 
-    // build vertex + index data (CPU only for now)
     auto getIndex = [&](int x, int z) { return z * size + x; };
 
-    for (int z = 0; z < size; ++z) {
-        for (int x = 0; x < size; ++x) {
-            float worldX = (float)x * scale;
-            float worldZ = (float)z * scale;
-            float h = heights[getIndex(x, z)];
+    for (int z = 0; z < size; ++z)
+    {
+        for (int x = 0; x < size; ++x)
+        {
+            float worldX = ((float)x - size * 0.5f) * scale;
+            float worldZ = ((float)z - size * 0.5f) * scale;
 
-            float hl = (x > 0) ? heights[getIndex(x - 1, z)] : h;
-            float hr = (x < size - 1) ? heights[getIndex(x + 1, z)] : h;
-            float hd = (z > 0) ? heights[getIndex(x, z - 1)] : h;
-            float hu = (z < size - 1) ? heights[getIndex(x, z + 1)] : h;
+            float h = 0.0f;
 
-            glm::vec3 normal = glm::normalize(glm::vec3(hl - hr, 2.0f, hd - hu));
+            glm::vec3 normal(0.0f, 1.0f, 0.0f);
 
             vertices.push_back(worldX);
             vertices.push_back(h);
@@ -41,8 +37,10 @@ Terrain::Terrain(int size, float scale)
         }
     }
 
-    for (int z = 0; z < size - 1; ++z) {
-        for (int x = 0; x < size - 1; ++x) {
+    for (int z = 0; z < size - 1; ++z)
+    {
+        for (int x = 0; x < size - 1; ++x)
+        {
             unsigned int i0 = getIndex(x, z);
             unsigned int i1 = getIndex(x + 1, z);
             unsigned int i2 = getIndex(x, z + 1);

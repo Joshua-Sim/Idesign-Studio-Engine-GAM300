@@ -435,6 +435,19 @@ namespace Framework {
         m_frameCount = 0;
         m_fpsLastTime = glfwGetTime(); // Start the timer
 
+        std::vector<std::string> faces = 
+        {
+        "Assets/Textures/right.png",
+        "Assets/Textures/left.png",
+        "Assets/Textures/top.png",
+        "Assets/Textures/bottom.png",
+        "Assets/Textures/front.png",
+        "Assets/Textures/back.png"
+        };
+
+        // Make sure the folder and files exist!
+        m_skybox.init(faces);
+
         ImguiManager::LogSuccess("Graphics System initialized successfully", "Graphics");
     }
 
@@ -1737,6 +1750,11 @@ namespace Framework {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glDepthMask(GL_FALSE);
 
+        // === DRAW SKYBOX HERE ===
+        // It uses the depth buffer to only draw on empty pixels
+        m_skybox.draw(view, proj);
+        // ====================================================
+
         for (auto it = transparentEntities.rbegin(); it != transparentEntities.rend(); ++it)
         {
             auto const& entityId = it->second;
@@ -1855,7 +1873,6 @@ namespace Framework {
         glDepthMask(GL_TRUE);
         glDisable(GL_BLEND);
         glCullFace(GL_BACK);
-
         // --- 4. PICK PASS ---
         glBindFramebuffer(GL_FRAMEBUFFER, pickFBO[pickWrite]);
         glViewport(0, 0, width, height);

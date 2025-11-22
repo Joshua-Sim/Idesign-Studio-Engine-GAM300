@@ -576,6 +576,9 @@
     <ClInclude Include="src\BoxColliderComponent.h">
       <Filter>Header Files\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="src\Skybox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />
@@ -674,6 +677,12 @@
     </None>
     <None Include="Shader2dfrag.glsl" />
     <None Include="Shader2dvert.glsl" />
+    <None Include="Assets\shaders\skybox_vert.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\skybox_frag.glsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -894,6 +903,9 @@
     </ClCompile>
     <ClCompile Include="src\EventManager.cpp">
       <Filter>Source Files\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Skybox.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
