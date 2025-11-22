@@ -157,7 +157,7 @@ function M:ChopItem()
     current_health = current_health - 1
     print("[ChoppingBoard] CHOP! Health: " .. current_health)
     
-    PlaySound("event:/buttonclick")
+    PlaySound("event:/ChoppingHerb")
 
     if current_health == 3 then
         SetMesh(current_herb_entity, self.mesh_stage1)
