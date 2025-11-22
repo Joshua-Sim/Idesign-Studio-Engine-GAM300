@@ -1,5 +1,5 @@
 {
-    "count": 8,
+    "count": 9,
     "entries": [
         {
             "guid": "c602f641-2748-4e0a-8fe7-2df7e8c401a2",
@@ -11,6 +11,13 @@
         {
             "guid": "d922d53f-3ff6-4f93-b646-3e2249c228b8",
             "scriptPath": "Assets/Scripts/hello.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "0cf97121-19fa-4fe9-a473-1b2cb85370f8",
+            "scriptPath": "Assets\\Scripts\\TagFunctionExample.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1

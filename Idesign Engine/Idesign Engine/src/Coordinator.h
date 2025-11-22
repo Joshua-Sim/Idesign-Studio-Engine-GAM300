@@ -181,20 +181,10 @@ namespace Framework {
 		}
 
 		// Tag Managing Functions
-		// Takes in an entity and a tag name, then assigns a tag to the entity
-		void AddTag(Entity entity, const std::string& tag);
+		std::vector<Entity> GetEntitiesByTag(const std::string& tag);
 
-		// Takes in an entity and a tag name, then removes the tag from that entity
-		void RemoveTag(Entity entity, const std::string& tag);
-
-		// Takes in an entity and a tag name, then returns true if the tag exists, or false if it does not
-		bool HasTag(Entity entity, const std::string& tag) const;
-
-		// Takes in a tag name, and returns the entities that contain said tag
-		const std::unordered_set<Entity>& GetEntitiesByTag(const std::string& tag) const;
-
-		// Takes in an entity and removes all tags from it 
-		void RemoveAllTags(Entity entity);
+		// Optional helper in Coordinator.cpp:
+		bool EntityHasTag(Entity entity, const std::string& tag);
 
 		// Entity Vector Stuff
 		// Returns the vector of all entities in existence
@@ -271,7 +261,6 @@ namespace Framework {
 		std::unique_ptr<ComponentManager> mComponentManager;	// A shared pointer of the Component Manager
 		std::unique_ptr<EntityManager> mEntityManager;			// A shared pointer of the Entity Manager
 		std::unique_ptr<ECSystemManager> mSystemManager;		// A shared pointer of the ECS System Manager
-		std::unique_ptr<TagManager> mTagManager;				// A shared pointer of the Tag Manager
 		std::unordered_map<Entity, std::string> entityNames;	// An unordered map of entity names, using the entity IDs as their keys. Since IDs are unique
 		std::unordered_map<Entity, std::string> guidMap;        // Unordered map of entity GUID to entity ID linkage, generated uniquely on creation.
 		std::vector<Entity> entityList;							// A vector of entities used for tracking all entities in game

@@ -1,15 +1,21 @@
 {
     "textures": [
         {
-            "guid": "d4899207-ea5e-473b-870f-aade76e8a7ff",
-            "name": "Door",
-            "path": "Assets\\Textures\\Door.png",
+            "guid": "afd25b76-dddc-4c4f-bae4-a6c9a22931e5",
+            "name": "Herb",
+            "path": "Assets\\Textures\\Herb.png",
             "isUI": false
         },
         {
             "guid": "b2d4bb99-3396-40de-8789-01d6cf083f4e",
             "name": "obj",
             "path": "Assets/Textures/obj.png",
+            "isUI": false
+        },
+        {
+            "guid": "d4899207-ea5e-473b-870f-aade76e8a7ff",
+            "name": "Door",
+            "path": "Assets\\Textures\\Door.png",
             "isUI": false
         },
         {
@@ -208,12 +214,6 @@
             "guid": "a3d6570b-a168-4e13-9ecc-6abb2ed62b18",
             "name": "Cutting Board",
             "path": "Assets\\Textures\\Cutting Board.png",
-            "isUI": false
-        },
-        {
-            "guid": "afd25b76-dddc-4c4f-bae4-a6c9a22931e5",
-            "name": "Herb",
-            "path": "Assets\\Textures\\Herb.png",
             "isUI": false
         }
     ]
