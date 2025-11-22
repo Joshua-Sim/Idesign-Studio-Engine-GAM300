@@ -182,6 +182,7 @@
     <ClInclude Include="src\FontShader.h" />
     <ClInclude Include="src\FontSystem.h" />
     <ClInclude Include="src\GameMessages.h" />
+    <ClInclude Include="src\GameSystem.h" />
     <ClInclude Include="src\Graphics.h" />
     <ClInclude Include="src\GraphicsShader.h" />
     <ClInclude Include="src\GraphicsWindows.h" />
@@ -260,6 +261,7 @@
     <ClInclude Include="src\Recast\Recast.h" />
     <ClInclude Include="src\Recast\RecastAlloc.h" />
     <ClInclude Include="src\Recast\RecastAssert.h" />
+    <ClInclude Include="src\RecipeBookManager.h" />
     <ClInclude Include="src\SceneManager.h" />
     <ClInclude Include="src\SceneProperties.h" />
     <ClInclude Include="src\ScriptingSystem.h" />
@@ -353,6 +355,7 @@
     <ClCompile Include="src\EventSystem.cpp" />
     <ClCompile Include="src\FileCheckSystem.cpp" />
     <ClCompile Include="src\FontSystem.cpp" />
+    <ClCompile Include="src\GameSystem.cpp" />
     <ClCompile Include="src\Graphics.cpp" />
     <ClCompile Include="src\GraphicsShader.cpp" />
     <ClCompile Include="src\ImguiManager.cpp" />

@@ -63,6 +63,8 @@
 #include <ScriptProperties.h>
 #include <BoxColliderComponent.h>
 #include "EventManager.h"
+#include <RecipeBookManager.h>
+#include "GameSystem.h"
 
 
 extern Framework::FontSystem fontSystem;
@@ -78,6 +80,7 @@ namespace Framework {
     static bool mouseCaptured = true;
     bool Graphics::groundMode = true; // toggle with a key (e.g., F1)
     bool Graphics::s_RenderDebugColliders = false;
+    bool GameSystem::bookOpen = false;
 
     const auto& assets = AssetManager::Instance().GetAssets();
 
@@ -876,6 +879,13 @@ namespace Framework {
             if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
                 cam.processKeyboard(Camera::Movement::Right, dt * baseSpeed, false, terrain);
 
+            // Recipe Book
+            bool isRPressed = (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS);
+            static bool wasRPressed = false;
+            if (isRPressed && !wasRPressed) GameSystem::bookOpen = !GameSystem::bookOpen;
+            wasRPressed = isRPressed;
+                
+                
             // Mouse Rotation Logic
             static bool firstMouse = true;
             static double lastX = 0.0, lastY = 0.0;
@@ -1509,6 +1519,7 @@ namespace Framework {
                 if (ecsInterface.HasComponent<TextureProperties>(entityId)) {
                     isUI = ecsInterface.GetComponent<TextureProperties>(entityId).isUI;
                 }
+
 
                 if (isUI) {
                     uiEntities.push_back(entityId); // Add to UI list

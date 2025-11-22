@@ -42,6 +42,7 @@
 #include <filesystem>
 #include <EventSystem.h>
 #include <EventManager.h>
+#include "GameSystem.h"
 
 using namespace Framework;
 
@@ -105,6 +106,7 @@ int main(void)
     auto animationSystem = ecsInterface.RegisterSystem<AnimationSystem>();
     auto sceneSystem = ecsInterface.RegisterSystem<SceneManager>();
     auto imguiSystem = ecsInterface.RegisterSystem<ImguiManager>();
+    auto gameSystem = ecsInterface.RegisterSystem<GameSystem>();
     imguiSystem->SetGraphicsSystem(graphicsSystem.get());
     graphicsSystem->SetImguiManager(imguiSystem.get());
     
@@ -152,6 +154,7 @@ int main(void)
     engine->AddSystem(sceneSystem.get());       // Register scene manager last
     engine->AddSystem(fileCheckSystem.get());
     engine->AddSystem(eventSystem.get());
+    engine->AddSystem(gameSystem.get());
 
     std::filesystem::path root = GetEngineRootPath();
     fileCheckSystem->WatchAllFolders();

@@ -7,15 +7,15 @@
             "isUI": false
         },
         {
-            "guid": "d4899207-ea5e-473b-870f-aade76e8a7ff",
-            "name": "Door",
-            "path": "Assets\\Textures\\Door.png",
-            "isUI": false
-        },
-        {
             "guid": "b2d4bb99-3396-40de-8789-01d6cf083f4e",
             "name": "obj",
             "path": "Assets/Textures/obj.png",
+            "isUI": false
+        },
+        {
+            "guid": "d4899207-ea5e-473b-870f-aade76e8a7ff",
+            "name": "Door",
+            "path": "Assets\\Textures\\Door.png",
             "isUI": false
         },
         {
@@ -199,6 +199,12 @@
             "isUI": false
         },
         {
+            "guid": "294eaf04-f5e3-404b-a262-ae25b04ef993",
+            "name": "chopped_herb",
+            "path": "Assets\\Textures\\chopped_herb.png",
+            "isUI": false
+        },
+        {
             "guid": "11bafc18-a375-4a2d-bfb4-221cb46a3278",
             "name": "YellowVIal",
             "path": "Assets\\Textures\\YellowVIal.png",
@@ -214,6 +220,30 @@
             "guid": "4cf1bf23-4fbd-4a08-9abb-f662145f2134",
             "name": "Counter",
             "path": "Assets\\Textures\\Counter.png",
+            "isUI": false
+        },
+        {
+            "guid": "1fd4cefe-486b-4fbc-810c-8456cf7bbb59",
+            "name": "strength_potion",
+            "path": "Assets\\Textures\\strength_potion.png",
+            "isUI": false
+        },
+        {
+            "guid": "c1052e01-2da1-4013-8337-3989c229ff5b",
+            "name": "unchopped_herb",
+            "path": "Assets\\Textures\\unchopped_herb.png",
+            "isUI": false
+        },
+        {
+            "guid": "d9ce8931-58e9-48c1-ab84-38ef2dba7ce1",
+            "name": "book",
+            "path": "Assets\\Textures\\book.png",
+            "isUI": false
+        },
+        {
+            "guid": "c936d001-2481-41d2-82b8-a3200baaddb9",
+            "name": "recipe_layout",
+            "path": "Assets\\Textures\\recipe_layout.png",
             "isUI": false
         }
     ]
