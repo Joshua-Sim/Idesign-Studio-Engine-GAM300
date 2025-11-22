@@ -183,12 +183,24 @@ namespace Framework
                 {
                     if (asset->path.empty())
                         return;
+
+                    // Ensure the asset is loaded before we copy from it
                     if (asset->skeleton.bones.empty()) {
                         AnimationLoader::loadAnimation(asset->path, *asset);
                     }
+
                     component.skeleton = asset->skeleton;
                     component.availableAnimations = asset->availableAnimations;
+
+                    // Copy the Global Inverse Transform (Critical for Scale/Rotation)
                     component.globalInverseTransform = asset->globalInverseTransform;
+
+                    // Reset the runtime state so the new animation starts fresh
+                    component.currentTime = 0.0f;          // Reset timer to 0
+                    component.currentAnimation = nullptr;  // Clear old animation pointer
+                    component.StartDefaultAnimation();     // Auto-play the new one
+
+                    // Resize matrices for the new skeleton size
                     component.finalBoneMatrices.resize(component.skeleton.bones.size(), glm::mat4(1.0f));
                 }
 

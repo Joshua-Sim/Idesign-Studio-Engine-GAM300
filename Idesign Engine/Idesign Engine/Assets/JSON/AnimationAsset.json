@@ -10,6 +10,17 @@
             "bPlayOnStart": true,
             "currentTime": 0.0,
             "vbo_skinning": 0
+        },
+        {
+            "guid": "329efd47-aa00-484a-aa36-ef9466cb86d2",
+            "name": "TestingCauldron",
+            "path": "Assets\\Objects\\TestingCauldron.fbx",
+            "defaultAnimationName": "",
+            "animationSpeed": 1.0,
+            "bLoops": true,
+            "bPlayOnStart": true,
+            "currentTime": 0.0,
+            "vbo_skinning": 0
         }
     ]
 }
