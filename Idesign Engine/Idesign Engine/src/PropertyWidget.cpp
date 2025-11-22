@@ -246,7 +246,23 @@ namespace Framework
 
                     if (ImGui::Button("Reload Mesh"))
                     {
-                        MeshLoader::loadMesh(mesh.path, mesh);
+                        if (ecs.HasComponent<AnimationProperties>(entity))
+                        {
+                            auto& animComp = ecs.GetComponent<AnimationProperties>(entity);
+
+                            // Reload Skeleton to be safe
+                            if (!animComp.path.empty()) {
+                                AnimationLoader::loadAnimation(animComp.path, animComp);
+                            }
+
+                            // Load Mesh using the Component's Skeleton
+                            MeshLoader::loadAnimatedMesh(mesh.path, animComp, mesh);
+                        }
+                        else
+                        {
+                            // No animation component? Load as static.
+                            MeshLoader::loadMesh(mesh.path, mesh);
+                        }
                     }
                     DrawMaterialSelector(mesh.materialGuid);
                 }

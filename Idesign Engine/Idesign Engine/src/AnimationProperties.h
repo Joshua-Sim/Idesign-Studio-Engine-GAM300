@@ -45,7 +45,7 @@ namespace Framework
         std::map<std::string, std::shared_ptr<Animation>> availableAnimations;
         Skeleton skeleton;
 
-
+        glm::mat4 globalInverseTransform{ 1.0f };
         // --- FUNCTIONS ---
         void PlayAnimation(const std::string& name)
         {
