@@ -69,6 +69,24 @@ namespace Framework {
             return 0;
         }
 
+        static int lua_SetRotation(lua_State* L)
+        {
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+            float x = static_cast<float>(luaL_checknumber(L, 2));
+            float y = static_cast<float>(luaL_checknumber(L, 3));
+            float z = static_cast<float>(luaL_checknumber(L, 4));
+
+            if (!ecsInterface.IsEntityValid(e) ||
+                !ecsInterface.HasComponent<TransformComponent>(e))
+            {
+                return luaL_error(L, "SetRotation: entity %d has no TransformComponent", (int)e);
+            }
+
+            auto& tr = ecsInterface.GetComponent<TransformComponent>(e);
+            tr.rotation = glm::vec3(x, y, z);
+            return 0;
+        }
+
         int l_IsKeyDown(lua_State* L) {
             auto* self = lua_self(L);
             Graphics* g = self ? self->GetGraphicsSystem() : nullptr;     // <-- use getter
@@ -512,6 +530,7 @@ namespace Framework {
         lua_register(L, "SetGroundMode", l_SetGround);
         lua_register(L, "GetPosition", lua_GetPosition);
         lua_register(L, "SetPosition", lua_SetPosition);
+        lua_register(L, "SetRotation", lua_SetRotation);
         lua_register(L, "SpawnPrompt", l_spawnPrompt);
         lua_register(L, "DestroyEntity", l_DestroyEntity);
         lua_register(L, "IsMouseButtonDown", l_IsMouseButtonDown); 
