@@ -13,6 +13,7 @@
 #include "MeshProperties.h"          // g_MeshPropertiesProps
 #include <filesystem>
 #include "ScriptProperties.h"
+#include "AudioSystem.h"
 
 extern Framework::Coordinator ecsInterface;
 
@@ -252,6 +253,23 @@ namespace Framework {
             }
 
             return 1; // Return the table
+        }
+
+        // Static helper function for playing sound
+        static int l_PlaySound(lua_State* L) {
+            // 1. Get the event path string from Lua
+            const char* eventPath = luaL_checkstring(L, 1);
+
+            // 2. Check if the global AudioSystem exists
+            if (g_AudioSystem) {
+                // 3. Play the sound!
+                g_AudioSystem->PlayAudio(eventPath);
+            }
+            else {
+                std::cerr << "[Lua Error] AudioSystem not initialized!\n";
+            }
+
+            return 0; // No return value
         }
 
         // NavMesh Exposed funcs for path-finding
@@ -503,6 +521,7 @@ namespace Framework {
         lua_register(L, "SetMesh", lua_SetMesh);
         lua_register(L, "SetTexture", lua_SetTexture);
         lua_register(L, "GetEntitiesByTag", lua_GetEntitiesByTag);
+        lua_register(L, "PlaySound", l_PlaySound);
 
         // Navmesh
         lua_register(L, "PathfindTo", [](lua_State* L) -> int {

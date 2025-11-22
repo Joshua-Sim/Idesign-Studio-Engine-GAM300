@@ -55,6 +55,14 @@
             "mode": "oneshot",
             "soundType": "effect",
             "duration": 1.0
+        },
+        {
+            "guid": "7afe55b3-f314-48f6-8ffd-a4acd3894960",
+            "name": "ChoppingHerb",
+            "path": "Assets\\Audio\\ChoppingHerb.wav",
+            "mode": "oneshot",
+            "soundType": "effect",
+            "duration": 1.0
         }
     ]
 }

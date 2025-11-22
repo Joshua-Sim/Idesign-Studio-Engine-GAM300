@@ -1,5 +1,5 @@
 {
-    "count": 7,
+    "count": 8,
     "entries": [
         {
             "guid": "{ad3d4d36-263d-49a4-af7c-db517f5157ec}",
@@ -53,6 +53,14 @@
             "guid": "{a6788508-9a6c-4e28-bd16-a275464e017b}",
             "name": "selectbutton",
             "path": "event:/selectbutton",
+            "mode": "oneshot",
+            "soundType": "effect",
+            "duration": 1.0
+        },
+        {
+            "guid": "7afe55b3-f314-48f6-8ffd-a4acd3894960",
+            "name": "ChoppingHerb",
+            "path": "Assets\\Audio\\ChoppingHerb.wav",
             "mode": "oneshot",
             "soundType": "effect",
             "duration": 1.0

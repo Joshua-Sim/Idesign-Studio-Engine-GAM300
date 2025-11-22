@@ -90,6 +90,9 @@ end
 function M:ChopItem()
     current_health = current_health - 1
     print("[ChoppingBoard] CHOP! Health: " .. current_health)
+    -- --- NEW: Play Chop Sound ---
+    -- We use the path from your JSON: "event:/buttonclick"
+    PlaySound("event:/buttonclick")
 
     if current_health == 3 then
         -- Change to Stage 1

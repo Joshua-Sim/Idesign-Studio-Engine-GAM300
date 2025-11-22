@@ -8,15 +8,15 @@
             "isUI": false
         },
         {
-            "guid": "b2d4bb99-3396-40de-8789-01d6cf083f4e",
-            "name": "obj",
-            "path": "Assets/Textures/obj.png",
-            "isUI": false
-        },
-        {
             "guid": "d4899207-ea5e-473b-870f-aade76e8a7ff",
             "name": "Door",
             "path": "Assets\\Textures\\Door.png",
+            "isUI": false
+        },
+        {
+            "guid": "b2d4bb99-3396-40de-8789-01d6cf083f4e",
+            "name": "obj",
+            "path": "Assets/Textures/obj.png",
             "isUI": false
         },
         {
@@ -29,6 +29,12 @@
             "guid": "b57b4683-8581-4256-9cc5-60c900acec67",
             "name": "T_Brick_BaseColor",
             "path": "Assets\\Textures\\T_Brick_BaseColor.png",
+            "isUI": false
+        },
+        {
+            "guid": "0ee031ad-9903-4383-bf79-3e703fd1fe5c",
+            "name": "GreenPotion",
+            "path": "Assets\\Textures\\GreenPotion.png",
             "isUI": false
         },
         {
@@ -182,12 +188,6 @@
             "isUI": false
         },
         {
-            "guid": "0ee031ad-9903-4383-bf79-3e703fd1fe5c",
-            "name": "GreenPotion",
-            "path": "Assets\\Textures\\GreenPotion.png",
-            "isUI": false
-        },
-        {
             "guid": "cf6e59fa-490e-4c1d-915b-11f4df02b5a5",
             "name": "BlueVial",
             "path": "Assets\\Textures\\BlueVial.png",
@@ -206,15 +206,15 @@
             "isUI": false
         },
         {
-            "guid": "4cf1bf23-4fbd-4a08-9abb-f662145f2134",
-            "name": "Counter",
-            "path": "Assets\\Textures\\Counter.png",
-            "isUI": false
-        },
-        {
             "guid": "a3d6570b-a168-4e13-9ecc-6abb2ed62b18",
             "name": "Cutting Board",
             "path": "Assets\\Textures\\Cutting Board.png",
+            "isUI": false
+        },
+        {
+            "guid": "4cf1bf23-4fbd-4a08-9abb-f662145f2134",
+            "name": "Counter",
+            "path": "Assets\\Textures\\Counter.png",
             "isUI": false
         }
     ]
