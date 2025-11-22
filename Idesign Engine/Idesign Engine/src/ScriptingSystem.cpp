@@ -235,6 +235,25 @@ namespace Framework {
             }
             return 0;
         }
+        // Tag exposed
+        static int lua_GetEntitiesByTag(lua_State* L)
+        {
+            const char* tag = luaL_checkstring(L, 1);
+
+            std::vector<Entity> entities = ecsInterface.GetEntitiesByTag(tag);
+
+            // Create a Lua table to return the entities
+            lua_newtable(L);
+
+            for (size_t i = 0; i < entities.size(); ++i)
+            {
+                lua_pushinteger(L, static_cast<lua_Integer>(entities[i]));
+                lua_rawseti(L, -2, static_cast<int>(i + 1)); // Lua arrays start at 1
+            }
+
+            return 1; // Return the table
+        }
+
         // NavMesh Exposed funcs for path-finding
 
         void ScriptPathfindTo(const std::string& agentName, const std::string& targetName)
@@ -325,7 +344,7 @@ namespace Framework {
             }
             catch (...) {
                 // swallow; we'll just recompile
-                std::cerr << "[Cook] Warning: failed to check timestamps — forcing recompile.\n";
+                std::cerr << "[Cook] Warning: failed to check timestamps ï¿½ forcing recompile.\n";
             }
             return false;
         }
@@ -447,7 +466,7 @@ namespace Framework {
     ScriptingSystem::~ScriptingSystem() { if (L) { lua_close(L); L = nullptr; } }
 
     void ScriptingSystem::Initialize() {
-        // 1) Register ScriptComponent (your engine’s pattern)
+        // 1) Register ScriptComponent (your engineï¿½s pattern)
         ecsInterface.RegisterComponent<ScriptEntry>();
         ecsInterface.RegisterComponent<ScriptProperties>();
 
@@ -483,6 +502,7 @@ namespace Framework {
         lua_register(L, "FindEntityByName", lua_FindEntityByName);
         lua_register(L, "SetMesh", lua_SetMesh);
         lua_register(L, "SetTexture", lua_SetTexture);
+        lua_register(L, "GetEntitiesByTag", lua_GetEntitiesByTag);
 
         // Navmesh
         lua_register(L, "PathfindTo", [](lua_State* L) -> int {

@@ -7,15 +7,15 @@
             "isUI": false
         },
         {
-            "guid": "d4899207-ea5e-473b-870f-aade76e8a7ff",
-            "name": "Door",
-            "path": "Assets\\Textures\\Door.png",
-            "isUI": false
-        },
-        {
             "guid": "b2d4bb99-3396-40de-8789-01d6cf083f4e",
             "name": "obj",
             "path": "Assets/Textures/obj.png",
+            "isUI": false
+        },
+        {
+            "guid": "d4899207-ea5e-473b-870f-aade76e8a7ff",
+            "name": "Door",
+            "path": "Assets\\Textures\\Door.png",
             "isUI": false
         },
         {
@@ -106,12 +106,6 @@
             "guid": "f5a9d8aa-42ce-4cdf-b778-7b63d04787e3",
             "name": "",
             "path": "Assets/PNG/test.png",
-            "isUI": false
-        },
-        {
-            "guid": "8d060cce-9c38-4b18-b144-fabecec8e9f1",
-            "name": "ChoppedHerb1",
-            "path": "Assets\\Textures\\ChoppedHerb1.png",
             "isUI": false
         },
         {
@@ -220,12 +214,6 @@
             "guid": "a3d6570b-a168-4e13-9ecc-6abb2ed62b18",
             "name": "Cutting Board",
             "path": "Assets\\Textures\\Cutting Board.png",
-            "isUI": false
-        },
-        {
-            "guid": "78ea917a-2bdd-462e-8d6c-9d55ba34b4ec",
-            "name": "ChoppedHerb2",
-            "path": "Assets\\Textures\\ChoppedHerb2.png",
             "isUI": false
         }
     ]

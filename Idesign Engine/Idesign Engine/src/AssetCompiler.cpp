@@ -152,6 +152,29 @@ namespace Framework
                     ecsInterface.AddComponent(entity, transform);
                 }
 
+                // Tag 
+                if (components.HasMember("TagComponent"))
+                {
+                    const auto& tagJson = components["TagComponent"];
+                    TagComponent tagComp;
+                    if (tagJson.HasMember("tags") && tagJson["tags"].IsArray())
+                    {
+                        for (const auto& tag : tagJson["tags"].GetArray())
+                        {
+                            if (tag.IsString())
+                                tagComp.tags.push_back(tag.GetString());
+                        }
+                    }
+                    ecsInterface.AddComponent(entity, tagComp);
+                }
+                else
+                {
+                    // Legacy support for pre-tag objects
+                    TagComponent tagComp;
+                    ecsInterface.AddComponent(entity, tagComp);
+                }
+
+
                 // Hierarchy
                 if (components.HasMember("HierarchyComponent"))
                 {
@@ -479,6 +502,22 @@ namespace Framework
                     componentsObj.AddMember("HierarchyComponent", hierarchyJson, allocator);
                 }
 
+                // TagComponent
+                if (ecsInterface.HasComponent<TagComponent>(entity))
+                {
+                    const auto& tagComp = ecsInterface.GetComponent<TagComponent>(entity);
+                    rapidjson::Value tagJson(rapidjson::kObjectType);
+
+                    rapidjson::Value tagsArray(rapidjson::kArrayType);
+                    for (const std::string& tag : tagComp.tags)
+                    {
+                        tagsArray.PushBack(rapidjson::Value(tag.c_str(), allocator), allocator);
+                    }
+
+                    tagJson.AddMember("tags", tagsArray, allocator);
+                    componentsObj.AddMember("TagComponent", tagJson, allocator);
+                }
+
                 // MeshProperties � write only GUID
                 if (ecsInterface.HasComponent<MeshProperties>(entity))
                 {
@@ -687,6 +726,11 @@ namespace Framework
             ecs.AddComponent(newEntity, hierarchy);
         }
 
+        if (ecs.HasComponent<TagComponent>(sourceEntity))
+        {
+            ecs.AddComponent(newEntity, ecs.GetComponent<TagComponent>(sourceEntity));
+        }
+
         if (ecs.HasComponent<MeshProperties>(sourceEntity))
         {
             ecs.AddComponent(newEntity, ecs.GetComponent<MeshProperties>(sourceEntity));
@@ -808,6 +852,23 @@ namespace Framework
             rapidjson::Value transformJson(rapidjson::kObjectType);
             Serialize((void*)&transform, g_TransformProps, transformJson, allocator);
             componentsObj.AddMember("TransformComponent", transformJson, allocator);
+        }
+
+
+        // TagComponent
+        if (ecsInterface.HasComponent<TagComponent>(entity))
+        {
+            const auto& tagComp = ecsInterface.GetComponent<TagComponent>(entity);
+            rapidjson::Value tagJson(rapidjson::kObjectType);
+
+            rapidjson::Value tagsArray(rapidjson::kArrayType);
+            for (const std::string& tag : tagComp.tags)
+            {
+                tagsArray.PushBack(rapidjson::Value(tag.c_str(), allocator), allocator);
+            }
+
+            tagJson.AddMember("tags", tagsArray, allocator);
+            componentsObj.AddMember("TagComponent", tagJson, allocator);
         }
 
         // HierarchyComponent
@@ -1090,6 +1151,25 @@ namespace Framework
             if (hierarchyJson.HasMember("sortIndex") && hierarchyJson["sortIndex"].IsInt())
                 hierarchy.sortIndex = hierarchyJson["sortIndex"].GetInt();
             ecsInterface.AddComponent(newEntity, hierarchy);
+        }
+
+
+        // TagComponent
+        if (components.HasMember("TagComponent"))
+        {
+            const auto& tagJson = components["TagComponent"];
+            TagComponent tagComp;
+
+            if (tagJson.HasMember("tags") && tagJson["tags"].IsArray())
+            {
+                for (const auto& tag : tagJson["tags"].GetArray())
+                {
+                    if (tag.IsString())
+                        tagComp.tags.push_back(tag.GetString());
+                }
+            }
+
+            ecsInterface.AddComponent(newEntity, tagComp);
         }
 
         // Mesh, Texture, NavMesh... (same as loadScene)
