@@ -237,6 +237,25 @@ namespace Framework {
             return 0;
         }
 
+        static int lua_SetMesh(lua_State* L)
+        {
+            // 1. Get arguments: Entity ID and Mesh Path
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+            const char* path = luaL_checkstring(L, 2);
+
+            // 2. Validate Entity & Component
+            if (ecsInterface.IsEntityValid(e) && ecsInterface.HasComponent<MeshProperties>(e)) {
+                auto& mesh = ecsInterface.GetComponent<MeshProperties>(e);
+
+                // 3. Update Path
+                mesh.path = path;
+
+                // 4. Reload Mesh Data Immediately
+                MeshLoader::loadMesh(mesh.path, mesh);
+            }
+            return 0;
+        }
+
         static int lua_SetRotation(lua_State* L)
         {
             Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
@@ -518,7 +537,7 @@ namespace Framework {
         lua_register(L, "DestroyEntity", l_DestroyEntity);
         lua_register(L, "IsMouseButtonDown", l_IsMouseButtonDown); 
         lua_register(L, "SetRotation", lua_SetRotation);
-        //lua_register(L, "SetMesh", lua_SetMesh);
+        lua_register(L, "SetMesh", lua_SetMesh);
         lua_register(L, "SetTexture", lua_SetTexture);
 
         // Engine utility
