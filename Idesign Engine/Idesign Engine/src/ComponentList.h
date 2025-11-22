@@ -69,6 +69,12 @@ struct HierarchyComponent { // Left here since property serialization not necess
     int sortIndex = 0; // Default to 0, unique among siblings
 };
 
+// Tag component for engine side tagging. Kept simple and serializable via vector O(n) lookup
+struct TagComponent
+{
+    std::vector<std::string> tags; // e.g., "Enemy", "Boss", "Lootable"
+};
+
 struct RenderComponent
 {
     std::string textureID;        // Texture or sprite name to render

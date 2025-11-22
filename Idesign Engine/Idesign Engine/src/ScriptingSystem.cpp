@@ -198,6 +198,25 @@ namespace Framework {
             return 1;
         }
 
+        // Tag exposed
+        static int lua_GetEntitiesByTag(lua_State* L)
+        {
+            const char* tag = luaL_checkstring(L, 1);
+
+            std::vector<Entity> entities = ecsInterface.GetEntitiesByTag(tag);
+
+            // Create a Lua table to return the entities
+            lua_newtable(L);
+
+            for (size_t i = 0; i < entities.size(); ++i)
+            {
+                lua_pushinteger(L, static_cast<lua_Integer>(entities[i]));
+                lua_rawseti(L, -2, static_cast<int>(i + 1)); // Lua arrays start at 1
+            }
+
+            return 1; // Return the table
+        }
+
         // NavMesh Exposed funcs for path-finding
 
         void ScriptPathfindTo(const std::string& agentName, const std::string& targetName)
@@ -444,6 +463,7 @@ namespace Framework {
 
         // Engine utility
         lua_register(L, "FindEntityByName", lua_FindEntityByName);
+        lua_register(L, "GetEntitiesByTag", lua_GetEntitiesByTag);
 
         // Navmesh
         lua_register(L, "PathfindTo", [](lua_State* L) -> int {
