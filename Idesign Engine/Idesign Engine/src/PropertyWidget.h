@@ -31,6 +31,7 @@
 #include "NavMeshProperties.h"
 #include "NavMeshAgentProperties.h"
 #include "AnimationProperties.h"
+#include "AnimationLoader.h"
 #include "LightProperties.h"
 #include "PhysicsProperties.h"
 
@@ -133,7 +134,31 @@ namespace Framework
                 {
                     if (asset->vao == 0 && !asset->path.empty())
                     {
-                        MeshLoader::loadMesh(asset->path, *asset); // Load once into asset
+                        auto animGUID = AssetManager::Instance().FindGuid<AnimationProperties>(asset->name);
+                        Framework::AnimationProperties* animAsset = nullptr;
+
+                        if (!animGUID.empty()) {
+                            animAsset = AssetManager::Instance().Get<AnimationProperties>(animGUID);
+                        }
+
+                        // IF we found a skeleton, use the ANIMATED loader.
+                        if (animAsset)
+                        {
+                            // Ensure skeleton is loaded first
+                            if (animAsset->skeleton.bones.empty()) {
+                                AnimationLoader::loadAnimation(animAsset->path, *animAsset);
+                            }
+
+                            // Load with Skinning Data (Weights/IDs)
+                            MeshLoader::loadAnimatedMesh(asset->path, *animAsset, *asset);
+                            std::cout << "[Editor] Auto-loaded ANIMATED mesh: " << asset->name << std::endl;
+                        }
+                        else
+                        {
+                            // No skeleton found? Load as STATIC (No weights)
+                            MeshLoader::loadMesh(asset->path, *asset);
+                            std::cout << "[Editor] Loaded STATIC mesh: " << asset->name << std::endl;
+                        }
                     }
                     component.vao = asset->vao;
                     component.vbo = asset->vbo;
@@ -158,9 +183,13 @@ namespace Framework
                 {
                     if (asset->path.empty())
                         return;
-
+                    if (asset->skeleton.bones.empty()) {
+                        AnimationLoader::loadAnimation(asset->path, *asset);
+                    }
                     component.skeleton = asset->skeleton;
                     component.availableAnimations = asset->availableAnimations;
+                    component.globalInverseTransform = asset->globalInverseTransform;
+                    component.finalBoneMatrices.resize(component.skeleton.bones.size(), glm::mat4(1.0f));
                 }
 
                 if constexpr (std::is_same_v<AssetType, ScriptProperties>)

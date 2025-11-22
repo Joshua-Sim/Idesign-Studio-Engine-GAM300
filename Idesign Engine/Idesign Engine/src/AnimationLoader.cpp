@@ -17,31 +17,53 @@ static void ProcessNode(aiNode* node, const aiScene* scene,
     Framework::Skeleton& skeleton, int parentBoneIndex)
 {
     std::string nodeName = node->mName.C_Str();
-    int currentBoneIndex = -1; // Default to "not a bone"
+    int currentBoneIndex = -1;
 
-    if (skeleton.boneNameMap.find(nodeName) != skeleton.boneNameMap.end())
+    // Check if this node is a weighted bone we found in Pass 1
+    auto it = skeleton.boneNameMap.find(nodeName);
+
+    if (it != skeleton.boneNameMap.end())
     {
-        currentBoneIndex = skeleton.boneNameMap[nodeName];
-        Framework::Bone& bone = skeleton.bones[currentBoneIndex];
-
-        bone.parentIndex = parentBoneIndex;
-        bone.defaultLocalTransform = ConvertAssimpMatrix(node->mTransformation);
-
-        if (parentBoneIndex == -1)
-        {
-            skeleton.rootBoneIndex = currentBoneIndex;
-        }
-
-        if (parentBoneIndex != -1)
-        {
-            skeleton.bones[parentBoneIndex].childrenIndices.push_back(currentBoneIndex);
-        }
+        // It IS a weighted bone. Update its data.
+        currentBoneIndex = it->second;
     }
     else
     {
-        currentBoneIndex = parentBoneIndex;
+        // It is a STRUCTURAL node (like "Armature" or a Group).
+        // We MUST add it to preserve the hierarchy, even if it has no weights.
+        Framework::Bone structuralBone;
+        structuralBone.name = nodeName;
+        structuralBone.boneID = static_cast<int>(skeleton.bones.size());
+        structuralBone.parentIndex = parentBoneIndex;
+
+        // Structural nodes don't deform the mesh directly, so InverseBind is Identity
+        structuralBone.inverseBindPoseMatrix = glm::mat4(1.0f);
+        structuralBone.defaultLocalTransform = ConvertAssimpMatrix(node->mTransformation);
+
+        // Register it
+        skeleton.bones.push_back(structuralBone);
+        skeleton.boneNameMap[nodeName] = structuralBone.boneID;
+        currentBoneIndex = structuralBone.boneID;
     }
 
+    // Update common data
+    Framework::Bone& bone = skeleton.bones[currentBoneIndex];
+    bone.defaultLocalTransform = ConvertAssimpMatrix(node->mTransformation);
+    bone.parentIndex = parentBoneIndex; // Ensure parent is set
+
+    // Set Root Index if this is the very first node we processed in the hierarchy
+    if (parentBoneIndex == -1 && skeleton.rootBoneIndex == -1)
+    {
+        skeleton.rootBoneIndex = currentBoneIndex;
+    }
+
+    // Link to Parent
+    if (parentBoneIndex != -1)
+    {
+        skeleton.bones[parentBoneIndex].childrenIndices.push_back(currentBoneIndex);
+    }
+
+    // Recurse
     for (unsigned int i = 0; i < node->mNumChildren; i++)
     {
         ProcessNode(node->mChildren[i], scene, skeleton, currentBoneIndex);
@@ -169,12 +191,18 @@ bool AnimationLoader::loadAnimation(const std::string& path, Framework::Animatio
 
         animProps.finalBoneMatrices.resize(animProps.skeleton.bones.size(), glm::mat4(1.0f));
         animProps.skeleton.rootNodeTransform = ConvertAssimpMatrix(scene->mRootNode->mTransformation);
+        animProps.globalInverseTransform = glm::inverse(animProps.skeleton.rootNodeTransform);
 
         // PASS 2: Read aiNode hierarchy (Parenting, Local Transforms)
         // We start processing from the *children* of the root node.
         // The root node's transform is applied separately in the AnimationSystem.
         for (unsigned int i = 0; i < scene->mRootNode->mNumChildren; i++)
         {
+            std::string childName = scene->mRootNode->mChildren[i]->mName.C_Str();
+            if (childName == "AnyConv" || childName == "Cauldron_Mesh" || childName == "Camera" || childName == "Light")
+            {
+                continue;
+            }
             ProcessNode(scene->mRootNode->mChildren[i], scene, animProps.skeleton, -1);
         }
     }

@@ -210,9 +210,29 @@ namespace Framework
                         if (mesh)
                         {
                             // Load mesh data if path is valid
-                            if (!mesh->path.empty())
-                                MeshLoader::loadMesh(mesh->path, *mesh);
+                            auto animGUID = AssetManager::Instance().FindGuid<AnimationProperties>(mesh->name);
+                            Framework::AnimationProperties* animAsset = nullptr;
 
+                            if (!animGUID.empty()) {
+                                animAsset = AssetManager::Instance().Get<AnimationProperties>(animGUID);
+                            }
+
+                            // 2. If found, load as Animated. Else, load as Static.
+                            if (animAsset)
+                            {
+                                // Ensure skeleton is loaded so we can map bone IDs
+                                if (animAsset->skeleton.bones.empty()) {
+                                    AnimationLoader::loadAnimation(animAsset->path, *animAsset);
+                                }
+
+                                // Load with Weights & IDs
+                                MeshLoader::loadAnimatedMesh(mesh->path, *animAsset, *mesh);
+                            }
+                            else
+                            {
+                                // Fallback to static
+                                MeshLoader::loadMesh(mesh->path, *mesh);
+                            }
                             // Restore material linkage if present
                             if (meshRef.HasMember("materialGuid") && meshRef["materialGuid"].IsString())
                             {

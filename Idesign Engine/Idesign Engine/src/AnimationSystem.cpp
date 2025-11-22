@@ -49,6 +49,23 @@ namespace Framework
                 {
 
                     animator.StartDefaultAnimation();
+                    if (!animator.finalBoneMatrices.empty())
+                    {
+                        glm::mat4 rootMat = animator.finalBoneMatrices[0];
+                        // Check if the scale is zero (Mesh Disappears) or normal (1.0)
+                        float scaleX = glm::length(glm::vec3(rootMat[0]));
+
+                        // Print only once to avoid spam
+                        static bool s_printed = false;
+                        if (!s_printed) {
+                            std::cout << "[DEBUG] Root Bone Scale: " << scaleX << std::endl;
+
+                            if (scaleX < 0.001f) std::cout << "[ERROR] MATRIX IS ZERO! Check GlobalInverseTransform." << std::endl;
+                            else std::cout << "[SUCCESS] Matrix is valid." << std::endl;
+
+                            s_printed = true;
+                        }
+                    }
                 }
 
                 // Now, if an animation is (or just became) active, update its transforms
@@ -174,7 +191,10 @@ namespace Framework
             if (!channel->scales.empty())
                 scale = InterpolateScale(channel, animator.currentTime);
         }
-
+        if (bone.name == "Bubble1") // Make sure this matches your Blender bone name EXACTLY
+        {
+            std::cout << "Bubble1 Y: " << position.y << std::endl;
+        }
         // 1c. Rebuild the final local transform matrix
         glm::mat4 localTransform = glm::translate(glm::mat4(1.0f), position) *
             glm::toMat4(rotation) *
@@ -186,8 +206,8 @@ namespace Framework
         globalTransforms[boneIndex] = globalTransform; // Store it for children
 
         // 3. Store Final Matrix for the shader
-        animator.finalBoneMatrices[boneIndex] = globalTransform * bone.inverseBindPoseMatrix;
-
+        animator.finalBoneMatrices[boneIndex] =
+            animator.globalInverseTransform * globalTransform * bone.inverseBindPoseMatrix;
 
         // 4. Recurse for Children
         for (int childIndex : bone.childrenIndices)
@@ -233,7 +253,8 @@ namespace Framework
         {
 
             UpdateBoneTransformsRecursive(animator, skeleton, animation,
-                rootIndex, skeleton.rootNodeTransform, globalTransforms);
+                rootIndex, glm::mat4(1.0f), globalTransforms);
+        
         }
         else
         {
