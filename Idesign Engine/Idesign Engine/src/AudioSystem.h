@@ -99,6 +99,7 @@ namespace Framework {
         void InitializeFMOD();
         void ShutdownFMOD();
         void PrintAudioInfo() const;
+        FMOD::Studio::Bank* LoadBank(const std::string& bankPath);
 
         // Get FMOD systems
         FMOD::Studio::System* GetStudioSystem() { return studioSystem; }

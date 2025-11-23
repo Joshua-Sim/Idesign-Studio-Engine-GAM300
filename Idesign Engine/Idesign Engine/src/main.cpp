@@ -30,16 +30,12 @@
 #include "NavMeshSystem.h"
 #include "AnimationSystem.h"
 #include "EnginePath.h"
-#include "AudioLoader.h"
-#include "MessageSystem.h"
 #include "AudioSystem.h"
 #include "AudioComponent.h"
 #include "ScriptingSystem.h"
 #include "lua.hpp"
 #include "PhysicsSystem.h"
 #include "FileCheckSystem.h"
-#include "EnginePath.h"
-#include <filesystem>
 #include <EventSystem.h>
 #include <EventManager.h>
 #include "GameSystem.h"
@@ -82,9 +78,6 @@ int main(void)
 	// Initialize FMOD Studio Audio System
     std::cout << "Initializing FMOD Studio Audio System..." << std::endl;
     
-
-    
-
     // ------- Create systems below -------- 
     // Initialize global ECS interface and other singleton components
     ecsInterface.Init();

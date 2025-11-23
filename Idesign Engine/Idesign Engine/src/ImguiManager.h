@@ -19,7 +19,6 @@
 #include "FontSystem.h"
 #include "AssetManager.h"
 #include "ComponentList.h"
-#include "AudioLoader.h"
 #include "PropertyWidget.h"
 #include "MessageSystem.h"
 #include <Graphics.h>

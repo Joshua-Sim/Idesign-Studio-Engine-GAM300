@@ -29,7 +29,6 @@
 #include "fmod.h"
 #include "fmod_studio.h"
 #include <random> 
-#include <filesystem>
 #include "AudioSystem.h"
 #include "AudioComponent.h"
 #include "MessageSystem.h"
@@ -390,38 +389,37 @@ namespace Framework {
                 else std::cout << "Texture already exists: " << fileName << std::endl;
             }
 
-            // Audio Files
-            else if (extension == "mp3" || extension == "wav" || extension == "flac")
+            // FMOD Studio Bank Files
+            else if (extension == "bank")
             {
-                auto existingGuid = AssetManager::Instance().FindGuid<AudioMetadata>(fileName);
+                auto existingGuid = AssetManager::Instance().FindGuid<AudioBankMetadata>(fileName);
                 if (existingGuid.empty())
                 {
-                    if (MoveFileToAssetFolder(filePath, audioFolder, finalAbsolutePath, error)) // <-- FIX: Using absolute folder
+                    if (MoveFileToAssetFolder(filePath, audioFolder, finalAbsolutePath, error)) // move into Assets/AudioBanks
                     {
-                        std::string relativePath = std::filesystem::relative(finalAbsolutePath, root).string(); // <-- FIX
+                        std::string relativePath = std::filesystem::relative(finalAbsolutePath, root).string();
 
-                        auto audioPtr = std::make_unique<AudioMetadata>();
-                        audioPtr->name = std::filesystem::path(fileName).stem().string();
-                        audioPtr->path = relativePath; // <-- FIX: Store the relative path
-                        audioPtr->mode = "loop";
-                        audioPtr->soundType = "background";
+                        auto bankPtr = std::make_unique<AudioBankMetadata>();
+                        bankPtr->name = std::filesystem::path(fileName).stem().string();
+                        bankPtr->path = relativePath; // relative path to the bank file
 
-                        loadAudio(*audioPtr); // Assumes this uses the relative path in audioPtr
+                        g_AudioSystem->LoadBank(bankPtr->path);
 
-                        AssetManager::Instance().RegisterAsset<AudioMetadata>(std::move(audioPtr), &g_AudioMetadataProps, relativePath); // <-- FIX: Register with relative path
-
-                        // <-- FIX: Save JSON to its absolute path
-                        AssetManager::Instance().SaveArrayToJson(TypeName<AudioMetadata>::value, (root / "Assets/JSON/AudioAsset.json").string(), "audio"); // <-- FIX: Changed key "AudioProperties" to "audio"
-                        std::cout << "Audio added: " << fileName << " to " << relativePath << std::endl;
+                        AssetManager::Instance().RegisterAsset<AudioBankMetadata>(std::move(bankPtr), &g_AudioBankMetadataProps, relativePath);
+                        AssetManager::Instance().SaveArrayToJson(TypeName<AudioBankMetadata>::value, (root / "Assets/JSON/AudioBank.json").string(), "banks");
+                        std::cout << "FMOD Bank added: " << fileName << " to " << relativePath << std::endl;
                     }
                     else
                     {
-                        errorMessage = "Failed to move audio:\n" + error;
+                        errorMessage = "Failed to move FMOD bank:\n" + error;
                         showErrorPopup = true;
                         return;
                     }
                 }
-                else std::cout << "Audio already exists: " << fileName << std::endl;
+                else
+                {
+                    std::cout << "FMOD Bank already exists: " << fileName << std::endl;
+                }
             }
 
             // OBJ || Mesh Files
@@ -1649,7 +1647,7 @@ namespace Framework {
             {
                 if (!ecsInterface.HasComponent<AudioComponent>(selectedEntity))
                 {
-                    AudioMetadata* meta = AssetManager::Instance().Get<AudioMetadata>(selectedAudioGuid);
+                    AudioBankMetadata* meta = AssetManager::Instance().Get<AudioBankMetadata>(selectedAudioGuid);
                     if (meta)
                     {
                         AudioComponent audioComp;
@@ -1694,7 +1692,7 @@ namespace Framework {
                 }
                 else if (selectedAudioGuid)
                 {
-                    AudioMetadata* audioMeta = AssetManager::Instance().Get<AudioMetadata>(selectedAudioGuid);
+                    AudioBankMetadata* audioMeta = AssetManager::Instance().Get<AudioBankMetadata>(selectedAudioGuid);
                     if (audioMeta)
                     {
                         std::cout << "[UI] Preview Play - Name: " << audioMeta->name << std::endl;
@@ -1784,17 +1782,17 @@ namespace Framework {
             ImGui::BeginGroup();
             ImGui::Text("Selected: %s",
                 selectedAudioGuid ?
-                AssetManager::Instance().Get<AudioMetadata>(selectedAudioGuid)->name.c_str() :
+                AssetManager::Instance().Get<AudioBankMetadata>(selectedAudioGuid)->name.c_str() :
                 "None");
             if (selectedAudioGuid)
             {
-                AudioMetadata* meta = AssetManager::Instance().Get<AudioMetadata>(selectedAudioGuid);
-                if (meta)
-                {
-                    ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f),
-                        "Duration: %.2fs | Type: %s | Mode: %s",
-                        meta->duration, meta->soundType.c_str(), meta->mode.c_str());
-                }
+                AudioBankMetadata* meta = AssetManager::Instance().Get<AudioBankMetadata>(selectedAudioGuid);
+                //if (meta)
+                //{
+                //    ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f),
+                //        "Duration: %.2fs | Type: %s | Mode: %s",
+                //        //meta->duration, meta->soundType.c_str(), meta->mode.c_str());
+                //}
             }
             ImGui::EndGroup();
         }
@@ -1822,10 +1820,10 @@ namespace Framework {
 
                 for (const auto& [key, entry] : assetsImgui)
                 {
-                    if (entry.typeName != TypeName<AudioMetadata>::value)
+                    if (entry.typeName != TypeName<AudioBankMetadata>::value)
                         continue;
 
-                    AudioMetadata* audioMeta = static_cast<AudioMetadata*>(entry.pObject.get());
+                    AudioBankMetadata* audioMeta = static_cast<AudioBankMetadata*>(entry.pObject.get());
                     if (!audioMeta) continue;
 
                     // Apply search filter
@@ -1843,8 +1841,7 @@ namespace Framework {
                     if (audioTypeFilter > 0)
                     {
                         const char* typeNames[] = { "", "Music", "SFX", "Ambient", "UI" };
-                        if (audioMeta->soundType != typeNames[audioTypeFilter])
-                            continue;
+                        //if (audioMeta->soundType != typeNames[audioTypeFilter]) continue;
                     }
 
                     ImGui::TableNextRow();
@@ -1946,30 +1943,27 @@ namespace Framework {
                         if (ImGui::InputText("Rename", renameBuffer, sizeof(renameBuffer)))
                         {
                             audioMeta->name = renameBuffer;
-                            AssetManager::Instance().MarkDirty(audioMeta->guid);
                         }
 
                         // Edit type
                         int typeIndex = 0;
-                        if (audioMeta->soundType == "Music") typeIndex = 1;
-                        else if (audioMeta->soundType == "SFX") typeIndex = 2;
-                        else if (audioMeta->soundType == "Ambient") typeIndex = 3;
-                        else if (audioMeta->soundType == "UI") typeIndex = 4;
+                        //if (audioMeta->soundType == "Music") typeIndex = 1;
+                        //else if (audioMeta->soundType == "SFX") typeIndex = 2;
+                        //else if (audioMeta->soundType == "Ambient") typeIndex = 3;
+                        //else if (audioMeta->soundType == "UI") typeIndex = 4;
 
                         if (ImGui::Combo("Type", &typeIndex, audioTypes, IM_ARRAYSIZE(audioTypes)))
                         {
-                            audioMeta->soundType = audioTypes[typeIndex];
-                            AssetManager::Instance().MarkDirty(audioMeta->guid);
+                            //audioMeta->soundType = audioTypes[typeIndex];
                         }
 
                         // Edit mode
-                        int modeIndex = (audioMeta->mode == "loop") ? 1 : 0;
+                        /*int modeIndex = (audioMeta->mode == "loop") ? 1 : 0;
                         const char* modes[] = { "oneshot", "loop" };
                         if (ImGui::Combo("Mode", &modeIndex, modes, 2))
                         {
                             audioMeta->mode = modes[modeIndex];
-                            AssetManager::Instance().MarkDirty(audioMeta->guid);
-                        }
+                        }*/
 
                         ImGui::Separator();
 
@@ -1998,9 +1992,9 @@ namespace Framework {
                         ImGui::BeginTooltip();
                         ImGui::Text("GUID: %s", audioMeta->guid.id.c_str());
                         ImGui::Text("Path: %s", audioMeta->path.c_str());
-                        ImGui::Text("Mode: %s", audioMeta->mode.c_str());
-                        ImGui::Text("Type: %s", audioMeta->soundType.c_str());
-                        ImGui::Text("Duration: %.2f seconds", audioMeta->duration);
+                        //ImGui::Text("Mode: %s", audioMeta->mode.c_str());
+                        //ImGui::Text("Type: %s", audioMeta->soundType.c_str());
+                        //ImGui::Text("Duration: %.2f seconds", audioMeta->duration);
                         ImGui::EndTooltip();
                     }
 
@@ -2016,15 +2010,15 @@ namespace Framework {
                     // Column 2: Type
                     ImGui::TableSetColumnIndex(2);
                     ImVec4 typeColor = ImVec4(1, 1, 1, 1);
-                    if (audioMeta->soundType == "Music") typeColor = ImVec4(0.5f, 0.8f, 1.0f, 1.0f);
+                    /*if (audioMeta->soundType == "Music") typeColor = ImVec4(0.5f, 0.8f, 1.0f, 1.0f);
                     else if (audioMeta->soundType == "SFX") typeColor = ImVec4(1.0f, 0.8f, 0.5f, 1.0f);
                     else if (audioMeta->soundType == "Ambient") typeColor = ImVec4(0.8f, 1.0f, 0.5f, 1.0f);
                     else if (audioMeta->soundType == "UI") typeColor = ImVec4(1.0f, 0.5f, 0.8f, 1.0f);
-                    ImGui::TextColored(typeColor, "%s", audioMeta->soundType.c_str());
+                    ImGui::TextColored(typeColor, "%s", audioMeta->soundType.c_str());*/
 
                     // Column 3: Duration
                     ImGui::TableSetColumnIndex(3);
-                    ImGui::Text("%.2fs", audioMeta->duration);
+                    //ImGui::Text("%.2fs", audioMeta->duration);
 
                     // Column 4: Actions
                     ImGui::TableSetColumnIndex(4);
@@ -2076,8 +2070,7 @@ namespace Framework {
             {
                 AssetManager::Instance().Unload(guid);
             }
-            AssetManager::Instance().SaveArrayToJson(TypeName<AudioMetadata>::value,
-                "Assets/JSON/AudioAsset.json", "audio");
+            AssetManager::Instance().SaveArrayToJson(TypeName<AudioBankMetadata>::value, "Assets/JSON/AudioAsset.json", "audio");
         }
 
         // Cleanup preview instance on tab switch
@@ -2114,10 +2107,10 @@ namespace Framework {
             {
                 for (const auto& [key, entry] : AssetManager::Instance().GetAssets())
                 {
-                    if (entry.typeName != TypeName<AudioMetadata>::value)
+                    if (entry.typeName != TypeName<AudioBankMetadata>::value)
                         continue;
 
-                    AudioMetadata* audioMeta = static_cast<AudioMetadata*>(entry.pObject.get());
+                    AudioBankMetadata* audioMeta = static_cast<AudioBankMetadata*>(entry.pObject.get());
                     if (audioMeta)
                     {
                         bool isSelected = (audioComp.guid == key.guid);
@@ -3377,7 +3370,6 @@ namespace Framework {
                     else {
                         m_graphicsSystem->RequestPickUVSecondary(u, v);
                     }
-
                 }
             }
             ImGui::End();
@@ -3468,7 +3460,6 @@ namespace Framework {
                     }
                 }
             }
-
             // Drag and drop Prefab to spawn in viewport
             if (ImGui::BeginDragDropTarget())
             {
@@ -3482,8 +3473,6 @@ namespace Framework {
                 ImGui::EndDragDropTarget();
             }
             ImGui::End();
-
-
         }
     }
 
@@ -3581,7 +3570,6 @@ namespace Framework {
                 tr.rotation = { r[0], r[1], r[2] };  // degrees
                 tr.scale = { s[0], s[1], s[2] };
             }
-            tr.isDirty = true;
         }
     }
 }

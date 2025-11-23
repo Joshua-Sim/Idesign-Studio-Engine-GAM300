@@ -1,13 +1,11 @@
 #include "pch.h"
 #include "ScriptingSystem.h"
 #include "Coordinator.h"
-//#include "ComponentList.h"
 #include "Graphics.h"          // to call Graphics* methods
 #include <lua.hpp>
 #include <iostream>
 #include "AssetCompiler.h"
 #include "WindowConfigProperties.h"  // g_WindowConfigProps
-#include "AudioLoader.h"             // g_AudioPropertiesProps
 #include "TextureLoader.h"           // g_TexturePropertiesProps
 #include "NavMeshSystem.h"
 #include "MeshProperties.h"          // g_MeshPropertiesProps
@@ -517,7 +515,7 @@ namespace Framework {
             const char* key = luaL_optstring(L, 4, "AudioProperties");
 
             bool skipped = prepare_output_and_skip_if_fresh(json, out);
-            bool ok = skipped ? true : CompileArray<AudioMetadata>(json, out, desc, g_AudioMetadataProps, key);
+            bool ok = skipped ? true : CompileArray<AudioBankMetadata>(json, out, desc, g_AudioBankMetadataProps, key);
             lua_pushboolean(L, ok);
             return 1;
         }

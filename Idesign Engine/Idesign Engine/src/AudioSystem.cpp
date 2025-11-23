@@ -411,6 +411,25 @@ namespace Framework {
         std::cout << "=========================\n" << std::endl;
     }
 
+    FMOD::Studio::Bank* AudioSystem::LoadBank(const std::string& bankPath)
+    {
+        FMOD::Studio::Bank* bank = nullptr;
+        FMOD_RESULT result = studioSystem->loadBankFile(
+            bankPath.c_str(),
+            FMOD_STUDIO_LOAD_BANK_NORMAL,
+            &bank
+        );
+
+        if (result != FMOD_OK) {
+            std::cerr << "[AudioSystem] Failed to load bank: " << bankPath
+                << " (error: " << result << ")" << std::endl;
+            return nullptr;
+        }
+
+        std::cout << "[AudioSystem] Bank loaded: " << bankPath << std::endl;
+        return bank;
+    }
+
     //==========================================================================
     // Event Loading and Playback
     //==========================================================================

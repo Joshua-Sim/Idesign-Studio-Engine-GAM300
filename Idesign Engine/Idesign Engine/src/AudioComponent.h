@@ -20,29 +20,24 @@
 
 namespace Framework
 {
-    struct AudioMetadata
+    struct AudioBankMetadata
     {
-        AssetHandle guid;          // Unique asset identifier
-        std::string name;          // Human-readable name
-        std::string path;          // File path or FMOD bank path
-        std::string mode;          // Streaming, static, etc.
-        std::string soundType;     // Music, SFX, Ambient, UI
-        float duration = 0.0f;     // Length in seconds
+        AssetHandle guid;                   // Unique asset identifer
+        std::string name;                   // Bank name (stem of filename)
+        std::string path;                   // Relative path to the .bank file
+        std::vector<std::string> events;    // List of event paths inside the bank
     };
 
-    // Property registration for AudioMetadata
-    inline const std::vector g_AudioMetadataPropsArray =
+    // Property registration for AudioBankMetadata
+    inline const std::vector g_AudioBankMetadataPropsArray =
     {
-        PROP_GUID_HIDDEN(guid,          AudioMetadata),
-        PROP_STRING(name,               AudioMetadata),
-        PROP_STRING(path,               AudioMetadata),
-        PROP_STRING_READONLY(mode,      AudioMetadata),
-        PROP_STRING_READONLY(soundType, AudioMetadata),
-        PROP_FLOAT_READONLY(duration,   AudioMetadata)
+        PROP_GUID_HIDDEN(guid,  AudioBankMetadata),
+        PROP_STRING(name,       AudioBankMetadata),
+        PROP_STRING(path,       AudioBankMetadata),
     };
 
-    inline const prop_list g_AudioMetadataProps{ "AudioMetadata", g_AudioMetadataPropsArray };
-    inline global_registration g_AudioMetadataReg(&g_AudioMetadataProps);
+    inline const prop_list g_AudioBankMetadataProps{ "AudioBankMetadata", g_AudioBankMetadataPropsArray };
+    inline global_registration g_AudioBankMetadataReg(&g_AudioBankMetadataProps);
 
     //------------------------------------------------------------------------------------------------------------------//
 

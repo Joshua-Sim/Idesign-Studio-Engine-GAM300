@@ -269,8 +269,8 @@ namespace Framework
                 
                 else if (typeName == "AudioComponent")
                 {
-                    auto& audio = *static_cast<AudioMetadata*>(componentPtr);
-                    DrawAssetDropdown<AudioMetadata>("Select Audio", audio);
+                    auto& audio = *static_cast<AudioBankMetadata*>(componentPtr);
+                    DrawAssetDropdown<AudioBankMetadata>("Select Audio", audio);
                 }
                 
                 else if (typeName == "NavMeshComponent")
