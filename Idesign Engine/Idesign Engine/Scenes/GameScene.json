@@ -91,12 +91,12 @@
                 "TransformComponent": {
                     "position": [
                         -32.06560134887695,
-                        5.606341361999512,
+                        5.536312103271484,
                         9.240556716918945
                     ],
                     "rotation": [
                         0.0,
-                        0.0,
+                        -0.0,
                         0.0
                     ],
                     "scale": [
@@ -132,17 +132,21 @@
                     "maxSlope": 45.0
                 },
                 "BoxColliderComponent": {
-                    "size": [
-                        100.0,
-                        100.0,
-                        100.0
-                    ],
-                    "center": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "canPassThrough": false
+                    "colliders": [
+                        {
+                            "size": [
+                                99.80000305175781,
+                                102.0999984741211,
+                                99.80000305175781
+                            ],
+                            "center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "canPassThrough": false
+                        }
+                    ]
                 },
                 "PhysicsProperties": {
                     "category": 0,
@@ -502,7 +506,8 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "e902f0d7-a022-45fc-9c17-2a98cbdb793e"
+                    "guid": "e902f0d7-a022-45fc-9c17-2a98cbdb793e",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "b57b4683-8581-4256-9cc5-60c900acec67",
@@ -617,7 +622,8 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "e902f0d7-a022-45fc-9c17-2a98cbdb793e"
+                    "guid": "e902f0d7-a022-45fc-9c17-2a98cbdb793e",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "b57b4683-8581-4256-9cc5-60c900acec67",
@@ -779,17 +785,7 @@
                     "isUI": false
                 },
                 "BoxColliderComponent": {
-                    "size": [
-                        2.0,
-                        3.5,
-                        1.0
-                    ],
-                    "center": [
-                        0.0,
-                        1.5,
-                        0.0
-                    ],
-                    "canPassThrough": true
+                    "colliders": []
                 },
                 "PhysicsProperties": {
                     "category": 0,
@@ -1891,17 +1887,21 @@
                     "guid": ""
                 },
                 "BoxColliderComponent": {
-                    "size": [
-                        1.0,
-                        4.0,
-                        1.0
-                    ],
-                    "center": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "canPassThrough": false
+                    "colliders": [
+                        {
+                            "size": [
+                                1.0,
+                                3.5,
+                                1.0
+                            ],
+                            "center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "canPassThrough": false
+                        }
+                    ]
                 },
                 "PhysicsProperties": {
                     "category": 2,
@@ -1923,8 +1923,12 @@
                     "startAwake": true
                 },
                 "EventSenderComponent": {
-                    "triggerName": "OnCollision",
-                    "messageName": "deez"
+                    "senders": [
+                        {
+                            "triggerName": "OnCollision",
+                            "messageName": "deez"
+                        }
+                    ]
                 }
             }
         },
@@ -2156,17 +2160,21 @@
                     ]
                 },
                 "BoxColliderComponent": {
-                    "size": [
-                        5.0,
-                        4.0,
-                        5.0
-                    ],
-                    "center": [
-                        0.0,
-                        2.0,
-                        0.0
-                    ],
-                    "canPassThrough": true
+                    "colliders": [
+                        {
+                            "size": [
+                                3.5999999046325684,
+                                2.5999999046325684,
+                                3.0
+                            ],
+                            "center": [
+                                0.0,
+                                1.2999999523162842,
+                                0.0
+                            ],
+                            "canPassThrough": true
+                        }
+                    ]
                 },
                 "PhysicsProperties": {
                     "category": 0,
@@ -2188,8 +2196,12 @@
                     "startAwake": true
                 },
                 "EventReceiverComponent": {
-                    "messageToListenFor": "deez",
-                    "luaFunctionToCall": "OnInteract"
+                    "receivers": [
+                        {
+                            "messageToListenFor": "deez",
+                            "luaFunctionToCall": "OnInteract"
+                        }
+                    ]
                 }
             }
         }
