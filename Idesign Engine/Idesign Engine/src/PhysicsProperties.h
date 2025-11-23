@@ -27,6 +27,7 @@ namespace Framework {
     // Use the same macro family your other components use.
     // (If your project uses different macro names, mirror the ones you see in e.g. Material/Text/Audio.)
     inline const std::vector g_PhysicsPropsArray = {
+        PROP_INT(category,          PhysicsProperties),
         PROP_BOOL(isImmovable,      PhysicsProperties), // <-- ADD THIS
         PROP_FLOAT(gravityFactor,   PhysicsProperties),
         PROP_FLOAT(mass,            PhysicsProperties),

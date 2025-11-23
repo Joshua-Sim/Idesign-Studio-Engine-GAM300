@@ -1,5 +1,5 @@
 {
-    "count": 41,
+    "count": 43,
     "entries": [
         {
             "guid": "afd25b76-dddc-4c4f-bae4-a6c9a22931e5",
@@ -11,6 +11,12 @@
             "guid": "b2d4bb99-3396-40de-8789-01d6cf083f4e",
             "name": "obj",
             "path": "Assets/Textures/obj.png",
+            "isUI": false
+        },
+        {
+            "guid": "e726adb8-bf75-4993-9e77-826f5541ac9d",
+            "name": "ChoppedHerb2",
+            "path": "Assets\\Textures\\ChoppedHerb2.png",
             "isUI": false
         },
         {
@@ -47,6 +53,12 @@
             "guid": "5548bb23-a8a5-467b-ac1b-af16f9d2cfa2",
             "name": "BluePotion3",
             "path": "Assets\\Textures\\BluePotion3.png",
+            "isUI": false
+        },
+        {
+            "guid": "d1624844-bd9b-44f7-9976-d196954e311f",
+            "name": "ChoppedHerb1",
+            "path": "Assets\\Textures\\ChoppedHerb1.png",
             "isUI": false
         },
         {
@@ -200,15 +212,15 @@
             "isUI": false
         },
         {
-            "guid": "294eaf04-f5e3-404b-a262-ae25b04ef993",
-            "name": "chopped_herb",
-            "path": "Assets\\Textures\\chopped_herb.png",
-            "isUI": false
-        },
-        {
             "guid": "11bafc18-a375-4a2d-bfb4-221cb46a3278",
             "name": "YellowVIal",
             "path": "Assets\\Textures\\YellowVIal.png",
+            "isUI": false
+        },
+        {
+            "guid": "294eaf04-f5e3-404b-a262-ae25b04ef993",
+            "name": "chopped_herb",
+            "path": "Assets\\Textures\\chopped_herb.png",
             "isUI": false
         },
         {

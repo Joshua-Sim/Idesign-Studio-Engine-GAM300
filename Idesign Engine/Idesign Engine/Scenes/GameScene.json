@@ -145,6 +145,7 @@
                     "canPassThrough": false
                 },
                 "PhysicsProperties": {
+                    "category": 0,
                     "isImmovable": true,
                     "gravityFactor": 1.0,
                     "mass": 1.0,
@@ -202,6 +203,7 @@
                     "isUI": false
                 },
                 "PhysicsProperties": {
+                    "category": 0,
                     "isImmovable": true,
                     "gravityFactor": 1.0,
                     "mass": 1.0,
@@ -790,6 +792,7 @@
                     "canPassThrough": true
                 },
                 "PhysicsProperties": {
+                    "category": 0,
                     "isImmovable": true,
                     "gravityFactor": 1.0,
                     "mass": 1.0,
@@ -864,14 +867,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -28.45073127746582,
-                        7.630732536315918,
-                        8.276019096374512
+                        -28.970077514648438,
+                        7.690000057220459,
+                        8.321422576904297
                     ],
                     "rotation": [
-                        0.0,
+                        -0.000005613005669147242,
                         90.0,
-                        0.0
+                        1.0
                     ],
                     "scale": [
                         1.0,
@@ -894,6 +897,38 @@
                 "TextureComponent": {
                     "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
                     "isUI": false
+                },
+                "BoxColliderComponent": {
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "canPassThrough": false
+                },
+                "PhysicsProperties": {
+                    "category": 1,
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 0.5,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "startAwake": true
                 }
             }
         },
@@ -1556,6 +1591,7 @@
                     "isUI": false
                 },
                 "PhysicsProperties": {
+                    "category": 0,
                     "isImmovable": false,
                     "gravityFactor": 1.0,
                     "mass": 1.0,
@@ -1828,14 +1864,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -34.799015045166016,
-                        7.7092790603637695,
-                        11.336045265197754
+                        -27.65318489074707,
+                        7.709938049316406,
+                        9.050322532653809
                     ],
                     "rotation": [
-                        -0.019654134288430214,
-                        -0.0038980641402304173,
-                        0.02668358013033867
+                        0.00001991841782000847,
+                        -65.55830383300781,
+                        -0.00019354216055944562
                     ],
                     "scale": [
                         1.0,
@@ -1852,8 +1888,7 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "BoxColliderComponent": {
                     "size": [
@@ -1869,6 +1904,7 @@
                     "canPassThrough": false
                 },
                 "PhysicsProperties": {
+                    "category": 2,
                     "isImmovable": false,
                     "gravityFactor": 1.0,
                     "mass": 1.0,
@@ -2133,6 +2169,7 @@
                     "canPassThrough": true
                 },
                 "PhysicsProperties": {
+                    "category": 0,
                     "isImmovable": true,
                     "gravityFactor": 1.0,
                     "mass": 1.0,

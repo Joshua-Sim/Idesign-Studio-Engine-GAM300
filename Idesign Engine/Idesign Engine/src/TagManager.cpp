@@ -15,6 +15,11 @@
 
 namespace Framework
 {
+	void TagManager::Initialize()
+	{
+		// Can be empty
+	}
+
 	void TagManager::AddTag(Entity entity, const std::string& tag)
 	{
 		assert(tagToEntities.find(tag) == tagToEntities.end() || tagToEntities[tag].find(entity) == tagToEntities[tag].end() && "Entity is already tagged with this tag!");
@@ -78,6 +83,18 @@ namespace Framework
 			}
 			entityToTags.erase(it);
 		}
+	}
+
+	void TagManager::Update(float timeslice)
+	{
+		// The TagManager doesn't need to do anything every frame,
+		// so this function is empty.
+		(void)timeslice; // Prevents "unused parameter" warnings
+	}
+
+	std::string TagManager::GetName()
+	{
+		return "TagManager";
 	}
 }
 
