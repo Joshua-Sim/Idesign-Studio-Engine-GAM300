@@ -246,7 +246,23 @@ namespace Framework
 
                     if (ImGui::Button("Reload Mesh"))
                     {
-                        MeshLoader::loadMesh(mesh.path, mesh);
+                        if (ecs.HasComponent<AnimationProperties>(entity))
+                        {
+                            auto& animComp = ecs.GetComponent<AnimationProperties>(entity);
+
+                            // Reload Skeleton to be safe
+                            if (!animComp.path.empty()) {
+                                AnimationLoader::loadAnimation(animComp.path, animComp);
+                            }
+
+                            // Load Mesh using the Component's Skeleton
+                            MeshLoader::loadAnimatedMesh(mesh.path, animComp, mesh);
+                        }
+                        else
+                        {
+                            // No animation component? Load as static.
+                            MeshLoader::loadMesh(mesh.path, mesh);
+                        }
                     }
                     DrawMaterialSelector(mesh.materialGuid);
                 }
@@ -341,55 +357,126 @@ namespace Framework
                     }
                     continue;   
                 }
-                // 1. Handle EVENT RECEIVER
+                // 1. Handle EVENT RECEIVER (List Version)
                 if (typeName == "EventReceiverComponent")
                 {
-                    auto& receiver = *static_cast<Framework::EventReceiverComponent*>(componentPtr);
+                    auto& receiverComp = *static_cast<Framework::EventReceiverComponent*>(componentPtr);
 
-                    // --- Input 1: Message to Listen For ---
-                    char msgListenBuffer[256];
-                    strncpy_s(msgListenBuffer, sizeof(msgListenBuffer), receiver.messageToListenFor.c_str(), _TRUNCATE);
+                    // Track which index to remove (if any)
+                    int indexToRemove = -1;
 
-                    // Returns TRUE only if you changed the text
-                    if (ImGui::InputText("Listen For (Msg)", msgListenBuffer, sizeof(msgListenBuffer)))
+                    // Loop through existing receivers
+                    for (int i = 0; i < receiverComp.receivers.size(); ++i)
                     {
-                        receiver.messageToListenFor = msgListenBuffer;
+                        auto& entry = receiverComp.receivers[i];
 
-                        // [CRITICAL FIX]
-                        // Force the EventSystem to re-subscribe to this new name next frame
-                        receiver.isSubscribed = false;
+                        // IMPORTANT: Push ID to ensure unique ID for every button/input in this loop
+                        ImGui::PushID(i);
+
+                        ImGui::Text("Receiver #%d", i + 1);
+
+                        // --- Input 1: Message to Listen For ---
+                        char msgListenBuffer[256];
+                        strncpy_s(msgListenBuffer, sizeof(msgListenBuffer), entry.messageToListenFor.c_str(), _TRUNCATE);
+
+                        if (ImGui::InputText("Listen For", msgListenBuffer, sizeof(msgListenBuffer)))
+                        {
+                            entry.messageToListenFor = msgListenBuffer;
+                            // Force re-subscription logic in System
+                            entry.isSubscribed = false;
+                        }
+
+                        // --- Input 2: Lua Function ---
+                        char luaFuncBuffer[256];
+                        strncpy_s(luaFuncBuffer, sizeof(luaFuncBuffer), entry.luaFunctionToCall.c_str(), _TRUNCATE);
+
+                        if (ImGui::InputText("Lua Function", luaFuncBuffer, sizeof(luaFuncBuffer)))
+                        {
+                            entry.luaFunctionToCall = luaFuncBuffer;
+                            // Safer to reset subscription if function changes too
+                            entry.isSubscribed = false;
+                        }
+
+                        // --- Remove Button ---
+                        // Make the button red to indicate destruction
+                        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.2f, 0.2f, 1.0f));
+                        if (ImGui::Button("Remove Entry"))
+                        {
+                            indexToRemove = i;
+                        }
+                        ImGui::PopStyleColor();
+
+                        ImGui::Separator();
+                        ImGui::PopID();
                     }
 
-                    // --- Input 2: Lua Function to Call ---
-                    char luaFuncBuffer[256];
-                    strncpy_s(luaFuncBuffer, sizeof(luaFuncBuffer), receiver.luaFunctionToCall.c_str(), _TRUNCATE);
-
-                    if (ImGui::InputText("Lua Function", luaFuncBuffer, sizeof(luaFuncBuffer)))
+                    // Handle Removal
+                    if (indexToRemove != -1)
                     {
-                        receiver.luaFunctionToCall = luaFuncBuffer;
-                        // Note: We don't technically need to re-subscribe for this one since 
-                        // the lambda looks up the component dynamically, but resetting is safer.
+                        receiverComp.receivers.erase(receiverComp.receivers.begin() + indexToRemove);
+                    }
+
+                    // Handle Addition
+                    if (ImGui::Button("+ Add New Receiver"))
+                    {
+                        receiverComp.receivers.push_back({}); // Add empty/default entry
                     }
                 }
-                // 2. Handle EVENT SENDER (New! Needs to handle strings now, not enums)
+
+                // 2. Handle EVENT SENDER (List Version)
                 else if (typeName == "EventSenderComponent")
                 {
-                    auto& sender = *static_cast<Framework::EventSenderComponent*>(componentPtr);
+                    auto& senderComp = *static_cast<Framework::EventSenderComponent*>(componentPtr);
 
-                    // --- Input 1: Trigger Name (e.g. "OnCollision") ---
-                    char triggerBuffer[256];
-                    strncpy_s(triggerBuffer, sizeof(triggerBuffer), sender.triggerName.c_str(), _TRUNCATE);
-                    if (ImGui::InputText("Trigger On", triggerBuffer, sizeof(triggerBuffer)))
+                    int indexToRemove = -1;
+
+                    for (int i = 0; i < senderComp.senders.size(); ++i)
                     {
-                        sender.triggerName = triggerBuffer;
+                        auto& entry = senderComp.senders[i];
+
+                        ImGui::PushID(i);
+                        ImGui::Text("Sender #%d", i + 1);
+
+                        // --- Input 1: Trigger Name ---
+                        char triggerBuffer[256];
+                        strncpy_s(triggerBuffer, sizeof(triggerBuffer), entry.triggerName.c_str(), _TRUNCATE);
+
+                        if (ImGui::InputText("Trigger On", triggerBuffer, sizeof(triggerBuffer)))
+                        {
+                            entry.triggerName = triggerBuffer;
+                        }
+
+                        // --- Input 2: Message Name ---
+                        char msgSendBuffer[256];
+                        strncpy_s(msgSendBuffer, sizeof(msgSendBuffer), entry.messageName.c_str(), _TRUNCATE);
+
+                        if (ImGui::InputText("Send Msg", msgSendBuffer, sizeof(msgSendBuffer)))
+                        {
+                            entry.messageName = msgSendBuffer;
+                        }
+
+                        // --- Remove Button ---
+                        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.2f, 0.2f, 1.0f));
+                        if (ImGui::Button("Remove Entry"))
+                        {
+                            indexToRemove = i;
+                        }
+                        ImGui::PopStyleColor();
+
+                        ImGui::Separator();
+                        ImGui::PopID();
                     }
 
-                    // --- Input 2: Message to Send (e.g. "ShowPrompt") ---
-                    char msgSendBuffer[256];
-                    strncpy_s(msgSendBuffer, sizeof(msgSendBuffer), sender.messageName.c_str(), _TRUNCATE);
-                    if (ImGui::InputText("Send Message", msgSendBuffer, sizeof(msgSendBuffer)))
+                    // Handle Removal
+                    if (indexToRemove != -1)
                     {
-                        sender.messageName = msgSendBuffer;
+                        senderComp.senders.erase(senderComp.senders.begin() + indexToRemove);
+                    }
+
+                    // Handle Addition
+                    if (ImGui::Button("+ Add New Sender"))
+                    {
+                        senderComp.senders.push_back({});
                     }
                 }
                 // 3. Handle SCRIPTS (Existing logic)
@@ -447,6 +534,51 @@ namespace Framework
                         ImGui::SetTooltip("If checked, text always faces the camera.");
                     }
                 }
+                if (typeName == "BoxColliderComponent")
+                {
+                    auto& colliderComp = *static_cast<Framework::BoxColliderComponent*>(componentPtr);
+                    int indexToRemove = -1;
+
+                    for (int i = 0; i < colliderComp.colliders.size(); ++i)
+                    {
+                        auto& entry = colliderComp.colliders[i];
+
+                        ImGui::PushID(i);
+                        ImGui::Text("Collider #%d", i + 1);
+
+                        // --- Size ---
+                        ImGui::DragFloat3("Size", &entry.size.x, 0.1f);
+
+                        // --- Center (Offset) ---
+                        ImGui::DragFloat3("Center", &entry.center.x, 0.1f);
+
+                        // --- Is Trigger ---
+                        ImGui::Checkbox("Is Trigger", &entry.canPassThrough);
+
+                        // --- Remove ---
+                        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.2f, 0.2f, 1.0f));
+                        if (ImGui::Button("Remove Collider"))
+                        {
+                            indexToRemove = i;
+                        }
+                        ImGui::PopStyleColor();
+
+                        ImGui::Separator();
+                        ImGui::PopID();
+                    }
+
+                    if (indexToRemove != -1)
+                    {
+                        colliderComp.colliders.erase(colliderComp.colliders.begin() + indexToRemove);
+                    }
+
+                    if (ImGui::Button("+ Add Collider"))
+                    {
+                        colliderComp.colliders.push_back({}); // Add default
+                    }
+                }
+
+
                 // 4. Handle EVERYTHING ELSE (Default Inspector)
                 else
                 {
@@ -466,36 +598,39 @@ namespace Framework
         // Show "Add [Component]" buttons for missing ones
         for (global_registration* reg = global_registration::m_pHead; reg; reg = reg->m_pNext)
         {
+
             const prop_list* propList = reg->m_pPopList;
+            if ((std::string(propList->m_pName) == "EventSenderEntry" || std::string(propList->m_pName) == "EventReceiverEntry" || std::string(propList->m_pName) == "BoxColliderEntry")) continue;
             if (!propList || !propList->m_pName || propList->m_Props.empty()) continue;
             if (attached.contains(propList->m_pName)) continue;
             if (excludedComponents.count(propList->m_pName)) continue;
 
             if (ImGui::Button(std::string("Add ").append(propList->m_pName).c_str()))
             {
-                TypeRegistry::Instance().AddComponent(propList->m_pName, ecs, entity);
+                
+                    TypeRegistry::Instance().AddComponent(propList->m_pName, ecs, entity);
 
-                if (std::string(propList->m_pName) == "BoxColliderComponent")
-                {
-                    if (!ecs.HasComponent<MeshProperties>(entity))
+                    if (std::string(propList->m_pName) == "BoxColliderComponent")
                     {
-                        std::cout << "yee";
-                        MeshProperties meshComponent{};
-                        meshComponent.debugShape = DebugShapeType::Box;
-                        meshComponent.debugcolor = glm::vec3(0.0f, 1.0f, 0.0f); // Green
-                        MeshLoader::loadMesh(meshComponent.path, meshComponent);
+                        if (!ecs.HasComponent<MeshProperties>(entity))
+                        {
+                            MeshProperties meshComponent{};
+                            meshComponent.debugShape = DebugShapeType::Box;
+                            meshComponent.debugcolor = glm::vec3(0.0f, 1.0f, 0.0f); // Green
+                            MeshLoader::loadMesh(meshComponent.path, meshComponent);
 
-                        ecs.AddComponent<MeshProperties>(entity, meshComponent);
+                            ecs.AddComponent<MeshProperties>(entity, meshComponent);
 
-                        std::cout << "[Editor] Auto-added Debug Mesh for BoxCollider on Entity " << entity << std::endl;
+                            std::cout << "[Editor] Auto-added Debug Mesh for BoxCollider on Entity " << entity << std::endl;
+                        }
+                        else {
+                            MeshProperties& meshComponent = ecs.GetComponent<MeshProperties>(entity);
+                            meshComponent.debugShape = DebugShapeType::Box;
+                            meshComponent.debugcolor = glm::vec3(0.0f, 1.0f, 0.0f); // Green
+                            MeshLoader::loadMesh(meshComponent.path, meshComponent);
+                        }
                     }
-                    else {
-                        MeshProperties& meshComponent = ecs.GetComponent<MeshProperties>(entity);
-                        meshComponent.debugShape = DebugShapeType::Box;
-                        meshComponent.debugcolor = glm::vec3(0.0f, 1.0f, 0.0f); // Green
-                        MeshLoader::loadMesh(meshComponent.path, meshComponent);
-                    }
-                }
+                
             }
         }      
     }

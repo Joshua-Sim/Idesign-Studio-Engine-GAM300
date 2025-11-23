@@ -30,6 +30,7 @@
 #include "WindowConfigProperties.h"
 #include "MeshProperties.h"
 #include "TextProperties.h"
+#include "Skybox.h"
 
 extern Terrain      terrain;
 extern const int    TerrainSize;
@@ -148,6 +149,9 @@ namespace Framework
         Mesh triangle;
         MeshProperties mesh;
         GLuint tex = 0;
+
+        //sky
+        Skybox m_skybox; 
 
         // shaders
         ShaderProgram terrainShader{ "Assets/shaders/terrainvert.glsl", "Assets/shaders/terrainfrag.glsl" };

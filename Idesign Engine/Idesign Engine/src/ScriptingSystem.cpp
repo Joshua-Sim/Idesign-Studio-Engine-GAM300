@@ -13,6 +13,7 @@
 #include "MeshProperties.h"          // g_MeshPropertiesProps
 #include <filesystem>
 #include "ScriptProperties.h"
+#include "AudioSystem.h"
 
 extern Framework::Coordinator ecsInterface;
 
@@ -196,6 +197,193 @@ namespace Framework {
                 lua_pushnil(L);
             }
             return 1;
+        }
+
+
+        // --------- Tag management functions--------------
+
+        static int lua_GetEntitiesByTag(lua_State* L)
+        {
+            const char* tag = luaL_checkstring(L, 1);
+
+            std::vector<Entity> entities = ecsInterface.GetEntitiesByTag(tag);
+
+            // Create a Lua table to return the entities
+            lua_newtable(L);
+
+            for (size_t i = 0; i < entities.size(); ++i)
+            {
+                lua_pushinteger(L, static_cast<lua_Integer>(entities[i]));
+                lua_rawseti(L, -2, static_cast<int>(i + 1)); // Lua arrays start at 1
+            }
+
+            return 1; // Return the table
+        }
+
+        static int lua_AddTagToEntity(lua_State* L)
+        {
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+            const char* tag = luaL_checkstring(L, 2);
+
+            if (!ecsInterface.IsEntityValid(e))
+            {
+                return luaL_error(L, "AddTagToEntity: invalid entity %d", (int)e);
+            }
+
+            ecsInterface.AddTagToEntity(e, tag);
+            return 0;
+        }
+
+        static int lua_RemoveTagFromEntity(lua_State* L)
+        {
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+            const char* tag = luaL_checkstring(L, 2);
+
+            if (!ecsInterface.IsEntityValid(e))
+            {
+                return luaL_error(L, "RemoveTagFromEntity: invalid entity %d", (int)e);
+            }
+
+            if (!ecsInterface.HasComponent<TagComponent>(e))
+            {
+                return 0; // Nothing to remove
+            }
+
+            auto& tagComp = ecsInterface.GetComponent<TagComponent>(e);
+            auto it = std::find(tagComp.tags.begin(), tagComp.tags.end(), std::string(tag));
+
+            if (it != tagComp.tags.end())
+            {
+                tagComp.tags.erase(it);
+            }
+
+            return 0;
+        }
+
+        static int lua_EntityHasTag(lua_State* L)
+        {
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+            const char* tag = luaL_checkstring(L, 2);
+
+            bool hasTag = ecsInterface.EntityHasTag(e, tag);
+            lua_pushboolean(L, hasTag);
+            return 1;
+        }
+
+        static int lua_SetTexture(lua_State* L)
+        {
+            // 1. Get arguments: Entity ID and Texture Path
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+            const char* path = luaL_checkstring(L, 2);
+
+            // 2. Validate Entity & Component
+            if (ecsInterface.IsEntityValid(e) && ecsInterface.HasComponent<TextureProperties>(e)) {
+                auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
+
+                // 3. Update Path
+                tex.path = path;
+
+                // 4. Reload Texture Data Immediately
+                TextureLoader::loadTexture(tex, true);
+            }
+            return 0;
+        }
+
+        static int lua_SetMesh(lua_State* L)
+        {
+            // 1. Get arguments: Entity ID and Mesh Path
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+            const char* path = luaL_checkstring(L, 2);
+
+            // 2. Validate Entity & Component
+            if (ecsInterface.IsEntityValid(e) && ecsInterface.HasComponent<MeshProperties>(e)) {
+                auto& mesh = ecsInterface.GetComponent<MeshProperties>(e);
+
+                // 3. Update Path
+                mesh.path = path;
+
+                // 4. Reload Mesh Data Immediately
+                MeshLoader::loadMesh(mesh.path, mesh);
+            }
+            return 0;
+        }
+
+        static int lua_SetRotation(lua_State* L)
+        {
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+            float x = static_cast<float>(luaL_checknumber(L, 2));
+            float y = static_cast<float>(luaL_checknumber(L, 3));
+            float z = static_cast<float>(luaL_checknumber(L, 4));
+
+            if (!ecsInterface.IsEntityValid(e) ||
+                !ecsInterface.HasComponent<TransformComponent>(e))
+            {
+                return luaL_error(L, "SetRotation: entity %d has no TransformComponent", (int)e);
+            }
+
+            auto& tr = ecsInterface.GetComponent<TransformComponent>(e);
+            tr.rotation = glm::vec3(x, y, z);
+            return 0;
+        }
+
+
+        // Static helper function for playing sound
+        static int l_PlaySound(lua_State* L) {
+            // 1. Get the event path string from Lua
+            const char* eventPath = luaL_checkstring(L, 1);
+
+            // 2. Check if the global AudioSystem exists
+            if (g_AudioSystem) {
+                // 3. Play the sound!
+                g_AudioSystem->PlayAudio(eventPath);
+            }
+            else {
+                std::cerr << "[Lua Error] AudioSystem not initialized!\n";
+            }
+
+            return 0; // No return value
+        }
+
+        // Helper to play an animation on an entity
+        static int l_PlayEntityAnimation(lua_State* L) {
+            // 1. Get Arguments: Entity ID and Animation Name
+            Entity entity = static_cast<Entity>(luaL_checkinteger(L, 1));
+            const char* animName = luaL_checkstring(L, 2);
+
+            // 2. Check if entity has animation component
+            if (ecsInterface.IsEntityValid(entity) && ecsInterface.HasComponent<AnimationProperties>(entity)) {
+                auto& animProps = ecsInterface.GetComponent<AnimationProperties>(entity);
+
+                // 3. Call the member function you wanted to use!
+                animProps.PlayAnimation(animName);
+
+                // Optional: Force restart if it's already playing
+                animProps.currentTime = 0.0f;
+            }
+            else {
+                std::cout << "[Lua Warning] PlayAnimation called on invalid entity or missing AnimationProperties: " << entity << std::endl;
+            }
+            return 0;
+        }
+
+        // Helper to configure animation properties
+        static int l_SetAnimationSettings(lua_State* L) {
+            // 1. Get Arguments
+            Entity entity = static_cast<Entity>(luaL_checkinteger(L, 1));
+            float speed = (float)luaL_checknumber(L, 2);
+            bool loop = lua_toboolean(L, 3);
+            bool playOnStart = lua_toboolean(L, 4);
+
+            // 2. Check for Component
+            if (ecsInterface.IsEntityValid(entity) && ecsInterface.HasComponent<AnimationProperties>(entity)) {
+                auto& animProps = ecsInterface.GetComponent<AnimationProperties>(entity);
+
+                // 3. Apply Settings
+                animProps.animationSpeed = speed;
+                animProps.bLoops = loop;
+                animProps.bPlayOnStart = playOnStart;
+            }
+            return 0;
         }
 
         // NavMesh Exposed funcs for path-finding
@@ -441,9 +629,20 @@ namespace Framework {
         lua_register(L, "SpawnPrompt", l_spawnPrompt);
         lua_register(L, "DestroyEntity", l_DestroyEntity);
         lua_register(L, "IsMouseButtonDown", l_IsMouseButtonDown); 
+        lua_register(L, "SetRotation", lua_SetRotation);
+        lua_register(L, "SetMesh", lua_SetMesh);
+        lua_register(L, "SetTexture", lua_SetTexture);
+        lua_register(L, "SetAnimationSettings", l_SetAnimationSettings);
 
         // Engine utility
         lua_register(L, "FindEntityByName", lua_FindEntityByName);
+        lua_register(L, "GetEntitiesByTag", lua_GetEntitiesByTag);
+        lua_register(L, "RemoveTagFromEntity", lua_RemoveTagFromEntity);
+        lua_register(L, "EntityHasTag", lua_EntityHasTag);
+        lua_register(L, "AddTagToEntity", lua_AddTagToEntity);
+        lua_register(L, "PlayEntityAnimation", l_PlayEntityAnimation);
+        lua_register(L, "PlaySound", l_PlaySound);
+        
 
         // Navmesh
         lua_register(L, "PathfindTo", [](lua_State* L) -> int {

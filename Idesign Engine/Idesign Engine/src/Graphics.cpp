@@ -63,6 +63,8 @@
 #include <ScriptProperties.h>
 #include <BoxColliderComponent.h>
 #include "EventManager.h"
+#include <RecipeBookManager.h>
+#include "GameSystem.h"
 
 
 extern Framework::FontSystem fontSystem;
@@ -78,6 +80,7 @@ namespace Framework {
     static bool mouseCaptured = true;
     bool Graphics::groundMode = true; // toggle with a key (e.g., F1)
     bool Graphics::s_RenderDebugColliders = false;
+    bool GameSystem::bookOpen = false;
 
     const auto& assets = AssetManager::Instance().GetAssets();
 
@@ -203,6 +206,7 @@ namespace Framework {
         ecsInterface.RegisterComponent<TextProperties>();
         ecsInterface.RegisterComponent<NavMeshComponent>();
         ecsInterface.RegisterComponent<NavMeshAgentComponent>(); // Move to navmesh sys after fixing load scene for mesh model
+        ecsInterface.RegisterComponent<TagComponent>(); // Engine specific default component
         ecsInterface.RegisterComponent<ListenerComponent>();
         ecsInterface.RegisterComponent<AudioMetadata>();
         ecsInterface.RegisterComponent<PhysicsBodyComponent>();
@@ -433,6 +437,19 @@ namespace Framework {
 
         m_frameCount = 0;
         m_fpsLastTime = glfwGetTime(); // Start the timer
+
+        std::vector<std::string> faces = 
+        {
+        "Assets/Textures/right.png",
+        "Assets/Textures/left.png",
+        "Assets/Textures/top.png",
+        "Assets/Textures/bottom.png",
+        "Assets/Textures/front.png",
+        "Assets/Textures/back.png"
+        };
+
+        // Make sure the folder and files exist!
+        m_skybox.init(faces);
 
         ImguiManager::LogSuccess("Graphics System initialized successfully", "Graphics");
     }
@@ -862,6 +879,13 @@ namespace Framework {
             if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
                 cam.processKeyboard(Camera::Movement::Right, dt * baseSpeed, false, terrain);
 
+            // Recipe Book
+            bool isRPressed = (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS);
+            static bool wasRPressed = false;
+            if (isRPressed && !wasRPressed) GameSystem::bookOpen = !GameSystem::bookOpen;
+            wasRPressed = isRPressed;
+                
+                
             // Mouse Rotation Logic
             static bool firstMouse = true;
             static double lastX = 0.0, lastY = 0.0;
@@ -1496,6 +1520,7 @@ namespace Framework {
                     isUI = ecsInterface.GetComponent<TextureProperties>(entityId).isUI;
                 }
 
+
                 if (isUI) {
                     uiEntities.push_back(entityId); // Add to UI list
                     continue; 
@@ -1540,10 +1565,15 @@ namespace Framework {
             model = glm::scale(model, tr.scale);
 
             // BOXCOLLIDER COLLISION (NEEDA MOVE IT OUTTA GRAPHICS :SKULL:)
-            if (mesh.debugShape == DebugShapeType::Box && ecsInterface.HasComponent<BoxColliderComponent>(entityId)) {
-                auto& collider = ecsInterface.GetComponent<BoxColliderComponent>(entityId);
-                model = glm::translate(model, collider.center);
-                model = glm::scale(model, collider.size);
+            if (mesh.debugShape == DebugShapeType::Box && ecsInterface.HasComponent<BoxColliderComponent>(entityId))
+            {
+                auto& colliderComp = ecsInterface.GetComponent<BoxColliderComponent>(entityId);
+                for (const auto& entry : colliderComp.colliders)
+                {
+                    glm::mat4 currentShapeModel = model;
+                    currentShapeModel = glm::translate(currentShapeModel, entry.center);
+                    currentShapeModel = glm::scale(currentShapeModel, entry.size);
+                }
             }
 
             if (ecsInterface.HasComponent<TextProperties>(entityId)) {
@@ -1694,40 +1724,45 @@ namespace Framework {
             // 2. SEPARATE DEBUG RENDERING FOR COLLIDER
             if (Framework::Graphics::s_RenderDebugColliders && ecsInterface.HasComponent<BoxColliderComponent>(entityId))
             {
-                auto& collider = ecsInterface.GetComponent<BoxColliderComponent>(entityId);
+                auto& colliderComp = ecsInterface.GetComponent<BoxColliderComponent>(entityId);
 
-                // --- 1. Calculate the Collider's World Transform ---
-                glm::mat4 colliderModel = glm::mat4(1.0f);
-
-                // A. Move to Entity Position
-                colliderModel = glm::translate(colliderModel, tr.position);
-
-                // B. Rotate (Match Entity Rotation)
-                colliderModel = glm::rotate(colliderModel, glm::radians(tr.rotation.x), { 1,0,0 });
-                colliderModel = glm::rotate(colliderModel, glm::radians(tr.rotation.y), { 0,1,0 });
-                colliderModel = glm::rotate(colliderModel, glm::radians(tr.rotation.z), { 0,0,1 });
-
-                // C. Scale (Match Entity Scale)
-                colliderModel = glm::scale(colliderModel, tr.scale);
-
-                // D. Offset & Size (Apply Collider specific properties)
-                //    Translate by center *after* scaling the entity so the offset scales with it
-                colliderModel = glm::translate(colliderModel, collider.center);
-                colliderModel = glm::scale(colliderModel, collider.size);
-
-                // --- 2. Draw using your existing Helper Function ---
-                // This ensures the correct shader uniforms ("view", "projection") are used
-                if (m_debugMeshes.find(DebugShapeType::Box) != m_debugMeshes.end())
+                // LOOP through all colliders on this entity
+                for (const auto& entry : colliderComp.colliders)
                 {
-                    DrawDebugMesh(
-                        m_debugMeshes[DebugShapeType::Box],
-                        glm::vec3(0.0f, 1.0f, 0.0f), // Green Color
-                        colliderModel,               // The matrix we just built
-                        proj,                        // Current Projection
-                        view                         // Current View
-                    );
+                    // --- 1. Calculate the Collider's World Transform ---
+                    glm::mat4 colliderModel = glm::mat4(1.0f);
+
+                    // A. Move to Entity Position
+                    colliderModel = glm::translate(colliderModel, tr.position);
+
+                    // B. Rotate (Match Entity Rotation)
+                    colliderModel = glm::rotate(colliderModel, glm::radians(tr.rotation.x), { 1,0,0 });
+                    colliderModel = glm::rotate(colliderModel, glm::radians(tr.rotation.y), { 0,1,0 });
+                    colliderModel = glm::rotate(colliderModel, glm::radians(tr.rotation.z), { 0,0,1 });
+
+                    // C. Scale (Match Entity Scale)
+                    // Note: This scales the offset (entry.center) as well, which is usually desired
+                    colliderModel = glm::scale(colliderModel, tr.scale);
+
+                    // D. Offset & Size (Apply Collider specific properties)
+                    colliderModel = glm::translate(colliderModel, entry.center);
+                    colliderModel = glm::scale(colliderModel, entry.size);
+
+                    // --- 2. Draw ---
+                    if (m_debugMeshes.find(DebugShapeType::Box) != m_debugMeshes.end())
+                    {
+                        // Visual Polish: Yellow for Trigger, Green for Solid
+                        glm::vec3 debugColor = entry.canPassThrough ? glm::vec3(1.0f, 1.0f, 0.0f) : glm::vec3(0.0f, 1.0f, 0.0f);
+
+                        DrawDebugMesh(
+                            m_debugMeshes[DebugShapeType::Box],
+                            debugColor,
+                            colliderModel,
+                            proj,
+                            view
+                        );
+                    }
                 }
-                
             }
         }
 
@@ -1735,6 +1770,11 @@ namespace Framework {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glDepthMask(GL_FALSE);
+
+        // === DRAW SKYBOX HERE ===
+        // It uses the depth buffer to only draw on empty pixels
+        m_skybox.draw(view, proj);
+        // ====================================================
 
         for (auto it = transparentEntities.rbegin(); it != transparentEntities.rend(); ++it)
         {
@@ -1854,7 +1894,6 @@ namespace Framework {
         glDepthMask(GL_TRUE);
         glDisable(GL_BLEND);
         glCullFace(GL_BACK);
-
         // --- 4. PICK PASS ---
         glBindFramebuffer(GL_FRAMEBUFFER, pickFBO[pickWrite]);
         glViewport(0, 0, width, height);

@@ -42,6 +42,8 @@
 #include <filesystem>
 #include <EventSystem.h>
 #include <EventManager.h>
+#include "GameSystem.h"
+#include "PlayerInteractSystem.h"
 
 using namespace Framework;
 
@@ -105,6 +107,7 @@ int main(void)
     auto animationSystem = ecsInterface.RegisterSystem<AnimationSystem>();
     auto sceneSystem = ecsInterface.RegisterSystem<SceneManager>();
     auto imguiSystem = ecsInterface.RegisterSystem<ImguiManager>();
+    auto gameSystem = ecsInterface.RegisterSystem<GameSystem>();
     imguiSystem->SetGraphicsSystem(graphicsSystem.get());
     graphicsSystem->SetImguiManager(imguiSystem.get());
     
@@ -129,7 +132,9 @@ int main(void)
     auto fileCheckSystem = ecsInterface.RegisterSystem<FileCheckSystem>();
     auto audioSystem = ecsInterface.RegisterSystem<AudioSystem>();
     auto physicsSystem = ecsInterface.RegisterSystem<PhysicsSystem>();
-
+    auto tagManager = ecsInterface.RegisterSystem<TagManager>();
+    ecsInterface.RegisterComponent<PlayerComponent>(); // register player component here coz of the interact system
+    auto playerInteractSystem = ecsInterface.RegisterSystem<PlayerInteractSystem>();
     auto eventSystem = ecsInterface.RegisterSystem<EventSystem>();
     ecsInterface.RegisterComponent<EventSenderComponent>();
     ecsInterface.RegisterComponent<EventReceiverComponent>();
@@ -149,9 +154,12 @@ int main(void)
     engine->AddSystem(navMeshSystem.get());
 	engine->AddSystem(audioSystem.get());
     engine->AddSystem(physicsSystem.get());
+    engine->AddSystem(tagManager.get());
+    engine->AddSystem(playerInteractSystem.get());
     engine->AddSystem(sceneSystem.get());       // Register scene manager last
     engine->AddSystem(fileCheckSystem.get());
     engine->AddSystem(eventSystem.get());
+    engine->AddSystem(gameSystem.get());
 
     std::filesystem::path root = GetEngineRootPath();
     fileCheckSystem->WatchAllFolders();

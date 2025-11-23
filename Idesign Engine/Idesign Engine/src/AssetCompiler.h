@@ -4,8 +4,8 @@
 /// @Brief : 
 ///	
 ///	@Authors: Edwin Leow
-///	@Copyright 2025, Digipen Institute of Technology
-///
+    ///	@Copyright 2025, Digipen Institute of Technology
+    ///
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #ifndef  _ASSET_COMPILER_H_
@@ -25,6 +25,7 @@
 #include "TransformProperties.h"
 #include "MaterialProperties.h"
 #include "ScriptProperties.h"
+#include "AnimationLoader.h"
 
 namespace fs = std::filesystem;
 namespace Framework

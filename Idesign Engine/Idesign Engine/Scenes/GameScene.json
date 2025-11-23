@@ -26,6 +26,9 @@
                     "children": [],
                     "sortIndex": 0
                 },
+                "TagComponent": {
+                    "tags": []
+                },
                 "MeshComponent": {
                     "guid": "52f9947c-0b27-4f5a-9a18-cfef71bcfac3",
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
@@ -47,19 +50,19 @@
             }
         },
         {
-            "name": "Entity 2",
+            "name": "Knife",
             "guid": "46643a43-ef91-4c8f-8675-27e1d159b4e9",
             "components": {
                 "TransformComponent": {
                     "position": [
-                        15.291282653808594,
-                        0.0,
-                        0.30000001192092896
+                        -40.5,
+                        7.400000095367432,
+                        1.2000000476837158
                     ],
                     "rotation": [
                         0.0,
-                        -0.0,
-                        0.0
+                        90.0,
+                        270.0
                     ],
                     "scale": [
                         0.5,
@@ -72,9 +75,15 @@
                     "children": [],
                     "sortIndex": 2
                 },
+                "TagComponent": {
+                    "tags": []
+                },
                 "MeshComponent": {
                     "guid": "6cbaa85b-562d-4b23-9f64-8639947659cc",
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "AnimationProperties": {
+                    "guid": "e4d836ef-c0bc-46bb-914c-c1e05246eb81"
                 }
             }
         },
@@ -85,12 +94,12 @@
                 "TransformComponent": {
                     "position": [
                         -32.06560134887695,
-                        5.606341361999512,
+                        5.536312103271484,
                         9.240556716918945
                     ],
                     "rotation": [
                         0.0,
-                        0.0,
+                        -0.0,
                         0.0
                     ],
                     "scale": [
@@ -103,6 +112,9 @@
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
                     "sortIndex": 3
+                },
+                "TagComponent": {
+                    "tags": []
                 },
                 "MeshComponent": {
                     "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941",
@@ -123,19 +135,24 @@
                     "maxSlope": 45.0
                 },
                 "BoxColliderComponent": {
-                    "size": [
-                        100.0,
-                        100.0,
-                        100.0
-                    ],
-                    "center": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "canPassThrough": false
+                    "colliders": [
+                        {
+                            "size": [
+                                99.80000305175781,
+                                102.0999984741211,
+                                99.80000305175781
+                            ],
+                            "center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "canPassThrough": false
+                        }
+                    ]
                 },
                 "PhysicsProperties": {
+                    "category": 0,
                     "isImmovable": true,
                     "gravityFactor": 1.0,
                     "mass": 1.0,
@@ -181,6 +198,9 @@
                     "children": [],
                     "sortIndex": 4
                 },
+                "TagComponent": {
+                    "tags": []
+                },
                 "MeshComponent": {
                     "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941",
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
@@ -190,6 +210,7 @@
                     "isUI": false
                 },
                 "PhysicsProperties": {
+                    "category": 0,
                     "isImmovable": true,
                     "gravityFactor": 1.0,
                     "mass": 1.0,
@@ -235,6 +256,9 @@
                     "children": [],
                     "sortIndex": 5
                 },
+                "TagComponent": {
+                    "tags": []
+                },
                 "MeshComponent": {
                     "guid": "eac3e6f4-1bf2-415f-aef8-8f1269d91560",
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
@@ -271,6 +295,9 @@
                     "children": [],
                     "sortIndex": 6
                 },
+                "TagComponent": {
+                    "tags": []
+                },
                 "MeshComponent": {
                     "guid": "da032094-6e5c-40fe-b6f0-39a9d542ffe5",
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
@@ -306,6 +333,9 @@
                     "parent": "",
                     "children": [],
                     "sortIndex": 7
+                },
+                "TagComponent": {
+                    "tags": []
                 },
                 "MeshComponent": {
                     "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941",
@@ -359,6 +389,9 @@
                     "children": [],
                     "sortIndex": 8
                 },
+                "TagComponent": {
+                    "tags": []
+                },
                 "MeshComponent": {
                     "guid": "62fa60bd-a3d0-4575-851f-e6d04a326345",
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
@@ -394,6 +427,9 @@
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
                     "sortIndex": 9
+                },
+                "TagComponent": {
+                    "tags": []
                 },
                 "MeshComponent": {
                     "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941",
@@ -431,6 +467,9 @@
                     "children": [],
                     "sortIndex": 10
                 },
+                "TagComponent": {
+                    "tags": []
+                },
                 "MeshComponent": {
                     "guid": "814c3cff-9da8-4ad4-8a05-009b99a4ea2b"
                 },
@@ -466,8 +505,12 @@
                     "children": [],
                     "sortIndex": 11
                 },
+                "TagComponent": {
+                    "tags": []
+                },
                 "MeshComponent": {
-                    "guid": "e902f0d7-a022-45fc-9c17-2a98cbdb793e"
+                    "guid": "e902f0d7-a022-45fc-9c17-2a98cbdb793e",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "b57b4683-8581-4256-9cc5-60c900acec67",
@@ -500,6 +543,9 @@
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
                     "sortIndex": 12
+                },
+                "TagComponent": {
+                    "tags": []
                 },
                 "MeshComponent": {
                     "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941",
@@ -537,6 +583,9 @@
                     "children": [],
                     "sortIndex": 13
                 },
+                "TagComponent": {
+                    "tags": []
+                },
                 "MeshComponent": {
                     "guid": "90a63915-c3e8-40b9-8c48-b8fe58a9bd67"
                 },
@@ -572,8 +621,12 @@
                     "children": [],
                     "sortIndex": 14
                 },
+                "TagComponent": {
+                    "tags": []
+                },
                 "MeshComponent": {
-                    "guid": "e902f0d7-a022-45fc-9c17-2a98cbdb793e"
+                    "guid": "e902f0d7-a022-45fc-9c17-2a98cbdb793e",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "b57b4683-8581-4256-9cc5-60c900acec67",
@@ -606,6 +659,9 @@
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
                     "sortIndex": 15
+                },
+                "TagComponent": {
+                    "tags": []
                 },
                 "MeshComponent": {
                     "guid": "d51dc95c-5066-4fd5-a31c-e51faf79cdd2",
@@ -643,6 +699,9 @@
                     "children": [],
                     "sortIndex": 16
                 },
+                "TagComponent": {
+                    "tags": []
+                },
                 "MeshComponent": {
                     "guid": "d51dc95c-5066-4fd5-a31c-e51faf79cdd2",
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
@@ -679,6 +738,9 @@
                     "children": [],
                     "sortIndex": 17
                 },
+                "TagComponent": {
+                    "tags": []
+                },
                 "MeshComponent": {
                     "guid": "90a63915-c3e8-40b9-8c48-b8fe58a9bd67"
                 },
@@ -714,6 +776,9 @@
                     "children": [],
                     "sortIndex": 18
                 },
+                "TagComponent": {
+                    "tags": []
+                },
                 "MeshComponent": {
                     "guid": "d51dc95c-5066-4fd5-a31c-e51faf79cdd2",
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
@@ -723,19 +788,10 @@
                     "isUI": false
                 },
                 "BoxColliderComponent": {
-                    "size": [
-                        2.0,
-                        3.5,
-                        1.0
-                    ],
-                    "center": [
-                        0.0,
-                        1.5,
-                        0.0
-                    ],
-                    "canPassThrough": true
+                    "colliders": []
                 },
                 "PhysicsProperties": {
+                    "category": 0,
                     "isImmovable": true,
                     "gravityFactor": 1.0,
                     "mass": 1.0,
@@ -781,6 +837,9 @@
                     "children": [],
                     "sortIndex": 19
                 },
+                "TagComponent": {
+                    "tags": []
+                },
                 "MeshComponent": {
                     "guid": "0bfc0f47-64aa-4521-b9fa-08ff8aed994b",
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
@@ -807,14 +866,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -28.45073127746582,
-                        7.630732536315918,
-                        8.276019096374512
+                        -28.970077514648438,
+                        7.690000057220459,
+                        8.321422576904297
                     ],
                     "rotation": [
-                        0.0,
+                        -0.000005613005669147242,
                         90.0,
-                        0.0
+                        1.0
                     ],
                     "scale": [
                         1.0,
@@ -827,6 +886,11 @@
                     "children": [],
                     "sortIndex": 20
                 },
+                "TagComponent": {
+                    "tags": [
+                        "Interactable"
+                    ]
+                },
                 "MeshComponent": {
                     "guid": "239cddd5-6733-44a1-927a-e3b13152a09a",
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
@@ -834,6 +898,42 @@
                 "TextureComponent": {
                     "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
                     "isUI": false
+                },
+                "BoxColliderComponent": {
+                    "colliders": [
+                        {
+                            "size": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ],
+                            "center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "canPassThrough": false
+                        }
+                    ]
+                },
+                "PhysicsProperties": {
+                    "category": 1,
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 0.5,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "startAwake": true
                 }
             }
         },
@@ -862,6 +962,9 @@
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
                     "sortIndex": 21
+                },
+                "TagComponent": {
+                    "tags": []
                 },
                 "MeshComponent": {
                     "guid": "1cc97700-7326-4df8-b677-80233b030807",
@@ -899,6 +1002,9 @@
                     "children": [],
                     "sortIndex": 22
                 },
+                "TagComponent": {
+                    "tags": []
+                },
                 "MeshComponent": {
                     "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941",
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
@@ -934,6 +1040,9 @@
                     "parent": "",
                     "children": [],
                     "sortIndex": 23
+                },
+                "TagComponent": {
+                    "tags": []
                 },
                 "MeshComponent": {
                     "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941",
@@ -987,6 +1096,9 @@
                     "children": [],
                     "sortIndex": 24
                 },
+                "TagComponent": {
+                    "tags": []
+                },
                 "MeshComponent": {
                     "guid": "177fa052-079f-42bb-b225-97be34770804",
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
@@ -1023,12 +1135,25 @@
                     "children": [],
                     "sortIndex": 25
                 },
+                "TagComponent": {
+                    "tags": []
+                },
                 "MeshComponent": {
-                    "guid": "6fa52b14-d79c-4815-aaff-767eb40b32ca"
+                    "guid": "6fa52b14-d79c-4815-aaff-767eb40b32ca",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "a3d6570b-a168-4e13-9ecc-6abb2ed62b18",
                     "isUI": false
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "583b617e-c68e-4e62-81cf-a2b05eefa1e4",
+                            "scriptPath": "Assets\\Scripts\\ChoppingBoard.lua",
+                            "hotReload": true
+                        }
+                    ]
                 }
             }
         },
@@ -1057,6 +1182,9 @@
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
                     "sortIndex": 26
+                },
+                "TagComponent": {
+                    "tags": []
                 },
                 "MeshComponent": {
                     "guid": "da032094-6e5c-40fe-b6f0-39a9d542ffe5",
@@ -1094,6 +1222,9 @@
                     "children": [],
                     "sortIndex": 27
                 },
+                "TagComponent": {
+                    "tags": []
+                },
                 "MeshComponent": {
                     "guid": "da032094-6e5c-40fe-b6f0-39a9d542ffe5",
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
@@ -1130,6 +1261,9 @@
                     "children": [],
                     "sortIndex": 28
                 },
+                "TagComponent": {
+                    "tags": []
+                },
                 "MeshComponent": {
                     "guid": "97635846-7fcd-4674-b730-21d672c2f510"
                 },
@@ -1164,6 +1298,9 @@
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
                     "sortIndex": 29
+                },
+                "TagComponent": {
+                    "tags": []
                 },
                 "MeshComponent": {
                     "guid": "4658a6a6-5858-4b7b-bf14-feea255d368c",
@@ -1201,6 +1338,9 @@
                     "children": [],
                     "sortIndex": 30
                 },
+                "TagComponent": {
+                    "tags": []
+                },
                 "MeshComponent": {
                     "guid": "4658a6a6-5858-4b7b-bf14-feea255d368c",
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
@@ -1236,6 +1376,9 @@
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
                     "sortIndex": 31
+                },
+                "TagComponent": {
+                    "tags": []
                 },
                 "MeshComponent": {
                     "guid": "4658a6a6-5858-4b7b-bf14-feea255d368c",
@@ -1289,6 +1432,9 @@
                     ],
                     "sortIndex": 32
                 },
+                "TagComponent": {
+                    "tags": []
+                },
                 "TextureComponent": {
                     "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
                     "isUI": false
@@ -1320,6 +1466,9 @@
                     "parent": "59cca078-d956-4d13-b89e-4f92455afb42",
                     "children": [],
                     "sortIndex": 33
+                },
+                "TagComponent": {
+                    "tags": []
                 },
                 "MeshComponent": {
                     "guid": "bf7c3abb-d8d4-4fa5-bd45-019e80216f61",
@@ -1357,6 +1506,9 @@
                     "children": [],
                     "sortIndex": 34
                 },
+                "TagComponent": {
+                    "tags": []
+                },
                 "MeshComponent": {
                     "guid": "bf7c3abb-d8d4-4fa5-bd45-019e80216f61",
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
@@ -1392,6 +1544,9 @@
                     "parent": "59cca078-d956-4d13-b89e-4f92455afb42",
                     "children": [],
                     "sortIndex": 35
+                },
+                "TagComponent": {
+                    "tags": []
                 },
                 "MeshComponent": {
                     "guid": "bf7c3abb-d8d4-4fa5-bd45-019e80216f61",
@@ -1429,6 +1584,9 @@
                     "children": [],
                     "sortIndex": 36
                 },
+                "TagComponent": {
+                    "tags": []
+                },
                 "MeshComponent": {
                     "guid": "bf7c3abb-d8d4-4fa5-bd45-019e80216f61",
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
@@ -1438,6 +1596,7 @@
                     "isUI": false
                 },
                 "PhysicsProperties": {
+                    "category": 0,
                     "isImmovable": false,
                     "gravityFactor": 1.0,
                     "mass": 1.0,
@@ -1483,6 +1642,9 @@
                     "children": [],
                     "sortIndex": 37
                 },
+                "TagComponent": {
+                    "tags": []
+                },
                 "MeshComponent": {
                     "guid": "bf7c3abb-d8d4-4fa5-bd45-019e80216f61",
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
@@ -1519,6 +1681,9 @@
                     "children": [],
                     "sortIndex": 38
                 },
+                "TagComponent": {
+                    "tags": []
+                },
                 "MeshComponent": {
                     "guid": "76f36163-789f-4c71-87b4-76fdccaa8408"
                 },
@@ -1553,6 +1718,9 @@
                     "parent": "59cca078-d956-4d13-b89e-4f92455afb42",
                     "children": [],
                     "sortIndex": 39
+                },
+                "TagComponent": {
+                    "tags": []
                 },
                 "MeshComponent": {
                     "guid": "76f36163-789f-4c71-87b4-76fdccaa8408"
@@ -1589,6 +1757,9 @@
                     "children": [],
                     "sortIndex": 40
                 },
+                "TagComponent": {
+                    "tags": []
+                },
                 "MeshComponent": {
                     "guid": "76f36163-789f-4c71-87b4-76fdccaa8408"
                 },
@@ -1623,6 +1794,9 @@
                     "parent": "59cca078-d956-4d13-b89e-4f92455afb42",
                     "children": [],
                     "sortIndex": 41
+                },
+                "TagComponent": {
+                    "tags": []
                 },
                 "MeshComponent": {
                     "guid": "76f36163-789f-4c71-87b4-76fdccaa8408"
@@ -1683,6 +1857,9 @@
                         "51315770-51ee-4179-8c2f-6f04b11153ff"
                     ],
                     "sortIndex": 42
+                },
+                "TagComponent": {
+                    "tags": []
                 }
             }
         },
@@ -1692,19 +1869,19 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -34.799015045166016,
-                        7.7092790603637695,
-                        11.336045265197754
+                        -34.85093688964844,
+                        8.074065208435059,
+                        11.671592712402344
                     ],
                     "rotation": [
-                        -0.019654134288430214,
-                        -0.0038980641402304173,
-                        0.02668358013033867
+                        0.00006252859020605683,
+                        -0.017449988052248955,
+                        -0.011732217855751514
                     ],
                     "scale": [
-                        1.0,
-                        1.0,
-                        1.0
+                        0.9999989867210388,
+                        0.9999967813491821,
+                        0.9999994039535522
                     ]
                 },
                 "HierarchyComponent": {
@@ -1712,23 +1889,31 @@
                     "children": [],
                     "sortIndex": 43
                 },
+                "TagComponent": {
+                    "tags": []
+                },
                 "MeshComponent": {
                     "guid": ""
                 },
                 "BoxColliderComponent": {
-                    "size": [
-                        1.0,
-                        4.0,
-                        1.0
-                    ],
-                    "center": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "canPassThrough": false
+                    "colliders": [
+                        {
+                            "size": [
+                                1.0,
+                                4.800000190734863,
+                                1.0
+                            ],
+                            "center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "canPassThrough": false
+                        }
+                    ]
                 },
                 "PhysicsProperties": {
+                    "category": 2,
                     "isImmovable": false,
                     "gravityFactor": 1.0,
                     "mass": 1.0,
@@ -1747,8 +1932,12 @@
                     "startAwake": true
                 },
                 "EventSenderComponent": {
-                    "triggerName": "OnCollision",
-                    "messageName": "deez"
+                    "senders": [
+                        {
+                            "triggerName": "OnCollision",
+                            "messageName": "deez"
+                        }
+                    ]
                 }
             }
         },
@@ -1781,6 +1970,9 @@
                         "c121b678-c782-4205-b20e-9695226e60ca"
                     ],
                     "sortIndex": 44
+                },
+                "TagComponent": {
+                    "tags": []
                 },
                 "MeshComponent": {
                     "guid": ""
@@ -1816,6 +2008,9 @@
                     "parent": "c9cb3c57-08a0-40e1-99ff-364fba30c505",
                     "children": [],
                     "sortIndex": 45
+                },
+                "TagComponent": {
+                    "tags": []
                 },
                 "MeshComponent": {
                     "guid": "e902f0d7-a022-45fc-9c17-2a98cbdb793e",
@@ -1877,6 +2072,9 @@
                     "children": [],
                     "sortIndex": 46
                 },
+                "TagComponent": {
+                    "tags": []
+                },
                 "MeshComponent": {
                     "guid": ""
                 },
@@ -1911,6 +2109,9 @@
                     "parent": "c9cb3c57-08a0-40e1-99ff-364fba30c505",
                     "children": [],
                     "sortIndex": 47
+                },
+                "TagComponent": {
+                    "tags": []
                 },
                 "MeshComponent": {
                     "guid": ""
@@ -1947,6 +2148,9 @@
                     "children": [],
                     "sortIndex": 1
                 },
+                "TagComponent": {
+                    "tags": []
+                },
                 "MeshComponent": {
                     "guid": "4bf0356c-3b1b-4e45-a327-5a7f573a20ef",
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
@@ -1965,19 +2169,24 @@
                     ]
                 },
                 "BoxColliderComponent": {
-                    "size": [
-                        5.0,
-                        4.0,
-                        5.0
-                    ],
-                    "center": [
-                        0.0,
-                        2.0,
-                        0.0
-                    ],
-                    "canPassThrough": true
+                    "colliders": [
+                        {
+                            "size": [
+                                3.5999999046325684,
+                                2.5999999046325684,
+                                3.0
+                            ],
+                            "center": [
+                                0.0,
+                                1.2999999523162842,
+                                0.0
+                            ],
+                            "canPassThrough": true
+                        }
+                    ]
                 },
                 "PhysicsProperties": {
+                    "category": 0,
                     "isImmovable": true,
                     "gravityFactor": 1.0,
                     "mass": 1.0,
@@ -1996,8 +2205,12 @@
                     "startAwake": true
                 },
                 "EventReceiverComponent": {
-                    "messageToListenFor": "deez",
-                    "luaFunctionToCall": "OnInteract"
+                    "receivers": [
+                        {
+                            "messageToListenFor": "deez",
+                            "luaFunctionToCall": "OnInteract"
+                        }
+                    ]
                 }
             }
         }

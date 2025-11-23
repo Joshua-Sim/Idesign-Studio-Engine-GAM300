@@ -701,7 +701,7 @@ namespace Framework {
 
         // Toggle editor visibility with Backspace key
         static bool backspaceWasPressed = false;
-        bool backspaceIsPressed = InputHandler::GetInstance()->IsKeyHeld(GLFW_KEY_1);
+        bool backspaceIsPressed = InputHandler::GetInstance()->IsKeyHeld(GLFW_KEY_EQUAL);
 
         if (backspaceIsPressed && !backspaceWasPressed)
         {
@@ -2840,6 +2840,7 @@ namespace Framework {
                     // ------ Default components added here ----------
                     ecsInterface.AddComponent<TransformComponent>(newEntity, TransformComponent{}); // Default transform
                     ecsInterface.AddComponent<HierarchyComponent>(newEntity, HierarchyComponent{}); // Default hierarchy
+                    ecsInterface.AddComponent<TagComponent>(newEntity, TagComponent{}); // Default tag component
 
                     auto* tex = AssetManager::Instance().Get<TextureProperties>(
                         AssetManager::Instance().FindGuid<TextureProperties>());
@@ -2982,7 +2983,7 @@ namespace Framework {
             for (const auto& [sceneName, entities] : Framework::sceneManager.GetSceneEntities())
                 registered.insert(entities.begin(), entities.end());
 
-            // 1. Entities with no scene (not recommended, but handled)
+            // 1. Entities with no scene 
             ImGui::PushID("NonSceneHeader");
             bool nonSceneOpen = ImGui::CollapsingHeader("Entities", ImGuiTreeNodeFlags_DefaultOpen);
 
@@ -3132,11 +3133,9 @@ namespace Framework {
             // ---- Entity Inspector List END ---
 
             ImGui::End();
-
             // Separate panel to edit the selected entity's name
             if (isPropertiesWindowOpen && selectedEntity != std::numeric_limits<Entity>::max())
             {
-
                 if (!ecsInterface.IsEntityValid(selectedEntity))
                 {
                     isPropertiesWindowOpen = false;
@@ -3144,14 +3143,13 @@ namespace Framework {
                 }
                 else
                 {
-                    ImGui::Begin("Entity Properties", &isPropertiesWindowOpen);                
-                   if (ImGui::CollapsingHeader("Name", ImGuiTreeNodeFlags_DefaultOpen))
+                    ImGui::Begin("Entity Properties", &isPropertiesWindowOpen);
+                    if (ImGui::CollapsingHeader("Name", ImGuiTreeNodeFlags_DefaultOpen))
                     {
                         std::string selectedEntityName = ecsInterface.GetEntityName(selectedEntity);
                         char buffer[256];
                         strncpy(buffer, selectedEntityName.c_str(), sizeof(buffer));
                         buffer[sizeof(buffer) - 1] = '\0';
-
                         // Display an InputText to edit the selected entity's name
                         if (ImGui::InputText("Edit Name", buffer, sizeof(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
                         {
@@ -3159,11 +3157,48 @@ namespace Framework {
                         }
                     }
 
+                    // TagComponent Section
+                    if (ecsInterface.HasComponent<TagComponent>(selectedEntity))
+                    {
+                        if (ImGui::CollapsingHeader("Tags", ImGuiTreeNodeFlags_DefaultOpen))
+                        {
+                            auto& tagComp = ecsInterface.GetComponent<TagComponent>(selectedEntity);
+
+                            // Display existing tags with remove buttons
+                            for (int i = 0; i < tagComp.tags.size(); ++i)
+                            {
+                                ImGui::PushID(i);
+                                ImGui::BulletText("%s", tagComp.tags[i].c_str());
+                                ImGui::SameLine();
+                                if (ImGui::SmallButton("Remove"))
+                                {
+                                    tagComp.tags.erase(tagComp.tags.begin() + i);
+                                    ImGui::PopID();
+                                    break; // Exit loop after erase to avoid iterator issues
+                                }
+                                ImGui::PopID();
+                            }
+
+                            // Add new tag input
+                            static char newTag[128] = "";
+                            ImGui::SetNextItemWidth(200.0f);
+                            ImGui::InputText("##NewTag", newTag, IM_ARRAYSIZE(newTag));
+                            ImGui::SameLine();
+                            if (ImGui::Button("Add Tag") && strlen(newTag) > 0)
+                            {
+                                tagComp.tags.push_back(std::string(newTag));
+                                newTag[0] = '\0'; // Clear input
+                            }
+
+                            // Optional: Show count
+                            ImGui::TextDisabled("Total Tags: %d", (int)tagComp.tags.size());
+                        }
+                    }
+
                     // Show combo box for adding components
                     static int selectedComponentIndex = -1;
                     std::vector<std::string> availableComponents;
-
-                    // Populate availableComponents with components the entity doesn�t already have
+                    // Populate availableComponents with components the entity doesn't already have
                     for (int i = 0; i < ecsInterface.GetComponentNames().size(); ++i)
                     {
                         if (!ecsInterface.GetEntitySignature(selectedEntity).test(i))  // Check if the component is not yet added
@@ -3171,10 +3206,8 @@ namespace Framework {
                             availableComponents.push_back(ecsInterface.GetComponentNames()[i]);
                         }
                     }
-
                     // Automate Generate Entity Inspector
                     DrawEntityInspector(selectedEntity, ecsInterface);
-
                     // Reset selectedEntity if the properties window is closed
                     if (!isPropertiesWindowOpen)
                     {

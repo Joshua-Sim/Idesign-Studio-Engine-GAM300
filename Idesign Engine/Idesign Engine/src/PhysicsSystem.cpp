@@ -1,11 +1,3 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// @file PhysicsSystem.cpp
-/// 
-/// @brief A physics system which moves entities and detects cube collisions.
-///
-///////////////////////////////////////////////////////////////////////////////
-
 #include "pch.h"
 #include "PhysicsSystem.h"
 #include "ECSystemManager.h"
@@ -27,15 +19,14 @@
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
 #include <Jolt/Physics/Collision/Shape/MeshShape.h>
 #include <Jolt/Physics/Collision/Shape/OffsetCenterOfMassShape.h>
-
 // --- NEW ---
+#include <Jolt/Physics/Collision/Shape/StaticCompoundShape.h> // Required for multiple colliders
 #include <Jolt/Physics/Collision/RayCast.h>
 #include <Jolt/Physics/Collision/CollisionCollector.h>
 #include <Jolt/Physics/Collision/CastResult.h>
 #include <Jolt/Physics/Collision/ObjectLayer.h>
-#include <Jolt/Physics/Collision/BroadPhase/BroadPhaseLayer.h> // <-- ADD THIS INCLUDE
+#include <Jolt/Physics/Collision/BroadPhase/BroadPhaseLayer.h>
 // --- END NEW ---
-
 
 #include <glm/glm/glm.hpp>
 #include <glm/glm/gtc/quaternion.hpp>
@@ -163,12 +154,13 @@ namespace Framework {
     static std::unordered_map<Entity, glm::vec3> s_lastLin, s_lastAng;
 
     // Static Helper for Box Math
-    static bool IsPointInsideBox(const glm::vec3& point, const Framework::TransformComponent& boxTrans, const Framework::BoxColliderComponent& collider) {
-        glm::vec3 boxWorldCenter = boxTrans.position + collider.center;
+    // UPDATED: Now takes a single BoxColliderEntry instead of the whole component
+    static bool IsPointInsideBox(const glm::vec3& point, const Framework::TransformComponent& boxTrans, const Framework::BoxColliderEntry& entry) {
+        glm::vec3 boxWorldCenter = boxTrans.position + entry.center;
         glm::vec3 halfSize = glm::vec3(
-            std::abs(collider.size.x * boxTrans.scale.x),
-            std::abs(collider.size.y * boxTrans.scale.y),
-            std::abs(collider.size.z * boxTrans.scale.z)
+            std::abs(entry.size.x * boxTrans.scale.x),
+            std::abs(entry.size.y * boxTrans.scale.y),
+            std::abs(entry.size.z * boxTrans.scale.z)
         ) * 0.5f;
 
         bool x = std::abs(point.x - boxWorldCenter.x) <= halfSize.x;
@@ -182,40 +174,86 @@ namespace Framework {
         if (!ecs.HasComponent<TransformComponent>(e) || !ecs.HasComponent<PhysicsProperties>(e)) return;
         if (ecs.HasComponent<PhysicsBodyComponent>(e)) return;
 
-        JPH::ShapeRefC shape = nullptr;
+        JPH::ShapeRefC finalShape = nullptr;
         auto& tf = ecs.GetComponent<TransformComponent>(e);
 
+        // --- NEW: Multiple Collider Support ---
         bool isSensor = false;
 
         if (ecs.HasComponent<BoxColliderComponent>(e)) {
-            auto& collider = ecs.GetComponent<BoxColliderComponent>(e);
-            isSensor = collider.canPassThrough;
+            auto& component = ecs.GetComponent<BoxColliderComponent>(e);
 
-            JPH::Vec3 half_extents(
-                std::abs(0.5f * collider.size.x * tf.scale.x),
-                std::abs(0.5f * collider.size.y * tf.scale.y),
-                std::abs(0.5f * collider.size.z * tf.scale.z)
-            );
+            // If no colliders in the list, skip
+            if (component.colliders.empty()) return;
 
-            const float kMinSize = 0.001f;
-            if (half_extents.GetX() < kMinSize || half_extents.GetY() < kMinSize || half_extents.GetZ() < kMinSize) return;
+            // Logic: If ANY collider is solid, the body is solid. 
+            // Only if ALL are triggers do we treat the body as a sensor.
+            // (You can adjust this logic based on your game needs)
+            bool anySolid = false;
+            for (const auto& c : component.colliders) {
+                if (!c.canPassThrough) anySolid = true;
+            }
+            isSensor = !anySolid;
 
-            JPH::BoxShapeSettings bs(half_extents);
-            JPH::ShapeSettings::ShapeResult result = bs.Create();
-            if (result.HasError()) return;
-            shape = result.Get();
+            // CASE 1: Single Collider (Optimization)
+            if (component.colliders.size() == 1) {
+                const auto& entry = component.colliders[0];
 
-            if (collider.center != glm::vec3(0.0f)) {
-                JPH::Vec3 jolt_center(collider.center.x, collider.center.y, collider.center.z);
-                shape = new JPH::OffsetCenterOfMassShape(shape, jolt_center);
+                JPH::Vec3 half_extents(
+                    std::abs(0.5f * entry.size.x * tf.scale.x),
+                    std::abs(0.5f * entry.size.y * tf.scale.y),
+                    std::abs(0.5f * entry.size.z * tf.scale.z)
+                );
+
+                // Prevent zero-size box crash
+                const float kMinSize = 0.001f;
+                half_extents = JPH::Vec3::sMax(half_extents, JPH::Vec3(kMinSize, kMinSize, kMinSize));
+
+                JPH::BoxShapeSettings bs(half_extents);
+                JPH::ShapeSettings::ShapeResult result = bs.Create();
+                if (result.HasError()) return;
+
+                finalShape = result.Get();
+
+                // Apply Offset if needed
+                if (entry.center != glm::vec3(0.0f)) {
+                    JPH::Vec3 jolt_center(entry.center.x, entry.center.y, entry.center.z);
+                    finalShape = new JPH::OffsetCenterOfMassShape(finalShape, jolt_center);
+                }
+            }
+            // CASE 2: Multiple Colliders (Compound Shape)
+            else {
+                JPH::StaticCompoundShapeSettings compoundSettings;
+
+                for (const auto& entry : component.colliders) {
+                    JPH::Vec3 half_extents(
+                        std::abs(0.5f * entry.size.x * tf.scale.x),
+                        std::abs(0.5f * entry.size.y * tf.scale.y),
+                        std::abs(0.5f * entry.size.z * tf.scale.z)
+                    );
+
+                    const float kMinSize = 0.001f;
+                    half_extents = JPH::Vec3::sMax(half_extents, JPH::Vec3(kMinSize, kMinSize, kMinSize));
+
+                    // Create sub-shape settings
+                    JPH::BoxShapeSettings* boxSettings = new JPH::BoxShapeSettings(half_extents);
+
+                    // Add to compound with offset
+                    JPH::Vec3 offset(entry.center.x, entry.center.y, entry.center.z);
+                    compoundSettings.AddShape(offset, JPH::Quat::sIdentity(), boxSettings);
+                }
+
+                JPH::ShapeSettings::ShapeResult result = compoundSettings.Create();
+                if (result.HasError()) return;
+                finalShape = result.Get();
             }
         }
 
-        if (shape == nullptr) return;
+        if (finalShape == nullptr) return;
 
         auto& prop = ecs.GetComponent<PhysicsProperties>(e);
         JPH::BodyCreationSettings bcs(
-            shape,
+            finalShape,
             JPH::RVec3(tf.position.x, tf.position.y, tf.position.z),
             MakeQuatFromEuler(tf.rotation),
             ToJoltMotionType(prop.motionType),
@@ -246,7 +284,7 @@ namespace Framework {
         }
 
         created_list.push_back(id);
-        ecs.AddComponent<PhysicsBodyComponent>(e, PhysicsBodyComponent{ id, shape, true });
+        ecs.AddComponent<PhysicsBodyComponent>(e, PhysicsBodyComponent{ id, finalShape, true });
         s_lastLin[e] = prop.linearVelocity;
         s_lastAng[e] = prop.angularVelocity;
     }
@@ -282,14 +320,13 @@ namespace Framework {
         struct Spawn {
             glm::vec3 pos;
             glm::vec3 scale;
-            int       motionType;    // 0=Static, 1=Dynamic
-            int       category;
+            int        motionType;    // 0=Static, 1=Dynamic
+            int        category;
             glm::vec3 linVel;
             glm::vec3 angVel;
-            float     gravityFactor;
+            float      gravityFactor;
         };
 
-        // --- FIXED SPAWNS: Changed 0.0f Gravity to 1.0f Gravity ---
         const Spawn spawns[4]{
             { glm::vec3{50.5f,  5.0f,  1.5f}, glm::vec3{5.0f}, 1, 2, glm::vec3{ 5.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 1.0f },
             { glm::vec3{60.5f,  5.0f,  1.5f}, glm::vec3{5.0f}, 1, 2, glm::vec3{-5.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 1.0f },
@@ -297,7 +334,7 @@ namespace Framework {
             { glm::vec3{40.0f, 10.0f, -5.5f}, glm::vec3{5.0f}, 1, 1, glm::vec3{ 0.0f, 0.0f, 0.0f}, {2.0f, 1.0f, 2.0f}, 1.0f },
         };
 
-        // ... (makeCubeEntity helper is same as before) ...
+        // ... (makeCubeEntity helper omitted for brevity, logic remains same) ...
         auto makeCubeEntity = [&](const Spawn& s) -> Entity {
             TransformComponent tf{};
             tf.position = s.pos;
@@ -322,6 +359,13 @@ namespace Framework {
             phys.startAwake = true;
 
             ecsInterface.AddComponent<PhysicsProperties>(e, phys);
+            // Default single collider for testing
+            BoxColliderComponent bc;
+            BoxColliderEntry entry;
+            entry.size = glm::vec3(1.0f);
+            bc.colliders.push_back(entry);
+            ecsInterface.AddComponent<BoxColliderComponent>(e, bc);
+
             EnsureBodyForEntity(e, ecsInterface, bodyInterface, m_createdBodies);
             return e;
             };
@@ -330,8 +374,6 @@ namespace Framework {
         makeCubeEntity(spawns[1]);
         makeCubeEntity(spawns[2]);
         makeCubeEntity(spawns[3]);
-
-        // ... (Spawning Logic Omitted for Brevity, keep your existing logic here) ...
 
         std::cout << "[Physics] Initialized.\n";
     }
@@ -345,7 +387,6 @@ namespace Framework {
         }
 
         // --- [STEP 2: PROCESS JOLT EVENT QUEUE] ---
-        // This processes collisions detected by Jolt (Sensors) safely
         {
             std::lock_guard<std::mutex> lock(s_TriggerMutex);
             for (const auto& ev : s_TriggerEvents) {
@@ -354,16 +395,12 @@ namespace Framework {
 
                 Entity e1 = (Entity)bodyInterface->GetUserData(ev.b1);
                 Entity e2 = (Entity)bodyInterface->GetUserData(ev.b2);
-
-                // You can add logic here to fire "OnCollision" events derived from Jolt
-                // For now, just print debug
-                // if (ev.type == TriggerEvent::ENTER) std::cout << "Jolt Enter: " << e1 << " & " << e2 << "\n";
+                // Jolt trigger logic here...
             }
             s_TriggerEvents.clear();
         }
 
         // --- [STEP 3: MANUAL PLAYER TRIGGER LOGIC] ---
-        // This logic makes the PLAYER the sender of the event.
         Entity playerEntity = ecsInterface.GetEntityByName("Player");
 
         if (ecsInterface.IsEntityValid(playerEntity) &&
@@ -381,35 +418,53 @@ namespace Framework {
                     continue;
                 }
 
-                auto& collider = ecsInterface.GetComponent<BoxColliderComponent>(e);
+                auto& colliderComp = ecsInterface.GetComponent<BoxColliderComponent>(e);
                 auto& transform = ecsInterface.GetComponent<TransformComponent>(e);
 
-                bool isInside = IsPointInsideBox(playerTrans.position, transform, collider);
+                // --- NEW LOOP: CHECK ALL COLLIDERS ON TARGET ENTITY ---
+                for (auto& entry : colliderComp.colliders)
+                {
+                    bool isInside = IsPointInsideBox(playerTrans.position, transform, entry);
 
-                // CASE: ENTER
-                if (isInside && !collider.wasInsideLastFrame) {
-                    if (playerSender.triggerName == "OnCollision") {
-                        CollisionEventData payload;
-                        payload.senderID = playerEntity;
-                        payload.targetID = e;
-                        payload.actionType = 1; // ENTER
+                    // CASE: ENTER
+                    if (isInside && !entry.wasInsideLastFrame)
+                    {
+                        // Fire ALL matching senders
+                        for (const auto& senderEntry : playerSender.senders)
+                        {
+                            if (senderEntry.triggerName == "OnCollision")
+                            {
+                                CollisionEventData payload;
+                                payload.senderID = playerEntity;
+                                payload.targetID = e;
+                                payload.actionType = 1; // ENTER
 
-                        EventManager::Instance().Fire(playerSender.messageName, &payload);
+                                EventManager::Instance().Fire(senderEntry.messageName, &payload);
+                            }
+                        }
                     }
-                }
-                // CASE: EXIT
-                else if (!isInside && collider.wasInsideLastFrame) {
-                    if (playerSender.triggerName == "OnCollision") {
-                        std::cout << "[Physics] Player EXITED Entity " << e << std::endl;
-                        CollisionEventData payload;
-                        payload.senderID = playerEntity;
-                        payload.targetID = e;
-                        payload.actionType = 0; // EXIT
+                    // CASE: EXIT
+                    else if (!isInside && entry.wasInsideLastFrame)
+                    {
+                        // Fire ALL matching senders
+                        for (const auto& senderEntry : playerSender.senders)
+                        {
+                            if (senderEntry.triggerName == "OnCollision")
+                            {
+                                // std::cout << "[Physics] Player EXITED Entity " << e << std::endl;
+                                CollisionEventData payload;
+                                payload.senderID = playerEntity;
+                                payload.targetID = e;
+                                payload.actionType = 0; // EXIT
 
-                        EventManager::Instance().Fire(playerSender.messageName, &payload);
+                                EventManager::Instance().Fire(senderEntry.messageName, &payload);
+                            }
+                        }
                     }
+
+                    // Update state specifically for THIS collider entry
+                    entry.wasInsideLastFrame = isInside;
                 }
-                collider.wasInsideLastFrame = isInside;
             }
         }
 
@@ -420,9 +475,18 @@ namespace Framework {
             auto& pb = ecsInterface.GetComponent<PhysicsBodyComponent>(e);
             auto& prop = ecsInterface.GetComponent<PhysicsProperties>(e);
 
+            // Sync 'Sensor' state:
+            // If the entity has colliders, we calculate if it should be a sensor.
             if (ecsInterface.HasComponent<BoxColliderComponent>(e)) {
-                auto& collider = ecsInterface.GetComponent<BoxColliderComponent>(e);
-                bodyInterface->SetIsSensor(pb.ID, collider.canPassThrough);
+                auto& colliderComp = ecsInterface.GetComponent<BoxColliderComponent>(e);
+                if (!colliderComp.colliders.empty()) {
+                    bool anySolid = false;
+                    for (const auto& c : colliderComp.colliders) {
+                        if (!c.canPassThrough) anySolid = true;
+                    }
+                    // If any part is solid, the body is solid.
+                    bodyInterface->SetIsSensor(pb.ID, !anySolid);
+                }
             }
 
             if (prop.isImmovable == true) prop.motionType = 0;

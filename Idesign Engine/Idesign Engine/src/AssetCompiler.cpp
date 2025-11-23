@@ -152,6 +152,29 @@ namespace Framework
                     ecsInterface.AddComponent(entity, transform);
                 }
 
+                // Tag 
+                if (components.HasMember("TagComponent"))
+                {
+                    const auto& tagJson = components["TagComponent"];
+                    TagComponent tagComp;
+                    if (tagJson.HasMember("tags") && tagJson["tags"].IsArray())
+                    {
+                        for (const auto& tag : tagJson["tags"].GetArray())
+                        {
+                            if (tag.IsString())
+                                tagComp.tags.push_back(tag.GetString());
+                        }
+                    }
+                    ecsInterface.AddComponent(entity, tagComp);
+                }
+                else
+                {
+                    // Legacy support for pre-tag objects
+                    TagComponent tagComp;
+                    ecsInterface.AddComponent(entity, tagComp);
+                }
+
+
                 // Hierarchy
                 if (components.HasMember("HierarchyComponent"))
                 {
@@ -187,9 +210,29 @@ namespace Framework
                         if (mesh)
                         {
                             // Load mesh data if path is valid
-                            if (!mesh->path.empty())
-                                MeshLoader::loadMesh(mesh->path, *mesh);
+                            auto animGUID = AssetManager::Instance().FindGuid<AnimationProperties>(mesh->name);
+                            Framework::AnimationProperties* animAsset = nullptr;
 
+                            if (!animGUID.empty()) {
+                                animAsset = AssetManager::Instance().Get<AnimationProperties>(animGUID);
+                            }
+
+                            // 2. If found, load as Animated. Else, load as Static.
+                            if (animAsset)
+                            {
+                                // Ensure skeleton is loaded so we can map bone IDs
+                                if (animAsset->skeleton.bones.empty()) {
+                                    AnimationLoader::loadAnimation(animAsset->path, *animAsset);
+                                }
+
+                                // Load with Weights & IDs
+                                MeshLoader::loadAnimatedMesh(mesh->path, *animAsset, *mesh);
+                            }
+                            else
+                            {
+                                // Fallback to static
+                                MeshLoader::loadMesh(mesh->path, *mesh);
+                            }
                             // Restore material linkage if present
                             if (meshRef.HasMember("materialGuid") && meshRef["materialGuid"].IsString())
                             {
@@ -339,18 +382,32 @@ namespace Framework
                         ecsInterface.AddComponent(entity, sp);
                     }
                 }
-                if (components.HasMember("BoxColliderComponent"))
-                {
-                    // 1. Create a default instance of the component
-                    Framework::BoxColliderComponent boxCollider;
+                if (components.HasMember("BoxColliderComponent")) {
+                    BoxColliderComponent comp;
+                    auto& json = components["BoxColliderComponent"];
 
-                    // 2. Deserialize the saved values ('size' and 'center') 
-                    //    from the JSON object into the component instance.
-                    //    (Note: The runtime state 'wasInsideLastFrame' remains 'false' as intended)
-                    Deserialize(&boxCollider, g_BoxColliderProps, components["BoxColliderComponent"]);
+                    if (json.HasMember("colliders") && json["colliders"].IsArray()) {
+                        for (const auto& val : json["colliders"].GetArray()) {
+                            BoxColliderEntry entry;
 
-                    // 3. Add the fully loaded component to the entity
-                    ecsInterface.AddComponent(entity, boxCollider);
+                            // Load Size
+                            if (val.HasMember("size")) {
+                                auto arr = val["size"].GetArray();
+                                entry.size = { arr[0].GetFloat(), arr[1].GetFloat(), arr[2].GetFloat() };
+                            }
+                            // Load Center
+                            if (val.HasMember("center")) {
+                                auto arr = val["center"].GetArray();
+                                entry.center = { arr[0].GetFloat(), arr[1].GetFloat(), arr[2].GetFloat() };
+                            }
+                            if (val.HasMember("canPassThrough")) {
+                                entry.canPassThrough = val["canPassThrough"].GetBool();
+                            }
+
+                            comp.colliders.push_back(entry);
+                        }
+                    }
+                    ecsInterface.AddComponent(entity, comp);
                 }
                 // PhysicsProperties
                 if (components.HasMember("PhysicsProperties"))
@@ -372,38 +429,72 @@ namespace Framework
                 if (components.HasMember("EventSenderComponent"))
                 {
                     const auto& jsonVal = components["EventSenderComponent"];
-                    EventSenderComponent sender;
+                    EventSenderComponent senderComp;
 
-                    // Manual extraction for safety with strings
-                    if (jsonVal.HasMember("triggerName") && jsonVal["triggerName"].IsString()) {
-                        sender.triggerName = jsonVal["triggerName"].GetString();
-                    }
-                    if (jsonVal.HasMember("messageName") && jsonVal["messageName"].IsString()) {
-                        sender.messageName = jsonVal["messageName"].GetString();
+                    // Check if the "senders" array exists
+                    if (jsonVal.HasMember("senders") && jsonVal["senders"].IsArray())
+                    {
+                        const auto& senderArray = jsonVal["senders"];
+
+                        for (rapidjson::SizeType i = 0; i < senderArray.Size(); i++)
+                        {
+                            const auto& entryObj = senderArray[i];
+                            EventSenderEntry newEntry;
+
+                            // Extract Trigger Name
+                            if (entryObj.HasMember("triggerName") && entryObj["triggerName"].IsString()) {
+                                newEntry.triggerName = entryObj["triggerName"].GetString();
+                            }
+
+                            // Extract Message Name
+                            if (entryObj.HasMember("messageName") && entryObj["messageName"].IsString()) {
+                                newEntry.messageName = entryObj["messageName"].GetString();
+                            }
+
+                            // Add to the component's vector
+                            senderComp.senders.push_back(newEntry);
+                        }
                     }
 
-                    ecsInterface.AddComponent(entity, sender);
+                    ecsInterface.AddComponent(entity, senderComp);
                 }
 
                 // --- Event Receiver ---
                 if (components.HasMember("EventReceiverComponent"))
                 {
                     const auto& jsonVal = components["EventReceiverComponent"];
-                    EventReceiverComponent receiver;
+                    EventReceiverComponent receiverComp;
 
-                    // Manual extraction
-                    if (jsonVal.HasMember("messageToListenFor") && jsonVal["messageToListenFor"].IsString()) {
-                        receiver.messageToListenFor = jsonVal["messageToListenFor"].GetString();
+                    // Check if the "receivers" array exists
+                    if (jsonVal.HasMember("receivers") && jsonVal["receivers"].IsArray())
+                    {
+                        const auto& receiverArray = jsonVal["receivers"];
+
+                        for (rapidjson::SizeType i = 0; i < receiverArray.Size(); i++)
+                        {
+                            const auto& entryObj = receiverArray[i];
+                            EventReceiverEntry newEntry;
+
+                            // Extract Message to Listen For
+                            if (entryObj.HasMember("messageToListenFor") && entryObj["messageToListenFor"].IsString()) {
+                                newEntry.messageToListenFor = entryObj["messageToListenFor"].GetString();
+                            }
+
+                            // Extract Lua Function
+                            if (entryObj.HasMember("luaFunctionToCall") && entryObj["luaFunctionToCall"].IsString()) {
+                                newEntry.luaFunctionToCall = entryObj["luaFunctionToCall"].GetString();
+                            }
+
+                            // IMPORTANT: Explicitly ensure isSubscribed is false on load
+                            // The EventSystem::Update loop will see this is false and automatically subscribe it.
+                            newEntry.isSubscribed = false;
+
+                            // Add to the component's vector
+                            receiverComp.receivers.push_back(newEntry);
+                        }
                     }
-                    if (jsonVal.HasMember("luaFunctionToCall") && jsonVal["luaFunctionToCall"].IsString()) {
-                        receiver.luaFunctionToCall = jsonVal["luaFunctionToCall"].GetString();
-                    }
 
-                    // IMPORTANT: Explicitly ensure isSubscribed is false on load
-                    // The EventSystem::Update loop will see this is false and automatically subscribe it.
-                    receiver.isSubscribed = false;
-
-                    ecsInterface.AddComponent(entity, receiver);
+                    ecsInterface.AddComponent(entity, receiverComp);
                 }
 
                 sceneManager.RegisterEntityToScene(entity, cleanName);
@@ -477,6 +568,22 @@ namespace Framework
                     hierarchyJson.AddMember("sortIndex", hierarchy.sortIndex, allocator);
 
                     componentsObj.AddMember("HierarchyComponent", hierarchyJson, allocator);
+                }
+
+                // TagComponent
+                if (ecsInterface.HasComponent<TagComponent>(entity))
+                {
+                    const auto& tagComp = ecsInterface.GetComponent<TagComponent>(entity);
+                    rapidjson::Value tagJson(rapidjson::kObjectType);
+
+                    rapidjson::Value tagsArray(rapidjson::kArrayType);
+                    for (const std::string& tag : tagComp.tags)
+                    {
+                        tagsArray.PushBack(rapidjson::Value(tag.c_str(), allocator), allocator);
+                    }
+
+                    tagJson.AddMember("tags", tagsArray, allocator);
+                    componentsObj.AddMember("TagComponent", tagJson, allocator);
                 }
 
                 // MeshProperties � write only GUID
@@ -581,17 +688,29 @@ namespace Framework
                     // 3. Add the complete object to the component list
                     componentsObj.AddMember("LightProperties", lightJson, allocator);
                 }
-                if (ecsInterface.HasComponent<BoxColliderComponent>(entity))
-                {
-                    const auto& collider = ecsInterface.GetComponent<BoxColliderComponent>(entity);
-                    rapidjson::Value colliderJson(rapidjson::kObjectType);
+                if (ecsInterface.HasComponent<BoxColliderComponent>(entity)) {
+                    const auto& comp = ecsInterface.GetComponent<BoxColliderComponent>(entity);
+                    rapidjson::Value compJson(rapidjson::kObjectType);
+                    rapidjson::Value arrayVal(rapidjson::kArrayType);
 
-                    // 1. Run the generic serializer 
-                    // This automatically handles 'size' and 'center' based on g_BoxColliderProps
-                    Serialize((void*)&collider, g_BoxColliderProps, colliderJson, allocator);
+                    for (const auto& entry : comp.colliders) {
+                        rapidjson::Value obj(rapidjson::kObjectType);
 
-                    // 2. Add the complete object to the component list
-                    componentsObj.AddMember("BoxColliderComponent", colliderJson, allocator);
+                        // Save Vec3 Size
+                        rapidjson::Value sizeVal(rapidjson::kArrayType);
+                        sizeVal.PushBack(entry.size.x, allocator).PushBack(entry.size.y, allocator).PushBack(entry.size.z, allocator);
+                        obj.AddMember("size", sizeVal, allocator);
+
+                        // Save Vec3 Center
+                        rapidjson::Value centerVal(rapidjson::kArrayType);
+                        centerVal.PushBack(entry.center.x, allocator).PushBack(entry.center.y, allocator).PushBack(entry.center.z, allocator);
+                        obj.AddMember("center", centerVal, allocator);
+
+                        obj.AddMember("canPassThrough", entry.canPassThrough, allocator);
+                        arrayVal.PushBack(obj, allocator);
+                    }
+                    compJson.AddMember("colliders", arrayVal, allocator);
+                    componentsObj.AddMember("BoxColliderComponent", compJson, allocator);
                 }
                 // PhysicsProperties
                 if (ecsInterface.HasComponent<PhysicsProperties>(entity))
@@ -609,27 +728,67 @@ namespace Framework
                 // --- Event Sender ---
                 if (ecsInterface.HasComponent<EventSenderComponent>(entity))
                 {
-                    const auto& sender = ecsInterface.GetComponent<EventSenderComponent>(entity);
-                    rapidjson::Value senderJson(rapidjson::kObjectType);
+                    const auto& senderComp = ecsInterface.GetComponent<EventSenderComponent>(entity);
+                    rapidjson::Value compJson(rapidjson::kObjectType);
 
-                    // Use the generic serializer (Uses g_EventSenderProps)
-                    Serialize((void*)&sender, g_EventSenderProps, senderJson, allocator);
+                    // Create the Array to hold the list of senders
+                    rapidjson::Value senderArray(rapidjson::kArrayType);
 
-                    componentsObj.AddMember("EventSenderComponent", senderJson, allocator);
+                    for (const auto& entry : senderComp.senders)
+                    {
+                        rapidjson::Value entryObj(rapidjson::kObjectType);
+
+                        // 1. Trigger Name
+                        rapidjson::Value triggerVal;
+                        triggerVal.SetString(entry.triggerName.c_str(), allocator);
+                        entryObj.AddMember("triggerName", triggerVal, allocator);
+
+                        // 2. Message Name
+                        rapidjson::Value msgVal;
+                        msgVal.SetString(entry.messageName.c_str(), allocator);
+                        entryObj.AddMember("messageName", msgVal, allocator);
+
+                        // Push into array
+                        senderArray.PushBack(entryObj, allocator);
+                    }
+
+                    // Add the array to the component object
+                    compJson.AddMember("senders", senderArray, allocator);
+                    componentsObj.AddMember("EventSenderComponent", compJson, allocator);
                 }
 
                 // --- Event Receiver ---
                 if (ecsInterface.HasComponent<EventReceiverComponent>(entity))
                 {
-                    const auto& receiver = ecsInterface.GetComponent<EventReceiverComponent>(entity);
-                    rapidjson::Value receiverJson(rapidjson::kObjectType);
+                    const auto& receiverComp = ecsInterface.GetComponent<EventReceiverComponent>(entity);
+                    rapidjson::Value compJson(rapidjson::kObjectType);
 
-                    // Use the generic serializer (Uses g_EventReceiverProps)
-                    // Note: This works perfectly because 'isSubscribed' is NOT in the 
-                    // g_EventReceiverProps array, so it won't be saved (which is what we want).
-                    Serialize((void*)&receiver, g_EventReceiverProps, receiverJson, allocator);
+                    // Create the Array to hold the list of receivers
+                    rapidjson::Value receiverArray(rapidjson::kArrayType);
 
-                    componentsObj.AddMember("EventReceiverComponent", receiverJson, allocator);
+                    for (const auto& entry : receiverComp.receivers)
+                    {
+                        rapidjson::Value entryObj(rapidjson::kObjectType);
+
+                        // 1. Message to Listen For
+                        rapidjson::Value msgVal;
+                        msgVal.SetString(entry.messageToListenFor.c_str(), allocator);
+                        entryObj.AddMember("messageToListenFor", msgVal, allocator);
+
+                        // 2. Lua Function
+                        rapidjson::Value funcVal;
+                        funcVal.SetString(entry.luaFunctionToCall.c_str(), allocator);
+                        entryObj.AddMember("luaFunctionToCall", funcVal, allocator);
+
+                        // Note: We intentionally DO NOT save 'isSubscribed'
+
+                        // Push into array
+                        receiverArray.PushBack(entryObj, allocator);
+                    }
+
+                    // Add the array to the component object
+                    compJson.AddMember("receivers", receiverArray, allocator);
+                    componentsObj.AddMember("EventReceiverComponent", compJson, allocator);
                 }
             }
 
@@ -685,6 +844,11 @@ namespace Framework
             // It will share the same parent, becoming a new sibling.
             hierarchy.childrenGUIDs.clear();
             ecs.AddComponent(newEntity, hierarchy);
+        }
+
+        if (ecs.HasComponent<TagComponent>(sourceEntity))
+        {
+            ecs.AddComponent(newEntity, ecs.GetComponent<TagComponent>(sourceEntity));
         }
 
         if (ecs.HasComponent<MeshProperties>(sourceEntity))
@@ -808,6 +972,23 @@ namespace Framework
             rapidjson::Value transformJson(rapidjson::kObjectType);
             Serialize((void*)&transform, g_TransformProps, transformJson, allocator);
             componentsObj.AddMember("TransformComponent", transformJson, allocator);
+        }
+
+
+        // TagComponent
+        if (ecsInterface.HasComponent<TagComponent>(entity))
+        {
+            const auto& tagComp = ecsInterface.GetComponent<TagComponent>(entity);
+            rapidjson::Value tagJson(rapidjson::kObjectType);
+
+            rapidjson::Value tagsArray(rapidjson::kArrayType);
+            for (const std::string& tag : tagComp.tags)
+            {
+                tagsArray.PushBack(rapidjson::Value(tag.c_str(), allocator), allocator);
+            }
+
+            tagJson.AddMember("tags", tagsArray, allocator);
+            componentsObj.AddMember("TagComponent", tagJson, allocator);
         }
 
         // HierarchyComponent
@@ -1090,6 +1271,25 @@ namespace Framework
             if (hierarchyJson.HasMember("sortIndex") && hierarchyJson["sortIndex"].IsInt())
                 hierarchy.sortIndex = hierarchyJson["sortIndex"].GetInt();
             ecsInterface.AddComponent(newEntity, hierarchy);
+        }
+
+
+        // TagComponent
+        if (components.HasMember("TagComponent"))
+        {
+            const auto& tagJson = components["TagComponent"];
+            TagComponent tagComp;
+
+            if (tagJson.HasMember("tags") && tagJson["tags"].IsArray())
+            {
+                for (const auto& tag : tagJson["tags"].GetArray())
+                {
+                    if (tag.IsString())
+                        tagComp.tags.push_back(tag.GetString());
+                }
+            }
+
+            ecsInterface.AddComponent(newEntity, tagComp);
         }
 
         // Mesh, Texture, NavMesh... (same as loadScene)

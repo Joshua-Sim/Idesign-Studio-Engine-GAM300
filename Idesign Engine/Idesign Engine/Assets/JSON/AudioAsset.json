@@ -55,6 +55,22 @@
             "mode": "oneshot",
             "soundType": "effect",
             "duration": 1.0
+        },
+        {
+            "guid": "{b6f8dace-d303-415b-9283-d7e3da2a59aa}",
+            "name": "ChoppingHerb",
+            "path": "event:/ChoppingHerb",
+            "mode": "oneshot",
+            "soundType": "effect",
+            "duration": 1.0
+        },
+        {
+            "guid": "{22a1e570-9295-4ea2-b721-85f4c76c1e38}",
+            "name": "Footstep",
+            "path": "event:/Footstep",
+            "mode": "oneshot",
+            "soundType": "effect",
+            "duration": 1.0
         }
     ]
 }

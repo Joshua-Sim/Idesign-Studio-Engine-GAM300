@@ -47,7 +47,6 @@ namespace Framework {
         mComponentManager = std::make_unique<ComponentManager>();
         mEntityManager = std::make_unique<EntityManager>();
         mSystemManager = std::make_unique<ECSystemManager>();
-        mTagManager = std::make_unique<TagManager>();
         entityList.clear(); // Clear vector during initialisation of Coordinator
         entityNames.clear(); // Clear entity names during initialisation
     }
@@ -64,8 +63,6 @@ namespace Framework {
         if (mEntityManager)
             mEntityManager->Clear(); // Optional if defined
 
-        if (mTagManager)
-            mTagManager->Clear();   // Optional if defined
         // Clear your containers manually here
         entityNames.clear();
         entityList.clear();
@@ -125,8 +122,6 @@ namespace Framework {
 
         mSystemManager->EntityDestroyed(entity);
 
-        mTagManager->RemoveAllTags(entity);
-
         guidMap.erase(entity);
 
         entityList.erase(std::remove(entityList.begin(), entityList.end(), entity), entityList.end());
@@ -145,69 +140,96 @@ namespace Framework {
     }
 
     /**
-    * @brief Adds a tag for grouping Entities.
-    *
-    * The function passes in an entity and a tag, then assigns a tag to the entity.
-    *
-    * @param [Entity] entity
-    * @param [const std::string&] tag
-    */
-    void Coordinator::AddTag(Entity entity, const std::string& tag)
+     * @brief Gets and returns list of entities with a tag.
+     *
+     * The function passes in an entity and returns its signature.
+     *
+     * @param [Entity] entity
+     */
+    std::vector<Entity> Coordinator::GetEntitiesByTag(const std::string& tag) 
     {
-        mTagManager->AddTag(entity, tag);
+        std::vector<Entity> result;
+
+        for (Entity entity : entityList)
+        {
+            if (HasComponent<TagComponent>(entity))
+            {
+                const auto& tagComp = GetComponent<TagComponent>(entity);
+
+                // Check if tag exists in the component's tag vector
+                for (const std::string& t : tagComp.tags)
+                {
+                    if (t == tag)
+                    {
+                        result.push_back(entity);
+                        break; // Found the tag, no need to check remaining tags
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     /**
-    * @brief Removes a tag from an Entity.
-    *
-    * The function passes in an entity and a tag, then removes the tag from the entity.
-    *
-    * @param [Entity] entity
-    * @param [const std::string&] tag
-    */
-    void Coordinator::RemoveTag(Entity entity, const std::string& tag)
+ * @brief Adds a tag to an entity's TagComponent
+ *
+ * If the entity doesn't have a TagComponent, one is added first.
+ * If the tag already exists, it won't be added again (no duplicates).
+ *
+ * @param entity The entity to add the tag to
+ * @param tag The tag string to add
+ */
+    void Coordinator::AddTagToEntity(Entity entity, const std::string& tag)
     {
-        mTagManager->RemoveTag(entity, tag);
+        // Ensure entity has a TagComponent
+        if (!HasComponent<TagComponent>(entity))
+        {
+            AddComponent<TagComponent>(entity, TagComponent{});
+        }
+
+        auto& tagComp = GetComponent<TagComponent>(entity);
+
+        // Check if tag already exists to avoid duplicates
+        if (std::find(tagComp.tags.begin(), tagComp.tags.end(), tag) == tagComp.tags.end())
+        {
+            tagComp.tags.push_back(tag);
+        }
     }
 
     /**
-    * @brief Checks if an entity has a specific tag.
-    *
-    * The function passes in an entity and a tag, then returns true
-    * if the tag is assigned to the entity.
-    *
-    * @param [Entity] entity
-    * @param [const std::string&] tag
-    */
-    bool Coordinator::HasTag(Entity entity, const std::string& tag) const
+ * @brief Removes a tag from an entity's TagComponent
+ *
+ * @param entity The entity to remove the tag from
+ * @param tag The tag string to remove
+ */
+    void Coordinator::RemoveTagFromEntity(Entity entity, const std::string& tag)
     {
-        return mTagManager->HasTag(entity, tag);
+        if (!HasComponent<TagComponent>(entity))
+            return;
+
+        auto& tagComp = GetComponent<TagComponent>(entity);
+        auto it = std::find(tagComp.tags.begin(), tagComp.tags.end(), tag);
+
+        if (it != tagComp.tags.end())
+        {
+            tagComp.tags.erase(it);
+        }
     }
 
     /**
-    * @brief Gets all entities with a specific tag.
-    *
-    * The function takes in a tag, then returns an unordered set of
-    * entities that has the tag
-    *
-    * @param [const std::string&] tag
-    */
-    const std::unordered_set<Entity>& Coordinator::GetEntitiesByTag(const std::string& tag) const
+     * @brief Reeturns bool if an entity has a tag
+     *
+     * The function passes in an entity and tag and returns if entity has the tag.
+     *
+     * @param [Entity] entity
+     */
+    bool Coordinator::EntityHasTag(Entity entity, const std::string& tag) 
     {
-        return mTagManager->GetEntitiesByTag(tag);
-    }
+        if (!HasComponent<TagComponent>(entity))
+            return false;
 
-    /**
-    * @brief Removes all tags from an entity.
-    *
-    * The function takes in a tag, then returns an unordered set of
-    * entities that has the tag.
-    *
-    * @param [Entity] entity
-    */
-    void Coordinator::RemoveAllTags(Entity entity)
-    {
-        mTagManager->RemoveAllTags(entity);
+        const auto& tagComp = GetComponent<TagComponent>(entity);
+        return std::find(tagComp.tags.begin(), tagComp.tags.end(), tag) != tagComp.tags.end();
     }
 
     /**

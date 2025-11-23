@@ -146,6 +146,7 @@
     <ClInclude Include="..\lib\imgui\imstb_rectpack.h" />
     <ClInclude Include="..\lib\imgui\imstb_textedit.h" />
     <ClInclude Include="..\lib\imgui\imstb_truetype.h" />
+    <ClInclude Include="PlayerInteractSystem.h" />
     <ClInclude Include="src\AnimationLoader.h" />
     <ClInclude Include="src\BoxColliderComponent.h" />
     <ClInclude Include="src\EnginePath.h" />
@@ -182,6 +183,7 @@
     <ClInclude Include="src\FontShader.h" />
     <ClInclude Include="src\FontSystem.h" />
     <ClInclude Include="src\GameMessages.h" />
+    <ClInclude Include="src\GameSystem.h" />
     <ClInclude Include="src\Graphics.h" />
     <ClInclude Include="src\GraphicsShader.h" />
     <ClInclude Include="src\GraphicsWindows.h" />
@@ -205,6 +207,7 @@
     <ClInclude Include="src\NavMeshProperties.h" />
     <ClInclude Include="src\NavMeshSystem.h" />
     <ClInclude Include="src\pch.h" />
+    <ClInclude Include="src\PhysicsProperties.h" />
     <ClInclude Include="src\PhysicsSystem.h" />
     <ClInclude Include="src\PrefabProperties.h" />
     <ClInclude Include="src\PropertyMacro.h" />
@@ -260,12 +263,14 @@
     <ClInclude Include="src\Recast\Recast.h" />
     <ClInclude Include="src\Recast\RecastAlloc.h" />
     <ClInclude Include="src\Recast\RecastAssert.h" />
+    <ClInclude Include="src\RecipeBookManager.h" />
     <ClInclude Include="src\SceneManager.h" />
     <ClInclude Include="src\SceneProperties.h" />
     <ClInclude Include="src\ScriptingSystem.h" />
     <ClInclude Include="src\ScriptProperties.h" />
     <ClInclude Include="src\ShaderProgram.h" />
     <ClInclude Include="src\SignalHandler.h" />
+    <ClInclude Include="src\Skybox.h" />
     <ClInclude Include="src\System.h" />
     <ClInclude Include="src\SystemInclude.h" />
     <ClInclude Include="src\TagManager.h" />
@@ -300,6 +305,8 @@
     <None Include="Assets\shaders\pickfrag.glsl" />
     <None Include="Assets\shaders\pickvert.glsl" />
     <None Include="Assets\shaders\postprocess.glsl" />
+    <None Include="Assets\shaders\skybox_frag.glsl" />
+    <None Include="Assets\shaders\skybox_vert.glsl" />
     <None Include="Assets\shaders\terrainfrag.glsl" />
     <None Include="Assets\shaders\terrainvert.glsl" />
     <None Include="Assets\shaders\vertex.glsl" />
@@ -331,6 +338,7 @@
     <ClCompile Include="..\lib\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="..\lib\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\lib\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="PlayerInteractSystem.cpp" />
     <ClCompile Include="src\AnimationLoader.cpp" />
     <ClCompile Include="src\AnimationSystem.cpp" />
     <ClCompile Include="src\AssetCompiler.cpp" />
@@ -350,6 +358,7 @@
     <ClCompile Include="src\EventSystem.cpp" />
     <ClCompile Include="src\FileCheckSystem.cpp" />
     <ClCompile Include="src\FontSystem.cpp" />
+    <ClCompile Include="src\GameSystem.cpp" />
     <ClCompile Include="src\Graphics.cpp" />
     <ClCompile Include="src\GraphicsShader.cpp" />
     <ClCompile Include="src\ImguiManager.cpp" />
@@ -392,6 +401,7 @@
     <ClCompile Include="src\ScriptingSystem.cpp" />
     <ClCompile Include="src\ShaderProgram.cpp" />
     <ClCompile Include="src\SignalHandler.cpp" />
+    <ClCompile Include="src\Skybox.cpp" />
     <ClCompile Include="src\TagManager.cpp" />
     <ClCompile Include="src\Terrain.cpp" />
     <ClCompile Include="src\TestSystem.cpp" />

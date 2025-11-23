@@ -22,6 +22,13 @@
             "tableRef": -1
         },
         {
+            "guid": "0cf97121-19fa-4fe9-a473-1b2cb85370f8",
+            "scriptPath": "Assets\\Scripts\\TagFunctionExample.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
             "guid": "2f3321b6-3682-49be-8ee2-5dea0ad6ced9",
             "scriptPath": "Assets/Scripts/controls.lua",
             "hotReload": true,
@@ -52,6 +59,20 @@
         {
             "guid": "998e8733-cf17-48d4-96be-ab700322c93c",
             "scriptPath": "Assets\\Scripts\\spawnPrompt.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "583b617e-c68e-4e62-81cf-a2b05eefa1e4",
+            "scriptPath": "Assets\\Scripts\\ChoppingBoard.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "196dd534-8ed5-43b7-97f2-9a77ce318958",
+            "scriptPath": "Assets\\Scripts\\TagFunctionExamaple2.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
