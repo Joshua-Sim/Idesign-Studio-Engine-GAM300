@@ -7,16 +7,27 @@
 Skybox::Skybox() {}
 
 Skybox::~Skybox() {
+    // 1. Cleanup Mesh Data
     if (cubeVAO) glDeleteVertexArrays(1, &cubeVAO);
     if (cubeVBO) glDeleteBuffers(1, &cubeVBO);
-    if (cubemapTexture) glDeleteTextures(1, &cubemapTexture);
+
+    // 2. Cleanup Textures
+    // ERROR WAS HERE: You must delete both the Day and Night textures now.
+    // 'cubemapTexture' likely no longer exists or isn't used.
+    if (texDay) glDeleteTextures(1, &texDay);
+    if (texNight) glDeleteTextures(1, &texNight);
+
+    // 3. Cleanup Shader
     if (shader) {
-        shader->destroy();
-        delete shader;
+        shader->destroy(); // delete the OpenGL program ID
+        delete shader;     // delete the C++ pointer
+        shader = nullptr;  // safety
     }
 }
 
-void Skybox::init(const std::vector<std::string>& faces) {
+void Skybox::init(const std::vector<std::string>& dayFaces,
+    const std::vector<std::string>& nightFaces)
+{
     // 1. Compile Shader
     shader = new ShaderProgram("Assets/shaders/skybox_vert.glsl", "Assets/shaders/skybox_frag.glsl");
     shader->initGL();
@@ -77,36 +88,48 @@ void Skybox::init(const std::vector<std::string>& faces) {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glBindVertexArray(0); // Unbind VAO
 
-    // 4. Load Texture
-    cubemapTexture = loadCubemap(faces);
+    // 3. Load BOTH textures
+    texDay = loadCubemap(dayFaces);
+    texNight = loadCubemap(nightFaces);
 
-    // 5. Configure Shader
+    // 4. Configure Shader Samplers
     shader->use();
-    shader->setInt("skybox", 0);
-
-    // CRITICAL FIX: Unbind shader and reset active texture to clean state
+    shader->setInt("skyboxDay", 0);   // Texture Unit 0
+    shader->setInt("skyboxNight", 1); // Texture Unit 1
     glUseProgram(0);
 }
 
-void Skybox::draw(const glm::mat4& view, const glm::mat4& proj) {
-    // Change depth function so depth of 1.0 (skybox) passes when equal to depth buffer
+void Skybox::draw(const glm::mat4& view, const glm::mat4& proj) 
+{
+
     glDepthFunc(GL_LEQUAL);
 
     shader->use();
     shader->setMat4("uView", view);
     shader->setMat4("uProj", proj);
+    shader->setFloat("blendFactor", m_blendFactor); // Send the blend factor
 
     glBindVertexArray(cubeVAO);
+
+    // Bind Day to Unit 0
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, texDay);
+
+    // Bind Night to Unit 1
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, texNight);
 
     glDrawArrays(GL_TRIANGLES, 0, 36);
 
+    // Cleanup
     glBindVertexArray(0);
-    // CRITICAL: Unbind the cubemap so subsequent 2D draws don't fail
+
+    // Unbind both to be safe
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+    glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
-    // Set depth function back to default
     glDepthFunc(GL_LESS);
 }
 

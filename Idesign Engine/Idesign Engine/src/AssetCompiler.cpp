@@ -307,7 +307,19 @@ namespace Framework
                         AnimationProperties* anim = AssetManager::Instance().Get<AnimationProperties>(guid);
                         if (anim)
                         {
-                            ecsInterface.AddComponent(entity, *anim);
+                            AnimationProperties instanceAnim = *anim;
+                            if (animRef.HasMember("defaultAnimationName") && animRef["defaultAnimationName"].IsString())
+                                instanceAnim.defaultAnimationName = animRef["defaultAnimationName"].GetString();
+
+                            if (animRef.HasMember("animationSpeed") && animRef["animationSpeed"].IsNumber())
+                                instanceAnim.animationSpeed = animRef["animationSpeed"].GetFloat();
+
+                            if (animRef.HasMember("bLoops") && animRef["bLoops"].IsBool())
+                                instanceAnim.bLoops = animRef["bLoops"].GetBool();
+
+                            if (animRef.HasMember("bPlayOnStart") && animRef["bPlayOnStart"].IsBool())
+                                instanceAnim.bPlayOnStart = animRef["bPlayOnStart"].GetBool();
+                            ecsInterface.AddComponent(entity, instanceAnim);
                         }
                         else
                         {
@@ -606,6 +618,10 @@ namespace Framework
                     const auto& anim = ecsInterface.GetComponent<AnimationProperties>(entity);
                     rapidjson::Value animRef(rapidjson::kObjectType);
                     animRef.AddMember("guid", rapidjson::Value(anim.guid.id.c_str(), allocator), allocator);
+                    animRef.AddMember("defaultAnimationName", rapidjson::Value(anim.defaultAnimationName.c_str(), allocator), allocator);
+                    animRef.AddMember("animationSpeed", anim.animationSpeed, allocator);
+                    animRef.AddMember("bLoops", anim.bLoops, allocator);
+                    animRef.AddMember("bPlayOnStart", anim.bPlayOnStart, allocator);
                     componentsObj.AddMember("AnimationProperties", animRef, allocator);
                 }
 
