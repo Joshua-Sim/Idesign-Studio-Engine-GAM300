@@ -57,15 +57,17 @@ function M:on_init()
     print("[ChoppingBoard] Initialized.")
     player_entity = FindEntityByName("Player")
     
-    -- Find and save Knife position
     knife_entity = FindEntityByName(self.knife_name)
     if knife_entity then
         knife_start_x, knife_start_y, knife_start_z = GetPosition(knife_entity)
-        
-        -- Ensure knife starts in resting rotation
         SetRotation(knife_entity, self.knife_rot_rest_x, self.knife_rot_rest_y, self.knife_rot_rest_z)
         
-        print("[ChoppingBoard] Knife found. Home saved.")
+        -- --- NEW: Configure Knife Animation ---
+        -- Entity, Speed=10.0, Loop=false, PlayOnStart=false
+        SetAnimationSettings(knife_entity, 10.0, false, false)
+        -- --------------------------------------
+
+        print("[ChoppingBoard] Knife found. Settings applied.")
     else
         print("[ChoppingBoard] Warning: Knife '" .. self.knife_name .. "' not found.")
     end

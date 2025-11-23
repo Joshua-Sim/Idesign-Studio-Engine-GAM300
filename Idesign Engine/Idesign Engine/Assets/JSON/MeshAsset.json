@@ -73,6 +73,15 @@
             "indexCount": 966
         },
         {
+            "guid": "58ebdd29-1fe2-4d81-a15a-36da0a0d9070",
+            "name": "TestingCauldron",
+            "path": "Assets\\Objects\\TestingCauldron.fbx",
+            "vao": 10,
+            "vbo": 19,
+            "ebo": 20,
+            "indexCount": 154086
+        },
+        {
             "guid": "239cddd5-6733-44a1-927a-e3b13152a09a",
             "name": "Frog",
             "path": "Assets/Objects/Frog.obj",
@@ -80,15 +89,6 @@
             "vbo": 128,
             "ebo": 129,
             "indexCount": 780
-        },
-        {
-            "guid": "58ebdd29-1fe2-4d81-a15a-36da0a0d9070",
-            "name": "TestingCauldron",
-            "path": "Assets\\Objects\\TestingCauldron.fbx",
-            "vao": 9,
-            "vbo": 17,
-            "ebo": 18,
-            "indexCount": 154086
         },
         {
             "guid": "61ccf513-cbc9-40a5-828f-95376b1b2c8e",
@@ -109,15 +109,6 @@
             "indexCount": 2304
         },
         {
-            "guid": "9e1fcb62-0699-4a0b-ae75-d0670af44b1b",
-            "name": "plane2",
-            "path": "Assets/Objects/plane2.obj",
-            "vao": 14,
-            "vbo": 27,
-            "ebo": 28,
-            "indexCount": 231840
-        },
-        {
             "guid": "e902f0d7-a022-45fc-9c17-2a98cbdb793e",
             "name": "Cylinder",
             "path": "Assets/Objects/Cylinder.obj",
@@ -125,6 +116,15 @@
             "vbo": 170,
             "ebo": 171,
             "indexCount": 240
+        },
+        {
+            "guid": "9e1fcb62-0699-4a0b-ae75-d0670af44b1b",
+            "name": "plane2",
+            "path": "Assets/Objects/plane2.obj",
+            "vao": 13,
+            "vbo": 25,
+            "ebo": 26,
+            "indexCount": 231840
         },
         {
             "guid": "eac3e6f4-1bf2-415f-aef8-8f1269d91560",
@@ -154,22 +154,22 @@
             "indexCount": 40356
         },
         {
-            "guid": "fe86c54b-7cc2-471c-9d7e-0bce31089b5a",
-            "name": "Cylinder",
-            "path": "Assets/Objects/Cylinder.obj",
-            "vao": 19,
-            "vbo": 37,
-            "ebo": 38,
-            "indexCount": 240
-        },
-        {
             "guid": "a25723a2-f9bf-4939-b80d-962eb537dd2e",
             "name": "RedPotion",
             "path": "Assets\\Objects\\RedPotion.obj",
+            "vao": 19,
+            "vbo": 37,
+            "ebo": 38,
+            "indexCount": 924
+        },
+        {
+            "guid": "fe86c54b-7cc2-471c-9d7e-0bce31089b5a",
+            "name": "Cylinder",
+            "path": "Assets/Objects/Cylinder.obj",
             "vao": 18,
             "vbo": 35,
             "ebo": 36,
-            "indexCount": 924
+            "indexCount": 240
         },
         {
             "guid": "da032094-6e5c-40fe-b6f0-39a9d542ffe5",

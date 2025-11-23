@@ -366,6 +366,25 @@ namespace Framework {
             return 0;
         }
 
+        // Helper to configure animation properties
+        static int l_SetAnimationSettings(lua_State* L) {
+            // 1. Get Arguments
+            Entity entity = static_cast<Entity>(luaL_checkinteger(L, 1));
+            float speed = (float)luaL_checknumber(L, 2);
+            bool loop = lua_toboolean(L, 3);
+            bool playOnStart = lua_toboolean(L, 4);
+
+            // 2. Check for Component
+            if (ecsInterface.IsEntityValid(entity) && ecsInterface.HasComponent<AnimationProperties>(entity)) {
+                auto& animProps = ecsInterface.GetComponent<AnimationProperties>(entity);
+
+                // 3. Apply Settings
+                animProps.animationSpeed = speed;
+                animProps.bLoops = loop;
+                animProps.bPlayOnStart = playOnStart;
+            }
+            return 0;
+        }
 
         // NavMesh Exposed funcs for path-finding
 
@@ -613,6 +632,7 @@ namespace Framework {
         lua_register(L, "SetRotation", lua_SetRotation);
         lua_register(L, "SetMesh", lua_SetMesh);
         lua_register(L, "SetTexture", lua_SetTexture);
+        lua_register(L, "SetAnimationSettings", l_SetAnimationSettings);
 
         // Engine utility
         lua_register(L, "FindEntityByName", lua_FindEntityByName);
@@ -622,6 +642,7 @@ namespace Framework {
         lua_register(L, "AddTagToEntity", lua_AddTagToEntity);
         lua_register(L, "PlayEntityAnimation", l_PlayEntityAnimation);
         lua_register(L, "PlaySound", l_PlaySound);
+        
 
         // Navmesh
         lua_register(L, "PathfindTo", [](lua_State* L) -> int {
