@@ -624,19 +624,34 @@ namespace Framework {
         std::cout << "[ScriptingSystem] Initialized (Lua VM ready)\n";
     }
 
-    void ScriptingSystem::Update(float dt) {
+    void ScriptingSystem::Update(float dt)
+    {
         for (auto const& e : mEntities) {
             if (!ecsInterface.HasComponent<ScriptProperties>(e)) continue;
             auto& comp = ecsInterface.GetComponent<ScriptProperties>(e);
 
-            for (auto& sc : comp.scripts) {         // <--- NEW
+            for (auto& sc : comp.scripts) {
                 if (sc.scriptPath.empty()) continue;
 
-                if (sc.hotReload && !sc.scriptPath.empty()) {
-                    try {
-                        auto nowTicks = FileTimeToTicks(
-                            std::filesystem::last_write_time(sc.scriptPath));
+                // ----- AUTO HOT RELOAD POLLING -----
+                if (sc.hotReload) {
+                    std::error_code ec;
+                    auto ft = std::filesystem::last_write_time(sc.scriptPath, ec);
 
+                    if (ec) {
+                        // Only log once per script path, then stop polling
+                        static std::unordered_set<std::string> alreadyLogged;
+                        if (!alreadyLogged.count(sc.scriptPath)) {
+                            std::cerr << "[HotReload] last_write_time failed for "
+                                << sc.scriptPath << ": " << ec.message() << "\n";
+                            alreadyLogged.insert(sc.scriptPath);
+                        }
+
+                        // Disable polling to avoid spamming every frame
+                        sc.hotReload = false;
+                    }
+                    else {
+                        auto nowTicks = FileTimeToTicks(ft);
                         if (nowTicks != sc.lastWriteTicks) {
                             std::cout << "[HotReload] " << sc.scriptPath << "\n";
 
@@ -652,14 +667,12 @@ namespace Framework {
                                 sc.initialized = true;
                             }
 
-                            sc.lastWriteTicks = nowTicks; // remember the new time
+                            sc.lastWriteTicks = nowTicks;   // remember latest timestamp
                         }
-                    }
-                    catch (const std::exception& ex) {
-                        std::cerr << "[HotReload] check failed for " << sc.scriptPath << ": " << ex.what() << "\n";
                     }
                 }
 
+                // ----- NORMAL SCRIPT EXECUTION -----
                 if (sc.tableRef == LUA_NOREF) {
                     if (!LoadScriptTable(sc)) continue;
 
@@ -669,7 +682,12 @@ namespace Framework {
                     lua_setfield(L, -2, "entity");
                     lua_pop(L, 1);
                 }
-                if (!sc.initialized) { CallHook(sc.tableRef, "on_init"); sc.initialized = true; }
+
+                if (!sc.initialized) {
+                    CallHook(sc.tableRef, "on_init");
+                    sc.initialized = true;
+                }
+
                 CallHook(sc.tableRef, "on_update", dt);
             }
         }
