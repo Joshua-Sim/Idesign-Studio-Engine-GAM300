@@ -9,11 +9,11 @@
             "duration": 1.0
         },
         {
-            "guid": "{6e538d8f-7934-4a55-bb86-f14eed76df94}",
-            "name": "piano",
-            "path": "event:/piano",
-            "mode": "loop",
-            "soundType": "background",
+            "guid": "{853ecc5f-520b-4061-9206-ca434d00437b}",
+            "name": "previousbutton",
+            "path": "event:/previousbutton",
+            "mode": "oneshot",
+            "soundType": "effect",
             "duration": 1.0
         },
         {
@@ -25,11 +25,11 @@
             "duration": 1.0
         },
         {
-            "guid": "{853ecc5f-520b-4061-9206-ca434d00437b}",
-            "name": "previousbutton",
-            "path": "event:/previousbutton",
-            "mode": "oneshot",
-            "soundType": "effect",
+            "guid": "{6e538d8f-7934-4a55-bb86-f14eed76df94}",
+            "name": "piano",
+            "path": "event:/piano",
+            "mode": "loop",
+            "soundType": "background",
             "duration": 1.0
         },
         {

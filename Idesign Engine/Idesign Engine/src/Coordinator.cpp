@@ -171,6 +171,52 @@ namespace Framework {
     }
 
     /**
+ * @brief Adds a tag to an entity's TagComponent
+ *
+ * If the entity doesn't have a TagComponent, one is added first.
+ * If the tag already exists, it won't be added again (no duplicates).
+ *
+ * @param entity The entity to add the tag to
+ * @param tag The tag string to add
+ */
+    void Coordinator::AddTagToEntity(Entity entity, const std::string& tag)
+    {
+        // Ensure entity has a TagComponent
+        if (!HasComponent<TagComponent>(entity))
+        {
+            AddComponent<TagComponent>(entity, TagComponent{});
+        }
+
+        auto& tagComp = GetComponent<TagComponent>(entity);
+
+        // Check if tag already exists to avoid duplicates
+        if (std::find(tagComp.tags.begin(), tagComp.tags.end(), tag) == tagComp.tags.end())
+        {
+            tagComp.tags.push_back(tag);
+        }
+    }
+
+    /**
+ * @brief Removes a tag from an entity's TagComponent
+ *
+ * @param entity The entity to remove the tag from
+ * @param tag The tag string to remove
+ */
+    void Coordinator::RemoveTagFromEntity(Entity entity, const std::string& tag)
+    {
+        if (!HasComponent<TagComponent>(entity))
+            return;
+
+        auto& tagComp = GetComponent<TagComponent>(entity);
+        auto it = std::find(tagComp.tags.begin(), tagComp.tags.end(), tag);
+
+        if (it != tagComp.tags.end())
+        {
+            tagComp.tags.erase(it);
+        }
+    }
+
+    /**
      * @brief Reeturns bool if an entity has a tag
      *
      * The function passes in an entity and tag and returns if entity has the tag.

@@ -69,6 +69,13 @@
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
+        },
+        {
+            "guid": "196dd534-8ed5-43b7-97f2-9a77ce318958",
+            "scriptPath": "Assets\\Scripts\\TagFunctionExamaple2.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
         }
     ]
 }

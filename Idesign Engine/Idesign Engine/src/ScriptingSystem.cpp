@@ -199,7 +199,9 @@ namespace Framework {
             return 1;
         }
 
-        // Tag exposed
+
+        // --------- Tag management functions--------------
+
         static int lua_GetEntitiesByTag(lua_State* L)
         {
             const char* tag = luaL_checkstring(L, 1);
@@ -216,6 +218,56 @@ namespace Framework {
             }
 
             return 1; // Return the table
+        }
+
+        static int lua_AddTagToEntity(lua_State* L)
+        {
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+            const char* tag = luaL_checkstring(L, 2);
+
+            if (!ecsInterface.IsEntityValid(e))
+            {
+                return luaL_error(L, "AddTagToEntity: invalid entity %d", (int)e);
+            }
+
+            ecsInterface.AddTagToEntity(e, tag);
+            return 0;
+        }
+
+        static int lua_RemoveTagFromEntity(lua_State* L)
+        {
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+            const char* tag = luaL_checkstring(L, 2);
+
+            if (!ecsInterface.IsEntityValid(e))
+            {
+                return luaL_error(L, "RemoveTagFromEntity: invalid entity %d", (int)e);
+            }
+
+            if (!ecsInterface.HasComponent<TagComponent>(e))
+            {
+                return 0; // Nothing to remove
+            }
+
+            auto& tagComp = ecsInterface.GetComponent<TagComponent>(e);
+            auto it = std::find(tagComp.tags.begin(), tagComp.tags.end(), std::string(tag));
+
+            if (it != tagComp.tags.end())
+            {
+                tagComp.tags.erase(it);
+            }
+
+            return 0;
+        }
+
+        static int lua_EntityHasTag(lua_State* L)
+        {
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+            const char* tag = luaL_checkstring(L, 2);
+
+            bool hasTag = ecsInterface.EntityHasTag(e, tag);
+            lua_pushboolean(L, hasTag);
+            return 1;
         }
 
         static int lua_SetTexture(lua_State* L)
@@ -543,6 +595,10 @@ namespace Framework {
         // Engine utility
         lua_register(L, "FindEntityByName", lua_FindEntityByName);
         lua_register(L, "GetEntitiesByTag", lua_GetEntitiesByTag);
+        lua_register(L, "RemoveTagFromEntity", lua_RemoveTagFromEntity);
+        lua_register(L, "EntityHasTag", lua_EntityHasTag);
+        lua_register(L, "AddTagToEntity", lua_AddTagToEntity);
+        
         lua_register(L, "PlaySound", l_PlaySound);
 
         // Navmesh

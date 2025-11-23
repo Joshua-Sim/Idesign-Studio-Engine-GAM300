@@ -186,6 +186,12 @@ namespace Framework {
 		// Optional helper in Coordinator.cpp:
 		bool EntityHasTag(Entity entity, const std::string& tag);
 
+		// Add Tag to entity via component
+		void AddTagToEntity(Entity entity, const std::string& tag);
+
+		// Remove tqag from entity via componenet
+		void RemoveTagFromEntity(Entity entity, const std::string& tag);
+
 		// Entity Vector Stuff
 		// Returns the vector of all entities in existence
 		const std::vector<Entity>& GetEntities() const;
