@@ -20,6 +20,9 @@ M.tex_stage2  = "Assets/Textures/ChoppedHerb2.png"
 
 -- Knife Settings
 M.knife_name = "Knife"
+-- IMPORTANT: Change this to the exact name of your animation clip!
+-- Check your console logs: "[AnimationLoader] Loaded clip: ..."
+M.knife_animation_name = "Armature|KnifeAction" 
 
 -- Knife Offsets (Relative to Player)
 M.knife_offset_right = 0.5       
@@ -27,11 +30,11 @@ M.knife_offset_up = -0.5
 M.knife_offset_forward = -0.5     
 
 -- Knife Rotations (Degrees)
-M.knife_rot_rest_x = 180.0
-M.knife_rot_rest_y = 0.0
-M.knife_rot_rest_z = 90.0
+M.knife_rot_rest_x = 0
+M.knife_rot_rest_y = 90.0
+M.knife_rot_rest_z = 270.0
 
-M.knife_rot_held_x = 270
+M.knife_rot_held_x = 0
 M.knife_rot_held_y = 0.0
 M.knife_rot_held_z = 0.0
 
@@ -71,11 +74,11 @@ end
 function M:on_update(dt)
     if not player_entity then player_entity = FindEntityByName("Player") end
     
-    -- --- NEW: Update Knife Position Every Frame ---
+    -- --- Update Knife Position Every Frame ---
     if is_holding_knife then
         self:UpdateKnifePosition()
     end
-    -- ----------------------------------------------
+    -- -----------------------------------------
 
     if not self:IsPlayerInRange() then return end
 
@@ -111,7 +114,6 @@ function M:UpdateKnifePosition()
         local px, py, pz = GetPosition(player_entity)
         
         -- Simple offset calculation (World Space)
-        -- Ideally, use player's forward/right vectors if available
         local kx = px + self.knife_offset_right
         local ky = py + self.knife_offset_up
         local kz = pz + self.knife_offset_forward
@@ -154,10 +156,16 @@ function M:StartChoppingSession()
 end
 
 function M:ChopItem()
-    current_health = current_health - 1
+    current_health = current_health - 1 -- Decrement health (Fixed logic: was +1)
     print("[ChoppingBoard] CHOP! Health: " .. current_health)
     
     PlaySound("event:/ChoppingHerb")
+
+    -- --- TRIGGER ANIMATION ---
+    if knife_entity then
+        PlayEntityAnimation(knife_entity, self.knife_animation_name)
+    end
+    -- -------------------------
 
     if current_health == 3 then
         SetMesh(current_herb_entity, self.mesh_stage1)

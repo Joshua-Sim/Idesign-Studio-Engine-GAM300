@@ -344,6 +344,28 @@ namespace Framework {
             return 0; // No return value
         }
 
+        // Helper to play an animation on an entity
+        static int l_PlayEntityAnimation(lua_State* L) {
+            // 1. Get Arguments: Entity ID and Animation Name
+            Entity entity = static_cast<Entity>(luaL_checkinteger(L, 1));
+            const char* animName = luaL_checkstring(L, 2);
+
+            // 2. Check if entity has animation component
+            if (ecsInterface.IsEntityValid(entity) && ecsInterface.HasComponent<AnimationProperties>(entity)) {
+                auto& animProps = ecsInterface.GetComponent<AnimationProperties>(entity);
+
+                // 3. Call the member function you wanted to use!
+                animProps.PlayAnimation(animName);
+
+                // Optional: Force restart if it's already playing
+                animProps.currentTime = 0.0f;
+            }
+            else {
+                std::cout << "[Lua Warning] PlayAnimation called on invalid entity or missing AnimationProperties: " << entity << std::endl;
+            }
+            return 0;
+        }
+
 
         // NavMesh Exposed funcs for path-finding
 
@@ -598,7 +620,7 @@ namespace Framework {
         lua_register(L, "RemoveTagFromEntity", lua_RemoveTagFromEntity);
         lua_register(L, "EntityHasTag", lua_EntityHasTag);
         lua_register(L, "AddTagToEntity", lua_AddTagToEntity);
-        
+        lua_register(L, "PlayEntityAnimation", l_PlayEntityAnimation);
         lua_register(L, "PlaySound", l_PlaySound);
 
         // Navmesh

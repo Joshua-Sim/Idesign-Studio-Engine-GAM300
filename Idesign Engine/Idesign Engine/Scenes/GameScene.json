@@ -60,9 +60,9 @@
                         1.2000000476837158
                     ],
                     "rotation": [
-                        180.0,
                         0.0,
-                        90.0
+                        90.0,
+                        270.0
                     ],
                     "scale": [
                         0.5,
@@ -81,6 +81,9 @@
                 "MeshComponent": {
                     "guid": "6cbaa85b-562d-4b23-9f64-8639947659cc",
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "AnimationProperties": {
+                    "guid": "e4d836ef-c0bc-46bb-914c-c1e05246eb81"
                 }
             }
         },
