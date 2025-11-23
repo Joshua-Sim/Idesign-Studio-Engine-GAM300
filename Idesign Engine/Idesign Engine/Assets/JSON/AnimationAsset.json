@@ -12,9 +12,9 @@
             "vbo_skinning": 0
         },
         {
-            "guid": "329efd47-aa00-484a-aa36-ef9466cb86d2",
-            "name": "TestingCauldron",
-            "path": "Assets\\Objects\\TestingCauldron.fbx",
+            "guid": "af14de83-981d-448a-a6e3-07a92a48e676",
+            "name": "CauldronStiring",
+            "path": "Assets\\Objects\\CauldronStiring.fbx",
             "defaultAnimationName": "",
             "animationSpeed": 1.0,
             "bLoops": true,

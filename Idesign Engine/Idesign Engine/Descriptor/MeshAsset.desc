@@ -74,15 +74,6 @@
             "indexCount": 966
         },
         {
-            "guid": "58ebdd29-1fe2-4d81-a15a-36da0a0d9070",
-            "name": "TestingCauldron",
-            "path": "Assets\\Objects\\TestingCauldron.fbx",
-            "vao": 10,
-            "vbo": 19,
-            "ebo": 20,
-            "indexCount": 154086
-        },
-        {
             "guid": "239cddd5-6733-44a1-927a-e3b13152a09a",
             "name": "Frog",
             "path": "Assets/Objects/Frog.obj",
@@ -333,6 +324,15 @@
             "vbo": 73,
             "ebo": 74,
             "indexCount": 1860
+        },
+        {
+            "guid": "95461aed-91bf-4172-9f2c-d7578e059e28",
+            "name": "CauldronStiring",
+            "path": "Assets\\Objects\\CauldronStiring.fbx",
+            "vao": 48,
+            "vbo": 90,
+            "ebo": 91,
+            "indexCount": 157614
         }
     ]
 }
