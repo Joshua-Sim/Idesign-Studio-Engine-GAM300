@@ -534,6 +534,51 @@ namespace Framework
                         ImGui::SetTooltip("If checked, text always faces the camera.");
                     }
                 }
+                if (typeName == "BoxColliderComponent")
+                {
+                    auto& colliderComp = *static_cast<Framework::BoxColliderComponent*>(componentPtr);
+                    int indexToRemove = -1;
+
+                    for (int i = 0; i < colliderComp.colliders.size(); ++i)
+                    {
+                        auto& entry = colliderComp.colliders[i];
+
+                        ImGui::PushID(i);
+                        ImGui::Text("Collider #%d", i + 1);
+
+                        // --- Size ---
+                        ImGui::DragFloat3("Size", &entry.size.x, 0.1f);
+
+                        // --- Center (Offset) ---
+                        ImGui::DragFloat3("Center", &entry.center.x, 0.1f);
+
+                        // --- Is Trigger ---
+                        ImGui::Checkbox("Is Trigger", &entry.canPassThrough);
+
+                        // --- Remove ---
+                        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.2f, 0.2f, 1.0f));
+                        if (ImGui::Button("Remove Collider"))
+                        {
+                            indexToRemove = i;
+                        }
+                        ImGui::PopStyleColor();
+
+                        ImGui::Separator();
+                        ImGui::PopID();
+                    }
+
+                    if (indexToRemove != -1)
+                    {
+                        colliderComp.colliders.erase(colliderComp.colliders.begin() + indexToRemove);
+                    }
+
+                    if (ImGui::Button("+ Add Collider"))
+                    {
+                        colliderComp.colliders.push_back({}); // Add default
+                    }
+                }
+
+
                 // 4. Handle EVERYTHING ELSE (Default Inspector)
                 else
                 {
@@ -555,7 +600,7 @@ namespace Framework
         {
 
             const prop_list* propList = reg->m_pPopList;
-            if ((std::string(propList->m_pName) == "EventSenderEntry" || std::string(propList->m_pName) == "EventReceiverEntry")) continue;
+            if ((std::string(propList->m_pName) == "EventSenderEntry" || std::string(propList->m_pName) == "EventReceiverEntry" || std::string(propList->m_pName) == "BoxColliderEntry")) continue;
             if (!propList || !propList->m_pName || propList->m_Props.empty()) continue;
             if (attached.contains(propList->m_pName)) continue;
             if (excludedComponents.count(propList->m_pName)) continue;

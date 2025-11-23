@@ -1565,10 +1565,15 @@ namespace Framework {
             model = glm::scale(model, tr.scale);
 
             // BOXCOLLIDER COLLISION (NEEDA MOVE IT OUTTA GRAPHICS :SKULL:)
-            if (mesh.debugShape == DebugShapeType::Box && ecsInterface.HasComponent<BoxColliderComponent>(entityId)) {
-                auto& collider = ecsInterface.GetComponent<BoxColliderComponent>(entityId);
-                model = glm::translate(model, collider.center);
-                model = glm::scale(model, collider.size);
+            if (mesh.debugShape == DebugShapeType::Box && ecsInterface.HasComponent<BoxColliderComponent>(entityId))
+            {
+                auto& colliderComp = ecsInterface.GetComponent<BoxColliderComponent>(entityId);
+                for (const auto& entry : colliderComp.colliders)
+                {
+                    glm::mat4 currentShapeModel = model;
+                    currentShapeModel = glm::translate(currentShapeModel, entry.center);
+                    currentShapeModel = glm::scale(currentShapeModel, entry.size);
+                }
             }
 
             if (ecsInterface.HasComponent<TextProperties>(entityId)) {
@@ -1719,40 +1724,45 @@ namespace Framework {
             // 2. SEPARATE DEBUG RENDERING FOR COLLIDER
             if (Framework::Graphics::s_RenderDebugColliders && ecsInterface.HasComponent<BoxColliderComponent>(entityId))
             {
-                auto& collider = ecsInterface.GetComponent<BoxColliderComponent>(entityId);
+                auto& colliderComp = ecsInterface.GetComponent<BoxColliderComponent>(entityId);
 
-                // --- 1. Calculate the Collider's World Transform ---
-                glm::mat4 colliderModel = glm::mat4(1.0f);
-
-                // A. Move to Entity Position
-                colliderModel = glm::translate(colliderModel, tr.position);
-
-                // B. Rotate (Match Entity Rotation)
-                colliderModel = glm::rotate(colliderModel, glm::radians(tr.rotation.x), { 1,0,0 });
-                colliderModel = glm::rotate(colliderModel, glm::radians(tr.rotation.y), { 0,1,0 });
-                colliderModel = glm::rotate(colliderModel, glm::radians(tr.rotation.z), { 0,0,1 });
-
-                // C. Scale (Match Entity Scale)
-                colliderModel = glm::scale(colliderModel, tr.scale);
-
-                // D. Offset & Size (Apply Collider specific properties)
-                //    Translate by center *after* scaling the entity so the offset scales with it
-                colliderModel = glm::translate(colliderModel, collider.center);
-                colliderModel = glm::scale(colliderModel, collider.size);
-
-                // --- 2. Draw using your existing Helper Function ---
-                // This ensures the correct shader uniforms ("view", "projection") are used
-                if (m_debugMeshes.find(DebugShapeType::Box) != m_debugMeshes.end())
+                // LOOP through all colliders on this entity
+                for (const auto& entry : colliderComp.colliders)
                 {
-                    DrawDebugMesh(
-                        m_debugMeshes[DebugShapeType::Box],
-                        glm::vec3(0.0f, 1.0f, 0.0f), // Green Color
-                        colliderModel,               // The matrix we just built
-                        proj,                        // Current Projection
-                        view                         // Current View
-                    );
+                    // --- 1. Calculate the Collider's World Transform ---
+                    glm::mat4 colliderModel = glm::mat4(1.0f);
+
+                    // A. Move to Entity Position
+                    colliderModel = glm::translate(colliderModel, tr.position);
+
+                    // B. Rotate (Match Entity Rotation)
+                    colliderModel = glm::rotate(colliderModel, glm::radians(tr.rotation.x), { 1,0,0 });
+                    colliderModel = glm::rotate(colliderModel, glm::radians(tr.rotation.y), { 0,1,0 });
+                    colliderModel = glm::rotate(colliderModel, glm::radians(tr.rotation.z), { 0,0,1 });
+
+                    // C. Scale (Match Entity Scale)
+                    // Note: This scales the offset (entry.center) as well, which is usually desired
+                    colliderModel = glm::scale(colliderModel, tr.scale);
+
+                    // D. Offset & Size (Apply Collider specific properties)
+                    colliderModel = glm::translate(colliderModel, entry.center);
+                    colliderModel = glm::scale(colliderModel, entry.size);
+
+                    // --- 2. Draw ---
+                    if (m_debugMeshes.find(DebugShapeType::Box) != m_debugMeshes.end())
+                    {
+                        // Visual Polish: Yellow for Trigger, Green for Solid
+                        glm::vec3 debugColor = entry.canPassThrough ? glm::vec3(1.0f, 1.0f, 0.0f) : glm::vec3(0.0f, 1.0f, 0.0f);
+
+                        DrawDebugMesh(
+                            m_debugMeshes[DebugShapeType::Box],
+                            debugColor,
+                            colliderModel,
+                            proj,
+                            view
+                        );
+                    }
                 }
-                
             }
         }
 

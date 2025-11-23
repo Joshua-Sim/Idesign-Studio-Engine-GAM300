@@ -382,18 +382,32 @@ namespace Framework
                         ecsInterface.AddComponent(entity, sp);
                     }
                 }
-                if (components.HasMember("BoxColliderComponent"))
-                {
-                    // 1. Create a default instance of the component
-                    Framework::BoxColliderComponent boxCollider;
+                if (components.HasMember("BoxColliderComponent")) {
+                    BoxColliderComponent comp;
+                    auto& json = components["BoxColliderComponent"];
 
-                    // 2. Deserialize the saved values ('size' and 'center') 
-                    //    from the JSON object into the component instance.
-                    //    (Note: The runtime state 'wasInsideLastFrame' remains 'false' as intended)
-                    Deserialize(&boxCollider, g_BoxColliderProps, components["BoxColliderComponent"]);
+                    if (json.HasMember("colliders") && json["colliders"].IsArray()) {
+                        for (const auto& val : json["colliders"].GetArray()) {
+                            BoxColliderEntry entry;
 
-                    // 3. Add the fully loaded component to the entity
-                    ecsInterface.AddComponent(entity, boxCollider);
+                            // Load Size
+                            if (val.HasMember("size")) {
+                                auto arr = val["size"].GetArray();
+                                entry.size = { arr[0].GetFloat(), arr[1].GetFloat(), arr[2].GetFloat() };
+                            }
+                            // Load Center
+                            if (val.HasMember("center")) {
+                                auto arr = val["center"].GetArray();
+                                entry.center = { arr[0].GetFloat(), arr[1].GetFloat(), arr[2].GetFloat() };
+                            }
+                            if (val.HasMember("canPassThrough")) {
+                                entry.canPassThrough = val["canPassThrough"].GetBool();
+                            }
+
+                            comp.colliders.push_back(entry);
+                        }
+                    }
+                    ecsInterface.AddComponent(entity, comp);
                 }
                 // PhysicsProperties
                 if (components.HasMember("PhysicsProperties"))
@@ -674,17 +688,29 @@ namespace Framework
                     // 3. Add the complete object to the component list
                     componentsObj.AddMember("LightProperties", lightJson, allocator);
                 }
-                if (ecsInterface.HasComponent<BoxColliderComponent>(entity))
-                {
-                    const auto& collider = ecsInterface.GetComponent<BoxColliderComponent>(entity);
-                    rapidjson::Value colliderJson(rapidjson::kObjectType);
+                if (ecsInterface.HasComponent<BoxColliderComponent>(entity)) {
+                    const auto& comp = ecsInterface.GetComponent<BoxColliderComponent>(entity);
+                    rapidjson::Value compJson(rapidjson::kObjectType);
+                    rapidjson::Value arrayVal(rapidjson::kArrayType);
 
-                    // 1. Run the generic serializer 
-                    // This automatically handles 'size' and 'center' based on g_BoxColliderProps
-                    Serialize((void*)&collider, g_BoxColliderProps, colliderJson, allocator);
+                    for (const auto& entry : comp.colliders) {
+                        rapidjson::Value obj(rapidjson::kObjectType);
 
-                    // 2. Add the complete object to the component list
-                    componentsObj.AddMember("BoxColliderComponent", colliderJson, allocator);
+                        // Save Vec3 Size
+                        rapidjson::Value sizeVal(rapidjson::kArrayType);
+                        sizeVal.PushBack(entry.size.x, allocator).PushBack(entry.size.y, allocator).PushBack(entry.size.z, allocator);
+                        obj.AddMember("size", sizeVal, allocator);
+
+                        // Save Vec3 Center
+                        rapidjson::Value centerVal(rapidjson::kArrayType);
+                        centerVal.PushBack(entry.center.x, allocator).PushBack(entry.center.y, allocator).PushBack(entry.center.z, allocator);
+                        obj.AddMember("center", centerVal, allocator);
+
+                        obj.AddMember("canPassThrough", entry.canPassThrough, allocator);
+                        arrayVal.PushBack(obj, allocator);
+                    }
+                    compJson.AddMember("colliders", arrayVal, allocator);
+                    componentsObj.AddMember("BoxColliderComponent", compJson, allocator);
                 }
                 // PhysicsProperties
                 if (ecsInterface.HasComponent<PhysicsProperties>(entity))
