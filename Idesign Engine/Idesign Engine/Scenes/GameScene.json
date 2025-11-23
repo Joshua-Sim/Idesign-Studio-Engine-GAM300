@@ -895,17 +895,21 @@
                     "isUI": false
                 },
                 "BoxColliderComponent": {
-                    "size": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "center": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "canPassThrough": false
+                    "colliders": [
+                        {
+                            "size": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ],
+                            "center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "canPassThrough": false
+                        }
+                    ]
                 },
                 "PhysicsProperties": {
                     "category": 1,
@@ -1860,19 +1864,19 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -27.65318489074707,
-                        7.709938049316406,
-                        9.050322532653809
+                        -34.12852478027344,
+                        7.727572441101074,
+                        12.49962329864502
                     ],
                     "rotation": [
-                        0.00001991841782000847,
-                        -65.55830383300781,
-                        -0.00019354216055944562
+                        0.0,
+                        0.0,
+                        0.0
                     ],
                     "scale": [
-                        1.0,
-                        1.0,
-                        1.0
+                        0.9999989867210388,
+                        0.9999967813491821,
+                        0.9999994039535522
                     ]
                 },
                 "HierarchyComponent": {
@@ -1884,14 +1888,15 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "BoxColliderComponent": {
                     "colliders": [
                         {
                             "size": [
                                 1.0,
-                                3.5,
+                                4.099999904632568,
                                 1.0
                             ],
                             "center": [
