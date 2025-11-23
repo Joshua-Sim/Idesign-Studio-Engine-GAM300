@@ -10,20 +10,27 @@ public:
     Skybox();
     ~Skybox();
 
-    // Loads the 6 textures and sets up buffers
-    // Order of faces: Right, Left, Top, Bottom, Front, Back
-    void init(const std::vector<std::string>& faces);
+    // Now accepts TWO lists of faces
+    void init(const std::vector<std::string>& dayFaces,
+        const std::vector<std::string>& nightFaces);
 
-    // Draw call needs view and projection matrices
     void draw(const glm::mat4& view, const glm::mat4& proj);
+
+    // New helper to control the cycle
+    void setBlendFactor(float factor) { m_blendFactor = factor; }
+    float getBlendFactor() const { return m_blendFactor; }
 
 private:
     unsigned int cubeVAO = 0;
     unsigned int cubeVBO = 0;
-    unsigned int cubemapTexture = 0;
-    
+
+    // Store two IDs now
+    unsigned int texDay = 0;
+    unsigned int texNight = 0;
+
+    float m_blendFactor = 0.0f; // Start at Day (0.0)
+
     ShaderProgram* shader = nullptr;
 
-    // Helper to load the raw texture data
     unsigned int loadCubemap(const std::vector<std::string>& faces);
 };

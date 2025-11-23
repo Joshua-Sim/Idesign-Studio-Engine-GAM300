@@ -438,18 +438,30 @@ namespace Framework {
         m_frameCount = 0;
         m_fpsLastTime = glfwGetTime(); // Start the timer
 
-        std::vector<std::string> faces = 
+        //IMPORTANT : ALWAYS STICK TO THIS ORDER
+        std::vector<std::string> dayFaces =
         {
-        "Assets/Textures/right.png",
-        "Assets/Textures/left.png",
-        "Assets/Textures/top.png",
-        "Assets/Textures/bottom.png",
-        "Assets/Textures/front.png",
-        "Assets/Textures/back.png"
+        "Assets/Textures/right.png",    //RIGHT
+        "Assets/Textures/left.png",    //LEFT 
+        "Assets/Textures/top.png",    //TOP or UP
+        "Assets/Textures/bottom.png",     //BOTTOM or DOWN
+        "Assets/Textures/front.png",    //FRONT
+        "Assets/Textures/back.png"      //BACK
         };
 
+        std::vector<std::string> nightFaces =
+        {
+        "Assets/Textures/right1.png",    //RIGHT
+        "Assets/Textures/left1.png",    //LEFT 
+        "Assets/Textures/top1.png",    //TOP or UP
+        "Assets/Textures/bottom1.png",     //BOTTOM or DOWN
+        "Assets/Textures/front1.png",    //FRONT
+        "Assets/Textures/back1.png"      //BACK
+        };
+
+
         // Make sure the folder and files exist!
-        m_skybox.init(faces);
+        m_skybox.init(dayFaces, nightFaces);
 
         ImguiManager::LogSuccess("Graphics System initialized successfully", "Graphics");
     }
@@ -878,6 +890,38 @@ namespace Framework {
                 cam.processKeyboard(Camera::Movement::Left, dt * baseSpeed, false, terrain);
             if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
                 cam.processKeyboard(Camera::Movement::Right, dt * baseSpeed, false, terrain);
+
+            static bool nKeyPressed = false;
+
+            if (glfwGetKey(window, GLFW_KEY_N) == GLFW_PRESS)
+            {
+                if (!nKeyPressed) 
+                {
+                    float newVal = m_skybox.getBlendFactor() + (dt * 0.5f); // 2 seconds to fade
+                    if (newVal > 1.0f) newVal = 1.0f;
+                    m_skybox.setBlendFactor(newVal);
+                    nKeyPressed = true;
+                }
+            }
+            else
+            {
+                nKeyPressed = false;
+            }
+
+            if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS) // 'M' for Morning
+            {
+                if (!nKeyPressed)
+                {
+                    float newVal = m_skybox.getBlendFactor() - (dt * 0.5f);
+                    if (newVal < 0.0f) newVal = 0.0f;
+                    m_skybox.setBlendFactor(newVal);
+                    nKeyPressed = true;
+                }
+            }
+            else
+            {
+                nKeyPressed = false;
+            }
 
             // Recipe Book
             bool isRPressed = (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS);
