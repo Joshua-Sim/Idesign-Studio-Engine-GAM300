@@ -11,11 +11,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "pch.h"
 #include "AssetManager.h"
+#include "AudioSystem.h"
 
 namespace Framework
 {
-	AssetManager::~AssetManager() {}
-
 	void AssetManager::SaveAllAssets()
 	{
 		std::filesystem::path root = GetEngineRootPath();
@@ -100,10 +99,6 @@ namespace Framework
 		std::string windowCfgPath = (root / "Resource/WindowAsset.cfg").string();
 		//std::cout << "  Loading: " << windowCfgPath << std::endl;
 		AssetManager::Instance().LoadBinary<WindowConfig>(windowCfgPath, g_WindowConfigProps);
-
-		std::string audioBinPath = (root / "Resource/AudioBank.bin").string();
-		//std::cout << "  Loading: " << audioBinPath << std::endl;
-		AssetManager::Instance().LoadBinaryArray<AudioBankMetadata>(audioBinPath, g_AudioBankMetadataProps);
 
 		std::string prefabBinPath = (root / "Resource/PrefabAsset.bin").string();
 		//std::cout << "  Loading: " << prefabBinPath << std::endl;

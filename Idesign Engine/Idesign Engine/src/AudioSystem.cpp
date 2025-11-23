@@ -94,6 +94,15 @@ namespace Framework {
 
         loadedEvents.clear();
 
+        // Clear all Banks
+        for (auto& [path, bank] : loadedBanks)
+        {
+            if (bank)   
+                bank->unload();
+                bank->unloadSampleData();
+        }
+        loadedBanks.clear();
+
         // Clean up DSP Effects
         if (reverbDSP) {
             reverbDSP->release();
@@ -307,87 +316,35 @@ namespace Framework {
             }
         }
 
-        // Load bank files
-        FMOD::Studio::Bank* masterBank = nullptr;
-        FMOD::Studio::Bank* stringsBank = nullptr;
-        FMOD::Studio::Bank* bgmBank = nullptr;
-        FMOD::Studio::Bank* sfxBank = nullptr;
-        FMOD::Studio::Bank* ambientBank = nullptr;
-        FMOD_RESULT result;
+        std::filesystem::path root = GetEngineRootPath();
+        std::string audioBinPath = (root / "Resource/AudioBank.bin").string();
+        //std::cout << "  Loading: " << audioBinPath << std::endl;
+        AssetManager::Instance().LoadBinaryArray<AudioBankMetadata>(audioBinPath, g_AudioBankMetadataProps, [](AudioBankMetadata& meta)
+            {
+                // Load the bank into FMOD
+                FMOD::Studio::Bank* bank = g_AudioSystem->LoadBank(meta.path);
+                if (!bank) return;
 
-        // Load Master.strings.bank FIRST
-        std::cout << "\n[AudioSystem] Loading Master.strings.bank..." << std::endl;
-        result = studioSystem->loadBankFile("Master.strings.bank", FMOD_STUDIO_LOAD_BANK_NORMAL, &stringsBank);
-        if (result != FMOD_OK) {
-            std::cerr << "[AudioSystem] ERROR: Failed to load Master.strings.bank, error: " << result << std::endl;
-        }
-        else {
-            std::cout << "[AudioSystem] Master.strings.bank loaded successfully!" << std::endl;
-        }
+                // Query events
+                int eventCount = 0;
+                bank->getEventCount(&eventCount);
 
-        // Load Master.bank
-        std::cout << "\n[AudioSystem] Loading Master.bank..." << std::endl;
-        result = studioSystem->loadBankFile("Master.bank", FMOD_STUDIO_LOAD_BANK_NORMAL, &masterBank);
-        if (result != FMOD_OK) {
-            std::cerr << "[AudioSystem] ERROR: Failed to load Master.bank, error: " << result << std::endl;
-        }
-        else {
-            std::cout << "[AudioSystem] Master.bank loaded successfully!" << std::endl;
-        }
+                std::vector<FMOD::Studio::EventDescription*> eventList(eventCount);
+                bank->getEventList(eventList.data(), eventCount, &eventCount);
 
-        // Load BGM.bank
-        std::cout << "\n[AudioSystem] Loading BGM.bank..." << std::endl;
-        result = studioSystem->loadBankFile("BGM.bank", FMOD_STUDIO_LOAD_BANK_NORMAL, &bgmBank);
-        if (result != FMOD_OK) {
-            std::cerr << "[AudioSystem] WARNING: Failed to load BGM.bank, error: " << result << std::endl;
-        }
-        else {
-            std::cout << "[AudioSystem] BGM.bank loaded successfully!" << std::endl;
-            int eventCount = 0;
-            bgmBank->getEventCount(&eventCount);
-            std::cout << "[AudioSystem] BGM bank contains " << eventCount << " events" << std::endl;
+                meta.events.clear();
+                std::cout << "[AudioSystem] Bank '" << meta.name << "' contains " << eventCount << " events" << std::endl;
 
-            result = bgmBank->loadSampleData();
-            if (result == FMOD_OK) {
-                std::cout << "[AudioSystem] BGM sample data loaded!" << std::endl;
+                for (auto* ev : eventList)
+                {
+                    char path[256];
+                    int retrieved = 0;
+                    ev->getPath(path, sizeof(path), &retrieved);
+                    meta.events.push_back(std::string(path));
+                    std::cout << "   -> Event: " << path << std::endl;
+                }
             }
-        }
-
-        // Load SFX.bank
-        std::cout << "\n[AudioSystem] Loading SFX.bank..." << std::endl;
-        result = studioSystem->loadBankFile("SFX.bank", FMOD_STUDIO_LOAD_BANK_NORMAL, &sfxBank);
-        if (result != FMOD_OK) {
-            std::cerr << "[AudioSystem] WARNING: Failed to load SFX.bank, error: " << result << std::endl;
-        }
-        else {
-            std::cout << "[AudioSystem] SFX.bank loaded successfully!" << std::endl;
-            int eventCount = 0;
-            sfxBank->getEventCount(&eventCount);
-            std::cout << "[AudioSystem] SFX bank contains " << eventCount << " events" << std::endl;
-
-            result = sfxBank->loadSampleData();
-            if (result == FMOD_OK) {
-                std::cout << "[AudioSystem] SFX sample data loaded!" << std::endl;
-            }
-        }
-
-        // Load Ambient.bank
-        std::cout << "\n[AudioSystem] Loading Ambient.bank..." << std::endl;
-        result = studioSystem->loadBankFile("Ambient.bank", FMOD_STUDIO_LOAD_BANK_NORMAL, &ambientBank);
-        if (result != FMOD_OK) {
-            std::cerr << "[AudioSystem] WARNING: Failed to load Ambient.bank, error: " << result << std::endl;
-        }
-        else {
-            std::cout << "[AudioSystem] Ambient.bank loaded successfully!" << std::endl;
-            int eventCount = 0;
-            ambientBank->getEventCount(&eventCount);
-            std::cout << "[AudioSystem] Ambient bank contains " << eventCount << " events" << std::endl;
-
-            result = ambientBank->loadSampleData();
-            if (result == FMOD_OK) {
-                std::cout << "[AudioSystem] Ambient sample data loaded!" << std::endl;
-            }
-        }
+        );
 
         std::cout << "\n[AudioSystem] ========================================" << std::endl;
         std::cout << "[AudioSystem] All bank files and sample data loaded!" << std::endl;
@@ -413,20 +370,37 @@ namespace Framework {
 
     FMOD::Studio::Bank* AudioSystem::LoadBank(const std::string& bankPath)
     {
-        FMOD::Studio::Bank* bank = nullptr;
-        FMOD_RESULT result = studioSystem->loadBankFile(
-            bankPath.c_str(),
-            FMOD_STUDIO_LOAD_BANK_NORMAL,
-            &bank
-        );
-
-        if (result != FMOD_OK) {
-            std::cerr << "[AudioSystem] Failed to load bank: " << bankPath
-                << " (error: " << result << ")" << std::endl;
-            return nullptr;
+        auto it = loadedBanks.find(bankPath);
+        if (it != loadedBanks.end()) 
+        {
+            std::cout << "[AudioSystem] Using cached bank: " << bankPath << std::endl;
+            return it->second;
         }
 
+        FMOD::Studio::Bank* bank = nullptr;
+
+        // loadBankFile only loads the metadata, but does not load the actual audio sample data
+        // Which means event instances can be created but without sample data, audio would not be played
+        FMOD_RESULT result = studioSystem->loadBankFile(bankPath.c_str(), FMOD_STUDIO_LOAD_BANK_NORMAL, &bank);
+
+        if (result != FMOD_OK || !bank) 
+        {
+            std::cerr << "[AudioSystem] ERROR: Failed to load bank: " << bankPath << " (error: " << result << ")" << std::endl;
+            return nullptr;
+        }
         std::cout << "[AudioSystem] Bank loaded: " << bankPath << std::endl;
+
+        // Load sample data so events can actually play
+        result = bank->loadSampleData();            
+        if (result != FMOD_OK)
+        {
+            std::cerr << "[AudioSystem] ERROR: Failed to load sample data for bank: " << bankPath << " (error: " << result << ")" << std::endl;
+        }
+        else
+        {
+            std::cout << "[AudioSystem] Sample data loaded for bank: " << bankPath << std::endl;
+        }
+        loadedBanks[bankPath] = bank;
         return bank;
     }
 
@@ -508,8 +482,7 @@ namespace Framework {
             attributes.forward = { 0.0f, 0.0f, 1.0f };
             attributes.up = { 0.0f, 1.0f, 0.0f };
             instance->set3DAttributes(&attributes);
-            std::cout << "[AudioSystem] Set 3D position at listener: ("
-                << listenerPosition.x << ", " << listenerPosition.y << ", " << listenerPosition.z << ")" << std::endl;
+            std::cout << "[AudioSystem] Set 3D position at listener: (" << listenerPosition.x << ", " << listenerPosition.y << ", " << listenerPosition.z << ")" << std::endl;
         }
 
         instance->setVolume(masterVolume);
@@ -536,6 +509,8 @@ namespace Framework {
         FMOD_STUDIO_PLAYBACK_STATE state;
         instance->getPlaybackState(&state);
         std::cout << "[AudioSystem] Playback state after start: " << state << std::endl;
+
+        instance->release();
     }
 
     void AudioSystem::PauseSound(const std::string& customName) {
@@ -568,6 +543,33 @@ namespace Framework {
             activeEventsById.erase(it);
             std::cout << "[AudioSystem] Stopped channel: " << channelId << std::endl;
         }
+    }
+
+    bool AudioSystem::IsPlaying(const std::string& eventPath) const
+    {
+        auto it = activeEvents.find(eventPath);
+        if (it == activeEvents.end() || !it->second) return false;
+
+        FMOD_STUDIO_PLAYBACK_STATE state;
+        it->second->getPlaybackState(&state);
+        return state == FMOD_STUDIO_PLAYBACK_PLAYING;
+    }
+
+    bool AudioSystem::IsPaused(const std::string& eventPath) const
+    {
+        auto it = activeEvents.find(eventPath);
+        if (it == activeEvents.end() || !it->second) return false;
+
+        bool paused = false;
+        it->second->getPaused(&paused);
+        return paused;
+    }
+
+    FMOD::Studio::EventInstance* AudioSystem::GetEventInstance(const std::string& eventPath) const
+    {
+        auto it = activeEvents.find(eventPath);
+        if (it != activeEvents.end()) return it->second;
+        return nullptr;
     }
 
     //==========================================================================
@@ -1121,4 +1123,15 @@ namespace Framework {
         return 1.0f - ((distance - minDist) / (maxDist - minDist));
     }
 
+    void AudioSystem::UnloadBank(const std::string& bankPath)
+    {
+        auto it = loadedBanks.find(bankPath);
+        if (it != loadedBanks.end()) 
+        {
+            it->second->unload();
+            it->second->unloadSampleData();
+            std::cout << "[AudioSystem] Bank unloaded: " << bankPath << std::endl;
+            loadedBanks.erase(it);
+        }
+    }
 } // namespace Framework

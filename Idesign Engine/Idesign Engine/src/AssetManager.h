@@ -138,9 +138,10 @@ namespace Framework
         // Delete copy/move constructors to enforce singleton
         AssetManager(const AssetManager&) = delete;
         AssetManager& operator=(const AssetManager&) = delete;
-        
-        // Save all files here (WIP)
-        ~AssetManager();
+        ~AssetManager()
+        {
+            m_Assets.clear();
+        }
 
         //------------------------------------------------------------------------------------------------------------------------------------
         //  Binary Related Functions
