@@ -2,7 +2,6 @@
 
 #include "ECSystemManager.h"
 #include "PhysicsSystem.h" 
-#include "TagManager.h"    
 #include "InputHandler.h" 
 #include "ComponentList.h"
 #include "Graphics.h" 
@@ -25,15 +24,13 @@ namespace Framework
 
         // --- System Pointers ---
         std::shared_ptr<PhysicsSystem> mPhysicsSystem;
-        std::shared_ptr<TagManager>    mTagManager;
+        // std::shared_ptr<TagManager> mTagManager; // <-- No longer needed
         InputHandler* mInputHandler;
         std::shared_ptr<Graphics> mGraphicsSystem;
 
         // --- Interaction Properties ---
         const float mInteractRange = 3.0f;
 
-        // --- ADD THIS LINE ---
-        bool mDebugFrogTagged = false;
-        // ---------------------
+        // bool mDebugFrogTagged = false; // <-- No longer needed
     };
 }

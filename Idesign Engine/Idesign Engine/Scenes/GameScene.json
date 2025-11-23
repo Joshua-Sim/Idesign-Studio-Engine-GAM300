@@ -884,7 +884,9 @@
                     "sortIndex": 20
                 },
                 "TagComponent": {
-                    "tags": []
+                    "tags": [
+                        "Interactable"
+                    ]
                 },
                 "MeshComponent": {
                     "guid": "239cddd5-6733-44a1-927a-e3b13152a09a",
@@ -1864,14 +1866,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -34.12852478027344,
-                        7.727572441101074,
-                        12.49962329864502
+                        -27.115751266479492,
+                        7.6919755935668945,
+                        8.688494682312012
                     ],
                     "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
+                        -0.00015186233213171363,
+                        -0.01744947023689747,
+                        -0.011733056977391243
                     ],
                     "scale": [
                         0.9999989867210388,
@@ -1888,8 +1890,7 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "BoxColliderComponent": {
                     "colliders": [
