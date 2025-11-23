@@ -1,38 +1,56 @@
 #pragma once
+#ifndef _EVENT_RECEIVER_COMPONENT_H_
+#define _EVENT_RECEIVER_COMPONENT_H_
 
 #include <string>
 #include <vector>
+
 #include "PropertySystem.h"
 #include "PropertyMacro.h"
 
-namespace Framework {
-
-    /**
-     * @brief Just Data. The EventSystem reads this to know what to wire up.
-     */
-    struct EventReceiverComponent {
-        // --- Data (Set by your editor) ---
-
-        // The "Channel" to listen to (e.g., "ShowPrompt", "OnCollision")
+namespace Framework
+{
+    // ------------------ Single Receiver Entry ------------------
+    struct EventReceiverEntry
+    {
         std::string messageToListenFor;
-
-        // The Lua function to run when that channel fires (e.g., "Lua_ShowPrompt")
         std::string luaFunctionToCall;
 
+        // Runtime state (hidden)
         bool isSubscribed = false;
     };
 
-    // --- REGISTRATION FOR IMGUI ---
+    inline const std::vector g_EventReceiverEntryPropsArray =
+    {
+        PROP_STRING(messageToListenFor, EventReceiverEntry),
+        PROP_STRING(luaFunctionToCall,  EventReceiverEntry),
+
+        // We hide the runtime state
+        PROP_BOOL_HIDDEN(isSubscribed,  EventReceiverEntry)
+    };
+
+    inline const prop_list g_EventReceiverEntryProps{ "EventReceiverEntry", g_EventReceiverEntryPropsArray };
+    inline global_registration g_EventReceiverEntryPropsReg(&g_EventReceiverEntryProps);
+
+
+    // ------------------ Component for Entity ------------------
+    struct EventReceiverComponent
+    {
+        std::vector<EventReceiverEntry> receivers;
+
+        // Helper for reflection since we can't reflect vector directly
+        int receiverCount = 0;
+    };
+
     inline const std::vector g_EventReceiverPropsArray =
     {
-        PROP_STRING(messageToListenFor, EventReceiverComponent),
-        // Note: I renamed 'onReceiveFunction' to 'luaFunctionToCall' to match the System code I gave you.
-        PROP_STRING(luaFunctionToCall, EventReceiverComponent)
+        // We reflect this hidden int just so the Property System knows the Component exists
+        PROP_INT_HIDDEN(receiverCount, EventReceiverComponent)
     };
 
     inline const prop_list g_EventReceiverProps{ "EventReceiverComponent", g_EventReceiverPropsArray };
-
     inline global_registration g_EventReceiverPropsReg(&g_EventReceiverProps);
-    // --- END REGISTRATION ---
 
 } // namespace Framework
+
+#endif // _EVENT_RECEIVER_COMPONENT_H_

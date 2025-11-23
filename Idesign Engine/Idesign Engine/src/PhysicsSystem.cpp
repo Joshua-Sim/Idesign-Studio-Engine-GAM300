@@ -387,26 +387,41 @@ namespace Framework {
                 bool isInside = IsPointInsideBox(playerTrans.position, transform, collider);
 
                 // CASE: ENTER
-                if (isInside && !collider.wasInsideLastFrame) {
-                    if (playerSender.triggerName == "OnCollision") {
-                        CollisionEventData payload;
-                        payload.senderID = playerEntity;
-                        payload.targetID = e;
-                        payload.actionType = 1; // ENTER
+                if (isInside && !collider.wasInsideLastFrame)
+                {
+                    // FIX: Iterate through all senders in the component
+                    for (const auto& entry : playerSender.senders)
+                    {
+                        if (entry.triggerName == "OnCollision")
+                        {
+                            CollisionEventData payload;
+                            payload.senderID = playerEntity;
+                            payload.targetID = e;
+                            payload.actionType = 1; // ENTER
 
-                        EventManager::Instance().Fire(playerSender.messageName, &payload);
+                            // Use entry.messageName, not playerSender.messageName
+                            EventManager::Instance().Fire(entry.messageName, &payload);
+                        }
                     }
                 }
                 // CASE: EXIT
-                else if (!isInside && collider.wasInsideLastFrame) {
-                    if (playerSender.triggerName == "OnCollision") {
-                        std::cout << "[Physics] Player EXITED Entity " << e << std::endl;
-                        CollisionEventData payload;
-                        payload.senderID = playerEntity;
-                        payload.targetID = e;
-                        payload.actionType = 0; // EXIT
+                else if (!isInside && collider.wasInsideLastFrame)
+                {
+                    // FIX: Iterate through all senders in the component
+                    for (const auto& entry : playerSender.senders)
+                    {
+                        if (entry.triggerName == "OnCollision")
+                        {
+                            std::cout << "[Physics] Player EXITED Entity " << e << std::endl;
 
-                        EventManager::Instance().Fire(playerSender.messageName, &payload);
+                            CollisionEventData payload;
+                            payload.senderID = playerEntity;
+                            payload.targetID = e;
+                            payload.actionType = 0; // EXIT
+
+                            // Use entry.messageName, not playerSender.messageName
+                            EventManager::Instance().Fire(entry.messageName, &payload);
+                        }
                     }
                 }
                 collider.wasInsideLastFrame = isInside;

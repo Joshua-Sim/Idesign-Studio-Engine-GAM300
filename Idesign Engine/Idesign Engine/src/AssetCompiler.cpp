@@ -415,38 +415,72 @@ namespace Framework
                 if (components.HasMember("EventSenderComponent"))
                 {
                     const auto& jsonVal = components["EventSenderComponent"];
-                    EventSenderComponent sender;
+                    EventSenderComponent senderComp;
 
-                    // Manual extraction for safety with strings
-                    if (jsonVal.HasMember("triggerName") && jsonVal["triggerName"].IsString()) {
-                        sender.triggerName = jsonVal["triggerName"].GetString();
-                    }
-                    if (jsonVal.HasMember("messageName") && jsonVal["messageName"].IsString()) {
-                        sender.messageName = jsonVal["messageName"].GetString();
+                    // Check if the "senders" array exists
+                    if (jsonVal.HasMember("senders") && jsonVal["senders"].IsArray())
+                    {
+                        const auto& senderArray = jsonVal["senders"];
+
+                        for (rapidjson::SizeType i = 0; i < senderArray.Size(); i++)
+                        {
+                            const auto& entryObj = senderArray[i];
+                            EventSenderEntry newEntry;
+
+                            // Extract Trigger Name
+                            if (entryObj.HasMember("triggerName") && entryObj["triggerName"].IsString()) {
+                                newEntry.triggerName = entryObj["triggerName"].GetString();
+                            }
+
+                            // Extract Message Name
+                            if (entryObj.HasMember("messageName") && entryObj["messageName"].IsString()) {
+                                newEntry.messageName = entryObj["messageName"].GetString();
+                            }
+
+                            // Add to the component's vector
+                            senderComp.senders.push_back(newEntry);
+                        }
                     }
 
-                    ecsInterface.AddComponent(entity, sender);
+                    ecsInterface.AddComponent(entity, senderComp);
                 }
 
                 // --- Event Receiver ---
                 if (components.HasMember("EventReceiverComponent"))
                 {
                     const auto& jsonVal = components["EventReceiverComponent"];
-                    EventReceiverComponent receiver;
+                    EventReceiverComponent receiverComp;
 
-                    // Manual extraction
-                    if (jsonVal.HasMember("messageToListenFor") && jsonVal["messageToListenFor"].IsString()) {
-                        receiver.messageToListenFor = jsonVal["messageToListenFor"].GetString();
+                    // Check if the "receivers" array exists
+                    if (jsonVal.HasMember("receivers") && jsonVal["receivers"].IsArray())
+                    {
+                        const auto& receiverArray = jsonVal["receivers"];
+
+                        for (rapidjson::SizeType i = 0; i < receiverArray.Size(); i++)
+                        {
+                            const auto& entryObj = receiverArray[i];
+                            EventReceiverEntry newEntry;
+
+                            // Extract Message to Listen For
+                            if (entryObj.HasMember("messageToListenFor") && entryObj["messageToListenFor"].IsString()) {
+                                newEntry.messageToListenFor = entryObj["messageToListenFor"].GetString();
+                            }
+
+                            // Extract Lua Function
+                            if (entryObj.HasMember("luaFunctionToCall") && entryObj["luaFunctionToCall"].IsString()) {
+                                newEntry.luaFunctionToCall = entryObj["luaFunctionToCall"].GetString();
+                            }
+
+                            // IMPORTANT: Explicitly ensure isSubscribed is false on load
+                            // The EventSystem::Update loop will see this is false and automatically subscribe it.
+                            newEntry.isSubscribed = false;
+
+                            // Add to the component's vector
+                            receiverComp.receivers.push_back(newEntry);
+                        }
                     }
-                    if (jsonVal.HasMember("luaFunctionToCall") && jsonVal["luaFunctionToCall"].IsString()) {
-                        receiver.luaFunctionToCall = jsonVal["luaFunctionToCall"].GetString();
-                    }
 
-                    // IMPORTANT: Explicitly ensure isSubscribed is false on load
-                    // The EventSystem::Update loop will see this is false and automatically subscribe it.
-                    receiver.isSubscribed = false;
-
-                    ecsInterface.AddComponent(entity, receiver);
+                    ecsInterface.AddComponent(entity, receiverComp);
                 }
 
                 sceneManager.RegisterEntityToScene(entity, cleanName);
@@ -668,27 +702,67 @@ namespace Framework
                 // --- Event Sender ---
                 if (ecsInterface.HasComponent<EventSenderComponent>(entity))
                 {
-                    const auto& sender = ecsInterface.GetComponent<EventSenderComponent>(entity);
-                    rapidjson::Value senderJson(rapidjson::kObjectType);
+                    const auto& senderComp = ecsInterface.GetComponent<EventSenderComponent>(entity);
+                    rapidjson::Value compJson(rapidjson::kObjectType);
 
-                    // Use the generic serializer (Uses g_EventSenderProps)
-                    Serialize((void*)&sender, g_EventSenderProps, senderJson, allocator);
+                    // Create the Array to hold the list of senders
+                    rapidjson::Value senderArray(rapidjson::kArrayType);
 
-                    componentsObj.AddMember("EventSenderComponent", senderJson, allocator);
+                    for (const auto& entry : senderComp.senders)
+                    {
+                        rapidjson::Value entryObj(rapidjson::kObjectType);
+
+                        // 1. Trigger Name
+                        rapidjson::Value triggerVal;
+                        triggerVal.SetString(entry.triggerName.c_str(), allocator);
+                        entryObj.AddMember("triggerName", triggerVal, allocator);
+
+                        // 2. Message Name
+                        rapidjson::Value msgVal;
+                        msgVal.SetString(entry.messageName.c_str(), allocator);
+                        entryObj.AddMember("messageName", msgVal, allocator);
+
+                        // Push into array
+                        senderArray.PushBack(entryObj, allocator);
+                    }
+
+                    // Add the array to the component object
+                    compJson.AddMember("senders", senderArray, allocator);
+                    componentsObj.AddMember("EventSenderComponent", compJson, allocator);
                 }
 
                 // --- Event Receiver ---
                 if (ecsInterface.HasComponent<EventReceiverComponent>(entity))
                 {
-                    const auto& receiver = ecsInterface.GetComponent<EventReceiverComponent>(entity);
-                    rapidjson::Value receiverJson(rapidjson::kObjectType);
+                    const auto& receiverComp = ecsInterface.GetComponent<EventReceiverComponent>(entity);
+                    rapidjson::Value compJson(rapidjson::kObjectType);
 
-                    // Use the generic serializer (Uses g_EventReceiverProps)
-                    // Note: This works perfectly because 'isSubscribed' is NOT in the 
-                    // g_EventReceiverProps array, so it won't be saved (which is what we want).
-                    Serialize((void*)&receiver, g_EventReceiverProps, receiverJson, allocator);
+                    // Create the Array to hold the list of receivers
+                    rapidjson::Value receiverArray(rapidjson::kArrayType);
 
-                    componentsObj.AddMember("EventReceiverComponent", receiverJson, allocator);
+                    for (const auto& entry : receiverComp.receivers)
+                    {
+                        rapidjson::Value entryObj(rapidjson::kObjectType);
+
+                        // 1. Message to Listen For
+                        rapidjson::Value msgVal;
+                        msgVal.SetString(entry.messageToListenFor.c_str(), allocator);
+                        entryObj.AddMember("messageToListenFor", msgVal, allocator);
+
+                        // 2. Lua Function
+                        rapidjson::Value funcVal;
+                        funcVal.SetString(entry.luaFunctionToCall.c_str(), allocator);
+                        entryObj.AddMember("luaFunctionToCall", funcVal, allocator);
+
+                        // Note: We intentionally DO NOT save 'isSubscribed'
+
+                        // Push into array
+                        receiverArray.PushBack(entryObj, allocator);
+                    }
+
+                    // Add the array to the component object
+                    compJson.AddMember("receivers", receiverArray, allocator);
+                    componentsObj.AddMember("EventReceiverComponent", compJson, allocator);
                 }
             }
 
