@@ -664,7 +664,7 @@ namespace Framework
                     const auto& mesh = ecsInterface.GetComponent<MeshProperties>(entity);
                     rapidjson::Value meshRef(rapidjson::kObjectType);
                     meshRef.AddMember("guid", rapidjson::Value(mesh.guid.id.c_str(), allocator), allocator);
-                    
+
                     // Linked Material GUID (if valid)
                     if (!mesh.materialGuid.empty())
                     {
@@ -720,7 +720,7 @@ namespace Framework
                     Serialize((void*)&agent, g_NavMeshAgentProps, agentJson, allocator);
                     componentsObj.AddMember("NavMeshAgentComponent", agentJson, allocator);
                 }
-                
+
                 // Scripts            
                 if (ecsInterface.HasComponent<ScriptProperties>(entity))
                 {
@@ -889,8 +889,9 @@ namespace Framework
                     Serialize((void*)&audioComp, g_AudioComponentProps, compJson, allocator);
 
                     componentsObj.AddMember("AudioComponent", compJson, allocator);
-                
-                    // --- Item Component ---
+                }
+
+                // --- Item Component ---
                 if (ecsInterface.HasComponent<ItemComponent>(entity))
                 {
                     const auto& item = ecsInterface.GetComponent<ItemComponent>(entity);
@@ -908,11 +909,9 @@ namespace Framework
                     componentsObj.AddMember("ItemComponent", itemJson, allocator);
                 }
             }
-
             entityObj.AddMember("components", componentsObj, allocator);
             entitiesArray.PushBack(entityObj, allocator);
         }
-
         doc.AddMember("Entities", entitiesArray, allocator);
 
         // Write to file
@@ -929,8 +928,6 @@ namespace Framework
         fclose(fp);
         std::cout << "Scene saved to: " << outputPath << "\n";
     }
-
-
 
     void DuplicateEntity(Framework::Coordinator& ecs, Entity sourceEntity)
     {
