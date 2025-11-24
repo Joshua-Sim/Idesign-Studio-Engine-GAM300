@@ -1,7 +1,6 @@
 local M = {}
 
 -- --- CONFIGURATION ---
-M.interaction_key = 69           -- 'E' key (Place/Start)
 M.chop_button = 0                -- Left Click (Chop)
 M.interaction_range = 2.5
 
@@ -64,7 +63,7 @@ function M:on_init()
         
         -- --- NEW: Configure Knife Animation ---
         -- Entity, Speed=10.0, Loop=false, PlayOnStart=false
-        SetAnimationSettings(knife_entity, 10.0, false, false)
+        --SetAnimationSettings(knife_entity, 10.0, false, true)
         -- --------------------------------------
 
         print("[ChoppingBoard] Knife found. Settings applied.")
@@ -73,54 +72,41 @@ function M:on_init()
     end
 end
 
+-- --- THIS IS CALLED BY C++ RAYCAST (Press 'E') ---
+function M:OnInteract()
+    print("[ChoppingBoard] Raycast Interaction Received!")
+    
+    -- Only start if board is empty
+    if current_herb_entity == nil then
+        self:StartChoppingSession()
+    else
+        print("[ChoppingBoard] Board is occupied.")
+    end
+end
+-- --------------------------------------------------
+
 function M:on_update(dt)
     if not player_entity then player_entity = FindEntityByName("Player") end
     
-    -- --- Update Knife Position Every Frame ---
     if is_holding_knife then
         self:UpdateKnifePosition()
     end
-    -- -----------------------------------------
 
-    if not self:IsPlayerInRange() then return end
-
-    -- 1. Place / Start Interaction (E Key)
-    if IsKeyDown(self.interaction_key) then
-        if not self.key_was_down then
-            self.key_was_down = true
-            -- Only start if board is empty
-            if current_herb_entity == nil then
-                self:StartChoppingSession()
-            end
-        end
-    else
-        self.key_was_down = false
-    end
-
-    -- 2. Chop Action (Left Click)
+    -- --- CHOPPING LOGIC (Left Click) ---
+    -- We still check range here because raycast doesn't handle clicks yet
     if IsMouseButtonDown(self.chop_button) then
-        if not click_was_down then
-            click_was_down = true
-            -- Only chop if herb is present
-            if current_herb_entity ~= nil then
+        if not self.click_was_down then
+            self.click_was_down = true
+            
+            -- Only chop if:
+            -- 1. There is a herb
+            -- 2. Player is close enough
+            if current_herb_entity ~= nil and self:IsPlayerInRange() then
                 self:ChopItem()
             end
         end
     else
-        click_was_down = false
-    end
-end
-
-function M:UpdateKnifePosition()
-    if knife_entity and player_entity then
-        local px, py, pz = GetPosition(player_entity)
-        
-        -- Simple offset calculation (World Space)
-        local kx = px + self.knife_offset_right
-        local ky = py + self.knife_offset_up
-        local kz = pz + self.knife_offset_forward
-        
-        SetPosition(knife_entity, kx, ky, kz)
+        self.click_was_down = false
     end
 end
 
@@ -128,15 +114,25 @@ function M:IsPlayerInRange()
     if not player_entity then return false end
     local bx, by, bz = GetPosition(self.entity)
     local px, py, pz = GetPosition(player_entity)
+    -- Simple distance check
     local dx = bx - px; local dy = by - py; local dz = bz - pz
     return math.sqrt(dx*dx + dy*dy + dz*dz) <= self.interaction_range
 end
 
+function M:UpdateKnifePosition()
+    if knife_entity and player_entity then
+        local px, py, pz = GetPosition(player_entity)
+        local kx = px + self.knife_offset_right
+        local ky = py + self.knife_offset_up
+        local kz = pz + self.knife_offset_forward
+        SetPosition(knife_entity, kx, ky, kz)
+    end
+end
+
 function M:StartChoppingSession()
-    -- 1. Place the Herb
     local itemID = FindEntityByName(M.initial_item_name)
     if itemID == nil then 
-        print("[ChoppingBoard] Herb not found in scene.")
+        print("[ChoppingBoard] Herb not found.")
         return 
     end
 
@@ -150,24 +146,23 @@ function M:StartChoppingSession()
     SetTexture(current_herb_entity, self.tex_raw)
     print("[ChoppingBoard] Placed raw herb.")
     
-    -- 2. Pick up the Knife
     if knife_entity then
-        is_holding_knife = true -- Start following
+        is_holding_knife = true 
         SetRotation(knife_entity, self.knife_rot_held_x, self.knife_rot_held_y, self.knife_rot_held_z)
     end
 end
 
 function M:ChopItem()
-    current_health = current_health - 1 -- Decrement health (Fixed logic: was +1)
+    current_health = current_health - 1
     print("[ChoppingBoard] CHOP! Health: " .. current_health)
     
     PlaySound("event:/ChoppingHerb")
 
-    -- --- TRIGGER ANIMATION ---
     if knife_entity then
         PlayEntityAnimation(knife_entity, self.knife_animation_name)
+    else
+        print("[ChoppingBoard] Warning: No knife entity found to animate.")
     end
-    -- -------------------------
 
     if current_health == 3 then
         SetMesh(current_herb_entity, self.mesh_stage1)
@@ -187,15 +182,13 @@ end
 function M:EndChoppingSession()
     print("[ChoppingBoard] Finished! Herb collected.")
 
-    -- 1. Destroy the Herb entity
     if current_herb_entity then
         DestroyEntity(current_herb_entity)
         current_herb_entity = nil
     end
     
-    -- 2. Return Knife to Home
     if knife_entity then
-        is_holding_knife = false -- Stop following
+        is_holding_knife = false
         SetPosition(knife_entity, knife_start_x, knife_start_y, knife_start_z)
         SetRotation(knife_entity, self.knife_rot_rest_x, self.knife_rot_rest_y, self.knife_rot_rest_z)
     end

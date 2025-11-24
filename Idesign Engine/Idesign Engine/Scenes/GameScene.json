@@ -83,7 +83,11 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "AnimationProperties": {
-                    "guid": "e4d836ef-c0bc-46bb-914c-c1e05246eb81"
+                    "guid": "e4d836ef-c0bc-46bb-914c-c1e05246eb81",
+                    "defaultAnimationName": "",
+                    "animationSpeed": 10.0,
+                    "bLoops": false,
+                    "bPlayOnStart": true
                 }
             }
         },
@@ -1136,7 +1140,9 @@
                     "sortIndex": 25
                 },
                 "TagComponent": {
-                    "tags": []
+                    "tags": [
+                        "Interactable"
+                    ]
                 },
                 "MeshComponent": {
                     "guid": "6fa52b14-d79c-4815-aaff-767eb40b32ca",
@@ -1154,6 +1160,42 @@
                             "hotReload": true
                         }
                     ]
+                },
+                "BoxColliderComponent": {
+                    "colliders": [
+                        {
+                            "size": [
+                                1.0,
+                                1.0,
+                                2.0
+                            ],
+                            "center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "canPassThrough": false
+                        }
+                    ]
+                },
+                "PhysicsProperties": {
+                    "category": 1,
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 0.5,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "startAwake": true
                 }
             }
         },
@@ -1869,14 +1911,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -34.85093688964844,
-                        8.074065208435059,
-                        11.671592712402344
+                        -34.85131072998047,
+                        8.04207706451416,
+                        11.671366691589355
                     ],
                     "rotation": [
-                        0.00006252859020605683,
-                        -0.017449988052248955,
-                        -0.011732217855751514
+                        0.000011705422366503626,
+                        -0.01921558380126953,
+                        -0.000007184340120147681
                     ],
                     "scale": [
                         0.9999989867210388,

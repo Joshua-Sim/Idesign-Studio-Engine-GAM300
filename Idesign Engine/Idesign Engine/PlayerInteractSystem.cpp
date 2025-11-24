@@ -3,7 +3,7 @@
 #include "Camera.h"
 #include <glm/glm/gtc/quaternion.hpp>
 #include <iostream>
-
+#include "ScriptingSystem.h"
 // Include Coordinator for GetEntityName and EntityHasTag
 #include "Coordinator.h" 
 
@@ -75,6 +75,16 @@ namespace Framework
                     << " which is tagged 'Interactable'" << std::endl;
 
                 // --- TODO: Call Lua Function ---
+                 // --- CALL THE LUA FUNCTION ---
+                auto scripting = ecsInterface.GetSystem<ScriptingSystem>();
+                if (scripting)
+                {
+                    // This assumes you added CallEntityFunction to ScriptingSystem!
+                    // We call "OnInteract" on the entity we hit.
+                    // We can pass the player ID as an argument if needed.
+                    Entity playerID = ecsInterface.GetEntityByName("Player");
+                    scripting->CallEntityFunction(hit.entity, "OnInteract", playerID);
+                }
             }
             else
             {
