@@ -30,6 +30,9 @@ public:
     size_t GetRawDataSize() const;
     unsigned int GetVertexCount() const;
 
+    GLuint getVBO() const { return vbo; }
+    int getVertexCount() const { return vertexCount; }
+
 private:
     std::vector<float> vertices;   // CPU-side vertex data (pos+normal interleaved)
     GLuint vao = 0, vbo = 0;

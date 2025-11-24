@@ -180,6 +180,7 @@
     <ClInclude Include="src\EventSenderComponent.h" />
     <ClInclude Include="src\EventSystem.h" />
     <ClInclude Include="src\FileCheckSystem.h" />
+    <ClInclude Include="src\FoliageRenderer.h" />
     <ClInclude Include="src\FontShader.h" />
     <ClInclude Include="src\FontSystem.h" />
     <ClInclude Include="src\GameMessages.h" />
@@ -298,6 +299,8 @@
     <None Include="Assets\shaders\blur.glsl" />
     <None Include="Assets\shaders\final.glsl" />
     <None Include="Assets\shaders\fragment.glsl" />
+    <None Include="Assets\shaders\instanced_frag.glsl" />
+    <None Include="Assets\shaders\instanced_vert.glsl" />
     <None Include="Assets\shaders\lightingfrag.glsl" />
     <None Include="Assets\shaders\lightingvert.glsl" />
     <None Include="Assets\shaders\meshfrag.glsl" />
@@ -357,6 +360,7 @@
     <ClCompile Include="src\EventManager.cpp" />
     <ClCompile Include="src\EventSystem.cpp" />
     <ClCompile Include="src\FileCheckSystem.cpp" />
+    <ClCompile Include="src\FoliageRenderer.cpp" />
     <ClCompile Include="src\FontSystem.cpp" />
     <ClCompile Include="src\GameSystem.cpp" />
     <ClCompile Include="src\Graphics.cpp" />

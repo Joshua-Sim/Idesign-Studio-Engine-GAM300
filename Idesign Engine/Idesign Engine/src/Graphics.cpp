@@ -135,6 +135,13 @@ namespace Framework {
         if (m_shadowFBO) glDeleteFramebuffers(1, &m_shadowFBO);
         if (m_shadowDepthTexture) glDeleteTextures(1, &m_shadowDepthTexture);
 
+        // === CLEANUP FOLIAGE ===
+        if (m_treeRenderer) {
+            delete m_treeRenderer;
+            m_treeRenderer = nullptr;
+            m_treeTextureID = 0;
+        }
+
         // Finally, destroy GLFW window + terminate GLFW
         if (window) {
             glfwSetFramebufferSizeCallback(window, nullptr); // stop resize callback
@@ -451,17 +458,61 @@ namespace Framework {
 
         std::vector<std::string> nightFaces =
         {
-        "Assets/Textures/right1.png",    //RIGHT
-        "Assets/Textures/left1.png",    //LEFT 
-        "Assets/Textures/top1.png",    //TOP or UP
-        "Assets/Textures/bottom1.png",     //BOTTOM or DOWN
-        "Assets/Textures/front1.png",    //FRONT
-        "Assets/Textures/back1.png"      //BACK
+        "Assets/Textures/right_night.png",    //RIGHT
+        "Assets/Textures/left_night.png",    //LEFT 
+        "Assets/Textures/top_night.png",    //TOP or UP
+        "Assets/Textures/bottom_night.png",     //BOTTOM or DOWN
+        "Assets/Textures/front_night.png",    //FRONT
+        "Assets/Textures/back_night.png"      //BACK
         };
 
 
         // Make sure the folder and files exist!
         m_skybox.init(dayFaces, nightFaces);
+
+        // === FOLIAGE/INSTANCING INIT ===
+
+        // 1. Create a simple mesh to represent the tree (Cylinder for a trunk)
+        // NOTE: If you have a way to load a real tree model (e.g., from an OBJ file 
+        // using MeshLoader), use that instead!
+        m_foliageMesh = Mesh::CreateUnitCylinderData(12);
+        m_foliageMesh.initGL(); // Upload the cylinder data to the GPU VBO/VAO
+
+        TextureProperties treeTexProps;
+        treeTexProps.path = "Assets/Textures/top.png"; // <-- CHANGE PATH TO YOUR TEXTURE!
+        m_treeTextureID = TextureLoader::loadTexture(treeTexProps, true);
+
+        m_treeRenderer = new FoliageRenderer(&m_foliageMesh);
+
+        //// 2. Create the Instancing Renderer
+        //m_treeRenderer = new FoliageRenderer(&m_foliageMesh);
+
+        // 3. Generate random positions for the trees
+        std::vector<glm::mat4> treeTransforms;
+        const int NUM_TREES = 5000; // Adjust this number for performance
+
+        // Assuming your terrain size is reasonable and you have access to the global 'terrain' object
+        for (int i = 0; i < NUM_TREES; i++) {
+            // Simple random position generation within a fixed bounding box (e.g., 200x200 area)
+            // This is a placeholder; you'd typically sample a bit more intelligently.
+            float x = -100.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 200.0f));
+            float z = -100.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 200.0f));
+
+            // Use terrain function to snap to ground height
+            float y = terrain.getHeightAt(x, z);
+
+            glm::mat4 model(1.0f);
+            model = glm::translate(model, glm::vec3(x, y, z));
+
+            // Random slight scale for variation
+            float scale = 2.8f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 0.4f));
+            model = glm::scale(model, glm::vec3(scale * 0.5f, scale * 2.0f, scale * 0.5f)); // Make it tall and thin
+
+            treeTransforms.push_back(model);
+        }
+
+        // 4. Send the data to the GPU Instancing VBO
+        m_treeRenderer->setInstances(treeTransforms);
 
         ImguiManager::LogSuccess("Graphics System initialized successfully", "Graphics");
     }
@@ -1545,6 +1596,12 @@ namespace Framework {
             }
         }
         terrain.draw();
+
+        // === DRAW FOLIAGE HERE  ===
+        if (m_treeRenderer && m_treeTextureID != 0) // Only draw if texture is loaded
+        {
+            m_treeRenderer->draw(view, proj, m_treeTextureID); // Pass the texture ID
+        }
 
 
         // --- ENTITY SORTING ---

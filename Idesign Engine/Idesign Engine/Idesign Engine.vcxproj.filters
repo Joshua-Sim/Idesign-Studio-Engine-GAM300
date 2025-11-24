@@ -139,6 +139,12 @@
     <Filter Include="Source Files\Event">
       <UniqueIdentifier>{03c7a3ec-6c07-4ebb-aff3-6cc470cc906c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\RendererInstance">
+      <UniqueIdentifier>{7554c5f4-127f-4621-8a9c-d0e362e8e8ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RendererInstance">
+      <UniqueIdentifier>{f9ea5b91-d0ce-43f9-b209-3197e3e9a033}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\rapidjson\allocators.h">
@@ -576,9 +582,6 @@
     <ClInclude Include="src\BoxColliderComponent.h">
       <Filter>Header Files\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Skybox.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\GameSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -590,6 +593,12 @@
     </ClInclude>
     <ClInclude Include="src\PhysicsProperties.h">
       <Filter>Header Files\Property</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Skybox.h">
+      <Filter>Header Files\RendererInstance</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FoliageRenderer.h">
+      <Filter>Header Files\RendererInstance</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -693,6 +702,12 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="Assets\shaders\skybox_frag.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\instanced_vert.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\instanced_frag.glsl">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
@@ -916,14 +931,17 @@
     <ClCompile Include="src\EventManager.cpp">
       <Filter>Source Files\Event</Filter>
     </ClCompile>
-    <ClCompile Include="src\Skybox.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\GameSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PlayerInteractSystem.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Skybox.cpp">
+      <Filter>Source Files\RendererInstance</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FoliageRenderer.cpp">
+      <Filter>Source Files\RendererInstance</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

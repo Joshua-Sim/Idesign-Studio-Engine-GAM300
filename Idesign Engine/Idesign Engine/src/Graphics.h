@@ -31,6 +31,7 @@
 #include "MeshProperties.h"
 #include "TextProperties.h"
 #include "Skybox.h"
+#include "FoliageRenderer.h"
 
 extern Terrain      terrain;
 extern const int    TerrainSize;
@@ -150,8 +151,17 @@ namespace Framework
         MeshProperties mesh;
         GLuint tex = 0;
 
+
+        //INSTANCING DECLARATIONS BELOW
         //sky
         Skybox m_skybox; 
+
+        //foliage
+        Mesh m_foliageMesh;           // The mesh data (e.g., a simple cylinder)
+        FoliageRenderer* m_treeRenderer = nullptr; // The instancing renderer
+
+        unsigned int m_treeTextureID = 0;
+        //END OF INSTANCING DECLARATION
 
         // shaders
         ShaderProgram terrainShader{ "Assets/shaders/terrainvert.glsl", "Assets/shaders/terrainfrag.glsl" };

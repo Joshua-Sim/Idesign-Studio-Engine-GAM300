@@ -7,9 +7,9 @@
             "isUI": false
         },
         {
-            "guid": "b2d4bb99-3396-40de-8789-01d6cf083f4e",
-            "name": "obj",
-            "path": "Assets/Textures/obj.png",
+            "guid": "e726adb8-bf75-4993-9e77-826f5541ac9d",
+            "name": "ChoppedHerb2",
+            "path": "Assets\\Textures\\ChoppedHerb2.png",
             "isUI": false
         },
         {
@@ -19,9 +19,9 @@
             "isUI": false
         },
         {
-            "guid": "e726adb8-bf75-4993-9e77-826f5541ac9d",
-            "name": "ChoppedHerb2",
-            "path": "Assets\\Textures\\ChoppedHerb2.png",
+            "guid": "b2d4bb99-3396-40de-8789-01d6cf083f4e",
+            "name": "obj",
+            "path": "Assets/Textures/obj.png",
             "isUI": false
         },
         {
@@ -49,6 +49,12 @@
             "isUI": false
         },
         {
+            "guid": "5548bb23-a8a5-467b-ac1b-af16f9d2cfa2",
+            "name": "BluePotion3",
+            "path": "Assets\\Textures\\BluePotion3.png",
+            "isUI": false
+        },
+        {
             "guid": "d1624844-bd9b-44f7-9976-d196954e311f",
             "name": "ChoppedHerb1",
             "path": "Assets\\Textures\\ChoppedHerb1.png",
@@ -61,19 +67,13 @@
             "isUI": false
         },
         {
-            "guid": "5548bb23-a8a5-467b-ac1b-af16f9d2cfa2",
-            "name": "BluePotion3",
-            "path": "Assets\\Textures\\BluePotion3.png",
-            "isUI": false
-        },
-        {
-            "guid": "7b119595-c240-4c45-a8a0-018d7a3d917f",
+            "guid": "338b187d-1182-4c0f-8af6-799d3fb9fbf2",
             "name": "",
             "path": "Assets/PNG/test.png",
             "isUI": false
         },
         {
-            "guid": "338b187d-1182-4c0f-8af6-799d3fb9fbf2",
+            "guid": "7b119595-c240-4c45-a8a0-018d7a3d917f",
             "name": "",
             "path": "Assets/PNG/test.png",
             "isUI": false
@@ -97,15 +97,15 @@
             "isUI": false
         },
         {
-            "guid": "0e3df122-8a0d-4926-bc68-1cc4f4acfa1f",
-            "name": "Drawer",
-            "path": "Assets\\Textures\\Drawer.png",
-            "isUI": false
-        },
-        {
             "guid": "add88db8-22f2-4599-ad64-d9abc2f87fa9",
             "name": "Chest",
             "path": "Assets\\Textures\\Chest.png",
+            "isUI": false
+        },
+        {
+            "guid": "0e3df122-8a0d-4926-bc68-1cc4f4acfa1f",
+            "name": "Drawer",
+            "path": "Assets\\Textures\\Drawer.png",
             "isUI": false
         },
         {
@@ -139,15 +139,15 @@
             "isUI": false
         },
         {
-            "guid": "0f2ece2c-6b29-43d9-a6ae-1f648d18d86d",
-            "name": "Wood",
-            "path": "Assets\\Textures\\Wood.png",
-            "isUI": false
-        },
-        {
             "guid": "f49379af-a87b-435b-b85b-5c3127ec2fe9",
             "name": "Counter",
             "path": "Assets\\Textures\\Counter.png",
+            "isUI": false
+        },
+        {
+            "guid": "0f2ece2c-6b29-43d9-a6ae-1f648d18d86d",
+            "name": "Wood",
+            "path": "Assets\\Textures\\Wood.png",
             "isUI": false
         },
         {
@@ -370,6 +370,18 @@
             "guid": "401f8be3-5ecf-4a58-b6b4-74cf52e9bf90",
             "name": "top_night",
             "path": "Assets\\Textures\\top_night.png",
+            "isUI": false
+        },
+        {
+            "guid": "00b45449-7939-493d-ba54-25f131f68902",
+            "name": "treefoliage",
+            "path": "Assets\\Textures\\treefoliage.png",
+            "isUI": false
+        },
+        {
+            "guid": "f57e2af6-1833-41ea-8af3-0189f79d988a",
+            "name": "foliage",
+            "path": "Assets\\Textures\\foliage.png",
             "isUI": false
         }
     ]
