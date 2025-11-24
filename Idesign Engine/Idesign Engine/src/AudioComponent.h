@@ -97,16 +97,16 @@ namespace Framework
     // Property registration for AudioComponent
     inline const std::vector g_AudioComponentPropsArray =
     {
-        PROP_GUID_HIDDEN(guid,      AudioComponent),
-        PROP_STRING(eventName,      AudioComponent),
-        PROP_BOOL(is3D,             AudioComponent),
-        PROP_FLOAT(minDistance,     AudioComponent),
-        PROP_FLOAT(maxDistance,     AudioComponent),
-        PROP_SLIDER_FLOAT(volume,   AudioComponent, 0.0f, 1.0f),
-        PROP_BOOL(loop,             AudioComponent),
-        PROP_BOOL(playOnStart,      AudioComponent),
-        PROP_BOOL(isPlaying,        AudioComponent),
-        PROP_VEC3(lastPosition,     AudioComponent)
+        PROP_GUID_HIDDEN(guid,          AudioComponent),
+        PROP_STRING_HIDDEN(eventName,   AudioComponent),
+        PROP_BOOL(is3D,                 AudioComponent),
+        PROP_FLOAT(minDistance,         AudioComponent),
+        PROP_FLOAT(maxDistance,         AudioComponent),
+        PROP_SLIDER_FLOAT(volume,       AudioComponent, 0.0f, 1.0f),
+        PROP_BOOL(loop,                 AudioComponent),
+        PROP_BOOL(playOnStart,          AudioComponent),
+        PROP_BOOL(isPlaying,            AudioComponent),
+        PROP_VEC3(lastPosition,         AudioComponent)
     };
 
     inline const prop_list g_AudioComponentProps{ "AudioComponent", g_AudioComponentPropsArray };

@@ -187,32 +187,40 @@ namespace Framework {
 
     void AudioSystem::Update(float deltaTime) {
 
-        Entity activeListenerEntity;
+        Entity activeListenerEntity = {};
         bool foundListener = false;
 
+        // Find active listener entity
         for (Entity e : mEntities) {
-            if (ecsInterface.GetEntityName(e) != "Player") continue;
             if (!ecsInterface.HasComponent<ListenerComponent>(e)) continue;
             if (!ecsInterface.HasComponent<TransformComponent>(e)) continue;
 
             auto& listener = ecsInterface.GetComponent<ListenerComponent>(e);
-            auto& transform = ecsInterface.GetComponent<TransformComponent>(e);
-            if (listener.active) {
-                activeListenerEntity = e;
-                listenerPosition = transform.position;
-                listenerForward = listener.forward;
-                listenerUp = listener.up;
-                foundListener = true;
-                break;
-            }
+            if (!listener.active) continue;
+
+            activeListenerEntity = e;
+            foundListener = true;
+            break;
         }
 
+        // If no listener found, bail or use fallback
         if (!foundListener) {
-            // fallback: default listener at origin
-            listenerPosition = glm::vec3(0.0f);
-            listenerForward = glm::vec3(0.0f, 0.0f, -1.0f);
-            listenerUp = glm::vec3(0.0f, 1.0f, 0.0f);
+            FMOD_3D_ATTRIBUTES fallbackAttribs = {};
+            fallbackAttribs.position = { 0.0f, 0.0f, 0.0f };
+            fallbackAttribs.forward = { 0.0f, 0.0f, -1.0f };
+            fallbackAttribs.up = { 0.0f, 1.0f, 0.0f };
+            fallbackAttribs.velocity = { 0.0f, 0.0f, 0.0f };
+
+            if (studioSystem) {
+                studioSystem->setListenerAttributes(0, &fallbackAttribs);
+                studioSystem->update();
+            }
+            return;
         }
+
+        // Update listener attributes from ECS
+        auto& listener = ecsInterface.GetComponent<ListenerComponent>(activeListenerEntity);
+        auto& transform = ecsInterface.GetComponent<TransformComponent>(activeListenerEntity);
 
         // Handle fade effects for smooth BGM transitions
         if (isFadingIn || isFadingOut) {
@@ -254,22 +262,22 @@ namespace Framework {
 
         // Update listener velocity for Doppler effect
         if (deltaTime > 0.0f) {
-            listenerVelocity = (listenerPosition - lastListenerPosition) / deltaTime;
-            lastListenerPosition = listenerPosition;
+            listener.velocity = (transform.position - listener.position) / deltaTime;
         }
+        listener.position = transform.position;
 
         // Update FMOD listener attributes
-        FMOD_3D_ATTRIBUTES listenerAttribs;
-        listenerAttribs.position = { listenerPosition.x, listenerPosition.y, listenerPosition.z };
-        listenerAttribs.velocity = { listenerVelocity.x, listenerVelocity.y, listenerVelocity.z };
-        listenerAttribs.forward = { listenerForward.x, listenerForward.y, listenerForward.z };
-        listenerAttribs.up = { listenerUp.x, listenerUp.y, listenerUp.z };
+        FMOD_3D_ATTRIBUTES listenerAttribs{};
+        listenerAttribs.position = { listener.position.x, listener.position.y, listener.position.z };
+        listenerAttribs.forward = { listener.forward.x, listener.forward.y, listener.forward.z };
+        listenerAttribs.up = { listener.up.x, listener.up.y, listener.up.z };
+        listenerAttribs.velocity = { listener.velocity.x, listener.velocity.y, listener.velocity.z };
 
         if (studioSystem) {
-            studioSystem->setListenerAttributes(0, &listenerAttribs);
+            studioSystem->setListenerAttributes(listener.listenerIndex, &listenerAttribs);
         }
 
-        // Update all entity audio positions
+        // Update all entity audio sources
         for (Entity entity : mEntities) {
             if (!ecsInterface.HasComponent<AudioComponent>(entity)) continue;
             if (!ecsInterface.HasComponent<TransformComponent>(entity)) continue;
@@ -488,7 +496,8 @@ namespace Framework {
         instance->setVolume(masterVolume);
         result = instance->start();
 
-        if (result != FMOD_OK) {
+        if (result != FMOD_OK) 
+        {
             std::cerr << "[AudioSystem] Failed to start instance: " << result << std::endl;
             instance->release();
             return;
@@ -509,8 +518,6 @@ namespace Framework {
         FMOD_STUDIO_PLAYBACK_STATE state;
         instance->getPlaybackState(&state);
         std::cout << "[AudioSystem] Playback state after start: " << state << std::endl;
-
-        instance->release();
     }
 
     void AudioSystem::PauseSound(const std::string& customName) {
@@ -946,7 +953,8 @@ namespace Framework {
         auto& audioComp = ecsInterface.GetComponent<AudioComponent>(entity);
 
         // Stop existing instance
-        if (audioComp.eventInstance) {
+        if (audioComp.eventInstance && !audioComp.loop)
+        {
             audioComp.eventInstance->stop(FMOD_STUDIO_STOP_IMMEDIATE);
             audioComp.eventInstance->release();
             audioComp.eventInstance = nullptr;
@@ -961,7 +969,7 @@ namespace Framework {
 
         // Create instance
         FMOD_RESULT result = eventDesc->createInstance(&audioComp.eventInstance);
-        if (result != FMOD_OK) {
+        if (result != FMOD_OK || !audioComp.eventInstance) {
             std::cerr << "[AudioSystem] Failed to create instance for: " << audioComp.eventName << std::endl;
             return;
         }
@@ -973,6 +981,7 @@ namespace Framework {
         if (audioComp.is3D && ecsInterface.HasComponent<TransformComponent>(entity)) {
             auto& transform = ecsInterface.GetComponent<TransformComponent>(entity);
             Update3DAttributes(entity, transform.position, glm::vec3(0.0f));
+            audioComp.lastPosition = transform.position;
 
             audioComp.eventInstance->setProperty(FMOD_STUDIO_EVENT_PROPERTY_MINIMUM_DISTANCE, audioComp.minDistance);
             audioComp.eventInstance->setProperty(FMOD_STUDIO_EVENT_PROPERTY_MAXIMUM_DISTANCE, audioComp.maxDistance);
