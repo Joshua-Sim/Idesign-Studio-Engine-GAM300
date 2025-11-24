@@ -33,6 +33,7 @@
 #include "AudioSystem.h"
 #include "AudioComponent.h"
 #include "MessageSystem.h"
+#include "ButtonSystem.h"
 
 
 extern Framework::Coordinator ecsInterface;
@@ -3297,7 +3298,7 @@ namespace Framework {
                 ImGui::PopStyleColor(3); // Restore color
             }
             ImGui::End();
-
+            bool menuActive = !engineState.IsPlay();
             if (ImGui::Begin("Main Viewport"))
             {
                 // Get the available size in the ImGui window
@@ -3335,14 +3336,22 @@ namespace Framework {
                     float v = (pos.y - min.y) / (max.y - min.y);
                     v = 1.0f - v;
 
-                    // hand normalized UV to Graphics for the readback
-                    m_graphicsSystem->SetPickViewIndex(g_MainViewIndex); // assuming view index 0 for main viewport
-                    m_graphicsSystem->SetGroundMode(true);
-                    if (g_MainViewIndex == 0) {
-                        m_graphicsSystem->RequestPickUV(u, v);
+                    if (!menuActive) {
+                        // hand normalized UV to Graphics for the readback
+                        m_graphicsSystem->SetPickViewIndex(g_MainViewIndex); // assuming view index 0 for main viewport
+                        m_graphicsSystem->SetGroundMode(true);
+                        if (g_MainViewIndex == 0) {
+                            m_graphicsSystem->RequestPickUV(u, v);
+
+                        }
+                        else {
+                            m_graphicsSystem->RequestPickUVSecondary(u, v);
+                        }
                     }
-                    else {
-                        m_graphicsSystem->RequestPickUVSecondary(u, v);
+                    // NEW: forward the same UV to ButtonSystem for 2D button hit-test
+                    auto buttonSys = ecsInterface.GetSystem<ButtonSystem>();
+                    if (buttonSys) {
+                        buttonSys->HandleClickUV(u, v);
                     }
 
                 }
@@ -3414,12 +3423,18 @@ namespace Framework {
                     v = 1.0f - v; // Flip V-coordinate to match OpenGL/texture convention
 
                     // Request the pick
-                    m_graphicsSystem->SetPickViewIndex(secondaryView);
-                    m_graphicsSystem->SetGroundMode(true);
-                    if (secondaryView == 0)
-                        m_graphicsSystem->RequestPickUV(u, v);
-                    else
-                        m_graphicsSystem->RequestPickUVSecondary(u, v);
+                    if (!menuActive) {
+                        m_graphicsSystem->SetPickViewIndex(secondaryView);
+                        m_graphicsSystem->SetGroundMode(true);
+                        if (secondaryView == 0)
+                            m_graphicsSystem->RequestPickUV(u, v);
+                        else
+                            m_graphicsSystem->RequestPickUVSecondary(u, v);
+                    }
+                    auto buttonSys = ecsInterface.GetSystem<ButtonSystem>();
+                    if (buttonSys) {
+                        buttonSys->HandleClickUV(u, v);
+                    }
                 }
 
                 // --- 6. Conditional Selection Logic ---

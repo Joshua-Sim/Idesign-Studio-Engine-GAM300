@@ -161,21 +161,31 @@ struct AnimationComponent
 
 class ButtonComponent {
 public:
-    glm::vec2 position;  // Position of the button
-    glm::vec2 size;      // Size of the button
-    bool isHovered;      // Is the button hovered?
-    std::function<void()> onClick;  // Function to be called when the button is clicked
+    glm::vec2 position{ 0.0f, 0.0f };   // Top-left or screen-space position
+    glm::vec2 size{ 0.0f, 0.0f };       // Width / Height
+    bool isHovered = false;       // Hover state
+    std::string label;    // Text shown on the button
+    bool wasPressedLastFrame = false;   // For edge-triggered click (no spam)
+    std::function<void()> onClick;  // Callback when clicked
 
-    ButtonComponent(glm::vec2 pos, glm::vec2 sz, std::function<void()> clickFunc)
-        : position(pos), size(sz), isHovered(false), onClick(clickFunc) {}
+    ButtonComponent() = default;
+
+    ButtonComponent(glm::vec2 pos,
+        glm::vec2 sz,
+        const std::string& text,
+        std::function<void()> clickFunc)
+        : position(pos), size(sz), isHovered(false),
+        label(text), wasPressedLastFrame(false), onClick(clickFunc) {
+    }
 
     // Trigger click event
-    void const TriggerClick() {
+    void TriggerClick() const {
         if (onClick) {
             onClick();
         }
     }
 };
+
 
 //struct ScriptInstance
 //{

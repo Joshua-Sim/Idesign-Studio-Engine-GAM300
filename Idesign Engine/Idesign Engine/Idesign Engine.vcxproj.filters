@@ -576,6 +576,9 @@
     <ClInclude Include="src\BoxColliderComponent.h">
       <Filter>Header Files\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="src\ButtonComponent.h">
+      <Filter>Header Files\Property</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

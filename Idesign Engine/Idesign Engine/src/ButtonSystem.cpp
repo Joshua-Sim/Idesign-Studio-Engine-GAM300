@@ -13,46 +13,69 @@
 
 #include "pch.h"
 #include <iostream>
-
+#include "Coordinator.h"
 #include "ButtonSystem.h"
-
+extern Framework::Coordinator ecsInterface;
 namespace Framework {
 
-    ButtonSystem::ButtonSystem(InputHandler* inputHandler) : inputHandler(inputHandler) {}
+    ButtonSystem::ButtonSystem() : m_inputHandler(nullptr) {}
+    ButtonSystem::ButtonSystem(InputHandler* inputHandler) : m_inputHandler(inputHandler) {}
+
+    void ButtonSystem::SetInputHandler(InputHandler* handler)
+    {
+        m_inputHandler = handler;
+    }
 
     void ButtonSystem::Initialize() {
         // Initialize buttons if needed
     }
 
+
     void ButtonSystem::Update(float deltaTime) {
         (void)deltaTime;
-        // Check for button interaction, hover, and clicks
-        for (auto& button : buttons) {
-            double mouseX = inputHandler->GetMouseX();
-            double mouseY = inputHandler->GetMouseY();
 
-            // Check if the mouse is over the button
-            if (mouseX > button.position.x && mouseX < button.position.x + button.size.x &&
-                mouseY > button.position.y && mouseY < button.position.y + button.size.y) {
-                button.isHovered = true;
+    }
+    void ButtonSystem::HandleClickUV(float u, float v)
+    {
+        // u, v are in [0,1], with v = 0 at top of the viewport (ImGui convention)
+        // Our 2D UI projection is bottom-left origin, so flip v.
+        float designX = u * DESIGN_WIDTH;
+        float designY = v * DESIGN_HEIGHT;
 
-                // Check if the button is clicked
-                if (inputHandler->IsMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
-                    button.TriggerClick();
-                }
-            }
-            else {
-                button.isHovered = false;
+        for (auto& entity : mEntities)
+        {
+            if (!ecsInterface.HasComponent<ButtonComponent>(entity))
+                continue;
+
+            auto& button = ecsInterface.GetComponent<ButtonComponent>(entity);
+
+            // AABB in design-space
+            float left = button.position.x;
+            float right = button.position.x + button.size.x;
+            float bottom = button.position.y;
+            float top = button.position.y + button.size.y;
+
+            bool inside = (designX > left && designX < right &&
+                designY > bottom && designY < top);
+
+            button.isHovered = inside;
+
+            if (inside)
+            {
+                // This function is only called on a mouse click,
+                // so we can immediately trigger the callback.
+                button.TriggerClick();
             }
         }
     }
-
-    void ButtonSystem::AddButton(ButtonComponent button) {
-        buttons.push_back(button);
-    }
-
-    std::vector<ButtonComponent> ButtonSystem::GetButtons() const {
-        return buttons;
-    }
-
 }
+
+//    void ButtonSystem::AddButton(ButtonComponent button) {
+//        buttons.push_back(button);
+//    }
+//
+//    std::vector<ButtonComponent> ButtonSystem::GetButtons() const {
+//        return buttons;
+//    }
+//
+//}
