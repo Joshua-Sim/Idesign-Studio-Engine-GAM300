@@ -217,6 +217,21 @@ PROPERTY_END(WindowConfig, WindowConfigProps)
     }
 
 //------------------------------------------------------------------------------------------------------------------------------------
+//  VEC2 MACRO
+//------------------------------------------------------------------------------------------------------------------------------------
+#define PROP_VEC2(field, type) \
+    Framework::prop{ #field, Framework::prop::VEC2, \
+        [](void* pObj, const void* pData) { \
+            assert(pObj && pData); \
+            static_cast<type*>(pObj)->field = *static_cast<const glm::vec2*>(pData); \
+        }, \
+        [](const void* pObj, void* pData) { \
+            assert(pObj && pData); \
+            *static_cast<glm::vec2*>(pData) = static_cast<const type*>(pObj)->field; \
+        } \
+    }
+
+//------------------------------------------------------------------------------------------------------------------------------------
 //  GUID MACRO
 //------------------------------------------------------------------------------------------------------------------------------------
 #define PROP_GUID_FLAGS(field, type, flags) \

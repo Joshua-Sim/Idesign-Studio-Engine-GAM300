@@ -210,10 +210,8 @@ namespace Framework {
         ecsInterface.RegisterComponent<MaterialMetadata>();
         ecsInterface.RegisterComponent<LightProperties>();
         ecsInterface.RegisterComponent<PhysicsProperties>();
-
+        ecsInterface.RegisterComponent<ButtonComponent>();
         ecsInterface.RegisterComponent<BoxColliderComponent>();
-
-
         //test
 
         ImguiManager::LogSuccess("Graphics components registered", "Graphics");

@@ -38,7 +38,7 @@ namespace Framework
             STRING,
             CHAR,
             BOOL,
-            VEC3,
+            VEC3, VEC2,
             UINT,
             OBJECT,         // a nested struct described by a prop_list
             VECTOR_OBJECT,
