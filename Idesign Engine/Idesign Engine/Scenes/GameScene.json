@@ -592,10 +592,6 @@
                 },
                 "MeshComponent": {
                     "guid": "90a63915-c3e8-40b9-8c48-b8fe58a9bd67"
-                },
-                "TextureComponent": {
-                    "guid": "0e3df122-8a0d-4926-bc68-1cc4f4acfa1f",
-                    "isUI": false
                 }
             }
         },
@@ -747,10 +743,6 @@
                 },
                 "MeshComponent": {
                     "guid": "90a63915-c3e8-40b9-8c48-b8fe58a9bd67"
-                },
-                "TextureComponent": {
-                    "guid": "0e3df122-8a0d-4926-bc68-1cc4f4acfa1f",
-                    "isUI": false
                 }
             }
         },
@@ -1728,10 +1720,6 @@
                 },
                 "MeshComponent": {
                     "guid": "76f36163-789f-4c71-87b4-76fdccaa8408"
-                },
-                "TextureComponent": {
-                    "guid": "5548bb23-a8a5-467b-ac1b-af16f9d2cfa2",
-                    "isUI": false
                 }
             }
         },
@@ -1766,10 +1754,6 @@
                 },
                 "MeshComponent": {
                     "guid": "76f36163-789f-4c71-87b4-76fdccaa8408"
-                },
-                "TextureComponent": {
-                    "guid": "5548bb23-a8a5-467b-ac1b-af16f9d2cfa2",
-                    "isUI": false
                 }
             }
         },
@@ -1804,10 +1788,6 @@
                 },
                 "MeshComponent": {
                     "guid": "76f36163-789f-4c71-87b4-76fdccaa8408"
-                },
-                "TextureComponent": {
-                    "guid": "5548bb23-a8a5-467b-ac1b-af16f9d2cfa2",
-                    "isUI": false
                 }
             }
         },
@@ -1842,10 +1822,6 @@
                 },
                 "MeshComponent": {
                     "guid": "76f36163-789f-4c71-87b4-76fdccaa8408"
-                },
-                "TextureComponent": {
-                    "guid": "5548bb23-a8a5-467b-ac1b-af16f9d2cfa2",
-                    "isUI": false
                 }
             }
         },
@@ -1911,14 +1887,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -29.986677169799805,
-                        8.042074203491211,
-                        13.79066276550293
+                        -30.908357620239258,
+                        8.04206657409668,
+                        13.218019485473633
                     ],
                     "rotation": [
-                        -0.000030142160539980978,
-                        -0.13257575035095215,
-                        -0.00011948585597565398
+                        0.0012771699111908674,
+                        -0.4370652139186859,
+                        -0.000008328344847541302
                     ],
                     "scale": [
                         0.9999989867210388,
@@ -2017,8 +1993,7 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
@@ -2214,14 +2189,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -40.49669647216797,
-                        6.511944770812988,
-                        17.749330520629883
+                        -40.230262756347656,
+                        6.287981033325195,
+                        17.725893020629883
                     ],
                     "rotation": [
-                        0.0,
-                        -0.0,
-                        0.0
+                        -2.647702501690219e-7,
+                        -0.004017276223748922,
+                        -0.000004445694230525987
                     ],
                     "scale": [
                         0.30000001192092896,
@@ -2235,14 +2210,16 @@
                     "sortIndex": 6
                 },
                 "TagComponent": {
-                    "tags": []
+                    "tags": [
+                        "Interactable"
+                    ]
                 },
                 "MeshComponent": {
                     "guid": "95461aed-91bf-4172-9f2c-d7578e059e28",
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "AnimationProperties": {
-                    "guid": "af14de83-981d-448a-a6e3-07a92a48e676",
+                    "guid": "7f9c0bd8-fb8d-4cb6-91a0-d40893904ef2",
                     "defaultAnimationName": "",
                     "animationSpeed": 1.0,
                     "bLoops": true,
@@ -2251,6 +2228,51 @@
                 "TextureComponent": {
                     "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
                     "isUI": false
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "3a5dd495-f311-4f19-991a-b6bfc5d63825",
+                            "scriptPath": "Assets\\Scripts\\Cauldron.lua",
+                            "hotReload": true
+                        }
+                    ]
+                },
+                "BoxColliderComponent": {
+                    "colliders": [
+                        {
+                            "size": [
+                                6.599999904632568,
+                                6.0,
+                                6.400000095367432
+                            ],
+                            "center": [
+                                -1.600000023841858,
+                                1.0,
+                                -1.0
+                            ],
+                            "canPassThrough": false
+                        }
+                    ]
+                },
+                "PhysicsProperties": {
+                    "category": 1,
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 0.5,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "startAwake": true
                 }
             }
         }

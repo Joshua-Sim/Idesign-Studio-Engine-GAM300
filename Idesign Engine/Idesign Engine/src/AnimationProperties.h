@@ -25,7 +25,7 @@ namespace Framework
         AssetHandle guid;
         std::string name;
         std::string path; // Path to the .fbx, .gltf, etc.
-
+        int updateMode = 0;
         /**
          * @brief The name of the animation to play by default.
          * (e.g., "Armature|ArmatureAction")

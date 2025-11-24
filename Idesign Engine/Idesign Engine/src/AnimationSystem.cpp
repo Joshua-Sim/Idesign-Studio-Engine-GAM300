@@ -19,6 +19,7 @@
 #include "MeshLoader.h"
 #include "TextureLoader.h"
 #include "AnimationProperties.h"
+#include "graphics.h"
 
 extern Framework::Coordinator ecsInterface;
 
@@ -39,39 +40,74 @@ namespace Framework
 
     void AnimationSystem::Update(float deltaTime)
     {
+        GLFWwindow* window = glfwGetCurrentContext();
+        auto* graphics = Graphics::GetInstance();
+        // --- 1. CALCULATE REAL TIME (For Normal NPCs) ---
+        static double lastFrameTime = glfwGetTime();
+        double currentFrameTime = glfwGetTime();
+        float realDt = static_cast<float>(currentFrameTime - lastFrameTime);
+        lastFrameTime = currentFrameTime;
+        if (realDt > 0.1f) realDt = 0.016f;
+
+        // --- 2. CALCULATE STIRRING LOGIC (For Cauldron) ---
+        // Only valid if we are in Interaction Mode (Camera Locked)
+        bool isInteractionMode = (graphics && !graphics->IsCameraRotationEnabled()); // Requires getter in Graphics.h
+
+        // Mouse Math
+        double currX, currY;
+        glfwGetCursorPos(window, &currX, &currY);
+        int winW, winH;
+        glfwGetWindowSize(window, &winW, &winH);
+
+        double centerX = winW / 2.0;
+        double centerY = winH / 2.0;
+        double vecX = currX - centerX;
+        double vecY = currY - centerY;
+        double currentAngle = std::atan2(vecY, vecX);
+
+        static double lastAngle = currentAngle;
+        double angleDelta = currentAngle - lastAngle;
+        const double PI = 3.14159265358979323846;
+        if (angleDelta > PI)  angleDelta -= 2.0 * PI;
+        if (angleDelta < -PI) angleDelta += 2.0 * PI;
+        lastAngle = currentAngle;
+
+        bool outsideDeadzone = (vecX * vecX + vecY * vecY) > (50.0 * 50.0);
+
+        // Stirring happens if: Camera Locked AND Mouse Rotating AND Outside Deadzone
+        bool isStirring = isInteractionMode && (std::abs(angleDelta) > 0.02) && outsideDeadzone;
+
+        // The time step to use for the Cauldron
+        float stirDt = isStirring ? realDt : 0.0f;
         for (auto const& entity : mEntities)
         {
-            if (ecsInterface.HasComponent<AnimationProperties>(entity)) {
+            if (ecsInterface.HasComponent<AnimationProperties>(entity))
+            {
                 auto& animator = ecsInterface.GetComponent<AnimationProperties>(entity);
-
-
                 if (!animator.currentAnimation && animator.bPlayOnStart)
                 {
-
                     animator.StartDefaultAnimation();
-                    if (!animator.finalBoneMatrices.empty())
-                    {
-                        glm::mat4 rootMat = animator.finalBoneMatrices[0];
-                        // Check if the scale is zero (Mesh Disappears) or normal (1.0)
-                        float scaleX = glm::length(glm::vec3(rootMat[0]));
-
-                        // Print only once to avoid spam
-                        static bool s_printed = false;
-                        if (!s_printed) {
-                            std::cout << "[DEBUG] Root Bone Scale: " << scaleX << std::endl;
-
-                            if (scaleX < 0.001f) std::cout << "[ERROR] MATRIX IS ZERO! Check GlobalInverseTransform." << std::endl;
-                            else std::cout << "[SUCCESS] Matrix is valid." << std::endl;
-
-                            s_printed = true;
-                        }
-                    }
                 }
 
-                // Now, if an animation is (or just became) active, update its transforms
                 if (animator.currentAnimation)
                 {
-                    CalculateBoneTransforms(animator, deltaTime);
+                    // [FIX] Determine DT based on the mode set by Lua
+                    float dtForEntity = 0.0f;
+                   
+                    switch (animator.updateMode)
+                    {
+                    case 0: // Normal (Always Play)
+                        dtForEntity = realDt;
+                        break;
+                    case 1: // Stirring (Only play if mouse is rotating)
+                        dtForEntity = isStirring ? realDt : 0.0f;
+                        break;
+                    case 2: // Manual (Paused)
+                        dtForEntity = 0.0f;
+                        break;
+                    }
+
+                    CalculateBoneTransforms(animator, dtForEntity);
                 }
             }
         }
@@ -191,10 +227,7 @@ namespace Framework
             if (!channel->scales.empty())
                 scale = InterpolateScale(channel, animator.currentTime);
         }
-        if (bone.name == "Bubble1") // Make sure this matches your Blender bone name EXACTLY
-        {
-          //  std::cout << "Bubble1 Y: " << position.y << std::endl;
-        }
+      
         // 1c. Rebuild the final local transform matrix
         glm::mat4 localTransform = glm::translate(glm::mat4(1.0f), position) *
             glm::toMat4(rotation) *

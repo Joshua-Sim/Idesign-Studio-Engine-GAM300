@@ -15,6 +15,7 @@
 #include "ScriptProperties.h"
 #include "AudioSystem.h"
 #include "ItemComponent.h" // <--- Add this
+#include "Graphics.h"
 
 extern Framework::Coordinator ecsInterface;
 
@@ -101,8 +102,6 @@ namespace Framework {
             g->NudgeLightFromLua(axis, amt);
             return 0;
         }
-
-        // In ScriptingSystem.cpp, inside the anonymous namespace or static helpers
 
         static int l_spawnPrompt(lua_State* L) {
             // Argument 1: The Entity ID (The Box/Receiver) - so we know WHERE to spawn
@@ -608,7 +607,7 @@ namespace Framework {
             }
             catch (...) {
                 // swallow; we'll just recompile
-                std::cerr << "[Cook] Warning: failed to check timestamps — forcing recompile.\n";
+                std::cerr << "[Cook] Warning: failed to check timestamps ï¿½ forcing recompile.\n";
             }
             return false;
         }
@@ -751,6 +750,66 @@ namespace Framework {
         static uint64_t FileTimeToTicks(const std::filesystem::file_time_type& ft) {
             return std::chrono::duration_cast<std::chrono::milliseconds>(ft.time_since_epoch()).count();
         }
+
+        // [NEW] Helper to find the GUID string from a friendly name
+        static int l_GetAnimationGUID(lua_State* L)
+        {
+            const char* name = luaL_checkstring(L, 1);
+            // Ask AssetManager for the GUID of the animation with this name
+            AssetHandle guid = AssetManager::Instance().FindGuid<AnimationProperties>(name);
+
+            if (guid.id.empty()) {
+                std::cout << "[Lua Warning] Animation Asset not found: " << name << std::endl;
+            }
+
+            lua_pushstring(L, guid.id.c_str());
+            return 1; // Return the GUID string to Lua
+        }
+
+        // [NEW] Helper to swap the Animation Asset by GUID
+        static int l_SetAnimationAsset(lua_State* L)
+        {
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+            const char* guidStr = luaL_checkstring(L, 2);
+
+            if (ecsInterface.IsEntityValid(e) && ecsInterface.HasComponent<AnimationProperties>(e))
+            {
+                auto& anim = ecsInterface.GetComponent<AnimationProperties>(e);
+                AssetHandle newGuid(guidStr);
+
+                // Only swap if it's different
+                if (anim.guid.id != newGuid.id)
+                {
+                    anim.guid = newGuid;
+
+                    // Load the new data
+                    AnimationProperties* asset = AssetManager::Instance().Get<AnimationProperties>(newGuid);
+                    if (asset)
+                    {
+                        // Ensure data is loaded
+                        if (asset->skeleton.bones.empty()) {
+                            AnimationLoader::loadAnimation(asset->path, *asset);
+                        }
+
+                        // Copy the new skeleton and clips
+                        anim.skeleton = asset->skeleton;
+                        anim.availableAnimations = asset->availableAnimations;
+                        anim.globalInverseTransform = asset->globalInverseTransform;
+
+                        // Reset Playback
+                        anim.currentTime = 0.0f;
+                        anim.currentAnimation = nullptr;
+                        anim.StartDefaultAnimation();
+
+                        // Resize matrices for safety
+                        anim.finalBoneMatrices.resize(anim.skeleton.bones.size(), glm::mat4(1.0f));
+
+                        // std::cout << "[Lua] Swapped Animation Asset to: " << asset->name << std::endl;
+                    }
+                }
+            }
+            return 0;
+        }
     } // anonymous namespace
 
     // ---------------------------- class methods --------------------------------
@@ -759,7 +818,7 @@ namespace Framework {
     ScriptingSystem::~ScriptingSystem() { if (L) { lua_close(L); L = nullptr; } }
 
     void ScriptingSystem::Initialize() {
-        // 1) Register ScriptComponent (your engine’s pattern)
+        // 1) Register ScriptComponent (your engineï¿½s pattern)
         ecsInterface.RegisterComponent<ScriptEntry>();
         ecsInterface.RegisterComponent<ScriptProperties>();
 
@@ -808,7 +867,52 @@ namespace Framework {
         lua_register(L, "PlaySound", l_PlaySound);
         lua_register(L, "SpawnPrefab", lua_SpawnPrefab);
 
+        
+        //cauldron
+        lua_register(L, "SetCameraLock", [](lua_State* L) -> int {
+            // 1. Get argument (true/false)
+            bool locked = lua_toboolean(L, 1);
 
+            // 2. Get Graphics System
+            auto* gfx = Graphics::GetInstance();
+
+            // 3. Apply the lock (True = Rotation Disabled)
+            if (gfx) gfx->SetCameraRotationEnabled(!locked);
+
+            return 0;
+            });
+
+        lua_register(L, "SetGravity", [](lua_State* L) -> int {
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+            float gravity = static_cast<float>(luaL_checknumber(L, 2));
+
+            if (ecsInterface.IsEntityValid(e) && ecsInterface.HasComponent<PhysicsProperties>(e))
+            {
+                auto& phys = ecsInterface.GetComponent<PhysicsProperties>(e);
+                phys.gravityFactor = gravity;
+                phys.startAwake = true; // Wake it up to apply change
+            }
+            return 0;
+            });
+
+        lua_register(L, "SetAnimationMode", [](lua_State* L) -> int {
+            // Arg 1: Entity ID
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+            // Arg 2: Mode (0=Normal, 1=Stirring, 2=Manual)
+            int mode = static_cast<int>(luaL_checkinteger(L, 2));
+
+            // Validate and Apply
+            if (ecsInterface.IsEntityValid(e) && ecsInterface.HasComponent<AnimationProperties>(e))
+            {
+                auto& anim = ecsInterface.GetComponent<AnimationProperties>(e);
+                anim.updateMode = mode;
+                // std::cout << "[Scripting] Set Animation Mode to " << mode << " for Entity " << e << std::endl;
+            }
+            return 0;
+            });
+
+        lua_register(L, "GetAnimationGUID", l_GetAnimationGUID);
+        lua_register(L, "SetAnimationAsset", l_SetAnimationAsset);
         // Navmesh
         lua_register(L, "BuildNavMesh", lua_BuildNavMesh);
         lua_register(L, "PathfindTo", [](lua_State* L) -> int {

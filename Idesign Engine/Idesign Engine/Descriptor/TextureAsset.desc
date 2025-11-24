@@ -1,16 +1,10 @@
 {
-    "count": 62,
+    "count": 60,
     "entries": [
         {
             "guid": "afd25b76-dddc-4c4f-bae4-a6c9a22931e5",
             "name": "Herb",
             "path": "Assets\\Textures\\Herb.png",
-            "isUI": false
-        },
-        {
-            "guid": "b2d4bb99-3396-40de-8789-01d6cf083f4e",
-            "name": "obj",
-            "path": "Assets/Textures/obj.png",
             "isUI": false
         },
         {
@@ -23,6 +17,12 @@
             "guid": "e726adb8-bf75-4993-9e77-826f5541ac9d",
             "name": "ChoppedHerb2",
             "path": "Assets\\Textures\\ChoppedHerb2.png",
+            "isUI": false
+        },
+        {
+            "guid": "b2d4bb99-3396-40de-8789-01d6cf083f4e",
+            "name": "obj",
+            "path": "Assets/Textures/obj.png",
             "isUI": false
         },
         {
@@ -62,12 +62,6 @@
             "isUI": false
         },
         {
-            "guid": "5548bb23-a8a5-467b-ac1b-af16f9d2cfa2",
-            "name": "BluePotion3",
-            "path": "Assets\\Textures\\BluePotion3.png",
-            "isUI": false
-        },
-        {
             "guid": "7b119595-c240-4c45-a8a0-018d7a3d917f",
             "name": "",
             "path": "Assets/PNG/test.png",
@@ -95,12 +89,6 @@
             "guid": "373d4ede-6c21-4cca-9e62-45d4e4c2b253",
             "name": "Potion1",
             "path": "Assets\\Textures\\Potion1.png",
-            "isUI": false
-        },
-        {
-            "guid": "0e3df122-8a0d-4926-bc68-1cc4f4acfa1f",
-            "name": "Drawer",
-            "path": "Assets\\Textures\\Drawer.png",
             "isUI": false
         },
         {
@@ -140,15 +128,15 @@
             "isUI": false
         },
         {
-            "guid": "0f2ece2c-6b29-43d9-a6ae-1f648d18d86d",
-            "name": "Wood",
-            "path": "Assets\\Textures\\Wood.png",
-            "isUI": false
-        },
-        {
             "guid": "f49379af-a87b-435b-b85b-5c3127ec2fe9",
             "name": "Counter",
             "path": "Assets\\Textures\\Counter.png",
+            "isUI": false
+        },
+        {
+            "guid": "0f2ece2c-6b29-43d9-a6ae-1f648d18d86d",
+            "name": "Wood",
+            "path": "Assets\\Textures\\Wood.png",
             "isUI": false
         },
         {

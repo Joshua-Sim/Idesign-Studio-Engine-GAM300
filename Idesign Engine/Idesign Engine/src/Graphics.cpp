@@ -76,6 +76,7 @@ const float TerrainScale = 1.0f;
 Terrain     terrain{ TerrainSize, TerrainScale };
 
 namespace Framework {
+    Graphics* Graphics::s_instance = nullptr;
     bool Graphics::mouseCaptured = true;
     static bool firstMouse = true;
     static bool mouseCaptured = true;
@@ -90,6 +91,7 @@ namespace Framework {
     {
         WindowConfig* config = AssetManager::Instance().Get<WindowConfig>(AssetManager::Instance().FindGuid<WindowConfig>());
         if (!glfwInit()) { std::cerr << "GLFW init failed\n"; return; }
+        s_instance = this;
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -143,6 +145,11 @@ namespace Framework {
             window = nullptr;
         }
         glfwTerminate();
+    }
+
+    void Graphics::SetCameraRotationEnabled(bool enabled)
+    {
+        m_cameraRotationEnabled = enabled;
     }
 
     // Initialize the system
@@ -874,8 +881,8 @@ namespace Framework {
         const bool editorActive = (m_mouseTargetView == 1);   // 1 = Editor/Scene, 0 = Game
 
         // ============================================================
-                // MODE A: EDITOR / FREE FLY
-                // ============================================================
+        // MODE A: EDITOR / FREE FLY
+        // ============================================================
         if (editorActive)
         {
             Camera& cam = sceneCamera;
@@ -966,7 +973,6 @@ namespace Framework {
 
         // ============================================================
         // MODE B: GAME MODE / PLAYER PHYSICS
-        // (We DO NOT use processKeyboard. We drive the Physics Body.)
         // ============================================================
         else
         {
@@ -978,10 +984,44 @@ namespace Framework {
                 auto& phys = ecsInterface.GetComponent<PhysicsProperties>(player);
                 auto& trans = ecsInterface.GetComponent<TransformComponent>(player);
 
+                // --- [NEW] MOUSE LOOK LOGIC (Game Mode) ---
+                // This allows looking around while playing
+                static bool firstMouseGame = true;
+                static double lastXGame = 0.0, lastYGame = 0.0;
+
+                if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
+                {
+                    double xpos, ypos;
+                    glfwGetCursorPos(window, &xpos, &ypos);
+
+                    if (firstMouseGame)
+                    {
+                        lastXGame = xpos;
+                        lastYGame = ypos;
+                        firstMouseGame = false;
+                    }
+
+                    float xoffset = static_cast<float>(xpos - lastXGame);
+                    float yoffset = static_cast<float>(lastYGame - ypos);
+
+                    lastXGame = xpos;
+                    lastYGame = ypos;
+
+                    // Only rotate if camera isn't locked (e.g. by stirring)
+                    if (m_cameraRotationEnabled)
+                    {
+                        gameCamera.processMouseMovement(xoffset, yoffset);
+                    }
+                }
+                else
+                {
+                    firstMouseGame = true;
+                }
+                // ------------------------------------------
+
                 // 2. Calculate Direction based on Camera Facing
-                // We want "W" to mean "Forward relative to where I am looking"
                 glm::vec3 camForward = gameCamera.front;
-                camForward.y = 0.0f; // Flatten so we don't fly up/down
+                camForward.y = 0.0f;
                 camForward = glm::normalize(camForward);
 
                 glm::vec3 camRight = gameCamera.right;
@@ -989,7 +1029,7 @@ namespace Framework {
                 camRight = glm::normalize(camRight);
 
                 glm::vec3 targetVelocity(0.0f);
-                float moveSpeed = 5.0f; // Adjust this speed!
+                float moveSpeed = 5.0f;
 
                 // 3. Input -> Velocity
                 if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) targetVelocity += camForward;
@@ -997,32 +1037,25 @@ namespace Framework {
                 if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) targetVelocity -= camRight;
                 if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) targetVelocity += camRight;
 
-                // Normalize if moving diagonally so we don't move faster
                 if (glm::length(targetVelocity) > 0.1f) {
                     targetVelocity = glm::normalize(targetVelocity) * moveSpeed;
                 }
 
-                // 4. Apply to Physics Component
-                // PRESERVE Y VELOCITY (Gravity needs to pull us down!)
+                // 4. Apply to Physics
                 phys.linearVelocity.x = targetVelocity.x;
                 phys.linearVelocity.z = targetVelocity.z;
-                // Do NOT touch phys.linearVelocity.y here, let Jolt handle gravity.
 
-                // 5. IMPORTANT: Wake up the body
-                // If the player was standing still, Jolt puts it to sleep to save CPU.
-                // We must wake it up to move it.
                 if (glm::length(targetVelocity) > 0.01f) {
                     phys.startAwake = true;
                 }
 
-                // 6. CAMERA FOLLOW LOGIC (Snap Camera to Player)
-                // We update the camera position to sit inside/above the player
-                glm::vec3 eyeOffset(0.0f, 1.8f, 0.0f); // 1.8 units high
+                // 6. CAMERA FOLLOW LOGIC
+                glm::vec3 eyeOffset(0.0f, 1.8f, 0.0f);
                 gameCamera.position = trans.position + eyeOffset;
             }
         }
 
-        // HDR and Bloom control
+        // HDR/Bloom keys...
         if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS) hdrExposure += 1.0f * dt;
         if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) if (hdrExposure > 0.0f) hdrExposure -= 1.0f * dt;
         if (glfwGetKey(window, GLFW_KEY_EQUAL) == GLFW_PRESS) bloomStrength += 1.0f * dt;

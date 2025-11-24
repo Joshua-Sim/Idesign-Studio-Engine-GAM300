@@ -95,7 +95,18 @@ namespace Framework
         // Static flag so we can access it anywhere without an instance
         static bool s_RenderDebugColliders;
 
+
+        //global assecs for systems
+        static Graphics* GetInstance() { return s_instance; }
+
+        //Function called by Lua to lock/unlock
+        void SetCameraRotationEnabled(bool enabled);
+        bool IsCameraRotationEnabled() const { return m_cameraRotationEnabled; }
     private:
+
+        static Graphics* s_instance;
+        bool m_cameraRotationEnabled = true;
+
         static void framebuffer_size_callback(GLFWwindow*, int, int);
         static void mouse_callback(GLFWwindow*, double, double);
 

@@ -1,10 +1,21 @@
 {
-    "count": 2,
+    "count": 3,
     "entries": [
         {
             "guid": "e4d836ef-c0bc-46bb-914c-c1e05246eb81",
             "name": "knifechoppingwithBONEFIXED4",
             "path": "Assets/Objects/knifechoppingwithBONEFIXED4.fbx",
+            "defaultAnimationName": "",
+            "animationSpeed": 1.0,
+            "bLoops": true,
+            "bPlayOnStart": true,
+            "currentTime": 0.0,
+            "vbo_skinning": 0
+        },
+        {
+            "guid": "7f9c0bd8-fb8d-4cb6-91a0-d40893904ef2",
+            "name": "cauldronwithoutspoon",
+            "path": "Assets\\Objects\\cauldronwithoutspoon.fbx",
             "defaultAnimationName": "",
             "animationSpeed": 1.0,
             "bLoops": true,
