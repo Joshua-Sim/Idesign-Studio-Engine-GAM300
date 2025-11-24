@@ -9,6 +9,7 @@
 #include "PrefabComponent.h"
 #include "ScriptProperties.h"
 #include "ScriptingSystem.h"
+#include <ItemComponent.h>
 
 static const std::map<std::string, LightType> s_stringToLightType = {
     { "Directional", LightType::Directional },
@@ -540,6 +541,34 @@ namespace Framework
                     // Add to ECS
                     ecsInterface.AddComponent(entity, audioComp);
                 }
+                
+                // --- Item Component ---
+                if (components.HasMember("ItemComponent"))
+                {
+                    const auto& jsonVal = components["ItemComponent"];
+                    ItemComponent item;
+
+                    // 1. Name
+                    if (jsonVal.HasMember("name") && jsonVal["name"].IsString())
+                    {
+                        item.name = jsonVal["name"].GetString();
+                    }
+
+                    // 2. Is Ingredient
+                    if (jsonVal.HasMember("isIngredient") && jsonVal["isIngredient"].IsBool())
+                    {
+                        item.isIngredient = jsonVal["isIngredient"].GetBool();
+                    }
+
+                    // 3. Is Choppable
+                    if (jsonVal.HasMember("isChoppable") && jsonVal["isChoppable"].IsBool())
+                    {
+                        item.isChoppable = jsonVal["isChoppable"].GetBool();
+                    }
+
+                    ecsInterface.AddComponent(entity, item);
+                }
+
                 sceneManager.RegisterEntityToScene(entity, cleanName);
             }
         }
@@ -860,6 +889,23 @@ namespace Framework
                     Serialize((void*)&audioComp, g_AudioComponentProps, compJson, allocator);
 
                     componentsObj.AddMember("AudioComponent", compJson, allocator);
+                
+                    // --- Item Component ---
+                if (ecsInterface.HasComponent<ItemComponent>(entity))
+                {
+                    const auto& item = ecsInterface.GetComponent<ItemComponent>(entity);
+                    rapidjson::Value itemJson(rapidjson::kObjectType);
+
+                    // 1. Name
+                    rapidjson::Value nameVal;
+                    nameVal.SetString(item.name.c_str(), allocator);
+                    itemJson.AddMember("name", nameVal, allocator);
+
+                    // 2. Bools
+                    itemJson.AddMember("isIngredient", item.isIngredient, allocator);
+                    itemJson.AddMember("isChoppable", item.isChoppable, allocator);
+
+                    componentsObj.AddMember("ItemComponent", itemJson, allocator);
                 }
             }
 
@@ -1511,6 +1557,98 @@ namespace Framework
 
         return entity;
     }
+
+    // Find prefab GUID by name
+    std::string FindPrefabGUIDByName(const std::string& prefabName)
+    {
+        // Get all prefabs from AssetManager
+        // This depends on your AssetManager implementation
+        // You might need to add a GetAll<T>() method to AssetManager
+
+        // For now, let's iterate through what we can access
+        // If your AssetManager has a way to iterate, use that
+        // Otherwise, you'll need to add this capability
+
+        std::cout << "[FindPrefab] Looking for prefab: " << prefabName << std::endl;
+
+        // Placeholder - you'll need to implement based on your AssetManager
+        // This is a simple approach if you don't have iteration:
+        // Try to load from the JSON directly
+
+        std::filesystem::path jsonPath = std::filesystem::path(ScriptingSystem::GetProjectRoot()) / "Assets/JSON/PrefabAsset.json";
+
+        FILE* fp = fopen(jsonPath.string().c_str(), "r");
+        if (!fp)
+        {
+            std::cerr << "[FindPrefab] Could not open PrefabAsset.json\n";
+            return "";
+        }
+
+        char buffer[65536];
+        rapidjson::FileReadStream is(fp, buffer, sizeof(buffer));
+        rapidjson::Document doc;
+        doc.ParseStream(is);
+        fclose(fp);
+
+        if (!doc.HasMember("prefabs") || !doc["prefabs"].IsArray())
+        {
+            std::cerr << "[FindPrefab] Invalid JSON format\n";
+            return "";
+        }
+
+        const auto& prefabs = doc["prefabs"].GetArray();
+        for (const auto& prefab : prefabs)
+        {
+            if (prefab.HasMember("name") && prefab["name"].IsString())
+            {
+                std::string name = prefab["name"].GetString();
+                if (name == prefabName)
+                {
+                    if (prefab.HasMember("guid") && prefab["guid"].IsString())
+                    {
+                        std::string guid = prefab["guid"].GetString();
+                        std::cout << "[FindPrefab] Found: " << prefabName << " -> " << guid << std::endl;
+                        return guid;
+                    }
+                }
+            }
+        }
+
+        std::cerr << "[FindPrefab] Prefab not found: " << prefabName << std::endl;
+        return "";
+    }
+
+    // Overload that takes name instead of GUID
+    Entity InstantiatePrefabByName(const std::string& prefabName)
+    {
+        std::string guid = FindPrefabGUIDByName(prefabName);
+        if (guid.empty())
+        {
+            std::cerr << "Failed to find prefab: " << prefabName << std::endl;
+            return std::numeric_limits<Entity>::max();
+        }
+
+        return InstantiatePrefab(guid);
+    }
+
+    Entity InstantiatePrefabByName(const std::string& prefabName, const glm::vec3& position)
+    {
+        std::string guid = FindPrefabGUIDByName(prefabName);
+        if (guid.empty())
+            return std::numeric_limits<Entity>::max();
+
+        return InstantiatePrefab(guid, position);
+    }
+
+    Entity InstantiatePrefabByName(const std::string& prefabName, const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale)
+    {
+        std::string guid = FindPrefabGUIDByName(prefabName);
+        if (guid.empty())
+            return std::numeric_limits<Entity>::max();
+
+        return InstantiatePrefab(guid, position, rotation, scale);
+    }
+
 
     bool MoveFileToAssetFolder(const std::string& sourcePath, const std::string& destinationFolder, std::string& outFinalPath, std::string& outError)
     {

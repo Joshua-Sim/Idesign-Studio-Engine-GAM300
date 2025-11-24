@@ -12,6 +12,7 @@
 #include <filesystem>
 #include "ScriptProperties.h"
 #include "AudioSystem.h"
+#include "ItemComponent.h" // <--- Add this
 
 extern Framework::Coordinator ecsInterface;
 
@@ -197,6 +198,137 @@ namespace Framework {
             return 1;
         }
 
+       // Navmesh build function
+        static int lua_BuildNavMesh(lua_State* L)
+        {
+            auto& ecs = ecsInterface;
+            auto navSystem = ecs.GetSystem<Framework::NavMeshSystem>();
+
+            if (!navSystem)
+            {
+                std::cerr << "[Lua] NavMeshSystem not found!\n";
+                lua_pushboolean(L, false);
+                return 1;
+            }
+
+            // If your function is void and doesn't return success:
+            navSystem->BuildNavMesh();  // or whatever your method is called
+            std::cout << "[Lua] NavMesh build triggered.\n";
+
+            lua_pushboolean(L, true);
+            return 1;
+        }
+
+        //Spawn prefab expose
+       // Update your lua_SpawnPrefab function in ScriptingSystem.cpp
+        static int lua_SpawnPrefab(lua_State* L)
+        {
+            const char* prefabIdentifier = luaL_checkstring(L, 1);
+
+            Entity spawnedEntity = std::numeric_limits<Entity>::max();
+
+            int numArgs = lua_gettop(L);
+
+            if (numArgs == 1)
+            {
+                // Try as GUID first (direct lookup - faster)
+                spawnedEntity = InstantiatePrefab(std::string(prefabIdentifier));
+
+                // If that fails, try as name
+                if (spawnedEntity == std::numeric_limits<Entity>::max())
+                {
+                    spawnedEntity = InstantiatePrefabByName(std::string(prefabIdentifier));
+                }
+            }
+            else if (numArgs == 2)
+            {
+                // Spawn at another entity's position
+                Entity positionEntity = static_cast<Entity>(luaL_checkinteger(L, 2));
+
+                if (!ecsInterface.IsEntityValid(positionEntity) ||
+                    !ecsInterface.HasComponent<TransformComponent>(positionEntity))
+                {
+                    return luaL_error(L, "SpawnPrefab: invalid position entity or missing TransformComponent");
+                }
+
+                auto& posTransform = ecsInterface.GetComponent<TransformComponent>(positionEntity);
+
+                // Try GUID first
+                spawnedEntity = InstantiatePrefab(std::string(prefabIdentifier), posTransform.position);
+
+                // Try name if GUID failed
+                if (spawnedEntity == std::numeric_limits<Entity>::max())
+                {
+                    spawnedEntity = InstantiatePrefabByName(std::string(prefabIdentifier), posTransform.position);
+                }
+            }
+            else if (numArgs == 4)
+            {
+                // Spawn with explicit position (x, y, z)
+                float x = static_cast<float>(luaL_checknumber(L, 2));
+                float y = static_cast<float>(luaL_checknumber(L, 3));
+                float z = static_cast<float>(luaL_checknumber(L, 4));
+
+                glm::vec3 position(x, y, z);
+
+                // Try GUID first
+                spawnedEntity = InstantiatePrefab(std::string(prefabIdentifier), position);
+
+                // Try name if GUID failed
+                if (spawnedEntity == std::numeric_limits<Entity>::max())
+                {
+                    spawnedEntity = InstantiatePrefabByName(std::string(prefabIdentifier), position);
+                }
+            }
+            else if (numArgs == 10)
+            {
+                // Full transform
+                float px = static_cast<float>(luaL_checknumber(L, 2));
+                float py = static_cast<float>(luaL_checknumber(L, 3));
+                float pz = static_cast<float>(luaL_checknumber(L, 4));
+
+                float rx = static_cast<float>(luaL_checknumber(L, 5));
+                float ry = static_cast<float>(luaL_checknumber(L, 6));
+                float rz = static_cast<float>(luaL_checknumber(L, 7));
+
+                float sx = static_cast<float>(luaL_checknumber(L, 8));
+                float sy = static_cast<float>(luaL_checknumber(L, 9));
+                float sz = static_cast<float>(luaL_checknumber(L, 10));
+
+                // Try GUID first
+                spawnedEntity = InstantiatePrefab(
+                    std::string(prefabIdentifier),
+                    glm::vec3(px, py, pz),
+                    glm::vec3(rx, ry, rz),
+                    glm::vec3(sx, sy, sz)
+                );
+
+                // Try name if GUID failed
+                if (spawnedEntity == std::numeric_limits<Entity>::max())
+                {
+                    spawnedEntity = InstantiatePrefabByName(
+                        std::string(prefabIdentifier),
+                        glm::vec3(px, py, pz),
+                        glm::vec3(rx, ry, rz),
+                        glm::vec3(sx, sy, sz)
+                    );
+                }
+            }
+            else
+            {
+                return luaL_error(L, "SpawnPrefab: invalid number of arguments (expected 1, 2, 4, or 10)");
+            }
+
+            // Return the spawned entity ID (or nil if failed)
+            if (spawnedEntity == std::numeric_limits<Entity>::max())
+            {
+                lua_pushnil(L);
+                return 1;
+            }
+
+            lua_pushinteger(L, static_cast<lua_Integer>(spawnedEntity));
+            return 1;
+        }
 
         // --------- Tag management functions--------------
 
@@ -489,7 +621,7 @@ namespace Framework {
             }
             catch (...) {
                 // swallow; we'll just recompile
-                std::cerr << "[Cook] Warning: failed to check timestamps — forcing recompile.\n";
+                std::cerr << "[Cook] Warning: failed to check timestamps ï¿½ forcing recompile.\n";
             }
             return false;
         }
@@ -600,6 +732,35 @@ namespace Framework {
             return 1;
         }
 
+        // Check if an entity has ItemComponent and if it is choppable
+        static int lua_IsItemChoppable(lua_State* L)
+        {
+            // 1. Get Entity ID from Lua
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+
+            // 2. Validate Entity
+            if (!ecsInterface.IsEntityValid(e))
+            {
+                lua_pushboolean(L, false);
+                return 1;
+            }
+
+            // 3. Check if it has the ItemComponent
+            if (ecsInterface.HasComponent<ItemComponent>(e))
+            {
+                auto& item = ecsInterface.GetComponent<ItemComponent>(e);
+                // 4. Return the bool value
+                lua_pushboolean(L, item.isChoppable);
+            }
+            else
+            {
+                // Component doesn't exist, so it's definitely not choppable
+                lua_pushboolean(L, false);
+            }
+
+            return 1; // Returning 1 value (boolean)
+        }
+
         static uint64_t FileTimeToTicks(const std::filesystem::file_time_type& ft) {
             return std::chrono::duration_cast<std::chrono::milliseconds>(ft.time_since_epoch()).count();
         }
@@ -611,7 +772,7 @@ namespace Framework {
     ScriptingSystem::~ScriptingSystem() { if (L) { lua_close(L); L = nullptr; } }
 
     void ScriptingSystem::Initialize() {
-        // 1) Register ScriptComponent (your engine’s pattern)
+        // 1) Register ScriptComponent (your engineï¿½s pattern)
         ecsInterface.RegisterComponent<ScriptEntry>();
         ecsInterface.RegisterComponent<ScriptProperties>();
 
@@ -647,6 +808,9 @@ namespace Framework {
         lua_register(L, "SetTexture", lua_SetTexture);
         lua_register(L, "SetAnimationSettings", l_SetAnimationSettings);
 
+        // Game utility
+        lua_register(L, "IsItemChoppable", lua_IsItemChoppable);
+
         // Engine utility
         lua_register(L, "FindEntityByName", lua_FindEntityByName);
         lua_register(L, "GetEntitiesByTag", lua_GetEntitiesByTag);
@@ -656,15 +820,18 @@ namespace Framework {
         lua_register(L, "PlayEntityAnimation", l_PlayEntityAnimation);
         lua_register(L, "PlaySound", l_PlaySound);
         lua_register(L, "PlayEntitySound", l_PlayEntitySound);
+        lua_register(L, "SpawnPrefab", lua_SpawnPrefab);
 
         // Navmesh
-        lua_register(L, "PathfindTo", [](lua_State* L) -> int {
+        lua_register(L, "BuildNavMesh", lua_BuildNavMesh);
+        lua_register(L, "PathfindTo", [](lua_State* L) -> int 
+        {
             const char* agentName = luaL_checkstring(L, 1);
             const char* targetName = luaL_checkstring(L, 2);
 
             ScriptPathfindTo(agentName, targetName);
             return 0;
-            });
+        });
 
         // Create Cook table with our functions
         lua_newtable(L);                           // Cook

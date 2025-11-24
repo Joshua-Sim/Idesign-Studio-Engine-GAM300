@@ -1,69 +1,84 @@
 -- This is the Customer system script. This system handles all customer system logic such as spawning customer prefab at location(Door), handling shop logics and placement.
 -- Customer receive and fulfill shop function will be moved to customer object for isolated responsibilities, for now either here or there.
-
+-- Customer System Script
 local CustomerSystem = {}
+
+-- Configuration
+CustomerSystem.customerPrefabGUID = "Customer_Prefab"
+CustomerSystem.spawnPointName = "SpawnPoint"
+CustomerSystem.waitPointName = "CustomerWaitingPoint"
+CustomerSystem.spawn_delay = 3.0
 
 -- Internal state
 local activeCustomer = nil
 local hasSpawned = false
-local customerPrefabName = "CustomerPrefab" -- must be defined in your prefab registry
-local spawnPointName = "CustomerSpawnPoint"
-local waitPointName = "CustomerWaitingPoint"
+local spawnTimer = 0
+local navMeshBuilt = false  -- <-- Track if we've built it
 
--- Called once on script attach
 function CustomerSystem:on_init()
-    print("[Lua] CustomerSystem initialized.")
-
-    -- (Optional) Build NavMesh here if needed
-    if BuildNavMesh then
-        BuildNavMesh()
-        print("[Lua] NavMesh built.")
+    print("[CustomerSystem] Initialized.")
+    
+    -- Build NavMesh on initialization
+    if not navMeshBuilt then
+        print("[CustomerSystem] Building NavMesh...")
+        local success = BuildNavMesh()
+        
+        if success then
+            print("[CustomerSystem] NavMesh built successfully!")
+            navMeshBuilt = true
+        else
+            print("[CustomerSystem] ERROR: Failed to build NavMesh!")
+        end
+    end
+    
+    -- Register global callback for when customer completes order
+    CustomerSystemNotifyComplete = function()
+        print("[CustomerSystem] Customer completed order.")
+        activeCustomer = nil
+        hasSpawned = false
+        spawnTimer = 0
     end
 end
 
--- Called every frame
 function CustomerSystem:on_update(dt)
+    -- Only spawn if NavMesh is ready
+    if not navMeshBuilt then
+        return
+    end
+    
+    -- Spawn logic with timer
     if not hasSpawned then
-        self:spawn_customer()
+        spawnTimer = spawnTimer + dt
+        
+        if spawnTimer >= self.spawn_delay then
+            self:spawn_customer()
+            spawnTimer = 0
+        end
     end
 end
 
--- Spawns a new customer and moves them to wait point
 function CustomerSystem:spawn_customer()
-    local spawnPoint = FindEntityByName(spawnPointName)
+    local spawnPoint = FindEntityByName(self.spawnPointName)
     if spawnPoint == nil then
-        print("[Lua] ERROR: Spawn point not found.")
+        print("[CustomerSystem] ERROR: Spawn point not found.")
         return
     end
-
-    -- Spawn the customer prefab at the spawn point
-    local customer = SpawnPrefab(customerPrefabName, spawnPoint)
+    
+    local customer = SpawnPrefab(self.customerPrefabGUID, spawnPoint)
+    
     if customer == nil then
-        print("[Lua] ERROR: Failed to spawn customer prefab.")
+        print("[CustomerSystem] ERROR: Failed to spawn customer.")
         return
     end
-
-    -- Store active customer reference (One customer for now, move logic to individual customers after)
+    
+    print("[CustomerSystem] Spawned customer entity: " .. customer)
+    
     activeCustomer = customer
     hasSpawned = true
-
-    -- Trigger pathfinding to wait point
-    PathfindTo(customer, waitPointName)
-    print("[Lua] Spawned and pathfinding customer to wait point.")
-end
-
--- Called externally (e.g., from item interaction logic)
-function GiveItemToCustomer()
-    if activeCustomer then
-        print("[Lua] Customer received item. Despawning...")
-
-        -- Despawn entity
-        DestroyEntity(activeCustomer)
-        activeCustomer = nil
-
-        -- Reset for next customer
-        hasSpawned = false
-    end
+    
+    -- Pathfinding
+    PathfindTo("Customer", self.waitPointName)
+    print("[CustomerSystem] Customer pathfinding to wait point.")
 end
 
 return CustomerSystem
