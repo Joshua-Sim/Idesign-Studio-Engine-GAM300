@@ -342,6 +342,21 @@ namespace Framework {
             return 0; // No return value
         }
 
+        // Static helper function for playing entity audio
+        static int l_PlayEntitySound(lua_State* L) {
+            Entity entity = static_cast<Entity>(luaL_checkinteger(L, 1));
+
+            if (g_AudioSystem) {
+                g_AudioSystem->PlayEntitySound(entity);
+            }
+            else {
+                std::cerr << "[Lua Error] AudioSystem not initialized!\n";
+            }
+
+            return 0;
+        }
+
+
         // Helper to play an animation on an entity
         static int l_PlayEntityAnimation(lua_State* L) {
             // 1. Get Arguments: Entity ID and Animation Name
@@ -640,7 +655,7 @@ namespace Framework {
         lua_register(L, "AddTagToEntity", lua_AddTagToEntity);
         lua_register(L, "PlayEntityAnimation", l_PlayEntityAnimation);
         lua_register(L, "PlaySound", l_PlaySound);
-        
+        lua_register(L, "PlayEntitySound", l_PlayEntitySound);
 
         // Navmesh
         lua_register(L, "PathfindTo", [](lua_State* L) -> int {

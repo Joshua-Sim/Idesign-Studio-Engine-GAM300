@@ -161,7 +161,7 @@ function M:ChopItem()
     current_health = current_health - 1 -- Decrement health (Fixed logic: was +1)
     print("[ChoppingBoard] CHOP! Health: " .. current_health)
     
-    PlaySound("event:/ChoppingHerb")
+    PlayEntitySound(self.entity)  -- plays whatever AudioComponent is attached
 
     -- --- TRIGGER ANIMATION ---
     if knife_entity then

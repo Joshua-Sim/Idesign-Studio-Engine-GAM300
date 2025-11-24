@@ -2630,6 +2630,8 @@ namespace Framework {
 					//Send message to start audio and other play-mode systems
                     MessageBus::Get().SendImmediate(EnterPlayModeMessage());
 
+                    g_AudioSystem->ResumeAllAudio();
+
                     //if (g_AudioSystem) {
                     //    std::string bgmPath = sceneManager.GetCurrentSceneBGMPath();
                     //    if (!bgmPath.empty()) {
@@ -2662,6 +2664,8 @@ namespace Framework {
                     {
                         engineState.SetPlay(false);
                         
+                        g_AudioSystem->PauseAllAudio();
+
                         //Send message to pause/stop audio
 						//MessageBus::Get().SendImmediate(ExitPlayModeMessage());
 
@@ -2688,6 +2692,8 @@ namespace Framework {
 
 					//Send message to stop all audio
 					MessageBus::Get().SendImmediate(ExitPlayModeMessage());
+
+                    g_AudioSystem->PauseAllAudio();
 
                     //Stop BGM immediately 
                     /*if (g_AudioSystem) {
