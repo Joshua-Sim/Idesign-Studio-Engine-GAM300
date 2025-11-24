@@ -193,7 +193,7 @@ namespace Framework
         }
         if (bone.name == "Bubble1") // Make sure this matches your Blender bone name EXACTLY
         {
-            std::cout << "Bubble1 Y: " << position.y << std::endl;
+          //  std::cout << "Bubble1 Y: " << position.y << std::endl;
         }
         // 1c. Rebuild the final local transform matrix
         glm::mat4 localTransform = glm::translate(glm::mat4(1.0f), position) *

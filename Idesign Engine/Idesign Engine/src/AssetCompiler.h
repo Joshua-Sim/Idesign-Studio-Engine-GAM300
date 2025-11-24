@@ -41,8 +41,15 @@ namespace Framework
     Entity InstantiatePrefab(const std::string& prefabGUID);
     Entity InstantiatePrefab(const std::string& prefabGUID, const glm::vec3& position);
     Entity InstantiatePrefab(const std::string& prefabGUID, const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale);
+    // Find prefab GUID by name
+    std::string FindPrefabGUIDByName(const std::string& prefabName);
+    Entity InstantiatePrefabByName(const std::string& prefabName);
+    Entity InstantiatePrefabByName(const std::string& prefabName, const glm::vec3& position);
+    Entity InstantiatePrefabByName(const std::string& prefabName, const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale);
+
 
     bool MoveFileToAssetFolder(const std::string& sourcePath, const std::string& destinationFolder, std::string& outFinalPath, std::string& outError);
+
 
     // Deserialize JSON into a C++ object using reflection-based property list
     void Deserialize(void* pObject, const prop_list& PropList, const rapidjson::Value& obj);

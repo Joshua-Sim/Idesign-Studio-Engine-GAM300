@@ -103,9 +103,9 @@
             "guid": "e902f0d7-a022-45fc-9c17-2a98cbdb793e",
             "name": "Cylinder",
             "path": "Assets/Objects/Cylinder.obj",
-            "vao": 88,
-            "vbo": 170,
-            "ebo": 171,
+            "vao": 61,
+            "vbo": 116,
+            "ebo": 117,
             "indexCount": 240
         },
         {
@@ -301,9 +301,9 @@
             "guid": "4bf0356c-3b1b-4e45-a327-5a7f573a20ef",
             "name": "Herb",
             "path": "Assets\\Objects\\Herb.obj",
-            "vao": 89,
-            "vbo": 172,
-            "ebo": 173,
+            "vao": 88,
+            "vbo": 170,
+            "ebo": 171,
             "indexCount": 1836
         },
         {
@@ -328,9 +328,9 @@
             "guid": "95461aed-91bf-4172-9f2c-d7578e059e28",
             "name": "CauldronStiring",
             "path": "Assets\\Objects\\CauldronStiring.fbx",
-            "vao": 37,
-            "vbo": 73,
-            "ebo": 74,
+            "vao": 89,
+            "vbo": 172,
+            "ebo": 173,
             "indexCount": 157614
         }
     ]
