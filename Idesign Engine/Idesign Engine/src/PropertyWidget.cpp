@@ -533,6 +533,13 @@ namespace Framework
                     if (ImGui::IsItemHovered()) {
                         ImGui::SetTooltip("If checked, text always faces the camera.");
                     }
+                    ImGui::Checkbox("Screen-Space (UI)", &textComp.screenSpace);
+                    if (ImGui::IsItemHovered()) {
+                        ImGui::SetTooltip(
+                            "If checked, this text is drawn as HUD/UI.\n"
+                            "Transform.position.x/y are treated as normalized screen coords in [0,1]."
+                        );
+                    }
                 }
                 if (typeName == "BoxColliderComponent")
                 {

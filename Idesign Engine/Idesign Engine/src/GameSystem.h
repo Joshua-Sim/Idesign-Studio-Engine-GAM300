@@ -17,5 +17,13 @@ namespace Framework {
 
         // 3. FIX: Implement GetName to satisfy pure virtual = 0
         std::string GetName() override { return "GameSystem"; }
+
+
+        static int score;
+
+        static void SetScore(int value);
+        static void AddScore(int delta);
+        static int  GetScore();
+
     };
 }

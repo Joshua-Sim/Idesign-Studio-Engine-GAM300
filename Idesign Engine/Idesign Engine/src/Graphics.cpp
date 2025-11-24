@@ -1509,6 +1509,8 @@ namespace Framework {
         std::vector<Entity> opaqueEntities;
         std::multimap<float, Entity> transparentEntities;
         std::vector<Entity> uiEntities;
+        std::vector<Entity> uiTextEntities;    // NEW: for HUD text
+
 
         for (auto const& entityId : mEntities)
         {
@@ -1576,39 +1578,46 @@ namespace Framework {
                 }
             }
 
-            if (ecsInterface.HasComponent<TextProperties>(entityId)) {
+            if (ecsInterface.HasComponent<TextProperties>(entityId))
+            {
                 auto& txt = ecsInterface.GetComponent<TextProperties>(entityId);
-                glm::mat4 model(1.0f);
-                model = glm::translate(model, tr.position);
-                if (txt.isBillboard)
+
+                // If it's UI text, register it for later (HUD pass)
+                if (txt.screenSpace)
                 {
-                    // To face the camera, we set the Model's rotation axes to match 
-                    // the Camera's View Matrix axes.
-                    // (We ignore the entity's own rotation here).
+                    uiTextEntities.push_back(entityId);
 
-                    // Right Vector
-                    model[0][0] = view[0][0];
-                    model[0][1] = view[1][0];
-                    model[0][2] = view[2][0];
-
-                    // Up Vector
-                    model[1][0] = view[0][1];
-                    model[1][1] = view[1][1];
-                    model[1][2] = view[2][1];
-
-                    // Forward Vector
-                    model[2][0] = view[0][2];
-                    model[2][1] = view[1][2];
-                    model[2][2] = view[2][2];
+                    // DO NOT render 3D text for UI elements
+                    // DO NOT return/continue because this entity may still have a mesh to render
                 }
-               
+                else
+                {
+                    // WORLD-SPACE 3D TEXT
+                    glm::mat4 textModel(1.0f);
+                    textModel = glm::translate(textModel, tr.position);
 
-                // 3. Apply Scale LAST (so it applies to the new rotation)
-                model = glm::scale(model, tr.scale);
+                    if (txt.isBillboard)
+                    {
+                        // Force rotation to face camera
+                        textModel[0][0] = view[0][0]; textModel[0][1] = view[1][0]; textModel[0][2] = view[2][0];
+                        textModel[1][0] = view[0][1]; textModel[1][1] = view[1][1]; textModel[1][2] = view[2][1];
+                        textModel[2][0] = view[0][2]; textModel[2][1] = view[1][2]; textModel[2][2] = view[2][2];
+                    }
 
-                // Render
-                fontSystem.RenderText3D(txt.text, model, view, proj, txt.scale, txt.color, txt.alignment);
+                    // Apply entity's scale
+                    textModel = glm::scale(textModel, tr.scale);
 
+                    // Render 3D text now
+                    fontSystem.RenderText3D(
+                        txt.text,
+                        textModel,
+                        view,
+                        proj,
+                        txt.scale,
+                        txt.color,
+                        txt.alignment
+                    );
+                }
             }
 
             if (ecsInterface.HasComponent<MeshProperties>(entityId))
@@ -2034,6 +2043,32 @@ namespace Framework {
             uiShader.setMat4("uModel", model);
             renderQuad();
         }
+
+        // --------------------------------------------
+        // HUD/UI TEXT PASS (2D Screen Space) (Jasper)
+        // --------------------------------------------
+        for (auto e : uiTextEntities)
+        {
+            auto& txt = ecsInterface.GetComponent<TextProperties>(e);
+            auto& tr = ecsInterface.GetComponent<TransformComponent>(e);
+
+            float px = glm::clamp(tr.position.x, 0.0f, 1.0f);
+            float py = glm::clamp(tr.position.y, 0.0f, 1.0f);
+
+            float screenX = px * (float)width;
+            float screenY = py * (float)height;
+
+            fontSystem.RenderText2D(
+                txt.text,
+                screenX,
+                screenY,
+                txt.scale,
+                txt.color,
+                (float)width,
+                (float)height
+            );
+        }
+
         glEnable(GL_DEPTH_TEST);
         glm::mat4 textModel = glm::mat4(1.0f);
         textModel = glm::translate(textModel, glm::vec3(0.0f, 5.0f, 0.0f));

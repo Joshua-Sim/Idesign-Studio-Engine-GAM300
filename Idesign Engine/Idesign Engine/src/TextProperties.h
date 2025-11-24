@@ -24,6 +24,10 @@ namespace Framework
         // [NEW] 0=Left, 1=Center, 2=Right
         int alignment = 0;
         bool isBillboard=false;
+
+        //Jasper
+        // NEW: when true, use screen-space (UI) rendering instead of world-space text
+        bool screenSpace = false;   
     };
 
     // 1. Define an array that lists each property
@@ -37,7 +41,8 @@ namespace Framework
         // Note: If your property system doesn't support Enums directly, 
         // we register it as an INT here, and handle the Dropdown in the Editor logic (Step 2).
         PROP_INT(alignment, TextProperties),
-        PROP_BOOL(isBillboard, TextProperties)
+        PROP_BOOL(isBillboard, TextProperties),
+        PROP_BOOL(screenSpace, TextProperties)    // NEW
     };
 
     inline const prop_list g_TextComponentProps{ "TextProperties", g_TextComponentPropsArray };

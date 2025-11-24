@@ -14,6 +14,7 @@
 #include <filesystem>
 #include "ScriptProperties.h"
 #include "AudioSystem.h"
+#include <GameSystem.h>
 
 extern Framework::Coordinator ecsInterface;
 
@@ -326,6 +327,36 @@ namespace Framework {
             return 0;
         }
 
+        static int lua_GetScore(lua_State* L)
+        {
+            int s = Framework::GameSystem::GetScore();
+            lua_pushinteger(L, s);
+            return 1; // 1 return value
+        }
+
+        static int lua_AddScore(lua_State* L)
+        {
+            int delta = (int)luaL_checkinteger(L, 1);
+            Framework::GameSystem::AddScore(delta);
+            return 0;
+        }
+
+        static int lua_SetText(lua_State* L)
+        {
+            int id = (int)luaL_checkinteger(L, 1);
+            const char* newText = luaL_checkstring(L, 2);
+
+            Framework::Entity e = static_cast<Framework::Entity>(id);
+
+            if (ecsInterface.IsEntityValid(e) &&
+                ecsInterface.HasComponent<Framework::TextProperties>(e))
+            {
+                auto& txt = ecsInterface.GetComponent<Framework::TextProperties>(e);
+                txt.text = newText;
+            }
+
+            return 0;
+        }
 
         // Static helper function for playing sound
         static int l_PlaySound(lua_State* L) {
@@ -591,6 +622,9 @@ namespace Framework {
         lua_register(L, "SetRotation", lua_SetRotation);
         lua_register(L, "SetMesh", lua_SetMesh);
         lua_register(L, "SetTexture", lua_SetTexture);
+        lua_register(L, "GetScore", lua_GetScore);
+        lua_register(L, "AddScore", lua_AddScore);
+        lua_register(L, "SetText", lua_SetText);
 
         // Engine utility
         lua_register(L, "FindEntityByName", lua_FindEntityByName);

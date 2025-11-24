@@ -12,6 +12,7 @@ extern Framework::Coordinator ecsInterface;
 Framework::RecipeBookManager* recipeBookManager = nullptr;
 
 namespace Framework {
+    int GameSystem::score = 0;
 
     void GameSystem::Initialize() {
         if (recipeBookManager == nullptr) {
@@ -34,5 +35,20 @@ namespace Framework {
             }
             wasBookOpen = GameSystem::bookOpen;
         }
+    }
+
+    void GameSystem::SetScore(int value)
+    {
+        score = value;
+    }
+
+    void GameSystem::AddScore(int delta)
+    {
+        score += delta;
+    }
+
+    int GameSystem::GetScore()
+    {
+        return score;
     }
 }

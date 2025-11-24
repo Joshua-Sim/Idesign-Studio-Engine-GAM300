@@ -76,6 +76,13 @@
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
+        },
+        {
+            "guid": "ff969bd2-85a2-49d8-8673-8d9cb18f352e",
+            "scriptPath": "Assets\\Scripts\\score_test.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
         }
     ]
 }
