@@ -139,6 +139,9 @@
     <Filter Include="Source Files\Event">
       <UniqueIdentifier>{03c7a3ec-6c07-4ebb-aff3-6cc470cc906c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Game">
+      <UniqueIdentifier>{e1860ec1-6dee-4a00-bf4d-d50e98421e85}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\rapidjson\allocators.h">
@@ -540,9 +543,6 @@
     <ClInclude Include="src\ScriptProperties.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GameMessages.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\EventSystem.h">
       <Filter>Header Files\EventSystem</Filter>
     </ClInclude>
@@ -579,17 +579,23 @@
     <ClInclude Include="src\Skybox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GameSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\RecipeBookManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="PlayerInteractSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\PhysicsProperties.h">
       <Filter>Header Files\Property</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameMessages.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameSystem.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RecipeBookManager.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemComponent.h">
+      <Filter>Header Files\Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

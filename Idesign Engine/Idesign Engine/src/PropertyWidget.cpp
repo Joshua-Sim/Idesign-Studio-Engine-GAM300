@@ -3,6 +3,7 @@
 #include "imgui.h"
 #include "PropertySystem.h"
 #include "PropertyWidget.h"
+#include <ItemComponent.h>
 
 namespace Framework
 {
@@ -577,6 +578,27 @@ namespace Framework
                         colliderComp.colliders.push_back({}); // Add default
                     }
                 }
+                else if (typeName == "ItemComponent")
+                {
+                    auto& item = *static_cast<Framework::ItemComponent*>(componentPtr);
+
+                    // --- Name Input ---
+                    char nameBuffer[256];
+                    strncpy_s(nameBuffer, sizeof(nameBuffer), item.name.c_str(), _TRUNCATE);
+
+                    if (ImGui::InputText("Item Name", nameBuffer, sizeof(nameBuffer)))
+                    {
+                        item.name = nameBuffer;
+                    }
+
+                    // --- Hint Text ---
+                    // ImGui::SameLine(); // Optional: keeps it on same line if there's room
+                    ImGui::TextDisabled("(Must match filename)");
+
+                    // --- Booleans ---
+                    ImGui::Checkbox("Is Ingredient", &item.isIngredient);
+                    ImGui::Checkbox("Is Choppable", &item.isChoppable);
+                }
 
 
                 // 4. Handle EVERYTHING ELSE (Default Inspector)
@@ -654,6 +676,7 @@ namespace Framework
         TypeRegistry::Instance().Register<ScriptProperties>("ScriptProperties", &g_ScriptPropertiesProps);
         TypeRegistry::Instance().Register<ScriptEntry>("ScriptEntry", &g_ScriptEntryProps);
         TypeRegistry::Instance().Register<BoxColliderComponent>("BoxColliderComponent", &g_BoxColliderProps);
+        TypeRegistry::Instance().Register<ItemComponent>("ItemComponent", &g_ItemProps);
     }
 
     void AutoRegisterAllReflectedComponents(Coordinator& ecs)

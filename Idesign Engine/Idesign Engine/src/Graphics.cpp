@@ -65,6 +65,7 @@
 #include "EventManager.h"
 #include <RecipeBookManager.h>
 #include "GameSystem.h"
+#include "ItemComponent.h"
 
 
 extern Framework::FontSystem fontSystem;
@@ -214,9 +215,8 @@ namespace Framework {
         ecsInterface.RegisterComponent<MaterialMetadata>();
         ecsInterface.RegisterComponent<LightProperties>();
         ecsInterface.RegisterComponent<PhysicsProperties>();
-
         ecsInterface.RegisterComponent<BoxColliderComponent>();
-
+        ecsInterface.RegisterComponent<ItemComponent>();
 
         //test
 

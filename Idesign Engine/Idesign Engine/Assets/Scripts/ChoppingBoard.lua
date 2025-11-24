@@ -75,13 +75,21 @@ end
 -- --- THIS IS CALLED BY C++ RAYCAST (Press 'E') ---
 function M:OnInteract()
     print("[ChoppingBoard] Raycast Interaction Received!")
-    
-    -- Only start if board is empty
-    if current_herb_entity == nil then
-        self:StartChoppingSession()
-    else
+
+    -- 1. Is the board already full?
+    if current_herb_entity ~= nil then
         print("[ChoppingBoard] Board is occupied.")
+        return
     end
+
+    -- local selectedItemName = GetPlayerSelectedItem()
+
+    -- if selectedItemName == "" or selectedItemName == nil then
+    --     print("[ChoppingBoard] Player is not holding anything.")
+    --     return
+    -- end
+    
+    self:StartChoppingSession() 
 end
 -- --------------------------------------------------
 
@@ -130,21 +138,41 @@ function M:UpdateKnifePosition()
 end
 
 function M:StartChoppingSession()
+    -- 1. Find the item
     local itemID = FindEntityByName(M.initial_item_name)
+    
+    -- local isChoppable = IsItemNameChoppable(itemName) --Checks if isChoppable
+    -- if not isChoppable then
+    --     print("[ChoppingBoard] You cannot chop " .. itemName)
+    --     return
+    -- end
+
+    -- Instantiates prefab by name
+    -- local newEntityID = SpawnPrefab(itemName) 
+    -- if newEntityID == nil then
+    --     print("[ChoppingBoard] Error: Could not spawn prefab for " .. itemName)
+    --     return
+    -- end
+    --
+    -- Decrease player item count by 1 -- Remove from Inventory
+    -- RemovePlayerItem(itemName, 1)
+
     if itemID == nil then 
-        print("[ChoppingBoard] Herb not found.")
+        print("[ChoppingBoard] Item '" .. M.initial_item_name .. "' not found in scene.")
         return 
     end
 
+    -- 3. Proceed with placement (Existing Logic)
     local bx, by, bz = GetPosition(self.entity)
     SetPosition(itemID, bx, by + self.place_offset_y, bz - self.place_offset_z)
     
     current_herb_entity = itemID
-    current_health = 5
+    current_health = 5 -- Reset health
     
+    -- Ensure visual state is raw
     SetMesh(current_herb_entity, self.mesh_raw)
     SetTexture(current_herb_entity, self.tex_raw)
-    print("[ChoppingBoard] Placed raw herb.")
+    print("[ChoppingBoard] Placed choppable item.")
     
     if knife_entity then
         is_holding_knife = true 

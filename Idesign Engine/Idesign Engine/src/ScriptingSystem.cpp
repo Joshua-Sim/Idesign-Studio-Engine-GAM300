@@ -14,6 +14,7 @@
 #include <filesystem>
 #include "ScriptProperties.h"
 #include "AudioSystem.h"
+#include "ItemComponent.h" // <--- Add this
 
 extern Framework::Coordinator ecsInterface;
 
@@ -587,6 +588,35 @@ namespace Framework {
             return 1;
         }
 
+        // Check if an entity has ItemComponent and if it is choppable
+        static int lua_IsItemChoppable(lua_State* L)
+        {
+            // 1. Get Entity ID from Lua
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+
+            // 2. Validate Entity
+            if (!ecsInterface.IsEntityValid(e))
+            {
+                lua_pushboolean(L, false);
+                return 1;
+            }
+
+            // 3. Check if it has the ItemComponent
+            if (ecsInterface.HasComponent<ItemComponent>(e))
+            {
+                auto& item = ecsInterface.GetComponent<ItemComponent>(e);
+                // 4. Return the bool value
+                lua_pushboolean(L, item.isChoppable);
+            }
+            else
+            {
+                // Component doesn't exist, so it's definitely not choppable
+                lua_pushboolean(L, false);
+            }
+
+            return 1; // Returning 1 value (boolean)
+        }
+
         static uint64_t FileTimeToTicks(const std::filesystem::file_time_type& ft) {
             return std::chrono::duration_cast<std::chrono::milliseconds>(ft.time_since_epoch()).count();
         }
@@ -633,6 +663,9 @@ namespace Framework {
         lua_register(L, "SetMesh", lua_SetMesh);
         lua_register(L, "SetTexture", lua_SetTexture);
         lua_register(L, "SetAnimationSettings", l_SetAnimationSettings);
+
+        // Game utility
+        lua_register(L, "IsItemChoppable", lua_IsItemChoppable);
 
         // Engine utility
         lua_register(L, "FindEntityByName", lua_FindEntityByName);

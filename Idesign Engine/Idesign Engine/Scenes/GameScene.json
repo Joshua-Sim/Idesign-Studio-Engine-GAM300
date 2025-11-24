@@ -73,7 +73,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 2
+                    "sortIndex": 1
                 },
                 "TagComponent": {
                     "tags": []
@@ -115,7 +115,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 3
+                    "sortIndex": 2
                 },
                 "TagComponent": {
                     "tags": []
@@ -200,7 +200,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 4
+                    "sortIndex": 3
                 },
                 "TagComponent": {
                     "tags": []
@@ -258,7 +258,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 5
+                    "sortIndex": 4
                 },
                 "TagComponent": {
                     "tags": []
@@ -297,7 +297,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 6
+                    "sortIndex": 5
                 },
                 "TagComponent": {
                     "tags": []
@@ -1911,14 +1911,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -34.85131072998047,
-                        8.04207706451416,
-                        11.671366691589355
+                        -41.452659606933594,
+                        8.042078018188477,
+                        13.484121322631836
                     ],
                     "rotation": [
-                        0.000011705422366503626,
-                        -0.01921558380126953,
-                        -0.000007184340120147681
+                        0.00001655139567446895,
+                        -0.029638325795531273,
+                        -0.00005790911745862104
                     ],
                     "scale": [
                         0.9999989867210388,
@@ -2188,7 +2188,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 1
+                    "sortIndex": 48
                 },
                 "TagComponent": {
                     "tags": []
@@ -2253,6 +2253,57 @@
                             "luaFunctionToCall": "OnInteract"
                         }
                     ]
+                },
+                "ItemComponent": {
+                    "name": "unchopped_herb",
+                    "isIngredient": true,
+                    "isChoppable": true
+                }
+            }
+        },
+        {
+            "name": "Cauldron",
+            "guid": "fffc27d4-57ce-4192-9177-a998866e67f5",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -40.49669647216797,
+                        6.511944770812988,
+                        17.749330520629883
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.30000001192092896,
+                        0.30000001192092896,
+                        0.30000001192092896
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 6
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "MeshComponent": {
+                    "guid": "95461aed-91bf-4172-9f2c-d7578e059e28",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "AnimationProperties": {
+                    "guid": "af14de83-981d-448a-a6e3-07a92a48e676",
+                    "defaultAnimationName": "",
+                    "animationSpeed": 1.0,
+                    "bLoops": true,
+                    "bPlayOnStart": true
+                },
+                "TextureComponent": {
+                    "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
+                    "isUI": false
                 }
             }
         }

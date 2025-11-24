@@ -9,6 +9,7 @@
 #include "PrefabComponent.h"
 #include "ScriptProperties.h"
 #include "ScriptingSystem.h"
+#include <ItemComponent.h>
 
 static const std::map<std::string, LightType> s_stringToLightType = {
     { "Directional", LightType::Directional },
@@ -509,6 +510,33 @@ namespace Framework
                     ecsInterface.AddComponent(entity, receiverComp);
                 }
 
+                // --- Item Component ---
+                if (components.HasMember("ItemComponent"))
+                {
+                    const auto& jsonVal = components["ItemComponent"];
+                    ItemComponent item;
+
+                    // 1. Name
+                    if (jsonVal.HasMember("name") && jsonVal["name"].IsString())
+                    {
+                        item.name = jsonVal["name"].GetString();
+                    }
+
+                    // 2. Is Ingredient
+                    if (jsonVal.HasMember("isIngredient") && jsonVal["isIngredient"].IsBool())
+                    {
+                        item.isIngredient = jsonVal["isIngredient"].GetBool();
+                    }
+
+                    // 3. Is Choppable
+                    if (jsonVal.HasMember("isChoppable") && jsonVal["isChoppable"].IsBool())
+                    {
+                        item.isChoppable = jsonVal["isChoppable"].GetBool();
+                    }
+
+                    ecsInterface.AddComponent(entity, item);
+                }
+
                 sceneManager.RegisterEntityToScene(entity, cleanName);
             }
         }
@@ -805,6 +833,23 @@ namespace Framework
                     // Add the array to the component object
                     compJson.AddMember("receivers", receiverArray, allocator);
                     componentsObj.AddMember("EventReceiverComponent", compJson, allocator);
+                }
+                // --- Item Component ---
+                if (ecsInterface.HasComponent<ItemComponent>(entity))
+                {
+                    const auto& item = ecsInterface.GetComponent<ItemComponent>(entity);
+                    rapidjson::Value itemJson(rapidjson::kObjectType);
+
+                    // 1. Name
+                    rapidjson::Value nameVal;
+                    nameVal.SetString(item.name.c_str(), allocator);
+                    itemJson.AddMember("name", nameVal, allocator);
+
+                    // 2. Bools
+                    itemJson.AddMember("isIngredient", item.isIngredient, allocator);
+                    itemJson.AddMember("isChoppable", item.isChoppable, allocator);
+
+                    componentsObj.AddMember("ItemComponent", itemJson, allocator);
                 }
             }
 
