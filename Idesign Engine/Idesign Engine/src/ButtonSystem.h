@@ -23,7 +23,7 @@
 #include <vector>
 #include "ComponentList.h"
 #include "InputHandler.h"
-
+#include "ButtonComponent.h"
 namespace Framework {
 
     class ButtonSystem : public ISystem {

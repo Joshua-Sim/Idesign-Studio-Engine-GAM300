@@ -43,6 +43,7 @@
 #include <EventSystem.h>
 #include <EventManager.h>
 #include"ButtonSystem.h"
+#include "ButtonComponent.h"
 
 using namespace Framework;
 
@@ -97,7 +98,7 @@ int main(void)
     AutoRegisterAllReflectedComponents(ecsInterface);   // Step 2: Hook them into ECS
 
     // Explicitly register ButtonComponent as an ECS component
-    ecsInterface.RegisterComponent<ButtonComponent>();
+    //ecsInterface.RegisterComponent<ButtonComponent>();
 	//AssetManager::Instance().LoadWindowConfig(); // Load WindowConfig before Graphics system is created
 
     // Register graphics system and GLFW Window first 
@@ -108,6 +109,7 @@ int main(void)
     auto animationSystem = ecsInterface.RegisterSystem<AnimationSystem>();
     auto sceneSystem = ecsInterface.RegisterSystem<SceneManager>();
     auto imguiSystem = ecsInterface.RegisterSystem<ImguiManager>();
+    auto buttonSystem = ecsInterface.RegisterSystem<ButtonSystem>();
     imguiSystem->SetGraphicsSystem(graphicsSystem.get());
     graphicsSystem->SetImguiManager(imguiSystem.get());
     
@@ -142,14 +144,13 @@ int main(void)
         signature.set(ecsInterface.GetComponentType<EventReceiverComponent>());
         ecsInterface.SetSystemSignature<EventSystem>(signature);
     }
-    // === NEW: Register ButtonSystem in ECS ===
-    auto buttonSystem = ecsInterface.RegisterSystem<ButtonSystem>();
-    buttonSystem->SetInputHandler(inputHandlerSystem);
-    {
-        Signature buttonSig;
-        buttonSig.set(ecsInterface.GetComponentType<ButtonComponent>());
-        ecsInterface.SetSystemSignature<ButtonSystem>(buttonSig);
-    }
+
+    //buttonSystem->SetInputHandler(inputHandlerSystem);
+    //{
+    //    Signature buttonSig;
+    //    buttonSig.set(ecsInterface.GetComponentType<ButtonComponent>());
+    //    ecsInterface.SetSystemSignature<ButtonSystem>(buttonSig);
+    //}
     // ------- Add systems to engine below -------- //
     engine->AddSystem(animationSystem.get());   // Calculate bone matrices
     engine->AddSystem(graphicsSystem.get());
