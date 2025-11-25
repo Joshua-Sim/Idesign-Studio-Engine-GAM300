@@ -15,6 +15,7 @@ namespace Framework
     class TypeRegistry
     {
     public:
+
         static TypeRegistry& Instance()
         {
             // Change from stack static to heap static
@@ -29,6 +30,9 @@ namespace Framework
         // To Stop Crashes
         void Shutdown()
         {
+            // Swap with empty containers to force deallocation safely 
+            // and detach iterators in a controlled manner.
+
             std::unordered_map<std::string, TypeGetter> emptyRegistry;
             registry.swap(emptyRegistry);
 

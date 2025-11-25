@@ -1887,14 +1887,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -30.908357620239258,
-                        8.04206657409668,
-                        13.218019485473633
+                        -31.119190216064453,
+                        8.035140037536621,
+                        12.420604705810547
                     ],
                     "rotation": [
-                        0.0012771699111908674,
-                        -0.4370652139186859,
-                        -0.000008328344847541302
+                        0.7714784145355225,
+                        -3.425881862640381,
+                        -0.0013184265699237585
                     ],
                     "scale": [
                         0.9999989867210388,
@@ -2219,7 +2219,7 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "AnimationProperties": {
-                    "guid": "7f9c0bd8-fb8d-4cb6-91a0-d40893904ef2",
+                    "guid": "e6e64140-6e45-4eb9-986a-e146404672bf",
                     "defaultAnimationName": "",
                     "animationSpeed": 1.0,
                     "bLoops": true,
@@ -2273,6 +2273,33 @@
                         0.0
                     ],
                     "startAwake": true
+                }
+            }
+        },
+        {
+            "name": "Customer",
+            "guid": "a54a7245-ad57-436e-8972-99ae789bf3fa",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
+                }
+            }
+        },
+        {
+            "name": "Customer",
+            "guid": "0d412362-03b8-4b47-8c27-75c840c45664",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
+                }
+            }
+        },
+        {
+            "name": "Customer",
+            "guid": "98546659-beb2-4cb0-a06c-855704f480d6",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
                 }
             }
         }

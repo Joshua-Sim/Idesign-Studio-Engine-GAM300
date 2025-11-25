@@ -13,9 +13,9 @@
             "vbo_skinning": 0
         },
         {
-            "guid": "7f9c0bd8-fb8d-4cb6-91a0-d40893904ef2",
-            "name": "cauldronwithoutspoon",
-            "path": "Assets\\Objects\\cauldronwithoutspoon.fbx",
+            "guid": "af14de83-981d-448a-a6e3-07a92a48e676",
+            "name": "CauldronStiring",
+            "path": "Assets\\Objects\\CauldronStiring.fbx",
             "defaultAnimationName": "",
             "animationSpeed": 1.0,
             "bLoops": true,
@@ -24,9 +24,9 @@
             "vbo_skinning": 0
         },
         {
-            "guid": "af14de83-981d-448a-a6e3-07a92a48e676",
-            "name": "CauldronStiring",
-            "path": "Assets\\Objects\\CauldronStiring.fbx",
+            "guid": "e6e64140-6e45-4eb9-986a-e146404672bf",
+            "name": "cauldronwithoutspoon",
+            "path": "Assets\\Objects\\cauldronwithoutspoon.fbx",
             "defaultAnimationName": "",
             "animationSpeed": 1.0,
             "bLoops": true,
