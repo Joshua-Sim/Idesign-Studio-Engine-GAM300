@@ -8,15 +8,15 @@
             "isUI": false
         },
         {
-            "guid": "d4899207-ea5e-473b-870f-aade76e8a7ff",
-            "name": "Door",
-            "path": "Assets\\Textures\\Door.png",
-            "isUI": false
-        },
-        {
             "guid": "e726adb8-bf75-4993-9e77-826f5541ac9d",
             "name": "ChoppedHerb2",
             "path": "Assets\\Textures\\ChoppedHerb2.png",
+            "isUI": false
+        },
+        {
+            "guid": "d4899207-ea5e-473b-870f-aade76e8a7ff",
+            "name": "Door",
+            "path": "Assets\\Textures\\Door.png",
             "isUI": false
         },
         {
@@ -62,13 +62,13 @@
             "isUI": false
         },
         {
-            "guid": "7b119595-c240-4c45-a8a0-018d7a3d917f",
+            "guid": "338b187d-1182-4c0f-8af6-799d3fb9fbf2",
             "name": "",
             "path": "Assets/PNG/test.png",
             "isUI": false
         },
         {
-            "guid": "338b187d-1182-4c0f-8af6-799d3fb9fbf2",
+            "guid": "7b119595-c240-4c45-a8a0-018d7a3d917f",
             "name": "",
             "path": "Assets/PNG/test.png",
             "isUI": false
@@ -128,15 +128,15 @@
             "isUI": false
         },
         {
-            "guid": "f49379af-a87b-435b-b85b-5c3127ec2fe9",
-            "name": "Counter",
-            "path": "Assets\\Textures\\Counter.png",
-            "isUI": false
-        },
-        {
             "guid": "0f2ece2c-6b29-43d9-a6ae-1f648d18d86d",
             "name": "Wood",
             "path": "Assets\\Textures\\Wood.png",
+            "isUI": false
+        },
+        {
+            "guid": "f49379af-a87b-435b-b85b-5c3127ec2fe9",
+            "name": "Counter",
+            "path": "Assets\\Textures\\Counter.png",
             "isUI": false
         },
         {
