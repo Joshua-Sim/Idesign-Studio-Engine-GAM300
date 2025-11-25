@@ -1,5 +1,5 @@
 {
-    "count": 64,
+    "count": 65,
     "entries": [
         {
             "guid": "afd25b76-dddc-4c4f-bae4-a6c9a22931e5",
@@ -383,6 +383,12 @@
             "guid": "f57e2af6-1833-41ea-8af3-0189f79d988a",
             "name": "foliage",
             "path": "Assets\\Textures\\foliage.png",
+            "isUI": false
+        },
+        {
+            "guid": "eec3a90d-a5eb-4e0f-ae25-2750d1eb2129",
+            "name": "tree",
+            "path": "Assets\\Textures\\tree.jpg",
             "isUI": false
         }
     ]

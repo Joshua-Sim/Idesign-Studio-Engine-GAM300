@@ -2,7 +2,6 @@
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec2 aTexCoords;
-// Locations 3, 4, 5, 6 are reserved for the 4x4 Matrix
 layout (location = 3) in mat4 aInstanceMatrix; 
 
 out vec2 TexCoords;
@@ -10,14 +9,15 @@ out vec3 Normal;
 
 uniform mat4 uProj;
 uniform mat4 uView;
+uniform mat4 uModel; // <--- ADD THIS (Global Offset)
 
 void main()
 {
     TexCoords = aTexCoords;
     
-    // Use the instance matrix directly
-    gl_Position = uProj * uView * aInstanceMatrix * vec4(aPos, 1.0);
+    // Apply Global Model Matrix * Instance Matrix
+    gl_Position = uProj * uView * uModel * aInstanceMatrix * vec4(aPos, 1.0);
     
-    // Rotate normal by the instance rotation (upper 3x3 of matrix)
-    Normal = mat3(transpose(inverse(aInstanceMatrix))) * aNormal; 
+    // Rotate normal by the combined rotation
+    Normal = mat3(transpose(inverse(uModel * aInstanceMatrix))) * aNormal; 
 }

@@ -69,12 +69,13 @@ void FoliageRenderer::setInstances(const std::vector<glm::mat4>& transforms) {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void FoliageRenderer::draw(const glm::mat4& view, const glm::mat4& proj, unsigned int textureID) {
+void FoliageRenderer::draw(const glm::mat4& view, const glm::mat4& proj, const glm::mat4& model, unsigned int textureID) {
     if (instanceCount == 0) return;
 
     shader->use();
     shader->setMat4("uView", view);
     shader->setMat4("uProj", proj);
+    shader->setMat4("uModel", model); // <--- SEND THE OFFSET TO GPU
 
     // === FIX: BIND TEXTURE ===
     glActiveTexture(GL_TEXTURE0);

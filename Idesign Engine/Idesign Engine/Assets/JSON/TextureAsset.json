@@ -383,6 +383,12 @@
             "name": "foliage",
             "path": "Assets\\Textures\\foliage.png",
             "isUI": false
+        },
+        {
+            "guid": "eec3a90d-a5eb-4e0f-ae25-2750d1eb2129",
+            "name": "tree",
+            "path": "Assets\\Textures\\tree.jpg",
+            "isUI": false
         }
     ]
 }

@@ -479,7 +479,7 @@ namespace Framework {
         m_foliageMesh.initGL(); // Upload the cylinder data to the GPU VBO/VAO
 
         TextureProperties treeTexProps;
-        treeTexProps.path = "Assets/Textures/top.png"; // <-- CHANGE PATH TO YOUR TEXTURE!
+        treeTexProps.path = "Assets/Textures/tree.jpg"; // <-- CHANGE PATH TO YOUR TEXTURE!
         m_treeTextureID = TextureLoader::loadTexture(treeTexProps, true);
 
         m_treeRenderer = new FoliageRenderer(&m_foliageMesh);
@@ -1577,6 +1577,10 @@ namespace Framework {
         // Get the correct pick UV for this view
         glm::vec2& pickUV = (viewIndex == 0) ? pendingPickUV0 : pendingPickUV1;
 
+        // 1. Calculate the Global Model Matrix
+        glm::mat4 mapModel = glm::translate(glm::mat4(1.0f), glm::vec3(-60.0f, 3.0f, 0.0f)); //hard coded values of mapmodel
+        mapModel = glm::scale(mapModel, glm::vec3(5.0f,5.0f,5.0f));
+
         // 1. SCENE PASS
         glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
         glEnable(GL_DEPTH_TEST);
@@ -1593,7 +1597,7 @@ namespace Framework {
         terrainShader.use();
         terrainShader.setMat4("uProj", proj);
         terrainShader.setMat4("uView", view);
-        terrainShader.setMat4("uModel", glm::mat4(1.f));
+        terrainShader.setMat4("uModel", mapModel);
         terrainShader.setVec3("uAlbedo", { 0.6f,0.4f,0.2f });
 
         // Bind shadow map for terrain
@@ -1641,7 +1645,7 @@ namespace Framework {
         // === DRAW FOLIAGE HERE  ===
         if (m_treeRenderer && m_treeTextureID != 0) // Only draw if texture is loaded
         {
-            m_treeRenderer->draw(view, proj, m_treeTextureID); // Pass the texture ID
+            m_treeRenderer->draw(view, proj, mapModel, m_treeTextureID);
         }
 
 
@@ -2182,4 +2186,45 @@ namespace Framework {
         fontSystem.RenderText3D("iDesign Engine by iDesign Studio", textModel, view, proj, 0.05f, glm::vec3(1.0f, 1.0f, 0.5f), 0);
         glDisable(GL_DEPTH_TEST);
     }
+
+    void Graphics::ScatterObject(FoliageRenderer* renderer, int count, float scaleMin, float scaleMax, float yOffset)
+    {
+        std::vector<glm::mat4> transforms;
+        transforms.reserve(count);
+
+        // Calculate map boundaries based on centered terrain
+        // Assuming TerrainSize = 128, Scale = 1.0 (Radius is 64)
+        float mapLimit = ((float)TerrainSize * TerrainScale) * 0.45f; // 0.45 to keep slightly away from absolute edge
+
+        for (int i = 0; i < count; i++) {
+            // 1. Random X and Z across the WHOLE map
+            float r1 = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+            float r2 = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+
+            float x = -mapLimit + (r1 * (mapLimit * 2.0f));
+            float z = -mapLimit + (r2 * (mapLimit * 2.0f));
+
+            // 2. Get Height
+            float y = terrain.getHeightAt(x, z);
+
+            // 3. Create Matrix
+            glm::mat4 model(1.0f);
+            model = glm::translate(model, glm::vec3(x, y + yOffset, z));
+
+            // Random Rotation (Y-axis)
+            float randomRot = (static_cast<float>(rand()) / RAND_MAX) * 360.0f;
+            model = glm::rotate(model, glm::radians(randomRot), glm::vec3(0, 1, 0));
+
+            // Random Scale
+            float scaleVal = scaleMin + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (scaleMax - scaleMin)));
+
+            // Non-uniform scaling for variety (width vs height)
+            model = glm::scale(model, glm::vec3(scaleVal, scaleVal * (0.8f + (rand() % 10) / 10.0f), scaleVal));
+
+            transforms.push_back(model);
+        }
+
+        renderer->setInstances(transforms);
+    }
  }
+

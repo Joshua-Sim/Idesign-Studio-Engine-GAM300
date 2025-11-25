@@ -13,7 +13,7 @@ public:
     void setInstances(const std::vector<glm::mat4>& transforms);
 
     // Update the draw function to accept the texture ID
-    void draw(const glm::mat4& view, const glm::mat4& proj, unsigned int textureID);
+    void draw(const glm::mat4& view, const glm::mat4& proj, const glm::mat4& model, unsigned int textureID);
 
 private:
     Mesh* mesh;
