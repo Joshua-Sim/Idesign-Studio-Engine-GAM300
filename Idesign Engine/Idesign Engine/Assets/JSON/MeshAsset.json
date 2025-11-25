@@ -4,57 +4,27 @@
             "guid": "814c3cff-9da8-4ad4-8a05-009b99a4ea2b",
             "name": "Door",
             "path": "Assets\\Objects\\Door.obj",
-<<<<<<< HEAD
-            "vao": 188,
-            "vbo": 370,
-            "ebo": 371,
-=======
             "vao": 1,
             "vbo": 1,
             "ebo": 2,
->>>>>>> jay-makebutton
             "indexCount": 324
         },
         {
             "guid": "1cc97700-7326-4df8-b677-80233b030807",
             "name": "Back Wall",
             "path": "Assets\\Objects\\Back Wall.obj",
-<<<<<<< HEAD
-            "vao": 199,
-            "vbo": 392,
-            "ebo": 393,
-            "indexCount": 591
-        },
-        {
-            "guid": "62fa60bd-a3d0-4575-851f-e6d04a326345",
-            "name": "Window Frame",
-            "path": "Assets\\Objects\\Window Frame.obj",
-            "vao": 186,
-            "vbo": 366,
-            "ebo": 367,
-=======
             "vao": 2,
             "vbo": 3,
             "ebo": 4,
             "indexCount": 591
         },
         {
-            "guid": "6cbaa85b-562d-4b23-9f64-8639947659cc",
-            "name": "knifechoppingwithBONEFIXED4",
-            "path": "Assets/Objects/knifechoppingwithBONEFIXED4.fbx",
-            "vao": 3,
-            "vbo": 5,
-            "ebo": 6,
-            "indexCount": 312
-        },
-        {
             "guid": "62fa60bd-a3d0-4575-851f-e6d04a326345",
             "name": "Window Frame",
             "path": "Assets\\Objects\\Window Frame.obj",
-            "vao": 4,
-            "vbo": 7,
-            "ebo": 8,
->>>>>>> jay-makebutton
+            "vao": 3,
+            "vbo": 5,
+            "ebo": 6,
             "indexCount": 774
         },
         {
@@ -70,69 +40,45 @@
             "guid": "6cbaa85b-562d-4b23-9f64-8639947659cc",
             "name": "knifechoppingwithBONEFIXED4",
             "path": "Assets/Objects/knifechoppingwithBONEFIXED4.fbx",
-            "vao": 180,
-            "vbo": 354,
-            "ebo": 355,
+            "vao": 5,
+            "vbo": 9,
+            "ebo": 10,
             "indexCount": 312
         },
         {
             "guid": "d51dc95c-5066-4fd5-a31c-e51faf79cdd2",
             "name": "Cupboard",
             "path": "Assets\\Objects\\Cupboard.obj",
-<<<<<<< HEAD
-            "vao": 196,
-            "vbo": 386,
-            "ebo": 387,
-=======
             "vao": 6,
             "vbo": 11,
             "ebo": 12,
->>>>>>> jay-makebutton
             "indexCount": 684
         },
         {
             "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941",
             "name": "Cube",
             "path": "Assets/Objects/Cube.obj",
-<<<<<<< HEAD
-            "vao": 201,
-            "vbo": 396,
-            "ebo": 397,
-=======
             "vao": 7,
             "vbo": 13,
             "ebo": 14,
->>>>>>> jay-makebutton
             "indexCount": 36
         },
         {
             "guid": "0bfc0f47-64aa-4521-b9fa-08ff8aed994b",
             "name": "Counter",
             "path": "Assets\\Objects\\Counter.obj",
-<<<<<<< HEAD
-            "vao": 197,
-            "vbo": 388,
-            "ebo": 389,
-=======
             "vao": 8,
             "vbo": 15,
             "ebo": 16,
->>>>>>> jay-makebutton
             "indexCount": 966
         },
         {
             "guid": "239cddd5-6733-44a1-927a-e3b13152a09a",
             "name": "Frog",
             "path": "Assets/Objects/Frog.obj",
-<<<<<<< HEAD
-            "vao": 198,
-            "vbo": 390,
-            "ebo": 391,
-=======
             "vao": 9,
             "vbo": 17,
             "ebo": 18,
->>>>>>> jay-makebutton
             "indexCount": 780
         },
         {
@@ -154,42 +100,30 @@
             "indexCount": 2304
         },
         {
-            "guid": "e902f0d7-a022-45fc-9c17-2a98cbdb793e",
-            "name": "Cylinder",
-            "path": "Assets/Objects/Cylinder.obj",
-<<<<<<< HEAD
-            "vao": 192,
-            "vbo": 378,
-            "ebo": 379,
-=======
-            "vao": 13,
-            "vbo": 25,
-            "ebo": 26,
->>>>>>> jay-makebutton
-            "indexCount": 240
-        },
-        {
             "guid": "9e1fcb62-0699-4a0b-ae75-d0670af44b1b",
             "name": "plane2",
             "path": "Assets/Objects/plane2.obj",
+            "vao": 13,
+            "vbo": 25,
+            "ebo": 26,
+            "indexCount": 231840
+        },
+        {
+            "guid": "e902f0d7-a022-45fc-9c17-2a98cbdb793e",
+            "name": "Cylinder",
+            "path": "Assets/Objects/Cylinder.obj",
             "vao": 12,
             "vbo": 23,
             "ebo": 24,
-            "indexCount": 231840
+            "indexCount": 240
         },
         {
             "guid": "eac3e6f4-1bf2-415f-aef8-8f1269d91560",
             "name": "Cube",
             "path": "Assets/Objects/Cube.obj",
-<<<<<<< HEAD
-            "vao": 183,
-            "vbo": 360,
-            "ebo": 361,
-=======
             "vao": 14,
             "vbo": 27,
             "ebo": 28,
->>>>>>> jay-makebutton
             "indexCount": 36
         },
         {
@@ -205,93 +139,63 @@
             "guid": "52f9947c-0b27-4f5a-9a18-cfef71bcfac3",
             "name": "layout2-0",
             "path": "Assets/Objects/layout2-0.obj",
-<<<<<<< HEAD
-            "vao": 179,
-            "vbo": 352,
-            "ebo": 353,
-=======
             "vao": 16,
             "vbo": 31,
             "ebo": 32,
->>>>>>> jay-makebutton
             "indexCount": 40356
-        },
-        {
-            "guid": "a25723a2-f9bf-4939-b80d-962eb537dd2e",
-            "name": "RedPotion",
-            "path": "Assets\\Objects\\RedPotion.obj",
-            "vao": 18,
-            "vbo": 35,
-            "ebo": 36,
-            "indexCount": 924
         },
         {
             "guid": "fe86c54b-7cc2-471c-9d7e-0bce31089b5a",
             "name": "Cylinder",
             "path": "Assets/Objects/Cylinder.obj",
+            "vao": 18,
+            "vbo": 35,
+            "ebo": 36,
+            "indexCount": 240
+        },
+        {
+            "guid": "a25723a2-f9bf-4939-b80d-962eb537dd2e",
+            "name": "RedPotion",
+            "path": "Assets\\Objects\\RedPotion.obj",
             "vao": 17,
             "vbo": 33,
             "ebo": 34,
-            "indexCount": 240
+            "indexCount": 924
         },
         {
             "guid": "da032094-6e5c-40fe-b6f0-39a9d542ffe5",
             "name": "Chest",
             "path": "Assets\\Objects\\Chest.obj",
-<<<<<<< HEAD
-            "vao": 205,
-            "vbo": 404,
-            "ebo": 405,
-=======
             "vao": 19,
             "vbo": 37,
             "ebo": 38,
->>>>>>> jay-makebutton
             "indexCount": 1116
         },
         {
             "guid": "90a63915-c3e8-40b9-8c48-b8fe58a9bd67",
             "name": "Drawer",
             "path": "Assets\\Objects\\Drawer.obj",
-<<<<<<< HEAD
-            "vao": 195,
-            "vbo": 384,
-            "ebo": 385,
-=======
             "vao": 20,
             "vbo": 39,
             "ebo": 40,
->>>>>>> jay-makebutton
             "indexCount": 1560
         },
         {
             "guid": "177fa052-079f-42bb-b225-97be34770804",
             "name": "Table",
             "path": "Assets\\Objects\\Table.obj",
-<<<<<<< HEAD
-            "vao": 202,
-            "vbo": 398,
-            "ebo": 399,
-=======
             "vao": 21,
             "vbo": 41,
             "ebo": 42,
->>>>>>> jay-makebutton
             "indexCount": 528
         },
         {
             "guid": "6fa52b14-d79c-4815-aaff-767eb40b32ca",
             "name": "Cutting Board",
             "path": "Assets\\Objects\\Cutting Board.obj",
-<<<<<<< HEAD
-            "vao": 203,
-            "vbo": 400,
-            "ebo": 401,
-=======
             "vao": 22,
             "vbo": 43,
             "ebo": 44,
->>>>>>> jay-makebutton
             "indexCount": 456
         },
         {
@@ -307,45 +211,27 @@
             "guid": "97635846-7fcd-4674-b730-21d672c2f510",
             "name": "BluePotion",
             "path": "Assets\\Objects\\BluePotion.obj",
-<<<<<<< HEAD
-            "vao": 206,
-            "vbo": 406,
-            "ebo": 407,
-=======
             "vao": 24,
             "vbo": 47,
             "ebo": 48,
->>>>>>> jay-makebutton
             "indexCount": 924
         },
         {
             "guid": "bf7c3abb-d8d4-4fa5-bd45-019e80216f61",
             "name": "BluePotion2",
             "path": "Assets\\Objects\\BluePotion2.obj",
-<<<<<<< HEAD
-            "vao": 214,
-            "vbo": 422,
-            "ebo": 423,
-=======
             "vao": 25,
             "vbo": 49,
             "ebo": 50,
->>>>>>> jay-makebutton
             "indexCount": 924
         },
         {
             "guid": "76f36163-789f-4c71-87b4-76fdccaa8408",
             "name": "BluePotion3",
             "path": "Assets\\Objects\\BluePotion3.obj",
-<<<<<<< HEAD
-            "vao": 218,
-            "vbo": 430,
-            "ebo": 431,
-=======
             "vao": 26,
             "vbo": 51,
             "ebo": 52,
->>>>>>> jay-makebutton
             "indexCount": 780
         },
         {
@@ -406,30 +292,18 @@
             "guid": "4658a6a6-5858-4b7b-bf14-feea255d368c",
             "name": "Shelf",
             "path": "Assets\\Objects\\Shelf.obj",
-<<<<<<< HEAD
-            "vao": 209,
-            "vbo": 412,
-            "ebo": 413,
-=======
             "vao": 33,
             "vbo": 65,
             "ebo": 66,
->>>>>>> jay-makebutton
             "indexCount": 816
         },
         {
             "guid": "4bf0356c-3b1b-4e45-a327-5a7f573a20ef",
             "name": "Herb",
             "path": "Assets\\Objects\\Herb.obj",
-<<<<<<< HEAD
-            "vao": 219,
-            "vbo": 432,
-            "ebo": 433,
-=======
             "vao": 34,
             "vbo": 67,
             "ebo": 68,
->>>>>>> jay-makebutton
             "indexCount": 1836
         },
         {
@@ -454,18 +328,18 @@
             "guid": "95461aed-91bf-4172-9f2c-d7578e059e28",
             "name": "CauldronStiring",
             "path": "Assets\\Objects\\CauldronStiring.fbx",
-            "vao": 220,
-            "vbo": 434,
-            "ebo": 435,
+            "vao": 37,
+            "vbo": 73,
+            "ebo": 74,
             "indexCount": 157614
         },
         {
             "guid": "2c8bebcc-51e9-46b0-b99a-cbdfb73ea71e",
             "name": "cauldronwithoutspoon",
             "path": "Assets\\Objects\\cauldronwithoutspoon.fbx",
-            "vao": 92,
-            "vbo": 178,
-            "ebo": 179,
+            "vao": 38,
+            "vbo": 75,
+            "ebo": 76,
             "indexCount": 157614
         }
     ]

@@ -1,6 +1,11 @@
 {
     "banks": [
         {
+            "guid": "45b5f7d2-94b5-4a7f-a32d-893778248a30",
+            "name": "Master",
+            "path": "Assets\\Audio\\Master.bank"
+        },
+        {
             "guid": "82e361a1-9ec3-4012-a695-66b77c020c17",
             "name": "Master.strings",
             "path": "Assets\\Audio\\Master.strings.bank"
@@ -19,11 +24,6 @@
             "guid": "174fa02d-453c-432c-a7ad-3a189353c91b",
             "name": "BGM",
             "path": "Assets\\Audio\\BGM.bank"
-        },
-        {
-            "guid": "45b5f7d2-94b5-4a7f-a32d-893778248a30",
-            "name": "Master",
-            "path": "Assets\\Audio\\Master.bank"
         }
     ]
 }
