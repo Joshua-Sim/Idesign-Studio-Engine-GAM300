@@ -573,6 +573,7 @@
     <ClInclude Include="src\BoxColliderComponent.h">
       <Filter>Header Files\Physics</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="src\Skybox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -594,6 +595,11 @@
     <ClInclude Include="ItemComponent.h">
       <Filter>Header Files\Game</Filter>
     </ClInclude>
+=======
+    <ClInclude Include="src\ButtonComponent.h">
+      <Filter>Header Files\Property</Filter>
+    </ClInclude>
+>>>>>>> jay-makebutton
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

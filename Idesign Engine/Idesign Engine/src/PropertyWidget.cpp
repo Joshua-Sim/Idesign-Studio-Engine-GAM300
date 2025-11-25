@@ -155,6 +155,27 @@ namespace Framework
                 }
                 break;
             }
+            case prop::VEC2:
+            {
+                glm::vec2 value{};
+                prop.m_fnGet(pObject, &value);
+
+                if (prop.m_HasRange)
+                {
+                    // If you want to enforce ranges, use SliderFloat2
+                    ImGui::SliderFloat2(prop.m_pName, &value.x, prop.GetMinAsFloat(), prop.GetMaxAsFloat());
+                }
+                else
+                {
+                    ImGui::InputFloat2(prop.m_pName, &value.x);
+                }
+
+                if (!readOnly && ImGui::IsItemEdited())
+                {
+                    prop.m_fnSet(pObject, &value);
+                }
+                break;
+            }
             case prop::DRAG_FLOAT:
             {
                 float value = 0.0f;
@@ -344,6 +365,14 @@ namespace Framework
                     {
                         ImGui::TextDisabled("No active path.");
                     }
+                }
+                else if (typeName == "PhysicsProperties")
+                {
+                    auto& phys = *static_cast<PhysicsProperties*>(componentPtr);
+
+                    // Your existing controls
+                    DrawEnumDropdown("Motion Type", &phys.motionType, Framework::kMotionTypeNames);
+                    DrawEnumDropdown("Category", &phys.category, Framework::kPhysicsCategoryNames);
                 }
 
                 else if (typeName == "ScriptProperties")
@@ -555,21 +584,31 @@ namespace Framework
                         ImGui::PushID(i);
                         ImGui::Text("Collider #%d", i + 1);
 
-                        // --- Size ---
                         ImGui::DragFloat3("Size", &entry.size.x, 0.1f);
-
-                        // --- Center (Offset) ---
                         ImGui::DragFloat3("Center", &entry.center.x, 0.1f);
-
-                        // --- Is Trigger ---
                         ImGui::Checkbox("Is Trigger", &entry.canPassThrough);
 
-                        // --- Remove ---
-                        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.2f, 0.2f, 1.0f));
-                        if (ImGui::Button("Remove Collider"))
+                        // --- NEW INTERACTION UI ---
+                        ImGui::Spacing();
+                        ImGui::Checkbox("Is Interactable", &entry.isInteractable);
+
+                        if (entry.isInteractable)
                         {
-                            indexToRemove = i;
+                            ImGui::Indent(); // Indent to show it belongs to the checkbox
+
+                            char msgBuffer[256];
+                            strncpy_s(msgBuffer, sizeof(msgBuffer), entry.interactMessage.c_str(), _TRUNCATE);
+                            if (ImGui::InputText("Event Message", msgBuffer, sizeof(msgBuffer)))
+                            {
+                                entry.interactMessage = msgBuffer;
+                            }
+                            ImGui::TextDisabled("(Fires when Player presses E)");
+
+                            ImGui::Unindent();
                         }
+
+                        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.2f, 0.2f, 1.0f));
+                        if (ImGui::Button("Remove Collider")) indexToRemove = i;
                         ImGui::PopStyleColor();
 
                         ImGui::Separator();
@@ -590,22 +629,40 @@ namespace Framework
                 {
                     auto& item = *static_cast<Framework::ItemComponent*>(componentPtr);
 
-                    // --- Name Input ---
-                    char nameBuffer[256];
-                    strncpy_s(nameBuffer, sizeof(nameBuffer), item.name.c_str(), _TRUNCATE);
+                    int currentItemIndex = Framework::ItemNameToId(item.name);
 
-                    if (ImGui::InputText("Item Name", nameBuffer, sizeof(nameBuffer)))
+                    if (ImGui::Combo("Item Select", &currentItemIndex, Framework::kItemNames, Framework::kItemCount))
                     {
-                        item.name = nameBuffer;
+                        // If selection changed, update the string immediately
+                        if (currentItemIndex >= 0 && currentItemIndex < Framework::kItemCount)
+                        {
+                            item.name = Framework::kItemNames[currentItemIndex];
+                        }
                     }
 
-                    // --- Hint Text ---
-                    // ImGui::SameLine(); // Optional: keeps it on same line if there's room
-                    ImGui::TextDisabled("(Must match filename)");
+                    if (currentItemIndex == -1)
+                    {
+                        ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Unknown Item: %s", item.name.c_str());
+
+                        char nameBuffer[256];
+                        strncpy_s(nameBuffer, sizeof(nameBuffer), item.name.c_str(), _TRUNCATE);
+                        if (ImGui::InputText("Manual Name override", nameBuffer, sizeof(nameBuffer)))
+                        {
+                            item.name = nameBuffer;
+                        }
+                    }
+                    else
+                    {
+                        // Just show the filename hint if it is valid
+                        ImGui::TextDisabled("Texture: Assets/Textures/%s.png", item.name.c_str());
+                    }
+
+                    ImGui::Separator();
 
                     // --- Booleans ---
                     ImGui::Checkbox("Is Ingredient", &item.isIngredient);
                     ImGui::Checkbox("Is Choppable", &item.isChoppable);
+                    ImGui::Checkbox("Destroy When Pick?", &item.toDestroyWhenPicked);
                 }
 
 
@@ -616,9 +673,13 @@ namespace Framework
                 }
                 
                 if (ImGui::Button(std::string("Remove ").append(typeName).c_str()))
+                if (typeName != "CollectibleProperties")
                 {
-                    TypeRegistry::Instance().RemoveComponent(typeName, ecs, entity); 
-                    break;
+                    if (ImGui::Button(std::string("Remove ").append(typeName).c_str()))
+                    {
+                        TypeRegistry::Instance().RemoveComponent(typeName, ecs, entity);
+                        break;
+                    }
                 }
             }
         }
@@ -680,6 +741,7 @@ namespace Framework
         TypeRegistry::Instance().Register<ScriptEntry>("ScriptEntry", &g_ScriptEntryProps);
         TypeRegistry::Instance().Register<BoxColliderComponent>("BoxColliderComponent", &g_BoxColliderProps);
         TypeRegistry::Instance().Register<ItemComponent>("ItemComponent", &g_ItemProps);
+        TypeRegistry::Instance().Register<ButtonComponent>("ButtonComponent", &g_ButtonComponentProps);
     }
 
     void AutoRegisterAllReflectedComponents(Coordinator& ecs)

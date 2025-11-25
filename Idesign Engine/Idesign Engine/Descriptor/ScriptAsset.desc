@@ -1,5 +1,5 @@
 {
-    "count": 15,
+    "count": 16,
     "entries": [
         {
             "guid": "3a5dd495-f311-4f19-991a-b6bfc5d63825",
@@ -102,6 +102,13 @@
         {
             "guid": "6d5cf756-cb0e-4343-a7df-ac4c89a09858",
             "scriptPath": "Assets\\Scripts\\score_test.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "852f4291-12ff-48e6-a6eb-bd6685a86b30",
+            "scriptPath": "Assets\\Scripts\\herb_pickup.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1

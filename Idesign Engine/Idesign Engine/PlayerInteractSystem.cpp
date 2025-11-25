@@ -1,98 +1,104 @@
 #include "pch.h"
 #include "PlayerInteractSystem.h"
 #include "Camera.h"
-#include <glm/glm/gtc/quaternion.hpp>
-#include <iostream>
+#include "Coordinator.h"
 #include "ScriptingSystem.h"
-// Include Coordinator for GetEntityName and EntityHasTag
-#include "Coordinator.h" 
+#include "EventManager.h"
+#include "Inventory.h" // Assuming you have this header
+#include "BoxColliderComponent.h"
+#include "ItemComponent.h"
+#include "ScriptingSystem.h" // Assuming you have this
+#include <iostream>
 
-// #include "TagManager.h" // <-- No longer needed
+extern Framework::Coordinator ecsInterface;
 
 namespace Framework
 {
     void PlayerInteractSystem::Initialize()
     {
-        // Get all the systems we depend on
         mPhysicsSystem = ecsInterface.GetSystem<PhysicsSystem>();
-        // mTagManager = ecsInterface.GetSystem<TagManager>(); // <-- No longer needed
+        //mTagManager = ecsInterface.GetSystem<TagManager>();
         mInputHandler = InputHandler::GetInstance();
         mGraphicsSystem = ecsInterface.GetSystem<Graphics>();
-
-        assert(mPhysicsSystem && "PlayerInteractSystem needs PhysicsSystem");
-        // assert(mTagManager && "PlayerInteractSystem needs TagManager"); // <-- No longer needed
-        assert(mInputHandler && "PlayerInteractSystem needs InputHandler");
-        assert(mGraphicsSystem && "PlayerInteractSystem needs GraphicsSystem");
     }
 
     void PlayerInteractSystem::Update(float dt)
     {
-        // --- All debug tagging code has been removed ---
+        // 1. Get current state
+        bool isEPressed = mInputHandler->IsKeyPressed(GLFW_KEY_E);
 
-        // Check for the 'E' key press
-        if (mInputHandler->IsKeyPressed(GLFW_KEY_E))
+        // 2. Only fire if pressed NOW but wasn't pressed BEFORE
+        if (isEPressed && !mWasEPressed)
         {
-            std::cout << "[PlayerInteractSystem] 'E' key was pressed!" << std::endl;
             TryInteract();
         }
+
+        // 3. Update state for the next frame
+        mWasEPressed = isEPressed;
     }
 
     void PlayerInteractSystem::TryInteract()
     {
-        // 1. Get the game camera directly from the Graphics System
-        Camera* gameCamera = mGraphicsSystem->getCamera();
-        if (gameCamera == nullptr) {
-            std::cerr << "PlayerInteractSystem: No camera found in GraphicsSystem!" << std::endl;
-            return;
-        }
+        // 1. Standard Raycast Setup
+        Camera* gameCamera = mGraphicsSystem ? mGraphicsSystem->getCamera() : nullptr;
+        if (!gameCamera) return;
 
-        // 2. Define the raycast parameters
         glm::vec3 origin = gameCamera->position;
         glm::vec3 direction = glm::normalize(gameCamera->front);
         Framework::RaycastHit hit;
 
-        // 3. Perform the raycast (targeting category 1, which is "Collectible")
         bool didHit = mPhysicsSystem->Raycast(origin, direction, mInteractRange, hit, 1);
 
-        if (!didHit)
-        {
-            // This message is normal when not looking at the frog
-            std::cout << "[PlayerInteractSystem] Raycast fired but hit NOTHING (or only hit player)." << std::endl;
-        }
-        else
-        {
-            // 4. Get the entity's name
-            std::string entityName = ecsInterface.GetEntityName(hit.entity);
-            std::cout << "[PlayerInteractSystem] Raycast HIT entity: "
-                << hit.entity << " (Name: " << entityName << ")" << std::endl;
+        if (!didHit) return;
 
-            // 4b. Check the tag using the Coordinator's "EntityHasTag" function
-            if (ecsInterface.EntityHasTag(hit.entity, "Interactable")) //
+        Entity targetEntity = hit.entity;
+        std::cout << "[Interact] Hit Entity: " << targetEntity << std::endl;
+
+        // --- PRIORITY 1: EVENT TRIGGER (Buttons, Chests, Scripted Items) ---
+        // Does the collider say "I am interactable"?
+        if (ecsInterface.HasComponent<BoxColliderComponent>(targetEntity))
+        {
+            auto& colliderComp = ecsInterface.GetComponent<BoxColliderComponent>(targetEntity);
+
+            for (const auto& entry : colliderComp.colliders)
             {
-                // SUCCESS!
-                std::cout << "Interact SUCCESS: Hit entity " << hit.entity
-                    << " (Name: " << entityName << ")"
-                    << " which is tagged 'Interactable'" << std::endl;
-
-                // --- TODO: Call Lua Function ---
-                 // --- CALL THE LUA FUNCTION ---
-                auto scripting = ecsInterface.GetSystem<ScriptingSystem>();
-                if (scripting)
+                // Check the boolean and ensure there is a message to send
+                if (entry.isInteractable && !entry.interactMessage.empty())
                 {
-                    // This assumes you added CallEntityFunction to ScriptingSystem!
-                    // We call "OnInteract" on the entity we hit.
-                    // We can pass the player ID as an argument if needed.
-                    Entity playerID = ecsInterface.GetEntityByName("Player");
-                    scripting->CallEntityFunction(hit.entity, "OnInteract", playerID);
+                    std::cout << "[Interact] Firing Event: " << entry.interactMessage << std::endl;
+
+                    // Construct Payload
+                    CollisionEventData payload;
+                    payload.senderID = ecsInterface.GetEntityByName("Player");
+                    payload.targetID = targetEntity; // The object being hit
+                    payload.actionType = 1;          // 1 = Interact
+
+                    // FIRE AND FORGET
+                    // The EventSystem will pick this up and call the Lua script attached to the object
+                    EventManager::Instance().Fire(entry.interactMessage, &payload);
+
+                    return; // Stop here. The Event System handles the rest.
                 }
             }
-            else
+        }
+
+        // --- PRIORITY 2: GENERIC ITEM FALLBACK (Rocks, Sticks) ---
+        // If no event was fired, check if it's just a simple item to pick up silently.
+        if (ecsInterface.HasComponent<ItemComponent>(targetEntity))
+        {
+            auto& item = ecsInterface.GetComponent<ItemComponent>(targetEntity);
+            int itemId = Framework::ItemNameToId(item.name);
+
+            if (itemId >= 0)
             {
-                // This will appear if you hit a Category 1 object 
-                // that is NOT tagged "Interactable"
-                std::cout << "Interact FAIL: Hit entity " << hit.entity
-                    << " (Name: " << entityName << ")"
-                    << " but it's NOT tagged 'Interactable'" << std::endl;
+                int slot = Framework::Inventory::Instance().AddFirstEmpty(itemId);
+                if (slot >= 0) {
+                    if (item.toDestroyWhenPicked) {
+                        mPhysicsSystem->RemoveBodyForEntity(targetEntity);
+                        ecsInterface.DestroyEntity(targetEntity);
+                    }
+                    std::cout << "[Interact] Generic Item Picked Up." << std::endl;
+                }
             }
         }
     }

@@ -104,6 +104,13 @@
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
+        },
+        {
+            "guid": "852f4291-12ff-48e6-a6eb-bd6685a86b30",
+            "scriptPath": "Assets\\Scripts\\herb_pickup.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
         }
     ]
 }

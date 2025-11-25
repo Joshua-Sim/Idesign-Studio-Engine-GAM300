@@ -62,19 +62,21 @@ namespace Framework {
                                 return false; // Unsubscribe
                             }
 
-                            // --- LOGIC IS SAFE ---
                             auto scriptingSystem = ecsInterface.GetSystem<ScriptingSystem>();
-                            if (scriptingSystem) {
+                            if (scriptingSystem)
+                            {
                                 // Cast payload
                                 auto* payload = static_cast<CollisionEventData*>(data);
                                 Entity target = (payload) ? payload->targetID : -1;
                                 int action = (payload) ? payload->actionType : 0;
 
-                                scriptingSystem->CallEntityFunction(
-                                    entity,
-                                    expectedLuaFunc, // Use the captured string
-                                    target,
-                                    action
+                                // NEW TEMPLATE CALL (void version)
+                                // We don't need to check if it exists first, Call handles safety.
+                                scriptingSystem->Call(
+                                    entity,           // The entity listening
+                                    expectedLuaFunc,  // The function name to run
+                                    target,           // Arg 1
+                                    action            // Arg 2
                                 );
                             }
 

@@ -416,6 +416,12 @@ namespace Framework
                             if (val.HasMember("canPassThrough")) {
                                 entry.canPassThrough = val["canPassThrough"].GetBool();
                             }
+                            if (val.HasMember("isInteractable")) {
+                                entry.isInteractable = val["isInteractable"].GetBool();
+                            }
+                            if (val.HasMember("interactMessage") && val["interactMessage"].IsString()) {
+                                entry.interactMessage = val["interactMessage"].GetString();
+                            }
 
                             comp.colliders.push_back(entry);
                         }
@@ -783,6 +789,14 @@ namespace Framework
                         obj.AddMember("center", centerVal, allocator);
 
                         obj.AddMember("canPassThrough", entry.canPassThrough, allocator);
+                        obj.AddMember("isInteractable", entry.isInteractable, allocator);
+
+                        if (entry.isInteractable) {
+                            rapidjson::Value msgVal;
+                            msgVal.SetString(entry.interactMessage.c_str(), allocator);
+                            obj.AddMember("interactMessage", msgVal, allocator);
+                        }
+
                         arrayVal.PushBack(obj, allocator);
                     }
                     compJson.AddMember("colliders", arrayVal, allocator);

@@ -25,8 +25,8 @@
 #include "MeshLoader.h"
 #include "TextureLoader.h"
 #include "ShaderProgram.h"
+#include "Inventory.h"
 
-#include "AssetManager.h"
 #include "WindowConfigProperties.h"
 #include "MeshProperties.h"
 #include "TextProperties.h"
@@ -102,6 +102,12 @@ namespace Framework
         //Function called by Lua to lock/unlock
         void SetCameraRotationEnabled(bool enabled);
         bool IsCameraRotationEnabled() const { return m_cameraRotationEnabled; }
+
+        //HOTBAR
+        void DrawUIRect(const glm::vec2& pos, const glm::vec2& size, const glm::vec3& color, float alpha);
+        GLuint GetOrLoadIconTex(const char* path);
+        GLuint GetOrLoadIconTexFromItemId(int itemId);
+
     private:
 
         static Graphics* s_instance;
@@ -246,6 +252,15 @@ namespace Framework
         bool m_resizePending = false;
         int m_newWidth = 0;
         int m_newHeight = 0;
+
+        GLuint m_WhiteTex = 0; // 1x1 white for solid-colored rects
+
+        // helpers
+        //std::array<x, 10> HotbarSlot{};
+        void DrawHotbar(int screenW, int screenH);
+        void DrawUISprite(GLuint tex, const glm::vec2& pos, const glm::vec2& size, float alpha = 1.0f);
+        static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+
     };
     
 }

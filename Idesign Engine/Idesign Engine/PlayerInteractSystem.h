@@ -21,7 +21,8 @@ namespace Framework
 
     private:
         void TryInteract();
-
+        void TryPickupCollectible();
+        bool mWasEPressed = false; // Track previous frame state
         // --- System Pointers ---
         std::shared_ptr<PhysicsSystem> mPhysicsSystem;
         // std::shared_ptr<TagManager> mTagManager; // <-- No longer needed
@@ -32,5 +33,10 @@ namespace Framework
         const float mInteractRange = 3.0f;
 
         // bool mDebugFrogTagged = false; // <-- No longer needed
+
+        //set key press once per press
+        bool   m_EWasDown = false;        // track last-frame state
+        double m_nextPickupTime = 0.0;    // debounce timer
+        double m_pickupCooldown = 0.15;   // seconds (tweak to taste)
     };
 }

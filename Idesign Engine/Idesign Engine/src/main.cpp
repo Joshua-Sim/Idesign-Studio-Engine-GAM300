@@ -40,6 +40,8 @@
 #include <EventManager.h>
 #include "GameSystem.h"
 #include "PlayerInteractSystem.h"
+#include"ButtonSystem.h"
+#include "ButtonComponent.h"
 
 using namespace Framework;
 
@@ -90,6 +92,10 @@ int main(void)
     RegisterComponentTypes();                           // Step 1: Register known types
     AutoRegisterAllReflectedComponents(ecsInterface);   // Step 2: Hook them into ECS
 
+    // Explicitly register ButtonComponent as an ECS component
+    //ecsInterface.RegisterComponent<ButtonComponent>();
+	//AssetManager::Instance().LoadWindowConfig(); // Load WindowConfig before Graphics system is created
+
     // Register graphics system and GLFW Window first 
     auto graphicsSystem = ecsInterface.RegisterSystem<Graphics>();
 
@@ -99,6 +105,7 @@ int main(void)
     auto sceneSystem = ecsInterface.RegisterSystem<SceneManager>();
     auto imguiSystem = ecsInterface.RegisterSystem<ImguiManager>();
     auto gameSystem = ecsInterface.RegisterSystem<GameSystem>();
+    auto buttonSystem = ecsInterface.RegisterSystem<ButtonSystem>();
     imguiSystem->SetGraphicsSystem(graphicsSystem.get());
     graphicsSystem->SetImguiManager(imguiSystem.get());
     
@@ -136,6 +143,12 @@ int main(void)
         ecsInterface.SetSystemSignature<EventSystem>(signature);
     }
 
+    //buttonSystem->SetInputHandler(inputHandlerSystem);
+    //{
+    //    Signature buttonSig;
+    //    buttonSig.set(ecsInterface.GetComponentType<ButtonComponent>());
+    //    ecsInterface.SetSystemSignature<ButtonSystem>(buttonSig);
+    //}
     // ------- Add systems to engine below -------- //
     engine->AddSystem(animationSystem.get());   // Calculate bone matrices
     engine->AddSystem(graphicsSystem.get());
@@ -151,6 +164,7 @@ int main(void)
     engine->AddSystem(fileCheckSystem.get());
     engine->AddSystem(eventSystem.get());
     engine->AddSystem(gameSystem.get());
+    engine->AddSystem(buttonSystem.get());
 
     std::filesystem::path root = GetEngineRootPath();
     fileCheckSystem->WatchAllFolders();
