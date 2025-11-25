@@ -10,22 +10,22 @@
             "indexCount": 324
         },
         {
-            "guid": "6cbaa85b-562d-4b23-9f64-8639947659cc",
-            "name": "knifechoppingwithBONEFIXED4",
-            "path": "Assets/Objects/knifechoppingwithBONEFIXED4.fbx",
-            "vao": 2,
-            "vbo": 3,
-            "ebo": 4,
-            "indexCount": 312
-        },
-        {
             "guid": "1cc97700-7326-4df8-b677-80233b030807",
             "name": "Back Wall",
             "path": "Assets\\Objects\\Back Wall.obj",
+            "vao": 2,
+            "vbo": 3,
+            "ebo": 4,
+            "indexCount": 591
+        },
+        {
+            "guid": "6cbaa85b-562d-4b23-9f64-8639947659cc",
+            "name": "knifechoppingwithBONEFIXED4",
+            "path": "Assets/Objects/knifechoppingwithBONEFIXED4.fbx",
             "vao": 3,
             "vbo": 5,
             "ebo": 6,
-            "indexCount": 591
+            "indexCount": 312
         },
         {
             "guid": "62fa60bd-a3d0-4575-851f-e6d04a326345",

@@ -457,7 +457,7 @@ namespace Framework {
         // Texture: a plain black texture, marked as UI
         {
             TextureProperties bgTex;
-            bgTex.path = "Assets/PNG/monkey.png"; // <- make a 1x1 black PNG
+            bgTex.path = "Assets/PNG/test.png"; // <- make a 1x1 black PNG
             bgTex.isUI = true;
             TextureLoader::loadTexture(bgTex, true);
             ecsInterface.AddComponent<TextureProperties>(menuBgEntity, bgTex);
@@ -625,9 +625,7 @@ namespace Framework {
         float now = (float)glfwGetTime();
         float dt = now - lastTime; lastTime = now;
         process_input(dt);
-        //jay
-        //if (engineState.IsPlay())
-        //    dt = 0.0;
+
         // ====================================================================
         // 0. LIGHT GATHERING PASS
         // ====================================================================
@@ -992,6 +990,9 @@ namespace Framework {
 
     void Graphics::process_input(float dt)
     {
+       
+        if (!engineState.IsPlay())
+            return;
         const bool editorActive = (m_mouseTargetView == 1);   // 1 = Editor/Scene, 0 = Game
 
         // ============================================================

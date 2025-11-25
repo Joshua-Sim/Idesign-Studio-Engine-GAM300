@@ -8,15 +8,15 @@
             "isUI": false
         },
         {
-            "guid": "b2d4bb99-3396-40de-8789-01d6cf083f4e",
-            "name": "obj",
-            "path": "Assets/Textures/obj.png",
-            "isUI": false
-        },
-        {
             "guid": "d4899207-ea5e-473b-870f-aade76e8a7ff",
             "name": "Door",
             "path": "Assets\\Textures\\Door.png",
+            "isUI": false
+        },
+        {
+            "guid": "b2d4bb99-3396-40de-8789-01d6cf083f4e",
+            "name": "obj",
+            "path": "Assets/Textures/obj.png",
             "isUI": false
         },
         {
@@ -29,6 +29,12 @@
             "guid": "b57b4683-8581-4256-9cc5-60c900acec67",
             "name": "T_Brick_BaseColor",
             "path": "Assets\\Textures\\T_Brick_BaseColor.png",
+            "isUI": false
+        },
+        {
+            "guid": "ac09c4fc-da84-4656-8246-40407d5bd854",
+            "name": "play_button",
+            "path": "Assets\\Textures\\play_button.png",
             "isUI": false
         },
         {
@@ -215,12 +221,6 @@
             "guid": "a3d6570b-a168-4e13-9ecc-6abb2ed62b18",
             "name": "Cutting Board",
             "path": "Assets\\Textures\\Cutting Board.png",
-            "isUI": false
-        },
-        {
-            "guid": "ac09c4fc-da84-4656-8246-40407d5bd854",
-            "name": "play_button",
-            "path": "Assets\\Textures\\play_button.png",
             "isUI": false
         }
     ]

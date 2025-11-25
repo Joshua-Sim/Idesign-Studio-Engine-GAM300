@@ -3336,7 +3336,7 @@ namespace Framework {
                     float v = (pos.y - min.y) / (max.y - min.y);
                     v = 1.0f - v;
 
-                    //if (!menuActive) {
+                    if (!menuActive) {
                         // hand normalized UV to Graphics for the readback
                         m_graphicsSystem->SetPickViewIndex(g_MainViewIndex); // assuming view index 0 for main viewport
                         m_graphicsSystem->SetGroundMode(true);
@@ -3347,7 +3347,7 @@ namespace Framework {
                         else {
                             m_graphicsSystem->RequestPickUVSecondary(u, v);
                         }
-                    //}
+                    }
                     // NEW: forward the same UV to ButtonSystem for 2D button hit-test
                     auto buttonSys = ecsInterface.GetSystem<ButtonSystem>();
                     if (buttonSys) {
@@ -3423,14 +3423,14 @@ namespace Framework {
                     v = 1.0f - v; // Flip V-coordinate to match OpenGL/texture convention
 
                     // Request the pick
-                    //if (!menuActive) {
+                    if (!menuActive) {
                         m_graphicsSystem->SetPickViewIndex(secondaryView);
                         m_graphicsSystem->SetGroundMode(true);
                         if (secondaryView == 0)
                             m_graphicsSystem->RequestPickUV(u, v);
                         else
                             m_graphicsSystem->RequestPickUVSecondary(u, v);
-                    //}
+                    }
                     auto buttonSys = ecsInterface.GetSystem<ButtonSystem>();
                     if (buttonSys) {
                         buttonSys->HandleClickUV(u, v);
