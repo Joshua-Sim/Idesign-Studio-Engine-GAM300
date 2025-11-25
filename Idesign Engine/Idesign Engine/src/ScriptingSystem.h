@@ -41,6 +41,7 @@ namespace Framework {
 
         void CallEntityFunction(Entity entity, const std::string & functionName, Entity arg1, Entity arg2);
         void CallEntityFunction(Entity entity, const std::string& functionName, Entity arg1);
+        bool CallEntityFunctionRetBool(Entity entity, const std::string& funcName, Entity arg1);
 
     private:
         lua_State* L = nullptr;

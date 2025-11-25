@@ -1,197 +1,95 @@
 #include "pch.h"
 #include "PlayerInteractSystem.h"
 #include "Camera.h"
-#include <glm/glm/gtc/quaternion.hpp>
-#include <iostream>
+#include "Coordinator.h"
 #include "ScriptingSystem.h"
-// Include Coordinator for GetEntityName and EntityHasTag
-#include "Coordinator.h" 
-#include "Inventory.h"
-#include "Graphics.h"
+#include "EventManager.h"
+#include "Inventory.h" // Assuming you have this header
+#include "BoxColliderComponent.h"
 #include "ItemComponent.h"
+#include "ScriptingSystem.h" // Assuming you have this
+#include <iostream>
 
-// #include "TagManager.h" // <-- No longer needed
+extern Framework::Coordinator ecsInterface;
 
 namespace Framework
 {
     void PlayerInteractSystem::Initialize()
     {
-        // Get all the systems we depend on
         mPhysicsSystem = ecsInterface.GetSystem<PhysicsSystem>();
-        // mTagManager = ecsInterface.GetSystem<TagManager>(); // <-- No longer needed
+        //mTagManager = ecsInterface.GetSystem<TagManager>();
         mInputHandler = InputHandler::GetInstance();
         mGraphicsSystem = ecsInterface.GetSystem<Graphics>();
-
-        assert(mPhysicsSystem && "PlayerInteractSystem needs PhysicsSystem");
-        // assert(mTagManager && "PlayerInteractSystem needs TagManager"); // <-- No longer needed
-        assert(mInputHandler && "PlayerInteractSystem needs InputHandler");
-        assert(mGraphicsSystem && "PlayerInteractSystem needs GraphicsSystem");
     }
 
     void PlayerInteractSystem::Update(float dt)
     {
-        // --- All debug tagging code has been removed ---
+        // 1. Get current state
+        bool isEPressed = mInputHandler->IsKeyPressed(GLFW_KEY_E);
 
-        // Check for the 'E' key press
-        /*if (mInputHandler->IsKeyPressed(GLFW_KEY_E))
+        // 2. Only fire if pressed NOW but wasn't pressed BEFORE
+        if (isEPressed && !mWasEPressed)
         {
-            std::cout << "[PlayerInteractSystem] 'E' key was pressed!" << std::endl;
             TryInteract();
-            TryPickupCollectible();
-        }*/
-
-        GLFWwindow* win = mGraphicsSystem ? mGraphicsSystem->GetWindow() : nullptr;
-        if (!win) return;
-
-        const double now = glfwGetTime();
-        const int    s = glfwGetKey(win, GLFW_KEY_E);
-        const bool   isDown = (s == GLFW_PRESS);
-
-        // Edge trigger + debounce: only fire on the transition Up->Down,
-        // and not more often than m_pickupCooldown.
-        if (isDown && !m_EWasDown && now >= m_nextPickupTime)
-        {
-            TryPickupCollectible();
-            m_nextPickupTime = now + m_pickupCooldown;
         }
 
-        m_EWasDown = isDown;
+        // 3. Update state for the next frame
+        mWasEPressed = isEPressed;
     }
 
     void PlayerInteractSystem::TryInteract()
     {
-        // 1. Get the game camera directly from the Graphics System
-        Camera* gameCamera = mGraphicsSystem->getCamera();
-        if (gameCamera == nullptr) {
-            std::cerr << "PlayerInteractSystem: No camera found in GraphicsSystem!" << std::endl;
-            return;
-        }
+        std::cout << "[Debug] TryInteract called..." << std::endl;
 
-        // 2. Define the raycast parameters
+        Camera* gameCamera = mGraphicsSystem ? mGraphicsSystem->getCamera() : nullptr;
+        if (!gameCamera) return;
+
         glm::vec3 origin = gameCamera->position;
         glm::vec3 direction = glm::normalize(gameCamera->front);
         Framework::RaycastHit hit;
 
-        // 3. Perform the raycast (targeting category 1, which is "Collectible")
+        // 1. Check Raycast
         bool didHit = mPhysicsSystem->Raycast(origin, direction, mInteractRange, hit, 1);
 
-        if (!didHit)
-        {
-            // This message is normal when not looking at the frog
-            std::cout << "[PlayerInteractSystem] Raycast fired but hit NOTHING (or only hit player)." << std::endl;
+        if (!didHit) {
+            std::cout << "[Debug] Raycast MISSED everything (Category 1)." << std::endl;
+            return;
         }
-        else
+
+        std::cout << "[Debug] Raycast HIT Entity: " << hit.entity << std::endl;
+
+        // 2. Check Script Override
+        bool handledByScript = false;
+        auto scripting = ecsInterface.GetSystem<ScriptingSystem>();
+
+        if (scripting && ecsInterface.HasComponent<ScriptProperties>(hit.entity))
         {
-            // 4. Get the entity's name
-            std::string entityName = ecsInterface.GetEntityName(hit.entity);
-            std::cout << "[PlayerInteractSystem] Raycast HIT entity: "
-                << hit.entity << " (Name: " << entityName << ")" << std::endl;
+            std::cout << "[Debug] Entity has ScriptComponent. Attempting 'OnPickup'..." << std::endl;
 
-            // 4b. Check the tag using the Coordinator's "EntityHasTag" function
-            if (ecsInterface.EntityHasTag(hit.entity, "Interactable")) //
-            {
-                // SUCCESS!
-                std::cout << "Interact SUCCESS: Hit entity " << hit.entity
-                    << " (Name: " << entityName << ")"
-                    << " which is tagged 'Interactable'" << std::endl;
+            // This will print errors inside ScriptingSystem if function is missing
+            handledByScript = scripting->CallEntityFunctionRetBool(hit.entity, "OnPickup", hit.entity);
 
-                // --- TODO: Call Lua Function ---
-                 // --- CALL THE LUA FUNCTION ---
-                auto scripting = ecsInterface.GetSystem<ScriptingSystem>();
-                if (scripting)
-                {
-                    // This assumes you added CallEntityFunction to ScriptingSystem!
-                    // We call "OnInteract" on the entity we hit.
-                    // We can pass the player ID as an argument if needed.
-                    Entity playerID = ecsInterface.GetEntityByName("Player");
-                    scripting->CallEntityFunction(hit.entity, "OnInteract", playerID);
-                }
+            if (handledByScript) {
+                std::cout << "[Debug] SUCCESS: Lua Script handled the interaction." << std::endl;
+                return;
             }
-            else
-            {
-                // This will appear if you hit a Category 1 object 
-                // that is NOT tagged "Interactable"
-                std::cout << "Interact FAIL: Hit entity " << hit.entity
-                    << " (Name: " << entityName << ")"
-                    << " but it's NOT tagged 'Interactable'" << std::endl;
+            else {
+                std::cout << "[Debug] Script found, but 'OnPickup' returned false or wasn't found." << std::endl;
             }
+        }
+        else {
+            std::cout << "[Debug] Entity does NOT have a ScriptComponent." << std::endl;
+        }
+
+        // 3. Check Fallback
+        if (ecsInterface.HasComponent<ItemComponent>(hit.entity))
+        {
+            std::cout << "[Debug] Found ItemComponent. Attempting generic pickup..." << std::endl;
+            // ... generic logic ...
+            std::cout << "[Debug] Generic Pickup Success." << std::endl;
+        }
+        else {
+            std::cout << "[Debug] Entity has no ItemComponent. Interaction ignored." << std::endl;
         }
     }
-
-    void PlayerInteractSystem::TryPickupCollectible()
-    {
-        // Only allow in game view (optional safety)
-        if (mGraphicsSystem && mGraphicsSystem->GetMouseTargetView() != 0)
-            return;
-
-        // Camera ray
-        Camera* gameCamera = mGraphicsSystem ? mGraphicsSystem->getCamera() : nullptr;
-        if (!gameCamera) return;
-
-        const glm::vec3 origin = gameCamera->position;
-        const glm::vec3 dir = glm::normalize(gameCamera->front);
-
-        // Raycast for collectibles (layer/category may differ in your project)
-        Framework::RaycastHit hit{};
-        constexpr int kCollectibleCategory = 1;  // adjust if needed
-        if (!mPhysicsSystem ||
-            !mPhysicsSystem->Raycast(origin, dir, mInteractRange, hit, kCollectibleCategory) ||
-            !hit.hit)
-        {
-            std::cout << "[Pickup] Nothing collectible in front.\n";
-            return;
-        }
-
-        Framework::Entity target = hit.entity;
-        if (!ecsInterface.IsEntityValid(target)) return;
-
-        // Must have ItemComponent + Transform
-        if (!ecsInterface.HasComponent<Framework::ItemComponent>(target) ||
-            !ecsInterface.HasComponent<Framework::TransformComponent>(target))
-        {
-            std::cout << "[Pickup] Hit entity is not a Collectible.\n";
-            return;
-        }
-
-        auto& item = ecsInterface.GetComponent<Framework::ItemComponent>(target);
-        auto& tr = ecsInterface.GetComponent<Framework::TransformComponent>(target);
-
-        // Distance check against pickupRadius (from camera/player)
-        /*const glm::vec3 toItem = tr.position - origin;
-        const float     dist2 = glm::dot(toItem, toItem);*/
-        /*const float     r2 = item.pickupRadius * item.pickupRadius;
-        if (dist2 > r2) {
-            std::cout << "[Pickup] Too far.\n";
-            return;
-        }*/
-
-        // Resolve itemId from item.name
-        const int itemId = Framework::ItemNameToId(item.name);
-        if (itemId < 0) {
-            std::cout << "[Pickup] Unknown item name: " << item.name << "\n";
-            return;
-        }
-
-        // Add to Inventory (first empty hotbar slot, non-stackable)
-        auto& inv = Framework::Inventory::Instance();
-        const int slot = inv.AddFirstEmpty(itemId);
-        if (slot < 0) {
-            std::cout << "[Pickup] Hotbar full; cannot pick up.\n";
-            return;
-        }
-
-        // Destroy or keep world entity based on flag
-        if (item.toDestroyWhenPicked) {
-            if (mPhysicsSystem) {
-                mPhysicsSystem->RemoveBodyForEntity(target); // ensure this exists
-            }
-            ecsInterface.DestroyEntity(target);
-        }
-
-        std::cout << "[Pickup] Picked " << item.name << " into hotbar slot " << slot
-            << (item.toDestroyWhenPicked ? " (consumed)\n" : " (source persists)\n");
-    }
-
-
-
 }

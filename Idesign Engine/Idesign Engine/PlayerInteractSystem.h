@@ -22,7 +22,7 @@ namespace Framework
     private:
         void TryInteract();
         void TryPickupCollectible();
-
+        bool mWasEPressed = false; // Track previous frame state
         // --- System Pointers ---
         std::shared_ptr<PhysicsSystem> mPhysicsSystem;
         // std::shared_ptr<TagManager> mTagManager; // <-- No longer needed

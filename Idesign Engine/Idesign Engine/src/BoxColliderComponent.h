@@ -7,16 +7,27 @@
 #include "PropertyMacro.h"
 #include <glm/glm/glm.hpp>
 #include <vector>
+#include <string> // Added
 
 namespace Framework {
+
+    struct CollisionEventData {
+        Entity senderID;
+        Entity targetID;
+        int actionType; // 1 = Enter, 0 = Exit
+    };
 
     // 1. Single Collider Data
     struct BoxColliderEntry {
         glm::vec3 size{ 1.0f, 1.0f, 1.0f };
-        glm::vec3 center{ 0.0f, 0.0f, 0.0f }; // Offset from Entity Transform
+        glm::vec3 center{ 0.0f, 0.0f, 0.0f };
         bool canPassThrough = false;
 
-        // Runtime State (Per-collider tracking)
+        // --- NEW INTERACTION FIELDS ---
+        bool isInteractable = false;       // If true, raycast can trigger event
+        std::string interactMessage;       // e.g. "OnPickUp" or "OpenChest"
+
+        // Runtime State
         bool wasInsideLastFrame = false;
     };
 
@@ -26,7 +37,8 @@ namespace Framework {
         PROP_VEC3(size, BoxColliderEntry),
         PROP_VEC3(center, BoxColliderEntry),
         PROP_BOOL(canPassThrough, BoxColliderEntry),
-        // Hide runtime state from Editor/Serialization
+        PROP_BOOL(isInteractable, BoxColliderEntry),     // NEW
+        PROP_STRING(interactMessage, BoxColliderEntry),  // NEW
         PROP_BOOL_HIDDEN(wasInsideLastFrame, BoxColliderEntry)
     };
 
@@ -34,21 +46,12 @@ namespace Framework {
     inline global_registration g_BoxColliderEntryPropsReg(&g_BoxColliderEntryProps);
 
 
-    // 2. The Component (The Container)
+    // 2. The Component
     struct BoxColliderComponent {
         std::vector<BoxColliderEntry> colliders;
-
-        // Hidden helper for reflection
         int colliderCount = 0;
     };
 
-    struct CollisionEventData {
-        Entity senderID;
-        Entity targetID;
-        int actionType; // 1 = Enter, 0 = Exit
-    };
-
-    // Register Component Properties
     inline const std::vector g_BoxColliderPropsArray =
     {
         PROP_INT_HIDDEN(colliderCount, BoxColliderComponent)

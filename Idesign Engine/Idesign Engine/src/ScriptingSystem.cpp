@@ -15,6 +15,7 @@
 #include "ItemComponent.h" // <--- Add this
 #include "Graphics.h"
 #include <GameSystem.h>
+#include <PhysicsSystem.h>
 
 extern Framework::Coordinator ecsInterface;
 
@@ -497,6 +498,61 @@ namespace Framework {
             return 0;
         }
 
+        static int Lua_GetItemName(lua_State* L) {
+            int entityID = (int)lua_tointeger(L, 1);
+
+            if (ecsInterface.IsEntityValid(entityID) &&
+                ecsInterface.HasComponent<Framework::ItemComponent>(entityID))
+            {
+                auto& item = ecsInterface.GetComponent<Framework::ItemComponent>(entityID);
+                lua_pushstring(L, item.name.c_str());
+                return 1;
+            }
+            lua_pushstring(L, "");
+            return 1;
+        }
+        int Lua_AddToInventory(lua_State* L) {
+            const char* itemName = lua_tostring(L, 1); // Arg 1: "RedMushroom"
+
+            int itemId = Framework::ItemNameToId(itemName);
+            if (itemId < 0) {
+                lua_pushinteger(L, -1); // Error
+                return 1;
+            }
+
+            auto& inv = Framework::Inventory::Instance();
+            int slot = inv.AddFirstEmpty(itemId);
+
+            lua_pushinteger(L, slot); // Return the slot index (or -1 if full)
+            return 1;
+        }
+
+        int Lua_DestroyEntity(lua_State* L) {
+            int entityID = (int)lua_tointeger(L, 1);
+
+            // Ensure we clean up physics body first if needed
+            auto physics = ecsInterface.GetSystem<Framework::PhysicsSystem>();
+            if (physics) physics->RemoveBodyForEntity(entityID);
+
+            ecsInterface.DestroyEntity(entityID);
+            return 0;
+        }
+
+        static int Lua_IsItemDestroyOnPick(lua_State* L) {
+            int entityID = (int)lua_tointeger(L, 1);
+
+            if (ecsInterface.IsEntityValid(entityID) &&
+                ecsInterface.HasComponent<Framework::ItemComponent>(entityID))
+            {
+                auto& item = ecsInterface.GetComponent<Framework::ItemComponent>(entityID);
+                lua_pushboolean(L, item.toDestroyWhenPicked); // Return the bool
+                return 1;
+            }
+            lua_pushboolean(L, false);
+            return 1;
+        }
+
+
 
         // Helper to play an animation on an entity
         static int l_PlayEntityAnimation(lua_State* L) {
@@ -590,6 +646,8 @@ namespace Framework {
 
             navSystem->SetAgentDestination(agent, to);
         }
+
+
 
 
         namespace fs = std::filesystem;
@@ -877,6 +935,10 @@ namespace Framework {
         lua_register(L, "GetScore", lua_GetScore);
         lua_register(L, "AddScore", lua_AddScore);
         lua_register(L, "SetText", lua_SetText);
+        lua_register(L, "AddToInventory", Lua_AddToInventory);
+        lua_register(L, "DestroyEntity", Lua_DestroyEntity);
+        lua_register(L, "GetItemName", Lua_GetItemName);
+        lua_register(L, "IsItemDestroyOnPick", Lua_IsItemDestroyOnPick);
 
         // Engine utility
         lua_register(L, "FindEntityByName", lua_FindEntityByName);
@@ -1007,8 +1069,8 @@ namespace Framework {
                     }
                 }
 
-                // ----- NORMAL SCRIPT EXECUTION -----
-                if (sc.tableRef == LUA_NOREF) {
+                if (sc.tableRef == LUA_NOREF || sc.tableRef == -1)
+                {
                     if (!LoadScriptTable(sc)) continue;
 
                     // expose entity id: self.entity
@@ -1016,6 +1078,9 @@ namespace Framework {
                     lua_pushinteger(L, static_cast<lua_Integer>(e));
                     lua_setfield(L, -2, "entity");
                     lua_pop(L, 1);
+
+                    // Force init call
+                    sc.initialized = false;
                 }
 
                 if (!sc.initialized) {
@@ -1040,6 +1105,7 @@ namespace Framework {
      std::string ScriptingSystem::GetProjectRoot() { return s_ProjectRoot; }
 
      // For Event
+// For Event
      void ScriptingSystem::CallEntityFunction(Entity entity, const std::string& functionName, Entity arg1, Entity arg2)
      {
          // 1. Check if entity is valid and has the correct component
@@ -1051,11 +1117,21 @@ namespace Framework {
 
          // 2. Loop through all script instances on that entity
          for (auto& sc : comp.scripts) {
-             if (sc.tableRef == LUA_NOREF) continue; // Script not loaded
 
-             // 3. Get the Lua function
-             // Push the instance table
-             lua_rawgeti(L, LUA_REGISTRYINDEX, sc.tableRef);  // [stack: tbl]
+             // Check for standard NOREF, but also -1 just in case
+             if (sc.tableRef == LUA_NOREF || sc.tableRef == -1) continue;
+
+             // 3. Get the Lua Table
+             lua_rawgeti(L, LUA_REGISTRYINDEX, sc.tableRef);  // [stack: tbl] (or nil)
+
+             // --- CRITICAL FIX START ---
+             // Check if we actually got a table back. 
+             // If sc.tableRef was garbage or -1, this will be nil or invalid.
+             if (!lua_istable(L, -1)) {
+                 lua_pop(L, 1); // Pop the nil/garbage
+                 continue;      // Skip this script
+             }
+             // --- CRITICAL FIX END ---
 
              // Push the method from the table
              lua_getfield(L, -1, functionName.c_str());       // [stack: tbl, fn]
@@ -1086,6 +1162,80 @@ namespace Framework {
              // 6. Clean up stack (pop the original table)
              lua_pop(L, 1); // pop tbl
          }
+     }
+
+     bool ScriptingSystem::CallEntityFunctionRetBool(Entity entity, const std::string& funcName, Entity arg1)
+     {
+         // 1. Safety Checks
+         if (!ecsInterface.IsEntityValid(entity) ||
+             !ecsInterface.HasComponent<Framework::ScriptProperties>(entity))
+         {
+             return false;
+         }
+
+         auto& scriptProps = ecsInterface.GetComponent<Framework::ScriptProperties>(entity);
+
+         // 2. ITERATE ALL SCRIPTS
+         for (auto& entry : scriptProps.scripts)
+         {
+             // SAFETY 1: Check if the script is actually loaded/initialized
+             if (!entry.initialized || entry.tableRef == LUA_NOREF || entry.tableRef == -1) {
+                 continue;
+             }
+
+             // A. Retrieve the Table
+             lua_rawgeti(L, LUA_REGISTRYINDEX, entry.tableRef); // Pushes [Table] or [nil]
+
+             // SAFETY 2: CRITICAL FIX FOR THE CRASH
+             // Check if what we pulled from the registry is actually a table.
+             if (!lua_istable(L, -1)) {
+                 // If it's nil or something else, pop it and skip this script
+                 // std::cerr << "[Lua Error] Script tableRef is invalid or corrupted for entity " << entity << std::endl;
+                 lua_pop(L, 1);
+                 continue;
+             }
+
+             // B. Look for the function name INSIDE this table
+             lua_getfield(L, -1, funcName.c_str()); // Pushes [Function] or [nil]
+
+             // C. Check if it is actually a function
+             if (lua_isfunction(L, -1))
+             {
+                 // Push Arguments (Target/Entity ID)
+                 lua_pushinteger(L, static_cast<lua_Integer>(arg1));
+
+                 // D. Call the function
+                 // Stack: [Table, Function, Arg1]
+                 if (lua_pcall(L, 1, 1, 0) == LUA_OK)
+                 {
+                     // Check Result
+                     bool handled = false;
+                     if (lua_isboolean(L, -1)) {
+                         handled = lua_toboolean(L, -1);
+                     }
+
+                     lua_pop(L, 1); // Pop Result
+                     lua_pop(L, 1); // Pop Table
+
+                     // If handled, stop looking
+                     if (handled) return true;
+                 }
+                 else
+                 {
+                     // Error handling
+                     std::cerr << "[Lua Error] Call failed: " << lua_tostring(L, -1) << std::endl;
+                     lua_pop(L, 1); // Pop error message
+                     lua_pop(L, 1); // Pop Table
+                 }
+             }
+             else
+             {
+                 // Function not found in this script
+                 lua_pop(L, 2); // Pop [nil] (the result of getfield) and [Table]
+             }
+         }
+
+         return false;
      }
 
      void ScriptingSystem::CallEntityFunction(Entity entity, const std::string& functionName, Entity arg1)
