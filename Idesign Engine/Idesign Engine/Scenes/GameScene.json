@@ -1936,14 +1936,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -32.861698150634766,
-                        9.169604301452637,
-                        13.077198028564453
+                        -28.25364112854004,
+                        8.034937858581543,
+                        7.37828254699707
                     ],
                     "rotation": [
-                        0.0,
-                        -0.0,
-                        0.0
+                        -0.20590950548648834,
+                        49.13507843017578,
+                        1.4971866607666016
                     ],
                     "scale": [
                         0.9999990463256836,
@@ -1962,6 +1962,15 @@
                 "MeshComponent": {
                     "guid": "",
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "614d7341-f9b8-4a53-ae5c-780116e3fe3d",
+                            "scriptPath": "Assets\\Scripts\\footstep.lua",
+                            "hotReload": true
+                        }
+                    ]
                 },
                 "BoxColliderComponent": {
                     "colliders": [
@@ -2009,9 +2018,9 @@
                 },
                 "ListenerComponent": {
                     "position": [
-                        -32.861698150634766,
-                        9.169604301452637,
-                        13.077198028564453
+                        -28.25364112854004,
+                        8.034937858581543,
+                        7.37828254699707
                     ],
                     "forward": [
                         0.0,
@@ -2025,11 +2034,27 @@
                     ],
                     "velocity": [
                         0.0,
-                        -67.53662109375,
+                        0.0,
                         0.0
                     ],
                     "active": true,
                     "listenerIndex": 0
+                },
+                "AudioComponent": {
+                    "guid": "d6f23fa6-ff6f-4892-91b3-ca11349bb492",
+                    "eventName": "event:/Footstep",
+                    "is3D": true,
+                    "minDistance": 1.0,
+                    "maxDistance": 100.0,
+                    "volume": 1.0,
+                    "loop": false,
+                    "playOnStart": true,
+                    "isPlaying": true,
+                    "lastPosition": [
+                        -28.25364112854004,
+                        8.034937858581543,
+                        7.37828254699707
+                    ]
                 }
             }
         },
@@ -2357,11 +2382,11 @@
                     "volume": 1.0,
                     "loop": false,
                     "playOnStart": true,
-                    "isPlaying": false,
+                    "isPlaying": true,
                     "lastPosition": [
-                        0.0,
-                        0.0,
-                        0.0
+                        -40.230262756347656,
+                        6.287981033325195,
+                        17.725893020629883
                     ]
                 }
             }
