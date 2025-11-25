@@ -92,15 +92,6 @@ namespace Framework {
             return 0;
         }
 
-        int l_NudgeLight(lua_State* L) {
-            auto* self = lua_self(L);
-            Graphics* g = self ? self->GetGraphicsSystem() : nullptr;
-            if (!g) return 0;
-            const char* axis = luaL_checkstring(L, 1);
-            float amt = (float)luaL_checknumber(L, 2);
-            g->NudgeLightFromLua(axis, amt);
-            return 0;
-        }
 
         // In ScriptingSystem.cpp, inside the anonymous namespace or static helpers
 
@@ -172,21 +163,9 @@ namespace Framework {
             return 0;
         }
 
-        int l_ToggleLight(lua_State* L) {
-            auto* self = lua_self(L);
-            Graphics* g = self ? self->GetGraphicsSystem() : nullptr;
-            if (!g) return 0;
-            g->ToggleMainLightFromLua();
-            return 0;
-        }
-
-        int l_SetHDR(lua_State* L) { auto* s = lua_self(L); auto* g = s ? s->GetGraphicsSystem() : nullptr; if (g) g->SetHDRFromLua((float)luaL_checknumber(L, 1)); return 0; }
-        int l_SetBloom(lua_State* L) { auto* s = lua_self(L); auto* g = s ? s->GetGraphicsSystem() : nullptr; if (g) g->SetBloomFromLua((float)luaL_checknumber(L, 1)); return 0; }
-        int l_SetGround(lua_State* L) { auto* s = lua_self(L); auto* g = s ? s->GetGraphicsSystem() : nullptr; if (g) g->SetGroundModeFromLua(lua_toboolean(L, 1) != 0);   return 0; }
 
         // Engine LUA exposed utility functions (Get entity, get by component, get by name, tag , create prefab, setactive -deactive etc
-
-        
+           
         int lua_FindEntityByName(lua_State* L)
         {
             const char* name = luaL_checkstring(L, 1);
@@ -609,11 +588,6 @@ namespace Framework {
         // 5) Register C functions (global names in Lua)
         lua_register(L, "IsKeyDown", l_IsKeyDown);
         lua_register(L, "CameraMove", l_CameraMove);
-        lua_register(L, "NudgeLight", l_NudgeLight);
-        lua_register(L, "ToggleLight", l_ToggleLight);
-        lua_register(L, "SetHDR", l_SetHDR);
-        lua_register(L, "SetBloom", l_SetBloom);
-        lua_register(L, "SetGroundMode", l_SetGround);
         lua_register(L, "GetPosition", lua_GetPosition);
         lua_register(L, "SetPosition", lua_SetPosition);
         lua_register(L, "SpawnPrompt", l_spawnPrompt);
