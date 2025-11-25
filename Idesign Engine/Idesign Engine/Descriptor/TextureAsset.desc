@@ -1,16 +1,23 @@
 {
+<<<<<<< HEAD
     "count": 60,
+=======
+    "count": 37,
+>>>>>>> jay-makebutton
     "entries": [
         {
             "guid": "afd25b76-dddc-4c4f-bae4-a6c9a22931e5",
             "name": "Herb",
             "path": "Assets\\Textures\\Herb.png",
+<<<<<<< HEAD
             "isUI": false
         },
         {
             "guid": "b2d4bb99-3396-40de-8789-01d6cf083f4e",
             "name": "obj",
             "path": "Assets/Textures/obj.png",
+=======
+>>>>>>> jay-makebutton
             "isUI": false
         },
         {
@@ -20,9 +27,15 @@
             "isUI": false
         },
         {
+<<<<<<< HEAD
             "guid": "e726adb8-bf75-4993-9e77-826f5541ac9d",
             "name": "ChoppedHerb2",
             "path": "Assets\\Textures\\ChoppedHerb2.png",
+=======
+            "guid": "b2d4bb99-3396-40de-8789-01d6cf083f4e",
+            "name": "obj",
+            "path": "Assets/Textures/obj.png",
+>>>>>>> jay-makebutton
             "isUI": false
         },
         {
@@ -38,12 +51,28 @@
             "isUI": false
         },
         {
+<<<<<<< HEAD
+=======
+            "guid": "ac09c4fc-da84-4656-8246-40407d5bd854",
+            "name": "play_button",
+            "path": "Assets\\Textures\\play_button.png",
+            "isUI": false
+        },
+        {
+            "guid": "c3eb9787-d36c-4380-a39f-78737901cda2",
+            "name": "Table",
+            "path": "Assets\\Textures\\Table.png",
+            "isUI": false
+        },
+        {
+>>>>>>> jay-makebutton
             "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
             "name": "",
             "path": "Assets/PNG/test.png",
             "isUI": false
         },
         {
+<<<<<<< HEAD
             "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606",
             "name": "music",
             "path": "Assets/Textures/music.png",
@@ -56,12 +85,23 @@
             "isUI": false
         },
         {
+=======
+>>>>>>> jay-makebutton
             "guid": "7bd3846d-4142-4b26-ab54-85667861258f",
             "name": "BluePotion2",
             "path": "Assets\\Textures\\BluePotion2.png",
             "isUI": false
         },
         {
+<<<<<<< HEAD
+=======
+            "guid": "5548bb23-a8a5-467b-ac1b-af16f9d2cfa2",
+            "name": "BluePotion3",
+            "path": "Assets\\Textures\\BluePotion3.png",
+            "isUI": false
+        },
+        {
+>>>>>>> jay-makebutton
             "guid": "7b119595-c240-4c45-a8a0-018d7a3d917f",
             "name": "",
             "path": "Assets/PNG/test.png",
@@ -92,6 +132,7 @@
             "isUI": false
         },
         {
+<<<<<<< HEAD
             "guid": "add88db8-22f2-4599-ad64-d9abc2f87fa9",
             "name": "Chest",
             "path": "Assets\\Textures\\Chest.png",
@@ -107,6 +148,17 @@
             "guid": "c3eb9787-d36c-4380-a39f-78737901cda2",
             "name": "Table",
             "path": "Assets\\Textures\\Table.png",
+=======
+            "guid": "0e3df122-8a0d-4926-bc68-1cc4f4acfa1f",
+            "name": "Drawer",
+            "path": "Assets\\Textures\\Drawer.png",
+>>>>>>> jay-makebutton
+            "isUI": false
+        },
+        {
+            "guid": "add88db8-22f2-4599-ad64-d9abc2f87fa9",
+            "name": "Chest",
+            "path": "Assets\\Textures\\Chest.png",
             "isUI": false
         },
         {
@@ -128,15 +180,27 @@
             "isUI": false
         },
         {
+<<<<<<< HEAD
             "guid": "f49379af-a87b-435b-b85b-5c3127ec2fe9",
             "name": "Counter",
             "path": "Assets\\Textures\\Counter.png",
+=======
+            "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606",
+            "name": "music",
+            "path": "Assets/Textures/music.png",
+>>>>>>> jay-makebutton
             "isUI": false
         },
         {
             "guid": "0f2ece2c-6b29-43d9-a6ae-1f648d18d86d",
             "name": "Wood",
             "path": "Assets\\Textures\\Wood.png",
+            "isUI": false
+        },
+        {
+            "guid": "f49379af-a87b-435b-b85b-5c3127ec2fe9",
+            "name": "Counter",
+            "path": "Assets\\Textures\\Counter.png",
             "isUI": false
         },
         {
@@ -206,6 +270,7 @@
             "isUI": false
         },
         {
+<<<<<<< HEAD
             "guid": "294eaf04-f5e3-404b-a262-ae25b04ef993",
             "name": "chopped_herb",
             "path": "Assets\\Textures\\chopped_herb.png",
@@ -218,12 +283,15 @@
             "isUI": false
         },
         {
+=======
+>>>>>>> jay-makebutton
             "guid": "4cf1bf23-4fbd-4a08-9abb-f662145f2134",
             "name": "Counter",
             "path": "Assets\\Textures\\Counter.png",
             "isUI": false
         },
         {
+<<<<<<< HEAD
             "guid": "1fd4cefe-486b-4fbc-810c-8456cf7bbb59",
             "name": "strength_potion",
             "path": "Assets\\Textures\\strength_potion.png",
@@ -359,6 +427,11 @@
             "guid": "401f8be3-5ecf-4a58-b6b4-74cf52e9bf90",
             "name": "top_night",
             "path": "Assets\\Textures\\top_night.png",
+=======
+            "guid": "a3d6570b-a168-4e13-9ecc-6abb2ed62b18",
+            "name": "Cutting Board",
+            "path": "Assets\\Textures\\Cutting Board.png",
+>>>>>>> jay-makebutton
             "isUI": false
         }
     ]

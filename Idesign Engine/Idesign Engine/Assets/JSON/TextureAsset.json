@@ -37,6 +37,18 @@
             "isUI": false
         },
         {
+            "guid": "ac09c4fc-da84-4656-8246-40407d5bd854",
+            "name": "play_button",
+            "path": "Assets\\Textures\\play_button.png",
+            "isUI": false
+        },
+        {
+            "guid": "c3eb9787-d36c-4380-a39f-78737901cda2",
+            "name": "Table",
+            "path": "Assets\\Textures\\Table.png",
+            "isUI": false
+        },
+        {
             "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
             "name": "",
             "path": "Assets/PNG/test.png",

@@ -46,6 +46,7 @@
 #include "EventReceiverComponent.h"
 #include "EventSenderComponent.h"
 #include "BoxColliderComponent.h"
+#include "ButtonComponent.h"
 
 // Asset Files
 #include "AssetLoader.h"
@@ -78,6 +79,7 @@ namespace Framework
     REGISTER_TYPE_NAME(EventReceiverComponent);
     REGISTER_TYPE_NAME(EventSenderComponent);
     REGISTER_TYPE_NAME(BoxColliderComponent);
+    REGISTER_TYPE_NAME(ButtonComponent);
 
     struct AssetKey 
     {

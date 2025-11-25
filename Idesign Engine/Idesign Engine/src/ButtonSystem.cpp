@@ -13,46 +13,95 @@
 
 #include "pch.h"
 #include <iostream>
-
+#include "Coordinator.h"
 #include "ButtonSystem.h"
-
+#include "TextureProperties.h"
+extern Framework::Coordinator ecsInterface;
 namespace Framework {
 
-    ButtonSystem::ButtonSystem(InputHandler* inputHandler) : inputHandler(inputHandler) {}
+    ButtonSystem::ButtonSystem() : m_inputHandler(nullptr) {}
+    ButtonSystem::ButtonSystem(InputHandler* inputHandler) : m_inputHandler(inputHandler) {}
+
+    void ButtonSystem::SetInputHandler(InputHandler* handler)
+    {
+        m_inputHandler = handler;
+    }
 
     void ButtonSystem::Initialize() {
         // Initialize buttons if needed
     }
 
-    void ButtonSystem::Update(float deltaTime) {
+
+    void ButtonSystem::Update(float deltaTime)
+    {
         (void)deltaTime;
-        // Check for button interaction, hover, and clicks
-        for (auto& button : buttons) {
-            double mouseX = inputHandler->GetMouseX();
-            double mouseY = inputHandler->GetMouseY();
 
-            // Check if the mouse is over the button
-            if (mouseX > button.position.x && mouseX < button.position.x + button.size.x &&
-                mouseY > button.position.y && mouseY < button.position.y + button.size.y) {
-                button.isHovered = true;
+        for (auto entity : mEntities)
+        {
+            if (!ecsInterface.HasComponent<ButtonComponent>(entity) ||
+                !ecsInterface.HasComponent<TransformComponent>(entity))
+                continue;
 
-                // Check if the button is clicked
-                if (inputHandler->IsMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
-                    button.TriggerClick();
-                }
-            }
-            else {
-                button.isHovered = false;
-            }
+            auto& button = ecsInterface.GetComponent<ButtonComponent>(entity);
+            auto& tr = ecsInterface.GetComponent<TransformComponent>(entity);
+
+            // interpret Transform as “center + full size” in design space
+            button.position = glm::vec2(
+                tr.position.x - 0.5f * tr.scale.x,
+                tr.position.y - 0.5f * tr.scale.y
+            );
+            button.size = glm::vec2(tr.scale.x, tr.scale.y);
         }
     }
 
-    void ButtonSystem::AddButton(ButtonComponent button) {
-        buttons.push_back(button);
-    }
+    // ---------------------------------------------------------------------
+    // Click handling in design (1920x1080) coordinates
+    // ---------------------------------------------------------------------
+    void ButtonSystem::HandleClickUV(float u, float v)
+    {
+        float designX = u * DESIGN_WIDTH;
+        float designY = v * DESIGN_HEIGHT;
 
-    std::vector<ButtonComponent> ButtonSystem::GetButtons() const {
-        return buttons;
-    }
+        for (auto entity : mEntities)
+        {
+            if (!ecsInterface.HasComponent<ButtonComponent>(entity) ||
+                !ecsInterface.HasComponent<TransformComponent>(entity) ||
+                !ecsInterface.HasComponent<TextureProperties>(entity))
+                continue;
 
+            auto& button = ecsInterface.GetComponent<ButtonComponent>(entity);
+            auto& tr = ecsInterface.GetComponent<TransformComponent>(entity);
+            auto& tex = ecsInterface.GetComponent<TextureProperties>(entity);
+
+            // only UI quads are treated as buttons
+            if (!tex.isUI)
+                continue;
+
+            // derive bounds from Transform (center + full size)
+            float left = tr.position.x - 0.5f * tr.scale.x;
+            float right = tr.position.x + 0.5f * tr.scale.x;
+            float bottom = tr.position.y - 0.5f * tr.scale.y;
+            float top = tr.position.y + 0.5f * tr.scale.y;
+
+            bool inside = (designX > left && designX < right &&
+                designY > bottom && designY < top);
+
+            button.isHovered = inside;
+
+            if (inside)
+            {
+                button.TriggerClick();
+            }
+        }
+    }
 }
+
+//    void ButtonSystem::AddButton(ButtonComponent button) {
+//        buttons.push_back(button);
+//    }
+//
+//    std::vector<ButtonComponent> ButtonSystem::GetButtons() const {
+//        return buttons;
+//    }
+//
+//}

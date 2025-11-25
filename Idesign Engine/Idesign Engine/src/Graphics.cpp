@@ -32,7 +32,7 @@
 //#include "imgui.h"
 //#include "imgui_impl_glfw.h"
 //#include "imgui_impl_opengl3.h"
-//#include "EngineState.h"
+#include "EngineState.h"
 //#include "AssetManager.h"
 //#include "TextureAsset.h"
 //#include "Debugger.h"
@@ -224,6 +224,7 @@ namespace Framework {
         ecsInterface.RegisterComponent<PhysicsProperties>();
         ecsInterface.RegisterComponent<BoxColliderComponent>();
         ecsInterface.RegisterComponent<ItemComponent>();
+        ecsInterface.RegisterComponent<ButtonComponent>();
 
         //test
 
@@ -394,7 +395,157 @@ namespace Framework {
         ecsInterface.AddComponent<HierarchyComponent>(lightEntity, HierarchyComponent{});
 
         // ====================================================================
-       
+        
+        //// ====================================================================
+        //// --- create a play button entity ---
+        //// ====================================================================
+        //const float DESIGN_WIDTH = 1920.0f;
+        //const float DESIGN_HEIGHT = 1080.0f;
+
+        //Entity playButtonEntity = ecsInterface.CreateEntity();
+
+        //// 1) Transform for 2D quad in screen space
+        //TransformComponent tr;
+
+        //// center on screen in design coords
+        //float buttonWidth = 400.0f;
+        //float buttonHeight = 150.0f;
+
+        //tr.position = glm::vec3(DESIGN_WIDTH * 0.5f, DESIGN_HEIGHT * 0.5f, 0.0f);
+        //// For a quad centered at position, scale is the full width/height
+        //tr.scale = glm::vec3(buttonWidth, buttonHeight, 1.0f);
+        //tr.rotation = glm::vec3(0.0f);
+
+        //ecsInterface.AddComponent<TransformComponent>(playButtonEntity, tr);
+
+        //// 2) Texture for the quad (marked as UI so RenderView puts it in uiEntities)
+        //TextureProperties tex;
+        //tex.path = "Assets/PNG/play_button.png";
+        //tex.isUI = true;
+        //TextureLoader::loadTexture(tex, true);
+        //ecsInterface.AddComponent<TextureProperties>(playButtonEntity, tex);
+
+        //// 3) ButtonComponent in the SAME coordinate system
+        //ButtonComponent playButton;
+
+        //// position is bottom-left corner in design coords
+        //playButton.position = glm::vec2(
+        //    tr.position.x - 0.5f * tr.scale.x,
+        //    tr.position.y - 0.5f * tr.scale.y
+        //);
+        //playButton.size = glm::vec2(buttonWidth, buttonHeight);
+
+        //playButton.onClick = []() {
+        //    engineState.SetPlay(true);
+        //    std::cout << "Play button clicked!\n";
+        //    };
+
+        //ecsInterface.AddComponent<ButtonComponent>(playButtonEntity, playButton);
+
+        //ecsInterface.AddComponent<HierarchyComponent>(playButtonEntity, HierarchyComponent{});
+
+        //// ----------------- End play button creation ---------------------
+        // ====================================================================
+// --- MENU OVERLAY: full black background + PLAY button ---
+// ====================================================================
+        const float DESIGN_WIDTH = 1920.0f;
+        const float DESIGN_HEIGHT = 1080.0f;
+        //bool menuActive = !engineState.IsPlay();
+        // --------- 1) Fullscreen black background quad (menu overlay) -------
+        // This quad will cover the whole screen so you cannot see the game.
+        Entity menuBgEntity = ecsInterface.CreateEntity();
+
+        // Transform: fullscreen in "design" coordinates
+        {
+            TransformComponent bgTr;
+            bgTr.position = glm::vec3(DESIGN_WIDTH * 0.5f,
+                DESIGN_HEIGHT * 0.5f,
+                0.0f);
+            bgTr.scale = glm::vec3(DESIGN_WIDTH,
+                DESIGN_HEIGHT,
+                1.0f);
+            bgTr.rotation = glm::vec3(0.0f);
+            ecsInterface.AddComponent<TransformComponent>(menuBgEntity, bgTr);
+        }
+
+        // Texture: a plain black texture, marked as UI
+        {
+            TextureProperties bgTex;
+            bgTex.path = "Assets/PNG/test.png"; // <- make a 1x1 black PNG
+            bgTex.isUI = true;
+            TextureLoader::loadTexture(bgTex, true);
+            ecsInterface.AddComponent<TextureProperties>(menuBgEntity, bgTex);
+        }
+
+        // Optional: hierarchy so it behaves like other entities
+        ecsInterface.AddComponent<HierarchyComponent>(menuBgEntity, HierarchyComponent{});
+
+        // --------- 2) PLAY button quad on top of the black background --------
+        Entity playButtonEntity = ecsInterface.CreateEntity();
+
+        // 2D transform in the same design coordinate system
+        TransformComponent tr;
+        float buttonWidth = 400.0f;
+        float buttonHeight = 150.0f;
+
+        tr.position = glm::vec3(DESIGN_WIDTH * 0.5f,
+            DESIGN_HEIGHT * 0.5f,
+            0.0f);             // center of screen
+        tr.scale = glm::vec3(buttonWidth,
+            buttonHeight,
+            1.0f);            // full button size
+        tr.rotation = glm::vec3(0.0f);
+
+        ecsInterface.AddComponent<TransformComponent>(playButtonEntity, tr);
+
+        // PLAY button texture, marked as UI so RenderView treats it as 2D overlay
+        TextureProperties tex;
+        tex.path = "Assets/PNG/play_button.png";
+        tex.isUI = true;
+        TextureLoader::loadTexture(tex, true);
+        ecsInterface.AddComponent<TextureProperties>(playButtonEntity, tex);
+
+        // ButtonComponent in the SAME coordinate system (design pixels)
+        ButtonComponent playButton;
+
+        // bottom-left corner in design coords
+        playButton.position = glm::vec2(
+            tr.position.x - 0.5f * tr.scale.x,
+            tr.position.y - 0.5f * tr.scale.y
+        );
+        playButton.size = glm::vec2(buttonWidth, buttonHeight);
+
+        // When clicked: start the game AND hide both the overlay and button
+        playButton.onClick = [playButtonEntity, menuBgEntity]()
+            {
+                // start the game
+                engineState.SetPlay(true);
+                std::cout << "Play button clicked!\n";
+
+                // hide PLAY button
+                if (ecsInterface.IsEntityValid(playButtonEntity) &&
+                    ecsInterface.HasComponent<TextureProperties>(playButtonEntity))
+                {
+                    ecsInterface.GetComponent<TextureProperties>(playButtonEntity).isUI = false;
+                }
+
+                // hide black background
+                if (ecsInterface.IsEntityValid(menuBgEntity) &&
+                    ecsInterface.HasComponent<TextureProperties>(menuBgEntity))
+                {
+                    ecsInterface.GetComponent<TextureProperties>(menuBgEntity).isUI = false;
+                }
+            };
+
+
+        ecsInterface.AddComponent<ButtonComponent>(playButtonEntity, playButton);
+        ecsInterface.AddComponent<HierarchyComponent>(playButtonEntity, HierarchyComponent{});
+
+        // ====================================================================
+        // --- End menu overlay creation --------------------------------------
+        // ====================================================================
+
+
         cube = Mesh::CreateUnitCubeData();
         plane = Mesh::CreateUnitSphereData();
         cone = Mesh::CreateUnitConeData();
@@ -878,6 +1029,9 @@ namespace Framework {
 
     void Graphics::process_input(float dt)
     {
+       
+        if (!engineState.IsPlay())
+            return;
         const bool editorActive = (m_mouseTargetView == 1);   // 1 = Editor/Scene, 0 = Game
 
         // ============================================================
@@ -1589,40 +1743,81 @@ namespace Framework {
         std::vector<Entity> uiTextEntities;    // NEW: for HUD text
 
 
+        //for (auto const& entityId : mEntities)
+        //{
+        //    if (ecsInterface.HasComponent<MeshProperties>(entityId))
+        //    {
+
+        //        bool isUI = false;
+        //        if (ecsInterface.HasComponent<TextureProperties>(entityId)) {
+        //            isUI = ecsInterface.GetComponent<TextureProperties>(entityId).isUI;
+        //        }
+
+        //        if (isUI) {
+        //            uiEntities.push_back(entityId); // Add to UI list
+        //            continue; 
+        //        }
+        //        float opacity = 1.0f;
+        //        if (ecsInterface.HasComponent<MaterialProperties>(entityId))
+        //        {
+        //            opacity = ecsInterface.GetComponent<MaterialProperties>(entityId).opacity;
+        //        }
+
+        //        if (opacity < 1.0f)
+        //        {
+        //            if (ecsInterface.HasComponent<TransformComponent>(entityId))
+        //            {
+        //                auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
+        //                float distance = glm::distance(tr.position, cam.position);
+        //                transparentEntities.insert({ distance, entityId });
+        //            }
+        //        }
+        //        else
+        //        {
+        //            opaqueEntities.push_back(entityId);
+        //        }
+        //    }
+        //}
         for (auto const& entityId : mEntities)
         {
-            if (ecsInterface.HasComponent<MeshProperties>(entityId))
+            // check if its a ui or tex
+            bool hasTex = ecsInterface.HasComponent<TextureProperties>(entityId);
+            bool isUI = false;
+
+            if (hasTex)
             {
+                auto& tex = ecsInterface.GetComponent<TextureProperties>(entityId);
+                isUI = tex.isUI;
+            }
 
-                bool isUI = false;
-                if (ecsInterface.HasComponent<TextureProperties>(entityId)) {
-                    isUI = ecsInterface.GetComponent<TextureProperties>(entityId).isUI;
-                }
+            if (isUI)
+            {
+                
+                uiEntities.push_back(entityId);
+                continue;
+            }
+            // Non-UI objects must have a mesh to be rendered in 3D passes
+            if (!ecsInterface.HasComponent<MeshProperties>(entityId))
+                continue;
 
+            float opacity = 1.0f;
+            if (ecsInterface.HasComponent<MaterialProperties>(entityId))
+            {
+                opacity = ecsInterface.GetComponent<MaterialProperties>(entityId).opacity;
+            }
 
-                if (isUI) {
-                    uiEntities.push_back(entityId); // Add to UI list
-                    continue; 
-                }
-                float opacity = 1.0f;
-                if (ecsInterface.HasComponent<MaterialProperties>(entityId))
+            if (opacity < 1.0f)
+            {
+                if (ecsInterface.HasComponent<TransformComponent>(entityId))
                 {
-                    opacity = ecsInterface.GetComponent<MaterialProperties>(entityId).opacity;
+                    auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
+                    float distance = glm::distance(tr.position, cam.position);
+                    transparentEntities.insert({ distance, entityId });
                 }
-
-                if (opacity < 1.0f)
-                {
-                    if (ecsInterface.HasComponent<TransformComponent>(entityId))
-                    {
-                        auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
-                        float distance = glm::distance(tr.position, cam.position);
-                        transparentEntities.insert({ distance, entityId });
-                    }
-                }
-                else
-                {
-                    opaqueEntities.push_back(entityId);
-                }
+            }
+            else
+            {
+                opaqueEntities.push_back(entityId);
             }
         }
 
@@ -2115,7 +2310,8 @@ namespace Framework {
 
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, tr.position);
-            model = glm::scale(model, glm::vec3(tr.scale.x * 0.5f, tr.scale.y * 0.5f, 1.0f));
+            //model = glm::scale(model, glm::vec3(tr.scale.x * 0.5f, tr.scale.y * 0.5f, 1.0f));
+            model = glm::scale(model, glm::vec3(tr.scale.x, tr.scale.y, 1.0f));
 
             uiShader.setMat4("uModel", model);
             renderQuad();

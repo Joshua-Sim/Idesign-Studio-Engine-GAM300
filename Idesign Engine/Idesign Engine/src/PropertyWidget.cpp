@@ -155,6 +155,27 @@ namespace Framework
                 }
                 break;
             }
+            case prop::VEC2:
+            {
+                glm::vec2 value{};
+                prop.m_fnGet(pObject, &value);
+
+                if (prop.m_HasRange)
+                {
+                    // If you want to enforce ranges, use SliderFloat2
+                    ImGui::SliderFloat2(prop.m_pName, &value.x, prop.GetMinAsFloat(), prop.GetMaxAsFloat());
+                }
+                else
+                {
+                    ImGui::InputFloat2(prop.m_pName, &value.x);
+                }
+
+                if (!readOnly && ImGui::IsItemEdited())
+                {
+                    prop.m_fnSet(pObject, &value);
+                }
+                break;
+            }
             case prop::DRAG_FLOAT:
             {
                 float value = 0.0f;
@@ -680,6 +701,7 @@ namespace Framework
         TypeRegistry::Instance().Register<ScriptEntry>("ScriptEntry", &g_ScriptEntryProps);
         TypeRegistry::Instance().Register<BoxColliderComponent>("BoxColliderComponent", &g_BoxColliderProps);
         TypeRegistry::Instance().Register<ItemComponent>("ItemComponent", &g_ItemProps);
+        TypeRegistry::Instance().Register<ButtonComponent>("ButtonComponent", &g_ButtonComponentProps);
     }
 
     void AutoRegisterAllReflectedComponents(Coordinator& ecs)
