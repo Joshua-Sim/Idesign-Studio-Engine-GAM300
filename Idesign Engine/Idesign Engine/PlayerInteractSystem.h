@@ -21,6 +21,7 @@ namespace Framework
 
     private:
         void TryInteract();
+        void TryPickupCollectible();
 
         // --- System Pointers ---
         std::shared_ptr<PhysicsSystem> mPhysicsSystem;

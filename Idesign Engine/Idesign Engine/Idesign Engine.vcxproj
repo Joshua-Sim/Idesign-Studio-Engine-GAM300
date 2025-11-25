@@ -151,6 +151,7 @@
     <ClInclude Include="src\AnimationLoader.h" />
     <ClInclude Include="src\BoxColliderComponent.h" />
     <ClInclude Include="src\ButtonComponent.h" />
+    <ClInclude Include="src\CollectibleProperties.h" />
     <ClInclude Include="src\EnginePath.h" />
     <ClInclude Include="src\Animation.h" />
     <ClInclude Include="src\AnimationProperties.h" />
@@ -191,6 +192,8 @@
     <ClInclude Include="src\ImguiManager.h" />
     <ClInclude Include="src\Imgui_Hierarchy.h" />
     <ClInclude Include="src\InputHandler.h" />
+    <ClInclude Include="src\InteractionSystem.h" />
+    <ClInclude Include="src\Inventory.h" />
     <ClInclude Include="src\JsonSerialize.h" />
     <ClInclude Include="src\Lighting.h" />
     <ClInclude Include="src\LightProperties.h" />
@@ -210,6 +213,7 @@
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\PhysicsProperties.h" />
     <ClInclude Include="src\PhysicsSystem.h" />
+    <ClInclude Include="src\PrefabComponent.h" />
     <ClInclude Include="src\PrefabProperties.h" />
     <ClInclude Include="src\PropertyMacro.h" />
     <ClInclude Include="src\PropertySystem.h" />
@@ -345,6 +349,7 @@
     <ClCompile Include="src\AssetCompiler.cpp" />
     <ClCompile Include="src\AssetManager.cpp" />
     <ClCompile Include="src\AudioSystem.cpp" />
+    <ClCompile Include="src\BoxColliderComponent.cpp" />
     <ClCompile Include="src\ButtonSystem.cpp" />
     <ClCompile Include="src\Collision.cpp" />
     <ClCompile Include="src\ComponentManager.cpp" />
@@ -361,8 +366,10 @@
     <ClCompile Include="src\GameSystem.cpp" />
     <ClCompile Include="src\Graphics.cpp" />
     <ClCompile Include="src\GraphicsShader.cpp" />
+    <ClCompile Include="src\GraphicsWindows.cpp" />
     <ClCompile Include="src\ImguiManager.cpp" />
     <ClCompile Include="src\InputHandler.cpp" />
+    <ClCompile Include="src\Inventory.cpp" />
     <ClCompile Include="src\Lighting.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\MainMath.cpp" />

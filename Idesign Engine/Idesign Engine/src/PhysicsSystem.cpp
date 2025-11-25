@@ -8,6 +8,8 @@
 #include "PhysicsProperties.h"
 #include "EventManager.h"
 #include "BoxColliderComponent.h"
+#include "CollectibleProperties.h"
+#include "Inventory.h"
 
 #include <Jolt/Jolt.h>
 #include <Jolt/Core/TempAllocator.h>
@@ -46,6 +48,43 @@ namespace Layers {
 
 // ---------- Small helpers ----------
 
+inline bool IsWithinRange(const glm::vec3& a, const glm::vec3& b, float radius)
+{
+    const glm::vec3 d = a - b;
+    return glm::dot(d, d) <= (radius * radius);
+}
+
+inline bool GetWorldPos(Framework::Coordinator& ecs, Entity e, glm::vec3& out)
+{
+    if (!ecs.HasComponent<TransformComponent>(e)) return false;
+    out = ecs.GetComponent<TransformComponent>(e).position;
+    return true;
+}
+
+// Replace InventoryComponent/Add() with your own
+//inline void CollectItem(Entity player, Entity item, Framework::Coordinator& ecs)
+//{
+//    auto& coll = ecs.GetComponent<CollectibleProperties>(item);
+//
+//    // Add to player's inventory
+//    if (ecs.HasComponent<InventoryComponent>(player))
+//    {
+//        auto& inv = ecs.GetComponent<InventoryComponent>(player);
+//        //inv.Add(static_cast<ItemID>(coll.itemId), coll.amount);
+//    }
+//
+//    //// Remove the world entity if it should be consumed
+//    //if (coll.consumeWhenCollect)
+//    //{
+//    //    // optionally remove physics before destroy if your ECS requires
+//    //    ecs.DestroyEntity(item);
+//    //}
+//}
+
+// UI enum -> Jolt motion type
+// THIS IS YOUR IMMOVABLE IMPLEMENTATION
+// 0 = Static (Immovable)
+// 1 = Dynamic (Movable with Gravity)
 static inline JPH::EMotionType ToJoltMotionType(int motionType) {
     switch (motionType) {
     case 0:  return JPH::EMotionType::Static;
@@ -584,6 +623,36 @@ namespace Framework {
         outHit.hit = false;
         return false;
     }
+
+    void PhysicsSystem::RemoveBodyForEntity(Entity e)
+    {
+        if (!bodyInterface) return;
+        if (!ecsInterface.HasComponent<PhysicsBodyComponent>(e)) return;
+
+        auto& pb = ecsInterface.GetComponent<PhysicsBodyComponent>(e);
+
+        // Remove from Jolt
+        if (!pb.ID.IsInvalid())
+        {
+            bodyInterface->RemoveBody(pb.ID);
+            bodyInterface->DestroyBody(pb.ID);
+        }
+
+        // Drop ECS physics component
+        ecsInterface.RemoveComponent<PhysicsBodyComponent>(e);
+
+        // Clean our local list
+        for (auto it = m_createdBodies.begin(); it != m_createdBodies.end(); ++it)
+        {
+            if (it->GetIndexAndSequenceNumber() == pb.ID.GetIndexAndSequenceNumber())
+            {
+                m_createdBodies.erase(it);
+                break;
+            }
+        }
+    }
+
+
 
     std::string PhysicsSystem::GetName() { return "PhysicsSystem"; }
 

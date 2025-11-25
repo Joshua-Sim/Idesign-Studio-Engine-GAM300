@@ -45,6 +45,7 @@ namespace Framework
         void Initialize();
         void Update(float dt) override;
         std::string GetName() override;
+        void RemoveBodyForEntity(Entity e);
         void Shutdown();
 
         // --- NEW ---

@@ -1,4 +1,5 @@
 #pragma once
+#include "pch.h"
 #include "PropertySystem.h"
 #include "PropertyMacro.h"
 #include <glm/glm/glm.hpp>
