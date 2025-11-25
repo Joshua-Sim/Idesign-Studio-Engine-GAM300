@@ -99,6 +99,7 @@ namespace Framework {
         void InitializeFMOD();
         void ShutdownFMOD();
         void PrintAudioInfo() const;
+        FMOD::Studio::Bank* LoadBank(const std::string& bankPath);
 
         // Get FMOD systems
         FMOD::Studio::System* GetStudioSystem() { return studioSystem; }
@@ -117,6 +118,9 @@ namespace Framework {
         void PauseSound(const std::string& customName);
         void SetVolume(const std::string& customName, float volume);
         void StopChannel(int channelId);
+        bool IsPlaying(const std::string& eventPath) const;
+        bool IsPaused(const std::string& eventPath) const;
+        FMOD::Studio::EventInstance* GetEventInstance(const std::string& eventPath) const;
 
         //======================================================================
         // 3D Audio Functions (from Audio class)
@@ -255,6 +259,8 @@ namespace Framework {
 
         int GetNextChannelId() { return nextChannelId++; }
 
+        void UnloadBank(const std::string& bankPath);
+
         //======================================================================
         // FMOD System Members (from Audio class)
         //======================================================================
@@ -310,6 +316,9 @@ namespace Framework {
         const float volChangeAmount = 0.1f;
         std::chrono::steady_clock::time_point lastVolumeChangeTime;
         const std::chrono::milliseconds volumeDebounceTime{ 100 };
+
+        // Cache of loaded banks
+        std::unordered_map<std::string, FMOD::Studio::Bank*> loadedBanks;
 
         //======================================================================
         // ECS Members (from AudioSystem)

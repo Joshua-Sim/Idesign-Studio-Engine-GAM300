@@ -58,7 +58,10 @@ namespace Framework
         "MaterialProperties",
         "SceneProperties",
         "AudioMetadata",
-        "ScriptEntry"
+        "ScriptEntry",
+        "EventSenderEntry",
+        "EventReceiverEntry",
+        "BoxColliderEntry"
     };
 
     //------------------------------------------------------------------------------------------------------------------------------------
@@ -228,6 +231,68 @@ namespace Framework
             ImGui::EndCombo();
         }
         return changed;
+    }
+
+    // Specialization for AudioComponent
+    template<>
+    inline void DrawAssetDropdown<AudioComponent>(const std::string& label, AudioComponent& component)
+    {
+        ImGui::Separator();
+        ImGui::Text("%s", label.c_str());
+
+        // First dropdown: select bank
+        std::string bankName = "<None>";
+        if (auto* bank = AssetManager::Instance().Get<AudioBankMetadata>(component.guid))
+            bankName = bank->name;
+
+        if (ImGui::BeginCombo("Select Bank", bankName.c_str()))
+        {
+            for (auto& [key, entry] : AssetManager::Instance().GetAssets())
+            {
+                if (entry.typeName != TypeName<AudioBankMetadata>::value) continue;
+                auto* bank = static_cast<AudioBankMetadata*>(entry.pObject.get());
+                if (!bank) continue;
+
+                bool isSelected = (component.guid == key.guid);
+                if (ImGui::Selectable(bank->name.c_str(), isSelected))
+                {
+                    component.guid = key.guid;       // store bank guid
+                    component.eventName.clear();     // reset event when bank changes
+                }
+                if (isSelected) ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
+
+        // Second dropdown: select event from chosen bank
+        if (auto* bank = AssetManager::Instance().Get<AudioBankMetadata>(component.guid))
+        {
+            int currentEventIndex = -1;
+            for (int i = 0; i < bank->events.size(); ++i)
+            {
+                if (bank->events[i] == component.eventName)
+                {
+                    currentEventIndex = i;
+                    break;
+                }
+            }
+
+            const char* preview = (currentEventIndex >= 0) ? bank->events[currentEventIndex].c_str() : "<None>";
+            if (ImGui::BeginCombo("Select Event", preview))
+            {
+                for (int i = 0; i < bank->events.size(); ++i)
+                {
+                    bool isSelected = (currentEventIndex == i);
+                    if (ImGui::Selectable(bank->events[i].c_str(), isSelected))
+                    {
+                        component.eventName = bank->events[i];   // store event in AudioComponent
+                    }
+                    if (isSelected)
+                        ImGui::SetItemDefaultFocus();
+                }
+                ImGui::EndCombo();
+            }
+        }
     }
 
     // Overload for NavMeshComponent using MeshProperties as asset type

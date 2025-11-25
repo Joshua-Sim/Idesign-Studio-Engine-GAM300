@@ -55,10 +55,12 @@
 
 namespace Framework
 {
+    // This registering affects the following functions below
+    // SaveArrayToJson etc... can add more once found, hopefully change during holiday
     REGISTER_TYPE_NAME(WindowConfig);
     REGISTER_TYPE_NAME(AudioComponent);
     REGISTER_TYPE_NAME(ListenerComponent);
-    REGISTER_TYPE_NAME(AudioMetadata);
+    REGISTER_TYPE_NAME(AudioBankMetadata);
     REGISTER_TYPE_NAME(TextureProperties);
     REGISTER_TYPE_NAME(MeshProperties);
     REGISTER_TYPE_NAME(TextProperties);
@@ -136,9 +138,10 @@ namespace Framework
         // Delete copy/move constructors to enforce singleton
         AssetManager(const AssetManager&) = delete;
         AssetManager& operator=(const AssetManager&) = delete;
-        
-        // Save all files here (WIP)
-        ~AssetManager();
+        ~AssetManager()
+        {
+            m_Assets.clear();
+        }
 
         //------------------------------------------------------------------------------------------------------------------------------------
         //  Binary Related Functions
@@ -258,16 +261,6 @@ namespace Framework
             return AssetHandle();
         }
 
-        void MarkDirty(const AssetHandle& guid)
-        {
-            m_DirtyAssets.insert(guid);
-        }
-
-        bool IsDirty(const AssetHandle& guid) const
-        {
-            return m_DirtyAssets.contains(guid);
-        }
-
         // Access to Unordered Map of Assets
         const std::unordered_map<AssetKey, AssetEntry, AssetKeyHash>& GetAssets() const
         {
@@ -286,7 +279,6 @@ namespace Framework
     private:
         AssetManager() = default;                                   // Private constructor
         std::unordered_map<AssetKey, AssetEntry, AssetKeyHash> m_Assets;
-        std::unordered_set<AssetHandle> m_DirtyAssets;              // Contains changed Assets
     };
 }
 #endif // !_ASSET_MANAGER_H_

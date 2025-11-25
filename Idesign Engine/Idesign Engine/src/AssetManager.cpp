@@ -11,11 +11,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "pch.h"
 #include "AssetManager.h"
+#include "AudioSystem.h"
 
 namespace Framework
 {
-	AssetManager::~AssetManager() {}
-
 	void AssetManager::SaveAllAssets()
 	{
 		std::filesystem::path root = GetEngineRootPath();
@@ -26,9 +25,9 @@ namespace Framework
 		//std::cout << "  Saving: " << meshPath << std::endl;
 		AssetManager::Instance().SaveArrayToJson(TypeName<MeshProperties>::value, meshPath, "mesh");
 
-		std::string audioPath = (root / "Assets/JSON/AudioAsset.json").string();
+		std::string audioPath = (root / "Assets/JSON/AudioBank.json").string();
 		//std::cout << "  Saving: " << audioPath << std::endl;
-		AssetManager::Instance().SaveArrayToJson(TypeName<AudioMetadata>::value, audioPath, "audio");
+		AssetManager::Instance().SaveArrayToJson(TypeName<AudioBankMetadata>::value, audioPath, "banks");
 
 		std::string texturePath = (root / "Assets/JSON/TextureAsset.json").string();
 		//std::cout << "  Saving: " << texturePath << std::endl;
@@ -68,7 +67,7 @@ namespace Framework
 		CompileArray<MeshProperties>((root / "Assets/JSON/MeshAsset.json").string(), (root / "Resource/MeshAsset.bin").string(), (root / "Descriptor/MeshAsset.desc").string(), g_MeshProps, "mesh");
 
 		//std::cout << "  Compiling Audio:\n    JSON: " << (root / "Assets/JSON/AudioAsset.json").string() << "\n    BIN: " << (root / "Resource/AudioAsset.bin").string() << std::endl;
-		CompileArray<AudioMetadata>((root / "Assets/JSON/AudioAsset.json").string(), (root / "Resource/AudioAsset.bin").string(), (root / "Descriptor/AudioAsset.desc").string(), g_AudioMetadataProps, "audio");
+		CompileArray<AudioBankMetadata>((root / "Assets/JSON/AudioBank.json").string(), (root / "Resource/AudioBank.bin").string(), (root / "Descriptor/AudioBank.desc").string(), g_AudioBankMetadataProps, "banks");
 
 		//std::cout << "  Compiling Texture:\n    JSON: " << (root / "Assets/JSON/TextureAsset.json").string() << "\n    BIN: " << (root / "Resource/TextureAsset.bin").string() << std::endl;
 		CompileArray<TextureProperties>((root / "Assets/JSON/TextureAsset.json").string(), (root / "Resource/TextureAsset.bin").string(), (root / "Descriptor/TextureAsset.desc").string(), g_TexturePropertiesProps, "textures");
@@ -100,10 +99,6 @@ namespace Framework
 		std::string windowCfgPath = (root / "Resource/WindowAsset.cfg").string();
 		//std::cout << "  Loading: " << windowCfgPath << std::endl;
 		AssetManager::Instance().LoadBinary<WindowConfig>(windowCfgPath, g_WindowConfigProps);
-
-		std::string audioBinPath = (root / "Resource/AudioAsset.bin").string();
-		//std::cout << "  Loading: " << audioBinPath << std::endl;
-		AssetManager::Instance().LoadBinaryArray<AudioMetadata>(audioBinPath, g_AudioMetadataProps);
 
 		std::string prefabBinPath = (root / "Resource/PrefabAsset.bin").string();
 		//std::cout << "  Loading: " << prefabBinPath << std::endl;

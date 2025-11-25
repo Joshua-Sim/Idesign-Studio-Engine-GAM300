@@ -510,6 +510,38 @@ namespace Framework
                     ecsInterface.AddComponent(entity, receiverComp);
                 }
 
+                // --- ListenerComponent ---
+                if (components.HasMember("ListenerComponent"))
+                {
+                    const auto& jsonVal = components["ListenerComponent"];
+                    ListenerComponent listenerComp;
+
+                    // Deserialize all registered properties
+                    Deserialize(&listenerComp, g_ListenerComponentProps, jsonVal);
+
+                    // Add to ECS
+                    ecsInterface.AddComponent(entity, listenerComp);
+                }
+
+                // --- AudioComponent ---
+                if (components.HasMember("AudioComponent"))
+                {
+                    const auto& jsonVal = components["AudioComponent"];
+                    AudioComponent audioComp;
+
+                    // Deserialize all registered properties
+                    Deserialize(&audioComp, g_AudioComponentProps, jsonVal);
+
+                    // Runtime-only fields should be reset
+                    audioComp.eventInstance = nullptr;   // FMOD instance is rebuilt at runtime
+                    audioComp.isPlaying = false;     // don’t persist playback state
+                    audioComp.channelID = -1;        // reset channel handle
+                    audioComp.lastPosition = glm::vec3(0.0f); // will be updated when playing
+
+                    // Add to ECS
+                    ecsInterface.AddComponent(entity, audioComp);
+                }
+                
                 // --- Item Component ---
                 if (components.HasMember("ItemComponent"))
                 {
@@ -632,7 +664,7 @@ namespace Framework
                     const auto& mesh = ecsInterface.GetComponent<MeshProperties>(entity);
                     rapidjson::Value meshRef(rapidjson::kObjectType);
                     meshRef.AddMember("guid", rapidjson::Value(mesh.guid.id.c_str(), allocator), allocator);
-                    
+
                     // Linked Material GUID (if valid)
                     if (!mesh.materialGuid.empty())
                     {
@@ -688,7 +720,7 @@ namespace Framework
                     Serialize((void*)&agent, g_NavMeshAgentProps, agentJson, allocator);
                     componentsObj.AddMember("NavMeshAgentComponent", agentJson, allocator);
                 }
-                
+
                 // Scripts            
                 if (ecsInterface.HasComponent<ScriptProperties>(entity))
                 {
@@ -834,6 +866,31 @@ namespace Framework
                     compJson.AddMember("receivers", receiverArray, allocator);
                     componentsObj.AddMember("EventReceiverComponent", compJson, allocator);
                 }
+
+                // --- ListenerComponent ---
+                if (ecsInterface.HasComponent<ListenerComponent>(entity))
+                {
+                    const auto& listener = ecsInterface.GetComponent<ListenerComponent>(entity);
+                    rapidjson::Value compJson(rapidjson::kObjectType);
+
+                    // Serialize all registered properties
+                    Serialize((void*)&listener, g_ListenerComponentProps, compJson, allocator);
+
+                    componentsObj.AddMember("ListenerComponent", compJson, allocator);
+                }
+
+                // --- AudioComponent ---
+                if (ecsInterface.HasComponent<AudioComponent>(entity))
+                {
+                    const auto& audioComp = ecsInterface.GetComponent<AudioComponent>(entity);
+                    rapidjson::Value compJson(rapidjson::kObjectType);
+
+                    // Serialize all registered properties
+                    Serialize((void*)&audioComp, g_AudioComponentProps, compJson, allocator);
+
+                    componentsObj.AddMember("AudioComponent", compJson, allocator);
+                }
+
                 // --- Item Component ---
                 if (ecsInterface.HasComponent<ItemComponent>(entity))
                 {
@@ -852,11 +909,9 @@ namespace Framework
                     componentsObj.AddMember("ItemComponent", itemJson, allocator);
                 }
             }
-
             entityObj.AddMember("components", componentsObj, allocator);
             entitiesArray.PushBack(entityObj, allocator);
         }
-
         doc.AddMember("Entities", entitiesArray, allocator);
 
         // Write to file
@@ -873,8 +928,6 @@ namespace Framework
         fclose(fp);
         std::cout << "Scene saved to: " << outputPath << "\n";
     }
-
-
 
     void DuplicateEntity(Framework::Coordinator& ecs, Entity sourceEntity)
     {
@@ -1652,17 +1705,20 @@ namespace Framework
             {
                 if (v.IsArray() && v.Size() == 3)
                 {
-                    glm::vec3 temp{
-                        v[0].GetFloat(),
-                        v[1].GetFloat(),
-                        v[2].GetFloat()
-                    };
+                    glm::vec3 temp{v[0].GetFloat(), v[1].GetFloat(), v[2].GetFloat()};
                     p.m_fnSet(pObject, &temp);
                 }
-                else
+                else std::cerr << "Invalid vec3 format for property: " << p.m_pName << std::endl;
+                break;
+            }
+            case prop::VEC2:
+            {
+                if (v.IsArray() && v.Size() == 2)
                 {
-                    std::cerr << "Invalid vec3 format for property: " << p.m_pName << std::endl;
+                    glm::vec2 temp{ v[0].GetFloat(), v[1].GetFloat() };
+                    p.m_fnSet(pObject, &temp);
                 }
+                else std::cerr << "Invalid vec2 format for property: " << p.m_pName << std::endl;
                 break;
             }
             default:
@@ -1719,6 +1775,18 @@ namespace Framework
                 vecArray.PushBack(value.x, allocator);
                 vecArray.PushBack(value.y, allocator);
                 vecArray.PushBack(value.z, allocator);
+                outObj.AddMember(key, vecArray, allocator);
+                break;
+            }
+            case prop::VEC2:
+            {
+                glm::vec2 value;
+                p.m_fnGet(pObject, &value);
+
+                rapidjson::Value vecArray(rapidjson::kArrayType);
+                vecArray.PushBack(value.x, allocator);
+                vecArray.PushBack(value.y, allocator);
+
                 outObj.AddMember(key, vecArray, allocator);
                 break;
             }

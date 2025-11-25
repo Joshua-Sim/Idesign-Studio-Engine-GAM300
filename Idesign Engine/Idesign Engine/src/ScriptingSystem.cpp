@@ -1,13 +1,11 @@
 #include "pch.h"
 #include "ScriptingSystem.h"
 #include "Coordinator.h"
-//#include "ComponentList.h"
 #include "Graphics.h"          // to call Graphics* methods
 #include <lua.hpp>
 #include <iostream>
 #include "AssetCompiler.h"
 #include "WindowConfigProperties.h"  // g_WindowConfigProps
-#include "AudioLoader.h"             // g_AudioPropertiesProps
 #include "TextureLoader.h"           // g_TexturePropertiesProps
 #include "NavMeshSystem.h"
 #include "MeshProperties.h"          // g_MeshPropertiesProps
@@ -485,6 +483,21 @@ namespace Framework {
             return 0; // No return value
         }
 
+        // Static helper function for playing entity audio
+        static int l_PlayEntitySound(lua_State* L) {
+            Entity entity = static_cast<Entity>(luaL_checkinteger(L, 1));
+
+            if (g_AudioSystem) {
+                g_AudioSystem->PlayEntitySound(entity);
+            }
+            else {
+                std::cerr << "[Lua Error] AudioSystem not initialized!\n";
+            }
+
+            return 0;
+        }
+
+
         // Helper to play an animation on an entity
         static int l_PlayEntityAnimation(lua_State* L) {
             // 1. Get Arguments: Entity ID and Animation Name
@@ -658,7 +671,7 @@ namespace Framework {
             const char* key = luaL_optstring(L, 4, "AudioProperties");
 
             bool skipped = prepare_output_and_skip_if_fresh(json, out);
-            bool ok = skipped ? true : CompileArray<AudioMetadata>(json, out, desc, g_AudioMetadataProps, key);
+            bool ok = skipped ? true : CompileArray<AudioBankMetadata>(json, out, desc, g_AudioBankMetadataProps, key);
             lua_pushboolean(L, ok);
             return 1;
         }
@@ -873,9 +886,9 @@ namespace Framework {
         lua_register(L, "AddTagToEntity", lua_AddTagToEntity);
         lua_register(L, "PlayEntityAnimation", l_PlayEntityAnimation);
         lua_register(L, "PlaySound", l_PlaySound);
+        lua_register(L, "PlayEntitySound", l_PlayEntitySound);
         lua_register(L, "SpawnPrefab", lua_SpawnPrefab);
 
-        
         //cauldron
         lua_register(L, "SetCameraLock", [](lua_State* L) -> int {
             // 1. Get argument (true/false)
@@ -923,13 +936,14 @@ namespace Framework {
         lua_register(L, "SetAnimationAsset", l_SetAnimationAsset);
         // Navmesh
         lua_register(L, "BuildNavMesh", lua_BuildNavMesh);
-        lua_register(L, "PathfindTo", [](lua_State* L) -> int {
+        lua_register(L, "PathfindTo", [](lua_State* L) -> int 
+        {
             const char* agentName = luaL_checkstring(L, 1);
             const char* targetName = luaL_checkstring(L, 2);
 
             ScriptPathfindTo(agentName, targetName);
             return 0;
-            });
+        });
 
         // Create Cook table with our functions
         lua_newtable(L);                           // Cook

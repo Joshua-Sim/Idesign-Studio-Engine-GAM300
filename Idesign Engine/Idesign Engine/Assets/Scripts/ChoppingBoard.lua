@@ -184,7 +184,7 @@ function M:ChopItem()
     current_health = current_health - 1
     print("[ChoppingBoard] CHOP! Health: " .. current_health)
     
-    PlaySound("event:/ChoppingHerb")
+    PlayEntitySound(self.entity)  -- plays whatever AudioComponent is attached
 
     if knife_entity then
         PlayEntityAnimation(knife_entity, self.knife_animation_name)

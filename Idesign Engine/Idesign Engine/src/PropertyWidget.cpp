@@ -270,8 +270,8 @@ namespace Framework
                 
                 else if (typeName == "AudioComponent")
                 {
-                    auto& audio = *static_cast<AudioMetadata*>(componentPtr);
-                    DrawAssetDropdown<AudioMetadata>("Select Audio", audio);
+                    auto& audio = *static_cast<AudioComponent*>(componentPtr);
+                    DrawAssetDropdown<AudioComponent>("Select Audio", audio);
                 }
                 
                 else if (typeName == "NavMeshComponent")
@@ -542,6 +542,7 @@ namespace Framework
                         );
                     }
                 }
+
                 if (typeName == "BoxColliderComponent")
                 {
                     auto& colliderComp = *static_cast<Framework::BoxColliderComponent*>(componentPtr);
@@ -614,8 +615,6 @@ namespace Framework
                     DrawInspector(componentPtr, *propList);
                 }
                 
-                
-
                 if (ImGui::Button(std::string("Remove ").append(typeName).c_str()))
                 {
                     TypeRegistry::Instance().RemoveComponent(typeName, ecs, entity); 
@@ -627,39 +626,36 @@ namespace Framework
         // Show "Add [Component]" buttons for missing ones
         for (global_registration* reg = global_registration::m_pHead; reg; reg = reg->m_pNext)
         {
-
             const prop_list* propList = reg->m_pPopList;
-            if ((std::string(propList->m_pName) == "EventSenderEntry" || std::string(propList->m_pName) == "EventReceiverEntry" || std::string(propList->m_pName) == "BoxColliderEntry")) continue;
             if (!propList || !propList->m_pName || propList->m_Props.empty()) continue;
             if (attached.contains(propList->m_pName)) continue;
             if (excludedComponents.count(propList->m_pName)) continue;
 
             if (ImGui::Button(std::string("Add ").append(propList->m_pName).c_str()))
             {
-                
-                    TypeRegistry::Instance().AddComponent(propList->m_pName, ecs, entity);
+                TypeRegistry::Instance().AddComponent(propList->m_pName, ecs, entity);
 
-                    if (std::string(propList->m_pName) == "BoxColliderComponent")
+                if (std::string(propList->m_pName) == "BoxColliderComponent")
+                {
+                    if (!ecs.HasComponent<MeshProperties>(entity))
                     {
-                        if (!ecs.HasComponent<MeshProperties>(entity))
-                        {
-                            MeshProperties meshComponent{};
-                            meshComponent.debugShape = DebugShapeType::Box;
-                            meshComponent.debugcolor = glm::vec3(0.0f, 1.0f, 0.0f); // Green
-                            MeshLoader::loadMesh(meshComponent.path, meshComponent);
+                        MeshProperties meshComponent{};
+                        meshComponent.debugShape = DebugShapeType::Box;
+                        meshComponent.debugcolor = glm::vec3(0.0f, 1.0f, 0.0f); // Green
+                        MeshLoader::loadMesh(meshComponent.path, meshComponent);
 
-                            ecs.AddComponent<MeshProperties>(entity, meshComponent);
+                        ecs.AddComponent<MeshProperties>(entity, meshComponent);
 
-                            std::cout << "[Editor] Auto-added Debug Mesh for BoxCollider on Entity " << entity << std::endl;
-                        }
-                        else {
-                            MeshProperties& meshComponent = ecs.GetComponent<MeshProperties>(entity);
-                            meshComponent.debugShape = DebugShapeType::Box;
-                            meshComponent.debugcolor = glm::vec3(0.0f, 1.0f, 0.0f); // Green
-                            MeshLoader::loadMesh(meshComponent.path, meshComponent);
-                        }
+                        std::cout << "[Editor] Auto-added Debug Mesh for BoxCollider on Entity " << entity << std::endl;
                     }
-                
+                    else 
+                    {
+                        MeshProperties& meshComponent = ecs.GetComponent<MeshProperties>(entity);
+                        meshComponent.debugShape = DebugShapeType::Box;
+                        meshComponent.debugcolor = glm::vec3(0.0f, 1.0f, 0.0f); // Green
+                        MeshLoader::loadMesh(meshComponent.path, meshComponent);
+                    }
+                }                
             }
         }      
     }

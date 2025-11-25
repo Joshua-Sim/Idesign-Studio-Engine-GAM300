@@ -91,6 +91,16 @@ namespace Framework {
         loadedEvents.clear();
 
         // 2. Release DSPs (These are attached to Core, release them before Core dies)
+        // Clear all Banks
+        for (auto& [path, bank] : loadedBanks)
+        {
+            if (bank)   
+                bank->unload();
+                bank->unloadSampleData();
+        }
+        loadedBanks.clear();
+
+        // Clean up DSP Effects
         if (reverbDSP) {
             reverbDSP->release();
             reverbDSP = nullptr;
@@ -181,6 +191,42 @@ namespace Framework {
     }
 
     void AudioSystem::Update(float deltaTime) {
+
+        Entity activeListenerEntity = {};
+        bool foundListener = false;
+
+        // Find active listener entity
+        for (Entity e : mEntities) {
+            if (!ecsInterface.HasComponent<ListenerComponent>(e)) continue;
+            if (!ecsInterface.HasComponent<TransformComponent>(e)) continue;
+
+            auto& listener = ecsInterface.GetComponent<ListenerComponent>(e);
+            if (!listener.active) continue;
+
+            activeListenerEntity = e;
+            foundListener = true;
+            break;
+        }
+
+        // If no listener found, bail or use fallback
+        if (!foundListener) {
+            FMOD_3D_ATTRIBUTES fallbackAttribs = {};
+            fallbackAttribs.position = { 0.0f, 0.0f, 0.0f };
+            fallbackAttribs.forward = { 0.0f, 0.0f, -1.0f };
+            fallbackAttribs.up = { 0.0f, 1.0f, 0.0f };
+            fallbackAttribs.velocity = { 0.0f, 0.0f, 0.0f };
+
+            if (studioSystem) {
+                studioSystem->setListenerAttributes(0, &fallbackAttribs);
+                studioSystem->update();
+            }
+            return;
+        }
+
+        // Update listener attributes from ECS
+        auto& listener = ecsInterface.GetComponent<ListenerComponent>(activeListenerEntity);
+        auto& transform = ecsInterface.GetComponent<TransformComponent>(activeListenerEntity);
+
         // Handle fade effects for smooth BGM transitions
         if (isFadingIn || isFadingOut) {
             fadeTimer += deltaTime;
@@ -221,22 +267,22 @@ namespace Framework {
 
         // Update listener velocity for Doppler effect
         if (deltaTime > 0.0f) {
-            listenerVelocity = (listenerPosition - lastListenerPosition) / deltaTime;
-            lastListenerPosition = listenerPosition;
+            listener.velocity = (transform.position - listener.position) / deltaTime;
         }
+        listener.position = transform.position;
 
         // Update FMOD listener attributes
-        FMOD_3D_ATTRIBUTES listenerAttribs;
-        listenerAttribs.position = { listenerPosition.x, listenerPosition.y, listenerPosition.z };
-        listenerAttribs.velocity = { listenerVelocity.x, listenerVelocity.y, listenerVelocity.z };
-        listenerAttribs.forward = { listenerForward.x, listenerForward.y, listenerForward.z };
-        listenerAttribs.up = { listenerUp.x, listenerUp.y, listenerUp.z };
+        FMOD_3D_ATTRIBUTES listenerAttribs{};
+        listenerAttribs.position = { listener.position.x, listener.position.y, listener.position.z };
+        listenerAttribs.forward = { listener.forward.x, listener.forward.y, listener.forward.z };
+        listenerAttribs.up = { listener.up.x, listener.up.y, listener.up.z };
+        listenerAttribs.velocity = { listener.velocity.x, listener.velocity.y, listener.velocity.z };
 
         if (studioSystem) {
-            studioSystem->setListenerAttributes(0, &listenerAttribs);
+            studioSystem->setListenerAttributes(listener.listenerIndex, &listenerAttribs);
         }
 
-        // Update all entity audio positions
+        // Update all entity audio sources
         for (Entity entity : mEntities) {
             if (!ecsInterface.HasComponent<AudioComponent>(entity)) continue;
             if (!ecsInterface.HasComponent<TransformComponent>(entity)) continue;
@@ -283,87 +329,35 @@ namespace Framework {
             }
         }
 
-        // Load bank files
-        FMOD::Studio::Bank* masterBank = nullptr;
-        FMOD::Studio::Bank* stringsBank = nullptr;
-        FMOD::Studio::Bank* bgmBank = nullptr;
-        FMOD::Studio::Bank* sfxBank = nullptr;
-        FMOD::Studio::Bank* ambientBank = nullptr;
-        FMOD_RESULT result;
+        std::filesystem::path root = GetEngineRootPath();
+        std::string audioBinPath = (root / "Resource/AudioBank.bin").string();
+        //std::cout << "  Loading: " << audioBinPath << std::endl;
+        AssetManager::Instance().LoadBinaryArray<AudioBankMetadata>(audioBinPath, g_AudioBankMetadataProps, [](AudioBankMetadata& meta)
+            {
+                // Load the bank into FMOD
+                FMOD::Studio::Bank* bank = g_AudioSystem->LoadBank(meta.path);
+                if (!bank) return;
 
-        // Load Master.strings.bank FIRST
-        std::cout << "\n[AudioSystem] Loading Master.strings.bank..." << std::endl;
-        result = studioSystem->loadBankFile("Master.strings.bank", FMOD_STUDIO_LOAD_BANK_NORMAL, &stringsBank);
-        if (result != FMOD_OK) {
-            std::cerr << "[AudioSystem] ERROR: Failed to load Master.strings.bank, error: " << result << std::endl;
-        }
-        else {
-            std::cout << "[AudioSystem] Master.strings.bank loaded successfully!" << std::endl;
-        }
+                // Query events
+                int eventCount = 0;
+                bank->getEventCount(&eventCount);
 
-        // Load Master.bank
-        std::cout << "\n[AudioSystem] Loading Master.bank..." << std::endl;
-        result = studioSystem->loadBankFile("Master.bank", FMOD_STUDIO_LOAD_BANK_NORMAL, &masterBank);
-        if (result != FMOD_OK) {
-            std::cerr << "[AudioSystem] ERROR: Failed to load Master.bank, error: " << result << std::endl;
-        }
-        else {
-            std::cout << "[AudioSystem] Master.bank loaded successfully!" << std::endl;
-        }
+                std::vector<FMOD::Studio::EventDescription*> eventList(eventCount);
+                bank->getEventList(eventList.data(), eventCount, &eventCount);
 
-        // Load BGM.bank
-        std::cout << "\n[AudioSystem] Loading BGM.bank..." << std::endl;
-        result = studioSystem->loadBankFile("BGM.bank", FMOD_STUDIO_LOAD_BANK_NORMAL, &bgmBank);
-        if (result != FMOD_OK) {
-            std::cerr << "[AudioSystem] WARNING: Failed to load BGM.bank, error: " << result << std::endl;
-        }
-        else {
-            std::cout << "[AudioSystem] BGM.bank loaded successfully!" << std::endl;
-            int eventCount = 0;
-            bgmBank->getEventCount(&eventCount);
-            std::cout << "[AudioSystem] BGM bank contains " << eventCount << " events" << std::endl;
+                meta.events.clear();
+                std::cout << "[AudioSystem] Bank '" << meta.name << "' contains " << eventCount << " events" << std::endl;
 
-            result = bgmBank->loadSampleData();
-            if (result == FMOD_OK) {
-                std::cout << "[AudioSystem] BGM sample data loaded!" << std::endl;
+                for (auto* ev : eventList)
+                {
+                    char path[256];
+                    int retrieved = 0;
+                    ev->getPath(path, sizeof(path), &retrieved);
+                    meta.events.push_back(std::string(path));
+                    std::cout << "   -> Event: " << path << std::endl;
+                }
             }
-        }
-
-        // Load SFX.bank
-        std::cout << "\n[AudioSystem] Loading SFX.bank..." << std::endl;
-        result = studioSystem->loadBankFile("SFX.bank", FMOD_STUDIO_LOAD_BANK_NORMAL, &sfxBank);
-        if (result != FMOD_OK) {
-            std::cerr << "[AudioSystem] WARNING: Failed to load SFX.bank, error: " << result << std::endl;
-        }
-        else {
-            std::cout << "[AudioSystem] SFX.bank loaded successfully!" << std::endl;
-            int eventCount = 0;
-            sfxBank->getEventCount(&eventCount);
-            std::cout << "[AudioSystem] SFX bank contains " << eventCount << " events" << std::endl;
-
-            result = sfxBank->loadSampleData();
-            if (result == FMOD_OK) {
-                std::cout << "[AudioSystem] SFX sample data loaded!" << std::endl;
-            }
-        }
-
-        // Load Ambient.bank
-        std::cout << "\n[AudioSystem] Loading Ambient.bank..." << std::endl;
-        result = studioSystem->loadBankFile("Ambient.bank", FMOD_STUDIO_LOAD_BANK_NORMAL, &ambientBank);
-        if (result != FMOD_OK) {
-            std::cerr << "[AudioSystem] WARNING: Failed to load Ambient.bank, error: " << result << std::endl;
-        }
-        else {
-            std::cout << "[AudioSystem] Ambient.bank loaded successfully!" << std::endl;
-            int eventCount = 0;
-            ambientBank->getEventCount(&eventCount);
-            std::cout << "[AudioSystem] Ambient bank contains " << eventCount << " events" << std::endl;
-
-            result = ambientBank->loadSampleData();
-            if (result == FMOD_OK) {
-                std::cout << "[AudioSystem] Ambient sample data loaded!" << std::endl;
-            }
-        }
+        );
 
         std::cout << "\n[AudioSystem] ========================================" << std::endl;
         std::cout << "[AudioSystem] All bank files and sample data loaded!" << std::endl;
@@ -385,6 +379,42 @@ namespace Framework {
         std::cout << "Active Events: " << activeEvents.size() << std::endl;
         std::cout << "Active Entity Instances: " << activeInstances.size() << std::endl;
         std::cout << "=========================\n" << std::endl;
+    }
+
+    FMOD::Studio::Bank* AudioSystem::LoadBank(const std::string& bankPath)
+    {
+        auto it = loadedBanks.find(bankPath);
+        if (it != loadedBanks.end()) 
+        {
+            std::cout << "[AudioSystem] Using cached bank: " << bankPath << std::endl;
+            return it->second;
+        }
+
+        FMOD::Studio::Bank* bank = nullptr;
+
+        // loadBankFile only loads the metadata, but does not load the actual audio sample data
+        // Which means event instances can be created but without sample data, audio would not be played
+        FMOD_RESULT result = studioSystem->loadBankFile(bankPath.c_str(), FMOD_STUDIO_LOAD_BANK_NORMAL, &bank);
+
+        if (result != FMOD_OK || !bank) 
+        {
+            std::cerr << "[AudioSystem] ERROR: Failed to load bank: " << bankPath << " (error: " << result << ")" << std::endl;
+            return nullptr;
+        }
+        std::cout << "[AudioSystem] Bank loaded: " << bankPath << std::endl;
+
+        // Load sample data so events can actually play
+        result = bank->loadSampleData();            
+        if (result != FMOD_OK)
+        {
+            std::cerr << "[AudioSystem] ERROR: Failed to load sample data for bank: " << bankPath << " (error: " << result << ")" << std::endl;
+        }
+        else
+        {
+            std::cout << "[AudioSystem] Sample data loaded for bank: " << bankPath << std::endl;
+        }
+        loadedBanks[bankPath] = bank;
+        return bank;
     }
 
     //==========================================================================
@@ -465,14 +495,14 @@ namespace Framework {
             attributes.forward = { 0.0f, 0.0f, 1.0f };
             attributes.up = { 0.0f, 1.0f, 0.0f };
             instance->set3DAttributes(&attributes);
-            std::cout << "[AudioSystem] Set 3D position at listener: ("
-                << listenerPosition.x << ", " << listenerPosition.y << ", " << listenerPosition.z << ")" << std::endl;
+            std::cout << "[AudioSystem] Set 3D position at listener: (" << listenerPosition.x << ", " << listenerPosition.y << ", " << listenerPosition.z << ")" << std::endl;
         }
 
         instance->setVolume(masterVolume);
         result = instance->start();
 
-        if (result != FMOD_OK) {
+        if (result != FMOD_OK) 
+        {
             std::cerr << "[AudioSystem] Failed to start instance: " << result << std::endl;
             instance->release();
             return;
@@ -525,6 +555,33 @@ namespace Framework {
             activeEventsById.erase(it);
             std::cout << "[AudioSystem] Stopped channel: " << channelId << std::endl;
         }
+    }
+
+    bool AudioSystem::IsPlaying(const std::string& eventPath) const
+    {
+        auto it = activeEvents.find(eventPath);
+        if (it == activeEvents.end() || !it->second) return false;
+
+        FMOD_STUDIO_PLAYBACK_STATE state;
+        it->second->getPlaybackState(&state);
+        return state == FMOD_STUDIO_PLAYBACK_PLAYING;
+    }
+
+    bool AudioSystem::IsPaused(const std::string& eventPath) const
+    {
+        auto it = activeEvents.find(eventPath);
+        if (it == activeEvents.end() || !it->second) return false;
+
+        bool paused = false;
+        it->second->getPaused(&paused);
+        return paused;
+    }
+
+    FMOD::Studio::EventInstance* AudioSystem::GetEventInstance(const std::string& eventPath) const
+    {
+        auto it = activeEvents.find(eventPath);
+        if (it != activeEvents.end()) return it->second;
+        return nullptr;
     }
 
     //==========================================================================
@@ -901,7 +958,8 @@ namespace Framework {
         auto& audioComp = ecsInterface.GetComponent<AudioComponent>(entity);
 
         // Stop existing instance
-        if (audioComp.eventInstance) {
+        if (audioComp.eventInstance && !audioComp.loop)
+        {
             audioComp.eventInstance->stop(FMOD_STUDIO_STOP_IMMEDIATE);
             audioComp.eventInstance->release();
             audioComp.eventInstance = nullptr;
@@ -916,7 +974,7 @@ namespace Framework {
 
         // Create instance
         FMOD_RESULT result = eventDesc->createInstance(&audioComp.eventInstance);
-        if (result != FMOD_OK) {
+        if (result != FMOD_OK || !audioComp.eventInstance) {
             std::cerr << "[AudioSystem] Failed to create instance for: " << audioComp.eventName << std::endl;
             return;
         }
@@ -928,6 +986,7 @@ namespace Framework {
         if (audioComp.is3D && ecsInterface.HasComponent<TransformComponent>(entity)) {
             auto& transform = ecsInterface.GetComponent<TransformComponent>(entity);
             Update3DAttributes(entity, transform.position, glm::vec3(0.0f));
+            audioComp.lastPosition = transform.position;
 
             audioComp.eventInstance->setProperty(FMOD_STUDIO_EVENT_PROPERTY_MINIMUM_DISTANCE, audioComp.minDistance);
             audioComp.eventInstance->setProperty(FMOD_STUDIO_EVENT_PROPERTY_MAXIMUM_DISTANCE, audioComp.maxDistance);
@@ -1078,4 +1137,15 @@ namespace Framework {
         return 1.0f - ((distance - minDist) / (maxDist - minDist));
     }
 
+    void AudioSystem::UnloadBank(const std::string& bankPath)
+    {
+        auto it = loadedBanks.find(bankPath);
+        if (it != loadedBanks.end()) 
+        {
+            it->second->unload();
+            it->second->unloadSampleData();
+            std::cout << "[AudioSystem] Bank unloaded: " << bankPath << std::endl;
+            loadedBanks.erase(it);
+        }
+    }
 } // namespace Framework

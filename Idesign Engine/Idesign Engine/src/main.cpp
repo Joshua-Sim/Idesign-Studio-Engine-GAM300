@@ -30,16 +30,12 @@
 #include "NavMeshSystem.h"
 #include "AnimationSystem.h"
 #include "EnginePath.h"
-#include "AudioLoader.h"
-#include "MessageSystem.h"
 #include "AudioSystem.h"
 #include "AudioComponent.h"
 #include "ScriptingSystem.h"
 #include "lua.hpp"
 #include "PhysicsSystem.h"
 #include "FileCheckSystem.h"
-#include "EnginePath.h"
-#include <filesystem>
 #include <EventSystem.h>
 #include <EventManager.h>
 #include "GameSystem.h"
@@ -82,22 +78,17 @@ int main(void)
 	// Initialize FMOD Studio Audio System
     std::cout << "Initializing FMOD Studio Audio System..." << std::endl;
     
-
-    
-
     // ------- Create systems below -------- 
     // Initialize global ECS interface and other singleton components
     ecsInterface.Init();
 
-    AssetManager::Instance().CompileAllAssets();
+    //AssetManager::Instance().CompileAllAssets();
     //AssetManager::Instance().SaveAllAssets();
     AssetManager::Instance().LoadAllAssets();
     
     // To Connect Prop with ECS
     RegisterComponentTypes();                           // Step 1: Register known types
     AutoRegisterAllReflectedComponents(ecsInterface);   // Step 2: Hook them into ECS
-
-	//AssetManager::Instance().LoadWindowConfig(); // Load WindowConfig before Graphics system is created
 
     // Register graphics system and GLFW Window first 
     auto graphicsSystem = ecsInterface.RegisterSystem<Graphics>();
@@ -178,10 +169,10 @@ int main(void)
 
     // Set 3D listener position (required for 3D audio!)
     audioSystem->Set3DListener(
-        Framework::Vector3(0, 0, 0),     // Position at origin
-        Framework::Vector3(0, 0, 0),     // No velocity
-        Framework::Vector3(0, 0, -1),    // Looking forward
-        Framework::Vector3(0, 1, 0)      // Up is +Y
+        Vector3(0, 0, 0),     // Position at origin
+        Vector3(0, 0, 0),     // No velocity
+        Vector3(0, 0, -1),    // Looking forward
+        Vector3(0, 1, 0)      // Up is +Y
     );
 
     std::cout << "[Audio] Volumes and 3D listener configured!" << std::endl;
@@ -217,8 +208,8 @@ int main(void)
 
     // Clear all systems and other dynamically allocated resources
     engine->DestroySystems();
-    Framework::EventManager::Instance().Reset();
-    Framework::TypeRegistry::Instance().Shutdown();
+    EventManager::Instance().Reset();
+    TypeRegistry::Instance().Shutdown();
 
     // Clean up smart pointers as they go out of scope
     // No need to manually delete as unique_ptr will handle it

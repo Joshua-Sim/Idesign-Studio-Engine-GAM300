@@ -160,7 +160,6 @@
     <ClInclude Include="src\AssetManager.h" />
     <ClInclude Include="src\Audio.h" />
     <ClInclude Include="src\AudioComponent.h" />
-    <ClInclude Include="src\AudioLoader.h" />
     <ClInclude Include="src\AudioSystem.h" />
     <ClInclude Include="src\backward.hpp" />
     <ClInclude Include="src\ButtonSystem.h" />
@@ -344,7 +343,6 @@
     <ClCompile Include="src\AnimationSystem.cpp" />
     <ClCompile Include="src\AssetCompiler.cpp" />
     <ClCompile Include="src\AssetManager.cpp" />
-    <ClCompile Include="src\AudioLoader.cpp" />
     <ClCompile Include="src\AudioSystem.cpp" />
     <ClCompile Include="src\ButtonSystem.cpp" />
     <ClCompile Include="src\Collision.cpp" />
