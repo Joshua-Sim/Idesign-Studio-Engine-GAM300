@@ -46,6 +46,55 @@
                     "cellSize": 0.30000001192092896,
                     "cellHeight": 0.20000000298023224,
                     "maxSlope": 45.0
+                },
+                "BoxColliderComponent": {
+                    "colliders": [
+                        {
+                            "size": [
+                                19.5,
+                                9.699999809265137,
+                                19.399999618530273
+                            ],
+                            "center": [
+                                -15.399999618530273,
+                                3.5,
+                                -4.699999809265137
+                            ],
+                            "canPassThrough": true
+                        },
+                        {
+                            "size": [
+                                19.200000762939453,
+                                1.0,
+                                22.299999237060547
+                            ],
+                            "center": [
+                                -14.300000190734863,
+                                -0.30000001192092896,
+                                -6.599999904632568
+                            ],
+                            "canPassThrough": false
+                        }
+                    ]
+                },
+                "PhysicsProperties": {
+                    "category": 0,
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 0.5,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "startAwake": true
                 }
             }
         },
@@ -1149,7 +1198,7 @@
                         {
                             "guid": "583b617e-c68e-4e62-81cf-a2b05eefa1e4",
                             "scriptPath": "Assets\\Scripts\\ChoppingBoard.lua",
-                            "hotReload": true
+                            "hotReload": false
                         }
                     ]
                 },
@@ -1887,19 +1936,19 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -31.119190216064453,
-                        8.035140037536621,
-                        12.420604705810547
+                        -32.861698150634766,
+                        9.169604301452637,
+                        13.077198028564453
                     ],
                     "rotation": [
-                        0.7714784145355225,
-                        -3.425881862640381,
-                        -0.0013184265699237585
+                        0.0,
+                        -0.0,
+                        0.0
                     ],
                     "scale": [
-                        0.9999989867210388,
-                        0.9999967813491821,
-                        0.9999994039535522
+                        0.9999990463256836,
+                        0.9999958276748657,
+                        0.9999991655349731
                     ]
                 },
                 "HierarchyComponent": {
@@ -1911,7 +1960,8 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "BoxColliderComponent": {
                     "colliders": [
@@ -1956,6 +2006,30 @@
                             "messageName": "deez"
                         }
                     ]
+                },
+                "ListenerComponent": {
+                    "position": [
+                        -32.861698150634766,
+                        9.169604301452637,
+                        13.077198028564453
+                    ],
+                    "forward": [
+                        0.0,
+                        0.0,
+                        -1.0
+                    ],
+                    "up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ],
+                    "velocity": [
+                        0.0,
+                        -67.53662109375,
+                        0.0
+                    ],
+                    "active": true,
+                    "listenerIndex": 0
                 }
             }
         },
@@ -2004,7 +2078,7 @@
                         {
                             "guid": "35037238-3549-4319-9a74-8a0472ccefa3",
                             "scriptPath": "Assets\\Scripts\\CustomerSystem.lua",
-                            "hotReload": true
+                            "hotReload": false
                         }
                     ]
                 }
@@ -2128,7 +2202,7 @@
                         {
                             "guid": "998e8733-cf17-48d4-96be-ab700322c93c",
                             "scriptPath": "Assets\\Scripts\\spawnPrompt.lua",
-                            "hotReload": true
+                            "hotReload": false
                         }
                     ]
                 },
@@ -2234,7 +2308,7 @@
                         {
                             "guid": "3a5dd495-f311-4f19-991a-b6bfc5d63825",
                             "scriptPath": "Assets\\Scripts\\Cauldron.lua",
-                            "hotReload": true
+                            "hotReload": false
                         }
                     ]
                 },
@@ -2273,6 +2347,22 @@
                         0.0
                     ],
                     "startAwake": true
+                },
+                "AudioComponent": {
+                    "guid": "d6f23fa6-ff6f-4892-91b3-ca11349bb492",
+                    "eventName": "event:/Boiling",
+                    "is3D": true,
+                    "minDistance": 1.0,
+                    "maxDistance": 15.0,
+                    "volume": 1.0,
+                    "loop": false,
+                    "playOnStart": true,
+                    "isPlaying": false,
+                    "lastPosition": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
                 }
             }
         },
