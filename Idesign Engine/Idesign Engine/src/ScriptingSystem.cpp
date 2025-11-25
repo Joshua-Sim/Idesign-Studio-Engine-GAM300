@@ -16,6 +16,7 @@
 #include "AudioSystem.h"
 #include "ItemComponent.h" // <--- Add this
 #include "Graphics.h"
+#include <GameSystem.h>
 
 extern Framework::Coordinator ecsInterface;
 
@@ -93,15 +94,6 @@ namespace Framework {
             return 0;
         }
 
-        int l_NudgeLight(lua_State* L) {
-            auto* self = lua_self(L);
-            Graphics* g = self ? self->GetGraphicsSystem() : nullptr;
-            if (!g) return 0;
-            const char* axis = luaL_checkstring(L, 1);
-            float amt = (float)luaL_checknumber(L, 2);
-            g->NudgeLightFromLua(axis, amt);
-            return 0;
-        }
 
         static int l_spawnPrompt(lua_State* L) {
             // Argument 1: The Entity ID (The Box/Receiver) - so we know WHERE to spawn
@@ -171,21 +163,9 @@ namespace Framework {
             return 0;
         }
 
-        int l_ToggleLight(lua_State* L) {
-            auto* self = lua_self(L);
-            Graphics* g = self ? self->GetGraphicsSystem() : nullptr;
-            if (!g) return 0;
-            g->ToggleMainLightFromLua();
-            return 0;
-        }
-
-        int l_SetHDR(lua_State* L) { auto* s = lua_self(L); auto* g = s ? s->GetGraphicsSystem() : nullptr; if (g) g->SetHDRFromLua((float)luaL_checknumber(L, 1)); return 0; }
-        int l_SetBloom(lua_State* L) { auto* s = lua_self(L); auto* g = s ? s->GetGraphicsSystem() : nullptr; if (g) g->SetBloomFromLua((float)luaL_checknumber(L, 1)); return 0; }
-        int l_SetGround(lua_State* L) { auto* s = lua_self(L); auto* g = s ? s->GetGraphicsSystem() : nullptr; if (g) g->SetGroundModeFromLua(lua_toboolean(L, 1) != 0);   return 0; }
 
         // Engine LUA exposed utility functions (Get entity, get by component, get by name, tag , create prefab, setactive -deactive etc
-
-        
+           
         int lua_FindEntityByName(lua_State* L)
         {
             const char* name = luaL_checkstring(L, 1);
@@ -457,6 +437,36 @@ namespace Framework {
             return 0;
         }
 
+        static int lua_GetScore(lua_State* L)
+        {
+            int s = Framework::GameSystem::GetScore();
+            lua_pushinteger(L, s);
+            return 1; // 1 return value
+        }
+
+        static int lua_AddScore(lua_State* L)
+        {
+            int delta = (int)luaL_checkinteger(L, 1);
+            Framework::GameSystem::AddScore(delta);
+            return 0;
+        }
+
+        static int lua_SetText(lua_State* L)
+        {
+            int id = (int)luaL_checkinteger(L, 1);
+            const char* newText = luaL_checkstring(L, 2);
+
+            Framework::Entity e = static_cast<Framework::Entity>(id);
+
+            if (ecsInterface.IsEntityValid(e) &&
+                ecsInterface.HasComponent<Framework::TextProperties>(e))
+            {
+                auto& txt = ecsInterface.GetComponent<Framework::TextProperties>(e);
+                txt.text = newText;
+            }
+
+            return 0;
+        }
 
         // Static helper function for playing sound
         static int l_PlaySound(lua_State* L) {
@@ -839,11 +849,6 @@ namespace Framework {
         // 5) Register C functions (global names in Lua)
         lua_register(L, "IsKeyDown", l_IsKeyDown);
         lua_register(L, "CameraMove", l_CameraMove);
-        lua_register(L, "NudgeLight", l_NudgeLight);
-        lua_register(L, "ToggleLight", l_ToggleLight);
-        lua_register(L, "SetHDR", l_SetHDR);
-        lua_register(L, "SetBloom", l_SetBloom);
-        lua_register(L, "SetGroundMode", l_SetGround);
         lua_register(L, "GetPosition", lua_GetPosition);
         lua_register(L, "SetPosition", lua_SetPosition);
         lua_register(L, "SpawnPrompt", l_spawnPrompt);
@@ -856,6 +861,9 @@ namespace Framework {
 
         // Game utility
         lua_register(L, "IsItemChoppable", lua_IsItemChoppable);
+        lua_register(L, "GetScore", lua_GetScore);
+        lua_register(L, "AddScore", lua_AddScore);
+        lua_register(L, "SetText", lua_SetText);
 
         // Engine utility
         lua_register(L, "FindEntityByName", lua_FindEntityByName);
@@ -937,19 +945,34 @@ namespace Framework {
         std::cout << "[ScriptingSystem] Initialized (Lua VM ready)\n";
     }
 
-    void ScriptingSystem::Update(float dt) {
+    void ScriptingSystem::Update(float dt)
+    {
         for (auto const& e : mEntities) {
             if (!ecsInterface.HasComponent<ScriptProperties>(e)) continue;
             auto& comp = ecsInterface.GetComponent<ScriptProperties>(e);
 
-            for (auto& sc : comp.scripts) {         // <--- NEW
+            for (auto& sc : comp.scripts) {
                 if (sc.scriptPath.empty()) continue;
 
-                if (sc.hotReload && !sc.scriptPath.empty()) {
-                    try {
-                        auto nowTicks = FileTimeToTicks(
-                            std::filesystem::last_write_time(sc.scriptPath));
+                // ----- AUTO HOT RELOAD POLLING -----
+                if (sc.hotReload) {
+                    std::error_code ec;
+                    auto ft = std::filesystem::last_write_time(sc.scriptPath, ec);
 
+                    if (ec) {
+                        // Only log once per script path, then stop polling
+                        static std::unordered_set<std::string> alreadyLogged;
+                        if (!alreadyLogged.count(sc.scriptPath)) {
+                            std::cerr << "[HotReload] last_write_time failed for "
+                                << sc.scriptPath << ": " << ec.message() << "\n";
+                            alreadyLogged.insert(sc.scriptPath);
+                        }
+
+                        // Disable polling to avoid spamming every frame
+                        sc.hotReload = false;
+                    }
+                    else {
+                        auto nowTicks = FileTimeToTicks(ft);
                         if (nowTicks != sc.lastWriteTicks) {
                             std::cout << "[HotReload] " << sc.scriptPath << "\n";
 
@@ -965,14 +988,12 @@ namespace Framework {
                                 sc.initialized = true;
                             }
 
-                            sc.lastWriteTicks = nowTicks; // remember the new time
+                            sc.lastWriteTicks = nowTicks;   // remember latest timestamp
                         }
-                    }
-                    catch (const std::exception& ex) {
-                        std::cerr << "[HotReload] check failed for " << sc.scriptPath << ": " << ex.what() << "\n";
                     }
                 }
 
+                // ----- NORMAL SCRIPT EXECUTION -----
                 if (sc.tableRef == LUA_NOREF) {
                     if (!LoadScriptTable(sc)) continue;
 
@@ -982,7 +1003,12 @@ namespace Framework {
                     lua_setfield(L, -2, "entity");
                     lua_pop(L, 1);
                 }
-                if (!sc.initialized) { CallHook(sc.tableRef, "on_init"); sc.initialized = true; }
+
+                if (!sc.initialized) {
+                    CallHook(sc.tableRef, "on_init");
+                    sc.initialized = true;
+                }
+
                 CallHook(sc.tableRef, "on_update", dt);
             }
         }
