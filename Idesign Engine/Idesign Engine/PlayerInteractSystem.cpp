@@ -8,6 +8,7 @@
 #include "Coordinator.h" 
 #include "Inventory.h"
 #include "Graphics.h"
+#include "ItemComponent.h"
 
 // #include "TagManager.h" // <-- No longer needed
 
@@ -32,12 +33,29 @@ namespace Framework
         // --- All debug tagging code has been removed ---
 
         // Check for the 'E' key press
-        if (mInputHandler->IsKeyPressed(GLFW_KEY_E))
+        /*if (mInputHandler->IsKeyPressed(GLFW_KEY_E))
         {
             std::cout << "[PlayerInteractSystem] 'E' key was pressed!" << std::endl;
             TryInteract();
             TryPickupCollectible();
+        }*/
+
+        GLFWwindow* win = mGraphicsSystem ? mGraphicsSystem->GetWindow() : nullptr;
+        if (!win) return;
+
+        const double now = glfwGetTime();
+        const int    s = glfwGetKey(win, GLFW_KEY_E);
+        const bool   isDown = (s == GLFW_PRESS);
+
+        // Edge trigger + debounce: only fire on the transition Up->Down,
+        // and not more often than m_pickupCooldown.
+        if (isDown && !m_EWasDown && now >= m_nextPickupTime)
+        {
+            TryPickupCollectible();
+            m_nextPickupTime = now + m_pickupCooldown;
         }
+
+        m_EWasDown = isDown;
     }
 
     void PlayerInteractSystem::TryInteract()
@@ -102,21 +120,23 @@ namespace Framework
 
     void PlayerInteractSystem::TryPickupCollectible()
     {
-        // 0) Only allow in game view (optional safety)
+        // Only allow in game view (optional safety)
         if (mGraphicsSystem && mGraphicsSystem->GetMouseTargetView() != 0)
             return;
 
-        // 1) Build ray from the active game camera
+        // Camera ray
         Camera* gameCamera = mGraphicsSystem ? mGraphicsSystem->getCamera() : nullptr;
         if (!gameCamera) return;
 
         const glm::vec3 origin = gameCamera->position;
         const glm::vec3 dir = glm::normalize(gameCamera->front);
 
-        // 2) Raycast for collectibles
+        // Raycast for collectibles (layer/category may differ in your project)
         Framework::RaycastHit hit{};
-        constexpr int kCollectibleCategory = 1;           // adjust if your layer differs
-        if (!mPhysicsSystem || !mPhysicsSystem->Raycast(origin, dir, mInteractRange, hit, kCollectibleCategory) || !hit.hit)
+        constexpr int kCollectibleCategory = 1;  // adjust if needed
+        if (!mPhysicsSystem ||
+            !mPhysicsSystem->Raycast(origin, dir, mInteractRange, hit, kCollectibleCategory) ||
+            !hit.hit)
         {
             std::cout << "[Pickup] Nothing collectible in front.\n";
             return;
@@ -125,49 +145,53 @@ namespace Framework
         Framework::Entity target = hit.entity;
         if (!ecsInterface.IsEntityValid(target)) return;
 
-        // 3) Require Collectible + Transform
-        if (!ecsInterface.HasComponent<CollectibleProperties>(target) ||
-            !ecsInterface.HasComponent<TransformComponent>(target))
+        // Must have ItemComponent + Transform
+        if (!ecsInterface.HasComponent<Framework::ItemComponent>(target) ||
+            !ecsInterface.HasComponent<Framework::TransformComponent>(target))
         {
             std::cout << "[Pickup] Hit entity is not a Collectible.\n";
             return;
         }
 
-        auto& coll = ecsInterface.GetComponent<CollectibleProperties>(target);
-        auto& tr = ecsInterface.GetComponent<TransformComponent>(target);
+        auto& item = ecsInterface.GetComponent<Framework::ItemComponent>(target);
+        auto& tr = ecsInterface.GetComponent<Framework::TransformComponent>(target);
 
-        // 4) Within pickup radius (use actual player distance, not ray t)
-        const glm::vec3 toItem = tr.position - origin;
-        const float     dist2 = glm::dot(toItem, toItem);
-        const float     r2 = coll.pickupRadius * coll.pickupRadius;
+        // Distance check against pickupRadius (from camera/player)
+        /*const glm::vec3 toItem = tr.position - origin;
+        const float     dist2 = glm::dot(toItem, toItem);*/
+        /*const float     r2 = item.pickupRadius * item.pickupRadius;
         if (dist2 > r2) {
             std::cout << "[Pickup] Too far.\n";
             return;
-        }
+        }*/
 
-        // 5) Validate item
-        if (coll.itemId < 0 || coll.itemId >= Framework::kItemCount) {
-            std::cout << "[Pickup] Invalid itemId: " << coll.itemId << "\n";
+        // Resolve itemId from item.name
+        const int itemId = Framework::ItemNameToId(item.name);
+        if (itemId < 0) {
+            std::cout << "[Pickup] Unknown item name: " << item.name << "\n";
             return;
         }
 
-        // 6) Add to Inventory hotbar (first empty, non-stackable path)
+        // Add to Inventory (first empty hotbar slot, non-stackable)
         auto& inv = Framework::Inventory::Instance();
-        const int slot = inv.AddFirstEmpty(coll.itemId);
+        const int slot = inv.AddFirstEmpty(itemId);
         if (slot < 0) {
             std::cout << "[Pickup] Hotbar full; cannot pick up.\n";
             return;
         }
 
-        // 7) Remove physics + destroy entity
-        if (mPhysicsSystem) {
-            mPhysicsSystem->RemoveBodyForEntity(target);  // ensure this exists in PhysicsSystem
+        // Destroy or keep world entity based on flag
+        if (item.toDestroyWhenPicked) {
+            if (mPhysicsSystem) {
+                mPhysicsSystem->RemoveBodyForEntity(target); // ensure this exists
+            }
+            ecsInterface.DestroyEntity(target);
         }
-        ecsInterface.DestroyEntity(target);
 
-        // Optional: feedback
-        std::cout << "[Pickup] Picked " << Framework::kItemNames[coll.itemId] << " into hotbar slot " << slot << "\n";
+        std::cout << "[Pickup] Picked " << item.name << " into hotbar slot " << slot
+            << (item.toDestroyWhenPicked ? " (consumed)\n" : " (source persists)\n");
     }
+
 
 
 }

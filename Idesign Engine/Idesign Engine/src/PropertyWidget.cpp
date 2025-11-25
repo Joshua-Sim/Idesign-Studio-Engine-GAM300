@@ -373,35 +373,6 @@ namespace Framework
                     // Your existing controls
                     DrawEnumDropdown("Motion Type", &phys.motionType, Framework::kMotionTypeNames);
                     DrawEnumDropdown("Category", &phys.category, Framework::kPhysicsCategoryNames);
-
-                    // --- Auto link/unlink CollectibleProperties based on Category ---
-                    constexpr int kCategoryCollectible = 1; // <-- index of "Collectible" in kPhysicsCategoryNames
-                    const bool wantsCollectible = (phys.category == kCategoryCollectible);
-                    const bool hasCollectible = ecs.HasComponent<CollectibleProperties>(entity);
-
-                    if (wantsCollectible && !hasCollectible)
-                        TypeRegistry::Instance().AddComponent("CollectibleProperties", ecs, entity);
-                    else if (!wantsCollectible && hasCollectible)
-                        TypeRegistry::Instance().RemoveComponent("CollectibleProperties", ecs, entity);
-
-                    // --- OPTIONAL: show Collectible UI inline when active ---
-                    if (wantsCollectible && ecs.HasComponent<CollectibleProperties>(entity))
-                    {
-                        auto& coll = ecs.GetComponent<CollectibleProperties>(entity);
-
-                        ImGui::Indent();
-                        ImGui::Separator();
-                        ImGui::TextColored(ImVec4(0.8f, 0.9f, 1.0f, 1.0f), "Collectible");
-
-                        // If you want a name dropdown instead of raw ID:
-                        DrawEnumDropdown("Item", &coll.itemId, Framework::kItemNames);
-
-                        // Or draw the rest of its fields (amount, pickupRadius, autoPickup, consumeWhenCollect)
-                        if (const prop_list* plist = TypeRegistry::Instance().GetPropList("CollectibleProperties_UI"))
-                            DrawInspector(&coll, *plist);
-
-                        ImGui::Unindent();
-                    }
                 }
 
                 else if (typeName == "ScriptProperties")
@@ -664,6 +635,7 @@ namespace Framework
                     // --- Booleans ---
                     ImGui::Checkbox("Is Ingredient", &item.isIngredient);
                     ImGui::Checkbox("Is Choppable", &item.isChoppable);
+                    ImGui::Checkbox("Destroy When Pick?", &item.toDestroyWhenPicked);
                 }
 
 
@@ -743,7 +715,6 @@ namespace Framework
         TypeRegistry::Instance().Register<BoxColliderComponent>("BoxColliderComponent", &g_BoxColliderProps);
         TypeRegistry::Instance().Register<ItemComponent>("ItemComponent", &g_ItemProps);
         TypeRegistry::Instance().Register<ButtonComponent>("ButtonComponent", &g_ButtonComponentProps);
-        TypeRegistry::Instance().Register<CollectibleProperties>("CollectibleProperties", &g_CollectibleProps);
     }
 
     void AutoRegisterAllReflectedComponents(Coordinator& ecs)

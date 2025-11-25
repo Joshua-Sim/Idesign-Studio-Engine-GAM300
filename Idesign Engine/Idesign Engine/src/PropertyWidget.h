@@ -34,7 +34,6 @@
 #include "AnimationLoader.h"
 #include "LightProperties.h"
 #include "PhysicsProperties.h"
-#include "CollectibleProperties.h"
 
 extern Framework::Coordinator ecsInterface;
 namespace Framework
@@ -63,7 +62,6 @@ namespace Framework
         "EventSenderEntry",
         "EventReceiverEntry",
         "BoxColliderEntry"
-        "CollectibleProperties"
     };
 
     //------------------------------------------------------------------------------------------------------------------------------------

@@ -25,7 +25,6 @@
 #include "MeshLoader.h"
 #include "TextureLoader.h"
 #include "ShaderProgram.h"
-#include "CollectibleProperties.h"
 #include "Inventory.h"
 
 #include "WindowConfigProperties.h"

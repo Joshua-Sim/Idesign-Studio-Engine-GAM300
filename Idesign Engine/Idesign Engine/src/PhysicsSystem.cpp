@@ -8,7 +8,6 @@
 #include "PhysicsProperties.h"
 #include "EventManager.h"
 #include "BoxColliderComponent.h"
-#include "CollectibleProperties.h"
 #include "Inventory.h"
 
 #include <Jolt/Jolt.h>
@@ -60,26 +59,6 @@ inline bool GetWorldPos(Framework::Coordinator& ecs, Entity e, glm::vec3& out)
     out = ecs.GetComponent<TransformComponent>(e).position;
     return true;
 }
-
-// Replace InventoryComponent/Add() with your own
-//inline void CollectItem(Entity player, Entity item, Framework::Coordinator& ecs)
-//{
-//    auto& coll = ecs.GetComponent<CollectibleProperties>(item);
-//
-//    // Add to player's inventory
-//    if (ecs.HasComponent<InventoryComponent>(player))
-//    {
-//        auto& inv = ecs.GetComponent<InventoryComponent>(player);
-//        //inv.Add(static_cast<ItemID>(coll.itemId), coll.amount);
-//    }
-//
-//    //// Remove the world entity if it should be consumed
-//    //if (coll.consumeWhenCollect)
-//    //{
-//    //    // optionally remove physics before destroy if your ECS requires
-//    //    ecs.DestroyEntity(item);
-//    //}
-//}
 
 // UI enum -> Jolt motion type
 // THIS IS YOUR IMMOVABLE IMPLEMENTATION

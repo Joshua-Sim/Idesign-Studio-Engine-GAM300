@@ -33,5 +33,10 @@ namespace Framework
         const float mInteractRange = 3.0f;
 
         // bool mDebugFrogTagged = false; // <-- No longer needed
+
+        //set key press once per press
+        bool   m_EWasDown = false;        // track last-frame state
+        double m_nextPickupTime = 0.0;    // debounce timer
+        double m_pickupCooldown = 0.15;   // seconds (tweak to taste)
     };
 }

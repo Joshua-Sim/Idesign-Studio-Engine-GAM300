@@ -229,7 +229,6 @@ namespace Framework {
         ecsInterface.RegisterComponent<MaterialMetadata>();
         ecsInterface.RegisterComponent<LightProperties>();
         ecsInterface.RegisterComponent<PhysicsProperties>();
-        ecsInterface.RegisterComponent<CollectibleProperties>();
 
         ecsInterface.RegisterComponent<BoxColliderComponent>();
         ecsInterface.RegisterComponent<ItemComponent>();
@@ -1373,7 +1372,6 @@ namespace Framework {
     GLuint Graphics::GetOrLoadIconTexFromItemId(int itemId)
     {
         if (itemId < 0) return 0;
-        // MakeItemIconPath is declared in CollectibleProperties.h
         std::string p = Framework::MakeItemIconPath(itemId);
         return GetOrLoadIconTex(p.c_str());
     }
