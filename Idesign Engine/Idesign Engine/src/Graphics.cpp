@@ -626,8 +626,8 @@ namespace Framework {
         float dt = now - lastTime; lastTime = now;
         process_input(dt);
         //jay
-        if (engineState.IsPlay())
-            dt = 0.0;
+        //if (engineState.IsPlay())
+        //    dt = 0.0;
         // ====================================================================
         // 0. LIGHT GATHERING PASS
         // ====================================================================

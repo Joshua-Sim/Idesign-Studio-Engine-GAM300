@@ -15,6 +15,7 @@
 #include <iostream>
 #include "Coordinator.h"
 #include "ButtonSystem.h"
+#include "TextureProperties.h"
 extern Framework::Coordinator ecsInterface;
 namespace Framework {
 
@@ -31,29 +32,56 @@ namespace Framework {
     }
 
 
-    void ButtonSystem::Update(float deltaTime) {
+    void ButtonSystem::Update(float deltaTime)
+    {
         (void)deltaTime;
 
-    }
-    void ButtonSystem::HandleClickUV(float u, float v)
-    {
-        // u, v are in [0,1], with v = 0 at top of the viewport (ImGui convention)
-        // Our 2D UI projection is bottom-left origin, so flip v.
-        float designX = u * DESIGN_WIDTH;
-        float designY = v * DESIGN_HEIGHT;
-
-        for (auto& entity : mEntities)
+        for (auto entity : mEntities)
         {
-            if (!ecsInterface.HasComponent<ButtonComponent>(entity))
+            if (!ecsInterface.HasComponent<ButtonComponent>(entity) ||
+                !ecsInterface.HasComponent<TransformComponent>(entity))
                 continue;
 
             auto& button = ecsInterface.GetComponent<ButtonComponent>(entity);
+            auto& tr = ecsInterface.GetComponent<TransformComponent>(entity);
 
-            // AABB in design-space
-            float left = button.position.x;
-            float right = button.position.x + button.size.x;
-            float bottom = button.position.y;
-            float top = button.position.y + button.size.y;
+            // interpret Transform as “center + full size” in design space
+            button.position = glm::vec2(
+                tr.position.x - 0.5f * tr.scale.x,
+                tr.position.y - 0.5f * tr.scale.y
+            );
+            button.size = glm::vec2(tr.scale.x, tr.scale.y);
+        }
+    }
+
+    // ---------------------------------------------------------------------
+    // Click handling in design (1920x1080) coordinates
+    // ---------------------------------------------------------------------
+    void ButtonSystem::HandleClickUV(float u, float v)
+    {
+        float designX = u * DESIGN_WIDTH;
+        float designY = v * DESIGN_HEIGHT;
+
+        for (auto entity : mEntities)
+        {
+            if (!ecsInterface.HasComponent<ButtonComponent>(entity) ||
+                !ecsInterface.HasComponent<TransformComponent>(entity) ||
+                !ecsInterface.HasComponent<TextureProperties>(entity))
+                continue;
+
+            auto& button = ecsInterface.GetComponent<ButtonComponent>(entity);
+            auto& tr = ecsInterface.GetComponent<TransformComponent>(entity);
+            auto& tex = ecsInterface.GetComponent<TextureProperties>(entity);
+
+            // only UI quads are treated as buttons
+            if (!tex.isUI)
+                continue;
+
+            // derive bounds from Transform (center + full size)
+            float left = tr.position.x - 0.5f * tr.scale.x;
+            float right = tr.position.x + 0.5f * tr.scale.x;
+            float bottom = tr.position.y - 0.5f * tr.scale.y;
+            float top = tr.position.y + 0.5f * tr.scale.y;
 
             bool inside = (designX > left && designX < right &&
                 designY > bottom && designY < top);
@@ -62,8 +90,6 @@ namespace Framework {
 
             if (inside)
             {
-                // This function is only called on a mouse click,
-                // so we can immediately trigger the callback.
                 button.TriggerClick();
             }
         }
