@@ -90,8 +90,13 @@ void Terrain::draw() const {
 
 float Terrain::getHeightAt(float x, float z) const {
     // naive nearest-neighbor sampling (you can extend to bilinear)
-    int gx = (int)(x / scale);
-    int gz = (int)(z / scale);
+
+    float offset = size * 0.5f;
+    int gx = (int)((x / scale) + offset);
+    int gz = (int)((z / scale) + offset);
+
+    // Boundary checks
     if (gx < 0 || gz < 0 || gx >= size || gz >= size) return 0.0f;
+
     return heights[gz * size + gx];
 }

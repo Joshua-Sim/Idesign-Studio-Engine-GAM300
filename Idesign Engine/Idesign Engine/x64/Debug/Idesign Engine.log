@@ -1,143 +1,145 @@
 ﻿  Graphics.cpp
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
       see declaration of 'Framework::AnimationProperties::name'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
   (compiling source file '/src/Graphics.cpp')
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
   (compiling source file '/src/Graphics.cpp')
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(114,151): warning C4100: 'ioSettings': unreferenced parameter
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(114,151): warning C4100: 'ioSettings': unreferenced parameter
   (compiling source file '/src/Graphics.cpp')
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(114,117): warning C4100: 'inManifold': unreferenced parameter
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(114,117): warning C4100: 'inManifold': unreferenced parameter
   (compiling source file '/src/Graphics.cpp')
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\RecipeBookManager.h(67,23): warning C4189: 'totalRowWidth': local variable is initialized but not referenced
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\RecipeBookManager.h(67,23): warning C4189: 'totalRowWidth': local variable is initialized but not referenced
   (compiling source file '/src/Graphics.cpp')
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(195,23): warning C4189: 'config': local variable is initialized but not referenced
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(195,23): warning C4189: 'config': local variable is initialized but not referenced
   (compiling source file '/src/Graphics.cpp')
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(621,27): warning C4458: declaration of 'mesh' hides class member
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(662,27): warning C4458: declaration of 'mesh' hides class member
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(151,24):
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(151,24):
       see declaration of 'Framework::Graphics::mesh'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(759,31): warning C4458: declaration of 'mesh' hides class member
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(800,31): warning C4458: declaration of 'mesh' hides class member
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(151,24):
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(151,24):
       see declaration of 'Framework::Graphics::mesh'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(932,21): warning C4458: declaration of 'cam' hides class member
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(973,21): warning C4458: declaration of 'cam' hides class member
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(132,17):
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(132,17):
       see declaration of 'Framework::Graphics::cam'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(985,25): warning C4459: declaration of 'firstMouse' hides global declaration
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1026,25): warning C4459: declaration of 'firstMouse' hides global declaration
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(79,17):
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(79,17):
       see declaration of 'Framework::firstMouse'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1090,68): warning C4100: 'amount': unreferenced parameter
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1131,68): warning C4100: 'amount': unreferenced parameter
   (compiling source file '/src/Graphics.cpp')
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1090,56): warning C4100: 'axis': unreferenced parameter
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1131,56): warning C4100: 'axis': unreferenced parameter
   (compiling source file '/src/Graphics.cpp')
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1126,23): warning C4458: declaration of 'cam' hides class member
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1167,23): warning C4458: declaration of 'cam' hides class member
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(132,17):
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(132,17):
       see declaration of 'Framework::Graphics::cam'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1132,23): warning C4458: declaration of 'cam' hides class member
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1173,23): warning C4458: declaration of 'cam' hides class member
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(132,17):
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(132,17):
       see declaration of 'Framework::Graphics::cam'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1202,39): warning C4100: 'viewIndex': unreferenced parameter
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1243,39): warning C4100: 'viewIndex': unreferenced parameter
   (compiling source file '/src/Graphics.cpp')
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1339,40): warning C4458: declaration of 'mesh' hides class member
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1380,40): warning C4458: declaration of 'mesh' hides class member
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(151,24):
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(151,24):
       see declaration of 'Framework::Graphics::mesh'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1529,17): warning C4458: declaration of 'cam' hides class member
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1570,17): warning C4458: declaration of 'cam' hides class member
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(132,17):
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(132,17):
       see declaration of 'Framework::Graphics::cam'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1569,59): warning C4018: '<': signed/unsigned mismatch
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1610,59): warning C4018: '<': signed/unsigned mismatch
   (compiling source file '/src/Graphics.cpp')
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1682,27): warning C4456: declaration of 'model' hides previous local declaration
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1723,27): warning C4456: declaration of 'model' hides previous local declaration
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1661,23):
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1702,23):
       see declaration of 'model'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1717,23): warning C4458: declaration of 'mesh' hides class member
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1758,23): warning C4458: declaration of 'mesh' hides class member
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(151,24):
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(151,24):
       see declaration of 'Framework::Graphics::mesh'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1735,25): warning C4456: declaration of 'pointShadowUnit' hides previous local declaration
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1776,25): warning C4456: declaration of 'pointShadowUnit' hides previous local declaration
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1565,13):
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1606,13):
       see declaration of 'pointShadowUnit'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1736,25): warning C4456: declaration of 'pointShadowCount' hides previous local declaration
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1777,25): warning C4456: declaration of 'pointShadowCount' hides previous local declaration
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1566,13):
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1607,13):
       see declaration of 'pointShadowCount'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1743,71): warning C4018: '<': signed/unsigned mismatch
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1784,71): warning C4018: '<': signed/unsigned mismatch
   (compiling source file '/src/Graphics.cpp')
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1752,46): warning C4456: declaration of 'entityId' hides previous local declaration
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1793,46): warning C4456: declaration of 'entityId' hides previous local declaration
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1655,26):
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1696,26):
       see declaration of 'entityId'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1807,31): warning C4458: declaration of 'tex' hides class member
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1848,31): warning C4458: declaration of 'tex' hides class member
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(152,16):
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(152,16):
       see declaration of 'Framework::Graphics::tex'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1884,19): warning C4458: declaration of 'mesh' hides class member
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1925,19): warning C4458: declaration of 'mesh' hides class member
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(151,24):
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(151,24):
       see declaration of 'Framework::Graphics::mesh'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1910,21): warning C4456: declaration of 'pointShadowUnit' hides previous local declaration
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1951,21): warning C4456: declaration of 'pointShadowUnit' hides previous local declaration
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1565,13):
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1606,13):
       see declaration of 'pointShadowUnit'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1911,21): warning C4456: declaration of 'pointShadowCount' hides previous local declaration
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1952,21): warning C4456: declaration of 'pointShadowCount' hides previous local declaration
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1566,13):
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1607,13):
       see declaration of 'pointShadowCount'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1919,67): warning C4018: '<': signed/unsigned mismatch
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1960,67): warning C4018: '<': signed/unsigned mismatch
   (compiling source file '/src/Graphics.cpp')
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1928,42): warning C4456: declaration of 'entityId' hides previous local declaration
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1969,42): warning C4456: declaration of 'entityId' hides previous local declaration
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1882,25):
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1923,25):
       see declaration of 'entityId'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1981,27): warning C4458: declaration of 'tex' hides class member
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2022,27): warning C4458: declaration of 'tex' hides class member
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(152,16):
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(152,16):
       see declaration of 'Framework::Graphics::tex'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2124,19): warning C4458: declaration of 'tex' hides class member
+C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2165,19): warning C4458: declaration of 'tex' hides class member
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(152,16):
+      C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(152,16):
       see declaration of 'Framework::Graphics::tex'
   
-  Idesign Engine.vcxproj -> D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe
+  Idesign Engine.vcxproj -> C:\Users\victo\OneDrive\Desktop\SIT\Year 3\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe
+  'pwsh.exe' is not recognized as an internal or external command,
+  operable program or batch file.

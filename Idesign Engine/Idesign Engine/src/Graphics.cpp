@@ -487,26 +487,67 @@ namespace Framework {
         //// 2. Create the Instancing Renderer
         //m_treeRenderer = new FoliageRenderer(&m_foliageMesh);
 
-        // 3. Generate random positions for the trees
+        // 3. Generate positions for the trees around the border
         std::vector<glm::mat4> treeTransforms;
-        const int NUM_TREES = 5000; // Adjust this number for performance
+        const int NUM_TREES = 4000; // High number for a dense border
 
-        // Assuming your terrain size is reasonable and you have access to the global 'terrain' object
+        // Calculate map boundaries (Assuming terrain starts at 0,0)
+        // If your terrain is centered at (0,0), change min/max accordingly.
+        // Range is now -64 to +64
+        float mapLimit = ((float)TerrainSize * TerrainScale) * 0.5f;
+
+        float minMap = -mapLimit;
+        float maxMap = mapLimit;
+
+        float borderThickness = 20.0f; // How thick the forest border is
+
         for (int i = 0; i < NUM_TREES; i++) {
-            // Simple random position generation within a fixed bounding box (e.g., 200x200 area)
-            // This is a placeholder; you'd typically sample a bit more intelligently.
-            float x = -100.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 200.0f));
-            float z = -100.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 200.0f));
+            float x = minMap + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (maxMap - minMap)));
+            float z;
 
-            // Use terrain function to snap to ground height
+            // Randomly choose one of the 4 sides
+            // 0 = Bottom Edge, 1 = Top Edge, 2 = Left Edge, 3 = Right Edge
+            int side = rand() % 4;
+
+            // Helper to get a random float between 0.0 and 1.0
+            float r1 = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+            float r2 = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+
+            if (side == 0) {
+                // Bottom Edge: X is anywhere, Z is in the small border strip (0 to 20)
+                x = minMap + (r1 * (maxMap - minMap));
+                z = minMap + (r2 * borderThickness);
+            }
+            else if (side == 1) {
+                // Top Edge: X is anywhere, Z is at the far end (108 to 128)
+                x = minMap + (r1 * (maxMap - minMap));
+                z = maxMap - (r2 * borderThickness);
+            }
+            else if (side == 2) {
+                // Left Edge: Z is anywhere, X is in the small border strip
+                x = minMap + (r2 * borderThickness);
+                z = minMap + (r1 * (maxMap - minMap));
+            }
+            else {
+                // Right Edge: Z is anywhere, X is at the far end
+                x = maxMap - (r2 * borderThickness);
+                z = minMap + (r1 * (maxMap - minMap));
+            }
+
+            // --- Standard Height/Scale Logic ---
+            // Get height from terrain so trees stick to the ground
             float y = terrain.getHeightAt(x, z);
 
             glm::mat4 model(1.0f);
             model = glm::translate(model, glm::vec3(x, y, z));
 
-            // Random slight scale for variation
-            float scale = 2.8f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 0.4f));
-            model = glm::scale(model, glm::vec3(scale * 0.5f, scale * 2.0f, scale * 0.5f)); // Make it tall and thin
+            // Random rotation (Y-axis) so trees don't all look identical
+            float randomRot = (static_cast<float>(rand()) / RAND_MAX) * 360.0f;
+            model = glm::rotate(model, glm::radians(randomRot), glm::vec3(0, 1, 0));
+
+            // Random scale variation
+            float scale = 5.8f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 0.5f));
+            model = glm::scale(model, glm::vec3(scale * 0.5f, scale * 1.5f, scale * 0.5f));
 
             treeTransforms.push_back(model);
         }
