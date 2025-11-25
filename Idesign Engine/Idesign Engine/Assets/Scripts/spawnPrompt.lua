@@ -3,22 +3,27 @@ local M = {}
 -- We store the text ID inside the table so we remember it
 M.spawnedTextID = -1 
 
--- action: 1 = Enter, 0 = Exit
-function M:OnInteract(targetID, action)
+-- CHANGED: Use DOT (.) syntax.
+-- C++ Arguments: (ListenerEntityID, TargetEntityID, ActionType)
+function M.OnInteract(myEntityID, targetID, action)
     
-    -- 1. Security Check (Am I the one being hit?)
-    if self.entity ~= targetID then return end
+    -- 1. Security Check 
+    -- (Physics event broadcasts globally, ensure the event was meant for ME)
+    -- 'myEntityID' is the entity holding this script.
+    -- 'targetID' is the entity that was actually hit.
+    if myEntityID ~= targetID then return end
 
-    -- 2. ENTER Logic
+    -- 2. ENTER Logic (Action 1)
     if action == 1 then
         print("Player Entered Box! Spawning Text.")
         
         -- Only spawn if we don't have one already
         if M.spawnedTextID == -1 then
-            M.spawnedTextID = SpawnPrompt(self.entity, "Press E", 2.5)
+            -- CHANGED: Use 'myEntityID' directly instead of 'self.entity'
+            M.spawnedTextID = SpawnPrompt(myEntityID, "Press E", 2.5)
         end
 
-    -- 3. EXIT Logic
+    -- 3. EXIT Logic (Action 0)
     elseif action == 0 then
         print("Player Exited Box! Destroying Text.")
 

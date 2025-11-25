@@ -39,8 +39,7 @@ namespace Framework
 
     void PlayerInteractSystem::TryInteract()
     {
-        std::cout << "[Debug] TryInteract called..." << std::endl;
-
+        // 1. Standard Raycast Setup
         Camera* gameCamera = mGraphicsSystem ? mGraphicsSystem->getCamera() : nullptr;
         if (!gameCamera) return;
 
@@ -48,48 +47,59 @@ namespace Framework
         glm::vec3 direction = glm::normalize(gameCamera->front);
         Framework::RaycastHit hit;
 
-        // 1. Check Raycast
         bool didHit = mPhysicsSystem->Raycast(origin, direction, mInteractRange, hit, 1);
 
-        if (!didHit) {
-            std::cout << "[Debug] Raycast MISSED everything (Category 1)." << std::endl;
-            return;
-        }
+        if (!didHit) return;
 
-        std::cout << "[Debug] Raycast HIT Entity: " << hit.entity << std::endl;
+        Entity targetEntity = hit.entity;
+        std::cout << "[Interact] Hit Entity: " << targetEntity << std::endl;
 
-        // 2. Check Script Override
-        bool handledByScript = false;
-        auto scripting = ecsInterface.GetSystem<ScriptingSystem>();
-
-        if (scripting && ecsInterface.HasComponent<ScriptProperties>(hit.entity))
+        // --- PRIORITY 1: EVENT TRIGGER (Buttons, Chests, Scripted Items) ---
+        // Does the collider say "I am interactable"?
+        if (ecsInterface.HasComponent<BoxColliderComponent>(targetEntity))
         {
-            std::cout << "[Debug] Entity has ScriptComponent. Attempting 'OnPickup'..." << std::endl;
+            auto& colliderComp = ecsInterface.GetComponent<BoxColliderComponent>(targetEntity);
 
-            // This will print errors inside ScriptingSystem if function is missing
-            handledByScript = scripting->CallEntityFunctionRetBool(hit.entity, "OnPickup", hit.entity);
+            for (const auto& entry : colliderComp.colliders)
+            {
+                // Check the boolean and ensure there is a message to send
+                if (entry.isInteractable && !entry.interactMessage.empty())
+                {
+                    std::cout << "[Interact] Firing Event: " << entry.interactMessage << std::endl;
 
-            if (handledByScript) {
-                std::cout << "[Debug] SUCCESS: Lua Script handled the interaction." << std::endl;
-                return;
-            }
-            else {
-                std::cout << "[Debug] Script found, but 'OnPickup' returned false or wasn't found." << std::endl;
+                    // Construct Payload
+                    CollisionEventData payload;
+                    payload.senderID = ecsInterface.GetEntityByName("Player");
+                    payload.targetID = targetEntity; // The object being hit
+                    payload.actionType = 1;          // 1 = Interact
+
+                    // FIRE AND FORGET
+                    // The EventSystem will pick this up and call the Lua script attached to the object
+                    EventManager::Instance().Fire(entry.interactMessage, &payload);
+
+                    return; // Stop here. The Event System handles the rest.
+                }
             }
         }
-        else {
-            std::cout << "[Debug] Entity does NOT have a ScriptComponent." << std::endl;
-        }
 
-        // 3. Check Fallback
-        if (ecsInterface.HasComponent<ItemComponent>(hit.entity))
+        // --- PRIORITY 2: GENERIC ITEM FALLBACK (Rocks, Sticks) ---
+        // If no event was fired, check if it's just a simple item to pick up silently.
+        if (ecsInterface.HasComponent<ItemComponent>(targetEntity))
         {
-            std::cout << "[Debug] Found ItemComponent. Attempting generic pickup..." << std::endl;
-            // ... generic logic ...
-            std::cout << "[Debug] Generic Pickup Success." << std::endl;
-        }
-        else {
-            std::cout << "[Debug] Entity has no ItemComponent. Interaction ignored." << std::endl;
+            auto& item = ecsInterface.GetComponent<ItemComponent>(targetEntity);
+            int itemId = Framework::ItemNameToId(item.name);
+
+            if (itemId >= 0)
+            {
+                int slot = Framework::Inventory::Instance().AddFirstEmpty(itemId);
+                if (slot >= 0) {
+                    if (item.toDestroyWhenPicked) {
+                        mPhysicsSystem->RemoveBodyForEntity(targetEntity);
+                        ecsInterface.DestroyEntity(targetEntity);
+                    }
+                    std::cout << "[Interact] Generic Item Picked Up." << std::endl;
+                }
+            }
         }
     }
 }
