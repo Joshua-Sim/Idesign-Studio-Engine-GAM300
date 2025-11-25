@@ -65,36 +65,32 @@ namespace Framework {
         g_AudioSystem = this;
     }
 
-    AudioSystem::~AudioSystem() {
-        // Clean up entity audio instances
+    Framework::AudioSystem::~AudioSystem() {
+        // 1. Stop all events safely
         for (auto& pair : activeInstances) {
-            if (pair.second) {
+            if (pair.second && pair.second->isValid()) {
                 pair.second->stop(FMOD_STUDIO_STOP_IMMEDIATE);
-                pair.second->release();
             }
         }
         activeInstances.clear();
 
-        // Release active event instances
         for (auto& p : activeEventsById) {
-            if (p.second) {
+            if (p.second && p.second->isValid()) {
                 p.second->stop(FMOD_STUDIO_STOP_IMMEDIATE);
-                p.second->release();
             }
         }
         activeEventsById.clear();
 
         for (auto& p : activeEvents) {
-            if (p.second) {
+            if (p.second && p.second->isValid()) {
                 p.second->stop(FMOD_STUDIO_STOP_IMMEDIATE);
-                p.second->release();
             }
         }
         activeEvents.clear();
 
         loadedEvents.clear();
 
-        // Clean up DSP Effects
+        // 2. Release DSPs (These are attached to Core, release them before Core dies)
         if (reverbDSP) {
             reverbDSP->release();
             reverbDSP = nullptr;
@@ -104,14 +100,22 @@ namespace Framework {
             lowPassFilter = nullptr;
         }
 
-        // Shutdown FMOD Studio system
         if (studioSystem) {
+            // 3. CRITICAL: Flush the command queue!
+            // This ensures the "Stop" commands above actually happen 
+            // before we rip the carpet out from under the audio driver.
+            studioSystem->update();
+
+            // 4. Unload banks
             studioSystem->unloadAll();
+
+            // 5. Release the System
+            // This will automatically clean up any lingering event instances
             studioSystem->release();
             studioSystem = nullptr;
         }
-        coreSystem = nullptr;
 
+        coreSystem = nullptr;
         g_AudioSystem = nullptr;
     }
 

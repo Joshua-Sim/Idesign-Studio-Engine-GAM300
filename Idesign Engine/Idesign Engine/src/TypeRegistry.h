@@ -17,8 +17,10 @@ namespace Framework
     public:
         static TypeRegistry& Instance()
         {
-            static TypeRegistry instance;
-            return instance;
+            // Change from stack static to heap static
+            // This prevents the destructor from running automatically at program exit
+            static TypeRegistry* instance = new TypeRegistry();
+            return *instance;
         }
 
         using TypeAdder = std::function<void(Coordinator&, Entity)>;
@@ -27,9 +29,15 @@ namespace Framework
         // To Stop Crashes
         void Shutdown()
         {
-            registry.clear();
-            adders.clear();
-            removers.clear();
+            std::unordered_map<std::string, TypeGetter> emptyRegistry;
+            registry.swap(emptyRegistry);
+
+            std::unordered_map<std::string, TypeAdder> emptyAdders;
+            adders.swap(emptyAdders);
+
+            std::unordered_map<std::string, TypeRemover> emptyRemovers;
+            removers.swap(emptyRemovers);
+
             propLists.clear();
         }
 
