@@ -2,7 +2,9 @@
 local M = {}
 
 function M.on_init()
-    GameStatePaused()
+    RegisterButtonCallback(self.entity, function(ent)
+        GameStatePaused()
+    end)
 end
 
 return M

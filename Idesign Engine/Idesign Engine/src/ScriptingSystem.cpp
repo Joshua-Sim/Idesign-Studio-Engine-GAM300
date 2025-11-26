@@ -538,7 +538,7 @@ namespace Framework {
         {            
             // Set engine state to play mode
             engineState.SetPlay(true);
-
+                    
             //Send message to start audio and other play-mode systems
             MessageBus::Get().SendImmediate(EnterPlayModeMessage());
 

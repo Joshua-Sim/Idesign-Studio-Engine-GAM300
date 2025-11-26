@@ -548,6 +548,19 @@ namespace Framework
                     // Add to ECS
                     ecsInterface.AddComponent(entity, audioComp);
                 }
+
+                // --- ButtonComponent ---
+                if (components.HasMember("ButtonComponent"))
+                {
+                    const auto& jsonVal = components["ButtonComponent"];
+                    ButtonComponent buttonComp;
+
+                    // Deserialize all registered properties
+                    Deserialize(&buttonComp, g_ButtonComponentProps, jsonVal);
+
+                    // Add to ECS
+                    ecsInterface.AddComponent(entity, buttonComp);
+                }
                 
                 // --- Item Component ---
                 if (components.HasMember("ItemComponent"))
@@ -907,6 +920,18 @@ namespace Framework
                     Serialize((void*)&audioComp, g_AudioComponentProps, compJson, allocator);
 
                     componentsObj.AddMember("AudioComponent", compJson, allocator);
+                }
+
+                // --- ButtonComponent ---
+                if (ecsInterface.HasComponent<ButtonComponent>(entity))
+                {
+                    const auto& buttonComp = ecsInterface.GetComponent<ButtonComponent>(entity);
+                    rapidjson::Value compJson(rapidjson::kObjectType);
+
+                    // Serialize all registered properties
+                    Serialize((void*)&buttonComp, g_ButtonComponentProps, compJson, allocator);
+
+                    componentsObj.AddMember("ButtonComponent", compJson, allocator);
                 }
 
                 // --- Item Component ---

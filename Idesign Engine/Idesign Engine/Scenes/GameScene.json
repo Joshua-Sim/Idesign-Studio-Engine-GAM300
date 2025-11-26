@@ -2593,11 +2593,22 @@
                 "TextureComponent": {
                     "guid": "01931225-401d-4164-8db6-754535863bb1",
                     "isUI": true
+                },
+                "ButtonComponent": {
+                    "position": [
+                        855.0,
+                        215.0
+                    ],
+                    "size": [
+                        250.0,
+                        250.0
+                    ],
+                    "isHovered": false
                 }
             }
         },
         {
-            "name": "startgame",
+            "name": "startbutton",
             "guid": "ed731c16-5301-4220-8ffa-98fd139ffb91",
             "components": {
                 "TransformComponent": {
@@ -2630,11 +2641,32 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "475e81a7-2e58-4938-9542-ca201d5d96f5",
                     "isUI": true
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "0b25e0c5-79e6-465a-96cd-920b83ef31e6",
+                            "scriptPath": "Assets\\Scripts\\GameStateStart.lua",
+                            "hotReload": true
+                        }
+                    ]
+                },
+                "ButtonComponent": {
+                    "position": [
+                        855.0,
+                        315.0
+                    ],
+                    "size": [
+                        250.0,
+                        250.0
+                    ],
+                    "isHovered": false
                 }
             }
         },
@@ -2673,6 +2705,26 @@
                 "TextureComponent": {
                     "guid": "38c96217-d4fa-4b5b-910f-d8914b7a1e0f",
                     "isUI": true
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "c6d4d63d-bced-4890-8a3b-3938e82b13e8",
+                            "scriptPath": "Assets\\Scripts\\GameStateExit.lua",
+                            "hotReload": true
+                        }
+                    ]
+                },
+                "ButtonComponent": {
+                    "position": [
+                        855.0,
+                        115.0
+                    ],
+                    "size": [
+                        250.0,
+                        250.0
+                    ],
+                    "isHovered": false
                 }
             }
         }
