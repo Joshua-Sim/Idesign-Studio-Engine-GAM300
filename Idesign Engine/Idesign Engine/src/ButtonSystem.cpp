@@ -90,7 +90,7 @@ namespace Framework {
 
             if (inside)
             {
-                button.TriggerClick();
+                button.TriggerClick(entity);
             }
         }
     }
