@@ -84,7 +84,7 @@ int main(void)
     // Initialize global ECS interface and other singleton components
     ecsInterface.Init();
 
-    //AssetManager::Instance().CompileAllAssets();
+    AssetManager::Instance().CompileAllAssets();
     //AssetManager::Instance().SaveAllAssets();
     AssetManager::Instance().LoadAllAssets();
     

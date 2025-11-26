@@ -46,6 +46,55 @@
                     "cellSize": 0.30000001192092896,
                     "cellHeight": 0.20000000298023224,
                     "maxSlope": 45.0
+                },
+                "BoxColliderComponent": {
+                    "colliders": [
+                        {
+                            "size": [
+                                19.5,
+                                9.699999809265137,
+                                19.399999618530273
+                            ],
+                            "center": [
+                                -15.399999618530273,
+                                3.5,
+                                -4.699999809265137
+                            ],
+                            "canPassThrough": true
+                        },
+                        {
+                            "size": [
+                                19.200000762939453,
+                                1.0,
+                                22.299999237060547
+                            ],
+                            "center": [
+                                -14.300000190734863,
+                                -0.30000001192092896,
+                                -6.599999904632568
+                            ],
+                            "canPassThrough": false
+                        }
+                    ]
+                },
+                "PhysicsProperties": {
+                    "category": 0,
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 0.5,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "startAwake": true
                 }
             }
         },
@@ -151,8 +200,7 @@
                                 0.0,
                                 0.0
                             ],
-                            "canPassThrough": false,
-                            "isInteractable": false
+                            "canPassThrough": false
                         }
                     ]
                 },
@@ -909,8 +957,7 @@
                                 0.0,
                                 0.0
                             ],
-                            "canPassThrough": false,
-                            "isInteractable": false
+                            "canPassThrough": false
                         }
                     ]
                 },
@@ -1168,8 +1215,7 @@
                                 0.0,
                                 0.0
                             ],
-                            "canPassThrough": false,
-                            "isInteractable": false
+                            "canPassThrough": false
                         }
                     ]
                 },
@@ -1890,19 +1936,19 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -39.50434494018555,
-                        8.039443969726563,
-                        9.422661781311035
+                        -28.25364112854004,
+                        8.034937858581543,
+                        7.37828254699707
                     ],
                     "rotation": [
-                        0.29789578914642334,
-                        -2.8125903606414795,
-                        0.00042227370431646705
+                        -0.20590950548648834,
+                        49.13507843017578,
+                        1.4971866607666016
                     ],
                     "scale": [
-                        0.9999989867210388,
-                        0.9999967813491821,
-                        0.9999994039535522
+                        0.9999990463256836,
+                        0.9999958276748657,
+                        0.9999991655349731
                     ]
                 },
                 "HierarchyComponent": {
@@ -1914,7 +1960,17 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "614d7341-f9b8-4a53-ae5c-780116e3fe3d",
+                            "scriptPath": "Assets\\Scripts\\footstep.lua",
+                            "hotReload": true
+                        }
+                    ]
                 },
                 "BoxColliderComponent": {
                     "colliders": [
@@ -1929,8 +1985,7 @@
                                 0.0,
                                 0.0
                             ],
-                            "canPassThrough": false,
-                            "isInteractable": false
+                            "canPassThrough": false
                         }
                     ]
                 },
@@ -1959,6 +2014,46 @@
                             "triggerName": "OnCollision",
                             "messageName": "deez"
                         }
+                    ]
+                },
+                "ListenerComponent": {
+                    "position": [
+                        -28.25364112854004,
+                        8.034937858581543,
+                        7.37828254699707
+                    ],
+                    "forward": [
+                        0.0,
+                        0.0,
+                        -1.0
+                    ],
+                    "up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ],
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "active": true,
+                    "listenerIndex": 0
+                },
+                "AudioComponent": {
+                    "guid": "d6f23fa6-ff6f-4892-91b3-ca11349bb492",
+                    "eventName": "event:/Footstep",
+                    "is3D": true,
+                    "minDistance": 1.0,
+                    "maxDistance": 100.0,
+                    "volume": 1.0,
+                    "loop": false,
+                    "playOnStart": true,
+                    "isPlaying": true,
+                    "lastPosition": [
+                        -28.25364112854004,
+                        8.034937858581543,
+                        7.37828254699707
                     ]
                 }
             }
@@ -2117,9 +2212,7 @@
                     "sortIndex": 48
                 },
                 "TagComponent": {
-                    "tags": [
-                        "Interactable"
-                    ]
+                    "tags": []
                 },
                 "MeshComponent": {
                     "guid": "4bf0356c-3b1b-4e45-a327-5a7f573a20ef",
@@ -2134,11 +2227,6 @@
                         {
                             "guid": "998e8733-cf17-48d4-96be-ab700322c93c",
                             "scriptPath": "Assets\\Scripts\\spawnPrompt.lua",
-                            "hotReload": false
-                        },
-                        {
-                            "guid": "852f4291-12ff-48e6-a6eb-bd6685a86b30",
-                            "scriptPath": "Assets\\Scripts\\herb_pickup.lua",
                             "hotReload": false
                         }
                     ]
@@ -2156,14 +2244,12 @@
                                 1.2999999523162842,
                                 0.0
                             ],
-                            "canPassThrough": true,
-                            "isInteractable": true,
-                            "interactMessage": "HerbPickup"
+                            "canPassThrough": true
                         }
                     ]
                 },
                 "PhysicsProperties": {
-                    "category": 1,
+                    "category": 0,
                     "isImmovable": true,
                     "gravityFactor": 1.0,
                     "mass": 1.0,
@@ -2186,10 +2272,6 @@
                         {
                             "messageToListenFor": "deez",
                             "luaFunctionToCall": "OnInteract"
-                        },
-                        {
-                            "messageToListenFor": "HerbPickup",
-                            "luaFunctionToCall": "OnPickup"
                         }
                     ]
                 },
@@ -2268,8 +2350,7 @@
                                 1.0,
                                 -1.0
                             ],
-                            "canPassThrough": false,
-                            "isInteractable": false
+                            "canPassThrough": false
                         }
                     ]
                 },
@@ -2291,12 +2372,46 @@
                         0.0
                     ],
                     "startAwake": true
+                },
+                "AudioComponent": {
+                    "guid": "d6f23fa6-ff6f-4892-91b3-ca11349bb492",
+                    "eventName": "event:/Boiling",
+                    "is3D": true,
+                    "minDistance": 1.0,
+                    "maxDistance": 15.0,
+                    "volume": 1.0,
+                    "loop": false,
+                    "playOnStart": true,
+                    "isPlaying": true,
+                    "lastPosition": [
+                        -40.230262756347656,
+                        6.287981033325195,
+                        17.725893020629883
+                    ]
                 }
             }
         },
         {
             "name": "Customer",
-            "guid": "e69f01da-c02b-4fa4-ac30-a2355035885d",
+            "guid": "a54a7245-ad57-436e-8972-99ae789bf3fa",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
+                }
+            }
+        },
+        {
+            "name": "Customer",
+            "guid": "0d412362-03b8-4b47-8c27-75c840c45664",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
+                }
+            }
+        },
+        {
+            "name": "Customer",
+            "guid": "98546659-beb2-4cb0-a06c-855704f480d6",
             "components": {
                 "PrefabComponent": {
                     "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
