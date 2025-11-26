@@ -16,7 +16,7 @@
 #include "Graphics.h"
 #include <GameSystem.h>
 #include <PhysicsSystem.h>
-
+#include "InputHandler.h"
 extern Framework::Coordinator ecsInterface;
 
 namespace Framework {
@@ -92,7 +92,24 @@ namespace Framework {
             g->MoveCameraFromLua(dir, dt, gm);
             return 0;
         }
+        static int lua_GetMousePosition(lua_State* L)
+        {
+            // Access your singleton InputHandler
+            auto* input = Framework::InputHandler::GetInstance();
 
+            if (input)
+            {
+                // Push X and Y to Lua
+                lua_pushnumber(L, input->GetMouseX());
+                lua_pushnumber(L, input->GetMouseY());
+                return 2; // We are returning 2 values (x, y)
+            }
+
+            // Fallback if system is missing
+            lua_pushnumber(L, 0.0);
+            lua_pushnumber(L, 0.0);
+            return 2;
+        }
 
         static int l_spawnPrompt(lua_State* L) {
             // Argument 1: The Entity ID (The Box/Receiver) - so we know WHERE to spawn
@@ -200,7 +217,6 @@ namespace Framework {
         }
 
         //Spawn prefab expose
-       // Update your lua_SpawnPrefab function in ScriptingSystem.cpp
         static int lua_SpawnPrefab(lua_State* L)
         {
             const char* prefabIdentifier = luaL_checkstring(L, 1);
@@ -892,6 +908,28 @@ namespace Framework {
             }
             return 0;
         }
+        static int lua_SetScale(lua_State* L)
+        {
+            // 1. Get Entity ID
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+
+            // 2. Get X, Y, Z scales
+            // Lua arguments start from index 2
+            float x = static_cast<float>(luaL_checknumber(L, 2));
+            float y = static_cast<float>(luaL_checknumber(L, 3));
+            float z = static_cast<float>(luaL_checknumber(L, 4));
+
+            // 3. Validate Entity & Component
+            if (!ecsInterface.IsEntityValid(e) || !ecsInterface.HasComponent<TransformComponent>(e))
+            {
+                return luaL_error(L, "SetScale: invalid entity %d or missing TransformComponent", (int)e);
+            }
+
+            // 4. Apply Scale
+            auto& tr = ecsInterface.GetComponent<TransformComponent>(e);
+            tr.scale = glm::vec3(x, y, z);
+            return 0;
+        }
     } // anonymous namespace
 
     // ---------------------------- class methods --------------------------------
@@ -921,6 +959,7 @@ namespace Framework {
         // 5) Register C functions (global names in Lua)
         lua_register(L, "IsKeyDown", l_IsKeyDown);
         lua_register(L, "CameraMove", l_CameraMove);
+        lua_register(L, "GetMousePosition", lua_GetMousePosition);
         lua_register(L, "GetPosition", lua_GetPosition);
         lua_register(L, "SetPosition", lua_SetPosition);
         lua_register(L, "SpawnPrompt", l_spawnPrompt);
@@ -951,6 +990,7 @@ namespace Framework {
         lua_register(L, "PlaySound", l_PlaySound);
         lua_register(L, "PlayEntitySound", l_PlayEntitySound);
         lua_register(L, "SpawnPrefab", lua_SpawnPrefab);
+        lua_register(L, "SetScale", lua_SetScale);
 
         //cauldron
         lua_register(L, "SetCameraLock", [](lua_State* L) -> int {

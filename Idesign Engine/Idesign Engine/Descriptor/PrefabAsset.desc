@@ -1,6 +1,12 @@
 {
-    "count": 2,
+    "count": 5,
     "entries": [
+        {
+            "guid": "6c60686a-c68c-4284-bce0-019cfcbf77fa",
+            "name": "ProgressBarFrame_Prefab",
+            "path": "Assets\\Prefabs\\ProgressBarFrame_Prefab.prefab",
+            "isScenePrefab": false
+        },
         {
             "guid": "898b36fc-aae3-43e4-9e2e-8edcb193e3c1",
             "name": "Frog_Prefab",
@@ -8,9 +14,21 @@
             "isScenePrefab": false
         },
         {
+            "guid": "5dfc16be-aa4a-420a-9105-f7c9652f3620",
+            "name": "ProgressBarFill_Prefab",
+            "path": "Assets\\Prefabs\\ProgressBarFill_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
             "guid": "b9703dc0-4246-4ba0-be36-1507cc721cd1",
             "name": "Customer_Prefab",
             "path": "Assets\\Prefabs\\Customer_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "e5d9bff9-1f28-46c5-aca4-68fd5519dcec",
+            "name": "ProgressBarFrame_Prefab",
+            "path": "Assets\\Prefabs\\ProgressBarFrame_Prefab.prefab",
             "isScenePrefab": false
         }
     ]

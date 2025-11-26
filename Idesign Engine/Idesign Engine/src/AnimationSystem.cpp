@@ -31,7 +31,7 @@ namespace Framework
         Signature signature;
         signature.set(ecsInterface.GetComponentType<AnimationProperties>());
         ecsInterface.SetSystemSignature<AnimationSystem>(signature);
-    }
+    }   
 
     std::string AnimationSystem::GetName()
     {
@@ -40,73 +40,50 @@ namespace Framework
 
     void AnimationSystem::Update(float deltaTime)
     {
-        GLFWwindow* window = glfwGetCurrentContext();
-        auto* graphics = Graphics::GetInstance();
-        // --- 1. CALCULATE REAL TIME (For Normal NPCs) ---
+        // --- 1. TIME CALCULATION ---
         static double lastFrameTime = glfwGetTime();
         double currentFrameTime = glfwGetTime();
         float realDt = static_cast<float>(currentFrameTime - lastFrameTime);
         lastFrameTime = currentFrameTime;
         if (realDt > 0.1f) realDt = 0.016f;
 
-        // --- 2. CALCULATE STIRRING LOGIC (For Cauldron) ---
-        // Only valid if we are in Interaction Mode (Camera Locked)
-        bool isInteractionMode = (graphics && !graphics->IsCameraRotationEnabled()); // Requires getter in Graphics.h
-
-        // Mouse Math
-        double currX, currY;
-        glfwGetCursorPos(window, &currX, &currY);
-        int winW, winH;
-        glfwGetWindowSize(window, &winW, &winH);
-
-        double centerX = winW / 2.0;
-        double centerY = winH / 2.0;
-        double vecX = currX - centerX;
-        double vecY = currY - centerY;
-        double currentAngle = std::atan2(vecY, vecX);
-
-        static double lastAngle = currentAngle;
-        double angleDelta = currentAngle - lastAngle;
-        const double PI = 3.14159265358979323846;
-        if (angleDelta > PI)  angleDelta -= 2.0 * PI;
-        if (angleDelta < -PI) angleDelta += 2.0 * PI;
-        lastAngle = currentAngle;
-
-        bool outsideDeadzone = (vecX * vecX + vecY * vecY) > (50.0 * 50.0);
-
-        // Stirring happens if: Camera Locked AND Mouse Rotating AND Outside Deadzone
-        bool isStirring = isInteractionMode && (std::abs(angleDelta) > 0.02) && outsideDeadzone;
-
-        // The time step to use for the Cauldron
-        float stirDt = isStirring ? realDt : 0.0f;
+        // --- 2. UPDATE ENTITIES ---
         for (auto const& entity : mEntities)
         {
             if (ecsInterface.HasComponent<AnimationProperties>(entity))
             {
                 auto& animator = ecsInterface.GetComponent<AnimationProperties>(entity);
+
+                // Start default if needed
                 if (!animator.currentAnimation && animator.bPlayOnStart)
-                {
                     animator.StartDefaultAnimation();
-                }
 
                 if (animator.currentAnimation)
                 {
-                    // [FIX] Determine DT based on the mode set by Lua
                     float dtForEntity = 0.0f;
-                   
+
+                    // SIMPLIFIED LOGIC:
+                    // Mode 0: Normal Playback
+                    // Mode 1: Stirring (Controlled by Lua)
+                    // Mode 2: Manual/Paused
                     switch (animator.updateMode)
                     {
-                    case 0: // Normal (Always Play)
+                    case 0:
                         dtForEntity = realDt;
                         break;
-                    case 1: // Stirring (Only play if mouse is rotating)
-                        dtForEntity = isStirring ? realDt : 0.0f;
+                    case 1:
+                        // OPTION A: Always play while in "Stir Mode"
+                        dtForEntity = realDt;
+
+                        // OPTION B: If you want Lua to control the speed (e.g. stop when mouse stops),
+                        // you would set animator.animationSpeed to 0 in Lua and keep this as realDt.
                         break;
-                    case 2: // Manual (Paused)
+                    case 2:
                         dtForEntity = 0.0f;
                         break;
                     }
 
+                    // Apply the time
                     CalculateBoneTransforms(animator, dtForEntity);
                 }
             }

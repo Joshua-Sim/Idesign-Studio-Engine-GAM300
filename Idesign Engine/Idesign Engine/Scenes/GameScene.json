@@ -1890,14 +1890,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -39.50434494018555,
-                        8.039443969726563,
-                        9.422661781311035
+                        -39.504310607910156,
+                        8.040079116821289,
+                        9.422322273254395
                     ],
                     "rotation": [
-                        0.29789578914642334,
-                        -2.8125903606414795,
-                        0.00042227370431646705
+                        0.2932673394680023,
+                        -2.8129310607910156,
+                        0.0010539211798459291
                     ],
                     "scale": [
                         0.9999989867210388,
@@ -1937,7 +1937,7 @@
                 "PhysicsProperties": {
                     "category": 2,
                     "isImmovable": false,
-                    "gravityFactor": 1.0,
+                    "gravityFactor": 0.0,
                     "mass": 1.0,
                     "friction": 0.5,
                     "restitution": 0.0,
@@ -2269,7 +2269,8 @@
                                 -1.0
                             ],
                             "canPassThrough": false,
-                            "isInteractable": false
+                            "isInteractable": true,
+                            "interactMessage": "STIR"
                         }
                     ]
                 },
@@ -2291,12 +2292,38 @@
                         0.0
                     ],
                     "startAwake": true
+                },
+                "EventReceiverComponent": {
+                    "receivers": [
+                        {
+                            "messageToListenFor": "STIR",
+                            "luaFunctionToCall": "OnInteract"
+                        }
+                    ]
                 }
             }
         },
         {
             "name": "Customer",
             "guid": "e69f01da-c02b-4fa4-ac30-a2355035885d",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
+                }
+            }
+        },
+        {
+            "name": "Customer",
+            "guid": "a194efe5-96d6-4993-83d3-e65bb3b556e7",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
+                }
+            }
+        },
+        {
+            "name": "Customer",
+            "guid": "000b3a31-734b-45c1-935f-283b9761acb4",
             "components": {
                 "PrefabComponent": {
                     "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
