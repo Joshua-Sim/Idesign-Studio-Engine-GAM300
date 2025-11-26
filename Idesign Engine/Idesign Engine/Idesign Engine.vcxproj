@@ -212,6 +212,7 @@
     <ClInclude Include="src\NavMeshProperties.h" />
     <ClInclude Include="src\NavMeshSystem.h" />
     <ClInclude Include="src\pch.h" />
+    <ClInclude Include="src\PhaseManager.h" />
     <ClInclude Include="src\PhysicsProperties.h" />
     <ClInclude Include="src\PhysicsSystem.h" />
     <ClInclude Include="src\PrefabComponent.h" />
@@ -388,6 +389,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\PhaseManager.cpp" />
     <ClCompile Include="src\PhysicsSystem.cpp" />
     <ClCompile Include="src\PropertyWidget.cpp" />
     <ClCompile Include="src\Recast\DetourAlloc.cpp" />
