@@ -7,9 +7,8 @@ local CustomerSystem = {}
 CustomerSystem.customerPrefabGUID = "Customer_Prefab"
 CustomerSystem.spawnPointName = "SpawnPoint"
 CustomerSystem.waitPointName = "CustomerWaitingPoint"
-CustomerSystem.frogDoorbellName = "Frog"
 CustomerSystem.spawn_delay = 3.0
-
+CustomerSystem.doorbellEvent = "event:/FrogCroak"
 -- Internal state
 local activeCustomer = nil
 local hasSpawned = false
@@ -64,8 +63,6 @@ function CustomerSystem:spawn_customer()
         print("[CustomerSystem] ERROR: Spawn point not found.")
         return
     end
-    
-    self:play_doorbell()
 
     local customer = SpawnPrefab(self.customerPrefabGUID, spawnPoint)
     
@@ -75,6 +72,10 @@ function CustomerSystem:spawn_customer()
     end
     
     print("[CustomerSystem] Spawned customer entity: " .. customer)
+
+    -- Play Frog sound here 
+    Sound.Play(self.doorbellEvent)
+    print("[CustomerSystem] Play doorbell sound: " .. self.doorbellEvent)
     
     activeCustomer = customer
     hasSpawned = true
@@ -83,18 +84,5 @@ function CustomerSystem:spawn_customer()
     PathfindTo("Customer", self.waitPointName)
     print("[CustomerSystem] Customer pathfinding to wait point.")
 end
-
-function CustomerSystem:play_doorbell()
-    local frogEntity = FindEntityByName(self.frogDoorbellName)
-
-    if frogEntity == nil then 
-        print("[CustomerSystem] WARNING: Frog doorbell entity not found")
-        print("[CustomerSystem] Looking for entity named: " .. self.frogDoorbellName)
-        return
-    end
-
-    PlayEntitySound(frogEntity)
-    print("[CustomerSystem] Frog croaked, customer entering shop")
-end 
 
 return CustomerSystem
