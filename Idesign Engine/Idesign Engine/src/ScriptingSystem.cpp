@@ -18,7 +18,7 @@
 #include <PhysicsSystem.h>
 #include "ButtonComponent.h"
 #include "ButtonSystem.h"
-
+#include "SceneManager.h" 
 
 extern Framework::Coordinator ecsInterface;
 
@@ -619,21 +619,18 @@ namespace Framework {
         {
             int argc = lua_gettop(L);
             if (argc < 1 || !lua_isstring(L, 1))
-                return luaL_error(L, "LoadScene(path) expects a string");
+                return luaL_error(L, "LoadScene(path[, additive]) expects at least a string");
 
             const char* path = lua_tostring(L, 1);
+            bool additive = false;
 
-            try
-            {
-                // This will resolve relative to ScriptingSystem::GetProjectRoot()
-                Framework::loadScene(path);
-            }
-            catch (const std::exception& e)
-            {
-                std::cerr << "[Lua] LoadScene failed: " << e.what() << "\n";
-            }
+            if (argc >= 2)
+                additive = lua_toboolean(L, 2) != 0;
 
-            return 0; // no return values to Lua
+            // Use the global sceneManager instance
+            sceneManager.LoadScene(path, additive);
+
+            return 0; // no return values
         }
         
         // --------- Animation --------------
