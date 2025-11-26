@@ -7,17 +7,24 @@
 #include <BoxColliderComponent.h>
 #include "Inputhandler.h"
 #include <RecipeBookManager.h>
+#include "PhaseManager.h" // Include the header
+
 
 extern Framework::Coordinator ecsInterface;
 Framework::RecipeBookManager* recipeBookManager = nullptr;
 
 namespace Framework {
     int GameSystem::score = 0;
-
+    PhaseManager* phaseManager = nullptr;
     void GameSystem::Initialize() {
         if (recipeBookManager == nullptr) {
             recipeBookManager = new RecipeBookManager(&ecsInterface);
         }
+        if (phaseManager == nullptr) {
+            phaseManager = new PhaseManager(&ecsInterface);
+            phaseManager->Initialize();
+        }
+
     }
 
     void GameSystem::Update(float timeslice) {
@@ -35,6 +42,8 @@ namespace Framework {
             }
             wasBookOpen = GameSystem::bookOpen;
         }
+        
+
     }
 
     void GameSystem::SetScore(int value)

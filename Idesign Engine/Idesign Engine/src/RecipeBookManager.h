@@ -76,13 +76,9 @@ namespace Framework {
 
                     if (i < recipe.ingredients.size() - 1) {
                         float plusX = currentX + (spacingX * 1.1f);
-                        SpawnUIText(plusX, currentY, "+");
                     }
                     currentX += spacingX;
                 }
-
-                float equalX = currentX - (spacingX * 0.5f);
-                SpawnUIText(equalX, currentY, "=");
 
                 SpawnUISprite(currentX + 40.0f, currentY, recipe.resultingPotion.name, slotSize);
 

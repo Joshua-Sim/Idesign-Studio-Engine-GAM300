@@ -67,10 +67,12 @@
 #include "GameSystem.h"
 #include "ItemComponent.h"
 #include "Inventory.h"
+#include "PhaseManager.h"
 
 
 extern Framework::FontSystem fontSystem;
 extern Framework::Coordinator ecsInterface;
+
 
 const int   TerrainSize = 128;
 const float TerrainScale = 1.0f;
@@ -81,6 +83,7 @@ static std::unordered_map<std::string, GLuint> s_iconCache;
 
 
 namespace Framework {
+    extern Framework::PhaseManager* phaseManager;
     Graphics* Graphics::s_instance = nullptr;
     bool Graphics::mouseCaptured = true;
     static bool firstMouse = true;
@@ -1162,6 +1165,9 @@ namespace Framework {
             if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
                 cam.processKeyboard(Camera::Movement::Right, dt * baseSpeed, false, terrain);
 
+
+
+
             static bool nKeyPressed = false;
 
             if (glfwGetKey(window, GLFW_KEY_N) == GLFW_PRESS)
@@ -1194,11 +1200,7 @@ namespace Framework {
                 nKeyPressed = false;
             }
 
-            // Recipe Book
-            bool isRPressed = (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS);
-            static bool wasRPressed = false;
-            if (isRPressed && !wasRPressed) GameSystem::bookOpen = !GameSystem::bookOpen;
-            wasRPressed = isRPressed;
+
                 
                 
             // Mouse Rotation Logic
@@ -1300,6 +1302,40 @@ namespace Framework {
                 if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) targetVelocity -= camForward;
                 if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) targetVelocity -= camRight;
                 if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) targetVelocity += camRight;
+
+                
+                {   // Recipe Book
+                    bool isRPressed = (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS);
+                    static bool wasRPressed = false;
+                    if (isRPressed && !wasRPressed) GameSystem::bookOpen = !GameSystem::bookOpen;
+                    wasRPressed = isRPressed;
+                }
+
+                {    //Phase Change
+                    // Static variable to ensure one press = one toggle
+                    static bool isBackslashPressed = false;
+
+                    if (glfwGetKey(window, GLFW_KEY_BACKSLASH) == GLFW_PRESS)
+                    {
+                        if (!isBackslashPressed)
+                        {
+                            // SAFETY CHECK: Ensure the pointer is valid before using '->'
+                            if (phaseManager != nullptr)
+                            {
+                                phaseManager->TogglePhase();
+                                std::cout << "[Input] Backslash pressed: Toggled Phase." << std::endl;
+                            }
+
+                            isBackslashPressed = true;
+                        }
+                    }
+                    else
+                    {
+                        // Reset when key is released
+                        isBackslashPressed = false;
+                    }
+
+                }
 
                 if (glm::length(targetVelocity) > 0.1f) {
                     targetVelocity = glm::normalize(targetVelocity) * moveSpeed;
@@ -2536,9 +2572,14 @@ namespace Framework {
             fontSystem.RenderText2D("Editor View", 10.f, 10.f, 1.f, { 1,1,0.5f }, (float)width, (float)height);
         }
 
-        glm::mat4 uiProj = glm::ortho(0.0f, float(width), 0.0f, float(height));
+        constexpr float UI_DESIGN_WIDTH = 1920.0f;
+        constexpr float UI_DESIGN_HEIGHT = 1080.0f;
+
+        glm::mat4 uiProj = glm::ortho(0.0f, UI_DESIGN_WIDTH, 0.0f, UI_DESIGN_HEIGHT);
+
         uiShader.use();
         uiShader.setMat4("uProjection", uiProj);
+
 
         std::sort(uiEntities.begin(), uiEntities.end(),
             [](Framework::Entity a, Framework::Entity b)
@@ -2569,10 +2610,23 @@ namespace Framework {
             glBindTexture(GL_TEXTURE_2D, tex.textureID);
             uiShader.setInt("uTexture", 0);
 
+            // [FIX 1] RESET COLOR STATE 
+            // The inventory system leaves the shader color dark gray. 
+            // We must reset it to White (1,1,1) so your normal UI isn't tinted.
+            uiShader.setVec3("uColor", glm::vec3(1.0f, 1.0f, 1.0f));
+            uiShader.setFloat("uAlpha", 1.0f);
+
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, tr.position);
-            //model = glm::scale(model, glm::vec3(tr.scale.x * 0.5f, tr.scale.y * 0.5f, 1.0f));
-            model = glm::scale(model, glm::vec3(tr.scale.x, tr.scale.y, 1.0f));
+
+            // [FIX 2] CORRECT SCALE CALCULATION
+            // Your renderQuad() is 2x2 (-1 to 1). 
+            // You were previously using the raw scale, making everything 2x bigger.
+            // Using * 0.5f makes it pixel-perfect relative to screen coordinates.
+            model = glm::scale(model, glm::vec3(tr.scale.x * 0.5f, tr.scale.y * 0.5f, 1.0f));
+
+            // Delete the old line below:
+            // model = glm::scale(model, glm::vec3(tr.scale.x, tr.scale.y, 1.0f));
 
             uiShader.setMat4("uModel", model);
             renderQuad();
