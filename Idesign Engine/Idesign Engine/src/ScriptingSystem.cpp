@@ -467,36 +467,56 @@ namespace Framework {
             return 0;
         }
 
-        // Static helper function for playing sound
-        static int l_PlaySound(lua_State* L) {
-            // 1. Get the event path string from Lua
+        // ============ AUDIO LUA BINDINGS ============
+        static int lua_AudioPlay(lua_State* L) {
             const char* eventPath = luaL_checkstring(L, 1);
-
-            // 2. Check if the global AudioSystem exists
             if (g_AudioSystem) {
-                // 3. Play the sound!
                 g_AudioSystem->PlayAudio(eventPath);
             }
-            else {
-                std::cerr << "[Lua Error] AudioSystem not initialized!\n";
-            }
-
-            return 0; // No return value
-        }
-
-        // Static helper function for playing entity audio
-        static int l_PlayEntitySound(lua_State* L) {
-            Entity entity = static_cast<Entity>(luaL_checkinteger(L, 1));
-
-            if (g_AudioSystem) {
-                g_AudioSystem->PlayEntitySound(entity);
-            }
-            else {
-                std::cerr << "[Lua Error] AudioSystem not initialized!\n";
-            }
-
             return 0;
         }
+
+        static int lua_AudioStop(lua_State* L) {
+            if (g_AudioSystem) {
+                g_AudioSystem->Reset();
+            }
+            return 0;
+        }
+
+        static int lua_AudioPause(lua_State* L) {
+            if (g_AudioSystem) {
+                g_AudioSystem->PauseAllAudio();
+            }
+            return 0;
+        }
+
+        static int lua_AudioResume(lua_State* L) {
+            if (g_AudioSystem) {
+                g_AudioSystem->ResumeAllAudio();
+            }
+            return 0;
+        }
+
+        static int lua_AudioSetVolume(lua_State* L) {
+            float volume = (float)luaL_checknumber(L, 1);
+            if (g_AudioSystem) {
+                g_AudioSystem->SetMasterVolume(volume);
+            }
+            return 0;
+        }
+
+        static int lua_AudioPlay3D(lua_State* L) {
+            const char* eventPath = luaL_checkstring(L, 1);
+            float x = (float)luaL_checknumber(L, 2);
+            float y = (float)luaL_checknumber(L, 3);
+            float z = (float)luaL_checknumber(L, 4);
+
+            if (g_AudioSystem) {
+                g_AudioSystem->PlaySound3D(eventPath, Framework::Vector3(x, y, z));
+            }
+            return 0;
+        }
+        // ============ END AUDIO LUA BINDINGS ============
 
         static int Lua_GetItemName(lua_State* L) {
             int entityID = (int)lua_tointeger(L, 1);
@@ -948,8 +968,6 @@ namespace Framework {
         lua_register(L, "EntityHasTag", lua_EntityHasTag);
         lua_register(L, "AddTagToEntity", lua_AddTagToEntity);
         lua_register(L, "PlayEntityAnimation", l_PlayEntityAnimation);
-        lua_register(L, "PlaySound", l_PlaySound);
-        lua_register(L, "PlayEntitySound", l_PlayEntitySound);
         lua_register(L, "SpawnPrefab", lua_SpawnPrefab);
 
         //cauldron
@@ -1018,6 +1036,24 @@ namespace Framework {
         lua_pushcfunction(L, l_Cook_Scene);        lua_setfield(L, -2, "Scenes");
         lua_pushcfunction(L, l_Cook_Material);     lua_setfield(L, -2, "Materials");
         lua_setglobal(L, "Cook");
+
+        lua_register(L, "PlayEntitySound", [](lua_State* L) -> int {
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+            if (g_AudioSystem) {
+                g_AudioSystem->PlayEntitySound(e);
+            }
+            return 0;
+            });
+
+        // Create Sound table with playback functions
+        lua_newtable(L);
+        lua_pushcfunction(L, lua_AudioPlay);      lua_setfield(L, -2, "Play");
+        lua_pushcfunction(L, lua_AudioStop);      lua_setfield(L, -2, "Stop");
+        lua_pushcfunction(L, lua_AudioPause);     lua_setfield(L, -2, "Pause");
+        lua_pushcfunction(L, lua_AudioResume);    lua_setfield(L, -2, "Resume");
+        lua_pushcfunction(L, lua_AudioSetVolume); lua_setfield(L, -2, "SetVolume");
+        lua_pushcfunction(L, lua_AudioPlay3D);    lua_setfield(L, -2, "Play3D");
+        lua_setglobal(L, "Sound");
 
         std::cout << "[ScriptingSystem] Initialized (Lua VM ready)\n";
     }

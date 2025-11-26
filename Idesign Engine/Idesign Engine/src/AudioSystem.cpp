@@ -1094,7 +1094,7 @@ namespace Framework {
             auto& audioComp = ecsInterface.GetComponent<AudioComponent>(entity);
             if (audioComp.playOnStart && !audioComp.eventName.empty()) {
                 std::cout << "[AudioSystem] Auto-playing: " << audioComp.eventName << " for entity " << entity << std::endl;
-                PlayEntitySound(entity);
+                //PlayEntitySound(entity);
             }
         }
     }
