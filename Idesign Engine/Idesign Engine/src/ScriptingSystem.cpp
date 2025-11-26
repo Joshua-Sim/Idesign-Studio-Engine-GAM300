@@ -13,9 +13,9 @@
 #include "ScriptProperties.h"
 #include "AudioSystem.h"
 #include "ItemComponent.h" // <--- Add this
-#include "Graphics.h"
 #include <GameSystem.h>
 #include <PhysicsSystem.h>
+#include "EngineState.h"
 
 extern Framework::Coordinator ecsInterface;
 
@@ -518,6 +518,63 @@ namespace Framework {
         }
         // ============ END AUDIO LUA BINDINGS ============
 
+
+        // ============ GAME STATE LUA BINDINGS ============
+        static int lua_GameStateStart(lua_State* L)
+        {
+            // Set engine state to play mode
+            engineState.SetPlay(true);
+
+            //Send message to start audio and other play-mode systems
+            MessageBus::Get().SendImmediate(EnterPlayModeMessage());
+
+            return 0;
+        }
+
+        static int lua_GameStateResume(lua_State* L)
+        {            
+            // Set engine state to play mode
+            engineState.SetPlay(true);
+
+            //Send message to start audio and other play-mode systems
+            MessageBus::Get().SendImmediate(EnterPlayModeMessage());
+
+            g_AudioSystem->ResumeAllAudio();
+
+            return 0;
+        }
+
+        static int lua_GameStatePaused(lua_State* L)
+        {
+            // Stop the game
+            engineState.SetPlay(false);
+
+            // Send exit message
+            MessageBus::Get().SendImmediate(ExitPlayModeMessage());
+
+            // Pause Current playing Audio
+            g_AudioSystem->PauseAllAudio();
+
+            return 0;
+        }
+
+        static int lua_GameStateExit(lua_State* L)
+        {
+            // Stop the game
+            engineState.SetPlay(false);
+
+            // Send exit message
+            MessageBus::Get().SendImmediate(ExitPlayModeMessage());
+
+            // Clear all audio
+            g_AudioSystem->Reset();
+
+            return 0;
+        }
+
+        // ============ END LUA BINDINGS ============
+
+
         static int Lua_GetItemName(lua_State* L) {
             int entityID = (int)lua_tointeger(L, 1);
 
@@ -939,36 +996,42 @@ namespace Framework {
         lua_setfield(L, LUA_REGISTRYINDEX, kRegistryKey);
 
         // 5) Register C functions (global names in Lua)
-        lua_register(L, "IsKeyDown", l_IsKeyDown);
-        lua_register(L, "CameraMove", l_CameraMove);
-        lua_register(L, "GetPosition", lua_GetPosition);
-        lua_register(L, "SetPosition", lua_SetPosition);
-        lua_register(L, "SpawnPrompt", l_spawnPrompt);
-        lua_register(L, "DestroyEntity", l_DestroyEntity);
-        lua_register(L, "IsMouseButtonDown", l_IsMouseButtonDown); 
-        lua_register(L, "SetRotation", lua_SetRotation);
-        lua_register(L, "SetMesh", lua_SetMesh);
-        lua_register(L, "SetTexture", lua_SetTexture);
+        lua_register(L, "IsKeyDown",            l_IsKeyDown);
+        lua_register(L, "CameraMove",           l_CameraMove);
+        lua_register(L, "GetPosition",          lua_GetPosition);
+        lua_register(L, "SetPosition",          lua_SetPosition);
+        lua_register(L, "SpawnPrompt",          l_spawnPrompt);
+        lua_register(L, "DestroyEntity",        l_DestroyEntity);
+        lua_register(L, "IsMouseButtonDown",    l_IsMouseButtonDown); 
+        lua_register(L, "SetRotation",          lua_SetRotation);
+        lua_register(L, "SetMesh",              lua_SetMesh);
+        lua_register(L, "SetTexture",           lua_SetTexture);
         lua_register(L, "SetAnimationSettings", l_SetAnimationSettings);
 
         // Game utility
-        lua_register(L, "IsItemChoppable", lua_IsItemChoppable);
-        lua_register(L, "GetScore", lua_GetScore);
-        lua_register(L, "AddScore", lua_AddScore);
-        lua_register(L, "SetText", lua_SetText);
-        lua_register(L, "AddToInventory", Lua_AddToInventory);
-        lua_register(L, "DestroyEntity", Lua_DestroyEntity);
-        lua_register(L, "GetItemName", Lua_GetItemName);
-        lua_register(L, "IsItemDestroyOnPick", Lua_IsItemDestroyOnPick);
+        lua_register(L, "IsItemChoppable",      lua_IsItemChoppable);
+        lua_register(L, "GetScore",             lua_GetScore);
+        lua_register(L, "AddScore",             lua_AddScore);
+        lua_register(L, "SetText",              lua_SetText);
+        lua_register(L, "AddToInventory",       Lua_AddToInventory);
+        lua_register(L, "DestroyEntity",        Lua_DestroyEntity);
+        lua_register(L, "GetItemName",          Lua_GetItemName);
+        lua_register(L, "IsItemDestroyOnPick",  Lua_IsItemDestroyOnPick);
 
         // Engine utility
-        lua_register(L, "FindEntityByName", lua_FindEntityByName);
-        lua_register(L, "GetEntitiesByTag", lua_GetEntitiesByTag);
-        lua_register(L, "RemoveTagFromEntity", lua_RemoveTagFromEntity);
-        lua_register(L, "EntityHasTag", lua_EntityHasTag);
-        lua_register(L, "AddTagToEntity", lua_AddTagToEntity);
-        lua_register(L, "PlayEntityAnimation", l_PlayEntityAnimation);
-        lua_register(L, "SpawnPrefab", lua_SpawnPrefab);
+        lua_register(L, "FindEntityByName",     lua_FindEntityByName);
+        lua_register(L, "GetEntitiesByTag",     lua_GetEntitiesByTag);
+        lua_register(L, "RemoveTagFromEntity",  lua_RemoveTagFromEntity);
+        lua_register(L, "EntityHasTag",         lua_EntityHasTag);
+        lua_register(L, "AddTagToEntity",       lua_AddTagToEntity);
+        lua_register(L, "PlayEntityAnimation",  l_PlayEntityAnimation);
+        lua_register(L, "SpawnPrefab",          lua_SpawnPrefab);
+
+        // Engine States
+        lua_register(L, "GameStateStart",       lua_GameStateStart);
+        lua_register(L, "GameStateResume",      lua_GameStateResume);
+        lua_register(L, "GameStatePaused",      lua_GameStatePaused);
+        lua_register(L, "GameStateExit",        lua_GameStateExit);
 
         //cauldron
         lua_register(L, "SetCameraLock", [](lua_State* L) -> int {
