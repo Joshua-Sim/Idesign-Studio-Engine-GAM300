@@ -16,6 +16,9 @@
 #include "Graphics.h"
 #include <GameSystem.h>
 #include <PhysicsSystem.h>
+#include "ButtonComponent.h"
+#include "ButtonSystem.h"
+
 
 extern Framework::Coordinator ecsInterface;
 
@@ -573,8 +576,67 @@ namespace Framework {
             return 1;
         }
 
+        // --------- Scene Loading --------------
+        static int Lua_RegisterButtonCallback(lua_State* L)
+        {
+            int entity = (int)luaL_checkinteger(L, 1);
 
+            if (!lua_isfunction(L, 2))
+                return luaL_error(L, "Second argument must be a function");
 
+            // Create reference to function
+            lua_pushvalue(L, 2);
+            int funcRef = luaL_ref(L, LUA_REGISTRYINDEX);
+
+            if (!ecsInterface.HasComponent<ButtonComponent>(entity))
+                return luaL_error(L, "Entity %d has no ButtonComponent", entity);
+
+            auto& btn = ecsInterface.GetComponent<ButtonComponent>(entity);
+
+            // Capture lua_State* and entity by value, because onClick is void()
+            lua_State* L_state = L;
+
+            btn.onClick = [L_state, funcRef, entity]()
+                {
+                    // Push the stored Lua function
+                    lua_rawgeti(L_state, LUA_REGISTRYINDEX, funcRef);
+
+                    // Pass the entity id as a Lua argument
+                    lua_pushinteger(L_state, (lua_Integer)entity);
+
+                    if (lua_pcall(L_state, 1, 0, 0) != LUA_OK)
+                    {
+                        std::cout << "[Lua] Button callback error: "
+                            << lua_tostring(L_state, -1) << "\n";
+                        lua_pop(L_state, 1); // pop error message
+                    }
+                };
+
+            return 0;
+        }
+
+        static int Lua_LoadScene(lua_State* L)
+        {
+            int argc = lua_gettop(L);
+            if (argc < 1 || !lua_isstring(L, 1))
+                return luaL_error(L, "LoadScene(path) expects a string");
+
+            const char* path = lua_tostring(L, 1);
+
+            try
+            {
+                // This will resolve relative to ScriptingSystem::GetProjectRoot()
+                Framework::loadScene(path);
+            }
+            catch (const std::exception& e)
+            {
+                std::cerr << "[Lua] LoadScene failed: " << e.what() << "\n";
+            }
+
+            return 0; // no return values to Lua
+        }
+        
+        // --------- Animation --------------
         // Helper to play an animation on an entity
         static int l_PlayEntityAnimation(lua_State* L) {
             // 1. Get Arguments: Entity ID and Animation Name
@@ -950,6 +1012,7 @@ namespace Framework {
         lua_register(L, "SetMesh", lua_SetMesh);
         lua_register(L, "SetTexture", lua_SetTexture);
         lua_register(L, "SetAnimationSettings", l_SetAnimationSettings);
+        lua_register(L, "LoadScene", Lua_LoadScene);
 
         // Game utility
         lua_register(L, "IsItemChoppable", lua_IsItemChoppable);
@@ -960,6 +1023,8 @@ namespace Framework {
         lua_register(L, "DestroyEntity", Lua_DestroyEntity);
         lua_register(L, "GetItemName", Lua_GetItemName);
         lua_register(L, "IsItemDestroyOnPick", Lua_IsItemDestroyOnPick);
+        lua_register(L, "RegisterButtonCallback", Lua_RegisterButtonCallback);
+
 
         // Engine utility
         lua_register(L, "FindEntityByName", lua_FindEntityByName);

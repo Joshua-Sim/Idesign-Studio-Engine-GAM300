@@ -111,6 +111,13 @@
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
+        },
+        {
+            "guid": "ec4ab6ff-e63e-4653-9df5-3aff0b2cbad9",
+            "scriptPath": "Assets\\Scripts\\StartGame.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
         }
     ]
 }

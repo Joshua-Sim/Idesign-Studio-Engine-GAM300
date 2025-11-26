@@ -5,6 +5,9 @@
 #include "PropertySystem.h" 
 #include "PropertyMacro.h" 
 #include <glm.hpp>
+#include <functional>
+#include <iostream>
+
 namespace Framework
 {
     struct ButtonComponent
@@ -14,9 +17,14 @@ namespace Framework
         bool isHovered;                      // Is the button hovered?
         std::function<void()> onClick;       // Function to be called when clicked
 
-        void TriggerClick() const 
+        void TriggerClick(Entity e) const
         {
             if (onClick) onClick();
+            else
+            {
+                // Default debug behaviour if nothing is bound
+                std::cout << "[Button] Entity " << e << " has been clicked!\n";
+            }
         }
     };
 
