@@ -304,6 +304,8 @@
     <None Include="Assets\shaders\blur.glsl" />
     <None Include="Assets\shaders\final.glsl" />
     <None Include="Assets\shaders\fragment.glsl" />
+    <None Include="Assets\shaders\instancedleave_frag.glsl" />
+    <None Include="Assets\shaders\instancedleave_vert.glsl" />
     <None Include="Assets\shaders\instanced_frag.glsl" />
     <None Include="Assets\shaders\instanced_vert.glsl" />
     <None Include="Assets\shaders\lightingfrag.glsl" />

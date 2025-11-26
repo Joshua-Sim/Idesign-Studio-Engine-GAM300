@@ -175,6 +175,11 @@ namespace Framework
         //foliage
         Mesh m_foliageMesh;           // The mesh data (e.g., a simple cylinder)
         FoliageRenderer* m_treeRenderer = nullptr; // The instancing renderer
+        FoliageRenderer* m_leafRenderer = nullptr; // The instancing renderer
+
+        Mesh* leafQuad = nullptr;
+        GLuint leafTexture = 0;
+        GLuint instanceVBOLeaves = 0;
 
         Mesh m_grassMesh;
         FoliageRenderer* m_grassRenderer = nullptr;

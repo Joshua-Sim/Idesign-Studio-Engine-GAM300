@@ -1,5 +1,5 @@
 {
-    "count": 62,
+    "count": 61,
     "entries": [
         {
             "guid": "d1624844-bd9b-44f7-9976-d196954e311f",
@@ -365,12 +365,6 @@
             "guid": "401f8be3-5ecf-4a58-b6b4-74cf52e9bf90",
             "name": "top1",
             "path": "Assets\\Textures\\top1.png",
-            "isUI": false
-        },
-        {
-            "guid": "b9451eb6-415f-465b-908d-b291ec117c39",
-            "name": "tree",
-            "path": "Assets\\Textures\\tree.jpg",
             "isUI": false
         }
     ]
