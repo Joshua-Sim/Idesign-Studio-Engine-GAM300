@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Mesh.h"
 #include <array>
 #include <cmath>
@@ -73,7 +73,7 @@ Mesh Mesh::CreateUnitCylinderData(int slices) {
         push(x0, y1, z0, nx0, 0, nz0);
     }
 
-    // Top cap (+Y) — CCW from above: center -> next -> curr
+    // Top cap (+Y) â€” CCW from above: center -> next -> curr
     for (int i = 0; i < slices; ++i) {
         float a0 = (i * 2.f * PI) / slices;
         float a1 = ((i + 1) * 2.f * PI) / slices;
@@ -82,7 +82,7 @@ Mesh Mesh::CreateUnitCylinderData(int slices) {
         push(R * std::cos(a0), y1, R * std::sin(a0), 0, 1, 0);
     }
 
-    // Bottom cap (−Y) — CCW from below: center -> curr -> next
+    // Bottom cap (âˆ’Y) â€” CCW from below: center -> curr -> next
     for (int i = 0; i < slices; ++i) {
         float a0 = (i * 2.f * PI) / slices;
         float a1 = ((i + 1) * 2.f * PI) / slices;
@@ -175,9 +175,9 @@ Mesh Mesh::CreateUnitConeData(int slices)
         float Tx = -s, Ty = 0, Tz = c;
         float Gx = -R * c, Gy = 1, Gz = -R * s;
         // N = T x G, flipped outward
-        float nx = -(Ty * Gz - Tz * Gy);// =� c
-        float ny = -(Tz * Gx - Tx * Gz);// =� R
-        float nz = -(Tx * Gy - Ty * Gx);// =� s
+        float nx = -(Ty * Gz - Tz * Gy);// =  c
+        float ny = -(Tz * Gx - Tx * Gz);// =  R
+        float nz = -(Tx * Gy - Ty * Gx);// =  s
         float len = std::sqrt(nx * nx + ny * ny + nz * nz);
         return std::array<float, 3>{ nx /len, ny / len, nz / len };
     };
@@ -203,7 +203,7 @@ Mesh Mesh::CreateUnitConeData(int slices)
         push(x0, y0, z0, N0[0], N0[1], N0[2]);
     }
 
-    // Base (−Y), CCW from below: center -> curr -> next
+    // Base (âˆ’Y), CCW from below: center -> curr -> next
     for (int i = 0; i < slices; ++i) 
     {
         float a0 = (i * 2.f * PI) / slices;
