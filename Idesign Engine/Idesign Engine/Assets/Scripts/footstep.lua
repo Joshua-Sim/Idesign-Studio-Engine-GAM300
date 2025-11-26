@@ -23,8 +23,7 @@ function M:on_update(dt)
         stepTimer = stepTimer + dt
         if stepTimer >= stepInterval then
             -- Play footstep sound
-            -- Audio.Play("event:/Footstep")  -- Changed back to Audio
-            PlayEntitySound(self.entity)
+            PlayEntitySound(self.entity)  -- Uses the AudioComponent on the entity 
             stepTimer = 0
         end
     else

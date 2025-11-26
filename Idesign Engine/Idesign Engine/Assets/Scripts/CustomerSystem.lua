@@ -7,7 +7,7 @@ local CustomerSystem = {}
 CustomerSystem.customerPrefabGUID = "Customer_Prefab"
 CustomerSystem.spawnPointName = "SpawnPoint"
 CustomerSystem.waitPointName = "CustomerWaitingPoint"
-CustomerSystem.frogDoorbellName = "Frog"
+-- CustomerSystem.frogDoorbellName = "Frog"
 CustomerSystem.spawn_delay = 3.0
 
 -- Internal state
@@ -65,7 +65,7 @@ function CustomerSystem:spawn_customer()
         return
     end
     
-    self:play_doorbell()
+    -- self:play_doorbell()
 
     local customer = SpawnPrefab(self.customerPrefabGUID, spawnPoint)
     
@@ -84,17 +84,17 @@ function CustomerSystem:spawn_customer()
     print("[CustomerSystem] Customer pathfinding to wait point.")
 end
 
-function CustomerSystem:play_doorbell()
-    local frogEntity = FindEntityByName(self.frogDoorbellName)
+-- function CustomerSystem:play_doorbell()
+--    local frogEntity = FindEntityByName(self.frogDoorbellName)
 
-    if frogEntity == nil then 
-        print("[CustomerSystem] WARNING: Frog doorbell entity not found")
-        print("[CustomerSystem] Looking for entity named: " .. self.frogDoorbellName)
-        return
-    end
+--     if frogEntity == nil then 
+--         print("[CustomerSystem] WARNING: Frog doorbell entity not found")
+--         print("[CustomerSystem] Looking for entity named: " .. self.frogDoorbellName)
+--         return
+--     end
 
-    PlayEntitySound(frogEntity)
-    print("[CustomerSystem] Frog croaked, customer entering shop")
-end 
+--     PlayEntitySound(frogEntity)
+--     print("[CustomerSystem] Frog croaked, customer entering shop")
+-- end 
 
 return CustomerSystem

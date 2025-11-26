@@ -932,6 +932,22 @@
                         0.0
                     ],
                     "startAwake": true
+                },
+                "AudioComponent": {
+                    "guid": "d6f23fa6-ff6f-4892-91b3-ca11349bb492",
+                    "eventName": "event:/FrogCroak",
+                    "is3D": true,
+                    "minDistance": 1.0,
+                    "maxDistance": 20.0,
+                    "volume": 1.0,
+                    "loop": false,
+                    "playOnStart": true,
+                    "isPlaying": false,
+                    "lastPosition": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
                 }
             }
         },
@@ -1890,14 +1906,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -39.50434494018555,
-                        8.039443969726563,
-                        9.422661781311035
+                        -29.331390380859375,
+                        8.039409637451172,
+                        3.934108018875122
                     ],
                     "rotation": [
-                        0.29789578914642334,
-                        -2.8125903606414795,
-                        0.00042227370431646705
+                        0.2845909297466278,
+                        -2.8819901943206787,
+                        -0.01746624894440174
                     ],
                     "scale": [
                         0.9999989867210388,
@@ -1914,7 +1930,17 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "80528a80-1756-4401-8cf3-f88ed05dcd03",
+                            "scriptPath": "Assets\\Scripts\\footstep.lua",
+                            "hotReload": true
+                        }
+                    ]
                 },
                 "BoxColliderComponent": {
                     "colliders": [
@@ -1959,6 +1985,46 @@
                             "triggerName": "OnCollision",
                             "messageName": "deez"
                         }
+                    ]
+                },
+                "ListenerComponent": {
+                    "position": [
+                        -29.331390380859375,
+                        8.039409637451172,
+                        3.934108018875122
+                    ],
+                    "forward": [
+                        0.0,
+                        0.0,
+                        -1.0
+                    ],
+                    "up": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ],
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "active": true,
+                    "listenerIndex": 0
+                },
+                "AudioComponent": {
+                    "guid": "d6f23fa6-ff6f-4892-91b3-ca11349bb492",
+                    "eventName": "event:/Footstep",
+                    "is3D": true,
+                    "minDistance": 1.0,
+                    "maxDistance": 100.0,
+                    "volume": 1.0,
+                    "loop": false,
+                    "playOnStart": true,
+                    "isPlaying": false,
+                    "lastPosition": [
+                        0.0,
+                        0.0,
+                        0.0
                     ]
                 }
             }
@@ -2291,12 +2357,37 @@
                         0.0
                     ],
                     "startAwake": true
+                },
+                "AudioComponent": {
+                    "guid": "d6f23fa6-ff6f-4892-91b3-ca11349bb492",
+                    "eventName": "event:/Boiling",
+                    "is3D": true,
+                    "minDistance": 1.0,
+                    "maxDistance": 15.0,
+                    "volume": 1.0,
+                    "loop": false,
+                    "playOnStart": true,
+                    "isPlaying": false,
+                    "lastPosition": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
                 }
             }
         },
         {
             "name": "Customer",
             "guid": "e69f01da-c02b-4fa4-ac30-a2355035885d",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
+                }
+            }
+        },
+        {
+            "name": "Customer",
+            "guid": "62a3fcba-7e97-4284-9f72-e351778e6669",
             "components": {
                 "PrefabComponent": {
                     "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
