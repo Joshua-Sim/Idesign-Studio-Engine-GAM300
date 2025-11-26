@@ -993,11 +993,25 @@ namespace Framework {
         }
 
         // Start playback
-        audioComp.eventInstance->start();
+        // Start playback
+        result = audioComp.eventInstance->start();
         audioComp.isPlaying = true;
         activeInstances[entity] = audioComp.eventInstance;
 
         std::cout << "[AudioSystem] Playing '" << audioComp.eventName << "' for entity " << entity << std::endl;
+
+        // DEBUG: Check playback state
+        FMOD_STUDIO_PLAYBACK_STATE state;
+        audioComp.eventInstance->getPlaybackState(&state);
+        std::cout << "[AudioSystem] Playback state: " << state
+            << " (0=Playing, 1=Sustaining, 2=Stopped, 3=StartingDelayed, 4=Stopping)" << std::endl;
+
+        // DEBUG: Check if 3D
+        bool is3D = false;
+        eventDesc->is3D(&is3D);
+        std::cout << "[AudioSystem] Event is 3D: " << (is3D ? "YES" : "NO") << std::endl;
+
+        
     }
 
     void AudioSystem::StopEntitySound(Entity entity) {
