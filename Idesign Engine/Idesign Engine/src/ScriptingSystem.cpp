@@ -968,8 +968,6 @@ namespace Framework {
         lua_register(L, "EntityHasTag", lua_EntityHasTag);
         lua_register(L, "AddTagToEntity", lua_AddTagToEntity);
         lua_register(L, "PlayEntityAnimation", l_PlayEntityAnimation);
-        lua_register(L, "PlaySound", l_PlaySound);
-        lua_register(L, "PlayEntitySound", l_PlayEntitySound);
         lua_register(L, "SpawnPrefab", lua_SpawnPrefab);
 
         //cauldron
