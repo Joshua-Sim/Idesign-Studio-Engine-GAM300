@@ -580,40 +580,55 @@ namespace Framework
                     for (int i = 0; i < colliderComp.colliders.size(); ++i)
                     {
                         auto& entry = colliderComp.colliders[i];
-
                         ImGui::PushID(i);
                         ImGui::Text("Collider #%d", i + 1);
 
                         ImGui::DragFloat3("Size", &entry.size.x, 0.1f);
                         ImGui::DragFloat3("Center", &entry.center.x, 0.1f);
-                        ImGui::Checkbox("Is Trigger", &entry.canPassThrough);
 
-                        // --- NEW INTERACTION UI ---
-                        ImGui::Spacing();
-                        ImGui::Checkbox("Is Interactable", &entry.isInteractable);
+                        // --- 1. TRIGGER LOGIC (Walk In) ---
+                        ImGui::Separator();
+                        ImGui::Checkbox("Is Trigger (Walk-in)", &entry.canPassThrough);
 
-                        if (entry.isInteractable)
+                        if (entry.canPassThrough)
                         {
-                            ImGui::Indent(); // Indent to show it belongs to the checkbox
-
-                            char msgBuffer[256];
-                            strncpy_s(msgBuffer, sizeof(msgBuffer), entry.interactMessage.c_str(), _TRUNCATE);
-                            if (ImGui::InputText("Event Message", msgBuffer, sizeof(msgBuffer)))
-                            {
-                                entry.interactMessage = msgBuffer;
+                            ImGui::Indent();
+                            char trigBuff[256];
+                            strncpy_s(trigBuff, sizeof(trigBuff), entry.triggerMessage.c_str(), _TRUNCATE);
+                            if (ImGui::InputText("Trigger Event", trigBuff, sizeof(trigBuff))) {
+                                entry.triggerMessage = trigBuff;
                             }
-                            ImGui::TextDisabled("(Fires when Player presses E)");
-
+                            ImGui::TextDisabled("(Fires on Enter/Exit collision)");
                             ImGui::Unindent();
                         }
 
+                        // --- 2. INTERACT LOGIC (Press E) ---
+                        ImGui::Separator();
+                        ImGui::Checkbox("Is Interactable (Press E)", &entry.isInteractable);
+
+                        if (entry.isInteractable)
+                        {
+                            ImGui::Indent();
+                            char intBuff[256];
+                            strncpy_s(intBuff, sizeof(intBuff), entry.interactMessage.c_str(), _TRUNCATE);
+                            if (ImGui::InputText("Interact Event", intBuff, sizeof(intBuff))) {
+                                entry.interactMessage = intBuff;
+                            }
+                            ImGui::TextDisabled("(Fires via Raycast + E)");
+                            ImGui::Unindent();
+                        }
+
+                        // --- Remove ---
+                        ImGui::Separator();
                         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.2f, 0.2f, 1.0f));
                         if (ImGui::Button("Remove Collider")) indexToRemove = i;
                         ImGui::PopStyleColor();
 
-                        ImGui::Separator();
                         ImGui::PopID();
+                        ImGui::Separator();
                     }
+                    // ... remove/add logic ...
+                
 
                     if (indexToRemove != -1)
                     {

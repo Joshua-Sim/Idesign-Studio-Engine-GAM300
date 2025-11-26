@@ -7,7 +7,7 @@
 #include "PropertyMacro.h"
 #include <glm/glm/glm.hpp>
 #include <vector>
-#include <string> // Added
+#include <string>
 
 namespace Framework {
 
@@ -21,11 +21,14 @@ namespace Framework {
     struct BoxColliderEntry {
         glm::vec3 size{ 1.0f, 1.0f, 1.0f };
         glm::vec3 center{ 0.0f, 0.0f, 0.0f };
-        bool canPassThrough = false;
 
-        // --- NEW INTERACTION FIELDS ---
-        bool isInteractable = false;       // If true, raycast can trigger event
-        std::string interactMessage;       // e.g. "OnPickUp" or "OpenChest"
+        // --- PHYSICS TRIGGER ---
+        bool canPassThrough = false;       // "Is Trigger"
+        std::string triggerMessage;        // NEW: Fires on collision Enter/Exit
+
+        // --- RAYCAST INTERACTION ---
+        bool isInteractable = false;       // "Can Press E"
+        std::string interactMessage;       // Fires on 'E' press
 
         // Runtime State
         bool wasInsideLastFrame = false;
@@ -37,8 +40,9 @@ namespace Framework {
         PROP_VEC3(size, BoxColliderEntry),
         PROP_VEC3(center, BoxColliderEntry),
         PROP_BOOL(canPassThrough, BoxColliderEntry),
-        PROP_BOOL(isInteractable, BoxColliderEntry),     // NEW
-        PROP_STRING(interactMessage, BoxColliderEntry),  // NEW
+        PROP_STRING(triggerMessage, BoxColliderEntry),   // <--- NEW REGISTRATION
+        PROP_BOOL(isInteractable, BoxColliderEntry),
+        PROP_STRING(interactMessage, BoxColliderEntry),
         PROP_BOOL_HIDDEN(wasInsideLastFrame, BoxColliderEntry)
     };
 
@@ -58,7 +62,8 @@ namespace Framework {
     };
 
     inline const prop_list g_BoxColliderProps{ "BoxColliderComponent", g_BoxColliderPropsArray };
-    inline global_registration g_BoxColliderPropsReg(&g_BoxColliderProps);
+    inline global_registration g_BoxColliderPropsReg(&g_BoxColliderEntryProps); // Typo fix in your original: use PropsReg not EntryPropsReg
+    inline global_registration g_BoxColliderPropsReg2(&g_BoxColliderProps);
 }
 
 #endif // _BOX_COLLIDER_COMPONENT_H_

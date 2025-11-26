@@ -20,14 +20,12 @@
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
 #include <Jolt/Physics/Collision/Shape/MeshShape.h>
 #include <Jolt/Physics/Collision/Shape/OffsetCenterOfMassShape.h>
-// --- NEW ---
-#include <Jolt/Physics/Collision/Shape/StaticCompoundShape.h> // Required for multiple colliders
+#include <Jolt/Physics/Collision/Shape/StaticCompoundShape.h>
 #include <Jolt/Physics/Collision/RayCast.h>
 #include <Jolt/Physics/Collision/CollisionCollector.h>
 #include <Jolt/Physics/Collision/CastResult.h>
 #include <Jolt/Physics/Collision/ObjectLayer.h>
 #include <Jolt/Physics/Collision/BroadPhase/BroadPhaseLayer.h>
-// --- END NEW ---
 
 #include <glm/glm/glm.hpp>
 #include <glm/glm/gtc/quaternion.hpp>
@@ -36,6 +34,7 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
+#include <algorithm>
 
 extern Framework::Coordinator ecsInterface;
 std::vector<JPH::BodyID> m_createdBodies;
@@ -60,10 +59,6 @@ inline bool GetWorldPos(Framework::Coordinator& ecs, Entity e, glm::vec3& out)
     return true;
 }
 
-// UI enum -> Jolt motion type
-// THIS IS YOUR IMMOVABLE IMPLEMENTATION
-// 0 = Static (Immovable)
-// 1 = Dynamic (Movable with Gravity)
 static inline JPH::EMotionType ToJoltMotionType(int motionType) {
     switch (motionType) {
     case 0:  return JPH::EMotionType::Static;
@@ -144,7 +139,6 @@ public:
     bool ShouldCollide(JPH::ObjectLayer, JPH::ObjectLayer) const override { return true; }
 };
 
-// --- Helper Classes for Raycast ---
 namespace {
     class AllowAllBroadPhaseFilter : public JPH::BroadPhaseLayerFilter {
     public:
@@ -171,140 +165,143 @@ namespace {
 namespace Framework {
     static std::unordered_map<Entity, glm::vec3> s_lastLin, s_lastAng;
 
-    // Static Helper for Box Math
-    // UPDATED: Now takes a single BoxColliderEntry instead of the whole component
-    static bool IsPointInsideBox(const glm::vec3& point, const Framework::TransformComponent& boxTrans, const Framework::BoxColliderEntry& entry) {
-        glm::vec3 boxWorldCenter = boxTrans.position + entry.center;
-        glm::vec3 halfSize = glm::vec3(
-            std::abs(entry.size.x * boxTrans.scale.x),
-            std::abs(entry.size.y * boxTrans.scale.y),
-            std::abs(entry.size.z * boxTrans.scale.z)
-        ) * 0.5f;
-
-        bool x = std::abs(point.x - boxWorldCenter.x) <= halfSize.x;
-        bool y = std::abs(point.y - boxWorldCenter.y) <= halfSize.y;
-        bool z = std::abs(point.z - boxWorldCenter.z) <= halfSize.z;
-        return x && y && z;
-    }
-
-    static void EnsureBodyForEntity(Entity e, Framework::Coordinator& ecs, JPH::BodyInterface* bi, std::vector<JPH::BodyID>& created_list) {
+    static void EnsureBodyForEntity(Entity e, Framework::Coordinator& ecs, JPH::BodyInterface* bi, std::vector<JPH::BodyID>& created_list)
+    {
         if (bi == nullptr) return;
         if (!ecs.HasComponent<TransformComponent>(e) || !ecs.HasComponent<PhysicsProperties>(e)) return;
         if (ecs.HasComponent<PhysicsBodyComponent>(e)) return;
 
-        JPH::ShapeRefC finalShape = nullptr;
         auto& tf = ecs.GetComponent<TransformComponent>(e);
+        auto& prop = ecs.GetComponent<PhysicsProperties>(e);
 
-        // --- NEW: Multiple Collider Support ---
-        bool isSensor = false;
+        struct ColliderConfig {
+            std::vector<const BoxColliderEntry*> solids;
+            std::vector<const BoxColliderEntry*> triggers;
+        };
+        ColliderConfig config;
 
         if (ecs.HasComponent<BoxColliderComponent>(e)) {
             auto& component = ecs.GetComponent<BoxColliderComponent>(e);
-
-            // If no colliders in the list, skip
-            if (component.colliders.empty()) return;
-
-            // Logic: If ANY collider is solid, the body is solid. 
-            // Only if ALL are triggers do we treat the body as a sensor.
-            // (You can adjust this logic based on your game needs)
-            bool anySolid = false;
-            for (const auto& c : component.colliders) {
-                if (!c.canPassThrough) anySolid = true;
+            for (const auto& entry : component.colliders) {
+                if (entry.canPassThrough) config.triggers.push_back(&entry);
+                else config.solids.push_back(&entry);
             }
-            isSensor = !anySolid;
+        }
 
-            // CASE 1: Single Collider (Optimization)
-            if (component.colliders.size() == 1) {
-                const auto& entry = component.colliders[0];
+        if (config.solids.empty() && config.triggers.empty()) return;
 
-                JPH::Vec3 half_extents(
-                    std::abs(0.5f * entry.size.x * tf.scale.x),
-                    std::abs(0.5f * entry.size.y * tf.scale.y),
-                    std::abs(0.5f * entry.size.z * tf.scale.z)
+        PhysicsBodyComponent newBodyComp;
+        newBodyComp.isInPhysicsSystem = true;
+
+        auto CreateJoltBody = [&](const std::vector<const BoxColliderEntry*>& entries, bool isSensor)
+            {
+                JPH::ShapeRefC shape = nullptr;
+
+                // Case A: Single Shape
+                if (entries.size() == 1) {
+                    const auto* entry = entries[0];
+                    JPH::Vec3 half_extents(
+                        std::abs(0.5f * entry->size.x * tf.scale.x),
+                        std::abs(0.5f * entry->size.y * tf.scale.y),
+                        std::abs(0.5f * entry->size.z * tf.scale.z)
+                    );
+                    half_extents = JPH::Vec3::sMax(half_extents, JPH::Vec3(0.001f, 0.001f, 0.001f));
+
+                    JPH::BoxShapeSettings bs(half_extents);
+                    auto result = bs.Create();
+                    if (result.HasError()) return;
+                    shape = result.Get();
+
+                    if (entry->center != glm::vec3(0.0f)) {
+                        // --- FIX 1: Apply Scale to Offset ---
+                        JPH::Vec3 center(
+                            entry->center.x * tf.scale.x,
+                            entry->center.y * tf.scale.y,
+                            entry->center.z * tf.scale.z
+                        );
+                        // ------------------------------------
+                        shape = new JPH::OffsetCenterOfMassShape(shape, center);
+                    }
+                }
+                // Case B: Compound Shape
+                else {
+                    JPH::StaticCompoundShapeSettings compoundSettings;
+                    for (const auto* entry : entries) {
+                        JPH::Vec3 half_extents(
+                            std::abs(0.5f * entry->size.x * tf.scale.x),
+                            std::abs(0.5f * entry->size.y * tf.scale.y),
+                            std::abs(0.5f * entry->size.z * tf.scale.z)
+                        );
+                        half_extents = JPH::Vec3::sMax(half_extents, JPH::Vec3(0.001f, 0.001f, 0.001f));
+
+                        JPH::BoxShapeSettings* box = new JPH::BoxShapeSettings(half_extents);
+
+                        // --- FIX 2: Apply Scale to Offset ---
+                        JPH::Vec3 offset(
+                            entry->center.x * tf.scale.x,
+                            entry->center.y * tf.scale.y,
+                            entry->center.z * tf.scale.z
+                        );
+                        // ------------------------------------
+
+                        compoundSettings.AddShape(offset, JPH::Quat::sIdentity(), box);
+                    }
+                    auto result = compoundSettings.Create();
+                    if (result.HasError()) return;
+                    shape = result.Get();
+                }
+
+                JPH::BodyCreationSettings bcs(
+                    shape,
+                    JPH::RVec3(tf.position.x, tf.position.y, tf.position.z),
+                    MakeQuatFromEuler(tf.rotation),
+                    ToJoltMotionType(prop.motionType),
+                    ToObjectLayer(prop.category)
                 );
 
-                // Prevent zero-size box crash
-                const float kMinSize = 0.001f;
-                half_extents = JPH::Vec3::sMax(half_extents, JPH::Vec3(kMinSize, kMinSize, kMinSize));
+                bcs.mIsSensor = isSensor;
+                bcs.mGravityFactor = prop.gravityFactor;
+                bcs.mUserData = static_cast<JPH::uint64>(e);
+                bcs.mAllowDynamicOrKinematic = true;
 
-                JPH::BoxShapeSettings bs(half_extents);
-                JPH::ShapeSettings::ShapeResult result = bs.Create();
-                if (result.HasError()) return;
-
-                finalShape = result.Get();
-
-                // Apply Offset if needed
-                if (entry.center != glm::vec3(0.0f)) {
-                    JPH::Vec3 jolt_center(entry.center.x, entry.center.y, entry.center.z);
-                    finalShape = new JPH::OffsetCenterOfMassShape(finalShape, jolt_center);
+                std::string name = ecs.GetEntityName(e);
+                if (name == "Player") {
+                    bcs.mAllowedDOFs = JPH::EAllowedDOFs::TranslationX |
+                        JPH::EAllowedDOFs::TranslationY |
+                        JPH::EAllowedDOFs::TranslationZ |
+                        JPH::EAllowedDOFs::RotationY;
                 }
-            }
-            // CASE 2: Multiple Colliders (Compound Shape)
-            else {
-                JPH::StaticCompoundShapeSettings compoundSettings;
-
-                for (const auto& entry : component.colliders) {
-                    JPH::Vec3 half_extents(
-                        std::abs(0.5f * entry.size.x * tf.scale.x),
-                        std::abs(0.5f * entry.size.y * tf.scale.y),
-                        std::abs(0.5f * entry.size.z * tf.scale.z)
-                    );
-
-                    const float kMinSize = 0.001f;
-                    half_extents = JPH::Vec3::sMax(half_extents, JPH::Vec3(kMinSize, kMinSize, kMinSize));
-
-                    // Create sub-shape settings
-                    JPH::BoxShapeSettings* boxSettings = new JPH::BoxShapeSettings(half_extents);
-
-                    // Add to compound with offset
-                    JPH::Vec3 offset(entry.center.x, entry.center.y, entry.center.z);
-                    compoundSettings.AddShape(offset, JPH::Quat::sIdentity(), boxSettings);
+                else {
+                    bcs.mAllowedDOFs = JPH::EAllowedDOFs::All;
                 }
 
-                JPH::ShapeSettings::ShapeResult result = compoundSettings.Create();
-                if (result.HasError()) return;
-                finalShape = result.Get();
-            }
-        }
+                if (prop.motionType == 1) {
+                    bcs.mMotionQuality = JPH::EMotionQuality::LinearCast;
+                    bcs.mAllowSleeping = false;
+                }
+                else {
+                    bcs.mMotionQuality = JPH::EMotionQuality::Discrete;
+                }
 
-        if (finalShape == nullptr) return;
+                JPH::EActivation act = prop.startAwake ? JPH::EActivation::Activate : JPH::EActivation::DontActivate;
+                JPH::BodyID id = bi->CreateAndAddBody(bcs, act);
 
-        auto& prop = ecs.GetComponent<PhysicsProperties>(e);
-        JPH::BodyCreationSettings bcs(
-            finalShape,
-            JPH::RVec3(tf.position.x, tf.position.y, tf.position.z),
-            MakeQuatFromEuler(tf.rotation),
-            ToJoltMotionType(prop.motionType),
-            ToObjectLayer(prop.category)
-        );
+                if (!id.IsInvalid()) {
+                    if (prop.motionType == 1) {
+                        if (glm::length(prop.linearVelocity) > 0.0f)
+                            bi->SetLinearVelocity(id, JPH::Vec3(prop.linearVelocity.x, prop.linearVelocity.y, prop.linearVelocity.z));
+                    }
+                    created_list.push_back(id);
+                    newBodyComp.IDs.push_back(id);
+                    s_lastLin[e] = prop.linearVelocity;
+                    s_lastAng[e] = prop.angularVelocity;
+                }
+            };
 
-        bcs.mIsSensor = isSensor;
-        bcs.mGravityFactor = prop.gravityFactor;
-        bcs.mUserData = static_cast<JPH::uint64>(e);
-        bcs.mAllowDynamicOrKinematic = true;
+        if (!config.solids.empty()) CreateJoltBody(config.solids, false);
+        if (!config.triggers.empty()) CreateJoltBody(config.triggers, true);
 
-        if (prop.motionType == 1) {
-            bcs.mMotionQuality = JPH::EMotionQuality::LinearCast;
-            bcs.mAllowSleeping = true;
-        }
-        else {
-            bcs.mMotionQuality = JPH::EMotionQuality::Discrete;
-        }
-
-        JPH::EActivation act = prop.startAwake ? JPH::EActivation::Activate : JPH::EActivation::DontActivate;
-        JPH::BodyID id = bi->CreateAndAddBody(bcs, act);
-
-        if (id.IsInvalid()) return;
-
-        if (prop.motionType == 1) {
-            if (prop.linearVelocity != glm::vec3(0.0f)) bi->SetLinearVelocity(id, JPH::Vec3(prop.linearVelocity.x, prop.linearVelocity.y, prop.linearVelocity.z));
-            if (prop.angularVelocity != glm::vec3(0.0f)) bi->SetAngularVelocity(id, JPH::Vec3(prop.angularVelocity.x, prop.angularVelocity.y, prop.angularVelocity.z));
-        }
-
-        created_list.push_back(id);
-        ecs.AddComponent<PhysicsBodyComponent>(e, PhysicsBodyComponent{ id, finalShape, true });
-        s_lastLin[e] = prop.linearVelocity;
-        s_lastAng[e] = prop.angularVelocity;
+        if (!newBodyComp.IDs.empty()) ecs.AddComponent<PhysicsBodyComponent>(e, newBodyComp);
     }
 
     void PhysicsSystem::Initialize() {
@@ -320,78 +317,10 @@ namespace Framework {
         static AllowAllPairFilter   pairFilter;
 
         physicsSystem.Init(1024, 0, 1024, 1024, broadPhaseInterface, objVsBP, pairFilter);
-
-        // 1. Get Main Body Interface
+        physicsSystem.SetContactListener(&g_ContactListener);
         bodyInterface = &physicsSystem.GetBodyInterface();
 
-        auto makeMaterial = [] {
-            MaterialProperties m{};
-            m.ambient = glm::vec3(0.05f, 0.07f, 0.10f);
-            m.albedo = glm::vec3(0.80f, 0.60f, 0.30f);
-            m.specular = glm::vec3(0.90f, 0.90f, 0.95f);
-            m.shininess = 48.0f;
-            m.opacity = 1.0f;
-            return m;
-            };
-        MaterialProperties materialComponent = makeMaterial();
-
-        struct Spawn {
-            glm::vec3 pos;
-            glm::vec3 scale;
-            int        motionType;    // 0=Static, 1=Dynamic
-            int        category;
-            glm::vec3 linVel;
-            glm::vec3 angVel;
-            float      gravityFactor;
-        };
-
-        const Spawn spawns[4]{
-            { glm::vec3{50.5f,  5.0f,  1.5f}, glm::vec3{5.0f}, 1, 2, glm::vec3{ 5.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 1.0f },
-            { glm::vec3{60.5f,  5.0f,  1.5f}, glm::vec3{5.0f}, 1, 2, glm::vec3{-5.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 1.0f },
-            { glm::vec3{50.0f, 15.0f, 15.5f}, glm::vec3{5.0f}, 1, 2, glm::vec3{ 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 1.0f },
-            { glm::vec3{40.0f, 10.0f, -5.5f}, glm::vec3{5.0f}, 1, 1, glm::vec3{ 0.0f, 0.0f, 0.0f}, {2.0f, 1.0f, 2.0f}, 1.0f },
-        };
-
-        // ... (makeCubeEntity helper omitted for brevity, logic remains same) ...
-        auto makeCubeEntity = [&](const Spawn& s) -> Entity {
-            TransformComponent tf{};
-            tf.position = s.pos;
-            tf.scale = s.scale;
-            tf.rotation = glm::vec3(0);
-
-            Entity e = ecsInterface.CreateEntity();
-            ecsInterface.AddComponent<HierarchyComponent>(e, HierarchyComponent{});
-            ecsInterface.AddComponent<TransformComponent>(e, tf);
-
-            MeshProperties mesh{};
-            mesh.debugShape = static_cast<DebugShapeType>(1); // Cube
-            ecsInterface.AddComponent<MeshProperties>(e, mesh);
-            ecsInterface.AddComponent<MaterialProperties>(e, materialComponent);
-
-            PhysicsProperties phys{};
-            phys.motionType = s.motionType;
-            phys.category = s.category;
-            phys.gravityFactor = s.gravityFactor;
-            phys.linearVelocity = s.linVel;
-            phys.angularVelocity = s.angVel;
-            phys.startAwake = true;
-
-            ecsInterface.AddComponent<PhysicsProperties>(e, phys);
-            // Default single collider for testing
-            BoxColliderComponent bc;
-            BoxColliderEntry entry;
-            entry.size = glm::vec3(1.0f);
-            bc.colliders.push_back(entry);
-            ecsInterface.AddComponent<BoxColliderComponent>(e, bc);
-
-            EnsureBodyForEntity(e, ecsInterface, bodyInterface, m_createdBodies);
-            return e;
-            };
-
-        makeCubeEntity(spawns[0]);
-        makeCubeEntity(spawns[1]);
-        makeCubeEntity(spawns[2]);
-        makeCubeEntity(spawns[3]);
+        // ... (Spawning logic omitted for brevity, keep yours) ...
 
         std::cout << "[Physics] Initialized.\n";
     }
@@ -404,144 +333,113 @@ namespace Framework {
             EnsureBodyForEntity(e, ecsInterface, bodyInterface, m_createdBodies);
         }
 
-        // --- [STEP 2: PROCESS JOLT EVENT QUEUE] ---
+        // --- [STEP 2: PROCESS JOLT TRIGGER EVENTS] ---
         {
             std::lock_guard<std::mutex> lock(s_TriggerMutex);
+
             for (const auto& ev : s_TriggerEvents) {
+
                 if (bodyInterface->IsActive(ev.b1) == false && !bodyInterface->IsAdded(ev.b1)) continue;
                 if (bodyInterface->IsActive(ev.b2) == false && !bodyInterface->IsAdded(ev.b2)) continue;
 
                 Entity e1 = (Entity)bodyInterface->GetUserData(ev.b1);
                 Entity e2 = (Entity)bodyInterface->GetUserData(ev.b2);
-                // Jolt trigger logic here...
+
+                if (!ecsInterface.IsEntityValid(e1) || !ecsInterface.IsEntityValid(e2)) continue;
+
+                // Inside PhysicsSystem::Update -> Step 2 loop
+
+                auto ProcessTrigger = [&](Entity triggerEntity, Entity visitorEntity)
+                    {
+                        std::string tName = ecsInterface.GetEntityName(triggerEntity);
+                        std::string vName = ecsInterface.GetEntityName(visitorEntity);
+
+                        // Debug 1: Detection
+                        // std::cout << "[Physics] Checking Potential Trigger: " << tName << " hit by " << vName << std::endl;
+
+                        // Check A: Visitor Name
+                        if (vName != "Player") {
+                            return;
+                        }
+
+                        // Check B: Component
+                        if (!ecsInterface.HasComponent<BoxColliderComponent>(triggerEntity)) {
+                            return;
+                        }
+
+                        auto& boxComp = ecsInterface.GetComponent<BoxColliderComponent>(triggerEntity);
+
+                        // Check C: Iterate Colliders
+                        bool foundValidTrigger = false;
+                        for (const auto& entry : boxComp.colliders)
+                        {
+                            if (entry.canPassThrough && !entry.triggerMessage.empty())
+                            {
+                                CollisionEventData payload;
+                                payload.senderID = visitorEntity; // Player
+                                payload.targetID = triggerEntity; // Herb
+                                payload.actionType = (ev.type == TriggerEvent::ENTER) ? 1 : 0;
+
+                                EventManager::Instance().Fire(entry.triggerMessage, &payload);
+                                foundValidTrigger = true;
+                                break;
+                            }
+                        }
+
+                        if (!foundValidTrigger) {
+                            std::cout << "   -> Fail: No collider on " << tName << " was (IsTrigger=True AND had TriggerMessage)." << std::endl;
+                        }
+                    };
+
+                // Run Checks Both Ways
+                ProcessTrigger(e1, e2); // Is e1 the Trigger?
+                ProcessTrigger(e2, e1); // Is e2 the Trigger?
             }
             s_TriggerEvents.clear();
         }
 
-        // --- [STEP 3: MANUAL PLAYER TRIGGER LOGIC] ---
-        Entity playerEntity = ecsInterface.GetEntityByName("Player");
-
-        if (ecsInterface.IsEntityValid(playerEntity) &&
-            ecsInterface.HasComponent<TransformComponent>(playerEntity) &&
-            ecsInterface.HasComponent<EventSenderComponent>(playerEntity))
-        {
-            auto& playerTrans = ecsInterface.GetComponent<TransformComponent>(playerEntity);
-            auto& playerSender = ecsInterface.GetComponent<EventSenderComponent>(playerEntity);
-
-            for (Entity e : ecsInterface.GetEntities()) {
-                if (e == playerEntity) continue;
-
-                if (!ecsInterface.HasComponent<BoxColliderComponent>(e) ||
-                    !ecsInterface.HasComponent<TransformComponent>(e)) {
-                    continue;
-                }
-
-                auto& colliderComp = ecsInterface.GetComponent<BoxColliderComponent>(e);
-                auto& transform = ecsInterface.GetComponent<TransformComponent>(e);
-
-                // --- NEW LOOP: CHECK ALL COLLIDERS ON TARGET ENTITY ---
-                for (auto& entry : colliderComp.colliders)
-                {
-                    bool isInside = IsPointInsideBox(playerTrans.position, transform, entry);
-
-                    // CASE: ENTER
-                    if (isInside && !entry.wasInsideLastFrame)
-                    {
-                        // Fire ALL matching senders
-                        for (const auto& senderEntry : playerSender.senders)
-                        {
-                            if (senderEntry.triggerName == "OnCollision")
-                            {
-                                CollisionEventData payload;
-                                payload.senderID = playerEntity;
-                                payload.targetID = e;
-                                payload.actionType = 1; // ENTER
-
-                                EventManager::Instance().Fire(senderEntry.messageName, &payload);
-                            }
-                        }
-                    }
-                    // CASE: EXIT
-                    else if (!isInside && entry.wasInsideLastFrame)
-                    {
-                        // Fire ALL matching senders
-                        for (const auto& senderEntry : playerSender.senders)
-                        {
-                            if (senderEntry.triggerName == "OnCollision")
-                            {
-                                // std::cout << "[Physics] Player EXITED Entity " << e << std::endl;
-                                CollisionEventData payload;
-                                payload.senderID = playerEntity;
-                                payload.targetID = e;
-                                payload.actionType = 0; // EXIT
-
-                                EventManager::Instance().Fire(senderEntry.messageName, &payload);
-                            }
-                        }
-                    }
-
-                    // Update state specifically for THIS collider entry
-                    entry.wasInsideLastFrame = isInside;
-                }
-            }
-        }
-
-        // --- [STEP 4: PRE-PHYSICS SYNC] ---
+        // --- [STEP 3: PRE-PHYSICS SYNC] ---
         for (Entity e : ecsInterface.GetEntities()) {
             if (!ecsInterface.HasComponent<PhysicsBodyComponent>(e) || !ecsInterface.HasComponent<PhysicsProperties>(e)) continue;
 
             auto& pb = ecsInterface.GetComponent<PhysicsBodyComponent>(e);
             auto& prop = ecsInterface.GetComponent<PhysicsProperties>(e);
 
-            // Sync 'Sensor' state:
-            // If the entity has colliders, we calculate if it should be a sensor.
-            if (ecsInterface.HasComponent<BoxColliderComponent>(e)) {
-                auto& colliderComp = ecsInterface.GetComponent<BoxColliderComponent>(e);
-                if (!colliderComp.colliders.empty()) {
-                    bool anySolid = false;
-                    for (const auto& c : colliderComp.colliders) {
-                        if (!c.canPassThrough) anySolid = true;
-                    }
-                    // If any part is solid, the body is solid.
-                    bodyInterface->SetIsSensor(pb.ID, !anySolid);
-                }
-            }
-
             if (prop.isImmovable == true) prop.motionType = 0;
             else if (prop.motionType == 0) prop.motionType = 1;
 
-            ApplyPropsToBody(bodyInterface, pb.ID, prop);
+            for (JPH::BodyID id : pb.IDs) {
+                ApplyPropsToBody(bodyInterface, id, prop);
 
-            if (prop.motionType == 1) {
-                // Apply velocity logic...
-                bool hasInputVel = glm::length(prop.linearVelocity) > 0.01f;
-                if (hasInputVel) {
-                    JPH::Vec3 currentVel = bodyInterface->GetLinearVelocity(pb.ID);
-                    bodyInterface->SetLinearVelocity(pb.ID, JPH::Vec3(prop.linearVelocity.x, currentVel.GetY(), prop.linearVelocity.z));
-                    bodyInterface->ActivateBody(pb.ID);
+                if (prop.motionType == 1) {
+                    bool hasInputVel = glm::length(prop.linearVelocity) > 0.01f;
+                    if (hasInputVel) {
+                        JPH::Vec3 currentVel = bodyInterface->GetLinearVelocity(id);
+                        bodyInterface->SetLinearVelocity(id, JPH::Vec3(prop.linearVelocity.x, currentVel.GetY(), prop.linearVelocity.z));
+                        bodyInterface->ActivateBody(id);
+                    }
+                    else {
+                        JPH::Vec3 currentVel = bodyInterface->GetLinearVelocity(id);
+                        bodyInterface->SetLinearVelocity(id, JPH::Vec3(0.0f, currentVel.GetY(), 0.0f));
+                        bodyInterface->SetAngularVelocity(id, JPH::Vec3(0, 0, 0));
+                    }
+                    if (glm::length(prop.angularVelocity) <= 0.01f) {
+                        bodyInterface->SetAngularVelocity(id, JPH::Vec3(0, 0, 0));
+                    }
                 }
                 else {
-                    JPH::Vec3 currentVel = bodyInterface->GetLinearVelocity(pb.ID);
-                    bodyInterface->SetLinearVelocity(pb.ID, JPH::Vec3(0.0f, currentVel.GetY(), 0.0f));
-                    bodyInterface->SetAngularVelocity(pb.ID, JPH::Vec3(0, 0, 0));
-                }
-                if (glm::length(prop.angularVelocity) <= 0.01f) {
-                    bodyInterface->SetAngularVelocity(pb.ID, JPH::Vec3(0, 0, 0));
-                }
-            }
-            else {
-                // Sync Static/Kinematic objects to transform
-                if (ecsInterface.HasComponent<TransformComponent>(e)) {
-                    auto& tf = ecsInterface.GetComponent<TransformComponent>(e);
-                    bodyInterface->SetPositionAndRotation(pb.ID, JPH::RVec3(tf.position.x, tf.position.y, tf.position.z), MakeQuatFromEuler(tf.rotation), JPH::EActivation::Activate);
+                    if (ecsInterface.HasComponent<TransformComponent>(e)) {
+                        auto& tf = ecsInterface.GetComponent<TransformComponent>(e);
+                        bodyInterface->SetPositionAndRotation(id, JPH::RVec3(tf.position.x, tf.position.y, tf.position.z), MakeQuatFromEuler(tf.rotation), JPH::EActivation::Activate);
+                    }
                 }
             }
         }
 
-        // --- [STEP 5: RUN PHYSICS] ---
+        // --- [STEP 4: RUN PHYSICS] ---
         physicsSystem.Update(dt, 1, tempAllocator, jobSystem);
 
-        // --- [STEP 6: POST-PHYSICS SYNC] ---
+        // --- [STEP 5: POST-PHYSICS SYNC] ---
         for (Entity e : ecsInterface.GetEntities()) {
             if (!ecsInterface.HasComponent<PhysicsBodyComponent>(e) || !ecsInterface.HasComponent<TransformComponent>(e) || !ecsInterface.HasComponent<PhysicsProperties>(e)) continue;
 
@@ -549,16 +447,16 @@ namespace Framework {
             auto& pb = ecsInterface.GetComponent<PhysicsBodyComponent>(e);
             auto& prop = ecsInterface.GetComponent<PhysicsProperties>(e);
 
-            if (prop.motionType == 1) {
-                const JPH::RVec3 p = bodyInterface->GetPosition(pb.ID);
+            if (prop.motionType == 1 && !pb.IDs.empty()) {
+                const JPH::RVec3 p = bodyInterface->GetPosition(pb.IDs[0]);
                 tf.position = glm::vec3(p.GetX(), p.GetY(), p.GetZ());
-                JPH::Quat q = bodyInterface->GetRotation(pb.ID);
+                JPH::Quat q = bodyInterface->GetRotation(pb.IDs[0]);
                 tf.rotation = QuatToEulerDegrees_Jolt(q);
             }
         }
     }
 
-    // --- Raycast Implementation ---
+    // --- Raycast (Keep as is) ---
     bool PhysicsSystem::Raycast(const glm::vec3& origin, const glm::vec3& direction, float maxDistance, RaycastHit& outHit, int targetCategory)
     {
         auto* narrowPhaseQuery = &physicsSystem.GetNarrowPhaseQuery();
@@ -603,6 +501,8 @@ namespace Framework {
         return false;
     }
 
+
+    // --- Remove Body ---
     void PhysicsSystem::RemoveBodyForEntity(Entity e)
     {
         if (!bodyInterface) return;
@@ -610,28 +510,16 @@ namespace Framework {
 
         auto& pb = ecsInterface.GetComponent<PhysicsBodyComponent>(e);
 
-        // Remove from Jolt
-        if (!pb.ID.IsInvalid())
-        {
-            bodyInterface->RemoveBody(pb.ID);
-            bodyInterface->DestroyBody(pb.ID);
-        }
-
-        // Drop ECS physics component
-        ecsInterface.RemoveComponent<PhysicsBodyComponent>(e);
-
-        // Clean our local list
-        for (auto it = m_createdBodies.begin(); it != m_createdBodies.end(); ++it)
-        {
-            if (it->GetIndexAndSequenceNumber() == pb.ID.GetIndexAndSequenceNumber())
-            {
-                m_createdBodies.erase(it);
-                break;
+        for (JPH::BodyID id : pb.IDs) {
+            if (!id.IsInvalid()) {
+                bodyInterface->RemoveBody(id);
+                bodyInterface->DestroyBody(id);
+                auto it = std::find(m_createdBodies.begin(), m_createdBodies.end(), id);
+                if (it != m_createdBodies.end()) m_createdBodies.erase(it);
             }
         }
+        ecsInterface.RemoveComponent<PhysicsBodyComponent>(e);
     }
-
-
 
     std::string PhysicsSystem::GetName() { return "PhysicsSystem"; }
 

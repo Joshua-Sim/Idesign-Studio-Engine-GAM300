@@ -2268,32 +2268,35 @@ namespace Framework {
             {
                 auto& colliderComp = ecsInterface.GetComponent<BoxColliderComponent>(entityId);
 
-                // LOOP through all colliders on this entity
                 for (const auto& entry : colliderComp.colliders)
                 {
-                    // --- 1. Calculate the Collider's World Transform ---
+                    // Start with Identity
                     glm::mat4 colliderModel = glm::mat4(1.0f);
 
-                    // A. Move to Entity Position
+                    // --- STEP 1: APPLY ENTITY TRANSFORM ---
+                    // Move to Entity World Position
                     colliderModel = glm::translate(colliderModel, tr.position);
 
-                    // B. Rotate (Match Entity Rotation)
+                    // Apply Entity Rotation
                     colliderModel = glm::rotate(colliderModel, glm::radians(tr.rotation.x), { 1,0,0 });
                     colliderModel = glm::rotate(colliderModel, glm::radians(tr.rotation.y), { 0,1,0 });
                     colliderModel = glm::rotate(colliderModel, glm::radians(tr.rotation.z), { 0,0,1 });
 
-                    // C. Scale (Match Entity Scale)
-                    // Note: This scales the offset (entry.center) as well, which is usually desired
+                    // Apply Entity Scale
                     colliderModel = glm::scale(colliderModel, tr.scale);
 
-                    // D. Offset & Size (Apply Collider specific properties)
+                    // --- STEP 2: APPLY COLLIDER LOCAL TRANSFORM ---
+                    // Apply Offset (Center) relative to the scaled entity
                     colliderModel = glm::translate(colliderModel, entry.center);
+
+                    // Apply Collider Size
+                    // IMPORTANT: Debug meshes are usually 1x1x1 unit cubes.
+                    // If entry.size is the FULL width, we scale by that.
                     colliderModel = glm::scale(colliderModel, entry.size);
 
-                    // --- 2. Draw ---
+                    // --- Draw ---
                     if (m_debugMeshes.find(DebugShapeType::Box) != m_debugMeshes.end())
                     {
-                        // Visual Polish: Yellow for Trigger, Green for Solid
                         glm::vec3 debugColor = entry.canPassThrough ? glm::vec3(1.0f, 1.0f, 0.0f) : glm::vec3(0.0f, 1.0f, 0.0f);
 
                         DrawDebugMesh(

@@ -46,6 +46,44 @@
                     "cellSize": 0.30000001192092896,
                     "cellHeight": 0.20000000298023224,
                     "maxSlope": 45.0
+                },
+                "BoxColliderComponent": {
+                    "colliders": [
+                        {
+                            "size": [
+                                19.5,
+                                5.800000190734863,
+                                20.0
+                            ],
+                            "center": [
+                                -15.300000190734863,
+                                2.799999952316284,
+                                -5.0
+                            ],
+                            "canPassThrough": true,
+                            "triggerMessage": "",
+                            "isInteractable": false
+                        }
+                    ]
+                },
+                "PhysicsProperties": {
+                    "category": 0,
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 0.5,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "startAwake": true
                 }
             }
         },
@@ -142,12 +180,12 @@
                     "colliders": [
                         {
                             "size": [
-                                99.80000305175781,
-                                102.0999984741211,
+                                337.1000061035156,
+                                104.5,
                                 99.80000305175781
                             ],
                             "center": [
-                                0.0,
+                                -25.0,
                                 0.0,
                                 0.0
                             ],
@@ -1890,14 +1928,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -39.50434494018555,
+                        -48.52269744873047,
                         8.039443969726563,
-                        9.422661781311035
+                        1.8870890140533447
                     ],
                     "rotation": [
-                        0.29789578914642334,
-                        -2.8125903606414795,
-                        0.00042227370431646705
+                        0.29789653420448303,
+                        15.742537498474121,
+                        0.0004559071094263345
                     ],
                     "scale": [
                         0.9999989867210388,
@@ -2157,6 +2195,7 @@
                                 0.0
                             ],
                             "canPassThrough": true,
+                            "triggerMessage": "deez",
                             "isInteractable": true,
                             "interactMessage": "HerbPickup"
                         }
@@ -2297,6 +2336,24 @@
         {
             "name": "Customer",
             "guid": "e69f01da-c02b-4fa4-ac30-a2355035885d",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
+                }
+            }
+        },
+        {
+            "name": "Customer",
+            "guid": "2e7e52e0-e0f6-410f-8274-8dd25abd32e7",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
+                }
+            }
+        },
+        {
+            "name": "Customer",
+            "guid": "e7a9dbbd-468d-43c2-9801-e8c5a53cae7e",
             "components": {
                 "PrefabComponent": {
                     "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"

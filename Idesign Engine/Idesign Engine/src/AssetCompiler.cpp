@@ -416,6 +416,7 @@ namespace Framework
                             if (val.HasMember("canPassThrough")) {
                                 entry.canPassThrough = val["canPassThrough"].GetBool();
                             }
+                            if (val.HasMember("triggerMessage")) entry.triggerMessage = val["triggerMessage"].GetString();
                             if (val.HasMember("isInteractable")) {
                                 entry.isInteractable = val["isInteractable"].GetBool();
                             }
@@ -789,12 +790,15 @@ namespace Framework
                         obj.AddMember("center", centerVal, allocator);
 
                         obj.AddMember("canPassThrough", entry.canPassThrough, allocator);
-                        obj.AddMember("isInteractable", entry.isInteractable, allocator);
+                        if (entry.canPassThrough) {
+                            rapidjson::Value val; val.SetString(entry.triggerMessage.c_str(), allocator);
+                            obj.AddMember("triggerMessage", val, allocator);
+                        }
 
+                        obj.AddMember("isInteractable", entry.isInteractable, allocator);
                         if (entry.isInteractable) {
-                            rapidjson::Value msgVal;
-                            msgVal.SetString(entry.interactMessage.c_str(), allocator);
-                            obj.AddMember("interactMessage", msgVal, allocator);
+                            rapidjson::Value val; val.SetString(entry.interactMessage.c_str(), allocator);
+                            obj.AddMember("interactMessage", val, allocator);
                         }
 
                         arrayVal.PushBack(obj, allocator);

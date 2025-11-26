@@ -212,8 +212,10 @@ struct AnimationComponent
 //    std::vector<ScriptInstance> scripts;
 //};
 
+// In ComponentList.h or wherever PhysicsBodyComponent is defined
 struct PhysicsBodyComponent {
-    JPH::BodyID ID;
-    JPH::ShapeRefC Shape;
-    bool active = true;
+    std::vector<JPH::BodyID> IDs;
+
+    JPH::ShapeRefC shape; 
+    bool isInPhysicsSystem = false;
 };
