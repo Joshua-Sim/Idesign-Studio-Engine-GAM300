@@ -19,13 +19,13 @@
             "isUI": false
         },
         {
-            "guid": "338b187d-1182-4c0f-8af6-799d3fb9fbf2",
+            "guid": "7b119595-c240-4c45-a8a0-018d7a3d917f",
             "name": "",
             "path": "Assets/PNG/test.png",
             "isUI": false
         },
         {
-            "guid": "7b119595-c240-4c45-a8a0-018d7a3d917f",
+            "guid": "338b187d-1182-4c0f-8af6-799d3fb9fbf2",
             "name": "",
             "path": "Assets/PNG/test.png",
             "isUI": false
@@ -85,27 +85,27 @@
             "isUI": false
         },
         {
-            "guid": "e726adb8-bf75-4993-9e77-826f5541ac9d",
-            "name": "ChoppedHerb2",
-            "path": "Assets\\Textures\\ChoppedHerb2.png",
-            "isUI": false
-        },
-        {
             "guid": "d4899207-ea5e-473b-870f-aade76e8a7ff",
             "name": "Door",
             "path": "Assets\\Textures\\Door.png",
             "isUI": false
         },
         {
-            "guid": "ac09c4fc-da84-4656-8246-40407d5bd854",
-            "name": "play_button",
-            "path": "Assets\\Textures\\play_button.png",
+            "guid": "e726adb8-bf75-4993-9e77-826f5541ac9d",
+            "name": "ChoppedHerb2",
+            "path": "Assets\\Textures\\ChoppedHerb2.png",
             "isUI": false
         },
         {
             "guid": "b57b4683-8581-4256-9cc5-60c900acec67",
             "name": "T_Brick_BaseColor",
             "path": "Assets\\Textures\\T_Brick_BaseColor.png",
+            "isUI": false
+        },
+        {
+            "guid": "ac09c4fc-da84-4656-8246-40407d5bd854",
+            "name": "play_button",
+            "path": "Assets\\Textures\\play_button.png",
             "isUI": false
         },
         {
@@ -133,15 +133,15 @@
             "isUI": false
         },
         {
-            "guid": "0f2ece2c-6b29-43d9-a6ae-1f648d18d86d",
-            "name": "Wood",
-            "path": "Assets\\Textures\\Wood.png",
-            "isUI": false
-        },
-        {
             "guid": "f49379af-a87b-435b-b85b-5c3127ec2fe9",
             "name": "Counter",
             "path": "Assets\\Textures\\Counter.png",
+            "isUI": false
+        },
+        {
+            "guid": "0f2ece2c-6b29-43d9-a6ae-1f648d18d86d",
+            "name": "Wood",
+            "path": "Assets\\Textures\\Wood.png",
             "isUI": false
         },
         {
@@ -205,15 +205,15 @@
             "isUI": false
         },
         {
-            "guid": "294eaf04-f5e3-404b-a262-ae25b04ef993",
-            "name": "chopped_herb",
-            "path": "Assets\\Textures\\chopped_herb.png",
-            "isUI": false
-        },
-        {
             "guid": "11bafc18-a375-4a2d-bfb4-221cb46a3278",
             "name": "YellowVIal",
             "path": "Assets\\Textures\\YellowVIal.png",
+            "isUI": false
+        },
+        {
+            "guid": "294eaf04-f5e3-404b-a262-ae25b04ef993",
+            "name": "chopped_herb",
+            "path": "Assets\\Textures\\chopped_herb.png",
             "isUI": false
         },
         {
@@ -364,6 +364,30 @@
             "guid": "401f8be3-5ecf-4a58-b6b4-74cf52e9bf90",
             "name": "top1",
             "path": "Assets\\Textures\\top1.png",
+            "isUI": false
+        },
+        {
+            "guid": "01931225-401d-4164-8db6-754535863bb1",
+            "name": "settings button",
+            "path": "Assets\\Textures\\settings button.png",
+            "isUI": false
+        },
+        {
+            "guid": "475e81a7-2e58-4938-9542-ca201d5d96f5",
+            "name": "StartGame",
+            "path": "Assets\\Textures\\StartGame.png",
+            "isUI": false
+        },
+        {
+            "guid": "38c96217-d4fa-4b5b-910f-d8914b7a1e0f",
+            "name": "exit game",
+            "path": "Assets\\Textures\\exit game.png",
+            "isUI": false
+        },
+        {
+            "guid": "b7b4bcaf-b4d9-4c53-a9af-017de16950a6",
+            "name": "mainIcon",
+            "path": "Assets\\Textures\\mainIcon.png",
             "isUI": false
         }
     ]

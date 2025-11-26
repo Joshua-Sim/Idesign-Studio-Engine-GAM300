@@ -680,14 +680,12 @@ namespace Framework
                     ImGui::Checkbox("Destroy When Pick?", &item.toDestroyWhenPicked);
                 }
 
-
                 // 4. Handle EVERYTHING ELSE (Default Inspector)
                 else
                 {
                     DrawInspector(componentPtr, *propList);
                 }
                 
-                if (ImGui::Button(std::string("Remove ").append(typeName).c_str()))
                 if (typeName != "CollectibleProperties")
                 {
                     if (ImGui::Button(std::string("Remove ").append(typeName).c_str()))
