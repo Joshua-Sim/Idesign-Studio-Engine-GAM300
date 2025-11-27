@@ -10,6 +10,7 @@ local has_received_item = false
 
 function Customer:on_init()
     print("[Customer] Initialized for entity: " .. self.entity)
+    print("CUSTOMER LUA SETUUP");
     player_entity = FindEntityByName("Player")
 end
 

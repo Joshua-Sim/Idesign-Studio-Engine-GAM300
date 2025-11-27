@@ -1251,6 +1251,145 @@ namespace Framework
             componentsObj.AddMember("ScriptProperties", scriptJson, allocator);
         }
 
+        // BoxColliderComponent
+        if (ecsInterface.HasComponent<BoxColliderComponent>(entity)) {
+            const auto& comp = ecsInterface.GetComponent<BoxColliderComponent>(entity);
+            rapidjson::Value compJson(rapidjson::kObjectType);
+            rapidjson::Value arrayVal(rapidjson::kArrayType);
+
+            for (const auto& entry : comp.colliders) {
+                rapidjson::Value obj(rapidjson::kObjectType);
+
+                // Save Vec3 Size
+                rapidjson::Value sizeVal(rapidjson::kArrayType);
+                sizeVal.PushBack(entry.size.x, allocator).PushBack(entry.size.y, allocator).PushBack(entry.size.z, allocator);
+                obj.AddMember("size", sizeVal, allocator);
+
+                // Save Vec3 Center
+                rapidjson::Value centerVal(rapidjson::kArrayType);
+                centerVal.PushBack(entry.center.x, allocator).PushBack(entry.center.y, allocator).PushBack(entry.center.z, allocator);
+                obj.AddMember("center", centerVal, allocator);
+
+                obj.AddMember("canPassThrough", entry.canPassThrough, allocator);
+                if (entry.canPassThrough) {
+                    rapidjson::Value val; val.SetString(entry.triggerMessage.c_str(), allocator);
+                    obj.AddMember("triggerMessage", val, allocator);
+                }
+
+                obj.AddMember("isInteractable", entry.isInteractable, allocator);
+                if (entry.isInteractable) {
+                    rapidjson::Value val; val.SetString(entry.interactMessage.c_str(), allocator);
+                    obj.AddMember("interactMessage", val, allocator);
+                }
+
+                arrayVal.PushBack(obj, allocator);
+            }
+            compJson.AddMember("colliders", arrayVal, allocator);
+            componentsObj.AddMember("BoxColliderComponent", compJson, allocator);
+        }
+
+        // PhysicsProperties
+        if (ecsInterface.HasComponent<PhysicsProperties>(entity))
+        {
+            const auto& phys = ecsInterface.GetComponent<PhysicsProperties>(entity);
+            rapidjson::Value physJson(rapidjson::kObjectType);
+            Serialize((void*)&phys, g_PhysicsProps, physJson, allocator);
+            componentsObj.AddMember("PhysicsProperties", physJson, allocator);
+        }
+
+        // EventSenderComponent
+        if (ecsInterface.HasComponent<EventSenderComponent>(entity))
+        {
+            const auto& senderComp = ecsInterface.GetComponent<EventSenderComponent>(entity);
+            rapidjson::Value compJson(rapidjson::kObjectType);
+            rapidjson::Value senderArray(rapidjson::kArrayType);
+
+            for (const auto& entry : senderComp.senders)
+            {
+                rapidjson::Value entryObj(rapidjson::kObjectType);
+                rapidjson::Value triggerVal;
+                triggerVal.SetString(entry.triggerName.c_str(), allocator);
+                entryObj.AddMember("triggerName", triggerVal, allocator);
+
+                rapidjson::Value msgVal;
+                msgVal.SetString(entry.messageName.c_str(), allocator);
+                entryObj.AddMember("messageName", msgVal, allocator);
+
+                senderArray.PushBack(entryObj, allocator);
+            }
+
+            compJson.AddMember("senders", senderArray, allocator);
+            componentsObj.AddMember("EventSenderComponent", compJson, allocator);
+        }
+
+        // EventReceiverComponent
+        if (ecsInterface.HasComponent<EventReceiverComponent>(entity))
+        {
+            const auto& receiverComp = ecsInterface.GetComponent<EventReceiverComponent>(entity);
+            rapidjson::Value compJson(rapidjson::kObjectType);
+            rapidjson::Value receiverArray(rapidjson::kArrayType);
+
+            for (const auto& entry : receiverComp.receivers)
+            {
+                rapidjson::Value entryObj(rapidjson::kObjectType);
+                rapidjson::Value msgVal;
+                msgVal.SetString(entry.messageToListenFor.c_str(), allocator);
+                entryObj.AddMember("messageToListenFor", msgVal, allocator);
+
+                rapidjson::Value funcVal;
+                funcVal.SetString(entry.luaFunctionToCall.c_str(), allocator);
+                entryObj.AddMember("luaFunctionToCall", funcVal, allocator);
+
+                receiverArray.PushBack(entryObj, allocator);
+            }
+
+            compJson.AddMember("receivers", receiverArray, allocator);
+            componentsObj.AddMember("EventReceiverComponent", compJson, allocator);
+        }
+
+        // ListenerComponent
+        if (ecsInterface.HasComponent<ListenerComponent>(entity))
+        {
+            const auto& listener = ecsInterface.GetComponent<ListenerComponent>(entity);
+            rapidjson::Value compJson(rapidjson::kObjectType);
+            Serialize((void*)&listener, g_ListenerComponentProps, compJson, allocator);
+            componentsObj.AddMember("ListenerComponent", compJson, allocator);
+        }
+
+        // AudioComponent
+        if (ecsInterface.HasComponent<AudioComponent>(entity))
+        {
+            const auto& audioComp = ecsInterface.GetComponent<AudioComponent>(entity);
+            rapidjson::Value compJson(rapidjson::kObjectType);
+            Serialize((void*)&audioComp, g_AudioComponentProps, compJson, allocator);
+            componentsObj.AddMember("AudioComponent", compJson, allocator);
+        }
+
+        // ButtonComponent
+        if (ecsInterface.HasComponent<ButtonComponent>(entity))
+        {
+            const auto& buttonComp = ecsInterface.GetComponent<ButtonComponent>(entity);
+            rapidjson::Value compJson(rapidjson::kObjectType);
+            Serialize((void*)&buttonComp, g_ButtonComponentProps, compJson, allocator);
+            componentsObj.AddMember("ButtonComponent", compJson, allocator);
+        }
+
+        // ItemComponent
+        if (ecsInterface.HasComponent<ItemComponent>(entity))
+        {
+            const auto& item = ecsInterface.GetComponent<ItemComponent>(entity);
+            rapidjson::Value itemJson(rapidjson::kObjectType);
+
+            rapidjson::Value nameVal;
+            nameVal.SetString(item.name.c_str(), allocator);
+            itemJson.AddMember("name", nameVal, allocator);
+
+            itemJson.AddMember("isIngredient", item.isIngredient, allocator);
+            itemJson.AddMember("isChoppable", item.isChoppable, allocator);
+
+            componentsObj.AddMember("ItemComponent", itemJson, allocator);
+        }
+
         entityObj.AddMember("components", componentsObj, allocator);
         doc.AddMember("entity", entityObj, allocator);  // Note: "entity" not "Entities"
 
@@ -1287,20 +1426,55 @@ namespace Framework
 
     void CreatePrefabFromEntity(Entity entity, const std::string& prefabName)
     {
-        // 1. Generate GUID for new prefab
-        std::string prefabGUID = GenerateGUID();
+        std::cout << "[CreatePrefab] START - Entity: " << entity << ", Name: " << prefabName << std::endl;
 
         // 2. BUILD ABSOLUTE PATHS
         std::filesystem::path projectRoot = Framework::ScriptingSystem::GetProjectRoot();
         std::filesystem::path prefabFolder = projectRoot / "Assets/Prefabs";
         std::filesystem::path prefabPath = prefabFolder / (prefabName + ".prefab");
 
+        // === CHECK IF PREFAB ALREADY EXISTS ===
+        std::string prefabGUID;
+        bool isOverwriting = false;
+
+        if (std::filesystem::exists(prefabPath))
+        {
+            std::cout << "[CreatePrefab] Prefab file already exists, checking for GUID..." << std::endl;
+
+            // Try to find existing GUID
+            std::string existingGUID = FindPrefabGUIDByName(prefabName);
+
+            if (!existingGUID.empty())
+            {
+                // Reuse existing GUID
+                prefabGUID = existingGUID;
+                isOverwriting = true;
+                std::cout << "[CreatePrefab] Overwriting existing prefab with GUID: " << prefabGUID << std::endl;
+            }
+            else
+            {
+                // File exists but not in registry - generate new GUID
+                prefabGUID = GenerateGUID();
+                std::cout << "[CreatePrefab] File exists but not registered, creating new with GUID: " << prefabGUID << std::endl;
+            }
+        }
+        else
+        {
+            // New prefab - generate new GUID
+            prefabGUID = GenerateGUID();
+            std::cout << "[CreatePrefab] Creating new prefab with GUID: " << prefabGUID << std::endl;
+        }
+
         // 3. Ensure directory exists (using absolute path)
         std::error_code ec;
         std::filesystem::create_directories(prefabFolder, ec);
-        if (ec) std::cerr << "Failed to create prefab directory: " << ec.message() << "\n"; return;
+        if (ec) {
+            std::cerr << "[CreatePrefab] ERROR: Failed to create prefab directory: " << ec.message() << std::endl;
+            return;
+        }
 
         // 4. Serialize entity to prefab file (use absolute path)
+        // This will overwrite if file exists
         std::string absolutePrefabPath = prefabPath.string();
         saveEntityToPrefab(entity, absolutePrefabPath);
 
@@ -1310,18 +1484,25 @@ namespace Framework
         auto prefabProps = std::make_unique<PrefabProperties>();
         prefabProps->guid = prefabGUID;
         prefabProps->name = prefabName;
-        prefabProps->path = relativePath; // Store relative path
+        prefabProps->path = relativePath;
         prefabProps->isScenePrefab = false;
 
-        // 6. Register in AssetManager (use relative path as key)
+        // 6. Register in AssetManager (this will update if already exists)
         AssetManager::Instance().RegisterAsset(std::move(prefabProps), &g_PrefabProps, relativePath);
 
         // 7. Save to JSON (use absolute path for JSON file)
         std::string jsonPath = (projectRoot / "Assets/JSON/PrefabAsset.json").string();
         AssetManager::Instance().SaveArrayToJson(TypeName<PrefabProperties>::value, jsonPath, "prefabs");
 
-        std::cout << "Created prefab: " << prefabName << " (GUID: " << prefabGUID << ")\n";
-        std::cout << "  Saved to: " << absolutePrefabPath << "\n";
+        if (isOverwriting)
+        {
+            std::cout << "[CreatePrefab] UPDATED existing prefab: " << prefabName << " (GUID: " << prefabGUID << ")" << std::endl;
+        }
+        else
+        {
+            std::cout << "[CreatePrefab] CREATED new prefab: " << prefabName << " (GUID: " << prefabGUID << ")" << std::endl;
+        }
+        std::cout << "[CreatePrefab] Saved to: " << absolutePrefabPath << std::endl;
     }
 
     Entity InstantiatePrefab(const std::string& prefabGUID)
@@ -1528,6 +1709,168 @@ namespace Framework
             }
             script.scriptCount = static_cast<int>(script.scripts.size());
             ecsInterface.AddComponent<ScriptProperties>(newEntity, script);
+        }
+
+        // BoxColliderComponent
+        if (components.HasMember("BoxColliderComponent")) {
+            BoxColliderComponent comp;
+            auto& json = components["BoxColliderComponent"];
+
+            if (json.HasMember("colliders") && json["colliders"].IsArray()) {
+                for (const auto& val : json["colliders"].GetArray()) {
+                    BoxColliderEntry entry;
+
+                    if (val.HasMember("size")) {
+                        auto arr = val["size"].GetArray();
+                        entry.size = { arr[0].GetFloat(), arr[1].GetFloat(), arr[2].GetFloat() };
+                    }
+                    if (val.HasMember("center")) {
+                        auto arr = val["center"].GetArray();
+                        entry.center = { arr[0].GetFloat(), arr[1].GetFloat(), arr[2].GetFloat() };
+                    }
+                    if (val.HasMember("canPassThrough")) {
+                        entry.canPassThrough = val["canPassThrough"].GetBool();
+                    }
+                    if (val.HasMember("triggerMessage")) entry.triggerMessage = val["triggerMessage"].GetString();
+                    if (val.HasMember("isInteractable")) {
+                        entry.isInteractable = val["isInteractable"].GetBool();
+                    }
+                    if (val.HasMember("interactMessage") && val["interactMessage"].IsString()) {
+                        entry.interactMessage = val["interactMessage"].GetString();
+                    }
+
+                    comp.colliders.push_back(entry);
+                }
+            }
+            ecsInterface.AddComponent(newEntity, comp);
+        }
+
+        // PhysicsProperties
+        if (components.HasMember("PhysicsProperties"))
+        {
+            Framework::PhysicsProperties phys;
+            const auto& physJson = components["PhysicsProperties"];
+            Deserialize(&phys, g_PhysicsProps, physJson);
+
+            if (phys.isImmovable)
+            {
+                phys.motionType = 0; // Set to Static
+            }
+
+            ecsInterface.AddComponent(newEntity, phys);
+        }
+
+        // EventSenderComponent
+        if (components.HasMember("EventSenderComponent"))
+        {
+            const auto& jsonVal = components["EventSenderComponent"];
+            EventSenderComponent senderComp;
+
+            if (jsonVal.HasMember("senders") && jsonVal["senders"].IsArray())
+            {
+                const auto& senderArray = jsonVal["senders"];
+                for (rapidjson::SizeType i = 0; i < senderArray.Size(); i++)
+                {
+                    const auto& entryObj = senderArray[i];
+                    EventSenderEntry newEntry;
+
+                    if (entryObj.HasMember("triggerName") && entryObj["triggerName"].IsString()) {
+                        newEntry.triggerName = entryObj["triggerName"].GetString();
+                    }
+                    if (entryObj.HasMember("messageName") && entryObj["messageName"].IsString()) {
+                        newEntry.messageName = entryObj["messageName"].GetString();
+                    }
+
+                    senderComp.senders.push_back(newEntry);
+                }
+            }
+
+            ecsInterface.AddComponent(newEntity, senderComp);
+        }
+
+        // EventReceiverComponent
+        if (components.HasMember("EventReceiverComponent"))
+        {
+            const auto& jsonVal = components["EventReceiverComponent"];
+            EventReceiverComponent receiverComp;
+
+            if (jsonVal.HasMember("receivers") && jsonVal["receivers"].IsArray())
+            {
+                const auto& receiverArray = jsonVal["receivers"];
+                for (rapidjson::SizeType i = 0; i < receiverArray.Size(); i++)
+                {
+                    const auto& entryObj = receiverArray[i];
+                    EventReceiverEntry newEntry;
+
+                    if (entryObj.HasMember("messageToListenFor") && entryObj["messageToListenFor"].IsString()) {
+                        newEntry.messageToListenFor = entryObj["messageToListenFor"].GetString();
+                    }
+                    if (entryObj.HasMember("luaFunctionToCall") && entryObj["luaFunctionToCall"].IsString()) {
+                        newEntry.luaFunctionToCall = entryObj["luaFunctionToCall"].GetString();
+                    }
+
+                    newEntry.isSubscribed = false;
+                    receiverComp.receivers.push_back(newEntry);
+                }
+            }
+
+            ecsInterface.AddComponent(newEntity, receiverComp);
+        }
+
+        // ListenerComponent
+        if (components.HasMember("ListenerComponent"))
+        {
+            const auto& jsonVal = components["ListenerComponent"];
+            ListenerComponent listenerComp;
+            Deserialize(&listenerComp, g_ListenerComponentProps, jsonVal);
+            ecsInterface.AddComponent(newEntity, listenerComp);
+        }
+
+        // AudioComponent
+        if (components.HasMember("AudioComponent"))
+        {
+            const auto& jsonVal = components["AudioComponent"];
+            AudioComponent audioComp;
+            Deserialize(&audioComp, g_AudioComponentProps, jsonVal);
+
+            // Reset runtime fields
+            audioComp.eventInstance = nullptr;
+            audioComp.isPlaying = false;
+            audioComp.channelID = -1;
+            audioComp.lastPosition = glm::vec3(0.0f);
+
+            ecsInterface.AddComponent(newEntity, audioComp);
+        }
+
+        // ButtonComponent
+        if (components.HasMember("ButtonComponent"))
+        {
+            const auto& jsonVal = components["ButtonComponent"];
+            ButtonComponent buttonComp;
+            Deserialize(&buttonComp, g_ButtonComponentProps, jsonVal);
+            ecsInterface.AddComponent(newEntity, buttonComp);
+        }
+
+        // ItemComponent
+        if (components.HasMember("ItemComponent"))
+        {
+            const auto& jsonVal = components["ItemComponent"];
+            ItemComponent item;
+
+            if (jsonVal.HasMember("name") && jsonVal["name"].IsString())
+            {
+                item.name = jsonVal["name"].GetString();
+            }
+            if (jsonVal.HasMember("isIngredient") && jsonVal["isIngredient"].IsBool())
+            {
+                item.isIngredient = jsonVal["isIngredient"].GetBool();
+            }
+            if (jsonVal.HasMember("isChoppable") && jsonVal["isChoppable"].IsBool())
+            {
+                item.isChoppable = jsonVal["isChoppable"].GetBool();
+            }
+
+            ecsInterface.AddComponent(newEntity, item);
         }
 
         if (newEntity != std::numeric_limits<Entity>::max())

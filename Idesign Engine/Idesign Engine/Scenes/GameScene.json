@@ -96,11 +96,11 @@
                     "volume": 0.20000000298023224,
                     "loop": false,
                     "playOnStart": true,
-                    "isPlaying": true,
+                    "isPlaying": false,
                     "lastPosition": [
-                        -45.934112548828125,
-                        5.300000190734863,
-                        14.715734481811523
+                        0.0,
+                        0.0,
+                        0.0
                     ]
                 }
             }
@@ -1962,14 +1962,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -46.17661666870117,
+                        -33.9033088684082,
                         8.039383888244629,
-                        11.722286224365234
+                        12.088208198547363
                     ],
                     "rotation": [
-                        0.2979099750518799,
-                        -8.09835147857666,
-                        0.004957654047757387
+                        0.2979106903076172,
+                        -18.7205867767334,
+                        0.0052345129661262035
                     ],
                     "scale": [
                         0.9999989867210388,
@@ -2044,9 +2044,9 @@
                 },
                 "ListenerComponent": {
                     "position": [
-                        -46.17661666870117,
+                        -33.9033088684082,
                         8.039383888244629,
-                        11.722286224365234
+                        12.088208198547363
                     ],
                     "forward": [
                         0.0,
@@ -2432,11 +2432,11 @@
                     "volume": 1.0,
                     "loop": true,
                     "playOnStart": true,
-                    "isPlaying": true,
+                    "isPlaying": false,
                     "lastPosition": [
-                        -40.230262756347656,
-                        6.287981033325195,
-                        17.725893020629883
+                        0.0,
+                        0.0,
+                        0.0
                     ]
                 }
             }
@@ -2551,8 +2551,8 @@
                 },
                 "ButtonComponent": {
                     "position": [
-                        855.0,
-                        215.0
+                        980.0,
+                        340.0
                     ],
                     "size": [
                         250.0,
@@ -2613,8 +2613,8 @@
                 },
                 "ButtonComponent": {
                     "position": [
-                        855.0,
-                        315.0
+                        980.0,
+                        440.0
                     ],
                     "size": [
                         250.0,
@@ -2671,8 +2671,8 @@
                 },
                 "ButtonComponent": {
                     "position": [
-                        855.0,
-                        115.0
+                        980.0,
+                        240.0
                     ],
                     "size": [
                         250.0,
@@ -2767,15 +2767,6 @@
             }
         },
         {
-            "name": "Customer",
-            "guid": "70e8d3d7-3068-4b8d-ab17-6957bd00905f",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
-                }
-            }
-        },
-        {
             "name": "ProgressBarFrame",
             "guid": "e3bb1d65-0a76-4c4b-9c3e-bcbffd48f2f8",
             "components": {
@@ -2790,24 +2781,6 @@
             "components": {
                 "PrefabComponent": {
                     "prefabGUID.id": "5dfc16be-aa4a-420a-9105-f7c9652f3620"
-                }
-            }
-        },
-        {
-            "name": "Customer",
-            "guid": "5893bf74-8b6f-42a6-8625-5ca889396c1e",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
-                }
-            }
-        },
-        {
-            "name": "Customer",
-            "guid": "051afc97-369c-469f-a277-ceca2b74884c",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
                 }
             }
         },
@@ -2837,12 +2810,11 @@
                     "children": [],
                     "sortIndex": 0
                 },
+                "TagComponent": {
+                    "tags": []
+                },
                 "MeshComponent": {
                     "guid": ""
-                },
-                "TextureComponent": {
-                    "guid": "",
-                    "isUI": false
                 }
             }
         },
@@ -2872,12 +2844,11 @@
                     "children": [],
                     "sortIndex": 0
                 },
+                "TagComponent": {
+                    "tags": []
+                },
                 "MeshComponent": {
                     "guid": ""
-                },
-                "TextureComponent": {
-                    "guid": "",
-                    "isUI": false
                 }
             }
         },
@@ -2907,12 +2878,11 @@
                     "children": [],
                     "sortIndex": 0
                 },
+                "TagComponent": {
+                    "tags": []
+                },
                 "MeshComponent": {
                     "guid": ""
-                },
-                "TextureComponent": {
-                    "guid": "",
-                    "isUI": false
                 }
             }
         },
@@ -2942,12 +2912,11 @@
                     "children": [],
                     "sortIndex": 0
                 },
+                "TagComponent": {
+                    "tags": []
+                },
                 "MeshComponent": {
                     "guid": ""
-                },
-                "TextureComponent": {
-                    "guid": "",
-                    "isUI": false
                 }
             }
         }

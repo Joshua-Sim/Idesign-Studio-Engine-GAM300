@@ -3,7 +3,7 @@ local CustomerSystem = {}
 -- =========================================================
 -- CONFIGURATION
 -- =========================================================
-CustomerSystem.customerPrefabGUID = "Customer_Prefab"
+CustomerSystem.customerPrefabGUID = "Customer_Kinematic_Prefab"
 CustomerSystem.spawnPointName = "SpawnPoint"
 CustomerSystem.waitPointName = "CustomerWaitingPoint"
 CustomerSystem.spawn_delay = 3.0
@@ -120,9 +120,9 @@ function CustomerSystem:on_update(dt)
                     
                     -- Update Timer
                     current_patience = current_patience - dt
-                    if current_patience < 0 then 
+                    if current_patience < 0 then    
                         current_patience = 0 
-                        print("[CustomerSystem] Time expired!")
+                      --  print("[CustomerSystem] Time expired!")
                         -- Add logic here for failure if needed
                     end
                     
@@ -175,7 +175,7 @@ function CustomerSystem:spawn_customer()
     hasSpawned = true
     is_at_counter = false 
     
-    PathfindTo("Customer", self.waitPointName)
+    PathfindTo("Customer_Kinematic", self.waitPointName)
 end
 
 -- =========================================================
