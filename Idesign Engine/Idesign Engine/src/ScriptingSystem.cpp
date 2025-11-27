@@ -448,6 +448,37 @@ namespace Framework {
             return 0;
         }
 
+        // Set a script's variable (Access a scripts local var and edit if needed)
+        static int lua_SetScriptVariable(lua_State* L)
+        {
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+            const char* varName = luaL_checkstring(L, 2);
+            const char* value = luaL_checkstring(L, 3);
+
+            if (!ecsInterface.IsEntityValid(e) || !ecsInterface.HasComponent<ScriptProperties>(e)) {
+                return luaL_error(L, "SetScriptVariable: invalid entity or no ScriptProperties");
+            }
+
+            auto& scriptProps = ecsInterface.GetComponent<ScriptProperties>(e);
+
+            // Find the Customer script's table
+            for (auto& sc : scriptProps.scripts) {
+                if (sc.tableRef != LUA_NOREF && sc.tableRef > 0) {
+                    // Push the script table
+                    lua_rawgeti(L, LUA_REGISTRYINDEX, sc.tableRef);
+
+                    // Set the variable
+                    lua_pushstring(L, value);
+                    lua_setfield(L, -2, varName);
+
+                    // Pop the table
+                    lua_pop(L, 1);
+                }
+            }
+
+            return 0;
+        }
+
         // Engine LUA exposed utility functions (Get entity, get by component, get by name, tag , create prefab, setactive -deactive etc
            
         int lua_FindEntityByName(lua_State* L)
@@ -870,6 +901,19 @@ namespace Framework {
                 return 1;
             }
             lua_pushstring(L, "");
+            return 1;
+        }
+
+        // Get item name from item ID (item mapping to name)
+        static int lua_GetItemNameById(lua_State* L) {
+            int itemId = static_cast<int>(luaL_checkinteger(L, 1));
+
+            if (itemId < 0 || itemId >= Framework::kItemCount) {
+                lua_pushstring(L, "");
+                return 1;
+            }
+
+            lua_pushstring(L, Framework::kItemNames[itemId]);
             return 1;
         }
 
@@ -1475,16 +1519,21 @@ namespace Framework {
         lua_register(L, "GetScore", lua_GetScore);
         lua_register(L, "AddScore", lua_AddScore);
         lua_register(L, "SetText", lua_SetText);
-        lua_register(L, "AddToInventory", Lua_AddToInventory);
+
         lua_register(L, "DestroyEntity", Lua_DestroyEntity);
         lua_register(L, "GetItemName", Lua_GetItemName);
         lua_register(L, "RegisterButtonCallback",   Lua_RegisterButtonCallback);
-        lua_register(L, "IsItemDestroyOnPick", Lua_IsItemDestroyOnPick);
-        lua_register(L, "GetSelectedItem", Lua_GetPlayerSelectedItemId);
-        lua_register(L, "ConsumeSelectedItem", Lua_ConsumePlayerSelectedItem);
+
         lua_register(L, "SpawnCauldronItem", l_spawnCauldronItem);
         lua_register(L, "CheckValidRecipe", l_CheckValidRecipe);
         lua_register(L, "GetEntityName", lua_GetEntityName);
+
+        // Inventory Utility
+        lua_register(L, "IsItemDestroyOnPick", Lua_IsItemDestroyOnPick);
+        lua_register(L, "GetSelectedItem", Lua_GetPlayerSelectedItemId);
+        lua_register(L, "ConsumeSelectedItem", Lua_ConsumePlayerSelectedItem);
+        lua_register(L, "AddToInventory", Lua_AddToInventory);
+        lua_register(L, "GetItemNameById", lua_GetItemNameById);
 
         // Engine utility
         lua_register(L, "FindEntityByName",     lua_FindEntityByName);
@@ -1495,6 +1544,7 @@ namespace Framework {
         lua_register(L, "PlayEntityAnimation",  l_PlayEntityAnimation);
         lua_register(L, "SpawnPrefab",          lua_SpawnPrefab);
         lua_register(L, "FireEvent", lua_FireEvent); // Maybe add register if needed
+        lua_register(L, "SetScriptVariable", lua_SetScriptVariable);
 
         // Engine States
         lua_register(L, "GameStateStart",       lua_GameStateStart);

@@ -589,6 +589,15 @@ namespace Framework
                     ecsInterface.AddComponent(entity, item);
                 }
 
+                // --- Text Component ---
+                if (components.HasMember("TextProperties"))
+                {
+                    const auto& jsonVal = components["TextProperties"];
+                    TextProperties textComp;
+                    Deserialize(&textComp, g_TextComponentProps, jsonVal);
+                    ecsInterface.AddComponent(entity, textComp);
+                }
+
                 sceneManager.RegisterEntityToScene(entity, cleanName);
             }
         }
@@ -1449,6 +1458,14 @@ namespace Framework
             componentsObj.AddMember("ItemComponent", itemJson, allocator);
         }
 
+        if (ecsInterface.HasComponent<TextProperties>(entity))
+        {
+            const auto& text = ecsInterface.GetComponent<TextProperties>(entity);
+            rapidjson::Value textJson(rapidjson::kObjectType);
+            Serialize((void*)&text, g_TextComponentProps, textJson, allocator);
+            componentsObj.AddMember("TextProperties", textJson, allocator);
+        }
+
         entityObj.AddMember("components", componentsObj, allocator);
         doc.AddMember("entity", entityObj, allocator);  // Note: "entity" not "Entities"
 
@@ -1675,11 +1692,29 @@ namespace Framework
         if (components.HasMember("MeshReference"))
         {
             const auto& meshRef = components["MeshReference"];
+
+            bool componentAdded = false;
+
             if (meshRef.HasMember("guid") && meshRef["guid"].IsString())
             {
                 std::string guid = meshRef["guid"].GetString();
-                MeshProperties* mesh = AssetManager::Instance().Get<MeshProperties>(guid);
-                if (mesh) ecsInterface.AddComponent(newEntity, *mesh);
+
+                if (!guid.empty() && guid != "0")
+                {
+                    MeshProperties* mesh = AssetManager::Instance().Get<MeshProperties>(guid);
+                    if (mesh)
+                    {
+                        ecsInterface.AddComponent(newEntity, *mesh);
+                        componentAdded = true;
+                    }
+                }
+            }
+
+            // If no valid mesh was loaded, add empty component
+            if (!componentAdded)
+            {
+                MeshProperties defaultMesh;
+                ecsInterface.AddComponent(newEntity, defaultMesh);
             }
         }
 
@@ -1934,6 +1969,14 @@ namespace Framework
             }
 
             ecsInterface.AddComponent(newEntity, item);
+        }
+
+        if (components.HasMember("TextProperties"))
+        {
+            const auto& jsonVal = components["TextProperties"];
+            TextProperties textComp;
+            Deserialize(&textComp, g_TextComponentProps, jsonVal);
+            ecsInterface.AddComponent(newEntity, textComp);
         }
 
         if (newEntity != std::numeric_limits<Entity>::max())

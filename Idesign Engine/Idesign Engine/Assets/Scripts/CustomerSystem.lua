@@ -12,11 +12,12 @@ CustomerSystem.spawn_delay = 3.0
 CustomerSystem.prefab_frame = "ProgressBarFrame_Prefab"
 CustomerSystem.prefab_fill  = "ProgressBarFill_Prefab"
 
-
 CustomerSystem.tex_green = "Assets/Textures/green.png" 
 CustomerSystem.tex_red   = "Assets/Textures/red.png"
+
 -- Threshold to turn red (0.3 = 30% time remaining)
 local color_swap_threshold = 0.3
+
 -- Visual Settings
 local bar_length_max = 0.5
 local bar_thickness  = 0.2
@@ -28,7 +29,6 @@ local tune_x = 1.6
 local tune_y = -0.04
 
 -- [BILLBOARD DEPTH ADJUST]
--- Positive (+) moves towards the player to prevent Z-fighting
 local billboard_depth_adjust = 0.055
 
 -- Patience Settings
@@ -47,11 +47,11 @@ local hasSpawned = false
 local is_at_counter = false 
 local spawnTimer = 0
 local navMeshBuilt = false
+local player_id = nil
 
 -- Bar Entity IDs
 local entity_frame = nil
 local entity_fill = nil
-local player_id = nil
 
 local current_bar_state = "green"
 
@@ -106,7 +106,11 @@ function CustomerSystem:on_update(dt)
                         is_at_counter = true
                         
                         current_patience = patience_duration
+                        
                         self:SpawnBar(activeCustomer)
+                        
+                        -- Fire arrival event to customer
+                        FireEvent("OnArrival", activeCustomer, activeCustomer, 0)
                     end
                 end
             else
@@ -115,30 +119,54 @@ function CustomerSystem:on_update(dt)
                     
                     -- Update Timer
                     current_patience = current_patience - dt
-                    if current_patience < 0 then    
-                        current_patience = 0 
-                      --  print("[CustomerSystem] Time expired!")
-                        -- Add logic here for failure if needed
+                    if current_patience <= 0 then    
+                        current_patience = 0
+                        
+                        -- TIME EXPIRED - CUSTOMER LEAVES UNHAPPY
+                        print("[CustomerSystem] Time expired! Customer leaving unhappy.")
+                        
+                        -- Apply score penalty
+                        AddScore(-10)
+                        print("[CustomerSystem] -10 score penalty!")
+                        
+                        -- Clean up progress bar
+                        if entity_frame then DestroyEntity(entity_frame); entity_frame = nil end
+                        if entity_fill then DestroyEntity(entity_fill); entity_fill = nil end
+                        
+                        -- Tell customer to clean up and leave
+                        if activeCustomer then
+                            FireEvent("CustomerTimeout", activeCustomer, activeCustomer, 0)
+                        end
+                        
+                        -- Reset state
+                        activeCustomer = nil
+                        hasSpawned = false
+                        is_at_counter = false
+                        current_patience = 0.0
+                        spawnTimer = 0
+                        current_bar_state = "green"
+                        
+                        print("[CustomerSystem] Ready for next customer.")
+                        return
                     end
                     
                     -- Update Scale
                     local pct = current_patience / patience_duration
 
-                    -- =============================================
+                    -- Color swap based on threshold
                     if pct <= color_swap_threshold then
-                        -- Time is low! Switch to RED if we haven't already
                         if current_bar_state == "green" then
                             print("[CustomerSystem] Patience Low! Switching to Red.")
                             SetTexture(entity_fill, self.tex_red)
                             current_bar_state = "red"
                         end
                     else
-                        -- Time is okay. Ensure it is GREEN
                         if current_bar_state == "red" then
                             SetTexture(entity_fill, self.tex_green)
                             current_bar_state = "green"
                         end
                     end
+                    
                     local current_length = pct * bar_length_max
                     SetScale(entity_fill, current_length, bar_thickness * 0.9, bar_thickness * 0.9)
 
@@ -172,9 +200,11 @@ function CustomerSystem:spawn_customer()
     
     PathfindTo("Customer_Kinematic", self.waitPointName)
 end
+
 -- =========================================================
--- CUSTOMER COMPLETION HANDLER
+-- EVENT HANDLERS
 -- =========================================================
+
 function CustomerSystem.OnCustomerComplete(senderID, targetID, actionType)
     print("[CustomerSystem] ========== CUSTOMER DONE ==========")
     print("[CustomerSystem] Event received - Sender: " .. tostring(senderID) .. ", Target: " .. tostring(targetID))
@@ -235,7 +265,6 @@ function CustomerSystem:UpdateBillboard(px, pz, cx, cy, cz)
 
     if entity_frame then
         SetPosition(entity_frame, frame_pos_x, frame_pos_y, frame_pos_z)
-        -- Rotate Frame to face player
         SetRotation(entity_frame, 0.0, angle_deg, 0.0)
     end
 
@@ -244,7 +273,6 @@ function CustomerSystem:UpdateBillboard(px, pz, cx, cy, cz)
         SetRotation(entity_fill, 0.0, angle_deg + 180.0, 0.0)
         
         -- 3. Calculate SIDEWAYS Offset (Left/Right alignment)
-        -- Moves the bar start point to the side of the frame
         local right_angle = angle_rad + (math.pi / 2.0)
         local side_dist = (bar_length_max * tune_x)
         
@@ -252,7 +280,6 @@ function CustomerSystem:UpdateBillboard(px, pz, cx, cy, cz)
         local side_offset_z = side_dist * math.cos(right_angle)
 
         -- 4. Calculate DEPTH Offset (Forward/Back alignment)
-        -- Moves the bar slightly towards the player to prevent clipping
         local depth_offset_x = billboard_depth_adjust * math.sin(angle_rad)
         local depth_offset_z = billboard_depth_adjust * math.cos(angle_rad)
 
@@ -265,16 +292,19 @@ function CustomerSystem:UpdateBillboard(px, pz, cx, cy, cz)
     end
 end
 
+-- =========================================================
+-- AUDIO
+-- =========================================================
+
 function CustomerSystem:play_doorbell()
     local frogEntity = FindEntityByName("Frog")
     
     if frogEntity == nil then 
         print("[CustomerSystem] WARNING: Frog doorbell entity not found")
-        print("[CustomerSystem] Looking for entity named: Frog")
         return
     end
 
-    PlayEntitySound(frogEntity)  -- Use entity-based audio instead of Sound.Play()
+    PlayEntitySound(frogEntity)
     print("[CustomerSystem] Frog croaked, customer entering shop")
 end 
 

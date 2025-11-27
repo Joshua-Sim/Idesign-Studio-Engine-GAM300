@@ -1,7 +1,7 @@
 {
     "entity": {
         "name": "Customer_Kinematic",
-        "guid": "a6d3f5fb-7839-46a2-b4dc-168c2efe16e8",
+        "guid": "8168dc56-9447-4669-bbe0-138cc16536db",
         "components": {
             "TransformComponent": {
                 "position": [
@@ -101,6 +101,14 @@
                     {
                         "messageToListenFor": "OnInteractCustomer",
                         "luaFunctionToCall": "OnInteract"
+                    },
+                    {
+                        "messageToListenFor": "OnArrival",
+                        "luaFunctionToCall": "OnArrival"
+                    },
+                    {
+                        "messageToListenFor": "CustomerTimeout",
+                        "luaFunctionToCall": "OnCustomerTimeout"
                     }
                 ]
             }

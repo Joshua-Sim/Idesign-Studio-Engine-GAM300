@@ -43,6 +43,12 @@
             "isScenePrefab": false
         },
         {
+            "guid": "b1e7bea6-ba5d-4a40-be1c-b30224f8868c",
+            "name": "CustomerTextbox_Prefab",
+            "path": "Assets\\Prefabs\\CustomerTextbox_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
             "guid": "584b841f-a181-4adb-a75c-852abf944c79",
             "name": "Customer_Kinematic_Prefab",
             "path": "Assets\\Prefabs\\Customer_Kinematic_Prefab.prefab",
