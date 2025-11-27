@@ -19,6 +19,12 @@
             "isUI": false
         },
         {
+            "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
+            "name": "green",
+            "path": "Assets\\Textures\\green.png",
+            "isUI": false
+        },
+        {
             "guid": "7b119595-c240-4c45-a8a0-018d7a3d917f",
             "name": "",
             "path": "Assets/PNG/test.png",
@@ -37,15 +43,15 @@
             "isUI": false
         },
         {
-            "guid": "e726adb8-bf75-4993-9e77-826f5541ac9d",
-            "name": "ChoppedHerb2",
-            "path": "Assets\\Textures\\ChoppedHerb2.png",
-            "isUI": false
-        },
-        {
             "guid": "d4899207-ea5e-473b-870f-aade76e8a7ff",
             "name": "Door",
             "path": "Assets\\Textures\\Door.png",
+            "isUI": false
+        },
+        {
+            "guid": "e726adb8-bf75-4993-9e77-826f5541ac9d",
+            "name": "ChoppedHerb2",
+            "path": "Assets\\Textures\\ChoppedHerb2.png",
             "isUI": false
         },
         {
@@ -91,29 +97,15 @@
             "isUI": false
         },
         {
+            "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
+            "name": "Shelf",
+            "path": "Assets\\Textures\\Shelf.png",
+            "isUI": false
+        },
+        {
             "guid": "afd25b76-dddc-4c4f-bae4-a6c9a22931e5",
             "name": "unchopped_herb",
             "path": "Assets\\Textures\\unchopped_herb3D.png",
-            "isUI": false
-        },
-        {
-            "guid": "d4899207-ea5e-473b-870f-aade76e8a7ff",
-            "name": "Door",
-            "path": "Assets\\Textures\\Door.png",
-            "isUI": false
-        },
-        {
-            "guid": "e726adb8-bf75-4993-9e77-826f5541ac9d",
-            "name": "ChoppedHerb2",
-            "path": "Assets\\Textures\\ChoppedHerb2.png",
-            "name": "Herb",
-            "path": "Assets\\Textures\\Herb.png",
-            "isUI": false
-        },
-        {
-            "guid": "ac09c4fc-da84-4656-8246-40407d5bd854",
-            "name": "play_button",
-            "path": "Assets\\Textures\\play_button.png",
             "isUI": false
         },
         {
@@ -132,12 +124,6 @@
             "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
             "name": "Frog",
             "path": "Assets\\Textures\\Frog.png",
-            "isUI": false
-        },
-        {
-            "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
-            "name": "Shelf",
-            "path": "Assets\\Textures\\Shelf.png",
             "isUI": false
         },
         {
@@ -407,21 +393,11 @@
         {
             "guid": "b7b4bcaf-b4d9-4c53-a9af-017de16950a6",
             "name": "mainIcon",
-            "path": "Assets\\Textures\\mainIcon.png"
-        },
-            "guid": "b9451eb6-415f-465b-908d-b291ec117c39",
-            "name": "tree",
-            "path": "Assets\\Textures\\tree.jpg",
+            "path": "Assets\\Textures\\mainIcon.png",
             "isUI": false
         },
         {
-            "guid": "9acf6914-2c9b-468a-bbd6-a65828faea16",
-            "name": "green",
-            "path": "Assets\\Textures\\green.png",
-            "isUI": false
-        },
-        {
-            "guid": "df5f7c8d-b2df-483f-89d6-da2036dad5a8",
+            "guid": "973ba46f-58c8-49a2-9b53-c42a588fb778",
             "name": "red",
             "path": "Assets\\Textures\\red.png",
             "isUI": false

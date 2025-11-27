@@ -96,11 +96,11 @@
                     "volume": 0.20000000298023224,
                     "loop": false,
                     "playOnStart": true,
-                    "isPlaying": true,
+                    "isPlaying": false,
                     "lastPosition": [
-                        -45.934112548828125,
-                        5.300000190734863,
-                        14.715734481811523
+                        0.0,
+                        0.0,
+                        0.0
                     ]
                 }
             }
@@ -2432,84 +2432,12 @@
                     "volume": 1.0,
                     "loop": true,
                     "playOnStart": true,
-                    "isPlaying": true,
+                    "isPlaying": false,
                     "lastPosition": [
-                        -40.230262756347656,
-                        6.287981033325195,
-                        17.725893020629883
+                        0.0,
+                        0.0,
+                        0.0
                     ]
-                }
-            }
-        },
-        {
-            "name": "Customer",
-            "guid": "e69f01da-c02b-4fa4-ac30-a2355035885d",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
-                }
-            }
-        },
-        {
-            "name": "Customer",
-            "guid": "2e7e52e0-e0f6-410f-8274-8dd25abd32e7",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
-                }
-            }
-        },
-        {
-            "name": "Customer",
-            "guid": "e7a9dbbd-468d-43c2-9801-e8c5a53cae7e",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
-                }
-            }
-        },
-        {
-            "name": "Customer",
-            "guid": "e544b19b-c9f3-4a30-8fd6-c019ca915b1c",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
-                }
-            }
-        },
-        {
-            "name": "Customer",
-            "guid": "7395ec8d-6cae-41bc-b0b8-fdf9fc89e566",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
-                }
-            }
-        },
-        {
-            "name": "Customer",
-            "guid": "a3b6774f-110e-4c55-a6d1-19c02b25e2fa",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
-                }
-            }
-        },
-        {
-            "name": "Customer",
-            "guid": "6dbbce0d-1150-44ea-8056-57d38e552f24",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
-                }
-            }
-        },
-        {
-            "name": "Customer",
-            "guid": "598b05e3-ba31-40a5-8f32-9827df2c9019",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
                 }
             }
         },
@@ -2543,8 +2471,7 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 }
             }
         },
@@ -2578,8 +2505,7 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "b7b4bcaf-b4d9-4c53-a9af-017de16950a6",
@@ -2617,8 +2543,7 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "01931225-401d-4164-8db6-754535863bb1",
@@ -2671,8 +2596,7 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "475e81a7-2e58-4938-9542-ca201d5d96f5",
@@ -2730,8 +2654,7 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "38c96217-d4fa-4b5b-910f-d8914b7a1e0f",
@@ -2756,60 +2679,6 @@
                         250.0
                     ],
                     "isHovered": false
-                }
-            }
-        },
-        {
-            "name": "Customer",
-            "guid": "16216b22-7d7e-411d-a3b7-114511fa0fd9",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
-                }
-            }
-        },
-        {
-            "name": "Customer",
-            "guid": "ba84631d-29d8-4d03-b95d-506cc61f72a6",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
-                }
-            }
-        },
-        {
-            "name": "Customer",
-            "guid": "0034eca4-ce4f-4a50-9896-ac10c3bc6890",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
-                }
-            }
-        },
-        {
-            "name": "Customer",
-            "guid": "3f040ac3-dad5-4ed6-8aae-48d66a373590",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
-                }
-            }
-        },
-        {
-            "name": "Customer",
-            "guid": "180f330e-b15c-481c-8792-8932ad6f627f",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
-                }
-            }
-        },
-        {
-            "name": "Customer",
-            "guid": "53f53e41-b795-457a-99e5-a2e4ec84ef9c",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
                 }
             }
         }
