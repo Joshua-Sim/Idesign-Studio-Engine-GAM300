@@ -76,9 +76,8 @@ namespace Framework
                     // FIRE AND FORGET
                     // The EventSystem will pick this up and call the Lua script attached to the object
                     EventManager::Instance().Fire(entry.interactMessage, &payload);
-
-                    return; // Stop here. The Event System handles the rest.
                 }
+                continue;
             }
         }
 
@@ -95,7 +94,7 @@ namespace Framework
                 if (slot >= 0) {
                     if (item.toDestroyWhenPicked) {
                         mPhysicsSystem->RemoveBodyForEntity(targetEntity);
-                        ecsInterface.DestroyEntity(targetEntity);
+                        if (item.toDestroyWhenPicked) ecsInterface.DestroyEntity(targetEntity);
                     }
                     std::cout << "[Interact] Generic Item Picked Up." << std::endl;
                 }

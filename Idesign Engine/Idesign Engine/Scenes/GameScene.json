@@ -1928,14 +1928,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -42.75856018066406,
+                        -46.85536193847656,
                         8.039443969726563,
-                        11.67110538482666
+                        13.175931930541992
                     ],
                     "rotation": [
-                        0.29789891839027405,
-                        0.9056686758995056,
-                        0.0004562035028357059
+                        0.297898530960083,
+                        4.948161602020264,
+                        0.0004596366488840431
                     ],
                     "scale": [
                         0.9999989867210388,
@@ -2367,13 +2367,13 @@
                 "TransformComponent": {
                     "position": [
                         -46.48421859741211,
-                        6.542980194091797,
-                        9.069893836975098
+                        5.874567985534668,
+                        9.069907188415527
                     ],
                     "rotation": [
-                        0.0,
-                        -0.0,
-                        0.0
+                        0.000009897079507936724,
+                        -0.007351710926741362,
+                        0.00003721707980730571
                     ],
                     "scale": [
                         0.5,
@@ -2398,6 +2398,52 @@
                 "TextureComponent": {
                     "guid": "761d0499-1d0b-4487-9019-734a51de371b",
                     "isUI": false
+                },
+                "BoxColliderComponent": {
+                    "colliders": [
+                        {
+                            "size": [
+                                4.099999904632568,
+                                3.5,
+                                4.099999904632568
+                            ],
+                            "center": [
+                                0.0,
+                                1.7999999523162842,
+                                0.0
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": true,
+                            "interactMessage": "pearpickup"
+                        }
+                    ]
+                },
+                "PhysicsProperties": {
+                    "category": 1,
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 0.5,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "startAwake": true
+                },
+                "EventReceiverComponent": {
+                    "receivers": []
+                },
+                "ItemComponent": {
+                    "name": "pear",
+                    "isIngredient": true,
+                    "isChoppable": false
                 }
             }
         },
@@ -2413,6 +2459,24 @@
         {
             "name": "Customer",
             "guid": "60096dde-8d6c-43d8-984c-5fa65044e8a9",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
+                }
+            }
+        },
+        {
+            "name": "Customer",
+            "guid": "7206c66f-51b7-4eb0-9f4e-78f4a9052bab",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
+                }
+            }
+        },
+        {
+            "name": "Customer",
+            "guid": "2f9bee73-efcd-4004-b580-51542dda9a41",
             "components": {
                 "PrefabComponent": {
                     "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
