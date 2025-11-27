@@ -7,6 +7,10 @@ local stepInterval = 0.5
 local indoorEvent = "event:/Footstep"
 local outdoorEvent = "event:/FootstepBackyard"
 
+--Track state
+local wasInBackyard = false
+local backyardEntity = nil
+
 -- Backyard bounds (calculated from your scene data)
 -- Backyard position: (-45.93, 5.3, 14.72)
 -- Backyard collider: size (19.5, 5.8, 20), center offset (-15.3, 2.8, -5)
@@ -26,6 +30,15 @@ function M:on_init()
     print("[Footsteps] Script initialized for entity " .. tostring(self.entity))
     print(string.format("[Footsteps] Backyard bounds: X(%.2f to %.2f), Y(%.2f to %.2f), Z(%.2f to %.2f)", 
         backyardMin.x, backyardMax.x, backyardMin.y, backyardMax.y, backyardMin.z, backyardMax.z))
+
+    -- Find the backyard entity for volume control
+    backyardEntity = FindEntityByName("Backyard")
+
+    if backyardEntity then
+        print("[Footsteps] Found Backyard entity: " .. backyardEntity)
+    else
+        print("[Footsteps] WARNING: Could not find backyard entity!")
+    end 
 end
 
 function M:IsInBackyard()
@@ -39,6 +52,28 @@ function M:IsInBackyard()
 end
 
 function M:on_update(dt)
+    local isInBackyard = self:IsInBackyard()
+
+    -- Handle ambient occlusion (volume control based on location)
+    if backyardEntity then
+        if isInBackyard then
+            --Full volume when in backyard (outdoor)
+            SetEntityVolume(backyardEntity, 1.0)
+        else 
+            SetEntityVolume(backyardEntity, 0.2)
+        end 
+    end
+
+    --Log zone transitions for debugging 
+    if IsInBackyard and not wasInBackyard then
+        print("[Footsteps] Entered backyard - ambient at full volume")
+    elseif not isInBackyard and wasInBackyard then
+        print("[Footsteps] Left backyard - ambient muffled")
+    end 
+
+    wasInBackyard = isInBackyard
+    
+    -- Footstep logic 
     -- Check if player is moving
     local isMoving = false
     

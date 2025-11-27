@@ -86,6 +86,22 @@
                         0.0
                     ],
                     "startAwake": true
+                },
+                "AudioComponent": {
+                    "guid": "98e943fc-62e3-4646-ae60-49ef01e59ff0",
+                    "eventName": "event:/ForestAmbient",
+                    "is3D": true,
+                    "minDistance": 1.0,
+                    "maxDistance": 100.0,
+                    "volume": 1.0,
+                    "loop": false,
+                    "playOnStart": true,
+                    "isPlaying": true,
+                    "lastPosition": [
+                        -45.934112548828125,
+                        5.300000190734863,
+                        14.715734481811523
+                    ]
                 }
             }
         },
@@ -1946,14 +1962,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -56.85700988769531,
+                        -55.29311752319336,
                         8.03951358795166,
-                        9.750334739685059
+                        9.053871154785156
                     ],
                     "rotation": [
-                        0.2978998124599457,
-                        52.8368034362793,
-                        0.0012184876250103116
+                        0.297899454832077,
+                        47.90789031982422,
+                        0.0018177588935941458
                     ],
                     "scale": [
                         0.9999989867210388,
@@ -2028,9 +2044,9 @@
                 },
                 "ListenerComponent": {
                     "position": [
-                        -56.85700988769531,
+                        -55.29311752319336,
                         8.03951358795166,
-                        9.750334739685059
+                        9.053871154785156
                     ],
                     "forward": [
                         0.0,
@@ -2732,6 +2748,15 @@
         {
             "name": "Customer",
             "guid": "16216b22-7d7e-411d-a3b7-114511fa0fd9",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
+                }
+            }
+        },
+        {
+            "name": "Customer",
+            "guid": "ba84631d-29d8-4d03-b95d-506cc61f72a6",
             "components": {
                 "PrefabComponent": {
                     "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"

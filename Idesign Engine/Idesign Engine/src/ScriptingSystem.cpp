@@ -1169,6 +1169,16 @@ namespace Framework {
             return 0;
             });
 
+        lua_register(L, "SetEntityVolume", [](lua_State* L) -> int {
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+            float volume = (float)luaL_checknumber(L, 2);
+
+            if (Framework::g_AudioSystem) {
+                Framework::g_AudioSystem->SetEntityVolume(e, volume);
+            }
+            return 0;
+            });
+
         // Create Sound table with playback functions
         lua_newtable(L);
         lua_pushcfunction(L, lua_AudioPlay);      lua_setfield(L, -2, "Play");
