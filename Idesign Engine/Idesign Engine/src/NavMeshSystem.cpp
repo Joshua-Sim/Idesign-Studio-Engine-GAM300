@@ -38,6 +38,7 @@ namespace Framework {
     }
 
     NavMeshSystem::~NavMeshSystem() {
+        CleanupNavData();
         if (heightfield) rcFreeHeightField(heightfield);
         if (compactHeightfield) rcFreeCompactHeightfield(compactHeightfield);
         if (contourSet) rcFreeContourSet(contourSet);
@@ -178,6 +179,7 @@ namespace Framework {
     }
 
     void NavMeshSystem::BuildNavMesh() {
+        CleanupNavData();
        CollectSourceGeometry();
        ConvertToRecastFormat();
         // Proceed with standard Recast navmesh build pipeline
@@ -703,4 +705,16 @@ namespace Framework {
         navSystem->SetAgentDestination(agent, to);
     }
 
+    void NavMeshSystem::CleanupNavData() {
+        if (heightfield) { rcFreeHeightField(heightfield); heightfield = nullptr; }
+        if (compactHeightfield) { rcFreeCompactHeightfield(compactHeightfield); compactHeightfield = nullptr; }
+        if (contourSet) { rcFreeContourSet(contourSet); contourSet = nullptr; }
+        if (polyMesh) { rcFreePolyMesh(polyMesh); polyMesh = nullptr; }
+        if (polyMeshDetail) { rcFreePolyMeshDetail(polyMeshDetail); polyMeshDetail = nullptr; }
+        if (navQuery) { dtFreeNavMeshQuery(navQuery); navQuery = nullptr; }
+        if (navMesh) { dtFreeNavMesh(navMesh); navMesh = nullptr; }
+
+        isNavMeshBuilt = false;
+        std::cout << "[NavMeshSystem] Cleaned up old navmesh data." << std::endl;
+    }
 }

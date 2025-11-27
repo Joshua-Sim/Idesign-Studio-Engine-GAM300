@@ -43,6 +43,7 @@
 #include"ButtonSystem.h"
 #include "ButtonComponent.h"
 #include "RecipeBookManager.h"
+#include "TypeRegistry.h"
 
 using namespace Framework;
 
@@ -64,7 +65,7 @@ EngineState engineState;
 
 int main(void)
 {
-    //_CrtSetBreakAlloc(755138);
+    _CrtSetBreakAlloc(735035);
 
     // Save the initial working directory
     std::filesystem::path initialCWD = std::filesystem::current_path();
