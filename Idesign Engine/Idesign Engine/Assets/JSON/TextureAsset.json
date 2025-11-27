@@ -1,18 +1,6 @@
 {
     "textures": [
         {
-            "guid": "d1624844-bd9b-44f7-9976-d196954e311f",
-            "name": "ChoppedHerb1",
-            "path": "Assets\\Textures\\ChoppedHerb1.png",
-            "isUI": false
-        },
-        {
-            "guid": "7bd3846d-4142-4b26-ab54-85667861258f",
-            "name": "BluePotion2",
-            "path": "Assets\\Textures\\BluePotion2.png",
-            "isUI": false
-        },
-        {
             "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
             "name": "",
             "path": "Assets/PNG/test.png",
@@ -22,6 +10,12 @@
             "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
             "name": "green",
             "path": "Assets\\Textures\\green.png",
+            "isUI": false
+        },
+        {
+            "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606",
+            "name": "music",
+            "path": "Assets/Textures/music.png",
             "isUI": false
         },
         {
@@ -37,12 +31,6 @@
             "isUI": false
         },
         {
-            "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606",
-            "name": "music",
-            "path": "Assets/Textures/music.png",
-            "isUI": false
-        },
-        {
             "guid": "d4899207-ea5e-473b-870f-aade76e8a7ff",
             "name": "Door",
             "path": "Assets\\Textures\\Door.png",
@@ -52,6 +40,30 @@
             "guid": "e726adb8-bf75-4993-9e77-826f5541ac9d",
             "name": "ChoppedHerb2",
             "path": "Assets\\Textures\\ChoppedHerb2.png",
+            "isUI": false
+        },
+        {
+            "guid": "cabb6b16-8445-4f40-b9c8-bd593ea6b65c",
+            "name": "top",
+            "path": "Assets\\Textures\\top.png",
+            "isUI": false
+        },
+        {
+            "guid": "312bdb54-477d-47bb-a1ce-2224bc3ec5e3",
+            "name": "Cupboard",
+            "path": "Assets\\Textures\\Cupboard.png",
+            "isUI": false
+        },
+        {
+            "guid": "d1624844-bd9b-44f7-9976-d196954e311f",
+            "name": "ChoppedHerb1",
+            "path": "Assets\\Textures\\ChoppedHerb1.png",
+            "isUI": false
+        },
+        {
+            "guid": "7bd3846d-4142-4b26-ab54-85667861258f",
+            "name": "BluePotion2",
+            "path": "Assets\\Textures\\BluePotion2.png",
             "isUI": false
         },
         {
@@ -139,21 +151,15 @@
             "isUI": false
         },
         {
-            "guid": "f49379af-a87b-435b-b85b-5c3127ec2fe9",
-            "name": "Counter",
-            "path": "Assets\\Textures\\Counter.png",
-            "isUI": false
-        },
-        {
             "guid": "0f2ece2c-6b29-43d9-a6ae-1f648d18d86d",
             "name": "Wood",
             "path": "Assets\\Textures\\Wood.png",
             "isUI": false
         },
         {
-            "guid": "312bdb54-477d-47bb-a1ce-2224bc3ec5e3",
-            "name": "Cupboard",
-            "path": "Assets\\Textures\\Cupboard.png",
+            "guid": "f49379af-a87b-435b-b85b-5c3127ec2fe9",
+            "name": "Counter",
+            "path": "Assets\\Textures\\Counter.png",
             "isUI": false
         },
         {
@@ -292,12 +298,6 @@
             "guid": "4150d93e-69d2-424e-82e8-2d3db312badf",
             "name": "right",
             "path": "Assets\\Textures\\right.png",
-            "isUI": false
-        },
-        {
-            "guid": "cabb6b16-8445-4f40-b9c8-bd593ea6b65c",
-            "name": "top",
-            "path": "Assets\\Textures\\top.png",
             "isUI": false
         },
         {

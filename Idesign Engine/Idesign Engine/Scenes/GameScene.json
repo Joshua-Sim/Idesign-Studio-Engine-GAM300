@@ -1241,7 +1241,8 @@
                                 0.0
                             ],
                             "canPassThrough": false,
-                            "isInteractable": false
+                            "isInteractable": true,
+                            "interactMessage": "StartChopping"
                         }
                     ]
                 },
@@ -1263,6 +1264,14 @@
                         0.0
                     ],
                     "startAwake": true
+                },
+                "EventReceiverComponent": {
+                    "receivers": [
+                        {
+                            "messageToListenFor": "StartChopping",
+                            "luaFunctionToCall": "OnInteract"
+                        }
+                    ]
                 }
             }
         },

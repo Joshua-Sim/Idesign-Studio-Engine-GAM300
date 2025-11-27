@@ -24,9 +24,9 @@ M.knife_name = "Knife"
 M.knife_animation_name = "Armature|KnifeAction" 
 
 -- Knife Offsets (Relative to Player)
-M.knife_offset_right = 0.5       
+M.knife_offset_right = 0.8       
 M.knife_offset_up = -0.5          
-M.knife_offset_forward = -0.5     
+M.knife_offset_forward = 1    
 
 -- Knife Rotations (Degrees)
 M.knife_rot_rest_x = 0
@@ -34,7 +34,7 @@ M.knife_rot_rest_y = 90.0
 M.knife_rot_rest_z = 270.0
 
 M.knife_rot_held_x = 0
-M.knife_rot_held_y = 0.0
+M.knife_rot_held_y = -90.0 
 M.knife_rot_held_z = 0.0
 
 -- --- INTERNAL STATE ---
@@ -72,26 +72,38 @@ function M:on_init()
     end
 end
 
--- --- THIS IS CALLED BY C++ RAYCAST (Press 'E') ---
-function M:OnInteract()
-    print("[ChoppingBoard] Raycast Interaction Received!")
+-- Change ':' to '.' to prevent Lua from expecting 'self' as the first arg
+-- We accept 'entityID' because C++ passes the entity ID as the first argument
+function M.OnInteract(entityID)
+    print("[ChoppingBoard] Raycast Interaction Received from Entity: " .. tostring(entityID))
 
-    -- 1. Is the board already full?
+    -- 1. Check if board is occupied
+    -- Note: We access current_herb_entity directly (it's a local variable)
     if current_herb_entity ~= nil then
-        print("[ChoppingBoard] Board is occupied.")
+        print("[ChoppingBoard] Board is already occupied.")
         return
     end
 
-    -- local selectedItemName = GetPlayerSelectedItem()
+    -- 2. Get the item name
+    local itemName = GetSelectedItemName()
 
-    -- if selectedItemName == "" or selectedItemName == nil then
-    --     print("[ChoppingBoard] Player is not holding anything.")
-    --     return
-    -- end
-    
-    self:StartChoppingSession() 
+    if itemName then
+        print("[ChoppingBoard] Player is holding: " .. itemName)
+        
+        -- 3. Pass the name to the start function
+        -- CRITICAL FIX: Use 'M' explicitly instead of 'self'
+        if(itemName == "unchopped_herb") then
+            M:StartChoppingSession(itemName)
+            
+            -- (Optional) Remove item from player inventory here
+            -- RemoveSelectedItem() 
+            
+            ConsumeSelectedItem()
+        end
+    else
+        print("[ChoppingBoard] Player is holding nothing.")
+    end
 end
--- --------------------------------------------------
 
 function M:on_update(dt)
     if not player_entity then player_entity = FindEntityByName("Player") end
@@ -127,56 +139,83 @@ function M:IsPlayerInRange()
     return math.sqrt(dx*dx + dy*dy + dz*dz) <= self.interaction_range
 end
 
+-- (Recap of the Lua function for clarity)
 function M:UpdateKnifePosition()
     if knife_entity and player_entity then
         local px, py, pz = GetPosition(player_entity)
-        local kx = px + self.knife_offset_right
-        local ky = py + self.knife_offset_up
-        local kz = pz + self.knife_offset_forward
+        
+        -- 1. Get Camera Angle
+        local camYaw = GetCameraYaw() 
+        local rad = math.rad(camYaw)
+
+        -- 2. Calculate Direction Vectors (You had this right!)
+        -- Forward Vector (The direction you are looking)
+        local fwdX = math.cos(rad)
+        local fwdZ = math.sin(rad)
+
+        -- Right Vector (90 degrees to your side)
+        local rightX = -math.sin(rad)
+        local rightZ = math.cos(rad)
+
+        -- 3. APPLY THE VECTORS (This was the missing part)
+        -- Instead of just adding offset_right, we multiply it by the Right Vector.
+        -- Instead of just adding offset_forward, we multiply it by the Forward Vector.
+        
+        local kx = px + (rightX * self.knife_offset_right) + (fwdX * self.knife_offset_forward)
+        
+        -- Keep Y absolute (up/down doesn't change with turning)
+        local ky = py + self.knife_offset_up 
+        
+        local kz = pz + (rightZ * self.knife_offset_right) + (fwdZ * self.knife_offset_forward)
+
+        -- 4. Set final position
         SetPosition(knife_entity, kx, ky, kz)
+        
+        -- 5. Set Rotation (Your rotation logic was already good)
+        SetRotation(knife_entity, self.knife_rot_held_x, -camYaw + self.knife_rot_held_y, self.knife_rot_held_z)
     end
 end
 
-function M:StartChoppingSession()
-    -- 1. Find the item
-    local itemID = FindEntityByName(M.initial_item_name)
+function M:StartChoppingSession(itemName)
+    -- 1. Construct the Prefab Name dynamically
+    -- "unchopped_herb" + "_prefab" -> "unchopped_herb_prefab"
+    local prefabName = itemName .. "_Prefab"
     
-    -- local isChoppable = IsItemNameChoppable(itemName) --Checks if isChoppable
-    -- if not isChoppable then
-    --     print("[ChoppingBoard] You cannot chop " .. itemName)
-    --     return
-    -- end
+    print("[ChoppingBoard] Attempting to spawn: " .. prefabName)
 
-    -- Instantiates prefab by name
-    -- local newEntityID = SpawnPrefab(itemName) 
-    -- if newEntityID == nil then
-    --     print("[ChoppingBoard] Error: Could not spawn prefab for " .. itemName)
-    --     return
-    -- end
-    --
-    -- Decrease player item count by 1 -- Remove from Inventory
-    -- RemovePlayerItem(itemName, 1)
-
-    if itemID == nil then 
-        print("[ChoppingBoard] Item '" .. M.initial_item_name .. "' not found in scene.")
-        return 
-    end
-
-    -- 3. Proceed with placement (Existing Logic)
+    -- Get the position of the Chopping Board (self.entity)
     local bx, by, bz = GetPosition(self.entity)
-    SetPosition(itemID, bx, by + self.place_offset_y, bz - self.place_offset_z)
-    
-    current_herb_entity = itemID
-    current_health = 5 -- Reset health
-    
-    -- Ensure visual state is raw
-    SetMesh(current_herb_entity, self.mesh_raw)
-    SetTexture(current_herb_entity, self.tex_raw)
-    print("[ChoppingBoard] Placed choppable item.")
-    
-    if knife_entity then
-        is_holding_knife = true 
-        SetRotation(knife_entity, self.knife_rot_held_x, self.knife_rot_held_y, self.knife_rot_held_z)
+
+    -- Calculate spawn position by adding the board's position to your offsets
+    -- NOTE: If your board is rotated 90 degrees, you may need to add offset_z to 'bx' instead of 'bz'
+    local spawnX = bx 
+    local spawnY = by + self.place_offset_y
+    local spawnZ = bz + self.place_offset_z
+
+    -- Spawn at the calculated relative coordinates
+    local newEntityID = SpawnPrefab(prefabName, spawnX, spawnY, spawnZ)
+
+    -- 3. Validate Spawn
+    if newEntityID ~= -1 and newEntityID ~= nil then
+        print("[ChoppingBoard] Spawn successful! ID: " .. newEntityID)
+        
+        -- 4. Setup Chopping State
+        current_herb_entity = newEntityID
+        current_health = 5
+        
+        -- Note: If your prefab already has the correct mesh/texture, 
+        -- you don't strictly need SetMesh/SetTexture here, but keeping them 
+        -- ensures it resets to "Raw" state if you are reusing logic.
+        SetMesh(current_herb_entity, self.mesh_raw)
+        SetTexture(current_herb_entity, self.tex_raw)
+
+        -- 5. Knife Logic (Pick up knife)
+        if knife_entity then
+            is_holding_knife = true 
+            SetRotation(knife_entity, self.knife_rot_held_x, self.knife_rot_held_y, self.knife_rot_held_z)
+        end
+    else
+        print("[ChoppingBoard] ERROR: Failed to spawn prefab '" .. prefabName .. "'")
     end
 end
 
@@ -211,6 +250,18 @@ function M:EndChoppingSession()
     print("[ChoppingBoard] Finished! Herb collected.")
 
     if current_herb_entity then
+        
+
+        -- 2. Try to add it
+        local slot = AddToInventory("chopped_herb")
+
+        -- 3. Check result
+        if slot >= 0 then
+            print("Lua: Success! Added to slot " .. slot)
+        elseif slot == -1 then
+            -- This assumes your C++ returns -1 for full, but let's verify
+            print("Lua Error: AddToInventory returned -1 (Inventory Full OR Item Not Found)")
+        end    
         DestroyEntity(current_herb_entity)
         current_herb_entity = nil
     end
