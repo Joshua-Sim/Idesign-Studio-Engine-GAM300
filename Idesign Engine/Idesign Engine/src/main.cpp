@@ -181,13 +181,8 @@ int main(void)
     audioSystem->SetBGMVolume(1.0f);
     audioSystem->SetSFXVolume(1.0f);
 
-    // Set 3D listener position (required for 3D audio!)
-    audioSystem->Set3DListener(
-        Vector3(0, 0, 0),     // Position at origin
-        Vector3(0, 0, 0),     // No velocity
-        Vector3(0, 0, -1),    // Looking forward
-        Vector3(0, 1, 0)      // Up is +Y
-    );
+    // The AudioSystem will automatically update listener position from the Player's ListenerComponent
+    std::cout << "[Audio] 3D audio will use Player's ListenerComponent for positioning." << std::endl;
 
     std::cout << "[Audio] Volumes and 3D listener configured!" << std::endl;
     std::cout << "FMOD Studio Audio System initialized successfully!" << std::endl;
