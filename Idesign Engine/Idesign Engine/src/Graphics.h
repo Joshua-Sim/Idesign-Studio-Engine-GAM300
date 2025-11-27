@@ -177,6 +177,9 @@ namespace Framework
         FoliageRenderer* m_treeRenderer = nullptr; // The instancing renderer
         FoliageRenderer* m_leafRenderer = nullptr; // The instancing renderer
 
+        std::vector<glm::mat4> leafTransforms;
+        std::vector<glm::vec2> leafScales;
+
         Mesh* leafQuad = nullptr;
         GLuint leafTexture = 0;
         GLuint instanceVBOLeaves = 0;
@@ -190,6 +193,7 @@ namespace Framework
         //glm::vec3 m_mapPosition = glm::vec3(80.0f, 0.0f, 0.0f); // Move map 50 units X and Z
 
         unsigned int m_treeTextureID = 0;
+        unsigned int grassTextureID = 0;
         //END OF INSTANCING DECLARATION
 
         // shaders

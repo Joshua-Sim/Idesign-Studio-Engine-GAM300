@@ -3,7 +3,11 @@ out vec4 FragColor;
 
 in vec3 vNormal;
 in vec3 vWorldPos;
-in vec4 v_FragPosLightSpace; 
+in vec4 v_FragPosLightSpace;
+in vec2 vUV;
+
+uniform sampler2D uGrassTex;
+uniform float uGrassTiling;
 
 struct DirectionalLight {
     vec3 direction;
@@ -174,5 +178,7 @@ void main() {
         }
     }
 
-    FragColor = vec4(uAlbedo * result, 1.0);
+    vec3 grassColor = texture(uGrassTex, vUV * uGrassTiling).rgb;
+
+    FragColor = vec4(grassColor * result, 1.0);
 }

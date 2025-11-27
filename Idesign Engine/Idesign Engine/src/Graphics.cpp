@@ -454,8 +454,8 @@ namespace Framework {
 
         //// ----------------- End play button creation ---------------------
         // ====================================================================
-// --- MENU OVERLAY: full black background + PLAY button ---
-// ====================================================================
+        // --- MENU OVERLAY: full black background + PLAY button ---
+        // ====================================================================
         const float DESIGN_WIDTH = 1920.0f;
         const float DESIGN_HEIGHT = 1080.0f;
         //bool menuActive = !engineState.IsPlay();
@@ -638,6 +638,11 @@ namespace Framework {
         // Make sure the folder and files exist!
         m_skybox.init(dayFaces, nightFaces);
 
+        //GRASS INIT
+        TextureProperties grass;
+        grass.path = "Assets/Textures/Grass.png";
+        grassTextureID = TextureLoader::loadTexture(grass, true);
+        
         // === FOLIAGE/INSTANCING INIT ===
         // 1. Create a simple mesh to represent the tree (Cylinder for a trunk)
         // NOTE: If you have a way to load a real tree model (e.g., from an OBJ file 
@@ -739,7 +744,7 @@ namespace Framework {
 
             // translation
             glm::mat4 leaves(1.0f);
-            leaves = glm::translate(leaves, glm::vec3(x, y + 2.1f, z));
+            leaves = glm::translate(leaves, glm::vec3(x, y, z));
 
             // Encode width + height in matrix
             leaves[0][3] = 3.0f; // width
@@ -1639,6 +1644,7 @@ namespace Framework {
         terrainShader.setMat4("uView", view);
         terrainShader.setMat4("uModel", glm::mat4(1.f));
         terrainShader.setVec3("uAlbedo", { 0.6f,0.4f,0.2f });
+
         LightProperties::upload(terrainShader, frameSun, frameHasSun, framePointLights, frameSpotLights);
         terrain.draw();
 
@@ -1970,6 +1976,13 @@ namespace Framework {
 
         // --- Terrain ---
         terrainShader.use();
+
+        // Set grass texture
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, grassTextureID);
+        terrainShader.setInt("uGrassTex", 0);
+        terrainShader.setFloat("uGrassTiling", 20.0f);
+
         terrainShader.setMat4("uProj", proj);
         terrainShader.setMat4("uView", view);
         terrainShader.setMat4("uModel", mapModel);
@@ -2350,19 +2363,11 @@ namespace Framework {
         m_skybox.draw(view, proj);
         // ====================================================
 
-        glDepthMask(GL_FALSE);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-
         // Billboard leaves
         if (m_leafRenderer)
         {
             m_leafRenderer->draw(view, proj, mapModel, leafTexture);
         }
-
-        glDepthMask(GL_TRUE);
-        glDisable(GL_BLEND);
 
         for (auto it = transparentEntities.rbegin(); it != transparentEntities.rend(); ++it)
         {
