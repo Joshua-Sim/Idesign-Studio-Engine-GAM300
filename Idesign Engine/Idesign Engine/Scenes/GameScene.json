@@ -27,7 +27,9 @@
                     "sortIndex": 0
                 },
                 "TagComponent": {
-                    "tags": []
+                    "tags": [
+                        "BackyardZone"
+                    ]
                 },
                 "MeshComponent": {
                     "guid": "52f9947c-0b27-4f5a-9a18-cfef71bcfac3",
@@ -61,7 +63,7 @@
                                 -5.0
                             ],
                             "canPassThrough": true,
-                            "triggerMessage": "",
+                            "triggerMessage": "BackyardZone",
                             "isInteractable": false
                         }
                     ]
@@ -1944,14 +1946,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -42.96040344238281,
+                        -56.85700988769531,
                         8.03951358795166,
-                        9.722146987915039
+                        9.750334739685059
                     ],
                     "rotation": [
-                        0.29790008068084717,
-                        31.094017028808594,
-                        0.0007363030454143882
+                        0.2978998124599457,
+                        52.8368034362793,
+                        0.0012184876250103116
                     ],
                     "scale": [
                         0.9999989867210388,
@@ -2026,9 +2028,9 @@
                 },
                 "ListenerComponent": {
                     "position": [
-                        -42.96040344238281,
+                        -56.85700988769531,
                         8.03951358795166,
-                        9.722146987915039
+                        9.750334739685059
                     ],
                     "forward": [
                         0.0,
@@ -2405,11 +2407,11 @@
                     "volume": 1.0,
                     "loop": true,
                     "playOnStart": true,
-                    "isPlaying": false,
+                    "isPlaying": true,
                     "lastPosition": [
-                        0.0,
-                        0.0,
-                        0.0
+                        -40.230262756347656,
+                        6.287981033325195,
+                        17.725893020629883
                     ]
                 }
             }
@@ -2641,8 +2643,7 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "475e81a7-2e58-4938-9542-ca201d5d96f5",
@@ -2725,6 +2726,15 @@
                         250.0
                     ],
                     "isHovered": false
+                }
+            }
+        },
+        {
+            "name": "Customer",
+            "guid": "16216b22-7d7e-411d-a3b7-114511fa0fd9",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
                 }
             }
         }
