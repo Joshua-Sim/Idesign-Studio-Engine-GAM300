@@ -1928,14 +1928,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -48.52269744873047,
+                        -42.75856018066406,
                         8.039443969726563,
-                        1.8870890140533447
+                        11.67110538482666
                     ],
                     "rotation": [
-                        0.29789653420448303,
-                        15.742537498474121,
-                        0.0004559071094263345
+                        0.29789891839027405,
+                        0.9056686758995056,
+                        0.0004562035028357059
                     ],
                     "scale": [
                         0.9999989867210388,
@@ -2354,6 +2354,65 @@
         {
             "name": "Customer",
             "guid": "e7a9dbbd-468d-43c2-9801-e8c5a53cae7e",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
+                }
+            }
+        },
+        {
+            "name": "Pear_Crate",
+            "guid": "cea6e610-1fef-4c8f-942b-a0aa4e5694d7",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -46.48421859741211,
+                        6.542980194091797,
+                        9.069893836975098
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 0
+                },
+                "TagComponent": {
+                    "tags": [
+                        "Interactable"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": "0acb845f-31f5-4020-bae8-eacca875de48",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "761d0499-1d0b-4487-9019-734a51de371b",
+                    "isUI": false
+                }
+            }
+        },
+        {
+            "name": "Customer",
+            "guid": "b58430b4-9120-4b1f-9920-1f6c5434e53d",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
+                }
+            }
+        },
+        {
+            "name": "Customer",
+            "guid": "60096dde-8d6c-43d8-984c-5fa65044e8a9",
             "components": {
                 "PrefabComponent": {
                     "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"

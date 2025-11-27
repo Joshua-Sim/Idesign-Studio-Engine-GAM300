@@ -1,5 +1,5 @@
 {
-    "count": 62,
+    "count": 64,
     "entries": [
         {
             "guid": "d1624844-bd9b-44f7-9976-d196954e311f",
@@ -371,6 +371,18 @@
             "guid": "b9451eb6-415f-465b-908d-b291ec117c39",
             "name": "tree",
             "path": "Assets\\Textures\\tree.jpg",
+            "isUI": false
+        },
+        {
+            "guid": "761d0499-1d0b-4487-9019-734a51de371b",
+            "name": "BoxOfPears-3-VegetableCrate",
+            "path": "Assets\\Textures\\BoxOfPears-3-VegetableCrate.png",
+            "isUI": false
+        },
+        {
+            "guid": "b5d53d15-f36d-4a8b-97f5-4749f71971bd",
+            "name": "Pear",
+            "path": "Assets\\Textures\\Pear.png",
             "isUI": false
         }
     ]
