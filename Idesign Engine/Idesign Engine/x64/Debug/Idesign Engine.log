@@ -1,4 +1,5 @@
 ﻿  Graphics.cpp
+  Mesh.cpp
 D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
   (compiling source file '/src/Graphics.cpp')
       D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
@@ -16,10 +17,7 @@ D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Physics
 D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,117): warning C4100: 'inManifold': unreferenced parameter
   (compiling source file '/src/Graphics.cpp')
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\RecipeBookManager.h(67,23): warning C4189: 'totalRowWidth': local variable is initialized but not referenced
-  (compiling source file '/src/Graphics.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\RecipeBookManager.h(78,31): warning C4189: 'plusX': local variable is initialized but not referenced
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\RecipeBookManager.h(84,23): warning C4189: 'totalRowWidth': local variable is initialized but not referenced
   (compiling source file '/src/Graphics.cpp')
   
 D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(523,32): warning C4458: declaration of 'leafTransforms' hides class member
@@ -157,5 +155,14 @@ D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphic
   (compiling source file '/src/Graphics.cpp')
       D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(170,16):
       see declaration of 'Framework::Graphics::tex'
+  
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AssetManager.h(232,25): warning C4459: declaration of 'assets' hides global declaration
+  (compiling source file '/src/Graphics.cpp')
+      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(72,17):
+      see declaration of 'Framework::assets'
+      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AssetManager.h(232,25):
+      the template instantiation context (the oldest one first) is
+          D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(78,100):
+          see reference to function template instantiation 'Framework::AssetHandle Framework::AssetManager::FindGuid<Framework::WindowConfig>(const std::optional<std::string> &)' being compiled
   
   Idesign Engine.vcxproj -> D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe
