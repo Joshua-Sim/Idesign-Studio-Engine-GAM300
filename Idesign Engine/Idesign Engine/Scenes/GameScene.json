@@ -2018,7 +2018,7 @@
                 "PhysicsProperties": {
                     "category": 2,
                     "isImmovable": false,
-                    "gravityFactor": 1.0,
+                    "gravityFactor": 0.0,
                     "mass": 1.0,
                     "friction": 0.5,
                     "restitution": 0.0,

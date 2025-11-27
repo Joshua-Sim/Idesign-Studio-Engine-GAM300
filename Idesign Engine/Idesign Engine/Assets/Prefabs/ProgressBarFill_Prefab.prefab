@@ -1,0 +1,40 @@
+{
+    "entity": {
+        "name": "ProgressBarFill",
+        "guid": "10dd4c33-bdd7-4acb-b04b-60f8b474cf61",
+        "components": {
+            "TransformComponent": {
+                "position": [
+                    -0.3195204734802246,
+                    0.2609849274158478,
+                    -0.10973334312438965
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "TagComponent": {
+                "tags": []
+            },
+            "HierarchyComponent": {
+                "parent": "",
+                "children": [],
+                "sortIndex": 0
+            },
+            "MeshReference": {
+                "guid": "f699e1d9-f947-49e1-9108-ad2ecb610aa0"
+            },
+            "TextureComponent": {
+                "guid": "9acf6914-2c9b-468a-bbd6-a65828faea16",
+                "isUI": false
+            }
+        }
+    }
+}

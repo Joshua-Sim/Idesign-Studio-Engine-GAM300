@@ -1,5 +1,5 @@
 {
-    "count": 38,
+    "count": 42,
     "entries": [
         {
             "guid": "814c3cff-9da8-4ad4-8a05-009b99a4ea2b",
@@ -342,6 +342,42 @@
             "vbo": 75,
             "ebo": 76,
             "indexCount": 157614
+        },
+        {
+            "guid": "5ec81f76-0cd6-4d5c-ba71-45bfdd723242",
+            "name": "Capsule",
+            "path": "Assets\\Objects\\Capsule.obj",
+            "vao": 39,
+            "vbo": 77,
+            "ebo": 78,
+            "indexCount": 3456
+        },
+        {
+            "guid": "c5a05b15-f198-42ed-94c4-938c0e5df6a4",
+            "name": "Untitled",
+            "path": "Assets\\Objects\\Untitled.obj",
+            "vao": 40,
+            "vbo": 79,
+            "ebo": 80,
+            "indexCount": 24
+        },
+        {
+            "guid": "f699e1d9-f947-49e1-9108-ad2ecb610aa0",
+            "name": "center",
+            "path": "Assets\\Objects\\center.obj",
+            "vao": 41,
+            "vbo": 81,
+            "ebo": 82,
+            "indexCount": 12
+        },
+        {
+            "guid": "7dcc7293-e55a-46b3-9015-a9ae51a11694",
+            "name": "testobj",
+            "path": "Assets\\Objects\\testobj.obj",
+            "vao": 103,
+            "vbo": 198,
+            "ebo": 199,
+            "indexCount": 24
         }
     ]
 }

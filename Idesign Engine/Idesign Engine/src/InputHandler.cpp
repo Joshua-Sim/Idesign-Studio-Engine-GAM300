@@ -65,7 +65,22 @@ namespace Framework {
 	void InputHandler::Update(float deltaTime) {
 
 		(void)deltaTime;
+		for (auto& [key, state] : keyStates)
+		{
+			if (state == KEY_PRESSED)
+			{
+				state = KEY_HELD;
+			}
+		}
 
+		// 2. Update Mouse Buttons
+		for (auto& [button, state] : mouseButtonStates)
+		{
+			if (state == KEY_PRESSED)
+			{
+				state = KEY_HELD;
+			}
+		}
 		glfwPollEvents();  // Poll events for GLFW, key pressed and key released
 
 		if (IsKeyPressed(GLFW_KEY_TAB))
@@ -347,15 +362,6 @@ namespace Framework {
 		inputSystem->mouseX = xpos;
 		inputSystem->mouseY = ypos;
 
-		// Only rotate camera when game has focus (TAB toggled off UI)
-		if (!inputSystem->isUIFocused && inputSystem->mainCamera) {
-			if (sFirstMouse) { sLastX = xpos; sLastY = ypos; sFirstMouse = false; }
-			float xoffset = static_cast<float>(xpos - sLastX);
-			float yoffset = static_cast<float>(sLastY - ypos); // y inverted
-			sLastX = xpos; sLastY = ypos;
-
-			inputSystem->mainCamera->processMouseMovement(xoffset, yoffset);
-		}
 	}
 }
 

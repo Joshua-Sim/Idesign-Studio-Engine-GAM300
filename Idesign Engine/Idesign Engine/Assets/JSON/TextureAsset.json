@@ -37,6 +37,18 @@
             "isUI": false
         },
         {
+            "guid": "e726adb8-bf75-4993-9e77-826f5541ac9d",
+            "name": "ChoppedHerb2",
+            "path": "Assets\\Textures\\ChoppedHerb2.png",
+            "isUI": false
+        },
+        {
+            "guid": "d4899207-ea5e-473b-870f-aade76e8a7ff",
+            "name": "Door",
+            "path": "Assets\\Textures\\Door.png",
+            "isUI": false
+        },
+        {
             "guid": "aa40e4be-e3ce-4b7d-8806-dc0f46d34ee8",
             "name": "Backyard",
             "path": "Assets/Textures/Backyard.png",
@@ -94,6 +106,14 @@
             "guid": "e726adb8-bf75-4993-9e77-826f5541ac9d",
             "name": "ChoppedHerb2",
             "path": "Assets\\Textures\\ChoppedHerb2.png",
+            "name": "Herb",
+            "path": "Assets\\Textures\\Herb.png",
+            "isUI": false
+        },
+        {
+            "guid": "ac09c4fc-da84-4656-8246-40407d5bd854",
+            "name": "play_button",
+            "path": "Assets\\Textures\\play_button.png",
             "isUI": false
         },
         {
@@ -387,7 +407,23 @@
         {
             "guid": "b7b4bcaf-b4d9-4c53-a9af-017de16950a6",
             "name": "mainIcon",
-            "path": "Assets\\Textures\\mainIcon.png",
+            "path": "Assets\\Textures\\mainIcon.png"
+        },
+            "guid": "b9451eb6-415f-465b-908d-b291ec117c39",
+            "name": "tree",
+            "path": "Assets\\Textures\\tree.jpg",
+            "isUI": false
+        },
+        {
+            "guid": "9acf6914-2c9b-468a-bbd6-a65828faea16",
+            "name": "green",
+            "path": "Assets\\Textures\\green.png",
+            "isUI": false
+        },
+        {
+            "guid": "df5f7c8d-b2df-483f-89d6-da2036dad5a8",
+            "name": "red",
+            "path": "Assets\\Textures\\red.png",
             "isUI": false
         }
     ]

@@ -154,6 +154,7 @@ namespace Framework {
     void Graphics::SetCameraRotationEnabled(bool enabled)
     {
         m_cameraRotationEnabled = enabled;
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 
     // Initialize the system
@@ -1081,11 +1082,42 @@ namespace Framework {
         }
 
         // ============================================================
-        // MODE B: GAME MODE / PLAYER PHYSICS
-        // ============================================================
+          // MODE B: GAME MODE / PLAYER PHYSICS
+          // ============================================================
         else
         {
-            // 1. Find the Player
+            // --- 1. MOUSE LOOK (ROTATION) ---
+            // This logic runs every frame to check mouse movement
+            static double lastXGame = 0.0, lastYGame = 0.0;
+            static bool firstMouseGame = true;
+
+            double xpos, ypos;
+            glfwGetCursorPos(window, &xpos, &ypos);
+
+            if (firstMouseGame)
+            {
+                lastXGame = xpos;
+                lastYGame = ypos;
+                firstMouseGame = false;
+            }
+
+            float xoffset = static_cast<float>(xpos - lastXGame);
+            float yoffset = static_cast<float>(lastYGame - ypos);
+
+            lastXGame = xpos;
+            lastYGame = ypos;
+
+            // [CRITICAL CHECK]
+            // Only rotate the camera if Rotation is Enabled!
+            // (It will be disabled when you are stirring the cauldron)
+            if (m_cameraRotationEnabled)
+            {
+                gameCamera.processMouseMovement(xoffset, yoffset);
+            }
+            // ----------------------------------
+
+
+            // --- 2. PLAYER MOVEMENT & PHYSICS ---
             Entity player = ecsInterface.GetEntityByName("Player");
 
             if (ecsInterface.IsEntityValid(player) && ecsInterface.HasComponent<PhysicsProperties>(player))
@@ -1093,42 +1125,7 @@ namespace Framework {
                 auto& phys = ecsInterface.GetComponent<PhysicsProperties>(player);
                 auto& trans = ecsInterface.GetComponent<TransformComponent>(player);
 
-                // --- [NEW] MOUSE LOOK LOGIC (Game Mode) ---
-                // This allows looking around while playing
-                static bool firstMouseGame = true;
-                static double lastXGame = 0.0, lastYGame = 0.0;
-
-                if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
-                {
-                    double xpos, ypos;
-                    glfwGetCursorPos(window, &xpos, &ypos);
-
-                    if (firstMouseGame)
-                    {
-                        lastXGame = xpos;
-                        lastYGame = ypos;
-                        firstMouseGame = false;
-                    }
-
-                    float xoffset = static_cast<float>(xpos - lastXGame);
-                    float yoffset = static_cast<float>(lastYGame - ypos);
-
-                    lastXGame = xpos;
-                    lastYGame = ypos;
-
-                    // Only rotate if camera isn't locked (e.g. by stirring)
-                    if (m_cameraRotationEnabled)
-                    {
-                        gameCamera.processMouseMovement(xoffset, yoffset);
-                    }
-                }
-                else
-                {
-                    firstMouseGame = true;
-                }
-                // ------------------------------------------
-
-                // 2. Calculate Direction based on Camera Facing
+                // Calculate Direction
                 glm::vec3 camForward = gameCamera.front;
                 camForward.y = 0.0f;
                 camForward = glm::normalize(camForward);
@@ -1140,7 +1137,7 @@ namespace Framework {
                 glm::vec3 targetVelocity(0.0f);
                 float moveSpeed = 5.0f;
 
-                // 3. Input -> Velocity
+                // Input -> Velocity
                 if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) targetVelocity += camForward;
                 if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) targetVelocity -= camForward;
                 if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) targetVelocity -= camRight;
@@ -1184,15 +1181,30 @@ namespace Framework {
                     targetVelocity = glm::normalize(targetVelocity) * moveSpeed;
                 }
 
-                // 4. Apply to Physics
-                phys.linearVelocity.x = targetVelocity.x;
-                phys.linearVelocity.z = targetVelocity.z;
+                // Physics Application
+                if (m_cameraRotationEnabled)
+                {
+                    // NORMAL: Apply X/Z, let Gravity handle Y
+                    phys.linearVelocity.x = targetVelocity.x;
+                    phys.linearVelocity.z = targetVelocity.z;
+                    phys.gravityFactor = 1.0f;
+                }
+                else
+                {
+                    // STIRRING: Stop everything
+                    phys.linearVelocity = glm::vec3(0.0f);
+                    phys.gravityFactor = 0.0f;
+                }
 
-                if (glm::length(targetVelocity) > 0.01f) {
+                // Wake up body
+                if (m_cameraRotationEnabled && glm::length(targetVelocity) > 0.01f) {
+                    phys.startAwake = true;
+                }
+                if (!m_cameraRotationEnabled) {
                     phys.startAwake = true;
                 }
 
-                // 6. CAMERA FOLLOW LOGIC
+                // Snap Camera to Player
                 glm::vec3 eyeOffset(0.0f, 1.8f, 0.0f);
                 gameCamera.position = trans.position + eyeOffset;
             }
