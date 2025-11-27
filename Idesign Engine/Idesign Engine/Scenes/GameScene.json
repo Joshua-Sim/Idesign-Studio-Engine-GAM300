@@ -1272,6 +1272,22 @@
                             "luaFunctionToCall": "OnInteract"
                         }
                     ]
+                },
+                 "AudioComponent": {
+                    "guid": "d6f23fa6-ff6f-4892-91b3-ca11349bb492",
+                    "eventName": "event:/ChoppingHerb",
+                    "is3D": true,
+                    "minDistance": 1.0,
+                    "maxDistance": 100.0,
+                    "volume": 1.0,
+                    "loop": false,
+                    "playOnStart": false,
+                    "isPlaying": true,
+                    "lastPosition": [
+                        -42.68813705444336,
+                        7.379386901855469,
+                        0.6743054986000061
+                    ]
                 }
             }
         },
