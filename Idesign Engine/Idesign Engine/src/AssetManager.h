@@ -156,8 +156,7 @@ namespace Framework
             auto obj = AssetLoader<T>::Load(binaryPath, props);
             AssetHandle guidHandle(obj->guid);
 
-            if (postInit)
-                postInit(*obj);
+            if (postInit) postInit(*obj);
 
             // Register using composite key
             RegisterAsset(std::move(obj), &props, binaryPath);
@@ -174,8 +173,7 @@ namespace Framework
             auto loadedObjects = AssetLoader<T>::LoadArray(binaryPath, props);
             for (auto& obj : loadedObjects)
             {
-                if (postInit)
-                    postInit(*obj); 
+                if (postInit) postInit(*obj); 
 
                 RegisterAsset(std::move(obj), &props, binaryPath); // Move after init
             }
@@ -189,10 +187,7 @@ namespace Framework
                 if (!entry.is_regular_file()) continue;
 
                 const auto& path = entry.path();
-                if (path.extension() == ".bin")
-                {
-                    LoadBinaryArray<T>(path.string(), props, postInit);
-                }
+                if (path.extension() == ".bin") LoadBinaryArray<T>(path.string(), props, postInit);
             }
         }
 
@@ -211,9 +206,7 @@ namespace Framework
         template<typename T>
         void RegisterAsset(std::unique_ptr<T> obj, const prop_list* props, const std::string& binaryPath)
         {
-            if (obj->guid.empty())
-                obj->guid = GenerateGUID();
-
+            if (obj->guid.empty()) obj->guid = GenerateGUID();
             AssetHandle guidHandle(obj->guid);
 
             std::unique_ptr<void, void(*)(void*)> erasedPtr(
@@ -242,23 +235,16 @@ namespace Framework
                 if (!obj) continue; // Skip if the cast fails or the object is null
 
                 // If a name was provided, try to match it against the asset's name
-                if constexpr (requires(T t) { t.name; })
+                if constexpr (requires { std::declval<T>().name; })
                 {
                     if (name.has_value())
                     {
-                        if (obj->name == name.value())
-                            return key.guid;   // <-- use key.guid instead of guid
+                        // normalize both sides to std::string_view
+                        if (std::string_view(obj->name) == std::string_view(name.value())) return key.guid;
                     }
-                    else
-                    {
-                        return key.guid;       // <-- use key.guid instead of guid
-                    }
+                    else return key.guid;
                 }
-                else
-                {
-                    if (!name.has_value())
-                        return key.guid;       // <-- use key.guid instead of guid
-                }
+                else if (!name.has_value()) return key.guid;
             }
             // No matching asset found — return an empty GUID
             return AssetHandle();

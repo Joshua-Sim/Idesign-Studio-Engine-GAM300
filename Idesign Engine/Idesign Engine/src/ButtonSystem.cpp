@@ -16,6 +16,8 @@
 #include "Coordinator.h"
 #include "ButtonSystem.h"
 #include "TextureProperties.h"
+#include "EngineState.h"
+
 extern Framework::Coordinator ecsInterface;
 namespace Framework {
 
@@ -31,26 +33,31 @@ namespace Framework {
         // Initialize buttons if needed
     }
 
-
     void ButtonSystem::Update(float deltaTime)
     {
         (void)deltaTime;
 
         for (auto entity : mEntities)
         {
-            if (!ecsInterface.HasComponent<ButtonComponent>(entity) ||
-                !ecsInterface.HasComponent<TransformComponent>(entity))
+            if (!ecsInterface.HasComponent<ButtonComponent>(entity)     ||
+                !ecsInterface.HasComponent<TransformComponent>(entity)  ||
+                !ecsInterface.HasComponent<TextureProperties>(entity))
                 continue;
 
             auto& button = ecsInterface.GetComponent<ButtonComponent>(entity);
             auto& tr = ecsInterface.GetComponent<TransformComponent>(entity);
 
             // interpret Transform as “center + full size” in design space
-            button.position = glm::vec2(
-                tr.position.x - 0.5f * tr.scale.x,
-                tr.position.y - 0.5f * tr.scale.y
-            );
+            //button.position = glm::vec2(tr.position.x - 0.5f * tr.scale.x,tr.position.y - 0.5f * tr.scale.y);
+            button.position = glm::vec2(tr.position.x, tr.position.y);
             button.size = glm::vec2(tr.scale.x, tr.scale.y);
+
+            // Game State Play/Pause
+            if (ecsInterface.HasComponent<TextureProperties>(entity)) 
+            {
+                auto& texture = ecsInterface.GetComponent<TextureProperties>(entity);
+                texture.isUI = !engineState.IsPlay(); // true when paused, false when playing
+            }
         }
     }
 
@@ -64,8 +71,8 @@ namespace Framework {
 
         for (auto entity : mEntities)
         {
-            if (!ecsInterface.HasComponent<ButtonComponent>(entity) ||
-                !ecsInterface.HasComponent<TransformComponent>(entity) ||
+            if (!ecsInterface.HasComponent<ButtonComponent>(entity)     ||
+                !ecsInterface.HasComponent<TransformComponent>(entity)  ||
                 !ecsInterface.HasComponent<TextureProperties>(entity))
                 continue;
 
@@ -74,8 +81,7 @@ namespace Framework {
             auto& tex = ecsInterface.GetComponent<TextureProperties>(entity);
 
             // only UI quads are treated as buttons
-            if (!tex.isUI)
-                continue;
+            if (!tex.isUI) continue;
 
             // derive bounds from Transform (center + full size)
             float left = tr.position.x - 0.5f * tr.scale.x;
@@ -83,15 +89,10 @@ namespace Framework {
             float bottom = tr.position.y - 0.5f * tr.scale.y;
             float top = tr.position.y + 0.5f * tr.scale.y;
 
-            bool inside = (designX > left && designX < right &&
-                designY > bottom && designY < top);
-
+            bool inside = (designX > left && designX < right && designY > bottom && designY < top);
             button.isHovered = inside;
 
-            if (inside)
-            {
-                button.TriggerClick(entity);
-            }
+            if (inside) button.TriggerClick(entity);
         }
     }
 }

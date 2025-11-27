@@ -1298,11 +1298,7 @@ namespace Framework
         // 3. Ensure directory exists (using absolute path)
         std::error_code ec;
         std::filesystem::create_directories(prefabFolder, ec);
-        if (ec)
-        {
-            std::cerr << "Failed to create prefab directory: " << ec.message() << "\n";
-            return;
-        }
+        if (ec) std::cerr << "Failed to create prefab directory: " << ec.message() << "\n"; return;
 
         // 4. Serialize entity to prefab file (use absolute path)
         std::string absolutePrefabPath = prefabPath.string();
@@ -1318,19 +1314,11 @@ namespace Framework
         prefabProps->isScenePrefab = false;
 
         // 6. Register in AssetManager (use relative path as key)
-        AssetManager::Instance().RegisterAsset(
-            std::move(prefabProps),
-            &g_PrefabProps,
-            relativePath
-        );
+        AssetManager::Instance().RegisterAsset(std::move(prefabProps), &g_PrefabProps, relativePath);
 
         // 7. Save to JSON (use absolute path for JSON file)
         std::string jsonPath = (projectRoot / "Assets/JSON/PrefabAsset.json").string();
-        AssetManager::Instance().SaveArrayToJson(
-            TypeName<PrefabProperties>::value,
-            jsonPath,
-            "prefabs"
-        );
+        AssetManager::Instance().SaveArrayToJson(TypeName<PrefabProperties>::value, jsonPath, "prefabs");
 
         std::cout << "Created prefab: " << prefabName << " (GUID: " << prefabGUID << ")\n";
         std::cout << "  Saved to: " << absolutePrefabPath << "\n";
@@ -1352,19 +1340,15 @@ namespace Framework
         {
             prefabPath = prefabProps->path;
         }
-        else
-        {
-            // Assume project root is stored somewhere accessible
-            prefabPath = std::filesystem::path(Framework::ScriptingSystem::GetProjectRoot()) / prefabProps->path;
-        }
+        // Assume project root is stored somewhere accessible
+        else prefabPath = std::filesystem::path(Framework::ScriptingSystem::GetProjectRoot()) / prefabProps->path;
 
         std::error_code ec;
         auto canonicalPath = std::filesystem::weakly_canonical(prefabPath, ec);
 
         if (ec || !std::filesystem::exists(canonicalPath))
         {
-            std::cerr << "Prefab file not found: " << prefabProps->path
-                << " (resolved to: " << prefabPath << ")" << std::endl;
+            std::cerr << "Prefab file not found: " << prefabProps->path << " (resolved to: " << prefabPath << ")" << std::endl;
             return std::numeric_limits<Entity>::max();
         }
 
@@ -1441,11 +1425,9 @@ namespace Framework
             {
                 for (const auto& tag : tagJson["tags"].GetArray())
                 {
-                    if (tag.IsString())
-                        tagComp.tags.push_back(tag.GetString());
+                    if (tag.IsString()) tagComp.tags.push_back(tag.GetString());
                 }
             }
-
             ecsInterface.AddComponent(newEntity, tagComp);
         }
 
@@ -1488,7 +1470,6 @@ namespace Framework
                     {
                         instanceTex.isUI = texRef["isUI"].GetBool();
                     }
-
                     ecsInterface.AddComponent(newEntity, instanceTex);
                 }
             }
@@ -1565,8 +1546,7 @@ namespace Framework
     {
         Entity entity = InstantiatePrefab(prefabGUID);
 
-        if (entity == std::numeric_limits<Entity>::max())
-            return entity;
+        if (entity == std::numeric_limits<Entity>::max()) return entity;
 
         // Override position only
         if (ecsInterface.HasComponent<TransformComponent>(entity))
@@ -1574,7 +1554,6 @@ namespace Framework
             auto& transform = ecsInterface.GetComponent<TransformComponent>(entity);
             transform.position = position;
         }
-
         return entity;
     }
 
@@ -1594,7 +1573,6 @@ namespace Framework
             transform.rotation = rotation;
             transform.scale = scale;
         }
-
         return entity;
     }
 
@@ -1674,8 +1652,7 @@ namespace Framework
     Entity InstantiatePrefabByName(const std::string& prefabName, const glm::vec3& position)
     {
         std::string guid = FindPrefabGUIDByName(prefabName);
-        if (guid.empty())
-            return std::numeric_limits<Entity>::max();
+        if (guid.empty()) return std::numeric_limits<Entity>::max();
 
         return InstantiatePrefab(guid, position);
     }
@@ -1683,8 +1660,7 @@ namespace Framework
     Entity InstantiatePrefabByName(const std::string& prefabName, const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale)
     {
         std::string guid = FindPrefabGUIDByName(prefabName);
-        if (guid.empty())
-            return std::numeric_limits<Entity>::max();
+        if (guid.empty()) return std::numeric_limits<Entity>::max();
 
         return InstantiatePrefab(guid, position, rotation, scale);
     }
@@ -1695,8 +1671,7 @@ namespace Framework
         try 
         {
             // Ensure destination folder exists
-            if (!fs::exists(destinationFolder))
-                fs::create_directories(destinationFolder);
+            if (!fs::exists(destinationFolder)) fs::create_directories(destinationFolder);
 
             // Extract filename
             std::string fileName = sourcePath.substr(sourcePath.find_last_of("/\\") + 1);

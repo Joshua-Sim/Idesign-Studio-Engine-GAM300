@@ -208,7 +208,7 @@ namespace Framework {
 
         void PauseAllAudio();
         void ResumeAllAudio();
-        void Reset();
+        void Reset();   
         void ListAllEvents();
 
         // Check if event is 3D
@@ -300,14 +300,14 @@ namespace Framework {
         float sfxVolume = 1.0f;
 
         // Fade state tracking
-        bool isFadingIn = false;
-        bool isFadingOut = false;
+        bool  isFadingIn = false;
+        bool  isFadingOut = false;
         float fadeTimer = 0.0f;
         float fadeDuration = 2.0f;
         float fadeStartVolume = 0.0f;
         float fadeTargetVolume = 1.0f;
-        int currentBGMChannel = -1;
-        int pendingBGMChannel = -1;
+        int   currentBGMChannel = -1;
+        int   pendingBGMChannel = -1;
 
         // Channel ID counter
         int nextChannelId = 1;

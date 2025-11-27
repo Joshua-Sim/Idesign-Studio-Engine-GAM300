@@ -266,35 +266,31 @@ namespace Framework {
         }
 
         // Update listener velocity for Doppler effect
-        if (deltaTime > 0.0f) {
-            listener.velocity = (transform.position - listener.position) / deltaTime;
-        }
+        if (deltaTime > 0.0f) listener.velocity = (transform.position - listener.position) / deltaTime;
         listener.position = transform.position;
 
         // Update FMOD listener attributes
         FMOD_3D_ATTRIBUTES listenerAttribs{};
-        listenerAttribs.position = { listener.position.x, listener.position.y, listener.position.z };
-        listenerAttribs.forward = { listener.forward.x, listener.forward.y, listener.forward.z };
-        listenerAttribs.up = { listener.up.x, listener.up.y, listener.up.z };
-        listenerAttribs.velocity = { listener.velocity.x, listener.velocity.y, listener.velocity.z };
+        listenerAttribs.position =  { listener.position.x,  listener.position.y,    listener.position.z };
+        listenerAttribs.forward =   { listener.forward.x,   listener.forward.y,     listener.forward.z };
+        listenerAttribs.up =        { listener.up.x,        listener.up.y,          listener.up.z };
+        listenerAttribs.velocity =  { listener.velocity.x,  listener.velocity.y,    listener.velocity.z };
 
-        if (studioSystem) {
-            studioSystem->setListenerAttributes(listener.listenerIndex, &listenerAttribs);
-        }
+        if (studioSystem) studioSystem->setListenerAttributes(listener.listenerIndex, &listenerAttribs);
 
         // Update all entity audio sources
-        for (Entity entity : mEntities) {
+        for (Entity entity : mEntities) 
+        {
             if (!ecsInterface.HasComponent<AudioComponent>(entity)) continue;
             if (!ecsInterface.HasComponent<TransformComponent>(entity)) continue;
 
             auto& audioComp = ecsInterface.GetComponent<AudioComponent>(entity);
             auto& transform = ecsInterface.GetComponent<TransformComponent>(entity);
 
-            if (audioComp.is3D && audioComp.isPlaying && audioComp.eventInstance) {
+            if (audioComp.is3D && audioComp.isPlaying && audioComp.eventInstance) 
+            {
                 glm::vec3 velocity(0.0f);
-                if (deltaTime > 0.0f) {
-                    velocity = (transform.position - audioComp.lastPosition) / deltaTime;
-                }
+                if (deltaTime > 0.0f) velocity = (transform.position - audioComp.lastPosition) / deltaTime;
 
                 Update3DAttributes(entity, transform.position, velocity);
                 audioComp.lastPosition = transform.position;
@@ -302,9 +298,7 @@ namespace Framework {
         }
 
         // Update FMOD
-        if (studioSystem) {
-            studioSystem->update();
-        }
+        if (studioSystem) studioSystem->update();
     }
 
     //==========================================================================
@@ -1010,8 +1004,6 @@ namespace Framework {
         bool is3D = false;
         eventDesc->is3D(&is3D);
         std::cout << "[AudioSystem] Event is 3D: " << (is3D ? "YES" : "NO") << std::endl;
-
-        
     }
 
     void AudioSystem::StopEntitySound(Entity entity) {

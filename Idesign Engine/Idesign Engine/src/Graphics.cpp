@@ -16,27 +16,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "pch.h"
-//#include <windows.h>
-//#include <commdlg.h>
 #include "Graphics.h"
-
-//#define STB_IMAGE_IMPLEMENTATION
-//#include "stb_image.h"
-//#include "stb_image_resize2.h"
-//#include <InputHandler.h>
-//#include "ComponentList.h"
-//#include "FontSystem.h"
-//#include "Coordinator.h"
 #include <algorithm>
-//
-//#include "imgui.h"
-//#include "imgui_impl_glfw.h"
-//#include "imgui_impl_opengl3.h"
 #include "EngineState.h"
-//#include "AssetManager.h"
-//#include "TextureAsset.h"
-//#include "Debugger.h"
-
 #include <glew.h>
 #include <GLFW/glfw3.h>
 #include <glm.hpp>
