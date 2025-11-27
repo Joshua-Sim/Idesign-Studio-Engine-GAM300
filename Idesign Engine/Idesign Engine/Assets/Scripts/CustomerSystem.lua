@@ -72,15 +72,10 @@ function CustomerSystem:on_init()
         end
     end
     
+    -- Keep the old callback for backwards compatibility
     CustomerSystemNotifyComplete = function()
-        print("[CustomerSystem] Customer completed order.")
-        self:DestroyBar() 
-        if activeCustomer then DestroyEntity(activeCustomer) end
-        
-        activeCustomer = nil
-        hasSpawned = false
-        is_at_counter = false 
-        spawnTimer = 0
+        print("[CustomerSystem] Customer completed order (legacy callback).")
+        self:OnCustomerComplete()
     end
 end
 
@@ -176,6 +171,33 @@ function CustomerSystem:spawn_customer()
     is_at_counter = false 
     
     PathfindTo("Customer_Kinematic", self.waitPointName)
+end
+-- =========================================================
+-- CUSTOMER COMPLETION HANDLER
+-- =========================================================
+function CustomerSystem.OnCustomerComplete(senderID, targetID, actionType)
+    print("[CustomerSystem] ========== CUSTOMER DONE ==========")
+    print("[CustomerSystem] Event received - Sender: " .. tostring(senderID) .. ", Target: " .. tostring(targetID))
+    
+    -- Clean up progress bar
+    if entity_frame then DestroyEntity(entity_frame); entity_frame = nil end
+    if entity_fill then DestroyEntity(entity_fill); entity_fill = nil end
+    
+    -- Destroy customer entity
+    if activeCustomer then 
+        print("[CustomerSystem] Destroying customer entity: " .. activeCustomer)
+        DestroyEntity(activeCustomer) 
+    end
+    
+    -- Reset state
+    activeCustomer = nil
+    hasSpawned = false
+    is_at_counter = false 
+    current_patience = 0.0
+    spawnTimer = 0
+    current_bar_state = "green"
+    
+    print("[CustomerSystem] Ready for next customer.")
 end
 
 -- =========================================================

@@ -1962,14 +1962,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -33.9033088684082,
-                        8.039383888244629,
-                        12.088208198547363
+                        -29.35053062438965,
+                        8.039384841918945,
+                        12.808287620544434
                     ],
                     "rotation": [
-                        0.2979106903076172,
-                        -18.7205867767334,
-                        0.0052345129661262035
+                        0.29791101813316345,
+                        -0.8136253356933594,
+                        0.005235022399574518
                     ],
                     "scale": [
                         0.9999989867210388,
@@ -2044,9 +2044,9 @@
                 },
                 "ListenerComponent": {
                     "position": [
-                        -33.9033088684082,
-                        8.039383888244629,
-                        12.088208198547363
+                        -29.35053062438965,
+                        8.039384841918945,
+                        12.808287620544434
                     ],
                     "forward": [
                         0.0,
@@ -2118,7 +2118,8 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
@@ -2130,6 +2131,14 @@
                             "guid": "35037238-3549-4319-9a74-8a0472ccefa3",
                             "scriptPath": "Assets\\Scripts\\CustomerSystem.lua",
                             "hotReload": false
+                        }
+                    ]
+                },
+                "EventReceiverComponent": {
+                    "receivers": [
+                        {
+                            "messageToListenFor": "CustomerComplete",
+                            "luaFunctionToCall": "OnCustomerComplete"
                         }
                     ]
                 }
@@ -2917,6 +2926,24 @@
                 },
                 "MeshComponent": {
                     "guid": ""
+                }
+            }
+        },
+        {
+            "name": "ProgressBarFrame",
+            "guid": "935c4b6c-9776-45bb-8758-055bf13c8c7e",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "6c60686a-c68c-4284-bce0-019cfcbf77fa"
+                }
+            }
+        },
+        {
+            "name": "ProgressBarFill",
+            "guid": "b60854ac-3888-4f8f-80ee-c2fde7a2f57e",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "5dfc16be-aa4a-420a-9105-f7c9652f3620"
                 }
             }
         }

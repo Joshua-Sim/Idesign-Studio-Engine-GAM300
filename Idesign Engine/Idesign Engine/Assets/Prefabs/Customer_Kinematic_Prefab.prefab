@@ -1,17 +1,17 @@
 {
     "entity": {
         "name": "Customer_Kinematic",
-        "guid": "421fafd7-9f7a-4358-8a6c-a3bfd2b8ce3a",
+        "guid": "a6d3f5fb-7839-46a2-b4dc-168c2efe16e8",
         "components": {
             "TransformComponent": {
                 "position": [
-                    -25.918914794921875,
+                    -25.940574645996094,
                     5.900000095367432,
-                    13.039981842041016
+                    13.040060043334961
                 ],
                 "rotation": [
                     0.028169747442007065,
-                    -89.79451751708984,
+                    -89.79428100585938,
                     179.9430389404297
                 ],
                 "scale": [
@@ -72,7 +72,8 @@
                             0.0
                         ],
                         "canPassThrough": false,
-                        "isInteractable": false
+                        "isInteractable": true,
+                        "interactMessage": "OnInteractCustomer"
                     }
                 ]
             },
@@ -94,6 +95,14 @@
                     0.0
                 ],
                 "startAwake": true
+            },
+            "EventReceiverComponent": {
+                "receivers": [
+                    {
+                        "messageToListenFor": "OnInteractCustomer",
+                        "luaFunctionToCall": "OnInteract"
+                    }
+                ]
             }
         }
     }

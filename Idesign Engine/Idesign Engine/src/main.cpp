@@ -134,8 +134,10 @@ int main(void)
     ecsInterface.RegisterComponent<PlayerComponent>(); // register player component here coz of the interact system
     auto playerInteractSystem = ecsInterface.RegisterSystem<PlayerInteractSystem>();
     auto eventSystem = ecsInterface.RegisterSystem<EventSystem>();
-    ecsInterface.RegisterComponent<EventSenderComponent>();
+
+    ecsInterface.RegisterComponent<EventSenderComponent>(); 
     ecsInterface.RegisterComponent<EventReceiverComponent>();
+
     {
         Signature signature;
         // Tell ECS: "This system only cares about entities with EventReceiverComponent"

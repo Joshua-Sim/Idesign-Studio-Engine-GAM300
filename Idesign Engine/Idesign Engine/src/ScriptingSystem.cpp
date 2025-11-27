@@ -18,6 +18,7 @@
 #include "EngineState.h"
 #include "ButtonComponent.h"
 #include "ButtonSystem.h"
+#include "EventManager.h"
 #include "SceneManager.h" 
 #include "Inventory.h" // Include your Inventory header
 
@@ -57,6 +58,7 @@ namespace Framework {
             lua_pushnumber(L, tr.position.z);
             return 3; // x, y, z
         }
+
 
         static int lua_SetPosition(lua_State* L)
         {
@@ -115,6 +117,97 @@ namespace Framework {
             lua_pushnumber(L, 0.0);
             return 2;
         }
+
+        //For text component
+        static int lua_GetTextComponent(lua_State* L)
+        {
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+
+            if (!ecsInterface.IsEntityValid(e) || !ecsInterface.HasComponent<TextProperties>(e)) {
+                lua_pushnil(L);
+                return 1;
+            }
+
+            auto& text = ecsInterface.GetComponent<TextProperties>(e);
+
+            // Return a table with text component data
+            lua_newtable(L);
+
+            lua_pushstring(L, text.text.c_str());
+            lua_setfield(L, -2, "text");
+
+            lua_pushnumber(L, text.scale);
+            lua_setfield(L, -2, "scale");
+
+            // Color
+            lua_newtable(L);
+            lua_pushnumber(L, text.color.r); lua_setfield(L, -2, "r");
+            lua_pushnumber(L, text.color.g); lua_setfield(L, -2, "g");
+            lua_pushnumber(L, text.color.b); lua_setfield(L, -2, "b");
+            lua_setfield(L, -2, "color");
+
+            lua_pushinteger(L, text.alignment);
+            lua_setfield(L, -2, "alignment");
+
+            lua_pushboolean(L, text.isBillboard);
+            lua_setfield(L, -2, "isBillboard");
+
+            lua_pushboolean(L, text.screenSpace);
+            lua_setfield(L, -2, "screenSpace");
+
+            return 1;
+        }
+
+        static int lua_SetTextComponent(lua_State* L)
+        {
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+            const char* field = luaL_checkstring(L, 2);
+            // Value is at index 3 (type depends on field)
+
+            if (!ecsInterface.IsEntityValid(e) || !ecsInterface.HasComponent<TextProperties>(e)) {
+                return luaL_error(L, "SetTextComponent: invalid entity or missing TextProperties");
+            }
+
+            auto& text = ecsInterface.GetComponent<TextProperties>(e);
+
+            if (strcmp(field, "text") == 0) {
+                text.text = luaL_checkstring(L, 3);
+            }
+            else if (strcmp(field, "scale") == 0) {
+                text.scale = static_cast<float>(luaL_checknumber(L, 3));
+            }
+            else if (strcmp(field, "alignment") == 0) {
+                text.alignment = static_cast<int>(luaL_checkinteger(L, 3));
+            }
+            else if (strcmp(field, "isBillboard") == 0) {
+                text.isBillboard = lua_toboolean(L, 3);
+            }
+            else if (strcmp(field, "screenSpace") == 0) {
+                text.screenSpace = lua_toboolean(L, 3);
+            }
+            else if (strcmp(field, "color") == 0) {
+                // Expect a table with r, g, b
+                if (!lua_istable(L, 3)) {
+                    return luaL_error(L, "SetTextComponent: color must be a table {r, g, b}");
+                }
+
+                lua_getfield(L, 3, "r");
+                lua_getfield(L, 3, "g");
+                lua_getfield(L, 3, "b");
+
+                text.color.r = static_cast<float>(luaL_checknumber(L, -3));
+                text.color.g = static_cast<float>(luaL_checknumber(L, -2));
+                text.color.b = static_cast<float>(luaL_checknumber(L, -1));
+
+                lua_pop(L, 3);
+            }
+            else {
+                return luaL_error(L, "SetTextComponent: unknown field '%s'", field);
+            }
+
+            return 0;
+        }
+
 
         static int l_spawnPrompt(lua_State* L) {
             // Argument 1: The Entity ID (The Box/Receiver) - so we know WHERE to spawn
@@ -278,6 +371,43 @@ namespace Framework {
             return 0;
         }
 
+        //Event firing
+        static int lua_FireEvent(lua_State* L)
+        {
+            // Arg 1: Event Message Name (string)
+            const char* messageName = luaL_checkstring(L, 1);
+
+            // Arg 2: Sender Entity (optional, defaults to 0)
+            Entity senderID = 0;
+            if (lua_gettop(L) >= 2) {
+                senderID = static_cast<Entity>(luaL_checkinteger(L, 2));
+            }
+
+            // Arg 3: Target Entity (optional, defaults to 0)
+            Entity targetID = 0;
+            if (lua_gettop(L) >= 3) {
+                targetID = static_cast<Entity>(luaL_checkinteger(L, 3));
+            }
+
+            // Arg 4: Action Type (optional, defaults to 0)
+            int actionType = 0;
+            if (lua_gettop(L) >= 4) {
+                actionType = static_cast<int>(luaL_checkinteger(L, 4));
+            }
+
+            // Build Payload
+            CollisionEventData payload;
+            payload.senderID = senderID;
+            payload.targetID = targetID;
+            payload.actionType = actionType;
+
+            // Fire Event
+            EventManager::Instance().Fire(messageName, &payload);
+
+            std::cout << "[Lua] Fired Event: " << messageName << std::endl;
+
+            return 0;
+        }
 
         // Engine LUA exposed utility functions (Get entity, get by component, get by name, tag , create prefab, setactive -deactive etc
            
@@ -1215,8 +1345,7 @@ namespace Framework {
         lua_register(L, "IsKeyDown", l_IsKeyDown);
         lua_register(L, "CameraMove", l_CameraMove);
         lua_register(L, "GetMousePosition", lua_GetMousePosition);
-        lua_register(L, "GetPosition", lua_GetPosition);
-        lua_register(L, "SetPosition", lua_SetPosition);
+
         lua_register(L, "SpawnPrompt", l_spawnPrompt);
         lua_register(L, "DestroyEntity", l_DestroyEntity);
         lua_register(L, "IsMouseButtonDown", l_IsMouseButtonDown); 
@@ -1225,6 +1354,13 @@ namespace Framework {
         lua_register(L, "SetTexture", lua_SetTexture);
         lua_register(L, "SetAnimationSettings", l_SetAnimationSettings);
         lua_register(L, "LoadScene", Lua_LoadScene);
+
+        //Components get & sets
+        lua_register(L, "GetPosition", lua_GetPosition); // Transform get setter
+        lua_register(L, "SetPosition", lua_SetPosition);
+
+        lua_register(L, "GetTextComponent", lua_GetTextComponent); // Text component get/set
+        lua_register(L, "SetTextComponent", lua_SetTextComponent);
 
         // Game utility
         lua_register(L, "IsItemChoppable", lua_IsItemChoppable);
@@ -1248,6 +1384,7 @@ namespace Framework {
         lua_register(L, "AddTagToEntity",       lua_AddTagToEntity);
         lua_register(L, "PlayEntityAnimation",  l_PlayEntityAnimation);
         lua_register(L, "SpawnPrefab",          lua_SpawnPrefab);
+        lua_register(L, "FireEvent", lua_FireEvent); // Maybe add register if needed
 
         // Engine States
         lua_register(L, "GameStateStart",       lua_GameStateStart);
