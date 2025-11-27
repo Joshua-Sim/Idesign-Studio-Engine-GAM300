@@ -110,10 +110,7 @@ namespace Framework
 
 		std::string materialBinPath = (root / "Resource/MaterialAsset.bin").string();
 		//std::cout << "  Loading: " << materialBinPath << std::endl;
-		AssetManager::Instance().LoadBinaryArray<MaterialMetadata>(
-			materialBinPath,
-			g_MaterialMetaProps,
-			[=](MaterialMetadata& meta) // Capture root by copy
+		AssetManager::Instance().LoadBinaryArray<MaterialMetadata>(materialBinPath, g_MaterialMetaProps, [=](MaterialMetadata& meta) // Capture root by copy
 			{
 				// Register metadata
 				AssetManager::Instance().RegisterAsset(std::make_unique<MaterialMetadata>(meta), &g_MaterialMetaProps, meta.path);

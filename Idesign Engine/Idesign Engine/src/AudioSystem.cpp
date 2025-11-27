@@ -18,6 +18,7 @@
 #include <cmath>
 #include <filesystem>
 #include <MessageSystem.h>
+#include "EngineState.h"
 
 // Global ECS interface
 extern Framework::Coordinator ecsInterface;
@@ -186,12 +187,25 @@ namespace Framework {
                 OnExitPlayMode();
             });
 
+        MessageBus::Get().Subscribe<PausePlayModeMessage>(
+            [this](const PausePlayModeMessage& msg) {
+                (void)msg;
+                OnPausedPlayMode();
+            });
+
+        MessageBus::Get().Subscribe<ResumePlayModeMessage>(
+            [this](const ResumePlayModeMessage& msg) {
+                (void)msg;
+                OnResumePlayMode();
+            });
+
         std::cout << "[AudioSystem] Initialized with 3D audio support" << std::endl;
         ImguiManager::LogSuccess("Initialized with 3D audio support", "AudioSystem");
     }
 
     void AudioSystem::Update(float deltaTime) {
 
+        bool audioPaused = false;
         Entity activeListenerEntity = {};
         bool foundListener = false;
 
@@ -297,6 +311,17 @@ namespace Framework {
             }
         }
 
+        if (!engineState.IsPlay() && !audioPaused) 
+        {
+            PauseAllAudio();
+            audioPaused = true;
+        }
+        else if (engineState.IsPlay() && audioPaused) 
+        {
+            ResumeAllAudio();
+            audioPaused = false;
+        }
+
         // Update FMOD
         if (studioSystem) studioSystem->update();
     }
@@ -340,7 +365,7 @@ namespace Framework {
                 bank->getEventList(eventList.data(), eventCount, &eventCount);
 
                 meta.events.clear();
-                std::cout << "[AudioSystem] Bank '" << meta.name << "' contains " << eventCount << " events" << std::endl;
+                //std::cout << "[AudioSystem] Bank '" << meta.name << "' contains " << eventCount << " events" << std::endl;
 
                 for (auto* ev : eventList)
                 {
@@ -348,7 +373,7 @@ namespace Framework {
                     int retrieved = 0;
                     ev->getPath(path, sizeof(path), &retrieved);
                     meta.events.push_back(std::string(path));
-                    std::cout << "   -> Event: " << path << std::endl;
+                    //std::cout << "   -> Event: " << path << std::endl;
                 }
             }
         );
@@ -380,7 +405,7 @@ namespace Framework {
         auto it = loadedBanks.find(bankPath);
         if (it != loadedBanks.end()) 
         {
-            std::cout << "[AudioSystem] Using cached bank: " << bankPath << std::endl;
+            //std::cout << "[AudioSystem] Using cached bank: " << bankPath << std::endl;
             return it->second;
         }
 
@@ -395,7 +420,7 @@ namespace Framework {
             std::cerr << "[AudioSystem] ERROR: Failed to load bank: " << bankPath << " (error: " << result << ")" << std::endl;
             return nullptr;
         }
-        std::cout << "[AudioSystem] Bank loaded: " << bankPath << std::endl;
+        //std::cout << "[AudioSystem] Bank loaded: " << bankPath << std::endl;
 
         // Load sample data so events can actually play
         result = bank->loadSampleData();            
@@ -1114,6 +1139,26 @@ namespace Framework {
             auto& audioComp = ecsInterface.GetComponent<AudioComponent>(entity);
             if (audioComp.isPlaying) {
                 StopEntitySound(entity);
+            }
+        }
+    }
+
+    void AudioSystem::OnPausedPlayMode()
+    {
+        std::cout << "[AudioSystem] Pausing all audio..." << std::endl;
+        for (auto& kv : activeEvents) {
+            if (kv.second) {
+                kv.second->setPaused(true);
+            }
+        }
+    }
+
+    void AudioSystem::OnResumePlayMode()
+    {
+        std::cout << "[AudioSystem] Resuming all audio..." << std::endl;
+        for (auto& kv : activeEvents) {
+            if (kv.second) {
+                kv.second->setPaused(false);
             }
         }
     }

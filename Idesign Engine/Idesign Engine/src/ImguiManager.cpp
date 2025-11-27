@@ -2630,8 +2630,6 @@ namespace Framework {
 
 					//Send message to start audio and other play-mode systems
                     MessageBus::Get().SendImmediate(EnterPlayModeMessage());
-
-                    g_AudioSystem->ResumeAllAudio();
                 }
                 ImGui::PopStyleColor(3); // Restore color
 
@@ -2687,7 +2685,9 @@ namespace Framework {
                 ImGui::PopStyleColor(3); // Restore color
             }
             ImGui::End();
+
             bool menuActive = !engineState.IsPlay();
+            
             if (ImGui::Begin("Main Viewport"))
             {
                 // Get the available size in the ImGui window

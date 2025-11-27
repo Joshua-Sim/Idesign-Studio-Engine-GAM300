@@ -58,10 +58,10 @@ namespace Framework {
 	}
 
 	/**
-* \brief Updates the input states by polling GLFW events and checking for key or mouse inputs.
-*
-* \param deltaTime The time elapsed since the last update (unused in this function).
-*/
+	* \brief Updates the input states by polling GLFW events and checking for key or mouse inputs.
+	*
+	* \param deltaTime The time elapsed since the last update (unused in this function).
+	*/
 	void InputHandler::Update(float deltaTime) {
 
 		(void)deltaTime;
@@ -134,48 +134,6 @@ namespace Framework {
 				engineState.SetInDebugMode(!engineState.IsInDebugMode());
 			}
 
-
-			// BGM Audio
-			if (IsKeyPressed(GLFW_KEY_5))
-			{
-				//GlobalAudio.UE_PlaySound("piano");
-			}
-
-			if (IsKeyPressed(GLFW_KEY_6))
-			{
-				//GlobalAudio.UE_PauseSound("piano");
-			}
-
-			// Sound Effects Audio
-			if (IsKeyPressed(GLFW_KEY_7))
-			{
-				//GlobalAudio.UE_PlaySound("buttonclick");
-			}
-
-			if (IsKeyPressed(GLFW_KEY_8))
-			{
-				//GlobalAudio.UE_PlaySound("selectbutton");
-			}
-
-			if (IsKeyPressed(GLFW_KEY_9))
-			{
-				//GlobalAudio.UE_PlaySound("previousbutton");
-			}
-
-			// Audio Volume Control
-			if (IsKeyPressed(GLFW_KEY_MINUS))
-			{
-				//GlobalAudio.DecrementGroupVol("BackgroundMusic");
-				//GlobalAudio.DecrementGroupVol("SoundEffects");
-			}
-
-			if (IsKeyPressed(GLFW_KEY_EQUAL))
-			{
-				//GlobalAudio.IncrementGroupVol("BackgroundMusic");
-				//GlobalAudio.IncrementGroupVol("SoundEffects");
-			}
-
-
 			if (IsMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
 				//std::cout << "Left mouse button clicked" << std::endl;
 				if (messageSystem) {
@@ -183,6 +141,17 @@ namespace Framework {
 					messageSystem->Dispatch(msg);
 				}
 			}
+		}
+
+		if (IsKeyPressed(GLFW_KEY_ESCAPE))
+		{
+			engineState.SetPlay(!engineState.IsPlay());
+
+			// Send message to start audio and other play-mode systems 
+			// the code below should not be tied to ESC as it should be played since the start
+			// and managed with the other states such as paused/resume
+			// This code allows audios that are meant to play on start to play immediately
+			// MessageBus::Get().SendImmediate(EnterPlayModeMessage());
 		}
 	}
 
@@ -346,8 +315,6 @@ namespace Framework {
 		}
 	}
 
-
-
 	/**
 	 * \brief Static function that handles GLFW cursor position events and updates the mouse position.
 	 *
@@ -364,4 +331,3 @@ namespace Framework {
 
 	}
 }
-

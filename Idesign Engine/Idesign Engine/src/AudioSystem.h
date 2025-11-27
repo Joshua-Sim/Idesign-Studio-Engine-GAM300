@@ -232,6 +232,8 @@ namespace Framework {
         void OnPlaySound(const PlaySoundMessage& msg);
         void OnEnterPlayMode();
         void OnExitPlayMode();
+        void OnPausedPlayMode();
+        void OnResumePlayMode();
 
     private:
         //======================================================================

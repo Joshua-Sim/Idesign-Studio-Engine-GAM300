@@ -20,7 +20,6 @@
 #include "ButtonSystem.h"
 #include "SceneManager.h" 
 #include "Inventory.h" // Include your Inventory header
-
 #include "InputHandler.h"
 extern Framework::Coordinator ecsInterface;
 
@@ -652,9 +651,9 @@ namespace Framework {
             engineState.SetPlay(true);
                     
             //Send message to start audio and other play-mode systems
-            MessageBus::Get().SendImmediate(EnterPlayModeMessage());
+            MessageBus::Get().SendImmediate(ResumePlayModeMessage());
 
-            g_AudioSystem->ResumeAllAudio();
+            //g_AudioSystem->ResumeAllAudio();
 
             return 0;
         }
@@ -665,10 +664,10 @@ namespace Framework {
             engineState.SetPlay(false);
 
             // Send exit message
-            MessageBus::Get().SendImmediate(ExitPlayModeMessage());
+            MessageBus::Get().SendImmediate(PausePlayModeMessage());
 
             // Pause Current playing Audio
-            g_AudioSystem->PauseAllAudio();
+            //g_AudioSystem->PauseAllAudio();
 
             return 0;
         }
@@ -682,7 +681,7 @@ namespace Framework {
             MessageBus::Get().SendImmediate(ExitPlayModeMessage());
 
             // Clear all audio
-            g_AudioSystem->Reset();
+            //g_AudioSystem->Reset();
 
             return 0;
         }
