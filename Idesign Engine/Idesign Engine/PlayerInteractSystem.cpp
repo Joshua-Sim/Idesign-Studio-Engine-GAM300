@@ -54,6 +54,7 @@ namespace Framework
         Entity targetEntity = hit.entity;
         std::cout << "[Interact] Hit Entity: " << targetEntity << std::endl;
 
+        bool handledByScript;
         // --- PRIORITY 1: EVENT TRIGGER (Buttons, Chests, Scripted Items) ---
         // Does the collider say "I am interactable"?
         if (ecsInterface.HasComponent<BoxColliderComponent>(targetEntity))
@@ -76,9 +77,11 @@ namespace Framework
                     // FIRE AND FORGET
                     // The EventSystem will pick this up and call the Lua script attached to the object
                     EventManager::Instance().Fire(entry.interactMessage, &payload);
-
-                    return; // Stop here. The Event System handles the rest.
+                    handledByScript = true;
                 }
+            }
+            if (handledByScript) {
+                return;
             }
         }
 

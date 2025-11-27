@@ -80,8 +80,8 @@
         },
         {
             "guid": "afd25b76-dddc-4c4f-bae4-a6c9a22931e5",
-            "name": "Herb",
-            "path": "Assets\\Textures\\Herb.png",
+            "name": "unchopped_herb",
+            "path": "Assets\\Textures\\unchopped_herb3D.png",
             "isUI": false
         },
         {

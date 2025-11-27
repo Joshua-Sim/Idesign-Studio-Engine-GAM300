@@ -19,6 +19,7 @@
 #include "ButtonComponent.h"
 #include "ButtonSystem.h"
 #include "SceneManager.h" 
+#include "Inventory.h" // Include your Inventory header
 
 extern Framework::Coordinator ecsInterface;
 
@@ -147,6 +148,100 @@ namespace Framework {
 
             // Optional: Return the new ID to Lua so we can delete it later?
             lua_pushinteger(L, static_cast<lua_Integer>(promptEntity));
+            return 1;
+        }
+
+        static int l_spawnCauldronItem(lua_State* L) {
+            // 1. Get Arguments
+            Entity parentID = static_cast<Entity>(luaL_checkinteger(L, 1));
+            int itemID = (int)luaL_checkinteger(L, 2);
+
+            // 2. Validate Parent
+            if (!ecsInterface.IsEntityValid(parentID) ||
+                !ecsInterface.HasComponent<TransformComponent>(parentID)) {
+                return 0;
+            }
+
+            // 3. Validate Item ID
+            if (itemID < 0 || itemID >= Framework::kItemCount) {
+                std::cout << "[Lua Error] Invalid Item ID: " << itemID << "\n";
+                return 0;
+            }
+
+            std::string itemName = Framework::kItemNames[itemID];
+
+            // =========================================================
+            // PATH HANDLING LOGIC (Robust)
+            // =========================================================
+
+            // 1. Define Relative Paths
+            std::string relObjPath = "Assets/Objects/" + itemName + ".obj";
+            std::string relPngPath = "Assets/Textures/" + itemName + "3D.png";
+
+            // 2. Resolve Mesh Path
+            fs::path meshPath(relObjPath);
+            if (!meshPath.is_absolute()) {
+                // If relative, prepend Current Working Directory (Project Root)
+                meshPath = fs::current_path() / meshPath;
+            }
+
+            // 3. Resolve Texture Path
+            fs::path texPath(relPngPath);
+            if (!texPath.is_absolute()) {
+                texPath = fs::current_path() / texPath;
+            }
+
+            // 4. Debug: Verify existence (Helps you see if path is wrong)
+            if (!fs::exists(meshPath)) {
+                std::cout << "[Lua Error] MESH MISSING at: " << meshPath.string() << std::endl;
+                // Optional: Fallback to a default cube if missing
+                // meshPath = fs::current_path() / "Assets/Objects/cube.obj";
+            }
+            if (!fs::exists(texPath)) {
+                std::cout << "[Lua Error] TEXTURE MISSING at: " << texPath.string() << std::endl;
+            }
+
+            // =========================================================
+
+            // 5. Calculate Position (Above BoxCollider)
+            auto& parentTrans = ecsInterface.GetComponent<TransformComponent>(parentID);
+            glm::vec3 spawnPos = parentTrans.position;
+
+            // 6. Create Entity
+            Entity itemEntity = ecsInterface.CreateEntity();
+
+            // --- NEW: SET UNIQUE NAME ---
+            std::string uniqueName = itemName + "_" + std::to_string((unsigned int)itemEntity);
+
+            // Assuming you have a SetEntityName function in your ECS Interface
+            ecsInterface.SetEntityName(itemEntity, uniqueName);
+            std::cout << "[DEBUG C++] Created Entity: " << uniqueName << std::endl;
+            // ----------------------------
+
+            // 7. Transform
+            TransformComponent tf;
+            tf.position = spawnPos;
+            tf.scale = glm::vec3(0.3f);
+            tf.rotation = glm::vec3(-90.0f, 0.0f, 0.0f);
+            ecsInterface.AddComponent(itemEntity, tf);
+
+            // 8. Hierarchy
+            HierarchyComponent hc;
+            ecsInterface.AddComponent(itemEntity, hc);
+
+            // 9. Mesh (Use the resolved absolute path)
+            MeshProperties mp;
+            mp.path = meshPath.string(); // Convert fs::path back to string
+            MeshLoader::loadMesh(mp.path, mp);
+            ecsInterface.AddComponent(itemEntity, mp);
+
+            // 10. Texture (Use the resolved absolute path)
+            TextureProperties tp;
+            tp.path = texPath.string(); // Convert fs::path back to string
+            TextureLoader::loadTexture(tp, true);
+            ecsInterface.AddComponent(itemEntity, tp);
+
+            lua_pushinteger(L, static_cast<lua_Integer>(itemEntity));
             return 1;
         }
 
@@ -640,6 +735,8 @@ namespace Framework {
 
             if (!lua_isfunction(L, 2))
                 return luaL_error(L, "Second argument must be a function");
+        // 1. Function to get the ID of the item currently held
+        
 
             // Create reference to function
             lua_pushvalue(L, 2);
@@ -670,6 +767,27 @@ namespace Framework {
                 };
 
             return 0;
+        }
+
+        int Lua_GetPlayerSelectedItemId(lua_State* L) {
+            int itemId = Framework::Inventory::Instance().GetSelectedItemId();
+            // In your Inventory.cpp, -1 (unsigned -1) is empty. 
+            // Let's ensure we return -1 to Lua if it's empty/max_uint
+            if (itemId == (unsigned)-1) itemId = -1;
+
+            lua_pushinteger(L, itemId);
+            return 1; // Returns 1 value to Lua
+        }
+
+        // 2. Function to remove the item currently held (consumes it)
+        int Lua_ConsumePlayerSelectedItem(lua_State* L) {
+            auto& inv = Framework::Inventory::Instance();
+            int idx = inv.GetSelectedIndex();
+
+            // Clear the slot
+            inv.ClearHotbarSlot(idx);
+
+            return 0; // Returns nothing
         }
 
         static int Lua_LoadScene(lua_State* L)
@@ -1069,15 +1187,18 @@ namespace Framework {
         lua_register(L, "LoadScene", Lua_LoadScene);
 
         // Game utility
-        lua_register(L, "IsItemChoppable",          lua_IsItemChoppable);
-        lua_register(L, "GetScore",                 lua_GetScore);
-        lua_register(L, "AddScore",                 lua_AddScore);
-        lua_register(L, "SetText",                  lua_SetText);
-        lua_register(L, "AddToInventory",           Lua_AddToInventory);
-        lua_register(L, "DestroyEntity",            Lua_DestroyEntity);
-        lua_register(L, "GetItemName",              Lua_GetItemName);
-        lua_register(L, "IsItemDestroyOnPick",      Lua_IsItemDestroyOnPick);
+        lua_register(L, "IsItemChoppable", lua_IsItemChoppable);
+        lua_register(L, "GetScore", lua_GetScore);
+        lua_register(L, "AddScore", lua_AddScore);
+        lua_register(L, "SetText", lua_SetText);
+        lua_register(L, "AddToInventory", Lua_AddToInventory);
+        lua_register(L, "DestroyEntity", Lua_DestroyEntity);
+        lua_register(L, "GetItemName", Lua_GetItemName);
         lua_register(L, "RegisterButtonCallback",   Lua_RegisterButtonCallback);
+        lua_register(L, "IsItemDestroyOnPick", Lua_IsItemDestroyOnPick);
+        lua_register(L, "GetSelectedItem", Lua_GetPlayerSelectedItemId);
+        lua_register(L, "ConsumeSelectedItem", Lua_ConsumePlayerSelectedItem);
+        lua_register(L, "SpawnCauldronItem", l_spawnCauldronItem);
 
         // Engine utility
         lua_register(L, "FindEntityByName",     lua_FindEntityByName);

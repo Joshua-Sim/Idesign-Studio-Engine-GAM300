@@ -2121,6 +2121,22 @@ namespace Framework {
                         currentshader.setFloat("uMaterial.opacity", material.opacity);
                         currentshader.setInt("uTexture", 0);
                     }
+                    // START ADDITION: Reset to defaults if no material component exists
+                    else
+                    {
+                        // Default Albedo: White (so textures look normal)
+                        const bool isSelected = (int)entityId == sel;
+                        glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : glm::vec3(1.0f, 1.0f, 1.0f);
+
+                        currentshader.setVec3("uAlbedo", finalAlbedo);
+
+                        // Default Material settings
+                        currentshader.setVec3("uMaterial.ambient", glm::vec3(0.1f));
+                        currentshader.setVec3("uMaterial.specular", glm::vec3(0.5f));
+                        currentshader.setFloat("uMaterial.shininess", 32.0f);
+                        currentshader.setFloat("uMaterial.opacity", 1.0f);
+                        currentshader.setInt("uTexture", 0);
+                    }
 
                     glActiveTexture(GL_TEXTURE0);
                     if (ecsInterface.HasComponent<TextureProperties>(entityId)) {

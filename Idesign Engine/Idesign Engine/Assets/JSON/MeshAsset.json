@@ -299,8 +299,8 @@
         },
         {
             "guid": "4bf0356c-3b1b-4e45-a327-5a7f573a20ef",
-            "name": "Herb",
-            "path": "Assets\\Objects\\Herb.obj",
+            "name": "unchopped_herb",
+            "path": "Assets\\Objects\\unchopped_herb.obj",
             "vao": 91,
             "vbo": 174,
             "ebo": 175,

@@ -93,7 +93,7 @@
                     "is3D": true,
                     "minDistance": 1.0,
                     "maxDistance": 100.0,
-                    "volume": 1.0,
+                    "volume": 0.20000000298023224,
                     "loop": false,
                     "playOnStart": true,
                     "isPlaying": true,
@@ -994,7 +994,7 @@
                     "eventName": "event:/FrogCroak",
                     "is3D": true,
                     "minDistance": 1.0,
-                    "maxDistance": 100.0,
+                    "maxDistance": 50.0,
                     "volume": 1.0,
                     "loop": false,
                     "playOnStart": false,
@@ -1962,14 +1962,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -55.29311752319336,
+                        -45.648597717285156,
                         8.03951358795166,
-                        9.053871154785156
+                        13.679012298583984
                     ],
                     "rotation": [
-                        0.297899454832077,
-                        47.90789031982422,
-                        0.0018177588935941458
+                        0.2979046404361725,
+                        29.99207878112793,
+                        0.004175654146820307
                     ],
                     "scale": [
                         0.9999989867210388,
@@ -2044,9 +2044,9 @@
                 },
                 "ListenerComponent": {
                     "position": [
-                        -55.29311752319336,
+                        -45.648597717285156,
                         8.03951358795166,
-                        9.053871154785156
+                        13.679012298583984
                     ],
                     "forward": [
                         0.0,
@@ -2391,7 +2391,8 @@
                                 -1.0
                             ],
                             "canPassThrough": false,
-                            "isInteractable": false
+                            "isInteractable": true,
+                            "interactMessage": "STIR"
                         }
                     ]
                 },
@@ -2413,6 +2414,14 @@
                         0.0
                     ],
                     "startAwake": true
+                },
+                "EventReceiverComponent": {
+                    "receivers": [
+                        {
+                            "messageToListenFor": "STIR",
+                            "luaFunctionToCall": "OnInteract"
+                        }
+                    ]
                 },
                 "AudioComponent": {
                     "guid": "d6f23fa6-ff6f-4892-91b3-ca11349bb492",
@@ -2534,7 +2543,8 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 }
             }
         },
@@ -2568,11 +2578,12 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "b7b4bcaf-b4d9-4c53-a9af-017de16950a6",
-                    "isUI": true
+                    "isUI": false
                 }
             }
         },
@@ -2606,11 +2617,12 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "01931225-401d-4164-8db6-754535863bb1",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ButtonComponent": {
                     "position": [
@@ -2659,11 +2671,12 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "475e81a7-2e58-4938-9542-ca201d5d96f5",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -2717,11 +2730,12 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "38c96217-d4fa-4b5b-910f-d8914b7a1e0f",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -2757,6 +2771,42 @@
         {
             "name": "Customer",
             "guid": "ba84631d-29d8-4d03-b95d-506cc61f72a6",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
+                }
+            }
+        },
+        {
+            "name": "Customer",
+            "guid": "0034eca4-ce4f-4a50-9896-ac10c3bc6890",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
+                }
+            }
+        },
+        {
+            "name": "Customer",
+            "guid": "3f040ac3-dad5-4ed6-8aae-48d66a373590",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
+                }
+            }
+        },
+        {
+            "name": "Customer",
+            "guid": "180f330e-b15c-481c-8792-8932ad6f627f",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
+                }
+            }
+        },
+        {
+            "name": "Customer",
+            "guid": "53f53e41-b795-457a-99e5-a2e4ec84ef9c",
             "components": {
                 "PrefabComponent": {
                     "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
