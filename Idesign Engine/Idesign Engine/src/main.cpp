@@ -65,7 +65,7 @@ EngineState engineState;
 
 int main(void)
 {
-    _CrtSetBreakAlloc(735035);
+    //_CrtSetBreakAlloc(735035);
 
     // Save the initial working directory
     std::filesystem::path initialCWD = std::filesystem::current_path();
