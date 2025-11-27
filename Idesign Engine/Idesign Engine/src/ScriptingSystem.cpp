@@ -97,6 +97,7 @@ namespace Framework {
             g->MoveCameraFromLua(dir, dt, gm);
             return 0;
         }
+        
         static int lua_GetMousePosition(lua_State* L)
         {
             // Access your singleton InputHandler

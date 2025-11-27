@@ -17,6 +17,8 @@
 #include "ButtonSystem.h"
 #include "TextureProperties.h"
 #include "EngineState.h"
+#include <BoxColliderComponent.h>
+#include "EventManager.h"
 
 extern Framework::Coordinator ecsInterface;
 namespace Framework {
@@ -92,7 +94,32 @@ namespace Framework {
             bool inside = (designX > left && designX < right && designY > bottom && designY < top);
             button.isHovered = inside;
 
-            if (inside) button.TriggerClick(entity);
+            if (inside)
+            {
+                button.TriggerClick(entity);
+
+                // 2) OPTIONAL: fire EventManager messages if this entity
+                //    also has an EventSenderComponent.
+                if (ecsInterface.HasComponent<EventSenderComponent>(entity))
+                {
+                    auto& senderComp = ecsInterface.GetComponent<EventSenderComponent>(entity);
+
+                    for (const auto& entry : senderComp.senders)
+                    {
+                        // Only respond to "OnClick" triggers so you can reuse
+                        // EventSenderComponent for other things later if you want.
+                        if (entry.triggerName == "OnClick")
+                        {
+                            CollisionEventData payload{};
+                            payload.senderID = entity;  // button that was clicked
+                            payload.targetID = entity;  // same here; receivers can ignore if they want
+                            payload.actionType = 1;      // 1 = "pressed/clicked" (similar to ENTER)
+
+                            EventManager::Instance().Fire(entry.messageName, &payload);
+                        }
+                    }
+                }
+            }
         }
     }
 }
