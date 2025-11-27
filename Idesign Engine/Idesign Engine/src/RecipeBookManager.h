@@ -9,21 +9,20 @@
 #include <TextureProperties.h>
 #include <ComponentList.h>
 #include "TextureLoader.h"
+#include "ItemComponent.h" // CRITICAL: Includes Global Recipe Definitions
 
 namespace Framework {
-    struct Item {
-        std::string name;
-    };
 
-    struct PotionRecipe {
-        std::vector<Item> ingredients;
-        Item resultingPotion;
+    // Helper for UI-specific data
+    struct UIRecipe {
+        std::vector<std::string> ingredientNames;
+        std::string resultName;
     };
 
     class RecipeBookManager {
     private:
         Coordinator* coordinator;
-        std::vector<PotionRecipe> allRecipes;
+        std::vector<UIRecipe> displayRecipes; // Local cache of names for rendering
         std::vector<Entity> uiEntities;
 
     public:
@@ -33,19 +32,37 @@ namespace Framework {
             PopulateData();
         }
 
+        // --- NEW: FETCH FROM GLOBAL SOURCE ---
         void PopulateData() {
-            Item herb = { "unchopped_herb" };
-            Item c_herb = { "chopped_herb" };
-            Item potion = { "strength_potion" };
+            displayRecipes.clear();
 
-            PotionRecipe r1;
-            PotionRecipe r2; //r2 = r1; allRecipes.push_back(r2);
+            // 1. Get the authoritative list from ItemComponent
+            const auto& globalRecipes = Framework::GetGlobalRecipes();
 
-            r1.ingredients = { herb, c_herb };
-            r1.resultingPotion = potion;
-            
-            allRecipes.push_back(r1);
-            
+            // 2. Convert IDs to Names for the UI
+            for (const auto& gRecipe : globalRecipes) {
+                UIRecipe uiRecipe;
+
+                // Ingredients
+                for (int id : gRecipe.ingredientIDs) {
+                    if (id >= 0 && id < Framework::kItemCount) {
+                        uiRecipe.ingredientNames.push_back(Framework::kItemNames[id]);
+                    }
+                    else {
+                        uiRecipe.ingredientNames.push_back("Unknown");
+                    }
+                }
+
+                // Result
+                if (gRecipe.resultItemID >= 0 && gRecipe.resultItemID < Framework::kItemCount) {
+                    uiRecipe.resultName = Framework::kItemNames[gRecipe.resultItemID];
+                }
+                else {
+                    uiRecipe.resultName = "Unknown";
+                }
+
+                displayRecipes.push_back(uiRecipe);
+            }
         }
 
         // --- UPDATED BUILD FUNCTION ---
@@ -54,33 +71,36 @@ namespace Framework {
 
             float startX = 660.0f;
             float startY = 650.0f;
-
-            float slotSize = 2.0f;       
+            float slotSize = 2.0f;
             float spacingX = 278.0f;
-            float spacingY = 250.0f;     
+            float spacingY = 250.0f;
 
             float currentY = startY;
 
-            for (const auto& recipe : allRecipes) {
+            // Iterate over our display-ready recipes
+            for (const auto& recipe : displayRecipes) {
                 float currentX = startX;
-                size_t count = recipe.ingredients.size();
+                size_t count = recipe.ingredientNames.size();
                 float totalRowWidth = (count * spacingX) + (spacingX * 0.5f);
 
-                float bgHeight = 180.0f;               
+                float bgHeight = 180.0f;
                 SpawnBook(960.0f, 400.0f, 1000.0f, 800.0f);
                 SpawnRowBackground(974.0f, currentY, 800.0f, bgHeight);
 
-                for (size_t i = 0; i < recipe.ingredients.size(); i++) {
+                for (size_t i = 0; i < recipe.ingredientNames.size(); i++) {
+                    SpawnUISprite(currentX, currentY, recipe.ingredientNames[i], slotSize);
 
-                    SpawnUISprite(currentX, currentY, recipe.ingredients[i].name, slotSize);
-
-                    if (i < recipe.ingredients.size() - 1) {
-                        float plusX = currentX + (spacingX * 1.1f);
+                    // Add 'Plus' symbol logic here if needed
+                    if (i < recipe.ingredientNames.size() - 1) {
+                        // float plusX = currentX + (spacingX * 1.1f);
+                        // SpawnUIText(plusX, currentY, "+"); 
                     }
                     currentX += spacingX;
                 }
 
-                SpawnUISprite(currentX + 40.0f, currentY, recipe.resultingPotion.name, slotSize);
+                // Arrow or Equals sign logic could go here
+
+                SpawnUISprite(currentX + 40.0f, currentY, recipe.resultName, slotSize);
 
                 currentY -= spacingY;
             }
@@ -95,9 +115,10 @@ namespace Framework {
         }
 
     private:
+        // ... (SpawnUISprite, SpawnUIText, SpawnBook, SpawnRowBackground remain exactly the same) ...
 
         void SpawnUISprite(float x, float y, std::string itemName, float scaleMult = 1.0f) {
-            if (itemName.empty()) return;
+            if (itemName.empty() || itemName == "Unknown") return;
 
             Entity e = coordinator->CreateEntity();
 
@@ -106,7 +127,7 @@ namespace Framework {
             trans.scale = glm::vec3(40.0f * scaleMult, 40.0f * scaleMult, 1.0f);
 
             MeshProperties mesh;
-            // mesh.meshName = "Quad"; // Make sure your mesh name is set here if needed
+            // mesh.meshName = "Quad"; 
 
             TextureProperties texComp;
             HierarchyComponent hc;
@@ -124,59 +145,24 @@ namespace Framework {
             uiEntities.push_back(e);
         }
 
-        // Helper to make the Text symbols
-        void SpawnUIText(float x, float y, std::string content) {
-            Entity e = coordinator->CreateEntity();
-
-            HierarchyComponent hc;
-            coordinator->AddComponent(e, hc);
-
-            // 1. Transform
-            TransformComponent trans;
-            trans.position = glm::vec3(x, y, 0);
-            // NOTE: You might need to increase this scale if the text is too small!
-            // Try 50.0f or 100.0f if you don't see it.
-            trans.scale = glm::vec3(1.0f, 1.0f, 1.0f);
-            coordinator->AddComponent(e, trans);
-
-            // 2. Text Component
-            TextProperties txt;
-            txt.text = content;
-            coordinator->AddComponent(e, txt);
-
-            // 3. Texture Properties (For UI Flag)
-            // If your text renders black or invisible, uncomment this!
-            /*
-            TextureProperties tex;
-            tex.isUI = true;
-            coordinator->AddComponent(e, tex);
-            */
-
-            uiEntities.push_back(e);
-        }
-
+        // ... Include the rest of your spawn functions here ...
         void SpawnBook(float x, float y, float width, float height) {
+            // (Copy your existing implementation here)
             Entity e = coordinator->CreateEntity();
-
-            // 1. Transform
-            // Z = 0.5f ensures it is behind ingredients (Z=0.0) and frames (Z=0.1)
             TransformComponent trans;
             trans.position = glm::vec3(x, y, 0);
             trans.scale = glm::vec3(width, height, 1.0f);
             coordinator->AddComponent(e, trans);
 
-            // 2. Mesh
             MeshProperties mesh;
             coordinator->AddComponent(e, mesh);
 
-            // 3. Texture
             TextureProperties texComp;
-            texComp.path = "Assets/Textures/book.png"; // <--- Make sure you have this image!
+            texComp.path = "Assets/Textures/book.png";
             texComp.isUI = true;
             TextureLoader::loadTexture(texComp, true);
             coordinator->AddComponent(e, texComp);
 
-            // 4. Hierarchy (To prevent crash)
             HierarchyComponent hc;
             coordinator->AddComponent(e, hc);
 
@@ -184,27 +170,22 @@ namespace Framework {
         }
 
         void SpawnRowBackground(float x, float y, float width, float height) {
+            // (Copy your existing implementation here)
             Entity e = coordinator->CreateEntity();
-
-            // 1. Transform
-            // Z = 0.5f ensures it is behind ingredients (Z=0.0) and frames (Z=0.1)
             TransformComponent trans;
             trans.position = glm::vec3(x, y, 0);
             trans.scale = glm::vec3(width, height, 1.0f);
             coordinator->AddComponent(e, trans);
 
-            // 2. Mesh
             MeshProperties mesh;
             coordinator->AddComponent(e, mesh);
 
-            // 3. Texture
             TextureProperties texComp;
-            texComp.path = "Assets/Textures/recipe_layout.png"; // <--- Make sure you have this image!
+            texComp.path = "Assets/Textures/recipe_layout.png";
             texComp.isUI = true;
             TextureLoader::loadTexture(texComp, true);
             coordinator->AddComponent(e, texComp);
 
-            // 4. Hierarchy (To prevent crash)
             HierarchyComponent hc;
             coordinator->AddComponent(e, hc);
 

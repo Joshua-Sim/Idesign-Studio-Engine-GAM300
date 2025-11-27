@@ -987,7 +987,7 @@ namespace Framework
         // 3. Go through every component type, check if the source has it,
         //    and add a copy of it to the new entity.
 
-        // --- (Copy logic for each component) --- 
+        // === CORE & GRAPHICS ===
 
         if (ecs.HasComponent<TransformComponent>(sourceEntity))
         {
@@ -1013,6 +1013,7 @@ namespace Framework
             ecs.AddComponent(newEntity, ecs.GetComponent<MeshProperties>(sourceEntity));
         }
 
+        // (Kept this from your original code, assuming it is used even if not in saveScene snippet)
         if (ecs.HasComponent<MaterialProperties>(sourceEntity))
         {
             ecs.AddComponent(newEntity, ecs.GetComponent<MaterialProperties>(sourceEntity));
@@ -1021,11 +1022,6 @@ namespace Framework
         if (ecs.HasComponent<TextureProperties>(sourceEntity))
         {
             ecs.AddComponent(newEntity, ecs.GetComponent<TextureProperties>(sourceEntity));
-        }
-
-        if (ecs.HasComponent<NavMeshComponent>(sourceEntity))
-        {
-            ecs.AddComponent(newEntity, ecs.GetComponent<NavMeshComponent>(sourceEntity));
         }
 
         if (ecs.HasComponent<LightProperties>(sourceEntity))
@@ -1038,9 +1034,45 @@ namespace Framework
             ecs.AddComponent(newEntity, ecs.GetComponent<AnimationProperties>(sourceEntity));
         }
 
+        // === AI & NAVIGATION ===
+
+        if (ecs.HasComponent<NavMeshComponent>(sourceEntity))
+        {
+            ecs.AddComponent(newEntity, ecs.GetComponent<NavMeshComponent>(sourceEntity));
+        }
+
         if (ecs.HasComponent<NavMeshAgentComponent>(sourceEntity))
         {
             ecs.AddComponent(newEntity, ecs.GetComponent<NavMeshAgentComponent>(sourceEntity));
+        }
+
+        // === PHYSICS ===
+
+        // Added BoxColliderComponent
+        if (ecs.HasComponent<BoxColliderComponent>(sourceEntity))
+        {
+            // Standard copy is sufficient as std::vector handles deep copy of collider entries
+            ecs.AddComponent(newEntity, ecs.GetComponent<BoxColliderComponent>(sourceEntity));
+        }
+
+        // Added PhysicsProperties
+        if (ecs.HasComponent<PhysicsProperties>(sourceEntity))
+        {
+            ecs.AddComponent(newEntity, ecs.GetComponent<PhysicsProperties>(sourceEntity));
+        }
+
+        // === LOGIC & EVENTS ===
+
+        // Added EventSenderComponent
+        if (ecs.HasComponent<EventSenderComponent>(sourceEntity))
+        {
+            ecs.AddComponent(newEntity, ecs.GetComponent<EventSenderComponent>(sourceEntity));
+        }
+
+        // Added EventReceiverComponent
+        if (ecs.HasComponent<EventReceiverComponent>(sourceEntity))
+        {
+            ecs.AddComponent(newEntity, ecs.GetComponent<EventReceiverComponent>(sourceEntity));
         }
 
         if (ecs.HasComponent<PrefabComponent>(sourceEntity))
@@ -1055,15 +1087,45 @@ namespace Framework
 
             for (const auto& inst : original.scripts)
             {
-                Framework::ScriptEntry newInst;
+                ScriptEntry newInst;
+                newInst.guid = inst.guid;
                 newInst.scriptPath = inst.scriptPath;
-                newInst.hotReload = inst.hotReload;   // copy other fields if needed
+                newInst.hotReload = inst.hotReload;
                 copy.scripts.push_back(newInst);
             }
 
             copy.scriptCount = static_cast<int>(copy.scripts.size());
-
             ecs.AddComponent<ScriptProperties>(newEntity, copy);
+        }
+
+        // === AUDIO ===
+
+        // Added ListenerComponent
+        if (ecs.HasComponent<ListenerComponent>(sourceEntity))
+        {
+            ecs.AddComponent(newEntity, ecs.GetComponent<ListenerComponent>(sourceEntity));
+        }
+
+        // Added AudioComponent
+        if (ecs.HasComponent<AudioComponent>(sourceEntity))
+        {
+            ecs.AddComponent(newEntity, ecs.GetComponent<AudioComponent>(sourceEntity));
+        }
+
+        // === UI ===
+
+        // Added ButtonComponent
+        if (ecs.HasComponent<ButtonComponent>(sourceEntity))
+        {
+            ecs.AddComponent(newEntity, ecs.GetComponent<ButtonComponent>(sourceEntity));
+        }
+
+        // === GAMEPLAY ===
+
+        // Added ItemComponent
+        if (ecs.HasComponent<ItemComponent>(sourceEntity))
+        {
+            ecs.AddComponent(newEntity, ecs.GetComponent<ItemComponent>(sourceEntity));
         }
 
         // --- [FIX #1: REGISTER THE NEW ENTITY WITH THE SCENEMANAGER] ---
@@ -1074,8 +1136,6 @@ namespace Framework
             sceneManager.RegisterEntityToScene(newEntity, currentScene);
             std::cout << "Registered new entity " << newEntity << " to scene: " << currentScene << std::endl;
         }
-        // ---------------------------------------------------------------
-
 
         // --- [FIX #2: UPDATE THE PARENT'S HIERARCHY] ---
         // Tell the parent entity that this new child exists.
@@ -1099,7 +1159,6 @@ namespace Framework
                 }
             }
         }
-        // ----------------------------------------------------
 
         std::cout << "Successfully duplicated entity." << std::endl;
     }
@@ -1868,6 +1927,10 @@ namespace Framework
             if (jsonVal.HasMember("isChoppable") && jsonVal["isChoppable"].IsBool())
             {
                 item.isChoppable = jsonVal["isChoppable"].GetBool();
+            }
+            if (jsonVal.HasMember("toDestroyWhenPicked") && jsonVal["toDestroyWhenPicked"].IsBool())
+            {
+                item.toDestroyWhenPicked = jsonVal["toDestroyWhenPicked"].GetBool();
             }
 
             ecsInterface.AddComponent(newEntity, item);

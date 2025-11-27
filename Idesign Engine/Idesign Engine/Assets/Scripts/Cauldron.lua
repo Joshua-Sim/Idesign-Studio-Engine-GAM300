@@ -7,16 +7,24 @@ local CAULDRON_NAME = "Cauldron"
 local name_stir = "CauldronStiring"       
 local name_idle = "cauldronwithoutspoon" 
 
+-- [RESULT SETTINGS]
+-- The name of the item to spawn when done.
+-- The script will look for "strength_potion_Prefab" (automatically adds "_Prefab")
+local result_item_name = "strength_potion" 
+
 -- [VISUAL ITEMS SETTINGS]
-local orbit_radius = 0.5    
-local orbit_speed = 1.5     
+local orbit_radius_start = 0.5    
+local orbit_speed_start = 1.5     
+local orbit_radius_end = 0.0      -- Merge to center
+local orbit_speed_end = 15.0      
+
 local bob_speed = 1.5       
 local bob_height = 0.1     
 local height_offset = 1.2   
-local center_offset_x = -0.5 -- Tweak if needed
+local center_offset_x = -0.5 
 local center_offset_z = -0.3
 
--- [PROGRESS BAR SETTINGS] (Friend's Settings)
+-- [PROGRESS BAR SETTINGS]
 local prefab_frame = "ProgressBarFrame_Prefab"
 local prefab_fill = "ProgressBarFill_Prefab"
 local bar_length_max = 0.5
@@ -29,7 +37,7 @@ local billboard_depth_adjust = 0.055
 
 -- [STIRRING SETTINGS]
 local stir_sensitivity = 0.005
-local finish_delay = 1
+local finish_delay = 1.0
 
 -- =============================================================
 -- [STATE VARIABLES]
@@ -39,6 +47,7 @@ local is_active = false
 local max_distance = 5.0
 local player_id = nil
 local accumulated_time = 0.0 
+local current_orbit_angle = 0.0 
 
 -- Progress State
 local current_finish_timer = 0.0
@@ -72,7 +81,7 @@ local function ResolveID(arg1, arg2)
 end
 
 local function GetMouseDelta()
-    local mx, my = GetMousePosition() -- Ensure this is bound in C++
+    local mx, my = GetMousePosition() 
     if first_frame then
         last_mouse_x = mx
         last_mouse_y = my
@@ -97,8 +106,6 @@ function M.on_init(arg1, arg2)
         guid_idle = GetAnimationGUID(name_idle)
         SetAnimationAsset(my_entity_id, guid_idle)
         SetAnimationMode(my_entity_id, 0)
-        
-        -- Stirring Init
         last_angle = math.atan2(spoon_y, spoon_x)
     end
     player_id = FindEntityByName("Player")
@@ -113,7 +120,7 @@ function M.OnInteract(arg1, arg2)
 
     local held_item_id = GetSelectedItem()
 
-    -- [BRANCH A] ADDING INGREDIENT (Priority)
+    -- [BRANCH A] ADDING INGREDIENT
     if held_item_id ~= -1 then
         table.insert(stored_ingredients, held_item_id)
         ConsumeSelectedItem()
@@ -131,25 +138,36 @@ function M.OnInteract(arg1, arg2)
     is_active = not is_active
 
     if is_active then
-        -- START STIRRING
-        print("[Lua] Stirring Started")
-        
-        -- Reset State
-        progress = 0.0
-        current_finish_timer = 0.0
-        is_finished = false
-        spoon_x = 0.0
-        spoon_y = 100.0
-        last_angle = math.atan2(spoon_y, spoon_x)
-        
-        SetCameraLock(true)
-        if id_to_use then
-            SetAnimationAsset(id_to_use, guid_stir)
-            SetAnimationMode(id_to_use, 1) 
-            M.SpawnBar(id_to_use) -- Spawn Friend's Bar
+        local isValid = false
+        if CheckValidRecipe then
+            isValid = CheckValidRecipe(stored_ingredients)
+        else
+            print("[Lua ERROR] CheckValidRecipe missing!")
+        end
+
+        if isValid then
+            print("[Lua] Valid Recipe! Stirring...")
+            
+            -- Reset State
+            progress = 0.0
+            current_finish_timer = 0.0
+            is_finished = false
+            spoon_x = 0.0
+            spoon_y = 100.0
+            last_angle = math.atan2(spoon_y, spoon_x)
+            
+            SetCameraLock(true)
+            if id_to_use then
+                SetAnimationAsset(id_to_use, guid_stir)
+                SetAnimationMode(id_to_use, 1) 
+                M.SpawnBar(id_to_use)
+            end
+            if player_id then SetGravity(player_id, 0.0) end
+        else
+            print("[Lua] Invalid Recipe!")
+            is_active = false 
         end
     else
-        -- STOP STIRRING
         M.StopInteraction(id_to_use)
     end
 end
@@ -165,10 +183,9 @@ function M.StopInteraction(entity_id)
         SetAnimationAsset(id, guid_idle)
         SetAnimationMode(id, 0) 
     end
+    if player_id then SetGravity(player_id, 1.0) end
     
-    -- Destroy Progress Bar
-    if entity_frame then DestroyEntity(entity_frame); entity_frame = nil end
-    if entity_fill then DestroyEntity(entity_fill); entity_fill = nil end
+    M.DestroyProgressBar()
 end
 
 -- =============================================================
@@ -194,17 +211,39 @@ function M.on_update(arg1, arg2)
             local cz = raw_cz + center_offset_z
             local angle_step = (2 * math.pi) / count
             
+            -- VORTEX MATH
+            local dynamic_radius = orbit_radius_start 
+            local dynamic_speed = orbit_speed_start
+            
+            if is_active then
+                dynamic_radius = orbit_radius_start + (orbit_radius_end - orbit_radius_start) * progress
+                dynamic_speed  = orbit_speed_start  + (orbit_speed_end  - orbit_speed_start)  * progress
+            end
+            
+            current_orbit_angle = current_orbit_angle + (dt * dynamic_speed)
+
             for i, vis_id in ipairs(visual_entities) do
-                local current_angle = (accumulated_time * orbit_speed) + ((i - 1) * angle_step)
-                local offset_x = math.cos(current_angle) * orbit_radius
-                local offset_z = math.sin(current_angle) * orbit_radius
-                local offset_y = math.sin((accumulated_time * bob_speed) + i) * bob_height
+                local item_angle = current_orbit_angle + ((i - 1) * angle_step)
+                local offset_x = math.cos(item_angle) * dynamic_radius
+                local offset_z = math.sin(item_angle) * dynamic_radius
+                
+                -- Disable bobbing if Stirring
+                local current_bob = bob_height
+                if is_active then current_bob = 0.0 end
+                
+                local offset_y = math.sin((accumulated_time * bob_speed) + i) * current_bob
                 
                 if SetPosition then
                     SetPosition(vis_id, cx + offset_x, cy + height_offset + offset_y, cz + offset_z)
                 end
+                
                 if SetRotation then
-                    SetRotation(vis_id, 0.0, accumulated_time * 50.0, 0.0) 
+                    local rot_speed = 50.0 
+                    if is_active then 
+                        SetRotation(vis_id, 0.0, 0.0, 0.0) 
+                    else
+                        SetRotation(vis_id, 0.0, accumulated_time * rot_speed, 0.0) 
+                    end
                 end
             end
         end
@@ -212,7 +251,6 @@ function M.on_update(arg1, arg2)
 
     -- [PART B] STIRRING LOGIC
     if is_active and player_id then
-        -- 1. Distance Check
         local px, py, pz = GetPosition(player_id)
         local cx, cy, cz = GetPosition(my_entity_id)
         local dist = math.sqrt((px - cx)^2 + (py - cy)^2 + (pz - cz)^2)
@@ -222,22 +260,19 @@ function M.on_update(arg1, arg2)
             return
         end
 
-        -- 2. Update Progress Bar Billboard
         if entity_fill and entity_frame then
             M.UpdateBillboard(px, pz, cx, cz, cy)
 
-            -- 3. Finished Check
             if is_finished then
                 current_finish_timer = current_finish_timer - dt
-                SetAnimationSettings(my_entity_id, 0.0, true, true) -- Stop animation
+                SetAnimationSettings(my_entity_id, 0.0, true, true) 
                 
                 if current_finish_timer <= 0 then
-                    M.OnPotionComplete() -- Done!
+                    M.OnPotionComplete() 
                 end
                 return
             end
 
-            -- 4. Mouse Input (Stirring)
             local dx, dy = GetMouseDelta()
             spoon_x = spoon_x + dx
             spoon_y = spoon_y + dy
@@ -260,9 +295,9 @@ function M.on_update(arg1, arg2)
 
             if is_stirring then
                 progress = progress + (math.abs(angle_delta) * stir_sensitivity)
-                SetAnimationSettings(my_entity_id, 1.0, true, true) -- Play animation
+                SetAnimationSettings(my_entity_id, 1.0, true, true)
             else
-                SetAnimationSettings(my_entity_id, 0.0, true, true) -- Pause animation
+                SetAnimationSettings(my_entity_id, 0.0, true, true)
             end
 
             if progress >= 1.0 then
@@ -272,19 +307,17 @@ function M.on_update(arg1, arg2)
                 print("[Lua] Soup 100% -> Finishing...")
             end
 
-            -- 5. Update Bar Visual
             local current_length = progress * bar_length_max
-            -- Note: Friend's code used * 0.9 thickness, preserved here
             SetScale(entity_fill, current_length, bar_thickness * 0.9, bar_thickness * 0.9)
         end
     end
 end
 
 -- =============================================================
--- [FRIEND'S FUNCTIONS]
+-- [HELPER FUNCTIONS]
 -- =============================================================
+
 function M.SpawnBar(cauldronID)
-    -- Requires "SpawnPrefab" in C++
     if SpawnPrefab then
         entity_frame = SpawnPrefab(prefab_frame, cauldronID)
         if entity_frame then
@@ -300,14 +333,23 @@ function M.SpawnBar(cauldronID)
     end
 end
 
+function M.DestroyProgressBar()
+    if entity_frame then 
+        DestroyEntity(entity_frame) 
+        entity_frame = nil
+    end
+    if entity_fill then 
+        DestroyEntity(entity_fill) 
+        entity_fill = nil
+    end
+end
+
 function M.UpdateBillboard(px, pz, cx, cz, cy)
-    -- 1. Calculate Angle to Player
     local dx = px - cx
     local dz = pz - cz
     local angle_rad = math.atan2(dx, dz)
     local angle_deg = math.deg(angle_rad)
 
-    -- 2. Position Frame (Center)
     local frame_pos_x = cx + x_offset_right
     local frame_pos_y = cy + y_offset
     local frame_pos_z = cz
@@ -320,17 +362,14 @@ function M.UpdateBillboard(px, pz, cx, cz, cy)
     if entity_fill then
         SetRotation(entity_fill, 0.0, angle_deg + 180.0, 0.0)
 
-        -- 3. Calculate SIDEWAYS Offset
         local right_angle = angle_rad + (math.pi / 2.0)
         local side_dist = (bar_length_max * tune_x)
         local side_offset_x = side_dist * math.sin(right_angle)
         local side_offset_z = side_dist * math.cos(right_angle)
 
-        -- 4. Calculate DEPTH Offset
         local depth_offset_x = billboard_depth_adjust * math.sin(angle_rad)
         local depth_offset_z = billboard_depth_adjust * math.cos(angle_rad)
 
-        -- 5. Combine
         local fill_x = frame_pos_x + side_offset_x + depth_offset_x
         local fill_y = frame_pos_y + tune_y
         local fill_z = frame_pos_z + side_offset_z + depth_offset_z
@@ -343,10 +382,28 @@ end
 -- UTILITY
 -- =============================================================
 function M.OnPotionComplete()
+    -- 1. Stop Minigame
     M.StopInteraction(my_entity_id)
     M.ClearCauldron()
     print("[Lua] Potion Complete! Ingredients Consumed.")
-    -- Spawn Result Potion Here if needed
+
+    -- 2. CALCULATE SPAWN POSITION
+    local cx, cy, cz = GetPosition(my_entity_id)
+    if cx then
+        local spawn_x = cx + center_offset_x
+        local spawn_y = cy + height_offset 
+        local spawn_z = cz + center_offset_z
+
+        -- 3. SPAWN PREFAB
+        local prefabName = result_item_name .. "_Prefab"
+        
+        if SpawnPrefab then
+            local potionID = SpawnPrefab(prefabName, spawn_x, spawn_y, spawn_z)
+            print("[Lua] Spawned Potion Prefab: " .. prefabName .. " (ID: " .. tostring(potionID) .. ")")
+        else
+            print("[Lua ERROR] SpawnPrefab missing!")
+        end
+    end
 end
 
 function M.PrintContents()

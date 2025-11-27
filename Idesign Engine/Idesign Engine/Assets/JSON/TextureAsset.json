@@ -1,9 +1,63 @@
 {
     "textures": [
         {
-            "guid": "90b999f3-2c4f-44ab-8213-964c53cd22cc",
-            "name": "pear3D",
-            "path": "Assets\\Textures\\pear3D.png",
+            "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
+            "name": "green",
+            "path": "Assets\\Textures\\green.png",
+            "isUI": false
+        },
+        {
+            "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
+            "name": "",
+            "path": "Assets/PNG/test.png",
+            "isUI": false
+        },
+        {
+            "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606",
+            "name": "music",
+            "path": "Assets/Textures/music.png",
+            "isUI": false
+        },
+        {
+            "guid": "338b187d-1182-4c0f-8af6-799d3fb9fbf2",
+            "name": "",
+            "path": "Assets/PNG/test.png",
+            "isUI": false
+        },
+        {
+            "guid": "7b119595-c240-4c45-a8a0-018d7a3d917f",
+            "name": "",
+            "path": "Assets/PNG/test.png",
+            "isUI": false
+        },
+        {
+            "guid": "e726adb8-bf75-4993-9e77-826f5541ac9d",
+            "name": "ChoppedHerb2",
+            "path": "Assets\\Textures\\ChoppedHerb2.png",
+            "isUI": false
+        },
+        {
+            "guid": "d4899207-ea5e-473b-870f-aade76e8a7ff",
+            "name": "Door",
+            "path": "Assets\\Textures\\Door.png",
+            "isUI": false
+        },
+        {
+            "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
+            "name": "Shelf",
+            "path": "Assets\\Textures\\Shelf.png",
+            "isUI": false
+        },
+        {
+            "guid": "312bdb54-477d-47bb-a1ce-2224bc3ec5e3",
+            "name": "Cupboard",
+            "path": "Assets\\Textures\\Cupboard.png",
+            "isUI": false
+        },
+        {
+            "guid": "cabb6b16-8445-4f40-b9c8-bd593ea6b65c",
+            "name": "top",
+            "path": "Assets\\Textures\\top.png",
             "isUI": false
         },
         {
@@ -19,57 +73,9 @@
             "isUI": false
         },
         {
-            "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
-            "name": "",
-            "path": "Assets/PNG/test.png",
-            "isUI": false
-        },
-        {
-            "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
-            "name": "green",
-            "path": "Assets\\Textures\\green.png",
-            "isUI": false
-        },
-        {
-            "guid": "7b119595-c240-4c45-a8a0-018d7a3d917f",
-            "name": "",
-            "path": "Assets/PNG/test.png",
-            "isUI": false
-        },
-        {
-            "guid": "338b187d-1182-4c0f-8af6-799d3fb9fbf2",
-            "name": "",
-            "path": "Assets/PNG/test.png",
-            "isUI": false
-        },
-        {
-            "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606",
-            "name": "music",
-            "path": "Assets/Textures/music.png",
-            "isUI": false
-        },
-        {
-            "guid": "d4899207-ea5e-473b-870f-aade76e8a7ff",
-            "name": "Door",
-            "path": "Assets\\Textures\\Door.png",
-            "isUI": false
-        },
-        {
-            "guid": "e726adb8-bf75-4993-9e77-826f5541ac9d",
-            "name": "ChoppedHerb2",
-            "path": "Assets\\Textures\\ChoppedHerb2.png",
-            "isUI": false
-        },
-        {
-            "guid": "cabb6b16-8445-4f40-b9c8-bd593ea6b65c",
-            "name": "top",
-            "path": "Assets\\Textures\\top.png",
-            "isUI": false
-        },
-        {
-            "guid": "312bdb54-477d-47bb-a1ce-2224bc3ec5e3",
-            "name": "Cupboard",
-            "path": "Assets\\Textures\\Cupboard.png",
+            "guid": "90b999f3-2c4f-44ab-8213-964c53cd22cc",
+            "name": "pear3D",
+            "path": "Assets\\Textures\\pear3D.png",
             "isUI": false
         },
         {
@@ -92,8 +98,8 @@
         },
         {
             "guid": "49874ec1-50f0-44fd-85cd-c2c551acaf66",
-            "name": "RedPotion",
-            "path": "Assets\\Textures\\RedPotion.png",
+            "name": "strength_potion",
+            "path": "Assets\\Textures\\strength_potion3D.png",
             "isUI": false
         },
         {
@@ -115,27 +121,21 @@
             "isUI": false
         },
         {
-            "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
-            "name": "Shelf",
-            "path": "Assets\\Textures\\Shelf.png",
-            "isUI": false
-        },
-        {
             "guid": "afd25b76-dddc-4c4f-bae4-a6c9a22931e5",
             "name": "unchopped_herb",
             "path": "Assets\\Textures\\unchopped_herb3D.png",
             "isUI": false
         },
         {
-            "guid": "b57b4683-8581-4256-9cc5-60c900acec67",
-            "name": "T_Brick_BaseColor",
-            "path": "Assets\\Textures\\T_Brick_BaseColor.png",
-            "isUI": false
-        },
-        {
             "guid": "ac09c4fc-da84-4656-8246-40407d5bd854",
             "name": "play_button",
             "path": "Assets\\Textures\\play_button.png",
+            "isUI": false
+        },
+        {
+            "guid": "b57b4683-8581-4256-9cc5-60c900acec67",
+            "name": "T_Brick_BaseColor",
+            "path": "Assets\\Textures\\T_Brick_BaseColor.png",
             "isUI": false
         },
         {
@@ -176,8 +176,8 @@
         },
         {
             "guid": "390883fb-54a2-4a3a-92d9-75c4057b2f76",
-            "name": "YellowPotion3",
-            "path": "Assets\\Textures\\YellowPotion3.png",
+            "name": "vitality_potion3D",
+            "path": "Assets\\Textures\\vitality_potion3D.png",
             "isUI": false
         },
         {
@@ -244,12 +244,6 @@
             "guid": "4cf1bf23-4fbd-4a08-9abb-f662145f2134",
             "name": "Counter",
             "path": "Assets\\Textures\\Counter.png",
-            "isUI": false
-        },
-        {
-            "guid": "1fd4cefe-486b-4fbc-810c-8456cf7bbb59",
-            "name": "strength_potion",
-            "path": "Assets\\Textures\\strength_potion.png",
             "isUI": false
         },
         {
@@ -343,15 +337,15 @@
             "isUI": false
         },
         {
-            "guid": "f7d8e93f-e2a1-4819-9aef-43f282f22713",
-            "name": "back1",
-            "path": "Assets\\Textures\\back1.png",
-            "isUI": false
-        },
-        {
             "guid": "4ee14b8b-838f-46e5-a49e-b1e1d768aa32",
             "name": "pear",
             "path": "Assets\\Textures\\pear.png",
+            "isUI": false
+        },
+        {
+            "guid": "f7d8e93f-e2a1-4819-9aef-43f282f22713",
+            "name": "back1",
+            "path": "Assets\\Textures\\back1.png",
             "isUI": false
         },
         {
@@ -418,6 +412,18 @@
             "guid": "827936c9-bf24-4d8e-8786-804be9e59c2f",
             "name": "BoxOfPears-3-VegetableCrate",
             "path": "Assets\\Textures\\BoxOfPears-3-VegetableCrate.png",
+            "isUI": false
+        },
+        {
+            "guid": "09ab93d8-f4cb-4ab1-86cd-889bebd524a8",
+            "name": "strength_potion",
+            "path": "Assets\\Textures\\strength_potion.png",
+            "isUI": false
+        },
+        {
+            "guid": "acb31027-a3de-428f-b58d-322acaf9a702",
+            "name": "vitality_potion",
+            "path": "Assets\\Textures\\vitality_potion.png",
             "isUI": false
         }
     ]
