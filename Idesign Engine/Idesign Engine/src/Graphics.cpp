@@ -765,6 +765,104 @@ namespace Framework {
         m_treeRenderer->setInstances(trunkTransforms);
         m_leafRenderer->setInstances(leafTransforms); 
 
+        // GENERATE PEBBLE MESH
+        // === LOAD PEBBLE MESH ===
+        //=== LOAD PEBBLE MESH ===
+        MeshLoader::loadMesh("Assets/Objects/rocks.obj", m_pebbleMesh);
+
+        // Load texture for pebbles
+        TextureProperties pebProps;
+        pebProps.path = "Assets/Textures/T_Brick_BaseColor.png";
+        pebbleTextureID = TextureLoader::loadTexture(pebProps, true);
+
+        // Create renderer
+        m_pebbleRenderer = new PebbleRenderer(&m_pebbleMesh);
+
+        // === Generate Pebble Transforms ===
+        std::vector<glm::mat4> pebbleTransforms;
+        const int NUM_PEBBLES = 1000;
+
+        auto rnd = [] { return (float)rand() / (float)RAND_MAX; };
+
+        // Center rectangle to block
+        float blockMinX = -10.f;
+        float blockMaxX = 10.f;
+        float blockMinZ = -10.f;
+        float blockMaxZ = 10.f;
+
+        for (int i = 0; i < NUM_PEBBLES; i++)
+        {
+            float x, z;
+
+            // Keep generating until the rock is OUTSIDE the blocked region
+            do {
+                x = rnd() * (maxMap - minMap) + minMap;
+                z = rnd() * (maxMap - minMap) + minMap;
+            } while (x >= blockMinX && x <= blockMaxX &&
+                z >= blockMinZ && z <= blockMaxZ);
+
+            float y = terrain.getHeightAt(x, z);
+
+            glm::mat4 M(1.0f);
+            M = glm::translate(M, glm::vec3(x, y + 0.02f, z));
+
+            float rot = rnd() * 360.0f;
+            M = glm::rotate(M, glm::radians(rot), glm::vec3(0, 1, 0));
+
+            float s = 0.05f + rnd() * 0.8f;
+            M = glm::scale(M, glm::vec3(s));
+
+            pebbleTransforms.push_back(M);
+        }
+
+        m_pebbleRenderer->setInstances(pebbleTransforms);
+
+
+        // GENERATE PINES MESH
+         // === LOAD PINES MESH ===
+        //=== LOAD PINES MESH ===
+        MeshLoader::loadMesh("Assets/Objects/pine.obj", m_pineMesh);
+
+        // Load texture for pine
+        TextureProperties pineProps;
+        pineProps.path = "Assets/Textures/treeLong.png";
+        pineTextureID = TextureLoader::loadTexture(pineProps, true);
+
+        // Create renderer
+        m_pineRenderer = new PebbleRenderer(&m_pineMesh);
+
+        // === Generate Pebble Transforms ===
+        std::vector<glm::mat4> pineTransform;
+        const int NUM_PINE = 3000;
+
+        for (int i = 0; i < NUM_PINE; i++)
+        {
+            float x, z;
+
+            // Keep generating until the rock is OUTSIDE the blocked region
+            do {
+                x = rnd() * (maxMap - minMap) + minMap;
+                z = rnd() * (maxMap - minMap) + minMap;
+            } while (x >= blockMinX && x <= blockMaxX &&
+                z >= blockMinZ && z <= blockMaxZ);
+
+            float y = terrain.getHeightAt(x, z);
+
+            glm::mat4 M(1.0f);
+            M = glm::translate(M, glm::vec3(x, y + 0.02f, z));
+
+            float rot = rnd() * 360.0f;
+            M = glm::rotate(M, glm::radians(rot), glm::vec3(0, 1, 0));
+
+            float s = 0.05f + rnd() * 0.8f;
+            M = glm::scale(M, glm::vec3(s));
+
+            pineTransform.push_back(M);
+        }
+
+        m_pineRenderer->setInstances(pineTransform);
+
+
         ImguiManager::LogSuccess("Graphics System initialized successfully", "Graphics");
     }
 
@@ -2036,6 +2134,15 @@ namespace Framework {
             m_treeRenderer->draw(view, proj, mapModel, m_treeTextureID);
         }
 
+        if (m_pebbleRenderer)
+        {
+            m_pebbleRenderer->draw(view, proj, mapModel, pebbleTextureID);
+        }
+
+        if (m_pineRenderer)
+        {
+            m_pineRenderer->draw(view, proj, mapModel, pineTextureID);
+        }
 
         // --- ENTITY SORTING ---
         int sel = lastPickedId;

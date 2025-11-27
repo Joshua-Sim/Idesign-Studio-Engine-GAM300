@@ -212,6 +212,7 @@
     <ClInclude Include="src\NavMeshProperties.h" />
     <ClInclude Include="src\NavMeshSystem.h" />
     <ClInclude Include="src\pch.h" />
+    <ClInclude Include="src\PebbleRenderer.h" />
     <ClInclude Include="src\PhysicsProperties.h" />
     <ClInclude Include="src\PhysicsSystem.h" />
     <ClInclude Include="src\PrefabComponent.h" />
@@ -307,6 +308,8 @@
     <None Include="Assets\shaders\instancedleave_frag.glsl" />
     <None Include="Assets\shaders\instancedleave_vert.glsl" />
     <None Include="Assets\shaders\instanced_frag.glsl" />
+    <None Include="Assets\shaders\instanced_pebble_frag.glsl" />
+    <None Include="Assets\shaders\instanced_pebble_vert.glsl" />
     <None Include="Assets\shaders\instanced_vert.glsl" />
     <None Include="Assets\shaders\lightingfrag.glsl" />
     <None Include="Assets\shaders\lightingvert.glsl" />
@@ -390,6 +393,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\PebbleRenderer.cpp" />
     <ClCompile Include="src\PhysicsSystem.cpp" />
     <ClCompile Include="src\PropertyWidget.cpp" />
     <ClCompile Include="src\Recast\DetourAlloc.cpp" />

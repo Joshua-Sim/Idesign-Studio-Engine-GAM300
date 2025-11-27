@@ -80,6 +80,7 @@
     <ClCompile Include="src\Vector2D.cpp" />
     <ClCompile Include="src\Vector3D.cpp" />
     <ClCompile Include="src\FoliageRenderer.cpp" />
+    <ClCompile Include="src\PebbleRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\lib\imgui\imgui.h" />
@@ -238,6 +239,7 @@
     <ClInclude Include="src\Vector3D.h" />
     <ClInclude Include="src\WindowConfigProperties.h" />
     <ClInclude Include="src\FoliageRenderer.h" />
+    <ClInclude Include="src\PebbleRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\fontshaders\textfrag.glsl" />
@@ -280,6 +282,8 @@
     <None Include="Assets\shaders\instanced_frag.glsl" />
     <None Include="Assets\shaders\instancedleave_vert.glsl" />
     <None Include="Assets\shaders\instancedleave_frag.glsl" />
+    <None Include="Assets\shaders\instanced_pebble_vert.glsl" />
+    <None Include="Assets\shaders\instanced_pebble_frag.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\back.png" />

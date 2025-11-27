@@ -73,6 +73,12 @@
             "isUI": false
         },
         {
+            "guid": "138f5d46-ae31-45c3-ab7b-f72bfb3b366f",
+            "name": "pumpkin",
+            "path": "Assets\\Textures\\pumpkin.png",
+            "isUI": false
+        },
+        {
             "guid": "c3eb9787-d36c-4380-a39f-78737901cda2",
             "name": "Table",
             "path": "Assets\\Textures\\Table.png",
@@ -427,6 +433,12 @@
             "isUI": false
         },
         {
+            "guid": "177f6360-44aa-46b3-95ff-6152887734fe",
+            "name": "pine-fall",
+            "path": "Assets\\Textures\\pine-fall.png",
+            "isUI": false
+        },
+        {
             "guid": "ff876dd5-1fb0-42f7-87e5-5cb3c8d3030f",
             "name": "SkyMidNight_Left",
             "path": "Assets\\Textures\\SkyMidNight_Left.png",
@@ -448,6 +460,54 @@
             "guid": "0af23191-a4be-47c3-95ab-dfb80af9a303",
             "name": "Grass_normal_left",
             "path": "Assets\\Textures\\Grass_normal_left.png",
+            "isUI": false
+        },
+        {
+            "guid": "8d434424-3166-4b9d-aa89-105904f0122c",
+            "name": "rocks",
+            "path": "Assets\\Textures\\rocks.png",
+            "isUI": false
+        },
+        {
+            "guid": "09f0e093-bb83-4680-9f72-ff3261b8bf6a",
+            "name": "rocks-tall",
+            "path": "Assets\\Textures\\rocks-tall.png",
+            "isUI": false
+        },
+        {
+            "guid": "8b4b7665-1c70-4031-b332-5465cee6759c",
+            "name": "shovel",
+            "path": "Assets\\Textures\\shovel.png",
+            "isUI": false
+        },
+        {
+            "guid": "e1db8bbd-a80b-4336-b30e-48af7e3b0d70",
+            "name": "shovel-dirt",
+            "path": "Assets\\Textures\\shovel-dirt.png",
+            "isUI": false
+        },
+        {
+            "guid": "b5af70f1-9c4b-4db2-979e-d669b739a549",
+            "name": "pine",
+            "path": "Assets\\Textures\\pine.png",
+            "isUI": false
+        },
+        {
+            "guid": "8cf7ec5a-31cf-4cae-af22-c9de1a6c7d45",
+            "name": "pine-crooked",
+            "path": "Assets\\Textures\\pine-crooked.png",
+            "isUI": false
+        },
+        {
+            "guid": "c088e591-a4f9-4c23-9044-d64178dcbe7c",
+            "name": "pine-fall-crooked",
+            "path": "Assets\\Textures\\pine-fall-crooked.png",
+            "isUI": false
+        },
+        {
+            "guid": "21307809-f0bd-4a0c-bdc4-4187d96c7377",
+            "name": "treeLong",
+            "path": "Assets\\Textures\\treeLong.png",
             "isUI": false
         }
     ]
