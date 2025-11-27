@@ -54,7 +54,7 @@ namespace Framework
         Entity targetEntity = hit.entity;
         std::cout << "[Interact] Hit Entity: " << targetEntity << std::endl;
 
-        bool handledByScript;
+        bool handledByScript = false;
         // --- PRIORITY 1: EVENT TRIGGER (Buttons, Chests, Scripted Items) ---
         // Does the collider say "I am interactable"?
         if (ecsInterface.HasComponent<BoxColliderComponent>(targetEntity))
@@ -91,6 +91,8 @@ namespace Framework
         {
             auto& item = ecsInterface.GetComponent<ItemComponent>(targetEntity);
             int itemId = Framework::ItemNameToId(item.name);
+
+            std::cout << "hello" << std::endl;
 
             if (itemId >= 0)
             {

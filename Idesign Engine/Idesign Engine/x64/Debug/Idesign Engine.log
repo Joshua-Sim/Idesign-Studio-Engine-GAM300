@@ -1,31 +1,25 @@
-﻿  ScriptingSystem.cpp
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.h(142,66): warning C4100: 'index': unreferenced parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
+﻿  PlayerInteractSystem.cpp
+D:\Y3T1\CSD3401 - GAM300\iDesignStudio Repo\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,151): warning C4100: 'ioSettings': unreferenced parameter
+  (compiling source file '/PlayerInteractSystem.cpp')
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/ScriptingSystem.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
+D:\Y3T1\CSD3401 - GAM300\iDesignStudio Repo\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,117): warning C4100: 'inManifold': unreferenced parameter
+  (compiling source file '/PlayerInteractSystem.cpp')
+  
+D:\Y3T1\CSD3401 - GAM300\iDesignStudio Repo\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
+  (compiling source file '/PlayerInteractSystem.cpp')
+      D:\Y3T1\CSD3401 - GAM300\iDesignStudio Repo\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
       see declaration of 'Framework::AnimationProperties::name'
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/ScriptingSystem.cpp')
+D:\Y3T1\CSD3401 - GAM300\iDesignStudio Repo\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
+  (compiling source file '/PlayerInteractSystem.cpp')
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/ScriptingSystem.cpp')
+D:\Y3T1\CSD3401 - GAM300\iDesignStudio Repo\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
+  (compiling source file '/PlayerInteractSystem.cpp')
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,151): warning C4100: 'ioSettings': unreferenced parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
+D:\Y3T1\CSD3401 - GAM300\iDesignStudio Repo\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.h(142,66): warning C4100: 'index': unreferenced parameter
+  (compiling source file '/PlayerInteractSystem.cpp')
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,117): warning C4100: 'inManifold': unreferenced parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
+D:\Y3T1\CSD3401 - GAM300\iDesignStudio Repo\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\PlayerInteractSystem.cpp(25,45): warning C4100: 'dt': unreferenced parameter
+  (compiling source file '/PlayerInteractSystem.cpp')
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(482,45): warning C4100: 'L': unreferenced parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(489,46): warning C4100: 'L': unreferenced parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(496,47): warning C4100: 'L': unreferenced parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
-  
-  Idesign Engine.vcxproj -> C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe
+  Idesign Engine.vcxproj -> D:\Y3T1\CSD3401 - GAM300\iDesignStudio Repo\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe
