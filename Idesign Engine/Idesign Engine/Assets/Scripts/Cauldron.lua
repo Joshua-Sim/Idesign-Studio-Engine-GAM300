@@ -38,7 +38,7 @@ local max_distance = 5.0
 local stir_sensitivity = 0.005
 
 -- [TIMER SETTINGS]
-local finish_delay = 1       
+local finish_delay = 1        
 local current_finish_timer = 0.0
 local is_finished = false       
 
