@@ -617,22 +617,22 @@ namespace Framework {
         //IMPORTANT : ALWAYS STICK TO THIS ORDER
         std::vector<std::string> dayFaces =
         {
-        "Assets/Textures/right.png",    //RIGHT
-        "Assets/Textures/left.png",    //LEFT 
-        "Assets/Textures/top.png",    //TOP or UP
-        "Assets/Textures/bottom.png",     //BOTTOM or DOWN
-        "Assets/Textures/front.png",    //FRONT
-        "Assets/Textures/back.png"      //BACK
+        "Assets/Textures/SkyNoon_Right.png",    //RIGHT
+        "Assets/Textures/SkyNoon_Left.png",    //LEFT 
+        "Assets/Textures/SkyNoon_Top.png",    //TOP or UP
+        "Assets/Textures/SkyNoon_Bottom.png",     //BOTTOM or DOWN
+        "Assets/Textures/SkyNoon_Front.png",    //FRONT
+        "Assets/Textures/SkyNoon_Back.png"      //BACK
         };
 
         std::vector<std::string> nightFaces =
         {
-        "Assets/Textures/right1.png",    //RIGHT
-        "Assets/Textures/left1.png",    //LEFT 
-        "Assets/Textures/top1.png",    //TOP or UP
-        "Assets/Textures/bottom1.png",     //BOTTOM or DOWN
-        "Assets/Textures/front1.png",    //FRONT
-        "Assets/Textures/back1.png"      //BACK
+        "Assets/Textures/SkyMidNight_Right.png",    //RIGHT
+        "Assets/Textures/SkyMidNight_Left.png",    //LEFT 
+        "Assets/Textures/SkyMidNight_Top.png",    //TOP or UP
+        "Assets/Textures/SkyMidNight_Bottom.png",     //BOTTOM or DOWN
+        "Assets/Textures/SkyMidNight_Front.png",    //FRONT
+        "Assets/Textures/SkyMidNight_Back.png"      //BACK
         };
 
         // Make sure the folder and files exist!
@@ -640,7 +640,7 @@ namespace Framework {
 
         //GRASS INIT
         TextureProperties grass;
-        grass.path = "Assets/Textures/Grass.png";
+        grass.path = "Assets/Textures/Grass_normal_left.png";
         grassTextureID = TextureLoader::loadTexture(grass, true);
         
         // === FOLIAGE/INSTANCING INIT ===
