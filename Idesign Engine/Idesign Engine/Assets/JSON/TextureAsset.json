@@ -91,6 +91,12 @@
             "isUI": false
         },
         {
+            "guid": "0d960551-d374-438f-b016-ba071589e284",
+            "name": "SkyMidNight_Front",
+            "path": "Assets\\Textures\\SkyMidNight_Front.png",
+            "isUI": false
+        },
+        {
             "guid": "4caccc21-6007-45d5-bb72-a14260f29a35",
             "name": "test",
             "path": "Assets/PNG/test.png",
@@ -424,6 +430,84 @@
             "guid": "acb31027-a3de-428f-b58d-322acaf9a702",
             "name": "vitality_potion",
             "path": "Assets\\Textures\\vitality_potion.png",
+            "isUI": false
+        },
+        {
+            "guid": "1a04361c-a4ca-4230-a564-24c35868f47c",
+            "name": "SkyMidNight_Right",
+            "path": "Assets\\Textures\\SkyMidNight_Right.png",
+            "isUI": false
+        },
+        {
+            "guid": "c2a1f2a8-98b8-490f-bae9-f3bc714f424c",
+            "name": "SkyNoon_Top",
+            "path": "Assets\\Textures\\SkyNoon_Top.png",
+            "isUI": false
+        },
+        {
+            "guid": "b8e4adb2-20e3-4651-85f1-77aa9dc4df18",
+            "name": "SkyMidNight_Bottom",
+            "path": "Assets\\Textures\\SkyMidNight_Bottom.png",
+            "isUI": false
+        },
+        {
+            "guid": "00429667-295d-4c22-aab8-5aa80f122555",
+            "name": "SkyMidNight_Left",
+            "path": "Assets\\Textures\\SkyMidNight_Left.png",
+            "isUI": false
+        },
+        {
+            "guid": "f76c3989-c7eb-4c0a-8fbd-b9fcb10e4096",
+            "name": "SkyMidNight_Top",
+            "path": "Assets\\Textures\\SkyMidNight_Top.png",
+            "isUI": false
+        },
+        {
+            "guid": "d2a5feea-5a76-412a-b09e-0a1f1ff3317c",
+            "name": "SkyNoon_Back",
+            "path": "Assets\\Textures\\SkyNoon_Back.png",
+            "isUI": false
+        },
+        {
+            "guid": "daac51c7-3556-42a1-86bd-ec161ec7a167",
+            "name": "SkyNoon_Bottom",
+            "path": "Assets\\Textures\\SkyNoon_Bottom.png",
+            "isUI": false
+        },
+        {
+            "guid": "21e71a10-33b3-4b37-a5df-9ebeb8a262e2",
+            "name": "SkyNoon_Front",
+            "path": "Assets\\Textures\\SkyNoon_Front.png",
+            "isUI": false
+        },
+        {
+            "guid": "c493f979-8e16-44c2-9c0c-76e713861a7a",
+            "name": "SkyNoon_Left",
+            "path": "Assets\\Textures\\SkyNoon_Left.png",
+            "isUI": false
+        },
+        {
+            "guid": "fc41bc46-1535-4158-86ed-4c6e4e3192ff",
+            "name": "SkyNoon_Right",
+            "path": "Assets\\Textures\\SkyNoon_Right.png",
+            "isUI": false
+        },
+        {
+            "guid": "3fa44413-2b3b-444a-8d06-3475bebf7792",
+            "name": "Grass_normal_left",
+            "path": "Assets\\Textures\\Grass_normal_left.png",
+            "isUI": false
+        },
+        {
+            "guid": "52dc7142-5614-46aa-a381-f3c2fb4ef013",
+            "name": "treeLong",
+            "path": "Assets\\Textures\\treeLong.png",
+            "isUI": false
+        },
+        {
+            "guid": "c9c55d09-3f6f-44ca-9069-50e51f428c84",
+            "name": "SkyMidNight_Back",
+            "path": "Assets\\Textures\\SkyMidNight_Back.png",
             "isUI": false
         }
     ]

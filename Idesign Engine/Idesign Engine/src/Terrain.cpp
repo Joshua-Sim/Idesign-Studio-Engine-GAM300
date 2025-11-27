@@ -30,10 +30,20 @@ Terrain::Terrain(int size, float scale)
 
             vertices.push_back(worldX);
             vertices.push_back(h);
+            // TERRAIN CENTERED: worldZ negative direction might flip uv; keep consistent
             vertices.push_back(worldZ);
+
+            // normal
             vertices.push_back(normal.x);
             vertices.push_back(normal.y);
             vertices.push_back(normal.z);
+
+            // ADD UVs (simple planar mapping)
+            float u = (float)x / (float)(size - 1);
+            float v = (float)z / (float)(size - 1);
+            vertices.push_back(u);
+            vertices.push_back(v);
+
         }
     }
 
@@ -72,12 +82,19 @@ void Terrain::initGL() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
 
+    size_t stride = 8 * sizeof(float);
+
     // position
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void*)0);
+
     // normal
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride, (void*)(3 * sizeof(float)));
+
+    // uv
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, stride, (void*)(6 * sizeof(float)));
 
     glBindVertexArray(0);
 }

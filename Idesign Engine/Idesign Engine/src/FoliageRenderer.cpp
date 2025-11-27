@@ -1,10 +1,14 @@
 #include "pch.h"
 #include "FoliageRenderer.h"
 
-FoliageRenderer::FoliageRenderer(Mesh* meshRef) : mesh(meshRef)
+FoliageRenderer::FoliageRenderer(
+    Mesh* meshRef,
+    const char* vsPath,
+    const char* fsPath)
+    : mesh(meshRef)
 {
     // 1. Init Shader (Ensure you have the instanced.vert shader!)
-    shader = new ShaderProgram("Assets/shaders/instanced_vert.glsl", "Assets/shaders/instanced_frag.glsl");
+    shader = new ShaderProgram(vsPath, fsPath);
     shader->initGL();
 
     // 2. Generate buffers for the matrices
@@ -32,8 +36,8 @@ FoliageRenderer::FoliageRenderer(Mesh* meshRef) : mesh(meshRef)
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride, (void*)(3 * sizeof(float)));
 
     // If your mesh has UVs (check your mesh generation):
-    // glEnableVertexAttribArray(2);
-    // glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, stride, (void*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, stride, (void*)(6 * sizeof(float)));
 
     // --- BIND INSTANCE DATA ---
     glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
@@ -87,6 +91,9 @@ void FoliageRenderer::draw(const glm::mat4& view, const glm::mat4& proj, const g
     shader->setVec3("uAmbientColor", glm::vec3(1.0f));
 
     glBindVertexArray(vao);
+
+    // CRITICAL RE-BIND (fixes broken UVs, broken vertex fetch)
+    glBindBuffer(GL_ARRAY_BUFFER, mesh->getVBO());
 
     glDrawArraysInstanced(GL_TRIANGLES, 0, mesh->getVertexCount(), instanceCount);
 

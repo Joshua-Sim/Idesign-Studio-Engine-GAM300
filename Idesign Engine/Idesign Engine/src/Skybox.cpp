@@ -99,7 +99,7 @@ void Skybox::init(const std::vector<std::string>& dayFaces,
     glUseProgram(0);
 }
 
-void Skybox::draw(const glm::mat4& view, const glm::mat4& proj) 
+void Skybox::draw(const glm::mat4& view, const glm::mat4& proj)
 {
 
     glDepthFunc(GL_LEQUAL);
