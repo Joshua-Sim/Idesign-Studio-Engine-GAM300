@@ -1,6 +1,33 @@
 {
-    "count": 44,
+    "count": 52,
     "entries": [
+        {
+            "guid": "99f149a1-0e12-47e8-9322-626cec816595",
+            "name": "bench-damaged",
+            "path": "Assets\\Objects\\bench-damaged.obj",
+            "vao": 67,
+            "vbo": 122,
+            "ebo": 123,
+            "indexCount": 1440
+        },
+        {
+            "guid": "ad1d920a-c18d-41ea-90e7-d1cdfa54f7bf",
+            "name": "shovel",
+            "path": "Assets\\Objects\\shovel.obj",
+            "vao": 63,
+            "vbo": 114,
+            "ebo": 115,
+            "indexCount": 888
+        },
+        {
+            "guid": "c5b64c53-571e-459e-a52d-37bb8ad05795",
+            "name": "shovel-dirt",
+            "path": "Assets\\Objects\\shovel-dirt.obj",
+            "vao": 64,
+            "vbo": 116,
+            "ebo": 117,
+            "indexCount": 1680
+        },
         {
             "guid": "814c3cff-9da8-4ad4-8a05-009b99a4ea2b",
             "name": "Door",
@@ -20,6 +47,15 @@
             "indexCount": 591
         },
         {
+            "guid": "58c34bb7-ff4d-4b4d-8e24-20ffbd1e78c6",
+            "name": "trunk",
+            "path": "Assets\\Objects\\trunk.obj",
+            "vao": 65,
+            "vbo": 118,
+            "ebo": 119,
+            "indexCount": 1644
+        },
+        {
             "guid": "62fa60bd-a3d0-4575-851f-e6d04a326345",
             "name": "Window Frame",
             "path": "Assets\\Objects\\Window Frame.obj",
@@ -36,6 +72,15 @@
             "vbo": 7,
             "ebo": 8,
             "indexCount": 924
+        },
+        {
+            "guid": "62e1e2d5-423b-4a19-952a-65918f252ea4",
+            "name": "altar-stone",
+            "path": "Assets\\Objects\\altar-stone.obj",
+            "vao": 66,
+            "vbo": 120,
+            "ebo": 121,
+            "indexCount": 996
         },
         {
             "guid": "6cbaa85b-562d-4b23-9f64-8639947659cc",
@@ -101,22 +146,22 @@
             "indexCount": 2304
         },
         {
-            "guid": "e902f0d7-a022-45fc-9c17-2a98cbdb793e",
-            "name": "Cylinder",
-            "path": "Assets/Objects/Cylinder.obj",
-            "vao": 13,
-            "vbo": 25,
-            "ebo": 26,
-            "indexCount": 240
-        },
-        {
             "guid": "9e1fcb62-0699-4a0b-ae75-d0670af44b1b",
             "name": "plane2",
             "path": "Assets/Objects/plane2.obj",
+            "vao": 13,
+            "vbo": 25,
+            "ebo": 26,
+            "indexCount": 231840
+        },
+        {
+            "guid": "e902f0d7-a022-45fc-9c17-2a98cbdb793e",
+            "name": "Cylinder",
+            "path": "Assets/Objects/Cylinder.obj",
             "vao": 12,
             "vbo": 23,
             "ebo": 24,
-            "indexCount": 231840
+            "indexCount": 240
         },
         {
             "guid": "eac3e6f4-1bf2-415f-aef8-8f1269d91560",
@@ -146,22 +191,22 @@
             "indexCount": 40356
         },
         {
-            "guid": "a25723a2-f9bf-4939-b80d-962eb537dd2e",
-            "name": "RedPotion",
-            "path": "Assets\\Objects\\RedPotion.obj",
-            "vao": 18,
-            "vbo": 35,
-            "ebo": 36,
-            "indexCount": 924
-        },
-        {
             "guid": "fe86c54b-7cc2-471c-9d7e-0bce31089b5a",
             "name": "Cylinder",
             "path": "Assets/Objects/Cylinder.obj",
+            "vao": 18,
+            "vbo": 35,
+            "ebo": 36,
+            "indexCount": 240
+        },
+        {
+            "guid": "a25723a2-f9bf-4939-b80d-962eb537dd2e",
+            "name": "RedPotion",
+            "path": "Assets\\Objects\\RedPotion.obj",
             "vao": 17,
             "vbo": 33,
             "ebo": 34,
-            "indexCount": 240
+            "indexCount": 924
         },
         {
             "guid": "da032094-6e5c-40fe-b6f0-39a9d542ffe5",
@@ -396,6 +441,33 @@
             "vbo": 85,
             "ebo": 86,
             "indexCount": 26238
+        },
+        {
+            "guid": "9b1a5ea2-0cbf-4533-b25f-a5a6813a35ce",
+            "name": "pine",
+            "path": "Assets\\Objects\\pine.obj",
+            "vao": 60,
+            "vbo": 108,
+            "ebo": 109,
+            "indexCount": 2016
+        },
+        {
+            "guid": "96ecdde5-7f27-4efc-824e-f18f383dbb83",
+            "name": "rocks",
+            "path": "Assets\\Objects\\rocks.obj",
+            "vao": 62,
+            "vbo": 112,
+            "ebo": 113,
+            "indexCount": 2184
+        },
+        {
+            "guid": "802c0ce8-9457-482e-95f8-1605b388e87a",
+            "name": "pine-crooked",
+            "path": "Assets\\Objects\\pine-crooked.obj",
+            "vao": 61,
+            "vbo": 110,
+            "ebo": 111,
+            "indexCount": 2016
         }
     ]
 }

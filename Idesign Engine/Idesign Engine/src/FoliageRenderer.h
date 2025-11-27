@@ -6,7 +6,9 @@
 
 class FoliageRenderer {
 public:
-    FoliageRenderer(Mesh* meshRef);
+    FoliageRenderer(Mesh* meshRef,
+        const char* vertexShaderPath = "Assets/shaders/instancedleave_vert.glsl",
+        const char* fragShaderPath = "Assets/shaders/instancedleave_frag.glsl");
     ~FoliageRenderer();
 
     // Setup the instances (call this once or when trees move)
@@ -22,4 +24,8 @@ private:
     unsigned int instanceVBO = 0;
     unsigned int vao = 0; // We need a custom VAO for this
     int instanceCount = 0;
+
+    //Mesh* leafQuad = nullptr;
+    //GLuint leafTexture = 0;
+    //GLuint instanceVBOLeaves = 0;
 };

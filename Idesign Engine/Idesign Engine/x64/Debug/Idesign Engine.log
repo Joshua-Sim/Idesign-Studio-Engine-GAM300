@@ -1,46 +1,161 @@
-﻿  ScriptingSystem.cpp
-C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.h(142,66): warning C4100: 'index': unreferenced formal parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
-  
-C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/ScriptingSystem.cpp')
-      C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
+﻿  Graphics.cpp
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
       see declaration of 'Framework::AnimationProperties::name'
   
-C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/ScriptingSystem.cpp')
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
+  (compiling source file '/src/Graphics.cpp')
   
-C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/ScriptingSystem.cpp')
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
+  (compiling source file '/src/Graphics.cpp')
   
-C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,151): warning C4100: 'ioSettings': unreferenced formal parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,151): warning C4100: 'ioSettings': unreferenced parameter
+  (compiling source file '/src/Graphics.cpp')
   
-C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,117): warning C4100: 'inManifold': unreferenced formal parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,117): warning C4100: 'inManifold': unreferenced parameter
+  (compiling source file '/src/Graphics.cpp')
   
-C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(724,45): warning C4100: 'L': unreferenced formal parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\RecipeBookManager.h(67,23): warning C4189: 'totalRowWidth': local variable is initialized but not referenced
+  (compiling source file '/src/Graphics.cpp')
   
-C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(731,46): warning C4100: 'L': unreferenced formal parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\RecipeBookManager.h(78,31): warning C4189: 'plusX': local variable is initialized but not referenced
+  (compiling source file '/src/Graphics.cpp')
   
-C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(738,47): warning C4100: 'L': unreferenced formal parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(523,32): warning C4458: declaration of 'leafTransforms' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(181,32):
+      see declaration of 'Framework::Graphics::leafTransforms'
   
-C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(768,50): warning C4100: 'L': unreferenced formal parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(183,23): warning C4189: 'config': local variable is initialized but not referenced
+  (compiling source file '/src/Graphics.cpp')
   
-C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(779,51): warning C4100: 'L': unreferenced formal parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(799,27): warning C4458: declaration of 'mesh' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(169,24):
+      see declaration of 'Framework::Graphics::mesh'
   
-C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(792,51): warning C4100: 'L': unreferenced formal parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(937,31): warning C4458: declaration of 'mesh' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(169,24):
+      see declaration of 'Framework::Graphics::mesh'
   
-C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(806,49): warning C4100: 'L': unreferenced formal parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1113,21): warning C4458: declaration of 'cam' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(150,17):
+      see declaration of 'Framework::Graphics::cam'
   
-C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(930,54): warning C4100: 'L': unreferenced formal parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1165,25): warning C4459: declaration of 'firstMouse' hides global declaration
+  (compiling source file '/src/Graphics.cpp')
+      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(67,17):
+      see declaration of 'Framework::firstMouse'
   
-  Idesign Engine.vcxproj -> C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1341,68): warning C4100: 'amount': unreferenced parameter
+  (compiling source file '/src/Graphics.cpp')
+  
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1341,56): warning C4100: 'axis': unreferenced parameter
+  (compiling source file '/src/Graphics.cpp')
+  
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1377,23): warning C4458: declaration of 'cam' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(150,17):
+      see declaration of 'Framework::Graphics::cam'
+  
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1383,23): warning C4458: declaration of 'cam' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(150,17):
+      see declaration of 'Framework::Graphics::cam'
+  
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1566,24): warning C4458: declaration of 'tex' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(170,16):
+      see declaration of 'Framework::Graphics::tex'
+  
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1577,40): warning C4458: declaration of 'tex' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(170,16):
+      see declaration of 'Framework::Graphics::tex'
+  
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1592,39): warning C4100: 'viewIndex': unreferenced parameter
+  (compiling source file '/src/Graphics.cpp')
+  
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1729,40): warning C4458: declaration of 'mesh' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(169,24):
+      see declaration of 'Framework::Graphics::mesh'
+  
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1919,17): warning C4458: declaration of 'cam' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(150,17):
+      see declaration of 'Framework::Graphics::cam'
+  
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1972,59): warning C4018: '<': signed/unsigned mismatch
+  (compiling source file '/src/Graphics.cpp')
+  
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2075,23): warning C4458: declaration of 'tex' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(170,16):
+      see declaration of 'Framework::Graphics::tex'
+  
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2183,23): warning C4458: declaration of 'mesh' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(169,24):
+      see declaration of 'Framework::Graphics::mesh'
+  
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2201,25): warning C4456: declaration of 'pointShadowUnit' hides previous local declaration
+  (compiling source file '/src/Graphics.cpp')
+      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1968,13):
+      see declaration of 'pointShadowUnit'
+  
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2202,25): warning C4456: declaration of 'pointShadowCount' hides previous local declaration
+  (compiling source file '/src/Graphics.cpp')
+      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1969,13):
+      see declaration of 'pointShadowCount'
+  
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2209,71): warning C4018: '<': signed/unsigned mismatch
+  (compiling source file '/src/Graphics.cpp')
+  
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2218,46): warning C4456: declaration of 'entityId' hides previous local declaration
+  (compiling source file '/src/Graphics.cpp')
+      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2114,26):
+      see declaration of 'entityId'
+  
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2289,31): warning C4458: declaration of 'tex' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(170,16):
+      see declaration of 'Framework::Graphics::tex'
+  
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2375,19): warning C4458: declaration of 'mesh' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(169,24):
+      see declaration of 'Framework::Graphics::mesh'
+  
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2401,21): warning C4456: declaration of 'pointShadowUnit' hides previous local declaration
+  (compiling source file '/src/Graphics.cpp')
+      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1968,13):
+      see declaration of 'pointShadowUnit'
+  
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2402,21): warning C4456: declaration of 'pointShadowCount' hides previous local declaration
+  (compiling source file '/src/Graphics.cpp')
+      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1969,13):
+      see declaration of 'pointShadowCount'
+  
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2410,67): warning C4018: '<': signed/unsigned mismatch
+  (compiling source file '/src/Graphics.cpp')
+  
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2419,42): warning C4456: declaration of 'entityId' hides previous local declaration
+  (compiling source file '/src/Graphics.cpp')
+      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2373,25):
+      see declaration of 'entityId'
+  
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2472,27): warning C4458: declaration of 'tex' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(170,16):
+      see declaration of 'Framework::Graphics::tex'
+  
+D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2617,19): warning C4458: declaration of 'tex' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(170,16):
+      see declaration of 'Framework::Graphics::tex'
+  
+  Idesign Engine.vcxproj -> D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe

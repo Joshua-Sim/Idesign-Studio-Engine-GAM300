@@ -386,7 +386,7 @@ namespace Framework {
         cube = Mesh::CreateUnitCubeData();
         plane = Mesh::CreateUnitSphereData();
         cone = Mesh::CreateUnitConeData();
-        cylinder = Mesh::CreateUnitCylinderData();
+        //cylinder = Mesh::CreateUnitCylinderData();
         triangle = Mesh::CreateUnitTriangleData();
         // Initialise 1 object into ECS (Temporary, liase and move de-serialize with loadmesh function handled at asset-handler)
 
@@ -446,38 +446,54 @@ namespace Framework {
         //IMPORTANT : ALWAYS STICK TO THIS ORDER
         std::vector<std::string> dayFaces =
         {
-        "Assets/Textures/right.png",    //RIGHT
-        "Assets/Textures/left.png",    //LEFT 
-        "Assets/Textures/top.png",    //TOP or UP
-        "Assets/Textures/bottom.png",     //BOTTOM or DOWN
-        "Assets/Textures/front.png",    //FRONT
-        "Assets/Textures/back.png"      //BACK
+        "Assets/Textures/SkyNoon_Right.png",    //RIGHT
+        "Assets/Textures/SkyNoon_Left.png",    //LEFT 
+        "Assets/Textures/SkyNoon_Top.png",    //TOP or UP
+        "Assets/Textures/SkyNoon_Bottom.png",     //BOTTOM or DOWN
+        "Assets/Textures/SkyNoon_Front.png",    //FRONT
+        "Assets/Textures/SkyNoon_Back.png"      //BACK
         };
 
         std::vector<std::string> nightFaces =
         {
-        "Assets/Textures/right1.png",    //RIGHT
-        "Assets/Textures/left1.png",    //LEFT 
-        "Assets/Textures/top1.png",    //TOP or UP
-        "Assets/Textures/bottom1.png",     //BOTTOM or DOWN
-        "Assets/Textures/front1.png",    //FRONT
-        "Assets/Textures/back1.png"      //BACK
+        "Assets/Textures/SkyMidNight_Right.png",    //RIGHT
+        "Assets/Textures/SkyMidNight_Left.png",    //LEFT 
+        "Assets/Textures/SkyMidNight_Top.png",    //TOP or UP
+        "Assets/Textures/SkyMidNight_Bottom.png",     //BOTTOM or DOWN
+        "Assets/Textures/SkyMidNight_Front.png",    //FRONT
+        "Assets/Textures/SkyMidNight_Back.png"      //BACK
         };
 
         // Make sure the folder and files exist!
         m_skybox.init(dayFaces, nightFaces);
 
-        // === FOLIAGE/INSTANCING INIT ===
+        //GRASS INIT
+        TextureProperties grass;
+        grass.path = "Assets/Textures/Grass_normal_left.png";
+        grassTextureID = TextureLoader::loadTexture(grass, true);
 
+        // === FOLIAGE/INSTANCING INIT ===
         // 1. Create a simple mesh to represent the tree (Cylinder for a trunk)
         // NOTE: If you have a way to load a real tree model (e.g., from an OBJ file 
         // using MeshLoader), use that instead!
         m_foliageMesh = Mesh::CreateUnitCylinderData(12);
         m_foliageMesh.initGL(); // Upload the cylinder data to the GPU VBO/VAO
 
+        // ===================== LEAF SYSTEM =====================
+        leafQuad = new Mesh(Mesh::CreateBillboardQuad());
+        leafQuad->initGL();
+
+        // Load your leaf texture (PNG with alpha)
+        TextureProperties leafProps;
+        leafProps.path = "Assets/Textures/unchopped_herb.png";
+        leafTexture = TextureLoader::loadTexture(leafProps, true);
+
+        if (!leafTexture)
+            std::cout << "Leaf PNG failed to load!" << std::endl;
+
         // === 1. LOAD TREE TEXTURE ===
         TextureProperties treeTexProps;
-        treeTexProps.path = "Assets/Textures/top.png"; // <-- CHANGE PATH TO YOUR TEXTURE!
+        treeTexProps.path = "Assets/Textures/Wood.png"; // <-- CHANGE PATH TO YOUR TEXTURE!
 
         // Assuming TextureLoader::loadTexture is available (from your uploaded files)
         // NOTE: loadTexture takes TextureProperties& props and bool flip
@@ -488,12 +504,24 @@ namespace Framework {
         }
 
         // 2. Create the Instancing Renderer
-        m_treeRenderer = new FoliageRenderer(&m_foliageMesh);
+        // TRUNK RENDERER (cylinder)
+        m_treeRenderer = new FoliageRenderer(
+            &m_foliageMesh,
+            "Assets/shaders/instanced_vert.glsl",
+            "Assets/shaders/instanced_frag.glsl"
+        );
+
+        // LEAF RENDERER (billboards)
+        m_leafRenderer = new FoliageRenderer(
+            leafQuad,
+            "Assets/shaders/instancedleave_vert.glsl",
+            "Assets/shaders/instancedleave_frag.glsl"
+        );
         //// 2. Create the Instancing Renderer
-        //m_treeRenderer = new FoliageRenderer(&m_foliageMesh);
 
         // 3. Generate positions for the trees around the border
-        std::vector<glm::mat4> treeTransforms;
+        std::vector<glm::mat4> leafTransforms;
+        std::vector<glm::mat4> trunkTransforms;
         const int NUM_TREES = 4000; // High number for a dense border
 
         // Calculate map boundaries (Assuming terrain starts at 0,0)
@@ -543,22 +571,126 @@ namespace Framework {
             // Get height from terrain so trees stick to the ground
             float y = terrain.getHeightAt(x, z);
 
-            glm::mat4 model(1.0f);
-            model = glm::translate(model, glm::vec3(x, y, z));
+            // translation
+            glm::mat4 leaves(1.0f);
+            leaves = glm::translate(leaves, glm::vec3(x, y, z));
+
+            // Encode width + height in matrix
+            leaves[0][3] = 3.0f; // width
+            leaves[1][3] = 4.5f; // height
+
+            leafTransforms.push_back(leaves);
 
             // Random rotation (Y-axis) so trees don't all look identical
             float randomRot = (static_cast<float>(rand()) / RAND_MAX) * 360.0f;
-            model = glm::rotate(model, glm::radians(randomRot), glm::vec3(0, 1, 0));
+            glm::mat4 trunk = glm::translate(glm::mat4(1.f), glm::vec3(x, y, z));
+            trunk = glm::rotate(trunk, glm::radians(randomRot), glm::vec3(0, 1, 0));
+            trunk = glm::scale(trunk, glm::vec3(3.0f, 2.5f, 0.12f));
 
-            // Random scale variation
-            float scale = 5.8f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 0.5f));
-            model = glm::scale(model, glm::vec3(scale * 0.5f, scale * 1.5f, scale * 0.5f));
-
-            treeTransforms.push_back(model);
+            trunkTransforms.push_back(trunk);
         }
 
         // after the for-loop that fills treeTransforms
-        m_treeRenderer->setInstances(treeTransforms);
+        m_treeRenderer->setInstances(trunkTransforms);
+        m_leafRenderer->setInstances(leafTransforms);
+
+        // GENERATE PEBBLE MESH
+        // === LOAD PEBBLE MESH ===
+        //=== LOAD PEBBLE MESH ===
+        MeshLoader::loadMesh("Assets/Objects/rocks.obj", m_pebbleMesh);
+
+        // Load texture for pebbles
+        TextureProperties pebProps;
+        pebProps.path = "Assets/Textures/T_Brick_BaseColor.png";
+        pebbleTextureID = TextureLoader::loadTexture(pebProps, true);
+
+        // Create renderer
+        m_pebbleRenderer = new PebbleRenderer(&m_pebbleMesh);
+
+        // === Generate Pebble Transforms ===
+        std::vector<glm::mat4> pebbleTransforms;
+        const int NUM_PEBBLES = 1000;
+
+        auto rnd = [] { return (float)rand() / (float)RAND_MAX; };
+
+        // Center rectangle to block
+        float blockMinX = -10.f;
+        float blockMaxX = 10.f;
+        float blockMinZ = -10.f;
+        float blockMaxZ = 10.f;
+
+        for (int i = 0; i < NUM_PEBBLES; i++)
+        {
+            float x, z;
+
+            // Keep generating until the rock is OUTSIDE the blocked region
+            do {
+                x = rnd() * (maxMap - minMap) + minMap;
+                z = rnd() * (maxMap - minMap) + minMap;
+            } while (x >= blockMinX && x <= blockMaxX &&
+                z >= blockMinZ && z <= blockMaxZ);
+
+            float y = terrain.getHeightAt(x, z);
+
+            glm::mat4 M(1.0f);
+            M = glm::translate(M, glm::vec3(x, y + 0.02f, z));
+
+            float rot = rnd() * 360.0f;
+            M = glm::rotate(M, glm::radians(rot), glm::vec3(0, 1, 0));
+
+            float s = 0.05f + rnd() * 0.8f;
+            M = glm::scale(M, glm::vec3(s));
+
+            pebbleTransforms.push_back(M);
+        }
+
+        m_pebbleRenderer->setInstances(pebbleTransforms);
+
+
+        // GENERATE PINES MESH
+         // === LOAD PINES MESH ===
+        //=== LOAD PINES MESH ===
+        MeshLoader::loadMesh("Assets/Objects/pine.obj", m_pineMesh);
+
+        // Load texture for pine
+        TextureProperties pineProps;
+        pineProps.path = "Assets/Textures/treeLong.png";
+        pineTextureID = TextureLoader::loadTexture(pineProps, true);
+
+        // Create renderer
+        m_pineRenderer = new PebbleRenderer(&m_pineMesh);
+
+        // === Generate Pebble Transforms ===
+        std::vector<glm::mat4> pineTransform;
+        const int NUM_PINE = 3000;
+
+        for (int i = 0; i < NUM_PINE; i++)
+        {
+            float x, z;
+
+            // Keep generating until the rock is OUTSIDE the blocked region
+            do {
+                x = rnd() * (maxMap - minMap) + minMap;
+                z = rnd() * (maxMap - minMap) + minMap;
+            } while (x >= blockMinX && x <= blockMaxX &&
+                z >= blockMinZ && z <= blockMaxZ);
+
+            float y = terrain.getHeightAt(x, z);
+
+            glm::mat4 M(1.0f);
+            M = glm::translate(M, glm::vec3(x, y + 0.02f, z));
+
+            float rot = rnd() * 360.0f;
+            M = glm::rotate(M, glm::radians(rot), glm::vec3(0, 1, 0));
+
+            float s = 0.05f + rnd() * 0.8f;
+            M = glm::scale(M, glm::vec3(s));
+
+            pineTransform.push_back(M);
+        }
+
+        m_pineRenderer->setInstances(pineTransform);
+
 
         ImguiManager::LogSuccess("Graphics System initialized successfully", "Graphics");
     }
@@ -1814,6 +1946,12 @@ namespace Framework {
 
         // --- Terrain ---
         terrainShader.use();
+        // Set grass texture
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, grassTextureID);
+        terrainShader.setInt("uGrassTex", 0);
+        terrainShader.setFloat("uGrassTiling", 20.0f);
+
         terrainShader.setMat4("uProj", proj);
         terrainShader.setMat4("uView", view);
         terrainShader.setMat4("uModel", mapModel);
@@ -1824,6 +1962,7 @@ namespace Framework {
         glBindTexture(GL_TEXTURE_2D, m_shadowDepthTexture);
         terrainShader.setInt("uShadowMap", 1);
         terrainShader.setMat4("uLightSpaceMatrix", m_lightSpaceMatrix);
+
 
         LightProperties::upload(terrainShader, sun, hasSun, points, spots);
         int pointShadowUnit = 2;
@@ -1866,6 +2005,19 @@ namespace Framework {
         {
             m_treeRenderer->draw(view, proj, mapModel, m_treeTextureID);
         }
+
+        // === DRAW PEBBLES HERE  ===
+        if (m_pebbleRenderer)
+        {
+            m_pebbleRenderer->draw(view, proj, mapModel, pebbleTextureID);
+        }
+
+        // === DRAW PINES HERE  ===
+        if (m_pineRenderer)
+        {
+            m_pineRenderer->draw(view, proj, mapModel, pineTextureID);
+        }
+
 
 
         // --- ENTITY SORTING ---
@@ -2209,6 +2361,12 @@ namespace Framework {
         // It uses the depth buffer to only draw on empty pixels
         m_skybox.draw(view, proj);
         // ====================================================
+
+        // Billboard leaves
+        if (m_leafRenderer)
+        {
+            m_leafRenderer->draw(view, proj, mapModel, leafTexture);
+        }
 
         for (auto it = transparentEntities.rbegin(); it != transparentEntities.rend(); ++it)
         {
