@@ -1467,6 +1467,70 @@ namespace Framework {
             tr.scale = glm::vec3(x, y, z);
             return 0;
         }
+
+        // Helper to get the NAME of the currently selected item
+        static int Lua_GetSelectedItemName(lua_State* L) {
+            auto& inv = Framework::Inventory::Instance();
+            int idx = inv.GetSelectedIndex();
+            const auto& slot = inv.Get(idx);
+
+            // Check if slot has an item and if the ID is safe
+            if (slot.itemId >= 0 && slot.itemId < Framework::kItemCount) {
+                // Access the array directly from ItemComponent.h
+                lua_pushstring(L, Framework::kItemNames[slot.itemId]);
+            }
+            else {
+                lua_pushnil(L); // Return nil if empty
+            }
+            return 1; // Returning 1 value (string or nil)
+        }
+
+        // In ScriptingSystem.cpp inside anonymous namespace
+
+        static int lua_GetRotation(lua_State* L)
+        {
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+
+            if (!ecsInterface.IsEntityValid(e) ||
+                !ecsInterface.HasComponent<TransformComponent>(e))
+            {
+                return luaL_error(L, "GetRotation: entity %d has no TransformComponent", (int)e);
+            }
+
+            auto& tr = ecsInterface.GetComponent<TransformComponent>(e);
+            lua_pushnumber(L, tr.rotation.x); // Pitch
+            lua_pushnumber(L, tr.rotation.y); // Yaw
+            lua_pushnumber(L, tr.rotation.z); // Roll
+            return 3;
+        }
+
+        // In ScriptingSystem.cpp, inside the anonymous namespace
+
+        static int lua_GetCameraYaw(lua_State* L)
+        {
+            // 1. Get the Graphics System
+            auto* gfx = Graphics::GetInstance();
+            if (!gfx) {
+                lua_pushnumber(L, 0.0f);
+                return 1;
+            }
+
+            // 2. Get the GAME CAMERA specifically (Index 0)
+            // Index 1 would be the Scene/Editor camera
+            Camera* cam = gfx->GetCameraByIndex(0);
+
+            if (!cam) {
+                lua_pushnumber(L, 0.0f);
+                return 1;
+            }
+
+            // 3. Return the Yaw (Horizontal Rotation)
+            lua_pushnumber(L, cam->yaw);
+            return 1;
+        }
+
+
+
     } // anonymous namespace
 
     // ---------------------------- class methods --------------------------------
@@ -1528,12 +1592,17 @@ namespace Framework {
         lua_register(L, "CheckValidRecipe", l_CheckValidRecipe);
         lua_register(L, "GetEntityName", lua_GetEntityName);
 
+        lua_register(L, "GetRotation", lua_GetRotation);
+        lua_register(L, "GetCameraYaw", lua_GetCameraYaw);
+
         // Inventory Utility
         lua_register(L, "IsItemDestroyOnPick", Lua_IsItemDestroyOnPick);
         lua_register(L, "GetSelectedItem", Lua_GetPlayerSelectedItemId);
         lua_register(L, "ConsumeSelectedItem", Lua_ConsumePlayerSelectedItem);
         lua_register(L, "AddToInventory", Lua_AddToInventory);
         lua_register(L, "GetItemNameById", lua_GetItemNameById);
+        lua_register(L, "GetSelectedItemName", Lua_GetSelectedItemName);
+
 
         // Engine utility
         lua_register(L, "FindEntityByName",     lua_FindEntityByName);

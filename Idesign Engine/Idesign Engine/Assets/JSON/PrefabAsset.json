@@ -65,6 +65,14 @@
             "name": "vitality_potion_Prefab",
             "path": "Assets\\Prefabs\\vitality_potion_Prefab.prefab",
             "isScenePrefab": false
+        },
+        {
+            "guid": "546385ef-6adb-4a62-8685-3b7cf8cfef7b",
+            "name": "unchopped_herb_Prefab",
+            "path": "Assets\\Prefabs\\unchopped_herb_Prefab.prefab",
+            "isScenePrefab": false
         }
+
+         
     ]
 }
