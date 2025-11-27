@@ -79,16 +79,6 @@ namespace Framework {
                                     action            // Arg 2
                                 );
                             }
-
-                        // NEW: Trigger audio if this entity has an AudioComponent
-                        if (ecsInterface.HasComponent<AudioComponent>(entity)) 
-                        {
-                            auto audioSystem = ecsInterface.GetSystem<AudioSystem>();
-                            if (audioSystem) {
-                                audioSystem->PlayEntitySound(entity);
-                                std::cout << "[EventSystem] [AUDIO] Playing sound for entity " << entity << " on channel '" << expectedChannel << "'" << std::endl;
-                            }
-                        }
                             return true; // Keep listening
                         }
                     );

@@ -687,7 +687,7 @@ namespace Framework {
             return 0;
         }
 
-        // ============ END LUA BINDINGS ============
+        // ============ END GAME STATE LUA BINDINGS ============
 
 
         static int Lua_GetItemName(lua_State* L) {
