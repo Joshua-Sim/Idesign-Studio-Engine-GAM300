@@ -93,7 +93,7 @@
                     "is3D": true,
                     "minDistance": 1.0,
                     "maxDistance": 100.0,
-                    "volume": 1.0,
+                    "volume": 0.20000000298023224,
                     "loop": false,
                     "playOnStart": true,
                     "isPlaying": true,
@@ -994,15 +994,15 @@
                     "eventName": "event:/FrogCroak",
                     "is3D": true,
                     "minDistance": 1.0,
-                    "maxDistance": 100.0,
+                    "maxDistance": 50.0,
                     "volume": 1.0,
                     "loop": false,
                     "playOnStart": false,
-                    "isPlaying": false,
+                    "isPlaying": true,
                     "lastPosition": [
-                        0.0,
-                        0.0,
-                        0.0
+                        -28.970077514648438,
+                        7.690000057220459,
+                        8.321422576904297
                     ]
                 }
             }
@@ -1962,14 +1962,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -55.29311752319336,
+                        -42.67597579956055,
                         8.03951358795166,
-                        9.053871154785156
+                        4.085195541381836
                     ],
                     "rotation": [
-                        0.297899454832077,
-                        47.90789031982422,
-                        0.0018177588935941458
+                        0.29790428280830383,
+                        33.01164245605469,
+                        0.0036164342891424894
                     ],
                     "scale": [
                         0.9999989867210388,
@@ -2044,9 +2044,9 @@
                 },
                 "ListenerComponent": {
                     "position": [
-                        -55.29311752319336,
+                        -42.67597579956055,
                         8.03951358795166,
-                        9.053871154785156
+                        4.085195541381836
                     ],
                     "forward": [
                         0.0,
@@ -2757,6 +2757,33 @@
         {
             "name": "Customer",
             "guid": "ba84631d-29d8-4d03-b95d-506cc61f72a6",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
+                }
+            }
+        },
+        {
+            "name": "Customer",
+            "guid": "0034eca4-ce4f-4a50-9896-ac10c3bc6890",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
+                }
+            }
+        },
+        {
+            "name": "Customer",
+            "guid": "3f040ac3-dad5-4ed6-8aae-48d66a373590",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"
+                }
+            }
+        },
+        {
+            "name": "Customer",
+            "guid": "180f330e-b15c-481c-8792-8932ad6f627f",
             "components": {
                 "PrefabComponent": {
                     "prefabGUID.id": "b9703dc0-4246-4ba0-be36-1507cc721cd1"

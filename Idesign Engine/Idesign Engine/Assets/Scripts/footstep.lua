@@ -10,6 +10,7 @@ local outdoorEvent = "event:/FootstepBackyard"
 --Track state
 local wasInBackyard = false
 local backyardEntity = nil
+local frogEntity = nil 
 
 -- Backyard bounds (calculated from your scene data)
 -- Backyard position: (-45.93, 5.3, 14.72)
@@ -39,6 +40,14 @@ function M:on_init()
     else
         print("[Footsteps] WARNING: Could not find backyard entity!")
     end 
+
+    -- Find the frog entity for volume control
+    frogEntity = FindEntityByName("Frog")
+    if frogEntity then
+        print("[Footsteps] Found Frog entity: " .. frogEntity)
+    else
+        print("[Footsteps] WARNING: Could not find Frog entity!")
+    end
 end
 
 function M:IsInBackyard()
@@ -64,11 +73,23 @@ function M:on_update(dt)
         end 
     end
 
+    -- Handle frog occlusion (opposite of backyard)
+    if frogEntity then
+        if isInBackyard then
+            -- Muted/very quiet when in backyard (outdoor)
+            SetEntityVolume(frogEntity, 0.0)  -- Silent outdoors
+        else
+            -- Full volume when indoors
+            SetEntityVolume(frogEntity, 1.0)
+        end
+    end
+
+
     --Log zone transitions for debugging 
     if IsInBackyard and not wasInBackyard then
-        print("[Footsteps] Entered backyard - ambient at full volume")
+        print("[Footsteps] Entered backyard - ambient at full volume, frog muted")
     elseif not isInBackyard and wasInBackyard then
-        print("[Footsteps] Left backyard - ambient muffled")
+        print("[Footsteps] Left backyard - ambient muffled , frog audible")
     end 
 
     wasInBackyard = isInBackyard
