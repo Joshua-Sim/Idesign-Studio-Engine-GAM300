@@ -42,6 +42,7 @@
 #include "PlayerInteractSystem.h"
 #include"ButtonSystem.h"
 #include "ButtonComponent.h"
+#include "RecipeBookManager.h"
 
 using namespace Framework;
 
@@ -63,6 +64,8 @@ EngineState engineState;
 
 int main(void)
 {
+    //_CrtSetBreakAlloc(755138);
+
     // Save the initial working directory
     std::filesystem::path initialCWD = std::filesystem::current_path();
     std::cout << "Initial working directory: " << initialCWD << std::endl;
@@ -87,7 +90,6 @@ int main(void)
     AssetManager::Instance().CompileAllAssets();
     //AssetManager::Instance().SaveAllAssets();
     AssetManager::Instance().LoadAllAssets();
-    
     // To Connect Prop with ECS
     RegisterComponentTypes();                           // Step 1: Register known types
     AutoRegisterAllReflectedComponents(ecsInterface);   // Step 2: Hook them into ECS
@@ -220,8 +222,9 @@ int main(void)
     // Clear all systems and other dynamically allocated resources
     engine->DestroySystems();
     EventManager::Instance().Reset();
-    TypeRegistry::Instance().Shutdown();
-
+    Framework::TypeRegistry::Shutdown();
+    Framework::MessageBus::Destroy();
+    Framework::MessageSystem::Destroy();
     // Clean up smart pointers as they go out of scope
     // No need to manually delete as unique_ptr will handle it
     return 0;

@@ -1,12 +1,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 ///
-///@file ComponentManager.h
+/// @file ComponentManager.h
 /// 
-/// @brief This file contains the defintion of a component manager and 
-///       how it manages the different components and their arrays
-///  
-///@Authors: Teo Joel
-///Copyright 2024, Digipen Institute of Technology
+/// @brief Manages the registration and retrieval of component arrays.
 ///
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -17,86 +13,103 @@
 
 #include "ComponentArray.h"
 #include <memory>
+#include <unordered_map>
+#include <string>
+#include <typeinfo>
+#include <cassert>
+
+// Define ComponentType if not already defined globally
+using ComponentType = std::uint8_t;
 
 namespace Framework {
 
-	class ComponentManager
-	{
-	public:
-		// Registers a component into the Component Array based on the component type.
-		template<typename T> void RegisterComponent()
-		{
-			const char* typeName = typeid(T).name();
+    class ComponentManager
+    {
+    public:
+        // Destructor ensures memory is cleared on shutdown
+        ~ComponentManager() {
+            Clear();
+        }
 
-			assert(mComponentTypes.find(typeName) == mComponentTypes.end() && "Registering component type more than once!");
+        template<typename T>
+        void RegisterComponent()
+        {
+            // Use string name for safety
+            std::string typeName = typeid(T).name();
 
-			mComponentTypes.insert({ typeName, mNextComponentType });
+            assert(mComponentTypes.find(typeName) == mComponentTypes.end() && "Registering component type more than once!");
 
-			mComponentArrays.insert({ typeName, std::make_shared<ComponentArray<T>>() });
+            mComponentTypes.insert({ typeName, mNextComponentType });
 
-			++mNextComponentType;
-		}
+            // Create the specific ComponentArray for this type
+            mComponentArrays.insert({ typeName, std::make_shared<ComponentArray<T>>() });
 
-		// Returns the component based on the name of the component
-		template<typename T> ComponentType GetComponentType()
-		{
-			const char* typeName = typeid(T).name();
+            ++mNextComponentType;
+        }
 
-			assert(mComponentTypes.find(typeName) != mComponentTypes.end() && "Component not registered before using!");
+        template<typename T>
+        ComponentType GetComponentType()
+        {
+            std::string typeName = typeid(T).name();
+            assert(mComponentTypes.find(typeName) != mComponentTypes.end() && "Component not registered before using!");
+            return mComponentTypes[typeName];
+        }
 
-			return mComponentTypes[typeName];
-		}
+        template<typename T>
+        void AddComponent(Entity entity, T component)
+        {
+            GetComponentArray<T>()->InsertData(entity, component);
+        }
 
-		// Passes in an entity and a component, then adds said component into said entity
-		template<typename T> void AddComponent(Entity entity, T component)
-		{
-			GetComponentArray<T>()->InsertData(entity, component);
-		}
+        template<typename T>
+        void RemoveComponent(Entity entity)
+        {
+            GetComponentArray<T>()->RemoveData(entity);
+        }
 
-		// Passes in an entity and removes the entity from the array of entities in that said component
-		template<typename T> void RemoveComponent(Entity entity)
-		{
-			GetComponentArray<T>()->RemoveData(entity);
-		}
+        template<typename T>
+        bool HasComponent(Entity entity) const
+        {
+            return GetComponentArray<T>()->HasData(entity);
+        }
 
-		template<typename T> bool HasComponent(Entity entity) const
-		{
-			auto componentArray = GetComponentArray<T>();
-			return componentArray->HasData(entity);  // Assumes HasData checks if entity has that component
-		}
+        template<typename T>
+        T& GetComponent(Entity entity)
+        {
+            return GetComponentArray<T>()->GetData(entity);
+        }
 
-		// Passes in an entity and returns a reference to the component of the enttity from that component array
-		template<typename T> T& GetComponent(Entity entity)
-		{
-			return GetComponentArray<T>()->GetData(entity);
-		}
+        // Defined in ComponentManager.cpp
+        void EntityDestroyed(Entity entity);
 
-		void EntityDestroyed(Entity entity);
+        void Clear()
+        {
+            // Clear the maps to release shared_ptrs
+            mComponentArrays.clear();
+            mComponentTypes.clear();
+            mNextComponentType = 0;
+        }
 
-		void Clear()
-		{
-			mComponentArrays.clear();  // releases all shared_ptrs to ComponentArray<T>
-			mComponentTypes.clear();   // clears type-name to type-index map
-			mNextComponentType = 0;    // reset counter (optional)
-		}
+    private:
+        // Map string names to Component Types (IDs)
+        std::unordered_map<std::string, ComponentType> mComponentTypes{};
 
-	private:
-		std::unordered_map<const char*, ComponentType> mComponentTypes{};						// An unordered map containing the index for the Components registered in the system
-		std::unordered_map<const char*, std::shared_ptr<IComponentArray>> mComponentArrays{};	// An unordered map containing the components in the array of components
-		ComponentType mNextComponentType{};														// A ComponentType (unsigned int) tracking number for the index of component types per registration
+        // Map string names to the actual Component Storage Arrays
+        std::unordered_map<std::string, std::shared_ptr<IComponentArray>> mComponentArrays{};
 
-		// Used by the component manager for managing of the components for the specified components
-		template<typename T>
-		std::shared_ptr<ComponentArray<T>> GetComponentArray() const
-		{
-			const char* typeName = typeid(T).name();
+        ComponentType mNextComponentType{};
 
-			assert(mComponentTypes.find(typeName) != mComponentTypes.end() && "Component not registered before use!");
+        // Helper to get the array for a specific type
+        template<typename T>
+        std::shared_ptr<ComponentArray<T>> GetComponentArray() const
+        {
+            std::string typeName = typeid(T).name();
 
-			return std::static_pointer_cast<ComponentArray<T>>(mComponentArrays.at(typeName));
-		}
+            assert(mComponentTypes.find(typeName) != mComponentTypes.end() && "Component not registered before use!");
 
-	};
+            return std::static_pointer_cast<ComponentArray<T>>(mComponentArrays.at(typeName));
+        }
+    };
 }
 
 #endif

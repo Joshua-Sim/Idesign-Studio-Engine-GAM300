@@ -303,7 +303,45 @@ namespace Framework {
 
         if (!newBodyComp.IDs.empty()) ecs.AddComponent<PhysicsBodyComponent>(e, newBodyComp);
     }
+    PhysicsSystem::~PhysicsSystem()
+    {
+        std::cout << "[Physics] Destructor called. Cleaning up Jolt...\n";
 
+        // 1. Clean up Interface/Bodies
+        if (bodyInterface) {
+            // Remove and destroy all bodies this system created
+            for (JPH::BodyID id : m_createdBodies) {
+                if (!id.IsInvalid()) {
+                    bodyInterface->RemoveBody(id);
+                    bodyInterface->DestroyBody(id);
+                }
+            }
+            m_createdBodies.clear();
+            bodyInterface = nullptr;
+        }
+
+
+        // 3. Delete Jolt Pointers (The Source of your Leak)
+        // IMPORTANT: Check for null to avoid double-delete if Initialize failed
+        if (jobSystem) {
+            delete jobSystem;
+            jobSystem = nullptr;
+        }
+
+        if (tempAllocator) {
+            delete tempAllocator; // <--- THIS FREES THE 10MB LEAK
+            tempAllocator = nullptr;
+        }
+
+        // 4. Unregister Jolt Types
+        JPH::UnregisterTypes();
+
+        // 5. Delete Factory
+        if (JPH::Factory::sInstance) {
+            delete JPH::Factory::sInstance;
+            JPH::Factory::sInstance = nullptr;
+        }
+    }
     void PhysicsSystem::Initialize() {
         using namespace JPH;
         RegisterDefaultAllocator();
@@ -506,6 +544,11 @@ namespace Framework {
     void PhysicsSystem::RemoveBodyForEntity(Entity e)
     {
         if (!bodyInterface) return;
+
+        // [FIX] Clean up the static maps to prevent memory growth
+        if (s_lastLin.find(e) != s_lastLin.end()) s_lastLin.erase(e);
+        if (s_lastAng.find(e) != s_lastAng.end()) s_lastAng.erase(e);
+
         if (!ecsInterface.HasComponent<PhysicsBodyComponent>(e)) return;
 
         auto& pb = ecsInterface.GetComponent<PhysicsBodyComponent>(e);
@@ -538,12 +581,14 @@ namespace Framework {
         for (Entity e : ecsInterface.GetEntities()) {
             if (ecsInterface.HasComponent<PhysicsBodyComponent>(e)) ecsInterface.RemoveComponent<PhysicsBodyComponent>(e);
         }
-        s_lastLin.clear();
-        s_lastAng.clear();
+
         delete jobSystem;
         delete tempAllocator;
         JPH::UnregisterTypes();
         delete JPH::Factory::sInstance;
         JPH::Factory::sInstance = nullptr;
     }
+
+
+    
 }

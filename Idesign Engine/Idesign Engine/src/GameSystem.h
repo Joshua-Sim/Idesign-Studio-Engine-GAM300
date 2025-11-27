@@ -7,6 +7,8 @@ namespace Framework {
     // Inherit from ISystem (the interface you shared)
     class GameSystem : public ISystem {
     public:
+        ~GameSystem() ;
+
         static bool bookOpen;
         static bool bookOpened;
         // 1. FIX: Rename Init -> Initialize to match the base class
@@ -18,7 +20,7 @@ namespace Framework {
         // 3. FIX: Implement GetName to satisfy pure virtual = 0
         std::string GetName() override { return "GameSystem"; }
 
-
+        void Shutdown();
         static int score;
 
         static void SetScore(int value);

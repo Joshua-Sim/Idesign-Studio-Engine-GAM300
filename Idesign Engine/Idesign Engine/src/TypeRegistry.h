@@ -1,4 +1,3 @@
-
 #pragma once
 #ifndef _TYPE_REGISTRY_H_
 #define _TYPE_REGISTRY_H_
@@ -14,25 +13,38 @@ namespace Framework
 
     class TypeRegistry
     {
+    private:
+  
+        // Private constructor ensures it's only created via Instance()
+        TypeRegistry() = default;
+
     public:
+        // Delete copy/move
+        TypeRegistry(const TypeRegistry&) = delete;
+        TypeRegistry& operator=(const TypeRegistry&) = delete;
 
         static TypeRegistry& Instance()
         {
-            // Change from stack static to heap static
-            // This prevents the destructor from running automatically at program exit
-            static TypeRegistry* instance = new TypeRegistry();
-            return *instance;
+            if (!s_Instance) {
+                s_Instance = new TypeRegistry();
+            }
+            return *s_Instance;
         }
 
-        using TypeAdder = std::function<void(Coordinator&, Entity)>;
-        using TypeRemover = std::function<void(Coordinator&, Entity)>;
-
-        // To Stop Crashes
-        void Shutdown()
+        // [CHANGE 2] Static Shutdown to delete the instance
+        static void Shutdown()
         {
-            // Swap with empty containers to force deallocation safely 
-            // and detach iterators in a controlled manner.
+            if (s_Instance)
+            {
+                s_Instance->ClearData(); // Clear internal maps
+                delete s_Instance;       // Delete the object itself
+                s_Instance = nullptr;    // Reset pointer
+            }
+        }
 
+        // Internal clear function (was your old Shutdown)
+        void ClearData()
+        {
             std::unordered_map<std::string, TypeGetter> emptyRegistry;
             registry.swap(emptyRegistry);
 
@@ -44,6 +56,9 @@ namespace Framework
 
             propLists.clear();
         }
+
+        using TypeAdder = std::function<void(Coordinator&, Entity)>;
+        using TypeRemover = std::function<void(Coordinator&, Entity)>;
 
         template<typename T>
         void Register(const std::string& typeName, const prop_list* props)
@@ -65,7 +80,7 @@ namespace Framework
                     ecs.RemoveComponent<T>(e);
                 };
 
-            propLists[typeName] = props; // Link to reflection metadata
+            propLists[typeName] = props;
         }
 
         inline const prop_list* GetPropList(const std::string& typeName) const
@@ -111,6 +126,7 @@ namespace Framework
         const std::unordered_map<std::string, TypeGetter>& GetAll() const { return registry; }
 
     private:
+        inline static TypeRegistry* s_Instance = nullptr;
         std::unordered_map<std::string, TypeGetter> registry;
         std::unordered_map<std::string, TypeAdder> adders;
         std::unordered_map<std::string, TypeRemover> removers;

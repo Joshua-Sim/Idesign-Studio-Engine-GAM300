@@ -33,6 +33,7 @@ namespace Framework
     class PhysicsSystem : public ISystem
     {
     public:
+        ~PhysicsSystem();
         void Initialize();
         void Update(float dt) override;
         std::string GetName() override;
@@ -47,7 +48,6 @@ namespace Framework
         // --- NEW: Expose BodyInterface for PhaseManager (Teleportation) ---
         JPH::BodyInterface* GetBodyInterface() { return bodyInterface; }
         // ------------------------------------------------------------------
-
     private:
         JPH::TempAllocatorImpl* tempAllocator = nullptr;
         JPH::JobSystemThreadPool* jobSystem = nullptr;

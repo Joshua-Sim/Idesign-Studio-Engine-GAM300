@@ -20,14 +20,24 @@ namespace Framework {
     };
 
     class RecipeBookManager {
+
     private:
         Coordinator* coordinator;
         std::vector<UIRecipe> displayRecipes; // Local cache of names for rendering
         std::vector<Entity> uiEntities;
-
+     
     public:
         bool bookSpawned = false;
+        void Shutdown()
+        {
+            // 1. Destroy the UI Entities (Sprites)
+            ClearBook();
 
+            // 2. Clear the String Data (Fixes the "chopped_" leak)
+            displayRecipes.clear();
+
+            std::cout << "[RecipeBook] Shutdown complete. Memory freed." << std::endl;
+        }
         RecipeBookManager(Coordinator* coord) : coordinator(coord) {
             PopulateData();
         }

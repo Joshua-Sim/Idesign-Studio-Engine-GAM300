@@ -123,7 +123,22 @@ namespace Framework {
         pointShadowShader.destroy();
         if (m_shadowFBO) glDeleteFramebuffers(1, &m_shadowFBO);
         if (m_shadowDepthTexture) glDeleteTextures(1, &m_shadowDepthTexture);
+        if (m_treeRenderer) { delete m_treeRenderer; m_treeRenderer = nullptr; }
+        if (m_leafRenderer) { delete m_leafRenderer; m_leafRenderer = nullptr; }
+        if (m_grassRenderer) { delete m_grassRenderer; m_grassRenderer = nullptr; }
 
+        // [FIX] DELETE THE PEBBLE/PINE RENDERERS
+        // Assuming PebbleRenderer works the same way
+        if (m_pebbleRenderer) { delete m_pebbleRenderer; m_pebbleRenderer = nullptr; }
+        if (m_pineRenderer) { delete m_pineRenderer; m_pineRenderer = nullptr; }
+
+        // [FIX] DELETE THE LEAF MESH QUAD
+        // You created this with 'new' in Initialize: leafQuad = new Mesh(...)
+        if (leafQuad) {
+            leafQuad->cleanupGL();
+            delete leafQuad;
+            leafQuad = nullptr;
+        }
         // Finally, destroy GLFW window + terminate GLFW
         if (window) {
             glfwSetFramebufferSizeCallback(window, nullptr); // stop resize callback
