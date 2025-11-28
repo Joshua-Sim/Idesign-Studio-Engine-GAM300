@@ -10,7 +10,7 @@
 namespace Framework
 {
     // 1. Define Items
-    inline const char* kItemNames[] = { "unchopped_herb", "chopped_herb", "pear", "strength_potion", "vitality_potion"};
+    inline const char* kItemNames[] = { "unchopped_herb", "chopped_herb", "pear", "strength_potion", "vitality_potion", "knife"};
     inline constexpr int kItemCount = sizeof(kItemNames) / sizeof(kItemNames[0]);
 
     inline std::string MakeItemIconPath(int itemId) {
