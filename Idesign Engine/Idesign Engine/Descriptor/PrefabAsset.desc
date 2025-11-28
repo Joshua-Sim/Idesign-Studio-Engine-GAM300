@@ -2,21 +2,15 @@
     "count": 14,
     "entries": [
         {
-            "guid": "898b36fc-aae3-43e4-9e2e-8edcb193e3c1",
-            "name": "Frog_Prefab",
-            "path": "Assets\\Prefabs\\Frog_Prefab.prefab",
-            "isScenePrefab": false
-        },
-        {
             "guid": "6c60686a-c68c-4284-bce0-019cfcbf77fa",
             "name": "ProgressBarFrame_Prefab",
             "path": "Assets\\Prefabs\\ProgressBarFrame_Prefab.prefab",
             "isScenePrefab": false
         },
         {
-            "guid": "5dfc16be-aa4a-420a-9105-f7c9652f3620",
-            "name": "ProgressBarFill_Prefab",
-            "path": "Assets\\Prefabs\\ProgressBarFill_Prefab.prefab",
+            "guid": "898b36fc-aae3-43e4-9e2e-8edcb193e3c1",
+            "name": "Frog_Prefab",
+            "path": "Assets\\Prefabs\\Frog_Prefab.prefab",
             "isScenePrefab": false
         },
         {
@@ -26,15 +20,15 @@
             "isScenePrefab": false
         },
         {
-            "guid": "e5d9bff9-1f28-46c5-aca4-68fd5519dcec",
-            "name": "ProgressBarFrame_Prefab",
-            "path": "Assets\\Prefabs\\ProgressBarFrame_Prefab.prefab",
+            "guid": "5dfc16be-aa4a-420a-9105-f7c9652f3620",
+            "name": "ProgressBarFill_Prefab",
+            "path": "Assets\\Prefabs\\ProgressBarFill_Prefab.prefab",
             "isScenePrefab": false
         },
         {
-            "guid": "8be70edb-fb03-4af7-a8b1-4880d8b00107",
-            "name": "ProgressBarFill_Prefab",
-            "path": "Assets\\Prefabs\\ProgressBarFill_Prefab.prefab",
+            "guid": "e5d9bff9-1f28-46c5-aca4-68fd5519dcec",
+            "name": "ProgressBarFrame_Prefab",
+            "path": "Assets\\Prefabs\\ProgressBarFrame_Prefab.prefab",
             "isScenePrefab": false
         },
         {
@@ -44,15 +38,21 @@
             "isScenePrefab": false
         },
         {
-            "guid": "b1e7bea6-ba5d-4a40-be1c-b30224f8868c",
-            "name": "CustomerTextbox_Prefab",
-            "path": "Assets\\Prefabs\\CustomerTextbox_Prefab.prefab",
+            "guid": "8be70edb-fb03-4af7-a8b1-4880d8b00107",
+            "name": "ProgressBarFill_Prefab",
+            "path": "Assets\\Prefabs\\ProgressBarFill_Prefab.prefab",
             "isScenePrefab": false
         },
         {
             "guid": "584b841f-a181-4adb-a75c-852abf944c79",
             "name": "Customer_Kinematic_Prefab",
             "path": "Assets\\Prefabs\\Customer_Kinematic_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "b1e7bea6-ba5d-4a40-be1c-b30224f8868c",
+            "name": "CustomerTextbox_Prefab",
+            "path": "Assets\\Prefabs\\CustomerTextbox_Prefab.prefab",
             "isScenePrefab": false
         },
         {

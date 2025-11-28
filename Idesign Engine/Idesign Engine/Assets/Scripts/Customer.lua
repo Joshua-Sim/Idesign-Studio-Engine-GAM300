@@ -6,7 +6,6 @@ Customer.interaction_range = 2.5
 -- Available items to request
 local available_items = {"strength_potion", "vitality_potion"}
 
-
 -- Textbox configuration
 local prefab_textbox = "CustomerTextbox_Prefab"
 local textbox_y_offset = 4.5
@@ -16,11 +15,17 @@ local x_offset_right = -0.5
 -- Log prefab
 local prefab_log = "CustomerLog_Prefab"
 
+-- Interaction cooldown
+local interaction_cooldown = 0.7  -- Seconds between interactions
+local last_interaction_time = 0.0
+
 -- State
 local player_entity = nil
 local has_received_item = false
 local my_requested_item = ""
 local entity_textbox = nil
+local elapsed_time = 0.0
+local has_arrived = false  -- NEW: Track if customer reached counter
 
 function Customer.on_init(self)
     print("[Customer] ===== INIT DEBUG =====")
@@ -31,9 +36,14 @@ function Customer.on_init(self)
     print("[Customer] ✓ Generated order: " .. my_requested_item)
     
     player_entity = FindEntityByName("Player")
+    elapsed_time = 0.0
+    last_interaction_time = 0.0
+    has_arrived = false  -- Customer hasn't arrived yet
 end
 
 function Customer.on_update(self, dt)
+    elapsed_time = elapsed_time + dt
+    
     if not player_entity then 
         player_entity = FindEntityByName("Player") 
     end
@@ -49,6 +59,9 @@ end
 function Customer.OnArrival(senderID, targetID, actionType)
     print("[Customer] Arrived at counter! Spawning textbox...")
     
+    -- Enable interactions
+    has_arrived = true
+    
     -- Spawn textbox with order
     local orderText = "Hi, I want a " .. my_requested_item .. "."
     Customer.SpawnTextbox(senderID, orderText)
@@ -58,6 +71,22 @@ function Customer.OnArrival(senderID, targetID, actionType)
 end
 
 function Customer.OnInteract(senderID, targetID, actionType)
+    -- Check if customer has arrived at counter
+    if not has_arrived then
+        print("[Customer] I'm not ready yet! Still walking to the counter...")
+        return
+    end
+    
+    -- Check cooldown
+    local time_since_last = elapsed_time - last_interaction_time
+    if time_since_last < interaction_cooldown then
+        print("[Customer] Interaction on cooldown (" .. string.format("%.1f", interaction_cooldown - time_since_last) .. "s remaining)")
+        return
+    end
+    
+    -- Update last interaction time
+    last_interaction_time = elapsed_time
+    
     print("[Customer] Customer interacted by player: " .. tostring(senderID))
     
     local customer_entity = targetID
@@ -151,8 +180,6 @@ function Customer.SpawnLog(message)
         -- Update the text
         SetTextComponent(logEntity, "text", message)
         print("[Customer] Spawned log: " .. message)
-        
-        -- TODO: Later add animation and self-destruct timer
     else
         print("[Customer] ERROR: Failed to spawn log!")
     end
