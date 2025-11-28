@@ -18,11 +18,14 @@ namespace Framework
         void Initialize();
         void Update(float dt) override;
         std::string GetName() override { return "PlayerInteractSystem"; }
+        
+        void HandlePlayerMovementandJump(float dt);
 
     private:
         void PerformInteract(Entity targetEntity);
         void SpawnInteractText();
         bool mWasEPressed = false; // Track previous frame state
+        bool mGrounded = false;
         // --- System Pointers ---
         std::shared_ptr<PhysicsSystem> mPhysicsSystem;
         // std::shared_ptr<TagManager> mTagManager; // <-- No longer needed

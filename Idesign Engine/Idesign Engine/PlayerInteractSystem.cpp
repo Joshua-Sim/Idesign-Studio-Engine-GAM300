@@ -108,6 +108,7 @@ namespace Framework
             }
         }
         mWasEPressed = isEPressed;
+        HandlePlayerMovementandJump(dt);
     }
 
     void PlayerInteractSystem::PerformInteract(Entity targetEntity)
@@ -226,4 +227,87 @@ namespace Framework
             std::cout << "[PlayerInteractSystem] UI Spawned." << std::endl;
         }
     }
+
+    void PlayerInteractSystem::HandlePlayerMovementandJump(float dt)
+    {
+        if (!mGraphicsSystem) return;
+        if (mGraphicsSystem->GetMouseTargetView() != 0) return; // only in game view
+
+        GLFWwindow* window = mGraphicsSystem->GetWindow();
+        if (!window) return;
+
+        // Find player
+        Framework::Entity player = ecsInterface.GetEntityByName("Player");
+        if (!ecsInterface.IsEntityValid(player) ||
+            !ecsInterface.HasComponent<Framework::PhysicsProperties>(player) ||
+            !ecsInterface.HasComponent<Framework::TransformComponent>(player))
+            return;
+
+        auto& phys = ecsInterface.GetComponent<Framework::PhysicsProperties>(player);
+        auto& trans = ecsInterface.GetComponent<Framework::TransformComponent>(player);
+
+        // Camera basis (Y-up world)
+        Camera* cam = mGraphicsSystem->GetCameraByIndex(0); // 0 = game view
+        if (!cam) return;
+
+        glm::vec3 fwd = cam->front;  fwd.y = 0.0f; fwd = glm::normalize(fwd);
+        glm::vec3 rgt = cam->right;  rgt.y = 0.0f; rgt = glm::normalize(rgt);
+
+        // --- Movement ---
+        glm::vec3 targetVel(0.0f);
+        const float moveSpeed = 5.0f;
+
+        const bool camRotationEnabled = mGraphicsSystem->IsCameraRotationEnabled();
+
+        // Only accumulate input if camera rotation enabled (same as old code)
+        if (camRotationEnabled)
+        {
+            if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) targetVel += fwd;
+            if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) targetVel -= fwd;
+            if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) targetVel -= rgt;
+            if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) targetVel += rgt;
+        }
+
+        if (glm::length(targetVel) > 0.1f)
+            targetVel = glm::normalize(targetVel) * moveSpeed;
+
+        if (camRotationEnabled)
+        {
+            // NORMAL: apply X/Z and let gravity act on Y
+            phys.linearVelocity.x = targetVel.x;
+            phys.linearVelocity.z = targetVel.z;
+            phys.gravityFactor = 1.0f;
+        }
+        else
+        {
+            // STIRRING / LOCKED: freeze all motion, turn off gravity
+            phys.linearVelocity = glm::vec3(0.0f);
+            phys.gravityFactor = 0.0f;
+        }
+
+        // Always ensure the body wakes up when we drive it
+        phys.startAwake = true;
+
+        // --- Jump (no startAwake, same style as movement) ---
+        static bool  prevSpace = false;  // edge trigger
+        static float jumpLock = 0.0f;   // anti-spam
+        if (jumpLock > 0.0f) jumpLock -= dt;
+
+        const bool spaceDown = (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS);
+
+        // TODO: later add && mGrounded here once your collision-based grounded is wired
+        if (spaceDown && !prevSpace && jumpLock <= 0.0f && camRotationEnabled)
+        {
+            const float jumpSpeed = 7.5f;
+            phys.linearVelocity.y = jumpSpeed;  // immediate upward impulse
+            jumpLock = 1.65f;
+            phys.startAwake = true;            // make sure this impulse wakes the body
+        }
+
+        prevSpace = spaceDown;
+
+        // (Camera-follow is still in GraphicsSystem; if you want to move it here,
+        //  you’d also set cam->position = trans.position + offset, like the old code.)
+    }
+
 }
