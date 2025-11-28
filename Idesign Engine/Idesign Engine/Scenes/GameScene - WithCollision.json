@@ -1710,7 +1710,8 @@
                             ],
                             "canPassThrough": false,
                             "isInteractable": true,
-                            "interactMessage": "StartChopping"
+                            "interactMessage": "StartChopping",
+                            "promptText": "Place ingredient"
                         }
                     ]
                 },
@@ -2829,11 +2830,6 @@
                 "ScriptProperties": {
                     "scripts": [
                         {
-                            "guid": "998e8733-cf17-48d4-96be-ab700322c93c",
-                            "scriptPath": "Assets\\Scripts\\spawnPrompt.lua",
-                            "hotReload": false
-                        },
-                        {
                             "guid": "852f4291-12ff-48e6-a6eb-bd6685a86b30",
                             "scriptPath": "Assets\\Scripts\\herb_pickup.lua",
                             "hotReload": false
@@ -2856,7 +2852,8 @@
                             "canPassThrough": true,
                             "triggerMessage": "deez",
                             "isInteractable": true,
-                            "interactMessage": "HerbPickup"
+                            "interactMessage": "HerbPickup",
+                            "promptText": "Pick up: Herb"
                         }
                     ]
                 },
@@ -2881,10 +2878,6 @@
                 },
                 "EventReceiverComponent": {
                     "receivers": [
-                        {
-                            "messageToListenFor": "deez",
-                            "luaFunctionToCall": "OnInteract"
-                        },
                         {
                             "messageToListenFor": "HerbPickup",
                             "luaFunctionToCall": "OnPickup"
@@ -2968,7 +2961,8 @@
                             ],
                             "canPassThrough": false,
                             "isInteractable": true,
-                            "interactMessage": "STIR"
+                            "interactMessage": "STIR",
+                            "promptText": "Stir Cauldron"
                         }
                     ]
                 },
@@ -3312,7 +3306,8 @@
                             ],
                             "canPassThrough": false,
                             "isInteractable": true,
-                            "interactMessage": ""
+                            "interactMessage": "",
+                            "promptText": ""
                         }
                     ]
                 },

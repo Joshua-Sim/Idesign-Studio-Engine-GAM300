@@ -89,8 +89,7 @@ namespace Framework
         PROP_BOOL(bPlayOnStart, AnimationProperties),
 
         // --- Show runtime data as Read-Only for debugging ---
-        PROP_FLOAT_READONLY(currentTime, AnimationProperties),
-
+        PROP_DRAG_FLOAT(currentTime, AnimationProperties),
         // --- Hide complex/unsupported data ---
         PROP_UINT_HIDDEN(vbo_skinning, AnimationProperties)
     };

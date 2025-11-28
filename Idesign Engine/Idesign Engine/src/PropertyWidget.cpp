@@ -608,6 +608,13 @@ namespace Framework
 
                         if (entry.isInteractable)
                         {
+                            char promptBuff[256];
+                            strncpy_s(promptBuff, sizeof(promptBuff), entry.promptText.c_str(), _TRUNCATE);
+                            if (ImGui::InputText("Prompt Text", promptBuff, sizeof(promptBuff))) {
+                                entry.promptText = promptBuff;
+                            }
+                            ImGui::TextDisabled("(Displayed in UI: 'E to Pickup Rock')");
+
                             ImGui::Indent();
                             char intBuff[256];
                             strncpy_s(intBuff, sizeof(intBuff), entry.interactMessage.c_str(), _TRUNCATE);

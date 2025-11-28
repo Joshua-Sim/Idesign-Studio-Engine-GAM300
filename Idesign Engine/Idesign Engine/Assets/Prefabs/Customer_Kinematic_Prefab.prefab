@@ -1,7 +1,7 @@
 {
     "entity": {
         "name": "Customer_Kinematic",
-        "guid": "8168dc56-9447-4669-bbe0-138cc16536db",
+        "guid": "9612c554-c794-44f2-b83e-6d0be3427e19",
         "components": {
             "TransformComponent": {
                 "position": [
@@ -62,9 +62,9 @@
                 "colliders": [
                     {
                         "size": [
-                            130.8000030517578,
-                            95.0,
-                            109.5999984741211
+                            369.20001220703125,
+                            197.0,
+                            595.0999755859375
                         ],
                         "center": [
                             0.0,
@@ -73,7 +73,8 @@
                         ],
                         "canPassThrough": false,
                         "isInteractable": true,
-                        "interactMessage": "OnInteractCustomer"
+                        "interactMessage": "OnInteractCustomer",
+                        "promptText": ""
                     }
                 ]
             },

@@ -982,7 +982,7 @@ namespace Framework {
         if (groundMode)
         {
             //float groundY = terrain.getHeightAt(gameCamera.position.x, gameCamera.position.z);
-            gameCamera.position.y = 9;
+            gameCamera.position.y = 20.0f;
             for (auto const& entityId : mEntities) {
                 if (ecsInterface.GetEntityName(entityId) == "Player") {
                     if (ecsInterface.HasComponent<TransformComponent>(entityId)) {
@@ -1100,38 +1100,19 @@ namespace Framework {
     // ============================================================
         if (isEditorMode)
         {
-            // Only move if Right Click is held
-            if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
-            {
-                // Define a speed specifically for the editor (faster than player)
-                float speed = 10.0f * dt;
+            Camera& cam = sceneCamera;
+            const float baseSpeed = 5.0f;
 
-                // Turbo mode: Hold Left Shift to go faster
-                if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
-                    speed *= 3.0f;
-                }
-
-                // --- Manual Position Updates ---
-
-                // Forward / Backward (Along Front Vector)
-                if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-                    sceneCamera.position += sceneCamera.front * speed;
-                if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-                    sceneCamera.position -= sceneCamera.front * speed;
-
-                // Left / Right (Along Right Vector)
-                if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-                    sceneCamera.position -= sceneCamera.right * speed;
-                if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-                    sceneCamera.position += sceneCamera.right * speed;
-
-                // Up / Down (Global World Y Axis)
-                // We use World Up (0,1,0) instead of Camera Up so "E" always goes strictly UP relative to the ground
-                if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-                    sceneCamera.position += glm::vec3(0.0f, 1.0f, 0.0f) * speed;
-                if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-                    sceneCamera.position -= glm::vec3(0.0f, 1.0f, 0.0f) * speed;
-            }
+            // Keyboard Movement
+            if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+                cam.processKeyboard(Camera::Movement::Forward, dt * baseSpeed, false, terrain);
+            if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+                cam.processKeyboard(Camera::Movement::Backward, dt * baseSpeed, false, terrain);
+            if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+                cam.processKeyboard(Camera::Movement::Left, dt * baseSpeed, false, terrain);
+            if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+                cam.processKeyboard(Camera::Movement::Right, dt * baseSpeed, false, terrain);
+        
         }
         // ============================================================
         // LOGIC 2: GAME MODE (Player/Game Camera Movement)
@@ -1191,7 +1172,7 @@ namespace Framework {
                 phys.startAwake = true;
 
                 // Snap Camera to Player
-                glm::vec3 eyeOffset(0.0f, 1.8f, 0.0f);
+                glm::vec3 eyeOffset(0.0f, 3.0f, 0.0f);
                 gameCamera.position = trans.position + eyeOffset;
             }
 
@@ -2463,13 +2444,63 @@ namespace Framework {
         // --- 8. HUD/TEXT PASS ---
         if (viewIndex == 0)
         {
-            fontSystem.RenderText2D("Score: 100", 10.f, 10.0f, 1.f,
+            fontSystem.RenderText2D(" ", 10.f, 10.0f, 1.f,
                 glm::vec3(1.0f, 1.0f, 0.5f), (float)width, (float)height);
         }
         else
         {
             fontSystem.RenderText2D("Editor View", 10.f, 10.f, 1.f, { 1,1,0.5f }, (float)width, (float)height);
         }
+
+        //----------------------------------------------------
+// CROSSHAIR DRAW (only for main viewIndex 0)
+//----------------------------------------------------
+        if (viewIndex == 0)
+        {
+            float screenW = static_cast<float>(width);
+            float screenH = static_cast<float>(height);
+
+            float cx = screenW * 0.5f;
+            float cy = screenH * 0.5f;
+
+            // Overall size of the crosshair (tweak to taste)
+            float outerSize = screenH * 0.018f;   // ~1.8% of screen height
+            float innerSize = outerSize * 0.55f;  // inner white square smaller
+
+            // Ortho in pixel space
+            glm::mat4 crossProj = glm::ortho(0.0f, screenW, 0.0f, screenH);
+
+            uiShader.use();
+            uiShader.setMat4("uProjection", crossProj);
+
+            glDisable(GL_DEPTH_TEST);
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+            // Bottom-left positions for the quads
+            glm::vec2 outerPos(cx - outerSize * 0.5f, cy - outerSize * 0.5f);
+            glm::vec2 innerPos(cx - innerSize * 0.5f, cy - innerSize * 0.5f);
+
+            // Outer black square (slightly translucent)
+            DrawUIRect(
+                outerPos,
+                { outerSize, outerSize },
+                glm::vec3(0.0f, 0.0f, 0.0f),
+                0.5f
+            );
+
+            // Inner white square
+            DrawUIRect(
+                innerPos,
+                { innerSize, innerSize },
+                glm::vec3(1.0f, 1.0f, 1.0f),
+                0.5f
+            );
+        }
+        //----------------------------------------------------
+        // CROSSHAIR DRAW (only for main viewIndex 0)
+        //----------------------------------------------------
+
 
         constexpr float UI_DESIGN_WIDTH = 1920.0f;
         constexpr float UI_DESIGN_HEIGHT = 1080.0f;

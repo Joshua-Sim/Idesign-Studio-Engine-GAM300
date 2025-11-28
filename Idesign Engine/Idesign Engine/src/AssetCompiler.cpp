@@ -320,6 +320,8 @@ namespace Framework
 
                             if (animRef.HasMember("bPlayOnStart") && animRef["bPlayOnStart"].IsBool())
                                 instanceAnim.bPlayOnStart = animRef["bPlayOnStart"].GetBool();
+                            if (animRef.HasMember("currentTime") && animRef["currentTime"].IsNumber())
+                                instanceAnim.currentTime = animRef["currentTime"].GetFloat();
                             ecsInterface.AddComponent(entity, instanceAnim);
                         }
                         else
@@ -329,6 +331,14 @@ namespace Framework
                     }
                 }
 
+                // --- Text Component ---
+                if (components.HasMember("TextProperties"))
+                {
+                    const auto& jsonVal = components["TextProperties"];
+                    TextProperties textComp;
+                    Deserialize(&textComp, g_TextComponentProps, jsonVal);
+                    ecsInterface.AddComponent(entity, textComp);
+                }
 
                 // Navmesh
                 if (components.HasMember("NavMeshComponent"))
@@ -422,6 +432,9 @@ namespace Framework
                             }
                             if (val.HasMember("interactMessage") && val["interactMessage"].IsString()) {
                                 entry.interactMessage = val["interactMessage"].GetString();
+                            }
+                            if (val.HasMember("promptText") && val["promptText"].IsString()) {
+                                entry.promptText = val["promptText"].GetString();
                             }
 
                             comp.colliders.push_back(entry);
@@ -712,6 +725,7 @@ namespace Framework
                     animRef.AddMember("bLoops", anim.bLoops, allocator);
                     animRef.AddMember("bPlayOnStart", anim.bPlayOnStart, allocator);
                     componentsObj.AddMember("AnimationProperties", animRef, allocator);
+                    animRef.AddMember("currentTime", anim.currentTime, allocator);
                 }
 
                 // TextureProperties � write only GUID
@@ -821,7 +835,10 @@ namespace Framework
                         if (entry.isInteractable) {
                             rapidjson::Value val; val.SetString(entry.interactMessage.c_str(), allocator);
                             obj.AddMember("interactMessage", val, allocator);
+                            rapidjson::Value promptVal; promptVal.SetString(entry.promptText.c_str(), allocator);
+                            obj.AddMember("promptText", promptVal, allocator);
                         }
+
 
                         arrayVal.PushBack(obj, allocator);
                     }
@@ -960,6 +977,17 @@ namespace Framework
 
                     componentsObj.AddMember("ItemComponent", itemJson, allocator);
                 }
+               
+                // --- Text Component ---
+
+                if (ecsInterface.HasComponent<TextProperties>(entity))
+                {
+                    const auto& textComp = ecsInterface.GetComponent<TextProperties>(entity);
+                    rapidjson::Value textJson(rapidjson::kObjectType);
+                    Serialize((void*)&textComp, g_TextComponentProps, textJson, allocator);
+                    componentsObj.AddMember("TextProperties", textJson, allocator);
+                }
+
             }
             entityObj.AddMember("components", componentsObj, allocator);
             entitiesArray.PushBack(entityObj, allocator);
@@ -1348,6 +1376,8 @@ namespace Framework
                 if (entry.isInteractable) {
                     rapidjson::Value val; val.SetString(entry.interactMessage.c_str(), allocator);
                     obj.AddMember("interactMessage", val, allocator);
+                    rapidjson::Value promptVal; promptVal.SetString(entry.promptText.c_str(), allocator);
+                    obj.AddMember("promptText", promptVal, allocator);
                 }
 
                 arrayVal.PushBack(obj, allocator);
@@ -1831,6 +1861,9 @@ namespace Framework
                     }
                     if (val.HasMember("interactMessage") && val["interactMessage"].IsString()) {
                         entry.interactMessage = val["interactMessage"].GetString();
+                    }
+                    if (val.HasMember("promptText") && val["promptText"].IsString()) {
+                        entry.promptText = val["promptText"].GetString();
                     }
 
                     comp.colliders.push_back(entry);

@@ -168,11 +168,11 @@ int main(void)
     engine->AddSystem(physicsSystem.get());
     engine->AddSystem(tagManager.get());
     engine->AddSystem(playerInteractSystem.get());
-    engine->AddSystem(sceneSystem.get());       // Register scene manager last
     engine->AddSystem(fileCheckSystem.get());
     engine->AddSystem(eventSystem.get());
     engine->AddSystem(gameSystem.get());
     engine->AddSystem(buttonSystem.get());
+    engine->AddSystem(sceneSystem.get());       // Register scene manager last
 
     std::filesystem::path root = GetEngineRootPath();
     fileCheckSystem->WatchAllFolders();

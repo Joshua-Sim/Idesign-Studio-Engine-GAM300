@@ -20,8 +20,8 @@ namespace Framework
         std::string GetName() override { return "PlayerInteractSystem"; }
 
     private:
-        void TryInteract();
-        void TryPickupCollectible();
+        void PerformInteract(Entity targetEntity);
+        void SpawnInteractText();
         bool mWasEPressed = false; // Track previous frame state
         // --- System Pointers ---
         std::shared_ptr<PhysicsSystem> mPhysicsSystem;
@@ -38,5 +38,7 @@ namespace Framework
         bool   m_EWasDown = false;        // track last-frame state
         double m_nextPickupTime = 0.0;    // debounce timer
         double m_pickupCooldown = 0.15;   // seconds (tweak to taste)
+        Entity mPromptTextEntity = -1;
+        Entity mPromptIconEntity = -2;
     };
 }
