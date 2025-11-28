@@ -93,6 +93,15 @@ public:
         glUniform3f(glGetUniformLocation(ID, name.c_str()), value.x, value.y, value.z);
     }
 
+    /**
+    * \brief Sets a float uniform in the shader program.
+    * \param name The name of the uniform variable.
+    * \param value The float value to assign.
+    */
+    void SetUniform(const std::string& name, float value) const {
+        glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+    }
+
 private:
     void CheckCompileErrors(GLuint shader, std::string type) {
         GLint success;

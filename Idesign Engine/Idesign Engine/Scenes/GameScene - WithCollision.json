@@ -105,15 +105,122 @@
                 }
             }
         },
-        {
-            "name": "Knife",
+         {
+            "name": "KnifePickUpArea",
             "guid": "46643a43-ef91-4c8f-8675-27e1d159b4e9",
             "components": {
                 "TransformComponent": {
                     "position": [
                         -40.5,
                         7.400000095367432,
-                        1.2000000476837158
+                        1.5
+                    ],
+                    "rotation": [
+                        0.0,
+                        90.0,
+                        270.0
+                    ],
+                    "scale": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 46
+                },
+                "TagComponent": {
+                    "tags": [
+                        "Interactable"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "afd25b76-dddc-4c4f-bae4-a6c9a22931e5",
+                    "isUI": false
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "d6628c13-1f36-47dd-9b77-5447605bb81f",
+                            "scriptPath": "Assets\\Scripts\\knife.lua",
+                            "hotReload": false
+                        }
+                    ]
+                },
+                "BoxColliderComponent": {
+                    "colliders": [
+                        {
+                            "size": [
+                                1.0,
+                                5.0,
+                                3.0
+                            ],
+                            "center": [
+                                0.0,
+                                1.2999999523162842,
+                                0.0
+                            ],
+                            "canPassThrough": true,
+                            "triggerMessage": "deez",
+                            "isInteractable": true,
+                            "interactMessage": "PickUp",
+                            "promptText": ""
+                        }
+                    ]
+                },
+                "PhysicsProperties": {
+                    "category": 1,
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 0.5,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "startAwake": true
+                },
+                "EventReceiverComponent": {
+                    "receivers": [
+                        {
+                            "messageToListenFor": "deez",
+                            "luaFunctionToCall": "OnInteract"
+                        },
+                        {
+                            "messageToListenFor": "PickUp",
+                            "luaFunctionToCall": "KnifePickUp"
+                        }
+                    ]
+                },
+                "ItemComponent": {
+                    "name": "knife",
+                    "isIngredient": true,
+                    "isChoppable": true
+                }
+            }
+        },
+        {
+            "name": "Knife",
+            "guid": "70de4655-6e92-4451-bb60-c91023b4f737",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -40.5,
+                        7.400000095367432,
+                        1.5
                     ],
                     "rotation": [
                         0.0,
@@ -143,8 +250,11 @@
                     "defaultAnimationName": "",
                     "animationSpeed": 10.0,
                     "bLoops": false,
-                    "bPlayOnStart": true,
-                    "currentTime": 0.0
+                    "bPlayOnStart": true
+                },
+                "TextureComponent": {
+                    "guid": "afd25b76-dddc-4c4f-bae4-a6c9a22931e5",
+                    "isUI": false
                 }
             }
         },

@@ -14,7 +14,7 @@ M.mesh_raw    = "Assets/Objects/Herb.obj"
 M.tex_raw     = "Assets/Textures/Herb.png"
 M.mesh_stage1 = "Assets/Objects/ChoppedHerb1.obj"
 M.tex_stage1  = "Assets/Textures/ChoppedHerb1.png"
-M.mesh_stage2 = "Assets/Objects/ChoppedHerb2.obj"
+M.mesh_stage2 = "Assets/Objects/chopped_herb.obj"
 M.tex_stage2  = "Assets/Textures/ChoppedHerb2.png"
 
 -- Knife Settings
@@ -57,19 +57,7 @@ function M:on_init()
     player_entity = FindEntityByName("Player")
     
     knife_entity = FindEntityByName(self.knife_name)
-    if knife_entity then
-        knife_start_x, knife_start_y, knife_start_z = GetPosition(knife_entity)
-        SetRotation(knife_entity, self.knife_rot_rest_x, self.knife_rot_rest_y, self.knife_rot_rest_z)
-        
-        -- --- NEW: Configure Knife Animation ---
-        -- Entity, Speed=10.0, Loop=false, PlayOnStart=false
-        --SetAnimationSettings(knife_entity, 10.0, false, true)
-        -- --------------------------------------
-
-        print("[ChoppingBoard] Knife found. Settings applied.")
-    else
-        print("[ChoppingBoard] Warning: Knife '" .. self.knife_name .. "' not found.")
-    end
+    
 end
 
 -- Change ':' to '.' to prevent Lua from expecting 'self' as the first arg
@@ -108,20 +96,17 @@ end
 function M:on_update(dt)
     if not player_entity then player_entity = FindEntityByName("Player") end
     
-    if is_holding_knife then
-        self:UpdateKnifePosition()
-    end
 
     -- --- CHOPPING LOGIC (Left Click) ---
     -- We still check range here because raycast doesn't handle clicks yet
     if IsMouseButtonDown(self.chop_button) then
         if not self.click_was_down then
             self.click_was_down = true
-            
+            local heldItemName = GetSelectedItemName()
             -- Only chop if:
             -- 1. There is a herb
             -- 2. Player is close enough
-            if current_herb_entity ~= nil and self:IsPlayerInRange() then
+            if current_herb_entity ~= nil and self:IsPlayerInRange() and heldItemName == "knife" then
                 self:ChopItem()
             end
         end
@@ -139,42 +124,6 @@ function M:IsPlayerInRange()
     return math.sqrt(dx*dx + dy*dy + dz*dz) <= self.interaction_range
 end
 
--- (Recap of the Lua function for clarity)
-function M:UpdateKnifePosition()
-    if knife_entity and player_entity then
-        local px, py, pz = GetPosition(player_entity)
-        
-        -- 1. Get Camera Angle
-        local camYaw = GetCameraYaw() 
-        local rad = math.rad(camYaw)
-
-        -- 2. Calculate Direction Vectors (You had this right!)
-        -- Forward Vector (The direction you are looking)
-        local fwdX = math.cos(rad)
-        local fwdZ = math.sin(rad)
-
-        -- Right Vector (90 degrees to your side)
-        local rightX = -math.sin(rad)
-        local rightZ = math.cos(rad)
-
-        -- 3. APPLY THE VECTORS (This was the missing part)
-        -- Instead of just adding offset_right, we multiply it by the Right Vector.
-        -- Instead of just adding offset_forward, we multiply it by the Forward Vector.
-        
-        local kx = px + (rightX * self.knife_offset_right) + (fwdX * self.knife_offset_forward)
-        
-        -- Keep Y absolute (up/down doesn't change with turning)
-        local ky = py + self.knife_offset_up 
-        
-        local kz = pz + (rightZ * self.knife_offset_right) + (fwdZ * self.knife_offset_forward)
-
-        -- 4. Set final position
-        SetPosition(knife_entity, kx, ky, kz)
-        
-        -- 5. Set Rotation (Your rotation logic was already good)
-        SetRotation(knife_entity, self.knife_rot_held_x, -camYaw + self.knife_rot_held_y, self.knife_rot_held_z)
-    end
-end
 
 function M:StartChoppingSession(itemName)
     -- 1. Construct the Prefab Name dynamically
@@ -209,11 +158,6 @@ function M:StartChoppingSession(itemName)
         SetMesh(current_herb_entity, self.mesh_raw)
         SetTexture(current_herb_entity, self.tex_raw)
 
-        -- 5. Knife Logic (Pick up knife)
-        if knife_entity then
-            is_holding_knife = true 
-            SetRotation(knife_entity, self.knife_rot_held_x, self.knife_rot_held_y, self.knife_rot_held_z)
-        end
     else
         print("[ChoppingBoard] ERROR: Failed to spawn prefab '" .. prefabName .. "'")
     end
@@ -265,12 +209,7 @@ function M:EndChoppingSession()
         DestroyEntity(current_herb_entity)
         current_herb_entity = nil
     end
-    
-    if knife_entity then
-        is_holding_knife = false
-        SetPosition(knife_entity, knife_start_x, knife_start_y, knife_start_z)
-        SetRotation(knife_entity, self.knife_rot_rest_x, self.knife_rot_rest_y, self.knife_rot_rest_z)
-    end
+
 end
 
 return M

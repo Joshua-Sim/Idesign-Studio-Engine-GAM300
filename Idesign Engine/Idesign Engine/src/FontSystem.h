@@ -41,7 +41,8 @@ namespace Framework {
             glm::vec3 color,
             float screenWidth,
             float screenHeight,
-            int alignment = 0); 
+            int alignment = 0,
+            float opacity = 1.0f);
 
         void RenderText3D(const std::string& text,
             const glm::mat4& model,
@@ -49,7 +50,8 @@ namespace Framework {
             const glm::mat4& projection,
             float scale,
             glm::vec3 color,
-            int alignment);
+            int alignment,
+            float opacity = 1.0f);
 
     private:
         FT_Library ft;

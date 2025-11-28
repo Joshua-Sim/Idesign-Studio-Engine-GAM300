@@ -2044,7 +2044,8 @@ namespace Framework {
                         proj,
                         txt.scale,
                         txt.color,
-                        txt.alignment
+                        txt.alignment,
+                        txt.opacity
                     );
                 }
             }
@@ -2446,12 +2447,12 @@ namespace Framework {
         // --- 8. HUD/TEXT PASS ---
         if (viewIndex == 0)
         {
-            fontSystem.RenderText2D(" ", 10.f, 10.0f, 1.f,
-                glm::vec3(1.0f, 1.0f, 0.5f), (float)width, (float)height);
+            fontSystem.RenderText2D("", 100.f, 10.0f, 1.f,
+                glm::vec3(1.0f, 1.0f, 0.5f), (float)width, (float)height,1);
         }
         else
         {
-            fontSystem.RenderText2D("Editor View", 10.f, 10.f, 1.f, { 1,1,0.5f }, (float)width, (float)height);
+            fontSystem.RenderText2D("Editor View", 100.f, 10.f, 1.f, { 1,1,0.5f }, (float)width, (float)height,1);
         }
 
         //----------------------------------------------------
@@ -2587,7 +2588,8 @@ namespace Framework {
                 txt.color,
                 (float)width,
                 (float)height,
-                txt.alignment // <--- ADD THIS ARGUMENT (0=Left, 1=Center, 2=Right)
+                txt.alignment,
+                txt.opacity// <--- ADD THIS ARGUMENT (0=Left, 1=Center, 2=Right)
             );
         }
 

@@ -533,6 +533,12 @@
             "name": "resumebuton",
             "path": "Assets\\Textures\\resumebuton.png",
             "isUI": false
+        },
+        {
+            "guid": "9387bb16-feb9-4468-841b-4456617ca735",
+            "name": "knife",
+            "path": "Assets\\Textures\\knife.png",
+            "isUI": false
         }
     ]
 }

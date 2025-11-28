@@ -1350,7 +1350,7 @@ namespace Framework {
             return std::chrono::duration_cast<std::chrono::milliseconds>(ft.time_since_epoch()).count();
         }
 
-        // [NEW] Helper to find the GUID string from a friendly name
+        // Helper to find the GUID string from a friendly name
         static int l_GetAnimationGUID(lua_State* L)
         {
             const char* name = luaL_checkstring(L, 1);
@@ -1370,7 +1370,7 @@ namespace Framework {
         {
             Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
             const char* guidStr = luaL_checkstring(L, 2);
-
+            
             if (ecsInterface.IsEntityValid(e) && ecsInterface.HasComponent<AnimationProperties>(e))
             {
                 auto& anim = ecsInterface.GetComponent<AnimationProperties>(e);
