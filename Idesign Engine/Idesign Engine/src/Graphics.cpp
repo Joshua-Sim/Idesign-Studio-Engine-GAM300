@@ -2452,6 +2452,56 @@ namespace Framework {
             fontSystem.RenderText2D("Editor View", 10.f, 10.f, 1.f, { 1,1,0.5f }, (float)width, (float)height);
         }
 
+        //----------------------------------------------------
+// CROSSHAIR DRAW (only for main viewIndex 0)
+//----------------------------------------------------
+        if (viewIndex == 0)
+        {
+            float screenW = static_cast<float>(width);
+            float screenH = static_cast<float>(height);
+
+            float cx = screenW * 0.5f;
+            float cy = screenH * 0.5f;
+
+            // Overall size of the crosshair (tweak to taste)
+            float outerSize = screenH * 0.018f;   // ~1.8% of screen height
+            float innerSize = outerSize * 0.55f;  // inner white square smaller
+
+            // Ortho in pixel space
+            glm::mat4 crossProj = glm::ortho(0.0f, screenW, 0.0f, screenH);
+
+            uiShader.use();
+            uiShader.setMat4("uProjection", crossProj);
+
+            glDisable(GL_DEPTH_TEST);
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+            // Bottom-left positions for the quads
+            glm::vec2 outerPos(cx - outerSize * 0.5f, cy - outerSize * 0.5f);
+            glm::vec2 innerPos(cx - innerSize * 0.5f, cy - innerSize * 0.5f);
+
+            // Outer black square (slightly translucent)
+            DrawUIRect(
+                outerPos,
+                { outerSize, outerSize },
+                glm::vec3(0.0f, 0.0f, 0.0f),
+                0.5f
+            );
+
+            // Inner white square
+            DrawUIRect(
+                innerPos,
+                { innerSize, innerSize },
+                glm::vec3(1.0f, 1.0f, 1.0f),
+                0.5f
+            );
+        }
+        //----------------------------------------------------
+        // CROSSHAIR DRAW (only for main viewIndex 0)
+        //----------------------------------------------------
+
+
         constexpr float UI_DESIGN_WIDTH = 1920.0f;
         constexpr float UI_DESIGN_HEIGHT = 1080.0f;
 
