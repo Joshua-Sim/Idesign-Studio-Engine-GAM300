@@ -96,11 +96,11 @@
                     "volume": 0.20000000298023224,
                     "loop": false,
                     "playOnStart": true,
-                    "isPlaying": true,
+                    "isPlaying": false,
                     "lastPosition": [
-                        -45.934112548828125,
-                        5.300000190734863,
-                        14.715734481811523
+                        0.0,
+                        0.0,
+                        0.0
                     ]
                 }
             }
@@ -524,7 +524,7 @@
                     "position": [
                         -13.912982940673828,
                         8.949725151062012,
-                        4.382999897003174
+                        4.382748126983643
                     ],
                     "rotation": [
                         0.0,
@@ -1076,8 +1076,7 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "90a63915-c3e8-40b9-8c48-b8fe58a9bd67",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": "90a63915-c3e8-40b9-8c48-b8fe58a9bd67"
                 },
                 "BoxColliderComponent": {
                     "colliders": [
@@ -1742,7 +1741,7 @@
                         }
                     ]
                 },
-                "AudioComponent": {
+                 "AudioComponent": {
                     "guid": "d6f23fa6-ff6f-4892-91b3-ca11349bb492",
                     "eventName": "event:/ChoppingHerb",
                     "is3D": true,
@@ -1751,11 +1750,11 @@
                     "volume": 1.0,
                     "loop": false,
                     "playOnStart": false,
-                    "isPlaying": false,
+                    "isPlaying": true,
                     "lastPosition": [
-                        0.0,
-                        0.0,
-                        0.0
+                        -42.68813705444336,
+                        7.379386901855469,
+                        0.6743054986000061
                     ]
                 }
             }
@@ -2530,14 +2529,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -34.1441650390625,
-                        8.040375709533691,
-                        11.252846717834473
+                        -29.35053062438965,
+                        8.039384841918945,
+                        12.808287620544434
                     ],
                     "rotation": [
-                        0.29791706800460815,
-                        -169.8489227294922,
-                        179.9943389892578
+                        0.29791101813316345,
+                        -0.8136253356933594,
+                        0.005235022399574518
                     ],
                     "scale": [
                         0.9999989867210388,
@@ -2561,7 +2560,7 @@
                         {
                             "guid": "4c64acea-fd05-4342-9f32-85ba69929743",
                             "scriptPath": "Assets\\Scripts\\footstep.lua",
-                            "hotReload": false
+                            "hotReload": true
                         }
                     ]
                 },
@@ -2612,9 +2611,9 @@
                 },
                 "ListenerComponent": {
                     "position": [
-                        -34.1441650390625,
-                        8.040375709533691,
-                        11.252846717834473
+                        -29.35053062438965,
+                        8.039384841918945,
+                        12.808287620544434
                     ],
                     "forward": [
                         0.0,
@@ -2686,7 +2685,8 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
@@ -3008,11 +3008,11 @@
                     "volume": 1.0,
                     "loop": true,
                     "playOnStart": true,
-                    "isPlaying": true,
+                    "isPlaying": false,
                     "lastPosition": [
-                        -40.230262756347656,
-                        6.287981033325195,
-                        17.725893020629883
+                        0.0,
+                        0.0,
+                        0.0
                     ]
                 }
             }
@@ -3134,7 +3134,7 @@
                         250.0,
                         250.0
                     ],
-                    "isHovered": true
+                    "isHovered": false
                 }
             }
         },
@@ -3183,7 +3183,7 @@
                         {
                             "guid": "0b25e0c5-79e6-465a-96cd-920b83ef31e6",
                             "scriptPath": "Assets\\Scripts\\GameStateStart.lua",
-                            "hotReload": false
+                            "hotReload": true
                         }
                     ]
                 },
@@ -3196,7 +3196,7 @@
                         250.0,
                         250.0
                     ],
-                    "isHovered": true
+                    "isHovered": false
                 }
             }
         },
@@ -3241,7 +3241,7 @@
                         {
                             "guid": "c6d4d63d-bced-4890-8a3b-3938e82b13e8",
                             "scriptPath": "Assets\\Scripts\\GameStateExit.lua",
-                            "hotReload": false
+                            "hotReload": true
                         }
                     ]
                 },
@@ -3511,78 +3511,6 @@
             "components": {
                 "PrefabComponent": {
                     "prefabGUID.id": "5dfc16be-aa4a-420a-9105-f7c9652f3620"
-                }
-            }
-        },
-        {
-            "name": "Customer_Kinematic",
-            "guid": "0e7dd0cf-0f05-4e35-8e1e-4b1951f0bfe6",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "584b841f-a181-4adb-a75c-852abf944c79"
-                }
-            }
-        },
-        {
-            "name": "ProgressBarFrame",
-            "guid": "bc8c1450-ca90-4eb8-bbcc-b22ad5427f8e",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "6c60686a-c68c-4284-bce0-019cfcbf77fa"
-                }
-            }
-        },
-        {
-            "name": "ProgressBarFill",
-            "guid": "c5d5d200-df43-4f12-b01b-4d181f628887",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "5dfc16be-aa4a-420a-9105-f7c9652f3620"
-                }
-            }
-        },
-        {
-            "name": "CustomerTextbox",
-            "guid": "2faab892-793d-4d70-8d6b-8b55e70d007f",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "b1e7bea6-ba5d-4a40-be1c-b30224f8868c"
-                }
-            }
-        },
-        {
-            "name": "Customer_Kinematic",
-            "guid": "c1ad73b0-8f8d-4f3b-84a6-84adf8f7f396",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "584b841f-a181-4adb-a75c-852abf944c79"
-                }
-            }
-        },
-        {
-            "name": "Customer_Kinematic",
-            "guid": "816bd1f7-82c0-4cd3-bc10-2260d2b9cf37",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "584b841f-a181-4adb-a75c-852abf944c79"
-                }
-            }
-        },
-        {
-            "name": "Customer_Kinematic",
-            "guid": "0e570ba9-5164-4d5c-911a-e8bce6eddf61",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "584b841f-a181-4adb-a75c-852abf944c79"
-                }
-            }
-        },
-        {
-            "name": "Customer_Kinematic",
-            "guid": "79d0836a-865d-4f25-80b1-0701b0006266",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "584b841f-a181-4adb-a75c-852abf944c79"
                 }
             }
         }
