@@ -299,6 +299,30 @@ namespace Framework {
             TextureLoader::loadTexture(tp, true);
             ecsInterface.AddComponent(itemEntity, tp);
 
+            ItemComponent itemComp;
+            itemComp.name = itemName;
+            itemComp.isIngredient = true;
+            itemComp.isChoppable = false;
+            itemComp.toDestroyWhenPicked = true; // Crucial: C++ destroys it on pickup
+            ecsInterface.AddComponent(itemEntity, itemComp);
+
+            TagComponent tc;
+            tc.tags = { "Interactable" };
+            ecsInterface.AddComponent(itemEntity, tc);
+
+            PhysicsProperties pp;
+            pp.isImmovable = true;
+            pp.category = 1;
+            ecsInterface.AddComponent(itemEntity, pp);
+
+            BoxColliderComponent colliderComp;
+            BoxColliderEntry entry;
+            entry.size = glm::vec3(1.0f); 
+            entry.isInteractable = true; 
+            entry.promptText = "Pick up: " + itemName;
+            colliderComp.colliders.push_back(entry);
+            ecsInterface.AddComponent(itemEntity, colliderComp);
+
             lua_pushinteger(L, static_cast<lua_Integer>(itemEntity));
             return 1;
         }
@@ -880,6 +904,14 @@ namespace Framework {
 
             ecsInterface.DestroyEntity(entityID);
             return 0;
+        }
+
+        // 1. Define the function
+        static int lua_IsEntityValid(lua_State* L) {
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+            bool valid = ecsInterface.IsEntityValid(e);
+            lua_pushboolean(L, valid);
+            return 1;
         }
 
         static int Lua_IsItemDestroyOnPick(lua_State* L) {
@@ -1499,7 +1531,6 @@ namespace Framework {
         lua_register(L, "IsKeyDown", l_IsKeyDown);
         lua_register(L, "CameraMove", l_CameraMove);
         lua_register(L, "GetMousePosition", lua_GetMousePosition);
-
         lua_register(L, "DestroyEntity", l_DestroyEntity);
         lua_register(L, "IsMouseButtonDown", l_IsMouseButtonDown); 
         lua_register(L, "SetRotation", lua_SetRotation);
@@ -1548,6 +1579,7 @@ namespace Framework {
         lua_register(L, "GetEntitiesByTag",     lua_GetEntitiesByTag);
         lua_register(L, "RemoveTagFromEntity",  lua_RemoveTagFromEntity);
         lua_register(L, "EntityHasTag",         lua_EntityHasTag);
+        lua_register(L, "IsEntityValid", lua_IsEntityValid);
         lua_register(L, "AddTagToEntity",       lua_AddTagToEntity);
         lua_register(L, "PlayEntityAnimation",  l_PlayEntityAnimation);
         lua_register(L, "SpawnPrefab",          lua_SpawnPrefab);
