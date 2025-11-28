@@ -209,98 +209,6 @@ namespace Framework {
             return 0;
         }
 
-
-        static int l_spawnPrompt(lua_State* L) {
-            // Argument 1: The Entity ID
-            Entity parentID = static_cast<Entity>(luaL_checkinteger(L, 1));
-
-            // Argument 2: The Text
-            const char* textContent = luaL_checkstring(L, 2);
-
-            // 1. Safety Check
-            if (!ecsInterface.IsEntityValid(parentID) ||
-                !ecsInterface.HasComponent<TransformComponent>(parentID)) {
-                std::cout << "[Lua Error] SpawnPrompt: Invalid entity or missing transform.\n";
-                return 0;
-            }
-
-            // 2. Get Parent Transform
-            auto& parentTrans = ecsInterface.GetComponent<TransformComponent>(parentID);
-
-            // Calculate the Base Height
-            float heightOffset = 0.0f;
-
-            // 3. AUTOMATIC HEIGHT CALCULATION
-            if (ecsInterface.HasComponent<BoxColliderComponent>(parentID))
-            {
-                const auto& boxComp = ecsInterface.GetComponent<BoxColliderComponent>(parentID);
-
-                // Iterate through all colliders to find the highest point
-                float maxLocalTop = 0.0f;
-                bool hasCollider = false;
-
-                for (const auto& col : boxComp.colliders)
-                {
-                    // The top of a box is its Center Y + (Size Y / 2)
-                    float topY = col.center.y + (col.size.y * 0.5f);
-
-                    if (!hasCollider || topY > maxLocalTop)
-                    {
-                        maxLocalTop = topY;
-                        hasCollider = true;
-                    }
-                }
-
-                if (hasCollider)
-                {
-                    // IMPORTANT: Multiply by parent's Y scale to get World Height
-                    heightOffset = maxLocalTop * parentTrans.scale.y;
-                }
-            }
-            else
-            {
-                // Fallback if no collider exists (e.g., default 1.0 height)
-                heightOffset = 1.0f * parentTrans.scale.y;
-            }
-
-            // 4. Calculate Final Position
-            glm::vec3 spawnPos = parentTrans.position;
-            spawnPos.y += heightOffset; // Add the calculated height + extra padding
-
-            // 5. Create New Entity
-            Entity promptEntity = ecsInterface.CreateEntity();
-
-            TransformComponent tf;
-            tf.position = spawnPos;
-            tf.scale = glm::vec3(0.2f);
-
-            // Billboard effect? usually prompts face the camera, but fixed rotation is fine too
-            tf.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
-            ecsInterface.AddComponent(promptEntity, tf);
-
-            HierarchyComponent hc;
-            hc.parentGUID = ecsInterface.GetEntityGUID(parentID);
-            ecsInterface.AddComponent(promptEntity, hc);
-
-            TextProperties tp;
-            tp.isBillboard = true;
-            tp.text = std::string(textContent);
-            tp.color = glm::vec3(1.0f, 1.0f, 1.0f);
-            tp.alignment = 1; // Center alignment usually
-            tp.scale = 0.02f;
-            ecsInterface.AddComponent(promptEntity, tp);
-
-            // Add empty mesh/material if your rendering system requires them for text
-            MeshProperties mp;
-            ecsInterface.AddComponent(promptEntity, mp);
-            MaterialProperties mp2;
-            ecsInterface.AddComponent(promptEntity, mp2);
-
-            // Return the new ID
-            lua_pushinteger(L, static_cast<lua_Integer>(promptEntity));
-            return 1;
-        }
-
         static int l_spawnCauldronItem(lua_State* L) {
             // 1. Get Arguments
             Entity parentID = static_cast<Entity>(luaL_checkinteger(L, 1));
@@ -393,6 +301,36 @@ namespace Framework {
 
             lua_pushinteger(L, static_cast<lua_Integer>(itemEntity));
             return 1;
+        }
+
+        static int l_SetInteractionText(lua_State* L)
+        {
+            // Arg 1: Entity ID
+            Entity entity = static_cast<Entity>(luaL_checkinteger(L, 1));
+
+            // Arg 2: New Text
+            const char* newText = luaL_checkstring(L, 2);
+
+            // Logic: Find the collider and update the string
+            if (ecsInterface.IsEntityValid(entity))
+            {
+                if (ecsInterface.HasComponent<BoxColliderComponent>(entity))
+                {
+                    auto& colliderComp = ecsInterface.GetComponent<BoxColliderComponent>(entity);
+
+                    // Loop through all colliders attached to this entity
+                    for (auto& entry : colliderComp.colliders)
+                    {
+                        // We only want to update the ones marked as Interactable
+                        if (entry.isInteractable)
+                        {
+                            entry.promptText = std::string(newText);
+                        }
+                    }
+                }
+            }
+
+            return 0; // Returns nothing to Lua
         }
 
         static int l_DestroyEntity(lua_State* L) {
@@ -1562,7 +1500,6 @@ namespace Framework {
         lua_register(L, "CameraMove", l_CameraMove);
         lua_register(L, "GetMousePosition", lua_GetMousePosition);
 
-        lua_register(L, "SpawnPrompt", l_spawnPrompt);
         lua_register(L, "DestroyEntity", l_DestroyEntity);
         lua_register(L, "IsMouseButtonDown", l_IsMouseButtonDown); 
         lua_register(L, "SetRotation", lua_SetRotation);
@@ -1602,6 +1539,8 @@ namespace Framework {
         lua_register(L, "AddToInventory", Lua_AddToInventory);
         lua_register(L, "GetItemNameById", lua_GetItemNameById);
         lua_register(L, "GetSelectedItemName", Lua_GetSelectedItemName);
+        lua_register(L, "SetInteractionText", l_SetInteractionText);
+
 
 
         // Engine utility

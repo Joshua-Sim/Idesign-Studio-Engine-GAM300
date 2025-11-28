@@ -1,15 +1,15 @@
 {
     "textures": [
         {
-            "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
-            "name": "",
-            "path": "Assets/PNG/test.png",
-            "isUI": false
-        },
-        {
             "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
             "name": "green",
             "path": "Assets\\Textures\\green.png",
+            "isUI": false
+        },
+        {
+            "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
+            "name": "",
+            "path": "Assets/PNG/test.png",
             "isUI": false
         },
         {
@@ -19,15 +19,21 @@
             "isUI": false
         },
         {
+            "guid": "338b187d-1182-4c0f-8af6-799d3fb9fbf2",
+            "name": "",
+            "path": "Assets/PNG/test.png",
+            "isUI": false
+        },
+        {
             "guid": "7b119595-c240-4c45-a8a0-018d7a3d917f",
             "name": "",
             "path": "Assets/PNG/test.png",
             "isUI": false
         },
         {
-            "guid": "338b187d-1182-4c0f-8af6-799d3fb9fbf2",
-            "name": "",
-            "path": "Assets/PNG/test.png",
+            "guid": "e726adb8-bf75-4993-9e77-826f5541ac9d",
+            "name": "chopped_herb3D",
+            "path": "Assets\\Textures\\chopped_herb3D.png",
             "isUI": false
         },
         {
@@ -37,15 +43,9 @@
             "isUI": false
         },
         {
-            "guid": "e726adb8-bf75-4993-9e77-826f5541ac9d",
-            "name": "ChoppedHerb2",
-            "path": "Assets\\Textures\\ChoppedHerb2.png",
-            "isUI": false
-        },
-        {
-            "guid": "cabb6b16-8445-4f40-b9c8-bd593ea6b65c",
-            "name": "top",
-            "path": "Assets\\Textures\\top.png",
+            "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
+            "name": "Shelf",
+            "path": "Assets\\Textures\\Shelf.png",
             "isUI": false
         },
         {
@@ -55,21 +55,15 @@
             "isUI": false
         },
         {
-            "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
-            "name": "Shelf",
-            "path": "Assets\\Textures\\Shelf.png",
+            "guid": "cabb6b16-8445-4f40-b9c8-bd593ea6b65c",
+            "name": "top",
+            "path": "Assets\\Textures\\top.png",
             "isUI": false
         },
         {
             "guid": "1a04361c-a4ca-4230-a564-24c35868f47c",
             "name": "SkyMidNight_Right",
             "path": "Assets\\Textures\\SkyMidNight_Right.png",
-            "isUI": false
-        },
-        {
-            "guid": "90b999f3-2c4f-44ab-8213-964c53cd22cc",
-            "name": "pear3D",
-            "path": "Assets\\Textures\\pear3D.png",
             "isUI": false
         },
         {
@@ -82,6 +76,12 @@
             "guid": "7bd3846d-4142-4b26-ab54-85667861258f",
             "name": "BluePotion2",
             "path": "Assets\\Textures\\BluePotion2.png",
+            "isUI": false
+        },
+        {
+            "guid": "90b999f3-2c4f-44ab-8213-964c53cd22cc",
+            "name": "pear3D",
+            "path": "Assets\\Textures\\pear3D.png",
             "isUI": false
         },
         {
@@ -112,6 +112,12 @@
             "guid": "49874ec1-50f0-44fd-85cd-c2c551acaf66",
             "name": "strength_potion",
             "path": "Assets\\Textures\\strength_potion3D.png",
+            "isUI": false
+        },
+        {
+            "guid": "b5153be8-0464-48c3-800e-48bfb0c931b9",
+            "name": "Key_E",
+            "path": "Assets\\Textures\\Key_E.png",
             "isUI": false
         },
         {
@@ -349,15 +355,15 @@
             "isUI": false
         },
         {
-            "guid": "f7d8e93f-e2a1-4819-9aef-43f282f22713",
-            "name": "back1",
-            "path": "Assets\\Textures\\back1.png",
-            "isUI": false
-        },
-        {
             "guid": "4ee14b8b-838f-46e5-a49e-b1e1d768aa32",
             "name": "pear",
             "path": "Assets\\Textures\\pear.png",
+            "isUI": false
+        },
+        {
+            "guid": "f7d8e93f-e2a1-4819-9aef-43f282f22713",
+            "name": "back1",
+            "path": "Assets\\Textures\\back1.png",
             "isUI": false
         },
         {

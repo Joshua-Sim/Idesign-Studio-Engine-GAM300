@@ -71,6 +71,9 @@ local stored_ingredients = {}
 local visual_entities = {}    
 local item_names = { [0] = "unchopped_herb", [1] = "chopped_herb" }
 
+-- Player Interact Prompt
+local last_prompt_state = ""
+
 -- =============================================================
 -- [HELPERS]
 -- =============================================================
@@ -197,6 +200,48 @@ function M.on_update(arg1, arg2)
     if type(arg2) == "number" then dt = arg2 end
 
     accumulated_time = accumulated_time + dt
+
+-- [DEBUG 1] Check if we have an ID
+    if not my_entity_id then 
+        -- Fallback: Try finding by name
+        my_entity_id = FindEntityByName(CAULDRON_NAME)
+        
+        if not my_entity_id then
+            -- Print only once per second to avoid spam
+            if debug_timer > 1.0 then
+                print("[Lua ERROR] Cauldron Script cannot find Entity ID! Name searched: " .. CAULDRON_NAME)
+                debug_timer = 0.0
+            end
+            return 
+        end
+    end
+
+    -- =========================================================
+    -- [NEW] DYNAMIC TEXT LOGIC
+    -- =========================================================
+    -- This runs every frame to check what the player is holding
+    if SetInteractionText then
+        local held_item = GetSelectedItem() 
+        local desired_text = ""
+
+        if is_active then
+            desired_text = "Stirring..." -- If we are currently stirring
+        elseif held_item ~= -1 then
+            -- Player is holding an item: Prompt to Add
+            -- Optional: You can do item_names[held_item] to get specific names
+            desired_text = "Add Ingredient"
+        else
+            -- Player hand is empty: Prompt to Stir
+            desired_text = "Stir Cauldron"
+        end
+
+        -- Only send to C++ if the text is different from the last frame
+        if desired_text ~= last_prompt_state then
+            SetInteractionText(my_entity_id, desired_text)
+            last_prompt_state = desired_text
+            -- print("[Lua] Changed Prompt to: " .. desired_text) -- Debug print
+        end
+    end
 
     if not my_entity_id then my_entity_id = FindEntityByName(CAULDRON_NAME) end
     if not my_entity_id then return end 

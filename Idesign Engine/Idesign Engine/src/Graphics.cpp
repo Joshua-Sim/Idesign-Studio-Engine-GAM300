@@ -982,7 +982,7 @@ namespace Framework {
         if (groundMode)
         {
             //float groundY = terrain.getHeightAt(gameCamera.position.x, gameCamera.position.z);
-            gameCamera.position.y = 9;
+            gameCamera.position.y = 20.0f;
             for (auto const& entityId : mEntities) {
                 if (ecsInterface.GetEntityName(entityId) == "Player") {
                     if (ecsInterface.HasComponent<TransformComponent>(entityId)) {
@@ -1191,7 +1191,7 @@ namespace Framework {
                 phys.startAwake = true;
 
                 // Snap Camera to Player
-                glm::vec3 eyeOffset(0.0f, 1.8f, 0.0f);
+                glm::vec3 eyeOffset(0.0f, 3.0f, 0.0f);
                 gameCamera.position = trans.position + eyeOffset;
             }
 

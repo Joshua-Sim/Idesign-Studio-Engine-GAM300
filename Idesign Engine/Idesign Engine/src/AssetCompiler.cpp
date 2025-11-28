@@ -423,6 +423,9 @@ namespace Framework
                             if (val.HasMember("interactMessage") && val["interactMessage"].IsString()) {
                                 entry.interactMessage = val["interactMessage"].GetString();
                             }
+                            if (val.HasMember("promptText") && val["promptText"].IsString()) {
+                                entry.promptText = val["promptText"].GetString();
+                            }
 
                             comp.colliders.push_back(entry);
                         }
@@ -821,7 +824,10 @@ namespace Framework
                         if (entry.isInteractable) {
                             rapidjson::Value val; val.SetString(entry.interactMessage.c_str(), allocator);
                             obj.AddMember("interactMessage", val, allocator);
+                            rapidjson::Value promptVal; promptVal.SetString(entry.promptText.c_str(), allocator);
+                            obj.AddMember("promptText", promptVal, allocator);
                         }
+
 
                         arrayVal.PushBack(obj, allocator);
                     }
@@ -1348,6 +1354,8 @@ namespace Framework
                 if (entry.isInteractable) {
                     rapidjson::Value val; val.SetString(entry.interactMessage.c_str(), allocator);
                     obj.AddMember("interactMessage", val, allocator);
+                    rapidjson::Value promptVal; promptVal.SetString(entry.promptText.c_str(), allocator);
+                    obj.AddMember("promptText", promptVal, allocator);
                 }
 
                 arrayVal.PushBack(obj, allocator);
@@ -1831,6 +1839,9 @@ namespace Framework
                     }
                     if (val.HasMember("interactMessage") && val["interactMessage"].IsString()) {
                         entry.interactMessage = val["interactMessage"].GetString();
+                    }
+                    if (val.HasMember("promptText") && val["promptText"].IsString()) {
+                        entry.promptText = val["promptText"].GetString();
                     }
 
                     comp.colliders.push_back(entry);

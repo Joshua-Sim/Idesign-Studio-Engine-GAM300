@@ -39,7 +39,6 @@
             },
             "ScriptProperties": {
                 "scripts": [
-                    "Assets\\Scripts\\spawnPrompt.lua",
                     "Assets\\Scripts\\herb_pickup.lua"
                 ]
             },
@@ -47,19 +46,20 @@
                 "colliders": [
                     {
                         "size": [
-                            6.0,
-                            0.7,
-                            6.0
+                            1.5,
+                            1.5,
+                            1.5
                         ],
                         "center": [
                             0.0,
-                            1.3,
+                            0.9,
                             0.0
                         ],
                         "canPassThrough": true,
                         "triggerMessage": "deez",
                         "isInteractable": true,
-                        "interactMessage": "vitality_potion_pickup"
+                        "interactMessage": "vitality_potion_pickup",
+                        "promptText": "Pick up: Vitality Potion"
                     }
                 ]
             },
@@ -84,10 +84,6 @@
             },
             "EventReceiverComponent": {
                 "receivers": [
-                    {
-                        "messageToListenFor": "deez",
-                        "luaFunctionToCall": "OnInteract"
-                    },
                     {
                         "messageToListenFor": "vitality_potion_pickup",
                         "luaFunctionToCall": "OnPickup"

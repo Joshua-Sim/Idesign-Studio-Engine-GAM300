@@ -28,6 +28,7 @@ namespace Framework {
 
         // --- RAYCAST INTERACTION ---
         bool isInteractable = false;       // "Can Press E"
+        std::string promptText;
         std::string interactMessage;       // Fires on 'E' press
 
         // Runtime State
@@ -42,6 +43,7 @@ namespace Framework {
         PROP_BOOL(canPassThrough, BoxColliderEntry),
         PROP_STRING(triggerMessage, BoxColliderEntry),   // <--- NEW REGISTRATION
         PROP_BOOL(isInteractable, BoxColliderEntry),
+        PROP_STRING(promptText, BoxColliderEntry),
         PROP_STRING(interactMessage, BoxColliderEntry),
         PROP_BOOL_HIDDEN(wasInsideLastFrame, BoxColliderEntry)
     };
