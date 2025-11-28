@@ -40,11 +40,14 @@ namespace Framework
 
     void AnimationSystem::Update(float deltaTime)
     {
-        // --- 1. TIME CALCULATION ---
+        // --- 1. CALCULATE REAL TIME (Unscaled) ---
+        // We calculate this manually to bypass Game Pause / Time Scale
         static double lastFrameTime = glfwGetTime();
         double currentFrameTime = glfwGetTime();
         float realDt = static_cast<float>(currentFrameTime - lastFrameTime);
         lastFrameTime = currentFrameTime;
+
+        // Safety cap for lag spikes (prevents exploding physics/animation)
         if (realDt > 0.1f) realDt = 0.016f;
 
         // --- 2. UPDATE ENTITIES ---
@@ -62,28 +65,24 @@ namespace Framework
                 {
                     float dtForEntity = 0.0f;
 
-                    // SIMPLIFIED LOGIC:
-                    // Mode 0: Normal Playback
-                    // Mode 1: Stirring (Controlled by Lua)
-                    // Mode 2: Manual/Paused
                     switch (animator.updateMode)
                     {
-                    case 0:
-                        dtForEntity = realDt;
+                    case 0: // Normal Gameplay Entities
+                        // Use engine time so they pause/slow-down correctly
+                        dtForEntity = deltaTime;
                         break;
-                    case 1:
-                        // OPTION A: Always play while in "Stir Mode"
-                        dtForEntity = realDt;
 
-                        // OPTION B: If you want Lua to control the speed (e.g. stop when mouse stops),
-                        // you would set animator.animationSpeed to 0 in Lua and keep this as realDt.
+                    case 1: // Stirring / Minigame
+                        // Use REAL time so it feels responsive and works while paused
+                        dtForEntity = realDt;
                         break;
-                    case 2:
+
+                    case 2: // Manual / Paused
                         dtForEntity = 0.0f;
                         break;
                     }
 
-                    // Apply the time
+                    // Apply the calculated time
                     CalculateBoneTransforms(animator, dtForEntity);
                 }
             }
