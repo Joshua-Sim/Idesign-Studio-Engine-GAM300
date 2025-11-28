@@ -115,16 +115,19 @@ int main(void)
     //AssetManager::Instance().LoadAllAssets();
     
     //Access the InputHandler instance from the singleton
+    InputHandler::Initialize(graphicsSystem->GetWindow());
     InputHandler* inputHandlerSystem = InputHandler::GetInstance();
-    if (!inputHandlerSystem) 
-    {
+
+    if (!inputHandlerSystem) {
         std::cerr << "Failed to initialize InputHandler!" << std::endl;
-        return -1; // Exit if InputHandler initialization failed
+        return -1;
     }
-    
-    // 3. Use the new getter to connect the camera to the input handler
-    Camera* graphicsCamera = graphicsSystem.get()->getCamera();
-    inputHandlerSystem->SetCamera(graphicsCamera);
+
+    // [FIX] ADD THIS LINE so InputHandler can access GetCameraByIndex
+    inputHandlerSystem->SetGraphics(graphicsSystem.get());
+
+    // Keep this one too
+    inputHandlerSystem->SetCamera(graphicsSystem->getCamera());
 
     // Registering systems in the ECS interface here
     auto scriptingSystem = ecsInterface.RegisterSystem<ScriptingSystem>();

@@ -1626,12 +1626,11 @@ namespace Framework {
             // 1. Get argument (true/false)
             bool locked = lua_toboolean(L, 1);
 
-            // 2. Get Graphics System
-            auto* gfx = Graphics::GetInstance();
-
-            // 3. Apply the lock (True = Rotation Disabled)
-            if (gfx) gfx->SetCameraRotationEnabled(!locked);
-
+            auto* input = InputHandler::GetInstance();
+            if (input) {
+                // "Locked" means rotation is disabled (for minigame)
+                input->SetCameraRotationEnabled(!locked);
+            }
             return 0;
             });
 

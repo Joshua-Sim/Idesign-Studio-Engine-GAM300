@@ -116,7 +116,6 @@ namespace Framework
         bool m_cameraRotationEnabled = true;
 
         static void framebuffer_size_callback(GLFWwindow*, int, int);
-        static void mouse_callback(GLFWwindow*, double, double);
 
         glm::vec2 pendingPickUV0{ -1.f, -1.f };  // main viewport
         glm::vec2 pendingPickUV1{ -1.f, -1.f };  // secondary viewport

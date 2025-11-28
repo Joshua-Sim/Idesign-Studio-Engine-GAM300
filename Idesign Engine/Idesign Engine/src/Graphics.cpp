@@ -205,7 +205,6 @@ namespace Framework {
 
         //// IMPORTANT: always store Graphics* as user pointer, not Camera*
         glfwSetWindowUserPointer(window, this);
-        glfwSetCursorPosCallback(window, mouse_callback);
         glfwSetScrollCallback(window, scroll_callback);
 
         // Register Graphics related Component
@@ -1082,171 +1081,67 @@ namespace Framework {
     void Graphics::SetPickViewIndex(int index) {
         pickViewIndex = (index <= 0) ? 0 : 1;
     }
-    // DO NOT CHANGE
-    void Graphics::mouse_callback(GLFWwindow* window, double xpos, double ypos)
-    {
-        WindowConfig* config = AssetManager::Instance().Get<WindowConfig>(AssetManager::Instance().FindGuid<WindowConfig>());
-        static float lastX = config->x * 0.5f;
-        static float lastY = config->y * 0.5f;
-
-        if (!mouseCaptured) return;
-        if (firstMouse) {
-            lastX = (float)xpos;
-            lastY = (float)ypos;
-            firstMouse = false;
-            return;
-        }
-        float xoffset = (float)xpos - lastX;
-        float yoffset = lastY - (float)ypos; // reversed: y ranges bottom->top
-        lastX = (float)xpos;
-        lastY = (float)ypos;
-
-        auto* g = static_cast<Graphics*>(glfwGetWindowUserPointer(window));
-        if (!g) return;
-        if (!g->mouseCaptured) return;
-
-        Camera& cam = (g->m_mouseTargetView == 1) ? g->sceneCamera : g->gameCamera;
-        cam.processMouseMovement(xoffset, yoffset);
-    }
-
-    void Graphics::SetGroundMode(bool state) {
-        groundMode = state;
-    }
-
+    
     void Graphics::process_input(float dt)
     {
-       
-        if (!engineState.IsPlay())
-            return;
-        const bool editorActive = (m_mouseTargetView == 1);   // 1 = Editor/Scene, 0 = Game
+        if (!engineState.IsPlay()) return;
+
+        // 1. Determine which mode we are in
+        // If UI is focused (Editor Mode), we control Scene Camera (Index 1)
+        // If Game is focused, we control Game Camera (Index 0)
+        // We check InputHandler directly for the source of truth
+        bool isEditorMode = InputHandler::GetInstance()->isUIFocused;
 
         // ============================================================
-        // MODE A: EDITOR / FREE FLY
+        // LOGIC 1: EDITOR MODE (Scene Camera Movement)
         // ============================================================
-        if (editorActive)
+       // ============================================================
+    // LOGIC 1: EDITOR MODE (Scene Camera Movement)
+    // ============================================================
+        if (isEditorMode)
         {
-            Camera& cam = sceneCamera;
-            const float baseSpeed = 5.0f;
-
-            // Keyboard Movement
-            if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-                cam.processKeyboard(Camera::Movement::Forward, dt * baseSpeed, false, terrain);
-            if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-                cam.processKeyboard(Camera::Movement::Backward, dt * baseSpeed, false, terrain);
-            if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-                cam.processKeyboard(Camera::Movement::Left, dt * baseSpeed, false, terrain);
-            if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-                cam.processKeyboard(Camera::Movement::Right, dt * baseSpeed, false, terrain);
-
-
-
-
-            static bool nKeyPressed = false;
-
-            if (glfwGetKey(window, GLFW_KEY_N) == GLFW_PRESS)
-            {
-                if (!nKeyPressed) 
-                {
-                    float newVal = m_skybox.getBlendFactor() + (dt * 0.5f); // 2 seconds to fade
-                    if (newVal > 1.0f) newVal = 1.0f;
-                    m_skybox.setBlendFactor(newVal);
-                    nKeyPressed = true;
-                }
-            }
-            else
-            {
-                nKeyPressed = false;
-            }
-
-            if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS) // 'M' for Morning
-            {
-                if (!nKeyPressed)
-                {
-                    float newVal = m_skybox.getBlendFactor() - (dt * 0.5f);
-                    if (newVal < 0.0f) newVal = 0.0f;
-                    m_skybox.setBlendFactor(newVal);
-                    nKeyPressed = true;
-                }
-            }
-            else
-            {
-                nKeyPressed = false;
-            }
-
-
-                
-                
-            // Mouse Rotation Logic
-            static bool firstMouse = true;
-            static double lastX = 0.0, lastY = 0.0;
-
+            // Only move if Right Click is held
             if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
             {
-                double xpos, ypos;
-                glfwGetCursorPos(window, &xpos, &ypos);
+                // Define a speed specifically for the editor (faster than player)
+                float speed = 10.0f * dt;
 
-                if (firstMouse)
-                {
-                    lastX = xpos;
-                    lastY = ypos;
-                    firstMouse = false; // We have established a starting point
+                // Turbo mode: Hold Left Shift to go faster
+                if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+                    speed *= 3.0f;
                 }
 
-                float xoffset = static_cast<float>(xpos - lastX);
-                float yoffset = static_cast<float>(lastY - ypos);
+                // --- Manual Position Updates ---
 
-                lastX = xpos;
-                lastY = ypos;
+                // Forward / Backward (Along Front Vector)
+                if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+                    sceneCamera.position += sceneCamera.front * speed;
+                if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+                    sceneCamera.position -= sceneCamera.front * speed;
 
-                cam.processMouseMovement(xoffset, yoffset);
-            }
-            else
-            {
-                // !!! THIS IS THE FIX !!!
-                // When we release the button, we reset firstMouse.
-                // The next time we click, we will treat that position as the new 0,0
-                // instead of calculating the distance from where we last let go.
-                firstMouse = true;
+                // Left / Right (Along Right Vector)
+                if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+                    sceneCamera.position -= sceneCamera.right * speed;
+                if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+                    sceneCamera.position += sceneCamera.right * speed;
+
+                // Up / Down (Global World Y Axis)
+                // We use World Up (0,1,0) instead of Camera Up so "E" always goes strictly UP relative to the ground
+                if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+                    sceneCamera.position += glm::vec3(0.0f, 1.0f, 0.0f) * speed;
+                if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+                    sceneCamera.position -= glm::vec3(0.0f, 1.0f, 0.0f) * speed;
             }
         }
-
         // ============================================================
-          // MODE B: GAME MODE / PLAYER PHYSICS
-          // ============================================================
+        // LOGIC 2: GAME MODE (Player/Game Camera Movement)
+        // ============================================================
         else
         {
-            // --- 1. MOUSE LOOK (ROTATION) ---
-            // This logic runs every frame to check mouse movement
-            static double lastXGame = 0.0, lastYGame = 0.0;
-            static bool firstMouseGame = true;
+            // --- 2.1 MOUSE ROTATION REMOVED ---
+            // (Handled by InputHandler::CursorPositionCallback)
 
-            double xpos, ypos;
-            glfwGetCursorPos(window, &xpos, &ypos);
-
-            if (firstMouseGame)
-            {
-                lastXGame = xpos;
-                lastYGame = ypos;
-                firstMouseGame = false;
-            }
-
-            float xoffset = static_cast<float>(xpos - lastXGame);
-            float yoffset = static_cast<float>(lastYGame - ypos);
-
-            lastXGame = xpos;
-            lastYGame = ypos;
-
-            // [CRITICAL CHECK]
-            // Only rotate the camera if Rotation is Enabled!
-            // (It will be disabled when you are stirring the cauldron)
-            if (m_cameraRotationEnabled)
-            {
-                gameCamera.processMouseMovement(xoffset, yoffset);
-            }
-            // ----------------------------------
-
-
-            // --- 2. PLAYER MOVEMENT & PHYSICS ---
+            // --- 2.2 PLAYER MOVEMENT & PHYSICS ---
             Entity player = ecsInterface.GetEntityByName("Player");
 
             if (ecsInterface.IsEntityValid(player) && ecsInterface.HasComponent<PhysicsProperties>(player))
@@ -1254,7 +1149,7 @@ namespace Framework {
                 auto& phys = ecsInterface.GetComponent<PhysicsProperties>(player);
                 auto& trans = ecsInterface.GetComponent<TransformComponent>(player);
 
-                // Calculate Direction
+                // Calculate Direction based on Game Camera
                 glm::vec3 camForward = gameCamera.front;
                 camForward.y = 0.0f;
                 camForward = glm::normalize(camForward);
@@ -1266,44 +1161,13 @@ namespace Framework {
                 glm::vec3 targetVelocity(0.0f);
                 float moveSpeed = 5.0f;
 
-                // Input -> Velocity
-                if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) targetVelocity += camForward;
-                if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) targetVelocity -= camForward;
-                if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) targetVelocity -= camRight;
-                if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) targetVelocity += camRight;
-
-                
-                {   // Recipe Book
-                    bool isRPressed = (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS);
-                    static bool wasRPressed = false;
-                    if (isRPressed && !wasRPressed) GameSystem::bookOpen = !GameSystem::bookOpen;
-                    wasRPressed = isRPressed;
-                }
-
-                {    //Phase Change
-                    // Static variable to ensure one press = one toggle
-                    static bool isBackslashPressed = false;
-
-                    if (glfwGetKey(window, GLFW_KEY_BACKSLASH) == GLFW_PRESS)
-                    {
-                        if (!isBackslashPressed)
-                        {
-                            // SAFETY CHECK: Ensure the pointer is valid before using '->'
-                            if (phaseManager != nullptr)
-                            {
-                                phaseManager->TogglePhase();
-                                std::cout << "[Input] Backslash pressed: Toggled Phase." << std::endl;
-                            }
-
-                            isBackslashPressed = true;
-                        }
-                    }
-                    else
-                    {
-                        // Reset when key is released
-                        isBackslashPressed = false;
-                    }
-
+                // Only move if NOT locked in Minigame
+                if (m_cameraRotationEnabled)
+                {
+                    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) targetVelocity += camForward;
+                    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) targetVelocity -= camForward;
+                    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) targetVelocity -= camRight;
+                    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) targetVelocity += camRight;
                 }
 
                 if (glm::length(targetVelocity) > 0.1f) {
@@ -1313,46 +1177,48 @@ namespace Framework {
                 // Physics Application
                 if (m_cameraRotationEnabled)
                 {
-                    // NORMAL: Apply X/Z, let Gravity handle Y
                     phys.linearVelocity.x = targetVelocity.x;
                     phys.linearVelocity.z = targetVelocity.z;
                     phys.gravityFactor = 1.0f;
                 }
                 else
                 {
-                    // STIRRING: Stop everything
+                    // STIRRING MINIGAME: Freeze Player Physics
                     phys.linearVelocity = glm::vec3(0.0f);
                     phys.gravityFactor = 0.0f;
                 }
 
-                // Wake up body
-                if (m_cameraRotationEnabled && glm::length(targetVelocity) > 0.01f) {
-                    phys.startAwake = true;
-                }
-                if (!m_cameraRotationEnabled) {
-                    phys.startAwake = true;
-                }
+                phys.startAwake = true;
 
                 // Snap Camera to Player
                 glm::vec3 eyeOffset(0.0f, 1.8f, 0.0f);
                 gameCamera.position = trans.position + eyeOffset;
             }
+
+            // --- 2.3 GAMEPLAY TOGGLES (Recipe Book, etc) ---
+            {
+                bool isRPressed = (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS);
+                static bool wasRPressed = false;
+                if (isRPressed && !wasRPressed) GameSystem::bookOpen = !GameSystem::bookOpen;
+                wasRPressed = isRPressed;
+            }
         }
 
-        // HDR/Bloom keys...
+        // Global Hotkeys (HDR/Bloom)
         if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS) hdrExposure += 1.0f * dt;
         if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) if (hdrExposure > 0.0f) hdrExposure -= 1.0f * dt;
-        if (glfwGetKey(window, GLFW_KEY_EQUAL) == GLFW_PRESS) bloomStrength += 1.0f * dt;
-        if (glfwGetKey(window, GLFW_KEY_MINUS) == GLFW_PRESS) if (bloomStrength > 0.0f) bloomStrength -= 1.0f * dt;
     }
 
-    void Graphics::MoveCameraFromLua(const std::string& dir, float dt, bool gm) {
-        if (dir == "W") camera.processKeyboard(Camera::Movement::Forward, dt, gm, terrain);
-        else if (dir == "S") camera.processKeyboard(Camera::Movement::Backward, dt, gm, terrain);
-        else if (dir == "A") camera.processKeyboard(Camera::Movement::Left, dt, gm, terrain);
-        else if (dir == "D") camera.processKeyboard(Camera::Movement::Right, dt, gm, terrain);
+    void Graphics::MoveCameraFromLua(const std::string& dir, float dt, bool gm)
+    {
+        // Use 'gameCamera' so scripts control the actual player view
+        if (dir == "W") gameCamera.processKeyboard(Camera::Movement::Forward, dt, gm, terrain);
+        else if (dir == "S") gameCamera.processKeyboard(Camera::Movement::Backward, dt, gm, terrain);
+        else if (dir == "A") gameCamera.processKeyboard(Camera::Movement::Left, dt, gm, terrain);
+        else if (dir == "D") gameCamera.processKeyboard(Camera::Movement::Right, dt, gm, terrain);
+        else if (dir == "E") gameCamera.processKeyboard(Camera::Movement::Up, dt, gm, terrain);   // Optional
+        else if (dir == "Q") gameCamera.processKeyboard(Camera::Movement::Down, dt, gm, terrain); // Optional
     }
-
    void Graphics::NudgeLightFromLua(const std::string& axis, float amount) {
         //if (pointLights.empty()) return;
         //if (axis == "up")    pointLights[0].position.z -= amount;
@@ -1360,7 +1226,14 @@ namespace Framework {
         //else if (axis == "left")  pointLights[0].position.x -= amount;
         //else if (axis == "right") pointLights[0].position.x += amount;
     }
-
+   void Graphics::SetGroundMode(bool state)
+   {
+       groundMode = state;
+       // Optional: You might want to reset camera pitch/yaw here if switching modes
+       if (state) {
+           // Logic when switching TO ground mode
+       }
+   }
     void Graphics::ToggleMainLightFromLua() {
       /*  if (pointLights.empty()) return;
         pointLights[0].enabled = !pointLights[0].enabled;*/
