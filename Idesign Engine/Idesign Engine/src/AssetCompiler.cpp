@@ -331,14 +331,7 @@ namespace Framework
                     }
                 }
 
-                // --- Text Component ---
-                if (components.HasMember("TextProperties"))
-                {
-                    const auto& jsonVal = components["TextProperties"];
-                    TextProperties textComp;
-                    Deserialize(&textComp, g_TextComponentProps, jsonVal);
-                    ecsInterface.AddComponent(entity, textComp);
-                }
+           
 
                 // Navmesh
                 if (components.HasMember("NavMeshComponent"))
