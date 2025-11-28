@@ -158,15 +158,15 @@ namespace Framework {
         glm::vec3 color,
         float screenWidth,
         float screenHeight,
-        int alignment) { // <--- 1. ADDED ARGUMENT (0=Left, 1=Center, 2=Right)
+        int alignment,
+        float opacity) { // <--- 1. ADDED ARGUMENT (0=Left, 1=Center, 2=Right)
 
         // --- SETUP ---
         shader.Use();
         glm::mat4 projection = glm::ortho(0.0f, screenWidth, 0.0f, screenHeight);
         shader.SetUniform("textColor", color);
         shader.SetUniform("projection", projection);
-
-        // --- ENABLE BLENDING ---
+        shader.SetUniform("opacity", opacity);        // --- ENABLE BLENDING ---
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glDisable(GL_DEPTH_TEST);
@@ -258,14 +258,15 @@ namespace Framework {
         const glm::mat4& projection,
         float scale,
         glm::vec3 color, 
-        int alignment) {
+        int alignment,
+        float opacity ) {
 
         // --- SETUP & STATE CHANGES ---
         shader3D.Use();
         shader3D.SetUniform("textColor", color);
         shader3D.SetUniform("projection", projection);
         shader3D.SetUniform("view", view);
-
+        shader3D.SetUniform("opacity", opacity);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
        // glDisable(GL_DEPTH_TEST);

@@ -969,7 +969,13 @@ namespace Framework
 
                     componentsObj.AddMember("ButtonComponent", compJson, allocator);
                 }
-
+                if (ecsInterface.HasComponent<TextProperties>(entity))
+                {
+                    const auto& text = ecsInterface.GetComponent<TextProperties>(entity);
+                    rapidjson::Value textJson(rapidjson::kObjectType);
+                    Serialize((void*)&text, g_TextComponentProps, textJson, allocator);
+                    componentsObj.AddMember("TextProperties", textJson, allocator);
+                }
                 // --- Item Component ---
                 if (ecsInterface.HasComponent<ItemComponent>(entity))
                 {
@@ -1205,6 +1211,10 @@ namespace Framework
                     std::cout << "Added new entity " << newGuid << " to parent's child list (" << newHierarchy.parentGUID << ")" << std::endl;
                 }
             }
+        }
+        if (ecs.HasComponent<TextProperties>(sourceEntity))
+        {
+            ecs.AddComponent(newEntity, ecs.GetComponent<TextProperties>(sourceEntity));
         }
 
         std::cout << "Successfully duplicated entity." << std::endl;

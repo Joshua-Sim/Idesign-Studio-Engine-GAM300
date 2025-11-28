@@ -20,7 +20,7 @@ namespace Framework
         std::string text = "Hello World";
         float scale = 0.05f;
         glm::vec3 color = { 1.0f, 1.0f, 1.0f };
-
+        float opacity = 1.0f;
         // [NEW] 0=Left, 1=Center, 2=Right
         int alignment = 0;
         bool isBillboard=false;
@@ -36,7 +36,7 @@ namespace Framework
         PROP_STRING(text, TextProperties),
         PROP_DRAG_FLOAT(scale, TextProperties),
         PROP_COLOR3(color, TextProperties),
-
+        PROP_DRAG_FLOAT(opacity, TextProperties),
         // [NEW] Register the integer. 
         // Note: If your property system doesn't support Enums directly, 
         // we register it as an INT here, and handle the Dropdown in the Editor logic (Step 2).

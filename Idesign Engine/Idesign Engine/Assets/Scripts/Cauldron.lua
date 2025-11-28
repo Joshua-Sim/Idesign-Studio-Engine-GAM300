@@ -8,6 +8,8 @@ local name_stir = "CauldronStiring"
 local name_idle = "cauldronwithoutspoon" 
 
 -- [RESULT SETTINGS]
+-- The name of the item to spawn when done.
+-- The script will look for "strength_potion_Prefab" (automatically adds "_Prefab")
 local result_item_name = "strength_potion" 
 
 -- [VISUAL ITEMS SETTINGS]
@@ -47,10 +49,6 @@ local player_id = nil
 local accumulated_time = 0.0 
 local current_orbit_angle = 0.0 
 
--- Dynamic Prompt State
-local last_prompt_state = ""
-local debug_timer = 0.0
-
 -- Progress State
 local current_finish_timer = 0.0
 local is_finished = false
@@ -69,18 +67,26 @@ local last_angle = 0.0
 -- Ingredient State
 local guid_stir = ""
 local guid_idle = ""
-
--- Unified List: Stores { data_id = int, visual_id = int }
-local cauldron_contents = {} 
-
+local stored_ingredients = {} 
+local visual_entities = {}    
 local item_names = { [0] = "unchopped_herb", [1] = "chopped_herb" }
+
+-- Player Interact Prompt
+local last_prompt_state = ""
 
 -- =============================================================
 -- [HELPERS]
 -- =============================================================
 local function ResolveID(arg1, arg2)
+    -- 1. Is the argument the Script Table (self)?
+    if type(arg1) == "table" and arg1.entity then 
+        return arg1.entity 
+    end
+    
+    -- 2. Is the argument a direct number? (Legacy support)
     if type(arg1) == "number" then return arg1 end
     if type(arg2) == "number" then return arg2 end
+
     return nil
 end
 
@@ -99,15 +105,6 @@ local function GetMouseDelta()
     return dx, dy
 end
 
--- Extracts just the Ingredient IDs for the C++ Recipe Checker
-local function GetIngredientIDs()
-    local ids = {}
-    for i, item in ipairs(cauldron_contents) do
-        table.insert(ids, item.data_id)
-    end
-    return ids
-end
-
 -- =============================================================
 -- 1. INIT
 -- =============================================================
@@ -115,13 +112,6 @@ function M.on_init(arg1, arg2)
     local entity_id = ResolveID(arg1, arg2)
     if entity_id then
         my_entity_id = entity_id 
-        print("[Lua] Cauldron Initialized: " .. tostring(my_entity_id))
-        
-        -- Force initial text
-        if SetInteractionText then
-            SetInteractionText(my_entity_id, "Stir Cauldron")
-        end
-
         guid_stir = GetAnimationGUID(name_stir)
         guid_idle = GetAnimationGUID(name_idle)
         SetAnimationAsset(my_entity_id, guid_idle)
@@ -142,19 +132,13 @@ function M.OnInteract(arg1, arg2)
 
     -- [BRANCH A] ADDING INGREDIENT
     if held_item_id ~= -1 then
+        table.insert(stored_ingredients, held_item_id)
         ConsumeSelectedItem()
         
-        -- Spawn Visual
-        local vis_id = -1
         if SpawnCauldronItem and id_to_use then
-            vis_id = SpawnCauldronItem(id_to_use, held_item_id)
+            local visual_id = SpawnCauldronItem(id_to_use, held_item_id)
+            if visual_id then table.insert(visual_entities, visual_id) end
         end
-
-        -- Store unified data
-        table.insert(cauldron_contents, { 
-            data_id = held_item_id, 
-            visual_id = vis_id 
-        })
         
         M.PrintContents()
         return 
@@ -164,11 +148,9 @@ function M.OnInteract(arg1, arg2)
     is_active = not is_active
 
     if is_active then
-        local current_ids = GetIngredientIDs()
         local isValid = false
-        
         if CheckValidRecipe then
-            isValid = CheckValidRecipe(current_ids)
+            isValid = CheckValidRecipe(stored_ingredients)
         else
             print("[Lua ERROR] CheckValidRecipe missing!")
         end
@@ -184,8 +166,7 @@ function M.OnInteract(arg1, arg2)
             spoon_y = 100.0
             last_angle = math.atan2(spoon_y, spoon_x)
             
-            SetCameraLock(true) -- [LOCKS CAMERA HERE]
-            
+            SetCameraLock(true)
             if id_to_use then
                 SetAnimationAsset(id_to_use, guid_stir)
                 SetAnimationMode(id_to_use, 1) 
@@ -207,8 +188,7 @@ function M.StopInteraction(entity_id)
     is_finished = false
     print("[Lua] Stirring Stopped")
     
-    SetCameraLock(false) -- [UNLOCKS CAMERA HERE]
-    
+    SetCameraLock(false)
     if id then
         SetAnimationAsset(id, guid_idle)
         SetAnimationMode(id, 0) 
@@ -227,59 +207,54 @@ function M.on_update(arg1, arg2)
     if type(arg2) == "number" then dt = arg2 end
 
     accumulated_time = accumulated_time + dt
-    debug_timer = debug_timer + dt
 
-    -- 1. Ensure ID is valid
+-- [DEBUG 1] Check if we have an ID
     if not my_entity_id then 
+        -- Fallback: Try finding by name
         my_entity_id = FindEntityByName(CAULDRON_NAME)
-        if not my_entity_id and debug_timer > 1.0 then 
-            print("[Lua Info] Waiting for Cauldron ID...") 
-            debug_timer = 0.0
+        
+        if not my_entity_id then
+            -- Print only once per second to avoid spam
+            if debug_timer > 1.0 then
+                print("[Lua ERROR] Cauldron Script cannot find Entity ID! Name searched: " .. CAULDRON_NAME)
+                debug_timer = 0.0
+            end
             return 
         end
     end
-    if not my_entity_id then return end 
 
-    -- 2. DYNAMIC TEXT LOGIC (Runs every frame)
+    -- =========================================================
+    -- [NEW] DYNAMIC TEXT LOGIC
+    -- =========================================================
+    -- This runs every frame to check what the player is holding
     if SetInteractionText then
         local held_item = GetSelectedItem() 
         local desired_text = ""
 
         if is_active then
-            desired_text = "Stirring..." 
+            desired_text = "Stirring..." -- If we are currently stirring
         elseif held_item ~= -1 then
+            -- Player is holding an item: Prompt to Add
+            -- Optional: You can do item_names[held_item] to get specific names
             desired_text = "Add Ingredient"
         else
+            -- Player hand is empty: Prompt to Stir
             desired_text = "Stir Cauldron"
         end
 
+        -- Only send to C++ if the text is different from the last frame
         if desired_text ~= last_prompt_state then
             SetInteractionText(my_entity_id, desired_text)
             last_prompt_state = desired_text
+            -- print("[Lua] Changed Prompt to: " .. desired_text) -- Debug print
         end
     end
 
-    -- 3. CLEANUP & ANIMATION (Passive)
-    local count = #cauldron_contents
-    local i = count
+    if not my_entity_id then my_entity_id = FindEntityByName(CAULDRON_NAME) end
+    if not my_entity_id then return end 
 
-    while i > 0 do
-        local item = cauldron_contents[i]
-        
-        -- [CRITICAL FIX]: Check 'visual_id > 0' first.
-        -- If visual_id is -1, it means spawning failed, but the ingredient is still physically added.
-        -- We don't want to auto-remove it just because the graphics failed.
-        if item.visual_id > 0 and IsEntityValid and not IsEntityValid(item.visual_id) then
-            print("[Lua] Item removed from cauldron: " .. tostring(item.data_id))
-            table.remove(cauldron_contents, i)
-            
-            if is_active then M.StopInteraction(my_entity_id) end
-        end
-        i = i - 1
-    end
-
-    -- 4. APPLY ORBIT POSITIONS (After cleanup)
-    count = #cauldron_contents
+    -- [PART A] ANIMATE FLOATING ITEMS
+    local count = #visual_entities
     if count > 0 then
         local raw_cx, raw_cy, raw_cz = GetPosition(my_entity_id)
         if raw_cx then 
@@ -288,6 +263,7 @@ function M.on_update(arg1, arg2)
             local cz = raw_cz + center_offset_z
             local angle_step = (2 * math.pi) / count
             
+            -- VORTEX MATH
             local dynamic_radius = orbit_radius_start 
             local dynamic_speed = orbit_speed_start
             
@@ -298,36 +274,34 @@ function M.on_update(arg1, arg2)
             
             current_orbit_angle = current_orbit_angle + (dt * dynamic_speed)
 
-            for k, item in ipairs(cauldron_contents) do
-                local vis_id = item.visual_id
+            for i, vis_id in ipairs(visual_entities) do
+                local item_angle = current_orbit_angle + ((i - 1) * angle_step)
+                local offset_x = math.cos(item_angle) * dynamic_radius
+                local offset_z = math.sin(item_angle) * dynamic_radius
                 
-                -- Only update position if we have a valid visual entity
-                if vis_id > 0 then 
-                    local item_angle = current_orbit_angle + ((k - 1) * angle_step)
-                    local offset_x = math.cos(item_angle) * dynamic_radius
-                    local offset_z = math.sin(item_angle) * dynamic_radius
-                    
-                    local current_bob = is_active and 0.0 or bob_height
-                    local offset_y = math.sin((accumulated_time * bob_speed) + k) * current_bob
-                    
-                    if SetPosition then
-                        SetPosition(vis_id, cx + offset_x, cy + height_offset + offset_y, cz + offset_z)
-                    end
-                    
-                    if SetRotation then
-                        local rot_speed = 50.0 
-                        if is_active then 
-                            SetRotation(vis_id, 0.0, 0.0, 0.0) 
-                        else
-                            SetRotation(vis_id, 0.0, accumulated_time * rot_speed, 0.0) 
-                        end
+                -- Disable bobbing if Stirring
+                local current_bob = bob_height
+                if is_active then current_bob = 0.0 end
+                
+                local offset_y = math.sin((accumulated_time * bob_speed) + i) * current_bob
+                
+                if SetPosition then
+                    SetPosition(vis_id, cx + offset_x, cy + height_offset + offset_y, cz + offset_z)
+                end
+                
+                if SetRotation then
+                    local rot_speed = 50.0 
+                    if is_active then 
+                        SetRotation(vis_id, 0.0, 0.0, 0.0) 
+                    else
+                        SetRotation(vis_id, 0.0, accumulated_time * rot_speed, 0.0) 
                     end
                 end
             end
         end
     end
 
-    -- 5. STIRRING INPUT LOGIC
+    -- [PART B] STIRRING LOGIC
     if is_active and player_id then
         local px, py, pz = GetPosition(player_id)
         local cx, cy, cz = GetPosition(my_entity_id)
@@ -486,22 +460,20 @@ end
 
 function M.PrintContents()
     local content_string = "Cauldron Contents: "
-    if #cauldron_contents == 0 then print(content_string .. "Empty") return end
-    
-    for i, item in ipairs(cauldron_contents) do
-        local name = item_names[item.data_id] or tostring(item.data_id)
+    if #stored_ingredients == 0 then print(content_string .. "Empty") return end
+    for i, id in ipairs(stored_ingredients) do
+        local name = item_names[id] or tostring(id)
         content_string = content_string .. "[" .. name .. "] "
     end
     print(content_string)
 end
 
 function M.ClearCauldron()
-    for _, item in ipairs(cauldron_contents) do
-        if IsEntityValid and IsEntityValid(item.visual_id) then
-            DestroyEntity(item.visual_id)
-        end
+    stored_ingredients = {}
+    for i, vis_id in ipairs(visual_entities) do
+        if DestroyEntity then DestroyEntity(vis_id) end
     end
-    cauldron_contents = {}
+    visual_entities = {}
     print("[Lua] Cauldron Cleared")
 end
 

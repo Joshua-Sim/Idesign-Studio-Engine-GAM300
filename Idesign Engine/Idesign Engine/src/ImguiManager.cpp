@@ -2277,6 +2277,10 @@ namespace Framework {
                     Entity textEntity = ecsInterface.CreateEntity();
                     ecsInterface.AddComponent<TransformComponent>(textEntity, TransformComponent{});
                     ecsInterface.AddComponent<TextProperties>(textEntity, TextProperties{});
+                    ecsInterface.AddComponent<HierarchyComponent>(textEntity, HierarchyComponent{}); // Default hierarchy
+                    MeshProperties meshComponent{};
+                    ecsInterface.AddComponent<MeshProperties>(textEntity, meshComponent);
+
 
                     std::cout << "[ECS] Created Text Entity ID: " << textEntity << std::endl;
                 }
