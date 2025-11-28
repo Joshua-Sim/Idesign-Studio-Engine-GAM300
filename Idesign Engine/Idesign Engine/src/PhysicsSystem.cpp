@@ -443,6 +443,7 @@ namespace Framework {
             auto& pb = ecsInterface.GetComponent<PhysicsBodyComponent>(e);
             auto& prop = ecsInterface.GetComponent<PhysicsProperties>(e);
 
+            // Keep motion type consistent with immovable flag
             if (prop.isImmovable == true) prop.motionType = 0;
             else if (prop.motionType == 0) prop.motionType = 1;
 
@@ -450,25 +451,55 @@ namespace Framework {
                 ApplyPropsToBody(bodyInterface, id, prop);
 
                 if (prop.motionType == 1) {
-                    bool hasInputVel = glm::length(prop.linearVelocity) > 0.01f;
-                    if (hasInputVel) {
-                        JPH::Vec3 currentVel = bodyInterface->GetLinearVelocity(id);
-                        bodyInterface->SetLinearVelocity(id, JPH::Vec3(prop.linearVelocity.x, currentVel.GetY(), prop.linearVelocity.z));
+                    // --- Dynamic body update ---
+
+                    // Make runtime gravityFactor toggles actually take effect
+                    bodyInterface->SetGravityFactor(id, prop.gravityFactor);
+
+                    // Current velocity from Jolt
+                    JPH::Vec3 cur = bodyInterface->GetLinearVelocity(id);
+
+                    // Inputs from gameplay
+                    const float eps = 0.01f;
+                    const bool hasXZ = (std::abs(prop.linearVelocity.x) > eps) || (std::abs(prop.linearVelocity.z) > eps);
+                    const bool hasYImpulse = (std::abs(prop.linearVelocity.y) > eps);   // e.g., jump for one frame
+
+                    // Decide new velocity components
+                    const float newX = hasXZ ? prop.linearVelocity.x : 0.0f;
+                    const float newZ = hasXZ ? prop.linearVelocity.z : 0.0f;
+                    const float newY = hasYImpulse ? prop.linearVelocity.y : cur.GetY();
+
+                    if (hasXZ || hasYImpulse) {
+                        bodyInterface->SetLinearVelocity(id, JPH::Vec3(newX, newY, newZ));
                         bodyInterface->ActivateBody(id);
                     }
                     else {
-                        JPH::Vec3 currentVel = bodyInterface->GetLinearVelocity(id);
-                        bodyInterface->SetLinearVelocity(id, JPH::Vec3(0.0f, currentVel.GetY(), 0.0f));
+                        // No gameplay input: keep Y (gravity) but stop planar drift
+                        bodyInterface->SetLinearVelocity(id, JPH::Vec3(0.0f, cur.GetY(), 0.0f));
                         bodyInterface->SetAngularVelocity(id, JPH::Vec3(0, 0, 0));
                     }
+
+                    // Consume one-shot Y impulse (so jump only applies once)
+                    if (hasYImpulse) {
+                        prop.linearVelocity.y = 0.0f;
+                    }
+
+                    // Zero tiny angular velocity noise unless you explicitly set it elsewhere
                     if (glm::length(prop.angularVelocity) <= 0.01f) {
                         bodyInterface->SetAngularVelocity(id, JPH::Vec3(0, 0, 0));
                     }
+
                 }
                 else {
+                    // --- Kinematic/static: drive transform from ECS ---
                     if (ecsInterface.HasComponent<TransformComponent>(e)) {
                         auto& tf = ecsInterface.GetComponent<TransformComponent>(e);
-                        bodyInterface->SetPositionAndRotation(id, JPH::RVec3(tf.position.x, tf.position.y, tf.position.z), MakeQuatFromEuler(tf.rotation), JPH::EActivation::Activate);
+                        bodyInterface->SetPositionAndRotation(
+                            id,
+                            JPH::RVec3(tf.position.x, tf.position.y, tf.position.z),
+                            MakeQuatFromEuler(tf.rotation),
+                            JPH::EActivation::Activate
+                        );
                     }
                 }
             }

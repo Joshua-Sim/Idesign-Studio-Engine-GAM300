@@ -7,7 +7,7 @@
 namespace Framework {
     
     inline constexpr const char* kMotionTypeNames[] = { "Static", "Dynamic", "Kinematic" };
-    inline constexpr const char* kPhysicsCategoryNames[] = { "Wall", "Collectible", "Player", "Customer"};
+    inline constexpr const char* kPhysicsCategoryNames[] = { "Wall", "Floor", "Player", "Customer"};
 
     struct PhysicsProperties
     {

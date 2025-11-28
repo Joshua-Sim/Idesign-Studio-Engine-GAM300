@@ -103,12 +103,13 @@ namespace Framework
 
         //Function called by Lua to lock/unlock
         void SetCameraRotationEnabled(bool enabled);
-        bool IsCameraRotationEnabled() const { return m_cameraRotationEnabled; }
+        bool IsCameraRotationEnabled() const;
 
         //HOTBAR
         void DrawUIRect(const glm::vec2& pos, const glm::vec2& size, const glm::vec3& color, float alpha);
         GLuint GetOrLoadIconTex(const char* path);
         GLuint GetOrLoadIconTexFromItemId(int itemId);
+
 
     private:
 
