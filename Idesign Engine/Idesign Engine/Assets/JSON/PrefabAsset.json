@@ -77,6 +77,12 @@
             "name": "CustomerLog_Prefab",
             "path": "Assets\\Prefabs\\CustomerLog_Prefab.prefab",
             "isScenePrefab": false
+        },
+        {
+            "guid": "8a362b6a-e321-41b7-9496-e18c1839cfbd",
+            "name": "ScoreText_Prefab",
+            "path": "Assets\\Prefabs\\ScoreText_Prefab.prefab",
+            "isScenePrefab": false
         }
     ]
 }

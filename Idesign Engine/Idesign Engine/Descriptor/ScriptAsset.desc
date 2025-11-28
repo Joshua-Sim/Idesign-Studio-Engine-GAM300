@@ -1,5 +1,5 @@
 {
-    "count": 20,
+    "count": 21,
     "entries": [
         {
             "guid": "c6d4d63d-bced-4890-8a3b-3938e82b13e8",
@@ -67,6 +67,13 @@
         {
             "guid": "3fec6498-cd0e-40c0-8b7c-6e6d78cc6d5f",
             "scriptPath": "Assets/Scripts/numpad_Move.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "e7535686-93e2-4aa2-8052-4abfe9e7deda",
+            "scriptPath": "Assets/Scripts/Pathfinding.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
