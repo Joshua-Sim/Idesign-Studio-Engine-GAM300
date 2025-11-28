@@ -93,6 +93,15 @@ namespace Framework {
             tabPressed = false;
         }
 
+        // ESC: Toggle pause/resume
+        if (IsKeyPressed(GLFW_KEY_ESCAPE))
+        {
+            // Flip the paused state
+            engineState.SetPaused(!engineState.IsPaused());
+
+            std::cout << "ESC PRESSED" << std::endl;
+        }
+
         // ImGui Input Block
         ImGuiIO& io = ImGui::GetIO();
         if (!isUIFocused) {

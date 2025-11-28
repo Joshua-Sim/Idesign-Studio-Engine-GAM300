@@ -707,6 +707,9 @@ namespace Framework {
             m_showEditor = !m_showEditor;
             if (m_showEditor) {
                 std::cout << "[ImGui] Editor enabled" << std::endl;
+                
+                engineState.SetInEditor(true);
+                engineState.SetPlay(false);
 
                 // Stop BGM when returning to editor
                 if (g_AudioSystem) {
@@ -716,6 +719,9 @@ namespace Framework {
             }
             else {
                 std::cout << "[ImGui] Editor disabled - Game only mode" << std::endl;
+
+                engineState.SetInEditor(false);
+                engineState.SetPlay(true);
 
                 // Start BGM when entering fullscreen game mode
                 if (g_AudioSystem) {

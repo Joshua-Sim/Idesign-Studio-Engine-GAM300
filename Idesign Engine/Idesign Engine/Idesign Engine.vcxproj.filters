@@ -223,6 +223,8 @@
     <ClCompile Include="src\FontSystem.cpp">
       <Filter>Source Files\FontSystem</Filter>
     </ClCompile>
+    <ClCompile Include="src\PebbleRenderer.cpp" />
+    <ClCompile Include="src\SceneInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ItemComponent.h" />
@@ -672,6 +674,8 @@
     <ClInclude Include="src\WindowConfigProperties.h">
       <Filter>Header Files\Property</Filter>
     </ClInclude>
+    <ClInclude Include="src\PebbleRenderer.h" />
+    <ClInclude Include="src\SceneInterface.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />
@@ -786,6 +790,14 @@
     <None Include="Descriptor\MeshProperties.meta">
       <Filter>Resource Files\Descriptor</Filter>
     </None>
+    <None Include="Assets\shaders\instancedleave_frag.glsl" />
+    <None Include="Assets\shaders\instancedleave_vert.glsl" />
+    <None Include="Assets\shaders\instanced_pebble_frag.glsl" />
+    <None Include="Assets\shaders\instanced_pebble_vert.glsl" />
+    <None Include="C:\Users\victo\Downloads\To Input\shaders\instancedleave_frag.glsl" />
+    <None Include="C:\Users\victo\Downloads\To Input\shaders\instancedleave_vert.glsl" />
+    <None Include="C:\Users\victo\Downloads\To Input\shaders\instanced_pebble_frag.glsl" />
+    <None Include="C:\Users\victo\Downloads\To Input\shaders\instanced_pebble_vert.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\back.png" />

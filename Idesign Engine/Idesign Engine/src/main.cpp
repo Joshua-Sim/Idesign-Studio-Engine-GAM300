@@ -40,10 +40,11 @@
 #include <EventManager.h>
 #include "GameSystem.h"
 #include "PlayerInteractSystem.h"
-#include"ButtonSystem.h"
+#include "ButtonSystem.h"
 #include "ButtonComponent.h"
 #include "RecipeBookManager.h"
 #include "TypeRegistry.h"
+#include "SceneInterface.h"
 
 using namespace Framework;
 
@@ -91,13 +92,10 @@ int main(void)
     //AssetManager::Instance().CompileAllAssets();
     //AssetManager::Instance().SaveAllAssets();
     AssetManager::Instance().LoadAllAssets();
+
     // To Connect Prop with ECS
     RegisterComponentTypes();                           // Step 1: Register known types
     AutoRegisterAllReflectedComponents(ecsInterface);   // Step 2: Hook them into ECS
-
-    // Explicitly register ButtonComponent as an ECS component
-    //ecsInterface.RegisterComponent<ButtonComponent>();
-	//AssetManager::Instance().LoadWindowConfig(); // Load WindowConfig before Graphics system is created
 
     // Register graphics system and GLFW Window first 
     auto graphicsSystem = ecsInterface.RegisterSystem<Graphics>();
@@ -140,6 +138,7 @@ int main(void)
     ecsInterface.RegisterComponent<PlayerComponent>(); // register player component here coz of the interact system
     auto playerInteractSystem = ecsInterface.RegisterSystem<PlayerInteractSystem>();
     auto eventSystem = ecsInterface.RegisterSystem<EventSystem>();
+    auto sceneInterface = ecsInterface.RegisterSystem<SceneInterface>();
 
     ecsInterface.RegisterComponent<EventSenderComponent>(); 
     ecsInterface.RegisterComponent<EventReceiverComponent>();
@@ -151,12 +150,6 @@ int main(void)
         ecsInterface.SetSystemSignature<EventSystem>(signature);
     }
 
-    //buttonSystem->SetInputHandler(inputHandlerSystem);
-    //{
-    //    Signature buttonSig;
-    //    buttonSig.set(ecsInterface.GetComponentType<ButtonComponent>());
-    //    ecsInterface.SetSystemSignature<ButtonSystem>(buttonSig);
-    //}
     // ------- Add systems to engine below -------- //
     engine->AddSystem(animationSystem.get());   // Calculate bone matrices
     engine->AddSystem(graphicsSystem.get());
@@ -173,6 +166,7 @@ int main(void)
     engine->AddSystem(gameSystem.get());
     engine->AddSystem(buttonSystem.get());
     engine->AddSystem(sceneSystem.get());       // Register scene manager last
+    engine->AddSystem(sceneInterface.get());
 
     std::filesystem::path root = GetEngineRootPath();
     fileCheckSystem->WatchAllFolders();
@@ -195,10 +189,8 @@ int main(void)
     std::cout << "[Audio] Volumes and 3D listener configured!" << std::endl;
     std::cout << "FMOD Studio Audio System initialized successfully!" << std::endl;
 
-    
     sceneManager.SetSceneBGM("jarrentest", "event:/Level1BGM");
    
-
     ImguiManager::Log("Initializing FontSystem...", "FontSystem");
     fontSystem.Initialize();
     fontSystem.LoadFont("Assets/Font/arial.ttf", 40, "Arial");

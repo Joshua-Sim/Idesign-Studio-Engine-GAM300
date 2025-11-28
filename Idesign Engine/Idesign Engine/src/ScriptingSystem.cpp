@@ -20,10 +20,10 @@
 #include "ButtonSystem.h"
 #include "SceneManager.h"
 #include "EventManager.h"
-#include "SceneManager.h" 
 #include "Inventory.h" // Include your Inventory header
 #include "BoxColliderComponent.h"
 #include "InputHandler.h"
+#include "SceneInterface.h"
 
 extern Framework::Coordinator ecsInterface;
 
@@ -60,7 +60,6 @@ namespace Framework {
             lua_pushnumber(L, tr.position.z);
             return 3; // x, y, z
         }
-
 
         static int lua_SetPosition(lua_State* L)
         {
@@ -101,6 +100,7 @@ namespace Framework {
             g->MoveCameraFromLua(dir, dt, gm);
             return 0;
         }
+
         static int lua_GetMousePosition(lua_State* L)
         {
             // Access your singleton InputHandler
@@ -795,17 +795,17 @@ namespace Framework {
             }
             return 0;
         }
+
         // ============ END AUDIO LUA BINDINGS ============
 
 
         // ============ GAME STATE LUA BINDINGS ============
         static int lua_GameStateStart(lua_State* L)
         {
-            // Set engine state to play mode
-            engineState.SetPlay(true);
-
             //Send message to start audio and other play-mode systems
             MessageBus::Get().SendImmediate(EnterPlayModeMessage());
+
+            SceneInterface::Instance().SetMenu(true);
 
             return 0;
         }
@@ -818,8 +818,6 @@ namespace Framework {
             //Send message to start audio and other play-mode systems
             MessageBus::Get().SendImmediate(ResumePlayModeMessage());
 
-            //g_AudioSystem->ResumeAllAudio();
-
             return 0;
         }
 
@@ -831,9 +829,6 @@ namespace Framework {
             // Send exit message
             MessageBus::Get().SendImmediate(PausePlayModeMessage());
 
-            // Pause Current playing Audio
-            //g_AudioSystem->PauseAllAudio();
-
             return 0;
         }
 
@@ -844,9 +839,6 @@ namespace Framework {
 
             // Send exit message
             MessageBus::Get().SendImmediate(ExitPlayModeMessage());
-
-            // Clear all audio
-            //g_AudioSystem->Reset();
 
             return 0;
         }

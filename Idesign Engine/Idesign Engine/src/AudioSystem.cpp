@@ -430,7 +430,7 @@ namespace Framework {
         }
         else
         {
-            std::cout << "[AudioSystem] Sample data loaded for bank: " << bankPath << std::endl;
+            //std::cout << "[AudioSystem] Sample data loaded for bank: " << bankPath << std::endl;
         }
         loadedBanks[bankPath] = bank;
         return bank;

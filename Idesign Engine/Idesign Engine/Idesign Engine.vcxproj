@@ -272,6 +272,7 @@
     <ClInclude Include="src\Recast\RecastAlloc.h" />
     <ClInclude Include="src\Recast\RecastAssert.h" />
     <ClInclude Include="src\RecipeBookManager.h" />
+    <ClInclude Include="src\SceneInterface.h" />
     <ClInclude Include="src\SceneManager.h" />
     <ClInclude Include="src\SceneProperties.h" />
     <ClInclude Include="src\ScriptingSystem.h" />
@@ -420,6 +421,7 @@
     <ClCompile Include="src\Recast\RecastMeshDetail.cpp" />
     <ClCompile Include="src\Recast\RecastRasterization.cpp" />
     <ClCompile Include="src\Recast\RecastRegion.cpp" />
+    <ClCompile Include="src\SceneInterface.cpp" />
     <ClCompile Include="src\SceneManager.cpp" />
     <ClCompile Include="src\ScriptingSystem.cpp" />
     <ClCompile Include="src\ShaderProgram.cpp" />
