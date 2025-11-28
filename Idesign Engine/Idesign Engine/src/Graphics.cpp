@@ -1100,38 +1100,19 @@ namespace Framework {
     // ============================================================
         if (isEditorMode)
         {
-            // Only move if Right Click is held
-            if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
-            {
-                // Define a speed specifically for the editor (faster than player)
-                float speed = 10.0f * dt;
+            Camera& cam = sceneCamera;
+            const float baseSpeed = 5.0f;
 
-                // Turbo mode: Hold Left Shift to go faster
-                if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
-                    speed *= 3.0f;
-                }
-
-                // --- Manual Position Updates ---
-
-                // Forward / Backward (Along Front Vector)
-                if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-                    sceneCamera.position += sceneCamera.front * speed;
-                if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-                    sceneCamera.position -= sceneCamera.front * speed;
-
-                // Left / Right (Along Right Vector)
-                if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-                    sceneCamera.position -= sceneCamera.right * speed;
-                if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-                    sceneCamera.position += sceneCamera.right * speed;
-
-                // Up / Down (Global World Y Axis)
-                // We use World Up (0,1,0) instead of Camera Up so "E" always goes strictly UP relative to the ground
-                if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-                    sceneCamera.position += glm::vec3(0.0f, 1.0f, 0.0f) * speed;
-                if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-                    sceneCamera.position -= glm::vec3(0.0f, 1.0f, 0.0f) * speed;
-            }
+            // Keyboard Movement
+            if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+                cam.processKeyboard(Camera::Movement::Forward, dt * baseSpeed, false, terrain);
+            if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+                cam.processKeyboard(Camera::Movement::Backward, dt * baseSpeed, false, terrain);
+            if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+                cam.processKeyboard(Camera::Movement::Left, dt * baseSpeed, false, terrain);
+            if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+                cam.processKeyboard(Camera::Movement::Right, dt * baseSpeed, false, terrain);
+        
         }
         // ============================================================
         // LOGIC 2: GAME MODE (Player/Game Camera Movement)

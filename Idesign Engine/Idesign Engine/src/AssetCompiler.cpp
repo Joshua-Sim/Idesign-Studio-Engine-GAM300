@@ -320,6 +320,8 @@ namespace Framework
 
                             if (animRef.HasMember("bPlayOnStart") && animRef["bPlayOnStart"].IsBool())
                                 instanceAnim.bPlayOnStart = animRef["bPlayOnStart"].GetBool();
+                            if (animRef.HasMember("currentTime") && animRef["currentTime"].IsNumber())
+                                instanceAnim.currentTime = animRef["currentTime"].GetFloat();
                             ecsInterface.AddComponent(entity, instanceAnim);
                         }
                         else
@@ -723,6 +725,7 @@ namespace Framework
                     animRef.AddMember("bLoops", anim.bLoops, allocator);
                     animRef.AddMember("bPlayOnStart", anim.bPlayOnStart, allocator);
                     componentsObj.AddMember("AnimationProperties", animRef, allocator);
+                    animRef.AddMember("currentTime", anim.currentTime, allocator);
                 }
 
                 // TextureProperties � write only GUID
