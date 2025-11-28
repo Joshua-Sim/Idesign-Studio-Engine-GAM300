@@ -123,7 +123,22 @@ namespace Framework {
         pointShadowShader.destroy();
         if (m_shadowFBO) glDeleteFramebuffers(1, &m_shadowFBO);
         if (m_shadowDepthTexture) glDeleteTextures(1, &m_shadowDepthTexture);
+        if (m_treeRenderer) { delete m_treeRenderer; m_treeRenderer = nullptr; }
+        if (m_leafRenderer) { delete m_leafRenderer; m_leafRenderer = nullptr; }
+        if (m_grassRenderer) { delete m_grassRenderer; m_grassRenderer = nullptr; }
 
+        // [FIX] DELETE THE PEBBLE/PINE RENDERERS
+        // Assuming PebbleRenderer works the same way
+        if (m_pebbleRenderer) { delete m_pebbleRenderer; m_pebbleRenderer = nullptr; }
+        if (m_pineRenderer) { delete m_pineRenderer; m_pineRenderer = nullptr; }
+
+        // [FIX] DELETE THE LEAF MESH QUAD
+        // You created this with 'new' in Initialize: leafQuad = new Mesh(...)
+        if (leafQuad) {
+            leafQuad->cleanupGL();
+            delete leafQuad;
+            leafQuad = nullptr;
+        }
         // Finally, destroy GLFW window + terminate GLFW
         if (window) {
             glfwSetFramebufferSizeCallback(window, nullptr); // stop resize callback
@@ -190,7 +205,6 @@ namespace Framework {
 
         //// IMPORTANT: always store Graphics* as user pointer, not Camera*
         glfwSetWindowUserPointer(window, this);
-        glfwSetCursorPosCallback(window, mouse_callback);
         glfwSetScrollCallback(window, scroll_callback);
 
         // Register Graphics related Component
@@ -386,7 +400,7 @@ namespace Framework {
         cube = Mesh::CreateUnitCubeData();
         plane = Mesh::CreateUnitSphereData();
         cone = Mesh::CreateUnitConeData();
-        cylinder = Mesh::CreateUnitCylinderData();
+        //cylinder = Mesh::CreateUnitCylinderData();
         triangle = Mesh::CreateUnitTriangleData();
         // Initialise 1 object into ECS (Temporary, liase and move de-serialize with loadmesh function handled at asset-handler)
 
@@ -446,38 +460,54 @@ namespace Framework {
         //IMPORTANT : ALWAYS STICK TO THIS ORDER
         std::vector<std::string> dayFaces =
         {
-        "Assets/Textures/right.png",    //RIGHT
-        "Assets/Textures/left.png",    //LEFT 
-        "Assets/Textures/top.png",    //TOP or UP
-        "Assets/Textures/bottom.png",     //BOTTOM or DOWN
-        "Assets/Textures/front.png",    //FRONT
-        "Assets/Textures/back.png"      //BACK
+        "Assets/Textures/SkyNoon_Right.png",    //RIGHT
+        "Assets/Textures/SkyNoon_Left.png",    //LEFT 
+        "Assets/Textures/SkyNoon_Top.png",    //TOP or UP
+        "Assets/Textures/SkyNoon_Bottom.png",     //BOTTOM or DOWN
+        "Assets/Textures/SkyNoon_Front.png",    //FRONT
+        "Assets/Textures/SkyNoon_Back.png"      //BACK
         };
 
         std::vector<std::string> nightFaces =
         {
-        "Assets/Textures/right1.png",    //RIGHT
-        "Assets/Textures/left1.png",    //LEFT 
-        "Assets/Textures/top1.png",    //TOP or UP
-        "Assets/Textures/bottom1.png",     //BOTTOM or DOWN
-        "Assets/Textures/front1.png",    //FRONT
-        "Assets/Textures/back1.png"      //BACK
+        "Assets/Textures/SkyMidNight_Right.png",    //RIGHT
+        "Assets/Textures/SkyMidNight_Left.png",    //LEFT 
+        "Assets/Textures/SkyMidNight_Top.png",    //TOP or UP
+        "Assets/Textures/SkyMidNight_Bottom.png",     //BOTTOM or DOWN
+        "Assets/Textures/SkyMidNight_Front.png",    //FRONT
+        "Assets/Textures/SkyMidNight_Back.png"      //BACK
         };
 
         // Make sure the folder and files exist!
         m_skybox.init(dayFaces, nightFaces);
 
-        // === FOLIAGE/INSTANCING INIT ===
+        //GRASS INIT
+        TextureProperties grass;
+        grass.path = "Assets/Textures/Grass_normal_left.png";
+        grassTextureID = TextureLoader::loadTexture(grass, true);
 
+        // === FOLIAGE/INSTANCING INIT ===
         // 1. Create a simple mesh to represent the tree (Cylinder for a trunk)
         // NOTE: If you have a way to load a real tree model (e.g., from an OBJ file 
         // using MeshLoader), use that instead!
         m_foliageMesh = Mesh::CreateUnitCylinderData(12);
         m_foliageMesh.initGL(); // Upload the cylinder data to the GPU VBO/VAO
 
+        // ===================== LEAF SYSTEM =====================
+        leafQuad = new Mesh(Mesh::CreateBillboardQuad());
+        leafQuad->initGL();
+
+        // Load your leaf texture (PNG with alpha)
+        TextureProperties leafProps;
+        leafProps.path = "Assets/Textures/unchopped_herb.png";
+        leafTexture = TextureLoader::loadTexture(leafProps, true);
+
+        if (!leafTexture)
+            std::cout << "Leaf PNG failed to load!" << std::endl;
+
         // === 1. LOAD TREE TEXTURE ===
         TextureProperties treeTexProps;
-        treeTexProps.path = "Assets/Textures/top.png"; // <-- CHANGE PATH TO YOUR TEXTURE!
+        treeTexProps.path = "Assets/Textures/Wood.png"; // <-- CHANGE PATH TO YOUR TEXTURE!
 
         // Assuming TextureLoader::loadTexture is available (from your uploaded files)
         // NOTE: loadTexture takes TextureProperties& props and bool flip
@@ -488,12 +518,24 @@ namespace Framework {
         }
 
         // 2. Create the Instancing Renderer
-        m_treeRenderer = new FoliageRenderer(&m_foliageMesh);
+        // TRUNK RENDERER (cylinder)
+        m_treeRenderer = new FoliageRenderer(
+            &m_foliageMesh,
+            "Assets/shaders/instanced_vert.glsl",
+            "Assets/shaders/instanced_frag.glsl"
+        );
+
+        // LEAF RENDERER (billboards)
+        m_leafRenderer = new FoliageRenderer(
+            leafQuad,
+            "Assets/shaders/instancedleave_vert.glsl",
+            "Assets/shaders/instancedleave_frag.glsl"
+        );
         //// 2. Create the Instancing Renderer
-        //m_treeRenderer = new FoliageRenderer(&m_foliageMesh);
 
         // 3. Generate positions for the trees around the border
-        std::vector<glm::mat4> treeTransforms;
+        std::vector<glm::mat4> leafTransforms;
+        std::vector<glm::mat4> trunkTransforms;
         const int NUM_TREES = 4000; // High number for a dense border
 
         // Calculate map boundaries (Assuming terrain starts at 0,0)
@@ -543,22 +585,126 @@ namespace Framework {
             // Get height from terrain so trees stick to the ground
             float y = terrain.getHeightAt(x, z);
 
-            glm::mat4 model(1.0f);
-            model = glm::translate(model, glm::vec3(x, y, z));
+            // translation
+            glm::mat4 leaves(1.0f);
+            leaves = glm::translate(leaves, glm::vec3(x, y, z));
+
+            // Encode width + height in matrix
+            leaves[0][3] = 3.0f; // width
+            leaves[1][3] = 4.5f; // height
+
+            leafTransforms.push_back(leaves);
 
             // Random rotation (Y-axis) so trees don't all look identical
             float randomRot = (static_cast<float>(rand()) / RAND_MAX) * 360.0f;
-            model = glm::rotate(model, glm::radians(randomRot), glm::vec3(0, 1, 0));
+            glm::mat4 trunk = glm::translate(glm::mat4(1.f), glm::vec3(x, y, z));
+            trunk = glm::rotate(trunk, glm::radians(randomRot), glm::vec3(0, 1, 0));
+            trunk = glm::scale(trunk, glm::vec3(3.0f, 2.5f, 0.12f));
 
-            // Random scale variation
-            float scale = 5.8f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 0.5f));
-            model = glm::scale(model, glm::vec3(scale * 0.5f, scale * 1.5f, scale * 0.5f));
-
-            treeTransforms.push_back(model);
+            trunkTransforms.push_back(trunk);
         }
 
         // after the for-loop that fills treeTransforms
-        m_treeRenderer->setInstances(treeTransforms);
+        m_treeRenderer->setInstances(trunkTransforms);
+        m_leafRenderer->setInstances(leafTransforms);
+
+        // GENERATE PEBBLE MESH
+        // === LOAD PEBBLE MESH ===
+        //=== LOAD PEBBLE MESH ===
+        MeshLoader::loadMesh("Assets/Objects/rocks.obj", m_pebbleMesh);
+
+        // Load texture for pebbles
+        TextureProperties pebProps;
+        pebProps.path = "Assets/Textures/T_Brick_BaseColor.png";
+        pebbleTextureID = TextureLoader::loadTexture(pebProps, true);
+
+        // Create renderer
+        m_pebbleRenderer = new PebbleRenderer(&m_pebbleMesh);
+
+        // === Generate Pebble Transforms ===
+        std::vector<glm::mat4> pebbleTransforms;
+        const int NUM_PEBBLES = 1000;
+
+        auto rnd = [] { return (float)rand() / (float)RAND_MAX; };
+
+        // Center rectangle to block
+        float blockMinX = -10.f;
+        float blockMaxX = 10.f;
+        float blockMinZ = -10.f;
+        float blockMaxZ = 10.f;
+
+        for (int i = 0; i < NUM_PEBBLES; i++)
+        {
+            float x, z;
+
+            // Keep generating until the rock is OUTSIDE the blocked region
+            do {
+                x = rnd() * (maxMap - minMap) + minMap;
+                z = rnd() * (maxMap - minMap) + minMap;
+            } while (x >= blockMinX && x <= blockMaxX &&
+                z >= blockMinZ && z <= blockMaxZ);
+
+            float y = terrain.getHeightAt(x, z);
+
+            glm::mat4 M(1.0f);
+            M = glm::translate(M, glm::vec3(x, y + 0.02f, z));
+
+            float rot = rnd() * 360.0f;
+            M = glm::rotate(M, glm::radians(rot), glm::vec3(0, 1, 0));
+
+            float s = 0.05f + rnd() * 0.8f;
+            M = glm::scale(M, glm::vec3(s));
+
+            pebbleTransforms.push_back(M);
+        }
+
+        m_pebbleRenderer->setInstances(pebbleTransforms);
+
+
+        // GENERATE PINES MESH
+         // === LOAD PINES MESH ===
+        //=== LOAD PINES MESH ===
+        MeshLoader::loadMesh("Assets/Objects/pine.obj", m_pineMesh);
+
+        // Load texture for pine
+        TextureProperties pineProps;
+        pineProps.path = "Assets/Textures/treeLong.png";
+        pineTextureID = TextureLoader::loadTexture(pineProps, true);
+
+        // Create renderer
+        m_pineRenderer = new PebbleRenderer(&m_pineMesh);
+
+        // === Generate Pebble Transforms ===
+        std::vector<glm::mat4> pineTransform;
+        const int NUM_PINE = 3000;
+
+        for (int i = 0; i < NUM_PINE; i++)
+        {
+            float x, z;
+
+            // Keep generating until the rock is OUTSIDE the blocked region
+            do {
+                x = rnd() * (maxMap - minMap) + minMap;
+                z = rnd() * (maxMap - minMap) + minMap;
+            } while (x >= blockMinX && x <= blockMaxX &&
+                z >= blockMinZ && z <= blockMaxZ);
+
+            float y = terrain.getHeightAt(x, z);
+
+            glm::mat4 M(1.0f);
+            M = glm::translate(M, glm::vec3(x, y + 0.02f, z));
+
+            float rot = rnd() * 360.0f;
+            M = glm::rotate(M, glm::radians(rot), glm::vec3(0, 1, 0));
+
+            float s = 0.05f + rnd() * 0.8f;
+            M = glm::scale(M, glm::vec3(s));
+
+            pineTransform.push_back(M);
+        }
+
+        m_pineRenderer->setInstances(pineTransform);
+
 
         ImguiManager::LogSuccess("Graphics System initialized successfully", "Graphics");
     }
@@ -935,171 +1081,67 @@ namespace Framework {
     void Graphics::SetPickViewIndex(int index) {
         pickViewIndex = (index <= 0) ? 0 : 1;
     }
-    // DO NOT CHANGE
-    void Graphics::mouse_callback(GLFWwindow* window, double xpos, double ypos)
-    {
-        WindowConfig* config = AssetManager::Instance().Get<WindowConfig>(AssetManager::Instance().FindGuid<WindowConfig>());
-        static float lastX = config->x * 0.5f;
-        static float lastY = config->y * 0.5f;
-
-        if (!mouseCaptured) return;
-        if (firstMouse) {
-            lastX = (float)xpos;
-            lastY = (float)ypos;
-            firstMouse = false;
-            return;
-        }
-        float xoffset = (float)xpos - lastX;
-        float yoffset = lastY - (float)ypos; // reversed: y ranges bottom->top
-        lastX = (float)xpos;
-        lastY = (float)ypos;
-
-        auto* g = static_cast<Graphics*>(glfwGetWindowUserPointer(window));
-        if (!g) return;
-        if (!g->mouseCaptured) return;
-
-        Camera& cam = (g->m_mouseTargetView == 1) ? g->sceneCamera : g->gameCamera;
-        cam.processMouseMovement(xoffset, yoffset);
-    }
-
-    void Graphics::SetGroundMode(bool state) {
-        groundMode = state;
-    }
-
+    
     void Graphics::process_input(float dt)
     {
-       
-        if (!engineState.IsPlay())
-            return;
-        const bool editorActive = (m_mouseTargetView == 1);   // 1 = Editor/Scene, 0 = Game
+        if (!engineState.IsPlay()) return;
+
+        // 1. Determine which mode we are in
+        // If UI is focused (Editor Mode), we control Scene Camera (Index 1)
+        // If Game is focused, we control Game Camera (Index 0)
+        // We check InputHandler directly for the source of truth
+        bool isEditorMode = InputHandler::GetInstance()->isUIFocused;
 
         // ============================================================
-        // MODE A: EDITOR / FREE FLY
+        // LOGIC 1: EDITOR MODE (Scene Camera Movement)
         // ============================================================
-        if (editorActive)
+       // ============================================================
+    // LOGIC 1: EDITOR MODE (Scene Camera Movement)
+    // ============================================================
+        if (isEditorMode)
         {
-            Camera& cam = sceneCamera;
-            const float baseSpeed = 5.0f;
-
-            // Keyboard Movement
-            if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-                cam.processKeyboard(Camera::Movement::Forward, dt * baseSpeed, false, terrain);
-            if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-                cam.processKeyboard(Camera::Movement::Backward, dt * baseSpeed, false, terrain);
-            if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-                cam.processKeyboard(Camera::Movement::Left, dt * baseSpeed, false, terrain);
-            if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-                cam.processKeyboard(Camera::Movement::Right, dt * baseSpeed, false, terrain);
-
-
-
-
-            static bool nKeyPressed = false;
-
-            if (glfwGetKey(window, GLFW_KEY_N) == GLFW_PRESS)
-            {
-                if (!nKeyPressed) 
-                {
-                    float newVal = m_skybox.getBlendFactor() + (dt * 0.5f); // 2 seconds to fade
-                    if (newVal > 1.0f) newVal = 1.0f;
-                    m_skybox.setBlendFactor(newVal);
-                    nKeyPressed = true;
-                }
-            }
-            else
-            {
-                nKeyPressed = false;
-            }
-
-            if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS) // 'M' for Morning
-            {
-                if (!nKeyPressed)
-                {
-                    float newVal = m_skybox.getBlendFactor() - (dt * 0.5f);
-                    if (newVal < 0.0f) newVal = 0.0f;
-                    m_skybox.setBlendFactor(newVal);
-                    nKeyPressed = true;
-                }
-            }
-            else
-            {
-                nKeyPressed = false;
-            }
-
-
-                
-                
-            // Mouse Rotation Logic
-            static bool firstMouse = true;
-            static double lastX = 0.0, lastY = 0.0;
-
+            // Only move if Right Click is held
             if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
             {
-                double xpos, ypos;
-                glfwGetCursorPos(window, &xpos, &ypos);
+                // Define a speed specifically for the editor (faster than player)
+                float speed = 10.0f * dt;
 
-                if (firstMouse)
-                {
-                    lastX = xpos;
-                    lastY = ypos;
-                    firstMouse = false; // We have established a starting point
+                // Turbo mode: Hold Left Shift to go faster
+                if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+                    speed *= 3.0f;
                 }
 
-                float xoffset = static_cast<float>(xpos - lastX);
-                float yoffset = static_cast<float>(lastY - ypos);
+                // --- Manual Position Updates ---
 
-                lastX = xpos;
-                lastY = ypos;
+                // Forward / Backward (Along Front Vector)
+                if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+                    sceneCamera.position += sceneCamera.front * speed;
+                if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+                    sceneCamera.position -= sceneCamera.front * speed;
 
-                cam.processMouseMovement(xoffset, yoffset);
-            }
-            else
-            {
-                // !!! THIS IS THE FIX !!!
-                // When we release the button, we reset firstMouse.
-                // The next time we click, we will treat that position as the new 0,0
-                // instead of calculating the distance from where we last let go.
-                firstMouse = true;
+                // Left / Right (Along Right Vector)
+                if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+                    sceneCamera.position -= sceneCamera.right * speed;
+                if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+                    sceneCamera.position += sceneCamera.right * speed;
+
+                // Up / Down (Global World Y Axis)
+                // We use World Up (0,1,0) instead of Camera Up so "E" always goes strictly UP relative to the ground
+                if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+                    sceneCamera.position += glm::vec3(0.0f, 1.0f, 0.0f) * speed;
+                if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+                    sceneCamera.position -= glm::vec3(0.0f, 1.0f, 0.0f) * speed;
             }
         }
-
         // ============================================================
-          // MODE B: GAME MODE / PLAYER PHYSICS
-          // ============================================================
+        // LOGIC 2: GAME MODE (Player/Game Camera Movement)
+        // ============================================================
         else
         {
-            // --- 1. MOUSE LOOK (ROTATION) ---
-            // This logic runs every frame to check mouse movement
-            static double lastXGame = 0.0, lastYGame = 0.0;
-            static bool firstMouseGame = true;
+            // --- 2.1 MOUSE ROTATION REMOVED ---
+            // (Handled by InputHandler::CursorPositionCallback)
 
-            double xpos, ypos;
-            glfwGetCursorPos(window, &xpos, &ypos);
-
-            if (firstMouseGame)
-            {
-                lastXGame = xpos;
-                lastYGame = ypos;
-                firstMouseGame = false;
-            }
-
-            float xoffset = static_cast<float>(xpos - lastXGame);
-            float yoffset = static_cast<float>(lastYGame - ypos);
-
-            lastXGame = xpos;
-            lastYGame = ypos;
-
-            // [CRITICAL CHECK]
-            // Only rotate the camera if Rotation is Enabled!
-            // (It will be disabled when you are stirring the cauldron)
-            if (m_cameraRotationEnabled)
-            {
-                gameCamera.processMouseMovement(xoffset, yoffset);
-            }
-            // ----------------------------------
-
-
-            // --- 2. PLAYER MOVEMENT & PHYSICS ---
+            // --- 2.2 PLAYER MOVEMENT & PHYSICS ---
             Entity player = ecsInterface.GetEntityByName("Player");
 
             if (ecsInterface.IsEntityValid(player) && ecsInterface.HasComponent<PhysicsProperties>(player))
@@ -1107,7 +1149,7 @@ namespace Framework {
                 auto& phys = ecsInterface.GetComponent<PhysicsProperties>(player);
                 auto& trans = ecsInterface.GetComponent<TransformComponent>(player);
 
-                // Calculate Direction
+                // Calculate Direction based on Game Camera
                 glm::vec3 camForward = gameCamera.front;
                 camForward.y = 0.0f;
                 camForward = glm::normalize(camForward);
@@ -1119,44 +1161,13 @@ namespace Framework {
                 glm::vec3 targetVelocity(0.0f);
                 float moveSpeed = 5.0f;
 
-                // Input -> Velocity
-                if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) targetVelocity += camForward;
-                if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) targetVelocity -= camForward;
-                if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) targetVelocity -= camRight;
-                if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) targetVelocity += camRight;
-
-                
-                {   // Recipe Book
-                    bool isRPressed = (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS);
-                    static bool wasRPressed = false;
-                    if (isRPressed && !wasRPressed) GameSystem::bookOpen = !GameSystem::bookOpen;
-                    wasRPressed = isRPressed;
-                }
-
-                {    //Phase Change
-                    // Static variable to ensure one press = one toggle
-                    static bool isBackslashPressed = false;
-
-                    if (glfwGetKey(window, GLFW_KEY_BACKSLASH) == GLFW_PRESS)
-                    {
-                        if (!isBackslashPressed)
-                        {
-                            // SAFETY CHECK: Ensure the pointer is valid before using '->'
-                            if (phaseManager != nullptr)
-                            {
-                                phaseManager->TogglePhase();
-                                std::cout << "[Input] Backslash pressed: Toggled Phase." << std::endl;
-                            }
-
-                            isBackslashPressed = true;
-                        }
-                    }
-                    else
-                    {
-                        // Reset when key is released
-                        isBackslashPressed = false;
-                    }
-
+                // Only move if NOT locked in Minigame
+                if (m_cameraRotationEnabled)
+                {
+                    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) targetVelocity += camForward;
+                    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) targetVelocity -= camForward;
+                    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) targetVelocity -= camRight;
+                    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) targetVelocity += camRight;
                 }
 
                 if (glm::length(targetVelocity) > 0.1f) {
@@ -1166,46 +1177,48 @@ namespace Framework {
                 // Physics Application
                 if (m_cameraRotationEnabled)
                 {
-                    // NORMAL: Apply X/Z, let Gravity handle Y
                     phys.linearVelocity.x = targetVelocity.x;
                     phys.linearVelocity.z = targetVelocity.z;
                     phys.gravityFactor = 1.0f;
                 }
                 else
                 {
-                    // STIRRING: Stop everything
+                    // STIRRING MINIGAME: Freeze Player Physics
                     phys.linearVelocity = glm::vec3(0.0f);
                     phys.gravityFactor = 0.0f;
                 }
 
-                // Wake up body
-                if (m_cameraRotationEnabled && glm::length(targetVelocity) > 0.01f) {
-                    phys.startAwake = true;
-                }
-                if (!m_cameraRotationEnabled) {
-                    phys.startAwake = true;
-                }
+                phys.startAwake = true;
 
                 // Snap Camera to Player
                 glm::vec3 eyeOffset(0.0f, 1.8f, 0.0f);
                 gameCamera.position = trans.position + eyeOffset;
             }
+
+            // --- 2.3 GAMEPLAY TOGGLES (Recipe Book, etc) ---
+            {
+                bool isRPressed = (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS);
+                static bool wasRPressed = false;
+                if (isRPressed && !wasRPressed) GameSystem::bookOpen = !GameSystem::bookOpen;
+                wasRPressed = isRPressed;
+            }
         }
 
-        // HDR/Bloom keys...
+        // Global Hotkeys (HDR/Bloom)
         if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS) hdrExposure += 1.0f * dt;
         if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) if (hdrExposure > 0.0f) hdrExposure -= 1.0f * dt;
-        if (glfwGetKey(window, GLFW_KEY_EQUAL) == GLFW_PRESS) bloomStrength += 1.0f * dt;
-        if (glfwGetKey(window, GLFW_KEY_MINUS) == GLFW_PRESS) if (bloomStrength > 0.0f) bloomStrength -= 1.0f * dt;
     }
 
-    void Graphics::MoveCameraFromLua(const std::string& dir, float dt, bool gm) {
-        if (dir == "W") camera.processKeyboard(Camera::Movement::Forward, dt, gm, terrain);
-        else if (dir == "S") camera.processKeyboard(Camera::Movement::Backward, dt, gm, terrain);
-        else if (dir == "A") camera.processKeyboard(Camera::Movement::Left, dt, gm, terrain);
-        else if (dir == "D") camera.processKeyboard(Camera::Movement::Right, dt, gm, terrain);
+    void Graphics::MoveCameraFromLua(const std::string& dir, float dt, bool gm)
+    {
+        // Use 'gameCamera' so scripts control the actual player view
+        if (dir == "W") gameCamera.processKeyboard(Camera::Movement::Forward, dt, gm, terrain);
+        else if (dir == "S") gameCamera.processKeyboard(Camera::Movement::Backward, dt, gm, terrain);
+        else if (dir == "A") gameCamera.processKeyboard(Camera::Movement::Left, dt, gm, terrain);
+        else if (dir == "D") gameCamera.processKeyboard(Camera::Movement::Right, dt, gm, terrain);
+        else if (dir == "E") gameCamera.processKeyboard(Camera::Movement::Up, dt, gm, terrain);   // Optional
+        else if (dir == "Q") gameCamera.processKeyboard(Camera::Movement::Down, dt, gm, terrain); // Optional
     }
-
    void Graphics::NudgeLightFromLua(const std::string& axis, float amount) {
         //if (pointLights.empty()) return;
         //if (axis == "up")    pointLights[0].position.z -= amount;
@@ -1213,7 +1226,14 @@ namespace Framework {
         //else if (axis == "left")  pointLights[0].position.x -= amount;
         //else if (axis == "right") pointLights[0].position.x += amount;
     }
-
+   void Graphics::SetGroundMode(bool state)
+   {
+       groundMode = state;
+       // Optional: You might want to reset camera pitch/yaw here if switching modes
+       if (state) {
+           // Logic when switching TO ground mode
+       }
+   }
     void Graphics::ToggleMainLightFromLua() {
       /*  if (pointLights.empty()) return;
         pointLights[0].enabled = !pointLights[0].enabled;*/
@@ -1814,6 +1834,12 @@ namespace Framework {
 
         // --- Terrain ---
         terrainShader.use();
+        // Set grass texture
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, grassTextureID);
+        terrainShader.setInt("uGrassTex", 0);
+        terrainShader.setFloat("uGrassTiling", 20.0f);
+
         terrainShader.setMat4("uProj", proj);
         terrainShader.setMat4("uView", view);
         terrainShader.setMat4("uModel", mapModel);
@@ -1824,6 +1850,7 @@ namespace Framework {
         glBindTexture(GL_TEXTURE_2D, m_shadowDepthTexture);
         terrainShader.setInt("uShadowMap", 1);
         terrainShader.setMat4("uLightSpaceMatrix", m_lightSpaceMatrix);
+
 
         LightProperties::upload(terrainShader, sun, hasSun, points, spots);
         int pointShadowUnit = 2;
@@ -1866,6 +1893,19 @@ namespace Framework {
         {
             m_treeRenderer->draw(view, proj, mapModel, m_treeTextureID);
         }
+
+        // === DRAW PEBBLES HERE  ===
+        if (m_pebbleRenderer)
+        {
+            m_pebbleRenderer->draw(view, proj, mapModel, pebbleTextureID);
+        }
+
+        // === DRAW PINES HERE  ===
+        if (m_pineRenderer)
+        {
+            m_pineRenderer->draw(view, proj, mapModel, pineTextureID);
+        }
+
 
 
         // --- ENTITY SORTING ---
@@ -2210,6 +2250,12 @@ namespace Framework {
         m_skybox.draw(view, proj);
         // ====================================================
 
+        // Billboard leaves
+        if (m_leafRenderer)
+        {
+            m_leafRenderer->draw(view, proj, mapModel, leafTexture);
+        }
+
         for (auto it = transparentEntities.rbegin(); it != transparentEntities.rend(); ++it)
         {
             auto const& entityId = it->second;
@@ -2486,13 +2532,14 @@ namespace Framework {
         }
 
         // --------------------------------------------
-        // HUD/UI TEXT PASS (2D Screen Space) (Jasper)
-        // --------------------------------------------
+                // HUD/UI TEXT PASS (2D Screen Space) (Jasper)
+                // --------------------------------------------
         for (auto e : uiTextEntities)
         {
             auto& txt = ecsInterface.GetComponent<TextProperties>(e);
             auto& tr = ecsInterface.GetComponent<TransformComponent>(e);
 
+            // Normalized coordinates (0.0 to 1.0) -> Screen Coordinates
             float px = glm::clamp(tr.position.x, 0.0f, 1.0f);
             float py = glm::clamp(tr.position.y, 0.0f, 1.0f);
 
@@ -2506,7 +2553,8 @@ namespace Framework {
                 txt.scale,
                 txt.color,
                 (float)width,
-                (float)height
+                (float)height,
+                txt.alignment // <--- ADD THIS ARGUMENT (0=Left, 1=Center, 2=Right)
             );
         }
 

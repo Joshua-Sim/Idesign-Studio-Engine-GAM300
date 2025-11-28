@@ -57,6 +57,8 @@ namespace Framework {
 
 
     private:
+        //clean up
+        void CleanupNavData();
         // Internal helper
         void CollectSourceGeometry();
         void ConvertToRecastFormat(); // Convert collected mesh to recast input mesh format

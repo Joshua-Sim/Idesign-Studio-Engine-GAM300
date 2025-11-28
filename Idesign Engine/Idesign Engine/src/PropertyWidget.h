@@ -82,35 +82,62 @@ namespace Framework
         std::vector<std::string> assetNames;
         std::vector<AssetHandle> assetGuids;
 
+        // 1. Lock the Asset Manager (If your engine supports it).
+        // If you don't have a mutex getter, just ensure this doesn't run while loading scenes.
+        // std::lock_guard<std::mutex> lock(AssetManager::Instance().GetMutex());
+
+        const auto& assets = AssetManager::Instance().GetAssets();
+
         // Iterate over AssetKey + AssetEntry
-        for (const auto& [key, entry] : AssetManager::Instance().GetAssets())
+        for (const auto& [key, entry] : assets)
         {
+            // SAFETY CHECK 1: Ensure the shared pointer is valid before doing ANYTHING
+            if (!entry.pObject)
+                continue;
+
+            // SAFETY CHECK 2: Compare types. 
+            // We assume TypeName<T>::value is a const char*. 
+            // If entry.typeName is corrupted, this is where it usually crashes.
             if (entry.typeName != TypeName<AssetType>::value)
                 continue;
 
             auto* asset = static_cast<AssetType*>(entry.pObject.get());
 
-            if constexpr (has_name_and_path<AssetType>::value)
-            {
-                if (!asset || (asset->name.empty() && asset->path.empty()))
-                    continue;
-
-                std::string name = asset->name.empty() ? asset->path : asset->name;
-                assetNames.push_back(name);
-            }
-            else
+            // SAFETY CHECK 3: Ensure the cast didn't result in a nullptr
+            if (!asset)
                 continue;
 
-            assetGuids.push_back(key.guid); // <-- use key.guid instead of guid
+            if constexpr (has_name_and_path<AssetType>::value)
+            {
+                // SAFETY CHECK 4: Ensure strings are valid
+                bool hasName = !asset->name.empty();
+                bool hasPath = !asset->path.empty();
+
+                if (!hasName && !hasPath)
+                    continue;
+
+                std::string displayName = hasName ? asset->name : asset->path;
+                assetNames.push_back(displayName);
+            }
+            else
+            {
+                continue;
+            }
+
+            assetGuids.push_back(key.guid);
         }
 
+        // Prepare ImGui pointers (Must be done AFTER assetNames is finished filling)
         std::vector<const char*> labelPtrs;
+        labelPtrs.reserve(assetNames.size());
         for (const auto& name : assetNames)
             labelPtrs.push_back(name.c_str());
 
+        // Find current selection
         int currentIndex = -1;
         for (size_t i = 0; i < assetGuids.size(); ++i)
         {
+            // This comparison is safe if both are std::string or valid IDs
             if (assetGuids[i] == component.guid)
             {
                 currentIndex = static_cast<int>(i);
@@ -120,96 +147,104 @@ namespace Framework
 
         ImGui::Separator();
         ImGui::Text("%s", label.c_str());
+
+        // Render Combo
         if (ImGui::Combo(label.c_str(), &currentIndex, labelPtrs.data(), static_cast<int>(labelPtrs.size())))
         {
-            component.guid = assetGuids[currentIndex];
-
-            if (auto* asset = AssetManager::Instance().Get<AssetType>(component.guid))
+            // User selected something
+            if (currentIndex >= 0 && currentIndex < assetGuids.size())
             {
-                if constexpr (has_name_and_path<AssetType>::value)
-                {
-                    if (asset->name.empty() && asset->path.empty()) return; // Skip if no identifying info
-                    component.name = asset->name.empty() ? asset->path : asset->name;
-                    component.path = asset->path;
-                }
+                component.guid = assetGuids[currentIndex];
 
-                if constexpr (std::is_same_v<AssetType, MeshProperties>)
+                // Re-fetch the asset to update component data
+                if (auto* asset = AssetManager::Instance().Get<AssetType>(component.guid))
                 {
-                    if (asset->vao == 0 && !asset->path.empty())
+                    if constexpr (has_name_and_path<AssetType>::value)
                     {
-                        auto animGUID = AssetManager::Instance().FindGuid<AnimationProperties>(asset->name);
-                        Framework::AnimationProperties* animAsset = nullptr;
-
-                        if (!animGUID.empty()) {
-                            animAsset = AssetManager::Instance().Get<AnimationProperties>(animGUID);
+                        // Update name/path only if valid
+                        if (!asset->name.empty() || !asset->path.empty()) {
+                            component.name = asset->name.empty() ? asset->path : asset->name;
+                            component.path = asset->path;
                         }
+                    }
 
-                        // IF we found a skeleton, use the ANIMATED loader.
-                        if (animAsset)
+                    // Handle Mesh Specifics (Auto-load Animation vs Static)
+                    if constexpr (std::is_same_v<AssetType, MeshProperties>)
+                    {
+                        if (asset->vao == 0 && !asset->path.empty())
                         {
-                            // Ensure skeleton is loaded first
-                            if (animAsset->skeleton.bones.empty()) {
-                                AnimationLoader::loadAnimation(animAsset->path, *animAsset);
+                            // Check for Animation
+                            auto animGUID = AssetManager::Instance().FindGuid<AnimationProperties>(asset->name);
+                            Framework::AnimationProperties* animAsset = nullptr;
+
+                            if (!animGUID.empty()) {
+                                animAsset = AssetManager::Instance().Get<AnimationProperties>(animGUID);
                             }
 
-                            // Load with Skinning Data (Weights/IDs)
-                            MeshLoader::loadAnimatedMesh(asset->path, *animAsset, *asset);
-                            std::cout << "[Editor] Auto-loaded ANIMATED mesh: " << asset->name << std::endl;
+                            if (animAsset)
+                            {
+                                if (animAsset->skeleton.bones.empty()) {
+                                    AnimationLoader::loadAnimation(animAsset->path, *animAsset);
+                                }
+                                MeshLoader::loadAnimatedMesh(asset->path, *animAsset, *asset);
+                                std::cout << "[Editor] Auto-loaded ANIMATED mesh: " << asset->name << std::endl;
+                            }
+                            else
+                            {
+                                MeshLoader::loadMesh(asset->path, *asset);
+                                std::cout << "[Editor] Loaded STATIC mesh: " << asset->name << std::endl;
+                            }
                         }
-                        else
-                        {
-                            // No skeleton found? Load as STATIC (No weights)
-                            MeshLoader::loadMesh(asset->path, *asset);
-                            std::cout << "[Editor] Loaded STATIC mesh: " << asset->name << std::endl;
-                        }
+                        component.vao = asset->vao;
+                        component.vbo = asset->vbo;
+                        component.ebo = asset->ebo;
+                        component.indexCount = asset->indexCount;
                     }
-                    component.vao = asset->vao;
-                    component.vbo = asset->vbo;
-                    component.ebo = asset->ebo;
-                    component.indexCount = asset->indexCount;
-                }
 
-                if constexpr (std::is_same_v<AssetType, TextureProperties>)
-                {
-                    if (asset->textureID == 0)
+                    // Handle Texture Specifics
+                    if constexpr (std::is_same_v<AssetType, TextureProperties>)
                     {
-                        TextureLoader::loadTexture(*asset, true); // Load once
-                    }
-                    component.textureID = asset->textureID; // Reuse loaded texture
-                }
-
-                if constexpr (std::is_same_v<AssetType, NavMeshComponent>)
-                {
-                    component.guid = assetGuids[currentIndex];
-                }
-                else if constexpr (std::is_same_v<AssetType, AnimationProperties>)
-                {
-                    if (asset->path.empty())
-                        return;
-
-                    // Ensure the asset is loaded before we copy from it
-                    if (asset->skeleton.bones.empty()) {
-                        AnimationLoader::loadAnimation(asset->path, *asset);
+                        if (asset->textureID == 0)
+                        {
+                            TextureLoader::loadTexture(*asset, true);
+                        }
+                        component.textureID = asset->textureID;
                     }
 
-                    component.skeleton = asset->skeleton;
-                    component.availableAnimations = asset->availableAnimations;
+                    // Handle NavMesh
+                    if constexpr (std::is_same_v<AssetType, NavMeshComponent>)
+                    {
+                        component.guid = assetGuids[currentIndex];
+                    }
 
-                    // Copy the Global Inverse Transform (Critical for Scale/Rotation)
-                    component.globalInverseTransform = asset->globalInverseTransform;
+                    // Handle Animation Specifics
+                    else if constexpr (std::is_same_v<AssetType, AnimationProperties>)
+                    {
+                        if (!asset->path.empty())
+                        {
+                            if (asset->skeleton.bones.empty()) {
+                                AnimationLoader::loadAnimation(asset->path, *asset);
+                            }
 
-                    // Reset the runtime state so the new animation starts fresh
-                    component.currentTime = 0.0f;          // Reset timer to 0
-                    component.currentAnimation = nullptr;  // Clear old animation pointer
-                    component.StartDefaultAnimation();     // Auto-play the new one
+                            component.skeleton = asset->skeleton;
+                            component.availableAnimations = asset->availableAnimations;
+                            component.globalInverseTransform = asset->globalInverseTransform;
+                            component.currentTime = 0.0f;
+                            component.currentAnimation = nullptr;
+                            component.StartDefaultAnimation();
 
-                    // Resize matrices for the new skeleton size
-                    component.finalBoneMatrices.resize(component.skeleton.bones.size(), glm::mat4(1.0f));
-                }
+                            // Check size before resize to avoid weird vector errors
+                            if (component.skeleton.bones.size() > 0) {
+                                component.finalBoneMatrices.resize(component.skeleton.bones.size(), glm::mat4(1.0f));
+                            }
+                        }
+                    }
 
-                if constexpr (std::is_same_v<AssetType, ScriptProperties>)
-                {
-                    component.script = asset->script;
+                    // Handle Scripts
+                    if constexpr (std::is_same_v<AssetType, ScriptProperties>)
+                    {
+                        component.script = asset->script;
+                    }
                 }
             }
         }

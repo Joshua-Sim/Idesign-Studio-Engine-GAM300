@@ -1,0 +1,117 @@
+{
+    "entity": {
+        "name": "Customer_Kinematic",
+        "guid": "8168dc56-9447-4669-bbe0-138cc16536db",
+        "components": {
+            "TransformComponent": {
+                "position": [
+                    -25.940574645996094,
+                    5.900000095367432,
+                    13.040060043334961
+                ],
+                "rotation": [
+                    0.028169747442007065,
+                    -89.79428100585938,
+                    179.9430389404297
+                ],
+                "scale": [
+                    0.009999999776482582,
+                    0.029999999329447746,
+                    0.009999999776482582
+                ]
+            },
+            "TagComponent": {
+                "tags": [
+                    "Interactable",
+                    "interactable"
+                ]
+            },
+            "HierarchyComponent": {
+                "parent": "",
+                "children": [],
+                "sortIndex": 0
+            },
+            "MeshReference": {
+                "guid": "e902f0d7-a022-45fc-9c17-2a98cbdb793e"
+            },
+            "TextureComponent": {
+                "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
+                "isUI": false
+            },
+            "NavMeshAgentComponent": {
+                "agentHeight": 10.0,
+                "agentRadius": 0.6000000238418579,
+                "moveSpeed": 3.5,
+                "angularSpeed": 120.0,
+                "acceleration": 8.0,
+                "stoppingDistance": 0.10000000149011612,
+                "autoRepath": false,
+                "stopOnTargetReached": true,
+                "targetPosition": [
+                    -25.987422943115234,
+                    5.900000095367432,
+                    13.040227890014648
+                ]
+            },
+            "ScriptProperties": {
+                "scripts": [
+                    "Assets\\Scripts\\Customer.lua"
+                ]
+            },
+            "BoxColliderComponent": {
+                "colliders": [
+                    {
+                        "size": [
+                            130.8000030517578,
+                            95.0,
+                            109.5999984741211
+                        ],
+                        "center": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "canPassThrough": false,
+                        "isInteractable": true,
+                        "interactMessage": "OnInteractCustomer"
+                    }
+                ]
+            },
+            "PhysicsProperties": {
+                "category": 1,
+                "isImmovable": true,
+                "gravityFactor": 1.0,
+                "mass": 1.0,
+                "friction": 0.5,
+                "restitution": 0.0,
+                "linearVelocity": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "angularVelocity": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "startAwake": true
+            },
+            "EventReceiverComponent": {
+                "receivers": [
+                    {
+                        "messageToListenFor": "OnInteractCustomer",
+                        "luaFunctionToCall": "OnInteract"
+                    },
+                    {
+                        "messageToListenFor": "OnArrival",
+                        "luaFunctionToCall": "OnArrival"
+                    },
+                    {
+                        "messageToListenFor": "CustomerTimeout",
+                        "luaFunctionToCall": "OnCustomerTimeout"
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -42,6 +42,8 @@
 #include "PlayerInteractSystem.h"
 #include"ButtonSystem.h"
 #include "ButtonComponent.h"
+#include "RecipeBookManager.h"
+#include "TypeRegistry.h"
 
 using namespace Framework;
 
@@ -63,6 +65,8 @@ EngineState engineState;
 
 int main(void)
 {
+    //_CrtSetBreakAlloc(735035);
+
     // Save the initial working directory
     std::filesystem::path initialCWD = std::filesystem::current_path();
     std::cout << "Initial working directory: " << initialCWD << std::endl;
@@ -87,7 +91,6 @@ int main(void)
     //AssetManager::Instance().CompileAllAssets();
     //AssetManager::Instance().SaveAllAssets();
     AssetManager::Instance().LoadAllAssets();
-    
     // To Connect Prop with ECS
     RegisterComponentTypes();                           // Step 1: Register known types
     AutoRegisterAllReflectedComponents(ecsInterface);   // Step 2: Hook them into ECS
@@ -112,16 +115,19 @@ int main(void)
     //AssetManager::Instance().LoadAllAssets();
     
     //Access the InputHandler instance from the singleton
+    InputHandler::Initialize(graphicsSystem->GetWindow());
     InputHandler* inputHandlerSystem = InputHandler::GetInstance();
-    if (!inputHandlerSystem) 
-    {
+
+    if (!inputHandlerSystem) {
         std::cerr << "Failed to initialize InputHandler!" << std::endl;
-        return -1; // Exit if InputHandler initialization failed
+        return -1;
     }
-    
-    // 3. Use the new getter to connect the camera to the input handler
-    Camera* graphicsCamera = graphicsSystem.get()->getCamera();
-    inputHandlerSystem->SetCamera(graphicsCamera);
+
+    // [FIX] ADD THIS LINE so InputHandler can access GetCameraByIndex
+    inputHandlerSystem->SetGraphics(graphicsSystem.get());
+
+    // Keep this one too
+    inputHandlerSystem->SetCamera(graphicsSystem->getCamera());
 
     // Registering systems in the ECS interface here
     auto scriptingSystem = ecsInterface.RegisterSystem<ScriptingSystem>();
@@ -134,8 +140,10 @@ int main(void)
     ecsInterface.RegisterComponent<PlayerComponent>(); // register player component here coz of the interact system
     auto playerInteractSystem = ecsInterface.RegisterSystem<PlayerInteractSystem>();
     auto eventSystem = ecsInterface.RegisterSystem<EventSystem>();
-    ecsInterface.RegisterComponent<EventSenderComponent>();
+
+    ecsInterface.RegisterComponent<EventSenderComponent>(); 
     ecsInterface.RegisterComponent<EventReceiverComponent>();
+
     {
         Signature signature;
         // Tell ECS: "This system only cares about entities with EventReceiverComponent"
@@ -218,8 +226,9 @@ int main(void)
     // Clear all systems and other dynamically allocated resources
     engine->DestroySystems();
     EventManager::Instance().Reset();
-    TypeRegistry::Instance().Shutdown();
-
+    Framework::TypeRegistry::Shutdown();
+    Framework::MessageBus::Destroy();
+    Framework::MessageSystem::Destroy();
     // Clean up smart pointers as they go out of scope
     // No need to manually delete as unique_ptr will handle it
     return 0;

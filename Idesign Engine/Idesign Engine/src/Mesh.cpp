@@ -12,25 +12,56 @@ Mesh::~Mesh() {
 Mesh Mesh::CreateUnitCubeData() {
     Mesh m;
 
+    // Fixed: Added 0.0f, 0.0f (UVs) to the end of every line to match stride of 8
     const float V[] = {
-        // +X
-        0.5f,-0.5f,-0.5f,  1,0,0,   0.5f, 0.5f,-0.5f,  1,0,0,   0.5f, 0.5f, 0.5f,  1,0,0,
-        0.5f,-0.5f,-0.5f,  1,0,0,   0.5f, 0.5f, 0.5f,  1,0,0,   0.5f,-0.5f, 0.5f,  1,0,0,
-        // -X
-       -0.5f,-0.5f, 0.5f, -1,0,0,  -0.5f, 0.5f, 0.5f, -1,0,0,  -0.5f, 0.5f,-0.5f, -1,0,0,
-       -0.5f,-0.5f, 0.5f, -1,0,0,  -0.5f, 0.5f,-0.5f, -1,0,0,  -0.5f,-0.5f,-0.5f, -1,0,0,
-       // +Y
-      -0.5f, 0.5f,-0.5f,  0,1,0,  -0.5f, 0.5f, 0.5f,  0,1,0,   0.5f, 0.5f, 0.5f,  0,1,0,
-      -0.5f, 0.5f,-0.5f,  0,1,0,   0.5f, 0.5f, 0.5f,  0,1,0,   0.5f, 0.5f,-0.5f, 0,1,0,
-      // -Y
-     -0.5f,-0.5f, 0.5f,  0,-1,0, -0.5f,-0.5f,-0.5f, 0,-1,0,   0.5f,-0.5f,-0.5f, 0,-1,0,
-     -0.5f,-0.5f, 0.5f,  0,-1,0,  0.5f,-0.5f,-0.5f, 0,-1,0,   0.5f,-0.5f, 0.5f, 0,-1,0,
-     // +Z
-    -0.5f,-0.5f, 0.5f,  0,0,1,   0.5f,-0.5f, 0.5f,  0,0,1,   0.5f, 0.5f, 0.5f,  0,0,1,
-    -0.5f,-0.5f, 0.5f,  0,0,1,   0.5f, 0.5f, 0.5f,  0,0,1,  -0.5f, 0.5f, 0.5f,  0,0,1,
-    // -Z
-    0.5f,-0.5f,-0.5f,  0,0,-1, -0.5f,-0.5f,-0.5f, 0,0,-1,  -0.5f, 0.5f,-0.5f, 0,0,-1,
-    0.5f,-0.5f,-0.5f,  0,0,-1, -0.5f, 0.5f,-0.5f, 0,0,-1,   0.5f, 0.5f,-0.5f, 0,0,-1,
+        // +X Face
+        // x,    y,     z,      nx,ny,nz,   u, v
+        0.5f,-0.5f,-0.5f,   1, 0, 0,   0.0f, 0.0f,
+        0.5f, 0.5f,-0.5f,   1, 0, 0,   1.0f, 0.0f,
+        0.5f, 0.5f, 0.5f,   1, 0, 0,   1.0f, 1.0f,
+        0.5f,-0.5f,-0.5f,   1, 0, 0,   0.0f, 0.0f,
+        0.5f, 0.5f, 0.5f,   1, 0, 0,   1.0f, 1.0f,
+        0.5f,-0.5f, 0.5f,   1, 0, 0,   0.0f, 1.0f,
+
+        // -X Face
+       -0.5f,-0.5f, 0.5f,  -1, 0, 0,   0.0f, 0.0f,
+       -0.5f, 0.5f, 0.5f,  -1, 0, 0,   1.0f, 0.0f,
+       -0.5f, 0.5f,-0.5f,  -1, 0, 0,   1.0f, 1.0f,
+       -0.5f,-0.5f, 0.5f,  -1, 0, 0,   0.0f, 0.0f,
+       -0.5f, 0.5f,-0.5f,  -1, 0, 0,   1.0f, 1.0f,
+       -0.5f,-0.5f,-0.5f,  -1, 0, 0,   0.0f, 1.0f,
+
+       // +Y Face
+      -0.5f, 0.5f,-0.5f,   0, 1, 0,   0.0f, 1.0f,
+      -0.5f, 0.5f, 0.5f,   0, 1, 0,   0.0f, 0.0f,
+       0.5f, 0.5f, 0.5f,   0, 1, 0,   1.0f, 0.0f,
+      -0.5f, 0.5f,-0.5f,   0, 1, 0,   0.0f, 1.0f,
+       0.5f, 0.5f, 0.5f,   0, 1, 0,   1.0f, 0.0f,
+       0.5f, 0.5f,-0.5f,   0, 1, 0,   1.0f, 1.0f,
+
+       // -Y Face
+      -0.5f,-0.5f, 0.5f,   0,-1, 0,   0.0f, 0.0f,
+      -0.5f,-0.5f,-0.5f,   0,-1, 0,   0.0f, 1.0f,
+       0.5f,-0.5f,-0.5f,   0,-1, 0,   1.0f, 1.0f,
+      -0.5f,-0.5f, 0.5f,   0,-1, 0,   0.0f, 0.0f,
+       0.5f,-0.5f,-0.5f,   0,-1, 0,   1.0f, 1.0f,
+       0.5f,-0.5f, 0.5f,   0,-1, 0,   1.0f, 0.0f,
+
+       // +Z Face
+      -0.5f,-0.5f, 0.5f,   0, 0, 1,   0.0f, 0.0f,
+       0.5f,-0.5f, 0.5f,   0, 0, 1,   1.0f, 0.0f,
+       0.5f, 0.5f, 0.5f,   0, 0, 1,   1.0f, 1.0f,
+      -0.5f,-0.5f, 0.5f,   0, 0, 1,   0.0f, 0.0f,
+       0.5f, 0.5f, 0.5f,   0, 0, 1,   1.0f, 1.0f,
+      -0.5f, 0.5f, 0.5f,   0, 0, 1,   0.0f, 1.0f,
+
+      // -Z Face
+       0.5f,-0.5f,-0.5f,   0, 0,-1,   0.0f, 0.0f,
+      -0.5f,-0.5f,-0.5f,   0, 0,-1,   1.0f, 0.0f,
+      -0.5f, 0.5f,-0.5f,   0, 0,-1,   1.0f, 1.0f,
+       0.5f,-0.5f,-0.5f,   0, 0,-1,   0.0f, 0.0f,
+      -0.5f, 0.5f,-0.5f,   0, 0,-1,   1.0f, 1.0f,
+       0.5f, 0.5f,-0.5f,   0, 0,-1,   0.0f, 1.0f,
     };
 
     m.vertexCount = 36;
@@ -38,61 +69,140 @@ Mesh Mesh::CreateUnitCubeData() {
     return m;
 }
 
-Mesh Mesh::CreateUnitCylinderData(int slices) {
-    if (slices < 3) slices = 3;
+Mesh Mesh::CreateUnitCylinderData(int segments)
+{
+    Mesh mesh;
+    std::vector<float> verts;
 
-    Mesh m;
-    constexpr float PI = 3.14159265358979323846f;
-    const float R = 0.5f;
-    const float y0 = -0.5f, y1 = 0.5f;
+    const float radius = 0.5f;
+    const float height = 1.0f;
+    const float halfH = height * 0.5f;
 
-    auto push = [&](float x, float y, float z, float nx, float ny, float nz) {
-        m.vertices.insert(m.vertices.end(), { x,y,z,nx,ny,nz });
-        };
+    const float TWO_PI = 6.28318530718f;
 
-    // Sides
-    for (int i = 0; i < slices; ++i) {
-        float a0 = (i * 2.f * PI) / slices;
-        float a1 = ((i + 1) * 2.f * PI) / slices;
-        float c0 = std::cos(a0), s0 = std::sin(a0);
-        float c1 = std::cos(a1), s1 = std::sin(a1);
+    // ---------------------------------------
+    // SIDE VERTICES (NO INDEX BUFFER)
+    // ---------------------------------------
 
-        float x0 = R * c0, z0 = R * s0;
-        float x1 = R * c1, z1 = R * s1;
+    for (int i = 0; i < segments; i++)
+    {
+        float t0 = (float)i / segments;
+        float t1 = (float)(i + 1) / segments;
 
-        float nx0 = c0, nz0 = s0;
-        float nx1 = c1, nz1 = s1;
+        float th0 = t0 * TWO_PI;
+        float th1 = t1 * TWO_PI;
 
-        // quad -> two tris, CCW from outside
-        push(x0, y0, z0, nx0, 0, nz0);
-        push(x1, y0, z1, nx1, 0, nz1);
-        push(x1, y1, z1, nx1, 0, nz1);
+        float x0 = cosf(th0), z0 = sinf(th0);
+        float x1 = cosf(th1), z1 = sinf(th1);
 
-        push(x0, y0, z0, nx0, 0, nz0);
-        push(x1, y1, z1, nx1, 0, nz1);
-        push(x0, y1, z0, nx0, 0, nz0);
+        float px0 = x0 * radius, pz0 = z0 * radius;
+        float px1 = x1 * radius, pz1 = z1 * radius;
+
+        // Quad split into 2 triangles:
+        // Triangle 1 (bottom0, top0, top1)
+        // Triangle 2 (bottom0, top1, bottom1)
+
+        // bottom0
+        verts.insert(verts.end(), { px0, -halfH, pz0,   x0, 0.0f, z0,    t0, 0.0f });
+        // top0
+        verts.insert(verts.end(), { px0,  halfH, pz0,   x0, 0.0f, z0,    t0, 1.0f });
+        // top1
+        verts.insert(verts.end(), { px1,  halfH, pz1,   x1, 0.0f, z1,    t1, 1.0f });
+
+        // bottom0
+        verts.insert(verts.end(), { px0, -halfH, pz0,   x0, 0.0f, z0,    t0, 0.0f });
+        // top1
+        verts.insert(verts.end(), { px1,  halfH, pz1,   x1, 0.0f, z1,    t1, 1.0f });
+        // bottom1
+        verts.insert(verts.end(), { px1, -halfH, pz1,   x1, 0.0f, z1,    t1, 0.0f });
     }
 
-    // Top cap (+Y) â€” CCW from above: center -> next -> curr
-    for (int i = 0; i < slices; ++i) {
-        float a0 = (i * 2.f * PI) / slices;
-        float a1 = ((i + 1) * 2.f * PI) / slices;
-        push(0, y1, 0, 0, 1, 0);
-        push(R * std::cos(a1), y1, R * std::sin(a1), 0, 1, 0);
-        push(R * std::cos(a0), y1, R * std::sin(a0), 0, 1, 0);
+    // ---------------------------------------
+    // TOP CAP (triangle fan, no index buffer)
+    // ---------------------------------------
+    const float nx_top = 0.f;
+    const float ny_top = 1.f;
+    const float nz_top = 0.f;
+
+    float centerU = 0.5f;
+    float centerV = 0.5f;
+
+    for (int i = 0; i < segments; i++)
+    {
+        float t0 = (float)i / segments;
+        float t1 = (float)(i + 1) / segments;
+
+        float th0 = t0 * TWO_PI;
+        float th1 = t1 * TWO_PI;
+
+        float x0 = cosf(th0), z0 = sinf(th0);
+        float x1 = cosf(th1), z1 = sinf(th1);
+
+        // center
+        verts.insert(verts.end(), {
+            0.f, halfH, 0.f,
+            nx_top, ny_top, nz_top,
+            centerU, centerV
+            });
+
+        // edge0
+        verts.insert(verts.end(), {
+            x0 * radius, halfH, z0 * radius,
+            nx_top, ny_top, nz_top,
+            (x0 * 0.5f + 0.5f), (z0 * 0.5f + 0.5f)
+            });
+
+        // edge1
+        verts.insert(verts.end(), {
+            x1 * radius, halfH, z1 * radius,
+            nx_top, ny_top, nz_top,
+            (x1 * 0.5f + 0.5f), (z1 * 0.5f + 0.5f)
+            });
     }
 
-    // Bottom cap (âˆ’Y) â€” CCW from below: center -> curr -> next
-    for (int i = 0; i < slices; ++i) {
-        float a0 = (i * 2.f * PI) / slices;
-        float a1 = ((i + 1) * 2.f * PI) / slices;
-        push(0, y0, 0, 0, -1, 0);
-        push(R * std::cos(a0), y0, R * std::sin(a0), 0, -1, 0);
-        push(R * std::cos(a1), y0, R * std::sin(a1), 0, -1, 0);
+    // ---------------------------------------
+    // BOTTOM CAP
+    // ---------------------------------------
+    const float nx_bot = 0.f;
+    const float ny_bot = -1.f;
+    const float nz_bot = 0.f;
+
+    for (int i = 0; i < segments; i++)
+    {
+        float t0 = (float)i / segments;
+        float t1 = (float)(i + 1) / segments;
+
+        float th0 = t0 * TWO_PI;
+        float th1 = t1 * TWO_PI;
+
+        float x0 = cosf(th0), z0 = sinf(th0);
+        float x1 = cosf(th1), z1 = sinf(th1);
+
+        // center
+        verts.insert(verts.end(), {
+            0.f, -halfH, 0.f,
+            nx_bot, ny_bot, nz_bot,
+            centerU, centerV
+            });
+
+        // edge1  (reversed order for correct winding)
+        verts.insert(verts.end(), {
+            x1 * radius, -halfH, z1 * radius,
+            nx_bot, ny_bot, nz_bot,
+            (x1 * 0.5f + 0.5f), (z1 * 0.5f + 0.5f)
+            });
+
+        // edge0
+        verts.insert(verts.end(), {
+            x0 * radius, -halfH, z0 * radius,
+            nx_bot, ny_bot, nz_bot,
+            (x0 * 0.5f + 0.5f), (z0 * 0.5f + 0.5f)
+            });
     }
 
-    m.vertexCount = static_cast<GLsizei>(m.vertices.size() / 6);
-    return m;
+    mesh.vertices = verts;
+    mesh.vertexCount = (GLsizei)(verts.size() / 8);
+    return mesh;
 }
 
 Mesh Mesh::CreateUnitSphereData(int stacks, int slices) {
@@ -155,7 +265,7 @@ Mesh Mesh::CreateUnitPlaneXZData() {
     return m;
 }
 
-Mesh Mesh::CreateUnitConeData(int slices) 
+Mesh Mesh::CreateUnitConeData(int slices)
 {
     if (slices < 3) slices = 3;
 
@@ -164,26 +274,26 @@ Mesh Mesh::CreateUnitConeData(int slices)
     const float R = 0.5f;
     const float y0 = -0.5f; // base
     const float y1 = 0.5f; //apex
-    auto push = [&](float x,float y,float z,float nx,float ny,float nz)
-    {
-        m.vertices.insert(m.vertices.end(), {x,y,z,nx,ny,nz});
-    };
+    auto push = [&](float x, float y, float z, float nx, float ny, float nz)
+        {
+            m.vertices.insert(m.vertices.end(), { x,y,z,nx,ny,nz });
+        };
 
     auto sideNormal = [&](float c, float s)
-    {
-        // Tangents: T(a)=(-s,0,c), G(a)=(-R c, 1, -R s)
-        float Tx = -s, Ty = 0, Tz = c;
-        float Gx = -R * c, Gy = 1, Gz = -R * s;
-        // N = T x G, flipped outward
-        float nx = -(Ty * Gz - Tz * Gy);// =  c
-        float ny = -(Tz * Gx - Tx * Gz);// =  R
-        float nz = -(Tx * Gy - Ty * Gx);// =  s
-        float len = std::sqrt(nx * nx + ny * ny + nz * nz);
-        return std::array<float, 3>{ nx /len, ny / len, nz / len };
-    };
+        {
+            // Tangents: T(a)=(-s,0,c), G(a)=(-R c, 1, -R s)
+            float Tx = -s, Ty = 0, Tz = c;
+            float Gx = -R * c, Gy = 1, Gz = -R * s;
+            // N = T x G, flipped outward
+            float nx = -(Ty * Gz - Tz * Gy);// =  c
+            float ny = -(Tz * Gx - Tx * Gz);// =  R
+            float nz = -(Tx * Gy - Ty * Gx);// =  s
+            float len = std::sqrt(nx * nx + ny * ny + nz * nz);
+            return std::array<float, 3>{ nx / len, ny / len, nz / len };
+        };
 
     // Sides
-    for (int i = 0; i < slices; ++i) 
+    for (int i = 0; i < slices; ++i)
     {
         float a0 = (i * 2.f * PI) / slices;
         float a1 = ((i + 1) * 2.f * PI) / slices;
@@ -204,7 +314,7 @@ Mesh Mesh::CreateUnitConeData(int slices)
     }
 
     // Base (âˆ’Y), CCW from below: center -> curr -> next
-    for (int i = 0; i < slices; ++i) 
+    for (int i = 0; i < slices; ++i)
     {
         float a0 = (i * 2.f * PI) / slices;
         float a1 = ((i + 1) * 2.f * PI) / slices;
@@ -228,10 +338,14 @@ void Mesh::initGL() {
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
 
     // layout(location=0) position, layout(location=1) normal
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(0); // pos
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+
+    glEnableVertexAttribArray(1); // normal
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+
+    glEnableVertexAttribArray(2); // uv
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 
     glBindVertexArray(0);
 
@@ -246,7 +360,7 @@ void Mesh::draw() const {
     glBindVertexArray(0);
 }
 
-void Mesh::cleanupGL() 
+void Mesh::cleanupGL()
 {
     if (vbo) {
         glDeleteBuffers(1, &vbo);
@@ -320,6 +434,25 @@ Mesh Mesh::CreateUnitTriangleData()
 
     return triangle;
 }
+
+Mesh Mesh::CreateBillboardQuad()
+{
+    Mesh m;
+    m.vertices = {
+        // pos            normal         uv
+        -0.5f, 0.f, 0.f,   0.f, 0.f, 1.f,   0.f, 0.f,
+         0.5f, 0.f, 0.f,   0.f, 0.f, 1.f,   1.f, 0.f,
+         0.5f, 1.f, 0.f,   0.f, 0.f, 1.f,   1.f, 1.f,
+
+        -0.5f, 0.f, 0.f,   0.f, 0.f, 1.f,   0.f, 0.f,
+         0.5f, 1.f, 0.f,   0.f, 0.f, 1.f,   1.f, 1.f,
+        -0.5f, 1.f, 0.f,   0.f, 0.f, 1.f,   0.f, 1.f,
+    };
+
+    m.vertexCount = 6;
+    return m;
+}
+
 
 const float* Mesh::GetRawVertexData() const {
     return vertices.data();

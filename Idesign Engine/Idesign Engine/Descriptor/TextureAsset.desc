@@ -1,22 +1,10 @@
 {
-    "count": 70,
+    "count": 85,
     "entries": [
         {
-            "guid": "d1624844-bd9b-44f7-9976-d196954e311f",
-            "name": "ChoppedHerb1",
-            "path": "Assets\\Textures\\ChoppedHerb1.png",
-            "isUI": false
-        },
-        {
-            "guid": "7bd3846d-4142-4b26-ab54-85667861258f",
-            "name": "BluePotion2",
-            "path": "Assets\\Textures\\BluePotion2.png",
-            "isUI": false
-        },
-        {
-            "guid": "90b999f3-2c4f-44ab-8213-964c53cd22cc",
-            "name": "pear3D",
-            "path": "Assets\\Textures\\pear3D.png",
+            "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
+            "name": "",
+            "path": "Assets/PNG/test.png",
             "isUI": false
         },
         {
@@ -26,7 +14,13 @@
             "isUI": false
         },
         {
-            "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
+            "guid": "7b119595-c240-4c45-a8a0-018d7a3d917f",
+            "name": "",
+            "path": "Assets/PNG/test.png",
+            "isUI": false
+        },
+        {
+            "guid": "338b187d-1182-4c0f-8af6-799d3fb9fbf2",
             "name": "",
             "path": "Assets/PNG/test.png",
             "isUI": false
@@ -38,15 +32,9 @@
             "isUI": false
         },
         {
-            "guid": "338b187d-1182-4c0f-8af6-799d3fb9fbf2",
-            "name": "",
-            "path": "Assets/PNG/test.png",
-            "isUI": false
-        },
-        {
-            "guid": "7b119595-c240-4c45-a8a0-018d7a3d917f",
-            "name": "",
-            "path": "Assets/PNG/test.png",
+            "guid": "d4899207-ea5e-473b-870f-aade76e8a7ff",
+            "name": "Door",
+            "path": "Assets\\Textures\\Door.png",
             "isUI": false
         },
         {
@@ -56,9 +44,9 @@
             "isUI": false
         },
         {
-            "guid": "d4899207-ea5e-473b-870f-aade76e8a7ff",
-            "name": "Door",
-            "path": "Assets\\Textures\\Door.png",
+            "guid": "cabb6b16-8445-4f40-b9c8-bd593ea6b65c",
+            "name": "top",
+            "path": "Assets\\Textures\\top.png",
             "isUI": false
         },
         {
@@ -68,9 +56,33 @@
             "isUI": false
         },
         {
-            "guid": "cabb6b16-8445-4f40-b9c8-bd593ea6b65c",
-            "name": "top",
-            "path": "Assets\\Textures\\top.png",
+            "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
+            "name": "Shelf",
+            "path": "Assets\\Textures\\Shelf.png",
+            "isUI": false
+        },
+        {
+            "guid": "1a04361c-a4ca-4230-a564-24c35868f47c",
+            "name": "SkyMidNight_Right",
+            "path": "Assets\\Textures\\SkyMidNight_Right.png",
+            "isUI": false
+        },
+        {
+            "guid": "90b999f3-2c4f-44ab-8213-964c53cd22cc",
+            "name": "pear3D",
+            "path": "Assets\\Textures\\pear3D.png",
+            "isUI": false
+        },
+        {
+            "guid": "d1624844-bd9b-44f7-9976-d196954e311f",
+            "name": "ChoppedHerb1",
+            "path": "Assets\\Textures\\ChoppedHerb1.png",
+            "isUI": false
+        },
+        {
+            "guid": "7bd3846d-4142-4b26-ab54-85667861258f",
+            "name": "BluePotion2",
+            "path": "Assets\\Textures\\BluePotion2.png",
             "isUI": false
         },
         {
@@ -86,6 +98,12 @@
             "isUI": false
         },
         {
+            "guid": "0d960551-d374-438f-b016-ba071589e284",
+            "name": "SkyMidNight_Front",
+            "path": "Assets\\Textures\\SkyMidNight_Front.png",
+            "isUI": false
+        },
+        {
             "guid": "4caccc21-6007-45d5-bb72-a14260f29a35",
             "name": "test",
             "path": "Assets/PNG/test.png",
@@ -93,8 +111,8 @@
         },
         {
             "guid": "49874ec1-50f0-44fd-85cd-c2c551acaf66",
-            "name": "RedPotion",
-            "path": "Assets\\Textures\\RedPotion.png",
+            "name": "strength_potion",
+            "path": "Assets\\Textures\\strength_potion3D.png",
             "isUI": false
         },
         {
@@ -113,12 +131,6 @@
             "guid": "c3eb9787-d36c-4380-a39f-78737901cda2",
             "name": "Table",
             "path": "Assets\\Textures\\Table.png",
-            "isUI": false
-        },
-        {
-            "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
-            "name": "Shelf",
-            "path": "Assets\\Textures\\Shelf.png",
             "isUI": false
         },
         {
@@ -177,8 +189,8 @@
         },
         {
             "guid": "390883fb-54a2-4a3a-92d9-75c4057b2f76",
-            "name": "YellowPotion3",
-            "path": "Assets\\Textures\\YellowPotion3.png",
+            "name": "vitality_potion3D",
+            "path": "Assets\\Textures\\vitality_potion3D.png",
             "isUI": false
         },
         {
@@ -245,12 +257,6 @@
             "guid": "4cf1bf23-4fbd-4a08-9abb-f662145f2134",
             "name": "Counter",
             "path": "Assets\\Textures\\Counter.png",
-            "isUI": false
-        },
-        {
-            "guid": "1fd4cefe-486b-4fbc-810c-8456cf7bbb59",
-            "name": "strength_potion",
-            "path": "Assets\\Textures\\strength_potion.png",
             "isUI": false
         },
         {
@@ -344,15 +350,15 @@
             "isUI": false
         },
         {
-            "guid": "4ee14b8b-838f-46e5-a49e-b1e1d768aa32",
-            "name": "pear",
-            "path": "Assets\\Textures\\pear.png",
-            "isUI": false
-        },
-        {
             "guid": "f7d8e93f-e2a1-4819-9aef-43f282f22713",
             "name": "back1",
             "path": "Assets\\Textures\\back1.png",
+            "isUI": false
+        },
+        {
+            "guid": "4ee14b8b-838f-46e5-a49e-b1e1d768aa32",
+            "name": "pear",
+            "path": "Assets\\Textures\\pear.png",
             "isUI": false
         },
         {
@@ -419,6 +425,90 @@
             "guid": "827936c9-bf24-4d8e-8786-804be9e59c2f",
             "name": "BoxOfPears-3-VegetableCrate",
             "path": "Assets\\Textures\\BoxOfPears-3-VegetableCrate.png",
+            "isUI": false
+        },
+        {
+            "guid": "09ab93d8-f4cb-4ab1-86cd-889bebd524a8",
+            "name": "strength_potion",
+            "path": "Assets\\Textures\\strength_potion.png",
+            "isUI": false
+        },
+        {
+            "guid": "acb31027-a3de-428f-b58d-322acaf9a702",
+            "name": "vitality_potion",
+            "path": "Assets\\Textures\\vitality_potion.png",
+            "isUI": false
+        },
+        {
+            "guid": "c2a1f2a8-98b8-490f-bae9-f3bc714f424c",
+            "name": "SkyNoon_Top",
+            "path": "Assets\\Textures\\SkyNoon_Top.png",
+            "isUI": false
+        },
+        {
+            "guid": "b8e4adb2-20e3-4651-85f1-77aa9dc4df18",
+            "name": "SkyMidNight_Bottom",
+            "path": "Assets\\Textures\\SkyMidNight_Bottom.png",
+            "isUI": false
+        },
+        {
+            "guid": "00429667-295d-4c22-aab8-5aa80f122555",
+            "name": "SkyMidNight_Left",
+            "path": "Assets\\Textures\\SkyMidNight_Left.png",
+            "isUI": false
+        },
+        {
+            "guid": "f76c3989-c7eb-4c0a-8fbd-b9fcb10e4096",
+            "name": "SkyMidNight_Top",
+            "path": "Assets\\Textures\\SkyMidNight_Top.png",
+            "isUI": false
+        },
+        {
+            "guid": "d2a5feea-5a76-412a-b09e-0a1f1ff3317c",
+            "name": "SkyNoon_Back",
+            "path": "Assets\\Textures\\SkyNoon_Back.png",
+            "isUI": false
+        },
+        {
+            "guid": "daac51c7-3556-42a1-86bd-ec161ec7a167",
+            "name": "SkyNoon_Bottom",
+            "path": "Assets\\Textures\\SkyNoon_Bottom.png",
+            "isUI": false
+        },
+        {
+            "guid": "21e71a10-33b3-4b37-a5df-9ebeb8a262e2",
+            "name": "SkyNoon_Front",
+            "path": "Assets\\Textures\\SkyNoon_Front.png",
+            "isUI": false
+        },
+        {
+            "guid": "c493f979-8e16-44c2-9c0c-76e713861a7a",
+            "name": "SkyNoon_Left",
+            "path": "Assets\\Textures\\SkyNoon_Left.png",
+            "isUI": false
+        },
+        {
+            "guid": "fc41bc46-1535-4158-86ed-4c6e4e3192ff",
+            "name": "SkyNoon_Right",
+            "path": "Assets\\Textures\\SkyNoon_Right.png",
+            "isUI": false
+        },
+        {
+            "guid": "3fa44413-2b3b-444a-8d06-3475bebf7792",
+            "name": "Grass_normal_left",
+            "path": "Assets\\Textures\\Grass_normal_left.png",
+            "isUI": false
+        },
+        {
+            "guid": "52dc7142-5614-46aa-a381-f3c2fb4ef013",
+            "name": "treeLong",
+            "path": "Assets\\Textures\\treeLong.png",
+            "isUI": false
+        },
+        {
+            "guid": "c9c55d09-3f6f-44ca-9069-50e51f428c84",
+            "name": "SkyMidNight_Back",
+            "path": "Assets\\Textures\\SkyMidNight_Back.png",
             "isUI": false
         }
     ]

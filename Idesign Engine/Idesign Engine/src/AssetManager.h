@@ -223,30 +223,56 @@ namespace Framework
         template<typename T>
         AssetHandle FindGuid(const std::optional<std::string>& name = std::nullopt)
         {
-            // Loop through all registered assets in the AssetManager
-            for (const auto& [key, entry] : AssetManager::Instance().GetAssets())
+            // [CRITICAL RECOMMENDATION] 
+            // If your game is multi-threaded, you MUST lock the asset manager here.
+            // If AssetManager::Instance().GetAssets() is modified while this loop runs, 
+            // the app WILL crash randomly.
+            // std::lock_guard<std::mutex> lock(AssetManager::Instance().GetMutex()); 
+
+            const auto& assets = AssetManager::Instance().GetAssets();
+
+            for (const auto& [key, entry] : assets)
             {
-                // Skip entries that don't match the requested type
+                // 1. Safety: Check if the raw pointer is null immediately
+                if (!entry.pObject)
+                    continue;
+
+                // 2. Type Check
                 if (entry.typeName != TypeName<T>::value)
                     continue;
 
-                // Safely cast the generic asset pointer to the expected type T
+                // 3. Cast
                 T* obj = static_cast<T*>(entry.pObject.get());
-                if (!obj) continue; // Skip if the cast fails or the object is null
 
-                // If a name was provided, try to match it against the asset's name
+                // 4. Safety: Double check the cast result
+                if (!obj)
+                    continue;
+
+                // 5. Comparison Logic
                 if constexpr (requires { std::declval<T>().name; })
                 {
                     if (name.has_value())
                     {
-                        // normalize both sides to std::string_view
-                        if (std::string_view(obj->name) == std::string_view(name.value())) return key.guid;
+                        // FIX: Removed std::string_view wrappers. 
+                        // Creating a string_view from a garbage pointer causes an immediate crash.
+                        // Standard operator== is safer and handles std::string vs char* correctly.
+                        if (obj->name == name.value())
+                        {
+                            return key.guid;
+                        }
                     }
-                    else return key.guid;
+                    else
+                    {
+                        // Name required but not provided
+                        return key.guid;
+                    }
                 }
-                else if (!name.has_value()) return key.guid;
+                else if (!name.has_value())
+                {
+                    return key.guid;
+                }
             }
-            // No matching asset found — return an empty GUID
+
             return AssetHandle();
         }
 

@@ -157,8 +157,8 @@ namespace Framework {
         float scale,
         glm::vec3 color,
         float screenWidth,
-        float screenHeight) {
-
+        float screenHeight,
+        int alignment) { // <--- 1. ADDED ARGUMENT (0=Left, 1=Center, 2=Right)
 
         // --- SETUP ---
         shader.Use();
@@ -176,14 +176,41 @@ namespace Framework {
         // Find the font in the cache safely
         auto font_it = FontCache.find(activeFont);
         if (font_it == FontCache.end()) {
-            glBindVertexArray(0); // Unbind before returning
-            glDisable(GL_BLEND);  // Disable blending before returning
+            glBindVertexArray(0);
+            glDisable(GL_BLEND);
             return;
         }
         auto& characters = font_it->second;
 
+        // -----------------------------------------------------------
+        // [NEW] STEP 1: CALCULATE TOTAL WIDTH FOR ALIGNMENT
+        // -----------------------------------------------------------
+        if (alignment != 0) { // If Center or Right aligned
+            float totalWidth = 0.0f;
+            for (char c : text) {
+                // Check if character exists to prevent crashing
+                if (characters.find(c) != characters.end()) {
+                    Character ch = characters[c];
+                    // 'Advance' is in 1/64th pixels, so shift by 6 to get pixels
+                    totalWidth += (ch.Advance >> 6) * scale;
+                }
+            }
+
+            // [NEW] STEP 2: OFFSET STARTING X
+            if (alignment == 1) {       // Center
+                x -= (totalWidth * 0.5f);
+            }
+            else if (alignment == 2) { // Right
+                x -= totalWidth;
+            }
+        }
+        // -----------------------------------------------------------
+
         // --- RENDER LOOP ---
         for (char c : text) {
+            // Safety Check: Skip unknown characters
+            if (characters.find(c) == characters.end()) continue;
+
             Character ch = characters[c];
 
             float xpos = x + ch.Bearing.x * scale;
@@ -197,19 +224,22 @@ namespace Framework {
 
             shader.SetUniform("model", model);
             float vertices[6][4] = {
-                // Coords      // TexCoords
-                { 0.0f, 1.0f,   0.0f, 0.0f }, // Top-left   (Tex Y is 0.0)
-                { 0.0f, 0.0f,   0.0f, 1.0f }, // Bottom-left(Tex Y is 1.0)
-                { 1.0f, 0.0f,   1.0f, 1.0f }, // Bottom-right(Tex Y is 1.0)
+                // Coords       // TexCoords
+                { 0.0f, 1.0f,   0.0f, 0.0f },
+                { 0.0f, 0.0f,   0.0f, 1.0f },
+                { 1.0f, 0.0f,   1.0f, 1.0f },
 
-                { 0.0f, 1.0f,   0.0f, 0.0f }, // Top-left   (Tex Y is 0.0)
-                { 1.0f, 0.0f,   1.0f, 1.0f }, // Bottom-right(Tex Y is 1.0)
-                { 1.0f, 1.0f,   1.0f, 0.0f }  // Top-right  (Tex Y is 0.0)
+                { 0.0f, 1.0f,   0.0f, 0.0f },
+                { 1.0f, 0.0f,   1.0f, 1.0f },
+                { 1.0f, 1.0f,   1.0f, 0.0f }
             };
+
             glBindTexture(GL_TEXTURE_2D, ch.TextureID);
             glBindBuffer(GL_ARRAY_BUFFER, VBO);
             glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
             glDrawArrays(GL_TRIANGLES, 0, 6);
+
+            // Move cursor forward for next character
             x += (ch.Advance >> 6) * scale;
         }
 

@@ -26,7 +26,10 @@ namespace Framework {
         }
 
     }
-
+    GameSystem::~GameSystem()
+    {
+        Shutdown();
+    }
     void GameSystem::Update(float timeslice) {
         static bool wasBookOpen = false;
 
@@ -60,4 +63,26 @@ namespace Framework {
     {
         return score;
     }
+
+    void GameSystem::Shutdown()
+    {
+        // 1. Clean up Recipe Book
+        if (recipeBookManager) {
+            recipeBookManager->Shutdown(); // Clears the vectors/strings
+            delete recipeBookManager;      // Deletes the object
+            recipeBookManager = nullptr;
+        }
+
+        // 2. Clean up Phase Manager
+        if (phaseManager) {
+            // phaseManager->Shutdown(); // If it has one
+            delete phaseManager;
+            phaseManager = nullptr;
+        }
+
+        std::cout << "[GameSystem] Shutdown complete. Managers freed." << std::endl;
+    }
 }
+
+
+

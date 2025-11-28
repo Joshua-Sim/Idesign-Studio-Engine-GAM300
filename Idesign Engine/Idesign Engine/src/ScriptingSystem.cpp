@@ -18,9 +18,12 @@
 #include "EngineState.h"
 #include "ButtonComponent.h"
 #include "ButtonSystem.h"
+#include "EventManager.h"
 #include "SceneManager.h" 
 #include "Inventory.h" // Include your Inventory header
+#include "BoxColliderComponent.h"
 #include "InputHandler.h"
+
 extern Framework::Coordinator ecsInterface;
 
 namespace Framework {
@@ -56,6 +59,7 @@ namespace Framework {
             lua_pushnumber(L, tr.position.z);
             return 3; // x, y, z
         }
+
 
         static int lua_SetPosition(lua_State* L)
         {
@@ -115,15 +119,103 @@ namespace Framework {
             return 2;
         }
 
+        //For text component
+        static int lua_GetTextComponent(lua_State* L)
+        {
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+
+            if (!ecsInterface.IsEntityValid(e) || !ecsInterface.HasComponent<TextProperties>(e)) {
+                lua_pushnil(L);
+                return 1;
+            }
+
+            auto& text = ecsInterface.GetComponent<TextProperties>(e);
+
+            // Return a table with text component data
+            lua_newtable(L);
+
+            lua_pushstring(L, text.text.c_str());
+            lua_setfield(L, -2, "text");
+
+            lua_pushnumber(L, text.scale);
+            lua_setfield(L, -2, "scale");
+
+            // Color
+            lua_newtable(L);
+            lua_pushnumber(L, text.color.r); lua_setfield(L, -2, "r");
+            lua_pushnumber(L, text.color.g); lua_setfield(L, -2, "g");
+            lua_pushnumber(L, text.color.b); lua_setfield(L, -2, "b");
+            lua_setfield(L, -2, "color");
+
+            lua_pushinteger(L, text.alignment);
+            lua_setfield(L, -2, "alignment");
+
+            lua_pushboolean(L, text.isBillboard);
+            lua_setfield(L, -2, "isBillboard");
+
+            lua_pushboolean(L, text.screenSpace);
+            lua_setfield(L, -2, "screenSpace");
+
+            return 1;
+        }
+
+        static int lua_SetTextComponent(lua_State* L)
+        {
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+            const char* field = luaL_checkstring(L, 2);
+            // Value is at index 3 (type depends on field)
+
+            if (!ecsInterface.IsEntityValid(e) || !ecsInterface.HasComponent<TextProperties>(e)) {
+                return luaL_error(L, "SetTextComponent: invalid entity or missing TextProperties");
+            }
+
+            auto& text = ecsInterface.GetComponent<TextProperties>(e);
+
+            if (strcmp(field, "text") == 0) {
+                text.text = luaL_checkstring(L, 3);
+            }
+            else if (strcmp(field, "scale") == 0) {
+                text.scale = static_cast<float>(luaL_checknumber(L, 3));
+            }
+            else if (strcmp(field, "alignment") == 0) {
+                text.alignment = static_cast<int>(luaL_checkinteger(L, 3));
+            }
+            else if (strcmp(field, "isBillboard") == 0) {
+                text.isBillboard = lua_toboolean(L, 3);
+            }
+            else if (strcmp(field, "screenSpace") == 0) {
+                text.screenSpace = lua_toboolean(L, 3);
+            }
+            else if (strcmp(field, "color") == 0) {
+                // Expect a table with r, g, b
+                if (!lua_istable(L, 3)) {
+                    return luaL_error(L, "SetTextComponent: color must be a table {r, g, b}");
+                }
+
+                lua_getfield(L, 3, "r");
+                lua_getfield(L, 3, "g");
+                lua_getfield(L, 3, "b");
+
+                text.color.r = static_cast<float>(luaL_checknumber(L, -3));
+                text.color.g = static_cast<float>(luaL_checknumber(L, -2));
+                text.color.b = static_cast<float>(luaL_checknumber(L, -1));
+
+                lua_pop(L, 3);
+            }
+            else {
+                return luaL_error(L, "SetTextComponent: unknown field '%s'", field);
+            }
+
+            return 0;
+        }
+
+
         static int l_spawnPrompt(lua_State* L) {
-            // Argument 1: The Entity ID (The Box/Receiver) - so we know WHERE to spawn
+            // Argument 1: The Entity ID
             Entity parentID = static_cast<Entity>(luaL_checkinteger(L, 1));
 
-            // Argument 2: The Text to display
+            // Argument 2: The Text
             const char* textContent = luaL_checkstring(L, 2);
-
-            // Argument 3: (Optional) Y Offset
-            float yOffset = (float)luaL_optnumber(L, 3, 2.0); // Default to 2.0 units high
 
             // 1. Safety Check
             if (!ecsInterface.IsEntityValid(parentID) ||
@@ -132,38 +224,79 @@ namespace Framework {
                 return 0;
             }
 
-            // 2. Get Parent Position
+            // 2. Get Parent Transform
             auto& parentTrans = ecsInterface.GetComponent<TransformComponent>(parentID);
-            glm::vec3 spawnPos = parentTrans.position;
-            spawnPos.y += yOffset;
 
-            // 3. Create New Entity
+            // Calculate the Base Height
+            float heightOffset = 0.0f;
+
+            // 3. AUTOMATIC HEIGHT CALCULATION
+            if (ecsInterface.HasComponent<BoxColliderComponent>(parentID))
+            {
+                const auto& boxComp = ecsInterface.GetComponent<BoxColliderComponent>(parentID);
+
+                // Iterate through all colliders to find the highest point
+                float maxLocalTop = 0.0f;
+                bool hasCollider = false;
+
+                for (const auto& col : boxComp.colliders)
+                {
+                    // The top of a box is its Center Y + (Size Y / 2)
+                    float topY = col.center.y + (col.size.y * 0.5f);
+
+                    if (!hasCollider || topY > maxLocalTop)
+                    {
+                        maxLocalTop = topY;
+                        hasCollider = true;
+                    }
+                }
+
+                if (hasCollider)
+                {
+                    // IMPORTANT: Multiply by parent's Y scale to get World Height
+                    heightOffset = maxLocalTop * parentTrans.scale.y;
+                }
+            }
+            else
+            {
+                // Fallback if no collider exists (e.g., default 1.0 height)
+                heightOffset = 1.0f * parentTrans.scale.y;
+            }
+
+            // 4. Calculate Final Position
+            glm::vec3 spawnPos = parentTrans.position;
+            spawnPos.y += heightOffset; // Add the calculated height + extra padding
+
+            // 5. Create New Entity
             Entity promptEntity = ecsInterface.CreateEntity();
 
-            // 4. Add Transform
             TransformComponent tf;
             tf.position = spawnPos;
-            tf.scale = glm::vec3(1.0f);
-            tf.rotation = glm::vec3(0.0f, 90.0f, 0.0f);
+            tf.scale = glm::vec3(0.2f);
+
+            // Billboard effect? usually prompts face the camera, but fixed rotation is fine too
+            tf.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
             ecsInterface.AddComponent(promptEntity, tf);
 
             HierarchyComponent hc;
+            hc.parentGUID = ecsInterface.GetEntityGUID(parentID);
             ecsInterface.AddComponent(promptEntity, hc);
 
             TextProperties tp;
+            tp.isBillboard = true;
             tp.text = std::string(textContent);
-            tp.color = glm::vec3(1.0f, 1.0f, 1.0f); // White text
-            tp.alignment = 1;
-            tp.scale = 0.03f;
+            tp.color = glm::vec3(1.0f, 1.0f, 1.0f);
+            tp.alignment = 1; // Center alignment usually
+            tp.scale = 0.02f;
             ecsInterface.AddComponent(promptEntity, tp);
 
+            // Add empty mesh/material if your rendering system requires them for text
             MeshProperties mp;
             ecsInterface.AddComponent(promptEntity, mp);
-
             MaterialProperties mp2;
             ecsInterface.AddComponent(promptEntity, mp2);
 
-            // Optional: Return the new ID to Lua so we can delete it later?
+            // Return the new ID
             lua_pushinteger(L, static_cast<lua_Integer>(promptEntity));
             return 1;
         }
@@ -277,6 +410,74 @@ namespace Framework {
             return 0;
         }
 
+        //Event firing
+        static int lua_FireEvent(lua_State* L)
+        {
+            // Arg 1: Event Message Name (string)
+            const char* messageName = luaL_checkstring(L, 1);
+
+            // Arg 2: Sender Entity (optional, defaults to 0)
+            Entity senderID = 0;
+            if (lua_gettop(L) >= 2) {
+                senderID = static_cast<Entity>(luaL_checkinteger(L, 2));
+            }
+
+            // Arg 3: Target Entity (optional, defaults to 0)
+            Entity targetID = 0;
+            if (lua_gettop(L) >= 3) {
+                targetID = static_cast<Entity>(luaL_checkinteger(L, 3));
+            }
+
+            // Arg 4: Action Type (optional, defaults to 0)
+            int actionType = 0;
+            if (lua_gettop(L) >= 4) {
+                actionType = static_cast<int>(luaL_checkinteger(L, 4));
+            }
+
+            // Build Payload
+            CollisionEventData payload;
+            payload.senderID = senderID;
+            payload.targetID = targetID;
+            payload.actionType = actionType;
+
+            // Fire Event
+            EventManager::Instance().Fire(messageName, &payload);
+
+            std::cout << "[Lua] Fired Event: " << messageName << std::endl;
+
+            return 0;
+        }
+
+        // Set a script's variable (Access a scripts local var and edit if needed)
+        static int lua_SetScriptVariable(lua_State* L)
+        {
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+            const char* varName = luaL_checkstring(L, 2);
+            const char* value = luaL_checkstring(L, 3);
+
+            if (!ecsInterface.IsEntityValid(e) || !ecsInterface.HasComponent<ScriptProperties>(e)) {
+                return luaL_error(L, "SetScriptVariable: invalid entity or no ScriptProperties");
+            }
+
+            auto& scriptProps = ecsInterface.GetComponent<ScriptProperties>(e);
+
+            // Find the Customer script's table
+            for (auto& sc : scriptProps.scripts) {
+                if (sc.tableRef != LUA_NOREF && sc.tableRef > 0) {
+                    // Push the script table
+                    lua_rawgeti(L, LUA_REGISTRYINDEX, sc.tableRef);
+
+                    // Set the variable
+                    lua_pushstring(L, value);
+                    lua_setfield(L, -2, varName);
+
+                    // Pop the table
+                    lua_pop(L, 1);
+                }
+            }
+
+            return 0;
+        }
 
         // Engine LUA exposed utility functions (Get entity, get by component, get by name, tag , create prefab, setactive -deactive etc
            
@@ -703,6 +904,19 @@ namespace Framework {
             return 1;
         }
 
+        // Get item name from item ID (item mapping to name)
+        static int lua_GetItemNameById(lua_State* L) {
+            int itemId = static_cast<int>(luaL_checkinteger(L, 1));
+
+            if (itemId < 0 || itemId >= Framework::kItemCount) {
+                lua_pushstring(L, "");
+                return 1;
+            }
+
+            lua_pushstring(L, Framework::kItemNames[itemId]);
+            return 1;
+        }
+
         int Lua_AddToInventory(lua_State* L) {
             const char* itemName = lua_tostring(L, 1); // Arg 1: "RedMushroom"
 
@@ -867,6 +1081,55 @@ namespace Framework {
             return 0;
         }
 
+        // Lua Call: bool CheckValidRecipe(table ingredientIDs)
+        static int l_CheckValidRecipe(lua_State* L) {
+            // 1. Read the Table from Lua (Argument 1)
+            if (!lua_istable(L, 1)) {
+                lua_pushboolean(L, false);
+                return 1;
+            }
+
+            std::vector<int> cauldronIngredients;
+
+            // Iterate over the Lua table (assuming it's a list {0, 1, ...})
+            lua_pushnil(L);
+            while (lua_next(L, 1) != 0) {
+                // key is at index -2, value at -1
+                if (lua_isnumber(L, -1)) {
+                    cauldronIngredients.push_back((int)lua_tonumber(L, -1));
+                }
+                lua_pop(L, 1);
+            }
+
+            // 2. Sort input ingredients to ensure order doesn't matter
+            // (e.g. {0, 1} should equal {1, 0})
+            std::sort(cauldronIngredients.begin(), cauldronIngredients.end());
+
+            // 3. Check against Global Recipes
+            const auto& allRecipes = Framework::GetGlobalRecipes();
+            bool matchFound = false;
+
+            for (const auto& recipe : allRecipes) {
+                // Copy recipe ingredients to sort them for comparison
+                std::vector<int> recipeIngredients = recipe.ingredientIDs;
+                std::sort(recipeIngredients.begin(), recipeIngredients.end());
+
+                if (cauldronIngredients.size() == recipeIngredients.size()) {
+                    if (cauldronIngredients == recipeIngredients) {
+                        matchFound = true;
+                        break;
+                    }
+                }
+            }
+
+            // 4. Return result to Lua
+            lua_pushboolean(L, matchFound);
+            return 1;
+        }
+
+        // REGISTER IN SCRIPT SYSTEM
+        // lua_register(L, "CheckValidRecipe", l_CheckValidRecipe);
+
         // NavMesh Exposed funcs for path-finding
 
         void ScriptPathfindTo(const std::string& agentName, const std::string& targetName)
@@ -917,7 +1180,27 @@ namespace Framework {
 
             navSystem->SetAgentDestination(agent, to);
         }
+        static int lua_GetEntityName(lua_State* L)
+        {
+            // 1. Get the Entity ID from the first argument passed in Lua
+            // (Lua stack index 1 is the first argument)
+            int entityID = (int)lua_tointeger(L, 1);
+            auto& ecs = ecsInterface;
+            // Optional: Check validity before getting name to prevent crashes
+            // if (!ecs.IsEntityValid(entityID)) {
+            //     lua_pushstring(L, "Invalid_Entity");
+            //     return 1; 
+            // }
 
+            // 3. Get the name string
+            std::string name = ecs.GetEntityName(entityID);
+
+            // 4. Push the string onto the Lua stack
+            lua_pushstring(L, name.c_str());
+
+            // 5. Return 1 because we are returning one value (the string)
+            return 1;
+        }
 
 
 
@@ -1184,6 +1467,70 @@ namespace Framework {
             tr.scale = glm::vec3(x, y, z);
             return 0;
         }
+
+        // Helper to get the NAME of the currently selected item
+        static int Lua_GetSelectedItemName(lua_State* L) {
+            auto& inv = Framework::Inventory::Instance();
+            int idx = inv.GetSelectedIndex();
+            const auto& slot = inv.Get(idx);
+
+            // Check if slot has an item and if the ID is safe
+            if (slot.itemId >= 0 && slot.itemId < Framework::kItemCount) {
+                // Access the array directly from ItemComponent.h
+                lua_pushstring(L, Framework::kItemNames[slot.itemId]);
+            }
+            else {
+                lua_pushnil(L); // Return nil if empty
+            }
+            return 1; // Returning 1 value (string or nil)
+        }
+
+        // In ScriptingSystem.cpp inside anonymous namespace
+
+        static int lua_GetRotation(lua_State* L)
+        {
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+
+            if (!ecsInterface.IsEntityValid(e) ||
+                !ecsInterface.HasComponent<TransformComponent>(e))
+            {
+                return luaL_error(L, "GetRotation: entity %d has no TransformComponent", (int)e);
+            }
+
+            auto& tr = ecsInterface.GetComponent<TransformComponent>(e);
+            lua_pushnumber(L, tr.rotation.x); // Pitch
+            lua_pushnumber(L, tr.rotation.y); // Yaw
+            lua_pushnumber(L, tr.rotation.z); // Roll
+            return 3;
+        }
+
+        // In ScriptingSystem.cpp, inside the anonymous namespace
+
+        static int lua_GetCameraYaw(lua_State* L)
+        {
+            // 1. Get the Graphics System
+            auto* gfx = Graphics::GetInstance();
+            if (!gfx) {
+                lua_pushnumber(L, 0.0f);
+                return 1;
+            }
+
+            // 2. Get the GAME CAMERA specifically (Index 0)
+            // Index 1 would be the Scene/Editor camera
+            Camera* cam = gfx->GetCameraByIndex(0);
+
+            if (!cam) {
+                lua_pushnumber(L, 0.0f);
+                return 1;
+            }
+
+            // 3. Return the Yaw (Horizontal Rotation)
+            lua_pushnumber(L, cam->yaw);
+            return 1;
+        }
+
+
+
     } // anonymous namespace
 
     // ---------------------------- class methods --------------------------------
@@ -1214,8 +1561,7 @@ namespace Framework {
         lua_register(L, "IsKeyDown", l_IsKeyDown);
         lua_register(L, "CameraMove", l_CameraMove);
         lua_register(L, "GetMousePosition", lua_GetMousePosition);
-        lua_register(L, "GetPosition", lua_GetPosition);
-        lua_register(L, "SetPosition", lua_SetPosition);
+
         lua_register(L, "SpawnPrompt", l_spawnPrompt);
         lua_register(L, "DestroyEntity", l_DestroyEntity);
         lua_register(L, "IsMouseButtonDown", l_IsMouseButtonDown); 
@@ -1225,19 +1571,38 @@ namespace Framework {
         lua_register(L, "SetAnimationSettings", l_SetAnimationSettings);
         lua_register(L, "LoadScene", Lua_LoadScene);
 
+        //Components get & sets
+        lua_register(L, "GetPosition", lua_GetPosition); // Transform get setter
+        lua_register(L, "SetPosition", lua_SetPosition);
+
+        lua_register(L, "GetTextComponent", lua_GetTextComponent); // Text component get/set
+        lua_register(L, "SetTextComponent", lua_SetTextComponent);
+
         // Game utility
         lua_register(L, "IsItemChoppable", lua_IsItemChoppable);
         lua_register(L, "GetScore", lua_GetScore);
         lua_register(L, "AddScore", lua_AddScore);
         lua_register(L, "SetText", lua_SetText);
-        lua_register(L, "AddToInventory", Lua_AddToInventory);
+
         lua_register(L, "DestroyEntity", Lua_DestroyEntity);
         lua_register(L, "GetItemName", Lua_GetItemName);
         lua_register(L, "RegisterButtonCallback",   Lua_RegisterButtonCallback);
+
+        lua_register(L, "SpawnCauldronItem", l_spawnCauldronItem);
+        lua_register(L, "CheckValidRecipe", l_CheckValidRecipe);
+        lua_register(L, "GetEntityName", lua_GetEntityName);
+
+        lua_register(L, "GetRotation", lua_GetRotation);
+        lua_register(L, "GetCameraYaw", lua_GetCameraYaw);
+
+        // Inventory Utility
         lua_register(L, "IsItemDestroyOnPick", Lua_IsItemDestroyOnPick);
         lua_register(L, "GetSelectedItem", Lua_GetPlayerSelectedItemId);
         lua_register(L, "ConsumeSelectedItem", Lua_ConsumePlayerSelectedItem);
-        lua_register(L, "SpawnCauldronItem", l_spawnCauldronItem);
+        lua_register(L, "AddToInventory", Lua_AddToInventory);
+        lua_register(L, "GetItemNameById", lua_GetItemNameById);
+        lua_register(L, "GetSelectedItemName", Lua_GetSelectedItemName);
+
 
         // Engine utility
         lua_register(L, "FindEntityByName",     lua_FindEntityByName);
@@ -1247,6 +1612,8 @@ namespace Framework {
         lua_register(L, "AddTagToEntity",       lua_AddTagToEntity);
         lua_register(L, "PlayEntityAnimation",  l_PlayEntityAnimation);
         lua_register(L, "SpawnPrefab",          lua_SpawnPrefab);
+        lua_register(L, "FireEvent", lua_FireEvent); // Maybe add register if needed
+        lua_register(L, "SetScriptVariable", lua_SetScriptVariable);
 
         // Engine States
         lua_register(L, "GameStateStart",       lua_GameStateStart);
@@ -1259,12 +1626,11 @@ namespace Framework {
             // 1. Get argument (true/false)
             bool locked = lua_toboolean(L, 1);
 
-            // 2. Get Graphics System
-            auto* gfx = Graphics::GetInstance();
-
-            // 3. Apply the lock (True = Rotation Disabled)
-            if (gfx) gfx->SetCameraRotationEnabled(!locked);
-
+            auto* input = InputHandler::GetInstance();
+            if (input) {
+                // "Locked" means rotation is disabled (for minigame)
+                input->SetCameraRotationEnabled(!locked);
+            }
             return 0;
             });
 
