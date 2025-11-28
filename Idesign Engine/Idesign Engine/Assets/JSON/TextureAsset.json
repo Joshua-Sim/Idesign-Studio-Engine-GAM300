@@ -13,12 +13,6 @@
             "isUI": false
         },
         {
-            "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606",
-            "name": "music",
-            "path": "Assets/Textures/music.png",
-            "isUI": false
-        },
-        {
             "guid": "338b187d-1182-4c0f-8af6-799d3fb9fbf2",
             "name": "",
             "path": "Assets/PNG/test.png",
@@ -28,6 +22,12 @@
             "guid": "7b119595-c240-4c45-a8a0-018d7a3d917f",
             "name": "",
             "path": "Assets/PNG/test.png",
+            "isUI": false
+        },
+        {
+            "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606",
+            "name": "music",
+            "path": "Assets/Textures/music.png",
             "isUI": false
         },
         {
@@ -43,12 +43,6 @@
             "isUI": false
         },
         {
-            "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
-            "name": "Shelf",
-            "path": "Assets\\Textures\\Shelf.png",
-            "isUI": false
-        },
-        {
             "guid": "312bdb54-477d-47bb-a1ce-2224bc3ec5e3",
             "name": "Cupboard",
             "path": "Assets\\Textures\\Cupboard.png",
@@ -58,6 +52,12 @@
             "guid": "cabb6b16-8445-4f40-b9c8-bd593ea6b65c",
             "name": "top",
             "path": "Assets\\Textures\\top.png",
+            "isUI": false
+        },
+        {
+            "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
+            "name": "Shelf",
+            "path": "Assets\\Textures\\Shelf.png",
             "isUI": false
         },
         {
@@ -121,15 +121,15 @@
             "isUI": false
         },
         {
-            "guid": "373d4ede-6c21-4cca-9e62-45d4e4c2b253",
-            "name": "Potion1",
-            "path": "Assets\\Textures\\Potion1.png",
-            "isUI": false
-        },
-        {
             "guid": "add88db8-22f2-4599-ad64-d9abc2f87fa9",
             "name": "Chest",
             "path": "Assets\\Textures\\Chest.png",
+            "isUI": false
+        },
+        {
+            "guid": "373d4ede-6c21-4cca-9e62-45d4e4c2b253",
+            "name": "Potion1",
+            "path": "Assets\\Textures\\Potion1.png",
             "isUI": false
         },
         {

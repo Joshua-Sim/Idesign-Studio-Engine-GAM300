@@ -12,6 +12,9 @@ local textbox_y_offset = 4.5
 local billboard_depth_adjust = 0.055
 local x_offset_right = -0.5
 
+-- Log prefab
+local prefab_log = "CustomerLog_Prefab"
+
 -- State
 local player_entity = nil
 local has_received_item = false
@@ -48,6 +51,9 @@ function Customer.OnArrival(senderID, targetID, actionType)
     -- Spawn textbox with order
     local orderText = "Hi, I want a " .. my_requested_item .. "."
     Customer.SpawnTextbox(senderID, orderText)
+    
+    -- Spawn arrival log
+    Customer.SpawnLog("Customer arrived!")
 end
 
 function Customer.OnInteract(senderID, targetID, actionType)
@@ -68,6 +74,7 @@ function Customer.OnInteract(senderID, targetID, actionType)
     
     if heldItemId < 0 then
         print("[Customer] You're not holding anything!")
+        Customer.SpawnLog("You're not holding anything!")
         return
     end
     
@@ -83,8 +90,15 @@ function Customer.OnInteract(senderID, targetID, actionType)
         -- Take the item
         ConsumeSelectedItem()
         
+        -- Add score reward
+        AddScore(10)
+        print("[Customer] +10 score!")
+        
         -- Clean up textbox
         Customer.DestroyTextbox()
+        
+        -- Spawn success log
+        Customer.SpawnLog("Order complete! +10 points")
         
         -- Fire completion event
         FireEvent("CustomerComplete", customer_entity, senderID, 1)
@@ -94,6 +108,9 @@ function Customer.OnInteract(senderID, targetID, actionType)
         DestroyEntity(customer_entity)
     else
         print("[Customer] Sorry, I ordered " .. my_requested_item .. ", not " .. itemName .. "!")
+        
+        -- Spawn wrong item log
+        Customer.SpawnLog("Wrong item! Customer wanted " .. my_requested_item)
     end
 end
 
@@ -122,6 +139,21 @@ function Customer.SpawnTextbox(parentID, text)
         print("[Customer] Spawned textbox: " .. entity_textbox .. " with text: " .. text)
     else
         print("[Customer] ERROR: Failed to spawn textbox!")
+    end
+end
+
+function Customer.SpawnLog(message)
+    -- Spawn log prefab (already positioned at top-left in prefab)
+    local logEntity = SpawnPrefab(prefab_log)
+    
+    if logEntity then
+        -- Update the text
+        SetTextComponent(logEntity, "text", message)
+        print("[Customer] Spawned log: " .. message)
+        
+        -- TODO: Later add animation and self-destruct timer
+    else
+        print("[Customer] ERROR: Failed to spawn log!")
     end
 end
 
@@ -159,12 +191,15 @@ function Customer.DestroyTextbox()
     end
 end
 
--- Timeout delete function
+-- Timeout handler
 function Customer.OnCustomerTimeout(senderID, targetID, actionType)
     print("[Customer] Timeout! I've waited long enough!")
     
     -- Clean up textbox
     Customer.DestroyTextbox()
+    
+    -- Spawn timeout log
+    Customer.SpawnLog("Customer left! -10 points")
     
     -- Leave
     print("[Customer] Leaving disappointed...")

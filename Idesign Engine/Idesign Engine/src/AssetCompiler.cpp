@@ -329,6 +329,14 @@ namespace Framework
                     }
                 }
 
+                // --- Text Component ---
+                if (components.HasMember("TextProperties"))
+                {
+                    const auto& jsonVal = components["TextProperties"];
+                    TextProperties textComp;
+                    Deserialize(&textComp, g_TextComponentProps, jsonVal);
+                    ecsInterface.AddComponent(entity, textComp);
+                }
 
                 // Navmesh
                 if (components.HasMember("NavMeshComponent"))
@@ -966,6 +974,17 @@ namespace Framework
 
                     componentsObj.AddMember("ItemComponent", itemJson, allocator);
                 }
+               
+                // --- Text Component ---
+
+                if (ecsInterface.HasComponent<TextProperties>(entity))
+                {
+                    const auto& textComp = ecsInterface.GetComponent<TextProperties>(entity);
+                    rapidjson::Value textJson(rapidjson::kObjectType);
+                    Serialize((void*)&textComp, g_TextComponentProps, textJson, allocator);
+                    componentsObj.AddMember("TextProperties", textJson, allocator);
+                }
+
             }
             entityObj.AddMember("components", componentsObj, allocator);
             entitiesArray.PushBack(entityObj, allocator);

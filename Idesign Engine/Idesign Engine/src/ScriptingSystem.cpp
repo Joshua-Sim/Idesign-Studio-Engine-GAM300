@@ -18,6 +18,7 @@
 #include "EngineState.h"
 #include "ButtonComponent.h"
 #include "ButtonSystem.h"
+#include "SceneManager.h"
 #include "EventManager.h"
 #include "SceneManager.h" 
 #include "Inventory.h" // Include your Inventory header
@@ -339,8 +340,9 @@ namespace Framework {
 
             // 2. Check validity
             if (ecsInterface.IsEntityValid(e)) {
-                ecsInterface.DestroyEntity(e);
-                // std::cout << "[Lua] Destroyed Entity " << e << std::endl;
+             
+                sceneManager.m_PendingEntityDeletes.push_back(e);
+                // std::cout << "[Lua] Queued Entity " << e << " for destruction" << std::endl;
             }
             else {
                 std::cout << "[Lua Warning] Tried to destroy invalid entity: " << e << std::endl;
@@ -1659,7 +1661,20 @@ namespace Framework {
 
     void ScriptingSystem::Update(float dt)
     {
-        for (auto const& e : mEntities) {
+        // CREATE A COPY of the entity set to iterate over
+        std::vector<Entity> entitiesToProcess;
+        entitiesToProcess.reserve(mEntities.size());
+        for (Entity e : mEntities) {
+            entitiesToProcess.push_back(e);
+        }
+
+        // NOW iterate over the COPY, not the original set
+        for (Entity e : entitiesToProcess) {
+            // Add safety check: entity might have been destroyed by a previous script
+            if (!ecsInterface.IsEntityValid(e)) {
+                continue;
+            }
+
             if (!ecsInterface.HasComponent<ScriptProperties>(e)) continue;
             auto& comp = ecsInterface.GetComponent<ScriptProperties>(e);
 
@@ -1670,37 +1685,28 @@ namespace Framework {
                 if (sc.hotReload) {
                     std::error_code ec;
                     auto ft = std::filesystem::last_write_time(sc.scriptPath, ec);
-
                     if (ec) {
-                        // Only log once per script path, then stop polling
                         static std::unordered_set<std::string> alreadyLogged;
                         if (!alreadyLogged.count(sc.scriptPath)) {
                             std::cerr << "[HotReload] last_write_time failed for "
                                 << sc.scriptPath << ": " << ec.message() << "\n";
                             alreadyLogged.insert(sc.scriptPath);
                         }
-
-                        // Disable polling to avoid spamming every frame
                         sc.hotReload = false;
                     }
                     else {
                         auto nowTicks = FileTimeToTicks(ft);
                         if (nowTicks != sc.lastWriteTicks) {
                             std::cout << "[HotReload] " << sc.scriptPath << "\n";
-
                             if (LoadScriptTable(sc)) {
-                                // re-expose entity id
                                 lua_rawgeti(L, LUA_REGISTRYINDEX, sc.tableRef);
                                 lua_pushinteger(L, static_cast<lua_Integer>(e));
                                 lua_setfield(L, -2, "entity");
                                 lua_pop(L, 1);
-
-                                // run on_init again so the script can re-bind state
                                 CallHook(sc.tableRef, "on_init");
                                 sc.initialized = true;
                             }
-
-                            sc.lastWriteTicks = nowTicks;   // remember latest timestamp
+                            sc.lastWriteTicks = nowTicks;
                         }
                     }
                 }
@@ -1708,14 +1714,10 @@ namespace Framework {
                 if (sc.tableRef == LUA_NOREF || sc.tableRef == -1)
                 {
                     if (!LoadScriptTable(sc)) continue;
-
-                    // expose entity id: self.entity
                     lua_rawgeti(L, LUA_REGISTRYINDEX, sc.tableRef);
                     lua_pushinteger(L, static_cast<lua_Integer>(e));
                     lua_setfield(L, -2, "entity");
                     lua_pop(L, 1);
-
-                    // Force init call
                     sc.initialized = false;
                 }
 

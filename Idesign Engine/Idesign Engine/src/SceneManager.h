@@ -60,15 +60,17 @@ namespace Framework {
 
         std::unordered_map<std::string, std::vector<Entity>>& GetSceneEntities() { return m_SceneEntities; }
 
+        // Deferred operations for removing entity safely at end of systems loop.
+        std::vector<Entity> m_PendingEntityDeletes;
+        std::vector<std::string> m_PendingSceneUnloads;
+
     private:
         std::string m_CurrentSceneName;
         
         //Mapping of scene names to entities belonging to it
         std::unordered_map<std::string, std::vector<Entity>> m_SceneEntities; // sceneName -> entities
 
-        // Deferred operations for removing entity safely at end of systems loop.
-        std::vector<Entity> m_PendingEntityDeletes;
-        std::vector<std::string> m_PendingSceneUnloads;
+
 
         // Load pending scenes for refresh at end of system loop
         struct PendingLoad {
