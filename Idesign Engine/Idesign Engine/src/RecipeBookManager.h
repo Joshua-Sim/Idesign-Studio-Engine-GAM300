@@ -10,114 +10,82 @@
 #include <ComponentList.h>
 #include "TextureLoader.h"
 #include "ItemComponent.h" // CRITICAL: Includes Global Recipe Definitions
+#include "AudioSystem.h"
 
 namespace Framework {
-
-    // Helper for UI-specific data
-    struct UIRecipe {
-        std::vector<std::string> ingredientNames;
-        std::string resultName;
-    };
 
     class RecipeBookManager {
 
     private:
         Coordinator* coordinator;
-        std::vector<UIRecipe> displayRecipes; // Local cache of names for rendering
         std::vector<Entity> uiEntities;
-     
+
     public:
         bool bookSpawned = false;
+
+        RecipeBookManager(Coordinator* coord) : coordinator(coord) {
+            // No need to populate data anymore, we read directly from GlobalRecipes
+        }
+
         void Shutdown()
         {
-            // 1. Destroy the UI Entities (Sprites)
             ClearBook();
-
-            // 2. Clear the String Data (Fixes the "chopped_" leak)
-            displayRecipes.clear();
-
-            std::cout << "[RecipeBook] Shutdown complete. Memory freed." << std::endl;
-        }
-        RecipeBookManager(Coordinator* coord) : coordinator(coord) {
-            PopulateData();
+            std::cout << "[RecipeBook] Shutdown complete." << std::endl;
         }
 
-        // --- NEW: FETCH FROM GLOBAL SOURCE ---
-        void PopulateData() {
-            displayRecipes.clear();
-
-            // 1. Get the authoritative list from ItemComponent
-            const auto& globalRecipes = Framework::GetGlobalRecipes();
-
-            // 2. Convert IDs to Names for the UI
-            for (const auto& gRecipe : globalRecipes) {
-                UIRecipe uiRecipe;
-
-                // Ingredients
-                for (int id : gRecipe.ingredientIDs) {
-                    if (id >= 0 && id < Framework::kItemCount) {
-                        uiRecipe.ingredientNames.push_back(Framework::kItemNames[id]);
-                    }
-                    else {
-                        uiRecipe.ingredientNames.push_back("Unknown");
-                    }
-                }
-
-                // Result
-                if (gRecipe.resultItemID >= 0 && gRecipe.resultItemID < Framework::kItemCount) {
-                    uiRecipe.resultName = Framework::kItemNames[gRecipe.resultItemID];
-                }
-                else {
-                    uiRecipe.resultName = "Unknown";
-                }
-
-                displayRecipes.push_back(uiRecipe);
-            }
-        }
-
-        // --- UPDATED BUILD FUNCTION ---
+        // --- DIRECTLY USE GLOBAL DATA ---
         void BuildBookUI() {
-            ClearBook();
+            g_AudioSystem->PlayAudio("event:/PaperUp"); 
 
             float startX = 660.0f;
-            float startY = 650.0f;
+            float startY = 630.0f;
             float slotSize = 2.0f;
             float spacingX = 278.0f;
             float spacingY = 250.0f;
 
+            // 1. SPAWN THE MAIN BOOK BACKGROUND
+            SpawnBook(960.0f, 400.0f, 1000.0f, 800.0f);
+
             float currentY = startY;
 
-            // Iterate over our display-ready recipes
-            for (const auto& recipe : displayRecipes) {
+            const auto& globalRecipes = Framework::GetGlobalRecipes();
+
+            for (const auto& recipe : globalRecipes) {
+
                 float currentX = startX;
-                size_t count = recipe.ingredientNames.size();
-                float totalRowWidth = (count * spacingX) + (spacingX * 0.5f);
 
                 float bgHeight = 180.0f;
-                SpawnBook(960.0f, 400.0f, 1000.0f, 800.0f);
+                SpawnPotionName(974.0f, currentY + 100.0f, recipe.potionName, 1.5f);
                 SpawnRowBackground(974.0f, currentY, 800.0f, bgHeight);
 
-                for (size_t i = 0; i < recipe.ingredientNames.size(); i++) {
-                    SpawnUISprite(currentX, currentY, recipe.ingredientNames[i], slotSize);
+                for (size_t i = 0; i < recipe.ingredientIDs.size(); i++) {
 
-                    // Add 'Plus' symbol logic here if needed
-                    if (i < recipe.ingredientNames.size() - 1) {
-                        // float plusX = currentX + (spacingX * 1.1f);
-                        // SpawnUIText(plusX, currentY, "+"); 
+                    int id = recipe.ingredientIDs[i];
+
+                    if (id >= 0 && id < Framework::kItemCount) {
+                        std::string texName = Framework::kItemNames[id];
+                        SpawnUISprite(currentX, currentY, texName, slotSize);
                     }
+
                     currentX += spacingX;
                 }
 
-                // Arrow or Equals sign logic could go here
+                // --- RESULT (POTION) ---
+                int resultID = recipe.resultItemID;
+                if (resultID >= 0 && resultID < Framework::kItemCount) {
+                    // DIRECT LOOKUP: int -> string
+                    std::string resultName = Framework::kItemNames[resultID];
+                    SpawnUISprite(currentX + 40.0f, currentY, resultName, slotSize);
+                }
 
-                SpawnUISprite(currentX + 40.0f, currentY, recipe.resultName, slotSize);
-
+                // Move down
                 currentY -= spacingY;
             }
             bookSpawned = true;
         }
 
         void ClearBook() {
+            g_AudioSystem->PlayAudio("event:/PaperDown");
             for (Entity e : uiEntities) {
                 coordinator->DestroyEntity(e);
             }
@@ -125,20 +93,16 @@ namespace Framework {
         }
 
     private:
-        // ... (SpawnUISprite, SpawnUIText, SpawnBook, SpawnRowBackground remain exactly the same) ...
 
         void SpawnUISprite(float x, float y, std::string itemName, float scaleMult = 1.0f) {
-            if (itemName.empty() || itemName == "Unknown") return;
+            if (itemName.empty()) return;
 
             Entity e = coordinator->CreateEntity();
-
             TransformComponent trans;
             trans.position = glm::vec3(x, y, 0.0f);
             trans.scale = glm::vec3(40.0f * scaleMult, 40.0f * scaleMult, 1.0f);
 
             MeshProperties mesh;
-            // mesh.meshName = "Quad"; 
-
             TextureProperties texComp;
             HierarchyComponent hc;
 
@@ -155,9 +119,31 @@ namespace Framework {
             uiEntities.push_back(e);
         }
 
-        // ... Include the rest of your spawn functions here ...
+        void SpawnPotionName(float x, float y, std::string potionName, float scaleMult = 1.0f) {
+            if (potionName.empty()) return;
+
+            Entity e = coordinator->CreateEntity();
+            TransformComponent trans;
+            trans.position = glm::vec3(x / 1920, y / 1080, 0.0f);
+            trans.scale = glm::vec3(1.0f,1.0f, 1.0f);
+
+            MeshProperties mesh;
+            HierarchyComponent hc;
+            
+            TextProperties tp;
+            tp.screenSpace = true;
+            tp.text = potionName;
+            tp.alignment = 1;
+            tp.scale = scaleMult;
+            coordinator->AddComponent(e, hc);
+            coordinator->AddComponent(e, trans);
+            coordinator->AddComponent(e, mesh);
+            coordinator->AddComponent(e, tp);
+
+            uiEntities.push_back(e);
+        }
+
         void SpawnBook(float x, float y, float width, float height) {
-            // (Copy your existing implementation here)
             Entity e = coordinator->CreateEntity();
             TransformComponent trans;
             trans.position = glm::vec3(x, y, 0);
@@ -180,7 +166,6 @@ namespace Framework {
         }
 
         void SpawnRowBackground(float x, float y, float width, float height) {
-            // (Copy your existing implementation here)
             Entity e = coordinator->CreateEntity();
             TransformComponent trans;
             trans.position = glm::vec3(x, y, 0);

@@ -35,13 +35,13 @@ namespace Framework {
         bool LoadFont(const std::string& fontPath, int fontSize, const std::string& fontName);
         void SetActiveFont(const std::string& fontName);
 
-        // Rendering
         void RenderText2D(const std::string& text,
             float x, float y,
             float scale,
             glm::vec3 color,
             float screenWidth,
-            float screenHeight);
+            float screenHeight,
+            int alignment = 0); 
 
         void RenderText3D(const std::string& text,
             const glm::mat4& model,

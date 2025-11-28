@@ -27,6 +27,7 @@ namespace Framework
 
     // 2. Define Recipe Structures Here (Global Access)
     struct PotionRecipe {
+        std::string potionName;
         std::vector<int> ingredientIDs; // Store IDs, not strings, for faster comparison
         int resultItemID;
     };
@@ -38,10 +39,10 @@ namespace Framework
         if (recipes.empty()) {
             // --- RECIPE 1: Strength Potion ---
             // Requires: unchopped_herb (0) + chopped_herb (1)
-            recipes.push_back({ {0, 2}, 3 });
+            recipes.push_back({"Strength Potion", {0, 2}, 3});
 
             // --- RECIPE 2: Example ---
-            recipes.push_back({ {1, 2}, 4 }); 
+            recipes.push_back({"Vitality Potion", {1, 2}, 4 });
         }
         return recipes;
     }

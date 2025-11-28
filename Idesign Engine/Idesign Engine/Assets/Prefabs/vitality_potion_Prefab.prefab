@@ -15,9 +15,9 @@
                     0.0
                 ],
                 "scale": [
-                    1.0,
-                    1.0,
-                    1.0
+                    0.5,
+                    0.5,
+                    0.5
                 ]
             },
             "TagComponent": {
@@ -47,19 +47,19 @@
                 "colliders": [
                     {
                         "size": [
-                            3.5999999046325684,
-                            2.5999999046325684,
-                            3.0
+                            6.0,
+                            0.7,
+                            6.0
                         ],
                         "center": [
                             0.0,
-                            1.2999999523162842,
+                            1.3,
                             0.0
                         ],
                         "canPassThrough": true,
                         "triggerMessage": "deez",
                         "isInteractable": true,
-                        "interactMessage": "HerbPickup"
+                        "interactMessage": "vitality_potion_pickup"
                     }
                 ]
             },
@@ -89,15 +89,16 @@
                         "luaFunctionToCall": "OnInteract"
                     },
                     {
-                        "messageToListenFor": "HerbPickup",
+                        "messageToListenFor": "vitality_potion_pickup",
                         "luaFunctionToCall": "OnPickup"
                     }
                 ]
             },
             "ItemComponent": {
                 "name": "vitality_potion",
-                "isIngredient": false,
-                "isChoppable": false
+                "isIngredient": true,
+                "isChoppable": true,
+                "toDestroyWhenPicked": true
             }
         }
     }

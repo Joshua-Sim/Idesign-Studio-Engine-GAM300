@@ -2659,13 +2659,14 @@ namespace Framework {
         }
 
         // --------------------------------------------
-        // HUD/UI TEXT PASS (2D Screen Space) (Jasper)
-        // --------------------------------------------
+                // HUD/UI TEXT PASS (2D Screen Space) (Jasper)
+                // --------------------------------------------
         for (auto e : uiTextEntities)
         {
             auto& txt = ecsInterface.GetComponent<TextProperties>(e);
             auto& tr = ecsInterface.GetComponent<TransformComponent>(e);
 
+            // Normalized coordinates (0.0 to 1.0) -> Screen Coordinates
             float px = glm::clamp(tr.position.x, 0.0f, 1.0f);
             float py = glm::clamp(tr.position.y, 0.0f, 1.0f);
 
@@ -2679,7 +2680,8 @@ namespace Framework {
                 txt.scale,
                 txt.color,
                 (float)width,
-                (float)height
+                (float)height,
+                txt.alignment // <--- ADD THIS ARGUMENT (0=Left, 1=Center, 2=Right)
             );
         }
 
