@@ -4,7 +4,8 @@ local Customer = {}
 Customer.interaction_range = 2.5
 
 -- Available items to request
-local available_items = {"unchopped_herb", "chopped_herb", "pear"}
+local available_items = {"strength_potion", "vitality_potion"}
+
 
 -- Textbox configuration
 local prefab_textbox = "CustomerTextbox_Prefab"

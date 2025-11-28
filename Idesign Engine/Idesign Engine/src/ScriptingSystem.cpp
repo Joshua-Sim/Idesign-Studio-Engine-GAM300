@@ -1689,7 +1689,7 @@ namespace Framework {
         lua_setglobal(L, "Sound");
 
         std::cout << "[ScriptingSystem] Initialized (Lua VM ready)\n";
-    }
+    }   
 
     void ScriptingSystem::Update(float dt)
     {
@@ -1698,7 +1698,7 @@ namespace Framework {
         entitiesToProcess.reserve(mEntities.size());
         for (Entity e : mEntities) {
             entitiesToProcess.push_back(e);
-        }
+        }   
 
         // NOW iterate over the COPY, not the original set
         for (Entity e : entitiesToProcess) {

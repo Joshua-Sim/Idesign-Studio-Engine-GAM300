@@ -67,9 +67,9 @@
             "guid": "58c34bb7-ff4d-4b4d-8e24-20ffbd1e78c6",
             "name": "trunk",
             "path": "Assets\\Objects\\trunk.obj",
-            "vao": 7,
-            "vbo": 13,
-            "ebo": 14,
+            "vao": 8,
+            "vbo": 15,
+            "ebo": 16,
             "indexCount": 1644
         },
         {
@@ -85,9 +85,9 @@
             "guid": "2d0d1073-79fb-44de-9d09-86af64b2aabb",
             "name": "GreenPotion2",
             "path": "Assets\\Objects\\GreenPotion2.obj",
-            "vao": 9,
-            "vbo": 17,
-            "ebo": 18,
+            "vao": 10,
+            "vbo": 19,
+            "ebo": 20,
             "indexCount": 924
         },
         {
@@ -103,18 +103,18 @@
             "guid": "9b1a5ea2-0cbf-4533-b25f-a5a6813a35ce",
             "name": "pine",
             "path": "Assets\\Objects\\pine.obj",
-            "vao": 11,
-            "vbo": 21,
-            "ebo": 22,
+            "vao": 12,
+            "vbo": 23,
+            "ebo": 24,
             "indexCount": 2016
         },
         {
             "guid": "96ecdde5-7f27-4efc-824e-f18f383dbb83",
             "name": "rocks",
             "path": "Assets\\Objects\\rocks.obj",
-            "vao": 12,
-            "vbo": 23,
-            "ebo": 24,
+            "vao": 13,
+            "vbo": 25,
+            "ebo": 26,
             "indexCount": 2184
         },
         {
@@ -157,27 +157,27 @@
             "guid": "61ccf513-cbc9-40a5-828f-95376b1b2c8e",
             "name": "Sphere",
             "path": "Assets/Objects/Sphere.obj",
-            "vao": 17,
-            "vbo": 33,
-            "ebo": 34,
-            "indexCount": 2304
-        },
-        {
-            "guid": "563cdf50-2687-4991-96cf-c5fa0be850ab",
-            "name": "Sphere",
-            "path": "Assets/Objects/Sphere.obj",
             "vao": 18,
             "vbo": 35,
             "ebo": 36,
             "indexCount": 2304
         },
         {
+            "guid": "563cdf50-2687-4991-96cf-c5fa0be850ab",
+            "name": "Sphere",
+            "path": "Assets/Objects/Sphere.obj",
+            "vao": 19,
+            "vbo": 37,
+            "ebo": 38,
+            "indexCount": 2304
+        },
+        {
             "guid": "9e1fcb62-0699-4a0b-ae75-d0670af44b1b",
             "name": "plane2",
             "path": "Assets/Objects/plane2.obj",
-            "vao": 20,
-            "vbo": 39,
-            "ebo": 40,
+            "vao": 21,
+            "vbo": 41,
+            "ebo": 42,
             "indexCount": 231840
         },
         {
@@ -193,9 +193,9 @@
             "guid": "3a68b780-632d-49d8-b45d-33b1ac035172",
             "name": "plane",
             "path": "Assets/Objects/plane.obj",
-            "vao": 21,
-            "vbo": 41,
-            "ebo": 42,
+            "vao": 22,
+            "vbo": 43,
+            "ebo": 44,
             "indexCount": 76662
         },
         {
@@ -211,18 +211,18 @@
             "guid": "fe86c54b-7cc2-471c-9d7e-0bce31089b5a",
             "name": "Cylinder",
             "path": "Assets/Objects/Cylinder.obj",
-            "vao": 24,
-            "vbo": 47,
-            "ebo": 48,
+            "vao": 25,
+            "vbo": 49,
+            "ebo": 50,
             "indexCount": 240
         },
         {
             "guid": "a25723a2-f9bf-4939-b80d-962eb537dd2e",
             "name": "strength_potion",
             "path": "Assets\\Objects\\strength_potion.obj",
-            "vao": 23,
-            "vbo": 45,
-            "ebo": 46,
+            "vao": 24,
+            "vbo": 47,
+            "ebo": 48,
             "indexCount": 924
         },
         {

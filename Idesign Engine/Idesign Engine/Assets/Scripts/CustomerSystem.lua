@@ -32,11 +32,15 @@ local tune_y = -0.04
 local billboard_depth_adjust = 0.055
 
 -- Patience Settings
-local patience_duration = 10.0 
+local patience_duration = 120.0 
 local current_patience = 0.0
 
 -- Arrival Settings
 local arrival_threshold = 1.5 
+
+-- [SCORE TRACKING]
+local current_score = 0
+local score_text_entity = nil
 
 -- =========================================================
 -- INTERNAL STATE
@@ -60,6 +64,15 @@ function CustomerSystem:on_init()
     
     player_id = FindEntityByName("Player")
     waitPointEntity = FindEntityByName(self.waitPointName)
+    
+    -- Spawn score text prefab
+    score_text_entity = SpawnPrefab("ScoreText_Prefab")
+    if score_text_entity then
+        print("[CustomerSystem] Spawned ScoreText entity: " .. score_text_entity)
+        CustomerSystem:UpdateScoreDisplay()
+    else
+        print("[CustomerSystem] ERROR: Failed to spawn ScoreText prefab!")
+    end
 
     if not navMeshBuilt then
         print("[CustomerSystem] Building NavMesh...")
@@ -126,7 +139,7 @@ function CustomerSystem:on_update(dt)
                         print("[CustomerSystem] Time expired! Customer leaving unhappy.")
                         
                         -- Apply score penalty
-                        AddScore(-10)
+                        CustomerSystem:AddScore(-10)
                         print("[CustomerSystem] -10 score penalty!")
                         
                         -- Clean up progress bar
@@ -202,12 +215,37 @@ function CustomerSystem:spawn_customer()
 end
 
 -- =========================================================
+-- SCORE MANAGEMENT
+-- =========================================================
+
+function CustomerSystem:AddScore(amount)
+    current_score = current_score + amount
+    print("[CustomerSystem] Score changed by " .. amount .. ", new score: " .. current_score)
+    CustomerSystem:UpdateScoreDisplay()
+end
+
+function CustomerSystem:UpdateScoreDisplay()
+    if score_text_entity then
+        local score_text = "Score: " .. tostring(current_score)
+        SetTextComponent(score_text_entity, "text", score_text)
+    end
+end
+
+function CustomerSystem:GetScore()
+    return current_score
+end
+
+-- =========================================================
 -- EVENT HANDLERS
 -- =========================================================
 
 function CustomerSystem.OnCustomerComplete(senderID, targetID, actionType)
     print("[CustomerSystem] ========== CUSTOMER DONE ==========")
     print("[CustomerSystem] Event received - Sender: " .. tostring(senderID) .. ", Target: " .. tostring(targetID))
+    
+    -- Add score reward
+    CustomerSystem:AddScore(10)
+    print("[CustomerSystem] +10 score reward!")
     
     -- Clean up progress bar
     if entity_frame then DestroyEntity(entity_frame); entity_frame = nil end
