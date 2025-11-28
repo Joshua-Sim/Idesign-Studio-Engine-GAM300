@@ -53,11 +53,11 @@ namespace Framework {
             button.size = glm::vec2(tr.scale.x, tr.scale.y);
 
             // Game State Play/Pause
-            if (ecsInterface.HasComponent<TextureProperties>(entity)) 
-            {
-                auto& texture = ecsInterface.GetComponent<TextureProperties>(entity);
-                texture.isUI = !engineState.IsPlay(); // true when paused, false when playing
-            }
+            //if (ecsInterface.HasComponent<TextureProperties>(entity)) 
+            //{
+            //    auto& texture = ecsInterface.GetComponent<TextureProperties>(entity);
+            //    texture.isUI = !engineState.IsPlay(); // true when paused, false when playing
+            //}
         }
     }
 
