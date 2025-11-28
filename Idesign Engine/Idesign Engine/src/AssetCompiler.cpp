@@ -405,7 +405,10 @@ namespace Framework
                         ecsInterface.AddComponent(entity, sp);
                     }
                 }
-                if (components.HasMember("BoxColliderComponent")) {
+
+                // Box Collider Component
+                if (components.HasMember("BoxColliderComponent")) 
+                {
                     BoxColliderComponent comp;
                     auto& json = components["BoxColliderComponent"];
 
@@ -442,6 +445,7 @@ namespace Framework
                     }
                     ecsInterface.AddComponent(entity, comp);
                 }
+
                 // PhysicsProperties
                 if (components.HasMember("PhysicsProperties"))
                 {
@@ -458,6 +462,7 @@ namespace Framework
 
                     ecsInterface.AddComponent(entity, phys);
                 }
+
                 // --- Event Sender ---
                 if (components.HasMember("EventSenderComponent"))
                 {
@@ -632,6 +637,10 @@ namespace Framework
 
             // Store entity name
             std::string entityName = ecsInterface.GetEntityName(entity);
+
+            // Skip runtime UI entities
+            if (entityName == "InteractionIcon" || entityName == "InteractionPrompt") continue;
+
             entityObj.AddMember("name", rapidjson::Value(entityName.c_str(), allocator), allocator);
 
             // Store GUID
@@ -724,8 +733,9 @@ namespace Framework
                     animRef.AddMember("animationSpeed", anim.animationSpeed, allocator);
                     animRef.AddMember("bLoops", anim.bLoops, allocator);
                     animRef.AddMember("bPlayOnStart", anim.bPlayOnStart, allocator);
-                    componentsObj.AddMember("AnimationProperties", animRef, allocator);
                     animRef.AddMember("currentTime", anim.currentTime, allocator);
+
+                    componentsObj.AddMember("AnimationProperties", animRef, allocator);
                 }
 
                 // TextureProperties � write only GUID

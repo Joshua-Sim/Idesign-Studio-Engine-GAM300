@@ -70,6 +70,7 @@ namespace Framework {
     bool Graphics::s_RenderDebugColliders = false;
     bool GameSystem::bookOpen = false;
     const auto& assets = AssetManager::Instance().GetAssets();
+    bool Graphics::IsCameraRotationEnabled() const { return m_cameraRotationEnabled; }
 
     // Constructor
     Graphics::Graphics()
@@ -1117,73 +1118,74 @@ namespace Framework {
         // ============================================================
         // LOGIC 2: GAME MODE (Player/Game Camera Movement)
         // ============================================================
-        else
-        {
-            // --- 2.1 MOUSE ROTATION REMOVED ---
-            // (Handled by InputHandler::CursorPositionCallback)
+        
+        //else
+        //{
+        //    // --- 2.1 MOUSE ROTATION REMOVED ---
+        //    // (Handled by InputHandler::CursorPositionCallback)
 
-            // --- 2.2 PLAYER MOVEMENT & PHYSICS ---
-            Entity player = ecsInterface.GetEntityByName("Player");
+        //    // --- 2.2 PLAYER MOVEMENT & PHYSICS ---
+        //    Entity player = ecsInterface.GetEntityByName("Player");
 
-            if (ecsInterface.IsEntityValid(player) && ecsInterface.HasComponent<PhysicsProperties>(player))
-            {
-                auto& phys = ecsInterface.GetComponent<PhysicsProperties>(player);
-                auto& trans = ecsInterface.GetComponent<TransformComponent>(player);
+        //    if (ecsInterface.IsEntityValid(player) && ecsInterface.HasComponent<PhysicsProperties>(player))
+        //    {
+        //        auto& phys = ecsInterface.GetComponent<PhysicsProperties>(player);
+        //        auto& trans = ecsInterface.GetComponent<TransformComponent>(player);
 
-                // Calculate Direction based on Game Camera
-                glm::vec3 camForward = gameCamera.front;
-                camForward.y = 0.0f;
-                camForward = glm::normalize(camForward);
+        //        // Calculate Direction based on Game Camera
+        //        glm::vec3 camForward = gameCamera.front;
+        //        camForward.y = 0.0f;
+        //        camForward = glm::normalize(camForward);
 
-                glm::vec3 camRight = gameCamera.right;
-                camRight.y = 0.0f;
-                camRight = glm::normalize(camRight);
+        //        glm::vec3 camRight = gameCamera.right;
+        //        camRight.y = 0.0f;
+        //        camRight = glm::normalize(camRight);
 
-                glm::vec3 targetVelocity(0.0f);
-                float moveSpeed = 5.0f;
+        //        glm::vec3 targetVelocity(0.0f);
+        //        float moveSpeed = 5.0f;
 
-                // Only move if NOT locked in Minigame
-                if (m_cameraRotationEnabled)
-                {
-                    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) targetVelocity += camForward;
-                    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) targetVelocity -= camForward;
-                    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) targetVelocity -= camRight;
-                    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) targetVelocity += camRight;
-                }
+        //        // Only move if NOT locked in Minigame
+        //        if (m_cameraRotationEnabled)
+        //        {
+        //            if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) targetVelocity += camForward;
+        //            if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) targetVelocity -= camForward;
+        //            if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) targetVelocity -= camRight;
+        //            if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) targetVelocity += camRight;
+        //        }
 
-                if (glm::length(targetVelocity) > 0.1f) {
-                    targetVelocity = glm::normalize(targetVelocity) * moveSpeed;
-                }
+        //        if (glm::length(targetVelocity) > 0.1f) {
+        //            targetVelocity = glm::normalize(targetVelocity) * moveSpeed;
+        //        }
 
-                // Physics Application
-                if (m_cameraRotationEnabled)
-                {
-                    phys.linearVelocity.x = targetVelocity.x;
-                    phys.linearVelocity.z = targetVelocity.z;
-                    phys.gravityFactor = 1.0f;
-                }
-                else
-                {
-                    // STIRRING MINIGAME: Freeze Player Physics
-                    phys.linearVelocity = glm::vec3(0.0f);
-                    phys.gravityFactor = 0.0f;
-                }
+        //        // Physics Application
+        //        if (m_cameraRotationEnabled)
+        //        {
+        //            phys.linearVelocity.x = targetVelocity.x;
+        //            phys.linearVelocity.z = targetVelocity.z;
+        //            phys.gravityFactor = 1.0f;
+        //        }
+        //        else
+        //        {
+        //            // STIRRING MINIGAME: Freeze Player Physics
+        //            phys.linearVelocity = glm::vec3(0.0f);
+        //            phys.gravityFactor = 0.0f;
+        //        }
 
-                phys.startAwake = true;
+        //        phys.startAwake = true;
 
-                // Snap Camera to Player
-                glm::vec3 eyeOffset(0.0f, 3.0f, 0.0f);
-                gameCamera.position = trans.position + eyeOffset;
-            }
+        //        // Snap Camera to Player
+        //        glm::vec3 eyeOffset(0.0f, 3.0f, 0.0f);
+        //        gameCamera.position = trans.position + eyeOffset;
+        //    }
 
-            // --- 2.3 GAMEPLAY TOGGLES (Recipe Book, etc) ---
-            {
-                bool isRPressed = (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS);
-                static bool wasRPressed = false;
-                if (isRPressed && !wasRPressed) GameSystem::bookOpen = !GameSystem::bookOpen;
-                wasRPressed = isRPressed;
-            }
-        }
+        //    // --- 2.3 GAMEPLAY TOGGLES (Recipe Book, etc) ---
+        //    {
+        //        bool isRPressed = (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS);
+        //        static bool wasRPressed = false;
+        //        if (isRPressed && !wasRPressed) GameSystem::bookOpen = !GameSystem::bookOpen;
+        //        wasRPressed = isRPressed;
+        //    }
+        //}
 
         // Global Hotkeys (HDR/Bloom)
         if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS) hdrExposure += 1.0f * dt;
