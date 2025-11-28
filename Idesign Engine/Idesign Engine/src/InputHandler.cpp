@@ -123,26 +123,6 @@ namespace Framework {
         InputHandler* self = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
         if (!self) return;
 
-			if (IsMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
-				//std::cout << "Left mouse button clicked" << std::endl;
-				if (messageSystem) {
-					MessageMouseClick* msg = new MessageMouseClick(GLFW_MOUSE_BUTTON_LEFT);
-					messageSystem->Dispatch(msg);
-				}
-			}
-		}
-
-		if (IsKeyPressed(GLFW_KEY_ESCAPE))
-		{
-			engineState.SetPlay(!engineState.IsPlay());
-
-			// Send message to start audio and other play-mode systems 
-			// the code below should not be tied to ESC as it should be played since the start
-			// and managed with the other states such as paused/resume
-			// This code allows audios that are meant to play on start to play immediately
-			// MessageBus::Get().SendImmediate(EnterPlayModeMessage());
-		}
-	}
         self->mouseX = xpos;
         self->mouseY = ypos;
 
