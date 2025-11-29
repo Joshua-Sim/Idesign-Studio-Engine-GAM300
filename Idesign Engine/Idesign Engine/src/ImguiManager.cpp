@@ -707,7 +707,7 @@ namespace Framework {
             m_showEditor = !m_showEditor;
             if (m_showEditor) {
                 std::cout << "[ImGui] Editor enabled" << std::endl;
-                
+                gfxSystem->SetMouseTargetView(1);
                 engineState.SetInEditor(true);
                 //engineState.SetPlay(false);
                 engineState.SetMenu(false); // hide menu
@@ -721,6 +721,7 @@ namespace Framework {
             else {
                 std::cout << "[ImGui] Editor disabled - Game only mode" << std::endl;
                 gfxSystem->SetCameraRotationEnabled(true);
+                gfxSystem->SetMouseTargetView(0);
                 engineState.SetInEditor(false);
                 engineState.SetPlay(true);
                 //engineState.SetMenu(true); // show menu

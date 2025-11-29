@@ -65,7 +65,7 @@ namespace Framework {
                 Camera* cam = graphicsSystem->getCamera();
                 if (cam)
                 {
-                    cam->yaw = 180.0f;
+                    cam->yaw = 0.0f;
                     cam->pitch = 0.0f;
                     cam->updateVectors();
                 }
