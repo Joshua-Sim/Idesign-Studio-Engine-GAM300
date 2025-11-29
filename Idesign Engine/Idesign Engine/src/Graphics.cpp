@@ -1085,6 +1085,8 @@ namespace Framework {
     
     void Graphics::process_input(float dt)
     {
+        bool nKeyPressed = false;
+
         if (!engineState.IsPlay()) return;
 
         // 1. Determine which mode we are in
@@ -1186,6 +1188,40 @@ namespace Framework {
                 wasRPressed = isRPressed;
             }
         //}
+
+        // ============================================================
+        // LOGIC 2: SKYBOX CHANGE TO MORNING
+        // ============================================================
+
+        if (glfwGetKey(window, GLFW_KEY_N) == GLFW_PRESS)
+        {
+            if (!nKeyPressed) 
+            {
+                float newVal = m_skybox.getBlendFactor() + (dt * 0.5f); // 2 seconds to fade
+                if (newVal > 1.0f) newVal = 1.0f;
+                m_skybox.setBlendFactor(newVal);
+                nKeyPressed = true;
+            }
+        }
+        else
+        {
+            nKeyPressed = false;
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS) // 'M' for Morning
+        {
+            if (!nKeyPressed)
+            {
+                float newVal = m_skybox.getBlendFactor() - (dt * 0.5f);
+                if (newVal < 0.0f) newVal = 0.0f;
+                m_skybox.setBlendFactor(newVal);
+                nKeyPressed = true;
+            }
+        }
+        else
+        {
+            nKeyPressed = false;
+        }
 
         // Global Hotkeys (HDR/Bloom)
         if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS) hdrExposure += 1.0f * dt;
