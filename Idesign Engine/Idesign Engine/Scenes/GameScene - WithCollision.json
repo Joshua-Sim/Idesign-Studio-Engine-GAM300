@@ -96,11 +96,11 @@
                     "volume": 1.0,
                     "loop": false,
                     "playOnStart": true,
-                    "isPlaying": true,
+                    "isPlaying": false,
                     "lastPosition": [
-                        -45.934112548828125,
-                        5.300000190734863,
-                        14.715734481811523
+                        0.0,
+                        0.0,
+                        0.0
                     ]
                 }
             }
@@ -251,7 +251,7 @@
                     "animationSpeed": 10.0,
                     "bLoops": false,
                     "bPlayOnStart": true,
-                    "currentTime": 20.0
+                    "currentTime": 0.0
                 },
                 "TextureComponent": {
                     "guid": "afd25b76-dddc-4c4f-bae4-a6c9a22931e5",
@@ -2812,8 +2812,7 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
@@ -3054,7 +3053,7 @@
                     "animationSpeed": 1.0,
                     "bLoops": true,
                     "bPlayOnStart": true,
-                    "currentTime": 89.9971694946289
+                    "currentTime": 0.0
                 },
                 "TextureComponent": {
                     "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
@@ -3125,11 +3124,11 @@
                     "volume": 1.0,
                     "loop": true,
                     "playOnStart": true,
-                    "isPlaying": true,
+                    "isPlaying": false,
                     "lastPosition": [
-                        -40.230262756347656,
-                        6.287981033325195,
-                        17.725893020629883
+                        0.0,
+                        0.0,
+                        0.0
                     ]
                 }
             }
@@ -3779,8 +3778,8 @@
                         0.0
                     ],
                     "scale": [
-                        1920.0,
-                        1060.0,
+                        1720.0,
+                        860.0,
                         1.0
                     ]
                 },
@@ -3797,7 +3796,7 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "e6731f54-4c63-4666-aadd-fb24e64475be",
+                    "guid": "ce8becd0-4b4f-467e-b8b7-e4cc0875c4df",
                     "isUI": false
                 },
                 "ButtonComponent": {
@@ -3806,8 +3805,8 @@
                         530.0
                     ],
                     "size": [
-                        1920.0,
-                        1060.0
+                        1720.0,
+                        860.0
                     ],
                     "isHovered": true
                 }
@@ -3819,8 +3818,8 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        1750.0,
-                        925.0,
+                        950.0,
+                        175.0,
                         0.0
                     ],
                     "rotation": [
@@ -3859,8 +3858,8 @@
                 },
                 "ButtonComponent": {
                     "position": [
-                        1750.0,
-                        925.0
+                        950.0,
+                        175.0
                     ],
                     "size": [
                         175.0,
@@ -4102,14 +4101,16 @@
                         0.0
                     ],
                     "scale": [
-                        1920.0,
-                        1080.0,
+                        1720.0,
+                        880.0,
                         1.0
                     ]
                 },
                 "HierarchyComponent": {
                     "parent": "",
-                    "children": [],
+                    "children": [
+                        "65638daa-d78a-497c-8285-fc4077ad4cbd"
+                    ],
                     "sortIndex": 72
                 },
                 "TagComponent": {
@@ -4127,10 +4128,10 @@
                         530.0
                     ],
                     "size": [
-                        1920.0,
-                        1080.0
+                        1720.0,
+                        880.0
                     ],
-                    "isHovered": false
+                    "isHovered": true
                 }
             }
         },
@@ -4767,6 +4768,61 @@
                         0.0
                     ],
                     "startAwake": true
+                }
+            }
+        },
+        {
+            "name": "nextdaybutton",
+            "guid": "65638daa-d78a-497c-8285-fc4077ad4cbd",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        950.0,
+                        250.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        175.0,
+                        100.0,
+                        1.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "8c4170a2-de7f-472d-a43a-931ed1f45b7a",
+                    "children": [],
+                    "sortIndex": 0
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "TextureComponent": {
+                    "guid": "bb86e2ff-7a24-4492-9e03-134fbfe85046",
+                    "isUI": false
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "0b25e0c5-79e6-465a-96cd-920b83ef31e6",
+                            "scriptPath": "Assets\\Scripts\\GameStateStart.lua",
+                            "hotReload": true
+                        }
+                    ]
+                },
+                "ButtonComponent": {
+                    "position": [
+                        950.0,
+                        250.0
+                    ],
+                    "size": [
+                        175.0,
+                        100.0
+                    ],
+                    "isHovered": false
                 }
             }
         }
