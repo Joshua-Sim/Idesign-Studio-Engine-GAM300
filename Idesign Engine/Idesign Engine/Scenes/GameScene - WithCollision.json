@@ -24,7 +24,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 0
+                    "sortIndex": 1
                 },
                 "TagComponent": {
                     "tags": [
@@ -54,12 +54,12 @@
                         {
                             "size": [
                                 19.5,
-                                5.800000190734863,
+                                8.800000190734863,
                                 20.0
                             ],
                             "center": [
                                 -15.300000190734863,
-                                2.799999952316284,
+                                3.4000000953674316,
                                 -5.0
                             ],
                             "canPassThrough": true,
@@ -129,7 +129,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 46
+                    "sortIndex": 2
                 },
                 "TagComponent": {
                     "tags": [
@@ -207,7 +207,8 @@
                 "ItemComponent": {
                     "name": "knife",
                     "isIngredient": true,
-                    "isChoppable": true
+                    "isChoppable": true,
+                    "toDestroyWhenPicked": false
                 }
             }
         },
@@ -235,7 +236,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 1
+                    "sortIndex": 3
                 },
                 "TagComponent": {
                     "tags": []
@@ -282,7 +283,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 2
+                    "sortIndex": 4
                 },
                 "TagComponent": {
                     "tags": []
@@ -368,7 +369,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 3
+                    "sortIndex": 5
                 },
                 "TagComponent": {
                     "tags": []
@@ -444,7 +445,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 4
+                    "sortIndex": 6
                 },
                 "TagComponent": {
                     "tags": []
@@ -520,7 +521,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 5
+                    "sortIndex": 7
                 },
                 "TagComponent": {
                     "tags": []
@@ -579,7 +580,7 @@
                 "TransformComponent": {
                     "position": [
                         -44.64616775512695,
-                        10.991904258728027,
+                        12.687789916992188,
                         10.0
                     ],
                     "rotation": [
@@ -596,18 +597,10 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 6
+                    "sortIndex": 8
                 },
                 "TagComponent": {
                     "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606",
-                    "isUI": false
                 },
                 "LightProperties": {
                     "enabled": true,
@@ -651,7 +644,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 7
+                    "sortIndex": 9
                 },
                 "TagComponent": {
                     "tags": []
@@ -727,7 +720,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 8
+                    "sortIndex": 10
                 },
                 "TagComponent": {
                     "tags": []
@@ -803,7 +796,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 9
+                    "sortIndex": 11
                 },
                 "TagComponent": {
                     "tags": []
@@ -841,7 +834,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 10
+                    "sortIndex": 12
                 },
                 "TagComponent": {
                     "tags": []
@@ -880,7 +873,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 11
+                    "sortIndex": 13
                 },
                 "TagComponent": {
                     "tags": []
@@ -919,13 +912,18 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 12
+                    "sortIndex": 14
                 },
                 "TagComponent": {
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "90a63915-c3e8-40b9-8c48-b8fe58a9bd67"
+                    "guid": "90a63915-c3e8-40b9-8c48-b8fe58a9bd67",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "312bdb54-477d-47bb-a1ce-2224bc3ec5e3",
+                    "isUI": false
                 },
                 "BoxColliderComponent": {
                     "colliders": [
@@ -990,7 +988,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 13
+                    "sortIndex": 15
                 },
                 "TagComponent": {
                     "tags": []
@@ -1029,7 +1027,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 14
+                    "sortIndex": 16
                 },
                 "TagComponent": {
                     "tags": []
@@ -1105,7 +1103,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 15
+                    "sortIndex": 17
                 },
                 "TagComponent": {
                     "tags": []
@@ -1181,13 +1179,18 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 16
+                    "sortIndex": 18
                 },
                 "TagComponent": {
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "90a63915-c3e8-40b9-8c48-b8fe58a9bd67"
+                    "guid": "90a63915-c3e8-40b9-8c48-b8fe58a9bd67",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "312bdb54-477d-47bb-a1ce-2224bc3ec5e3",
+                    "isUI": false
                 },
                 "BoxColliderComponent": {
                     "colliders": [
@@ -1252,7 +1255,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 17
+                    "sortIndex": 19
                 },
                 "TagComponent": {
                     "tags": []
@@ -1328,7 +1331,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 18
+                    "sortIndex": 20
                 },
                 "TagComponent": {
                     "tags": []
@@ -1428,7 +1431,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 19
+                    "sortIndex": 21
                 },
                 "TagComponent": {
                     "tags": [
@@ -1522,7 +1525,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 20
+                    "sortIndex": 22
                 },
                 "TagComponent": {
                     "tags": []
@@ -1612,7 +1615,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 21
+                    "sortIndex": 23
                 },
                 "TagComponent": {
                     "tags": []
@@ -1665,13 +1668,13 @@
             }
         },
         {
-            "name": "Light (Copy)",
+            "name": "Light2",
             "guid": "ed016c46-7dc3-4081-ba22-e006e380c005",
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -30.0,
-                        10.991904258728027,
+                        -59.09307861328125,
+                        12.477137565612793,
                         10.0
                     ],
                     "rotation": [
@@ -1688,18 +1691,10 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 22
+                    "sortIndex": 24
                 },
                 "TagComponent": {
                     "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606",
-                    "isUI": false
                 },
                 "LightProperties": {
                     "enabled": true,
@@ -1743,7 +1738,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 23
+                    "sortIndex": 25
                 },
                 "TagComponent": {
                     "tags": []
@@ -1782,7 +1777,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 24
+                    "sortIndex": 26
                 },
                 "TagComponent": {
                     "tags": [
@@ -1895,7 +1890,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 25
+                    "sortIndex": 27
                 },
                 "TagComponent": {
                     "tags": []
@@ -1971,7 +1966,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 26
+                    "sortIndex": 28
                 },
                 "TagComponent": {
                     "tags": []
@@ -2047,7 +2042,7 @@
                 "HierarchyComponent": {
                     "parent": "59cca078-d956-4d13-b89e-4f92455afb42",
                     "children": [],
-                    "sortIndex": 27
+                    "sortIndex": 29
                 },
                 "TagComponent": {
                     "tags": []
@@ -2085,7 +2080,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 28
+                    "sortIndex": 30
                 },
                 "TagComponent": {
                     "tags": []
@@ -2124,7 +2119,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 29
+                    "sortIndex": 31
                 },
                 "TagComponent": {
                     "tags": []
@@ -2163,7 +2158,7 @@
                 "HierarchyComponent": {
                     "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
                     "children": [],
-                    "sortIndex": 30
+                    "sortIndex": 32
                 },
                 "TagComponent": {
                     "tags": []
@@ -2218,7 +2213,7 @@
                         "eb2198cf-50c0-4855-835e-f9a81a2b3fe8",
                         "91e173de-50e4-4332-a01a-42e823a288b3"
                     ],
-                    "sortIndex": 31
+                    "sortIndex": 33
                 },
                 "TagComponent": {
                     "tags": []
@@ -2253,7 +2248,7 @@
                 "HierarchyComponent": {
                     "parent": "59cca078-d956-4d13-b89e-4f92455afb42",
                     "children": [],
-                    "sortIndex": 32
+                    "sortIndex": 34
                 },
                 "TagComponent": {
                     "tags": []
@@ -2292,7 +2287,7 @@
                 "HierarchyComponent": {
                     "parent": "59cca078-d956-4d13-b89e-4f92455afb42",
                     "children": [],
-                    "sortIndex": 33
+                    "sortIndex": 35
                 },
                 "TagComponent": {
                     "tags": []
@@ -2331,7 +2326,7 @@
                 "HierarchyComponent": {
                     "parent": "59cca078-d956-4d13-b89e-4f92455afb42",
                     "children": [],
-                    "sortIndex": 34
+                    "sortIndex": 36
                 },
                 "TagComponent": {
                     "tags": []
@@ -2370,7 +2365,7 @@
                 "HierarchyComponent": {
                     "parent": "59cca078-d956-4d13-b89e-4f92455afb42",
                     "children": [],
-                    "sortIndex": 35
+                    "sortIndex": 37
                 },
                 "TagComponent": {
                     "tags": []
@@ -2428,7 +2423,7 @@
                 "HierarchyComponent": {
                     "parent": "59cca078-d956-4d13-b89e-4f92455afb42",
                     "children": [],
-                    "sortIndex": 36
+                    "sortIndex": 38
                 },
                 "TagComponent": {
                     "tags": []
@@ -2467,13 +2462,18 @@
                 "HierarchyComponent": {
                     "parent": "59cca078-d956-4d13-b89e-4f92455afb42",
                     "children": [],
-                    "sortIndex": 37
+                    "sortIndex": 39
                 },
                 "TagComponent": {
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "76f36163-789f-4c71-87b4-76fdccaa8408"
+                    "guid": "76f36163-789f-4c71-87b4-76fdccaa8408",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "53b6aedc-c55e-4bd1-bddb-3d1842e4d22a",
+                    "isUI": false
                 }
             }
         },
@@ -2501,13 +2501,18 @@
                 "HierarchyComponent": {
                     "parent": "59cca078-d956-4d13-b89e-4f92455afb42",
                     "children": [],
-                    "sortIndex": 38
+                    "sortIndex": 40
                 },
                 "TagComponent": {
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "76f36163-789f-4c71-87b4-76fdccaa8408"
+                    "guid": "76f36163-789f-4c71-87b4-76fdccaa8408",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "53b6aedc-c55e-4bd1-bddb-3d1842e4d22a",
+                    "isUI": false
                 }
             }
         },
@@ -2535,13 +2540,18 @@
                 "HierarchyComponent": {
                     "parent": "59cca078-d956-4d13-b89e-4f92455afb42",
                     "children": [],
-                    "sortIndex": 39
+                    "sortIndex": 41
                 },
                 "TagComponent": {
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "76f36163-789f-4c71-87b4-76fdccaa8408"
+                    "guid": "76f36163-789f-4c71-87b4-76fdccaa8408",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "0d917096-1644-44a8-8e66-f77f83672f2c",
+                    "isUI": false
                 }
             }
         },
@@ -2569,13 +2579,18 @@
                 "HierarchyComponent": {
                     "parent": "59cca078-d956-4d13-b89e-4f92455afb42",
                     "children": [],
-                    "sortIndex": 40
+                    "sortIndex": 42
                 },
                 "TagComponent": {
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "76f36163-789f-4c71-87b4-76fdccaa8408"
+                    "guid": "76f36163-789f-4c71-87b4-76fdccaa8408",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "4647cf55-032f-4bd2-952f-0ae059337c19",
+                    "isUI": false
                 }
             }
         },
@@ -2628,7 +2643,7 @@
                         "76664a7c-73ef-49ba-b2da-6d39e08e6c61",
                         "51315770-51ee-4179-8c2f-6f04b11153ff"
                     ],
-                    "sortIndex": 41
+                    "sortIndex": 43
                 },
                 "TagComponent": {
                     "tags": []
@@ -2641,14 +2656,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -53.96500015258789,
-                        8.044564247131348,
-                        9.5
+                        -62.14150619506836,
+                        8.04300594329834,
+                        10.870586395263672
                     ],
                     "rotation": [
                         0.0,
-                        90.0,
-                        0.0
+                        100.22123718261719,
+                        180.0
                     ],
                     "scale": [
                         0.9999989867210388,
@@ -2659,7 +2674,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 42
+                    "sortIndex": 44
                 },
                 "TagComponent": {
                     "tags": []
@@ -2723,9 +2738,9 @@
                 },
                 "ListenerComponent": {
                     "position": [
-                        -53.96500015258789,
-                        8.044564247131348,
-                        9.5
+                        -62.14150619506836,
+                        8.04300594329834,
+                        10.870586395263672
                     ],
                     "forward": [
                         0.0,
@@ -2791,7 +2806,7 @@
                         "f3ac9264-85f2-4433-bbe3-24f57fc60ca3",
                         "c121b678-c782-4205-b20e-9695226e60ca"
                     ],
-                    "sortIndex": 43
+                    "sortIndex": 45
                 },
                 "TagComponent": {
                     "tags": []
@@ -2851,7 +2866,7 @@
                 "HierarchyComponent": {
                     "parent": "c9cb3c57-08a0-40e1-99ff-364fba30c505",
                     "children": [],
-                    "sortIndex": 44
+                    "sortIndex": 46
                 },
                 "TagComponent": {
                     "tags": []
@@ -2889,7 +2904,7 @@
                 "HierarchyComponent": {
                     "parent": "c9cb3c57-08a0-40e1-99ff-364fba30c505",
                     "children": [],
-                    "sortIndex": 45
+                    "sortIndex": 47
                 },
                 "TagComponent": {
                     "tags": []
@@ -2904,14 +2919,14 @@
             }
         },
         {
-            "name": "Herb",
+            "name": "Herb1",
             "guid": "cacae5c6-d63c-4a92-9a65-b512e4eb2fa0",
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -42.63027572631836,
-                        5.769213676452637,
-                        9.310661315917969
+                        -70.2682876586914,
+                        9.39199447631836,
+                        11.429106712341309
                     ],
                     "rotation": [
                         0.0,
@@ -2927,7 +2942,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 46
+                    "sortIndex": 48
                 },
                 "TagComponent": {
                     "tags": [
@@ -2955,20 +2970,19 @@
                     "colliders": [
                         {
                             "size": [
-                                3.5999999046325684,
-                                2.5999999046325684,
-                                3.0
+                                2.9000000953674316,
+                                0.5,
+                                2.299999952316284
                             ],
                             "center": [
                                 0.0,
-                                1.2999999523162842,
+                                0.30000001192092896,
                                 0.0
                             ],
-                            "canPassThrough": true,
-                            "triggerMessage": "deez",
+                            "canPassThrough": false,
                             "isInteractable": true,
-                            "interactMessage": "HerbPickup",
-                            "promptText": "Pick up: Herb"
+                            "interactMessage": "",
+                            "promptText": ""
                         }
                     ]
                 },
@@ -2991,18 +3005,11 @@
                     ],
                     "startAwake": true
                 },
-                "EventReceiverComponent": {
-                    "receivers": [
-                        {
-                            "messageToListenFor": "HerbPickup",
-                            "luaFunctionToCall": "OnPickup"
-                        }
-                    ]
-                },
                 "ItemComponent": {
                     "name": "unchopped_herb",
                     "isIngredient": true,
-                    "isChoppable": true
+                    "isChoppable": true,
+                    "toDestroyWhenPicked": true
                 }
             }
         },
@@ -3030,7 +3037,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 47
+                    "sortIndex": 49
                 },
                 "TagComponent": {
                     "tags": [
@@ -3151,7 +3158,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 48
+                    "sortIndex": 50
                 },
                 "TagComponent": {
                     "tags": []
@@ -3185,7 +3192,7 @@
                 "HierarchyComponent": {
                     "parent": "ed731c16-5301-4220-8ffa-98fd139ffb91",
                     "children": [],
-                    "sortIndex": 2
+                    "sortIndex": 51
                 },
                 "TagComponent": {
                     "tags": [
@@ -3242,7 +3249,7 @@
                 "HierarchyComponent": {
                     "parent": "ed731c16-5301-4220-8ffa-98fd139ffb91",
                     "children": [],
-                    "sortIndex": 0
+                    "sortIndex": 52
                 },
                 "TagComponent": {
                     "tags": [
@@ -3281,19 +3288,19 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -46.82866287231445,
-                        6.099185466766357,
-                        9.699509620666504
+                        -61.59295654296875,
+                        5.490319728851318,
+                        16.822715759277344
                     ],
                     "rotation": [
-                        0.0003272549656685442,
-                        -0.9336321949958801,
-                        -0.00032849254785105586
+                        0.09805543720722198,
+                        -0.928453266620636,
+                        -0.09805545210838318
                     ],
                     "scale": [
-                        0.5,
-                        0.5,
-                        0.5
+                        0.4999987483024597,
+                        0.4999993145465851,
+                        0.4999987483024597
                     ]
                 },
                 "HierarchyComponent": {
@@ -3356,7 +3363,8 @@
                 "ItemComponent": {
                     "name": "pear",
                     "isIngredient": true,
-                    "isChoppable": false
+                    "isChoppable": false,
+                    "toDestroyWhenPicked": false
                 }
             }
         },
@@ -3560,7 +3568,7 @@
                         "59a63bf7-241d-480a-ad05-2601e4773b33",
                         "840c7124-cb6a-4e4f-9961-dbe1d25d3965"
                     ],
-                    "sortIndex": 4
+                    "sortIndex": 62
                 },
                 "TagComponent": {
                     "tags": [
@@ -3608,7 +3616,7 @@
                 "HierarchyComponent": {
                     "parent": "23491286-9912-4971-b5d4-9145a810d598",
                     "children": [],
-                    "sortIndex": 0
+                    "sortIndex": 63
                 },
                 "TagComponent": {
                     "tags": [
@@ -3624,7 +3632,7 @@
                         {
                             "guid": "f2483dea-2693-432a-b1a5-01aed656bd1e",
                             "scriptPath": "Assets\\Scripts\\GameStateResume.lua",
-                            "hotReload": true
+                            "hotReload": false
                         }
                     ]
                 },
@@ -3665,7 +3673,7 @@
                 "HierarchyComponent": {
                     "parent": "23491286-9912-4971-b5d4-9145a810d598",
                     "children": [],
-                    "sortIndex": 1
+                    "sortIndex": 64
                 },
                 "TagComponent": {
                     "tags": [
@@ -3681,7 +3689,7 @@
                         {
                             "guid": "c6d4d63d-bced-4890-8a3b-3938e82b13e8",
                             "scriptPath": "Assets\\Scripts\\GameStateExit.lua",
-                            "hotReload": true
+                            "hotReload": false
                         }
                     ]
                 },
@@ -3722,7 +3730,7 @@
                 "HierarchyComponent": {
                     "parent": "23491286-9912-4971-b5d4-9145a810d598",
                     "children": [],
-                    "sortIndex": 2
+                    "sortIndex": 65
                 },
                 "TagComponent": {
                     "tags": [
@@ -3738,7 +3746,7 @@
                         {
                             "guid": "8de4ea3f-31fb-4768-a277-e1ac0fc64201",
                             "scriptPath": "Assets\\Scripts\\GameStateHowToPlay.lua",
-                            "hotReload": true
+                            "hotReload": false
                         }
                     ]
                 },
@@ -3781,7 +3789,7 @@
                     "children": [
                         "60f2e874-560b-418f-8941-5051eaf42703"
                     ],
-                    "sortIndex": 3
+                    "sortIndex": 66
                 },
                 "TagComponent": {
                     "tags": [
@@ -3829,7 +3837,7 @@
                 "HierarchyComponent": {
                     "parent": "828bfd6d-ea7d-42fd-8535-472b0a692e6e",
                     "children": [],
-                    "sortIndex": 0
+                    "sortIndex": 67
                 },
                 "TagComponent": {
                     "tags": [
@@ -3845,7 +3853,7 @@
                         {
                             "guid": "50911a7e-8c97-4e66-99f4-ffd4855680ee",
                             "scriptPath": "Assets\\Scripts\\GameStateBackToPause.lua",
-                            "hotReload": true
+                            "hotReload": false
                         }
                     ]
                 },
@@ -3888,7 +3896,7 @@
                     "children": [
                         "e67dcc0d-7001-43a8-a331-19ea9c0628dd"
                     ],
-                    "sortIndex": 0
+                    "sortIndex": 68
                 },
                 "TagComponent": {
                     "tags": [
@@ -3940,7 +3948,7 @@
                         "42fba46a-dc8d-4372-9233-8a68add37890",
                         "35eb7bb0-72b2-4031-8443-cdc398e9129a"
                     ],
-                    "sortIndex": 4
+                    "sortIndex": 69
                 },
                 "TagComponent": {
                     "tags": [
@@ -3988,7 +3996,7 @@
                 "HierarchyComponent": {
                     "parent": "214c5541-f814-4e7f-bafa-d9e3db5aff2c",
                     "children": [],
-                    "sortIndex": 1
+                    "sortIndex": 70
                 },
                 "TagComponent": {
                     "tags": [
@@ -4004,7 +4012,7 @@
                         {
                             "guid": "0b25e0c5-79e6-465a-96cd-920b83ef31e6",
                             "scriptPath": "Assets\\Scripts\\GameStateStart.lua",
-                            "hotReload": true
+                            "hotReload": false
                         }
                     ]
                 },
@@ -4045,7 +4053,7 @@
                 "HierarchyComponent": {
                     "parent": "214c5541-f814-4e7f-bafa-d9e3db5aff2c",
                     "children": [],
-                    "sortIndex": 2
+                    "sortIndex": 71
                 },
                 "TagComponent": {
                     "tags": [
@@ -4061,7 +4069,7 @@
                         {
                             "guid": "c6d4d63d-bced-4890-8a3b-3938e82b13e8",
                             "scriptPath": "Assets\\Scripts\\GameStateExit.lua",
-                            "hotReload": true
+                            "hotReload": false
                         }
                     ]
                 },
@@ -4102,7 +4110,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 0
+                    "sortIndex": 72
                 },
                 "TagComponent": {
                     "tags": [
@@ -4123,6 +4131,642 @@
                         1080.0
                     ],
                     "isHovered": false
+                }
+            }
+        },
+        {
+            "name": "rock1",
+            "guid": "df016680-22b8-4705-8f57-b6f248b35d41",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -66.49919128417969,
+                        5.631087779998779,
+                        11.99338150024414
+                    ],
+                    "rotation": [
+                        0.000017008196664392017,
+                        -0.5346001386642456,
+                        -0.000020882829630863853
+                    ],
+                    "scale": [
+                        0.02160000056028366,
+                        0.02160000056028366,
+                        0.02160000056028366
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 73
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "MeshComponent": {
+                    "guid": "eac3e6f4-1bf2-415f-aef8-8f1269d91560",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "b1ed784d-987d-41f5-9ab0-1a35ca1b3a8d",
+                    "isUI": false
+                },
+                "BoxColliderComponent": {
+                    "colliders": [
+                        {
+                            "size": [
+                                100.19999694824219,
+                                101.0,
+                                100.0
+                            ],
+                            "center": [
+                                0.0,
+                                0.30000001192092896,
+                                0.0
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        }
+                    ]
+                },
+                "PhysicsProperties": {
+                    "category": 0,
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 0.5,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "startAwake": true
+                }
+            }
+        },
+        {
+            "name": "rock3",
+            "guid": "8fccc9bf-c08d-4cac-8743-7cdd443bac33",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -69.43993377685547,
+                        6.96518611907959,
+                        7.090492248535156
+                    ],
+                    "rotation": [
+                        -0.18762049078941345,
+                        0.30109894275665283,
+                        0.10564418137073517
+                    ],
+                    "scale": [
+                        0.037772003561258316,
+                        0.04825400188565254,
+                        0.1181771457195282
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 0
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "MeshComponent": {
+                    "guid": "eac3e6f4-1bf2-415f-aef8-8f1269d91560",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "b1ed784d-987d-41f5-9ab0-1a35ca1b3a8d",
+                    "isUI": false
+                },
+                "BoxColliderComponent": {
+                    "colliders": [
+                        {
+                            "size": [
+                                101.0999984741211,
+                                101.19999694824219,
+                                100.4000015258789
+                            ],
+                            "center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        }
+                    ]
+                },
+                "PhysicsProperties": {
+                    "category": 0,
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 0.5,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "startAwake": true
+                }
+            }
+        },
+        {
+            "name": "rock1 (Copy)",
+            "guid": "059c60b2-8de0-4f4c-a7dd-6b7bd6ccfd33",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -66.48868560791016,
+                        6.5713348388671875,
+                        9.974803924560547
+                    ],
+                    "rotation": [
+                        0.000010450113222759683,
+                        -0.03490595147013664,
+                        -0.000006414111794583732
+                    ],
+                    "scale": [
+                        0.02160000056028366,
+                        0.02160000056028366,
+                        0.02160000056028366
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 73
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "MeshComponent": {
+                    "guid": "eac3e6f4-1bf2-415f-aef8-8f1269d91560",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "b1ed784d-987d-41f5-9ab0-1a35ca1b3a8d",
+                    "isUI": false
+                },
+                "BoxColliderComponent": {
+                    "colliders": [
+                        {
+                            "size": [
+                                100.30000305175781,
+                                100.80000305175781,
+                                101.0
+                            ],
+                            "center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        }
+                    ]
+                },
+                "PhysicsProperties": {
+                    "category": 0,
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 0.5,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "startAwake": true
+                }
+            }
+        },
+        {
+            "name": "Light2 (Copy)",
+            "guid": "3b609b69-ed69-4bc4-b293-5e99f13fdb17",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -30.0,
+                        12.477137565612793,
+                        10.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.006000001449137926,
+                        0.006000001449137926,
+                        0.006125030107796192
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 24
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "LightProperties": {
+                    "enabled": true,
+                    "color": [
+                        0.6554892063140869,
+                        0.6365410089492798,
+                        0.3543917238712311
+                    ],
+                    "intensity": 1.0,
+                    "radius": 100.0,
+                    "innerCutOffAngle": 0.21816615760326385,
+                    "outerCutOffAngle": 0.2617993950843811,
+                    "castsShadow": false,
+                    "shadowBiasConst": 0.004999999888241291,
+                    "shadowBiasFactor": 0.05000000074505806,
+                    "type": "Point"
+                }
+            }
+        },
+        {
+            "name": "Herb2",
+            "guid": "2423f2f8-81af-499c-bf32-4580a910e7c5",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -70.2682876586914,
+                        9.409496307373047,
+                        8.788857460021973
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 48
+                },
+                "TagComponent": {
+                    "tags": [
+                        "Interactable"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": "4bf0356c-3b1b-4e45-a327-5a7f573a20ef",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "afd25b76-dddc-4c4f-bae4-a6c9a22931e5",
+                    "isUI": false
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "852f4291-12ff-48e6-a6eb-bd6685a86b30",
+                            "scriptPath": "Assets\\Scripts\\herb_pickup.lua",
+                            "hotReload": false
+                        }
+                    ]
+                },
+                "BoxColliderComponent": {
+                    "colliders": [
+                        {
+                            "size": [
+                                2.9000000953674316,
+                                0.4000000059604645,
+                                2.299999952316284
+                            ],
+                            "center": [
+                                0.0,
+                                0.30000001192092896,
+                                0.0
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": true,
+                            "interactMessage": "",
+                            "promptText": ""
+                        }
+                    ]
+                },
+                "PhysicsProperties": {
+                    "category": 1,
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 0.5,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "startAwake": true
+                },
+                "ItemComponent": {
+                    "name": "unchopped_herb",
+                    "isIngredient": true,
+                    "isChoppable": true,
+                    "toDestroyWhenPicked": true
+                }
+            }
+        },
+        {
+            "name": "Herb3",
+            "guid": "811551f7-7b0f-4b0c-a439-0ec7d3934559",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -70.2682876586914,
+                        9.387428283691406,
+                        5.945329666137695
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 48
+                },
+                "TagComponent": {
+                    "tags": [
+                        "Interactable"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": "4bf0356c-3b1b-4e45-a327-5a7f573a20ef",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "afd25b76-dddc-4c4f-bae4-a6c9a22931e5",
+                    "isUI": false
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "852f4291-12ff-48e6-a6eb-bd6685a86b30",
+                            "scriptPath": "Assets\\Scripts\\herb_pickup.lua",
+                            "hotReload": false
+                        }
+                    ]
+                },
+                "BoxColliderComponent": {
+                    "colliders": [
+                        {
+                            "size": [
+                                2.9000000953674316,
+                                0.4000000059604645,
+                                2.299999952316284
+                            ],
+                            "center": [
+                                0.0,
+                                0.30000001192092896,
+                                0.0
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": true,
+                            "interactMessage": "",
+                            "promptText": ""
+                        }
+                    ]
+                },
+                "PhysicsProperties": {
+                    "category": 1,
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 0.5,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "startAwake": true
+                },
+                "ItemComponent": {
+                    "name": "unchopped_herb",
+                    "isIngredient": true,
+                    "isChoppable": true,
+                    "toDestroyWhenPicked": true
+                }
+            }
+        },
+        {
+            "name": "Herb4",
+            "guid": "95b5c704-ef86-4028-9be9-9c2f2f889361",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -70.2682876586914,
+                        9.355600357055664,
+                        2.9465508460998535
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 48
+                },
+                "TagComponent": {
+                    "tags": [
+                        "Interactable"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": "4bf0356c-3b1b-4e45-a327-5a7f573a20ef",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "afd25b76-dddc-4c4f-bae4-a6c9a22931e5",
+                    "isUI": false
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "852f4291-12ff-48e6-a6eb-bd6685a86b30",
+                            "scriptPath": "Assets\\Scripts\\herb_pickup.lua",
+                            "hotReload": false
+                        }
+                    ]
+                },
+                "BoxColliderComponent": {
+                    "colliders": [
+                        {
+                            "size": [
+                                2.9000000953674316,
+                                0.699999988079071,
+                                2.299999952316284
+                            ],
+                            "center": [
+                                0.0,
+                                0.4000000059604645,
+                                0.0
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": true,
+                            "interactMessage": "",
+                            "promptText": ""
+                        }
+                    ]
+                },
+                "PhysicsProperties": {
+                    "category": 1,
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 0.5,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "startAwake": true
+                },
+                "ItemComponent": {
+                    "name": "unchopped_herb",
+                    "isIngredient": true,
+                    "isChoppable": true,
+                    "toDestroyWhenPicked": true
+                }
+            }
+        },
+        {
+            "name": "rock1 (Copy) (Copy)",
+            "guid": "29c09dfc-a064-49fd-96d4-03cd8019c54d",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -66.48721313476563,
+                        6.8226189613342285,
+                        7.57501220703125
+                    ],
+                    "rotation": [
+                        0.000012362686902633868,
+                        -0.034905921667814255,
+                        -0.00000920727052289294
+                    ],
+                    "scale": [
+                        0.02160000056028366,
+                        0.0375739149749279,
+                        0.026884183287620544
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 73
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "MeshComponent": {
+                    "guid": "eac3e6f4-1bf2-415f-aef8-8f1269d91560",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "b1ed784d-987d-41f5-9ab0-1a35ca1b3a8d",
+                    "isUI": false
+                },
+                "BoxColliderComponent": {
+                    "colliders": [
+                        {
+                            "size": [
+                                100.30000305175781,
+                                100.80000305175781,
+                                101.0
+                            ],
+                            "center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        }
+                    ]
+                },
+                "PhysicsProperties": {
+                    "category": 0,
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 0.5,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "startAwake": true
                 }
             }
         }

@@ -67,9 +67,9 @@
             "isUI": false
         },
         {
-            "guid": "096e3cd9-c61d-470e-ab51-5cacb54601d1",
-            "name": "upgrades",
-            "path": "Assets\\Textures\\upgrades.png",
+            "guid": "468efa22-bb31-4660-9af8-2527d6bc5465",
+            "name": "bluecloud_lf",
+            "path": "Assets\\Textures\\bluecloud_lf.jpg",
             "isUI": false
         },
         {
@@ -79,15 +79,9 @@
             "isUI": false
         },
         {
-            "guid": "d1624844-bd9b-44f7-9976-d196954e311f",
-            "name": "ChoppedHerb1",
-            "path": "Assets\\Textures\\ChoppedHerb1.png",
-            "isUI": false
-        },
-        {
-            "guid": "7bd3846d-4142-4b26-ab54-85667861258f",
-            "name": "BluePotion2",
-            "path": "Assets\\Textures\\BluePotion2.png",
+            "guid": "096e3cd9-c61d-470e-ab51-5cacb54601d1",
+            "name": "upgrades",
+            "path": "Assets\\Textures\\upgrades.png",
             "isUI": false
         },
         {
@@ -106,6 +100,18 @@
             "guid": "c2a1f2a8-98b8-490f-bae9-f3bc714f424c",
             "name": "SkyNoon_Top",
             "path": "Assets\\Textures\\SkyNoon_Top.png",
+            "isUI": false
+        },
+        {
+            "guid": "7bd3846d-4142-4b26-ab54-85667861258f",
+            "name": "BluePotion2",
+            "path": "Assets\\Textures\\BluePotion2.png",
+            "isUI": false
+        },
+        {
+            "guid": "d1624844-bd9b-44f7-9976-d196954e311f",
+            "name": "ChoppedHerb1",
+            "path": "Assets\\Textures\\ChoppedHerb1.png",
             "isUI": false
         },
         {
@@ -349,12 +355,6 @@
             "isUI": false
         },
         {
-            "guid": "468efa22-bb31-4660-9af8-2527d6bc5465",
-            "name": "bluecloud_lf",
-            "path": "Assets\\Textures\\bluecloud_lf.jpg",
-            "isUI": false
-        },
-        {
             "guid": "897c546b-9e02-4fc3-9ffb-b730cccf2190",
             "name": "bluecloud_up",
             "path": "Assets\\Textures\\bluecloud_up.jpg",
@@ -514,6 +514,18 @@
             "guid": "e6731f54-4c63-4666-aadd-fb24e64475be",
             "name": "instructions",
             "path": "Assets\\Textures\\instructions.png",
+            "isUI": false
+        },
+        {
+            "guid": "7c8534ad-0fdd-408d-89fa-2f7ce1d4ea89",
+            "name": "close_button",
+            "path": "Assets\\Textures\\close_button.png",
+            "isUI": false
+        },
+        {
+            "guid": "b1ed784d-987d-41f5-9ab0-1a35ca1b3a8d",
+            "name": "snow_dark",
+            "path": "Assets\\Textures\\snow_dark.png",
             "isUI": false
         },
         {

@@ -247,8 +247,8 @@ function M.OnInteract(arg1, arg2)
             end
             if player_id then SetGravity(player_id, 0.0) end
         else
+            Sound.Play("event:/InvalidRecipe")
             print("[Lua] Invalid Recipe!")
-        
             SpawnLog("Invalid Recipe!") 
             
             is_active = false 

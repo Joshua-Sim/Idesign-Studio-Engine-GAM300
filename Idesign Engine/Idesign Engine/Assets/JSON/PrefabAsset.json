@@ -61,6 +61,12 @@
             "isScenePrefab": false
         },
         {
+            "guid": "eb37c4f0-924e-4edc-af53-c18f22773ba5",
+            "name": "Herb3_Prefab",
+            "path": "Assets\\Prefabs\\Herb3_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
             "guid": "71a83449-8181-416a-8371-acb33d34c4f4",
             "name": "vitality_potion_Prefab",
             "path": "Assets\\Prefabs\\vitality_potion_Prefab.prefab",
@@ -88,6 +94,24 @@
             "guid": "784fb99c-10de-491c-a454-a1ecdd245f49",
             "name": "CauldronLog_Prefab",
             "path": "Assets\\Prefabs\\CauldronLog_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "4727a0ad-4372-49ef-b0d2-c8258cc0d518",
+            "name": "Herb2_Prefab",
+            "path": "Assets\\Prefabs\\Herb2_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "a8b89a08-c5f9-494c-81fc-ac3d88ff4f53",
+            "name": "Herb1_Prefab",
+            "path": "Assets\\Prefabs\\Herb1_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "f2b79bf2-29d4-4577-801d-b6dff82ecb2c",
+            "name": "Herb4_Prefab",
+            "path": "Assets\\Prefabs\\Herb4_Prefab.prefab",
             "isScenePrefab": false
         }
     ]

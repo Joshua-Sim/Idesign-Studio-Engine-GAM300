@@ -597,6 +597,18 @@ namespace Framework
                         item.isChoppable = jsonVal["isChoppable"].GetBool();
                     }
 
+                    // 3. Is Choppable
+                    if (jsonVal.HasMember("isChoppable") && jsonVal["isChoppable"].IsBool())
+                    {
+                        item.isChoppable = jsonVal["isChoppable"].GetBool();
+                    }
+
+                    // 3. Is Choppable
+                    if (jsonVal.HasMember("toDestroyWhenPicked") && jsonVal["toDestroyWhenPicked"].IsBool())
+                    {
+                        item.toDestroyWhenPicked = jsonVal["toDestroyWhenPicked"].GetBool();
+                    }
+
                     ecsInterface.AddComponent(entity, item);
                 }
 
@@ -983,6 +995,7 @@ namespace Framework
                     // 2. Bools
                     itemJson.AddMember("isIngredient", item.isIngredient, allocator);
                     itemJson.AddMember("isChoppable", item.isChoppable, allocator);
+                    itemJson.AddMember("toDestroyWhenPicked", item.toDestroyWhenPicked, allocator);
 
                     componentsObj.AddMember("ItemComponent", itemJson, allocator);
                 }
@@ -1497,6 +1510,8 @@ namespace Framework
 
             itemJson.AddMember("isIngredient", item.isIngredient, allocator);
             itemJson.AddMember("isChoppable", item.isChoppable, allocator);
+            itemJson.AddMember("toDestroyWhenPicked", item.toDestroyWhenPicked, allocator);
+
 
             componentsObj.AddMember("ItemComponent", itemJson, allocator);
         }

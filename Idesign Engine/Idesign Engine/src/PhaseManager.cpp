@@ -82,8 +82,10 @@ namespace Framework {
 
         if (m_currentPhase == GamePhase::Day) {
             auto graphicsSystem = ecsInterface.GetSystem<Graphics>();
+            Skybox* skybox = graphicsSystem->getSkybox();
             if (graphicsSystem)
             {
+                skybox->setBlendFactor(0.0f);
                 Camera* cam = graphicsSystem->getCamera();
                 if (cam)
                 {
@@ -96,8 +98,10 @@ namespace Framework {
         }
         else if (m_currentPhase == GamePhase::Night) {
             auto graphicsSystem = ecsInterface.GetSystem<Graphics>();
+            Skybox* skybox = graphicsSystem->getSkybox();
             if (graphicsSystem)
             {
+                skybox->setBlendFactor(1.0f);
                 Camera* cam = graphicsSystem->getCamera();
                 if (cam)
                 {
