@@ -33,7 +33,7 @@
 #include "AudioComponent.h"
 #include "MessageSystem.h"
 #include "ButtonSystem.h"
-
+#include "SceneInterface.h"
 
 extern Framework::Coordinator ecsInterface;
 
@@ -710,6 +710,7 @@ namespace Framework {
                 
                 engineState.SetInEditor(true);
                 engineState.SetPlay(false);
+                engineState.SetMenu(false); // hide menu
 
                 // Stop BGM when returning to editor
                 if (g_AudioSystem) {
@@ -722,6 +723,7 @@ namespace Framework {
 
                 engineState.SetInEditor(false);
                 engineState.SetPlay(true);
+                engineState.SetMenu(true); // show menu
 
                 // Start BGM when entering fullscreen game mode
                 if (g_AudioSystem) {
@@ -2637,6 +2639,8 @@ namespace Framework {
                 {
                     // Set engine state to play mode
                     engineState.SetPlay(true);
+
+                    engineState.SetMenu(true); // show menu
 
 					//Send message to start audio and other play-mode systems
                     MessageBus::Get().SendImmediate(EnterPlayModeMessage());

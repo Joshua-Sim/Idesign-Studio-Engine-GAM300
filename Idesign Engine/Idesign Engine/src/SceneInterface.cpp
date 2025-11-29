@@ -9,6 +9,9 @@ extern Framework::Coordinator ecsInterface;
 
 namespace Framework
 {
+    // Define the global instance
+    SceneInterface sceneInterface;
+
     void SceneInterface::Initialize() {}
 
     std::string SceneInterface::GetName()
@@ -21,8 +24,9 @@ namespace Framework
         (void)deltaTime;
 
         // In Play State but not in Editor mode and not paused
-        if (engineState.IsPlay() && !engineState.IsInEditor())
+        if (engineState.IsInEditor())
         {
+            // Should only trigger once, unless quit level
             auto menuEntities = ecsInterface.GetEntitiesByTag("menu");
             for (Entity e : menuEntities)
             {
@@ -35,12 +39,13 @@ namespace Framework
                     auto& button = ecsInterface.GetComponent<ButtonComponent>(e);
                     auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
 
-                    if (mInMenu) texture.isUI = false;
-                    else         texture.isUI = true;
+                    // Show menu only if mInMenu is true
+                    texture.isUI = engineState.IsInMenu();
+                    //std::cout << engineState.IsInMenu() << std::endl;
                 }
             }
 
-            // Pause State
+            // Pause State (Triggered by ESC in Inputhandler)
             auto pauseEntities = ecsInterface.GetEntitiesByTag("pause");
             for (Entity e : pauseEntities)
             {
@@ -57,7 +62,7 @@ namespace Framework
                 }
             }
 
-            // How To Play
+            // How To Play (Triggered by button click)
             auto howtoplayEntities = ecsInterface.GetEntitiesByTag("howtoplay");
             for (Entity e : howtoplayEntities)
             {
@@ -70,7 +75,7 @@ namespace Framework
                     auto& button = ecsInterface.GetComponent<ButtonComponent>(e);
                     auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
 
-                    //texture.isUI = engineState.IsPaused();
+                    texture.isUI = engineState.InHowToPlay();
                 }
             }
         }

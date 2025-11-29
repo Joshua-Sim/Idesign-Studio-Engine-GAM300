@@ -8,6 +8,13 @@
             "tableRef": -1
         },
         {
+            "guid": "8de4ea3f-31fb-4768-a277-e1ac0fc64201",
+            "scriptPath": "Assets\\Scripts\\GameStateHowToPlay.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
             "guid": "3a5dd495-f311-4f19-991a-b6bfc5d63825",
             "scriptPath": "Assets\\Scripts\\Cauldron.lua",
             "hotReload": true,
@@ -127,6 +134,13 @@
             "tableRef": -1
         },
         {
+            "guid": "d6628c13-1f36-47dd-9b77-5447605bb81f",
+            "scriptPath": "Assets\\Scripts\\knife.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
             "guid": "be141cd7-fad9-4612-8d4c-9452cd03cce0",
             "scriptPath": "Assets\\Scripts\\FloatUpAndDelete.lua",
             "hotReload": true,
@@ -148,8 +162,8 @@
             "tableRef": -1
         },
         {
-            "guid": "d6628c13-1f36-47dd-9b77-5447605bb81f",
-            "scriptPath": "Assets\\Scripts\\knife.lua",
+            "guid": "50911a7e-8c97-4e66-99f4-ffd4855680ee",
+            "scriptPath": "Assets\\Scripts\\GameStateBackToPause.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1

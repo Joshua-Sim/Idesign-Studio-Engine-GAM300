@@ -7,6 +7,7 @@ function M:on_init()
         print("[MenuScript] Button clicked! Entity:", ent)
 
         -- Start the game state
+        -- ATM only got audio
         GameStateStart()
 
     end)

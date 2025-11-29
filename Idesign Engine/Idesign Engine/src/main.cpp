@@ -89,7 +89,7 @@ int main(void)
     // Initialize global ECS interface and other singleton components
     ecsInterface.Init();
 
-    //AssetManager::Instance().CompileAllAssets();
+    AssetManager::Instance().CompileAllAssets();
     //AssetManager::Instance().SaveAllAssets();
     AssetManager::Instance().LoadAllAssets();
 
@@ -218,9 +218,9 @@ int main(void)
     // Clear all systems and other dynamically allocated resources
     engine->DestroySystems();
     EventManager::Instance().Reset();
-    Framework::TypeRegistry::Shutdown();
-    Framework::MessageBus::Destroy();
-    Framework::MessageSystem::Destroy();
+    TypeRegistry::Shutdown();
+    MessageBus::Destroy();
+    MessageSystem::Destroy();
     // Clean up smart pointers as they go out of scope
     // No need to manually delete as unique_ptr will handle it
     return 0;

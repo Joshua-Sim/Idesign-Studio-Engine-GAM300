@@ -802,19 +802,21 @@ namespace Framework {
         // ============ GAME STATE LUA BINDINGS ============
         static int lua_GameStateStart(lua_State* L)
         {
+            engineState.SetMenu(false);
+            //std::cout << engineState.IsInMenu() << std::endl;
+
             //Send message to start audio and other play-mode systems
             MessageBus::Get().SendImmediate(EnterPlayModeMessage());
-
-            SceneInterface::Instance().SetMenu(true);
-
+            
             return 0;
         }
 
         static int lua_GameStateResume(lua_State* L)
         {            
             // Set engine state to play mode
-            engineState.SetPlay(true);
-                    
+            engineState.SetPaused(false);
+            engineState.SetHowToPlay(false);
+
             //Send message to start audio and other play-mode systems
             MessageBus::Get().SendImmediate(ResumePlayModeMessage());
 
@@ -824,7 +826,7 @@ namespace Framework {
         static int lua_GameStatePaused(lua_State* L)
         {
             // Stop the game
-            engineState.SetPlay(false);
+            engineState.SetPaused(true);
 
             // Send exit message
             MessageBus::Get().SendImmediate(PausePlayModeMessage());
@@ -836,9 +838,27 @@ namespace Framework {
         {
             // Stop the game
             engineState.SetPlay(false);
+            engineState.SetPaused(false);
 
             // Send exit message
             MessageBus::Get().SendImmediate(ExitPlayModeMessage());
+
+            exit(0); // Immediately terminate app, but skips cleanup
+            return 0;
+        }
+
+        static int lua_GameStateHowToPlay(lua_State* L)
+        {
+            engineState.SetHowToPlay(true); // Render UI How To Play
+            engineState.SetPaused(false);   // Hide Pause UI
+
+            return 0;
+        }
+
+        static int lua_GameStateBackToPause(lua_State* L)
+        {
+            engineState.SetHowToPlay(false);    // Hide How To Play
+            engineState.SetPaused(true);        // Render Pause UI
 
             return 0;
         }
@@ -1585,7 +1605,10 @@ namespace Framework {
         lua_register(L, "GameStateResume",      lua_GameStateResume);
         lua_register(L, "GameStatePaused",      lua_GameStatePaused);
         lua_register(L, "GameStateExit",        lua_GameStateExit);
+        lua_register(L, "GameStateHowToPlay",   lua_GameStateHowToPlay);
+        lua_register(L, "GameStateBackToPause", lua_GameStateBackToPause);
         lua_register(L, "SetScale", lua_SetScale);
+        
         //cauldron
         lua_register(L, "SetCameraLock", [](lua_State* L) -> int {
             // 1. Get argument (true/false)

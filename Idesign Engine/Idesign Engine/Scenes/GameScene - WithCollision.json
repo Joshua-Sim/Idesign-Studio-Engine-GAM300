@@ -105,7 +105,7 @@
                 }
             }
         },
-         {
+        {
             "name": "KnifePickUpArea",
             "guid": "46643a43-ef91-4c8f-8675-27e1d159b4e9",
             "components": {
@@ -137,8 +137,7 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "afd25b76-dddc-4c4f-bae4-a6c9a22931e5",
@@ -170,7 +169,7 @@
                             "triggerMessage": "deez",
                             "isInteractable": true,
                             "interactMessage": "PickUp",
-                            "promptText": ""
+                            "promptText": "Pick up Knife"
                         }
                     ]
                 },
@@ -250,7 +249,8 @@
                     "defaultAnimationName": "",
                     "animationSpeed": 10.0,
                     "bLoops": false,
-                    "bPlayOnStart": true
+                    "bPlayOnStart": true,
+                    "currentTime": 0.0
                 },
                 "TextureComponent": {
                     "guid": "afd25b76-dddc-4c4f-bae4-a6c9a22931e5",
@@ -2641,14 +2641,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -29.35053062438965,
+                        -29.900836944580078,
                         8.039384841918945,
                         12.808287620544434
                     ],
                     "rotation": [
-                        0.29791101813316345,
-                        -0.8136253356933594,
-                        0.005235022399574518
+                        0.29791128635406494,
+                        -0.00007453512807842344,
+                        0.005234942305833101
                     ],
                     "scale": [
                         0.9999989867210388,
@@ -2672,7 +2672,7 @@
                         {
                             "guid": "4c64acea-fd05-4342-9f32-85ba69929743",
                             "scriptPath": "Assets\\Scripts\\footstep.lua",
-                            "hotReload": true
+                            "hotReload": false
                         }
                     ]
                 },
@@ -2723,7 +2723,7 @@
                 },
                 "ListenerComponent": {
                     "position": [
-                        -29.35053062438965,
+                        -29.900836944580078,
                         8.039384841918945,
                         12.808287620544434
                     ],
@@ -3163,7 +3163,7 @@
                 "TransformComponent": {
                     "position": [
                         980.0,
-                        420.0,
+                        400.0,
                         0.0
                     ],
                     "rotation": [
@@ -3172,8 +3172,8 @@
                         0.0
                     ],
                     "scale": [
-                        350.0,
-                        350.0,
+                        250.0,
+                        100.0,
                         1.0
                     ]
                 },
@@ -3188,7 +3188,7 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "475e81a7-2e58-4938-9542-ca201d5d96f5",
+                    "guid": "84369442-e278-434a-9fa6-c48d9c56bbb3",
                     "isUI": false
                 },
                 "ScriptProperties": {
@@ -3196,70 +3196,18 @@
                         {
                             "guid": "0b25e0c5-79e6-465a-96cd-920b83ef31e6",
                             "scriptPath": "Assets\\Scripts\\GameStateStart.lua",
-                            "hotReload": true
+                            "hotReload": false
                         }
                     ]
                 },
                 "ButtonComponent": {
                     "position": [
                         980.0,
-                        420.0
+                        400.0
                     ],
                     "size": [
-                        350.0,
-                        350.0
-                    ],
-                    "isHovered": false
-                }
-            }
-        },
-        {
-            "name": "mainMenuScene",
-            "guid": "ed731c16-5301-4220-8ffa-98fd139ffb91",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        960.0,
-                        640.0,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        1024.0,
-                        1024.0,
-                        1.0
-                    ]
-                },
-                "HierarchyComponent": {
-                    "parent": "",
-                    "children": [
-                        "aa8365ac-5eae-4566-b921-f4c2c546b8fc",
-                        "af7e17df-fb68-48bf-b4dd-bc4333f62497",
-                        "9dcecee3-55a2-4c8b-897d-7ed2a7014be4"
-                    ],
-                    "sortIndex": 51
-                },
-                "TagComponent": {
-                    "tags": [
-                        "menu"
-                    ]
-                },
-                "TextureComponent": {
-                    "guid": "b7b4bcaf-b4d9-4c53-a9af-017de16950a6",
-                    "isUI": false
-                },
-                "ButtonComponent": {
-                    "position": [
-                        960.0,
-                        640.0
-                    ],
-                    "size": [
-                        1024.0,
-                        1024.0
+                        250.0,
+                        100.0
                     ],
                     "isHovered": false
                 }
@@ -3281,8 +3229,8 @@
                         0.0
                     ],
                     "scale": [
-                        350.0,
-                        350.0,
+                        250.0,
+                        100.0,
                         1.0
                     ]
                 },
@@ -3297,7 +3245,7 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "306b5aba-52aa-43c4-8acf-342a955c0ade",
+                    "guid": "d24a29c5-cd9e-4322-ab59-d38618cba4bf",
                     "isUI": false
                 },
                 "ScriptProperties": {
@@ -3305,7 +3253,7 @@
                         {
                             "guid": "c6d4d63d-bced-4890-8a3b-3938e82b13e8",
                             "scriptPath": "Assets\\Scripts\\GameStateExit.lua",
-                            "hotReload": true
+                            "hotReload": false
                         }
                     ]
                 },
@@ -3315,8 +3263,8 @@
                         280.0
                     ],
                     "size": [
-                        350.0,
-                        350.0
+                        250.0,
+                        100.0
                     ],
                     "isHovered": false
                 }
@@ -3594,8 +3542,8 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        960.0,
-                        640.0,
+                        980.0,
+                        780.0,
                         0.0
                     ],
                     "rotation": [
@@ -3604,8 +3552,8 @@
                         0.0
                     ],
                     "scale": [
-                        1024.0,
-                        1024.0,
+                        781.0,
+                        450.0,
                         1.0
                     ]
                 },
@@ -3624,17 +3572,17 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "b7b4bcaf-b4d9-4c53-a9af-017de16950a6",
+                    "guid": "7d0d853e-cc77-4ef2-bd2b-af349f1ab9e0",
                     "isUI": false
                 },
                 "ButtonComponent": {
                     "position": [
-                        960.0,
-                        640.0
+                        980.0,
+                        780.0
                     ],
                     "size": [
-                        1024.0,
-                        1024.0
+                        781.0,
+                        450.0
                     ],
                     "isHovered": false
                 }
@@ -3656,8 +3604,8 @@
                         0.0
                     ],
                     "scale": [
-                        350.0,
-                        350.0,
+                        250.0,
+                        100.0,
                         1.0
                     ]
                 },
@@ -3672,8 +3620,17 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "8e7d59fe-c104-4430-b630-48ac01258249",
+                    "guid": "d1717710-3745-4779-a5f4-791474646b86",
                     "isUI": false
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "f2483dea-2693-432a-b1a5-01aed656bd1e",
+                            "scriptPath": "Assets\\Scripts\\GameStateResume.lua",
+                            "hotReload": true
+                        }
+                    ]
                 },
                 "ButtonComponent": {
                     "position": [
@@ -3681,8 +3638,8 @@
                         470.0
                     ],
                     "size": [
-                        350.0,
-                        350.0
+                        250.0,
+                        100.0
                     ],
                     "isHovered": false
                 }
@@ -3704,8 +3661,8 @@
                         0.0
                     ],
                     "scale": [
-                        350.0,
-                        350.0,
+                        250.0,
+                        100.0,
                         1.0
                     ]
                 },
@@ -3720,8 +3677,17 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "306b5aba-52aa-43c4-8acf-342a955c0ade",
+                    "guid": "d24a29c5-cd9e-4322-ab59-d38618cba4bf",
                     "isUI": false
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "c6d4d63d-bced-4890-8a3b-3938e82b13e8",
+                            "scriptPath": "Assets\\Scripts\\GameStateExit.lua",
+                            "hotReload": true
+                        }
+                    ]
                 },
                 "ButtonComponent": {
                     "position": [
@@ -3729,8 +3695,8 @@
                         230.0
                     ],
                     "size": [
-                        350.0,
-                        350.0
+                        250.0,
+                        100.0
                     ],
                     "isHovered": false
                 }
@@ -3752,8 +3718,8 @@
                         0.0
                     ],
                     "scale": [
-                        350.0,
-                        350.0,
+                        250.0,
+                        100.0,
                         1.0
                     ]
                 },
@@ -3768,8 +3734,17 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "b8e7fa55-ed0e-494c-b396-8285389fe956",
+                    "guid": "570d1836-97f4-478c-a328-e658b3182a8e",
                     "isUI": false
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "8de4ea3f-31fb-4768-a277-e1ac0fc64201",
+                            "scriptPath": "Assets\\Scripts\\GameStateHowToPlay.lua",
+                            "hotReload": true
+                        }
+                    ]
                 },
                 "ButtonComponent": {
                     "position": [
@@ -3777,8 +3752,8 @@
                         350.0
                     ],
                     "size": [
-                        350.0,
-                        350.0
+                        250.0,
+                        100.0
                     ],
                     "isHovered": false
                 }
@@ -3863,7 +3838,7 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
+                    "guid": "f5a9d8aa-42ce-4cdf-b778-7b63d04787e3",
                     "isUI": false
                 },
                 "ButtonComponent": {
@@ -3914,6 +3889,15 @@
                     "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
                     "isUI": false
                 },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "50911a7e-8c97-4e66-99f4-ffd4855680ee",
+                            "scriptPath": "Assets\\Scripts\\GameStateBackToPause.lua",
+                            "hotReload": true
+                        }
+                    ]
+                },
                 "ButtonComponent": {
                     "position": [
                         250.0,
@@ -3924,6 +3908,285 @@
                         250.0
                     ],
                     "isHovered": false
+                }
+            }
+        },
+        {
+            "name": "ScoreText",
+            "guid": "69d9bbe6-28e1-4d46-9d7a-756a14b26f64",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "8a362b6a-e321-41b7-9496-e18c1839cfbd"
+                }
+            }
+        },
+        {
+            "name": "ScoreText",
+            "guid": "59ca258b-1d6c-4ae8-b51e-827cbcbd0241",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "8a362b6a-e321-41b7-9496-e18c1839cfbd"
+                }
+            }
+        },
+        {
+            "name": "ScoreText",
+            "guid": "0466bfb8-7b94-4ee0-bb62-5b1defdca596",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "8a362b6a-e321-41b7-9496-e18c1839cfbd"
+                }
+            }
+        },
+        {
+            "name": "ScoreText",
+            "guid": "fbe4b7f8-eddd-48fe-8efd-3448a02fd8b3",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "8a362b6a-e321-41b7-9496-e18c1839cfbd"
+                }
+            }
+        },
+        {
+            "name": "background",
+            "guid": "7b84a8bb-5259-4b2c-8538-7d97a11db5ef",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        960.0,
+                        520.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        2050.0,
+                        1080.0,
+                        1.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "214c5541-f814-4e7f-bafa-d9e3db5aff2c",
+                    "children": [
+                        "e67dcc0d-7001-43a8-a331-19ea9c0628dd"
+                    ],
+                    "sortIndex": 0
+                },
+                "TagComponent": {
+                    "tags": [
+                        "menu"
+                    ]
+                },
+                "TextureComponent": {
+                    "guid": "f49379af-a87b-435b-b85b-5c3127ec2fe9",
+                    "isUI": false
+                },
+                "ButtonComponent": {
+                    "position": [
+                        960.0,
+                        520.0
+                    ],
+                    "size": [
+                        2050.0,
+                        1080.0
+                    ],
+                    "isHovered": false
+                }
+            }
+        },
+        {
+            "name": "mainMenubutton",
+            "guid": "214c5541-f814-4e7f-bafa-d9e3db5aff2c",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        980.0,
+                        780.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        781.0,
+                        450.0,
+                        1.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [
+                        "7b84a8bb-5259-4b2c-8538-7d97a11db5ef",
+                        "42fba46a-dc8d-4372-9233-8a68add37890",
+                        "35eb7bb0-72b2-4031-8443-cdc398e9129a"
+                    ],
+                    "sortIndex": 4
+                },
+                "TagComponent": {
+                    "tags": [
+                        "menu"
+                    ]
+                },
+                "TextureComponent": {
+                    "guid": "7d0d853e-cc77-4ef2-bd2b-af349f1ab9e0",
+                    "isUI": false
+                },
+                "ButtonComponent": {
+                    "position": [
+                        980.0,
+                        780.0
+                    ],
+                    "size": [
+                        781.0,
+                        450.0
+                    ],
+                    "isHovered": false
+                }
+            }
+        },
+        {
+            "name": "playbutton",
+            "guid": "42fba46a-dc8d-4372-9233-8a68add37890",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        980.0,
+                        400.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        250.0,
+                        100.0,
+                        1.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "214c5541-f814-4e7f-bafa-d9e3db5aff2c",
+                    "children": [],
+                    "sortIndex": 1
+                },
+                "TagComponent": {
+                    "tags": [
+                        "menu"
+                    ]
+                },
+                "TextureComponent": {
+                    "guid": "84369442-e278-434a-9fa6-c48d9c56bbb3",
+                    "isUI": false
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "0b25e0c5-79e6-465a-96cd-920b83ef31e6",
+                            "scriptPath": "Assets\\Scripts\\GameStateStart.lua",
+                            "hotReload": true
+                        }
+                    ]
+                },
+                "ButtonComponent": {
+                    "position": [
+                        980.0,
+                        400.0
+                    ],
+                    "size": [
+                        250.0,
+                        100.0
+                    ],
+                    "isHovered": false
+                }
+            }
+        },
+        {
+            "name": "exitbutton",
+            "guid": "35eb7bb0-72b2-4031-8443-cdc398e9129a",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        980.0,
+                        280.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        250.0,
+                        100.0,
+                        1.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "214c5541-f814-4e7f-bafa-d9e3db5aff2c",
+                    "children": [],
+                    "sortIndex": 2
+                },
+                "TagComponent": {
+                    "tags": [
+                        "menu"
+                    ]
+                },
+                "TextureComponent": {
+                    "guid": "d24a29c5-cd9e-4322-ab59-d38618cba4bf",
+                    "isUI": false
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "c6d4d63d-bced-4890-8a3b-3938e82b13e8",
+                            "scriptPath": "Assets\\Scripts\\GameStateExit.lua",
+                            "hotReload": true
+                        }
+                    ]
+                },
+                "ButtonComponent": {
+                    "position": [
+                        980.0,
+                        280.0
+                    ],
+                    "size": [
+                        250.0,
+                        100.0
+                    ],
+                    "isHovered": false
+                }
+            }
+        },
+        {
+            "name": "ScoreText",
+            "guid": "e570c51f-a175-4739-8b74-0b5ed2c3491c",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "8a362b6a-e321-41b7-9496-e18c1839cfbd"
+                }
+            }
+        },
+        {
+            "name": "ScoreText",
+            "guid": "5939386e-cd20-4b92-9130-f1054e8f8ebe",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "8a362b6a-e321-41b7-9496-e18c1839cfbd"
+                }
+            }
+        },
+        {
+            "name": "ScoreText",
+            "guid": "4a8613f7-5f37-46bc-a79d-6002584b1571",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "8a362b6a-e321-41b7-9496-e18c1839cfbd"
                 }
             }
         }
