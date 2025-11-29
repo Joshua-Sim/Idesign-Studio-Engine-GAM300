@@ -318,8 +318,8 @@ namespace Framework {
 
             BoxColliderComponent colliderComp;
             BoxColliderEntry entry;
-            entry.size = glm::vec3(1.0f); 
-            entry.isInteractable = true; 
+            entry.size = glm::vec3(1.0f);
+            entry.isInteractable = true;
             entry.promptText = "Pick up: " + itemName;
             colliderComp.colliders.push_back(entry);
             ecsInterface.AddComponent(itemEntity, colliderComp);
@@ -364,7 +364,7 @@ namespace Framework {
 
             // 2. Check validity
             if (ecsInterface.IsEntityValid(e)) {
-             
+
                 sceneManager.m_PendingEntityDeletes.push_back(e);
                 // std::cout << "[Lua] Queued Entity " << e << " for destruction" << std::endl;
             }
@@ -444,7 +444,7 @@ namespace Framework {
         }
 
         // Engine LUA exposed utility functions (Get entity, get by component, get by name, tag , create prefab, setactive -deactive etc
-           
+
         int lua_FindEntityByName(lua_State* L)
         {
             const char* name = luaL_checkstring(L, 1);
@@ -458,7 +458,7 @@ namespace Framework {
             return 1;
         }
 
-       // Navmesh build function
+        // Navmesh build function
         static int lua_BuildNavMesh(lua_State* L)
         {
             auto& ecs = ecsInterface;
@@ -757,7 +757,16 @@ namespace Framework {
 
         static int lua_AudioStop(lua_State* L) {
             if (g_AudioSystem) {
-                g_AudioSystem->Reset();
+                // Check if an event name was provided
+                if (lua_gettop(L) >= 1 && lua_isstring(L, 1)) {
+                    // Stop specific event
+                    const char* eventName = lua_tostring(L, 1);
+                    g_AudioSystem->StopEvent(eventName);
+                }
+                else {
+                    // No arguments - stop all audio (legacy behavior)
+                    g_AudioSystem->Reset();
+                }
             }
             return 0;
         }
@@ -795,6 +804,19 @@ namespace Framework {
             }
             return 0;
         }
+
+        static int lua_AudioIsPlaying(lua_State* L) {
+            const char* eventPath = luaL_checkstring(L, 1);
+            bool isPlaying = false;
+
+            if (g_AudioSystem) {
+                // Your AudioSystem already has this function logic implemented!
+                isPlaying = g_AudioSystem->IsPlaying(eventPath);
+            }
+
+            lua_pushboolean(L, isPlaying);
+            return 1;
+        }
         // ============ END AUDIO LUA BINDINGS ============
 
 
@@ -811,10 +833,10 @@ namespace Framework {
         }
 
         static int lua_GameStateResume(lua_State* L)
-        {            
+        {
             // Set engine state to play mode
             engineState.SetPlay(true);
-                    
+
             //Send message to start audio and other play-mode systems
             MessageBus::Get().SendImmediate(EnterPlayModeMessage());
 
@@ -937,10 +959,10 @@ namespace Framework {
 
             if (!lua_isfunction(L, 2))
                 return luaL_error(L, "Second argument must be a function");
-        // 1. Function to get the ID of the item currently held
-        
+            // 1. Function to get the ID of the item currently held
 
-            // Create reference to function
+
+                // Create reference to function
             lua_pushvalue(L, 2);
             int funcRef = luaL_ref(L, LUA_REGISTRYINDEX);
 
@@ -1009,7 +1031,7 @@ namespace Framework {
 
             return 0; // no return values
         }
-        
+
         // --------- Animation --------------
         // Helper to play an animation on an entity
         static int l_PlayEntityAnimation(lua_State* L) {
@@ -1053,49 +1075,49 @@ namespace Framework {
             return 0;
         }
 
-        // Lua Call: bool CheckValidRecipe(table ingredientIDs)
+        // Lua Call: int CheckValidRecipe(table ingredientIDs)
+// Returns: -1 if invalid, or the ItemID (int) of the result if valid
         static int l_CheckValidRecipe(lua_State* L) {
-            // 1. Read the Table from Lua (Argument 1)
+            // 1. Validate Input
             if (!lua_istable(L, 1)) {
-                lua_pushboolean(L, false);
+                lua_pushinteger(L, -1); // Return -1 (Error/Invalid)
                 return 1;
             }
 
             std::vector<int> cauldronIngredients;
 
-            // Iterate over the Lua table (assuming it's a list {0, 1, ...})
+            // 2. Extract Ingredients from Lua Table
             lua_pushnil(L);
             while (lua_next(L, 1) != 0) {
-                // key is at index -2, value at -1
                 if (lua_isnumber(L, -1)) {
                     cauldronIngredients.push_back((int)lua_tonumber(L, -1));
                 }
                 lua_pop(L, 1);
             }
 
-            // 2. Sort input ingredients to ensure order doesn't matter
-            // (e.g. {0, 1} should equal {1, 0})
+            // 3. Sort input ingredients so order doesn't matter
             std::sort(cauldronIngredients.begin(), cauldronIngredients.end());
 
-            // 3. Check against Global Recipes
+            // 4. Check against Global Recipes
             const auto& allRecipes = Framework::GetGlobalRecipes();
-            bool matchFound = false;
+            int foundResultID = -1; // Default to -1 (No Match Found)
 
             for (const auto& recipe : allRecipes) {
                 // Copy recipe ingredients to sort them for comparison
                 std::vector<int> recipeIngredients = recipe.ingredientIDs;
                 std::sort(recipeIngredients.begin(), recipeIngredients.end());
 
-                if (cauldronIngredients.size() == recipeIngredients.size()) {
-                    if (cauldronIngredients == recipeIngredients) {
-                        matchFound = true;
-                        break;
-                    }
+                // Compare the vectors
+                if (cauldronIngredients == recipeIngredients) {
+                    foundResultID = recipe.resultItemID; // [FIX] Capture the Result ID
+                    break;
                 }
             }
 
-            // 4. Return result to Lua
-            lua_pushboolean(L, matchFound);
+            // 5. Return the ID to Lua
+            // If valid: returns e.g. 4 (Vitality Potion ID)
+            // If invalid: returns -1
+            lua_pushinteger(L, foundResultID);
             return 1;
         }
 
@@ -1311,7 +1333,7 @@ namespace Framework {
             lua_pushboolean(L, ok);
             return 1;
         }
-    
+
         // Cook.Scene(jsonPath, outPath [, key="materials"])
         int l_Cook_Material(lua_State* L) {
             const char* json = luaL_checkstring(L, 1);
@@ -1378,7 +1400,7 @@ namespace Framework {
         {
             Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
             const char* guidStr = luaL_checkstring(L, 2);
-            
+
             if (ecsInterface.IsEntityValid(e) && ecsInterface.HasComponent<AnimationProperties>(e))
             {
                 auto& anim = ecsInterface.GetComponent<AnimationProperties>(e);
@@ -1534,7 +1556,7 @@ namespace Framework {
         lua_register(L, "CameraMove", l_CameraMove);
         lua_register(L, "GetMousePosition", lua_GetMousePosition);
         lua_register(L, "DestroyEntity", l_DestroyEntity);
-        lua_register(L, "IsMouseButtonDown", l_IsMouseButtonDown); 
+        lua_register(L, "IsMouseButtonDown", l_IsMouseButtonDown);
         lua_register(L, "SetRotation", lua_SetRotation);
         lua_register(L, "SetMesh", lua_SetMesh);
         lua_register(L, "SetTexture", lua_SetTexture);
@@ -1556,7 +1578,7 @@ namespace Framework {
 
         lua_register(L, "DestroyEntity", Lua_DestroyEntity);
         lua_register(L, "GetItemName", Lua_GetItemName);
-        lua_register(L, "RegisterButtonCallback",   Lua_RegisterButtonCallback);
+        lua_register(L, "RegisterButtonCallback", Lua_RegisterButtonCallback);
 
         lua_register(L, "SpawnCauldronItem", l_spawnCauldronItem);
         lua_register(L, "CheckValidRecipe", l_CheckValidRecipe);
@@ -1574,25 +1596,23 @@ namespace Framework {
         lua_register(L, "GetSelectedItemName", Lua_GetSelectedItemName);
         lua_register(L, "SetInteractionText", l_SetInteractionText);
 
-
-
         // Engine utility
-        lua_register(L, "FindEntityByName",     lua_FindEntityByName);
-        lua_register(L, "GetEntitiesByTag",     lua_GetEntitiesByTag);
-        lua_register(L, "RemoveTagFromEntity",  lua_RemoveTagFromEntity);
-        lua_register(L, "EntityHasTag",         lua_EntityHasTag);
+        lua_register(L, "FindEntityByName", lua_FindEntityByName);
+        lua_register(L, "GetEntitiesByTag", lua_GetEntitiesByTag);
+        lua_register(L, "RemoveTagFromEntity", lua_RemoveTagFromEntity);
+        lua_register(L, "EntityHasTag", lua_EntityHasTag);
         lua_register(L, "IsEntityValid", lua_IsEntityValid);
-        lua_register(L, "AddTagToEntity",       lua_AddTagToEntity);
-        lua_register(L, "PlayEntityAnimation",  l_PlayEntityAnimation);
-        lua_register(L, "SpawnPrefab",          lua_SpawnPrefab);
+        lua_register(L, "AddTagToEntity", lua_AddTagToEntity);
+        lua_register(L, "PlayEntityAnimation", l_PlayEntityAnimation);
+        lua_register(L, "SpawnPrefab", lua_SpawnPrefab);
         lua_register(L, "FireEvent", lua_FireEvent); // Maybe add register if needed
         lua_register(L, "SetScriptVariable", lua_SetScriptVariable);
 
         // Engine States
-        lua_register(L, "GameStateStart",       lua_GameStateStart);
-        lua_register(L, "GameStateResume",      lua_GameStateResume);
-        lua_register(L, "GameStatePaused",      lua_GameStatePaused);
-        lua_register(L, "GameStateExit",        lua_GameStateExit);
+        lua_register(L, "GameStateStart", lua_GameStateStart);
+        lua_register(L, "GameStateResume", lua_GameStateResume);
+        lua_register(L, "GameStatePaused", lua_GameStatePaused);
+        lua_register(L, "GameStateExit", lua_GameStateExit);
         lua_register(L, "SetScale", lua_SetScale);
         //cauldron
         lua_register(L, "SetCameraLock", [](lua_State* L) -> int {
@@ -1640,14 +1660,14 @@ namespace Framework {
         lua_register(L, "SetAnimationAsset", l_SetAnimationAsset);
         // Navmesh
         lua_register(L, "BuildNavMesh", lua_BuildNavMesh);
-        lua_register(L, "PathfindTo", [](lua_State* L) -> int 
-        {
-            const char* agentName = luaL_checkstring(L, 1);
-            const char* targetName = luaL_checkstring(L, 2);
+        lua_register(L, "PathfindTo", [](lua_State* L) -> int
+            {
+                const char* agentName = luaL_checkstring(L, 1);
+                const char* targetName = luaL_checkstring(L, 2);
 
-            ScriptPathfindTo(agentName, targetName);
-            return 0;
-        });
+                ScriptPathfindTo(agentName, targetName);
+                return 0;
+            });
 
         // Create Cook table with our functions
         lua_newtable(L);                           // Cook
@@ -1686,10 +1706,12 @@ namespace Framework {
         lua_pushcfunction(L, lua_AudioResume);    lua_setfield(L, -2, "Resume");
         lua_pushcfunction(L, lua_AudioSetVolume); lua_setfield(L, -2, "SetVolume");
         lua_pushcfunction(L, lua_AudioPlay3D);    lua_setfield(L, -2, "Play3D");
+        lua_pushcfunction(L, lua_AudioIsPlaying);  lua_setfield(L, -2, "IsPlaying"); // <--- ADD THIS
         lua_setglobal(L, "Sound");
 
+
         std::cout << "[ScriptingSystem] Initialized (Lua VM ready)\n";
-    }   
+    }
 
     void ScriptingSystem::Update(float dt)
     {
@@ -1698,7 +1720,7 @@ namespace Framework {
         entitiesToProcess.reserve(mEntities.size());
         for (Entity e : mEntities) {
             entitiesToProcess.push_back(e);
-        }   
+        }
 
         // NOW iterate over the COPY, not the original set
         for (Entity e : entitiesToProcess) {
@@ -1763,7 +1785,7 @@ namespace Framework {
         }
     }
 
-    void ScriptingSystem:: SetProjectRoot(const std::string& root) {
+    void ScriptingSystem::SetProjectRoot(const std::string& root) {
         std::error_code ec;
         auto canonical = std::filesystem::canonical(root, ec);
         if (!ec) {
@@ -1772,7 +1794,7 @@ namespace Framework {
         }
     }
 
-     std::string ScriptingSystem::GetProjectRoot() { return s_ProjectRoot; }
+    std::string ScriptingSystem::GetProjectRoot() { return s_ProjectRoot; }
 
     std::string ScriptingSystem::GetName() { return "ScriptingSystem"; }
 
@@ -1855,7 +1877,7 @@ namespace Framework {
         lua_pop(L, 1); // pop tbl
         return true;
     }
-    
+
     Entity ScriptingSystem::CreateScriptEntity(const std::string& path) {
         Entity e = ecsInterface.CreateEntity();
 

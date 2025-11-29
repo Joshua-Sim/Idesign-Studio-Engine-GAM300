@@ -9,6 +9,7 @@
 #include "ItemComponent.h"
 #include "MeshLoader.h" // [IMPORTANT] Needed to load the Quad for the icon
 #include <iostream>
+#include "AudioSystem.h"
 
 extern Framework::Coordinator ecsInterface;
 
@@ -124,7 +125,7 @@ namespace Framework
                     payload.senderID = ecsInterface.GetEntityByName("Player");
                     payload.targetID = targetEntity;
                     payload.actionType = 1;
-
+                        
                     EventManager::Instance().Fire(entry.interactMessage, &payload);
                     handledByScript = true;
                 }
@@ -140,6 +141,7 @@ namespace Framework
             if (itemId >= 0) {
                 int slot = Framework::Inventory::Instance().AddFirstEmpty(itemId);
                 if (slot >= 0) {
+                    g_AudioSystem->PlayAudio("event:/PickingUpHerb");
                     if (item.toDestroyWhenPicked) {
                         mPhysicsSystem->RemoveBodyForEntity(targetEntity);
                         ecsInterface.DestroyEntity(targetEntity);

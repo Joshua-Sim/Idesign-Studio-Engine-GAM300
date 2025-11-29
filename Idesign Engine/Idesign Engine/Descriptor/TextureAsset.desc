@@ -1,5 +1,5 @@
 {
-    "count": 86,
+    "count": 87,
     "entries": [
         {
             "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
@@ -11,12 +11,6 @@
             "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
             "name": "green",
             "path": "Assets\\Textures\\green.png",
-            "isUI": false
-        },
-        {
-            "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606",
-            "name": "music",
-            "path": "Assets/Textures/music.png",
             "isUI": false
         },
         {
@@ -32,6 +26,12 @@
             "isUI": false
         },
         {
+            "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606",
+            "name": "music",
+            "path": "Assets/Textures/music.png",
+            "isUI": false
+        },
+        {
             "guid": "d4899207-ea5e-473b-870f-aade76e8a7ff",
             "name": "Door",
             "path": "Assets\\Textures\\Door.png",
@@ -44,12 +44,6 @@
             "isUI": false
         },
         {
-            "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
-            "name": "Shelf",
-            "path": "Assets\\Textures\\Shelf.png",
-            "isUI": false
-        },
-        {
             "guid": "cabb6b16-8445-4f40-b9c8-bd593ea6b65c",
             "name": "top",
             "path": "Assets\\Textures\\top.png",
@@ -59,6 +53,12 @@
             "guid": "312bdb54-477d-47bb-a1ce-2224bc3ec5e3",
             "name": "Cupboard",
             "path": "Assets\\Textures\\Cupboard.png",
+            "isUI": false
+        },
+        {
+            "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
+            "name": "Shelf",
+            "path": "Assets\\Textures\\Shelf.png",
             "isUI": false
         },
         {
@@ -110,12 +110,6 @@
             "isUI": false
         },
         {
-            "guid": "49874ec1-50f0-44fd-85cd-c2c551acaf66",
-            "name": "strength_potion",
-            "path": "Assets\\Textures\\strength_potion3D.png",
-            "isUI": false
-        },
-        {
             "guid": "b5153be8-0464-48c3-800e-48bfb0c931b9",
             "name": "Key_E",
             "path": "Assets\\Textures\\Key_E.png",
@@ -125,6 +119,12 @@
             "guid": "add88db8-22f2-4599-ad64-d9abc2f87fa9",
             "name": "Chest",
             "path": "Assets\\Textures\\Chest.png",
+            "isUI": false
+        },
+        {
+            "guid": "49874ec1-50f0-44fd-85cd-c2c551acaf66",
+            "name": "strength_potion",
+            "path": "Assets\\Textures\\strength_potion3D.png",
             "isUI": false
         },
         {
@@ -515,6 +515,12 @@
             "guid": "c9c55d09-3f6f-44ca-9069-50e51f428c84",
             "name": "SkyMidNight_Back",
             "path": "Assets\\Textures\\SkyMidNight_Back.png",
+            "isUI": false
+        },
+        {
+            "guid": "9387bb16-feb9-4468-841b-4456617ca735",
+            "name": "knife",
+            "path": "Assets\\Textures\\knife.png",
             "isUI": false
         }
     ]

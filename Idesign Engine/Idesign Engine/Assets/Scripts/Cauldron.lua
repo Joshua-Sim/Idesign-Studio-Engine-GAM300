@@ -69,10 +69,51 @@ local guid_stir = ""
 local guid_idle = ""
 local stored_ingredients = {} 
 local visual_entities = {}    
-local item_names = { [0] = "unchopped_herb", [1] = "chopped_herb" }
+local item_names = { [0] = "unchopped_herb", [1] = "chopped_herb", [2] = "pear" }
 
 -- Player Interact Prompt
 local last_prompt_state = ""
+
+-- [AUDIO STATE]
+local is_stirring_sound_active = false
+local last_sound_trigger_time = 0.0 -- [NEW] Debounce timer
+
+-- [UI LOG SETTINGS]
+local prefab_log = "CauldronLog_Prefab" -- Reusing your existing prefab
+
+-- =============================================================
+-- [AUDIO HELPERS]
+-- =============================================================
+-- [AUDIO HELPERS]
+local function PlayStirSound()
+    -- [FIX] Debounce: Don't try to play more than once every 0.1 seconds.
+    -- This prevents the "Machine Gun" effect while waiting for the engine to report IsPlaying.
+    if (accumulated_time - last_sound_trigger_time) < 0.1 then return end
+
+    -- 1. Ask Engine: Is this sound already playing?
+    local is_playing = false
+    if Sound and Sound.IsPlaying then
+        is_playing = Sound.IsPlaying("event:/Stirring")
+    end
+
+    -- 2. Only play if stopped
+    if not is_playing then
+        if Sound and Sound.Play then
+            Sound.Play("event:/Stirring")
+            last_sound_trigger_time = accumulated_time -- [NEW] Update timer
+        end
+    end
+end
+
+local function StopStirSound()
+    -- Only send stop command if it is actually playing
+    if Sound and Sound.IsPlaying and Sound.IsPlaying("event:/Stirring") then
+        if Sound.Stop then
+            -- Note: Uses your fixed Stop function that takes an argument
+            Sound.Stop("event:/Stirring")
+        end
+    end
+end
 
 -- =============================================================
 -- [HELPERS]
@@ -105,6 +146,27 @@ local function GetMouseDelta()
     return dx, dy
 end
 
+-- [HELPER] GetIngredientIDs
+-- Changed to read from 'stored_ingredients' directly
+local function GetIngredientIDs()
+    return stored_ingredients -- Since this is already a list of ints, we just return it
+end
+
+local function SpawnLog(message)
+    if SpawnPrefab and SetTextComponent then
+        -- Spawn the log UI entity
+        local logEntity = SpawnPrefab(prefab_log)
+        
+        if logEntity then
+            -- Update the text component on that entity
+            SetTextComponent(logEntity, "text", message)
+            print("[Cauldron] UI Log: " .. message)
+        else
+            print("[Cauldron] Failed to spawn log prefab!")
+        end
+    end
+end
+
 -- =============================================================
 -- 1. INIT
 -- =============================================================
@@ -135,10 +197,15 @@ function M.OnInteract(arg1, arg2)
         table.insert(stored_ingredients, held_item_id)
         ConsumeSelectedItem()
         
+        -- Default to -1 (No Visual) logic
+        local vis_id = -1
         if SpawnCauldronItem and id_to_use then
-            local visual_id = SpawnCauldronItem(id_to_use, held_item_id)
-            if visual_id then table.insert(visual_entities, visual_id) end
+            local res = SpawnCauldronItem(id_to_use, held_item_id)
+            if res then vis_id = res end
         end
+        
+        -- CRITICAL: Insert into visual list even if it failed (-1) to keep lists synced
+        table.insert(visual_entities, vis_id)
         
         M.PrintContents()
         return 
@@ -148,16 +215,21 @@ function M.OnInteract(arg1, arg2)
     is_active = not is_active
 
     if is_active then
-        local isValid = false
+        -- Check Recipe using stored_ingredients
+        local resultID = -1
         if CheckValidRecipe then
-            isValid = CheckValidRecipe(stored_ingredients)
+            resultID = CheckValidRecipe(stored_ingredients)
         else
             print("[Lua ERROR] CheckValidRecipe missing!")
         end
 
-        if isValid then
-            print("[Lua] Valid Recipe! Stirring...")
+        if resultID ~= -1 then
+            print("[Lua] Valid Recipe Found! Result ID: " .. resultID)
             
+            if GetItemNameById then
+                result_item_name = GetItemNameById(resultID)
+            end
+
             -- Reset State
             progress = 0.0
             current_finish_timer = 0.0
@@ -166,7 +238,8 @@ function M.OnInteract(arg1, arg2)
             spoon_y = 100.0
             last_angle = math.atan2(spoon_y, spoon_x)
             
-            SetCameraLock(true)
+            SetCameraLock(true) 
+            
             if id_to_use then
                 SetAnimationAsset(id_to_use, guid_stir)
                 SetAnimationMode(id_to_use, 1) 
@@ -175,6 +248,9 @@ function M.OnInteract(arg1, arg2)
             if player_id then SetGravity(player_id, 0.0) end
         else
             print("[Lua] Invalid Recipe!")
+        
+            SpawnLog("Invalid Recipe!") 
+            
             is_active = false 
         end
     else
@@ -187,6 +263,8 @@ function M.StopInteraction(entity_id)
     is_active = false
     is_finished = false
     print("[Lua] Stirring Stopped")
+    
+    StopStirSound() 
     
     SetCameraLock(false)
     if id then
@@ -207,106 +285,112 @@ function M.on_update(arg1, arg2)
     if type(arg2) == "number" then dt = arg2 end
 
     accumulated_time = accumulated_time + dt
+    if not debug_timer then debug_timer = 0.0 end
+    debug_timer = debug_timer + dt
 
--- [DEBUG 1] Check if we have an ID
     if not my_entity_id then 
-        -- Fallback: Try finding by name
         my_entity_id = FindEntityByName(CAULDRON_NAME)
-        
-        if not my_entity_id then
-            -- Print only once per second to avoid spam
-            if debug_timer > 1.0 then
-                print("[Lua ERROR] Cauldron Script cannot find Entity ID! Name searched: " .. CAULDRON_NAME)
-                debug_timer = 0.0
-            end
-            return 
-        end
+        if not my_entity_id then return end 
     end
 
-    -- =========================================================
-    -- [NEW] DYNAMIC TEXT LOGIC
-    -- =========================================================
-    -- This runs every frame to check what the player is holding
+    -- 1. DYNAMIC TEXT
     if SetInteractionText then
         local held_item = GetSelectedItem() 
         local desired_text = ""
+        if is_active then desired_text = "Stirring..." 
+        elseif held_item ~= -1 then desired_text = "Add Ingredient"
+        else desired_text = "Stir Cauldron" end
 
-        if is_active then
-            desired_text = "Stirring..." -- If we are currently stirring
-        elseif held_item ~= -1 then
-            -- Player is holding an item: Prompt to Add
-            -- Optional: You can do item_names[held_item] to get specific names
-            desired_text = "Add Ingredient"
-        else
-            -- Player hand is empty: Prompt to Stir
-            desired_text = "Stir Cauldron"
-        end
-
-        -- Only send to C++ if the text is different from the last frame
         if desired_text ~= last_prompt_state then
             SetInteractionText(my_entity_id, desired_text)
             last_prompt_state = desired_text
-            -- print("[Lua] Changed Prompt to: " .. desired_text) -- Debug print
         end
     end
 
-    if not my_entity_id then my_entity_id = FindEntityByName(CAULDRON_NAME) end
-    if not my_entity_id then return end 
-
-    -- [PART A] ANIMATE FLOATING ITEMS
+    -- 2. CLEANUP & ANIMATION (Using Separate Lists)
     local count = #visual_entities
-    if count > 0 then
-        local raw_cx, raw_cy, raw_cz = GetPosition(my_entity_id)
-        if raw_cx then 
-            local cx = raw_cx + center_offset_x
-            local cy = raw_cy 
-            local cz = raw_cz + center_offset_z
+    local i = count
+
+    while i > 0 do
+        local vis_id = visual_entities[i]
+        local is_valid = true
+        
+        -- Check validity (Only if ID > 0)
+        if vis_id > 0 and IsEntityValid and not IsEntityValid(vis_id) then
+            is_valid = false
+        end
+
+        if is_valid and vis_id > 0 then
+            -- Animation Math
             local angle_step = (2 * math.pi) / count
+            local item_angle = current_orbit_angle + ((i - 1) * angle_step)
             
-            -- VORTEX MATH
             local dynamic_radius = orbit_radius_start 
-            local dynamic_speed = orbit_speed_start
-            
             if is_active then
                 dynamic_radius = orbit_radius_start + (orbit_radius_end - orbit_radius_start) * progress
-                dynamic_speed  = orbit_speed_start  + (orbit_speed_end  - orbit_speed_start)  * progress
             end
-            
-            current_orbit_angle = current_orbit_angle + (dt * dynamic_speed)
 
-            for i, vis_id in ipairs(visual_entities) do
-                local item_angle = current_orbit_angle + ((i - 1) * angle_step)
-                local offset_x = math.cos(item_angle) * dynamic_radius
-                local offset_z = math.sin(item_angle) * dynamic_radius
-                
-                -- Disable bobbing if Stirring
-                local current_bob = bob_height
-                if is_active then current_bob = 0.0 end
-                
-                local offset_y = math.sin((accumulated_time * bob_speed) + i) * current_bob
-                
+            local offset_x = math.cos(item_angle) * dynamic_radius
+            local offset_z = math.sin(item_angle) * dynamic_radius
+            
+            local current_bob = is_active and 0.0 or bob_height
+            local offset_y = math.sin((accumulated_time * bob_speed) + i) * current_bob
+            
+            local raw_cx, raw_cy, raw_cz = GetPosition(my_entity_id)
+            if raw_cx then 
+                local tx = raw_cx + center_offset_x + offset_x
+                local ty = raw_cy + height_offset + offset_y
+                local tz = raw_cz + center_offset_z + offset_z
+
+                -- [FIX] pcall SetPosition
                 if SetPosition then
-                    SetPosition(vis_id, cx + offset_x, cy + height_offset + offset_y, cz + offset_z)
+                    local ok = pcall(SetPosition, vis_id, tx, ty, tz)
+                    if not ok then is_valid = false end
                 end
                 
-                if SetRotation then
+                -- [FIX] pcall SetRotation
+                if is_valid and SetRotation then
                     local rot_speed = 50.0 
+                    local ok = true
                     if is_active then 
-                        SetRotation(vis_id, 0.0, 0.0, 0.0) 
+                        ok = pcall(SetRotation, vis_id, 0.0, 0.0, 0.0) 
                     else
-                        SetRotation(vis_id, 0.0, accumulated_time * rot_speed, 0.0) 
+                        ok = pcall(SetRotation, vis_id, 0.0, accumulated_time * rot_speed, 0.0) 
                     end
+                    if not ok then is_valid = false end
                 end
             end
         end
-    end
 
-    -- [PART B] STIRRING LOGIC
+        -- Cleanup
+        if not is_valid then
+            print("[Lua] Item removed/invalid at index " .. i)
+            table.remove(visual_entities, i)
+            table.remove(stored_ingredients, i) -- Remove from data list too
+            
+            if is_active then M.StopInteraction(my_entity_id) end
+        end
+        i = i - 1
+    end
+    
+    -- Update Timer
+    local dynamic_speed = orbit_speed_start
+    if is_active then
+        dynamic_speed = orbit_speed_start + (orbit_speed_end - orbit_speed_start) * progress
+    end
+    current_orbit_angle = current_orbit_angle + (dt * dynamic_speed)
+
+    -- 3. STIRRING LOGIC
     if is_active and player_id then
         local px, py, pz = GetPosition(player_id)
         local cx, cy, cz = GetPosition(my_entity_id)
-        local dist = math.sqrt((px - cx)^2 + (py - cy)^2 + (pz - cz)^2)
+        
+        if not px or not cx then 
+            M.StopInteraction(my_entity_id)
+            return
+        end
 
+        local dist = math.sqrt((px - cx)^2 + (py - cy)^2 + (pz - cz)^2)
         if dist > max_distance then
             M.StopInteraction(my_entity_id)
             return
@@ -319,9 +403,7 @@ function M.on_update(arg1, arg2)
                 current_finish_timer = current_finish_timer - dt
                 SetAnimationSettings(my_entity_id, 0.0, true, true) 
                 
-                if current_finish_timer <= 0 then
-                    M.OnPotionComplete() 
-                end
+                if current_finish_timer <= 0 then M.OnPotionComplete() end
                 return
             end
 
@@ -348,8 +430,10 @@ function M.on_update(arg1, arg2)
             if is_stirring then
                 progress = progress + (math.abs(angle_delta) * stir_sensitivity)
                 SetAnimationSettings(my_entity_id, 1.0, true, true)
+                PlayStirSound() -- Safe call now
             else
                 SetAnimationSettings(my_entity_id, 0.0, true, true)
+                StopStirSound() -- Safe call now
             end
 
             if progress >= 1.0 then
@@ -434,10 +518,15 @@ end
 -- UTILITY
 -- =============================================================
 function M.OnPotionComplete()
-    -- 1. Stop Minigame
+    -- 1. Stop Minigame (This also stops the stirring sound via StopInteraction)
     M.StopInteraction(my_entity_id)
     M.ClearCauldron()
     print("[Lua] Potion Complete! Ingredients Consumed.")
+
+    -- [NEW] Play Success Sound
+    if Sound and Sound.Play then
+        Sound.Play("event:/RecipeComplete")
+    end
 
     -- 2. CALCULATE SPAWN POSITION
     local cx, cy, cz = GetPosition(my_entity_id)

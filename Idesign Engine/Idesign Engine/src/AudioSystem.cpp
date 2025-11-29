@@ -94,9 +94,9 @@ namespace Framework {
         // Clear all Banks
         for (auto& [path, bank] : loadedBanks)
         {
-            if (bank)   
+            if (bank)
                 bank->unload();
-                bank->unloadSampleData();
+            bank->unloadSampleData();
         }
         loadedBanks.clear();
 
@@ -271,15 +271,15 @@ namespace Framework {
 
         // Update FMOD listener attributes
         FMOD_3D_ATTRIBUTES listenerAttribs{};
-        listenerAttribs.position =  { listener.position.x,  listener.position.y,    listener.position.z };
-        listenerAttribs.forward =   { listener.forward.x,   listener.forward.y,     listener.forward.z };
-        listenerAttribs.up =        { listener.up.x,        listener.up.y,          listener.up.z };
-        listenerAttribs.velocity =  { listener.velocity.x,  listener.velocity.y,    listener.velocity.z };
+        listenerAttribs.position = { listener.position.x,  listener.position.y,    listener.position.z };
+        listenerAttribs.forward = { listener.forward.x,   listener.forward.y,     listener.forward.z };
+        listenerAttribs.up = { listener.up.x,        listener.up.y,          listener.up.z };
+        listenerAttribs.velocity = { listener.velocity.x,  listener.velocity.y,    listener.velocity.z };
 
         if (studioSystem) studioSystem->setListenerAttributes(listener.listenerIndex, &listenerAttribs);
 
         // Update all entity audio sources
-        for (Entity entity : mEntities) 
+        for (Entity entity : mEntities)
         {
             if (!ecsInterface.HasComponent<AudioComponent>(entity)) continue;
             if (!ecsInterface.HasComponent<TransformComponent>(entity)) continue;
@@ -287,7 +287,7 @@ namespace Framework {
             auto& audioComp = ecsInterface.GetComponent<AudioComponent>(entity);
             auto& transform = ecsInterface.GetComponent<TransformComponent>(entity);
 
-            if (audioComp.is3D && audioComp.isPlaying && audioComp.eventInstance) 
+            if (audioComp.is3D && audioComp.isPlaying && audioComp.eventInstance)
             {
                 glm::vec3 velocity(0.0f);
                 if (deltaTime > 0.0f) velocity = (transform.position - audioComp.lastPosition) / deltaTime;
@@ -378,7 +378,7 @@ namespace Framework {
     FMOD::Studio::Bank* AudioSystem::LoadBank(const std::string& bankPath)
     {
         auto it = loadedBanks.find(bankPath);
-        if (it != loadedBanks.end()) 
+        if (it != loadedBanks.end())
         {
             std::cout << "[AudioSystem] Using cached bank: " << bankPath << std::endl;
             return it->second;
@@ -390,7 +390,7 @@ namespace Framework {
         // Which means event instances can be created but without sample data, audio would not be played
         FMOD_RESULT result = studioSystem->loadBankFile(bankPath.c_str(), FMOD_STUDIO_LOAD_BANK_NORMAL, &bank);
 
-        if (result != FMOD_OK || !bank) 
+        if (result != FMOD_OK || !bank)
         {
             std::cerr << "[AudioSystem] ERROR: Failed to load bank: " << bankPath << " (error: " << result << ")" << std::endl;
             return nullptr;
@@ -398,7 +398,7 @@ namespace Framework {
         std::cout << "[AudioSystem] Bank loaded: " << bankPath << std::endl;
 
         // Load sample data so events can actually play
-        result = bank->loadSampleData();            
+        result = bank->loadSampleData();
         if (result != FMOD_OK)
         {
             std::cerr << "[AudioSystem] ERROR: Failed to load sample data for bank: " << bankPath << " (error: " << result << ")" << std::endl;
@@ -495,7 +495,7 @@ namespace Framework {
         instance->setVolume(masterVolume);
         result = instance->start();
 
-        if (result != FMOD_OK) 
+        if (result != FMOD_OK)
         {
             std::cerr << "[AudioSystem] Failed to start instance: " << result << std::endl;
             instance->release();
@@ -517,6 +517,37 @@ namespace Framework {
         FMOD_STUDIO_PLAYBACK_STATE state;
         instance->getPlaybackState(&state);
         std::cout << "[AudioSystem] Playback state after start: " << state << std::endl;
+    }
+
+    // Add this function anywhere in AudioSystem.cpp (suggest after the PlayAudio function)
+
+    void AudioSystem::StopEvent(const std::string& eventName)
+    {
+        // Check if the event is currently active
+        auto it = activeEvents.find(eventName);
+        if (it != activeEvents.end() && it->second) {
+            FMOD::Studio::EventInstance* instance = it->second;
+
+            // Stop the event (use ALLOWFADEOUT for smooth stop, IMMEDIATE for instant)
+            FMOD_RESULT result = instance->stop(FMOD_STUDIO_STOP_ALLOWFADEOUT);
+
+            if (result == FMOD_OK) {
+                std::cout << "[AudioSystem] Stopped event: " << eventName << std::endl;
+            }
+            else {
+                std::cerr << "[AudioSystem] Failed to stop event: " << eventName
+                    << " Error: " << result << std::endl;
+            }
+
+            // Release the instance
+            instance->release();
+
+            // Remove from active events map
+            activeEvents.erase(it);
+        }
+        else {
+            std::cerr << "[AudioSystem] Event not found or not playing: " << eventName << std::endl;
+        }
     }
 
     void AudioSystem::PauseSound(const std::string& customName) {
@@ -1146,7 +1177,7 @@ namespace Framework {
     void AudioSystem::UnloadBank(const std::string& bankPath)
     {
         auto it = loadedBanks.find(bankPath);
-        if (it != loadedBanks.end()) 
+        if (it != loadedBanks.end())
         {
             it->second->unload();
             it->second->unloadSampleData();

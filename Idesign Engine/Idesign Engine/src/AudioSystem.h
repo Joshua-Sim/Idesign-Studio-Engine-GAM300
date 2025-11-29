@@ -208,7 +208,7 @@ namespace Framework {
 
         void PauseAllAudio();
         void ResumeAllAudio();
-        void Reset();   
+        void Reset();
         void ListAllEvents();
 
         // Check if event is 3D
@@ -223,6 +223,7 @@ namespace Framework {
         void SetEntityVolume(Entity entity, float volume);
         void SetListenerPosition(const glm::vec3& position, const glm::vec3& forward, const glm::vec3& up);
 
+        void StopEvent(const std::string& eventName);
         //======================================================================
         // Message Handlers
         //======================================================================
@@ -333,6 +334,8 @@ namespace Framework {
 
         // Cache of active audio instances for entities
         std::unordered_map<Entity, FMOD::Studio::EventInstance*> activeInstances;
+
+
     };
 
     // Global AudioSystem pointer (replaces GlobalAudio)

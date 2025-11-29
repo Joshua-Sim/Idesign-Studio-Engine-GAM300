@@ -12,7 +12,14 @@ function M.OnPickup(entityID)
 
     -- 3. Check result
     if slot >= 0 then
+        
         print("Lua: Success! Added to slot " .. slot)
+
+        -- [NEW] Play Pickup Sound
+        if Sound and Sound.Play then
+            Sound.Play("event:/PickingUpHerb")
+        end
+
         if IsItemDestroyOnPick(entityID) then
             DestroyEntity(entityID)
         end

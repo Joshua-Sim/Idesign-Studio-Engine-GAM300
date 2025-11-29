@@ -1,5 +1,5 @@
 {
-    "count": 21,
+    "count": 22,
     "entries": [
         {
             "guid": "c6d4d63d-bced-4890-8a3b-3938e82b13e8",
@@ -116,6 +116,13 @@
         {
             "guid": "852f4291-12ff-48e6-a6eb-bd6685a86b30",
             "scriptPath": "Assets\\Scripts\\herb_pickup.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "d6628c13-1f36-47dd-9b77-5447605bb81f",
+            "scriptPath": "Assets\\Scripts\\knife.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
