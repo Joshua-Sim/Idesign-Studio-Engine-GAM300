@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="PlayerInteractSystem.cpp" />
+    <ClCompile Include="src\PlayerInteractSystem.cpp" />
     <ClCompile Include="src\BoxColliderComponent.cpp" />
     <ClCompile Include="src\GameSystem.cpp" />
     <ClCompile Include="src\GraphicsWindows.cpp" />
@@ -228,7 +228,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ItemComponent.h" />
-    <ClInclude Include="PlayerInteractSystem.h" />
+    <ClInclude Include="src\PlayerInteractSystem.h" />
     <ClInclude Include="src\CollectibleProperties.h" />
     <ClInclude Include="src\GameSystem.h" />
     <ClInclude Include="src\InteractionSystem.h" />

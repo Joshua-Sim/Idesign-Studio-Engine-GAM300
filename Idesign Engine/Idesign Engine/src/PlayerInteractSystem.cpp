@@ -9,11 +9,9 @@
 #include "ItemComponent.h"
 #include "MeshLoader.h" // [IMPORTANT] Needed to load the Quad for the icon
 #include <iostream>
+#include "EngineState.h"
 
 extern Framework::Coordinator ecsInterface;
-
-
-
 namespace Framework
 {
 
@@ -232,6 +230,13 @@ namespace Framework
     {
         if (!mGraphicsSystem) return;
         if (mGraphicsSystem->GetMouseTargetView() != 0) return; // only in game view
+
+        if (engineState.IsPaused() ||
+            engineState.InHowToPlay() ||
+            engineState.IsInMenu())
+        {
+            return; // skip movement/jump when not in active gameplay
+        }
 
         GLFWwindow* window = mGraphicsSystem->GetWindow();
         if (!window) return;

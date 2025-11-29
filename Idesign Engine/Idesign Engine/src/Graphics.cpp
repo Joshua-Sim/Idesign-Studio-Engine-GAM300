@@ -2607,7 +2607,11 @@ namespace Framework {
             );
         }
 
-        if (viewIndex == 0)
+        // Do not display inventory boxes while in paused/howtoplay/menu state
+        if (viewIndex == 0 &&
+            !engineState.IsPaused() &&
+            !engineState.InHowToPlay() &&
+            !engineState.IsInMenu())
         {
             DrawHotbar(width, height);
         }

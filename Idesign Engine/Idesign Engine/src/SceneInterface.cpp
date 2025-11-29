@@ -71,6 +71,20 @@ namespace Framework
                     texture.isUI = engineState.InHowToPlay();
                 }
             }
+
+            // 4. Upgrade
+            auto upgradeEntities = ecsInterface.GetEntitiesByTag("upgrade");
+            for (Entity e : upgradeEntities)
+            {
+                if (!ecsInterface.IsEntityValid(e)) continue;
+
+                if (ecsInterface.HasComponent<ButtonComponent>(e) &&
+                    ecsInterface.HasComponent<TextureProperties>(e))
+                {
+                    auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
+                    texture.isUI = engineState.InHowToPlay();
+                }
+            }
         }
     }
 }

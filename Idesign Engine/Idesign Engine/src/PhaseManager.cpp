@@ -8,6 +8,7 @@
 #include <glm/glm/gtc/quaternion.hpp>
 #include <Jolt/Physics/Body/BodyInterface.h>
 #include "Graphics.h"
+#include "EngineState.h"
 
 extern Framework::Coordinator ecsInterface;
 
@@ -42,15 +43,15 @@ namespace Framework {
         TeleportPlayer(targetPos, targetRot);
 
         // 4. Fire Events
-        if (m_currentPhase == GamePhase::Day) { 
+        if (m_currentPhase == GamePhase::Day) {
             auto graphicsSystem = ecsInterface.GetSystem<Graphics>();
             if (graphicsSystem)
             {
                 Camera* cam = graphicsSystem->getCamera();
                 if (cam)
                 {
-                    cam->yaw = -180.0f;  
-                    cam->pitch = 0.0f;  
+                    cam->yaw = -180.0f;
+                    cam->pitch = 0.0f;
                     cam->updateVectors();
                 }
             }
@@ -58,7 +59,7 @@ namespace Framework {
             // -----------------------------------------
             EventManager::Instance().Fire("OnDayStart", nullptr);
         }
-        else {
+        if (m_currentPhase == GamePhase::Night) {
             auto graphicsSystem = ecsInterface.GetSystem<Graphics>();
             if (graphicsSystem)
             {
@@ -71,6 +72,10 @@ namespace Framework {
                 }
             }
             EventManager::Instance().Fire("OnNightStart", nullptr);
+        }
+        if (m_currentPhase == GamePhase::Upgrade) 
+        {
+            engineState.SetUpgrade(true);
         }
     }
 

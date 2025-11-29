@@ -188,8 +188,6 @@ int main(void)
     std::cout << "[Audio] Volumes and 3D listener configured!" << std::endl;
     std::cout << "FMOD Studio Audio System initialized successfully!" << std::endl;
 
-    sceneManager.SetSceneBGM("jarrentest", "event:/Level1BGM");
-   
     ImguiManager::Log("Initializing FontSystem...", "FontSystem");
     fontSystem.Initialize();
     fontSystem.LoadFont("Assets/Font/arial.ttf", 40, "Arial");
@@ -208,7 +206,7 @@ int main(void)
     engineState.SetPlay(true);
     engineState.SetMenu(true);
     sceneManager.LoadScene("Scenes/GameScene - WithCollision.json");
-
+    
     engine->GameLoop();
 
     // Restore the original directory before saving/compiling

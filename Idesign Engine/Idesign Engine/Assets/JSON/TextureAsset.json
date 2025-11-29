@@ -61,6 +61,12 @@
             "isUI": false
         },
         {
+            "guid": "096e3cd9-c61d-470e-ab51-5cacb54601d1",
+            "name": "upgrades",
+            "path": "Assets\\Textures\\upgrades.png",
+            "isUI": false
+        },
+        {
             "guid": "90b999f3-2c4f-44ab-8213-964c53cd22cc",
             "name": "pear3D",
             "path": "Assets\\Textures\\pear3D.png",
@@ -91,12 +97,6 @@
             "isUI": false
         },
         {
-            "guid": "0d960551-d374-438f-b016-ba071589e284",
-            "name": "SkyMidNight_Front",
-            "path": "Assets\\Textures\\SkyMidNight_Front.png",
-            "isUI": false
-        },
-        {
             "guid": "b5153be8-0464-48c3-800e-48bfb0c931b9",
             "name": "Key_E",
             "path": "Assets\\Textures\\Key_E.png",
@@ -112,6 +112,12 @@
             "guid": "c2a1f2a8-98b8-490f-bae9-f3bc714f424c",
             "name": "SkyNoon_Top",
             "path": "Assets\\Textures\\SkyNoon_Top.png",
+            "isUI": false
+        },
+        {
+            "guid": "0d960551-d374-438f-b016-ba071589e284",
+            "name": "SkyMidNight_Front",
+            "path": "Assets\\Textures\\SkyMidNight_Front.png",
             "isUI": false
         },
         {
@@ -493,15 +499,15 @@
             "isUI": false
         },
         {
-            "guid": "7c8534ad-0fdd-408d-89fa-2f7ce1d4ea89",
-            "name": "close_button",
-            "path": "Assets\\Textures\\close_button.png",
+            "guid": "e6731f54-4c63-4666-aadd-fb24e64475be",
+            "name": "instructions",
+            "path": "Assets\\Textures\\instructions.png",
             "isUI": false
         },
         {
-            "guid": "69642207-63ae-4669-831f-7459ee69f325",
-            "name": "instructions",
-            "path": "Assets\\Textures\\instructions.png",
+            "guid": "7c8534ad-0fdd-408d-89fa-2f7ce1d4ea89",
+            "name": "close_button",
+            "path": "Assets\\Textures\\close_button.png",
             "isUI": false
         }
     ]

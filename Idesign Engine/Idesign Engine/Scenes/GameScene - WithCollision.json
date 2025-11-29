@@ -3757,7 +3757,7 @@
                 "TransformComponent": {
                     "position": [
                         960.0,
-                        520.0,
+                        530.0,
                         0.0
                     ],
                     "rotation": [
@@ -3784,19 +3784,19 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "69642207-63ae-4669-831f-7459ee69f325",
+                    "guid": "e6731f54-4c63-4666-aadd-fb24e64475be",
                     "isUI": false
                 },
                 "ButtonComponent": {
                     "position": [
                         960.0,
-                        520.0
+                        530.0
                     ],
                     "size": [
                         1920.0,
                         1060.0
                     ],
-                    "isHovered": false
+                    "isHovered": true
                 }
             }
         },
@@ -4068,6 +4068,54 @@
                     "size": [
                         250.0,
                         100.0
+                    ],
+                    "isHovered": false
+                }
+            }
+        },
+        {
+            "name": "UpgradeScreen",
+            "guid": "8c4170a2-de7f-472d-a43a-931ed1f45b7a",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        960.0,
+                        530.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1920.0,
+                        1080.0,
+                        1.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 0
+                },
+                "TagComponent": {
+                    "tags": [
+                        "upgrade"
+                    ]
+                },
+                "TextureComponent": {
+                    "guid": "096e3cd9-c61d-470e-ab51-5cacb54601d1",
+                    "isUI": false
+                },
+                "ButtonComponent": {
+                    "position": [
+                        960.0,
+                        530.0
+                    ],
+                    "size": [
+                        1920.0,
+                        1080.0
                     ],
                     "isHovered": false
                 }

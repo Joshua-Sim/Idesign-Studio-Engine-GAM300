@@ -39,6 +39,9 @@ namespace Framework {
         bool InHowToPlay() const { return mInHowToPlay; }
         void SetHowToPlay(bool value) { mInHowToPlay = value; }
 
+        bool IsInUpgrade() const { return mInUpgrade; }
+        void SetUpgrade(bool value) { mInUpgrade = value; }
+
     private:
         // State flags
         bool inEditor = true;
@@ -49,6 +52,7 @@ namespace Framework {
         // Scenes
         bool mInMenu = false;
         bool mInHowToPlay = false;
+        bool mInUpgrade = false;
     };
 
     // Declare the global instance of EngineState

@@ -9,7 +9,8 @@ namespace Framework {
     {
         GameStart,
         Day,
-        Night
+        Night,
+        Upgrade
     };
 
     class PhaseManager
