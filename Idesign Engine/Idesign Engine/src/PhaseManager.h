@@ -47,9 +47,11 @@ namespace Framework {
         GamePhase m_currentPhase = GamePhase::Day;
 
         glm::vec3 m_daySpawnPos{ -53.965, 9.0f, 9.5f };
-        glm::vec3 m_daySpawnRot{ 0.0f, 0.0f, 0.0f };
+        glm::vec3 m_daySpawnRot{ 0.0f, 90.0f, 0.0f };
 
         glm::vec3 m_nightSpawnPos{ -36.0f, 9.0f, 9.5f };
         glm::vec3 m_nightSpawnRot{ 0.0f, 0.0f, 0.0f };
     };
+
+    extern Framework::PhaseManager* phaseManager;
 }

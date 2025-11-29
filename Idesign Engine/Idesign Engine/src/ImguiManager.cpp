@@ -701,7 +701,7 @@ namespace Framework {
         // Toggle editor visibility with Backspace key
         static bool backspaceWasPressed = false;
         bool backspaceIsPressed = InputHandler::GetInstance()->IsKeyHeld(GLFW_KEY_EQUAL);
-
+        auto gfxSystem = ecsInterface.GetSystem<Framework::Graphics>();
         if (backspaceIsPressed && !backspaceWasPressed)
         {
             m_showEditor = !m_showEditor;
@@ -709,7 +709,7 @@ namespace Framework {
                 std::cout << "[ImGui] Editor enabled" << std::endl;
                 
                 engineState.SetInEditor(true);
-                engineState.SetPlay(false);
+                //engineState.SetPlay(false);
                 engineState.SetMenu(false); // hide menu
 
                 // Stop BGM when returning to editor
@@ -720,10 +720,10 @@ namespace Framework {
             }
             else {
                 std::cout << "[ImGui] Editor disabled - Game only mode" << std::endl;
-
+                gfxSystem->SetCameraRotationEnabled(true);
                 engineState.SetInEditor(false);
                 engineState.SetPlay(true);
-                engineState.SetMenu(true); // show menu
+                //engineState.SetMenu(true); // show menu
 
                 // Start BGM when entering fullscreen game mode
                 if (g_AudioSystem) {

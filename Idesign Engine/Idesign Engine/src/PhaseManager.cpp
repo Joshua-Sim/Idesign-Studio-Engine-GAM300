@@ -7,11 +7,12 @@
 #include <Jolt/Jolt.h>
 #include <glm/glm/gtc/quaternion.hpp>
 #include <Jolt/Physics/Body/BodyInterface.h>
+#include "Graphics.h"
 
 extern Framework::Coordinator ecsInterface;
 
 namespace Framework {
-
+    Camera* cam;
     void PhaseManager::Initialize()
     {
         std::cout << "[PhaseManager] Initialized. Default Phase: DAY" << std::endl;
@@ -41,10 +42,34 @@ namespace Framework {
         TeleportPlayer(targetPos, targetRot);
 
         // 4. Fire Events
-        if (m_currentPhase == GamePhase::Day) {
+        if (m_currentPhase == GamePhase::Day) { 
+            auto graphicsSystem = ecsInterface.GetSystem<Graphics>();
+            if (graphicsSystem)
+            {
+                Camera* cam = graphicsSystem->getCamera();
+                if (cam)
+                {
+                    cam->yaw = -180.0f;  
+                    cam->pitch = 0.0f;  
+                    cam->updateVectors();
+                }
+            }
+
+            // -----------------------------------------
             EventManager::Instance().Fire("OnDayStart", nullptr);
         }
         else {
+            auto graphicsSystem = ecsInterface.GetSystem<Graphics>();
+            if (graphicsSystem)
+            {
+                Camera* cam = graphicsSystem->getCamera();
+                if (cam)
+                {
+                    cam->yaw = 180.0f;
+                    cam->pitch = 0.0f;
+                    cam->updateVectors();
+                }
+            }
             EventManager::Instance().Fire("OnNightStart", nullptr);
         }
     }

@@ -74,7 +74,7 @@ namespace Framework
 		int m_gizmoMode = 0; // 0=Local, 1=World
 		bool m_gizmoEnabled = true;
 
-		bool m_showEditor = true;
+		bool m_showEditor = false;
 
 		//Console Methods 
 		void RenderConsole();

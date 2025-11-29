@@ -87,9 +87,6 @@ public:
         }
     }
 
-
-
-
     void processMouseMovement(float xoffset, float yoffset) {
         xoffset *= sensitivity;
         yoffset *= sensitivity;
@@ -99,8 +96,6 @@ public:
         if (pitch < -89.f) pitch = -89.f;
         updateVectors();
     }
-
-private:
     void updateVectors() {
         glm::vec3 f;
         f.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
@@ -110,4 +105,6 @@ private:
         right = glm::normalize(glm::cross(front, worldUp));
         up = glm::normalize(glm::cross(right, front));
     }
+private:
+    
 };

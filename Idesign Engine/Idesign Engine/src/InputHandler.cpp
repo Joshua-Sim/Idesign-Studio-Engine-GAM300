@@ -9,7 +9,7 @@
 #include <Camera.h>
 #include "Graphics.h"
 #include "Coordinator.h"
-#include <ButtonSystem.h>
+#include "ButtonSystem.h" // Ensure this is included
 
 extern Framework::Coordinator ecsInterface;
 namespace Framework {
@@ -68,6 +68,7 @@ namespace Framework {
     void InputHandler::Update(float deltaTime) {
         (void)deltaTime;
 
+        // 1. Update Key States
         for (auto& [key, state] : keyStates) {
             if (state == KEY_PRESSED) state = KEY_HELD;
         }
@@ -77,19 +78,13 @@ namespace Framework {
 
         glfwPollEvents();
 
+        // 2. Handle State Toggles
         // TAB: Toggle Editor vs Game Mode
         if (IsKeyPressed(GLFW_KEY_TAB)) {
             if (!tabPressed) {
                 tabPressed = true;
                 isUIFocused = !isUIFocused;
-
-                if (isUIFocused) {
-                    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-                }
-                else {
-                    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-                    m_firstMouse = true;
-                }
+                // Note: We DO NOT set cursor mode here anymore. We just change the boolean.
             }
         }
         else {
@@ -99,21 +94,17 @@ namespace Framework {
         // ESC: Toggle pause/resume
         if (IsKeyPressed(GLFW_KEY_ESCAPE))
         {
-            if (engineState.InHowToPlay())
-            {
-                // Hide the How To Play page
+            if (engineState.InHowToPlay()) {
                 engineState.SetHowToPlay(false);
                 std::cout << "ESC PRESSED - Hiding How To Play page" << std::endl;
             }
-            else 
-            {
-                // Flip the paused state if not in How To Play
+            else {
                 engineState.SetPaused(!engineState.IsPaused());
                 std::cout << "ESC PRESSED - Toggling pause" << std::endl;
             }
         }
 
-        // ImGui Input Block
+        // 3. ImGui Configuration
         ImGuiIO& io = ImGui::GetIO();
         if (!isUIFocused) {
             io.ConfigFlags |= ImGuiConfigFlags_NoMouse;
@@ -124,14 +115,47 @@ namespace Framework {
             io.ConfigFlags &= ~ImGuiConfigFlags_NoKeyboard;
         }
 
-        // Editor Mode: Right Click to Look
+        // 4. DETERMINE DESIRED CURSOR MODE
+        // Default assumption: If we are in the Editor (UI Focused), cursor is visible.
+        // If we are in Game, cursor is hidden.
+        int desiredMode = isUIFocused ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED;
+
+        // OVERRIDE 1: Editor Camera Look (Right Click)
         if (isUIFocused) {
-            if (IsMouseButtonPressed(GLFW_MOUSE_BUTTON_RIGHT)) {
-                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            if (IsMouseButtonHeld(GLFW_MOUSE_BUTTON_RIGHT)) {
+                desiredMode = GLFW_CURSOR_DISABLED;
+                if (IsMouseButtonPressed(GLFW_MOUSE_BUTTON_RIGHT)) m_firstMouse = true;
+            }
+        }
+
+        // OVERRIDE 2: Menus / Pause / HowToPlay
+        // If ANY of these are true, we MUST show the cursor, regardless of Editor/Game mode.
+        if (engineState.IsInMenu() || engineState.IsPaused() || engineState.InHowToPlay()) {
+            desiredMode = GLFW_CURSOR_NORMAL;
+        }
+
+        // 5. APPLY CURSOR MODE
+        // Only call GLFW if the mode actually changes to prevent jitter/overhead
+        static int currentMode = -1;
+        if (currentMode != desiredMode) {
+            glfwSetInputMode(window, GLFW_CURSOR, desiredMode);
+            currentMode = desiredMode;
+
+            // Reset first mouse if we just hid the cursor to prevent large jumps
+            if (desiredMode == GLFW_CURSOR_DISABLED) {
                 m_firstMouse = true;
             }
-            if (IsMouseButtonReleased(GLFW_MOUSE_BUTTON_RIGHT)) {
-                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        }
+
+        if (currentMode != desiredMode) {
+            glfwSetInputMode(window, GLFW_CURSOR, desiredMode);
+            currentMode = desiredMode;
+
+            // [FIX] CRITICAL: Reset camera logic when entering Game Mode
+            // If we switch to DISABLED mode, treating the next mouse move as a "first move"
+            // prevents the camera from snapping to the old menu cursor position.
+            if (desiredMode == GLFW_CURSOR_DISABLED) {
+                m_firstMouse = true;
             }
         }
     }
@@ -146,8 +170,16 @@ namespace Framework {
         self->mouseX = xpos;
         self->mouseY = ypos;
 
+        // --- [FIX] CHECK GLOBAL ENGINE STATE ---
+        // If any menu is open, we must NOT rotate the camera.
+        bool isMenuOpen = engineState.IsInMenu() || engineState.IsPaused() || engineState.InHowToPlay();
+
         bool isRightClickHeld = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
-        bool canRotate = (!self->isUIFocused) || (self->isUIFocused && isRightClickHeld);
+
+        // --- [FIX] UPDATE ROTATION LOGIC ---
+        // 1. Editor Mode (isUIFocused): Rotate only if Right Click is held.
+        // 2. Game Mode (!isUIFocused): Rotate only if NO menu is open.
+        bool canRotate = (self->isUIFocused && isRightClickHeld) || (!self->isUIFocused && !isMenuOpen);
 
         if (!self->m_cameraRotationEnabled) {
             canRotate = false;
@@ -156,22 +188,13 @@ namespace Framework {
         Camera* targetCam = nullptr;
 
         if (self->mainGraphics) {
-            int camIndex = 0; // Default to Game Camera
-
+            int camIndex = 0;
             if (self->isUIFocused) {
-                // [FIX] In Editor Mode, rotate the camera belonging to the Viewport we are hovering
-                // This allows you to rotate Main Viewport (0) OR Secondary Viewport (1)
                 camIndex = self->mainGraphics->GetMouseTargetView();
             }
-            else {
-                // In Game Mode, always force Game Camera
-                camIndex = 0;
-            }
-
             targetCam = self->mainGraphics->GetCameraByIndex(camIndex);
         }
         else {
-            // Fallback if SetGraphics wasn't called
             targetCam = self->mainCamera;
         }
 
@@ -192,9 +215,13 @@ namespace Framework {
             targetCam->processMouseMovement(xoffset, yoffset);
         }
         else {
+            // [IMPORTANT] If we can't rotate (Menu Mode), constantly reset firstMouse.
+            // This ensures that when we DO return to the game, the first movement
+            // is treated as a reset, not a giant jump.
             self->m_firstMouse = true;
         }
     }
+
     void InputHandler::SetCamera(Camera* camera) {
         this->mainCamera = camera;
     }
@@ -250,14 +277,47 @@ namespace Framework {
         }
     }
 
-    void InputHandler::MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
+    void InputHandler::MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
+    {
         (void)mods;
         InputHandler* inputSystem = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
-        if (inputSystem) {
-            KeyState currentMouseState{};
-            if (action == GLFW_PRESS) currentMouseState = KEY_PRESSED;
-            else if (action == GLFW_RELEASE) currentMouseState = KEY_RELEASED;
-            inputSystem->mouseButtonStates[button] = currentMouseState;
+
+        if (!inputSystem) return;
+
+        // 1. Update State (Keep this!)
+        KeyState currentMouseState{};
+        if (action == GLFW_PRESS) currentMouseState = KEY_PRESSED;
+        else if (action == GLFW_RELEASE) currentMouseState = KEY_RELEASED;
+        inputSystem->mouseButtonStates[button] = currentMouseState;
+
+        // 2. Handle UI Clicks
+        if (action == GLFW_PRESS && button == GLFW_MOUSE_BUTTON_LEFT)
+        {
+            int width, height;
+            glfwGetWindowSize(window, &width, &height);
+
+            if (width > 0 && height > 0)
+            {
+                double mx, my;
+                glfwGetCursorPos(window, &mx, &my);
+
+                // Calculate Normalized Coordinates (0.0 to 1.0)
+                float u = static_cast<float>(mx) / static_cast<float>(width);
+                float v = static_cast<float>(my) / static_cast<float>(height);
+
+                // [FIX] Invert Y-Axis for OpenGL-style rendering
+                // If clicking TOP triggered BOTTOM button, this will flip it.
+                v = 1.0f - v;
+
+                // Debug Print to confirm
+                std::cout << "[Input] Click at UV: (" << u << ", " << v << ")" << std::endl;
+
+                auto buttonSystem = ecsInterface.GetSystem<ButtonSystem>();
+                if (buttonSystem)
+                {
+                    buttonSystem->HandleClickUV(u, v);
+                }
+            }
         }
     }
 }

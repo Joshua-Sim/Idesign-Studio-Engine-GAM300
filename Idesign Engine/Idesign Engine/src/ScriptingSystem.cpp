@@ -24,8 +24,10 @@
 #include "BoxColliderComponent.h"
 #include "InputHandler.h"
 #include "SceneInterface.h"
+#include "PhaseManager.h"
 
 extern Framework::Coordinator ecsInterface;
+
 
 namespace Framework {
 
@@ -804,7 +806,8 @@ namespace Framework {
         {
             engineState.SetMenu(false);
             //std::cout << engineState.IsInMenu() << std::endl;
-
+            phaseManager->SetPhase(GamePhase::Day);
+            
             //Send message to start audio and other play-mode systems
             MessageBus::Get().SendImmediate(EnterPlayModeMessage());
             
@@ -851,6 +854,7 @@ namespace Framework {
         {
             engineState.SetHowToPlay(true); // Render UI How To Play
             engineState.SetPaused(false);   // Hide Pause UI
+            
 
             return 0;
         }

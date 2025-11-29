@@ -23,58 +23,51 @@ namespace Framework
     {
         (void)deltaTime;
 
-        // In Play State but not in Editor mode and not paused
-        if (engineState.IsPlay() && engineState.IsInEditor())
+        // [FIX] Run this logic whenever the Game Simulation is active.
+        // In Standalone, IsPlay() should always be true.
+        // In Editor, IsPlay() is true only when you hit the Play button.
+        if (engineState.IsPlay())
         {
-            // Should only trigger once, unless quit level
+            // 1. MAIN MENU LOGIC
             auto menuEntities = ecsInterface.GetEntitiesByTag("menu");
             for (Entity e : menuEntities)
             {
                 if (!ecsInterface.IsEntityValid(e)) continue;
 
-                // Check required components before rendering
                 if (ecsInterface.HasComponent<ButtonComponent>(e) &&
                     ecsInterface.HasComponent<TextureProperties>(e))
                 {
-                    auto& button = ecsInterface.GetComponent<ButtonComponent>(e);
                     auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
 
-                    // Show menu only if mInMenu is true
+                    // This line hides the menu when SetMenu(false) is called in Lua
                     texture.isUI = engineState.IsInMenu();
-                    //std::cout << engineState.IsInMenu() << std::endl;
                 }
             }
 
-            // Pause State (Triggered by ESC in Inputhandler)
+            // 2. PAUSE MENU LOGIC
             auto pauseEntities = ecsInterface.GetEntitiesByTag("pause");
             for (Entity e : pauseEntities)
             {
                 if (!ecsInterface.IsEntityValid(e)) continue;
 
-                // Check required components before rendering
                 if (ecsInterface.HasComponent<ButtonComponent>(e) &&
                     ecsInterface.HasComponent<TextureProperties>(e))
                 {
-                    auto& button = ecsInterface.GetComponent<ButtonComponent>(e);
                     auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
-
                     texture.isUI = engineState.IsPaused();
                 }
             }
 
-            // How To Play (Triggered by button click)
+            // 3. HOW TO PLAY LOGIC
             auto howtoplayEntities = ecsInterface.GetEntitiesByTag("howtoplay");
             for (Entity e : howtoplayEntities)
             {
                 if (!ecsInterface.IsEntityValid(e)) continue;
 
-                // Check required components before rendering
                 if (ecsInterface.HasComponent<ButtonComponent>(e) &&
                     ecsInterface.HasComponent<TextureProperties>(e))
                 {
-                    auto& button = ecsInterface.GetComponent<ButtonComponent>(e);
                     auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
-
                     texture.isUI = engineState.InHowToPlay();
                 }
             }

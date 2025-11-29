@@ -62,7 +62,6 @@ void EnableMemoryLeakChecking(int breakAlloc = -1)
 // Define global ptrs
 Coordinator
 ecsInterface;   // REQUIRED FOR ECS INTERFACE
-EngineState engineState;
 
 int main(void)
 {
@@ -205,6 +204,10 @@ int main(void)
    //scriptingSystem->CreateScriptEntity("Assets/Scripts/hello.lua");
     //scriptingSystem->CreateScriptEntity("Assets/Scripts/controls.lua");
     //scriptingSystem->CreateScriptEntity("assets/scripts/prove_lua.lua");
+
+    engineState.SetPlay(true);
+    engineState.SetMenu(true);
+    sceneManager.LoadScene("Scenes/GameScene - WithCollision.json");
 
     engine->GameLoop();
 
