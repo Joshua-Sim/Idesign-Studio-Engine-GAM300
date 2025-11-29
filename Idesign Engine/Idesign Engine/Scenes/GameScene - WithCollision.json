@@ -96,11 +96,11 @@
                     "volume": 1.0,
                     "loop": false,
                     "playOnStart": true,
-                    "isPlaying": true,
+                    "isPlaying": false,
                     "lastPosition": [
-                        -45.934112548828125,
-                        5.300000190734863,
-                        14.715734481811523
+                        0.0,
+                        0.0,
+                        0.0
                     ]
                 }
             }
@@ -250,7 +250,7 @@
                     "animationSpeed": 10.0,
                     "bLoops": false,
                     "bPlayOnStart": true,
-                    "currentTime": 20.0
+                    "currentTime": 0.0
                 },
                 "TextureComponent": {
                     "guid": "afd25b76-dddc-4c4f-bae4-a6c9a22931e5",
@@ -2797,8 +2797,7 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
@@ -3047,7 +3046,7 @@
                     "animationSpeed": 1.0,
                     "bLoops": true,
                     "bPlayOnStart": true,
-                    "currentTime": 89.9971694946289
+                    "currentTime": 0.0
                 },
                 "TextureComponent": {
                     "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
@@ -3118,11 +3117,11 @@
                     "volume": 1.0,
                     "loop": true,
                     "playOnStart": true,
-                    "isPlaying": true,
+                    "isPlaying": false,
                     "lastPosition": [
-                        -40.230262756347656,
-                        6.287981033325195,
-                        17.725893020629883
+                        0.0,
+                        0.0,
+                        0.0
                     ]
                 }
             }
@@ -3756,56 +3755,6 @@
             }
         },
         {
-            "name": "howtoplayScreen",
-            "guid": "828bfd6d-ea7d-42fd-8535-472b0a692e6e",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        960.0,
-                        530.0,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        1920.0,
-                        1060.0,
-                        1.0
-                    ]
-                },
-                "HierarchyComponent": {
-                    "parent": "",
-                    "children": [
-                        "60f2e874-560b-418f-8941-5051eaf42703"
-                    ],
-                    "sortIndex": 3
-                },
-                "TagComponent": {
-                    "tags": [
-                        "howtoplay"
-                    ]
-                },
-                "TextureComponent": {
-                    "guid": "e6731f54-4c63-4666-aadd-fb24e64475be",
-                    "isUI": false
-                },
-                "ButtonComponent": {
-                    "position": [
-                        960.0,
-                        530.0
-                    ],
-                    "size": [
-                        1920.0,
-                        1060.0
-                    ],
-                    "isHovered": true
-                }
-            }
-        },
-        {
             "name": "backButton",
             "guid": "60f2e874-560b-418f-8941-5051eaf42703",
             "components": {
@@ -4079,8 +4028,8 @@
             }
         },
         {
-            "name": "UpgradeScreen",
-            "guid": "8c4170a2-de7f-472d-a43a-931ed1f45b7a",
+            "name": "howtoplaybackground",
+            "guid": "f9ec687e-c6da-4f10-bdf1-9d0198533831",
             "components": {
                 "TransformComponent": {
                     "position": [
@@ -4101,6 +4050,222 @@
                 },
                 "HierarchyComponent": {
                     "parent": "",
+                    "children": [
+                        "afb7a84e-f7af-4c34-84ff-1c845d1a04e8",
+                        "2ef33aba-eb17-44d1-b87b-2e46bf2cffd0"
+                    ],
+                    "sortIndex": 5
+                },
+                "TagComponent": {
+                    "tags": [
+                        "howtoplay"
+                    ]
+                },
+                "TextureComponent": {
+                    "guid": "153552e1-8c72-4999-b18d-9dc5bdf8396f",
+                    "isUI": false
+                },
+                "ButtonComponent": {
+                    "position": [
+                        960.0,
+                        530.0
+                    ],
+                    "size": [
+                        1920.0,
+                        1080.0
+                    ],
+                    "isHovered": true
+                }
+            }
+        },
+        {
+            "name": "howtoplaypage",
+            "guid": "afb7a84e-f7af-4c34-84ff-1c845d1a04e8",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        950.0,
+                        520.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1600.0,
+                        880.0,
+                        1.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "f9ec687e-c6da-4f10-bdf1-9d0198533831",
+                    "children": [],
+                    "sortIndex": 0
+                },
+                "TagComponent": {
+                    "tags": [
+                        "howtoplay"
+                    ]
+                },
+                "TextureComponent": {
+                    "guid": "ce8becd0-4b4f-467e-b8b7-e4cc0875c4df",
+                    "isUI": false
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "8de4ea3f-31fb-4768-a277-e1ac0fc64201",
+                            "scriptPath": "Assets\\Scripts\\GameStateHowToPlay.lua",
+                            "hotReload": true
+                        }
+                    ]
+                },
+                "ButtonComponent": {
+                    "position": [
+                        950.0,
+                        520.0
+                    ],
+                    "size": [
+                        1600.0,
+                        880.0
+                    ],
+                    "isHovered": false
+                }
+            }
+        },
+        {
+            "name": "backbutton",
+            "guid": "2ef33aba-eb17-44d1-b87b-2e46bf2cffd0",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        1000.0,
+                        150.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        175.0,
+                        100.0,
+                        1.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "f9ec687e-c6da-4f10-bdf1-9d0198533831",
+                    "children": [],
+                    "sortIndex": 1
+                },
+                "TagComponent": {
+                    "tags": [
+                        "howtoplay"
+                    ]
+                },
+                "TextureComponent": {
+                    "guid": "7c8534ad-0fdd-408d-89fa-2f7ce1d4ea89",
+                    "isUI": false
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "50911a7e-8c97-4e66-99f4-ffd4855680ee",
+                            "scriptPath": "Assets\\Scripts\\GameStateBackToPause.lua",
+                            "hotReload": true
+                        }
+                    ]
+                },
+                "ButtonComponent": {
+                    "position": [
+                        1000.0,
+                        150.0
+                    ],
+                    "size": [
+                        175.0,
+                        100.0
+                    ],
+                    "isHovered": false
+                }
+            }
+        },
+        {
+            "name": "upgradebackground",
+            "guid": "8ad234ee-4585-4ba0-bfd6-a40790d05953",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        960.0,
+                        530.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1920.0,
+                        1080.0,
+                        1.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [
+                        "1ba95186-b7b3-4028-9eec-d8192cb31031",
+                        "b92bd3ac-8745-4eba-b047-f127cec9f3d7"
+                    ],
+                    "sortIndex": 3
+                },
+                "TagComponent": {
+                    "tags": [
+                        "upgrade"
+                    ]
+                },
+                "TextureComponent": {
+                    "guid": "153552e1-8c72-4999-b18d-9dc5bdf8396f",
+                    "isUI": false
+                },
+                "ButtonComponent": {
+                    "position": [
+                        960.0,
+                        530.0
+                    ],
+                    "size": [
+                        1920.0,
+                        1080.0
+                    ],
+                    "isHovered": false
+                }
+            }
+        },
+        {
+            "name": "upgradepage",
+            "guid": "1ba95186-b7b3-4028-9eec-d8192cb31031",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        950.0,
+                        520.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1600.0,
+                        880.0,
+                        1.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "8ad234ee-4585-4ba0-bfd6-a40790d05953",
                     "children": [],
                     "sortIndex": 0
                 },
@@ -4115,12 +4280,69 @@
                 },
                 "ButtonComponent": {
                     "position": [
-                        960.0,
-                        530.0
+                        950.0,
+                        520.0
                     ],
                     "size": [
-                        1920.0,
-                        1080.0
+                        1600.0,
+                        880.0
+                    ],
+                    "isHovered": false
+                }
+            }
+        },
+        {
+            "name": "nextdaybutton",
+            "guid": "b92bd3ac-8745-4eba-b047-f127cec9f3d7",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        1000.0,
+                        250.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        175.0,
+                        100.0,
+                        1.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "8ad234ee-4585-4ba0-bfd6-a40790d05953",
+                    "children": [],
+                    "sortIndex": 1
+                },
+                "TagComponent": {
+                    "tags": [
+                        "upgrade"
+                    ]
+                },
+                "TextureComponent": {
+                    "guid": "bb86e2ff-7a24-4492-9e03-134fbfe85046",
+                    "isUI": false
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "0b25e0c5-79e6-465a-96cd-920b83ef31e6",
+                            "scriptPath": "Assets\\Scripts\\GameStateStart.lua",
+                            "hotReload": true
+                        }
+                    ]
+                },
+                "ButtonComponent": {
+                    "position": [
+                        1000.0,
+                        250.0
+                    ],
+                    "size": [
+                        175.0,
+                        100.0
                     ],
                     "isHovered": false
                 }
