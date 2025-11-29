@@ -65,6 +65,48 @@
                             "canPassThrough": true,
                             "triggerMessage": "BackyardZone",
                             "isInteractable": false
+                        },
+                        {
+                            "size": [
+                                0.699999988079071,
+                                6.800000190734863,
+                                20.299999237060547
+                            ],
+                            "center": [
+                                -24.299999237060547,
+                                3.4000000953674316,
+                                -5.199999809265137
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        },
+                        {
+                            "size": [
+                                19.200000762939453,
+                                6.699999809265137,
+                                1.0
+                            ],
+                            "center": [
+                                -14.800000190734863,
+                                3.0999999046325684,
+                                4.800000190734863
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        },
+                        {
+                            "size": [
+                                19.200000762939453,
+                                7.0,
+                                1.0
+                            ],
+                            "center": [
+                                -15.300000190734863,
+                                3.200000047683716,
+                                -14.600000381469727
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
                         }
                     ]
                 },
@@ -96,11 +138,11 @@
                     "volume": 1.0,
                     "loop": false,
                     "playOnStart": true,
-                    "isPlaying": false,
+                    "isPlaying": true,
                     "lastPosition": [
-                        0.0,
-                        0.0,
-                        0.0
+                        -45.934112548828125,
+                        5.300000190734863,
+                        14.715734481811523
                     ]
                 }
             }
@@ -251,7 +293,7 @@
                     "animationSpeed": 10.0,
                     "bLoops": false,
                     "bPlayOnStart": true,
-                    "currentTime": 0.0
+                    "currentTime": 20.0
                 },
                 "TextureComponent": {
                     "guid": "afd25b76-dddc-4c4f-bae4-a6c9a22931e5",
@@ -2656,13 +2698,13 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -62.14150619506836,
-                        8.04300594329834,
-                        10.870586395263672
+                        -55.77500915527344,
+                        8.044564247131348,
+                        9.434948921203613
                     ],
                     "rotation": [
                         0.0,
-                        100.22123718261719,
+                        92.7815170288086,
                         180.0
                     ],
                     "scale": [
@@ -2738,9 +2780,9 @@
                 },
                 "ListenerComponent": {
                     "position": [
-                        -62.14150619506836,
-                        8.04300594329834,
-                        10.870586395263672
+                        -55.77500915527344,
+                        8.044564247131348,
+                        9.434948921203613
                     ],
                     "forward": [
                         0.0,
@@ -3053,7 +3095,7 @@
                     "animationSpeed": 1.0,
                     "bLoops": true,
                     "bPlayOnStart": true,
-                    "currentTime": 0.0
+                    "currentTime": 71.18199157714844
                 },
                 "TextureComponent": {
                     "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
@@ -3124,11 +3166,11 @@
                     "volume": 1.0,
                     "loop": true,
                     "playOnStart": true,
-                    "isPlaying": false,
+                    "isPlaying": true,
                     "lastPosition": [
-                        0.0,
-                        0.0,
-                        0.0
+                        -40.230262756347656,
+                        6.287981033325195,
+                        17.725893020629883
                     ]
                 }
             }
@@ -4798,7 +4840,9 @@
                     "sortIndex": 0
                 },
                 "TagComponent": {
-                    "tags": ["upgrade"]
+                    "tags": [
+                        "upgrade"
+                    ]
                 },
                 "TextureComponent": {
                     "guid": "bb86e2ff-7a24-4492-9e03-134fbfe85046",
