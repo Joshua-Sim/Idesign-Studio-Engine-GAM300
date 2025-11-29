@@ -7,6 +7,7 @@
 #include <glm.hpp>
 #include <functional>
 #include <iostream>
+#include "AudioSystem.h"
 
 namespace Framework
 {
@@ -19,7 +20,10 @@ namespace Framework
 
         void TriggerClick(Entity e) const
         {
-            if (onClick) onClick();
+            if (onClick) {
+                g_AudioSystem->PlayAudio("event:/ButtonClick");
+                onClick();
+            }
             else
             {
                 // Default debug behaviour if nothing is bound
