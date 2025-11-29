@@ -1,8 +1,8 @@
-# Install script for directory: C:/Users/jason/OneDrive/Desktop/SIT/Year 3 Sem 1/GAM 300/Idesign-Studio-Engine-GAM300/Idesign Engine/lib/Jolt
+# Install script for directory: C:/Users/Jasper/Downloads/SIT Stuff/Year 3/SEP Y3T1/Idesign-Studio-Engine-GAM300/Idesign Engine/lib/Jolt
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Users/jason/OneDrive/Desktop/SIT/Year 3 Sem 1/GAM 300/Idesign-Studio-Engine-GAM300/Idesign Engine/lib/Jolt/out/install/x64-Release")
+  set(CMAKE_INSTALL_PREFIX "C:/Users/Jasper/Downloads/SIT Stuff/Year 3/SEP Y3T1/Idesign-Studio-Engine-GAM300/Idesign Engine/lib/Jolt/out/install/x64-Release")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -35,7 +35,7 @@ endif()
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
 if(CMAKE_INSTALL_LOCAL_ONLY)
-  file(WRITE "C:/Users/jason/OneDrive/Desktop/SIT/Year 3 Sem 1/GAM 300/Idesign-Studio-Engine-GAM300/Idesign Engine/lib/Jolt/out/build/x64-Release/install_local_manifest.txt"
+  file(WRITE "C:/Users/Jasper/Downloads/SIT Stuff/Year 3/SEP Y3T1/Idesign-Studio-Engine-GAM300/Idesign Engine/lib/Jolt/out/build/x64-Release/install_local_manifest.txt"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()
 if(CMAKE_INSTALL_COMPONENT)
@@ -51,6 +51,6 @@ else()
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  file(WRITE "C:/Users/jason/OneDrive/Desktop/SIT/Year 3 Sem 1/GAM 300/Idesign-Studio-Engine-GAM300/Idesign Engine/lib/Jolt/out/build/x64-Release/${CMAKE_INSTALL_MANIFEST}"
+  file(WRITE "C:/Users/Jasper/Downloads/SIT Stuff/Year 3/SEP Y3T1/Idesign-Studio-Engine-GAM300/Idesign Engine/lib/Jolt/out/build/x64-Release/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()
