@@ -1978,6 +1978,12 @@ namespace Framework {
             }
         }
 
+        // === DRAW SKYBOX HERE ===
+        // It uses the depth buffer to only draw on empty pixels
+        m_skybox.draw(view, proj);
+        // ====================================================
+
+
         // --- 1. OPAQUE PASS ---
         glDisable(GL_BLEND);
         glDepthMask(GL_TRUE);
@@ -2036,6 +2042,14 @@ namespace Framework {
                     // Apply entity's scale
                     textModel = glm::scale(textModel, tr.scale);
 
+                    // TEMPORARILY ENABLE BLENDING FOR TEXT
+                    // Text needs alpha blending to look correct and not have black/grey boxes.
+                    glEnable(GL_BLEND);
+                    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+                    // Optional: Disable depth write so text doesn't occlude things behind it weirdly
+                    glDepthMask(GL_FALSE);
+
                     // Render 3D text now
                     fontSystem.RenderText3D(
                         txt.text,
@@ -2047,6 +2061,10 @@ namespace Framework {
                         txt.alignment,
                         txt.opacity
                     );
+
+                    // RESTORE OPAQUE STATE
+                    glDepthMask(GL_TRUE);
+                    glDisable(GL_BLEND);
                 }
             }
 
@@ -2228,11 +2246,6 @@ namespace Framework {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glDepthMask(GL_FALSE);
-
-        // === DRAW SKYBOX HERE ===
-        // It uses the depth buffer to only draw on empty pixels
-        m_skybox.draw(view, proj);
-        // ====================================================
 
         // Billboard leaves
         if (m_leafRenderer)
