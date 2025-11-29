@@ -40,10 +40,16 @@ namespace Framework {
     {
         // 1. State Change
         m_currentPhase = newPhase;
-
+        glm::vec3 targetPos, targetRot;
         // ... existing transform logic ...
-        glm::vec3 targetPos = (m_currentPhase == GamePhase::Day) ? m_daySpawnPos : m_nightSpawnPos;
-        glm::vec3 targetRot = (m_currentPhase == GamePhase::Day) ? m_daySpawnRot : m_nightSpawnRot;
+        if (m_currentPhase == GamePhase::Day) {
+            targetPos = m_daySpawnPos;
+            targetRot = m_daySpawnRot;
+        }
+        else if (m_currentPhase == GamePhase::Night) {
+            targetPos = m_nightSpawnPos;
+            targetRot = m_nightSpawnRot;
+        }
 
         // ... existing teleport logic ...
         TeleportPlayer(targetPos, targetRot);

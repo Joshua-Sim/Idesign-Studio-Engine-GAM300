@@ -4798,7 +4798,7 @@
                     "sortIndex": 0
                 },
                 "TagComponent": {
-                    "tags": []
+                    "tags": ["upgrade"]
                 },
                 "TextureComponent": {
                     "guid": "bb86e2ff-7a24-4492-9e03-134fbfe85046",
