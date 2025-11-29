@@ -3528,15 +3528,6 @@
             }
         },
         {
-            "name": "ScoreText",
-            "guid": "f96c78dd-328e-4c43-afe3-eb2ed4bcada2",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "8a362b6a-e321-41b7-9496-e18c1839cfbd"
-                }
-            }
-        },
-        {
             "name": "pauseScreen",
             "guid": "23491286-9912-4971-b5d4-9145a810d598",
             "components": {
@@ -3760,51 +3751,6 @@
             }
         },
         {
-            "name": "ScoreText",
-            "guid": "1fd5f303-4b48-4332-b722-163a5f24f4ec",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "8a362b6a-e321-41b7-9496-e18c1839cfbd"
-                }
-            }
-        },
-        {
-            "name": "ScoreText",
-            "guid": "0ad15209-3329-4fd8-aafb-5d4324fcf9eb",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "8a362b6a-e321-41b7-9496-e18c1839cfbd"
-                }
-            }
-        },
-        {
-            "name": "ScoreText",
-            "guid": "0a980d21-39f5-4fb3-962b-ccb91963089b",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "8a362b6a-e321-41b7-9496-e18c1839cfbd"
-                }
-            }
-        },
-        {
-            "name": "ScoreText",
-            "guid": "7969d0d9-a163-449d-808a-ce1b5583c3b1",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "8a362b6a-e321-41b7-9496-e18c1839cfbd"
-                }
-            }
-        },
-        {
-            "name": "ScoreText",
-            "guid": "c4f33e5a-544c-4981-8783-2b16c605f6ab",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "8a362b6a-e321-41b7-9496-e18c1839cfbd"
-                }
-            }
-        },
-        {
             "name": "howtoplayScreen",
             "guid": "828bfd6d-ea7d-42fd-8535-472b0a692e6e",
             "components": {
@@ -3821,7 +3767,7 @@
                     ],
                     "scale": [
                         1920.0,
-                        1080.0,
+                        1060.0,
                         1.0
                     ]
                 },
@@ -3838,7 +3784,7 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "f5a9d8aa-42ce-4cdf-b778-7b63d04787e3",
+                    "guid": "69642207-63ae-4669-831f-7459ee69f325",
                     "isUI": false
                 },
                 "ButtonComponent": {
@@ -3848,7 +3794,7 @@
                     ],
                     "size": [
                         1920.0,
-                        1080.0
+                        1060.0
                     ],
                     "isHovered": false
                 }
@@ -3860,8 +3806,8 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        250.0,
-                        800.0,
+                        1750.0,
+                        925.0,
                         0.0
                     ],
                     "rotation": [
@@ -3870,8 +3816,8 @@
                         0.0
                     ],
                     "scale": [
-                        250.0,
-                        250.0,
+                        175.0,
+                        100.0,
                         1.0
                     ]
                 },
@@ -3886,7 +3832,7 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
+                    "guid": "7c8534ad-0fdd-408d-89fa-2f7ce1d4ea89",
                     "isUI": false
                 },
                 "ScriptProperties": {
@@ -3900,50 +3846,14 @@
                 },
                 "ButtonComponent": {
                     "position": [
-                        250.0,
-                        800.0
+                        1750.0,
+                        925.0
                     ],
                     "size": [
-                        250.0,
-                        250.0
+                        175.0,
+                        100.0
                     ],
                     "isHovered": false
-                }
-            }
-        },
-        {
-            "name": "ScoreText",
-            "guid": "69d9bbe6-28e1-4d46-9d7a-756a14b26f64",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "8a362b6a-e321-41b7-9496-e18c1839cfbd"
-                }
-            }
-        },
-        {
-            "name": "ScoreText",
-            "guid": "59ca258b-1d6c-4ae8-b51e-827cbcbd0241",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "8a362b6a-e321-41b7-9496-e18c1839cfbd"
-                }
-            }
-        },
-        {
-            "name": "ScoreText",
-            "guid": "0466bfb8-7b94-4ee0-bb62-5b1defdca596",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "8a362b6a-e321-41b7-9496-e18c1839cfbd"
-                }
-            }
-        },
-        {
-            "name": "ScoreText",
-            "guid": "fbe4b7f8-eddd-48fe-8efd-3448a02fd8b3",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "8a362b6a-e321-41b7-9496-e18c1839cfbd"
                 }
             }
         },
@@ -3954,7 +3864,7 @@
                 "TransformComponent": {
                     "position": [
                         960.0,
-                        520.0,
+                        540.0,
                         0.0
                     ],
                     "rotation": [
@@ -3987,7 +3897,7 @@
                 "ButtonComponent": {
                     "position": [
                         960.0,
-                        520.0
+                        540.0
                     ],
                     "size": [
                         2050.0,
@@ -4160,33 +4070,6 @@
                         100.0
                     ],
                     "isHovered": false
-                }
-            }
-        },
-        {
-            "name": "ScoreText",
-            "guid": "e570c51f-a175-4739-8b74-0b5ed2c3491c",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "8a362b6a-e321-41b7-9496-e18c1839cfbd"
-                }
-            }
-        },
-        {
-            "name": "ScoreText",
-            "guid": "5939386e-cd20-4b92-9130-f1054e8f8ebe",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "8a362b6a-e321-41b7-9496-e18c1839cfbd"
-                }
-            }
-        },
-        {
-            "name": "ScoreText",
-            "guid": "4a8613f7-5f37-46bc-a79d-6002584b1571",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "8a362b6a-e321-41b7-9496-e18c1839cfbd"
                 }
             }
         }

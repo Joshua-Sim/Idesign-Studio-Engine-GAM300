@@ -9,8 +9,6 @@ function M:on_init()
         -- Start the game state
         -- ATM only got audio
         GameStateStart()
-
     end)
 end
-
 return M

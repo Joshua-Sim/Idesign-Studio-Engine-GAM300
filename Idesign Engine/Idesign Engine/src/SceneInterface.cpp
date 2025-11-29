@@ -24,7 +24,7 @@ namespace Framework
         (void)deltaTime;
 
         // In Play State but not in Editor mode and not paused
-        if (engineState.IsInEditor())
+        if (engineState.IsPlay() && engineState.IsInEditor())
         {
             // Should only trigger once, unless quit level
             auto menuEntities = ecsInterface.GetEntitiesByTag("menu");

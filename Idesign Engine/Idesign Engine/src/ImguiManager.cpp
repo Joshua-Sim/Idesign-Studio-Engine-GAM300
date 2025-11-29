@@ -2833,6 +2833,7 @@ namespace Framework {
                         else
                             m_graphicsSystem->RequestPickUVSecondary(u, v);
                     }
+
                     auto buttonSys = ecsInterface.GetSystem<ButtonSystem>();
                     if (buttonSys) {
                         buttonSys->HandleClickUV(u, v);

@@ -8,7 +8,10 @@
 #include <imgui.h>
 #include <Camera.h>
 #include "Graphics.h"
+#include "Coordinator.h"
+#include <ButtonSystem.h>
 
+extern Framework::Coordinator ecsInterface;
 namespace Framework {
 
     InputHandler* InputHandler::instance = nullptr;
@@ -96,10 +99,18 @@ namespace Framework {
         // ESC: Toggle pause/resume
         if (IsKeyPressed(GLFW_KEY_ESCAPE))
         {
-            // Flip the paused state
-            engineState.SetPaused(!engineState.IsPaused());
-
-            std::cout << "ESC PRESSED" << std::endl;
+            if (engineState.InHowToPlay())
+            {
+                // Hide the How To Play page
+                engineState.SetHowToPlay(false);
+                std::cout << "ESC PRESSED - Hiding How To Play page" << std::endl;
+            }
+            else 
+            {
+                // Flip the paused state if not in How To Play
+                engineState.SetPaused(!engineState.IsPaused());
+                std::cout << "ESC PRESSED - Toggling pause" << std::endl;
+            }
         }
 
         // ImGui Input Block
