@@ -21,8 +21,8 @@ local color_swap_threshold = 0.3
 -- Visual Settings
 local bar_length_max = 0.5
 local bar_thickness  = 0.2
-local y_offset       = 3.5   
-local x_offset_right = -0.5   
+local y_offset       = 3.5    
+local x_offset_right = -0.5    
 
 -- [OFFSETS FROM CAULDRON SCRIPT]
 local tune_x = 1.6
@@ -42,6 +42,11 @@ local arrival_threshold = 1.5
 local current_score = 0
 local score_text_entity = nil
 
+-- [PHASE MANAGEMENT]
+local PHASE_NIGHT = 2   -- GamePhase::Night enum value
+local MAX_CUSTOMERS = 2   -- Total customers before ending night phase
+local customers_served = 0   -- Count of completed/failed customers
+
 -- =========================================================
 -- INTERNAL STATE
 -- =========================================================
@@ -58,6 +63,10 @@ local entity_frame = nil
 local entity_fill = nil
 
 local current_bar_state = "green"
+
+-- NEW STATE TRACKER: Used to detect phase transitions
+local previousPhase = -1 
+
 
 function CustomerSystem:on_init()
     print("[CustomerSystem] Initialized.")
@@ -85,6 +94,9 @@ function CustomerSystem:on_init()
         end
     end
     
+    -- Reset customer count upon initial system load/init
+    self:ResetNightPhase()
+    
     -- Keep the old callback for backwards compatibility
     CustomerSystemNotifyComplete = function()
         print("[CustomerSystem] Customer completed order (legacy callback).")
@@ -94,6 +106,32 @@ end
 
 function CustomerSystem:on_update(dt)
     if not navMeshBuilt then return end
+    
+    local currentPhase = GetPhase()
+    
+    -- === CRITICAL PHASE TRANSITION CHECK ===
+    -- This block ensures that the customer system state is only reset 
+    -- when the game transitions *into* the night phase from another phase (Day/Upgrade).
+    if currentPhase == PHASE_NIGHT and previousPhase ~= PHASE_NIGHT then
+        print("[CustomerSystem] --- Detected transition INTO Night Phase. Resetting state. ---")
+        self:ResetNightPhase()
+    end
+    
+    previousPhase = currentPhase
+    
+    -- Check if we're in Night phase (shop is open)
+    if currentPhase ~= PHASE_NIGHT then
+        -- Not in night phase, don't spawn or update customers
+        return
+    end
+    
+    -- Check if we've reached max customers
+    -- If customers_served is MAX_CUSTOMERS, we immediately end the night.
+    if customers_served >= MAX_CUSTOMERS then
+        print("[CustomerSystem] Max customers reached (" .. MAX_CUSTOMERS .. "), ending night phase...")
+        self:EndNightPhase()
+        return
+    end
     
     -- 1. SPAWN LOGIC
     if not hasSpawned then
@@ -132,7 +170,7 @@ function CustomerSystem:on_update(dt)
                     
                     -- Update Timer
                     current_patience = current_patience - dt
-                    if current_patience <= 0 then    
+                    if current_patience <= 0 then     
                         current_patience = 0
                         
                         -- TIME EXPIRED - CUSTOMER LEAVES UNHAPPY
@@ -142,16 +180,19 @@ function CustomerSystem:on_update(dt)
                         CustomerSystem:AddScore(-10)
                         print("[CustomerSystem] -10 score penalty!")
                         
+                        -- Increment customer count (failed customer)
+                        customers_served = customers_served + 1
+                        print("[CustomerSystem] Customers served: " .. customers_served .. "/" .. MAX_CUSTOMERS)
+                        
                         -- Clean up progress bar
-                        if entity_frame then DestroyEntity(entity_frame); entity_frame = nil end
-                        if entity_fill then DestroyEntity(entity_fill); entity_fill = nil end
+                        self:DestroyBar()
                         
                         -- Tell customer to clean up and leave
                         if activeCustomer then
                             FireEvent("CustomerTimeout", activeCustomer, activeCustomer, 0)
                         end
                         
-                        -- Reset state
+                        -- Reset temp state, waiting for next customer
                         activeCustomer = nil
                         hasSpawned = false
                         is_at_counter = false
@@ -236,6 +277,53 @@ function CustomerSystem:GetScore()
 end
 
 -- =========================================================
+-- PHASE MANAGEMENT
+-- =========================================================
+
+function CustomerSystem:ResetNightPhase()
+    print("[CustomerSystem] Resetting night phase state...")
+    
+    -- This is the critical reset point for the customer count.
+    customers_served = 0
+    
+    -- Cleanup active customer if one is still around from a failed/aborted night
+    if activeCustomer then 
+        DestroyEntity(activeCustomer) 
+        activeCustomer = nil
+    end
+    
+    self:DestroyBar()
+    
+    hasSpawned = false
+    is_at_counter = false
+    current_patience = 0.0
+    spawnTimer = 0
+    current_bar_state = "green"
+    
+    -- Update score display
+    CustomerSystem:UpdateScoreDisplay()
+    
+    print("[CustomerSystem] Night phase reset complete. Customers served: " .. customers_served)
+end
+
+function CustomerSystem:EndNightPhase()
+    print("[CustomerSystem] ========== ENDING NIGHT PHASE ==========")
+    print("[CustomerSystem] Final Score: " .. current_score)
+    print("[CustomerSystem] Customers Served: " .. customers_served .. "/" .. MAX_CUSTOMERS)
+    
+    -- Clean up any active entities
+    self:DestroyBar()
+    
+    -- Call engine state transition
+    GameStateEndNightPhase()
+    
+    -- CRITICAL: Removed the internal call to ResetNightPhase() here. 
+    -- The state will now be reset by the on_update block when the next PHASE_NIGHT starts.
+    
+    print("[CustomerSystem] Night phase ended, transitioning to upgrade phase...")
+end
+
+-- =========================================================
 -- EVENT HANDLERS
 -- =========================================================
 
@@ -247,9 +335,12 @@ function CustomerSystem.OnCustomerComplete(senderID, targetID, actionType)
     CustomerSystem:AddScore(10)
     print("[CustomerSystem] +10 score reward!")
     
+    -- Increment customer count (successful customer)
+    customers_served = customers_served + 1
+    print("[CustomerSystem] Customers served: " .. customers_served .. "/" .. MAX_CUSTOMERS)
+    
     -- Clean up progress bar
-    if entity_frame then DestroyEntity(entity_frame); entity_frame = nil end
-    if entity_fill then DestroyEntity(entity_fill); entity_fill = nil end
+    CustomerSystem:DestroyBar()
     
     -- Destroy customer entity
     if activeCustomer then 
@@ -257,7 +348,7 @@ function CustomerSystem.OnCustomerComplete(senderID, targetID, actionType)
         DestroyEntity(activeCustomer) 
     end
     
-    -- Reset state
+    -- Reset state to allow next spawn
     activeCustomer = nil
     hasSpawned = false
     is_at_counter = false 
@@ -282,11 +373,13 @@ function CustomerSystem:SpawnBar(parentID)
     if entity_fill then
         SetScale(entity_fill, bar_length_max, bar_thickness, bar_thickness) 
     end
+    SetTexture(entity_fill, self.tex_green) -- Ensure initial color is green
 end
 
 function CustomerSystem:DestroyBar()
     if entity_frame then DestroyEntity(entity_frame); entity_frame = nil end
     if entity_fill then DestroyEntity(entity_fill); entity_fill = nil end
+    current_bar_state = "green"
 end
 
 function CustomerSystem:UpdateBillboard(px, pz, cx, cy, cz)

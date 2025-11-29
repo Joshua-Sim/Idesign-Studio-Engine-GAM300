@@ -897,10 +897,23 @@ namespace Framework {
             engineState.SetPaused(true);
             engineState.SetUpgrade(true);
 
+            phaseManager->SetPhase(GamePhase::Upgrade);
+
             return 0;
         }
 
+        // Get current phase for checking incase certain updates shouldn't run in other phases (e.g customer_system.lua)
+        static int lua_GetPhase(lua_State* L)
+        {
+            if (!phaseManager) {
+                lua_pushnil(L);
+                return 1;
+            }
 
+            GamePhase currentPhase = phaseManager->GetCurrentPhase();
+            lua_pushinteger(L, static_cast<int>(currentPhase));
+            return 1;
+        }
 
         // ============ END GAME STATE LUA BINDINGS ============
 
@@ -1645,6 +1658,8 @@ namespace Framework {
         lua_register(L, "GameStateHowToPlay",   lua_GameStateHowToPlay);
         lua_register(L, "GameStateBackToPause", lua_GameStateBackToPause);
         lua_register(L, "GameStateEndNightPhase", lua_GameStateEndNightPhase);
+        lua_register(L, "GetPhase", lua_GetPhase);
+        
         lua_register(L, "SetScale", lua_SetScale);
         
         //cauldron
