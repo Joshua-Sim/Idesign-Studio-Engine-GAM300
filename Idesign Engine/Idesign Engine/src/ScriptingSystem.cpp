@@ -711,18 +711,52 @@ namespace Framework {
             return 0;
         }
 
+        // Update your existing lua bindings
         static int lua_GetScore(lua_State* L)
         {
             int s = Framework::GameSystem::GetScore();
             lua_pushinteger(L, s);
-            return 1; // 1 return value
+            return 1;
         }
 
-        static int lua_AddScore(lua_State* L)
+        static int lua_SetScore(lua_State* L)
         {
-            int delta = (int)luaL_checkinteger(L, 1);
-            Framework::GameSystem::AddScore(delta);
+            int value = (int)luaL_checkinteger(L, 1);
+            Framework::GameSystem::SetScore(value);
             return 0;
+        }
+
+        // Add new generic data functions
+        static int lua_GetData(lua_State* L)
+        {
+            const char* key = luaL_checkstring(L, 1);
+            int value = Framework::GameSystem::GetData(key);
+            lua_pushinteger(L, value);
+            return 1;
+        }
+
+        static int lua_SetData(lua_State* L)
+        {
+            const char* key = luaL_checkstring(L, 1);
+            int value = (int)luaL_checkinteger(L, 2);
+            Framework::GameSystem::SetData(key, value);
+            return 0;
+        }
+
+        static int lua_AddData(lua_State* L)
+        {
+            const char* key = luaL_checkstring(L, 1);
+            int delta = (int)luaL_checkinteger(L, 2);
+            Framework::GameSystem::AddData(key, delta);
+            return 0;
+        }
+
+        static int lua_HasData(lua_State* L)
+        {
+            const char* key = luaL_checkstring(L, 1);
+            bool exists = Framework::GameSystem::HasData(key);
+            lua_pushboolean(L, exists);
+            return 1;
         }
 
         static int lua_SetText(lua_State* L)
@@ -1614,9 +1648,15 @@ namespace Framework {
 
         // Game utility
         lua_register(L, "IsItemChoppable", lua_IsItemChoppable);
-        lua_register(L, "GetScore", lua_GetScore);
-        lua_register(L, "AddScore", lua_AddScore);
         lua_register(L, "SetText", lua_SetText);
+
+        // Data Entry from engine
+        lua_register(L, "GetScore", lua_GetScore);
+        lua_register(L, "SetScore", lua_SetScore);
+        lua_register(L, "GetData", lua_GetData);
+        lua_register(L, "SetData", lua_SetData);
+        lua_register(L, "AddData", lua_AddData);
+        lua_register(L, "HasData", lua_HasData);
 
         lua_register(L, "DestroyEntity", Lua_DestroyEntity);
         lua_register(L, "GetItemName", Lua_GetItemName);

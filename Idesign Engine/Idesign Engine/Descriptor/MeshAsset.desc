@@ -182,6 +182,15 @@
             "indexCount": 2304
         },
         {
+            "guid": "9e1fcb62-0699-4a0b-ae75-d0670af44b1b",
+            "name": "plane2",
+            "path": "Assets/Objects/plane2.obj",
+            "vao": 22,
+            "vbo": 43,
+            "ebo": 44,
+            "indexCount": 231840
+        },
+        {
             "guid": "e902f0d7-a022-45fc-9c17-2a98cbdb793e",
             "name": "Cylinder",
             "path": "Assets/Objects/Cylinder.obj",
@@ -189,15 +198,6 @@
             "vbo": 152,
             "ebo": 153,
             "indexCount": 240
-        },
-        {
-            "guid": "9e1fcb62-0699-4a0b-ae75-d0670af44b1b",
-            "name": "plane2",
-            "path": "Assets/Objects/plane2.obj",
-            "vao": 21,
-            "vbo": 41,
-            "ebo": 42,
-            "indexCount": 231840
         },
         {
             "guid": "3a68b780-632d-49d8-b45d-33b1ac035172",
@@ -218,22 +218,22 @@
             "indexCount": 40356
         },
         {
-            "guid": "a25723a2-f9bf-4939-b80d-962eb537dd2e",
-            "name": "strength_potion",
-            "path": "Assets\\Objects\\strength_potion.obj",
-            "vao": 26,
-            "vbo": 51,
-            "ebo": 52,
-            "indexCount": 924
-        },
-        {
             "guid": "fe86c54b-7cc2-471c-9d7e-0bce31089b5a",
             "name": "Cylinder",
             "path": "Assets/Objects/Cylinder.obj",
+            "vao": 26,
+            "vbo": 51,
+            "ebo": 52,
+            "indexCount": 240
+        },
+        {
+            "guid": "a25723a2-f9bf-4939-b80d-962eb537dd2e",
+            "name": "strength_potion",
+            "path": "Assets\\Objects\\strength_potion.obj",
             "vao": 25,
             "vbo": 49,
             "ebo": 50,
-            "indexCount": 240
+            "indexCount": 924
         },
         {
             "guid": "da032094-6e5c-40fe-b6f0-39a9d542ffe5",

@@ -1,17 +1,17 @@
 {
     "entity": {
         "name": "Customer_Kinematic",
-        "guid": "9612c554-c794-44f2-b83e-6d0be3427e19",
+        "guid": "d66e5b79-9b0b-4de8-ab90-c96cddaac569",
         "components": {
             "TransformComponent": {
                 "position": [
-                    -25.940574645996094,
+                    -19.115678787231445,
                     5.900000095367432,
-                    13.040060043334961
+                    13.015567779541016
                 ],
                 "rotation": [
                     0.028169747442007065,
-                    -89.79428100585938,
+                    -89.79439544677734,
                     179.9430389404297
                 ],
                 "scale": [
@@ -109,7 +109,7 @@
                     },
                     {
                         "messageToListenFor": "CustomerTimeout",
-                        "luaFunctionToCall": "OnCustomerTimeout"
+                        "luaFunctionToCall": "DestroyTextbox"
                     }
                 ]
             }

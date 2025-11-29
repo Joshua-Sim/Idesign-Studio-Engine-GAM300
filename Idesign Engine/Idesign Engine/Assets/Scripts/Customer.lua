@@ -16,8 +16,12 @@ local x_offset_right = -0.5
 local prefab_log = "CustomerLog_Prefab"
 
 -- Interaction cooldown
-local interaction_cooldown = 0.7  -- Seconds between interactions
+local interaction_cooldown = 0.7
 local last_interaction_time = 0.0
+
+-- Wrong item tracking
+local MAX_WRONG_ATTEMPTS = 2
+local wrong_item_count = 0
 
 -- State
 local player_entity = nil
@@ -25,7 +29,7 @@ local has_received_item = false
 local my_requested_item = ""
 local entity_textbox = nil
 local elapsed_time = 0.0
-local has_arrived = false  -- NEW: Track if customer reached counter
+local has_arrived = false
 
 function Customer.on_init(self)
     print("[Customer] ===== INIT DEBUG =====")
@@ -38,7 +42,8 @@ function Customer.on_init(self)
     player_entity = FindEntityByName("Player")
     elapsed_time = 0.0
     last_interaction_time = 0.0
-    has_arrived = false  -- Customer hasn't arrived yet
+    has_arrived = false
+    wrong_item_count = 0
 end
 
 function Customer.on_update(self, dt)
@@ -59,19 +64,16 @@ end
 function Customer.OnArrival(senderID, targetID, actionType)
     print("[Customer] Arrived at counter! Spawning textbox...")
     
-    -- Enable interactions
     has_arrived = true
     
-    -- Spawn textbox with order
     local orderText = "Hi, I want a " .. my_requested_item .. "."
     Customer.SpawnTextbox(senderID, orderText)
     
-    -- Spawn arrival log
     Customer.SpawnLog("Customer arrived!")
 end
 
 function Customer.OnInteract(senderID, targetID, actionType)
-    -- Check if customer has arrived at counter
+    -- Check if customer has arrived
     if not has_arrived then
         print("[Customer] I'm not ready yet! Still walking to the counter...")
         return
@@ -84,7 +86,6 @@ function Customer.OnInteract(senderID, targetID, actionType)
         return
     end
     
-    -- Update last interaction time
     last_interaction_time = elapsed_time
     
     print("[Customer] Customer interacted by player: " .. tostring(senderID))
@@ -117,30 +118,34 @@ function Customer.OnInteract(senderID, targetID, actionType)
         print("[Customer] Perfect! That's exactly what I wanted!")
         has_received_item = true
         
-        -- Take the item
         ConsumeSelectedItem()
         
-        -- Add score reward
-        AddScore(10)
-        print("[Customer] +10 score!")
-        
-        -- Clean up textbox
         Customer.DestroyTextbox()
         
-        -- Spawn success log
-        Customer.SpawnLog("Order complete! +10 points")
-        
-        -- Fire completion event
+        -- Fire completion event to CustomerSystem
         FireEvent("CustomerComplete", customer_entity, senderID, 1)
         
-        -- Leave
         print("[Customer] Thank you! Leaving now...")
         DestroyEntity(customer_entity)
     else
-        print("[Customer] Sorry, I ordered " .. my_requested_item .. ", not " .. itemName .. "!")
+        -- WRONG ITEM LOGIC
+        wrong_item_count = wrong_item_count + 1
+        print("[Customer] Wrong item! Count: " .. wrong_item_count .. "/" .. MAX_WRONG_ATTEMPTS)
         
-        -- Spawn wrong item log
-        Customer.SpawnLog("Wrong item! Customer wanted " .. my_requested_item)
+        if wrong_item_count >= MAX_WRONG_ATTEMPTS then
+            -- Too many wrong items - customer leaves angry
+            print("[Customer] That's it! I've had enough! Leaving...")
+            
+            Customer.DestroyTextbox()
+            Customer.SpawnLog("Customer left angry!")
+            
+            -- Fire failure event to CustomerSystem
+            FireEvent("CustomerFailed", customer_entity, senderID, 0)
+        else
+            -- Still give them another chance
+            print("[Customer] Sorry, I ordered " .. my_requested_item .. ", not " .. itemName .. "!")
+            Customer.SpawnLog("Wrong item! " .. (MAX_WRONG_ATTEMPTS - wrong_item_count) .. " chance(s) left")
+        end
     end
 end
 
@@ -149,12 +154,37 @@ end
 -- =========================================================
 
 function Customer.GenerateRequest()
-    -- Random pick from available items
-    local randomIndex = math.random(1, #available_items)
-    local requestedItem = available_items[randomIndex]
+    -- Check if using fixed queue mode
+    local fixedQueue = GetData("fixedQueue")
     
-    print("[Customer] Generated request: " .. requestedItem)
-    return requestedItem
+    if fixedQueue > 0 then
+        -- FIXED QUEUE MODE - Assign based on queue number
+        local requestedItem
+        
+        if fixedQueue == 2 then
+            -- First customer gets strength potion
+            requestedItem = "strength_potion"
+        elseif fixedQueue == 1 then
+            -- Second customer gets vitality potion
+            requestedItem = "vitality_potion"
+        else
+            -- Fallback to random if unexpected value
+            requestedItem = available_items[math.random(1, #available_items)]
+        end
+        
+        -- Decrement the queue counter
+        SetData("fixedQueue", fixedQueue - 1)
+        
+        print("[Customer] FIXED QUEUE MODE: Generated request: " .. requestedItem .. " (queue was " .. fixedQueue .. ")")
+        return requestedItem
+    else
+        -- RANDOM MODE (when fixedQueue is 0 or doesn't exist)
+        local randomIndex = math.random(1, #available_items)
+        local requestedItem = available_items[randomIndex]
+        
+        print("[Customer] RANDOM MODE: Generated request: " .. requestedItem)
+        return requestedItem
+    end
 end
 
 -- =========================================================
@@ -173,11 +203,9 @@ function Customer.SpawnTextbox(parentID, text)
 end
 
 function Customer.SpawnLog(message)
-    -- Spawn log prefab (already positioned at top-left in prefab)
     local logEntity = SpawnPrefab(prefab_log)
     
     if logEntity then
-        -- Update the text
         SetTextComponent(logEntity, "text", message)
         print("[Customer] Spawned log: " .. message)
     else
@@ -188,25 +216,21 @@ end
 function Customer.UpdateTextboxBillboard(customer_entity, px, pz, cx, cy, cz)
     if not entity_textbox then return end
     
-    -- Calculate angle to player
     local dx = px - cx
     local dz = pz - cz
     local angle_rad = math.atan2(dx, dz) 
     local angle_deg = math.deg(angle_rad)
     
-    -- Position textbox above customer
     local textbox_x = cx + x_offset_right
     local textbox_y = cy + textbox_y_offset
     local textbox_z = cz
     
-    -- Apply depth offset to prevent Z-fighting
     local depth_offset_x = billboard_depth_adjust * math.sin(angle_rad)
     local depth_offset_z = billboard_depth_adjust * math.cos(angle_rad)
     
     textbox_x = textbox_x + depth_offset_x
     textbox_z = textbox_z + depth_offset_z
     
-    -- Update position and rotation
     SetPosition(entity_textbox, textbox_x, textbox_y, textbox_z)
     SetRotation(entity_textbox, 0.0, angle_deg, 0.0)
 end
@@ -219,19 +243,13 @@ function Customer.DestroyTextbox()
     end
 end
 
--- Timeout handler
-function Customer.OnCustomerTimeout(senderID, targetID, actionType)
-    print("[Customer] Timeout! I've waited long enough!")
+function Customer.OnTimeout(senderID, targetID, actionType)
+    print("[Customer] Timeout! Cleaning up before leaving...")
     
     -- Clean up textbox
     Customer.DestroyTextbox()
     
-    -- Spawn timeout log
-    Customer.SpawnLog("Customer left! -10 points")
-    
-    -- Leave
-    print("[Customer] Leaving disappointed...")
-    DestroyEntity(targetID)
+    print("[Customer] Cleanup complete, ready to be destroyed.")
 end
 
 return Customer

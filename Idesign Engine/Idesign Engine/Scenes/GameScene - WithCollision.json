@@ -93,14 +93,14 @@
                     "is3D": true,
                     "minDistance": 1.0,
                     "maxDistance": 100.0,
-                    "volume": 0.20000000298023224,
+                    "volume": 1.0,
                     "loop": false,
                     "playOnStart": true,
-                    "isPlaying": false,
+                    "isPlaying": true,
                     "lastPosition": [
-                        0.0,
-                        0.0,
-                        0.0
+                        -45.934112548828125,
+                        5.300000190734863,
+                        14.715734481811523
                     ]
                 }
             }
@@ -250,7 +250,7 @@
                     "animationSpeed": 10.0,
                     "bLoops": false,
                     "bPlayOnStart": true,
-                    "currentTime": 0.0
+                    "currentTime": 20.0
                 },
                 "TextureComponent": {
                     "guid": "afd25b76-dddc-4c4f-bae4-a6c9a22931e5",
@@ -1486,7 +1486,7 @@
                     "is3D": true,
                     "minDistance": 1.0,
                     "maxDistance": 50.0,
-                    "volume": 1.0,
+                    "volume": 0.0,
                     "loop": false,
                     "playOnStart": false,
                     "isPlaying": false,
@@ -2641,14 +2641,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -29.900836944580078,
-                        8.039384841918945,
-                        12.808287620544434
+                        -53.96500015258789,
+                        8.044564247131348,
+                        9.5
                     ],
                     "rotation": [
-                        0.29791128635406494,
-                        -0.00007453512807842344,
-                        0.005234942305833101
+                        0.0,
+                        90.0,
+                        0.0
                     ],
                     "scale": [
                         0.9999989867210388,
@@ -2723,9 +2723,9 @@
                 },
                 "ListenerComponent": {
                     "position": [
-                        -29.900836944580078,
-                        8.039384841918945,
-                        12.808287620544434
+                        -53.96500015258789,
+                        8.044564247131348,
+                        9.5
                     ],
                     "forward": [
                         0.0,
@@ -2797,7 +2797,8 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
@@ -2817,6 +2818,10 @@
                         {
                             "messageToListenFor": "CustomerComplete",
                             "luaFunctionToCall": "OnCustomerComplete"
+                        },
+                        {
+                            "messageToListenFor": "CustomerFailed",
+                            "luaFunctionToCall": "OnCustomerFailed"
                         }
                     ]
                 }
@@ -3042,7 +3047,7 @@
                     "animationSpeed": 1.0,
                     "bLoops": true,
                     "bPlayOnStart": true,
-                    "currentTime": 0.0
+                    "currentTime": 89.9971694946289
                 },
                 "TextureComponent": {
                     "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
@@ -3113,11 +3118,11 @@
                     "volume": 1.0,
                     "loop": true,
                     "playOnStart": true,
-                    "isPlaying": false,
+                    "isPlaying": true,
                     "lastPosition": [
-                        0.0,
-                        0.0,
-                        0.0
+                        -40.230262756347656,
+                        6.287981033325195,
+                        17.725893020629883
                     ]
                 }
             }
@@ -3209,7 +3214,7 @@
                         250.0,
                         100.0
                     ],
-                    "isHovered": false
+                    "isHovered": true
                 }
             }
         },
@@ -3903,7 +3908,7 @@
                         2050.0,
                         1080.0
                     ],
-                    "isHovered": false
+                    "isHovered": true
                 }
             }
         },
@@ -4012,7 +4017,7 @@
                         250.0,
                         100.0
                     ],
-                    "isHovered": false
+                    "isHovered": true
                 }
             }
         },
