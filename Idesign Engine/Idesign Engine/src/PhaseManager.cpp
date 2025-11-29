@@ -9,6 +9,7 @@
 #include <Jolt/Physics/Body/BodyInterface.h>
 #include "Graphics.h"
 #include "EngineState.h"
+#include "InputHandler.h" 
 
 extern Framework::Coordinator ecsInterface;
 
@@ -21,10 +22,18 @@ namespace Framework {
 
     void PhaseManager::TogglePhase()
     {
-        if (m_currentPhase == GamePhase::Day)
+        switch (m_currentPhase)
+        {
+        case GamePhase::Day:
             SetPhase(GamePhase::Night);
-        else
+            break;
+        case GamePhase::Night:
+            SetPhase(GamePhase::Upgrade);
+            break;
+        case GamePhase::Upgrade:
             SetPhase(GamePhase::Day);
+            break;
+        }
     }
 
     void PhaseManager::SetPhase(GamePhase newPhase)
@@ -32,17 +41,45 @@ namespace Framework {
         // 1. State Change
         m_currentPhase = newPhase;
 
-        // 2. Determine Target Transform
+        // ... existing transform logic ...
         glm::vec3 targetPos = (m_currentPhase == GamePhase::Day) ? m_daySpawnPos : m_nightSpawnPos;
         glm::vec3 targetRot = (m_currentPhase == GamePhase::Day) ? m_daySpawnRot : m_nightSpawnRot;
 
-        std::string phaseName = (m_currentPhase == GamePhase::Day) ? "DAY" : "NIGHT";
-        std::cout << "[PhaseManager] Transitioning to " << phaseName << " phase." << std::endl;
-
-        // 3. Teleport Player
+        // ... existing teleport logic ...
         TeleportPlayer(targetPos, targetRot);
 
-        // 4. Fire Events
+        // =========================================================
+        // [FIX] FORCE CURSOR STATE BASED ON PHASE
+        // =========================================================
+        InputHandler* input = InputHandler::GetInstance();
+
+        if (m_currentPhase == GamePhase::Day || m_currentPhase == GamePhase::Night)
+        {
+            // 1. Disable Engine UI States
+            engineState.SetUpgrade(false);
+            engineState.SetMenu(false);
+            engineState.SetPaused(false);
+
+            // 2. Force InputHandler to Game Mode (Cursor Disabled)
+            if (input) {
+                input->SetUIFocused(false);
+            }
+        }
+        else if (m_currentPhase == GamePhase::Upgrade)
+        {
+            // Upgrade mode usually needs a cursor
+            engineState.SetUpgrade(true);
+
+            // Optional: Force cursor ON for upgrade menu
+            if (input) {
+                input->SetUIFocused(true);
+            }
+        }
+
+        // =========================================================
+        // EXISTING EVENT LOGIC
+        // =========================================================
+
         if (m_currentPhase == GamePhase::Day) {
             auto graphicsSystem = ecsInterface.GetSystem<Graphics>();
             if (graphicsSystem)
@@ -55,11 +92,9 @@ namespace Framework {
                     cam->updateVectors();
                 }
             }
-
-            // -----------------------------------------
             EventManager::Instance().Fire("OnDayStart", nullptr);
         }
-        if (m_currentPhase == GamePhase::Night) {
+        else if (m_currentPhase == GamePhase::Night) {
             auto graphicsSystem = ecsInterface.GetSystem<Graphics>();
             if (graphicsSystem)
             {
@@ -72,10 +107,6 @@ namespace Framework {
                 }
             }
             EventManager::Instance().Fire("OnNightStart", nullptr);
-        }
-        if (m_currentPhase == GamePhase::Upgrade) 
-        {
-            engineState.SetUpgrade(true);
         }
     }
 

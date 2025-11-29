@@ -82,7 +82,7 @@ namespace Framework
                     ecsInterface.HasComponent<TextureProperties>(e))
                 {
                     auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
-                    texture.isUI = engineState.InHowToPlay();
+                    texture.isUI = engineState.IsInUpgrade();
                 }
             }
         }

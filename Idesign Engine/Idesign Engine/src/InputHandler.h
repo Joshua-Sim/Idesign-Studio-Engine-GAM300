@@ -36,6 +36,7 @@ namespace Framework {
         void SetMessageSystem(MessageSystem* msgSystem);
         void SetCamera(Camera* camera);
         void SetGraphics(class Graphics* gfx) { mainGraphics = gfx; }
+        void SetUIFocused(bool focused);
 
         // Input Queries
         bool IsKeyPressed(int key);

@@ -727,13 +727,13 @@ namespace Framework {
                 //engineState.SetMenu(true); // show menu
 
                 // Start BGM when entering fullscreen game mode
-                if (g_AudioSystem) {
-                    std::string bgmPath = sceneManager.GetCurrentSceneBGMPath();
-                    if (!bgmPath.empty()) {
-                        g_AudioSystem->PlayAudio(bgmPath);
-                        std::cout << "[Audio] Playing BGM: " << bgmPath << std::endl;
-                    }
-                }
+                //if (g_AudioSystem) {
+                //    std::string bgmPath = sceneManager.GetCurrentSceneBGMPath();
+                //    if (!bgmPath.empty()) {
+                //        g_AudioSystem->PlayAudio(bgmPath);
+                //        std::cout << "[Audio] Playing BGM: " << bgmPath << std::endl;
+                //    }
+                //}
             }
         }
         backspaceWasPressed = backspaceIsPressed;

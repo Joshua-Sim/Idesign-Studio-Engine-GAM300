@@ -857,8 +857,6 @@ namespace Framework {
         {
             // Stop the game
             engineState.SetPaused(true);
-
-            // Send exit message
             MessageBus::Get().SendImmediate(PausePlayModeMessage());
 
             return 0;
@@ -893,6 +891,16 @@ namespace Framework {
 
             return 0;
         }
+
+        static int lua_GameStateEndNightPhase(lua_State* L)
+        {
+            engineState.SetPaused(true);
+            engineState.SetUpgrade(true);
+
+            return 0;
+        }
+
+
 
         // ============ END GAME STATE LUA BINDINGS ============
 
@@ -1636,6 +1644,7 @@ namespace Framework {
         lua_register(L, "GameStateExit",        lua_GameStateExit);
         lua_register(L, "GameStateHowToPlay",   lua_GameStateHowToPlay);
         lua_register(L, "GameStateBackToPause", lua_GameStateBackToPause);
+        lua_register(L, "GameStateEndNightPhase", lua_GameStateEndNightPhase);
         lua_register(L, "SetScale", lua_SetScale);
         
         //cauldron

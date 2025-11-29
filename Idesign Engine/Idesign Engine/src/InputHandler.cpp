@@ -320,4 +320,14 @@ namespace Framework {
             }
         }
     }
+
+    void InputHandler::SetUIFocused(bool focused) {
+        isUIFocused = focused;
+
+        // Optional: Reset tab state if forcing game mode
+        if (!focused) {
+            // Force immediate cursor update if needed, 
+            // though Update() loop will catch it next frame.
+        }
+    }
 }
