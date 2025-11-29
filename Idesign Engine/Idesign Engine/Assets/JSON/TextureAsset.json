@@ -31,18 +31,6 @@
             "isUI": false
         },
         {
-            "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
-            "name": "Shelf",
-            "path": "Assets\\Textures\\Shelf.png",
-            "isUI": false
-        },
-        {
-            "guid": "d24a29c5-cd9e-4322-ab59-d38618cba4bf",
-            "name": "quitbutton",
-            "path": "Assets\\Textures\\quitbutton.png",
-            "isUI": false
-        },
-        {
             "guid": "cabb6b16-8445-4f40-b9c8-bd593ea6b65c",
             "name": "top",
             "path": "Assets\\Textures\\top.png",
@@ -52,6 +40,18 @@
             "guid": "312bdb54-477d-47bb-a1ce-2224bc3ec5e3",
             "name": "Cupboard",
             "path": "Assets\\Textures\\Cupboard.png",
+            "isUI": false
+        },
+        {
+            "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
+            "name": "Shelf",
+            "path": "Assets\\Textures\\Shelf.png",
+            "isUI": false
+        },
+        {
+            "guid": "d24a29c5-cd9e-4322-ab59-d38618cba4bf",
+            "name": "quitbutton",
+            "path": "Assets\\Textures\\quitbutton.png",
             "isUI": false
         },
         {
@@ -511,15 +511,27 @@
             "isUI": false
         },
         {
-            "guid": "e6731f54-4c63-4666-aadd-fb24e64475be",
+            "guid": "7c8534ad-0fdd-408d-89fa-2f7ce1d4ea89",
+            "name": "close_button",
+            "path": "Assets\\Textures\\close_button.png",
+            "isUI": false
+        },
+        {
+            "guid": "153552e1-8c72-4999-b18d-9dc5bdf8396f",
+            "name": "White_background",
+            "path": "Assets\\Textures\\White_background.png",
+            "isUI": false
+        },
+        {
+            "guid": "ce8becd0-4b4f-467e-b8b7-e4cc0875c4df",
             "name": "instructions",
             "path": "Assets\\Textures\\instructions.png",
             "isUI": false
         },
         {
-            "guid": "7c8534ad-0fdd-408d-89fa-2f7ce1d4ea89",
-            "name": "close_button",
-            "path": "Assets\\Textures\\close_button.png",
+            "guid": "bb86e2ff-7a24-4492-9e03-134fbfe85046",
+            "name": "nextday",
+            "path": "Assets\\Textures\\nextday.png",
             "isUI": false
         },
         {
