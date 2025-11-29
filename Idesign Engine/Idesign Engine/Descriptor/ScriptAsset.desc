@@ -1,9 +1,16 @@
 {
-    "count": 22,
+    "count": 24,
     "entries": [
         {
             "guid": "c6d4d63d-bced-4890-8a3b-3938e82b13e8",
             "scriptPath": "Assets\\Scripts\\GameStateExit.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "8de4ea3f-31fb-4768-a277-e1ac0fc64201",
+            "scriptPath": "Assets\\Scripts\\GameStateHowToPlay.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
@@ -151,6 +158,13 @@
         {
             "guid": "ec4ab6ff-e63e-4653-9df5-3aff0b2cbad9",
             "scriptPath": "Assets\\Scripts\\StartGame.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "50911a7e-8c97-4e66-99f4-ffd4855680ee",
+            "scriptPath": "Assets\\Scripts\\GameStateBackToPause.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1

@@ -998,11 +998,11 @@
                     "volume": 1.0,
                     "loop": false,
                     "playOnStart": false,
-                    "isPlaying": true,
+                    "isPlaying": false,
                     "lastPosition": [
-                        -28.970077514648438,
-                        7.690000057220459,
-                        8.321422576904297
+                        0.0,
+                        0.0,
+                        0.0
                     ]
                 }
             }
@@ -2539,11 +2539,23 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "b7b4bcaf-b4d9-4c53-a9af-017de16950a6",
-                    "isUI": false
+                    "isUI": true
+                },
+                "ButtonComponent": {
+                    "position": [
+                        960.0,
+                        640.0
+                    ],
+                    "size": [
+                        1024.0,
+                        1024.0
+                    ],
+                    "isHovered": false
                 }
             }
         },
@@ -2581,7 +2593,7 @@
                 },
                 "TextureComponent": {
                     "guid": "01931225-401d-4164-8db6-754535863bb1",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ButtonComponent": {
                     "position": [
@@ -2630,11 +2642,12 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "475e81a7-2e58-4938-9542-ca201d5d96f5",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -2692,7 +2705,7 @@
                 },
                 "TextureComponent": {
                     "guid": "38c96217-d4fa-4b5b-910f-d8914b7a1e0f",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [

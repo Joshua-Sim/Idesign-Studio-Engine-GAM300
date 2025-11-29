@@ -632,7 +632,7 @@ namespace Framework
             std::string entityName = ecsInterface.GetEntityName(entity);
 
             // Skip runtime UI entities
-            if (entityName == "InteractionIcon" || entityName == "InteractionPrompt") continue;
+            if (entityName == "InteractionIcon" || entityName == "InteractionPrompt" || entityName == "ScoreText") continue;
 
             entityObj.AddMember("name", rapidjson::Value(entityName.c_str(), allocator), allocator);
 

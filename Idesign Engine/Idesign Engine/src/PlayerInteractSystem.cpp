@@ -10,11 +10,9 @@
 #include "MeshLoader.h" // [IMPORTANT] Needed to load the Quad for the icon
 #include <iostream>
 #include "AudioSystem.h"
+#include "EngineState.h"
 
 extern Framework::Coordinator ecsInterface;
-
-
-
 namespace Framework
 {
 
@@ -235,6 +233,13 @@ namespace Framework
         if (!mGraphicsSystem) return;
         if (mGraphicsSystem->GetMouseTargetView() != 0) return; // only in game view
 
+        if (engineState.IsPaused() ||
+            engineState.InHowToPlay() ||
+            engineState.IsInMenu())
+        {
+            return; // skip movement/jump when not in active gameplay
+        }
+
         GLFWwindow* window = mGraphicsSystem->GetWindow();
         if (!window) return;
 
@@ -309,7 +314,7 @@ namespace Framework
         prevSpace = spaceDown;
 
         // (Camera-follow is still in GraphicsSystem; if you want to move it here,
-        //  you’d also set cam->position = trans.position + offset, like the old code.)
+        //  youï¿½d also set cam->position = trans.position + offset, like the old code.)
     }
 
 }

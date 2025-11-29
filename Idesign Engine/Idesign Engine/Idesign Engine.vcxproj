@@ -147,7 +147,7 @@
     <ClInclude Include="..\lib\imgui\imstb_textedit.h" />
     <ClInclude Include="..\lib\imgui\imstb_truetype.h" />
     <ClInclude Include="ItemComponent.h" />
-    <ClInclude Include="PlayerInteractSystem.h" />
+    <ClInclude Include="src\PlayerInteractSystem.h" />
     <ClInclude Include="src\AnimationLoader.h" />
     <ClInclude Include="src\BoxColliderComponent.h" />
     <ClInclude Include="src\ButtonComponent.h" />
@@ -272,6 +272,7 @@
     <ClInclude Include="src\Recast\RecastAlloc.h" />
     <ClInclude Include="src\Recast\RecastAssert.h" />
     <ClInclude Include="src\RecipeBookManager.h" />
+    <ClInclude Include="src\SceneInterface.h" />
     <ClInclude Include="src\SceneManager.h" />
     <ClInclude Include="src\SceneProperties.h" />
     <ClInclude Include="src\ScriptingSystem.h" />
@@ -356,7 +357,7 @@
     <ClCompile Include="..\lib\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="..\lib\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\lib\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="PlayerInteractSystem.cpp" />
+    <ClCompile Include="src\PlayerInteractSystem.cpp" />
     <ClCompile Include="src\AnimationLoader.cpp" />
     <ClCompile Include="src\AnimationSystem.cpp" />
     <ClCompile Include="src\AssetCompiler.cpp" />
@@ -420,6 +421,7 @@
     <ClCompile Include="src\Recast\RecastMeshDetail.cpp" />
     <ClCompile Include="src\Recast\RecastRasterization.cpp" />
     <ClCompile Include="src\Recast\RecastRegion.cpp" />
+    <ClCompile Include="src\SceneInterface.cpp" />
     <ClCompile Include="src\SceneManager.cpp" />
     <ClCompile Include="src\ScriptingSystem.cpp" />
     <ClCompile Include="src\ShaderProgram.cpp" />

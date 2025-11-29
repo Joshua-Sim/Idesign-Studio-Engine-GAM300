@@ -498,8 +498,8 @@ namespace Framework {
     };
 
     /**
- * Enter Play Mode Message - sent when engine enters play mode
- */
+    * Enter Play Mode Message - sent when engine enters play mode
+    */
     struct EnterPlayModeMessage : TypedMessage<EnterPlayModeMessage> {
         EnterPlayModeMessage() {}
     };
@@ -509,6 +509,14 @@ namespace Framework {
      */
     struct ExitPlayModeMessage : TypedMessage<ExitPlayModeMessage> {
         ExitPlayModeMessage() {}
+    };
+
+    struct PausePlayModeMessage : TypedMessage<PausePlayModeMessage> {
+        PausePlayModeMessage() {}
+    };
+
+    struct ResumePlayModeMessage : TypedMessage<ResumePlayModeMessage> {
+        ResumePlayModeMessage() {}
     };
 
 } // namespace Framework

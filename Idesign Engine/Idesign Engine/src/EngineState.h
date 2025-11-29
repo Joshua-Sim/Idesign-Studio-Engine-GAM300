@@ -18,6 +18,7 @@ namespace Framework {
 
     class EngineState {
     public:
+
         // Accessors and mutators for flags
         bool IsInEditor() const { return inEditor; }
         void SetInEditor(bool value) { inEditor = value; }
@@ -31,12 +32,27 @@ namespace Framework {
         bool IsPlay() const { return IsPlayMode; }
         void SetPlay(bool value) { IsPlayMode = value; }
 
+        // Scenes
+        bool IsInMenu() const { return mInMenu; }
+        void SetMenu(bool value) { mInMenu = value; }
+
+        bool InHowToPlay() const { return mInHowToPlay; }
+        void SetHowToPlay(bool value) { mInHowToPlay = value; }
+
+        bool IsInUpgrade() const { return mInUpgrade; }
+        void SetUpgrade(bool value) { mInUpgrade = value; }
+
     private:
         // State flags
         bool inEditor = true;
         bool inDebugMode = false;  
         bool isPaused = false;
         bool IsPlayMode = false;
+        
+        // Scenes
+        bool mInMenu = false;
+        bool mInHowToPlay = false;
+        bool mInUpgrade = false;
     };
 
     // Declare the global instance of EngineState

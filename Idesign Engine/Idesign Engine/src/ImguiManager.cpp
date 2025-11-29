@@ -33,7 +33,7 @@
 #include "AudioComponent.h"
 #include "MessageSystem.h"
 #include "ButtonSystem.h"
-
+#include "SceneInterface.h"
 
 extern Framework::Coordinator ecsInterface;
 
@@ -701,12 +701,16 @@ namespace Framework {
         // Toggle editor visibility with Backspace key
         static bool backspaceWasPressed = false;
         bool backspaceIsPressed = InputHandler::GetInstance()->IsKeyHeld(GLFW_KEY_EQUAL);
-
+        auto gfxSystem = ecsInterface.GetSystem<Framework::Graphics>();
         if (backspaceIsPressed && !backspaceWasPressed)
         {
             m_showEditor = !m_showEditor;
             if (m_showEditor) {
                 std::cout << "[ImGui] Editor enabled" << std::endl;
+                gfxSystem->SetMouseTargetView(1);
+                engineState.SetInEditor(true);
+                //engineState.SetPlay(false);
+                engineState.SetMenu(false); // hide menu
 
                 // Stop BGM when returning to editor
                 if (g_AudioSystem) {
@@ -716,6 +720,11 @@ namespace Framework {
             }
             else {
                 std::cout << "[ImGui] Editor disabled - Game only mode" << std::endl;
+                gfxSystem->SetCameraRotationEnabled(true);
+                gfxSystem->SetMouseTargetView(0);
+                engineState.SetInEditor(false);
+                engineState.SetPlay(true);
+                //engineState.SetMenu(true); // show menu
 
                 // Start BGM when entering fullscreen game mode
                 if (g_AudioSystem) {
@@ -2632,10 +2641,10 @@ namespace Framework {
                     // Set engine state to play mode
                     engineState.SetPlay(true);
 
+                    engineState.SetMenu(true); // show menu
+
 					//Send message to start audio and other play-mode systems
                     MessageBus::Get().SendImmediate(EnterPlayModeMessage());
-
-                    g_AudioSystem->ResumeAllAudio();
                 }
                 ImGui::PopStyleColor(3); // Restore color
 
@@ -2691,7 +2700,9 @@ namespace Framework {
                 ImGui::PopStyleColor(3); // Restore color
             }
             ImGui::End();
+
             bool menuActive = !engineState.IsPlay();
+            
             if (ImGui::Begin("Main Viewport"))
             {
                 // Get the available size in the ImGui window
@@ -2823,6 +2834,7 @@ namespace Framework {
                         else
                             m_graphicsSystem->RequestPickUVSecondary(u, v);
                     }
+
                     auto buttonSys = ecsInterface.GetSystem<ButtonSystem>();
                     if (buttonSys) {
                         buttonSys->HandleClickUV(u, v);

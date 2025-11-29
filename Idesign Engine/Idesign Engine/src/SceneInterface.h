@@ -1,0 +1,24 @@
+
+#pragma once
+#ifndef _SCENE_INTERFACE_H_
+#define _SCENE_INTERFACE_H_
+
+#include "System.h"
+#include "EngineState.h"
+
+namespace Framework 
+{
+	class SceneInterface : public ISystem
+	{
+	public:
+		void Initialize() override;
+		void Update(float deltaTime) override;
+		std::string GetName() override;
+
+	private:
+	};
+
+	// Declare the global instance of EngineState
+	extern SceneInterface sceneInterface;
+}
+#endif // !_SCENE_INTERFACE_H_

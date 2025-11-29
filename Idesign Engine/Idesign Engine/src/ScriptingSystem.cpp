@@ -20,12 +20,14 @@
 #include "ButtonSystem.h"
 #include "SceneManager.h"
 #include "EventManager.h"
-#include "SceneManager.h" 
 #include "Inventory.h" // Include your Inventory header
 #include "BoxColliderComponent.h"
-
 #include "InputHandler.h"
+#include "SceneInterface.h"
+#include "PhaseManager.h"
+
 extern Framework::Coordinator ecsInterface;
+
 
 namespace Framework {
 
@@ -60,7 +62,6 @@ namespace Framework {
             lua_pushnumber(L, tr.position.z);
             return 3; // x, y, z
         }
-
 
         static int lua_SetPosition(lua_State* L)
         {
@@ -101,6 +102,7 @@ namespace Framework {
             g->MoveCameraFromLua(dir, dt, gm);
             return 0;
         }
+
         static int lua_GetMousePosition(lua_State* L)
         {
             // Access your singleton InputHandler
@@ -817,11 +819,22 @@ namespace Framework {
         // ============ GAME STATE LUA BINDINGS ============
         static int lua_GameStateStart(lua_State* L)
         {
-            // Set engine state to play mode
-            engineState.SetPlay(true);
-
+            engineState.SetMenu(false);
+            //std::cout << engineState.IsInMenu() << std::endl;
+            phaseManager->SetPhase(GamePhase::Day);
+            
             //Send message to start audio and other play-mode systems
             MessageBus::Get().SendImmediate(EnterPlayModeMessage());
+            
+            if (g_AudioSystem) 
+            {
+                std::string bgmPath = sceneManager.GetCurrentSceneBGMPath();
+                if (!bgmPath.empty()) 
+                {
+                    g_AudioSystem->PlayAudio(bgmPath);
+                    std::cout << "[Audio] Playing BGM: " << bgmPath << std::endl;
+                }
+            }
 
             return 0;
         }
@@ -829,12 +842,13 @@ namespace Framework {
         static int lua_GameStateResume(lua_State* L)
         {
             // Set engine state to play mode
-            engineState.SetPlay(true);
+            // engineState.SetPlay(true); okay nid to edit this later
+
+            engineState.SetPaused(false);
+            engineState.SetHowToPlay(false);
 
             //Send message to start audio and other play-mode systems
-            MessageBus::Get().SendImmediate(EnterPlayModeMessage());
-
-            g_AudioSystem->ResumeAllAudio();
+            MessageBus::Get().SendImmediate(ResumePlayModeMessage());
 
             return 0;
         }
@@ -842,13 +856,10 @@ namespace Framework {
         static int lua_GameStatePaused(lua_State* L)
         {
             // Stop the game
-            engineState.SetPlay(false);
+            engineState.SetPaused(true);
 
             // Send exit message
-            MessageBus::Get().SendImmediate(ExitPlayModeMessage());
-
-            // Pause Current playing Audio
-            g_AudioSystem->PauseAllAudio();
+            MessageBus::Get().SendImmediate(PausePlayModeMessage());
 
             return 0;
         }
@@ -857,12 +868,28 @@ namespace Framework {
         {
             // Stop the game
             engineState.SetPlay(false);
+            engineState.SetPaused(false);
 
             // Send exit message
             MessageBus::Get().SendImmediate(ExitPlayModeMessage());
 
-            // Clear all audio
-            g_AudioSystem->Reset();
+            exit(0); // Immediately terminate app, but skips cleanup
+            return 0;
+        }
+
+        static int lua_GameStateHowToPlay(lua_State* L)
+        {
+            engineState.SetHowToPlay(true); // Render UI How To Play
+            engineState.SetPaused(false);   // Hide Pause UI
+            
+
+            return 0;
+        }
+
+        static int lua_GameStateBackToPause(lua_State* L)
+        {
+            engineState.SetHowToPlay(false);    // Hide How To Play
+            engineState.SetPaused(true);        // Render Pause UI
 
             return 0;
         }
@@ -1603,11 +1630,14 @@ namespace Framework {
         lua_register(L, "SetScriptVariable", lua_SetScriptVariable);
 
         // Engine States
-        lua_register(L, "GameStateStart", lua_GameStateStart);
-        lua_register(L, "GameStateResume", lua_GameStateResume);
-        lua_register(L, "GameStatePaused", lua_GameStatePaused);
-        lua_register(L, "GameStateExit", lua_GameStateExit);
+        lua_register(L, "GameStateStart",       lua_GameStateStart);
+        lua_register(L, "GameStateResume",      lua_GameStateResume);
+        lua_register(L, "GameStatePaused",      lua_GameStatePaused);
+        lua_register(L, "GameStateExit",        lua_GameStateExit);
+        lua_register(L, "GameStateHowToPlay",   lua_GameStateHowToPlay);
+        lua_register(L, "GameStateBackToPause", lua_GameStateBackToPause);
         lua_register(L, "SetScale", lua_SetScale);
+        
         //cauldron
         lua_register(L, "SetCameraLock", [](lua_State* L) -> int {
             // 1. Get argument (true/false)

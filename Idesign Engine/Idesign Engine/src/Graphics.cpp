@@ -1224,6 +1224,20 @@ namespace Framework {
         }
 
         // Global Hotkeys (HDR/Bloom)
+        // 1. Create a static variable to remember the state from the previous frame
+        static bool wasXPressed = false;
+
+        // 2. Get the current state
+        bool isXPressed = (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS);
+
+        // 3. Check: Is it pressed NOW, but wasn't pressed BEFORE?
+        if (isXPressed && !wasXPressed)
+        {
+            phaseManager->TogglePhase();
+        }
+
+        // 4. Update the "was" variable for the next frame
+        wasXPressed = isXPressed;
         if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS) hdrExposure += 1.0f * dt;
         if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) if (hdrExposure > 0.0f) hdrExposure -= 1.0f * dt;
     }
@@ -2642,7 +2656,11 @@ namespace Framework {
             );
         }
 
-        if (viewIndex == 0)
+        // Do not display inventory boxes while in paused/howtoplay/menu state
+        if (viewIndex == 0 &&
+            !engineState.IsPaused() &&
+            !engineState.InHowToPlay() &&
+            !engineState.IsInMenu())
         {
             DrawHotbar(width, height);
         }
