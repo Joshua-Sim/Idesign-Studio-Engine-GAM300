@@ -124,20 +124,15 @@ namespace Framework {
         static int lua_GetTextComponent(lua_State* L)
         {
             Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
-
             if (!ecsInterface.IsEntityValid(e) || !ecsInterface.HasComponent<TextProperties>(e)) {
                 lua_pushnil(L);
                 return 1;
             }
-
             auto& text = ecsInterface.GetComponent<TextProperties>(e);
-
             // Return a table with text component data
             lua_newtable(L);
-
             lua_pushstring(L, text.text.c_str());
             lua_setfield(L, -2, "text");
-
             lua_pushnumber(L, text.scale);
             lua_setfield(L, -2, "scale");
 
@@ -148,28 +143,28 @@ namespace Framework {
             lua_pushnumber(L, text.color.b); lua_setfield(L, -2, "b");
             lua_setfield(L, -2, "color");
 
+            // Opacity (NEW)
+            lua_pushnumber(L, text.opacity);
+            lua_setfield(L, -2, "opacity");
+
             lua_pushinteger(L, text.alignment);
             lua_setfield(L, -2, "alignment");
-
             lua_pushboolean(L, text.isBillboard);
             lua_setfield(L, -2, "isBillboard");
-
             lua_pushboolean(L, text.screenSpace);
             lua_setfield(L, -2, "screenSpace");
-
             return 1;
         }
 
+        //text component
         static int lua_SetTextComponent(lua_State* L)
         {
             Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
             const char* field = luaL_checkstring(L, 2);
             // Value is at index 3 (type depends on field)
-
             if (!ecsInterface.IsEntityValid(e) || !ecsInterface.HasComponent<TextProperties>(e)) {
                 return luaL_error(L, "SetTextComponent: invalid entity or missing TextProperties");
             }
-
             auto& text = ecsInterface.GetComponent<TextProperties>(e);
 
             if (strcmp(field, "text") == 0) {
@@ -177,6 +172,9 @@ namespace Framework {
             }
             else if (strcmp(field, "scale") == 0) {
                 text.scale = static_cast<float>(luaL_checknumber(L, 3));
+            }
+            else if (strcmp(field, "opacity") == 0) {  // NEW
+                text.opacity = static_cast<float>(luaL_checknumber(L, 3));
             }
             else if (strcmp(field, "alignment") == 0) {
                 text.alignment = static_cast<int>(luaL_checkinteger(L, 3));
@@ -192,21 +190,17 @@ namespace Framework {
                 if (!lua_istable(L, 3)) {
                     return luaL_error(L, "SetTextComponent: color must be a table {r, g, b}");
                 }
-
                 lua_getfield(L, 3, "r");
                 lua_getfield(L, 3, "g");
                 lua_getfield(L, 3, "b");
-
                 text.color.r = static_cast<float>(luaL_checknumber(L, -3));
                 text.color.g = static_cast<float>(luaL_checknumber(L, -2));
                 text.color.b = static_cast<float>(luaL_checknumber(L, -1));
-
                 lua_pop(L, 3);
             }
             else {
                 return luaL_error(L, "SetTextComponent: unknown field '%s'", field);
             }
-
             return 0;
         }
 
