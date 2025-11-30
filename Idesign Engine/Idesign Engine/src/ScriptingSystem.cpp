@@ -860,17 +860,6 @@ namespace Framework {
             
             //Send message to start audio and other play-mode systems
             MessageBus::Get().SendImmediate(EnterPlayModeMessage());
-            
-            if (g_AudioSystem) 
-            {
-                std::string bgmPath = sceneManager.GetCurrentSceneBGMPath();
-                if (!bgmPath.empty()) 
-                {
-                    if (!g_AudioSystem->IsPlaying(bgmPath))
-                    g_AudioSystem->PlayAudio(bgmPath);
-                    std::cout << "[Audio] Playing BGM: " << bgmPath << std::endl;
-                }
-            }
 
             return 0;
         }

@@ -94,6 +94,8 @@ namespace Framework {
         // ESC: Toggle pause/resume
         if (IsKeyPressed(GLFW_KEY_ESCAPE))
         {
+            g_AudioSystem->PlayAudio("event:/ButtonClick");
+
             if (engineState.InHowToPlay()) {
                 engineState.SetHowToPlay(false);
                 std::cout << "ESC PRESSED - Hiding How To Play page" << std::endl;

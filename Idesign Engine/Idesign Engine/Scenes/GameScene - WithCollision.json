@@ -3210,63 +3210,6 @@
             }
         },
         {
-            "name": "playbutton",
-            "guid": "9dcecee3-55a2-4c8b-897d-7ed2a7014be4",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        980.0,
-                        400.0,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        250.0,
-                        100.0,
-                        1.0
-                    ]
-                },
-                "HierarchyComponent": {
-                    "parent": "ed731c16-5301-4220-8ffa-98fd139ffb91",
-                    "children": [],
-                    "sortIndex": 51
-                },
-                "TagComponent": {
-                    "tags": [
-                        "menu"
-                    ]
-                },
-                "TextureComponent": {
-                    "guid": "84369442-e278-434a-9fa6-c48d9c56bbb3",
-                    "isUI": false
-                },
-                "ScriptProperties": {
-                    "scripts": [
-                        {
-                            "guid": "0b25e0c5-79e6-465a-96cd-920b83ef31e6",
-                            "scriptPath": "Assets\\Scripts\\GameStateStart.lua",
-                            "hotReload": false
-                        }
-                    ]
-                },
-                "ButtonComponent": {
-                    "position": [
-                        980.0,
-                        400.0
-                    ],
-                    "size": [
-                        250.0,
-                        100.0
-                    ],
-                    "isHovered": true
-                }
-            }
-        },
-        {
             "name": "exitbutton",
             "guid": "aa8365ac-5eae-4566-b921-f4c2c546b8fc",
             "components": {
