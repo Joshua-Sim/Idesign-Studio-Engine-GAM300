@@ -196,7 +196,7 @@ function M.OnInteract(arg1, arg2)
     if held_item_id ~= -1 then
         table.insert(stored_ingredients, held_item_id)
         ConsumeSelectedItem()
-        
+        Sound.Play("event:/PlaceDownItem")
         -- Default to -1 (No Visual) logic
         local vis_id = -1
         if SpawnCauldronItem and id_to_use then
