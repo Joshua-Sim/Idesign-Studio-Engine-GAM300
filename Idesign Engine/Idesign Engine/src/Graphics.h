@@ -110,6 +110,10 @@ namespace Framework
         GLuint GetOrLoadIconTex(const char* path);
         GLuint GetOrLoadIconTexFromItemId(int itemId);
 
+        Skybox* getSkybox() {
+            return &m_skybox;
+        }
+
 
     private:
 

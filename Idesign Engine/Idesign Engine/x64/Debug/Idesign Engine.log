@@ -1,1061 +1,359 @@
-﻿  pch.cpp
-  Compiling Precompiled Header File...
-  imgui.cpp
-  imgui_demo.cpp
-  imgui_draw.cpp
-  imgui_impl_glfw.cpp
-  imgui_impl_opengl3.cpp
-  imgui_tables.cpp
-  imgui_widgets.cpp
-  PlayerInteractSystem.cpp
-  AnimationLoader.cpp
-  AnimationSystem.cpp
-  AssetCompiler.cpp
-  AssetManager.cpp
-  AudioSystem.cpp
-  BoxColliderComponent.cpp
-  ButtonSystem.cpp
-  Collision.cpp
-  ComponentManager.cpp
-  Coordinator.cpp
-  Core.cpp
-  Debugger.cpp
-D:\Windows Kits\10\Include\10.0.26100.0\shared\minwindef.h(130,9): warning C4005: 'APIENTRY': macro redefinition
-  (compiling source file '/lib/imgui/imgui_impl_opengl3.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\glfw-3.4.bin.WIN64\include\GLFW\glfw3.h(123,11):
-      see previous definition of 'APIENTRY'
-  
-D:\Windows Kits\10\Include\10.0.26100.0\shared\minwindef.h(130,9): warning C4005: 'APIENTRY': macro redefinition
-  (compiling source file '/lib/imgui/imgui.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\glfw-3.4.bin.WIN64\include\GLFW\glfw3.h(123,11):
-      see previous definition of 'APIENTRY'
-  
-  DummySystem.cpp
-  EngineState.cpp
-  EntityManager.cpp
-  EventManager.cpp
-  EventSystem.cpp
-  FileCheckSystem.cpp
-  FoliageRenderer.cpp
-  FontSystem.cpp
-  GameSystem.cpp
+﻿  GameSystem.cpp
   Graphics.cpp
-  GraphicsShader.cpp
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/AnimationLoader.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\FoliageRenderer.cpp(33,53): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
-  (compiling source file '/src/FoliageRenderer.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\FoliageRenderer.cpp(36,53): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
-  (compiling source file '/src/FoliageRenderer.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\FoliageRenderer.cpp(40,53): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
-  (compiling source file '/src/FoliageRenderer.cpp')
-  
-  GraphicsWindows.cpp
-  ImguiManager.cpp
-  InputHandler.cpp
-D:\Windows Kits\10\Include\10.0.26100.0\shared\minwindef.h(130,9): warning C4005: 'APIENTRY': macro redefinition
-  (compiling source file '/src/ImguiManager.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\glfw-3.4.bin.WIN64\include\GLFW\glfw3.h(123,11):
-      see previous definition of 'APIENTRY'
-  
-  Inventory.cpp
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\FileCheckSystem.cpp(39,40): warning C4100: 'dt': unreferenced parameter
-  (compiling source file '/src/FileCheckSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.h(142,66): warning C4100: 'index': unreferenced parameter
-  (compiling source file '/src/EventSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/AnimationSystem.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.h(142,66): warning C4100: 'index': unreferenced parameter
-  (compiling source file '/src/GameSystem.cpp')
-  
-  Lighting.cpp
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Coordinator.cpp(258,16): warning C4245: 'return': conversion from 'int' to 'Framework::Entity', signed/unsigned mismatch
-  (compiling source file '/src/Coordinator.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/AssetManager.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/AssetManager.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/AssetManager.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationLoader.cpp(91,67): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-  (compiling source file '/src/AnimationLoader.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationLoader.cpp(93,39): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-  (compiling source file '/src/AnimationLoader.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationLoader.cpp(111,28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  (compiling source file '/src/AnimationLoader.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationLoader.cpp(117,28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  (compiling source file '/src/AnimationLoader.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationLoader.cpp(123,28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  (compiling source file '/src/AnimationLoader.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Collision.cpp(376,15): warning C4459: declaration of 'dt' hides global declaration
-  (compiling source file '/src/Collision.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Collision.cpp(22,7):
-      see declaration of 'dt'
-  
+  ScriptingSystem.cpp
   main.cpp
-  MainMath.cpp
-  MaterialLoader.cpp
-  Matrix3x3.cpp
-  Matrix4x4.cpp
-  Mesh.cpp
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/AssetCompiler.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-  MeshLoader.cpp
-  MessageSystem.cpp
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/AssetCompiler.cpp')
-  
-  NavMeshSystem.cpp
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/AssetCompiler.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EventSystem.cpp(15,36): warning C4100: 'timeslice': unreferenced parameter
-  (compiling source file '/src/EventSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Coordinator.cpp(352,1): warning C4702: unreachable code
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,151): warning C4100: 'ioSettings': unreferenced parameter
-  (compiling source file '/src/PlayerInteractSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,117): warning C4100: 'inManifold': unreferenced parameter
-  (compiling source file '/src/PlayerInteractSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/AudioSystem.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-  PebbleRenderer.cpp
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/AudioSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/AudioSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/FontSystem.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/Graphics.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/Graphics.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/FontSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/FontSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.h(142,66): warning C4100: 'index': unreferenced parameter
-  (compiling source file '/src/AssetCompiler.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/DummySystem.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/DummySystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/DummySystem.cpp')
-  
-  PhaseManager.cpp
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/InputHandler.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\GameSystem.cpp(33,35): warning C4100: 'timeslice': unreferenced parameter
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.h(142,66): warning C4100: 'index': unreferenced formal parameter
   (compiling source file '/src/GameSystem.cpp')
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/InputHandler.cpp')
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.h(142,66): warning C4100: 'index': unreferenced formal parameter
+  (compiling source file '/src/ScriptingSystem.cpp')
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/InputHandler.cpp')
-  
-  PhysicsSystem.cpp
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/PlayerInteractSystem.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/PlayerInteractSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/PlayerInteractSystem.cpp')
-  
-  PropertyWidget.cpp
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/AnimationSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/AnimationSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/MeshLoader.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AudioSystem.cpp(302,19): warning C4456: declaration of 'transform' hides previous local declaration
-  (compiling source file '/src/AudioSystem.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AudioSystem.cpp(242,15):
-      see declaration of 'transform'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PlayerInteractSystem.h(44,36): warning C4245: 'initializing': conversion from 'int' to 'Framework::Entity', signed/unsigned mismatch
-  (compiling source file '/src/PlayerInteractSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PlayerInteractSystem.h(45,36): warning C4245: 'initializing': conversion from 'int' to 'Framework::Entity', signed/unsigned mismatch
-  (compiling source file '/src/PlayerInteractSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.h(142,66): warning C4100: 'index': unreferenced parameter
-  (compiling source file '/src/PlayerInteractSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PebbleRenderer.cpp(62,36): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-  (compiling source file '/src/PebbleRenderer.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PlayerInteractSystem.cpp(254,15): warning C4189: 'trans': local variable is initialized but not referenced
-  (compiling source file '/src/PlayerInteractSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/MaterialLoader.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/MaterialLoader.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/MaterialLoader.cpp')
-  
-  DetourAlloc.cpp
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
   (compiling source file '/src/main.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
+      C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
       see declaration of 'Framework::AnimationProperties::name'
   
-  DetourAssert.cpp
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
+      see declaration of 'Framework::AnimationProperties::name'
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
   (compiling source file '/src/main.cpp')
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
   (compiling source file '/src/main.cpp')
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/ImguiManager.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
+  (compiling source file '/src/Graphics.cpp')
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
+  (compiling source file '/src/Graphics.cpp')
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
+  (compiling source file '/src/ScriptingSystem.cpp')
+      C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
       see declaration of 'Framework::AnimationProperties::name'
   
-  DetourCommon.cpp
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/ImguiManager.cpp')
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
+  (compiling source file '/src/ScriptingSystem.cpp')
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/ImguiManager.cpp')
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
+  (compiling source file '/src/ScriptingSystem.cpp')
   
-  DetourNavMesh.cpp
-  DetourNavMeshBuilder.cpp
-  DetourNavMeshQuery.cpp
-  DetourNode.cpp
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\DetourNavMesh.cpp(640,21): warning C4127: conditional expression is constant
-  (compiling source file '/src/Recast/DetourNavMesh.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\DetourNavMesh.cpp(640,21):
-      consider using 'if constexpr' statement instead
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\DetourNavMesh.cpp(640,21):
-      the template instantiation context (the oldest one first) is
-          C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\DetourNavMesh.cpp(724,2):
-          see reference to function template instantiation 'void `anonymous-namespace'::closestPointOnDetailEdges<false>(const dtMeshTile *,const dtPoly *,const float *,float *)' being compiled
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\GameSystem.cpp(40,35): warning C4100: 'timeslice': unreferenced formal parameter
+  (compiling source file '/src/GameSystem.cpp')
   
-  Recast.cpp
-  RecastAlloc.cpp
-  RecastArea.cpp
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,151): warning C4100: 'ioSettings': unreferenced parameter
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.h(142,66): warning C4100: 'index': unreferenced formal parameter
+  (compiling source file '/src/main.cpp')
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,151): warning C4100: 'ioSettings': unreferenced formal parameter
   (compiling source file '/src/Graphics.cpp')
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,117): warning C4100: 'inManifold': unreferenced parameter
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,117): warning C4100: 'inManifold': unreferenced formal parameter
   (compiling source file '/src/Graphics.cpp')
   
-  RecastAssert.cpp
-  RecastContour.cpp
-  RecastFilter.cpp
-  RecastLayers.cpp
-  RecastMesh.cpp
-  RecastMeshDetail.cpp
-  RecastRasterization.cpp
-  RecastRegion.cpp
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(538,32): warning C4458: declaration of 'leafTransforms' hides class member
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,151): warning C4100: 'ioSettings': unreferenced formal parameter
+  (compiling source file '/src/ScriptingSystem.cpp')
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,117): warning C4100: 'inManifold': unreferenced formal parameter
+  (compiling source file '/src/ScriptingSystem.cpp')
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,151): warning C4100: 'ioSettings': unreferenced formal parameter
+  (compiling source file '/src/main.cpp')
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,117): warning C4100: 'inManifold': unreferenced formal parameter
+  (compiling source file '/src/main.cpp')
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(804,46): warning C4100: 'L': unreferenced formal parameter
+  (compiling source file '/src/ScriptingSystem.cpp')
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(811,47): warning C4100: 'L': unreferenced formal parameter
+  (compiling source file '/src/ScriptingSystem.cpp')
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(854,50): warning C4100: 'L': unreferenced formal parameter
+  (compiling source file '/src/ScriptingSystem.cpp')
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(876,51): warning C4100: 'L': unreferenced formal parameter
+  (compiling source file '/src/ScriptingSystem.cpp')
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(890,51): warning C4100: 'L': unreferenced formal parameter
+  (compiling source file '/src/ScriptingSystem.cpp')
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(899,49): warning C4100: 'L': unreferenced formal parameter
+  (compiling source file '/src/ScriptingSystem.cpp')
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(912,54): warning C4100: 'L': unreferenced formal parameter
+  (compiling source file '/src/ScriptingSystem.cpp')
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(921,56): warning C4100: 'L': unreferenced formal parameter
+  (compiling source file '/src/ScriptingSystem.cpp')
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(929,58): warning C4100: 'L': unreferenced formal parameter
+  (compiling source file '/src/ScriptingSystem.cpp')
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(1083,54): warning C4100: 'L': unreferenced formal parameter
+  (compiling source file '/src/ScriptingSystem.cpp')
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PlayerInteractSystem.h(44,36): warning C4245: 'initializing': conversion from 'int' to 'Framework::Entity', signed/unsigned mismatch
+  (compiling source file '/src/main.cpp')
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PlayerInteractSystem.h(45,36): warning C4245: 'initializing': conversion from 'int' to 'Framework::Entity', signed/unsigned mismatch
+  (compiling source file '/src/main.cpp')
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(538,32): warning C4458: declaration of 'leafTransforms' hides class member
   (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(181,32):
+      C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(181,32):
       see declaration of 'Framework::Graphics::leafTransforms'
   
-  SceneInterface.cpp
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(199,23): warning C4189: 'config': local variable is initialized but not referenced
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(199,23): warning C4189: 'config': local variable is initialized but not referenced
   (compiling source file '/src/Graphics.cpp')
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(814,27): warning C4458: declaration of 'mesh' hides class member
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(814,27): warning C4458: declaration of 'mesh' hides class member
   (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(169,24):
+      C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(169,24):
       see declaration of 'Framework::Graphics::mesh'
   
-  SceneManager.cpp
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(952,31): warning C4458: declaration of 'mesh' hides class member
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(952,31): warning C4458: declaration of 'mesh' hides class member
   (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(169,24):
+      C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(169,24):
       see declaration of 'Framework::Graphics::mesh'
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1106,21): warning C4458: declaration of 'cam' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(150,17):
-      see declaration of 'Framework::Graphics::cam'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1255,68): warning C4100: 'amount': unreferenced parameter
-  (compiling source file '/src/Graphics.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1255,56): warning C4100: 'axis': unreferenced parameter
-  (compiling source file '/src/Graphics.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1298,23): warning C4458: declaration of 'cam' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(150,17):
-      see declaration of 'Framework::Graphics::cam'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1304,23): warning C4458: declaration of 'cam' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(150,17):
-      see declaration of 'Framework::Graphics::cam'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1487,24): warning C4458: declaration of 'tex' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(170,16):
-      see declaration of 'Framework::Graphics::tex'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1498,40): warning C4458: declaration of 'tex' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(170,16):
-      see declaration of 'Framework::Graphics::tex'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1513,39): warning C4100: 'viewIndex': unreferenced parameter
-  (compiling source file '/src/Graphics.cpp')
-  
-  ScriptingSystem.cpp
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1650,40): warning C4458: declaration of 'mesh' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(169,24):
-      see declaration of 'Framework::Graphics::mesh'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1840,17): warning C4458: declaration of 'cam' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(150,17):
-      see declaration of 'Framework::Graphics::cam'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1893,59): warning C4018: '<': signed/unsigned mismatch
-  (compiling source file '/src/Graphics.cpp')
-  
-  ShaderProgram.cpp
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1996,23): warning C4458: declaration of 'tex' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(170,16):
-      see declaration of 'Framework::Graphics::tex'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2123,23): warning C4458: declaration of 'mesh' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(169,24):
-      see declaration of 'Framework::Graphics::mesh'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2141,25): warning C4456: declaration of 'pointShadowUnit' hides previous local declaration
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1889,13):
-      see declaration of 'pointShadowUnit'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2142,25): warning C4456: declaration of 'pointShadowCount' hides previous local declaration
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1890,13):
-      see declaration of 'pointShadowCount'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2149,71): warning C4018: '<': signed/unsigned mismatch
-  (compiling source file '/src/Graphics.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2158,46): warning C4456: declaration of 'entityId' hides previous local declaration
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2041,26):
-      see declaration of 'entityId'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2229,31): warning C4458: declaration of 'tex' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(170,16):
-      see declaration of 'Framework::Graphics::tex'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2310,19): warning C4458: declaration of 'mesh' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(169,24):
-      see declaration of 'Framework::Graphics::mesh'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2336,21): warning C4456: declaration of 'pointShadowUnit' hides previous local declaration
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1889,13):
-      see declaration of 'pointShadowUnit'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2337,21): warning C4456: declaration of 'pointShadowCount' hides previous local declaration
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1890,13):
-      see declaration of 'pointShadowCount'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2345,67): warning C4018: '<': signed/unsigned mismatch
-  (compiling source file '/src/Graphics.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2354,42): warning C4456: declaration of 'entityId' hides previous local declaration
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2308,25):
-      see declaration of 'entityId'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2407,27): warning C4458: declaration of 'tex' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(170,16):
-      see declaration of 'Framework::Graphics::tex'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2602,19): warning C4458: declaration of 'tex' hides class member
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(170,16):
-      see declaration of 'Framework::Graphics::tex'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AssetManager.h(232,25): warning C4459: declaration of 'assets' hides global declaration
-  (compiling source file '/src/Graphics.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(72,17):
-      see declaration of 'Framework::assets'
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AssetManager.h(232,25):
-      the template instantiation context (the oldest one first) is
-          C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(79,100):
-          see reference to function template instantiation 'Framework::AssetHandle Framework::AssetManager::FindGuid<Framework::WindowConfig>(const std::optional<std::string> &)' being compiled
-  
-  SignalHandler.cpp
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/NavMeshSystem.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-  Skybox.cpp
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-  TagManager.cpp
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.h(142,66): warning C4100: 'index': unreferenced parameter
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\main.cpp(140,10): warning C4459: declaration of 'sceneInterface' hides global declaration
   (compiling source file '/src/main.cpp')
-  
-  Terrain.cpp
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.h(142,66): warning C4100: 'index': unreferenced parameter
-  (compiling source file '/src/ImguiManager.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\Recast.h(115,7): warning C4099: 'rcContext': type name first seen using 'struct' now seen using 'class'
-  (compiling source file '/src/NavMeshSystem.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\Recast.h(115,7):
-      see declaration of 'rcContext'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\DetourNavMesh.h(338,7): warning C4099: 'dtNavMesh': type name first seen using 'struct' now seen using 'class'
-  (compiling source file '/src/NavMeshSystem.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\DetourNavMesh.h(338,7):
-      see declaration of 'dtNavMesh'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\DetourNavMesh.h(676,15): warning C4099: 'dtNavMeshQuery': type name first seen using 'struct' now seen using 'class'
-  (compiling source file '/src/NavMeshSystem.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.h(22,8):
-      see declaration of 'dtNavMeshQuery'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\DetourNavMeshQuery.h(165,7): warning C4099: 'dtNavMeshQuery': type name first seen using 'struct' now seen using 'class'
-  (compiling source file '/src/NavMeshSystem.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\DetourNavMeshQuery.h(165,7):
-      see declaration of 'dtNavMeshQuery'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.h(142,66): warning C4100: 'index': unreferenced parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
-  
-  TestSystem.cpp
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(323,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(331,62): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(330,54): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(336,37): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(334,84): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(340,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(346,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(360,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(371,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(378,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(384,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(398,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(411,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(426,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(478,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(493,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(507,22): warning C4566: character represented by universal-character-name '\u2705' cannot be represented in the current code page (1252)
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(587,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(559,18): warning C4189: 'pathStatus': local variable is initialized but not referenced
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(230,19): warning C4456: declaration of 'ev' hides previous local declaration
-  (compiling source file '/src/ImguiManager.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(191,30):
-      see declaration of 'ev'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(296,62): warning C4459: declaration of 'rbo' hides global declaration
-  (compiling source file '/src/ImguiManager.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(62,46):
-      see declaration of 'Framework::rbo'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(330,25): warning C4459: declaration of 'filePath' hides global declaration
-  (compiling source file '/src/ImguiManager.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(64,24):
-      see declaration of 'Framework::filePath'
-  
-  TextureLoader.cpp
-  TextureLoaderDDS.cpp
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(698,37): warning C4100: 'deltaTime': unreferenced parameter
-  (compiling source file '/src/ImguiManager.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1061,42): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1070,38): warning C4566: character represented by universal-character-name '\u26A0' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1099,46): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1100,40): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1104,46): warning C4566: character represented by universal-character-name '\u2717' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1105,40): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-  Vector2D.cpp
-D:\Windows Kits\10\Include\10.0.26100.0\shared\minwindef.h(130,9): warning C4005: 'APIENTRY': macro redefinition
-  (compiling source file '/src/SignalHandler.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\glfw-3.4.bin.WIN64\include\GLFW\glfw3.h(123,11):
-      see previous definition of 'APIENTRY'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1141,42): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1146,46): warning C4566: character represented by universal-character-name '\u26A0' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1167,42): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1172,46): warning C4566: character represented by universal-character-name '\u26A0' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1282,40): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1443,40): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,151): warning C4100: 'ioSettings': unreferenced parameter
-  (compiling source file '/src/main.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,117): warning C4100: 'inManifold': unreferenced parameter
-  (compiling source file '/src/main.cpp')
-  
-  Vector3D.cpp
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1606,40): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1625,17): warning C4566: character represented by universal-character-name '\U0001F7E2' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1626,17): warning C4566: character represented by universal-character-name '\U0001F535' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1627,17): warning C4566: character represented by universal-character-name '\U0001F7E1' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1645,51): warning C4566: character represented by universal-character-name '\U0001F50D' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1692,43): warning C4566: character represented by universal-character-name '\u23F9' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1692,56): warning C4566: character represented by universal-character-name '\u25B6' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1830,41): warning C4566: character represented by universal-character-name '\U0001F50A' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1870,49): warning C4566: character represented by universal-character-name '\U0001F5D1' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1948,40): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2203,48): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2355,48): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PlayerInteractSystem.h(44,36): warning C4245: 'initializing': conversion from 'int' to 'Framework::Entity', signed/unsigned mismatch
-  (compiling source file '/src/main.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PlayerInteractSystem.h(45,36): warning C4245: 'initializing': conversion from 'int' to 'Framework::Entity', signed/unsigned mismatch
-  (compiling source file '/src/main.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2900,39): warning C4459: declaration of 'ecsInterface' hides global declaration
-  (compiling source file '/src/ImguiManager.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(38,31):
-      see declaration of 'ecsInterface'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,151): warning C4100: 'ioSettings': unreferenced parameter
-  (compiling source file '/src/PhysicsSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,117): warning C4100: 'inManifold': unreferenced parameter
-  (compiling source file '/src/PhysicsSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,151): warning C4100: 'ioSettings': unreferenced parameter
-  (compiling source file '/src/PhaseManager.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,117): warning C4100: 'inManifold': unreferenced parameter
-  (compiling source file '/src/PhaseManager.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/PropertyWidget.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\main.cpp(140,10): warning C4459: declaration of 'sceneInterface' hides global declaration
-  (compiling source file '/src/main.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\SceneInterface.h(22,24):
+      C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\SceneInterface.h(22,24):
       see declaration of 'Framework::sceneInterface'
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Terrain.cpp(89,53): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
-  (compiling source file '/src/Terrain.cpp')
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1106,21): warning C4458: declaration of 'cam' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(150,17):
+      see declaration of 'Framework::Graphics::cam'
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Terrain.cpp(93,53): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
-  (compiling source file '/src/Terrain.cpp')
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1255,68): warning C4100: 'amount': unreferenced formal parameter
+  (compiling source file '/src/Graphics.cpp')
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Terrain.cpp(97,53): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
-  (compiling source file '/src/Terrain.cpp')
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1255,56): warning C4100: 'axis': unreferenced formal parameter
+  (compiling source file '/src/Graphics.cpp')
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/PropertyWidget.cpp')
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1298,23): warning C4458: declaration of 'cam' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(150,17):
+      see declaration of 'Framework::Graphics::cam'
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/PropertyWidget.cpp')
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1304,23): warning C4458: declaration of 'cam' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(150,17):
+      see declaration of 'Framework::Graphics::cam'
   
-D:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\algorithm(3799,24): warning C4244: '=': conversion from 'int' to 'char', possible loss of data
-  (compiling source file '/src/ImguiManager.cpp')
-      D:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\algorithm(3799,24):
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1487,24): warning C4458: declaration of 'tex' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(170,16):
+      see declaration of 'Framework::Graphics::tex'
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1498,40): warning C4458: declaration of 'tex' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(170,16):
+      see declaration of 'Framework::Graphics::tex'
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1513,39): warning C4100: 'viewIndex': unreferenced formal parameter
+  (compiling source file '/src/Graphics.cpp')
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1650,40): warning C4458: declaration of 'mesh' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(169,24):
+      see declaration of 'Framework::Graphics::mesh'
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1840,17): warning C4458: declaration of 'cam' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(150,17):
+      see declaration of 'Framework::Graphics::cam'
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1893,59): warning C4018: '<': signed/unsigned mismatch
+  (compiling source file '/src/Graphics.cpp')
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1996,23): warning C4458: declaration of 'tex' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(170,16):
+      see declaration of 'Framework::Graphics::tex'
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2123,23): warning C4458: declaration of 'mesh' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(169,24):
+      see declaration of 'Framework::Graphics::mesh'
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2141,25): warning C4456: declaration of 'pointShadowUnit' hides previous local declaration
+  (compiling source file '/src/Graphics.cpp')
+      C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1889,13):
+      see declaration of 'pointShadowUnit'
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2142,25): warning C4456: declaration of 'pointShadowCount' hides previous local declaration
+  (compiling source file '/src/Graphics.cpp')
+      C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1890,13):
+      see declaration of 'pointShadowCount'
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2149,71): warning C4018: '<': signed/unsigned mismatch
+  (compiling source file '/src/Graphics.cpp')
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2158,46): warning C4456: declaration of 'entityId' hides previous local declaration
+  (compiling source file '/src/Graphics.cpp')
+      C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2041,26):
+      see declaration of 'entityId'
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2229,31): warning C4458: declaration of 'tex' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(170,16):
+      see declaration of 'Framework::Graphics::tex'
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2310,19): warning C4458: declaration of 'mesh' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(169,24):
+      see declaration of 'Framework::Graphics::mesh'
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2336,21): warning C4456: declaration of 'pointShadowUnit' hides previous local declaration
+  (compiling source file '/src/Graphics.cpp')
+      C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1889,13):
+      see declaration of 'pointShadowUnit'
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2337,21): warning C4456: declaration of 'pointShadowCount' hides previous local declaration
+  (compiling source file '/src/Graphics.cpp')
+      C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1890,13):
+      see declaration of 'pointShadowCount'
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2345,67): warning C4018: '<': signed/unsigned mismatch
+  (compiling source file '/src/Graphics.cpp')
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2354,42): warning C4456: declaration of 'entityId' hides previous local declaration
+  (compiling source file '/src/Graphics.cpp')
+      C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2308,25):
+      see declaration of 'entityId'
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2407,27): warning C4458: declaration of 'tex' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(170,16):
+      see declaration of 'Framework::Graphics::tex'
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2602,19): warning C4458: declaration of 'tex' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(170,16):
+      see declaration of 'Framework::Graphics::tex'
+  
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AssetManager.h(232,25): warning C4459: declaration of 'assets' hides global declaration
+  (compiling source file '/src/Graphics.cpp')
+      C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(72,17):
+      see declaration of 'Framework::assets'
+      C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AssetManager.h(232,25):
       the template instantiation context (the oldest one first) is
-          C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(332,18):
-          see reference to function template instantiation '_OutIt std::transform<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,int(__cdecl *)(int)>(const _InIt,const _InIt,_OutIt,_Fn)' being compiled
-          with
-          [
-              _OutIt=std::_String_iterator<std::_String_val<std::_Simple_types<char>>>,
-              _Elem=char,
-              _InIt=std::_String_iterator<std::_String_val<std::_Simple_types<char>>>,
-              _Fn=int (__cdecl *)(int)
-          ]
+          C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(79,100):
+          see reference to function template instantiation 'Framework::AssetHandle Framework::AssetManager::FindGuid<Framework::WindowConfig>(const std::optional<std::string> &)' being compiled
   
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/PhaseManager.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PropertyWidget.cpp(17,55): warning C4244: 'argument': conversion from 'uintptr_t' to 'int', possible loss of data
-  (compiling source file '/src/PropertyWidget.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/PhysicsSystem.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/PhaseManager.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/PhaseManager.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/PhysicsSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/PhysicsSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhaseManager.cpp(87,25): warning C4459: declaration of 'cam' hides global declaration
-  (compiling source file '/src/PhaseManager.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhaseManager.cpp(17,13):
-      see declaration of 'Framework::cam'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhaseManager.cpp(101,25): warning C4459: declaration of 'cam' hides global declaration
-  (compiling source file '/src/PhaseManager.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhaseManager.cpp(17,13):
-      see declaration of 'Framework::cam'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/ScriptingSystem.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/ScriptingSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/ScriptingSystem.cpp')
-  
-D:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\algorithm(3799,24): warning C4244: '=': conversion from 'int' to 'char', possible loss of data
-  (compiling source file '/src/TextureLoader.cpp')
-      D:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\algorithm(3799,24):
-      the template instantiation context (the oldest one first) is
-          C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\TextureLoader.cpp(25,14):
-          see reference to function template instantiation '_OutIt std::transform<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,int(__cdecl *)(int)>(const _InIt,const _InIt,_OutIt,_Fn)' being compiled
-          with
-          [
-              _OutIt=std::_String_iterator<std::_String_val<std::_Simple_types<char>>>,
-              _Elem=char,
-              _InIt=std::_String_iterator<std::_String_val<std::_Simple_types<char>>>,
-              _Fn=int (__cdecl *)(int)
-          ]
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/SceneManager.cpp')
-      C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/SceneManager.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/SceneManager.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(54,20): warning C4505: 'GetFileNameOnly': unreferenced function with internal linkage has been removed
-  (compiling source file '/src/ImguiManager.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,151): warning C4100: 'ioSettings': unreferenced parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,117): warning C4100: 'inManifold': unreferenced parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(770,46): warning C4100: 'L': unreferenced parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(777,47): warning C4100: 'L': unreferenced parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(820,50): warning C4100: 'L': unreferenced parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(842,51): warning C4100: 'L': unreferenced parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(856,51): warning C4100: 'L': unreferenced parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(865,49): warning C4100: 'L': unreferenced parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(878,54): warning C4100: 'L': unreferenced parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(887,56): warning C4100: 'L': unreferenced parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(895,58): warning C4100: 'L': unreferenced parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(1049,54): warning C4100: 'L': unreferenced parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
-  
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(875,1): warning C4702: unreachable code
-  ImGuizmo.cpp
-glew32s.lib(glew.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'glew32s.lib(glew.obj)' or at 'C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\vc120.pdb'; linking object as if no debug info
-Jolt.lib(BodyManager.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(BodyManager.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(ContactConstraintManager.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(ContactConstraintManager.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(IslandBuilder.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(IslandBuilder.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(LargeIslandSplitter.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(LargeIslandSplitter.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(PhysicsSystem.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(PhysicsSystem.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(Memory.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(Memory.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(BodyInterface.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(BodyInterface.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(SerializableObject.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(SerializableObject.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(MassProperties.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(MassProperties.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(Shape.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(Shape.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(JobSystemThreadPool.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(JobSystemThreadPool.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(NarrowPhaseQuery.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(NarrowPhaseQuery.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(ConvexShape.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(ConvexShape.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(RegisterTypes.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(RegisterTypes.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(BoxShape.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(BoxShape.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(DecoratedShape.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(DecoratedShape.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(OffsetCenterOfMassShape.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(OffsetCenterOfMassShape.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(CompoundShape.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(CompoundShape.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(StaticCompoundShape.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(StaticCompoundShape.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(IssueReporting.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(IssueReporting.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(Factory.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(Factory.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(MotionProperties.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(MotionProperties.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(Body.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(Body.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(BodyCreationSettings.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(BodyCreationSettings.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(SoftBodyMotionProperties.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(SoftBodyMotionProperties.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(SoftBodyShape.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(SoftBodyShape.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(Color.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(Color.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(TransformedShape.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(TransformedShape.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(ManifoldBetweenTwoFaces.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(ManifoldBetweenTwoFaces.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(ConstraintManager.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(ConstraintManager.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(BroadPhase.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(BroadPhase.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(PhysicsUpdateContext.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(PhysicsUpdateContext.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(BroadPhaseQuadTree.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(BroadPhaseQuadTree.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(CollisionDispatch.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(CollisionDispatch.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(CollisionGroup.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(CollisionGroup.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(PhysicsMaterial.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(PhysicsMaterial.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(RTTI.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(RTTI.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(ScaledShape.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(ScaledShape.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(Semaphore.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(Semaphore.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(JobSystemWithBarrier.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(JobSystemWithBarrier.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(OrientedBox.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(OrientedBox.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(TriangleShape.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(TriangleShape.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(PlaneShape.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(PlaneShape.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(SphereShape.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(SphereShape.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(CapsuleShape.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(CapsuleShape.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(TaperedCapsuleShape.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(TaperedCapsuleShape.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(CylinderShape.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(CylinderShape.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(TaperedCylinderShape.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(TaperedCylinderShape.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(MeshShape.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(MeshShape.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(ConvexHullShape.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(ConvexHullShape.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(HeightFieldShape.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(HeightFieldShape.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(RotatedTranslatedShape.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(RotatedTranslatedShape.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(MutableCompoundShape.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(MutableCompoundShape.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(EmptyShape.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(EmptyShape.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(PhysicsMaterialSimple.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(PhysicsMaterialSimple.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(Skeleton.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(Skeleton.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(SkeletalAnimation.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(SkeletalAnimation.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(Ragdoll.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(Ragdoll.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(PointConstraint.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(PointConstraint.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(SixDOFConstraint.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(SixDOFConstraint.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(SliderConstraint.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(SliderConstraint.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(SwingTwistConstraint.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(SwingTwistConstraint.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(DistanceConstraint.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(DistanceConstraint.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(HingeConstraint.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(HingeConstraint.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(FixedConstraint.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(FixedConstraint.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(ConeConstraint.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(ConeConstraint.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(PathConstraint.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(PathConstraint.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(PathConstraintPath.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(PathConstraintPath.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(PathConstraintPathHermite.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(PathConstraintPathHermite.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(VehicleConstraint.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(VehicleConstraint.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(WheeledVehicleController.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(WheeledVehicleController.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(TrackedVehicleController.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(TrackedVehicleController.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(MotorcycleController.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(MotorcycleController.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(RackAndPinionConstraint.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(RackAndPinionConstraint.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(GearConstraint.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(GearConstraint.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(PulleyConstraint.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(PulleyConstraint.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(MotorSettings.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(MotorSettings.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(PhysicsScene.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(PhysicsScene.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(GroupFilter.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(GroupFilter.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(GroupFilterTable.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(GroupFilterTable.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(SoftBodyCreationSettings.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(SoftBodyCreationSettings.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(CastConvexVsTriangles.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(CastConvexVsTriangles.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(CastSphereVsTriangles.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(CastSphereVsTriangles.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(CollideConvexVsTriangles.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(CollideConvexVsTriangles.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(CollideSphereVsTriangles.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(CollideSphereVsTriangles.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(QuadTree.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(QuadTree.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(StringTools.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(StringTools.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(Indexify.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(Indexify.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(TriangleSplitterBinning.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(TriangleSplitterBinning.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(TriangleSplitterMean.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(TriangleSplitterMean.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(AABBTreeBuilder.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(AABBTreeBuilder.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(ConvexHullBuilder.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(ConvexHullBuilder.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(Constraint.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(Constraint.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(TwoBodyConstraint.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(TwoBodyConstraint.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(SpringSettings.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(SpringSettings.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(VehicleAntiRollBar.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(VehicleAntiRollBar.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(Wheel.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(Wheel.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(VehicleController.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(VehicleController.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(LinearCurve.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(LinearCurve.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(VehicleEngine.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(VehicleEngine.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(VehicleTransmission.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(VehicleTransmission.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(VehicleDifferential.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(VehicleDifferential.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(VehicleTrack.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(VehicleTrack.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(SoftBodySharedSettings.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(SoftBodySharedSettings.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(TriangleSplitter.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(TriangleSplitter.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
-Jolt.lib(ConvexHullBuilder2D.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '0' doesn't match value '2' in imgui.obj
-Jolt.lib(ConvexHullBuilder2D.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MD_DynamicRelease' doesn't match value 'MDd_DynamicDebug' in imgui.obj
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(909,1): warning C4702: unreachable code
+glew32s.lib(glew.obj) : warning LNK4099: PDB '' was not found with 'glew32s.lib(glew.obj)' or at ''; linking object as if no debug info
+Jolt.lib(BodyManager.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(BodyManager.obj)' or at ''; linking object as if no debug info
+Jolt.lib(ContactConstraintManager.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(ContactConstraintManager.obj)' or at ''; linking object as if no debug info
+Jolt.lib(IslandBuilder.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(IslandBuilder.obj)' or at ''; linking object as if no debug info
+Jolt.lib(LargeIslandSplitter.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(LargeIslandSplitter.obj)' or at ''; linking object as if no debug info
+Jolt.lib(PhysicsSystem.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(PhysicsSystem.obj)' or at ''; linking object as if no debug info
+Jolt.lib(Memory.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(Memory.obj)' or at ''; linking object as if no debug info
+Jolt.lib(IssueReporting.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(IssueReporting.obj)' or at ''; linking object as if no debug info
+Jolt.lib(BodyInterface.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(BodyInterface.obj)' or at ''; linking object as if no debug info
+Jolt.lib(SerializableObject.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(SerializableObject.obj)' or at ''; linking object as if no debug info
+Jolt.lib(MassProperties.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(MassProperties.obj)' or at ''; linking object as if no debug info
+Jolt.lib(Shape.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(Shape.obj)' or at ''; linking object as if no debug info
+Jolt.lib(JobSystemThreadPool.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(JobSystemThreadPool.obj)' or at ''; linking object as if no debug info
+Jolt.lib(NarrowPhaseQuery.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(NarrowPhaseQuery.obj)' or at ''; linking object as if no debug info
+Jolt.lib(ConvexShape.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(ConvexShape.obj)' or at ''; linking object as if no debug info
+Jolt.lib(RegisterTypes.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(RegisterTypes.obj)' or at ''; linking object as if no debug info
+Jolt.lib(BoxShape.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(BoxShape.obj)' or at ''; linking object as if no debug info
+Jolt.lib(DecoratedShape.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(DecoratedShape.obj)' or at ''; linking object as if no debug info
+Jolt.lib(OffsetCenterOfMassShape.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(OffsetCenterOfMassShape.obj)' or at ''; linking object as if no debug info
+Jolt.lib(CompoundShape.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(CompoundShape.obj)' or at ''; linking object as if no debug info
+Jolt.lib(StaticCompoundShape.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(StaticCompoundShape.obj)' or at ''; linking object as if no debug info
+Jolt.lib(Factory.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(Factory.obj)' or at ''; linking object as if no debug info
+Jolt.lib(MotionProperties.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(MotionProperties.obj)' or at ''; linking object as if no debug info
+Jolt.lib(Body.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(Body.obj)' or at ''; linking object as if no debug info
+Jolt.lib(BodyCreationSettings.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(BodyCreationSettings.obj)' or at ''; linking object as if no debug info
+Jolt.lib(SoftBodyMotionProperties.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(SoftBodyMotionProperties.obj)' or at ''; linking object as if no debug info
+Jolt.lib(SoftBodyShape.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(SoftBodyShape.obj)' or at ''; linking object as if no debug info
+Jolt.lib(Color.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(Color.obj)' or at ''; linking object as if no debug info
+Jolt.lib(TransformedShape.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(TransformedShape.obj)' or at ''; linking object as if no debug info
+Jolt.lib(ManifoldBetweenTwoFaces.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(ManifoldBetweenTwoFaces.obj)' or at ''; linking object as if no debug info
+Jolt.lib(ConstraintManager.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(ConstraintManager.obj)' or at ''; linking object as if no debug info
+Jolt.lib(BroadPhase.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(BroadPhase.obj)' or at ''; linking object as if no debug info
+Jolt.lib(PhysicsUpdateContext.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(PhysicsUpdateContext.obj)' or at ''; linking object as if no debug info
+Jolt.lib(BroadPhaseQuadTree.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(BroadPhaseQuadTree.obj)' or at ''; linking object as if no debug info
+Jolt.lib(CollisionDispatch.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(CollisionDispatch.obj)' or at ''; linking object as if no debug info
+Jolt.lib(CollisionGroup.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(CollisionGroup.obj)' or at ''; linking object as if no debug info
+Jolt.lib(PhysicsMaterial.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(PhysicsMaterial.obj)' or at ''; linking object as if no debug info
+Jolt.lib(RTTI.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(RTTI.obj)' or at ''; linking object as if no debug info
+Jolt.lib(ScaledShape.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(ScaledShape.obj)' or at ''; linking object as if no debug info
+Jolt.lib(Semaphore.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(Semaphore.obj)' or at ''; linking object as if no debug info
+Jolt.lib(JobSystemWithBarrier.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(JobSystemWithBarrier.obj)' or at ''; linking object as if no debug info
+Jolt.lib(OrientedBox.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(OrientedBox.obj)' or at ''; linking object as if no debug info
+Jolt.lib(TriangleShape.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(TriangleShape.obj)' or at ''; linking object as if no debug info
+Jolt.lib(PlaneShape.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(PlaneShape.obj)' or at ''; linking object as if no debug info
+Jolt.lib(SphereShape.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(SphereShape.obj)' or at ''; linking object as if no debug info
+Jolt.lib(CapsuleShape.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(CapsuleShape.obj)' or at ''; linking object as if no debug info
+Jolt.lib(TaperedCapsuleShape.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(TaperedCapsuleShape.obj)' or at ''; linking object as if no debug info
+Jolt.lib(CylinderShape.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(CylinderShape.obj)' or at ''; linking object as if no debug info
+Jolt.lib(TaperedCylinderShape.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(TaperedCylinderShape.obj)' or at ''; linking object as if no debug info
+Jolt.lib(MeshShape.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(MeshShape.obj)' or at ''; linking object as if no debug info
+Jolt.lib(ConvexHullShape.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(ConvexHullShape.obj)' or at ''; linking object as if no debug info
+Jolt.lib(HeightFieldShape.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(HeightFieldShape.obj)' or at ''; linking object as if no debug info
+Jolt.lib(RotatedTranslatedShape.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(RotatedTranslatedShape.obj)' or at ''; linking object as if no debug info
+Jolt.lib(MutableCompoundShape.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(MutableCompoundShape.obj)' or at ''; linking object as if no debug info
+Jolt.lib(EmptyShape.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(EmptyShape.obj)' or at ''; linking object as if no debug info
+Jolt.lib(PhysicsMaterialSimple.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(PhysicsMaterialSimple.obj)' or at ''; linking object as if no debug info
+Jolt.lib(Skeleton.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(Skeleton.obj)' or at ''; linking object as if no debug info
+Jolt.lib(SkeletalAnimation.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(SkeletalAnimation.obj)' or at ''; linking object as if no debug info
+Jolt.lib(Ragdoll.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(Ragdoll.obj)' or at ''; linking object as if no debug info
+Jolt.lib(PointConstraint.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(PointConstraint.obj)' or at ''; linking object as if no debug info
+Jolt.lib(SixDOFConstraint.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(SixDOFConstraint.obj)' or at ''; linking object as if no debug info
+Jolt.lib(SliderConstraint.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(SliderConstraint.obj)' or at ''; linking object as if no debug info
+Jolt.lib(SwingTwistConstraint.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(SwingTwistConstraint.obj)' or at ''; linking object as if no debug info
+Jolt.lib(DistanceConstraint.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(DistanceConstraint.obj)' or at ''; linking object as if no debug info
+Jolt.lib(HingeConstraint.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(HingeConstraint.obj)' or at ''; linking object as if no debug info
+Jolt.lib(FixedConstraint.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(FixedConstraint.obj)' or at ''; linking object as if no debug info
+Jolt.lib(ConeConstraint.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(ConeConstraint.obj)' or at ''; linking object as if no debug info
+Jolt.lib(PathConstraint.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(PathConstraint.obj)' or at ''; linking object as if no debug info
+Jolt.lib(PathConstraintPath.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(PathConstraintPath.obj)' or at ''; linking object as if no debug info
+Jolt.lib(PathConstraintPathHermite.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(PathConstraintPathHermite.obj)' or at ''; linking object as if no debug info
+Jolt.lib(VehicleConstraint.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(VehicleConstraint.obj)' or at ''; linking object as if no debug info
+Jolt.lib(WheeledVehicleController.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(WheeledVehicleController.obj)' or at ''; linking object as if no debug info
+Jolt.lib(TrackedVehicleController.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(TrackedVehicleController.obj)' or at ''; linking object as if no debug info
+Jolt.lib(MotorcycleController.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(MotorcycleController.obj)' or at ''; linking object as if no debug info
+Jolt.lib(RackAndPinionConstraint.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(RackAndPinionConstraint.obj)' or at ''; linking object as if no debug info
+Jolt.lib(GearConstraint.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(GearConstraint.obj)' or at ''; linking object as if no debug info
+Jolt.lib(PulleyConstraint.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(PulleyConstraint.obj)' or at ''; linking object as if no debug info
+Jolt.lib(MotorSettings.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(MotorSettings.obj)' or at ''; linking object as if no debug info
+Jolt.lib(PhysicsScene.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(PhysicsScene.obj)' or at ''; linking object as if no debug info
+Jolt.lib(GroupFilter.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(GroupFilter.obj)' or at ''; linking object as if no debug info
+Jolt.lib(GroupFilterTable.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(GroupFilterTable.obj)' or at ''; linking object as if no debug info
+Jolt.lib(SoftBodyCreationSettings.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(SoftBodyCreationSettings.obj)' or at ''; linking object as if no debug info
+Jolt.lib(CastConvexVsTriangles.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(CastConvexVsTriangles.obj)' or at ''; linking object as if no debug info
+Jolt.lib(CastSphereVsTriangles.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(CastSphereVsTriangles.obj)' or at ''; linking object as if no debug info
+Jolt.lib(CollideConvexVsTriangles.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(CollideConvexVsTriangles.obj)' or at ''; linking object as if no debug info
+Jolt.lib(CollideSphereVsTriangles.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(CollideSphereVsTriangles.obj)' or at ''; linking object as if no debug info
+Jolt.lib(QuadTree.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(QuadTree.obj)' or at ''; linking object as if no debug info
+Jolt.lib(StringTools.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(StringTools.obj)' or at ''; linking object as if no debug info
+Jolt.lib(Indexify.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(Indexify.obj)' or at ''; linking object as if no debug info
+Jolt.lib(TriangleSplitterBinning.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(TriangleSplitterBinning.obj)' or at ''; linking object as if no debug info
+Jolt.lib(TriangleSplitterMean.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(TriangleSplitterMean.obj)' or at ''; linking object as if no debug info
+Jolt.lib(AABBTreeBuilder.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(AABBTreeBuilder.obj)' or at ''; linking object as if no debug info
+Jolt.lib(ConvexHullBuilder.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(ConvexHullBuilder.obj)' or at ''; linking object as if no debug info
+Jolt.lib(Constraint.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(Constraint.obj)' or at ''; linking object as if no debug info
+Jolt.lib(TwoBodyConstraint.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(TwoBodyConstraint.obj)' or at ''; linking object as if no debug info
+Jolt.lib(SpringSettings.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(SpringSettings.obj)' or at ''; linking object as if no debug info
+Jolt.lib(VehicleAntiRollBar.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(VehicleAntiRollBar.obj)' or at ''; linking object as if no debug info
+Jolt.lib(Wheel.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(Wheel.obj)' or at ''; linking object as if no debug info
+Jolt.lib(VehicleController.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(VehicleController.obj)' or at ''; linking object as if no debug info
+Jolt.lib(LinearCurve.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(LinearCurve.obj)' or at ''; linking object as if no debug info
+Jolt.lib(VehicleEngine.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(VehicleEngine.obj)' or at ''; linking object as if no debug info
+Jolt.lib(VehicleTransmission.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(VehicleTransmission.obj)' or at ''; linking object as if no debug info
+Jolt.lib(VehicleDifferential.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(VehicleDifferential.obj)' or at ''; linking object as if no debug info
+Jolt.lib(VehicleTrack.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(VehicleTrack.obj)' or at ''; linking object as if no debug info
+Jolt.lib(SoftBodySharedSettings.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(SoftBodySharedSettings.obj)' or at ''; linking object as if no debug info
+Jolt.lib(TriangleSplitter.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(TriangleSplitter.obj)' or at ''; linking object as if no debug info
+Jolt.lib(ConvexHullBuilder2D.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(ConvexHullBuilder2D.obj)' or at ''; linking object as if no debug info
 LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
 LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
-main.obj : error LNK2001: unresolved external symbol "bool (__cdecl* JPH::AssertFailed)(char const *,char const *,char const *,unsigned int)" (?AssertFailed@JPH@@3P6A_NPEBD00I@ZEA)
-PhysicsSystem.obj : error LNK2001: unresolved external symbol "bool (__cdecl* JPH::AssertFailed)(char const *,char const *,char const *,unsigned int)" (?AssertFailed@JPH@@3P6A_NPEBD00I@ZEA)
-C:\Users\Jasper\Downloads\SIT Stuff\Year 3\SEP Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe : fatal error LNK1120: 1 unresolved externals
+  Idesign Engine.vcxproj -> C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Debug\Idesign Engine.exe

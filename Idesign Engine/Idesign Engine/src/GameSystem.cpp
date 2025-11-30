@@ -3,19 +3,21 @@
 #include "EventManager.h"
 #include "ScriptingSystem.h"
 #include "GameSystem.h"
-#include <EventReceiverComponent.h> // Ensure this path is correct
+#include <EventReceiverComponent.h>
 #include <BoxColliderComponent.h>
 #include "Inputhandler.h"
 #include <RecipeBookManager.h>
-#include "PhaseManager.h" // Include the header
-
+#include "PhaseManager.h"
 
 extern Framework::Coordinator ecsInterface;
 Framework::RecipeBookManager* recipeBookManager = nullptr;
 
 namespace Framework {
-    int GameSystem::score = 0;
+    // Static member initialization
+    std::unordered_map<std::string, int> GameSystem::gameData;
+
     PhaseManager* phaseManager = nullptr;
+
     void GameSystem::Initialize() {
         if (recipeBookManager == nullptr) {
             recipeBookManager = new RecipeBookManager(&ecsInterface);
@@ -25,16 +27,19 @@ namespace Framework {
             phaseManager->Initialize();
         }
 
+        // Initialize default values
+        SetData("score", 0);
+        SetData("customerQueue", 0);
     }
+
     GameSystem::~GameSystem()
     {
         Shutdown();
     }
+
     void GameSystem::Update(float timeslice) {
         static bool wasBookOpen = false;
-
         if (GameSystem::bookOpen != wasBookOpen) {
-
             if (GameSystem::bookOpen) {
                 std::cout << "\nBook Opened!" << std::endl;
                 if (recipeBookManager) recipeBookManager->BuildBookUI();
@@ -45,44 +50,63 @@ namespace Framework {
             }
             wasBookOpen = GameSystem::bookOpen;
         }
-        
-
     }
 
-    void GameSystem::SetScore(int value)
+    // =========================================================
+    // DATA MANAGEMENT FUNCTIONS
+    // =========================================================
+
+    void GameSystem::SetData(const std::string& key, int value)
     {
-        score = value;
+        gameData[key] = value;
+        std::cout << "[GameSystem] Set " << key << " = " << value << std::endl;
     }
 
-    void GameSystem::AddScore(int delta)
+    void GameSystem::AddData(const std::string& key, int delta)
     {
-        score += delta;
+        // Check if key exists, if not create with 0
+        if (gameData.find(key) == gameData.end()) {
+            gameData[key] = 0;
+            std::cout << "[GameSystem] Created new data entry: " << key << " = 0" << std::endl;
+        }
+
+        gameData[key] += delta;
+        std::cout << "[GameSystem] Added " << delta << " to " << key << ", new value = " << gameData[key] << std::endl;
     }
 
-    int GameSystem::GetScore()
+    int GameSystem::GetData(const std::string& key)
     {
-        return score;
+        // Check if key exists, if not return 0
+        if (gameData.find(key) == gameData.end()) {
+            std::cout << "[GameSystem] Data key '" << key << "' not found, returning 0" << std::endl;
+            return 0;
+        }
+        return gameData[key];
+    }
+
+    bool GameSystem::HasData(const std::string& key)
+    {
+        return gameData.find(key) != gameData.end();
     }
 
     void GameSystem::Shutdown()
     {
         // 1. Clean up Recipe Book
         if (recipeBookManager) {
-            recipeBookManager->Shutdown(); // Clears the vectors/strings
-            delete recipeBookManager;      // Deletes the object
+            recipeBookManager->Shutdown();
+            delete recipeBookManager;
             recipeBookManager = nullptr;
         }
 
         // 2. Clean up Phase Manager
         if (phaseManager) {
-            // phaseManager->Shutdown(); // If it has one
             delete phaseManager;
             phaseManager = nullptr;
         }
 
+        // 3. Clear game data
+        gameData.clear();
+
         std::cout << "[GameSystem] Shutdown complete. Managers freed." << std::endl;
     }
 }
-
-
-

@@ -41,49 +41,61 @@ namespace Framework {
         // 1. State Change
         m_currentPhase = newPhase;
 
-        // ... existing transform logic ...
-        glm::vec3 targetPos = (m_currentPhase == GamePhase::Day) ? m_daySpawnPos : m_nightSpawnPos;
-        glm::vec3 targetRot = (m_currentPhase == GamePhase::Day) ? m_daySpawnRot : m_nightSpawnRot;
+        // [FIX 1] Initialize variables to prevent garbage data
+        glm::vec3 targetPos(0.0f);
+        glm::vec3 targetRot(0.0f);
+        bool shouldTeleport = false; // Flag to control teleportation
 
-        // ... existing teleport logic ...
-        TeleportPlayer(targetPos, targetRot);
+        // 2. Determine Target Transform based on Phase
+        if (m_currentPhase == GamePhase::Day) {
+            targetPos = m_daySpawnPos;
+            targetRot = m_daySpawnRot;
+            shouldTeleport = true;
+        }
+        else if (m_currentPhase == GamePhase::Night) {
+            targetPos = m_nightSpawnPos;
+            targetRot = m_nightSpawnRot;
+            shouldTeleport = true;
+        }
+        // [NOTE] We do NOT set shouldTeleport = true for Upgrade phase, 
+        // preventing the garbage data crash.
+
+        // 3. Teleport Player (Only if valid)
+        if (shouldTeleport) {
+            TeleportPlayer(targetPos, targetRot);
+        }
 
         // =========================================================
-        // [FIX] FORCE CURSOR STATE BASED ON PHASE
+        // FORCE CURSOR STATE
         // =========================================================
         InputHandler* input = InputHandler::GetInstance();
 
         if (m_currentPhase == GamePhase::Day || m_currentPhase == GamePhase::Night)
         {
-            // 1. Disable Engine UI States
             engineState.SetUpgrade(false);
             engineState.SetMenu(false);
             engineState.SetPaused(false);
 
-            // 2. Force InputHandler to Game Mode (Cursor Disabled)
-            if (input) {
-                input->SetUIFocused(false);
-            }
+            if (input) input->SetUIFocused(false);
         }
         else if (m_currentPhase == GamePhase::Upgrade)
         {
-            // Upgrade mode usually needs a cursor
             engineState.SetUpgrade(true);
-
-            // Optional: Force cursor ON for upgrade menu
-            if (input) {
-                input->SetUIFocused(true);
-            }
+            if (input) input->SetUIFocused(true);
         }
 
         // =========================================================
-        // EXISTING EVENT LOGIC
+        // EVENT & GRAPHICS LOGIC
         // =========================================================
 
         if (m_currentPhase == GamePhase::Day) {
             auto graphicsSystem = ecsInterface.GetSystem<Graphics>();
+            // [FIX 2] Check System BEFORE accessing Skybox
             if (graphicsSystem)
             {
+                Skybox* skybox = graphicsSystem->getSkybox();
+                if (skybox) skybox->setBlendFactor(0.0f); // [FIX 3] Check Skybox validity
+
                 Camera* cam = graphicsSystem->getCamera();
                 if (cam)
                 {
@@ -98,6 +110,9 @@ namespace Framework {
             auto graphicsSystem = ecsInterface.GetSystem<Graphics>();
             if (graphicsSystem)
             {
+                Skybox* skybox = graphicsSystem->getSkybox();
+                if (skybox) skybox->setBlendFactor(1.0f);
+
                 Camera* cam = graphicsSystem->getCamera();
                 if (cam)
                 {

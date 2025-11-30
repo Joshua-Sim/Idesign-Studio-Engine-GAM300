@@ -15,6 +15,10 @@ CustomerSystem.prefab_fill  = "ProgressBarFill_Prefab"
 CustomerSystem.tex_green = "Assets/Textures/green.png" 
 CustomerSystem.tex_red   = "Assets/Textures/red.png"
 
+-- Log prefab
+local prefab_log = "CustomerLog_Prefab"
+
+
 -- Threshold to turn red (0.3 = 30% time remaining)
 local color_swap_threshold = 0.3
 
@@ -39,13 +43,12 @@ local current_patience = 0.0
 local arrival_threshold = 1.5 
 
 -- [SCORE TRACKING]
-local current_score = 0
 local score_text_entity = nil
 
 -- [PHASE MANAGEMENT]
-local PHASE_NIGHT = 2   -- GamePhase::Night enum value
-local MAX_CUSTOMERS = 2   -- Total customers before ending night phase
-local customers_served = 0   -- Count of completed/failed customers
+local PHASE_NIGHT = 2
+local MAX_CUSTOMERS = 2
+local customers_served = 0
 
 -- =========================================================
 -- INTERNAL STATE
@@ -63,10 +66,7 @@ local entity_frame = nil
 local entity_fill = nil
 
 local current_bar_state = "green"
-
--- NEW STATE TRACKER: Used to detect phase transitions
 local previousPhase = -1 
-
 
 function CustomerSystem:on_init()
     print("[CustomerSystem] Initialized.")
@@ -94,7 +94,6 @@ function CustomerSystem:on_init()
         end
     end
     
-    -- Reset customer count upon initial system load/init
     self:ResetNightPhase()
     
     -- Keep the old callback for backwards compatibility
@@ -109,9 +108,7 @@ function CustomerSystem:on_update(dt)
     
     local currentPhase = GetPhase()
     
-    -- === CRITICAL PHASE TRANSITION CHECK ===
-    -- This block ensures that the customer system state is only reset 
-    -- when the game transitions *into* the night phase from another phase (Day/Upgrade).
+    -- Phase transition detection
     if currentPhase == PHASE_NIGHT and previousPhase ~= PHASE_NIGHT then
         print("[CustomerSystem] --- Detected transition INTO Night Phase. Resetting state. ---")
         self:ResetNightPhase()
@@ -119,14 +116,12 @@ function CustomerSystem:on_update(dt)
     
     previousPhase = currentPhase
     
-    -- Check if we're in Night phase (shop is open)
+    -- Check if we're in Night phase
     if currentPhase ~= PHASE_NIGHT then
-        -- Not in night phase, don't spawn or update customers
         return
     end
     
     -- Check if we've reached max customers
-    -- If customers_served is MAX_CUSTOMERS, we immediately end the night.
     if customers_served >= MAX_CUSTOMERS then
         print("[CustomerSystem] Max customers reached (" .. MAX_CUSTOMERS .. "), ending night phase...")
         self:EndNightPhase()
@@ -173,34 +168,17 @@ function CustomerSystem:on_update(dt)
                     if current_patience <= 0 then     
                         current_patience = 0
                         
-                        -- TIME EXPIRED - CUSTOMER LEAVES UNHAPPY
-                        print("[CustomerSystem] Time expired! Customer leaving unhappy.")
-                        
-                        -- Apply score penalty
-                        CustomerSystem:AddScore(-10)
-                        print("[CustomerSystem] -10 score penalty!")
-                        
-                        -- Increment customer count (failed customer)
-                        customers_served = customers_served + 1
-                        print("[CustomerSystem] Customers served: " .. customers_served .. "/" .. MAX_CUSTOMERS)
-                        
-                        -- Clean up progress bar
-                        self:DestroyBar()
-                        
-                        -- Tell customer to clean up and leave
+                        -- TIME EXPIRED - Fire CustomerFailed event
+                        print("[CustomerSystem] Time expired! Firing CustomerFailed event.")
+                        CustomerSystem:SpawnLog("Time's up! Customer left.")
+
                         if activeCustomer then
+
+                                 -- First, let customer cleanup and spawn log
                             FireEvent("CustomerTimeout", activeCustomer, activeCustomer, 0)
+
+                            FireEvent("CustomerFailed", activeCustomer, activeCustomer, 0)
                         end
-                        
-                        -- Reset temp state, waiting for next customer
-                        activeCustomer = nil
-                        hasSpawned = false
-                        is_at_counter = false
-                        current_patience = 0.0
-                        spawnTimer = 0
-                        current_bar_state = "green"
-                        
-                        print("[CustomerSystem] Ready for next customer.")
                         return
                     end
                     
@@ -240,7 +218,6 @@ function CustomerSystem:spawn_customer()
     local spawnPoint = FindEntityByName(self.spawnPointName)
     if spawnPoint == nil then return end
     
-    -- Play doorbell sound BEFORE spawning customer
     self:play_doorbell()
 
     local customer = SpawnPrefab(self.customerPrefabGUID, spawnPoint)
@@ -260,20 +237,36 @@ end
 -- =========================================================
 
 function CustomerSystem:AddScore(amount)
-    current_score = current_score + amount
-    print("[CustomerSystem] Score changed by " .. amount .. ", new score: " .. current_score)
+    -- Get current engine score
+    local current_score = GetScore()
+    
+    -- Add the delta
+    local new_score = current_score + amount
+    
+    -- Clamp to minimum of 0
+    if new_score < 0 then
+        new_score = 0
+    end
+    
+    -- Set the new score in engine
+    SetScore(new_score)
+    
+    print("[CustomerSystem] Score changed by " .. amount .. ", new score: " .. new_score)
     CustomerSystem:UpdateScoreDisplay()
 end
 
 function CustomerSystem:UpdateScoreDisplay()
     if score_text_entity then
+        -- Get score from engine
+        local current_score = GetScore()
         local score_text = "Score: " .. tostring(current_score)
         SetTextComponent(score_text_entity, "text", score_text)
     end
 end
 
 function CustomerSystem:GetScore()
-    return current_score
+    -- Return engine score
+    return GetScore()
 end
 
 -- =========================================================
@@ -283,10 +276,12 @@ end
 function CustomerSystem:ResetNightPhase()
     print("[CustomerSystem] Resetting night phase state...")
     
-    -- This is the critical reset point for the customer count.
     customers_served = 0
     
-    -- Cleanup active customer if one is still around from a failed/aborted night
+    -- Reset fixed queue to 2 for ordered customer requests
+    SetData("fixedQueue", 2)
+    print("[CustomerSystem] Set fixedQueue to 2 (strength -> vitality)")
+    
     if activeCustomer then 
         DestroyEntity(activeCustomer) 
         activeCustomer = nil
@@ -300,7 +295,7 @@ function CustomerSystem:ResetNightPhase()
     spawnTimer = 0
     current_bar_state = "green"
     
-    -- Update score display
+    -- Update score display (reads from engine)
     CustomerSystem:UpdateScoreDisplay()
     
     print("[CustomerSystem] Night phase reset complete. Customers served: " .. customers_served)
@@ -308,50 +303,83 @@ end
 
 function CustomerSystem:EndNightPhase()
     print("[CustomerSystem] ========== ENDING NIGHT PHASE ==========")
-    print("[CustomerSystem] Final Score: " .. current_score)
+    
+    local final_score = GetScore()
+    print("[CustomerSystem] Final Score: " .. final_score)
     print("[CustomerSystem] Customers Served: " .. customers_served .. "/" .. MAX_CUSTOMERS)
     
-    -- Clean up any active entities
     self:DestroyBar()
     
-    -- Call engine state transition
     GameStateEndNightPhase()
-    
-    -- CRITICAL: Removed the internal call to ResetNightPhase() here. 
-    -- The state will now be reset by the on_update block when the next PHASE_NIGHT starts.
     
     print("[CustomerSystem] Night phase ended, transitioning to upgrade phase...")
 end
 
 -- =========================================================
--- EVENT HANDLERS
+-- EVENT HANDLERS (called via EventReceiverComponent)
 -- =========================================================
 
+-- Called when customer successfully completes order
 function CustomerSystem.OnCustomerComplete(senderID, targetID, actionType)
-    print("[CustomerSystem] ========== CUSTOMER DONE ==========")
-    print("[CustomerSystem] Event received - Sender: " .. tostring(senderID) .. ", Target: " .. tostring(targetID))
+    print("[CustomerSystem] ========== CUSTOMER COMPLETE ==========")
+    print("[CustomerSystem] Event - Sender: " .. tostring(senderID) .. ", Target: " .. tostring(targetID))
     
     -- Add score reward
     CustomerSystem:AddScore(10)
     print("[CustomerSystem] +10 score reward!")
     
-    -- Increment customer count (successful customer)
+    -- Spawn success log
+    CustomerSystem:SpawnLog("Customer served! +10 points")
+    
+    -- Increment customer count
+    customers_served = customers_served + 1
+    print("[CustomerSystem] Customers served: " .. customers_served .. "/" .. MAX_CUSTOMERS)
+    
+    -- Clean up
+    CustomerSystem:DestroyBar()
+    
+    if activeCustomer then 
+        print("[CustomerSystem] Destroying customer entity: " .. activeCustomer)
+        DestroyEntity(activeCustomer) 
+    end
+    
+    -- Reset state
+    activeCustomer = nil
+    hasSpawned = false
+    is_at_counter = false 
+    current_patience = 0.0
+    spawnTimer = 0
+    current_bar_state = "green"
+    
+    print("[CustomerSystem] Ready for next customer.")
+end
+
+-- Called when customer fails (timeout OR too many wrong items)
+function CustomerSystem.OnCustomerFailed(senderID, targetID, actionType)
+    print("[CustomerSystem] ========== CUSTOMER FAILED ==========")
+    print("[CustomerSystem] Event - Sender: " .. tostring(senderID) .. ", Target: " .. tostring(targetID))
+    
+    -- Apply score penalty
+    CustomerSystem:AddScore(-10)
+    print("[CustomerSystem] -10 score penalty!")
+    
+    -- Increment customer count (failed customer still counts)
     customers_served = customers_served + 1
     print("[CustomerSystem] Customers served: " .. customers_served .. "/" .. MAX_CUSTOMERS)
     
     -- Clean up progress bar
     CustomerSystem:DestroyBar()
     
-    -- Destroy customer entity
-    if activeCustomer then 
-        print("[CustomerSystem] Destroying customer entity: " .. activeCustomer)
-        DestroyEntity(activeCustomer) 
+    -- Destroy the customer entity (textbox cleanup handled by CustomerTimeout event)
+    if activeCustomer then
+        print("[CustomerSystem] Destroying failed customer: " .. activeCustomer)
+        DestroyEntity(activeCustomer)
     end
     
-    -- Reset state to allow next spawn
+    -- Reset state for next customer
     activeCustomer = nil
     hasSpawned = false
-    is_at_counter = false 
+    is_at_counter = false
     current_patience = 0.0
     spawnTimer = 0
     current_bar_state = "green"
@@ -373,7 +401,7 @@ function CustomerSystem:SpawnBar(parentID)
     if entity_fill then
         SetScale(entity_fill, bar_length_max, bar_thickness, bar_thickness) 
     end
-    SetTexture(entity_fill, self.tex_green) -- Ensure initial color is green
+    SetTexture(entity_fill, self.tex_green)
 end
 
 function CustomerSystem:DestroyBar()
@@ -383,13 +411,11 @@ function CustomerSystem:DestroyBar()
 end
 
 function CustomerSystem:UpdateBillboard(px, pz, cx, cy, cz)
-    -- 1. Calculate Angle to Player
     local dx = px - cx
     local dz = pz - cz
     local angle_rad = math.atan2(dx, dz) 
     local angle_deg = math.deg(angle_rad)
 
-    -- 2. Position Frame (Center above customer)
     local frame_pos_x = cx + x_offset_right
     local frame_pos_y = cy + y_offset
     local frame_pos_z = cz 
@@ -400,21 +426,17 @@ function CustomerSystem:UpdateBillboard(px, pz, cx, cy, cz)
     end
 
     if entity_fill then
-        -- Rotate Fill to face player (Flipped 180 to match fill direction)
         SetRotation(entity_fill, 0.0, angle_deg + 180.0, 0.0)
         
-        -- 3. Calculate SIDEWAYS Offset (Left/Right alignment)
         local right_angle = angle_rad + (math.pi / 2.0)
         local side_dist = (bar_length_max * tune_x)
         
         local side_offset_x = side_dist * math.sin(right_angle)
         local side_offset_z = side_dist * math.cos(right_angle)
 
-        -- 4. Calculate DEPTH Offset (Forward/Back alignment)
         local depth_offset_x = billboard_depth_adjust * math.sin(angle_rad)
         local depth_offset_z = billboard_depth_adjust * math.cos(angle_rad)
 
-        -- 5. Combine positions
         local fill_x = frame_pos_x + side_offset_x + depth_offset_x
         local fill_y = frame_pos_y + tune_y
         local fill_z = frame_pos_z + side_offset_z + depth_offset_z
@@ -422,10 +444,6 @@ function CustomerSystem:UpdateBillboard(px, pz, cx, cy, cz)
         SetPosition(entity_fill, fill_x, fill_y, fill_z)
     end
 end
-
--- =========================================================
--- AUDIO
--- =========================================================
 
 function CustomerSystem:play_doorbell()
     local frogEntity = FindEntityByName("Frog")
@@ -438,5 +456,20 @@ function CustomerSystem:play_doorbell()
     PlayEntitySound(frogEntity)
     print("[CustomerSystem] Frog croaked, customer entering shop")
 end 
+
+-- =========================================================
+-- LOG HELPER FUNCTION
+-- =========================================================
+
+function CustomerSystem:SpawnLog(message)
+    local logEntity = SpawnPrefab(prefab_log)
+    
+    if logEntity then
+        SetTextComponent(logEntity, "text", message)
+        print("[CustomerSystem] Spawned log: " .. message)
+    else
+        print("[CustomerSystem] ERROR: Failed to spawn log!")
+    end
+end
 
 return CustomerSystem

@@ -201,6 +201,11 @@ namespace Framework {
 
         std::cout << "[AudioSystem] Initialized with 3D audio support" << std::endl;
         ImguiManager::LogSuccess("Initialized with 3D audio support", "AudioSystem");
+
+        // At the end of AudioSystem::Initialize()
+        // Auto-play default BGM
+        PlayAudio("event:/Level1BGM");
+        std::cout << "[AudioSystem] Auto-playing default BGM: event:/Level1BGM" << std::endl;
     }
 
     void AudioSystem::Update(float deltaTime) {

@@ -72,6 +72,16 @@ namespace Framework {
                 sceneManager.m_CurrentSceneBGMPath = "event:/Level1BGM";  // Default BGM for any scene
                 std::cout << "[SceneManager] Using default BGM for scene: " << load.sceneName << std::endl;
             }
+
+            // ACTUALLY PLAY THE BGM
+            if (g_AudioSystem && !sceneManager.m_CurrentSceneBGMPath.empty()) {
+                // Stop any currently playing BGM first
+                g_AudioSystem->StopEvent(sceneManager.m_CurrentSceneBGMPath);
+
+                // Play the new BGM
+                g_AudioSystem->PlayAudio(sceneManager.m_CurrentSceneBGMPath);
+                std::cout << "[SceneManager] Playing BGM: " << sceneManager.m_CurrentSceneBGMPath << std::endl;
+            }
         }
         sceneManager.m_PendingSceneLoads.clear();
     }

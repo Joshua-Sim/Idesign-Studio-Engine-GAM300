@@ -87,6 +87,7 @@ function M.OnInteract(entityID)
             -- RemoveSelectedItem() 
             
             ConsumeSelectedItem()
+            Sound.Play("event:/PlaceDownItem")
         end
     else
         print("[ChoppingBoard] Player is holding nothing.")

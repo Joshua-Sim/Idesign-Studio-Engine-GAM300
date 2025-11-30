@@ -29,6 +29,13 @@
             "tableRef": -1
         },
         {
+            "guid": "583b617e-c68e-4e62-81cf-a2b05eefa1e4",
+            "scriptPath": "Assets\\Scripts\\ChoppingBoard.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
             "guid": "3a5dd495-f311-4f19-991a-b6bfc5d63825",
             "scriptPath": "Assets\\Scripts\\Cauldron.lua",
             "hotReload": true,
@@ -80,13 +87,6 @@
         {
             "guid": "e7535686-93e2-4aa2-8052-4abfe9e7deda",
             "scriptPath": "Assets/Scripts/Pathfinding.lua",
-            "hotReload": true,
-            "initialized": false,
-            "tableRef": -1
-        },
-        {
-            "guid": "583b617e-c68e-4e62-81cf-a2b05eefa1e4",
-            "scriptPath": "Assets\\Scripts\\ChoppingBoard.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
