@@ -49,9 +49,9 @@
             "guid": "b220352c-c200-46f5-b805-578eb29bb705",
             "name": "ChoppedHerb1",
             "path": "Assets\\Objects\\ChoppedHerb1.obj",
-            "vao": 41,
-            "vbo": 81,
-            "ebo": 82,
+            "vao": 6,
+            "vbo": 11,
+            "ebo": 12,
             "indexCount": 2016
         },
         {
@@ -85,9 +85,9 @@
             "guid": "58c34bb7-ff4d-4b4d-8e24-20ffbd1e78c6",
             "name": "trunk",
             "path": "Assets\\Objects\\trunk.obj",
-            "vao": 9,
-            "vbo": 17,
-            "ebo": 18,
+            "vao": 10,
+            "vbo": 19,
+            "ebo": 20,
             "indexCount": 1644
         },
         {
@@ -103,9 +103,9 @@
             "guid": "2d0d1073-79fb-44de-9d09-86af64b2aabb",
             "name": "GreenPotion2",
             "path": "Assets\\Objects\\GreenPotion2.obj",
-            "vao": 11,
-            "vbo": 21,
-            "ebo": 22,
+            "vao": 12,
+            "vbo": 23,
+            "ebo": 24,
             "indexCount": 924
         },
         {
@@ -121,18 +121,18 @@
             "guid": "9b1a5ea2-0cbf-4533-b25f-a5a6813a35ce",
             "name": "pine",
             "path": "Assets\\Objects\\pine.obj",
-            "vao": 13,
-            "vbo": 25,
-            "ebo": 26,
+            "vao": 14,
+            "vbo": 27,
+            "ebo": 28,
             "indexCount": 2016
         },
         {
             "guid": "473d7163-f81d-41d7-bde2-5106f072d36a",
             "name": "vitality_potion",
             "path": "Assets\\Objects\\vitality_potion.obj",
-            "vao": 14,
-            "vbo": 27,
-            "ebo": 28,
+            "vao": 15,
+            "vbo": 29,
+            "ebo": 30,
             "indexCount": 780
         },
         {
@@ -175,28 +175,19 @@
             "guid": "61ccf513-cbc9-40a5-828f-95376b1b2c8e",
             "name": "Sphere",
             "path": "Assets/Objects/Sphere.obj",
-            "vao": 19,
-            "vbo": 37,
-            "ebo": 38,
-            "indexCount": 2304
-        },
-        {
-            "guid": "563cdf50-2687-4991-96cf-c5fa0be850ab",
-            "name": "Sphere",
-            "path": "Assets/Objects/Sphere.obj",
             "vao": 20,
             "vbo": 39,
             "ebo": 40,
             "indexCount": 2304
         },
         {
-            "guid": "9e1fcb62-0699-4a0b-ae75-d0670af44b1b",
-            "name": "plane2",
-            "path": "Assets/Objects/plane2.obj",
-            "vao": 22,
-            "vbo": 43,
-            "ebo": 44,
-            "indexCount": 231840
+            "guid": "563cdf50-2687-4991-96cf-c5fa0be850ab",
+            "name": "Sphere",
+            "path": "Assets/Objects/Sphere.obj",
+            "vao": 21,
+            "vbo": 41,
+            "ebo": 42,
+            "indexCount": 2304
         },
         {
             "guid": "e902f0d7-a022-45fc-9c17-2a98cbdb793e",
@@ -208,12 +199,21 @@
             "indexCount": 240
         },
         {
+            "guid": "9e1fcb62-0699-4a0b-ae75-d0670af44b1b",
+            "name": "plane2",
+            "path": "Assets/Objects/plane2.obj",
+            "vao": 22,
+            "vbo": 43,
+            "ebo": 44,
+            "indexCount": 231840
+        },
+        {
             "guid": "3a68b780-632d-49d8-b45d-33b1ac035172",
             "name": "plane",
             "path": "Assets/Objects/plane.obj",
-            "vao": 23,
-            "vbo": 45,
-            "ebo": 46,
+            "vao": 24,
+            "vbo": 47,
+            "ebo": 48,
             "indexCount": 76662
         },
         {
@@ -226,6 +226,15 @@
             "indexCount": 40356
         },
         {
+            "guid": "a25723a2-f9bf-4939-b80d-962eb537dd2e",
+            "name": "strength_potion",
+            "path": "Assets\\Objects\\strength_potion.obj",
+            "vao": 27,
+            "vbo": 53,
+            "ebo": 54,
+            "indexCount": 924
+        },
+        {
             "guid": "fe86c54b-7cc2-471c-9d7e-0bce31089b5a",
             "name": "Cylinder",
             "path": "Assets/Objects/Cylinder.obj",
@@ -233,15 +242,6 @@
             "vbo": 51,
             "ebo": 52,
             "indexCount": 240
-        },
-        {
-            "guid": "a25723a2-f9bf-4939-b80d-962eb537dd2e",
-            "name": "strength_potion",
-            "path": "Assets\\Objects\\strength_potion.obj",
-            "vao": 25,
-            "vbo": 49,
-            "ebo": 50,
-            "indexCount": 924
         },
         {
             "guid": "da032094-6e5c-40fe-b6f0-39a9d542ffe5",
@@ -274,9 +274,9 @@
             "guid": "4d2d79f0-74c7-4d6a-9998-aa6c7f0d5bc9",
             "name": "BlueVial",
             "path": "Assets\\Objects\\BlueVial.obj",
-            "vao": 30,
-            "vbo": 59,
-            "ebo": 60,
+            "vao": 31,
+            "vbo": 61,
+            "ebo": 62,
             "indexCount": 1116
         },
         {
@@ -310,45 +310,45 @@
             "guid": "fa8fc24d-ae88-4495-b5b9-75de860dbd54",
             "name": "YellowVIal",
             "path": "Assets\\Objects\\YellowVIal.obj",
-            "vao": 34,
-            "vbo": 67,
-            "ebo": 68,
+            "vao": 35,
+            "vbo": 69,
+            "ebo": 70,
             "indexCount": 1116
         },
         {
             "guid": "671f6bcc-5844-4c6d-9093-cb8e0c817831",
             "name": "GreenPotion",
             "path": "Assets\\Objects\\GreenPotion.obj",
-            "vao": 35,
-            "vbo": 69,
-            "ebo": 70,
+            "vao": 36,
+            "vbo": 71,
+            "ebo": 72,
             "indexCount": 924
         },
         {
             "guid": "4de6e54b-0df4-4ff4-9d1c-51a61190fe92",
             "name": "GreenPotion3",
             "path": "Assets\\Objects\\GreenPotion3.obj",
-            "vao": 36,
-            "vbo": 71,
-            "ebo": 72,
+            "vao": 37,
+            "vbo": 73,
+            "ebo": 74,
             "indexCount": 780
         },
         {
             "guid": "81ace677-17ae-4158-9b13-e11aeafc3fe0",
             "name": "RedPotion2",
             "path": "Assets\\Objects\\RedPotion2.obj",
-            "vao": 37,
-            "vbo": 73,
-            "ebo": 74,
+            "vao": 38,
+            "vbo": 75,
+            "ebo": 76,
             "indexCount": 924
         },
         {
             "guid": "a54638fb-f319-4fa3-b94b-a2a06b39e080",
             "name": "RedVial",
             "path": "Assets\\Objects\\RedVial.obj",
-            "vao": 38,
-            "vbo": 75,
-            "ebo": 76,
+            "vao": 39,
+            "vbo": 77,
+            "ebo": 78,
             "indexCount": 1116
         },
         {

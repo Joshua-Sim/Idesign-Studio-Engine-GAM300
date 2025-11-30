@@ -922,7 +922,7 @@ namespace Framework {
 
         static int lua_GameStateEndNightPhase(lua_State* L)
         {
-            engineState.SetPaused(true);
+            engineState.SetPaused(false);
             engineState.SetUpgrade(true);
 
             phaseManager->SetPhase(GamePhase::Upgrade);
