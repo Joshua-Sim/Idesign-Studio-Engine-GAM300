@@ -1059,7 +1059,8 @@ namespace Framework {
     }
 
     Camera* Graphics::getCamera() {
-        return &cam;
+        // Dynamic lookup: Check the mode *right now* and return the correct pointer
+        return (activeCameraMode == CameraMode::Scene) ? &sceneCamera : &gameCamera;
     }
 
     void Graphics::framebuffer_size_callback(GLFWwindow* window, int w, int h)
