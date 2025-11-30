@@ -84,7 +84,8 @@
             "ItemComponent": {
                 "name": "unchopped_herb",
                 "isIngredient": true,
-                "isChoppable": true
+                "isChoppable": true,
+                "toDestroyWhenPicked": true
             }
         }
     }

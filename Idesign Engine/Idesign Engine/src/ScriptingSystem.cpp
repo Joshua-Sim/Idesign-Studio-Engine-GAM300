@@ -25,6 +25,7 @@
 #include "InputHandler.h"
 #include "SceneInterface.h"
 #include "PhaseManager.h"
+#include <Core.h>
 
 extern Framework::Coordinator ecsInterface;
 
@@ -906,6 +907,9 @@ namespace Framework {
             // Send exit message
             MessageBus::Get().SendImmediate(ExitPlayModeMessage());
 
+            if (CORE) {
+                CORE->EndGameLoop();
+            }
             exit(0); // Immediately terminate app, but skips cleanup
             return 0;
         }
