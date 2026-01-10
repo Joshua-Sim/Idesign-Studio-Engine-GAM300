@@ -33,3 +33,7 @@
 !**/Assets/**/*.obj
 
 !**/lib/**/[Rr]elease/
+!.props
+!.vcxproj
+!.filters
+!.sln
