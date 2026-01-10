@@ -22,9 +22,7 @@
 *.log
 *.pch
 *.idb
-# Allow Release folders inside the lib directory
-!lib/**/[Rr]elease/
-!**/lib/**/[Rr]elease/
+
 # ==========================================
 # 3. ASSET EXCEPTIONS (Keep at bottom)
 # ==========================================
@@ -33,3 +31,5 @@
 !**/Assets/
 !**/Assets/**
 !**/Assets/**/*.obj
+
+!**/lib/**/[Rr]elease/
