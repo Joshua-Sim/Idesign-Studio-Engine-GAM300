@@ -1,33 +1,30 @@
-# ==========================================
-# 1. GLOBAL IGNORES (Folders at any depth)
-# ==========================================
-# This catches your nested x64/Release and x64/Debug folders
-**/[Xx]64/
-**/[Rr]elease/
-**/[Dd]ebug/
-**/.vs/
-**/[Bb]in/
-**/[Oo]bj/
+# =============================
+# Visual Studio build folders
+# =============================
+.vs/
+[Bb]in/
+[Oo]bj/
 
-# ==========================================
-# 2. BUILD ARTIFACTS (Extensions)
-# ==========================================
+# =============================
+# Platform / config folders
+# =============================
+x64/Debug/
+x64/Release/
+
+# =============================
+# Build artifacts
+# =============================
 *.obj
 *.pdb
-*.exe
 *.ilk
 *.tlog
-*.recipe
-*.lastbuildstate
-*.log
+*.exe
 *.pch
 *.idb
+*.log
 
-# ==========================================
-# 3. ASSET EXCEPTIONS (Keep at bottom)
-# ==========================================
-# This ensures that .obj files in Assets are saved 
-# even though we ignored *.obj above.
-!**/Assets/
-!**/Assets/**
-!**/Assets/**/*.obj
+# =============================
+# KEEP runtime DLLs
+# =============================
+!**/*.dll
+!**/*.lib
