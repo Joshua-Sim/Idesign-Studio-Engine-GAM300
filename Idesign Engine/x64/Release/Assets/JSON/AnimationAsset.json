@@ -1,0 +1,37 @@
+{
+    "animation": [
+        {
+            "guid": "e4d836ef-c0bc-46bb-914c-c1e05246eb81",
+            "name": "knifechoppingwithBONEFIXED4",
+            "path": "Assets/Objects/knifechoppingwithBONEFIXED4.fbx",
+            "defaultAnimationName": "",
+            "animationSpeed": 1.0,
+            "bLoops": true,
+            "bPlayOnStart": true,
+            "currentTime": 0.0,
+            "vbo_skinning": 0
+        },
+        {
+            "guid": "af14de83-981d-448a-a6e3-07a92a48e676",
+            "name": "CauldronStiring",
+            "path": "Assets\\Objects\\CauldronStiring.fbx",
+            "defaultAnimationName": "",
+            "animationSpeed": 1.0,
+            "bLoops": true,
+            "bPlayOnStart": true,
+            "currentTime": 0.0,
+            "vbo_skinning": 0
+        },
+        {
+            "guid": "e6e64140-6e45-4eb9-986a-e146404672bf",
+            "name": "cauldronwithoutspoon",
+            "path": "Assets\\Objects\\cauldronwithoutspoon.fbx",
+            "defaultAnimationName": "",
+            "animationSpeed": 1.0,
+            "bLoops": true,
+            "bPlayOnStart": true,
+            "currentTime": 0.0,
+            "vbo_skinning": 0
+        }
+    ]
+}
