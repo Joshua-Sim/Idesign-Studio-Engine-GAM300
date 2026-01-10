@@ -1,7 +1,7 @@
 # ==========================================
 # 1. GLOBAL IGNORES (Folders at any depth)
 # ==========================================
-# This catches your nested x64/Release and x64/Debug folders
+# This catches your build output folders (trash)
 **/[Xx]64/
 **/[Rr]elease/
 **/[Dd]ebug/
@@ -24,7 +24,7 @@
 *.idb
 
 # ==========================================
-# 3. ASSET EXCEPTIONS (Keep at bottom)
+# 3. ASSET EXCEPTIONS
 # ==========================================
 # This ensures that .obj files in Assets are saved 
 # even though we ignored *.obj above.
@@ -32,8 +32,24 @@
 !**/Assets/**
 !**/Assets/**/*.obj
 
+# ==========================================
+# 4. LIBRARY EXCEPTIONS (Critical Fix)
+# ==========================================
+# This forces Git to LOOK INSIDE your "lib" folder,
+# even if it contains folders named "x64" or "Release".
+!lib/
+!lib/**
+
+# Explicitly un-ignore the forbidden folder names inside lib
+!**/lib/**/[Xx]64/
 !**/lib/**/[Rr]elease/
-!.props
-!.vcxproj
-!.filters
-!.sln
+!**/lib/**/[Dd]ebug/
+
+# ==========================================
+# 5. PROJECT FILES (Force Track)
+# ==========================================
+# Ensure main project files are never ignored
+!*.sln
+!*.vcxproj
+!*.filters
+!*.props
