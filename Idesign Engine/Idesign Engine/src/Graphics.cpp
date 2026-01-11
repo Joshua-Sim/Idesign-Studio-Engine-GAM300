@@ -778,7 +778,7 @@ namespace Framework {
         {
             // 1. Calculate the Light's View/Projection matrix
             float near_plane = 1.0f, far_plane = 200.0f;
-            float ortho_size = 1000.0f;
+            float ortho_size = 100.0f;
             glm::mat4 lightProjection = glm::ortho(-ortho_size, ortho_size, -ortho_size, ortho_size, near_plane, far_plane);
             //glm::vec3 lightPos = frameSun.position - frameSun.direction * 20.0f;
             glm::vec3 lookTarget = glm::vec3(0.0f, 0.0f, 0.0f);
