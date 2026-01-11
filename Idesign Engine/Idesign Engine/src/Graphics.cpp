@@ -778,7 +778,7 @@ namespace Framework {
         {
             // 1. Calculate the Light's View/Projection matrix
             float near_plane = 1.0f, far_plane = 200.0f;
-            float ortho_size = 100.0f;
+            float ortho_size = 1000.0f;
             glm::mat4 lightProjection = glm::ortho(-ortho_size, ortho_size, -ortho_size, ortho_size, near_plane, far_plane);
             //glm::vec3 lightPos = frameSun.position - frameSun.direction * 20.0f;
             glm::vec3 lookTarget = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -858,11 +858,12 @@ namespace Framework {
             if (light.type != LightType::Point || !light.castsShadow) continue;
 
             auto& transform = ecsInterface.GetComponent<TransformComponent>(entityId);
+            glm::vec3 lightPos = transform.position;
 
-            // Store the far plane (radius) for the shader
+            // Set far plane for normalization
             light.shadowFarPlane = light.radius;
             pointShadowShader.setFloat("uFarPlane", light.shadowFarPlane);
-            pointShadowShader.setVec3("uLightPos", transform.position);
+            pointShadowShader.setVec3("uLightPos", lightPos);
 
             if (light.shadowFBO == 0)
             {
@@ -905,37 +906,32 @@ namespace Framework {
 
             // --- 2. Calculate the 6 View matrices and 1 Projection matrix ---
             float near_plane = 0.1f;
-            glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f),
-                (float)POINT_SHADOW_WIDTH / (float)POINT_SHADOW_HEIGHT,
-                near_plane, light.shadowFarPlane);
+            glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), 1.0f, near_plane, light.shadowFarPlane);
 
             std::vector<glm::mat4> shadowTransforms;
-            glm::vec3 lightPos = transform.position;
-            shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0))); // +X
-            shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(-1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0))); // -X
-            shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 1.0, 0.0), glm::vec3(0.0, 0.0, 1.0))); // +Y
-            shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, -1.0, 0.0), glm::vec3(0.0, 0.0, -1.0))); // -Y
-            shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0, -1.0, 0.0))); // +Z
-            shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, -1.0, 0.0))); // -Z
+            // Standard OpenGL Cubemap Orientations: Target, Up
+            shadowTransforms.push_back(shadowProj* glm::lookAt(lightPos, lightPos + glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0))); // +X
+            shadowTransforms.push_back(shadowProj* glm::lookAt(lightPos, lightPos + glm::vec3(-1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0))); // -X
+            shadowTransforms.push_back(shadowProj* glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 1.0, 0.0), glm::vec3(0.0, 0.0, 1.0))); // +Y
+            shadowTransforms.push_back(shadowProj* glm::lookAt(lightPos, lightPos + glm::vec3(0.0, -1.0, 0.0), glm::vec3(0.0, 0.0, -1.0))); // -Y
+            shadowTransforms.push_back(shadowProj* glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0, -1.0, 0.0))); // +Z
+            shadowTransforms.push_back(shadowProj* glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, -1.0, 0.0))); // -Z
 
-            // --- 3. Render the scene 6 times ---
             glViewport(0, 0, POINT_SHADOW_WIDTH, POINT_SHADOW_HEIGHT);
             glBindFramebuffer(GL_FRAMEBUFFER, light.shadowFBO);
-            glEnable(GL_DEPTH_TEST);
 
             for (unsigned int i = 0; i < 6; ++i)
             {
-                // Attach the correct cubemap face for rendering
                 glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                     GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, light.shadowDepthCubeMap, 0);
 
-                // Clear *both* the color (our distance) and depth (for testing)
-                glClearColor(FLT_MAX, 0.0, 0.0, 1.0); // Clear distance to max
+                // FIX 1: Clear to 1.0 instead of FLT_MAX
+                glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
                 pointShadowShader.setMat4("uLightSpaceMatrix", shadowTransforms[i]);
 
-                // --- Render the entire scene (terrain + entities) ---
+                // Render scene
                 pointShadowShader.setMat4("uModel", glm::mat4(1.0f));
                 terrain.draw();
 
@@ -974,8 +970,9 @@ namespace Framework {
         } 
 
         // --- 4. Restore default state ---
-        glCullFace(GL_BACK);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glViewport(0, 0, m_fbW, m_fbH); // Reset viewport to window size
+        glEnable(GL_CULL_FACE);
 
         // ====================================================================
         // 1. RENDER VIEW 0: GAME (grounded)
