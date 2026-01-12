@@ -2042,6 +2042,7 @@ namespace Framework {
         for (auto const& entityId : opaqueEntities)
         {
             auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
+            if (!tr.isActive) continue; // Skip render if isactive is false.
 
             glm::vec3 drawScale = tr.scale;
 
@@ -2306,11 +2307,12 @@ namespace Framework {
 
         for (auto it = transparentEntities.rbegin(); it != transparentEntities.rend(); ++it)
         {
+
             auto const& entityId = it->second;
             auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
             auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
 
-
+            if (!tr.isActive) continue; // Skip pass if isactive is false
 
             glm::mat4 model(1.0f);
             model = glm::translate(model, tr.position);
@@ -2436,7 +2438,11 @@ namespace Framework {
         for (auto const& entityId : mEntities) {
             if (ecsInterface.HasComponent<MeshProperties>(entityId) && ecsInterface.GetComponent<MeshProperties>(entityId).vao != 0)
             {
+
                 auto& transformComponent = ecsInterface.GetComponent<TransformComponent>(entityId);
+
+                if (transformComponent.isActive == false) continue; // Skip rendering inactive entities, go to next entity
+
                 glm::mat4 model(1.0f);
                 model = glm::translate(model, transformComponent.position);
                 model = glm::rotate(model, transformComponent.rotation.x, glm::vec3(1, 0, 0));
@@ -2602,6 +2608,8 @@ namespace Framework {
             auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
             auto& tex = ecsInterface.GetComponent<TextureProperties>(entityId);
 
+            if (!tr.isActive) continue; // Skip pass if isactive is false
+
             // 2. Bind Texture
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, tex.textureID);
@@ -2636,6 +2644,8 @@ namespace Framework {
         {
             auto& txt = ecsInterface.GetComponent<TextProperties>(e);
             auto& tr = ecsInterface.GetComponent<TransformComponent>(e);
+
+            if (!tr.isActive) continue; // Skip pass if isactive is false
 
             // Normalized coordinates (0.0 to 1.0) -> Screen Coordinates
             float px = glm::clamp(tr.position.x, 0.0f, 1.0f);
