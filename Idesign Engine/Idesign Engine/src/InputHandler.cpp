@@ -10,6 +10,9 @@
 #include "Graphics.h"
 #include "Coordinator.h"
 #include "ButtonSystem.h" // Ensure this is included
+#include <RecipeBookManager.h>
+
+extern Framework::RecipeBookManager* recipeBookManager;
 
 extern Framework::Coordinator ecsInterface;
 namespace Framework {
@@ -224,6 +227,10 @@ namespace Framework {
         }
     }
 
+    void InputHandler::SetRecipeManager(Framework::RecipeBookManager* manager) {
+        m_recipeManager = manager;
+    }
+
     void InputHandler::SetCamera(Camera* camera) {
         this->mainCamera = camera;
     }
@@ -318,6 +325,11 @@ namespace Framework {
                 if (buttonSystem)
                 {
                     buttonSystem->HandleClickUV(u, v);
+                }
+                // InputHandler.cpp MouseButtonCallback
+                if (inputSystem->m_recipeManager) {
+                    std::cout << "hi";
+                    inputSystem->m_recipeManager->OnMouseClick(u, v);
                 }
             }
         }

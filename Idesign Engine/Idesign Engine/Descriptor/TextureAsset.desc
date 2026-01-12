@@ -1,5 +1,5 @@
 {
-    "count": 90,
+    "count": 93,
     "entries": [
         {
             "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
@@ -83,6 +83,12 @@
             "guid": "096e3cd9-c61d-470e-ab51-5cacb54601d1",
             "name": "upgrades",
             "path": "Assets\\Textures\\upgrades.png",
+            "isUI": false
+        },
+        {
+            "guid": "02c0cd97-ec1e-4fdb-89a6-f5442b809d6f",
+            "name": "Item_IngredientBG",
+            "path": "Assets\\Textures\\Item_IngredientBG.png",
             "isUI": false
         },
         {
@@ -539,6 +545,18 @@
             "guid": "b1ed784d-987d-41f5-9ab0-1a35ca1b3a8d",
             "name": "snow_dark",
             "path": "Assets\\Textures\\snow_dark.png",
+            "isUI": false
+        },
+        {
+            "guid": "8666c95b-015a-46b8-99b7-3c645a658e87",
+            "name": "Item_DefaultBG",
+            "path": "Assets\\Textures\\Item_DefaultBG.png",
+            "isUI": false
+        },
+        {
+            "guid": "6aa0b393-fd83-4896-9e9c-6cf5ef6fb8fa",
+            "name": "Item_PotionBG",
+            "path": "Assets\\Textures\\Item_PotionBG.png",
             "isUI": false
         }
     ]

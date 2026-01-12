@@ -653,12 +653,13 @@ namespace Framework
 
                     int currentItemIndex = Framework::ItemNameToId(item.name);
 
-                    if (ImGui::Combo("Item Select", &currentItemIndex, Framework::kItemNames, Framework::kItemCount))
+                    if (ImGui::Combo("Item Select", &currentItemIndex, &Framework::ItemGetter, nullptr, Framework::kItemCount))
                     {
                         // If selection changed, update the string immediately
                         if (currentItemIndex >= 0 && currentItemIndex < Framework::kItemCount)
                         {
-                            item.name = Framework::kItemNames[currentItemIndex];
+                            // CHANGED: Access the database directly to get the ID string
+                            item.name = Framework::GetItemDatabase()[currentItemIndex].id;
                         }
                     }
 

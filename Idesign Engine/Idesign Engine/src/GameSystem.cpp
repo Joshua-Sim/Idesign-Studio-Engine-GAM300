@@ -8,9 +8,15 @@
 #include "Inputhandler.h"
 #include <RecipeBookManager.h>
 #include "PhaseManager.h"
+#include <fstream>                      
+#include <rapidjson/document.h>         
+#include <rapidjson/istreamwrapper.h>   
+#include "ItemComponent.h"
 
 extern Framework::Coordinator ecsInterface;
 Framework::RecipeBookManager* recipeBookManager = nullptr;
+Framework::InputHandler* inputHandler = nullptr;
+
 
 namespace Framework {
     // Static member initialization
@@ -18,10 +24,29 @@ namespace Framework {
 
     PhaseManager* phaseManager = nullptr;
 
+
+
     void GameSystem::Initialize() {
+
+        std::filesystem::path projectRoot = Framework::ScriptingSystem::GetProjectRoot();
+        std::string itemsPath = (projectRoot / "Assets/JSON/items.json").string();
+        std::cout << "\nAAAAAAAAAAAAAAAAAA\n" << itemsPath << "\nAAAAAAAAAAAAAAAAAA\n";
+        bool success = Framework::InitializeItemDatabase(itemsPath);
+
+        if (!success) {
+            std::cerr << "CRITICAL WARNING: Items failed to load!" << std::endl;
+            // Optional: return -1; if the game cannot function without items
+        }
+
         if (recipeBookManager == nullptr) {
             recipeBookManager = new RecipeBookManager(&ecsInterface);
+
+            if (InputHandler::GetInstance()) {
+                InputHandler::GetInstance()->SetRecipeManager(recipeBookManager);
+                std::cout << " [GameSystem] Linked RecipeBookManager to InputHandler." << std::endl;
+            }
         }
+
         if (phaseManager == nullptr) {
             phaseManager = new PhaseManager(&ecsInterface);
             phaseManager->Initialize();

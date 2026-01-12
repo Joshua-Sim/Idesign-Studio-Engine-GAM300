@@ -46,6 +46,8 @@
 #include "TypeRegistry.h"
 #include "SceneInterface.h"
 
+
+
 using namespace Framework;
 
 void EnableMemoryLeakChecking(int breakAlloc = -1)
@@ -138,6 +140,8 @@ int main(void)
     auto playerInteractSystem = ecsInterface.RegisterSystem<PlayerInteractSystem>();
     auto eventSystem = ecsInterface.RegisterSystem<EventSystem>();
     auto sceneInterface = ecsInterface.RegisterSystem<SceneInterface>();
+
+
 
     ecsInterface.RegisterComponent<EventSenderComponent>(); 
     ecsInterface.RegisterComponent<EventReceiverComponent>();
