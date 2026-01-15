@@ -43,6 +43,7 @@
 #include "ButtonSystem.h"
 #include "ButtonComponent.h"
 #include "RecipeBookManager.h"
+#include "DialogueSystem.h"
 #include "TypeRegistry.h"
 #include "SceneInterface.h"
 
@@ -137,6 +138,7 @@ int main(void)
     ecsInterface.RegisterComponent<PlayerComponent>(); // register player component here coz of the interact system
     auto playerInteractSystem = ecsInterface.RegisterSystem<PlayerInteractSystem>();
     auto eventSystem = ecsInterface.RegisterSystem<EventSystem>();
+    auto dialogueSystem = ecsInterface.RegisterSystem<DialogueSystem>();
     auto sceneInterface = ecsInterface.RegisterSystem<SceneInterface>();
 
     ecsInterface.RegisterComponent<EventSenderComponent>(); 
@@ -164,6 +166,7 @@ int main(void)
     engine->AddSystem(eventSystem.get());
     engine->AddSystem(gameSystem.get());
     engine->AddSystem(buttonSystem.get());
+    engine->AddSystem(dialogueSystem.get());
     engine->AddSystem(sceneSystem.get());       // Register scene manager last
     engine->AddSystem(sceneInterface.get());
 

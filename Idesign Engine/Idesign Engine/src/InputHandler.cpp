@@ -10,6 +10,7 @@
 #include "Graphics.h"
 #include "Coordinator.h"
 #include "ButtonSystem.h" // Ensure this is included
+#include "DialogueSystem.h"
 
 extern Framework::Coordinator ecsInterface;
 namespace Framework {
@@ -91,6 +92,22 @@ namespace Framework {
             tabPressed = false;
         }
 
+        // --- DIALOGUE INPUT HANDLING ---
+        if (engineState.InDialogue() && !isUIFocused) {
+            // Only process dialogue-specific input when in game mode
+            if (IsKeyPressed(GLFW_KEY_ENTER)) {
+                Framework::DialogueSystem::Instance().Advance();
+            }
+
+            // Allow ESC to force-close dialogue
+            if (IsKeyPressed(GLFW_KEY_ESCAPE)) {
+                Framework::DialogueSystem::Instance().EndDialogue();
+            }
+
+            // Block all other input processing
+            return;
+        }
+        
         // ESC: Toggle pause/resume
         if (IsKeyPressed(GLFW_KEY_ESCAPE))
         {
@@ -132,7 +149,7 @@ namespace Framework {
 
         // OVERRIDE 2: Menus / Pause / HowToPlay
         // If ANY of these are true, we MUST show the cursor, regardless of Editor/Game mode.
-        if (engineState.IsInMenu() || engineState.IsPaused() || engineState.InHowToPlay()) {
+        if (engineState.IsInMenu() || engineState.IsPaused() || engineState.InHowToPlay() || engineState.InDialogue()) {
             desiredMode = GLFW_CURSOR_NORMAL;
         }
 
@@ -174,7 +191,7 @@ namespace Framework {
 
         // --- [FIX] CHECK GLOBAL ENGINE STATE ---
         // If any menu is open, we must NOT rotate the camera.
-        bool isMenuOpen = engineState.IsInMenu() || engineState.IsPaused() || engineState.InHowToPlay();
+        bool isMenuOpen = engineState.IsInMenu() || engineState.IsPaused() || engineState.InHowToPlay() || engineState.InDialogue();
 
         bool isRightClickHeld = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
 

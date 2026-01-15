@@ -6,6 +6,7 @@ C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\imgui\imgui_impl_glfw.cp
 C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\imgui\imgui_impl_opengl3.cpp;C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\imgui_impl_opengl3.obj
 C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\imgui\imgui_tables.cpp;C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\imgui_tables.obj
 C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\imgui\imgui_widgets.cpp;C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\imgui_widgets.obj
+C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\DialogueSystem.cpp;C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\DialogueSystem.obj
 C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PlayerInteractSystem.cpp;C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\PlayerInteractSystem.obj
 C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationLoader.cpp;C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\AnimationLoader.obj
 C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationSystem.cpp;C:\test\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\x64\Debug\AnimationSystem.obj

@@ -42,13 +42,18 @@ namespace Framework {
         bool IsInUpgrade() const { return mInUpgrade; }
         void SetUpgrade(bool value) { mInUpgrade = value; }
 
+        // Dialogue toggles
+        bool InDialogue() const { return inDialogue; }
+        void SetDialogue(bool state) { inDialogue = state; }
+
     private:
         // State flags
         bool inEditor = true;
         bool inDebugMode = false;  
         bool isPaused = false;
         bool IsPlayMode = false;
-        
+        bool inDialogue = false;
+
         // Scenes
         bool mInMenu = false;
         bool mInHowToPlay = false;

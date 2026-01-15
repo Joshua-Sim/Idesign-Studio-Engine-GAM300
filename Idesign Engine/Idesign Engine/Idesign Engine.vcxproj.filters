@@ -225,6 +225,7 @@
     </ClCompile>
     <ClCompile Include="src\PebbleRenderer.cpp" />
     <ClCompile Include="src\SceneInterface.cpp" />
+    <ClCompile Include="src\DialogueSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ItemComponent.h" />
@@ -676,6 +677,7 @@
     </ClInclude>
     <ClInclude Include="src\PebbleRenderer.h" />
     <ClInclude Include="src\SceneInterface.h" />
+    <ClInclude Include="src\DialogueSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

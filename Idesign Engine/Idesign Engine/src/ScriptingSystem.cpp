@@ -24,6 +24,7 @@
 #include "BoxColliderComponent.h"
 #include "InputHandler.h"
 #include "SceneInterface.h"
+#include "DialogueSystem.h"
 #include "PhaseManager.h"
 #include <Core.h>
 
@@ -775,6 +776,40 @@ namespace Framework {
             }
 
             return 0;
+        }
+
+        // Dialogue functions
+        // 
+        // // Add these inside the anonymous namespace with other Lua functions
+
+        static int lua_DialogueClear(lua_State* L) {
+            Framework::DialogueSystem::Instance().Clear();
+            return 0;
+        }
+
+        static int lua_DialogueAdd(lua_State* L) {
+            const char* text = luaL_checkstring(L, 1);
+            const char* speaker = luaL_optstring(L, 2, "");
+            const char* portrait = luaL_optstring(L, 3, "");
+
+            Framework::DialogueSystem::Instance().AddLine(text, speaker, portrait);
+            return 0;
+        }
+
+        static int lua_DialogueStart(lua_State* L) {
+            Framework::DialogueSystem::Instance().StartDialogue();
+            return 0;
+        }
+
+        static int lua_DialogueEnd(lua_State* L) {
+            Framework::DialogueSystem::Instance().EndDialogue();
+            return 0;
+        }
+
+        static int lua_DialogueIsActive(lua_State* L) {
+            bool active = Framework::DialogueSystem::Instance().IsActive();
+            lua_pushboolean(L, active);
+            return 1;
         }
 
         // ============ AUDIO LUA BINDINGS ============
@@ -1695,6 +1730,14 @@ namespace Framework {
         lua_register(L, "GetPhase", lua_GetPhase);
         
         lua_register(L, "SetScale", lua_SetScale);
+
+        // Dialogue System
+        lua_register(L, "DialogueClear", lua_DialogueClear);
+        lua_register(L, "DialogueAdd", lua_DialogueAdd);
+        lua_register(L, "DialogueStart", lua_DialogueStart);
+        lua_register(L, "DialogueEnd", lua_DialogueEnd);
+        lua_register(L, "DialogueIsActive", lua_DialogueIsActive);
+
         
         //cauldron
         lua_register(L, "SetCameraLock", [](lua_State* L) -> int {
