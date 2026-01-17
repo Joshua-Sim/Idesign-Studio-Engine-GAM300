@@ -21,10 +21,8 @@ namespace Framework
         AssetHandle guid;
         std::string name;
         std::string path;
-        bool isDirty = false;
-
-
         bool isUI = false;
+
         // Runtime-only
         unsigned int textureID = 0;
         int width = 0;

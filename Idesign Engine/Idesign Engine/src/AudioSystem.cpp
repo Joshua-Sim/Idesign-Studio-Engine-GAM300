@@ -316,12 +316,12 @@ namespace Framework {
             }
         }
 
-        if (!engineState.IsPlay() && !audioPaused) 
+        if (!engineState.HasState(EngineMode::Play) && !audioPaused) 
         {
             PauseAllAudio();
             audioPaused = true;
         }
-        else if (engineState.IsPlay() && audioPaused) 
+        else if (engineState.HasState(EngineMode::Play) && audioPaused) 
         {
             ResumeAllAudio();
             audioPaused = false;
@@ -1235,4 +1235,12 @@ namespace Framework {
             loadedBanks.erase(it);
         }
     }
+    
+    void AudioSystem::setBusMute(const std::string& path, bool mute)
+    {
+        FMOD::Studio::Bus* bus = nullptr; 
+        studioSystem->getBus(path.c_str(), &bus);
+        if (bus) bus->setMute(mute);
+    }
+
 } // namespace Framework

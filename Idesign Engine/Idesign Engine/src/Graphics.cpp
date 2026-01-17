@@ -1088,7 +1088,7 @@ namespace Framework {
     {
         bool nKeyPressed = false;
 
-        if (!engineState.IsPlay()) return;
+        if (!engineState.Is(EngineMode::Play)) return;
 
         // 1. Determine which mode we are in
         // If UI is focused (Editor Mode), we control Scene Camera (Index 1)
@@ -1185,7 +1185,7 @@ namespace Framework {
             {
                 bool isRPressed = (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS);
                 static bool wasRPressed = false;
-                if (isRPressed && !wasRPressed) GameSystem::bookOpen = !GameSystem::bookOpen;
+                if (isRPressed && !wasRPressed && !isEditorMode) GameSystem::bookOpen = !GameSystem::bookOpen;
                 wasRPressed = isRPressed;
             }
         //}
@@ -1232,7 +1232,7 @@ namespace Framework {
         bool isXPressed = (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS);
 
         // 3. Check: Is it pressed NOW, but wasn't pressed BEFORE?
-        if (isXPressed && !wasXPressed)
+        if (isXPressed && !wasXPressed && !isEditorMode)
         {
             phaseManager->TogglePhase();
         }
@@ -2659,9 +2659,10 @@ namespace Framework {
 
         // Do not display inventory boxes while in paused/howtoplay/menu state
         if (viewIndex == 0 &&
-            !engineState.IsPaused() &&
-            !engineState.InHowToPlay() &&
-            !engineState.IsInMenu())
+            !engineState.Is(EngineMode::Paused) &&
+            !engineState.Is(EngineMode::HowToPlay) &&
+            !engineState.Is(EngineMode::Menu) &&
+            !engineState.Is(EngineMode::Settings))
         {
             DrawHotbar(width, height);
         }

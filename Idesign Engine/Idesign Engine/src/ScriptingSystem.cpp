@@ -854,11 +854,16 @@ namespace Framework {
         // ============ GAME STATE LUA BINDINGS ============
         static int lua_GameStateStart(lua_State* L)
         {
-            engineState.SetMenu(false);
-            //std::cout << engineState.IsInMenu() << std::endl;
+            // Clear everything except base
+            engineState.ClearToBase();
+
+            // Push gameplay layer
+            engineState.PushState(EngineMode::Play);
+
+            // Set game phase
             phaseManager->SetPhase(GamePhase::Day);
-            
-            //Send message to start audio and other play-mode systems
+
+            // Send message to start audio and other play-mode systems
             MessageBus::Get().SendImmediate(EnterPlayModeMessage());
 
             return 0;
@@ -866,13 +871,13 @@ namespace Framework {
 
         static int lua_GameStateResume(lua_State* L)
         {
-            // Set engine state to play mode
-            // engineState.SetPlay(true); okay nid to edit this later
+            // Pop temporary states until we are back to Play
+            while (!engineState.Is(EngineMode::Play))
+            {
+                engineState.PopState();
+            }
 
-            engineState.SetPaused(false);
-            engineState.SetHowToPlay(false);
-
-            //Send message to start audio and other play-mode systems
+            // Send message to resume audio and gameplay systems
             MessageBus::Get().SendImmediate(ResumePlayModeMessage());
 
             return 0;
@@ -880,8 +885,10 @@ namespace Framework {
 
         static int lua_GameStatePaused(lua_State* L)
         {
-            // Stop the game
-            engineState.SetPaused(true);
+            // Push Paused on top of the stack
+            engineState.PushState(EngineMode::Paused);
+
+            // Send pause message
             MessageBus::Get().SendImmediate(PausePlayModeMessage());
 
             return 0;
@@ -889,42 +896,62 @@ namespace Framework {
 
         static int lua_GameStateExit(lua_State* L)
         {
-            // Stop the game
-            engineState.SetPlay(false);
-            engineState.SetPaused(false);
+            // Clear all layers and reset stacks
+            engineState.ClearToBase();
 
             // Send exit message
             MessageBus::Get().SendImmediate(ExitPlayModeMessage());
 
-            if (CORE) {
-                CORE->EndGameLoop();
-            }
-            exit(0); // Immediately terminate app, but skips cleanup
+            if (CORE) CORE->EndGameLoop();
+
+            exit(0); // immediately terminate app
+
             return 0;
         }
 
         static int lua_GameStateHowToPlay(lua_State* L)
         {
-            engineState.SetHowToPlay(true); // Render UI How To Play
-            engineState.SetPaused(false);   // Hide Pause UI
-            
+            // Remove any temporary layers to ensure clean stack
+            engineState.ClearToBase();
+
+            // Ensure gameplay layer exists
+            engineState.PushState(EngineMode::Play);
+
+            // Push HowToPlay UI on top
+            engineState.PushState(EngineMode::HowToPlay);
+
+            return 0;
+        }
+
+        static int lua_GameStateSettings(lua_State* L)
+        {
+            engineState.ClearToBase();                   // Remove temporary layers
+            engineState.PushState(EngineMode::Play);     // Keep gameplay
+            engineState.PushState(EngineMode::Paused);   // Optional: pause underlying gameplay
+            engineState.PushState(EngineMode::Settings); // Settings UI on top
 
             return 0;
         }
 
         static int lua_GameStateBackToPause(lua_State* L)
         {
-            engineState.SetHowToPlay(false);    // Hide How To Play
-            engineState.SetPaused(true);        // Render Pause UI
-
+            // Pop HowToPlay (or any temporary UI) to reveal Paused
+            if (!engineState.Is(EngineMode::Paused)) engineState.PushState(EngineMode::Paused);
             return 0;
         }
 
         static int lua_GameStateEndNightPhase(lua_State* L)
         {
-            engineState.SetPaused(false);
-            engineState.SetUpgrade(true);
+            // Clear temporary UI layers
+            engineState.ClearToBase();
 
+            // Ensure gameplay is active
+            engineState.PushState(EngineMode::Play);
+
+            // Push Upgrade UI
+            engineState.PushState(EngineMode::Upgrade);
+
+            // Set phase to Upgrade
             phaseManager->SetPhase(GamePhase::Upgrade);
 
             return 0;
@@ -1647,50 +1674,51 @@ namespace Framework {
         // Data Entry from engine
         lua_register(L, "GetScore", lua_GetScore);
         lua_register(L, "SetScore", lua_SetScore);
-        lua_register(L, "GetData", lua_GetData);
-        lua_register(L, "SetData", lua_SetData);
-        lua_register(L, "AddData", lua_AddData);
-        lua_register(L, "HasData", lua_HasData);
+        lua_register(L, "GetData",  lua_GetData);
+        lua_register(L, "SetData",  lua_SetData);
+        lua_register(L, "AddData",  lua_AddData);
+        lua_register(L, "HasData",  lua_HasData);
 
-        lua_register(L, "DestroyEntity", Lua_DestroyEntity);
-        lua_register(L, "GetItemName", Lua_GetItemName);
-        lua_register(L, "RegisterButtonCallback", Lua_RegisterButtonCallback);
+        lua_register(L, "DestroyEntity",            Lua_DestroyEntity);
+        lua_register(L, "GetItemName",              Lua_GetItemName);
+        lua_register(L, "RegisterButtonCallback",   Lua_RegisterButtonCallback);
 
         lua_register(L, "SpawnCauldronItem", l_spawnCauldronItem);
-        lua_register(L, "CheckValidRecipe", l_CheckValidRecipe);
-        lua_register(L, "GetEntityName", lua_GetEntityName);
+        lua_register(L, "CheckValidRecipe",  l_CheckValidRecipe);
+        lua_register(L, "GetEntityName",     lua_GetEntityName);
 
-        lua_register(L, "GetRotation", lua_GetRotation);
+        lua_register(L, "GetRotation",  lua_GetRotation);
         lua_register(L, "GetCameraYaw", lua_GetCameraYaw);
 
         // Inventory Utility
-        lua_register(L, "IsItemDestroyOnPick", Lua_IsItemDestroyOnPick);
-        lua_register(L, "GetSelectedItem", Lua_GetPlayerSelectedItemId);
-        lua_register(L, "ConsumeSelectedItem", Lua_ConsumePlayerSelectedItem);
-        lua_register(L, "AddToInventory", Lua_AddToInventory);
-        lua_register(L, "GetItemNameById", lua_GetItemNameById);
-        lua_register(L, "GetSelectedItemName", Lua_GetSelectedItemName);
-        lua_register(L, "SetInteractionText", l_SetInteractionText);
+        lua_register(L, "IsItemDestroyOnPick",  Lua_IsItemDestroyOnPick);
+        lua_register(L, "GetSelectedItem",      Lua_GetPlayerSelectedItemId);
+        lua_register(L, "ConsumeSelectedItem",  Lua_ConsumePlayerSelectedItem);
+        lua_register(L, "AddToInventory",       Lua_AddToInventory);
+        lua_register(L, "GetItemNameById",      lua_GetItemNameById);
+        lua_register(L, "GetSelectedItemName",  Lua_GetSelectedItemName);
+        lua_register(L, "SetInteractionText",   l_SetInteractionText);
 
         // Engine utility
-        lua_register(L, "FindEntityByName", lua_FindEntityByName);
-        lua_register(L, "GetEntitiesByTag", lua_GetEntitiesByTag);
-        lua_register(L, "RemoveTagFromEntity", lua_RemoveTagFromEntity);
-        lua_register(L, "EntityHasTag", lua_EntityHasTag);
-        lua_register(L, "IsEntityValid", lua_IsEntityValid);
-        lua_register(L, "AddTagToEntity", lua_AddTagToEntity);
-        lua_register(L, "PlayEntityAnimation", l_PlayEntityAnimation);
-        lua_register(L, "SpawnPrefab", lua_SpawnPrefab);
-        lua_register(L, "FireEvent", lua_FireEvent); // Maybe add register if needed
-        lua_register(L, "SetScriptVariable", lua_SetScriptVariable);
+        lua_register(L, "FindEntityByName",     lua_FindEntityByName);
+        lua_register(L, "GetEntitiesByTag",     lua_GetEntitiesByTag);
+        lua_register(L, "RemoveTagFromEntity",  lua_RemoveTagFromEntity);
+        lua_register(L, "EntityHasTag",         lua_EntityHasTag);
+        lua_register(L, "IsEntityValid",        lua_IsEntityValid);
+        lua_register(L, "AddTagToEntity",       lua_AddTagToEntity);
+        lua_register(L, "PlayEntityAnimation",  l_PlayEntityAnimation);
+        lua_register(L, "SpawnPrefab",          lua_SpawnPrefab);
+        lua_register(L, "FireEvent",            lua_FireEvent); // Maybe add register if needed
+        lua_register(L, "SetScriptVariable",    lua_SetScriptVariable);
 
         // Engine States
-        lua_register(L, "GameStateStart",       lua_GameStateStart);
-        lua_register(L, "GameStateResume",      lua_GameStateResume);
-        lua_register(L, "GameStatePaused",      lua_GameStatePaused);
-        lua_register(L, "GameStateExit",        lua_GameStateExit);
-        lua_register(L, "GameStateHowToPlay",   lua_GameStateHowToPlay);
-        lua_register(L, "GameStateBackToPause", lua_GameStateBackToPause);
+        lua_register(L, "GameStateStart",         lua_GameStateStart);
+        lua_register(L, "GameStateResume",        lua_GameStateResume);
+        lua_register(L, "GameStatePaused",        lua_GameStatePaused);
+        lua_register(L, "GameStateExit",          lua_GameStateExit);
+        lua_register(L, "GameStateHowToPlay",     lua_GameStateHowToPlay);
+        lua_register(L, "GameStateSettings",      lua_GameStateSettings);
+        lua_register(L, "GameStateBackToPause",   lua_GameStateBackToPause);
         lua_register(L, "GameStateEndNightPhase", lua_GameStateEndNightPhase);
         lua_register(L, "GetPhase", lua_GetPhase);
         

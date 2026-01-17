@@ -72,15 +72,18 @@ namespace Framework {
 
         if (m_currentPhase == GamePhase::Day || m_currentPhase == GamePhase::Night)
         {
-            engineState.SetUpgrade(false);
-            engineState.SetMenu(false);
-            engineState.SetPaused(false);
+            engineState.ClearToBase();
+            engineState.PushState(EngineMode::Play);
 
             if (input) input->SetUIFocused(false);
         }
         else if (m_currentPhase == GamePhase::Upgrade)
         {
-            engineState.SetUpgrade(true);
+            engineState.ClearToBase();
+            engineState.PushState(EngineMode::Play);
+            engineState.PushState(EngineMode::Paused);
+            engineState.PushState(EngineMode::Upgrade);
+
             if (input) input->SetUIFocused(true);
         }
 
