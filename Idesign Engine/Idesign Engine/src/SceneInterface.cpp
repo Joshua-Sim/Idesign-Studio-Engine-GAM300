@@ -4,7 +4,7 @@
 #include "ButtonComponent.h"
 #include "TextureProperties.h"
 #include "Coordinator.h"
-#include <TextProperties.h>
+#include "TextProperties.h"
 
 extern Framework::Coordinator ecsInterface;
 
@@ -39,8 +39,6 @@ namespace Framework
                     ecsInterface.HasComponent<TextureProperties>(e))
                 {
                     auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
-
-                    // This line hides the menu when SetMenu(false) is called in Lua
                     if (!engineState.Is(EngineMode::Editor)) { texture.isUI = engineState.Is(EngineMode::Menu); }
                 }
             }

@@ -293,7 +293,7 @@
                     "animationSpeed": 10.0,
                     "bLoops": false,
                     "bPlayOnStart": true,
-                    "currentTime": 20.0
+                    "currentTime": 0.0
                 },
                 "TextureComponent": {
                     "guid": "afd25b76-dddc-4c4f-bae4-a6c9a22931e5",
@@ -3095,7 +3095,7 @@
                     "animationSpeed": 1.0,
                     "bLoops": true,
                     "bPlayOnStart": true,
-                    "currentTime": 140.78805541992188
+                    "currentTime": 0.0
                 },
                 "TextureComponent": {
                     "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
@@ -3242,7 +3242,7 @@
                 },
                 "TextureComponent": {
                     "guid": "d24a29c5-cd9e-4322-ab59-d38618cba4bf",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -3549,8 +3549,10 @@
                     "parent": "",
                     "children": [
                         "91a947de-6b6d-47a9-a3c8-60641443b7d4",
+                        "840c7124-cb6a-4e4f-9961-dbe1d25d3965",
+                        "cb125a24-8b08-40f9-8fcc-b6a37f697290",
                         "59a63bf7-241d-480a-ad05-2601e4773b33",
-                        "840c7124-cb6a-4e4f-9961-dbe1d25d3965"
+                        "f94f09dd-0bf0-4a3e-a440-78807d2cf1c4"
                     ],
                     "sortIndex": 60
                 },
@@ -3600,7 +3602,7 @@
                 "HierarchyComponent": {
                     "parent": "23491286-9912-4971-b5d4-9145a810d598",
                     "children": [],
-                    "sortIndex": 61
+                    "sortIndex": 0
                 },
                 "TagComponent": {
                     "tags": [
@@ -3640,7 +3642,7 @@
                 "TransformComponent": {
                     "position": [
                         980.0,
-                        230.0,
+                        100.0,
                         0.0
                     ],
                     "rotation": [
@@ -3657,7 +3659,7 @@
                 "HierarchyComponent": {
                     "parent": "23491286-9912-4971-b5d4-9145a810d598",
                     "children": [],
-                    "sortIndex": 62
+                    "sortIndex": 3
                 },
                 "TagComponent": {
                     "tags": [
@@ -3680,7 +3682,7 @@
                 "ButtonComponent": {
                     "position": [
                         980.0,
-                        230.0
+                        100.0
                     ],
                     "size": [
                         250.0,
@@ -3714,7 +3716,7 @@
                 "HierarchyComponent": {
                     "parent": "23491286-9912-4971-b5d4-9145a810d598",
                     "children": [],
-                    "sortIndex": 63
+                    "sortIndex": 1
                 },
                 "TagComponent": {
                     "tags": [
@@ -3880,7 +3882,7 @@
                     "children": [
                         "e67dcc0d-7001-43a8-a331-19ea9c0628dd"
                     ],
-                    "sortIndex": 0
+                    "sortIndex": 66
                 },
                 "TagComponent": {
                     "tags": [
@@ -3889,7 +3891,7 @@
                 },
                 "TextureComponent": {
                     "guid": "f49379af-a87b-435b-b85b-5c3127ec2fe9",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ButtonComponent": {
                     "position": [
@@ -3942,7 +3944,7 @@
                 },
                 "TextureComponent": {
                     "guid": "7d0d853e-cc77-4ef2-bd2b-af349f1ab9e0",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ButtonComponent": {
                     "position": [
@@ -3981,7 +3983,7 @@
                 "HierarchyComponent": {
                     "parent": "214c5541-f814-4e7f-bafa-d9e3db5aff2c",
                     "children": [],
-                    "sortIndex": 1
+                    "sortIndex": 68
                 },
                 "TagComponent": {
                     "tags": [
@@ -3990,7 +3992,7 @@
                 },
                 "TextureComponent": {
                     "guid": "84369442-e278-434a-9fa6-c48d9c56bbb3",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -4038,7 +4040,7 @@
                 "HierarchyComponent": {
                     "parent": "214c5541-f814-4e7f-bafa-d9e3db5aff2c",
                     "children": [],
-                    "sortIndex": 2
+                    "sortIndex": 69
                 },
                 "TagComponent": {
                     "tags": [
@@ -4047,7 +4049,7 @@
                 },
                 "TextureComponent": {
                     "guid": "d24a29c5-cd9e-4322-ab59-d38618cba4bf",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -4900,7 +4902,7 @@
                 "HierarchyComponent": {
                     "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
                     "children": [],
-                    "sortIndex": 0
+                    "sortIndex": 81
                 },
                 "TagComponent": {
                     "tags": [
@@ -4949,7 +4951,7 @@
                 "HierarchyComponent": {
                     "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
                     "children": [],
-                    "sortIndex": 1
+                    "sortIndex": 82
                 },
                 "TagComponent": {
                     "tags": [
@@ -4998,7 +5000,7 @@
                 "HierarchyComponent": {
                     "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
                     "children": [],
-                    "sortIndex": 2
+                    "sortIndex": 83
                 },
                 "TagComponent": {
                     "tags": [
@@ -5007,12 +5009,24 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
                     "isUI": false
+                },
+                "TextProperties": {
+                    "text": "100%",
+                    "scale": 1.0,
+                    "color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "opacity": 0.0,
+                    "alignment": 0,
+                    "isBillboard": false,
+                    "screenSpace": true
                 },
                 "TextProperties": {
                     "text": "100%",
@@ -5053,7 +5067,7 @@
                 "HierarchyComponent": {
                     "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
                     "children": [],
-                    "sortIndex": 3
+                    "sortIndex": 84
                 },
                 "TagComponent": {
                     "tags": [
@@ -5105,7 +5119,7 @@
                 "HierarchyComponent": {
                     "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
                     "children": [],
-                    "sortIndex": 4
+                    "sortIndex": 85
                 },
                 "TagComponent": {
                     "tags": [
@@ -5157,7 +5171,7 @@
                 "HierarchyComponent": {
                     "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
                     "children": [],
-                    "sortIndex": 5
+                    "sortIndex": 86
                 },
                 "TagComponent": {
                     "tags": [
@@ -5166,12 +5180,24 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
                     "isUI": false
+                },
+                "TextProperties": {
+                    "text": "100%",
+                    "scale": 1.0,
+                    "color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "opacity": 0.0,
+                    "alignment": 0,
+                    "isBillboard": false,
+                    "screenSpace": true
                 },
                 "TextProperties": {
                     "text": "100%",
@@ -5212,7 +5238,7 @@
                 "HierarchyComponent": {
                     "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
                     "children": [],
-                    "sortIndex": 6
+                    "sortIndex": 87
                 },
                 "TagComponent": {
                     "tags": [
@@ -5264,7 +5290,7 @@
                 "HierarchyComponent": {
                     "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
                     "children": [],
-                    "sortIndex": 7
+                    "sortIndex": 88
                 },
                 "TagComponent": {
                     "tags": [
@@ -5316,7 +5342,7 @@
                 "HierarchyComponent": {
                     "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
                     "children": [],
-                    "sortIndex": 8
+                    "sortIndex": 89
                 },
                 "TagComponent": {
                     "tags": [
@@ -5325,12 +5351,24 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
                     "isUI": false
+                },
+                "TextProperties": {
+                    "text": "100%",
+                    "scale": 1.0,
+                    "color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "opacity": 0.0,
+                    "alignment": 0,
+                    "isBillboard": false,
+                    "screenSpace": true
                 },
                 "TextProperties": {
                     "text": "100%",
@@ -5371,7 +5409,7 @@
                 "HierarchyComponent": {
                     "parent": "214c5541-f814-4e7f-bafa-d9e3db5aff2c",
                     "children": [],
-                    "sortIndex": 3
+                    "sortIndex": 90
                 },
                 "TagComponent": {
                     "tags": [
@@ -5383,7 +5421,7 @@
                 },
                 "TextureComponent": {
                     "guid": "0ae073ca-d11b-4ab6-ab53-94e5324d6415",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -5431,7 +5469,7 @@
                 "HierarchyComponent": {
                     "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
                     "children": [],
-                    "sortIndex": 9
+                    "sortIndex": 91
                 },
                 "TagComponent": {
                     "tags": [
@@ -5439,8 +5477,7 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "7c8534ad-0fdd-408d-89fa-2f7ce1d4ea89",
@@ -5492,12 +5529,11 @@
                 "HierarchyComponent": {
                     "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
                     "children": [],
-                    "sortIndex": 10
+                    "sortIndex": 92
                 },
                 "TagComponent": {
                     "tags": [
-                        "settings",
-                        "mute_master"
+                        "settings"
                     ]
                 },
                 "MeshComponent": {
@@ -5507,6 +5543,26 @@
                 "TextureComponent": {
                     "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
                     "isUI": false
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "5a675a8e-6d41-4326-bfd1-7106b0279459",
+                            "scriptPath": "Assets\\Scripts\\Settings_Master_Mute.lua",
+                            "hotReload": true
+                        }
+                    ]
+                },
+                "ButtonComponent": {
+                    "position": [
+                        1650.0,
+                        700.0
+                    ],
+                    "size": [
+                        100.0,
+                        100.0
+                    ],
+                    "isHovered": false
                 }
             }
         },
@@ -5534,12 +5590,11 @@
                 "HierarchyComponent": {
                     "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
                     "children": [],
-                    "sortIndex": 11
+                    "sortIndex": 93
                 },
                 "TagComponent": {
                     "tags": [
-                        "settings",
-                        "mute_bgm"
+                        "settings"
                     ]
                 },
                 "MeshComponent": {
@@ -5549,6 +5604,26 @@
                 "TextureComponent": {
                     "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
                     "isUI": false
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "48782e7b-a969-4b1f-ad50-0d92ca2e6de2",
+                            "scriptPath": "Assets\\Scripts\\Settings_BGM_Mute.lua",
+                            "hotReload": true
+                        }
+                    ]
+                },
+                "ButtonComponent": {
+                    "position": [
+                        1650.0,
+                        500.0
+                    ],
+                    "size": [
+                        100.0,
+                        100.0
+                    ],
+                    "isHovered": false
                 }
             }
         },
@@ -5576,12 +5651,11 @@
                 "HierarchyComponent": {
                     "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
                     "children": [],
-                    "sortIndex": 12
+                    "sortIndex": 94
                 },
                 "TagComponent": {
                     "tags": [
-                        "settings",
-                        "mute_sfx"
+                        "settings"
                     ]
                 },
                 "MeshComponent": {
@@ -5591,6 +5665,86 @@
                 "TextureComponent": {
                     "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
                     "isUI": false
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "6b92065e-2d95-46f7-9c6e-3e2a2dae96ca",
+                            "scriptPath": "Assets\\Scripts\\Settings_SFX_Mute.lua",
+                            "hotReload": true
+                        }
+                    ]
+                },
+                "ButtonComponent": {
+                    "position": [
+                        1650.0,
+                        300.0
+                    ],
+                    "size": [
+                        100.0,
+                        100.0
+                    ],
+                    "isHovered": false
+                }
+            }
+        },
+        {
+            "name": "settingsbutton",
+            "guid": "cb125a24-8b08-40f9-8fcc-b6a37f697290",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        980.0,
+                        230.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        250.0,
+                        100.0,
+                        1.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "23491286-9912-4971-b5d4-9145a810d598",
+                    "children": [],
+                    "sortIndex": 2
+                },
+                "TagComponent": {
+                    "tags": [
+                        "pause"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": ""
+                },
+                "TextureComponent": {
+                    "guid": "0ae073ca-d11b-4ab6-ab53-94e5324d6415",
+                    "isUI": false
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "23de8816-8d7d-42e1-ada2-3fdd7190fe5f",
+                            "scriptPath": "Assets\\Scripts\\GameStateSettings.lua",
+                            "hotReload": true
+                        }
+                    ]
+                },
+                "ButtonComponent": {
+                    "position": [
+                        980.0,
+                        230.0
+                    ],
+                    "size": [
+                        250.0,
+                        100.0
+                    ],
+                    "isHovered": false
                 }
             }
         }

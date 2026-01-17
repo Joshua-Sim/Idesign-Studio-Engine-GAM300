@@ -37,7 +37,8 @@ namespace Framework {
         // Where we store/retrieve the ScriptingSystem* inside Lua's registry
         constexpr const char* kRegistryKey = "__ScriptingSystemPtr";
 
-        inline ScriptingSystem* lua_self(lua_State* L) {
+        inline ScriptingSystem* lua_self(lua_State* L) 
+        {
             lua_getfield(L, LUA_REGISTRYINDEX, kRegistryKey);
             auto* self = static_cast<ScriptingSystem*>(lua_touserdata(L, -1));
             lua_pop(L, 1);
@@ -49,8 +50,7 @@ namespace Framework {
             // 1st arg: entity id
             Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
 
-            if (!ecsInterface.IsEntityValid(e) ||
-                !ecsInterface.HasComponent<TransformComponent>(e))
+            if (!ecsInterface.IsEntityValid(e) || !ecsInterface.HasComponent<TransformComponent>(e))
             {
                 // no transform; return 0 values
                 return luaL_error(L, "GetPosition: entity %d has no TransformComponent", (int)e);
@@ -71,8 +71,7 @@ namespace Framework {
             float y = static_cast<float>(luaL_checknumber(L, 3));
             float z = static_cast<float>(luaL_checknumber(L, 4));
 
-            if (!ecsInterface.IsEntityValid(e) ||
-                !ecsInterface.HasComponent<TransformComponent>(e))
+            if (!ecsInterface.IsEntityValid(e) || !ecsInterface.HasComponent<TransformComponent>(e))
             {
                 return luaL_error(L, "SetPosition: entity %d has no TransformComponent", (int)e);
             }
@@ -82,7 +81,8 @@ namespace Framework {
             return 0;
         }
 
-        int l_IsKeyDown(lua_State* L) {
+        int l_IsKeyDown(lua_State* L) 
+        {
             auto* self = lua_self(L);
             Graphics* g = self ? self->GetGraphicsSystem() : nullptr;     // <-- use getter
             if (!g) { lua_pushboolean(L, 0); return 1; }
@@ -93,7 +93,8 @@ namespace Framework {
             return 1;
         }
 
-        int l_CameraMove(lua_State* L) {
+        int l_CameraMove(lua_State* L) 
+        {
             auto* self = lua_self(L);
             Graphics* g = self ? self->GetGraphicsSystem() : nullptr;     // <-- use getter
             if (!g) return 0;
@@ -765,202 +766,178 @@ namespace Framework {
             int id = (int)luaL_checkinteger(L, 1);
             const char* newText = luaL_checkstring(L, 2);
 
-            Framework::Entity e = static_cast<Framework::Entity>(id);
+            Entity e = static_cast<Entity>(id);
 
-            if (ecsInterface.IsEntityValid(e) &&
-                ecsInterface.HasComponent<Framework::TextProperties>(e))
+            if (ecsInterface.IsEntityValid(e) && ecsInterface.HasComponent<TextProperties>(e))
             {
-                auto& txt = ecsInterface.GetComponent<Framework::TextProperties>(e);
+                auto& txt = ecsInterface.GetComponent<TextProperties>(e);
                 txt.text = newText;
             }
-
             return 0;
         }
 
         // ============ AUDIO LUA BINDINGS ============
-        static int lua_AudioPlay(lua_State* L) {
+        static int lua_AudioPlay(lua_State* L) 
+        {
             const char* eventPath = luaL_checkstring(L, 1);
-            if (g_AudioSystem) {
-                g_AudioSystem->PlayAudio(eventPath);
-            }
+            if (g_AudioSystem) g_AudioSystem->PlayAudio(eventPath);
             return 0;
         }
 
-        static int lua_AudioStop(lua_State* L) {
-            if (g_AudioSystem) {
+        static int lua_AudioStop(lua_State* L) 
+        {
+            if (g_AudioSystem) 
+            {
                 // Check if an event name was provided
-                if (lua_gettop(L) >= 1 && lua_isstring(L, 1)) {
+                if (lua_gettop(L) >= 1 && lua_isstring(L, 1)) 
+                {
                     // Stop specific event
                     const char* eventName = lua_tostring(L, 1);
                     g_AudioSystem->StopEvent(eventName);
                 }
-                else {
-                    // No arguments - stop all audio (legacy behavior)
-                    g_AudioSystem->Reset();
-                }
+                else g_AudioSystem->Reset(); // No arguments - stop all audio (legacy behavior)
             }
             return 0;
         }
 
-        static int lua_AudioPause(lua_State* L) {
-            if (g_AudioSystem) {
-                g_AudioSystem->PauseAllAudio();
-            }
+        static int lua_AudioPause(lua_State* L) 
+        {
+            (void)L;
+            if (g_AudioSystem) g_AudioSystem->PauseAllAudio();
             return 0;
         }
 
-        static int lua_AudioResume(lua_State* L) {
-            if (g_AudioSystem) {
-                g_AudioSystem->ResumeAllAudio();
-            }
+        static int lua_AudioResume(lua_State* L) 
+        {
+            (void)L;
+            if (g_AudioSystem) g_AudioSystem->ResumeAllAudio();
             return 0;
         }
 
-        static int lua_AudioSetVolume(lua_State* L) {
+        static int lua_AudioSetVolume(lua_State* L) 
+        {
             float volume = (float)luaL_checknumber(L, 1);
-            if (g_AudioSystem) {
+            if (g_AudioSystem) 
+            {
                 g_AudioSystem->SetMasterVolume(volume);
             }
             return 0;
         }
 
-        static int lua_AudioPlay3D(lua_State* L) {
+        static int lua_AudioPlay3D(lua_State* L) 
+        {
             const char* eventPath = luaL_checkstring(L, 1);
             float x = (float)luaL_checknumber(L, 2);
             float y = (float)luaL_checknumber(L, 3);
             float z = (float)luaL_checknumber(L, 4);
 
-            if (g_AudioSystem) {
-                g_AudioSystem->PlaySound3D(eventPath, Framework::Vector3(x, y, z));
-            }
+            if (g_AudioSystem) g_AudioSystem->PlaySound3D(eventPath, Vector3(x, y, z));
             return 0;
         }
 
-        static int lua_AudioIsPlaying(lua_State* L) {
+        static int lua_AudioIsPlaying(lua_State* L) 
+        {
             const char* eventPath = luaL_checkstring(L, 1);
             bool isPlaying = false;
 
-            if (g_AudioSystem) {
-                // Your AudioSystem already has this function logic implemented!
-                isPlaying = g_AudioSystem->IsPlaying(eventPath);
-            }
+            if (g_AudioSystem) isPlaying = g_AudioSystem->IsPlaying(eventPath);
 
             lua_pushboolean(L, isPlaying);
             return 1;
         }
+
+        static int lua_AudioMute(lua_State* L)
+        {
+            const char* tag = luaL_checkstring(L, 1); // "master", "bgm", "sfx"
+            bool mute = lua_toboolean(L, 2);
+
+            if (strcmp(tag, "master_mute") == 0) g_AudioSystem->MuteMasterVolume(mute);
+            else if (strcmp(tag, "bgm_mute") == 0) g_AudioSystem->MuteBgmVolume(mute);
+            else if (strcmp(tag, "sfx_mute") == 0) g_AudioSystem->MuteSfxVolume(mute);
+
+            return 0;
+        }
+
         // ============ END AUDIO LUA BINDINGS ============
 
 
         // ============ GAME STATE LUA BINDINGS ============
         static int lua_GameStateStart(lua_State* L)
         {
-            // Clear everything except base
-            engineState.ClearToBase();
-
-            // Push gameplay layer
-            engineState.PushState(EngineMode::Play);
-
-            // Set game phase
-            phaseManager->SetPhase(GamePhase::Day);
-
-            // Send message to start audio and other play-mode systems
-            MessageBus::Get().SendImmediate(EnterPlayModeMessage());
-
+            (void)L;
+            engineState.ClearToBase();                                  // Clear everything except base
+            engineState.PushState(EngineMode::Play);                    // Push gameplay layer
+            phaseManager->SetPhase(GamePhase::Day);                     // Set game phase
+            MessageBus::Get().SendImmediate(EnterPlayModeMessage());    // Send message to start audio and other play-mode systems
             return 0;
         }
 
         static int lua_GameStateResume(lua_State* L)
         {
-            // Pop temporary states until we are back to Play
-            while (!engineState.Is(EngineMode::Play))
-            {
-                engineState.PopState();
-            }
-
-            // Send message to resume audio and gameplay systems
-            MessageBus::Get().SendImmediate(ResumePlayModeMessage());
+            (void)L;
+            while (!engineState.Is(EngineMode::Play)) engineState.PopState();   // Pop temporary states until we are back to Play
+            MessageBus::Get().SendImmediate(ResumePlayModeMessage());           // Send message to resume audio and gameplay systems
 
             return 0;
         }
 
         static int lua_GameStatePaused(lua_State* L)
         {
-            // Push Paused on top of the stack
-            engineState.PushState(EngineMode::Paused);
-
-            // Send pause message
-            MessageBus::Get().SendImmediate(PausePlayModeMessage());
+            (void)L;
+            engineState.PushState(EngineMode::Paused);                  // Push Paused on top of the stack
+            MessageBus::Get().SendImmediate(PausePlayModeMessage());    // Send pause message
 
             return 0;
         }
 
         static int lua_GameStateExit(lua_State* L)
         {
-            // Clear all layers and reset stacks
-            engineState.ClearToBase();
-
-            // Send exit message
-            MessageBus::Get().SendImmediate(ExitPlayModeMessage());
+            (void)L;
+            engineState.ClearToBase();                  // Clear all layers and reset stacks
+            MessageBus::Get().SendImmediate(ExitPlayModeMessage());     // Send exit message
 
             if (CORE) CORE->EndGameLoop();
-
-            exit(0); // immediately terminate app
-
+            exit(0);        // immediately terminate app
             return 0;
         }
 
         static int lua_GameStateHowToPlay(lua_State* L)
         {
-            // Remove any temporary layers to ensure clean stack
-            engineState.ClearToBase();
-
-            // Ensure gameplay layer exists
-            engineState.PushState(EngineMode::Play);
-
-            // Push HowToPlay UI on top
-            engineState.PushState(EngineMode::HowToPlay);
+            (void)L;
+            engineState.PushState(EngineMode::HowToPlay);   // Push HowToPlay UI on top
 
             return 0;
         }
 
         static int lua_GameStateSettings(lua_State* L)
         {
-            engineState.ClearToBase();                   // Remove temporary layers
-            engineState.PushState(EngineMode::Play);     // Keep gameplay
-            engineState.PushState(EngineMode::Paused);   // Optional: pause underlying gameplay
-            engineState.PushState(EngineMode::Settings); // Settings UI on top
+            (void)L;
+            engineState.PushState(EngineMode::Settings);    // Settings UI on top
 
             return 0;
         }
 
         static int lua_GameStateBackToPause(lua_State* L)
         {
-            // Pop HowToPlay (or any temporary UI) to reveal Paused
-            if (!engineState.Is(EngineMode::Paused)) engineState.PushState(EngineMode::Paused);
+            (void)L;
+            engineState.PopState();                         // Pop HowToPlay (or any temporary UI) to reveal Paused
+
             return 0;
         }
 
         static int lua_GameStateEndNightPhase(lua_State* L)
         {
-            // Clear temporary UI layers
-            engineState.ClearToBase();
-
-            // Ensure gameplay is active
-            engineState.PushState(EngineMode::Play);
-
-            // Push Upgrade UI
-            engineState.PushState(EngineMode::Upgrade);
-
-            // Set phase to Upgrade
-            phaseManager->SetPhase(GamePhase::Upgrade);
-
+            (void)L;
+            engineState.PushState(EngineMode::Upgrade);     // Push Upgrade UI
+            phaseManager->SetPhase(GamePhase::Upgrade);     // Set phase to Upgrade
             return 0;
         }
 
         // Get current phase for checking incase certain updates shouldn't run in other phases (e.g customer_system.lua)
         static int lua_GetPhase(lua_State* L)
         {
-            if (!phaseManager) {
+            if (!phaseManager) 
+            {
                 lua_pushnil(L);
                 return 1;
             }
@@ -1790,22 +1767,20 @@ namespace Framework {
         lua_pushcfunction(L, l_Cook_Material);     lua_setfield(L, -2, "Materials");
         lua_setglobal(L, "Cook");
 
-        lua_register(L, "PlayEntitySound", [](lua_State* L) -> int {
-            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
-            if (g_AudioSystem) {
-                g_AudioSystem->PlayEntitySound(e);
-            }
-            return 0;
+        lua_register(L, "PlayEntitySound", [](lua_State* L) -> int 
+            {
+                Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+                if (g_AudioSystem) g_AudioSystem->PlayEntitySound(e);
+                return 0;
             });
 
-        lua_register(L, "SetEntityVolume", [](lua_State* L) -> int {
-            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
-            float volume = (float)luaL_checknumber(L, 2);
+        lua_register(L, "SetEntityVolume", [](lua_State* L) -> int 
+            {
+                Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+                float volume = (float)luaL_checknumber(L, 2);
 
-            if (Framework::g_AudioSystem) {
-                Framework::g_AudioSystem->SetEntityVolume(e, volume);
-            }
-            return 0;
+                if (g_AudioSystem) g_AudioSystem->SetEntityVolume(e, volume);
+                return 0;
             });
 
         // Create Sound table with playback functions
@@ -1816,9 +1791,9 @@ namespace Framework {
         lua_pushcfunction(L, lua_AudioResume);    lua_setfield(L, -2, "Resume");
         lua_pushcfunction(L, lua_AudioSetVolume); lua_setfield(L, -2, "SetVolume");
         lua_pushcfunction(L, lua_AudioPlay3D);    lua_setfield(L, -2, "Play3D");
-        lua_pushcfunction(L, lua_AudioIsPlaying);  lua_setfield(L, -2, "IsPlaying"); // <--- ADD THIS
+        lua_pushcfunction(L, lua_AudioIsPlaying); lua_setfield(L, -2, "IsPlaying");
+        lua_pushcfunction(L, lua_AudioMute);      lua_setfield(L, -2, "Mute");
         lua_setglobal(L, "Sound");
-
 
         std::cout << "[ScriptingSystem] Initialized (Lua VM ready)\n";
     }
@@ -2062,5 +2037,4 @@ namespace Framework {
             }
         }
     }
-
 } // namespace Framework

@@ -17,7 +17,7 @@
 #include "ButtonSystem.h"
 #include "TextureProperties.h"
 #include "EngineState.h"
-#include <TextProperties.h>
+#include "TextProperties.h"
 
 extern Framework::Coordinator ecsInterface;
 namespace Framework {
@@ -40,7 +40,6 @@ namespace Framework {
     void ButtonSystem::Update(float deltaTime)
     {
         (void)deltaTime;
-
         for (auto entity : mEntities)
         {
             if (!ecsInterface.HasComponent<ButtonComponent>(entity)     ||
@@ -52,16 +51,9 @@ namespace Framework {
             auto& tr = ecsInterface.GetComponent<TransformComponent>(entity);
 
             // interpret Transform as “center + full size” in design space
-            //button.position = glm::vec2(tr.position.x - 0.5f * tr.scale.x,tr.position.y - 0.5f * tr.scale.y);
+            // button.position = glm::vec2(tr.position.x - 0.5f * tr.scale.x,tr.position.y - 0.5f * tr.scale.y);
             button.position = glm::vec2(tr.position.x, tr.position.y);
             button.size = glm::vec2(tr.scale.x, tr.scale.y);
-
-            // Game State Play/Pause
-            //if (ecsInterface.HasComponent<TextureProperties>(entity)) 
-            //{
-            //    auto& texture = ecsInterface.GetComponent<TextureProperties>(entity);
-            //    texture.isUI = !engineState.IsPlay(); // true when paused, false when playing
-            //}
         }
     }
 
