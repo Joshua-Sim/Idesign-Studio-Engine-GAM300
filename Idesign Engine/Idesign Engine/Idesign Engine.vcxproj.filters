@@ -796,8 +796,10 @@
     <None Include="Assets\shaders\instanced_pebble_vert.glsl" />
     <None Include="C:\Users\victo\Downloads\To Input\shaders\instancedleave_frag.glsl" />
     <None Include="C:\Users\victo\Downloads\To Input\shaders\instancedleave_vert.glsl" />
-    <None Include="C:\Users\victo\Downloads\To Input\shaders\instanced_pebble_frag.glsl" />
     <None Include="C:\Users\victo\Downloads\To Input\shaders\instanced_pebble_vert.glsl" />
+    <None Include="C:\Users\victo\Downloads\To Input\shaders\instanced_pebble_frag.glsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\back.png" />
