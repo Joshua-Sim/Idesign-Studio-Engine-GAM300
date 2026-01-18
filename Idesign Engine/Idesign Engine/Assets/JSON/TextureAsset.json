@@ -211,6 +211,12 @@
             "isUI": false
         },
         {
+            "guid": "1d05db70-ba11-4d22-98cc-1594aa9f8bd2",
+            "name": "horsecart",
+            "path": "Assets\\Textures\\horsecart.png",
+            "isUI": false
+        },
+        {
             "guid": "6e8fe7c8-cde3-45a7-bdb0-dc732852d3ff",
             "name": "RedVial",
             "path": "Assets\\Textures\\RedVial.png",
@@ -427,6 +433,12 @@
             "isUI": false
         },
         {
+            "guid": "5a83226c-9c23-4ede-8468-a2852c9b87ff",
+            "name": "mine_sign",
+            "path": "Assets\\Textures\\mine_sign.png",
+            "isUI": false
+        },
+        {
             "guid": "acb31027-a3de-428f-b58d-322acaf9a702",
             "name": "vitality_potion",
             "path": "Assets\\Textures\\vitality_potion.png",
@@ -538,6 +550,30 @@
             "guid": "b1ed784d-987d-41f5-9ab0-1a35ca1b3a8d",
             "name": "snow_dark",
             "path": "Assets\\Textures\\snow_dark.png",
+            "isUI": false
+        },
+        {
+            "guid": "bdca4fb8-fc22-4bfc-b886-3a1e1a21ebd7",
+            "name": "Rocks007_2K-PNG_Color",
+            "path": "Assets\\Textures\\Rocks007_2K-PNG_Color.png",
+            "isUI": false
+        },
+        {
+            "guid": "b50ee85f-ff40-438b-9261-9b121ba43a07",
+            "name": "Rock030_2K-PNG_Color",
+            "path": "Assets\\Textures\\Rock030_2K-PNG_Color.png",
+            "isUI": false
+        },
+        {
+            "guid": "a59dcec4-b1b0-496c-9ea4-2eadb6604fd3",
+            "name": "rock_pixelated",
+            "path": "Assets\\Textures\\rock_pixelated.png",
+            "isUI": false
+        },
+        {
+            "guid": "b52ea343-007a-490b-ae1f-ce5a3ff76c90",
+            "name": "Lantern",
+            "path": "Assets\\Textures\\Lantern.png",
             "isUI": false
         }
     ]
