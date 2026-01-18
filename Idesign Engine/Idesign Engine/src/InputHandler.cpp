@@ -218,11 +218,24 @@ namespace Framework {
             self->m_lastY = ypos;
 
             targetCam->processMouseMovement(xoffset, yoffset);
+            
         }
         else {
             // [IMPORTANT] If we can't rotate (Menu Mode), constantly reset firstMouse.
             // This ensures that when we DO return to the game, the first movement
             // is treated as a reset, not a giant jump.
+            // --- THE FIX START ---
+            int width, height;
+            glfwGetWindowSize(window, &width, &height);
+
+            // Normalize Raw Pixels (0 -> 1920) to UVs (0.0 -> 1.0)
+            // Check for divide by zero just in case
+            if (width > 0 && height > 0) {
+                float uvX = static_cast<float>(xpos) / static_cast<float>(width);
+                float uvY = 1.0f - (static_cast<float>(ypos) / static_cast<float>(height));
+
+                recipeBookManager->OnMouseMove(uvX, uvY);
+            }
             self->m_firstMouse = true;
         }
     }

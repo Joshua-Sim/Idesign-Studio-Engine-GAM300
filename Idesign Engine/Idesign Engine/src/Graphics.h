@@ -67,6 +67,7 @@ namespace Framework
 
         //Getter for windows for external systems.
         GLFWwindow* GetWindow();
+
         void SetImguiManager(ImguiManager* manager);
 
         Camera* getCamera();

@@ -50,6 +50,7 @@
 #include "ItemComponent.h"
 #include "Inventory.h"
 #include "PhaseManager.h"
+#include "RecipeBookManager.h"
 
 extern Framework::FontSystem fontSystem;
 extern Framework::Coordinator ecsInterface;
@@ -1848,7 +1849,6 @@ namespace Framework {
         // Get the correct pick UV for this view
         glm::vec2& pickUV = (viewIndex == 0) ? pendingPickUV0 : pendingPickUV1;
 
-
         // 1. Calculate the Global Model Matrix
         glm::mat4 mapModel = glm::translate(glm::mat4(1.0f), glm::vec3(-60.0f, 3.0f, 0.0f)); //hard coded values of mapmodel
         mapModel = glm::scale(mapModel, glm::vec3(5.0f, 5.0f, 5.0f));
@@ -2630,32 +2630,39 @@ namespace Framework {
         }
 
         // --------------------------------------------
-                // HUD/UI TEXT PASS (2D Screen Space) (Jasper)
-                // --------------------------------------------
+        // HUD/UI TEXT PASS (2D Screen Space) (Jasper)
+        // --------------------------------------------
         for (auto e : uiTextEntities)
         {
             auto& txt = ecsInterface.GetComponent<TextProperties>(e);
             auto& tr = ecsInterface.GetComponent<TransformComponent>(e);
 
-            // Normalized coordinates (0.0 to 1.0) -> Screen Coordinates
             float px = glm::clamp(tr.position.x, 0.0f, 1.0f);
             float py = glm::clamp(tr.position.y, 0.0f, 1.0f);
 
             float screenX = px * (float)width;
             float screenY = py * (float)height;
 
+            // scale text with resolution (treat txt.scale as authored at 1920x1080)
+            const float REF_W = 1920.0f;
+            const float REF_H = 1080.0f;
+            float resScale = std::min((float)width / REF_W, (float)height / REF_H);
+
+            float effectiveScale = txt.scale * resScale;
+
             fontSystem.RenderText2D(
                 txt.text,
                 screenX,
                 screenY,
-                txt.scale,
+                effectiveScale,   // <-- changed
                 txt.color,
                 (float)width,
                 (float)height,
                 txt.alignment,
-                txt.opacity// <--- ADD THIS ARGUMENT (0=Left, 1=Center, 2=Right)
+                txt.opacity
             );
         }
+
 
         // Do not display inventory boxes while in paused/howtoplay/menu state
         if (viewIndex == 0 &&

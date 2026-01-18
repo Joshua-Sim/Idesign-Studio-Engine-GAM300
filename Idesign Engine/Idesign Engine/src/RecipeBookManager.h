@@ -26,10 +26,16 @@ namespace Framework {
 
         // --- LAYOUT CONSTANTS ---
         const float GRID_START_X = 510.0f;  // Top-left of the Left Page
-        const float GRID_START_Y = 750.0f;
+        const float GRID_START_Y = 675.0f;
         const float SLOT_SIZE = 120.0f;
         const float PADDING = 20.0f;
         const int   GRID_COLUMNS = 3;
+
+        int m_hoveredItemID = -1;       // ID of item currently under mouse
+        Entity m_tooltipEntity = -1;    // ID of the text entity (so we can delete it)
+        bool m_tooltipActive = false;   // Is the text currently showing?
+
+        std::vector<Entity> m_tooltipEntities;
 
     public:
         bool bookSpawned = false;
@@ -53,6 +59,7 @@ namespace Framework {
         }
 
         void Shutdown() {
+            RemoveTooltip(); // <--- Add this
             ClearBook();
             std::cout << "[RecipeBook] Shutdown complete." << std::endl;
         }
@@ -61,41 +68,15 @@ namespace Framework {
         void OnMouseClick(float mouseUV_X, float mouseUV_Y) {
             if (!bookSpawned) return;
 
-            // 1. CONVERT UV (0-1) TO PIXELS (1920x1080)
-            // We use the same reference resolution you used for placement
-            float mouseX = mouseUV_X * 1920.0f;
-            float mouseY = mouseUV_Y * 1080.0f;
+            float itemX, itemY;
+            // Use the shared helper function
+            int itemID = GetItemAtPosition(mouseUV_X, mouseUV_Y, itemX, itemY);
 
-            float currentX = GRID_START_X;
-            float currentY = GRID_START_Y;
-            int colCounter = 0;
-
-            for (int i = 0; i < Framework::kItemCount; i++) {
-                // AABB Collision Check (Mouse vs Icon Center)
-                float halfSize = SLOT_SIZE / 2.0f;
-
-                // Now comparing Pixels vs Pixels
-                bool hitX = mouseX >= (currentX - halfSize) && mouseX <= (currentX + halfSize);
-                bool hitY = mouseY >= (currentY - halfSize) && mouseY <= (currentY + halfSize);
-
-                if (hitX && hitY) {
-                    std::cout << "hi";
-                    ItemClickedEvent data;
-                    data.itemID = i;
-                    EventManager::Instance().Fire("ItemClicked", &data);
-                    return;
-                }
-
-                // Grid Logic (Advance to next slot)
-                colCounter++;
-                if (colCounter >= GRID_COLUMNS) {
-                    colCounter = 0;
-                    currentX = GRID_START_X;
-                    currentY -= (SLOT_SIZE + PADDING);
-                }
-                else {
-                    currentX += (SLOT_SIZE + PADDING);
-                }
+            if (itemID != -1) {
+                std::cout << "CLICKED ITEM: " << itemID << std::endl;
+                ItemClickedEvent data;
+                data.itemID = itemID;
+                EventManager::Instance().Fire("ItemClicked", &data);
             }
         }
 
@@ -121,6 +102,7 @@ namespace Framework {
         }
 
         void ClearBook() {
+            RemoveTooltip(); // <--- Add this
             for (Entity e : uiEntities) {
                 coordinator->DestroyEntity(e);
             }
@@ -133,7 +115,153 @@ namespace Framework {
             BuildBookUI();
         }
 
+        // Call this every frame or on mouse move events
+        // --- INPUT HANDLING ---
+        // Call this every frame or on mouse move events
+        // --- DEBUG VERSION OF ONMOUSEMOVE ---
+            void OnMouseMove(float mouseUV_X, float mouseUV_Y) {
+                if (!bookSpawned) return;
+
+                float itemX, itemY;
+                // Use the EXACT same helper function
+                int foundItemID = GetItemAtPosition(mouseUV_X, mouseUV_Y, itemX, itemY);
+
+                // State Change Check
+                if (foundItemID != m_hoveredItemID) {
+
+                    RemoveTooltip();
+                    m_hoveredItemID = foundItemID;
+
+                    if (foundItemID != -1) {
+                        // If we find an item, force a print to console to prove it worked
+                        std::cout << "[Hover] Found Item: " << foundItemID << " at " << itemX << ", " << itemY << std::endl;
+                        CreateTooltip(foundItemID, itemX, itemY);
+                    }
+                }
+            }
+
+
+
     private:
+            void CreateTooltip(int itemID, float itemX, float itemY) {
+                std::string text = Framework::kItemNames[itemID];
+
+                // --- 1. CALCULATE DIMENSIONS ---
+                float charWidth = 14.0f; // Tweak this based on your font
+                float padding = 20.0f;
+                float textScale = 1.0f;
+
+                float bgWidth = (text.length() * charWidth * textScale) + padding;
+                float bgHeight = 50.0f;
+
+                // Position: slightly above item
+                float tooltipY = itemY + (SLOT_SIZE / 2.0f) + 20.0f;
+
+                // Normalize 
+                float normX = itemX;
+                float normY = tooltipY;
+
+                // --- 2. SPAWN BACKGROUND (Solid Color) ---
+                {
+                    Entity bg = coordinator->CreateEntity();
+                    m_tooltipEntities.push_back(bg);
+
+                    TransformComponent trans;
+                    trans.position = glm::vec3(normX, normY, 0.1f); // Behind text
+                    trans.scale = glm::vec3(bgWidth, bgHeight, 1.0f);
+
+                    MeshProperties mesh;
+                    HierarchyComponent hc;
+                    TextureProperties texComp;
+
+                    // TRICK: Use a 1x1 white pixel. Scaling it just makes a larger rectangle.
+                    texComp.path = "Assets/Textures/White.png";
+                    texComp.isUI = true;
+                    
+                    TextureLoader::loadTexture(texComp, true);
+
+                    coordinator->AddComponent(bg, hc);
+                    coordinator->AddComponent(bg, trans);
+                    coordinator->AddComponent(bg, mesh);
+                    coordinator->AddComponent(bg, texComp);
+                }
+
+                // --- 3. SPAWN TEXT ---
+                {
+                    Entity txt = coordinator->CreateEntity();
+                    m_tooltipEntities.push_back(txt);
+
+                    TransformComponent trans;
+                    trans.position = glm::vec3(normX / 1920, normY / 1080, 0.21f); // In front of BG
+                    trans.scale = glm::vec3(1.0f, 1.0f, 1.0f);
+
+                    MeshProperties mesh;
+                    HierarchyComponent hc;
+                    TextProperties tp;
+
+                    tp.screenSpace = true;
+                    tp.text = text;
+                    tp.alignment = 1; // Center
+                    tp.scale = textScale;
+                    // tp.color = {1.0f, 1.0f, 1.0f}; // White Text
+
+                    coordinator->AddComponent(txt, hc);
+                    coordinator->AddComponent(txt, trans);
+                    coordinator->AddComponent(txt, mesh);
+                    coordinator->AddComponent(txt, tp);
+                }
+
+                m_tooltipActive = true;
+            }
+
+            void RemoveTooltip() {
+                if (m_tooltipActive) {
+                    // Destroy all parts of the tooltip (BG + Text)
+                    for (Entity e : m_tooltipEntities) {
+                        coordinator->DestroyEntity(e);
+                    }
+                    m_tooltipEntities.clear();
+                    m_tooltipActive = false;
+                }
+            }
+
+            int GetItemAtPosition(float mouseUV_X, float mouseUV_Y, float& outItemX, float& outItemY) {
+
+                // 1. CONVERT UV TO PIXELS
+                float mouseX = mouseUV_X * 1920.0f;
+                float mouseY = mouseUV_Y * 1080.0f;
+
+                float currentX = GRID_START_X;
+                float currentY = GRID_START_Y;
+                float halfSize = SLOT_SIZE / 2.0f;
+                int colCounter = 0;
+
+                for (int i = 0; i < Framework::kItemCount; i++) {
+
+                    // STRICT HIT CHECK
+                    bool hitX = mouseX >= (currentX - halfSize) && mouseX <= (currentX + halfSize);
+                    bool hitY = mouseY >= (currentY - halfSize) && mouseY <= (currentY + halfSize);
+
+                    if (hitX && hitY) {
+                        outItemX = currentX;
+                        outItemY = currentY;
+                        return i; // Found it!
+                    }
+
+                    // GRID ADVANCE
+                    colCounter++;
+                    if (colCounter >= GRID_COLUMNS) {
+                        colCounter = 0;
+                        currentX = GRID_START_X;
+                        currentY -= (SLOT_SIZE + PADDING);
+                    }
+                    else {
+                        currentX += (SLOT_SIZE + PADDING);
+                    }
+                }
+
+                return -1; // Nothing found
+            }
 
         // =========================================================
         //                 LEFT PAGE: ITEM GRID
@@ -143,7 +271,7 @@ namespace Framework {
             float currentY = GRID_START_Y;
             int colCounter = 0;
 
-            SpawnText(currentX + 100.0f, currentY + 130.0f, "All Items", 1.0f);
+            SpawnText(currentX + 150.0f, currentY + 150.0f, "All Items", 2.0f);
 
             for (int i = 0; i < Framework::kItemCount; i++) {
 
@@ -173,15 +301,12 @@ namespace Framework {
         // =========================================================
         //                  RIGHT PAGE: INGREDIENT BREAKDOWN
         // =========================================================
-// =========================================================
-        //                 RIGHT PAGE: INGREDIENT BREAKDOWN
-        // =========================================================
         void BuildRightPage(int selectedID) {
             float rightPageX = 960.0f + 250.0f;
             float currentY = GRID_START_Y;
             float rowSpacing = SLOT_SIZE + PADDING;
 
-            SpawnText(rightPageX, currentY + 130.0f, "Ingredients Required", 1.0f);
+            SpawnText(rightPageX + 30.0f, currentY + 150.0f, "Ingredients Required", 2.0f);
 
             // 1. Get the Main Recipe for the selected item
             const PotionRecipe* primaryRecipe = Framework::GetRecipeForResult(selectedID);
@@ -220,10 +345,12 @@ namespace Framework {
             // 3. FINAL STEP: Show the main recipe at the bottom
             // Add a little extra spacing or a separator
             currentY -= 30.0f;
-            SpawnText(rightPageX, currentY + (SLOT_SIZE / 2.0f) + 20.0f, "Final Mixture", 0.8f);
+            SpawnText(rightPageX + 50.0f, currentY + (SLOT_SIZE / 2.0f) - 80.0f, "Final Mixture", 2.0f);
 
-            RenderRecipeRow(rightPageX, currentY, primaryRecipe);
+            RenderRecipeRow(rightPageX, currentY - 100.0f, primaryRecipe);
         }
+
+       
 
         void RenderRecipeRow(float centerX, float y, const PotionRecipe* recipe) {
             if (!recipe) return;

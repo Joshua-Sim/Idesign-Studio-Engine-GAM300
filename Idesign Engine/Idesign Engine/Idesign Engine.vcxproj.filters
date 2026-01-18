@@ -676,6 +676,9 @@
     </ClInclude>
     <ClInclude Include="src\PebbleRenderer.h" />
     <ClInclude Include="src\SceneInterface.h" />
+    <ClInclude Include="UILayout.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />
