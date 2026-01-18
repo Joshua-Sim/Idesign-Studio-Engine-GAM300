@@ -138,11 +138,11 @@
                     "volume": 1.0,
                     "loop": false,
                     "playOnStart": true,
-                    "isPlaying": true,
+                    "isPlaying": false,
                     "lastPosition": [
-                        -45.934112548828125,
-                        5.300000190734863,
-                        14.715734481811523
+                        0.0,
+                        0.0,
+                        0.0
                     ]
                 }
             }
@@ -2698,14 +2698,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -67.02519989013672,
-                        10.041123390197754,
-                        8.926251411437988
+                        -55.22536087036133,
+                        8.044564247131348,
+                        7.572541236877441
                     ],
                     "rotation": [
                         0.0,
-                        90.63897705078125,
-                        180.0
+                        89.25916290283203,
+                        0.0
                     ],
                     "scale": [
                         0.9999989867210388,
@@ -2780,9 +2780,9 @@
                 },
                 "ListenerComponent": {
                     "position": [
-                        -67.02519989013672,
-                        10.041123390197754,
-                        8.926251411437988
+                        -55.22536087036133,
+                        8.044564247131348,
+                        7.572541236877441
                     ],
                     "forward": [
                         0.0,
@@ -3095,7 +3095,7 @@
                     "animationSpeed": 1.0,
                     "bLoops": true,
                     "bPlayOnStart": true,
-                    "currentTime": 46.14926528930664
+                    "currentTime": 66.19557189941406
                 },
                 "TextureComponent": {
                     "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
@@ -3166,11 +3166,11 @@
                     "volume": 1.0,
                     "loop": true,
                     "playOnStart": true,
-                    "isPlaying": true,
+                    "isPlaying": false,
                     "lastPosition": [
-                        -40.230262756347656,
-                        6.287981033325195,
-                        17.725893020629883
+                        0.0,
+                        0.0,
+                        0.0
                     ]
                 }
             }
@@ -4903,8 +4903,7 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
@@ -5147,19 +5146,19 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -219.9723358154297,
-                        6.177515029907227,
-                        -174.49977111816406
+                        -144.36074829101563,
+                        47.61824035644531,
+                        -168.01353454589844
                     ],
                     "rotation": [
-                        0.000018320219169254415,
-                        0.000004141952558711637,
-                        0.0000051884430831705686
+                        0.0,
+                        49.99999237060547,
+                        0.0
                     ],
                     "scale": [
-                        2.0,
-                        2.0,
-                        2.0
+                        3.9999983310699463,
+                        3.9999988079071045,
+                        3.9999959468841553
                     ]
                 },
                 "HierarchyComponent": {
@@ -5171,12 +5170,28 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "ad1d920a-c18d-41ea-90e7-d1cdfa54f7bf",
+                    "guid": "129121d0-1b79-4037-92cc-441ec6337a1f",
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
+                    "guid": "b52ea343-007a-490b-ae1f-ce5a3ff76c90",
                     "isUI": false
+                },
+                "LightProperties": {
+                    "enabled": true,
+                    "color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "intensity": 0.4740000069141388,
+                    "radius": 10.039999961853027,
+                    "innerCutOffAngle": 0.21816615760326385,
+                    "outerCutOffAngle": 0.2617993950843811,
+                    "castsShadow": false,
+                    "shadowBiasConst": 0.004999999888241291,
+                    "shadowBiasFactor": 0.05000000074505806,
+                    "type": "Directional"
                 },
                 "BoxColliderComponent": {
                     "colliders": [
@@ -5319,8 +5334,7 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
@@ -5350,19 +5364,19 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -208.98684692382813,
-                        5.98076868057251,
-                        -171.366943359375
+                        -169.92630004882813,
+                        9.587713241577148,
+                        -162.9172821044922
                     ],
                     "rotation": [
-                        -0.00015248179261106998,
-                        -0.010281069204211235,
-                        0.03365347906947136
+                        0.0,
+                        -0.0,
+                        0.0
                     ],
                     "scale": [
-                        4.999999523162842,
-                        0.9999949932098389,
-                        4.999995708465576
+                        0.9999987483024597,
+                        0.9999982118606567,
+                        0.9999960064888
                     ]
                 },
                 "HierarchyComponent": {
@@ -5374,11 +5388,11 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "177fa052-079f-42bb-b225-97be34770804",
+                    "guid": "5a92f04b-b30d-44f3-b990-d790fa568494",
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
+                    "guid": "1d05db70-ba11-4d22-98cc-1594aa9f8bd2",
                     "isUI": false
                 },
                 "BoxColliderComponent": {
@@ -5450,8 +5464,7 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "b2d4bb99-3396-40de-8789-01d6cf083f4e",
@@ -5758,9 +5771,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -233.05282592773438,
+                        -217.16168212890625,
                         5.900085926055908,
-                        -168.0260009765625
+                        -173.0196533203125
                     ],
                     "rotation": [
                         0.0,
@@ -5768,9 +5781,9 @@
                         0.0
                     ],
                     "scale": [
-                        0.25,
-                        0.25,
-                        0.25
+                        0.75,
+                        0.75,
+                        0.75
                     ]
                 },
                 "HierarchyComponent": {
@@ -5782,11 +5795,11 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "71eff974-51b5-4c24-912c-ed68dbe5df8c",
+                    "guid": "7b6859aa-5151-4275-b87d-49b47c391646",
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
+                    "guid": "1d20c5f9-aee9-468d-a96e-3c1547b21646",
                     "isUI": false
                 }
             }
@@ -6248,7 +6261,502 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "b50ee85f-ff40-438b-9261-9b121ba43a07",
+                    "guid": "bb86e2ff-7a24-4492-9e03-134fbfe85046",
+                    "isUI": false
+                }
+            }
+        },
+        {
+            "name": "Quarry-rock1 (Copy) (Copy)",
+            "guid": "35ca9f9e-b0b5-4680-94c9-98bcb93d75d5",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -219.97482299804688,
+                        5.170827865600586,
+                        -171.0207977294922
+                    ],
+                    "rotation": [
+                        0.000017812313672038727,
+                        0.0006514148553833365,
+                        -0.0002958997501991689
+                    ],
+                    "scale": [
+                        4.0,
+                        4.0,
+                        4.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 85
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "MeshComponent": {
+                    "guid": "c88635f7-0838-4fef-adcf-32a32dc48ea5",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "5a83226c-9c23-4ede-8468-a2852c9b87ff",
+                    "isUI": false
+                },
+                "BoxColliderComponent": {
+                    "colliders": [
+                        {
+                            "size": [
+                                1.100000023841858,
+                                0.6499999761581421,
+                                1.0
+                            ],
+                            "center": [
+                                0.30000001192092896,
+                                0.30000001192092896,
+                                0.10000000149011612
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        }
+                    ]
+                },
+                "PhysicsProperties": {
+                    "category": 0,
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 0.5,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "startAwake": true
+                }
+            }
+        },
+        {
+            "name": "QuarryTable (Copy)",
+            "guid": "27952f74-a658-4bfc-a2af-993fcdf9f93c",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -208.98684692382813,
+                        5.98076868057251,
+                        -171.366943359375
+                    ],
+                    "rotation": [
+                        -0.00015248179261106998,
+                        -0.010281069204211235,
+                        0.03365347906947136
+                    ],
+                    "scale": [
+                        4.999999523162842,
+                        0.9999949932098389,
+                        4.999995708465576
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 88
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "MeshComponent": {
+                    "guid": "177fa052-079f-42bb-b225-97be34770804",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
+                    "isUI": false
+                },
+                "BoxColliderComponent": {
+                    "colliders": [
+                        {
+                            "size": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ],
+                            "center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        }
+                    ]
+                },
+                "PhysicsProperties": {
+                    "category": 0,
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 0.5,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "startAwake": true
+                }
+            }
+        },
+        {
+            "name": "QuarryTable (Copy)",
+            "guid": "fc0a28ac-96ba-4cd9-8d51-fe63214bc0e7",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -179.0149383544922,
+                        5.998372554779053,
+                        -171.36160278320313
+                    ],
+                    "rotation": [
+                        0.039254430681467056,
+                        49.99998474121094,
+                        0.05170523002743721
+                    ],
+                    "scale": [
+                        2.0,
+                        1.9999998807907104,
+                        2.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 88
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "MeshComponent": {
+                    "guid": "b0bdcbb9-f3e6-4f07-8c24-875c928d13fa",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "1d05db70-ba11-4d22-98cc-1594aa9f8bd2",
+                    "isUI": false
+                },
+                "BoxColliderComponent": {
+                    "colliders": [
+                        {
+                            "size": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ],
+                            "center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        }
+                    ]
+                },
+                "PhysicsProperties": {
+                    "category": 0,
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 0.5,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "startAwake": true
+                }
+            }
+        },
+        {
+            "name": "QuarryTable (Copy)",
+            "guid": "8463b5ea-9d8b-4a53-b356-0f0c832a35d3",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -171.77505493164063,
+                        5.385252952575684,
+                        -165.7279815673828
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.9999951720237732,
+                        0.9999937415122986,
+                        0.999993622303009
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 88
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "MeshComponent": {
+                    "guid": "5a92f04b-b30d-44f3-b990-d790fa568494",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "1d05db70-ba11-4d22-98cc-1594aa9f8bd2",
+                    "isUI": false
+                },
+                "BoxColliderComponent": {
+                    "colliders": [
+                        {
+                            "size": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ],
+                            "center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        }
+                    ]
+                },
+                "PhysicsProperties": {
+                    "category": 0,
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 0.5,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "startAwake": true
+                }
+            }
+        },
+        {
+            "name": "QuarryTable (Copy)",
+            "guid": "a04edb0e-dddd-4ba0-af0b-bdd226ef652a",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -167.18411254882813,
+                        5.580447196960449,
+                        -163.49234008789063
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.9999987483024597,
+                        0.9999982118606567,
+                        0.9999960064888
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 88
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "MeshComponent": {
+                    "guid": "5a92f04b-b30d-44f3-b990-d790fa568494",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "1d05db70-ba11-4d22-98cc-1594aa9f8bd2",
+                    "isUI": false
+                },
+                "BoxColliderComponent": {
+                    "colliders": [
+                        {
+                            "size": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ],
+                            "center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        }
+                    ]
+                },
+                "PhysicsProperties": {
+                    "category": 0,
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 0.5,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "startAwake": true
+                }
+            }
+        },
+        {
+            "name": "QuarryTable (Copy)",
+            "guid": "dbc4ed3d-5a5a-4209-82b2-9f50d60fb8a9",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -170.18202209472656,
+                        5.674075126647949,
+                        -160.6740264892578
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.9999987483024597,
+                        0.9999982118606567,
+                        0.9999960064888
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 88
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "MeshComponent": {
+                    "guid": "5a92f04b-b30d-44f3-b990-d790fa568494",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "1d05db70-ba11-4d22-98cc-1594aa9f8bd2",
+                    "isUI": false
+                },
+                "BoxColliderComponent": {
+                    "colliders": [
+                        {
+                            "size": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ],
+                            "center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        }
+                    ]
+                },
+                "PhysicsProperties": {
+                    "category": 0,
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 0.5,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "startAwake": true
+                }
+            }
+        },
+        {
+            "name": "Pickable-rock (Copy) (Copy)",
+            "guid": "26a7ff35-ba3a-4887-ab0b-64a0a2e64c54",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -208.7455596923828,
+                        5.900085926055908,
+                        -157.3512420654297
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.25,
+                        0.25,
+                        0.25
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 96
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "MeshComponent": {
+                    "guid": "71eff974-51b5-4c24-912c-ed68dbe5df8c",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
                     "isUI": false
                 }
             }

@@ -31,18 +31,6 @@
             "isUI": false
         },
         {
-            "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
-            "name": "Shelf",
-            "path": "Assets\\Textures\\Shelf.png",
-            "isUI": false
-        },
-        {
-            "guid": "d24a29c5-cd9e-4322-ab59-d38618cba4bf",
-            "name": "quitbutton",
-            "path": "Assets\\Textures\\quitbutton.png",
-            "isUI": false
-        },
-        {
             "guid": "cabb6b16-8445-4f40-b9c8-bd593ea6b65c",
             "name": "top",
             "path": "Assets\\Textures\\top.png",
@@ -52,6 +40,18 @@
             "guid": "312bdb54-477d-47bb-a1ce-2224bc3ec5e3",
             "name": "Cupboard",
             "path": "Assets\\Textures\\Cupboard.png",
+            "isUI": false
+        },
+        {
+            "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
+            "name": "Shelf",
+            "path": "Assets\\Textures\\Shelf.png",
+            "isUI": false
+        },
+        {
+            "guid": "d24a29c5-cd9e-4322-ab59-d38618cba4bf",
+            "name": "quitbutton",
+            "path": "Assets\\Textures\\quitbutton.png",
             "isUI": false
         },
         {
@@ -574,6 +574,12 @@
             "guid": "b52ea343-007a-490b-ae1f-ce5a3ff76c90",
             "name": "Lantern",
             "path": "Assets\\Textures\\Lantern.png",
+            "isUI": false
+        },
+        {
+            "guid": "1d20c5f9-aee9-468d-a96e-3c1547b21646",
+            "name": "pickaxe",
+            "path": "Assets\\Textures\\pickaxe.png",
             "isUI": false
         }
     ]
