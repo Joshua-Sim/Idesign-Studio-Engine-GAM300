@@ -833,6 +833,7 @@ namespace Framework {
 
                         shadowShader.setMat4("uModel", model);
                         glBindVertexArray(mesh.vao);
+
                         glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
                     }
                 }
@@ -1292,6 +1293,11 @@ namespace Framework {
         int id = lastPickedId;
         lastPickedId = -1;
         return id;
+    }
+
+    void Graphics::SetLookAtHighlightedId(int id)
+    {
+        mLookAtHighlightedId = id;
     }
 
     glm::mat4 Graphics::GetViewMatrix(int viewIdx) const
@@ -1792,8 +1798,8 @@ namespace Framework {
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBuffer, 0);
         glGenRenderbuffers(1, &rboDepth);
         glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height); // Use parameters
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
             std::cout << "ERROR::FRAMEBUFFER:: HDR Framebuffer is not complete!\n";
 
@@ -1857,11 +1863,14 @@ namespace Framework {
         // 1. SCENE PASS
         glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
         glEnable(GL_DEPTH_TEST);
+        glEnable(GL_STENCIL_TEST);
+        glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+        glClearStencil(0);
         glDisable(GL_CULL_FACE);
 
         glViewport(0, 0, width, height);
         glClearColor(0.07f, 0.09f, 0.12f, 1.f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
         glm::mat4 proj = cam.getProjectionMatrix((float)width, (float)height);
         glm::mat4 view = cam.getViewMatrix();
@@ -1944,6 +1953,7 @@ namespace Framework {
 
         // --- ENTITY SORTING ---
         int sel = lastPickedId;
+        int hoverSel = mLookAtHighlightedId;
         const glm::vec3 kHighlightAlbedo(1.0f, 0.85f, 0.3f);
         std::vector<Entity> opaqueEntities;
         std::multimap<float, Entity> transparentEntities;
@@ -2197,7 +2207,7 @@ namespace Framework {
                     if (ecsInterface.HasComponent<MaterialProperties>(entityId))
                     {
                         auto& material = ecsInterface.GetComponent<MaterialProperties>(entityId);
-                        const bool isSelected = (int)entityId == sel;
+                        const bool isSelected = ((int)entityId == sel) || ((int)entityId == hoverSel);
                         glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : material.albedo;
                         currentshader.setVec3("uAlbedo", finalAlbedo);
 
@@ -2212,7 +2222,7 @@ namespace Framework {
                     else
                     {
                         // Default Albedo: White (so textures look normal)
-                        const bool isSelected = (int)entityId == sel;
+                        const bool isSelected = ((int)entityId == sel) || ((int)entityId == hoverSel);
                         glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : glm::vec3(1.0f, 1.0f, 1.0f);
 
                         currentshader.setVec3("uAlbedo", finalAlbedo);
@@ -2235,6 +2245,14 @@ namespace Framework {
                     }
 
                     LightProperties::upload(currentshader, sun, hasSun, points, spots);
+                    bool doOutline = ((int)entityId == hoverSel); // or: == sel, or both
+                    if (doOutline) {
+                        glStencilFunc(GL_ALWAYS, 1, 0xFF);
+                        glStencilMask(0xFF);   // enable stencil writes
+                    }
+                    else {
+                        glStencilMask(0x00);   // disable stencil writes for normal objects
+                    }
                     glBindVertexArray(mesh.vao);
                     glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
                 }
@@ -2292,6 +2310,55 @@ namespace Framework {
                 }
             }
         }
+
+        if (hoverSel != -1)
+        {
+            Entity outlineEntity = (Entity)hoverSel;
+
+            if (ecsInterface.HasComponent<TransformComponent>(outlineEntity) &&
+                ecsInterface.HasComponent<MeshProperties>(outlineEntity))
+            {
+                auto& trO = ecsInterface.GetComponent<TransformComponent>(outlineEntity);
+                auto& meshO = ecsInterface.GetComponent<MeshProperties>(outlineEntity);
+
+                if (meshO.debugShape == DebugShapeType::None && meshO.vao != 0)
+                {
+                    glm::mat4 baseModel(1.0f);
+                    baseModel = glm::translate(baseModel, trO.position);
+                    baseModel = glm::rotate(baseModel, glm::radians(trO.rotation.x), { 1,0,0 });
+                    baseModel = glm::rotate(baseModel, glm::radians(trO.rotation.y), { 0,1,0 });
+                    baseModel = glm::rotate(baseModel, glm::radians(trO.rotation.z), { 0,0,1 });
+                    baseModel = glm::scale(baseModel, trO.scale);
+
+                    const float outlineScale = 1.03f; // thickness knob (try 1.02 ~ 1.06)
+                    glm::mat4 outlineModel = glm::scale(baseModel, glm::vec3(outlineScale));
+
+                    glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+                    glStencilMask(0x00);
+                    glDisable(GL_DEPTH_TEST);
+
+                    glEnable(GL_CULL_FACE);
+                    glCullFace(GL_FRONT);
+
+                    debugShader.use();
+                    debugShader.setMat4("projection", proj);
+                    debugShader.setMat4("view", view);
+                    debugShader.setMat4("model", outlineModel);
+                    debugShader.setVec3("color", glm::vec3(1.0f)); // white outline
+
+                    glBindVertexArray(meshO.vao);
+                    glDrawElements(GL_TRIANGLES, meshO.indexCount, GL_UNSIGNED_INT, 0);
+
+                    glCullFace(GL_BACK);
+                    glEnable(GL_DEPTH_TEST);
+                }
+            }
+        }
+
+        // IMPORTANT: don’t let stencil affect transparent/UI passes
+        glStencilMask(0xFF);
+        glStencilFunc(GL_ALWAYS, 0, 0xFF);
+        glDisable(GL_STENCIL_TEST);
 
         // --- 2. TRANSPARENT PASS ---
         glEnable(GL_BLEND);
@@ -2393,7 +2460,7 @@ namespace Framework {
                 if (ecsInterface.HasComponent<MaterialProperties>(entityId))
                 {
                     auto& material = ecsInterface.GetComponent<MaterialProperties>(entityId);
-                    const bool isSelected = (int)entityId == sel;
+                    const bool isSelected = ((int)entityId == sel) || ((int)entityId == hoverSel);
                     glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : material.albedo;
                     currentShader.setVec3("uAlbedo", finalAlbedo);
                     currentShader.setVec3("uMaterial.ambient", material.ambient);
@@ -2413,6 +2480,14 @@ namespace Framework {
                 }
 
                 LightProperties::upload(currentShader, sun, hasSun, points, spots);
+                bool doOutline = ((int)entityId == hoverSel); // or sel / both
+                if (doOutline) {
+                    glStencilFunc(GL_ALWAYS, 1, 0xFF);
+                    glStencilMask(0xFF);
+                }
+                else {
+                    glStencilMask(0x00);
+                }
                 glBindVertexArray(mesh.vao);
                 glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
             }
@@ -2630,30 +2705,36 @@ namespace Framework {
         }
 
         // --------------------------------------------
-                // HUD/UI TEXT PASS (2D Screen Space) (Jasper)
-                // --------------------------------------------
+        // HUD/UI TEXT PASS (2D Screen Space) (Jasper)
+        // --------------------------------------------
         for (auto e : uiTextEntities)
         {
             auto& txt = ecsInterface.GetComponent<TextProperties>(e);
             auto& tr = ecsInterface.GetComponent<TransformComponent>(e);
 
-            // Normalized coordinates (0.0 to 1.0) -> Screen Coordinates
             float px = glm::clamp(tr.position.x, 0.0f, 1.0f);
             float py = glm::clamp(tr.position.y, 0.0f, 1.0f);
 
             float screenX = px * (float)width;
             float screenY = py * (float)height;
 
+            // scale text with resolution (treat txt.scale as authored at 1920x1080)
+            const float REF_W = 1920.0f;
+            const float REF_H = 1080.0f;
+            float resScale = std::min((float)width / REF_W, (float)height / REF_H);
+
+            float effectiveScale = txt.scale * resScale;
+
             fontSystem.RenderText2D(
                 txt.text,
                 screenX,
                 screenY,
-                txt.scale,
+                effectiveScale,   // <-- changed
                 txt.color,
                 (float)width,
                 (float)height,
                 txt.alignment,
-                txt.opacity// <--- ADD THIS ARGUMENT (0=Left, 1=Center, 2=Right)
+                txt.opacity
             );
         }
 
