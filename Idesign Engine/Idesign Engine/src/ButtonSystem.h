@@ -39,6 +39,7 @@ namespace Framework {
         void SetInputHandler(InputHandler* handler);
        // std::vector<ButtonComponent> GetButtons() const;
         void HandleClickUV(float u, float v);
+        void UpdateHoverUV(float u, float v);
 
     private:
         //std::vector<ButtonComponent> buttons; // List of buttons

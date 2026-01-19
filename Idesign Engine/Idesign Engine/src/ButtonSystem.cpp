@@ -95,6 +95,47 @@ namespace Framework {
             if (inside) button.TriggerClick(entity);
         }
     }
+
+    void ButtonSystem::UpdateHoverUV(float u, float v)
+    {
+        float designX = u * DESIGN_WIDTH;
+        float designY = v * DESIGN_HEIGHT;
+
+        for (auto entity : mEntities)
+        {
+            if (!ecsInterface.HasComponent<ButtonComponent>(entity) ||
+                !ecsInterface.HasComponent<TransformComponent>(entity) ||
+                !ecsInterface.HasComponent<TextureProperties>(entity))
+                continue;
+
+            auto& button = ecsInterface.GetComponent<ButtonComponent>(entity);
+            auto& tr = ecsInterface.GetComponent<TransformComponent>(entity);
+            auto& tex = ecsInterface.GetComponent<TextureProperties>(entity);
+
+            // only UI quads are treated as buttons
+            if (!tex.isUI) continue;
+
+            // derive bounds from Transform (center + full size)
+            float left = tr.position.x - 0.5f * tr.scale.x;
+            float right = tr.position.x + 0.5f * tr.scale.x;
+            float bottom = tr.position.y - 0.5f * tr.scale.y;
+            float top = tr.position.y + 0.5f * tr.scale.y;
+
+            bool inside = (designX > left && designX < right && designY > bottom && designY < top);
+            button.isHovered = inside;
+
+            //DO NOT CHANGE ANY Z POSITIONING
+            if (inside && button.isFrontButton == true)
+            {
+                tr.position.z = -100;
+            }
+            else
+            {
+                tr.position.z = 1;
+            }
+        }
+    }
+
 }
 
 //    void ButtonSystem::AddButton(ButtonComponent button) {
