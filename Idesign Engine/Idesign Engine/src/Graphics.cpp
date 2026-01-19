@@ -2720,12 +2720,9 @@ namespace Framework {
             auto& txt = ecsInterface.GetComponent<TextProperties>(e);
             auto& tr = ecsInterface.GetComponent<TransformComponent>(e);
 
-<<<<<<< HEAD
             if (!tr.isActive) continue; // Skip pass if isactive is false
 
             // Normalized coordinates (0.0 to 1.0) -> Screen Coordinates
-=======
->>>>>>> Jasper_M4
             float px = glm::clamp(tr.position.x, 0.0f, 1.0f);
             float py = glm::clamp(tr.position.y, 0.0f, 1.0f);
 
