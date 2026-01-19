@@ -130,12 +130,16 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)lib\glfw-3.4.bin.WIN64\lib-vc2022;$(SolutionDir)Idesign Engine;$(SolutionDir)Idesign Engine\src;$(SolutionDir)lib\glew\lib\Release\x64;$(SolutionDir)lib\glew\lib\Debug\x64;$(SolutionDir)Idesign Engine\x64\Debug;$(SolutionDir)Idesign Engine\x64\Release;$(SolutionDir)lib\freetype;$(SolutionDir)lib\FMOD_CORE\lib\x64;$(SolutionDir)lib\FMOD_STUDIO\lib\x64;$(SolutionDir)\Idesign Engine\x64\Debug;$(SolutionDir)lib\installed\x64-windows\lib;$(SolutionDir)lib\Jolt\out\build\x64-Debug;$(SolutionDir)lib\Jolt\out\build\x64-Release;$(SolutionDir)lib\lua-5.4.2</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;user32.lib;gdi32.lib;shell32.lib;%(AdditionalDependencies);glew32s.lib;freetype.lib;fmod_vc.lib;fmodL_vc.lib;fmodstudio_vc.lib;fmodstudioL_vc.lib;glfw3.lib;assimp-vc143-mt.lib;glew32.lib;Jolt.lib;lua54.lib;rttr_core.lib</AdditionalDependencies>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
+      <ShowProgress>LinkVerboseLib</ShowProgress>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y /d "$(SolutionDir)dll\*.dll" "$(OutDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\lib\imgui\imgui.h" />

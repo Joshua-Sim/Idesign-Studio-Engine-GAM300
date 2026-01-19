@@ -82,6 +82,7 @@ namespace Framework
         bool IsScriptControlEnabled() const;
 
         int  ConsumeLastPickedId();
+        void SetLookAtHighlightedId(int id);
         glm::mat4 GetViewMatrix(int viewIdx) const;
         glm::mat4 GetProjectionMatrix(int viewIdx, float w, float h) const;
         Camera* GetCameraByIndex(int viewIdx);
@@ -252,6 +253,7 @@ namespace Framework
         ShaderProgram pickShader{ "Assets/shaders/pickvert.glsl", "Assets/shaders/pickfrag.glsl" };
         glm::vec2 pendingPickUV = { -1.0f,-1.0f };
         int lastPickedId = -1;
+        int mLookAtHighlightedId = -1;
 
         std::map<DebugShapeType, Mesh*> m_debugMeshes;
 
