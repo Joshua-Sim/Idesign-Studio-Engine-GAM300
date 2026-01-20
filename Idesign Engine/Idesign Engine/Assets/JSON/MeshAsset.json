@@ -31,9 +31,9 @@
             "guid": "eac3e6f4-1bf2-415f-aef8-8f1269d91560",
             "name": "Cube",
             "path": "Assets/Objects/Cube.obj",
-            "vao": 116,
-            "vbo": 220,
-            "ebo": 221,
+            "vao": 265,
+            "vbo": 518,
+            "ebo": 519,
             "indexCount": 36
         },
         {
@@ -58,27 +58,27 @@
             "guid": "814c3cff-9da8-4ad4-8a05-009b99a4ea2b",
             "name": "Door",
             "path": "Assets\\Objects\\Door.obj",
-            "vao": 77,
-            "vbo": 142,
-            "ebo": 143,
+            "vao": 270,
+            "vbo": 528,
+            "ebo": 529,
             "indexCount": 324
         },
         {
             "guid": "1cc97700-7326-4df8-b677-80233b030807",
             "name": "Back Wall",
             "path": "Assets\\Objects\\Back Wall.obj",
-            "vao": 88,
-            "vbo": 164,
-            "ebo": 165,
+            "vao": 281,
+            "vbo": 550,
+            "ebo": 551,
             "indexCount": 591
         },
         {
             "guid": "90a63915-c3e8-40b9-8c48-b8fe58a9bd67",
             "name": "Drawer",
             "path": "Assets\\Objects\\Drawer.obj",
-            "vao": 84,
-            "vbo": 156,
-            "ebo": 157,
+            "vao": 277,
+            "vbo": 542,
+            "ebo": 543,
             "indexCount": 1560
         },
         {
@@ -94,9 +94,9 @@
             "guid": "62fa60bd-a3d0-4575-851f-e6d04a326345",
             "name": "Window Frame",
             "path": "Assets\\Objects\\Window Frame.obj",
-            "vao": 75,
-            "vbo": 138,
-            "ebo": 139,
+            "vao": 268,
+            "vbo": 524,
+            "ebo": 525,
             "indexCount": 774
         },
         {
@@ -112,9 +112,9 @@
             "guid": "239cddd5-6733-44a1-927a-e3b13152a09a",
             "name": "Frog",
             "path": "Assets/Objects/Frog.obj",
-            "vao": 87,
-            "vbo": 162,
-            "ebo": 163,
+            "vao": 280,
+            "vbo": 548,
+            "ebo": 549,
             "indexCount": 780
         },
         {
@@ -139,36 +139,36 @@
             "guid": "6cbaa85b-562d-4b23-9f64-8639947659cc",
             "name": "knifechoppingwithBONEFIXED4",
             "path": "Assets/Objects/knifechoppingwithBONEFIXED4.fbx",
-            "vao": 70,
-            "vbo": 128,
-            "ebo": 129,
+            "vao": 262,
+            "vbo": 512,
+            "ebo": 513,
             "indexCount": 312
         },
         {
             "guid": "d51dc95c-5066-4fd5-a31c-e51faf79cdd2",
             "name": "Cupboard",
             "path": "Assets\\Objects\\Cupboard.obj",
-            "vao": 85,
-            "vbo": 158,
-            "ebo": 159,
+            "vao": 278,
+            "vbo": 544,
+            "ebo": 545,
             "indexCount": 684
         },
         {
             "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941",
             "name": "Cube",
             "path": "Assets/Objects/Cube.obj",
-            "vao": 89,
-            "vbo": 166,
-            "ebo": 167,
+            "vao": 283,
+            "vbo": 554,
+            "ebo": 555,
             "indexCount": 36
         },
         {
             "guid": "0bfc0f47-64aa-4521-b9fa-08ff8aed994b",
             "name": "Counter",
             "path": "Assets\\Objects\\Counter.obj",
-            "vao": 86,
-            "vbo": 160,
-            "ebo": 161,
+            "vao": 279,
+            "vbo": 546,
+            "ebo": 547,
             "indexCount": 966
         },
         {
@@ -193,9 +193,9 @@
             "guid": "e902f0d7-a022-45fc-9c17-2a98cbdb793e",
             "name": "Cylinder",
             "path": "Assets/Objects/Cylinder.obj",
-            "vao": 81,
-            "vbo": 150,
-            "ebo": 151,
+            "vao": 274,
+            "vbo": 536,
+            "ebo": 537,
             "indexCount": 240
         },
         {
@@ -220,9 +220,9 @@
             "guid": "52f9947c-0b27-4f5a-9a18-cfef71bcfac3",
             "name": "layout2-0",
             "path": "Assets/Objects/layout2-0.obj",
-            "vao": 69,
-            "vbo": 126,
-            "ebo": 127,
+            "vao": 261,
+            "vbo": 510,
+            "ebo": 511,
             "indexCount": 40356
         },
         {
@@ -247,27 +247,27 @@
             "guid": "da032094-6e5c-40fe-b6f0-39a9d542ffe5",
             "name": "Chest",
             "path": "Assets\\Objects\\Chest.obj",
-            "vao": 93,
-            "vbo": 174,
-            "ebo": 175,
+            "vao": 287,
+            "vbo": 562,
+            "ebo": 563,
             "indexCount": 1116
         },
         {
             "guid": "177fa052-079f-42bb-b225-97be34770804",
             "name": "Table",
             "path": "Assets\\Objects\\Table.obj",
-            "vao": 90,
-            "vbo": 168,
-            "ebo": 169,
+            "vao": 284,
+            "vbo": 556,
+            "ebo": 557,
             "indexCount": 528
         },
         {
             "guid": "6fa52b14-d79c-4815-aaff-767eb40b32ca",
             "name": "Cutting Board",
             "path": "Assets\\Objects\\Cutting Board.obj",
-            "vao": 91,
-            "vbo": 170,
-            "ebo": 171,
+            "vao": 285,
+            "vbo": 558,
+            "ebo": 559,
             "indexCount": 456
         },
         {
@@ -283,27 +283,27 @@
             "guid": "97635846-7fcd-4674-b730-21d672c2f510",
             "name": "BluePotion",
             "path": "Assets\\Objects\\BluePotion.obj",
-            "vao": 94,
-            "vbo": 176,
-            "ebo": 177,
+            "vao": 288,
+            "vbo": 564,
+            "ebo": 565,
             "indexCount": 924
         },
         {
             "guid": "bf7c3abb-d8d4-4fa5-bd45-019e80216f61",
             "name": "BluePotion2",
             "path": "Assets\\Objects\\BluePotion2.obj",
-            "vao": 102,
-            "vbo": 192,
-            "ebo": 193,
+            "vao": 296,
+            "vbo": 580,
+            "ebo": 581,
             "indexCount": 924
         },
         {
             "guid": "76f36163-789f-4c71-87b4-76fdccaa8408",
             "name": "BluePotion3",
             "path": "Assets\\Objects\\BluePotion3.obj",
-            "vao": 106,
-            "vbo": 200,
-            "ebo": 201,
+            "vao": 300,
+            "vbo": 588,
+            "ebo": 589,
             "indexCount": 780
         },
         {
@@ -355,18 +355,18 @@
             "guid": "4658a6a6-5858-4b7b-bf14-feea255d368c",
             "name": "Shelf",
             "path": "Assets\\Objects\\Shelf.obj",
-            "vao": 97,
-            "vbo": 182,
-            "ebo": 183,
+            "vao": 291,
+            "vbo": 570,
+            "ebo": 571,
             "indexCount": 816
         },
         {
             "guid": "4bf0356c-3b1b-4e45-a327-5a7f573a20ef",
             "name": "unchopped_herb",
             "path": "Assets\\Objects\\unchopped_herb.obj",
-            "vao": 115,
-            "vbo": 218,
-            "ebo": 219,
+            "vao": 301,
+            "vbo": 590,
+            "ebo": 591,
             "indexCount": 1836
         },
         {
@@ -382,9 +382,9 @@
             "guid": "95461aed-91bf-4172-9f2c-d7578e059e28",
             "name": "CauldronStiring",
             "path": "Assets\\Objects\\CauldronStiring.fbx",
-            "vao": 108,
-            "vbo": 204,
-            "ebo": 205,
+            "vao": 302,
+            "vbo": 592,
+            "ebo": 593,
             "indexCount": 157614
         },
         {
@@ -436,9 +436,9 @@
             "guid": "162fe10c-ffbf-4733-835c-4beb16376317",
             "name": "BoxOfPears-3-VegetableCrate",
             "path": "Assets\\Objects\\BoxOfPears-3-VegetableCrate.obj",
-            "vao": 109,
-            "vbo": 206,
-            "ebo": 207,
+            "vao": 303,
+            "vbo": 594,
+            "ebo": 595,
             "indexCount": 10632
         },
         {

@@ -13,8 +13,8 @@
 #include "EngineState.h"
 #include "TextureLoader.h"
 #include "ComponentList.h"
-#include "TextProperties.h"
 #include <iostream>
+#include "TextProperties.h"
 
 extern Framework::Coordinator ecsInterface;
 
@@ -100,7 +100,10 @@ namespace Framework {
         std::cout << "[DialogueSystem] Starting dialogue with " << dialogueQueue.size() << " lines" << std::endl;
 
         isActive = true;
-        engineState.SetDialogue(true);
+
+        // [UPDATED] Push HowToPlay state (reusing existing enum)
+        // This will automatically show cursor and block game input
+        engineState.PushState(EngineMode::Dialogue);
 
         SetDialogueUIVisible(true);
         DisplayCurrentLine();
@@ -127,7 +130,10 @@ namespace Framework {
         std::cout << "[DialogueSystem] Ending dialogue" << std::endl;
 
         isActive = false;
-        engineState.SetDialogue(false);
+
+        // [UPDATED] Pop HowToPlay state from stack
+        // This will restore previous input/cursor behavior
+        engineState.PopState();
 
         SetDialogueUIVisible(false);
 
@@ -200,13 +206,10 @@ namespace Framework {
         for (const auto& tag : dialogueTags) {
             Entity e = FindDialogueEntity(tag);
             if (ecsInterface.IsEntityValid(e)) {
-                // TODO: Implement your active/inactive toggle mechanism
-                // If you have an IsActive component:
-                // if (ecsInterface.HasComponent<IsActiveComponent>(e)) {
-                //     auto& active = ecsInterface.GetComponent<IsActiveComponent>(e);
-                //     active.isActive = visible;
-                // }
-
+                if (ecsInterface.HasComponent<TransformComponent>(e)) {
+                    auto& transform = ecsInterface.GetComponent<TransformComponent>(e);
+                    transform.isActive = visible;  // <-- FIXED: Direct assignment, no nested .isActive
+                }
                 std::cout << "[DialogueSystem] Set " << tag << " visible: " << visible << std::endl;
             }
         }

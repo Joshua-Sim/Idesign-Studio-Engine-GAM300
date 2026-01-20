@@ -1,0 +1,104 @@
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\gamesystem.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\scriptingsystem.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\graphics.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\main.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.pch
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\vc143.pdb
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\vc143.idb
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\pch.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imgui_demo.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\dummysystem.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\recastrasterization.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\scenemanager.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imgui_tables.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\core.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\inventory.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\matrix4x4.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\meshloader.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\signalhandler.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\collision.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\physicssystem.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imgui.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\detouralloc.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\detourcommon.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\detournavmeshbuilder.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\detournode.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\recast.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\recastarea.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\recastfilter.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\recastmesh.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\sceneinterface.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imgui_widgets.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\enginestate.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\eventmanager.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\foliagerenderer.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\graphicsshader.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\inputhandler.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\testsystem.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imgui_impl_glfw.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\fontsystem.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\skybox.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\terrain.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\vector2d.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\vector3d.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\animationsystem.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\detourassert.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\detournavmesh.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\detournavmeshquery.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\recastalloc.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\recastassert.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\recastcontour.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\recastlayers.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\recastmeshdetail.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\recastregion.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\assetmanager.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\playerinteractsystem.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\componentmanager.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\coordinator.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\materialloader.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\textureloaderdds.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imgui_impl_opengl3.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\entitymanager.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\eventsystem.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\navmeshsystem.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\assetcompiler.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\shaderprogram.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\tagmanager.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\textureloader.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\animationloader.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\graphicswindows.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imguimanager.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\boxcollidercomponent.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\buttonsystem.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\pebblerenderer.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\propertywidget.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imgui_draw.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\debugger.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\filechecksystem.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\lighting.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\mainmath.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\matrix3x3.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\mesh.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\messagesystem.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\phasemanager.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\audiosystem.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\imguizmo.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\dialoguesystem.obj
+c:\test\idesign-studio-engine-gam300\idesign engine\x64\debug\idesign engine.exe
+c:\test\idesign-studio-engine-gam300\idesign engine\x64\debug\idesign engine.pdb
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.ilk
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\cl.command.1.tlog
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\cl.items.tlog
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\cl.read.1.tlog
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\cl.write.1.tlog
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\link-cvtres.read.1.tlog
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\link-cvtres.write.1.tlog
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\link-rc.read.1.tlog
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\link-rc.write.1.tlog
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\link.command.1.tlog
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\link.read.1.tlog
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\link.read.2.tlog
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\link.read.3.tlog
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\link.read.4.tlog
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\link.secondary.1.tlog
+c:\test\idesign-studio-engine-gam300\idesign engine\idesign engine\x64\debug\idesign engine.tlog\link.write.1.tlog

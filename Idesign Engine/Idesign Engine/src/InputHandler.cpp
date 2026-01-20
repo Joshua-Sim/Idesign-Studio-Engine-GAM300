@@ -9,6 +9,7 @@
 #include <Camera.h>
 #include "Graphics.h"
 #include "Coordinator.h"
+#include "DialogueSystem.h"
 #include "ButtonSystem.h" // Ensure this is included
 
 extern Framework::Coordinator ecsInterface;
@@ -108,6 +109,18 @@ namespace Framework {
             }
         }
 
+        // ============================================================
+            //DIALOGUE INPUT HANDLING
+        // ============================================================
+        if (engineState.Is(EngineMode::Dialogue) && !isUIFocused) {
+            // Only process dialogue-specific input in game mode
+            if (IsKeyPressed(GLFW_KEY_SPACE) || IsKeyPressed(GLFW_KEY_ENTER) || IsMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
+                Framework::DialogueSystem::Instance().Advance();
+            }
+            return; 
+        }
+
+
         // 3. ImGui Configuration
         ImGuiIO& io = ImGui::GetIO();
         if (!isUIFocused) {
@@ -194,7 +207,8 @@ namespace Framework {
         // --- [FIX] CHECK GLOBAL ENGINE STATE ---
         // If any menu is open, we must NOT rotate the camera.
         bool isMenuOpen = engineState.Is(EngineMode::Menu) || engineState.Is(EngineMode::Paused) ||
-                          engineState.Is(EngineMode::HowToPlay) || engineState.Is(EngineMode::Settings);
+                          engineState.Is(EngineMode::HowToPlay) || engineState.Is(EngineMode::Settings) ||
+                          engineState.Is(EngineMode::Dialogue);
 
         bool isRightClickHeld = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
 

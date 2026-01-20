@@ -152,6 +152,7 @@
     <ClInclude Include="..\lib\imgui\imstb_textedit.h" />
     <ClInclude Include="..\lib\imgui\imstb_truetype.h" />
     <ClInclude Include="ItemComponent.h" />
+    <ClInclude Include="src\DialogueSystem.h" />
     <ClInclude Include="src\PlayerInteractSystem.h" />
     <ClInclude Include="src\AnimationLoader.h" />
     <ClInclude Include="src\BoxColliderComponent.h" />
@@ -362,6 +363,7 @@
     <ClCompile Include="..\lib\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="..\lib\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\lib\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="src\DialogueSystem.cpp" />
     <ClCompile Include="src\PlayerInteractSystem.cpp" />
     <ClCompile Include="src\AnimationLoader.cpp" />
     <ClCompile Include="src\AnimationSystem.cpp" />
