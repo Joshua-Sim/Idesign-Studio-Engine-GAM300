@@ -1,5 +1,5 @@
 {
-    "count": 90,
+    "count": 116,
     "entries": [
         {
             "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
@@ -32,18 +32,6 @@
             "isUI": false
         },
         {
-            "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
-            "name": "Shelf",
-            "path": "Assets\\Textures\\Shelf.png",
-            "isUI": false
-        },
-        {
-            "guid": "d24a29c5-cd9e-4322-ab59-d38618cba4bf",
-            "name": "quitbutton",
-            "path": "Assets\\Textures\\quitbutton.png",
-            "isUI": false
-        },
-        {
             "guid": "cabb6b16-8445-4f40-b9c8-bd593ea6b65c",
             "name": "top",
             "path": "Assets\\Textures\\top.png",
@@ -56,6 +44,24 @@
             "isUI": false
         },
         {
+            "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
+            "name": "Shelf",
+            "path": "Assets\\Textures\\Shelf.png",
+            "isUI": false
+        },
+        {
+            "guid": "5361d026-4076-490e-bf6c-204ace0da656",
+            "name": "SETTINGS BUTTON",
+            "path": "Assets\\Textures\\SETTINGS BUTTON.png",
+            "isUI": false
+        },
+        {
+            "guid": "d24a29c5-cd9e-4322-ab59-d38618cba4bf",
+            "name": "quitbutton",
+            "path": "Assets\\Textures\\quitbutton.png",
+            "isUI": false
+        },
+        {
             "guid": "1a04361c-a4ca-4230-a564-24c35868f47c",
             "name": "SkyMidNight_Right",
             "path": "Assets\\Textures\\SkyMidNight_Right.png",
@@ -65,6 +71,18 @@
             "guid": "c9c55d09-3f6f-44ca-9069-50e51f428c84",
             "name": "SkyMidNight_Back",
             "path": "Assets\\Textures\\SkyMidNight_Back.png",
+            "isUI": false
+        },
+        {
+            "guid": "d7666fdd-353e-4a3e-9a3f-70f50cea9f7a",
+            "name": "CREDITS BUTTON",
+            "path": "Assets\\Textures\\CREDITS BUTTON.png",
+            "isUI": false
+        },
+        {
+            "guid": "6268a735-25b0-4a92-b9df-38ba44a3af1e",
+            "name": "SETTING HOVER BUTTON",
+            "path": "Assets\\Textures\\SETTING HOVER BUTTON.png",
             "isUI": false
         },
         {
@@ -149,6 +167,12 @@
             "guid": "373d4ede-6c21-4cca-9e62-45d4e4c2b253",
             "name": "Potion1",
             "path": "Assets\\Textures\\Potion1.png",
+            "isUI": false
+        },
+        {
+            "guid": "f40a69c3-bc8f-4e14-a097-3dd6e7326499",
+            "name": "QUIT BUTTON-2",
+            "path": "Assets\\Textures\\QUIT BUTTON-2.png",
             "isUI": false
         },
         {
@@ -539,6 +563,138 @@
             "guid": "b1ed784d-987d-41f5-9ab0-1a35ca1b3a8d",
             "name": "snow_dark",
             "path": "Assets\\Textures\\snow_dark.png",
+            "isUI": false
+        },
+        {
+            "guid": "4c11b083-dc94-4f0b-a988-ae104705857b",
+            "name": "QUIT HOVER BUTTON",
+            "path": "Assets\\Textures\\QUIT HOVER BUTTON.png",
+            "isUI": false
+        },
+        {
+            "guid": "f33b2c37-d7c5-43b6-9f39-ec0b00ca8a8e",
+            "name": "HOW TO PLAY BUTTON",
+            "path": "Assets\\Textures\\HOW TO PLAY BUTTON.png",
+            "isUI": false
+        },
+        {
+            "guid": "2a229a37-805f-4280-be08-3848ef849214",
+            "name": "HOW TO PLAY HOVER BUTTON",
+            "path": "Assets\\Textures\\HOW TO PLAY HOVER BUTTON.png",
+            "isUI": false
+        },
+        {
+            "guid": "294e195f-2e45-4a56-9d47-cc69d0c0c1d4",
+            "name": "QUIT BUTTON",
+            "path": "Assets\\Textures\\QUIT BUTTON.png",
+            "isUI": false
+        },
+        {
+            "guid": "857dc62a-1a81-4b73-b73e-fb1e31db0bcb",
+            "name": "QUIT BUTTON-1",
+            "path": "Assets\\Textures\\QUIT BUTTON-1.png",
+            "isUI": false
+        },
+        {
+            "guid": "8176225f-1649-48c9-8ef0-442e22e9b542",
+            "name": "QUIT HOVER BUTTON-1",
+            "path": "Assets\\Textures\\QUIT HOVER BUTTON-1.png",
+            "isUI": false
+        },
+        {
+            "guid": "ce245ff9-d779-4453-83b7-0173ccd82660",
+            "name": "QUIT HOVER BUTTON-2",
+            "path": "Assets\\Textures\\QUIT HOVER BUTTON-2.png",
+            "isUI": false
+        },
+        {
+            "guid": "b27e21d1-6c60-412f-92eb-0b851ce34523",
+            "name": "START BUTTON",
+            "path": "Assets\\Textures\\START BUTTON.png",
+            "isUI": false
+        },
+        {
+            "guid": "36cfa0cd-c53f-46aa-bc46-68f36e22ad08",
+            "name": "START HOVER BUTTON",
+            "path": "Assets\\Textures\\START HOVER BUTTON.png",
+            "isUI": false
+        },
+        {
+            "guid": "2c284536-13b8-4925-bc73-881eb8825ff2",
+            "name": "SETTINGS BUTTON",
+            "path": "Assets\\Textures\\SETTINGS BUTTON.png",
+            "isUI": false
+        },
+        {
+            "guid": "26deb469-c3d2-45f5-abd0-d5d29655e6e7",
+            "name": "START HOVER BUTTON",
+            "path": "Assets\\Textures\\START HOVER BUTTON.png",
+            "isUI": false
+        },
+        {
+            "guid": "7975acc5-88f1-4071-bb7f-14528d6ca857",
+            "name": "CLOSE BUTTON",
+            "path": "Assets\\Textures\\CLOSE BUTTON.png",
+            "isUI": false
+        },
+        {
+            "guid": "12c367bb-5f67-4bb7-b7df-6a94466941a5",
+            "name": "CLOSE HOVER BUTTON",
+            "path": "Assets\\Textures\\CLOSE HOVER BUTTON.png",
+            "isUI": false
+        },
+        {
+            "guid": "d00d0189-903f-42e5-af05-cf3f5550b41b",
+            "name": "CREDITS HOVER BUTTON",
+            "path": "Assets\\Textures\\CREDITS HOVER BUTTON.png",
+            "isUI": false
+        },
+        {
+            "guid": "7cf95b2f-4160-4a45-9ce1-2b889b5b40af",
+            "name": "QUIT BUTTON",
+            "path": "Assets\\Textures\\QUIT BUTTON.png",
+            "isUI": false
+        },
+        {
+            "guid": "c43c4719-e688-4409-9c62-6b2508cc3a71",
+            "name": "HOW TO PLAY BUTTON",
+            "path": "Assets\\Textures\\HOW TO PLAY BUTTON.png",
+            "isUI": false
+        },
+        {
+            "guid": "c44c9565-d18e-4186-86af-03e26a23eafe",
+            "name": "HOW TO PLAY HOVER BUTTON",
+            "path": "Assets\\Textures\\HOW TO PLAY HOVER BUTTON.png",
+            "isUI": false
+        },
+        {
+            "guid": "197bc9ec-6f34-40e7-8f8a-5b7d8a951a8c",
+            "name": "QUIT HOVER BUTTON",
+            "path": "Assets\\Textures\\QUIT HOVER BUTTON.png",
+            "isUI": false
+        },
+        {
+            "guid": "273edb8c-f3da-4c2c-8c25-bab578b94f55",
+            "name": "RESUME HOVER BUTTON",
+            "path": "Assets\\Textures\\RESUME HOVER BUTTON.png",
+            "isUI": false
+        },
+        {
+            "guid": "e4e85e35-08e3-4fb5-9f54-53c971ed3fee",
+            "name": "REUME BUTTON",
+            "path": "Assets\\Textures\\REUME BUTTON.png",
+            "isUI": false
+        },
+        {
+            "guid": "04e1dcaf-e0d4-49ad-933a-3168d5f6be74",
+            "name": "SETTING HOVER BUTTON",
+            "path": "Assets\\Textures\\SETTING HOVER BUTTON.png",
+            "isUI": false
+        },
+        {
+            "guid": "15910deb-44ce-4b6b-b80f-65983e2f154e",
+            "name": "START BUTTON",
+            "path": "Assets\\Textures\\START BUTTON.png",
             "isUI": false
         }
     ]
