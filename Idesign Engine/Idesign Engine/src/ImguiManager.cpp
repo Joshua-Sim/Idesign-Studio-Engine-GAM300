@@ -732,6 +732,8 @@ namespace Framework {
                 // Clear editor layer
                 engineState.ClearToBase();
                 engineState.PushState(EngineMode::Play);
+
+
             }
         }
         backspaceWasPressed = backspaceIsPressed;

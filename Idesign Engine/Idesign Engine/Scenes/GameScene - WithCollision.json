@@ -2741,13 +2741,13 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -52.940521240234375,
-                        8.044564247131348,
-                        8.780094146728516
+                        -55.34569549560547,
+                        8.024563789367676,
+                        8.921391487121582
                     ],
                     "rotation": [
                         0.0,
-                        88.0398178100586,
+                        90.0,
                         0.0
                     ],
                     "scale": [
@@ -2824,9 +2824,9 @@
                 },
                 "ListenerComponent": {
                     "position": [
-                        -52.940521240234375,
-                        8.044564247131348,
-                        8.780094146728516
+                        -55.34569549560547,
+                        8.024563789367676,
+                        8.921391487121582
                     ],
                     "forward": [
                         0.0,
@@ -3144,7 +3144,7 @@
                     "animationSpeed": 1.0,
                     "bLoops": true,
                     "bPlayOnStart": true,
-                    "currentTime": 61.60009002685547
+                    "currentTime": 90.80020141601563
                 },
                 "TextureComponent": {
                     "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
@@ -3660,7 +3660,7 @@
                 "HierarchyComponent": {
                     "parent": "23491286-9912-4971-b5d4-9145a810d598",
                     "children": [],
-                    "sortIndex": 0
+                    "sortIndex": 61
                 },
                 "TagComponent": {
                     "tags": [
@@ -3718,7 +3718,7 @@
                 "HierarchyComponent": {
                     "parent": "23491286-9912-4971-b5d4-9145a810d598",
                     "children": [],
-                    "sortIndex": 3
+                    "sortIndex": 62
                 },
                 "TagComponent": {
                     "tags": [
@@ -3776,7 +3776,7 @@
                 "HierarchyComponent": {
                     "parent": "23491286-9912-4971-b5d4-9145a810d598",
                     "children": [],
-                    "sortIndex": 1
+                    "sortIndex": 63
                 },
                 "TagComponent": {
                     "tags": [
@@ -5515,7 +5515,7 @@
                         {
                             "guid": "23de8816-8d7d-42e1-ada2-3fdd7190fe5f",
                             "scriptPath": "Assets\\Scripts\\GameStateSettings.lua",
-                            "hotReload": true
+                            "hotReload": false
                         }
                     ]
                 },
@@ -5589,7 +5589,7 @@
                         250.0,
                         100.0
                     ],
-                    "isHovered": true
+                    "isHovered": false
                 }
             }
         },
@@ -5637,7 +5637,7 @@
                         {
                             "guid": "5a675a8e-6d41-4326-bfd1-7106b0279459",
                             "scriptPath": "Assets\\Scripts\\Settings_Master_Mute.lua",
-                            "hotReload": true
+                            "hotReload": false
                         }
                     ]
                 },
@@ -5698,7 +5698,7 @@
                         {
                             "guid": "48782e7b-a969-4b1f-ad50-0d92ca2e6de2",
                             "scriptPath": "Assets\\Scripts\\Settings_BGM_Mute.lua",
-                            "hotReload": true
+                            "hotReload": false
                         }
                     ]
                 },
@@ -5759,7 +5759,7 @@
                         {
                             "guid": "6b92065e-2d95-46f7-9c6e-3e2a2dae96ca",
                             "scriptPath": "Assets\\Scripts\\Settings_SFX_Mute.lua",
-                            "hotReload": true
+                            "hotReload": false
                         }
                     ]
                 },
@@ -5801,7 +5801,7 @@
                 "HierarchyComponent": {
                     "parent": "23491286-9912-4971-b5d4-9145a810d598",
                     "children": [],
-                    "sortIndex": 2
+                    "sortIndex": 95
                 },
                 "TagComponent": {
                     "tags": [
@@ -5820,7 +5820,7 @@
                         {
                             "guid": "23de8816-8d7d-42e1-ada2-3fdd7190fe5f",
                             "scriptPath": "Assets\\Scripts\\GameStateSettings.lua",
-                            "hotReload": true
+                            "hotReload": false
                         }
                     ]
                 },
@@ -5862,16 +5862,21 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [
-                        "63158d02-64c9-4df7-ab58-caa2c18611ac"
+                        "fb9692a4-7331-45ad-87e9-1b0b96f2279d",
+                        "da060ba3-4057-4d30-8a07-0780b111f4b6",
+                        "63158d02-64c9-4df7-ab58-caa2c18611ac",
+                        "b928e820-addf-48d3-8d83-ad3c35821f2d",
+                        "7433fd7c-21bf-4d58-b7a2-8b1904955557",
+                        "1ef356ab-007e-49a5-9f22-ed6476b4cc4a",
+                        "8ae286b4-616b-4f76-ae16-5624f510d274"
                     ],
-                    "sortIndex": 6
+                    "sortIndex": 96
                 },
                 "TagComponent": {
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
@@ -5894,7 +5899,7 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        0.05000000074505806,
+                        0.10999999940395355,
                         0.20000000298023224,
                         0.0
                     ],
@@ -5913,11 +5918,11 @@
                 "HierarchyComponent": {
                     "parent": "6cb91ce4-34a5-4fb5-9341-5e906ce4cb1d",
                     "children": [],
-                    "sortIndex": 0
+                    "sortIndex": 2
                 },
                 "TagComponent": {
                     "tags": [
-                        "DialogueLine_1"
+                        "DialogueLine1"
                     ]
                 },
                 "MeshComponent": {
@@ -5928,12 +5933,12 @@
                     "isUI": false
                 },
                 "TextProperties": {
-                    "text": "This is the final line. After this, dialogue should end automatically.",
-                    "scale": 1.3300000429153442,
+                    "text": "Goodbye!",
+                    "scale": 0.6899999976158142,
                     "color": [
-                        1.0,
-                        1.0,
-                        1.0
+                        0.15939366817474365,
+                        0.15866754949092865,
+                        0.06640792638063431
                     ],
                     "opacity": 1.0,
                     "alignment": 0,
@@ -5941,17 +5946,344 @@
                     "screenSpace": true
                 },
                 "TextProperties": {
-                    "text": "This is the final line. After this, dialogue should end automatically.",
-                    "scale": 1.3300000429153442,
+                    "text": "Goodbye!",
+                    "scale": 0.6899999976158142,
                     "color": [
-                        1.0,
-                        1.0,
-                        1.0
+                        0.15939366817474365,
+                        0.15866754949092865,
+                        0.06640792638063431
                     ],
                     "opacity": 1.0,
                     "alignment": 0,
                     "isBillboard": false,
                     "screenSpace": true
+                }
+            }
+        },
+        {
+            "name": "DialogueBox",
+            "guid": "fb9692a4-7331-45ad-87e9-1b0b96f2279d",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        950.0,
+                        200.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1535.0,
+                        270.0,
+                        100.0
+                    ],
+                    "isActive": false
+                },
+                "HierarchyComponent": {
+                    "parent": "6cb91ce4-34a5-4fb5-9341-5e906ce4cb1d",
+                    "children": [],
+                    "sortIndex": 0
+                },
+                "TagComponent": {
+                    "tags": [
+                        "DialogueBox"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": "eac3e6f4-1bf2-415f-aef8-8f1269d91560",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "f853ac0f-5340-43ec-a6a5-ab7dc5260b0c",
+                    "isUI": true
+                }
+            }
+        },
+        {
+            "name": "NameText",
+            "guid": "da060ba3-4057-4d30-8a07-0780b111f4b6",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        0.10999999940395355,
+                        0.25,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "isActive": false
+                },
+                "HierarchyComponent": {
+                    "parent": "6cb91ce4-34a5-4fb5-9341-5e906ce4cb1d",
+                    "children": [],
+                    "sortIndex": 1
+                },
+                "TagComponent": {
+                    "tags": [
+                        "Name_text"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": ""
+                },
+                "TextureComponent": {
+                    "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
+                    "isUI": false
+                },
+                "TextProperties": {
+                    "text": "NPC",
+                    "scale": 0.8500000238418579,
+                    "color": [
+                        0.15939366817474365,
+                        0.15866754949092865,
+                        0.06640792638063431
+                    ],
+                    "opacity": 1.0,
+                    "alignment": 0,
+                    "isBillboard": false,
+                    "screenSpace": true
+                },
+                "TextProperties": {
+                    "text": "NPC",
+                    "scale": 0.8500000238418579,
+                    "color": [
+                        0.15939366817474365,
+                        0.15866754949092865,
+                        0.06640792638063431
+                    ],
+                    "opacity": 1.0,
+                    "alignment": 0,
+                    "isBillboard": false,
+                    "screenSpace": true
+                }
+            }
+        },
+        {
+            "name": "DialogueLine2",
+            "guid": "b928e820-addf-48d3-8d83-ad3c35821f2d",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        0.10999999940395355,
+                        0.15000000596046448,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "isActive": false
+                },
+                "HierarchyComponent": {
+                    "parent": "6cb91ce4-34a5-4fb5-9341-5e906ce4cb1d",
+                    "children": [],
+                    "sortIndex": 2
+                },
+                "TagComponent": {
+                    "tags": [
+                        "DialogueLine2"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": ""
+                },
+                "TextureComponent": {
+                    "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
+                    "isUI": false
+                },
+                "TextProperties": {
+                    "text": "",
+                    "scale": 0.6899999976158142,
+                    "color": [
+                        0.15939366817474365,
+                        0.15866754949092865,
+                        0.06640792638063431
+                    ],
+                    "opacity": 1.0,
+                    "alignment": 0,
+                    "isBillboard": false,
+                    "screenSpace": true
+                },
+                "TextProperties": {
+                    "text": "",
+                    "scale": 0.6899999976158142,
+                    "color": [
+                        0.15939366817474365,
+                        0.15866754949092865,
+                        0.06640792638063431
+                    ],
+                    "opacity": 1.0,
+                    "alignment": 0,
+                    "isBillboard": false,
+                    "screenSpace": true
+                }
+            }
+        },
+        {
+            "name": "DialogueLine3",
+            "guid": "7433fd7c-21bf-4d58-b7a2-8b1904955557",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        0.10999999940395355,
+                        0.10000000149011612,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "isActive": false
+                },
+                "HierarchyComponent": {
+                    "parent": "6cb91ce4-34a5-4fb5-9341-5e906ce4cb1d",
+                    "children": [],
+                    "sortIndex": 2
+                },
+                "TagComponent": {
+                    "tags": [
+                        "DialogueLine3"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": ""
+                },
+                "TextureComponent": {
+                    "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
+                    "isUI": false
+                },
+                "TextProperties": {
+                    "text": "",
+                    "scale": 0.6899999976158142,
+                    "color": [
+                        0.15939366817474365,
+                        0.15866754949092865,
+                        0.06640792638063431
+                    ],
+                    "opacity": 1.0,
+                    "alignment": 0,
+                    "isBillboard": false,
+                    "screenSpace": true
+                },
+                "TextProperties": {
+                    "text": "",
+                    "scale": 0.6899999976158142,
+                    "color": [
+                        0.15939366817474365,
+                        0.15866754949092865,
+                        0.06640792638063431
+                    ],
+                    "opacity": 1.0,
+                    "alignment": 0,
+                    "isBillboard": false,
+                    "screenSpace": true
+                }
+            }
+        },
+        {
+            "name": "PortraitBox",
+            "guid": "1ef356ab-007e-49a5-9f22-ed6476b4cc4a",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        330.0,
+                        480.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        300.0,
+                        270.0,
+                        100.0
+                    ],
+                    "isActive": false
+                },
+                "HierarchyComponent": {
+                    "parent": "6cb91ce4-34a5-4fb5-9341-5e906ce4cb1d",
+                    "children": [],
+                    "sortIndex": 0
+                },
+                "TagComponent": {
+                    "tags": [
+                        "PortraitBox"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": "4bf0356c-3b1b-4e45-a327-5a7f573a20ef",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "f853ac0f-5340-43ec-a6a5-ab7dc5260b0c",
+                    "isUI": true
+                }
+            }
+        },
+        {
+            "name": "Portrait",
+            "guid": "8ae286b4-616b-4f76-ae16-5624f510d274",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        330.0,
+                        500.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        300.0,
+                        270.0,
+                        100.0
+                    ],
+                    "isActive": false
+                },
+                "HierarchyComponent": {
+                    "parent": "6cb91ce4-34a5-4fb5-9341-5e906ce4cb1d",
+                    "children": [],
+                    "sortIndex": 0
+                },
+                "TagComponent": {
+                    "tags": [
+                        "Portrait"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": "4bf0356c-3b1b-4e45-a327-5a7f573a20ef",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "09ab93d8-f4cb-4ab1-86cd-889bebd524a8",
+                    "isUI": true
                 }
             }
         }

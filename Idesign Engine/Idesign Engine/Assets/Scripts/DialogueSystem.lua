@@ -1,29 +1,29 @@
 --- dialogue_test_manual.lua
---- Press T to trigger dialogue
+--- Press F8 to trigger dialogue
 
 local DialogueTest = {}
 
 DialogueTest.hasTriggered = false
 
 function DialogueTest:on_init()
-    print("[DialogueTest] Press T to start dialogue test")
+    print("[DialogueTest] Press F8 to start dialogue test")
 end
 
 function DialogueTest:on_update(dt)
-    -- Check if T key is pressed (GLFW_KEY_T = 84)
-    if IsKeyDown(84) and not self.hasTriggered then
+    -- Check if F8 key is pressed (GLFW_KEY_F8 = 297)
+    if IsKeyDown(297) and not self.hasTriggered then
         self:StartTestDialogue()
         self.hasTriggered = true
     end
     
     -- Reset trigger when key is released (for multiple tests)
-    if not IsKeyDown(84) then
+    if not IsKeyDown(297) then
         self.hasTriggered = false
     end
 end
 
 function DialogueTest:StartTestDialogue()
-    print("[DialogueTest] T pressed - Starting dialogue...")
+    print("[DialogueTest] F8 pressed - Starting dialogue...")
     
     DialogueClear()
     

@@ -8,7 +8,7 @@
 // You will also need your Input and Physics/Raycasting headers here
 
 namespace Framework {
-
+            
     class InteractionSystem : public System {
     public:
         void Init(Coordinator* coord) {

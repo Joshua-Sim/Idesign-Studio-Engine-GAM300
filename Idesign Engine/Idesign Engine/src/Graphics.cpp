@@ -2672,7 +2672,8 @@ namespace Framework {
             !engineState.Is(EngineMode::Paused) &&
             !engineState.Is(EngineMode::HowToPlay) &&
             !engineState.Is(EngineMode::Menu) &&
-            !engineState.Is(EngineMode::Settings))
+            !engineState.Is(EngineMode::Settings) &&
+            !engineState.Is(EngineMode::Dialogue))
         {
             DrawHotbar(width, height);
         }

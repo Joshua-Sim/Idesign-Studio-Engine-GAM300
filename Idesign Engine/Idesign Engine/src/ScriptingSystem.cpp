@@ -781,8 +781,11 @@ namespace Framework {
         // 
         // // Add these inside the anonymous namespace with other Lua functions
 
+       // In the anonymous namespace with other Lua functions:
+
         static int lua_DialogueClear(lua_State* L) {
-            Framework::DialogueSystem::Instance().Clear();
+            auto dialogueSys = ecsInterface.GetSystem<Framework::DialogueSystem>();
+            if (dialogueSys) dialogueSys->Clear();
             return 0;
         }
 
@@ -791,22 +794,26 @@ namespace Framework {
             const char* speaker = luaL_optstring(L, 2, "");
             const char* portrait = luaL_optstring(L, 3, "");
 
-            Framework::DialogueSystem::Instance().AddLine(text, speaker, portrait);
+            auto dialogueSys = ecsInterface.GetSystem<Framework::DialogueSystem>();
+            if (dialogueSys) dialogueSys->AddLine(text, speaker, portrait);
             return 0;
         }
 
         static int lua_DialogueStart(lua_State* L) {
-            Framework::DialogueSystem::Instance().StartDialogue();
+            auto dialogueSys = ecsInterface.GetSystem<Framework::DialogueSystem>();
+            if (dialogueSys) dialogueSys->StartDialogue();
             return 0;
         }
 
         static int lua_DialogueEnd(lua_State* L) {
-            Framework::DialogueSystem::Instance().EndDialogue();
+            auto dialogueSys = ecsInterface.GetSystem<Framework::DialogueSystem>();
+            if (dialogueSys) dialogueSys->EndDialogue();
             return 0;
         }
 
         static int lua_DialogueIsActive(lua_State* L) {
-            bool active = Framework::DialogueSystem::Instance().IsActive();
+            auto dialogueSys = ecsInterface.GetSystem<Framework::DialogueSystem>();
+            bool active = dialogueSys ? dialogueSys->IsActive() : false;
             lua_pushboolean(L, active);
             return 1;
         }

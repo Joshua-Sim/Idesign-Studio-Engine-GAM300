@@ -115,9 +115,9 @@ namespace Framework {
         if (engineState.Is(EngineMode::Dialogue) && !isUIFocused) {
             // Only process dialogue-specific input in game mode
             if (IsKeyPressed(GLFW_KEY_SPACE) || IsKeyPressed(GLFW_KEY_ENTER) || IsMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
-                Framework::DialogueSystem::Instance().Advance();
+                auto dialogueSys = ecsInterface.GetSystem<Framework::DialogueSystem>();
+                if (dialogueSys) dialogueSys->Advance();
             }
-            return; 
         }
 
 
@@ -149,7 +149,8 @@ namespace Framework {
         // OVERRIDE 2: Menus / Pause / HowToPlay
         // If ANY of these are true, we MUST show the cursor, regardless of Editor/Game mode.
         if (engineState.Is(EngineMode::Menu) || engineState.Is(EngineMode::Paused) || 
-            engineState.Is(EngineMode::HowToPlay) || engineState.Is(EngineMode::Settings)) 
+            engineState.Is(EngineMode::HowToPlay) || engineState.Is(EngineMode::Settings) ||
+            engineState.Is(EngineMode::Dialogue))
         {
             desiredMode = GLFW_CURSOR_NORMAL;
         }
