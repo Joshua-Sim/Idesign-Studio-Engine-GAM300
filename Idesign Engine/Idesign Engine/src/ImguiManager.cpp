@@ -705,35 +705,33 @@ namespace Framework {
         if (backspaceIsPressed && !backspaceWasPressed)
         {
             m_showEditor = !m_showEditor;
-            if (m_showEditor) {
+            if (m_showEditor) 
+            {
                 std::cout << "[ImGui] Editor enabled" << std::endl;
                 gfxSystem->SetMouseTargetView(1);
-                engineState.SetInEditor(true);
-                //engineState.SetPlay(false);
-                engineState.SetMenu(false); // hide menu
+                
+                // Clear current gameplay/UI layers
+                engineState.ClearToBase();
+
+                // Push Editor layer
+                engineState.PushState(EngineMode::Editor);
 
                 // Stop BGM when returning to editor
-                if (g_AudioSystem) {
+                if (g_AudioSystem) 
+                {
                     g_AudioSystem->Reset();
                     std::cout << "[Audio] BGM Stopped (returned to editor)" << std::endl;
                 }
             }
-            else {
+            else 
+            {
                 std::cout << "[ImGui] Editor disabled - Game only mode" << std::endl;
                 gfxSystem->SetCameraRotationEnabled(true);
                 gfxSystem->SetMouseTargetView(0);
-                engineState.SetInEditor(false);
-                engineState.SetPlay(true);
-                //engineState.SetMenu(true); // show menu
 
-                // Start BGM when entering fullscreen game mode
-                //if (g_AudioSystem) {
-                //    std::string bgmPath = sceneManager.GetCurrentSceneBGMPath();
-                //    if (!bgmPath.empty()) {
-                //        g_AudioSystem->PlayAudio(bgmPath);
-                //        std::cout << "[Audio] Playing BGM: " << bgmPath << std::endl;
-                //    }
-                //}
+                // Clear editor layer
+                engineState.ClearToBase();
+                engineState.PushState(EngineMode::Play);
             }
         }
         backspaceWasPressed = backspaceIsPressed;
@@ -2638,10 +2636,14 @@ namespace Framework {
                 ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.3f, 0.7f, 1.0f));  // Darker blue when active
                 if (ImGui::Button("Play", buttonSize))
                 {
-                    // Set engine state to play mode
-                    engineState.SetPlay(true);
+                    // Clear all temp layers and return to base
+                    engineState.ClearToBase();
 
-                    engineState.SetMenu(true); // show menu
+                    // Push gameplay layer
+                    engineState.PushState(EngineMode::Play);
+
+                    // Push Menu layer
+                    engineState.PushState(EngineMode::Menu);
 
 					//Send message to start audio and other play-mode systems
                     MessageBus::Get().SendImmediate(EnterPlayModeMessage());
@@ -2657,9 +2659,9 @@ namespace Framework {
                 if (ImGui::Button("Pause", buttonSize))
                 {
                     // Toggle pause state while in play mode
-                    if (engineState.IsPlay())
+                    if (engineState.Is(EngineMode::Play))
                     {
-                        engineState.SetPlay(false);
+                        engineState.PushState(EngineMode::Paused);
                         
                         MessageBus::Get().SendImmediate(ExitPlayModeMessage());
 
@@ -2676,8 +2678,8 @@ namespace Framework {
                 ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.6f, 0.0f, 0.0f, 1.0f));  // Even darker red when active
                 if (ImGui::Button("Stop", buttonSize))
                 {
-                    // Stop the game by setting play to false
-                    engineState.SetPlay(false);
+                    // Hard reset, remove all layers
+                    engineState.ClearToBase();
 
 					//Send message to stop all audio
 					MessageBus::Get().SendImmediate(ExitPlayModeMessage());
@@ -2694,14 +2696,18 @@ namespace Framework {
                 if (ImGui::Button("Debug", buttonSize))
                 {
                     // Toggle debug state while in play mode
-                    engineState.SetInDebugMode(!engineState.IsInDebugMode());
+                    if (engineState.Is(EngineMode::Debug))
+                    {
+                        engineState.PopState();
+                    }
+                    else engineState.PushState(EngineMode::Debug);
                     Framework::Graphics::s_RenderDebugColliders = !Framework::Graphics::s_RenderDebugColliders;
                 }
                 ImGui::PopStyleColor(3); // Restore color
             }
             ImGui::End();
 
-            bool menuActive = !engineState.IsPlay();
+            bool menuActive = !engineState.Is(EngineMode::Play);
             
             if (ImGui::Begin("Main Viewport"))
             {

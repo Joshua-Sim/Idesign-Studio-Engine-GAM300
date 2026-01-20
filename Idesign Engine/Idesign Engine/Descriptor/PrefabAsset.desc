@@ -2,15 +2,15 @@
     "count": 19,
     "entries": [
         {
-            "guid": "898b36fc-aae3-43e4-9e2e-8edcb193e3c1",
-            "name": "Frog_Prefab",
-            "path": "Assets\\Prefabs\\Frog_Prefab.prefab",
-            "isScenePrefab": false
-        },
-        {
             "guid": "6c60686a-c68c-4284-bce0-019cfcbf77fa",
             "name": "ProgressBarFrame_Prefab",
             "path": "Assets\\Prefabs\\ProgressBarFrame_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "898b36fc-aae3-43e4-9e2e-8edcb193e3c1",
+            "name": "Frog_Prefab",
+            "path": "Assets\\Prefabs\\Frog_Prefab.prefab",
             "isScenePrefab": false
         },
         {

@@ -180,6 +180,10 @@ namespace Framework {
         void IncrementGroupVol(const std::string& groupName);
         void DecrementGroupVol(const std::string& groupName);
 
+        void MuteMasterVolume(bool mute) { setBusMute("bus:/", mute); }
+        void MuteBgmVolume(bool mute) { setBusMute("bus:/BGM", mute); }
+        void MuteSfxVolume(bool mute) { setBusMute("bus:/SFX", mute); }
+
         //======================================================================
         // BGM Fading (from Audio class)
         //======================================================================
@@ -263,6 +267,8 @@ namespace Framework {
         int GetNextChannelId() { return nextChannelId++; }
 
         void UnloadBank(const std::string& bankPath);
+
+        void setBusMute(const std::string& path, bool mute);
 
         //======================================================================
         // FMOD System Members (from Audio class)

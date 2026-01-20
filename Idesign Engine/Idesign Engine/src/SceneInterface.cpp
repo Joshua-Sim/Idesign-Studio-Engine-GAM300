@@ -4,6 +4,7 @@
 #include "ButtonComponent.h"
 #include "TextureProperties.h"
 #include "Coordinator.h"
+#include "TextProperties.h"
 
 extern Framework::Coordinator ecsInterface;
 
@@ -26,7 +27,7 @@ namespace Framework
         // [FIX] Run this logic whenever the Game Simulation is active.
         // In Standalone, IsPlay() should always be true.
         // In Editor, IsPlay() is true only when you hit the Play button.
-        if (engineState.IsPlay())
+        if (engineState.HasState(EngineMode::Play))
         {
             // 1. MAIN MENU LOGIC
             auto menuEntities = ecsInterface.GetEntitiesByTag("menu");
@@ -38,9 +39,7 @@ namespace Framework
                     ecsInterface.HasComponent<TextureProperties>(e))
                 {
                     auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
-
-                    // This line hides the menu when SetMenu(false) is called in Lua
-                    texture.isUI = engineState.IsInMenu();
+                    if (!engineState.Is(EngineMode::Editor)) { texture.isUI = engineState.Is(EngineMode::Menu); }
                 }
             }
 
@@ -54,7 +53,7 @@ namespace Framework
                     ecsInterface.HasComponent<TextureProperties>(e))
                 {
                     auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
-                    texture.isUI = engineState.IsPaused();
+                    if (!engineState.Is(EngineMode::Editor)) { texture.isUI = engineState.Is(EngineMode::Paused); }
                 }
             }
 
@@ -68,7 +67,7 @@ namespace Framework
                     ecsInterface.HasComponent<TextureProperties>(e))
                 {
                     auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
-                    texture.isUI = engineState.InHowToPlay();
+                    if (!engineState.Is(EngineMode::Editor)) { texture.isUI = engineState.Is(EngineMode::HowToPlay); }
                 }
             }
 
@@ -82,7 +81,30 @@ namespace Framework
                     ecsInterface.HasComponent<TextureProperties>(e))
                 {
                     auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
-                    texture.isUI = engineState.IsInUpgrade();
+                    if (!engineState.Is(EngineMode::Editor)) { texture.isUI = engineState.Is(EngineMode::Upgrade); }
+                }
+            }
+
+            // 5. Settings (Vol Control)
+            auto settingsEntities = ecsInterface.GetEntitiesByTag("settings");
+            for (Entity e : settingsEntities)
+            {
+                if (!ecsInterface.IsEntityValid(e)) continue;
+
+                if (ecsInterface.HasComponent<ButtonComponent>(e) &&
+                    ecsInterface.HasComponent<TextureProperties>(e))
+                {
+                    auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
+                    // Only enforce UI flag if NOT in editor mode 
+                    if (!engineState.Is(EngineMode::Editor)) { texture.isUI = engineState.Is(EngineMode::Settings); }
+                }
+
+                if (ecsInterface.HasComponent<TextProperties>(e))
+                {
+                    auto& text = ecsInterface.GetComponent<TextProperties>(e);
+                    
+                    // Only enforce opacity if NOT in editor mode 
+                    if (!engineState.Is(EngineMode::Editor)) { text.opacity = engineState.Is(EngineMode::Settings) ? 1.f : 0.f; }
                 }
             }
         }

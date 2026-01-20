@@ -20,7 +20,8 @@ namespace Framework
 
         void TriggerClick(Entity e) const
         {
-            if (onClick) {
+            if (onClick) 
+            {
                 g_AudioSystem->PlayAudio("event:/ButtonClick");
                 onClick();
             }

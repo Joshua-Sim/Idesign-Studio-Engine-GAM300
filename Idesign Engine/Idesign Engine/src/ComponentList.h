@@ -89,21 +89,10 @@ struct LayerComponent {
     Layer layerID = Layer::Background;  // Layer for rendering order, default to 'First'
 };
 
-// Text component for text rendering entities
-struct TextComponent {
-    std::string text;
-    int fontSize = 16;
-    glm::vec3 color{ 1.0f, 1.0f, 1.0f };
-    std::string fontName;
-    glm::vec2 offset{ 0.0f, 0.0f };  // Position offset relative to TransformComponent's position
-};
-
 // Player component for updating text and holding player utilized information
 struct PlayerComponent {
     std::string CurrentText;  // Updates the text component of entity to reflect this.
 };
-
-
 
 struct AABB {
     glm::vec2 max{0.0,0.0};
@@ -164,53 +153,6 @@ struct AnimationComponent
     std::string key;
 
 };
-
-//class ButtonComponent {
-//public:
-//    glm::vec2 position{ 0.0f, 0.0f };   // Top-left or screen-space position
-//    glm::vec2 size{ 0.0f, 0.0f };       // Width / Height
-//    bool isHovered = false;       // Hover state
-//    std::string label;    // Text shown on the button
-//    bool wasPressedLastFrame = false;   // For edge-triggered click (no spam)
-//    std::function<void()> onClick;  // Callback when clicked
-//
-//    ButtonComponent() = default;
-//
-//    ButtonComponent(glm::vec2 pos,
-//        glm::vec2 sz,
-//        const std::string& text,
-//        std::function<void()> clickFunc)
-//        : position(pos), size(sz), isHovered(false),
-//        label(text), wasPressedLastFrame(false), onClick(clickFunc) {
-//    }
-//
-//    // Trigger click event
-//    void TriggerClick() const {
-//        if (onClick) {
-//            onClick();
-//        }
-//    }
-//};
-
-
-//struct ScriptInstance
-//{
-//    std::string scriptPath;   // e.g. "scripts/player.lua"
-//    int tableRef = LUA_NOREF; // reference to the Lua table (instance)
-//    bool initialized = false; // if on_init() has been called
-//    bool hotReload = false;    // enable/disable live reload
-//    uint64_t lastWriteTicks = 0; // file modification time cache
-//
-//    /*ScriptComponent() = default;
-//    ScriptComponent(const std::string& path)
-//        : scriptPath(path)
-//    {}*/
-//};
-//
-//struct ScriptComponent
-//{
-//    std::vector<ScriptInstance> scripts;
-//};
 
 // In ComponentList.h or wherever PhysicsBodyComponent is defined
 struct PhysicsBodyComponent {

@@ -90,13 +90,16 @@ namespace Framework
             // Update game logic in fixed steps to ensure consistency
             while (accumulator >= fixedDt)
             {
-                for (auto* system : Systems) {
+                for (auto* system : Systems) 
+                {
                     auto start = std::chrono::high_resolution_clock::now();
 
-                    if (engineState.IsPlay()) {
+                    if (engineState.Is(EngineMode::Play)) 
+                    {
                         system->Update(static_cast<float>(fixedDt)); // Use the constant fixedDt
                     }
-                    else {
+                    else 
+                    {
                         system->Update(0);
                     }
 
@@ -107,7 +110,8 @@ namespace Framework
                 accumulator -= fixedDt;
             }
 
-            if (debugSystem) {
+            if (debugSystem) 
+            {
                 debugSystem->SetSystemTimes(systemTimes);
                 // Pass the actual frameTime for accurate FPS calculation, not dt
                 debugSystem->ProcessSystemUpdateTimes(static_cast<float>(frameTime));

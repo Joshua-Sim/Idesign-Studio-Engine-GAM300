@@ -1,6 +1,13 @@
 {
     "scripts": [
         {
+            "guid": "23de8816-8d7d-42e1-ada2-3fdd7190fe5f",
+            "scriptPath": "Assets\\Scripts\\GameStateSettings.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
             "guid": "c6d4d63d-bced-4890-8a3b-3938e82b13e8",
             "scriptPath": "Assets\\Scripts\\GameStateExit.lua",
             "hotReload": true,
@@ -164,6 +171,27 @@
         {
             "guid": "50911a7e-8c97-4e66-99f4-ffd4855680ee",
             "scriptPath": "Assets\\Scripts\\GameStateBackToPause.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "48782e7b-a969-4b1f-ad50-0d92ca2e6de2",
+            "scriptPath": "Assets\\Scripts\\Settings_BGM_Mute.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "6b92065e-2d95-46f7-9c6e-3e2a2dae96ca",
+            "scriptPath": "Assets\\Scripts\\Settings_SFX_Mute.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "5a675a8e-6d41-4326-bfd1-7106b0279459",
+            "scriptPath": "Assets\\Scripts\\Settings_Master_Mute.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1

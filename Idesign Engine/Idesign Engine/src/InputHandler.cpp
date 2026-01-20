@@ -10,7 +10,6 @@
 #include "Graphics.h"
 #include "Coordinator.h"
 #include "ButtonSystem.h" // Ensure this is included
-#include "DialogueSystem.h"
 
 extern Framework::Coordinator ecsInterface;
 namespace Framework {
@@ -92,33 +91,19 @@ namespace Framework {
             tabPressed = false;
         }
 
-        // --- DIALOGUE INPUT HANDLING ---
-        if (engineState.InDialogue() && !isUIFocused) {
-            // Only process dialogue-specific input when in game mode
-            if (IsKeyPressed(GLFW_KEY_ENTER)) {
-                Framework::DialogueSystem::Instance().Advance();
-            }
-
-            // Allow ESC to force-close dialogue
-            if (IsKeyPressed(GLFW_KEY_ESCAPE)) {
-                Framework::DialogueSystem::Instance().EndDialogue();
-            }
-
-            // Block all other input processing
-            return;
-        }
-        
         // ESC: Toggle pause/resume
         if (IsKeyPressed(GLFW_KEY_ESCAPE))
         {
             g_AudioSystem->PlayAudio("event:/ButtonClick");
 
-            if (engineState.InHowToPlay()) {
-                engineState.SetHowToPlay(false);
+            if (engineState.Is(EngineMode::Play))
+            {
+                engineState.PushState(EngineMode::Paused);
                 std::cout << "ESC PRESSED - Hiding How To Play page" << std::endl;
             }
-            else {
-                engineState.SetPaused(!engineState.IsPaused());
+            else 
+            {
+                engineState.PopState();
                 std::cout << "ESC PRESSED - Toggling pause" << std::endl;
             }
         }
@@ -141,7 +126,8 @@ namespace Framework {
 
         // OVERRIDE 1: Editor Camera Look (Right Click)
         if (isUIFocused) {
-            if (IsMouseButtonHeld(GLFW_MOUSE_BUTTON_RIGHT)) {
+            if (IsMouseButtonHeld(GLFW_MOUSE_BUTTON_RIGHT)) 
+            {
                 desiredMode = GLFW_CURSOR_DISABLED;
                 if (IsMouseButtonPressed(GLFW_MOUSE_BUTTON_RIGHT)) m_firstMouse = true;
             }
@@ -149,7 +135,9 @@ namespace Framework {
 
         // OVERRIDE 2: Menus / Pause / HowToPlay
         // If ANY of these are true, we MUST show the cursor, regardless of Editor/Game mode.
-        if (engineState.IsInMenu() || engineState.IsPaused() || engineState.InHowToPlay() || engineState.InDialogue()) {
+        if (engineState.Is(EngineMode::Menu) || engineState.Is(EngineMode::Paused) || 
+            engineState.Is(EngineMode::HowToPlay) || engineState.Is(EngineMode::Settings)) 
+        {
             desiredMode = GLFW_CURSOR_NORMAL;
         }
 
@@ -177,12 +165,26 @@ namespace Framework {
                 m_firstMouse = true;
             }
         }
+
+        // --- Slider Drag Logic -- 
+        int width, height;
+        glfwGetWindowSize(window, &width, &height);
+        if (width > 0 && height > 0)
+        {
+            float u = static_cast<float>(mouseX) / static_cast<float>(width);
+            float v = static_cast<float>(mouseY) / static_cast<float>(height);
+            v = 1.0f - v;
+
+            auto buttonSystem = ecsInterface.GetSystem<ButtonSystem>();
+            if (buttonSystem) buttonSystem->HandleSliderDrag(u, v);
+        }
     }
 
     // [FIX] CursorPositionCallback Implementation
-  // In InputHandler.cpp
+    // In InputHandler.cpp
 
-    void InputHandler::CursorPositionCallback(GLFWwindow* window, double xpos, double ypos) {
+    void InputHandler::CursorPositionCallback(GLFWwindow* window, double xpos, double ypos) 
+    {
         InputHandler* self = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
         if (!self) return;
 
@@ -191,7 +193,8 @@ namespace Framework {
 
         // --- [FIX] CHECK GLOBAL ENGINE STATE ---
         // If any menu is open, we must NOT rotate the camera.
-        bool isMenuOpen = engineState.IsInMenu() || engineState.IsPaused() || engineState.InHowToPlay() || engineState.InDialogue();
+        bool isMenuOpen = engineState.Is(EngineMode::Menu) || engineState.Is(EngineMode::Paused) ||
+                          engineState.Is(EngineMode::HowToPlay) || engineState.Is(EngineMode::Settings);
 
         bool isRightClickHeld = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
 
@@ -200,26 +203,25 @@ namespace Framework {
         // 2. Game Mode (!isUIFocused): Rotate only if NO menu is open.
         bool canRotate = (self->isUIFocused && isRightClickHeld) || (!self->isUIFocused && !isMenuOpen);
 
-        if (!self->m_cameraRotationEnabled) {
-            canRotate = false;
-        }
+        if (!self->m_cameraRotationEnabled) canRotate = false;
 
         Camera* targetCam = nullptr;
 
-        if (self->mainGraphics) {
+        if (self->mainGraphics) 
+        {
             int camIndex = 0;
-            if (self->isUIFocused) {
+            if (self->isUIFocused) 
+            {
                 camIndex = self->mainGraphics->GetMouseTargetView();
             }
             targetCam = self->mainGraphics->GetCameraByIndex(camIndex);
         }
-        else {
-            targetCam = self->mainCamera;
-        }
+        else targetCam = self->mainCamera;
 
         if (canRotate && targetCam)
         {
-            if (self->m_firstMouse) {
+            if (self->m_firstMouse) 
+            {
                 self->m_lastX = xpos;
                 self->m_lastY = ypos;
                 self->m_firstMouse = false;
