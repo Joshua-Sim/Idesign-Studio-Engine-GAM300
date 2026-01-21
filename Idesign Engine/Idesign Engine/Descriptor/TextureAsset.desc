@@ -1,5 +1,5 @@
 {
-    "count": 116,
+    "count": 118,
     "entries": [
         {
             "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
@@ -32,18 +32,6 @@
             "isUI": false
         },
         {
-            "guid": "cabb6b16-8445-4f40-b9c8-bd593ea6b65c",
-            "name": "top",
-            "path": "Assets\\Textures\\top.png",
-            "isUI": false
-        },
-        {
-            "guid": "312bdb54-477d-47bb-a1ce-2224bc3ec5e3",
-            "name": "Cupboard",
-            "path": "Assets\\Textures\\Cupboard.png",
-            "isUI": false
-        },
-        {
             "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
             "name": "Shelf",
             "path": "Assets\\Textures\\Shelf.png",
@@ -62,6 +50,18 @@
             "isUI": false
         },
         {
+            "guid": "cabb6b16-8445-4f40-b9c8-bd593ea6b65c",
+            "name": "top",
+            "path": "Assets\\Textures\\top.png",
+            "isUI": false
+        },
+        {
+            "guid": "312bdb54-477d-47bb-a1ce-2224bc3ec5e3",
+            "name": "Cupboard",
+            "path": "Assets\\Textures\\Cupboard.png",
+            "isUI": false
+        },
+        {
             "guid": "1a04361c-a4ca-4230-a564-24c35868f47c",
             "name": "SkyMidNight_Right",
             "path": "Assets\\Textures\\SkyMidNight_Right.png",
@@ -74,15 +74,15 @@
             "isUI": false
         },
         {
-            "guid": "d7666fdd-353e-4a3e-9a3f-70f50cea9f7a",
-            "name": "CREDITS BUTTON",
-            "path": "Assets\\Textures\\CREDITS BUTTON.png",
-            "isUI": false
-        },
-        {
             "guid": "6268a735-25b0-4a92-b9df-38ba44a3af1e",
             "name": "SETTING HOVER BUTTON",
             "path": "Assets\\Textures\\SETTING HOVER BUTTON.png",
+            "isUI": false
+        },
+        {
+            "guid": "d7666fdd-353e-4a3e-9a3f-70f50cea9f7a",
+            "name": "CREDITS BUTTON",
+            "path": "Assets\\Textures\\CREDITS BUTTON.png",
             "isUI": false
         },
         {
@@ -695,6 +695,18 @@
             "guid": "15910deb-44ce-4b6b-b80f-65983e2f154e",
             "name": "START BUTTON",
             "path": "Assets\\Textures\\START BUTTON.png",
+            "isUI": false
+        },
+        {
+            "guid": "f16bcc4e-155e-46f3-8a12-a74c1cbad935",
+            "name": "BACKGROUND_REMASTERED",
+            "path": "Assets\\Textures\\BACKGROUND_REMASTERED.png",
+            "isUI": false
+        },
+        {
+            "guid": "617a5da4-3f2e-41ce-9a4e-5980c77830f5",
+            "name": "logo1",
+            "path": "Assets\\Textures\\logo1.png",
             "isUI": false
         }
     ]

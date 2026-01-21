@@ -136,6 +136,33 @@
             "indexCount": 780
         },
         {
+            "guid": "52f9947c-0b27-4f5a-9a18-cfef71bcfac3",
+            "name": "layout2-0",
+            "path": "Assets/Objects/layout2-0.obj",
+            "vao": 69,
+            "vbo": 126,
+            "ebo": 127,
+            "indexCount": 40356
+        },
+        {
+            "guid": "177fa052-079f-42bb-b225-97be34770804",
+            "name": "Table",
+            "path": "Assets\\Objects\\Table.obj",
+            "vao": 90,
+            "vbo": 168,
+            "ebo": 169,
+            "indexCount": 528
+        },
+        {
+            "guid": "3a68b780-632d-49d8-b45d-33b1ac035172",
+            "name": "plane",
+            "path": "Assets/Objects/plane.obj",
+            "vao": 18,
+            "vbo": 35,
+            "ebo": 36,
+            "indexCount": 76662
+        },
+        {
             "guid": "6cbaa85b-562d-4b23-9f64-8639947659cc",
             "name": "knifechoppingwithBONEFIXED4",
             "path": "Assets/Objects/knifechoppingwithBONEFIXED4.fbx",
@@ -175,27 +202,27 @@
             "guid": "61ccf513-cbc9-40a5-828f-95376b1b2c8e",
             "name": "Sphere",
             "path": "Assets/Objects/Sphere.obj",
-            "vao": 20,
-            "vbo": 39,
-            "ebo": 40,
+            "vao": 23,
+            "vbo": 45,
+            "ebo": 46,
             "indexCount": 2304
         },
         {
             "guid": "563cdf50-2687-4991-96cf-c5fa0be850ab",
             "name": "Sphere",
             "path": "Assets/Objects/Sphere.obj",
-            "vao": 21,
-            "vbo": 41,
-            "ebo": 42,
+            "vao": 24,
+            "vbo": 47,
+            "ebo": 48,
             "indexCount": 2304
         },
         {
             "guid": "9e1fcb62-0699-4a0b-ae75-d0670af44b1b",
             "name": "plane2",
             "path": "Assets/Objects/plane2.obj",
-            "vao": 23,
-            "vbo": 45,
-            "ebo": 46,
+            "vao": 26,
+            "vbo": 51,
+            "ebo": 52,
             "indexCount": 231840
         },
         {
@@ -208,39 +235,21 @@
             "indexCount": 240
         },
         {
-            "guid": "3a68b780-632d-49d8-b45d-33b1ac035172",
-            "name": "plane",
-            "path": "Assets/Objects/plane.obj",
-            "vao": 24,
-            "vbo": 47,
-            "ebo": 48,
-            "indexCount": 76662
-        },
-        {
-            "guid": "52f9947c-0b27-4f5a-9a18-cfef71bcfac3",
-            "name": "layout2-0",
-            "path": "Assets/Objects/layout2-0.obj",
-            "vao": 69,
-            "vbo": 126,
-            "ebo": 127,
-            "indexCount": 40356
-        },
-        {
             "guid": "fe86c54b-7cc2-471c-9d7e-0bce31089b5a",
             "name": "Cylinder",
             "path": "Assets/Objects/Cylinder.obj",
-            "vao": 27,
-            "vbo": 53,
-            "ebo": 54,
+            "vao": 28,
+            "vbo": 55,
+            "ebo": 56,
             "indexCount": 240
         },
         {
             "guid": "a25723a2-f9bf-4939-b80d-962eb537dd2e",
             "name": "strength_potion",
             "path": "Assets\\Objects\\strength_potion.obj",
-            "vao": 26,
-            "vbo": 51,
-            "ebo": 52,
+            "vao": 27,
+            "vbo": 53,
+            "ebo": 54,
             "indexCount": 924
         },
         {
@@ -251,15 +260,6 @@
             "vbo": 174,
             "ebo": 175,
             "indexCount": 1116
-        },
-        {
-            "guid": "177fa052-079f-42bb-b225-97be34770804",
-            "name": "Table",
-            "path": "Assets\\Objects\\Table.obj",
-            "vao": 90,
-            "vbo": 168,
-            "ebo": 169,
-            "indexCount": 528
         },
         {
             "guid": "6fa52b14-d79c-4815-aaff-767eb40b32ca",
