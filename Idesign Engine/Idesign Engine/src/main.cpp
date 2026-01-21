@@ -45,6 +45,7 @@
 #include "RecipeBookManager.h"
 #include "TypeRegistry.h"
 #include "SceneInterface.h"
+#include "LoadingSystem.h"
 
 using namespace Framework;
 
@@ -139,6 +140,13 @@ int main(void)
     auto eventSystem = ecsInterface.RegisterSystem<EventSystem>();
     auto sceneInterface = ecsInterface.RegisterSystem<SceneInterface>();
 
+    // Registered components here used for loading screen transition
+    ecsInterface.RegisterComponent<TransformComponent>();
+    ecsInterface.RegisterComponent<TextureProperties>();
+    ecsInterface.RegisterComponent<LayerComponent>();
+    ecsInterface.RegisterComponent<PhysicsBodyComponent>();
+    auto loadingSystem = ecsInterface.RegisterSystem<LoadingSystem>();
+
     ecsInterface.RegisterComponent<EventSenderComponent>(); 
     ecsInterface.RegisterComponent<EventReceiverComponent>();
 
@@ -166,6 +174,7 @@ int main(void)
     engine->AddSystem(buttonSystem.get());
     engine->AddSystem(sceneSystem.get());       // Register scene manager last
     engine->AddSystem(sceneInterface.get());
+    engine->AddSystem(loadingSystem.get());
 
     std::filesystem::path root = GetEngineRootPath();
     fileCheckSystem->WatchAllFolders();

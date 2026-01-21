@@ -22,6 +22,8 @@ namespace Framework {
 
     void PhaseManager::TogglePhase()
     {
+        EventManager::Instance().Fire("StartPhaseTransition", nullptr);
+
         switch (m_currentPhase)
         {
         case GamePhase::Day:
@@ -127,15 +129,15 @@ namespace Framework {
 
     void PhaseManager::TeleportPlayer(const glm::vec3& position, const glm::vec3& rotation)
     {
-        // 1. Find Player Entity
         Entity player = ecsInterface.GetEntityByName("Player");
 
-        if (!ecsInterface.IsEntityValid(player)) {
-            std::cerr << "[PhaseManager] Error: Player entity not found!" << std::endl;
+        // 1. Validate Entity
+        if (player == -1 || !ecsInterface.IsEntityValid(player)) {
+            std::cerr << "[PhaseManager] ERROR: Player entity not found!" << std::endl;
             return;
         }
 
-        // 2. Update Visual Transform
+        // 2. Validate Transform
         if (ecsInterface.HasComponent<TransformComponent>(player))
         {
             auto& transform = ecsInterface.GetComponent<TransformComponent>(player);
@@ -143,36 +145,27 @@ namespace Framework {
             transform.rotation = rotation;
         }
 
-        // 3. Update Physics Bodies (CRITICAL FOR JOLT)
+        // 3. Validate Physics
         if (ecsInterface.HasComponent<PhysicsBodyComponent>(player))
         {
             auto& pb = ecsInterface.GetComponent<PhysicsBodyComponent>(player);
             auto physicsSystem = ecsInterface.GetSystem<PhysicsSystem>();
 
-            if (physicsSystem)
+            // Ensure we actually have physics IDs to move
+            if (physicsSystem && !pb.IDs.empty())
             {
                 JPH::BodyInterface* bodyInterface = physicsSystem->GetBodyInterface();
                 if (bodyInterface)
                 {
-                    // --- CONVERT DATA ONCE ---
-                    // Convert GLM Position to Jolt
                     JPH::RVec3 jPos(position.x, position.y, position.z);
-
-                    // Convert Euler (Degrees) to GLM Quat -> Jolt Quat
                     glm::quat q = glm::quat(glm::radians(rotation));
                     JPH::Quat jRot(q.x, q.y, q.z, q.w);
 
-                    // --- APPLY TO ALL BODIES ---
-                    // The player might have a Solid body AND a Sensor body. 
-                    // We must move both.
                     for (JPH::BodyID id : pb.IDs)
                     {
                         if (!id.IsInvalid())
                         {
-                            // Force set position and wake up
                             bodyInterface->SetPositionAndRotation(id, jPos, jRot, JPH::EActivation::Activate);
-
-                            // Kill velocity so they don't carry momentum into the new phase
                             bodyInterface->SetLinearVelocity(id, JPH::Vec3::sZero());
                         }
                     }
