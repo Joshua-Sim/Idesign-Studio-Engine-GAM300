@@ -50,7 +50,7 @@ namespace Framework {
             auto& button = ecsInterface.GetComponent<ButtonComponent>(entity);
             auto& tr = ecsInterface.GetComponent<TransformComponent>(entity);
 
-            // interpret Transform as “center + full size” in design space
+            // interpret Transform as ï¿½center + full sizeï¿½ in design space
             // button.position = glm::vec2(tr.position.x - 0.5f * tr.scale.x,tr.position.y - 0.5f * tr.scale.y);
             button.position = glm::vec2(tr.position.x, tr.position.y);
             button.size = glm::vec2(tr.scale.x, tr.scale.y);
@@ -94,16 +94,13 @@ namespace Framework {
 
     void ButtonSystem::HandleSliderDrag(float u, float v)
     {
-        float designX = u * DESIGN_WIDTH;
-        float designY = v * DESIGN_HEIGHT;
-
         auto* input =     InputHandler::GetInstance();
         bool isPressed =  input->IsMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT);
         bool isHeld =     input->IsMouseButtonHeld(GLFW_MOUSE_BUTTON_LEFT);
         bool isReleased = input->IsMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT);
 
         /*--------------------------------------------------
-            1) START DRAG — ONLY ON PRESS
+            1) START DRAG ï¿½ ONLY ON PRESS
         --------------------------------------------------*/
         if (!m_isDraggingSlider && isPressed)
         {
@@ -144,7 +141,7 @@ namespace Framework {
         }
 
         /*--------------------------------------------------
-            2) DRAG — ONLY WHILE HELD
+            2) DRAG ï¿½ ONLY WHILE HELD
         --------------------------------------------------*/
         if (m_isDraggingSlider && isHeld)
         {
@@ -220,7 +217,7 @@ namespace Framework {
         }
 
         /*--------------------------------------------------
-            3) RELEASE — ALWAYS RESET
+            3) RELEASE ï¿½ ALWAYS RESET
         --------------------------------------------------*/
         if (m_isDraggingSlider && isReleased)
         {
@@ -229,6 +226,47 @@ namespace Framework {
             m_activeSliderType = SliderType::None;
         }
     }
+    
+    void ButtonSystem::UpdateHoverUV(float u, float v)
+    {
+        float designX = u * DESIGN_WIDTH;
+        float designY = v * DESIGN_HEIGHT;
+
+        for (auto entity : mEntities)
+        {
+            if (!ecsInterface.HasComponent<ButtonComponent>(entity) ||
+                !ecsInterface.HasComponent<TransformComponent>(entity) ||
+                !ecsInterface.HasComponent<TextureProperties>(entity))
+                continue;
+
+            auto& button = ecsInterface.GetComponent<ButtonComponent>(entity);
+            auto& tr = ecsInterface.GetComponent<TransformComponent>(entity);
+            auto& tex = ecsInterface.GetComponent<TextureProperties>(entity);
+
+            // only UI quads are treated as buttons
+            if (!tex.isUI) continue;
+
+            // derive bounds from Transform (center + full size)
+            float left = tr.position.x - 0.5f * tr.scale.x;
+            float right = tr.position.x + 0.5f * tr.scale.x;
+            float bottom = tr.position.y - 0.5f * tr.scale.y;
+            float top = tr.position.y + 0.5f * tr.scale.y;
+
+            bool inside = (designX > left && designX < right && designY > bottom && designY < top);
+            button.isHovered = inside;
+
+            //DO NOT CHANGE ANY Z POSITIONING
+            if (inside && button.isFrontButton == true)
+            {
+                tr.position.z = -100;
+            }
+            else
+            {
+                tr.position.z = 1;
+            }
+        }
+    }
+
 }
 
 //    void ButtonSystem::AddButton(ButtonComponent button) {

@@ -17,6 +17,7 @@ namespace Framework
         glm::vec2 size;                      // Size of the button
         bool isHovered;                      // Is the button hovered?
         std::function<void()> onClick;       // Function to be called when clicked
+        bool isFrontButton = false;
 
         void TriggerClick(Entity e) const
         {
@@ -39,6 +40,7 @@ namespace Framework
         PROP_VEC2(position,   ButtonComponent),
         PROP_VEC2(size,       ButtonComponent),
         PROP_BOOL(isHovered,  ButtonComponent),
+        PROP_BOOL(isFrontButton, ButtonComponent),
         // Note: onClick is a function, not a serializable property, so we don’t register it
     };
 

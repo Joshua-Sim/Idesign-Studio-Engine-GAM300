@@ -41,6 +41,7 @@ namespace Framework
         // std::vector<ButtonComponent> GetButtons() const;
         void HandleClickUV(float u, float v);
         void HandleSliderDrag(float u, float v);
+        void UpdateHoverUV(float u, float v);
 
     private:
 

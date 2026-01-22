@@ -139,11 +139,11 @@
                     "volume": 1.0,
                     "loop": false,
                     "playOnStart": true,
-                    "isPlaying": true,
+                    "isPlaying": false,
                     "lastPosition": [
-                        -45.934112548828125,
-                        5.300000190734863,
-                        14.715734481811523
+                        0.0,
+                        0.0,
+                        0.0
                     ]
                 }
             }
@@ -2741,14 +2741,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -55.34569549560547,
-                        8.024563789367676,
-                        8.921391487121582
+                        -56.68317413330078,
+                        6.1445746421813965,
+                        16.818458557128906
                     ],
                     "rotation": [
-                        0.0,
-                        90.0,
-                        0.0
+                        0.00001366037849948043,
+                        89.94149780273438,
+                        -90.00001525878906
                     ],
                     "scale": [
                         0.9999989867210388,
@@ -2824,9 +2824,9 @@
                 },
                 "ListenerComponent": {
                     "position": [
-                        -55.34569549560547,
-                        8.024563789367676,
-                        8.921391487121582
+                        -56.68317413330078,
+                        6.1445746421813965,
+                        16.818458557128906
                     ],
                     "forward": [
                         0.0,
@@ -3215,11 +3215,11 @@
                     "volume": 1.0,
                     "loop": true,
                     "playOnStart": true,
-                    "isPlaying": true,
+                    "isPlaying": false,
                     "lastPosition": [
-                        -40.230262756347656,
-                        6.287981033325195,
-                        17.725893020629883
+                        0.0,
+                        0.0,
+                        0.0
                     ]
                 }
             }
@@ -3267,7 +3267,7 @@
                     "position": [
                         980.0,
                         280.0,
-                        0.0
+                        1.0
                     ],
                     "rotation": [
                         0.0,
@@ -3313,7 +3313,8 @@
                         250.0,
                         100.0
                     ],
-                    "isHovered": false
+                    "isHovered": false,
+                    "isFrontButton": false
                 }
             }
         },
@@ -3586,9 +3587,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        980.0,
-                        780.0,
-                        0.0
+                        960.0,
+                        540.0,
+                        1.0
                     ],
                     "rotation": [
                         0.0,
@@ -3596,8 +3597,8 @@
                         0.0
                     ],
                     "scale": [
-                        781.0,
-                        450.0,
+                        1920.0,
+                        1080.0,
                         1.0
                     ],
                     "isActive": true
@@ -3609,7 +3610,11 @@
                         "840c7124-cb6a-4e4f-9961-dbe1d25d3965",
                         "cb125a24-8b08-40f9-8fcc-b6a37f697290",
                         "59a63bf7-241d-480a-ad05-2601e4773b33",
-                        "f94f09dd-0bf0-4a3e-a440-78807d2cf1c4"
+                        "f94f09dd-0bf0-4a3e-a440-78807d2cf1c4",
+                        "840c7124-cb6a-4e4f-9961-dbe1d25d3965",
+                        "a7a06efa-a42a-47f9-b56d-5f3edd0aea3b",
+                        "cd99edfa-8f1d-4d2f-a3eb-7e5faa0f2055",
+                        "e0653c51-ad34-4f14-9b64-a56bb646b912"
                     ],
                     "sortIndex": 60
                 },
@@ -3619,19 +3624,20 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "7d0d853e-cc77-4ef2-bd2b-af349f1ab9e0",
-                    "isUI": false
+                    "guid": "af8e75b5-739e-4206-8194-4123598c5a7c",
+                    "isUI": true
                 },
                 "ButtonComponent": {
                     "position": [
-                        980.0,
-                        780.0
+                        960.0,
+                        540.0
                     ],
                     "size": [
-                        781.0,
-                        450.0
+                        1920.0,
+                        1080.0
                     ],
-                    "isHovered": false
+                    "isHovered": true,
+                    "isFrontButton": false
                 }
             }
         },
@@ -3642,8 +3648,8 @@
                 "TransformComponent": {
                     "position": [
                         980.0,
-                        470.0,
-                        0.0
+                        670.0,
+                        1.0
                     ],
                     "rotation": [
                         0.0,
@@ -3651,8 +3657,8 @@
                         0.0
                     ],
                     "scale": [
-                        250.0,
-                        100.0,
+                        375.0,
+                        150.0,
                         1.0
                     ],
                     "isActive": true
@@ -3668,8 +3674,8 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "d1717710-3745-4779-a5f4-791474646b86",
-                    "isUI": false
+                    "guid": "273edb8c-f3da-4c2c-8c25-bab578b94f55",
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -3683,13 +3689,14 @@
                 "ButtonComponent": {
                     "position": [
                         980.0,
-                        470.0
+                        670.0
                     ],
                     "size": [
-                        250.0,
-                        100.0
+                        375.0,
+                        150.0
                     ],
-                    "isHovered": false
+                    "isHovered": false,
+                    "isFrontButton": false
                 }
             }
         },
@@ -3700,8 +3707,8 @@
                 "TransformComponent": {
                     "position": [
                         980.0,
-                        100.0,
-                        0.0
+                        280.0,
+                        1.0
                     ],
                     "rotation": [
                         0.0,
@@ -3709,8 +3716,8 @@
                         0.0
                     ],
                     "scale": [
-                        250.0,
-                        100.0,
+                        375.0,
+                        150.0,
                         1.0
                     ],
                     "isActive": true
@@ -3726,8 +3733,8 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "d24a29c5-cd9e-4322-ab59-d38618cba4bf",
-                    "isUI": false
+                    "guid": "197bc9ec-6f34-40e7-8f8a-5b7d8a951a8c",
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -3741,13 +3748,14 @@
                 "ButtonComponent": {
                     "position": [
                         980.0,
-                        100.0
+                        280.0
                     ],
                     "size": [
-                        250.0,
-                        100.0
+                        375.0,
+                        150.0
                     ],
-                    "isHovered": false
+                    "isHovered": false,
+                    "isFrontButton": false
                 }
             }
         },
@@ -3758,8 +3766,8 @@
                 "TransformComponent": {
                     "position": [
                         980.0,
-                        350.0,
-                        0.0
+                        470.0,
+                        1.0
                     ],
                     "rotation": [
                         0.0,
@@ -3767,8 +3775,8 @@
                         0.0
                     ],
                     "scale": [
-                        250.0,
-                        100.0,
+                        375.0,
+                        150.0,
                         1.0
                     ],
                     "isActive": true
@@ -3784,8 +3792,8 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "570d1836-97f4-478c-a328-e658b3182a8e",
-                    "isUI": false
+                    "guid": "c44c9565-d18e-4186-86af-03e26a23eafe",
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -3799,13 +3807,14 @@
                 "ButtonComponent": {
                     "position": [
                         980.0,
-                        350.0
+                        470.0
                     ],
                     "size": [
-                        250.0,
-                        100.0
+                        375.0,
+                        150.0
                     ],
-                    "isHovered": false
+                    "isHovered": false,
+                    "isFrontButton": false
                 }
             }
         },
@@ -3834,7 +3843,8 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [
-                        "60f2e874-560b-418f-8941-5051eaf42703"
+                        "60f2e874-560b-418f-8941-5051eaf42703",
+                        "ce98accd-a35e-41f8-addd-5874a4a8cc99"
                     ],
                     "sortIndex": 64
                 },
@@ -3856,7 +3866,8 @@
                         1720.0,
                         860.0
                     ],
-                    "isHovered": true
+                    "isHovered": true,
+                    "isFrontButton": false
                 }
             }
         },
@@ -3893,7 +3904,7 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "7c8534ad-0fdd-408d-89fa-2f7ce1d4ea89",
+                    "guid": "12c367bb-5f67-4bb7-b7df-6a94466941a5",
                     "isUI": false
                 },
                 "ScriptProperties": {
@@ -3914,7 +3925,8 @@
                         175.0,
                         100.0
                     ],
-                    "isHovered": true
+                    "isHovered": false,
+                    "isFrontButton": false
                 }
             }
         },
@@ -3926,7 +3938,7 @@
                     "position": [
                         960.0,
                         540.0,
-                        0.0
+                        1.0
                     ],
                     "rotation": [
                         0.0,
@@ -3934,7 +3946,7 @@
                         0.0
                     ],
                     "scale": [
-                        2050.0,
+                        1925.0,
                         1080.0,
                         1.0
                     ],
@@ -3953,7 +3965,7 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "f49379af-a87b-435b-b85b-5c3127ec2fe9",
+                    "guid": "f16bcc4e-155e-46f3-8a12-a74c1cbad935",
                     "isUI": false
                 },
                 "ButtonComponent": {
@@ -3962,10 +3974,11 @@
                         540.0
                     ],
                     "size": [
-                        2050.0,
+                        1925.0,
                         1080.0
                     ],
-                    "isHovered": true
+                    "isHovered": false,
+                    "isFrontButton": false
                 }
             }
         },
@@ -3975,9 +3988,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        980.0,
-                        780.0,
-                        0.0
+                        960.0,
+                        850.0,
+                        1.0
                     ],
                     "rotation": [
                         0.0,
@@ -3985,8 +3998,8 @@
                         0.0
                     ],
                     "scale": [
-                        781.0,
-                        450.0,
+                        1929.0,
+                        537.0,
                         1.0
                     ],
                     "isActive": true
@@ -3997,7 +4010,9 @@
                         "7b84a8bb-5259-4b2c-8538-7d97a11db5ef",
                         "42fba46a-dc8d-4372-9233-8a68add37890",
                         "35eb7bb0-72b2-4031-8443-cdc398e9129a",
-                        "2699ab9b-68cf-45a7-a645-70d5300e57cc"
+                        "2699ab9b-68cf-45a7-a645-70d5300e57cc",
+                        "46b6366c-5bd8-4cf8-b82a-bce0227a175f",
+                        "1b4b5d0c-6351-45f6-80e5-9be48c9bf0d8"
                     ],
                     "sortIndex": 67
                 },
@@ -4007,19 +4022,20 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "7d0d853e-cc77-4ef2-bd2b-af349f1ab9e0",
+                    "guid": "617a5da4-3f2e-41ce-9a4e-5980c77830f5",
                     "isUI": false
                 },
                 "ButtonComponent": {
                     "position": [
-                        980.0,
-                        780.0
+                        960.0,
+                        850.0
                     ],
                     "size": [
-                        781.0,
-                        450.0
+                        1929.0,
+                        537.0
                     ],
-                    "isHovered": false
+                    "isHovered": true,
+                    "isFrontButton": false
                 }
             }
         },
@@ -4030,8 +4046,8 @@
                 "TransformComponent": {
                     "position": [
                         980.0,
-                        450.0,
-                        0.0
+                        400.0,
+                        1.0
                     ],
                     "rotation": [
                         0.0,
@@ -4056,7 +4072,7 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "84369442-e278-434a-9fa6-c48d9c56bbb3",
+                    "guid": "26deb469-c3d2-45f5-abd0-d5d29655e6e7",
                     "isUI": false
                 },
                 "ScriptProperties": {
@@ -4077,7 +4093,8 @@
                         250.0,
                         100.0
                     ],
-                    "isHovered": true
+                    "isHovered": false,
+                    "isFrontButton": false
                 }
             }
         },
@@ -4088,8 +4105,8 @@
                 "TransformComponent": {
                     "position": [
                         980.0,
-                        200.0,
-                        0.0
+                        280.0,
+                        1.0
                     ],
                     "rotation": [
                         0.0,
@@ -4114,7 +4131,7 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "d24a29c5-cd9e-4322-ab59-d38618cba4bf",
+                    "guid": "197bc9ec-6f34-40e7-8f8a-5b7d8a951a8c",
                     "isUI": false
                 },
                 "ScriptProperties": {
@@ -4135,7 +4152,8 @@
                         250.0,
                         100.0
                     ],
-                    "isHovered": false
+                    "isHovered": false,
+                    "isFrontButton": false
                 }
             }
         },
@@ -4186,7 +4204,8 @@
                         1720.0,
                         880.0
                     ],
-                    "isHovered": true
+                    "isHovered": true,
+                    "isFrontButton": false
                 }
             }
         },
@@ -4888,7 +4907,356 @@
                         175.0,
                         100.0
                     ],
-                    "isHovered": false
+                    "isHovered": false,
+                    "isFrontButton": false
+                }
+            }
+        },
+        {
+            "name": "resumebutton (Copy)",
+            "guid": "a7a06efa-a42a-47f9-b56d-5f3edd0aea3b",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        980.0,
+                        670.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        375.0,
+                        150.0,
+                        1.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "23491286-9912-4971-b5d4-9145a810d598",
+                    "children": [],
+                    "sortIndex": 63
+                },
+                "TagComponent": {
+                    "tags": [
+                        "pause"
+                    ]
+                },
+                "TextureComponent": {
+                    "guid": "e4e85e35-08e3-4fb5-9f54-53c971ed3fee",
+                    "isUI": true
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "f2483dea-2693-432a-b1a5-01aed656bd1e",
+                            "scriptPath": "Assets\\Scripts\\GameStateResume.lua",
+                            "hotReload": false
+                        }
+                    ]
+                },
+                "ButtonComponent": {
+                    "position": [
+                        980.0,
+                        670.0
+                    ],
+                    "size": [
+                        375.0,
+                        150.0
+                    ],
+                    "isHovered": false,
+                    "isFrontButton": true
+                }
+            }
+        },
+        {
+            "name": "quitbutton (Copy)",
+            "guid": "cd99edfa-8f1d-4d2f-a3eb-7e5faa0f2055",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        980.0,
+                        280.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        375.0,
+                        150.0,
+                        1.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "23491286-9912-4971-b5d4-9145a810d598",
+                    "children": [],
+                    "sortIndex": 64
+                },
+                "TagComponent": {
+                    "tags": [
+                        "pause"
+                    ]
+                },
+                "TextureComponent": {
+                    "guid": "7cf95b2f-4160-4a45-9ce1-2b889b5b40af",
+                    "isUI": true
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "c6d4d63d-bced-4890-8a3b-3938e82b13e8",
+                            "scriptPath": "Assets\\Scripts\\GameStateExit.lua",
+                            "hotReload": false
+                        }
+                    ]
+                },
+                "ButtonComponent": {
+                    "position": [
+                        980.0,
+                        280.0
+                    ],
+                    "size": [
+                        375.0,
+                        150.0
+                    ],
+                    "isHovered": false,
+                    "isFrontButton": true
+                }
+            }
+        },
+        {
+            "name": "howtoplaybutton (Copy)",
+            "guid": "e0653c51-ad34-4f14-9b64-a56bb646b912",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        980.0,
+                        470.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        375.0,
+                        150.0,
+                        1.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "23491286-9912-4971-b5d4-9145a810d598",
+                    "children": [],
+                    "sortIndex": 65
+                },
+                "TagComponent": {
+                    "tags": [
+                        "pause"
+                    ]
+                },
+                "TextureComponent": {
+                    "guid": "c43c4719-e688-4409-9c62-6b2508cc3a71",
+                    "isUI": true
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "8de4ea3f-31fb-4768-a277-e1ac0fc64201",
+                            "scriptPath": "Assets\\Scripts\\GameStateHowToPlay.lua",
+                            "hotReload": false
+                        }
+                    ]
+                },
+                "ButtonComponent": {
+                    "position": [
+                        980.0,
+                        470.0
+                    ],
+                    "size": [
+                        375.0,
+                        150.0
+                    ],
+                    "isHovered": false,
+                    "isFrontButton": true
+                }
+            }
+        },
+        {
+            "name": "playbutton (Copy)",
+            "guid": "46b6366c-5bd8-4cf8-b82a-bce0227a175f",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        980.0,
+                        400.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        250.0,
+                        100.0,
+                        1.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "214c5541-f814-4e7f-bafa-d9e3db5aff2c",
+                    "children": [],
+                    "sortIndex": 70
+                },
+                "TagComponent": {
+                    "tags": [
+                        "menu"
+                    ]
+                },
+                "TextureComponent": {
+                    "guid": "b27e21d1-6c60-412f-92eb-0b851ce34523",
+                    "isUI": false
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "0b25e0c5-79e6-465a-96cd-920b83ef31e6",
+                            "scriptPath": "Assets\\Scripts\\GameStateStart.lua",
+                            "hotReload": false
+                        }
+                    ]
+                },
+                "ButtonComponent": {
+                    "position": [
+                        980.0,
+                        400.0
+                    ],
+                    "size": [
+                        250.0,
+                        100.0
+                    ],
+                    "isHovered": false,
+                    "isFrontButton": true
+                }
+            }
+        },
+        {
+            "name": "exitbutton (Copy)",
+            "guid": "1b4b5d0c-6351-45f6-80e5-9be48c9bf0d8",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        980.0,
+                        280.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        250.0,
+                        100.0,
+                        1.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "214c5541-f814-4e7f-bafa-d9e3db5aff2c",
+                    "children": [],
+                    "sortIndex": 71
+                },
+                "TagComponent": {
+                    "tags": [
+                        "menu"
+                    ]
+                },
+                "TextureComponent": {
+                    "guid": "7cf95b2f-4160-4a45-9ce1-2b889b5b40af",
+                    "isUI": false
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "c6d4d63d-bced-4890-8a3b-3938e82b13e8",
+                            "scriptPath": "Assets\\Scripts\\GameStateExit.lua",
+                            "hotReload": false
+                        }
+                    ]
+                },
+                "ButtonComponent": {
+                    "position": [
+                        980.0,
+                        280.0
+                    ],
+                    "size": [
+                        250.0,
+                        100.0
+                    ],
+                    "isHovered": false,
+                    "isFrontButton": true
+                }
+            }
+        },
+        {
+            "name": "backButton (Copy)",
+            "guid": "ce98accd-a35e-41f8-addd-5874a4a8cc99",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        950.0,
+                        175.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        175.0,
+                        100.0,
+                        1.0
+                    ]
+                },
+                "HierarchyComponent": {
+                    "parent": "828bfd6d-ea7d-42fd-8535-472b0a692e6e",
+                    "children": [],
+                    "sortIndex": 67
+                },
+                "TagComponent": {
+                    "tags": [
+                        "howtoplay"
+                    ]
+                },
+                "TextureComponent": {
+                    "guid": "7975acc5-88f1-4071-bb7f-14528d6ca857",
+                    "isUI": false
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "50911a7e-8c97-4e66-99f4-ffd4855680ee",
+                            "scriptPath": "Assets\\Scripts\\GameStateBackToPause.lua",
+                            "hotReload": false
+                        }
+                    ]
+                },
+                "ButtonComponent": {
+                    "position": [
+                        950.0,
+                        175.0
+                    ],
+                    "size": [
+                        175.0,
+                        100.0
+                    ],
+                    "isHovered": false,
+                    "isFrontButton": true
                 }
             }
         },
@@ -5107,19 +5475,6 @@
                     "alignment": 0,
                     "isBillboard": false,
                     "screenSpace": true
-                },
-                "TextProperties": {
-                    "text": "100%",
-                    "scale": 1.0,
-                    "color": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "opacity": 0.0,
-                    "alignment": 0,
-                    "isBillboard": false,
-                    "screenSpace": true
                 }
             }
         },
@@ -5281,19 +5636,6 @@
                     "alignment": 0,
                     "isBillboard": false,
                     "screenSpace": true
-                },
-                "TextProperties": {
-                    "text": "100%",
-                    "scale": 1.0,
-                    "color": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "opacity": 0.0,
-                    "alignment": 0,
-                    "isBillboard": false,
-                    "screenSpace": true
                 }
             }
         },
@@ -5442,19 +5784,6 @@
                 "TextureComponent": {
                     "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
                     "isUI": false
-                },
-                "TextProperties": {
-                    "text": "100%",
-                    "scale": 1.0,
-                    "color": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "opacity": 0.0,
-                    "alignment": 0,
-                    "isBillboard": false,
-                    "screenSpace": true
                 },
                 "TextProperties": {
                     "text": "100%",
@@ -5944,19 +6273,6 @@
                     "alignment": 0,
                     "isBillboard": false,
                     "screenSpace": true
-                },
-                "TextProperties": {
-                    "text": "Goodbye!",
-                    "scale": 0.6899999976158142,
-                    "color": [
-                        0.15939366817474365,
-                        0.15866754949092865,
-                        0.06640792638063431
-                    ],
-                    "opacity": 1.0,
-                    "alignment": 0,
-                    "isBillboard": false,
-                    "screenSpace": true
                 }
             }
         },
@@ -6053,19 +6369,6 @@
                     "alignment": 0,
                     "isBillboard": false,
                     "screenSpace": true
-                },
-                "TextProperties": {
-                    "text": "NPC",
-                    "scale": 0.8500000238418579,
-                    "color": [
-                        0.15939366817474365,
-                        0.15866754949092865,
-                        0.06640792638063431
-                    ],
-                    "opacity": 1.0,
-                    "alignment": 0,
-                    "isBillboard": false,
-                    "screenSpace": true
                 }
             }
         },
@@ -6120,19 +6423,6 @@
                     "alignment": 0,
                     "isBillboard": false,
                     "screenSpace": true
-                },
-                "TextProperties": {
-                    "text": "",
-                    "scale": 0.6899999976158142,
-                    "color": [
-                        0.15939366817474365,
-                        0.15866754949092865,
-                        0.06640792638063431
-                    ],
-                    "opacity": 1.0,
-                    "alignment": 0,
-                    "isBillboard": false,
-                    "screenSpace": true
                 }
             }
         },
@@ -6174,19 +6464,6 @@
                 "TextureComponent": {
                     "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
                     "isUI": false
-                },
-                "TextProperties": {
-                    "text": "",
-                    "scale": 0.6899999976158142,
-                    "color": [
-                        0.15939366817474365,
-                        0.15866754949092865,
-                        0.06640792638063431
-                    ],
-                    "opacity": 1.0,
-                    "alignment": 0,
-                    "isBillboard": false,
-                    "screenSpace": true
                 },
                 "TextProperties": {
                     "text": "",

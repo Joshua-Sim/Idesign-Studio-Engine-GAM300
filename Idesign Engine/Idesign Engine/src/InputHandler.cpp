@@ -256,6 +256,32 @@ namespace Framework {
             // is treated as a reset, not a giant jump.
             self->m_firstMouse = true;
         }
+
+        int width, height;
+        glfwGetWindowSize(window, &width, &height);
+
+        if (width > 0 && height > 0)
+        {
+            double mx, my;
+            glfwGetCursorPos(window, &mx, &my);
+
+            // Calculate Normalized Coordinates (0.0 to 1.0)
+            float u = static_cast<float>(mx) / static_cast<float>(width);
+            float v = static_cast<float>(my) / static_cast<float>(height);
+
+            // [FIX] Invert Y-Axis for OpenGL-style rendering
+            // If clicking TOP triggered BOTTOM button, this will flip it.
+            v = 1.0f - v;
+
+            // Debug Print to confirm
+            std::cout << "[Input] Click at UV: (" << u << ", " << v << ")" << std::endl;
+
+            auto buttonSystem = ecsInterface.GetSystem<ButtonSystem>();
+            if (buttonSystem)
+            {
+                buttonSystem->UpdateHoverUV(u, v);
+            }
+        }
     }
 
     void InputHandler::SetCamera(Camera* camera) {
