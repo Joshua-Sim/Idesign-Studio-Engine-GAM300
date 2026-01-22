@@ -94,6 +94,9 @@ namespace Framework {
 
     void ButtonSystem::HandleSliderDrag(float u, float v)
     {
+        float designX = u * DESIGN_WIDTH;
+        float designY = v * DESIGN_HEIGHT;
+
         auto* input =     InputHandler::GetInstance();
         bool isPressed =  input->IsMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT);
         bool isHeld =     input->IsMouseButtonHeld(GLFW_MOUSE_BUTTON_LEFT);
