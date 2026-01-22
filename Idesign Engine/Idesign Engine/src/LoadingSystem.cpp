@@ -37,14 +37,19 @@ namespace Framework {
             layer.sortID = 999;
             ecsInterface.AddComponent(m_LoadingEntity, layer);
         }
-        else {
-            // Only access if entity is valid and has the component
-            if (ecsInterface.HasComponent<TransformComponent>(m_LoadingEntity)) {
-                auto& trans = ecsInterface.GetComponent<TransformComponent>(m_LoadingEntity);
-                trans.scale = glm::vec3(1920.0f, 1080.0f, 1.0f);
-            }
+        else 
+        {
+            // --- FIX: RESET EXISTING ENTITY STATE ---
+            // 1. Reset Visibility
+            auto& trans = ecsInterface.GetComponent<TransformComponent>(m_LoadingEntity);
+            trans.scale = glm::vec3(1920.0f, 1080.0f, 1.0f);
+
+            // 2. Reset Texture to Frame 0 ("Loading1")
+            auto& tex = ecsInterface.GetComponent<TextureProperties>(m_LoadingEntity);
+            tex.path = m_Frames[m_CurrentFrame]; // Sets it back to index 0
+            TextureLoader::loadTexture(tex, true);
+            // ----------------------------------------
         }
-        return true;
     }
 
     void LoadingSystem::Update(float deltaTime) {
