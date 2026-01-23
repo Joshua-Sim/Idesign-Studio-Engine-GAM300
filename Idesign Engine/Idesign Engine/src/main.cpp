@@ -212,8 +212,8 @@ int main(void)
     //scriptingSystem->CreateScriptEntity("Assets/Scripts/controls.lua");
     //scriptingSystem->CreateScriptEntity("assets/scripts/prove_lua.lua");
 
-    engineState.SetPlay(true);
-    engineState.SetMenu(true);
+    engineState.PushState(EngineMode::Play);    // Set to Play active    
+    engineState.PushState(EngineMode::Menu);    // Set to Menu active
     sceneManager.LoadScene("Scenes/GameScene - WithCollision.json");
     
     engine->GameLoop();
