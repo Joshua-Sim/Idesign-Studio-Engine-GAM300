@@ -51,28 +51,56 @@ namespace Framework {
             // ----------------------------------------
         }
     }
+    
+    // OG before change
+    //void LoadingSystem::Update(float deltaTime) {
+    //    if (!m_IsActive || !ecsInterface.IsEntityValid(m_LoadingEntity)) return;
 
+    //    m_AnimationTimer += deltaTime;
+
+    //    // Frame duration: 0.5 seconds per frame
+    //    if (m_AnimationTimer >= 0.2f) {
+    //        m_AnimationTimer = 0.0f;
+
+    //        // Move to the next frame
+    //        m_CurrentFrame++;
+
+    //        // CHECK: Have we finished all 3 frames?
+    //        if (m_CurrentFrame >= m_Frames.size()) {
+    //            // ONE LOOP COMPLETE: Stop and hide everything
+    //            //std::cout << "[LoadingSystem] One loop finished. Deactivating..." << std::endl;
+    //            OnLoadingEnd(nullptr);
+    //            return;
+    //        }
+
+    //        // Otherwise, update the texture to the next frame
+    //        if (ecsInterface.HasComponent<TextureProperties>(m_LoadingEntity)) {
+    //            auto& tex = ecsInterface.GetComponent<TextureProperties>(m_LoadingEntity);
+    //            tex.path = m_Frames[m_CurrentFrame];
+    //            TextureLoader::loadTexture(tex, true);
+    //        }
+    //    }
+    //}
+
+    // smoother one here
     void LoadingSystem::Update(float deltaTime) {
         if (!m_IsActive || !ecsInterface.IsEntityValid(m_LoadingEntity)) return;
 
         m_AnimationTimer += deltaTime;
 
-        // Frame duration: 0.5 seconds per frame
-        if (m_AnimationTimer >= 0.5f) {
+        // --- CHANGE THIS VALUE ---
+        // 0.1f = 10 frames per second (Smooth)
+        // 0.05f = 20 frames per second (Very Smooth)
+        if (m_AnimationTimer >= 0.1f) {
             m_AnimationTimer = 0.0f;
 
-            // Move to the next frame
             m_CurrentFrame++;
 
-            // CHECK: Have we finished all 3 frames?
             if (m_CurrentFrame >= m_Frames.size()) {
-                // ONE LOOP COMPLETE: Stop and hide everything
-                //std::cout << "[LoadingSystem] One loop finished. Deactivating..." << std::endl;
                 OnLoadingEnd(nullptr);
                 return;
             }
 
-            // Otherwise, update the texture to the next frame
             if (ecsInterface.HasComponent<TextureProperties>(m_LoadingEntity)) {
                 auto& tex = ecsInterface.GetComponent<TextureProperties>(m_LoadingEntity);
                 tex.path = m_Frames[m_CurrentFrame];
