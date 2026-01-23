@@ -539,6 +539,18 @@
             "name": "snow_dark",
             "path": "Assets\\Textures\\snow_dark.png",
             "isUI": false
+        },
+        {
+            "guid": "8dfb8eae-aaa5-4d6d-aeb3-676e80561dee",
+            "name": "Goblin",
+            "path": "Assets\\Textures\\Goblin.png",
+            "isUI": false
+        },
+        {
+            "guid": "426b57d1-9af6-411b-9786-52eb46acea4b",
+            "name": "Goblin",
+            "path": "Assets\\Textures\\Goblin.png",
+            "isUI": false
         }
     ]
 }

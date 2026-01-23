@@ -32,6 +32,28 @@
             "bPlayOnStart": true,
             "currentTime": 0.0,
             "vbo_skinning": 0
+        },
+        {
+            "guid": "d860e626-e7cf-44dc-b081-9c36f0a7d671",
+            "name": "GoblinPixelLatest(1)",
+            "path": "Assets\\Objects\\GoblinPixelLatest(1).fbx",
+            "defaultAnimationName": "",
+            "animationSpeed": 1.0,
+            "bLoops": true,
+            "bPlayOnStart": true,
+            "currentTime": 0.0,
+            "vbo_skinning": 0
+        },
+        {
+            "guid": "4015f98e-e322-4d64-b938-5868c300ff46",
+            "name": "GoblinPixelLatest",
+            "path": "Assets\\Objects\\GoblinPixelLatest.fbx",
+            "defaultAnimationName": "",
+            "animationSpeed": 1.0,
+            "bLoops": true,
+            "bPlayOnStart": true,
+            "currentTime": 0.0,
+            "vbo_skinning": 0
         }
     ]
 }
