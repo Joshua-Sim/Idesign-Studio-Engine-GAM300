@@ -194,8 +194,8 @@ int main(void)
 
     ImguiManager::Log("Initializing FontSystem...", "FontSystem");
     fontSystem.Initialize();
-    fontSystem.LoadFont("Assets/Font/Ithaca.ttf", 40, "Ithaca");
-    fontSystem.SetActiveFont("Ithaca");
+    fontSystem.LoadFont("Assets/Font/AveriaSerifLibre.ttf", 40, "AveriaSerifLibre");
+    fontSystem.SetActiveFont("AveriaSerifLibre");
     ImguiManager::LogSuccess("FontSystem ready", "FontSystem");
 
     // Run All Scripts

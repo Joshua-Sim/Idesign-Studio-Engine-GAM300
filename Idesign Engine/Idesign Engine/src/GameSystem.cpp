@@ -30,7 +30,6 @@ namespace Framework {
 
         std::filesystem::path projectRoot = Framework::ScriptingSystem::GetProjectRoot();
         std::string itemsPath = (projectRoot / "Assets/JSON/items.json").string();
-        std::cout << "\nAAAAAAAAAAAAAAAAAA\n" << itemsPath << "\nAAAAAAAAAAAAAAAAAA\n";
         bool success = Framework::InitializeItemDatabase(itemsPath);
 
         if (!success) {
@@ -71,6 +70,7 @@ namespace Framework {
             }
             else {
                 std::cout << "\nBook Closed!" << std::endl;
+                recipeBookManager->bookSpawned = false;
                 if (recipeBookManager) recipeBookManager->ClearBook();
             }
             wasBookOpen = GameSystem::bookOpen;

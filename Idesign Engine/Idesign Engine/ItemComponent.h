@@ -55,20 +55,10 @@ namespace Framework
         }
     };
 
-    // Re-introduce the symbols RecipeBookManager expects
     inline ItemNamesProxy kItemNames;
-
-    // We cannot use 'constexpr' for dynamic data, but we can use a reference function
-    // WARNING: If RecipeBookManager uses kItemCount for array sizing (int arr[kItemCount]), 
-    // that WILL break and must be changed to std::vector. 
-    // If it's just loops (i < kItemCount), this helper works:
     inline int GetGlobalItemCount() { return (int)GetItemDatabase().size(); }
-
-    // Quick Hack: If RecipeBookManager accesses kItemCount directly as a variable:
-    // We define a global variable that we update after loading JSON.
     inline int kItemCount = 0;
 
-    // --- 4. Helper Functions ---
     inline int ItemNameToId(const std::string& name) {
         const auto& items = GetItemDatabase();
         for (int i = 0; i < items.size(); ++i) {
@@ -195,7 +185,6 @@ namespace Framework
         return true;
     }
 
-    // 2. Add this Helper for ImGui::Combo
     // ImGui needs this specific function signature to read from std::vector
     inline bool ItemGetter(void* data, int idx, const char** out_text)
     {
@@ -203,6 +192,12 @@ namespace Framework
         if (idx < 0 || idx >= items.size()) return false;
         *out_text = items[idx].id.c_str(); // Returns the ID string (e.g., "tool_knife")
         return true;
+    }
+
+    inline std::string GetItemDisplayName(int id) {
+        const auto& items = GetItemDatabase();
+        if (id < 0 || id >= items.size()) return "Unknown";
+        return items[id].displayName;
     }
 
 

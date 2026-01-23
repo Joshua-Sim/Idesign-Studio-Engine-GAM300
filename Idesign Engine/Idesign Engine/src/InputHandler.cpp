@@ -341,7 +341,6 @@ namespace Framework {
                 }
                 // InputHandler.cpp MouseButtonCallback
                 if (inputSystem->m_recipeManager) {
-                    std::cout << "hi";
                     inputSystem->m_recipeManager->OnMouseClick(u, v);
                 }
             }

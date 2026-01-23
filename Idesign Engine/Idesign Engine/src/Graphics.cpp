@@ -2668,7 +2668,9 @@ namespace Framework {
         if (viewIndex == 0 &&
             !engineState.IsPaused() &&
             !engineState.InHowToPlay() &&
-            !engineState.IsInMenu())
+            !engineState.IsInMenu() && 
+            !GameSystem::bookOpen)
+            
         {
             DrawHotbar(width, height);
         }

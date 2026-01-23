@@ -106,6 +106,7 @@ namespace Framework {
             for (Entity e : uiEntities) {
                 coordinator->DestroyEntity(e);
             }
+            g_AudioSystem->PlayAudio("event:/PaperDown");
             uiEntities.clear();
         }
 
@@ -115,104 +116,115 @@ namespace Framework {
             BuildBookUI();
         }
 
-        // Call this every frame or on mouse move events
-        // --- INPUT HANDLING ---
-        // Call this every frame or on mouse move events
-        // --- DEBUG VERSION OF ONMOUSEMOVE ---
-            void OnMouseMove(float mouseUV_X, float mouseUV_Y) {
-                if (!bookSpawned) return;
+        void OnMouseMove(float mouseUV_X, float mouseUV_Y) {
+            if (!bookSpawned) return;
 
-                float itemX, itemY;
-                // Use the EXACT same helper function
-                int foundItemID = GetItemAtPosition(mouseUV_X, mouseUV_Y, itemX, itemY);
+            float itemX, itemY;
+            // Use the EXACT same helper function
+            int foundItemID = GetItemAtPosition(mouseUV_X, mouseUV_Y, itemX, itemY);
 
-                // State Change Check
-                if (foundItemID != m_hoveredItemID) {
+            // State Change Check
+            if (foundItemID != m_hoveredItemID) {
 
-                    RemoveTooltip();
-                    m_hoveredItemID = foundItemID;
+                RemoveTooltip();
+                m_hoveredItemID = foundItemID;
 
-                    if (foundItemID != -1) {
-                        // If we find an item, force a print to console to prove it worked
-                        std::cout << "[Hover] Found Item: " << foundItemID << " at " << itemX << ", " << itemY << std::endl;
-                        CreateTooltip(foundItemID, itemX, itemY);
-                    }
+                if (foundItemID != -1) {
+                    // If we find an item, force a print to console to prove it worked
+                    std::cout << "[Hover] Found Item: " << foundItemID << " at " << itemX << ", " << itemY << std::endl;
+                    CreateTooltip(foundItemID, itemX, itemY);
                 }
             }
+        }
 
 
 
     private:
-            void CreateTooltip(int itemID, float itemX, float itemY) {
-                std::string text = Framework::kItemNames[itemID];
+        void CreateTooltip(int itemID, float itemX, float itemY) {
+            std::string text = Framework::GetItemDisplayName(itemID);
 
-                // --- 1. CALCULATE DIMENSIONS ---
-                float charWidth = 14.0f; // Tweak this based on your font
-                float padding = 20.0f;
-                float textScale = 1.0f;
+            // --- 1. CALCULATE DIMENSIONS ---
+            // A standard font at scale 1.0 usually averages 18-22 pixels wide per character.
+            // 14.0f was too thin. 19.0f is a much safer average for mixed-case text.
+            float charWidth = 19.0f;
+            float padding = 20.0f;
+            float textScale = 1.0f;
+            float bgHeight = 60.0f;
 
-                float bgWidth = (text.length() * charWidth * textScale) + padding;
-                float bgHeight = 50.0f;
+            // Calculate estimated width
+            float estimatedTextWidth = text.length() * charWidth * textScale;
 
-                // Position: slightly above item
-                float tooltipY = itemY + (SLOT_SIZE / 2.0f) + 20.0f;
+            // Add a "Base Width" safety buffer. 
+            // Even a 1-letter word needs a minimum box size.
+            float minBoxWidth = 50.0f;
 
-                // Normalize 
-                float normX = itemX;
-                float normY = tooltipY;
+            // Final Width: Max of (calculated vs minimum) + Padding on both sides
+            float bgWidth = estimatedTextWidth + (padding * 2.0f);
 
-                // --- 2. SPAWN BACKGROUND (Solid Color) ---
-                {
-                    Entity bg = coordinator->CreateEntity();
-                    m_tooltipEntities.push_back(bg);
+            // --- 2. POSITIONING ---
+            // Position the box slightly above the item
+            // (Assuming Y+ is UP, we add to Y to go up)
+            float tooltipY = itemY + (SLOT_SIZE / 2.0f) + (bgHeight / 2.0f) + 10.0f;
 
-                    TransformComponent trans;
-                    trans.position = glm::vec3(normX, normY, 0.1f); // Behind text
-                    trans.scale = glm::vec3(bgWidth, bgHeight, 1.0f);
+            // [CRITICAL FIX] Text Vertical Offset
+            // Text draws from the baseline (bottom). The Box draws from the center.
+            // We must move the text DOWN (subtract Y) so it sits in the middle of the box.
+            // Try values between 10.0f and 15.0f.
+            float textVerticalOffset = 15.0f;
 
-                    MeshProperties mesh;
-                    HierarchyComponent hc;
-                    TextureProperties texComp;
+            float normX = itemX;
+            float normY = tooltipY;
 
-                    // TRICK: Use a 1x1 white pixel. Scaling it just makes a larger rectangle.
-                    texComp.path = "Assets/Textures/White.png";
-                    texComp.isUI = true;
-                    
-                    TextureLoader::loadTexture(texComp, true);
+            // --- 3. SPAWN BACKGROUND (Solid Color) ---
+            {
+                Entity bg = coordinator->CreateEntity();
+                m_tooltipEntities.push_back(bg);
 
-                    coordinator->AddComponent(bg, hc);
-                    coordinator->AddComponent(bg, trans);
-                    coordinator->AddComponent(bg, mesh);
-                    coordinator->AddComponent(bg, texComp);
-                }
+                TransformComponent trans;
+                trans.position = glm::vec3(normX, normY, 0.1f);
+                trans.scale = glm::vec3(bgWidth, bgHeight, 1.0f);
 
-                // --- 3. SPAWN TEXT ---
-                {
-                    Entity txt = coordinator->CreateEntity();
-                    m_tooltipEntities.push_back(txt);
+                MeshProperties mesh;
+                HierarchyComponent hc;
+                TextureProperties texComp;
 
-                    TransformComponent trans;
-                    trans.position = glm::vec3(normX / 1920, normY / 1080, 0.21f); // In front of BG
-                    trans.scale = glm::vec3(1.0f, 1.0f, 1.0f);
+                texComp.path = "Assets/Textures/White.png";
+                texComp.isUI = true;
+                TextureLoader::loadTexture(texComp, true);
 
-                    MeshProperties mesh;
-                    HierarchyComponent hc;
-                    TextProperties tp;
-
-                    tp.screenSpace = true;
-                    tp.text = text;
-                    tp.alignment = 1; // Center
-                    tp.scale = textScale;
-                    // tp.color = {1.0f, 1.0f, 1.0f}; // White Text
-
-                    coordinator->AddComponent(txt, hc);
-                    coordinator->AddComponent(txt, trans);
-                    coordinator->AddComponent(txt, mesh);
-                    coordinator->AddComponent(txt, tp);
-                }
-
-                m_tooltipActive = true;
+                coordinator->AddComponent(bg, hc);
+                coordinator->AddComponent(bg, trans);
+                coordinator->AddComponent(bg, mesh);
+                coordinator->AddComponent(bg, texComp);
             }
+
+            // --- 4. SPAWN TEXT ---
+            {
+                Entity txt = coordinator->CreateEntity();
+                m_tooltipEntities.push_back(txt);
+
+                TransformComponent trans;
+                // [FIX APPLIED HERE]: Subtract textVerticalOffset from normY
+                trans.position = glm::vec3(normX / 1920.0f, (normY - textVerticalOffset) / 1080.0f, 0.21f);
+                trans.scale = glm::vec3(1.0f, 1.0f, 1.0f);
+
+                MeshProperties mesh;
+                HierarchyComponent hc;
+                TextProperties tp;
+
+                tp.screenSpace = true;
+                tp.text = text;
+                tp.alignment = 1; // Center
+                tp.scale = textScale;
+
+                coordinator->AddComponent(txt, hc);
+                coordinator->AddComponent(txt, trans);
+                coordinator->AddComponent(txt, mesh);
+                coordinator->AddComponent(txt, tp);
+            }
+
+            m_tooltipActive = true;
+        }
 
             void RemoveTooltip() {
                 if (m_tooltipActive) {
@@ -238,6 +250,9 @@ namespace Framework {
 
                 for (int i = 0; i < Framework::kItemCount; i++) {
 
+                    bool shouldSkip = (Framework::GetItemType(i) == Framework::ItemType::DEFAULT); 
+                    if (shouldSkip) continue; 
+                    
                     // STRICT HIT CHECK
                     bool hitX = mouseX >= (currentX - halfSize) && mouseX <= (currentX + halfSize);
                     bool hitY = mouseY >= (currentY - halfSize) && mouseY <= (currentY + halfSize);
@@ -271,12 +286,13 @@ namespace Framework {
             float currentY = GRID_START_Y;
             int colCounter = 0;
 
-            SpawnText(currentX + 150.0f, currentY + 150.0f, "All Items", 2.0f);
+            SpawnText(currentX + 130.0f, currentY + 150.0f, "All Items", 1.5f);
 
             for (int i = 0; i < Framework::kItemCount; i++) {
-
+             
                 // 1. Determine Background based on Type
                 Framework::ItemType type = Framework::GetItemType(i);
+                if (type == ItemType::DEFAULT) continue;
                 std::string bgTexture = "Item_DefaultBG";
                 if (type == Framework::ItemType::POTION) bgTexture = "Item_PotionBG";
                 else if (type == Framework::ItemType::INGREDIENT) bgTexture = "Item_IngredientBG";
@@ -302,11 +318,11 @@ namespace Framework {
         //                  RIGHT PAGE: INGREDIENT BREAKDOWN
         // =========================================================
         void BuildRightPage(int selectedID) {
-            float rightPageX = 960.0f + 250.0f;
+            float rightPageX = 960.0f + 230.0f;
             float currentY = GRID_START_Y;
             float rowSpacing = SLOT_SIZE + PADDING;
 
-            SpawnText(rightPageX + 30.0f, currentY + 150.0f, "Ingredients Required", 2.0f);
+            SpawnText(rightPageX + 30.0f, currentY + 150.0f, "Ingredients Required", 1.5f);
 
             // 1. Get the Main Recipe for the selected item
             const PotionRecipe* primaryRecipe = Framework::GetRecipeForResult(selectedID);
@@ -345,7 +361,7 @@ namespace Framework {
             // 3. FINAL STEP: Show the main recipe at the bottom
             // Add a little extra spacing or a separator
             currentY -= 30.0f;
-            SpawnText(rightPageX + 50.0f, currentY + (SLOT_SIZE / 2.0f) - 80.0f, "Final Mixture", 2.0f);
+            SpawnText(rightPageX + 30.0f, currentY + (SLOT_SIZE / 2.0f) - 80.0f, "Final Mixture", 1.5f);
 
             RenderRecipeRow(rightPageX, currentY - 100.0f, primaryRecipe);
         }

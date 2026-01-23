@@ -40,7 +40,7 @@
     },
     {
       "id": "r_strength_potion",
-      "inputs": ["unchopped_herb", "chopped_herb"],
+      "inputs": ["unchopped_herb"],
       "output": "strength_potion"
     },
         {
