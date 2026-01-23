@@ -71,7 +71,15 @@ namespace Framework
             }
         }
 
-        // --- 3. UPDATE UI VISUALS ---
+        // --- 2.5 LOOK-AT HIGHLIGHT ---
+        if (mGraphicsSystem)
+        {
+            int lookAtId = (didHit && foundInteractable) ? (int)hit.entity : -1;
+            mGraphicsSystem->SetLookAtHighlightedId(lookAtId);
+        }
+
+
+        // --- 3. UPDATE UI VISUALS ---       
 
         // A. Handle ICON Visibility (Scale Toggle)
         if (mPromptIconEntity != -1 && ecsInterface.HasComponent<TransformComponent>(mPromptIconEntity))
