@@ -1,7 +1,7 @@
 {
     "entity": {
         "name": "Customer_Kinematic",
-        "guid": "d66e5b79-9b0b-4de8-ab90-c96cddaac569",
+        "guid": "9a2f1542-ed6c-4f3b-9fd9-d1a84ef0475f",
         "components": {
             "TransformComponent": {
                 "position": [
@@ -10,14 +10,14 @@
                     13.015567779541016
                 ],
                 "rotation": [
-                    0.028169747442007065,
-                    -89.79439544677734,
-                    179.9430389404297
+                    0.0,
+                    0.0,
+                    0.0
                 ],
                 "scale": [
-                    0.009999999776482582,
-                    0.029999999329447746,
-                    0.009999999776482582
+                    0.9,
+                    0.9,
+                    0.9
                 ]
             },
             "TagComponent": {
@@ -32,17 +32,17 @@
                 "sortIndex": 0
             },
             "MeshReference": {
-                "guid": "e902f0d7-a022-45fc-9c17-2a98cbdb793e"
+                "guid": "d18bb312-eaa8-4bcf-9716-e93dd927eb27"
             },
             "TextureComponent": {
-                "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
+                "guid": "612ba301-6dcc-493b-b15e-0467a047e322",
                 "isUI": false
             },
             "NavMeshAgentComponent": {
                 "agentHeight": 10.0,
                 "agentRadius": 0.6000000238418579,
                 "moveSpeed": 3.5,
-                "angularSpeed": 120.0,
+                "angularSpeed": 0.0,
                 "acceleration": 8.0,
                 "stoppingDistance": 0.10000000149011612,
                 "autoRepath": false,
@@ -62,9 +62,9 @@
                 "colliders": [
                     {
                         "size": [
-                            369.20001220703125,
-                            197.0,
-                            595.0999755859375
+                           4.20001220703125,
+                            10.0,
+                            4.0999755859375
                         ],
                         "center": [
                             0.0,
@@ -112,7 +112,15 @@
                         "luaFunctionToCall": "DestroyTextbox"
                     }
                 ]
+            },
+            "AnimationProperties": {
+                "path": "Assets\\Objects\\GoblinPixelLatest.fbx",
+                "defaultAnimationName":"",
+                "animationSpeed": 1.0,
+                "bLoops": true,
+                "bPlayOnStart": true
             }
+
         }
     }
 }

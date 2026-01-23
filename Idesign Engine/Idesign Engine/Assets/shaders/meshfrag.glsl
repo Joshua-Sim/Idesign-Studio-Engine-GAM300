@@ -68,29 +68,28 @@ uniform sampler2D uShadowMap;
 
 float CalculatePointShadow(int index, vec3 L, vec3 N, vec3 Lnorm)
 {
-    // 1. Sample the cubemap using the direction vector L
-    //    .r contains the normalized distance [0,1]
-    float closestNormalizedDepth = texture(uPointShadowMaps[index], L).r;
-    
-    if (closestNormalizedDepth <= 0.001 || closestNormalizedDepth >= 1.0)
-    {
-        return 0.0; // Not in shadow
-    }
+    // Direction from light to fragment (for cubemap sampling)
+    vec3 lightToFrag = -L;
 
-    // 2. Un-normalize it back to world-space distance
+    // 1. Get the normalized depth [0, 1] from the cubemap
+    float closestNormalizedDepth = texture(uPointShadowMaps[index], lightToFrag).r;
+
+    // 2. Reconstruct the world-space distance
+    // Ensure uPointLights[index].radius matches uFarPlane used in point_shadow_frag.glsl
     float closestDepth = closestNormalizedDepth * uPointLights[index].radius;
-    
-    // 3. Get the *current* fragment's distance from the light
+
+    // 3. Current distance from fragment to light
     float currentDepth = length(L);
-    
-    // 4. Add a bias to fix shadow acne
-   float bias = max(uPointLights[index].shadowBiasFactor * (1.0 - dot(N, Lnorm)), 
-                     uPointLights[index].shadowBiasConst);                     
-                     
-    // 5. Compare
-    float shadow = (currentDepth - bias) > closestDepth ? 1.0 : 0.0;
-        
-    return shadow;
+
+    // 4. Check if the fragment is further away than the stored depth
+    // Note: If closestNormalizedDepth is 1.0, it means nothing was hit within 'radius'
+    if (closestNormalizedDepth >= 1.0) return 0.0;
+
+    // Adjust bias: Point shadows often need a much smaller bias than directional shadows
+    float bias = max(uPointLights[index].shadowBiasFactor * (1.0 - dot(N, Lnorm)),
+        uPointLights[index].shadowBiasConst);
+
+    return (currentDepth - bias) > closestDepth ? 1.0 : 0.0;
 }
 
 float CalculateShadow(vec4 fragPosLightSpace, vec3 normal, vec3 lightDir)

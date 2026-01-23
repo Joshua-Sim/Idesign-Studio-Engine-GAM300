@@ -634,6 +634,9 @@ namespace Framework {
         float blockMaxX = 10.f;
         float blockMinZ = -10.f;
         float blockMaxZ = 10.f;
+        // --- map midpoint (for left / right split) ---
+        float midMap = (minMap + maxMap) * 0.5f;   // RIGHT = z > midMap
+
 
         for (int i = 0; i < NUM_PEBBLES; i++)
         {
@@ -643,8 +646,8 @@ namespace Framework {
             do {
                 x = rnd() * (maxMap - minMap) + minMap;
                 z = rnd() * (maxMap - minMap) + minMap;
-            } while (x >= blockMinX && x <= blockMaxX &&
-                z >= blockMinZ && z <= blockMaxZ);
+            } while ((x >= blockMinX && x <= blockMaxX &&
+                z >= blockMinZ && z <= blockMaxZ)||(x<midMap));
 
             float y = terrain.getHeightAt(x, z);
 
@@ -688,8 +691,8 @@ namespace Framework {
             do {
                 x = rnd() * (maxMap - minMap) + minMap;
                 z = rnd() * (maxMap - minMap) + minMap;
-            } while (x >= blockMinX && x <= blockMaxX &&
-                z >= blockMinZ && z <= blockMaxZ);
+            } while ((x >= blockMinX && x <= blockMaxX &&
+                z >= blockMinZ && z <= blockMaxZ)||(x<midMap));
 
             float y = terrain.getHeightAt(x, z);
 
@@ -778,15 +781,15 @@ namespace Framework {
         if (frameHasSun)
         {
             // 1. Calculate the Light's View/Projection matrix
-            float near_plane = 1.0f, far_plane = 200.0f;
+            float near_plane = -100.0f, far_plane = 500.0f;    
             float ortho_size = 100.0f;
             glm::mat4 lightProjection = glm::ortho(-ortho_size, ortho_size, -ortho_size, ortho_size, near_plane, far_plane);
             //glm::vec3 lightPos = frameSun.position - frameSun.direction * 20.0f;
-            glm::vec3 lookTarget = glm::vec3(0.0f, 0.0f, 0.0f);
+            glm::vec3 lookTarget = gameCamera.position;
 
             // 2. Position the light *relative to the target*, far enough back to see everything
             //    (frameSun.direction is the vector the light shines *along*)
-            float shadow_distance = 80.0f; // Pulls the camera back
+            float shadow_distance = 200.0f; // Pulls the camera back
             glm::vec3 lightPos = lookTarget - frameSun.direction * shadow_distance;
 
             // 3. Create the view matrix
@@ -859,11 +862,12 @@ namespace Framework {
             if (light.type != LightType::Point || !light.castsShadow) continue;
 
             auto& transform = ecsInterface.GetComponent<TransformComponent>(entityId);
+            glm::vec3 lightPos = transform.position;
 
-            // Store the far plane (radius) for the shader
+            // Set far plane for normalization
             light.shadowFarPlane = light.radius;
             pointShadowShader.setFloat("uFarPlane", light.shadowFarPlane);
-            pointShadowShader.setVec3("uLightPos", transform.position);
+            pointShadowShader.setVec3("uLightPos", lightPos);
 
             if (light.shadowFBO == 0)
             {
@@ -906,37 +910,32 @@ namespace Framework {
 
             // --- 2. Calculate the 6 View matrices and 1 Projection matrix ---
             float near_plane = 0.1f;
-            glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f),
-                (float)POINT_SHADOW_WIDTH / (float)POINT_SHADOW_HEIGHT,
-                near_plane, light.shadowFarPlane);
+            glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), 1.0f, near_plane, light.shadowFarPlane);
 
             std::vector<glm::mat4> shadowTransforms;
-            glm::vec3 lightPos = transform.position;
-            shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0))); // +X
-            shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(-1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0))); // -X
-            shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 1.0, 0.0), glm::vec3(0.0, 0.0, 1.0))); // +Y
-            shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, -1.0, 0.0), glm::vec3(0.0, 0.0, -1.0))); // -Y
-            shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0, -1.0, 0.0))); // +Z
-            shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, -1.0, 0.0))); // -Z
+            // Standard OpenGL Cubemap Orientations: Target, Up
+            shadowTransforms.push_back(shadowProj* glm::lookAt(lightPos, lightPos + glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0))); // +X
+            shadowTransforms.push_back(shadowProj* glm::lookAt(lightPos, lightPos + glm::vec3(-1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0))); // -X
+            shadowTransforms.push_back(shadowProj* glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 1.0, 0.0), glm::vec3(0.0, 0.0, 1.0))); // +Y
+            shadowTransforms.push_back(shadowProj* glm::lookAt(lightPos, lightPos + glm::vec3(0.0, -1.0, 0.0), glm::vec3(0.0, 0.0, -1.0))); // -Y
+            shadowTransforms.push_back(shadowProj* glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0, -1.0, 0.0))); // +Z
+            shadowTransforms.push_back(shadowProj* glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, -1.0, 0.0))); // -Z
 
-            // --- 3. Render the scene 6 times ---
             glViewport(0, 0, POINT_SHADOW_WIDTH, POINT_SHADOW_HEIGHT);
             glBindFramebuffer(GL_FRAMEBUFFER, light.shadowFBO);
-            glEnable(GL_DEPTH_TEST);
 
             for (unsigned int i = 0; i < 6; ++i)
             {
-                // Attach the correct cubemap face for rendering
                 glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                     GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, light.shadowDepthCubeMap, 0);
 
-                // Clear *both* the color (our distance) and depth (for testing)
-                glClearColor(FLT_MAX, 0.0, 0.0, 1.0); // Clear distance to max
+                // FIX 1: Clear to 1.0 instead of FLT_MAX
+                glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
                 pointShadowShader.setMat4("uLightSpaceMatrix", shadowTransforms[i]);
 
-                // --- Render the entire scene (terrain + entities) ---
+                // Render scene
                 pointShadowShader.setMat4("uModel", glm::mat4(1.0f));
                 terrain.draw();
 
@@ -975,8 +974,9 @@ namespace Framework {
         } 
 
         // --- 4. Restore default state ---
-        glCullFace(GL_BACK);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glViewport(0, 0, m_fbW, m_fbH); // Reset viewport to window size
+        glEnable(GL_CULL_FACE);
 
         // ====================================================================
         // 1. RENDER VIEW 0: GAME (grounded)
@@ -1295,6 +1295,11 @@ namespace Framework {
         return id;
     }
 
+    void Graphics::SetLookAtHighlightedId(int id)
+    {
+        mLookAtHighlightedId = id;
+    }
+
     glm::mat4 Graphics::GetViewMatrix(int viewIdx) const
     {
         const Camera& cam = (viewIdx == 1) ? sceneCamera : gameCamera;
@@ -1324,7 +1329,7 @@ namespace Framework {
         glBindTexture(GL_TEXTURE_2D, colorBuffer);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, w, h, 0, GL_RGBA, GL_FLOAT, nullptr);
         glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, w, h);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, w, h);
 
         // 2) Resize Bloom ping-pong
         for (int i = 0; i < 2; ++i) {
@@ -1793,8 +1798,8 @@ namespace Framework {
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBuffer, 0);
         glGenRenderbuffers(1, &rboDepth);
         glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height); // Use parameters
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
             std::cout << "ERROR::FRAMEBUFFER:: HDR Framebuffer is not complete!\n";
 
@@ -1857,11 +1862,14 @@ namespace Framework {
         // 1. SCENE PASS
         glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
         glEnable(GL_DEPTH_TEST);
+        glEnable(GL_STENCIL_TEST);
+        glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+        glClearStencil(0);
         glDisable(GL_CULL_FACE);
 
         glViewport(0, 0, width, height);
         glClearColor(0.07f, 0.09f, 0.12f, 1.f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
         glm::mat4 proj = cam.getProjectionMatrix((float)width, (float)height);
         glm::mat4 view = cam.getViewMatrix();
@@ -1944,6 +1952,7 @@ namespace Framework {
 
         // --- ENTITY SORTING ---
         int sel = lastPickedId;
+        int hoverSel = mLookAtHighlightedId;
         const glm::vec3 kHighlightAlbedo(1.0f, 0.85f, 0.3f);
         std::vector<Entity> opaqueEntities;
         std::multimap<float, Entity> transparentEntities;
@@ -2198,7 +2207,7 @@ namespace Framework {
                     if (ecsInterface.HasComponent<MaterialProperties>(entityId))
                     {
                         auto& material = ecsInterface.GetComponent<MaterialProperties>(entityId);
-                        const bool isSelected = (int)entityId == sel;
+                        const bool isSelected = ((int)entityId == sel) || ((int)entityId == hoverSel);
                         glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : material.albedo;
                         currentshader.setVec3("uAlbedo", finalAlbedo);
 
@@ -2213,7 +2222,7 @@ namespace Framework {
                     else
                     {
                         // Default Albedo: White (so textures look normal)
-                        const bool isSelected = (int)entityId == sel;
+                        const bool isSelected = ((int)entityId == sel) || ((int)entityId == hoverSel);
                         glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : glm::vec3(1.0f, 1.0f, 1.0f);
 
                         currentshader.setVec3("uAlbedo", finalAlbedo);
@@ -2236,6 +2245,14 @@ namespace Framework {
                     }
 
                     LightProperties::upload(currentshader, sun, hasSun, points, spots);
+                    bool doOutline = ((int)entityId == hoverSel); // or: == sel, or both
+                    if (doOutline) {
+                        glStencilFunc(GL_ALWAYS, 1, 0xFF);
+                        glStencilMask(0xFF);   // enable stencil writes
+                    }
+                    else {
+                        glStencilMask(0x00);   // disable stencil writes for normal objects
+                    }
                     glBindVertexArray(mesh.vao);
                     glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
                 }
@@ -2293,6 +2310,57 @@ namespace Framework {
                 }
             }
         }
+
+        // ---Hover Outline--- (Jasper)
+        if (hoverSel != -1)
+        {
+            Entity outlineEntity = (Entity)hoverSel;
+
+            if (ecsInterface.HasComponent<TransformComponent>(outlineEntity) &&
+                ecsInterface.HasComponent<MeshProperties>(outlineEntity))
+            {
+                auto& trO = ecsInterface.GetComponent<TransformComponent>(outlineEntity);
+                auto& meshO = ecsInterface.GetComponent<MeshProperties>(outlineEntity);
+
+                if (meshO.debugShape == DebugShapeType::None && meshO.vao != 0)
+                {
+                    glm::mat4 baseModel(1.0f);
+                    baseModel = glm::translate(baseModel, trO.position);
+                    baseModel = glm::rotate(baseModel, glm::radians(trO.rotation.x), { 1,0,0 });
+                    baseModel = glm::rotate(baseModel, glm::radians(trO.rotation.y), { 0,1,0 });
+                    baseModel = glm::rotate(baseModel, glm::radians(trO.rotation.z), { 0,0,1 });
+                    baseModel = glm::scale(baseModel, trO.scale);
+
+                    const float outlineScale = 1.03f; // thickness knob (try 1.02 ~ 1.06)
+                    glm::mat4 outlineModel = glm::scale(baseModel, glm::vec3(outlineScale));
+
+                    glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+                    glStencilMask(0x00);
+                    glDisable(GL_DEPTH_TEST);
+
+                    glEnable(GL_CULL_FACE);
+                    glCullFace(GL_FRONT);
+
+                    debugShader.use();
+                    debugShader.setMat4("projection", proj);
+                    debugShader.setMat4("view", view);
+                    debugShader.setMat4("model", outlineModel);
+                    debugShader.setVec3("color", glm::vec3(1.0f)); // white outline
+
+                    glBindVertexArray(meshO.vao);
+                    glDrawElements(GL_TRIANGLES, meshO.indexCount, GL_UNSIGNED_INT, 0);
+
+                    glCullFace(GL_BACK);
+                    glEnable(GL_DEPTH_TEST);
+                }
+            }
+        }
+
+        // IMPORTANT: don’t let stencil affect transparent/UI passes
+        glStencilMask(0xFF);
+        glStencilFunc(GL_ALWAYS, 0, 0xFF);
+        glDisable(GL_STENCIL_TEST);
+
 
         // --- 2. TRANSPARENT PASS ---
         glEnable(GL_BLEND);
@@ -2395,7 +2463,7 @@ namespace Framework {
                 if (ecsInterface.HasComponent<MaterialProperties>(entityId))
                 {
                     auto& material = ecsInterface.GetComponent<MaterialProperties>(entityId);
-                    const bool isSelected = (int)entityId == sel;
+                    const bool isSelected = ((int)entityId == sel) || ((int)entityId == hoverSel);
                     glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : material.albedo;
                     currentShader.setVec3("uAlbedo", finalAlbedo);
                     currentShader.setVec3("uMaterial.ambient", material.ambient);
@@ -2415,6 +2483,14 @@ namespace Framework {
                 }
 
                 LightProperties::upload(currentShader, sun, hasSun, points, spots);
+                bool doOutline = ((int)entityId == hoverSel); // or sel / both
+                if (doOutline) {
+                    glStencilFunc(GL_ALWAYS, 1, 0xFF);
+                    glStencilMask(0xFF);
+                }
+                else {
+                    glStencilMask(0x00);
+                }
                 glBindVertexArray(mesh.vao);
                 glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
             }

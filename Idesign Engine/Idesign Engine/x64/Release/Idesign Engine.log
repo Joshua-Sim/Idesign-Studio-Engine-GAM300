@@ -1,925 +1,263 @@
-﻿  pch.cpp
-  Compiling Precompiled Header File...
-  imgui.cpp
-  imgui_demo.cpp
-  imgui_draw.cpp
-  imgui_impl_glfw.cpp
-  imgui_impl_opengl3.cpp
-  imgui_tables.cpp
-  imgui_widgets.cpp
-  DialogueSystem.cpp
-  PlayerInteractSystem.cpp
-  AnimationLoader.cpp
-  AnimationSystem.cpp
-  AssetCompiler.cpp
-  AssetManager.cpp
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\minwindef.h(130,9): warning C4005: 'APIENTRY': macro redefinition
-  (compiling source file '/lib/imgui/imgui_impl_opengl3.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\glfw-3.4.bin.WIN64\include\GLFW\glfw3.h(123,11):
-      see previous definition of 'APIENTRY'
-  
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\minwindef.h(130,9): warning C4005: 'APIENTRY': macro redefinition
-  (compiling source file '/lib/imgui/imgui.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\glfw-3.4.bin.WIN64\include\GLFW\glfw3.h(123,11):
-      see previous definition of 'APIENTRY'
-  
-  AudioSystem.cpp
-  BoxColliderComponent.cpp
-  ButtonSystem.cpp
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\DialogueSystem.cpp(232,97): warning C4458: declaration of 'maxCharsPerLine' hides class member
-  (compiling source file '/src/DialogueSystem.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\DialogueSystem.h(46,13):
-      see declaration of 'Framework::DialogueSystem::maxCharsPerLine'
-  
-  Collision.cpp
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/AnimationLoader.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/AnimationSystem.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-  ComponentManager.cpp
-  Coordinator.cpp
-  Core.cpp
-  Debugger.cpp
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationLoader.cpp(91,67): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-  (compiling source file '/src/AnimationLoader.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationLoader.cpp(93,39): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-  (compiling source file '/src/AnimationLoader.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationLoader.cpp(111,28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  (compiling source file '/src/AnimationLoader.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationLoader.cpp(117,28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  (compiling source file '/src/AnimationLoader.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationLoader.cpp(123,28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  (compiling source file '/src/AnimationLoader.cpp')
-  
-  DummySystem.cpp
-  EngineState.cpp
-  EntityManager.cpp
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/AssetManager.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/AssetManager.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/AssetManager.cpp')
-  
-  EventManager.cpp
-  EventSystem.cpp
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/AssetCompiler.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-  FileCheckSystem.cpp
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/AudioSystem.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/AssetCompiler.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/AssetCompiler.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/AudioSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/AudioSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Collision.cpp(376,15): warning C4459: declaration of 'dt' hides global declaration
-  (compiling source file '/src/Collision.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Collision.cpp(22,7):
-      see declaration of 'dt'
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/AnimationSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/AnimationSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Coordinator.cpp(258,16): warning C4245: 'return': conversion from 'int' to 'Framework::Entity', signed/unsigned mismatch
-  (compiling source file '/src/Coordinator.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,151): warning C4100: 'ioSettings': unreferenced parameter
-  (compiling source file '/src/PlayerInteractSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,117): warning C4100: 'inManifold': unreferenced parameter
-  (compiling source file '/src/PlayerInteractSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.h(142,66): warning C4100: 'index': unreferenced parameter
-  (compiling source file '/src/EventSystem.cpp')
-  
-  FoliageRenderer.cpp
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.h(142,66): warning C4100: 'index': unreferenced parameter
-  (compiling source file '/src/AssetCompiler.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AudioSystem.cpp(307,19): warning C4456: declaration of 'transform' hides previous local declaration
-  (compiling source file '/src/AudioSystem.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AudioSystem.cpp(247,15):
-      see declaration of 'transform'
-  
-  FontSystem.cpp
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/PlayerInteractSystem.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\FileCheckSystem.cpp(39,40): warning C4100: 'dt': unreferenced parameter
-  (compiling source file '/src/FileCheckSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/PlayerInteractSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/PlayerInteractSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\FoliageRenderer.cpp(33,53): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
-  (compiling source file '/src/FoliageRenderer.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\FoliageRenderer.cpp(36,53): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
-  (compiling source file '/src/FoliageRenderer.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\FoliageRenderer.cpp(40,53): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
-  (compiling source file '/src/FoliageRenderer.cpp')
-  
-  GameSystem.cpp
-  Graphics.cpp
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PlayerInteractSystem.h(44,36): warning C4245: 'initializing': conversion from 'int' to 'Framework::Entity', signed/unsigned mismatch
-  (compiling source file '/src/PlayerInteractSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PlayerInteractSystem.h(45,36): warning C4245: 'initializing': conversion from 'int' to 'Framework::Entity', signed/unsigned mismatch
-  (compiling source file '/src/PlayerInteractSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.h(142,66): warning C4100: 'index': unreferenced parameter
-  (compiling source file '/src/PlayerInteractSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PlayerInteractSystem.cpp(254,15): warning C4189: 'trans': local variable is initialized but not referenced
-  (compiling source file '/src/PlayerInteractSystem.cpp')
-  
-  GraphicsShader.cpp
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\EventSystem.cpp(15,36): warning C4100: 'timeslice': unreferenced parameter
-  (compiling source file '/src/EventSystem.cpp')
-  
-  GraphicsWindows.cpp
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/DummySystem.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-  ImguiManager.cpp
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/DummySystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/DummySystem.cpp')
-  
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\minwindef.h(130,9): warning C4005: 'APIENTRY': macro redefinition
-  (compiling source file '/src/ImguiManager.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\glfw-3.4.bin.WIN64\include\GLFW\glfw3.h(123,11):
-      see previous definition of 'APIENTRY'
-  
-  InputHandler.cpp
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.h(142,66): warning C4100: 'index': unreferenced parameter
-  (compiling source file '/src/GameSystem.cpp')
-  
-  Inventory.cpp
-  Lighting.cpp
-  main.cpp
-  MainMath.cpp
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/FontSystem.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-  MaterialLoader.cpp
-  Matrix3x3.cpp
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/FontSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/FontSystem.cpp')
-  
-  Matrix4x4.cpp
-  Mesh.cpp
-  MeshLoader.cpp
-  MessageSystem.cpp
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
+﻿  Graphics.cpp
+C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
+      C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
       see declaration of 'Framework::AnimationProperties::name'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
+C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
   (compiling source file '/src/Graphics.cpp')
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
+C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
   (compiling source file '/src/Graphics.cpp')
   
-  NavMeshSystem.cpp
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\GameSystem.cpp(40,35): warning C4100: 'timeslice': unreferenced parameter
-  (compiling source file '/src/GameSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/InputHandler.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-  PebbleRenderer.cpp
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/InputHandler.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/InputHandler.cpp')
-  
-  PhaseManager.cpp
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/MeshLoader.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/ImguiManager.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/ImguiManager.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/ImguiManager.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/main.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/main.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/main.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,151): warning C4100: 'ioSettings': unreferenced parameter
+C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,151): warning C4100: 'ioSettings': unreferenced formal parameter
   (compiling source file '/src/Graphics.cpp')
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,117): warning C4100: 'inManifold': unreferenced parameter
+C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,117): warning C4100: 'inManifold': unreferenced formal parameter
   (compiling source file '/src/Graphics.cpp')
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/MaterialLoader.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/MaterialLoader.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/MaterialLoader.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PebbleRenderer.cpp(62,36): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-  (compiling source file '/src/PebbleRenderer.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(538,32): warning C4458: declaration of 'leafTransforms' hides class member
+C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\ItemComponent.h(189,34): warning C4100: 'data': unreferenced formal parameter
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(184,32):
+  
+C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\RecipeBookManager.h(35,34): warning C4245: 'initializing': conversion from 'int' to 'Framework::Entity', signed/unsigned mismatch
+  (compiling source file '/src/Graphics.cpp')
+  
+C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\RecipeBookManager.h(159,19): warning C4189: 'minBoxWidth': local variable is initialized but not referenced
+  (compiling source file '/src/Graphics.cpp')
+  
+C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(539,32): warning C4458: declaration of 'leafTransforms' hides class member
+  (compiling source file '/src/Graphics.cpp')
+      C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(186,32):
       see declaration of 'Framework::Graphics::leafTransforms'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(199,23): warning C4189: 'config': local variable is initialized but not referenced
+C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(200,23): warning C4189: 'config': local variable is initialized but not referenced
   (compiling source file '/src/Graphics.cpp')
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(814,27): warning C4458: declaration of 'mesh' hides class member
+C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(815,27): warning C4458: declaration of 'mesh' hides class member
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(172,24):
+      C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(174,24):
       see declaration of 'Framework::Graphics::mesh'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(952,31): warning C4458: declaration of 'mesh' hides class member
+C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(949,31): warning C4458: declaration of 'mesh' hides class member
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(172,24):
+      C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(174,24):
       see declaration of 'Framework::Graphics::mesh'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1256,68): warning C4100: 'amount': unreferenced parameter
+C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1254,68): warning C4100: 'amount': unreferenced formal parameter
   (compiling source file '/src/Graphics.cpp')
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1256,56): warning C4100: 'axis': unreferenced parameter
+C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1254,56): warning C4100: 'axis': unreferenced formal parameter
   (compiling source file '/src/Graphics.cpp')
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1488,24): warning C4458: declaration of 'tex' hides class member
+C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1491,24): warning C4458: declaration of 'tex' hides class member
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(173,16):
+      C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(175,16):
       see declaration of 'Framework::Graphics::tex'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1499,40): warning C4458: declaration of 'tex' hides class member
+C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1502,40): warning C4458: declaration of 'tex' hides class member
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(173,16):
+      C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(175,16):
       see declaration of 'Framework::Graphics::tex'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1514,39): warning C4100: 'viewIndex': unreferenced parameter
+C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1517,39): warning C4100: 'viewIndex': unreferenced formal parameter
   (compiling source file '/src/Graphics.cpp')
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1651,40): warning C4458: declaration of 'mesh' hides class member
+C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1654,40): warning C4458: declaration of 'mesh' hides class member
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(172,24):
+      C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(174,24):
       see declaration of 'Framework::Graphics::mesh'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1894,59): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1899,59): warning C4018: '<': signed/unsigned mismatch
   (compiling source file '/src/Graphics.cpp')
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1997,23): warning C4458: declaration of 'tex' hides class member
+C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2003,23): warning C4458: declaration of 'tex' hides class member
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(173,16):
+      C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(175,16):
       see declaration of 'Framework::Graphics::tex'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2125,23): warning C4458: declaration of 'mesh' hides class member
+C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2131,23): warning C4458: declaration of 'mesh' hides class member
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(172,24):
+      C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(174,24):
       see declaration of 'Framework::Graphics::mesh'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2143,25): warning C4456: declaration of 'pointShadowUnit' hides previous local declaration
+C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2149,25): warning C4456: declaration of 'pointShadowUnit' hides previous local declaration
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1890,13):
+      C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1895,13):
       see declaration of 'pointShadowUnit'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2144,25): warning C4456: declaration of 'pointShadowCount' hides previous local declaration
+C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2150,25): warning C4456: declaration of 'pointShadowCount' hides previous local declaration
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1891,13):
+      C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1896,13):
       see declaration of 'pointShadowCount'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2151,71): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2157,71): warning C4018: '<': signed/unsigned mismatch
   (compiling source file '/src/Graphics.cpp')
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2160,46): warning C4456: declaration of 'entityId' hides previous local declaration
+C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2166,46): warning C4456: declaration of 'entityId' hides previous local declaration
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2042,26):
+      C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2048,26):
       see declaration of 'entityId'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2231,31): warning C4458: declaration of 'tex' hides class member
+C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2237,31): warning C4458: declaration of 'tex' hides class member
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(173,16):
+      C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(175,16):
       see declaration of 'Framework::Graphics::tex'
   
-  PhysicsSystem.cpp
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2313,19): warning C4458: declaration of 'mesh' hides class member
+C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2378,19): warning C4458: declaration of 'mesh' hides class member
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(172,24):
+      C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(174,24):
       see declaration of 'Framework::Graphics::mesh'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2339,21): warning C4456: declaration of 'pointShadowUnit' hides previous local declaration
+C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2404,21): warning C4456: declaration of 'pointShadowUnit' hides previous local declaration
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1890,13):
+      C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1895,13):
       see declaration of 'pointShadowUnit'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2340,21): warning C4456: declaration of 'pointShadowCount' hides previous local declaration
+C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2405,21): warning C4456: declaration of 'pointShadowCount' hides previous local declaration
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1891,13):
+      C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(1896,13):
       see declaration of 'pointShadowCount'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2348,67): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2413,67): warning C4018: '<': signed/unsigned mismatch
   (compiling source file '/src/Graphics.cpp')
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2357,42): warning C4456: declaration of 'entityId' hides previous local declaration
+C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2422,42): warning C4456: declaration of 'entityId' hides previous local declaration
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2311,25):
+      C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2376,25):
       see declaration of 'entityId'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2410,27): warning C4458: declaration of 'tex' hides class member
+C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2475,27): warning C4458: declaration of 'tex' hides class member
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(173,16):
+      C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(175,16):
       see declaration of 'Framework::Graphics::tex'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2609,19): warning C4458: declaration of 'tex' hides class member
+C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2682,19): warning C4458: declaration of 'tex' hides class member
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(173,16):
+      C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(175,16):
       see declaration of 'Framework::Graphics::tex'
   
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AssetManager.h(232,25): warning C4459: declaration of 'assets' hides global declaration
+C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(2772,23): warning C4458: declaration of 'tex' hides class member
   (compiling source file '/src/Graphics.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(72,17):
+      C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.h(175,16):
+      see declaration of 'Framework::Graphics::tex'
+  
+C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AssetManager.h(232,25): warning C4459: declaration of 'assets' hides global declaration
+  (compiling source file '/src/Graphics.cpp')
+      C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(73,17):
       see declaration of 'Framework::assets'
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AssetManager.h(232,25):
+      C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AssetManager.h(232,25):
       the template instantiation context (the oldest one first) is
-          D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(79,100):
+          C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Graphics.cpp(80,100):
           see reference to function template instantiation 'Framework::AssetHandle Framework::AssetManager::FindGuid<Framework::WindowConfig>(const std::optional<std::string> &)' being compiled
   
-  PropertyWidget.cpp
-  DetourAlloc.cpp
-  DetourAssert.cpp
-  DetourCommon.cpp
-  DetourNavMesh.cpp
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\DetourNavMesh.cpp(640,21): warning C4127: conditional expression is constant
-  (compiling source file '/src/Recast/DetourNavMesh.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\DetourNavMesh.cpp(640,21):
-      consider using 'if constexpr' statement instead
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\DetourNavMesh.cpp(640,21):
-      the template instantiation context (the oldest one first) is
-          D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\DetourNavMesh.cpp(724,2):
-          see reference to function template instantiation 'void `anonymous-namespace'::closestPointOnDetailEdges<false>(const dtMeshTile *,const dtPoly *,const float *,float *)' being compiled
-  
-  DetourNavMeshBuilder.cpp
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.h(142,66): warning C4100: 'index': unreferenced parameter
-  (compiling source file '/src/main.cpp')
-  
-  DetourNavMeshQuery.cpp
-  DetourNode.cpp
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.h(142,66): warning C4100: 'index': unreferenced parameter
-  (compiling source file '/src/ImguiManager.cpp')
-  
-  Recast.cpp
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(230,19): warning C4456: declaration of 'ev' hides previous local declaration
-  (compiling source file '/src/ImguiManager.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(191,30):
-      see declaration of 'ev'
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(296,62): warning C4459: declaration of 'rbo' hides global declaration
-  (compiling source file '/src/ImguiManager.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(62,46):
-      see declaration of 'Framework::rbo'
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(330,25): warning C4459: declaration of 'filePath' hides global declaration
-  (compiling source file '/src/ImguiManager.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(64,24):
-      see declaration of 'Framework::filePath'
-  
-  RecastAlloc.cpp
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,151): warning C4100: 'ioSettings': unreferenced parameter
-  (compiling source file '/src/main.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,117): warning C4100: 'inManifold': unreferenced parameter
-  (compiling source file '/src/main.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(698,37): warning C4100: 'deltaTime': unreferenced parameter
-  (compiling source file '/src/ImguiManager.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1061,42): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1070,38): warning C4566: character represented by universal-character-name '\u26A0' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1099,46): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1100,40): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1104,46): warning C4566: character represented by universal-character-name '\u2717' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1105,40): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1141,42): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1146,46): warning C4566: character represented by universal-character-name '\u26A0' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1167,42): warning C4566: character represented by universal-character-name '\u2192' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1172,46): warning C4566: character represented by universal-character-name '\u26A0' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PlayerInteractSystem.h(44,36): warning C4245: 'initializing': conversion from 'int' to 'Framework::Entity', signed/unsigned mismatch
-  (compiling source file '/src/main.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PlayerInteractSystem.h(45,36): warning C4245: 'initializing': conversion from 'int' to 'Framework::Entity', signed/unsigned mismatch
-  (compiling source file '/src/main.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1282,40): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1443,40): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1606,40): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1625,17): warning C4566: character represented by universal-character-name '\U0001F7E2' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1626,17): warning C4566: character represented by universal-character-name '\U0001F535' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1627,17): warning C4566: character represented by universal-character-name '\U0001F7E1' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1645,51): warning C4566: character represented by universal-character-name '\U0001F50D' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1692,43): warning C4566: character represented by universal-character-name '\u23F9' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1692,56): warning C4566: character represented by universal-character-name '\u25B6' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1830,41): warning C4566: character represented by universal-character-name '\U0001F50A' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1870,49): warning C4566: character represented by universal-character-name '\U0001F5D1' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(1948,40): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-  RecastArea.cpp
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2203,48): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2355,48): warning C4566: character represented by universal-character-name '\u2753' cannot be represented in the current code page (1252)
-  (compiling source file '/src/ImguiManager.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\main.cpp(142,10): warning C4459: declaration of 'sceneInterface' hides global declaration
-  (compiling source file '/src/main.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\SceneInterface.h(22,24):
-      see declaration of 'Framework::sceneInterface'
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(2908,39): warning C4459: declaration of 'ecsInterface' hides global declaration
-  (compiling source file '/src/ImguiManager.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(38,31):
-      see declaration of 'ecsInterface'
-  
-  RecastAssert.cpp
-  RecastContour.cpp
-  RecastFilter.cpp
-  RecastLayers.cpp
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/NavMeshSystem.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-  RecastMesh.cpp
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-  RecastMeshDetail.cpp
-D:\Visual Studio Product\VC\Tools\MSVC\14.44.35207\include\algorithm(3800,24): warning C4244: '=': conversion from 'int' to 'char', possible loss of data
-  (compiling source file '/src/ImguiManager.cpp')
-      D:\Visual Studio Product\VC\Tools\MSVC\14.44.35207\include\algorithm(3800,24):
-      the template instantiation context (the oldest one first) is
-          D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(332,18):
-          see reference to function template instantiation '_OutIt std::transform<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,int(__cdecl *)(int)>(const _InIt,const _InIt,_OutIt,_Fn)' being compiled
-          with
-          [
-              _OutIt=std::_String_iterator<std::_String_val<std::_Simple_types<char>>>,
-              _Elem=char,
-              _InIt=std::_String_iterator<std::_String_val<std::_Simple_types<char>>>,
-              _Fn=int (__cdecl *)(int)
-          ]
-  
-  RecastRasterization.cpp
-  RecastRegion.cpp
-  SceneInterface.cpp
-  SceneManager.cpp
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,151): warning C4100: 'ioSettings': unreferenced parameter
-  (compiling source file '/src/PhaseManager.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,117): warning C4100: 'inManifold': unreferenced parameter
-  (compiling source file '/src/PhaseManager.cpp')
-  
-  ScriptingSystem.cpp
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\Recast.h(115,7): warning C4099: 'rcContext': type name first seen using 'struct' now seen using 'class'
-  (compiling source file '/src/NavMeshSystem.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\Recast.h(115,7):
-      see declaration of 'rcContext'
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\DetourNavMesh.h(338,7): warning C4099: 'dtNavMesh': type name first seen using 'struct' now seen using 'class'
-  (compiling source file '/src/NavMeshSystem.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\DetourNavMesh.h(338,7):
-      see declaration of 'dtNavMesh'
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\DetourNavMesh.h(676,15): warning C4099: 'dtNavMeshQuery': type name first seen using 'struct' now seen using 'class'
-  (compiling source file '/src/NavMeshSystem.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.h(22,8):
-      see declaration of 'dtNavMeshQuery'
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\DetourNavMeshQuery.h(165,7): warning C4099: 'dtNavMeshQuery': type name first seen using 'struct' now seen using 'class'
-  (compiling source file '/src/NavMeshSystem.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Recast\DetourNavMeshQuery.h(165,7):
-      see declaration of 'dtNavMeshQuery'
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(323,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(331,62): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(330,54): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(336,37): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(334,84): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(340,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(346,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(360,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(371,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(378,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(384,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(398,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(411,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(426,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(478,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(493,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(507,22): warning C4566: character represented by universal-character-name '\u2705' cannot be represented in the current code page (1252)
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(587,22): warning C4566: character represented by universal-character-name '\u2713' cannot be represented in the current code page (1252)
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\NavMeshSystem.cpp(559,18): warning C4189: 'pathStatus': local variable is initialized but not referenced
-  (compiling source file '/src/NavMeshSystem.cpp')
-  
-  ShaderProgram.cpp
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/PhaseManager.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/PhaseManager.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/PhaseManager.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,151): warning C4100: 'ioSettings': unreferenced parameter
-  (compiling source file '/src/PhysicsSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,117): warning C4100: 'inManifold': unreferenced parameter
-  (compiling source file '/src/PhysicsSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/PropertyWidget.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/PropertyWidget.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/PropertyWidget.cpp')
-  
-  SignalHandler.cpp
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhaseManager.cpp(102,25): warning C4459: declaration of 'cam' hides global declaration
-  (compiling source file '/src/PhaseManager.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhaseManager.cpp(17,13):
-      see declaration of 'Framework::cam'
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhaseManager.cpp(119,25): warning C4459: declaration of 'cam' hides global declaration
-  (compiling source file '/src/PhaseManager.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhaseManager.cpp(17,13):
-      see declaration of 'Framework::cam'
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.h(142,66): warning C4100: 'index': unreferenced parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/PhysicsSystem.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/PhysicsSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/PhysicsSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PropertyWidget.cpp(17,55): warning C4244: 'argument': conversion from 'uintptr_t' to 'int', possible loss of data
-  (compiling source file '/src/PropertyWidget.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ImguiManager.cpp(54,20): warning C4505: 'GetFileNameOnly': unreferenced function with internal linkage has been removed
-  (compiling source file '/src/ImguiManager.cpp')
-  
-  Skybox.cpp
-  TagManager.cpp
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\minwindef.h(130,9): warning C4005: 'APIENTRY': macro redefinition
-  (compiling source file '/src/SignalHandler.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\lib\glfw-3.4.bin.WIN64\include\GLFW\glfw3.h(123,11):
-      see previous definition of 'APIENTRY'
-  
-  Terrain.cpp
-  TestSystem.cpp
-  TextureLoader.cpp
-  TextureLoaderDDS.cpp
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/ScriptingSystem.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(50,47): warning C4458: declaration of 'name' hides class member
-  (compiling source file '/src/SceneManager.cpp')
-      D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\AnimationProperties.h(26,21):
-      see declaration of 'Framework::AnimationProperties::name'
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/ScriptingSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/ScriptingSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(170,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/SceneManager.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\LightProperties.h(171,9): warning C4002: too many arguments for function-like macro invocation 'PROP_DRAG_FLOAT'
-  (compiling source file '/src/SceneManager.cpp')
-  
-  Vector2D.cpp
-  Vector3D.cpp
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Terrain.cpp(89,53): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
-  (compiling source file '/src/Terrain.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Terrain.cpp(93,53): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
-  (compiling source file '/src/Terrain.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\Terrain.cpp(97,53): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
-  (compiling source file '/src/Terrain.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,151): warning C4100: 'ioSettings': unreferenced parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\PhysicsSystem.h(81,117): warning C4100: 'inManifold': unreferenced parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(786,49): warning C4100: 'L': unreferenced parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(802,49): warning C4100: 'L': unreferenced parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(808,47): warning C4100: 'L': unreferenced parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
-  
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(1123,54): warning C4100: 'L': unreferenced parameter
-  (compiling source file '/src/ScriptingSystem.cpp')
-  
-D:\Visual Studio Product\VC\Tools\MSVC\14.44.35207\include\algorithm(3800,24): warning C4244: '=': conversion from 'int' to 'char', possible loss of data
-  (compiling source file '/src/TextureLoader.cpp')
-      D:\Visual Studio Product\VC\Tools\MSVC\14.44.35207\include\algorithm(3800,24):
-      the template instantiation context (the oldest one first) is
-          D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\TextureLoader.cpp(25,14):
-          see reference to function template instantiation '_OutIt std::transform<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,int(__cdecl *)(int)>(const _InIt,const _InIt,_OutIt,_Fn)' being compiled
-          with
-          [
-              _OutIt=std::_String_iterator<std::_String_val<std::_Simple_types<char>>>,
-              _Elem=char,
-              _InIt=std::_String_iterator<std::_String_val<std::_Simple_types<char>>>,
-              _Fn=int (__cdecl *)(int)
-          ]
-  
-  ImGuizmo.cpp
 LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
-  Generating code
-D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\Idesign Engine\src\ScriptingSystem.cpp(943): warning C4702: unreachable code
-  22006 of 22012 functions (100.0%) were compiled, the rest were copied from previous compilation.
-    385 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
-  Finished generating code
-glew32s.lib(glew.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'glew32s.lib(glew.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\vc120.pdb'; linking object as if no debug info
-Jolt.lib(Memory.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(Memory.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(BodyManager.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(BodyManager.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(PhysicsSystem.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(PhysicsSystem.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(ContactConstraintManager.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(ContactConstraintManager.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(IslandBuilder.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(IslandBuilder.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(LargeIslandSplitter.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(LargeIslandSplitter.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(BodyInterface.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(BodyInterface.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(SerializableObject.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(SerializableObject.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(Shape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(Shape.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(IssueReporting.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(IssueReporting.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(ConvexShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(ConvexShape.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(RegisterTypes.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(RegisterTypes.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(BoxShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(BoxShape.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(MassProperties.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(MassProperties.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(CompoundShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(CompoundShape.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(StaticCompoundShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(StaticCompoundShape.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(Factory.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(Factory.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(JobSystemThreadPool.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(JobSystemThreadPool.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(NarrowPhaseQuery.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(NarrowPhaseQuery.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(DecoratedShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(DecoratedShape.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(OffsetCenterOfMassShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(OffsetCenterOfMassShape.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(MotionProperties.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(MotionProperties.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(Body.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(Body.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(BodyCreationSettings.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(BodyCreationSettings.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(SoftBodyMotionProperties.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(SoftBodyMotionProperties.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(SoftBodyShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(SoftBodyShape.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(Color.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(Color.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(TransformedShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(TransformedShape.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(ManifoldBetweenTwoFaces.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(ManifoldBetweenTwoFaces.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(ConstraintManager.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(ConstraintManager.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(BroadPhase.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(BroadPhase.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(PhysicsUpdateContext.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(PhysicsUpdateContext.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(BroadPhaseQuadTree.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(BroadPhaseQuadTree.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(CollisionDispatch.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(CollisionDispatch.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(CollisionGroup.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(CollisionGroup.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(PhysicsMaterial.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(PhysicsMaterial.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(RTTI.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(RTTI.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(ScaledShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(ScaledShape.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(OrientedBox.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(OrientedBox.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(TriangleShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(TriangleShape.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(PlaneShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(PlaneShape.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(SphereShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(SphereShape.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(CapsuleShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(CapsuleShape.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(TaperedCapsuleShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(TaperedCapsuleShape.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(CylinderShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(CylinderShape.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(TaperedCylinderShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(TaperedCylinderShape.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(MeshShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(MeshShape.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(ConvexHullShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(ConvexHullShape.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(HeightFieldShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(HeightFieldShape.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(RotatedTranslatedShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(RotatedTranslatedShape.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(MutableCompoundShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(MutableCompoundShape.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(EmptyShape.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(EmptyShape.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(PhysicsMaterialSimple.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(PhysicsMaterialSimple.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(Skeleton.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(Skeleton.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(SkeletalAnimation.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(SkeletalAnimation.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(Ragdoll.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(Ragdoll.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(PointConstraint.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(PointConstraint.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(SixDOFConstraint.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(SixDOFConstraint.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(SliderConstraint.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(SliderConstraint.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(SwingTwistConstraint.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(SwingTwistConstraint.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(DistanceConstraint.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(DistanceConstraint.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(HingeConstraint.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(HingeConstraint.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(FixedConstraint.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(FixedConstraint.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(ConeConstraint.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(ConeConstraint.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(PathConstraint.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(PathConstraint.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(PathConstraintPath.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(PathConstraintPath.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(PathConstraintPathHermite.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(PathConstraintPathHermite.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(VehicleConstraint.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(VehicleConstraint.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(WheeledVehicleController.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(WheeledVehicleController.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(TrackedVehicleController.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(TrackedVehicleController.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(MotorcycleController.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(MotorcycleController.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(RackAndPinionConstraint.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(RackAndPinionConstraint.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(GearConstraint.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(GearConstraint.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(PulleyConstraint.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(PulleyConstraint.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(MotorSettings.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(MotorSettings.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(PhysicsScene.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(PhysicsScene.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(GroupFilter.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(GroupFilter.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(GroupFilterTable.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(GroupFilterTable.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(SoftBodyCreationSettings.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(SoftBodyCreationSettings.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(Semaphore.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(Semaphore.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(JobSystemWithBarrier.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(JobSystemWithBarrier.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(CastConvexVsTriangles.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(CastConvexVsTriangles.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(CastSphereVsTriangles.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(CastSphereVsTriangles.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(CollideConvexVsTriangles.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(CollideConvexVsTriangles.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(CollideSphereVsTriangles.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(CollideSphereVsTriangles.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(QuadTree.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(QuadTree.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(StringTools.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(StringTools.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(Indexify.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(Indexify.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(TriangleSplitterBinning.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(TriangleSplitterBinning.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(TriangleSplitterMean.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(TriangleSplitterMean.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(AABBTreeBuilder.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(AABBTreeBuilder.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(ConvexHullBuilder.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(ConvexHullBuilder.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(Constraint.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(Constraint.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(TwoBodyConstraint.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(TwoBodyConstraint.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(SpringSettings.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(SpringSettings.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(VehicleAntiRollBar.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(VehicleAntiRollBar.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(Wheel.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(Wheel.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(VehicleController.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(VehicleController.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(LinearCurve.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(LinearCurve.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(VehicleEngine.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(VehicleEngine.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(VehicleTransmission.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(VehicleTransmission.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(VehicleDifferential.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(VehicleDifferential.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(VehicleTrack.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(VehicleTrack.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(SoftBodySharedSettings.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(SoftBodySharedSettings.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(TriangleSplitter.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(TriangleSplitter.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-Jolt.lib(ConvexHullBuilder2D.cpp.obj) : warning LNK4099: PDB 'Jolt.pdb' was not found with 'Jolt.lib(ConvexHullBuilder2D.cpp.obj)' or at 'D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Jolt.pdb'; linking object as if no debug info
-  Idesign Engine.vcxproj -> D:\GAM300\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Idesign Engine.exe
+  LINK : /LTCG specified but no code generation required; remove /LTCG from the link command line to improve linker performance
+glew32s.lib(glew.obj) : warning LNK4099: PDB '' was not found with 'glew32s.lib(glew.obj)' or at ''; linking object as if no debug info
+Jolt.lib(BodyManager.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(BodyManager.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(ContactConstraintManager.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(ContactConstraintManager.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(PhysicsSystem.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(PhysicsSystem.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(Memory.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(Memory.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(BodyInterface.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(BodyInterface.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(SerializableObject.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(SerializableObject.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(MassProperties.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(MassProperties.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(Shape.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(Shape.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(JobSystemThreadPool.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(JobSystemThreadPool.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(NarrowPhaseQuery.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(NarrowPhaseQuery.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(ConvexShape.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(ConvexShape.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(RegisterTypes.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(RegisterTypes.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(BoxShape.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(BoxShape.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(DecoratedShape.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(DecoratedShape.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(OffsetCenterOfMassShape.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(OffsetCenterOfMassShape.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(CompoundShape.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(CompoundShape.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(StaticCompoundShape.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(StaticCompoundShape.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(IssueReporting.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(IssueReporting.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(Factory.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(Factory.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(MotionProperties.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(MotionProperties.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(Body.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(Body.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(BodyCreationSettings.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(BodyCreationSettings.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(SoftBodyMotionProperties.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(SoftBodyMotionProperties.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(SoftBodyShape.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(SoftBodyShape.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(IslandBuilder.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(IslandBuilder.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(Color.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(Color.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(TransformedShape.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(TransformedShape.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(ManifoldBetweenTwoFaces.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(ManifoldBetweenTwoFaces.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(ConstraintManager.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(ConstraintManager.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(LargeIslandSplitter.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(LargeIslandSplitter.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(BroadPhase.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(BroadPhase.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(PhysicsUpdateContext.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(PhysicsUpdateContext.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(BroadPhaseQuadTree.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(BroadPhaseQuadTree.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(CollisionDispatch.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(CollisionDispatch.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(CollisionGroup.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(CollisionGroup.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(PhysicsMaterial.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(PhysicsMaterial.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(RTTI.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(RTTI.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(ScaledShape.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(ScaledShape.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(Semaphore.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(Semaphore.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(JobSystemWithBarrier.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(JobSystemWithBarrier.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(OrientedBox.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(OrientedBox.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(TriangleShape.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(TriangleShape.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(PlaneShape.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(PlaneShape.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(SphereShape.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(SphereShape.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(CapsuleShape.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(CapsuleShape.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(TaperedCapsuleShape.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(TaperedCapsuleShape.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(CylinderShape.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(CylinderShape.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(TaperedCylinderShape.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(TaperedCylinderShape.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(MeshShape.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(MeshShape.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(ConvexHullShape.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(ConvexHullShape.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(HeightFieldShape.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(HeightFieldShape.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(RotatedTranslatedShape.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(RotatedTranslatedShape.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(MutableCompoundShape.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(MutableCompoundShape.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(EmptyShape.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(EmptyShape.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(PhysicsMaterialSimple.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(PhysicsMaterialSimple.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(Skeleton.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(Skeleton.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(SkeletalAnimation.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(SkeletalAnimation.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(Ragdoll.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(Ragdoll.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(PointConstraint.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(PointConstraint.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(SixDOFConstraint.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(SixDOFConstraint.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(SliderConstraint.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(SliderConstraint.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(SwingTwistConstraint.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(SwingTwistConstraint.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(DistanceConstraint.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(DistanceConstraint.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(HingeConstraint.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(HingeConstraint.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(FixedConstraint.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(FixedConstraint.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(ConeConstraint.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(ConeConstraint.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(PathConstraint.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(PathConstraint.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(PathConstraintPath.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(PathConstraintPath.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(PathConstraintPathHermite.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(PathConstraintPathHermite.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(VehicleConstraint.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(VehicleConstraint.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(WheeledVehicleController.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(WheeledVehicleController.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(TrackedVehicleController.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(TrackedVehicleController.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(MotorcycleController.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(MotorcycleController.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(RackAndPinionConstraint.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(RackAndPinionConstraint.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(GearConstraint.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(GearConstraint.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(PulleyConstraint.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(PulleyConstraint.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(MotorSettings.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(MotorSettings.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(PhysicsScene.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(PhysicsScene.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(GroupFilter.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(GroupFilter.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(GroupFilterTable.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(GroupFilterTable.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(SoftBodyCreationSettings.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(SoftBodyCreationSettings.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(CastConvexVsTriangles.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(CastConvexVsTriangles.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(CastSphereVsTriangles.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(CastSphereVsTriangles.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(CollideConvexVsTriangles.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(CollideConvexVsTriangles.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(CollideSphereVsTriangles.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(CollideSphereVsTriangles.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(QuadTree.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(QuadTree.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(StringTools.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(StringTools.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(Indexify.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(Indexify.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(TriangleSplitterBinning.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(TriangleSplitterBinning.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(TriangleSplitterMean.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(TriangleSplitterMean.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(AABBTreeBuilder.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(AABBTreeBuilder.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(ConvexHullBuilder.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(ConvexHullBuilder.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(Constraint.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(Constraint.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(TwoBodyConstraint.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(TwoBodyConstraint.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(SpringSettings.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(SpringSettings.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(VehicleAntiRollBar.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(VehicleAntiRollBar.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(Wheel.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(Wheel.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(VehicleController.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(VehicleController.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(LinearCurve.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(LinearCurve.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(VehicleEngine.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(VehicleEngine.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(VehicleTransmission.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(VehicleTransmission.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(VehicleDifferential.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(VehicleDifferential.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(VehicleTrack.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(VehicleTrack.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(SoftBodySharedSettings.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(SoftBodySharedSettings.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(TriangleSplitter.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(TriangleSplitter.cpp.obj)' or at ''; linking object as if no debug info
+Jolt.lib(ConvexHullBuilder2D.cpp.obj) : warning LNK4099: PDB '' was not found with 'Jolt.lib(ConvexHullBuilder2D.cpp.obj)' or at ''; linking object as if no debug info
+  Idesign Engine.vcxproj -> C:\Users\Jasper-Laptop\Downloads\UNI Y3T1\Idesign-Studio-Engine-GAM300\Idesign Engine\x64\Release\Idesign Engine.exe
   0 File(s) copied

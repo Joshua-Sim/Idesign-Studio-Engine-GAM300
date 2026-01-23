@@ -25,7 +25,7 @@ local color_swap_threshold = 0.3
 -- Visual Settings
 local bar_length_max = 0.5
 local bar_thickness  = 0.2
-local y_offset       = 3.5    
+local y_offset       = 3.8    
 local x_offset_right = -0.5    
 
 -- [OFFSETS FROM CAULDRON SCRIPT]
