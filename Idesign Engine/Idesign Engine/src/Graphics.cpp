@@ -634,6 +634,9 @@ namespace Framework {
         float blockMaxX = 10.f;
         float blockMinZ = -10.f;
         float blockMaxZ = 10.f;
+        // --- map midpoint (for left / right split) ---
+        float midMap = (minMap + maxMap) * 0.5f;   // RIGHT = z > midMap
+
 
         for (int i = 0; i < NUM_PEBBLES; i++)
         {
@@ -643,8 +646,8 @@ namespace Framework {
             do {
                 x = rnd() * (maxMap - minMap) + minMap;
                 z = rnd() * (maxMap - minMap) + minMap;
-            } while (x >= blockMinX && x <= blockMaxX &&
-                z >= blockMinZ && z <= blockMaxZ);
+            } while ((x >= blockMinX && x <= blockMaxX &&
+                z >= blockMinZ && z <= blockMaxZ)||(x<midMap));
 
             float y = terrain.getHeightAt(x, z);
 
@@ -688,8 +691,8 @@ namespace Framework {
             do {
                 x = rnd() * (maxMap - minMap) + minMap;
                 z = rnd() * (maxMap - minMap) + minMap;
-            } while (x >= blockMinX && x <= blockMaxX &&
-                z >= blockMinZ && z <= blockMaxZ);
+            } while ((x >= blockMinX && x <= blockMaxX &&
+                z >= blockMinZ && z <= blockMaxZ)||(x<midMap));
 
             float y = terrain.getHeightAt(x, z);
 

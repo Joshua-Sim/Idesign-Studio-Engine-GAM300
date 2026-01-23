@@ -13,6 +13,12 @@
             "isScenePrefab": false
         },
         {
+            "guid": "b9703dc0-4246-4ba0-be36-1507cc721cd1",
+            "name": "Customer_Prefab",
+            "path": "Assets\\Prefabs\\Customer_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
             "guid": "5dfc16be-aa4a-420a-9105-f7c9652f3620",
             "name": "ProgressBarFill_Prefab",
             "path": "Assets\\Prefabs\\ProgressBarFill_Prefab.prefab",
