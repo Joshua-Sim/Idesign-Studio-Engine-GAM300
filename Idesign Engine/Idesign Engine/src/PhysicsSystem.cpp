@@ -263,6 +263,8 @@ namespace Framework {
                 bcs.mGravityFactor = prop.gravityFactor;
                 bcs.mUserData = static_cast<JPH::uint64>(e);
                 bcs.mAllowDynamicOrKinematic = true;
+                bcs.mFriction = prop.friction;
+                bcs.mRestitution = prop.restitution;
 
                 std::string name = ecs.GetEntityName(e);
                 if (name == "Player") {
@@ -363,6 +365,36 @@ namespace Framework {
         std::cout << "[Physics] Initialized.\n";
     }
 
+    static float ComputeEntityHalfHeight(Framework::Coordinator& ecs, Entity e)
+    {
+        if (!ecs.HasComponent<BoxColliderComponent>(e) || !ecs.HasComponent<TransformComponent>(e))
+            return 0.5f;
+
+        const auto& tf = ecs.GetComponent<TransformComponent>(e);
+        const auto& bc = ecs.GetComponent<BoxColliderComponent>(e);
+
+        float maxY = 0.5f;
+        for (const auto& c : bc.colliders)
+        {
+            // Only consider solid colliders for grounding
+            if (c.canPassThrough) continue;
+
+            float halfY = 0.5f * std::abs(c.size.y * tf.scale.y);
+            float centerY = std::abs(c.center.y * tf.scale.y);
+            maxY = std::max(maxY, centerY + halfY);
+        }
+        return std::max(maxY, 0.05f);
+    }
+
+    static bool IsWalkableGround(const glm::vec3& n, float maxSlopeAngleDeg)
+    {
+        // slope angle from up axis: angle = arccos(n.y)
+        // walkable if angle <= maxSlope
+        float cosMax = std::cos(maxSlopeAngleDeg * 0.01745329251994329577f);
+        return n.y >= cosMax;
+    }
+
+
     void PhysicsSystem::Update(float dt) {
         if (dt <= 0.0001f) return;
 
@@ -436,6 +468,45 @@ namespace Framework {
             s_TriggerEvents.clear();
         }
 
+        // --- [GROUND CHECK (raycast)] ---
+        for (Entity e : ecsInterface.GetEntities())
+        {
+            if (!ecsInterface.HasComponent<PhysicsBodyComponent>(e) ||
+                !ecsInterface.HasComponent<PhysicsProperties>(e))
+                continue;
+
+            auto& pb = ecsInterface.GetComponent<PhysicsBodyComponent>(e);
+            auto& prop = ecsInterface.GetComponent<PhysicsProperties>(e);
+            if (pb.IDs.empty()) continue;
+
+            // Only really needed for Player, but harmless for others if you want
+            // (If you want: if (ecsInterface.GetEntityName(e) != "Player") continue;)
+
+            // Get current physics position (more accurate than transform mid-step)
+            JPH::RVec3 jp = bodyInterface->GetPosition(pb.IDs[0]);
+            glm::vec3 pos(jp.GetX(), jp.GetY(), jp.GetZ());
+
+            float halfH = ComputeEntityHalfHeight(ecsInterface, e);
+
+            // Ray origin slightly above bottom of collider
+            glm::vec3 origin = pos + glm::vec3(0.0f, 0.05f, 0.0f);
+            float rayLen = halfH + prop.groundCheckExtra + 0.05f;
+
+            RaycastHit hit;
+            bool didHit = Raycast(origin, glm::vec3(0.0f, -1.0f, 0.0f), rayLen, hit, /*targetCategory*/ -1);
+
+            if (didHit && hit.hit)
+            {
+                prop.groundNormal = hit.normal;
+                prop.isGrounded = IsWalkableGround(hit.normal, prop.maxSlopeAngleDeg);
+            }
+            else
+            {
+                prop.isGrounded = false;
+                prop.groundNormal = glm::vec3(0.0f, 1.0f, 0.0f);
+            }
+        }
+
         // --- [STEP 3: PRE-PHYSICS SYNC] ---
         for (Entity e : ecsInterface.GetEntities()) {
             if (!ecsInterface.HasComponent<PhysicsBodyComponent>(e) || !ecsInterface.HasComponent<PhysicsProperties>(e)) continue;
@@ -464,25 +535,77 @@ namespace Framework {
                     const bool hasXZ = (std::abs(prop.linearVelocity.x) > eps) || (std::abs(prop.linearVelocity.z) > eps);
                     const bool hasYImpulse = (std::abs(prop.linearVelocity.y) > eps);   // e.g., jump for one frame
 
-                    // Decide new velocity components
-                    const float newX = hasXZ ? prop.linearVelocity.x : 0.0f;
-                    const float newZ = hasXZ ? prop.linearVelocity.z : 0.0f;
-                    const float newY = hasYImpulse ? prop.linearVelocity.y : cur.GetY();
+                    //// Decide new velocity components
+                    //const float newX = hasXZ ? prop.linearVelocity.x : 0.0f;
+                    //const float newZ = hasXZ ? prop.linearVelocity.z : 0.0f;
+                    //const float newY = hasYImpulse ? prop.linearVelocity.y : cur.GetY();
 
-                    if (hasXZ || hasYImpulse) {
-                        bodyInterface->SetLinearVelocity(id, JPH::Vec3(newX, newY, newZ));
-                        bodyInterface->ActivateBody(id);
+                    //if (hasXZ || hasYImpulse) {
+                    //    bodyInterface->SetLinearVelocity(id, JPH::Vec3(newX, newY, newZ));
+                    //    bodyInterface->ActivateBody(id);
+                    //}
+                    //else {
+                    //    // No gameplay input: keep Y (gravity) but stop planar drift
+                    //    bodyInterface->SetLinearVelocity(id, JPH::Vec3(0.0f, cur.GetY(), 0.0f));
+                    //    bodyInterface->SetAngularVelocity(id, JPH::Vec3(0, 0, 0));
+                    //}
+
+                    glm::vec3 curV(cur.GetX(), cur.GetY(), cur.GetZ());
+
+                    glm::vec3 desiredXZ(prop.linearVelocity.x, 0.0f, prop.linearVelocity.z);
+
+                    // If grounded, project desired movement onto the slope plane (prevents “pop/hop” on stop)
+                    if (prop.isGrounded)
+                    {
+                        glm::vec3 n = glm::normalize(prop.groundNormal);
+                        desiredXZ = desiredXZ - glm::dot(desiredXZ, n) * n; // remove into-normal component
                     }
-                    else {
-                        // No gameplay input: keep Y (gravity) but stop planar drift
-                        bodyInterface->SetLinearVelocity(id, JPH::Vec3(0.0f, cur.GetY(), 0.0f));
-                        bodyInterface->SetAngularVelocity(id, JPH::Vec3(0, 0, 0));
+
+                    // Build final velocity
+                    glm::vec3 finalV = curV;
+
+                    // Jump impulse (one-shot Y)
+                    if (hasYImpulse)
+                    {
+                        finalV.y = prop.linearVelocity.y;
                     }
+                    else
+                    {
+                        // If grounded, keep player “planted” (avoid micro airborne + prevent hop)
+                        if (prop.isGrounded && finalV.y > 0.0f)
+                            finalV.y = 0.0f;
+                    }
+
+                    // Apply input motion
+                    if (hasXZ)
+                    {
+                        finalV.x = desiredXZ.x;
+                        finalV.z = desiredXZ.z;
+                    }
+                    else
+                    {
+                        // No input: stop sliding down slope if grounded
+                        if (prop.isGrounded)
+                        {
+                            finalV.x = 0.0f;
+                            finalV.z = 0.0f;
+
+                            // small downward bias keeps contact stable
+                            finalV.y = std::min(finalV.y, prop.stickToGroundVel);
+                        }
+                        else
+                        {
+                            // Airborne: don’t force XZ to zero (keeps natural momentum if any)
+                            // If you WANT air control = 0, then set to 0 here too.
+                        }
+                    }
+
+                    bodyInterface->SetLinearVelocity(id, JPH::Vec3(finalV.x, finalV.y, finalV.z));
+                    bodyInterface->ActivateBody(id);
 
                     // Consume one-shot Y impulse (so jump only applies once)
-                    if (hasYImpulse) {
+                    if (hasYImpulse)
                         prop.linearVelocity.y = 0.0f;
-                    }
 
                     // Zero tiny angular velocity noise unless you explicitly set it elsewhere
                     if (glm::length(prop.angularVelocity) <= 0.01f) {
@@ -621,5 +744,5 @@ namespace Framework {
     }
 
 
-    
+
 }

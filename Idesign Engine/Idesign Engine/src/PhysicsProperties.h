@@ -5,9 +5,9 @@
 #include <glm.hpp>
 
 namespace Framework {
-    
+
     inline constexpr const char* kMotionTypeNames[] = { "Static", "Dynamic", "Kinematic" };
-    inline constexpr const char* kPhysicsCategoryNames[] = { "Wall", "Floor", "Player", "Customer"};
+    inline constexpr const char* kPhysicsCategoryNames[] = { "Wall", "Floor", "Player", "Customer" };
 
     struct PhysicsProperties
     {
@@ -17,11 +17,18 @@ namespace Framework {
         bool  isImmovable = false; // true = Static (0), false = Dynamic (1)
         float gravityFactor = 1.0f;   // worldGravity * factor
         float mass = 1.0f;
-        float friction = 0.5f;
+        float friction = 1.0f;
         float restitution = 0.0f;
         glm::vec3 linearVelocity{ 0.0f };
         glm::vec3 angularVelocity{ 0.0f };
         bool  startAwake = true;
+        bool     isGrounded = false;
+        glm::vec3 groundNormal{ 0.0f, 1.0f, 0.0f };
+
+        // Tuning
+        float maxSlopeAngleDeg = 50.0f;      // treat slopes as ground
+        float groundCheckExtra = 0.15f;      // extra ray distance beyond collider bottom
+        float stickToGroundVel = -1.0f;      // small downward bias to stay planted
     };
 
     // Use the same macro family your other components use.

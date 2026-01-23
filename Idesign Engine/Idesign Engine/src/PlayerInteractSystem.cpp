@@ -27,7 +27,7 @@ namespace Framework
     {
         // 1. LAZY INIT: Ensure UI entities exist
         // We check for the Text entity. If missing, we assume we need to respawn everything.
-        
+
 
         if (!ecsInterface.IsEntityValid(mPromptTextEntity) && !ecsInterface.IsEntityValid(mPromptIconEntity))
         {
@@ -130,7 +130,7 @@ namespace Framework
                     payload.senderID = ecsInterface.GetEntityByName("Player");
                     payload.targetID = targetEntity;
                     payload.actionType = 1;
-                        
+
                     EventManager::Instance().Fire(entry.interactMessage, &payload);
                     handledByScript = true;
                 }
@@ -157,7 +157,7 @@ namespace Framework
     }
 
     void PlayerInteractSystem::SpawnInteractText() {
-        
+
         Entity existingIcon = ecsInterface.GetEntityByName("InteractionIcon");
         if (ecsInterface.IsEntityValid(existingIcon)) {
             ecsInterface.DestroyEntity(existingIcon);
@@ -212,9 +212,9 @@ namespace Framework
             ecsInterface.SetEntityName(mPromptTextEntity, "InteractionPrompt");
 
             TransformComponent transform;
-            transform.position = glm::vec3(0.5f, (centerY - 100.0f)/1080 , 0.0f);
+            transform.position = glm::vec3(0.5f, (centerY - 100.0f) / 1080, 0.0f);
             transform.scale = glm::vec3(1.0f);
-           
+
             HierarchyComponent hc;
             MeshProperties mp;
 
@@ -242,13 +242,31 @@ namespace Framework
 
         if (engineState.Is(EngineMode::Paused) ||
             engineState.Is(EngineMode::HowToPlay) ||
-            engineState.Is(EngineMode::Menu)) 
+            engineState.Is(EngineMode::Menu))
         {
             return; // skip movement/jump when not in active gameplay
         }
 
         GLFWwindow* window = mGraphicsSystem->GetWindow();
         if (!window) return;
+
+        //Link key 0-9 to hotbar selected box
+        auto& inv = Framework::Inventory::Instance();
+        static bool prevNum[10] = {};
+
+        int keys[10] = {
+            GLFW_KEY_1, GLFW_KEY_2, GLFW_KEY_3,
+            GLFW_KEY_4, GLFW_KEY_5, GLFW_KEY_6,
+            GLFW_KEY_7, GLFW_KEY_8, GLFW_KEY_9,  GLFW_KEY_0
+        };
+
+        for (int i = 0; i < 10; ++i)
+        {
+            bool down = glfwGetKey(window, keys[i]) == GLFW_PRESS;
+            if (down && !prevNum[i])
+                inv.SetSelectedIndex(i);
+            prevNum[i] = down;
+        }
 
         // Find player
         Framework::Entity player = ecsInterface.GetEntityByName("Player");
@@ -269,7 +287,7 @@ namespace Framework
 
         // --- Movement ---
         glm::vec3 targetVel(0.0f);
-        const float moveSpeed = 5.0f;
+        const float moveSpeed = 10.0f;
 
         const bool camRotationEnabled = mGraphicsSystem->IsCameraRotationEnabled();
 
@@ -288,9 +306,34 @@ namespace Framework
         if (camRotationEnabled)
         {
             // NORMAL: apply X/Z and let gravity act on Y
-            phys.linearVelocity.x = targetVel.x;
-            phys.linearVelocity.z = targetVel.z;
-            phys.gravityFactor = 1.0f;
+            auto moveToward = [](float cur, float tgt, float maxDelta)
+                {
+                    float diff = tgt - cur;
+                    if (diff > maxDelta) diff = maxDelta;
+                    if (diff < -maxDelta) diff = -maxDelta;
+                    return cur + diff;
+                };
+
+            const float accel = 30.0f;          // tune: higher = snappier
+            const float brake = 120.0f;     // extra strong decel when stopping
+            const float maxAccelDelta = accel * dt;
+            const float maxBrakeDelta = brake * dt;
+
+            phys.linearVelocity.x = moveToward(phys.linearVelocity.x, targetVel.x,
+                (glm::abs(targetVel.x) < 0.01f) ? maxBrakeDelta : maxAccelDelta);
+
+            phys.linearVelocity.z = moveToward(phys.linearVelocity.z, targetVel.z,
+                (glm::abs(targetVel.z) < 0.01f) ? maxBrakeDelta : maxAccelDelta);
+
+            phys.gravityFactor = 10.0f;// edit for faster dropdown
+
+            const bool noInput = glm::length(targetVel) < 0.01f;
+            if (noInput)
+            {
+                // stop horizontal drift so gravity doesn't pull you down the slope
+                phys.linearVelocity.x = 0.0f;
+                phys.linearVelocity.z = 0.0f;
+            }
         }
         else
         {
@@ -312,16 +355,16 @@ namespace Framework
         // TODO: later add && mGrounded here once your collision-based grounded is wired
         if (spaceDown && !prevSpace && jumpLock <= 0.0f && camRotationEnabled)
         {
-            const float jumpSpeed = 7.5f;
-            phys.linearVelocity.y = jumpSpeed;  // immediate upward impulse
-            jumpLock = 1.65f;
-            phys.startAwake = true;            // make sure this impulse wakes the body
+            const float jumpSpeed = 25.0f;
+            phys.linearVelocity.y = jumpSpeed;
+            jumpLock = 1.25f;
+            phys.startAwake = true;
         }
 
         prevSpace = spaceDown;
 
         // (Camera-follow is still in GraphicsSystem; if you want to move it here,
-        //  you�d also set cam->position = trans.position + offset, like the old code.)
+        //  also set cam->position = trans.position + offset, like the old code.)
     }
 
 }

@@ -37,6 +37,7 @@ namespace Framework {
     }
 
     void Inventory::ChangeSelected(int delta) {
+        delta = -delta;
         int i = (m_selectedIndex + delta) % kHotbarSlots;
         if (i < 0) i += kHotbarSlots;
         m_selectedIndex = i;
