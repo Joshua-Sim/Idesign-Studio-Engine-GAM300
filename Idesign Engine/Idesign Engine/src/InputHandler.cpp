@@ -11,6 +11,9 @@
 #include "Coordinator.h"
 #include "DialogueSystem.h"
 #include "ButtonSystem.h" // Ensure this is included
+#include <RecipeBookManager.h>
+
+extern Framework::RecipeBookManager* recipeBookManager;
 
 extern Framework::Coordinator ecsInterface;
 namespace Framework {
@@ -249,11 +252,24 @@ namespace Framework {
             self->m_lastY = ypos;
 
             targetCam->processMouseMovement(xoffset, yoffset);
+            
         }
         else {
             // [IMPORTANT] If we can't rotate (Menu Mode), constantly reset firstMouse.
             // This ensures that when we DO return to the game, the first movement
             // is treated as a reset, not a giant jump.
+            // --- THE FIX START ---
+            int width, height;
+            glfwGetWindowSize(window, &width, &height);
+
+            // Normalize Raw Pixels (0 -> 1920) to UVs (0.0 -> 1.0)
+            // Check for divide by zero just in case
+            if (width > 0 && height > 0) {
+                float uvX = static_cast<float>(xpos) / static_cast<float>(width);
+                float uvY = 1.0f - (static_cast<float>(ypos) / static_cast<float>(height));
+
+                recipeBookManager->OnMouseMove(uvX, uvY);
+            }
             self->m_firstMouse = true;
         }
 
@@ -282,6 +298,10 @@ namespace Framework {
                 buttonSystem->UpdateHoverUV(u, v);
             }
         }
+    }
+
+    void InputHandler::SetRecipeManager(Framework::RecipeBookManager* manager) {
+        m_recipeManager = manager;
     }
 
     void InputHandler::SetCamera(Camera* camera) {
@@ -378,6 +398,10 @@ namespace Framework {
                 if (buttonSystem)
                 {
                     buttonSystem->HandleClickUV(u, v);
+                }
+                // InputHandler.cpp MouseButtonCallback
+                if (inputSystem->m_recipeManager) {
+                    inputSystem->m_recipeManager->OnMouseClick(u, v);
                 }
             }
         }

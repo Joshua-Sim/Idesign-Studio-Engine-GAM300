@@ -10,6 +10,10 @@
 #include <iostream>
 
 namespace Framework {
+    class RecipeBookManager;
+}
+
+namespace Framework {
 
     class InputHandler : public ISystem {
     public:
@@ -57,6 +61,9 @@ namespace Framework {
 
         static InputHandler* instance;
 
+        // 3. SETTER FUNCTION
+        void SetRecipeManager(RecipeBookManager* manager);
+
     private:
         enum KeyState { KEY_RELEASED = 0, KEY_PRESSED = 1, KEY_HELD = 2 };
 
@@ -84,5 +91,8 @@ namespace Framework {
 
         // [FIX] Declaration Only
         static void CursorPositionCallback(GLFWwindow* window, double xpos, double ypos);
+
+        // for recipe book click
+        RecipeBookManager* m_recipeManager = nullptr;
     };
 }

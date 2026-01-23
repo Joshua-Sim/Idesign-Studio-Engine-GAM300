@@ -47,6 +47,8 @@
 #include "TypeRegistry.h"
 #include "SceneInterface.h"
 
+
+
 using namespace Framework;
 
 void EnableMemoryLeakChecking(int breakAlloc = -1)
@@ -141,6 +143,8 @@ int main(void)
     auto dialogueSystem = ecsInterface.RegisterSystem<DialogueSystem>();
     auto sceneInterface = ecsInterface.RegisterSystem<SceneInterface>();
 
+
+
     ecsInterface.RegisterComponent<EventSenderComponent>(); 
     ecsInterface.RegisterComponent<EventReceiverComponent>();
 
@@ -193,8 +197,8 @@ int main(void)
 
     ImguiManager::Log("Initializing FontSystem...", "FontSystem");
     fontSystem.Initialize();
-    fontSystem.LoadFont("Assets/Font/arial.ttf", 40, "Arial");
-    fontSystem.SetActiveFont("Arial");
+    fontSystem.LoadFont("Assets/Font/AveriaSerifLibre.ttf", 40, "AveriaSerifLibre");
+    fontSystem.SetActiveFont("AveriaSerifLibre");
     ImguiManager::LogSuccess("FontSystem ready", "FontSystem");
 
     // Run All Scripts

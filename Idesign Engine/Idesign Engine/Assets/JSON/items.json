@@ -1,0 +1,53 @@
+{
+  "items": [
+    {
+      "id": "unchopped_herb",
+      "name": "Unchopped Herb",
+      "type": "ingredient"
+    },
+    {
+      "id": "chopped_herb",
+      "name": "Chopped Herb",
+      "type": "ingredient"
+    },
+    {
+      "id": "pear",
+      "name": "Fresh Pear",
+      "type": "ingredient"
+    },
+    {
+      "id": "strength_potion",
+      "name": "Potion of Strength",
+      "type": "potion"
+    },
+    {
+      "id": "vitality_potion",
+      "name": "Potion of Vitality",
+      "type": "potion"
+    },
+    {
+      "id": "knife",
+      "name": "Kitchen Knife",
+      "type": "tool"
+    }
+  ],
+  "recipes": [
+    {
+      "id": "r_chop_herb",
+      "inputs": ["unchopped_herb"],
+      "tool": "knife",
+      "output": "chopped_herb"
+    },
+    {
+      "id": "r_strength_potion",
+      "inputs": ["unchopped_herb"],
+      "output": "strength_potion"
+    },
+        {
+      "id": "r_vitality_potion",
+      "inputs": ["pear", "chopped_herb"],
+      "output": "vitality_potion"
+    }
+
+  ]
+}

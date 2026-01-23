@@ -97,6 +97,12 @@
             "isUI": false
         },
         {
+            "guid": "02c0cd97-ec1e-4fdb-89a6-f5442b809d6f",
+            "name": "Item_IngredientBG",
+            "path": "Assets\\Textures\\Item_IngredientBG.png",
+            "isUI": false
+        },
+        {
             "guid": "b5153be8-0464-48c3-800e-48bfb0c931b9",
             "name": "Key_E",
             "path": "Assets\\Textures\\Key_E.png",

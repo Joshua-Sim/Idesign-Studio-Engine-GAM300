@@ -429,18 +429,28 @@ function M.on_update(arg1, arg2)
 
             if is_stirring then
                 progress = progress + (math.abs(angle_delta) * stir_sensitivity)
+                
+                -- 1. Always play speed POSITIVE (1.0) so the engine loops it correctly.
                 SetAnimationSettings(my_entity_id, 1.0, true, true)
-                PlayStirSound() -- Safe call now
-            else
-                SetAnimationSettings(my_entity_id, 0.0, true, true)
-                StopStirSound() -- Safe call now
-            end
 
-            if progress >= 1.0 then
-                progress = 1.0
-                is_finished = true
-                current_finish_timer = finish_delay
-                print("[Lua] Soup 100% -> Finishing...")
+                -- 2. Visual Trick: Flip the Cauldron Scale to match direction
+                -- If angle_delta is negative (Clockwise), we flip the X-axis scale to -1.
+                -- This makes the "Left" spinning animation look "Right" spinning.
+                if angle_delta > 0 then
+                    -- Normal Orientation
+                    SetScale(my_entity_id, 1.6, 1.0, 1.0)
+                else
+                    -- Mirrored Orientation (Looks like reverse spin)
+                    SetScale(my_entity_id, -1.6, 1.0, 1.0)
+                end
+                
+                PlayStirSound() 
+            else
+                -- [IMPORTANT] Reset Scale to normal when stopping
+                SetScale(my_entity_id, 1.0, 1.0, 1.0)
+                
+                SetAnimationSettings(my_entity_id, 0.0, true, true)
+                StopStirSound() 
             end
 
             local current_length = progress * bar_length_max
