@@ -1,135 +1,55 @@
-.vs
-.tmp
-bin
-bin/
-"Idesign Engine/x64"
-"Idesign Engine/Idesign Engine/x64"
-Unnamed Studios/Unnamed Studios.vcxproj
-Unnamed Studios/Unnamed Studios.vcxproj.filters
-Unnamed Studios/x64/Debug/Core.obj
-Unnamed Studios/x64/Debug/Graphics.obj
-Unnamed Studios/x64/Debug/GraphicsWindows.obj
-Unnamed Studios/x64/Debug/InputHandler.obj
-Unnamed Studios/x64/Debug/main.obj
-Unnamed Studios/x64/Debug/Matrix3x3.obj
-Unnamed Studios/x64/Debug/ObjectFactory.obj
-Unnamed Studios/x64/Debug/pch.obj
-Unnamed Studios/x64/Debug/Unnamed Studios.exe.recipe
-Unnamed Studios/x64/Debug/Unnamed Studios.ilk
-Unnamed Studios/x64/Debug/Unnamed Studios.log
-Unnamed Studios/x64/Debug/Unnamed Studios.pch
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/CL.command.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/Cl.items.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/CL.read.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/CL.write.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/link.command.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/link.read.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/link.write.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/Unnamed Studios.lastbuildstate
-Unnamed Studios/x64/Debug/vc143.idb
-Unnamed Studios/x64/Debug/vc143.pdb
-Unnamed Studios/x64/Debug/Vector2D.obj
-Unnamed Studios/x64/Release/Unnamed Studios.log
-Unnamed Studios/x64/Release/Unnamed Studios.pch
-Unnamed Studios/x64/Release/Unnamed Studios.tlog/CL.command.1.tlog
-Unnamed Studios/x64/Release/Unnamed Studios.tlog/CL.read.1.tlog
-Unnamed Studios/x64/Release/Unnamed Studios.tlog/CL.write.1.tlog
-Unnamed Studios/x64/Release/Unnamed Studios.tlog/link.command.1.tlog
-Unnamed Studios/x64/Release/Unnamed Studios.tlog/Unnamed Studios.lastbuildstate
-Unnamed Studios/x64/Release/vc143.pdb
-x64/Debug/Unnamed Studios.exe
-x64/Debug/Unnamed Studios.pdb
-x64/Release/Unnamed Studios.exe
-Unnamed Studios/Unnamed Studios.vcxproj
-Unnamed Studios/Unnamed Studios.vcxproj.filters
-Unnamed Studios/x64/Debug/Core.obj
-Unnamed Studios/x64/Debug/Graphics.obj
-Unnamed Studios/x64/Debug/GraphicsWindows.obj
-Unnamed Studios/x64/Debug/InputHandler.obj
-Unnamed Studios/x64/Debug/main.obj
-Unnamed Studios/x64/Debug/Matrix3x3.obj
-Unnamed Studios/x64/Debug/ObjectFactory.obj
-Unnamed Studios/x64/Debug/pch.obj
-Unnamed Studios/x64/Debug/Unnamed Studios.exe.recipe
-Unnamed Studios/x64/Debug/Unnamed Studios.ilk
-Unnamed Studios/x64/Debug/Unnamed Studios.log
-Unnamed Studios/x64/Debug/Unnamed Studios.pch
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/CL.command.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/Cl.items.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/CL.read.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/CL.write.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/link.command.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/link.read.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/link.write.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/Unnamed Studios.lastbuildstate
-Unnamed Studios/x64/Debug/vc143.idb
-Unnamed Studios/x64/Debug/vc143.pdb
-Unnamed Studios/x64/Debug/Vector2D.obj
-Unnamed Studios/x64/Release/Unnamed Studios.log
-Unnamed Studios/x64/Release/Unnamed Studios.tlog/CL.command.1.tlog
-Unnamed Studios/x64/Release/Unnamed Studios.tlog/Unnamed Studios.lastbuildstate
-x64/Debug/Unnamed Studios.exe
-x64/Debug/Unnamed Studios.pdb
-Unnamed Studios/Unnamed Studios.vcxproj
-Unnamed Studios/Unnamed Studios.vcxproj.filters
-Unnamed Studios/x64/Debug/Core.obj
-Unnamed Studios/x64/Debug/Graphics.obj
-Unnamed Studios/x64/Debug/GraphicsWindows.obj
-Unnamed Studios/x64/Debug/InputHandler.obj
-Unnamed Studios/x64/Debug/main.obj
-Unnamed Studios/x64/Debug/Matrix3x3.obj
-Unnamed Studios/x64/Debug/ObjectFactory.obj
-Unnamed Studios/x64/Debug/pch.obj
-Unnamed Studios/x64/Debug/Unnamed Studios.exe.recipe
-Unnamed Studios/x64/Debug/Unnamed Studios.ilk
-Unnamed Studios/x64/Debug/Unnamed Studios.log
-Unnamed Studios/x64/Debug/Unnamed Studios.pch
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/CL.command.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/Cl.items.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/CL.read.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/CL.write.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/link.command.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/link.read.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/link.write.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/Unnamed Studios.lastbuildstate
-Unnamed Studios/x64/Debug/vc143.idb
-Unnamed Studios/x64/Debug/vc143.pdb
-Unnamed Studios/x64/Debug/Vector2D.obj
-Unnamed Studios/x64/Release/Unnamed Studios.log
-Unnamed Studios/x64/Release/Unnamed Studios.tlog/CL.command.1.tlog
-Unnamed Studios/x64/Release/Unnamed Studios.tlog/Unnamed Studios.lastbuildstate
-x64/Debug/Unnamed Studios.exe
-x64/Debug/Unnamed Studios.pdb
-Unnamed Studios/Unnamed Studios.vcxproj
-Unnamed Studios/Unnamed Studios.vcxproj.filters
-Unnamed Studios/x64/Debug/Core.obj
-Unnamed Studios/x64/Debug/Graphics.obj
-Unnamed Studios/x64/Debug/GraphicsWindows.obj
-Unnamed Studios/x64/Debug/InputHandler.obj
-Unnamed Studios/x64/Debug/main.obj
-Unnamed Studios/x64/Debug/Matrix3x3.obj
-Unnamed Studios/x64/Debug/ObjectFactory.obj
-Unnamed Studios/x64/Debug/pch.obj
-Unnamed Studios/x64/Debug/Unnamed Studios.exe.recipe
-Unnamed Studios/x64/Debug/Unnamed Studios.ilk
-Unnamed Studios/x64/Debug/Unnamed Studios.log
-Unnamed Studios/x64/Debug/Unnamed Studios.pch
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/CL.command.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/Cl.items.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/CL.read.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/CL.write.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/link.command.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/link.read.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/link.write.1.tlog
-Unnamed Studios/x64/Debug/Unnamed Studios.tlog/Unnamed Studios.lastbuildstate
-Unnamed Studios/x64/Debug/vc143.idb
-Unnamed Studios/x64/Debug/vc143.pdb
-Unnamed Studios/x64/Debug/Vector2D.obj
-Unnamed Studios/x64/Release/Unnamed Studios.log
-Unnamed Studios/x64/Release/Unnamed Studios.tlog/CL.command.1.tlog
-Unnamed Studios/x64/Release/Unnamed Studios.tlog/Unnamed Studios.lastbuildstate
-x64/Debug/Unnamed Studios.exe
-x64/Debug/Unnamed Studios.pdb
-!Assets/Objects/**
-# Allow 3D model .obj files under Assets/Objects
-!Assets/Objects/*.obj
+# ==========================================
+# 1. GLOBAL IGNORES (Folders at any depth)
+# ==========================================
+# This catches your build output folders (trash)
+**/[Xx]64/
+**/[Rr]elease/
+**/[Dd]ebug/
+**/.vs/
+**/[Bb]in/
+**/[Oo]bj/
+
+# ==========================================
+# 2. BUILD ARTIFACTS (Extensions)
+# ==========================================
+*.obj
+*.pdb
+*.exe
+*.ilk
+*.tlog
+*.recipe
+*.lastbuildstate
+*.log
+*.pch
+*.idb
+
+# ==========================================
+# 3. ASSET EXCEPTIONS
+# ==========================================
+# This ensures that .obj files in Assets are saved 
+# even though we ignored *.obj above.
+!**/Assets/
+!**/Assets/**
+!**/Assets/**/*.obj
+
+# ==========================================
+# 4. LIBRARY EXCEPTIONS (Critical Fix)
+# ==========================================
+# This forces Git to LOOK INSIDE your "lib" folder,
+# even if it contains folders named "x64" or "Release".
+!lib/
+!lib/**
+
+# Explicitly un-ignore the forbidden folder names inside lib
+!**/lib/**/[Xx]64/
+!**/lib/**/[Rr]elease/
+!**/lib/**/[Dd]ebug/
+
+# ==========================================
+# 5. PROJECT FILES (Force Track)
+# ==========================================
+# Ensure main project files are never ignored
+!*.sln
+!*.vcxproj
+!*.filters
+!*.props
