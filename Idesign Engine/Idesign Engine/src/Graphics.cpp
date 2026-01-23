@@ -2686,6 +2686,44 @@ namespace Framework {
         {
             DrawHotbar(width, height);
         }
+
+        Entity loadingEntity = ecsInterface.GetEntityByName("LoadingUI");
+
+        if (loadingEntity != -1 && ecsInterface.IsEntityValid(loadingEntity))
+        {
+            auto& tr = ecsInterface.GetComponent<TransformComponent>(loadingEntity);
+
+            // Only draw if the LoadingSystem has it "active" (scale > 0)
+            if (tr.scale.x > 0.01f)
+            {
+                auto& tex = ecsInterface.GetComponent<TextureProperties>(loadingEntity);
+
+                glDisable(GL_DEPTH_TEST);
+                glEnable(GL_BLEND);
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+                // Use the UI projection (1920x1080)
+                uiShader.use();
+                uiShader.setMat4("uProjection", glm::ortho(0.0f, 1920.0f, 0.0f, 1080.0f));
+                uiShader.setVec3("uColor", glm::vec3(1.0f));
+                uiShader.setFloat("uAlpha", 1.0f);
+
+                // Draw fullscreen (Center 960,540 with half-extents 960,540)
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::translate(model, glm::vec3(960.0f, 540.0f, 0.0f));
+                model = glm::scale(model, glm::vec3(960.0f, 540.0f, 1.0f));
+
+                uiShader.setMat4("uModel", model);
+
+                glActiveTexture(GL_TEXTURE0);
+                glBindTexture(GL_TEXTURE_2D, tex.textureID);
+                uiShader.setInt("uTexture", 0);
+
+                renderQuad(); // Draws the fullscreen quad
+            }
+        }
+        // =========================================================
+
         glEnable(GL_DEPTH_TEST);
         glm::mat4 textModel = glm::mat4(1.0f);
         textModel = glm::translate(textModel, glm::vec3(0.0f, 5.0f, 0.0f));

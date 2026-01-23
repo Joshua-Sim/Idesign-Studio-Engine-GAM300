@@ -43,11 +43,9 @@
 #include "ButtonSystem.h"
 #include "ButtonComponent.h"
 #include "RecipeBookManager.h"
-#include "DialogueSystem.h"
 #include "TypeRegistry.h"
 #include "SceneInterface.h"
-
-
+#include "LoadingSystem.h"
 
 using namespace Framework;
 
@@ -140,10 +138,14 @@ int main(void)
     ecsInterface.RegisterComponent<PlayerComponent>(); // register player component here coz of the interact system
     auto playerInteractSystem = ecsInterface.RegisterSystem<PlayerInteractSystem>();
     auto eventSystem = ecsInterface.RegisterSystem<EventSystem>();
-    auto dialogueSystem = ecsInterface.RegisterSystem<DialogueSystem>();
     auto sceneInterface = ecsInterface.RegisterSystem<SceneInterface>();
 
-
+    // Registered components here used for loading screen transition
+    ecsInterface.RegisterComponent<TransformComponent>();
+    ecsInterface.RegisterComponent<TextureProperties>();
+    ecsInterface.RegisterComponent<LayerComponent>();
+    ecsInterface.RegisterComponent<PhysicsBodyComponent>();
+    auto loadingSystem = ecsInterface.RegisterSystem<LoadingSystem>();
 
     ecsInterface.RegisterComponent<EventSenderComponent>(); 
     ecsInterface.RegisterComponent<EventReceiverComponent>();
@@ -170,9 +172,9 @@ int main(void)
     engine->AddSystem(eventSystem.get());
     engine->AddSystem(gameSystem.get());
     engine->AddSystem(buttonSystem.get());
-    engine->AddSystem(dialogueSystem.get());
     engine->AddSystem(sceneSystem.get());       // Register scene manager last
     engine->AddSystem(sceneInterface.get());
+    engine->AddSystem(loadingSystem.get());
 
     std::filesystem::path root = GetEngineRootPath();
     fileCheckSystem->WatchAllFolders();
@@ -197,8 +199,8 @@ int main(void)
 
     ImguiManager::Log("Initializing FontSystem...", "FontSystem");
     fontSystem.Initialize();
-    fontSystem.LoadFont("Assets/Font/AveriaSerifLibre.ttf", 40, "AveriaSerifLibre");
-    fontSystem.SetActiveFont("AveriaSerifLibre");
+    fontSystem.LoadFont("Assets/Font/arial.ttf", 40, "Arial");
+    fontSystem.SetActiveFont("Arial");
     ImguiManager::LogSuccess("FontSystem ready", "FontSystem");
 
     // Run All Scripts
@@ -210,8 +212,8 @@ int main(void)
     //scriptingSystem->CreateScriptEntity("Assets/Scripts/controls.lua");
     //scriptingSystem->CreateScriptEntity("assets/scripts/prove_lua.lua");
 
-    engineState.PushState(EngineMode::Play);    // Set to Play active
-    engineState.PushState(EngineMode::Menu);    // Set to Menu active
+    engineState.SetPlay(true);
+    engineState.SetMenu(true);
     sceneManager.LoadScene("Scenes/GameScene - WithCollision.json");
     
     engine->GameLoop();
