@@ -65,6 +65,19 @@ namespace Framework {
             return 3; // x, y, z
         }
 
+        static int l_StopEntityAnimation(lua_State* L) {
+            // 1. Get Entity ID
+            Entity entity = static_cast<Entity>(luaL_checkinteger(L, 1));
+
+            // 2. Check for Component
+            if (ecsInterface.IsEntityValid(entity) && ecsInterface.HasComponent<AnimationProperties>(entity)) {
+                auto& animProps = ecsInterface.GetComponent<AnimationProperties>(entity);
+
+                // 3. Set speed to 0 to freeze the animation
+                animProps.animationSpeed = 0.0f;
+            }
+            return 0;
+        }
         static int lua_SetPosition(lua_State* L)
         {
             Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
@@ -1597,6 +1610,19 @@ namespace Framework {
 
         // In ScriptingSystem.cpp inside anonymous namespace
 
+        static void StopAnimation(Entity entityID)
+        {
+            // Check if the entity has animation properties
+            if (ecsInterface.HasComponent<AnimationProperties>(entityID))
+            {
+                // Get the component
+                auto& anim = ecsInterface.GetComponent<AnimationProperties>(entityID);
+
+                // "Stop" by setting speed to 0 (Freezes the frame)
+                anim.animationSpeed = 0.0f;
+            }
+        }
+
         static int lua_GetRotation(lua_State* L)
         {
             Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
@@ -1719,16 +1745,17 @@ namespace Framework {
         lua_register(L, "SetInteractionText",   l_SetInteractionText);
 
         // Engine utility
-        lua_register(L, "FindEntityByName",     lua_FindEntityByName);
-        lua_register(L, "GetEntitiesByTag",     lua_GetEntitiesByTag);
-        lua_register(L, "RemoveTagFromEntity",  lua_RemoveTagFromEntity);
-        lua_register(L, "EntityHasTag",         lua_EntityHasTag);
-        lua_register(L, "IsEntityValid",        lua_IsEntityValid);
-        lua_register(L, "AddTagToEntity",       lua_AddTagToEntity);
-        lua_register(L, "PlayEntityAnimation",  l_PlayEntityAnimation);
-        lua_register(L, "SpawnPrefab",          lua_SpawnPrefab);
-        lua_register(L, "FireEvent",            lua_FireEvent); // Maybe add register if needed
-        lua_register(L, "SetScriptVariable",    lua_SetScriptVariable);
+        lua_register(L, "FindEntityByName", lua_FindEntityByName);
+        lua_register(L, "GetEntitiesByTag", lua_GetEntitiesByTag);
+        lua_register(L, "RemoveTagFromEntity", lua_RemoveTagFromEntity);
+        lua_register(L, "EntityHasTag", lua_EntityHasTag);
+        lua_register(L, "IsEntityValid", lua_IsEntityValid);
+        lua_register(L, "AddTagToEntity", lua_AddTagToEntity);
+        lua_register(L, "PlayEntityAnimation", l_PlayEntityAnimation);
+        lua_register(L, "StopAnimation", l_StopEntityAnimation); 
+        lua_register(L, "SpawnPrefab", lua_SpawnPrefab);
+        lua_register(L, "FireEvent", lua_FireEvent); // Maybe add register if needed
+        lua_register(L, "SetScriptVariable", lua_SetScriptVariable);
 
         // Engine States
         lua_register(L, "GameStateStart",         lua_GameStateStart);
