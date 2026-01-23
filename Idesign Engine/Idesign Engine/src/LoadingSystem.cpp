@@ -1,8 +1,10 @@
+// --- LoadingSystem.cpp ---
 #include "pch.h"
 #include "LoadingSystem.h"
 #include "EventManager.h"
 #include "TextureLoader.h"
 #include "ComponentList.h"
+#include "PhaseManager.h"
 
 extern Framework::Coordinator ecsInterface;
 
@@ -12,14 +14,12 @@ namespace Framework {
         m_AnimationTimer = 0.0f;
         m_CurrentFrame = 0;
 
-        // Use GetEntityByName to see if it exists first
         m_LoadingEntity = ecsInterface.GetEntityByName("LoadingUI");
 
         if (m_LoadingEntity == -1 || !ecsInterface.IsEntityValid(m_LoadingEntity)) {
             m_LoadingEntity = ecsInterface.CreateEntity();
             ecsInterface.SetEntityName(m_LoadingEntity, "LoadingUI");
 
-            // Use AddComponent safely
             ecsInterface.AddComponent(m_LoadingEntity, TransformComponent{
                 glm::vec3(960.0f, 540.0f, 0.0f),
                 glm::vec3(0.0f),
@@ -37,63 +37,25 @@ namespace Framework {
             layer.sortID = 999;
             ecsInterface.AddComponent(m_LoadingEntity, layer);
         }
-        else 
+        else
         {
-            // --- FIX: RESET EXISTING ENTITY STATE ---
-            // 1. Reset Visibility
             auto& trans = ecsInterface.GetComponent<TransformComponent>(m_LoadingEntity);
             trans.scale = glm::vec3(1920.0f, 1080.0f, 1.0f);
 
-            // 2. Reset Texture to Frame 0 ("Loading1")
             auto& tex = ecsInterface.GetComponent<TextureProperties>(m_LoadingEntity);
-            tex.path = m_Frames[m_CurrentFrame]; // Sets it back to index 0
+            tex.path = m_Frames[m_CurrentFrame];
             TextureLoader::loadTexture(tex, true);
-            // ----------------------------------------
         }
+        return true; // satisfies C4716 error
     }
-    
-    // OG before change
-    //void LoadingSystem::Update(float deltaTime) {
-    //    if (!m_IsActive || !ecsInterface.IsEntityValid(m_LoadingEntity)) return;
 
-    //    m_AnimationTimer += deltaTime;
-
-    //    // Frame duration: 0.5 seconds per frame
-    //    if (m_AnimationTimer >= 0.2f) {
-    //        m_AnimationTimer = 0.0f;
-
-    //        // Move to the next frame
-    //        m_CurrentFrame++;
-
-    //        // CHECK: Have we finished all 3 frames?
-    //        if (m_CurrentFrame >= m_Frames.size()) {
-    //            // ONE LOOP COMPLETE: Stop and hide everything
-    //            //std::cout << "[LoadingSystem] One loop finished. Deactivating..." << std::endl;
-    //            OnLoadingEnd(nullptr);
-    //            return;
-    //        }
-
-    //        // Otherwise, update the texture to the next frame
-    //        if (ecsInterface.HasComponent<TextureProperties>(m_LoadingEntity)) {
-    //            auto& tex = ecsInterface.GetComponent<TextureProperties>(m_LoadingEntity);
-    //            tex.path = m_Frames[m_CurrentFrame];
-    //            TextureLoader::loadTexture(tex, true);
-    //        }
-    //    }
-    //}
-
-    // smoother one here
     void LoadingSystem::Update(float deltaTime) {
         if (!m_IsActive || !ecsInterface.IsEntityValid(m_LoadingEntity)) return;
 
         m_AnimationTimer += deltaTime;
 
-        // --- CHANGE THIS VALUE ---
-        // 0.1f = 10 frames per second (Smooth)
-        // 0.05f = 20 frames per second (Very Smooth)
         if (m_AnimationTimer >= 0.1f) {
             m_AnimationTimer = 0.0f;
-
             m_CurrentFrame++;
 
             if (m_CurrentFrame >= m_Frames.size()) {
@@ -111,7 +73,12 @@ namespace Framework {
 
     bool LoadingSystem::OnLoadingEnd(void* data) {
         m_IsActive = false;
-        // Hide by scaling to zero
+
+        // NEW: If the transition was to the Upgrade phase, pause the game now
+        if (phaseManager && phaseManager->GetCurrentPhase() == GamePhase::Upgrade) {
+            phaseManager->ApplyUpgradeState();
+        }
+
         if (ecsInterface.IsEntityValid(m_LoadingEntity)) {
             auto& trans = ecsInterface.GetComponent<TransformComponent>(m_LoadingEntity);
             trans.scale = glm::vec3(0.0f);
@@ -121,7 +88,6 @@ namespace Framework {
     }
 
     void LoadingSystem::Initialize() {
-        // Now you can pass the functions more directly if the signatures match
         EventManager::Instance().Subscribe("StartPhaseTransition", [this](void* d) { return OnLoadingStart(d); });
         EventManager::Instance().Subscribe("EndPhaseTransition", [this](void* d) { return OnLoadingEnd(d); });
     }

@@ -1,3 +1,4 @@
+// --- PhaseManager.h ---
 #include "pch.h"
 #include <glm/glm/glm.hpp>
 #include <string>
@@ -16,21 +17,18 @@ namespace Framework {
     class PhaseManager
     {
     public:
-        // 1. REMOVED: static Instance() (We are using a pointer in GameSystem now)
-
-        // 2. CHANGED: Constructor is now PUBLIC and takes Coordinator*
-        PhaseManager(Coordinator* coord) : coordinator(coord) {
-            // Initialize defaults if needed
-        }
+        PhaseManager(Coordinator* coord) : coordinator(coord) {}
 
         void Initialize();
 
-        // --- Main Control ---
         void SetPhase(GamePhase newPhase);
         void TogglePhase();
+
+        // NEW: Handles the delayed pause for the Upgrade screen
+        void ApplyUpgradeState();
+
         GamePhase GetCurrentPhase() const { return m_currentPhase; }
 
-        // --- Configuration ---
         void StartGame() { SetPhase(GamePhase::Day); }
         void SetDaySpawn(const glm::vec3& pos, const glm::vec3& rot) { m_daySpawnPos = pos; m_daySpawnRot = rot; }
         void SetNightSpawn(const glm::vec3& pos, const glm::vec3& rot) { m_nightSpawnPos = pos; m_nightSpawnRot = rot; }
@@ -39,10 +37,7 @@ namespace Framework {
         glm::vec3& GetNightSpawnPosRef() { return m_nightSpawnPos; }
 
     private:
-        // 3. ADDED: Store the coordinator pointer
         Coordinator* coordinator;
-
-        // Internal helper
         void TeleportPlayer(const glm::vec3& position, const glm::vec3& rotation);
 
         GamePhase m_currentPhase = GamePhase::Day;

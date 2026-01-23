@@ -290,7 +290,7 @@ namespace Framework {
             v = 1.0f - v;
 
             // Debug Print to confirm
-            std::cout << "[Input] Click at UV: (" << u << ", " << v << ")" << std::endl;
+            //std::cout << "[Input] Click at UV: (" << u << ", " << v << ")" << std::endl;
 
             auto buttonSystem = ecsInterface.GetSystem<ButtonSystem>();
             if (buttonSystem)
@@ -392,7 +392,7 @@ namespace Framework {
                 v = 1.0f - v;
 
                 // Debug Print to confirm
-                std::cout << "[Input] Click at UV: (" << u << ", " << v << ")" << std::endl;
+                //std::cout << "[Input] Click at UV: (" << u << ", " << v << ")" << std::endl;
 
                 auto buttonSystem = ecsInterface.GetSystem<ButtonSystem>();
                 if (buttonSystem)

@@ -1,3 +1,4 @@
+// --- PhaseManager.cpp ---
 #include "pch.h"
 #include "PhaseManager.h"
 #include "EventManager.h"
@@ -14,7 +15,6 @@
 extern Framework::Coordinator ecsInterface;
 
 namespace Framework {
-    Camera* cam;
     void PhaseManager::Initialize()
     {
         std::cout << "[PhaseManager] Initialized. Default Phase: DAY" << std::endl;
@@ -40,15 +40,12 @@ namespace Framework {
 
     void PhaseManager::SetPhase(GamePhase newPhase)
     {
-        // 1. State Change
         m_currentPhase = newPhase;
 
-        // [FIX 1] Initialize variables to prevent garbage data
         glm::vec3 targetPos(0.0f);
         glm::vec3 targetRot(0.0f);
-        bool shouldTeleport = false; // Flag to control teleportation
+        bool shouldTeleport = false;
 
-        // 2. Determine Target Transform based on Phase
         if (m_currentPhase == GamePhase::Day) {
             targetPos = m_daySpawnPos;
             targetRot = m_daySpawnRot;
@@ -59,88 +56,76 @@ namespace Framework {
             targetRot = m_nightSpawnRot;
             shouldTeleport = true;
         }
-        // [NOTE] We do NOT set shouldTeleport = true for Upgrade phase, 
-        // preventing the garbage data crash.
 
-        // 3. Teleport Player (Only if valid)
         if (shouldTeleport) {
             TeleportPlayer(targetPos, targetRot);
         }
 
         // =========================================================
-        // FORCE CURSOR STATE
+        // INTEGRITY: Day/Night Engine State (Unpauses immediately)
         // =========================================================
         InputHandler* input = InputHandler::GetInstance();
 
         if (m_currentPhase == GamePhase::Day || m_currentPhase == GamePhase::Night)
         {
             engineState.ClearToBase();
-            engineState.PushState(EngineMode::Play);
+            engineState.PushState(EngineMode::Play); // Allows physics and animation to run
 
-            if (input) input->SetUIFocused(false);
+            if (input) input->SetUIFocused(false); // Hides cursor
         }
-        else if (m_currentPhase == GamePhase::Upgrade)
+
+        // =========================================================
+        // INTEGRITY: Camera & Graphics Logic
+        // =========================================================
+        auto graphicsSystem = ecsInterface.GetSystem<Graphics>();
+        if (graphicsSystem)
         {
+            Skybox* skybox = graphicsSystem->getSkybox();
+            Camera* cam = graphicsSystem->getCamera();
+
+            if (m_currentPhase == GamePhase::Day) {
+                if (skybox) skybox->setBlendFactor(0.0f);
+                if (cam)
+                {
+                    cam->yaw = -180.0f; // Original Angle
+                    cam->pitch = 0.0f;
+                    cam->updateVectors();
+                }
+                EventManager::Instance().Fire("OnDayStart", nullptr);
+            }
+            else if (m_currentPhase == GamePhase::Night) {
+                if (skybox) skybox->setBlendFactor(1.0f);
+                if (cam)
+                {
+                    cam->yaw = 0.0f; // Original Angle
+                    cam->pitch = 0.0f;
+                    cam->updateVectors();
+                }
+                EventManager::Instance().Fire("OnNightStart", nullptr);
+            }
+        }
+    }
+
+    // NEW FUNCTION: Only called when the loading animation ends
+    void PhaseManager::ApplyUpgradeState()
+    {
+        if (m_currentPhase == GamePhase::Upgrade)
+        {
+            InputHandler* input = InputHandler::GetInstance();
             engineState.ClearToBase();
             engineState.PushState(EngineMode::Play);
-            engineState.PushState(EngineMode::Paused);
+            engineState.PushState(EngineMode::Paused); // Pauses only now
             engineState.PushState(EngineMode::Upgrade);
 
-            if (input) input->SetUIFocused(true);
-        }
-
-        // =========================================================
-        // EVENT & GRAPHICS LOGIC
-        // =========================================================
-
-        if (m_currentPhase == GamePhase::Day) {
-            auto graphicsSystem = ecsInterface.GetSystem<Graphics>();
-            // [FIX 2] Check System BEFORE accessing Skybox
-            if (graphicsSystem)
-            {
-                Skybox* skybox = graphicsSystem->getSkybox();
-                if (skybox) skybox->setBlendFactor(0.0f); // [FIX 3] Check Skybox validity
-
-                Camera* cam = graphicsSystem->getCamera();
-                if (cam)
-                {
-                    cam->yaw = -180.0f;
-                    cam->pitch = 0.0f;
-                    cam->updateVectors();
-                }
-            }
-            EventManager::Instance().Fire("OnDayStart", nullptr);
-        }
-        else if (m_currentPhase == GamePhase::Night) {
-            auto graphicsSystem = ecsInterface.GetSystem<Graphics>();
-            if (graphicsSystem)
-            {
-                Skybox* skybox = graphicsSystem->getSkybox();
-                if (skybox) skybox->setBlendFactor(1.0f);
-
-                Camera* cam = graphicsSystem->getCamera();
-                if (cam)
-                {
-                    cam->yaw = 0.0f;
-                    cam->pitch = 0.0f;
-                    cam->updateVectors();
-                }
-            }
-            EventManager::Instance().Fire("OnNightStart", nullptr);
+            if (input) input->SetUIFocused(true); // Shows cursor
         }
     }
 
     void PhaseManager::TeleportPlayer(const glm::vec3& position, const glm::vec3& rotation)
     {
         Entity player = ecsInterface.GetEntityByName("Player");
+        if (player == -1 || !ecsInterface.IsEntityValid(player)) return;
 
-        // 1. Validate Entity
-        if (player == -1 || !ecsInterface.IsEntityValid(player)) {
-            std::cerr << "[PhaseManager] ERROR: Player entity not found!" << std::endl;
-            return;
-        }
-
-        // 2. Validate Transform
         if (ecsInterface.HasComponent<TransformComponent>(player))
         {
             auto& transform = ecsInterface.GetComponent<TransformComponent>(player);
@@ -148,13 +133,10 @@ namespace Framework {
             transform.rotation = rotation;
         }
 
-        // 3. Validate Physics
         if (ecsInterface.HasComponent<PhysicsBodyComponent>(player))
         {
             auto& pb = ecsInterface.GetComponent<PhysicsBodyComponent>(player);
             auto physicsSystem = ecsInterface.GetSystem<PhysicsSystem>();
-
-            // Ensure we actually have physics IDs to move
             if (physicsSystem && !pb.IDs.empty())
             {
                 JPH::BodyInterface* bodyInterface = physicsSystem->GetBodyInterface();
