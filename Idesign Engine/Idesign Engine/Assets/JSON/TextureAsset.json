@@ -1,15 +1,15 @@
 {
     "textures": [
         {
-            "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
-            "name": "",
-            "path": "Assets/PNG/test.png",
-            "isUI": false
-        },
-        {
             "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
             "name": "green",
             "path": "Assets\\Textures\\green.png",
+            "isUI": false
+        },
+        {
+            "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
+            "name": "",
+            "path": "Assets/PNG/test.png",
             "isUI": false
         },
         {
@@ -19,27 +19,21 @@
             "isUI": false
         },
         {
-            "guid": "d4899207-ea5e-473b-870f-aade76e8a7ff",
-            "name": "Door",
-            "path": "Assets\\Textures\\Door.png",
-            "isUI": false
-        },
-        {
             "guid": "e726adb8-bf75-4993-9e77-826f5541ac9d",
             "name": "chopped_herb3D",
             "path": "Assets\\Textures\\chopped_herb3D.png",
             "isUI": false
         },
         {
-            "guid": "cabb6b16-8445-4f40-b9c8-bd593ea6b65c",
-            "name": "top",
-            "path": "Assets\\Textures\\top.png",
+            "guid": "d4899207-ea5e-473b-870f-aade76e8a7ff",
+            "name": "Door",
+            "path": "Assets\\Textures\\Door.png",
             "isUI": false
         },
         {
-            "guid": "312bdb54-477d-47bb-a1ce-2224bc3ec5e3",
-            "name": "Cupboard",
-            "path": "Assets\\Textures\\Cupboard.png",
+            "guid": "d24a29c5-cd9e-4322-ab59-d38618cba4bf",
+            "name": "quitbutton",
+            "path": "Assets\\Textures\\quitbutton.png",
             "isUI": false
         },
         {
@@ -49,9 +43,15 @@
             "isUI": false
         },
         {
-            "guid": "d24a29c5-cd9e-4322-ab59-d38618cba4bf",
-            "name": "quitbutton",
-            "path": "Assets\\Textures\\quitbutton.png",
+            "guid": "312bdb54-477d-47bb-a1ce-2224bc3ec5e3",
+            "name": "Cupboard",
+            "path": "Assets\\Textures\\Cupboard.png",
+            "isUI": false
+        },
+        {
+            "guid": "cabb6b16-8445-4f40-b9c8-bd593ea6b65c",
+            "name": "top",
+            "path": "Assets\\Textures\\top.png",
             "isUI": false
         },
         {
@@ -73,15 +73,21 @@
             "isUI": false
         },
         {
+            "guid": "096e3cd9-c61d-470e-ab51-5cacb54601d1",
+            "name": "upgrades",
+            "path": "Assets\\Textures\\upgrades.png",
+            "isUI": false
+        },
+        {
             "guid": "90b999f3-2c4f-44ab-8213-964c53cd22cc",
             "name": "pear3D",
             "path": "Assets\\Textures\\pear3D.png",
             "isUI": false
         },
         {
-            "guid": "096e3cd9-c61d-470e-ab51-5cacb54601d1",
-            "name": "upgrades",
-            "path": "Assets\\Textures\\upgrades.png",
+            "guid": "f7b72f50-1fbd-45eb-b499-2ad0a8f7d9a5",
+            "name": "autumn tree",
+            "path": "Assets\\Textures\\autumn tree.png",
             "isUI": false
         },
         {
@@ -103,15 +109,15 @@
             "isUI": false
         },
         {
-            "guid": "7bd3846d-4142-4b26-ab54-85667861258f",
-            "name": "BluePotion2",
-            "path": "Assets\\Textures\\BluePotion2.png",
-            "isUI": false
-        },
-        {
             "guid": "d1624844-bd9b-44f7-9976-d196954e311f",
             "name": "ChoppedHerb1",
             "path": "Assets\\Textures\\ChoppedHerb1.png",
+            "isUI": false
+        },
+        {
+            "guid": "7bd3846d-4142-4b26-ab54-85667861258f",
+            "name": "BluePotion2",
+            "path": "Assets\\Textures\\BluePotion2.png",
             "isUI": false
         },
         {
@@ -127,15 +133,21 @@
             "isUI": false
         },
         {
+            "guid": "4caccc21-6007-45d5-bb72-a14260f29a35",
+            "name": "test",
+            "path": "Assets/PNG/test.png",
+            "isUI": false
+        },
+        {
             "guid": "0d960551-d374-438f-b016-ba071589e284",
             "name": "SkyMidNight_Front",
             "path": "Assets\\Textures\\SkyMidNight_Front.png",
             "isUI": false
         },
         {
-            "guid": "4caccc21-6007-45d5-bb72-a14260f29a35",
-            "name": "test",
-            "path": "Assets/PNG/test.png",
+            "guid": "0417d7b5-cfcc-4060-b086-fc7aa90068aa",
+            "name": "Autumn pine tree small",
+            "path": "Assets\\Textures\\Autumn pine tree small.png",
             "isUI": false
         },
         {
@@ -181,6 +193,12 @@
             "isUI": false
         },
         {
+            "guid": "14bf7dfb-6b42-44fe-bef3-a97e9f2b2837",
+            "name": "autumn tree 2 branches",
+            "path": "Assets\\Textures\\autumn tree 2 branches.png",
+            "isUI": false
+        },
+        {
             "guid": "f5a9d8aa-42ce-4cdf-b778-7b63d04787e3",
             "name": "",
             "path": "Assets/PNG/test.png",
@@ -211,15 +229,15 @@
             "isUI": false
         },
         {
-            "guid": "1d05db70-ba11-4d22-98cc-1594aa9f8bd2",
-            "name": "horsecart",
-            "path": "Assets\\Textures\\horsecart.png",
-            "isUI": false
-        },
-        {
             "guid": "6e8fe7c8-cde3-45a7-bdb0-dc732852d3ff",
             "name": "RedVial",
             "path": "Assets\\Textures\\RedVial.png",
+            "isUI": false
+        },
+        {
+            "guid": "1d05db70-ba11-4d22-98cc-1594aa9f8bd2",
+            "name": "horsecart",
+            "path": "Assets\\Textures\\horsecart.png",
             "isUI": false
         },
         {
@@ -232,6 +250,12 @@
             "guid": "0d917096-1644-44a8-8e66-f77f83672f2c",
             "name": "GreenPotion3",
             "path": "Assets\\Textures\\GreenPotion3.png",
+            "isUI": false
+        },
+        {
+            "guid": "665fab0b-a7a0-4ce1-96fe-c4437a1664a3",
+            "name": "grass3",
+            "path": "Assets\\Textures\\grass3.png",
             "isUI": false
         },
         {
@@ -325,6 +349,12 @@
             "isUI": false
         },
         {
+            "guid": "fcc7b4ae-b633-41f3-88fc-a50750eecc31",
+            "name": "mushroom single",
+            "path": "Assets\\Textures\\mushroom single.png",
+            "isUI": false
+        },
+        {
             "guid": "73bc2f8a-2bb1-4fa8-a8e4-6b788ff04c8a",
             "name": "left",
             "path": "Assets\\Textures\\left.png",
@@ -343,15 +373,15 @@
             "isUI": false
         },
         {
-            "guid": "689624f9-11f7-43cc-93b9-6de76f9ca5f1",
-            "name": "bluecloud_dn",
-            "path": "Assets\\Textures\\bluecloud_dn.jpg",
-            "isUI": false
-        },
-        {
             "guid": "d1717710-3745-4779-a5f4-791474646b86",
             "name": "resumebuton",
             "path": "Assets\\Textures\\resumebuton.png",
+            "isUI": false
+        },
+        {
+            "guid": "689624f9-11f7-43cc-93b9-6de76f9ca5f1",
+            "name": "bluecloud_dn",
+            "path": "Assets\\Textures\\bluecloud_dn.jpg",
             "isUI": false
         },
         {
@@ -373,15 +403,15 @@
             "isUI": false
         },
         {
-            "guid": "f7d8e93f-e2a1-4819-9aef-43f282f22713",
-            "name": "back1",
-            "path": "Assets\\Textures\\back1.png",
-            "isUI": false
-        },
-        {
             "guid": "4ee14b8b-838f-46e5-a49e-b1e1d768aa32",
             "name": "pear",
             "path": "Assets\\Textures\\pear.png",
+            "isUI": false
+        },
+        {
+            "guid": "f7d8e93f-e2a1-4819-9aef-43f282f22713",
+            "name": "back1",
+            "path": "Assets\\Textures\\back1.png",
             "isUI": false
         },
         {
@@ -433,15 +463,15 @@
             "isUI": false
         },
         {
-            "guid": "5a83226c-9c23-4ede-8468-a2852c9b87ff",
-            "name": "mine_sign",
-            "path": "Assets\\Textures\\mine_sign.png",
-            "isUI": false
-        },
-        {
             "guid": "acb31027-a3de-428f-b58d-322acaf9a702",
             "name": "vitality_potion",
             "path": "Assets\\Textures\\vitality_potion.png",
+            "isUI": false
+        },
+        {
+            "guid": "5a83226c-9c23-4ede-8468-a2852c9b87ff",
+            "name": "mine_sign",
+            "path": "Assets\\Textures\\mine_sign.png",
             "isUI": false
         },
         {
@@ -496,6 +526,12 @@
             "guid": "3fa44413-2b3b-444a-8d06-3475bebf7792",
             "name": "Grass_normal_left",
             "path": "Assets\\Textures\\Grass_normal_left.png",
+            "isUI": false
+        },
+        {
+            "guid": "6f9a2787-d013-43c4-a38d-13b3e287de87",
+            "name": "autumn tree 2 tier",
+            "path": "Assets\\Textures\\autumn tree 2 tier.png",
             "isUI": false
         },
         {
@@ -580,6 +616,60 @@
             "guid": "1d20c5f9-aee9-468d-a96e-3c1547b21646",
             "name": "pickaxe",
             "path": "Assets\\Textures\\pickaxe.png",
+            "isUI": false
+        },
+        {
+            "guid": "d45be89d-08cc-4606-81ea-a276257c5705",
+            "name": "AUTUMN PINE TREE MED",
+            "path": "Assets\\Textures\\AUTUMN PINE TREE MED.png",
+            "isUI": false
+        },
+        {
+            "guid": "b3587be4-b920-4f7e-abf5-2254747c80d1",
+            "name": "fir tree bent",
+            "path": "Assets\\Textures\\fir tree bent.png",
+            "isUI": false
+        },
+        {
+            "guid": "f40353db-bf74-4637-bf2e-f6a64fabe58f",
+            "name": "fir tree large",
+            "path": "Assets\\Textures\\fir tree large.png",
+            "isUI": false
+        },
+        {
+            "guid": "1d5d9271-070e-4372-97d5-7b2252b23928",
+            "name": "tori gate",
+            "path": "Assets\\Textures\\tori gate.png",
+            "isUI": false
+        },
+        {
+            "guid": "95b2bdaa-b3c5-42e0-9687-d0edc85dfe01",
+            "name": "mushroom 2",
+            "path": "Assets\\Textures\\mushroom 2.png",
+            "isUI": false
+        },
+        {
+            "guid": "4c65263f-1893-4533-a5a7-0992badc6a86",
+            "name": "fountain",
+            "path": "Assets\\Textures\\fountain.png",
+            "isUI": false
+        },
+        {
+            "guid": "03d39b6f-6622-4fd5-ae63-2cd25142a8c1",
+            "name": "autumn tree merged leaves",
+            "path": "Assets\\Textures\\autumn tree merged leaves.png",
+            "isUI": false
+        },
+        {
+            "guid": "bfa7e0c6-8a43-40f9-858b-008de19805af",
+            "name": "autumn tree 4 branches",
+            "path": "Assets\\Textures\\autumn tree 4 branches.png",
+            "isUI": false
+        },
+        {
+            "guid": "e47098ed-91c0-44ed-9b18-8c8e5e0f6c18",
+            "name": "grass2",
+            "path": "Assets\\Textures\\grass2.png",
             "isUI": false
         }
     ]
