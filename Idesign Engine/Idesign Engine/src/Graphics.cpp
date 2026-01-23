@@ -2682,7 +2682,7 @@ namespace Framework {
             !engineState.Is(EngineMode::Menu) &&
             !engineState.Is(EngineMode::Settings) &&
             !engineState.Is(EngineMode::Dialogue) &&
-            !GameSystem::bookOpen)) 
+            !GameSystem::bookOpen) 
         {
             DrawHotbar(width, height);
         }
