@@ -1841,14 +1841,66 @@ namespace Framework
         if (components.HasMember("AnimationProperties"))
         {
             const auto& animRef = components["AnimationProperties"];
+
+            AnimationProperties* anim = nullptr;
+            std::string guid;
+
+            // 1. Try to load by GUID (Existing Asset)
             if (animRef.HasMember("guid") && animRef["guid"].IsString())
             {
-                std::string guid = animRef["guid"].GetString();
-                AnimationProperties* anim = AssetManager::Instance().Get<AnimationProperties>(guid);
-                if (anim) ecsInterface.AddComponent(newEntity, *anim);
+                guid = animRef["guid"].GetString();
+                anim = AssetManager::Instance().Get<AnimationProperties>(guid);
+            }
+
+            if (anim)
+            {
+                // Found existing asset - Copy it
+                AnimationProperties instanceAnim = *anim;
+
+                if (animRef.HasMember("defaultAnimationName") && animRef["defaultAnimationName"].IsString())
+                    instanceAnim.defaultAnimationName = animRef["defaultAnimationName"].GetString();
+
+                if (animRef.HasMember("animationSpeed") && animRef["animationSpeed"].IsNumber())
+                    instanceAnim.animationSpeed = animRef["animationSpeed"].GetFloat();
+
+                if (animRef.HasMember("bLoops") && animRef["bLoops"].IsBool())
+                    instanceAnim.bLoops = animRef["bLoops"].GetBool();
+
+                if (animRef.HasMember("bPlayOnStart") && animRef["bPlayOnStart"].IsBool())
+                    instanceAnim.bPlayOnStart = animRef["bPlayOnStart"].GetBool();
+
+                if (animRef.HasMember("currentTime") && animRef["currentTime"].IsNumber())
+                    instanceAnim.currentTime = animRef["currentTime"].GetFloat();
+
+                ecsInterface.AddComponent(newEntity, instanceAnim);
+            }
+            // 2. Fallback: Load by Path (The part you are using)
+            else if (animRef.HasMember("path") && animRef["path"].IsString())
+            {
+                AnimationProperties tempAnim;
+                tempAnim.path = animRef["path"].GetString();
+
+                // --- THIS WAS MISSING: ACTUALLY LOAD THE DATA ---
+                // We must read the FBX file to get the clips/bones
+                AnimationLoader::loadAnimation(tempAnim.path, tempAnim);
+                // ------------------------------------------------
+
+                // Apply overrides
+                if (animRef.HasMember("defaultAnimationName") && animRef["defaultAnimationName"].IsString())
+                    tempAnim.defaultAnimationName = animRef["defaultAnimationName"].GetString();
+
+                if (animRef.HasMember("animationSpeed") && animRef["animationSpeed"].IsNumber())
+                    tempAnim.animationSpeed = animRef["animationSpeed"].GetFloat();
+
+                if (animRef.HasMember("bLoops") && animRef["bLoops"].IsBool())
+                    tempAnim.bLoops = animRef["bLoops"].GetBool();
+
+                if (animRef.HasMember("bPlayOnStart") && animRef["bPlayOnStart"].IsBool())
+                    tempAnim.bPlayOnStart = animRef["bPlayOnStart"].GetBool();
+
+                ecsInterface.AddComponent(newEntity, tempAnim);
             }
         }
-
         if (components.HasMember("ScriptProperties")) 
         {
             ScriptProperties script;

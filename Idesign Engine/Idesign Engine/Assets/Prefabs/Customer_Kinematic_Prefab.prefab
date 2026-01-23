@@ -10,7 +10,7 @@
                     13.015567779541016
                 ],
                 "rotation": [
-                    0.0,
+                    -90.0,
                     0.0,
                     0.0
                 ],
@@ -114,7 +114,7 @@
                 ]
             },
             "AnimationProperties": {
-                "path": "Assets\\Objects\\GoblinPixelLatest.fbx",
+                "path": "Assets/Objects/GoblinPixelLatest.fbx",
                 "defaultAnimationName":"",
                 "animationSpeed": 1.0,
                 "bLoops": true,
