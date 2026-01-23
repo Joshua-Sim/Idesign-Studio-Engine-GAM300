@@ -1,10 +1,21 @@
 {
-    "count": 5,
+    "count": 6,
     "entries": [
         {
             "guid": "e4d836ef-c0bc-46bb-914c-c1e05246eb81",
             "name": "knifechoppingwithBONEFIXED4",
             "path": "Assets/Objects/knifechoppingwithBONEFIXED4.fbx",
+            "defaultAnimationName": "",
+            "animationSpeed": 1.0,
+            "bLoops": true,
+            "bPlayOnStart": true,
+            "currentTime": 0.0,
+            "vbo_skinning": 0
+        },
+        {
+            "guid": "e8768e36-c957-4c66-a279-56d502dc5a18",
+            "name": "GoblinPixelLatest",
+            "path": "Assets\\Objects\\GoblinPixelLatest.fbx",
             "defaultAnimationName": "",
             "animationSpeed": 1.0,
             "bLoops": true,
@@ -24,9 +35,9 @@
             "vbo_skinning": 0
         },
         {
-            "guid": "e6e64140-6e45-4eb9-986a-e146404672bf",
-            "name": "cauldronwithoutspoon",
-            "path": "Assets\\Objects\\cauldronwithoutspoon.fbx",
+            "guid": "d860e626-e7cf-44dc-b081-9c36f0a7d671",
+            "name": "GoblinPixelLatest(1)",
+            "path": "Assets\\Objects\\GoblinPixelLatest(1).fbx",
             "defaultAnimationName": "",
             "animationSpeed": 1.0,
             "bLoops": true,
@@ -35,9 +46,9 @@
             "vbo_skinning": 0
         },
         {
-            "guid": "d860e626-e7cf-44dc-b081-9c36f0a7d671",
-            "name": "GoblinPixelLatest(1)",
-            "path": "Assets\\Objects\\GoblinPixelLatest(1).fbx",
+            "guid": "e6e64140-6e45-4eb9-986a-e146404672bf",
+            "name": "cauldronwithoutspoon",
+            "path": "Assets\\Objects\\cauldronwithoutspoon.fbx",
             "defaultAnimationName": "",
             "animationSpeed": 1.0,
             "bLoops": true,

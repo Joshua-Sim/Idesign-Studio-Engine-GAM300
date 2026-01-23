@@ -32,10 +32,10 @@
                 "sortIndex": 0
             },
             "MeshReference": {
-                "guid": "9a2f1542-ed6c-4f3b-9fd9-d1a84ef0475f"
+                "guid": "d18bb312-eaa8-4bcf-9716-e93dd927eb27"
             },
             "TextureComponent": {
-                "guid": "426b57d1-9af6-411b-9786-52eb46acea4b",
+                "guid": "612ba301-6dcc-493b-b15e-0467a047e322",
                 "isUI": false
             },
             "NavMeshAgentComponent": {
