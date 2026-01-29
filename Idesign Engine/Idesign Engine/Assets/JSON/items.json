@@ -29,6 +29,11 @@
       "id": "knife",
       "name": "Kitchen Knife",
       "type": "tool"
+    },
+    {
+      "id": "Sheep_Horn",
+      "name": "Sheeo's Horn",
+      "type": "ingredient"
     }
   ],
   "recipes": [
