@@ -114,13 +114,62 @@ namespace Framework
             }
         }
         mWasEPressed = isEPressed;
+        Entity player = ecsInterface.GetEntityByName("Player");
+        if (ecsInterface.IsEntityValid(player))
+        {
+            glm::vec3 playerPos = ecsInterface.GetComponent<TransformComponent>(player).position;
+            playerPos.y += 1.0f; // Target chest height
+
+            for (Entity entity = 0; entity < MAX_ENTITIES; ++entity)
+            {
+                if (!ecsInterface.IsEntityValid(entity)) continue;
+                if (!ecsInterface.HasComponent<ItemComponent>(entity)) continue;
+
+                auto& item = ecsInterface.GetComponent<ItemComponent>(entity);
+
+                // Only move items that have been flagged by PerformInteract
+                if (item.isZipping)
+                {
+                    auto& trans = ecsInterface.GetComponent<TransformComponent>(entity);
+                    glm::vec3 toPlayer = playerPos - trans.position;
+                    float distance = glm::length(toPlayer);
+
+                    // Acceleration math: Faster as it gets closer
+                    float speed = 12.0f + (1.0f / (distance + 0.1f)) * 5.0f;
+
+                    if (distance > 0.3f)
+                    {
+                        trans.position += glm::normalize(toPlayer) * speed * dt;
+                    }
+                    else
+                    {
+                        // REACHED PLAYER: Finalize
+                        int itemId = Framework::ItemNameToId(item.name);
+                        if (itemId >= 0) {
+                            int slot = Framework::Inventory::Instance().AddFirstEmpty(itemId);
+                            if (slot >= 0) {
+                                g_AudioSystem->PlayAudio("event:/PickingUpHerb");
+                                // IMPORTANT: Don't call RemoveBody here anymore, 
+                                // we already did it in PerformInteract!
+                                ecsInterface.DestroyEntity(entity);
+                            }
+                            else {
+                                // Inventory full: Drop it
+                                item.isZipping = false;
+                                // Re-add physics if you want it to fall back to the ground
+                            }
+                        }
+                    }
+                }
+            }
+        }
         HandlePlayerMovementandJump(dt);
     }
 
     void PlayerInteractSystem::PerformInteract(Entity targetEntity)
     {
-        bool handledByScript = false;
-
+        // --- 1. SCRIPT/EVENT INTERACTION ---
+        // Check if this is a trigger (like a door or button) rather than a physical item
         if (ecsInterface.HasComponent<BoxColliderComponent>(targetEntity)) {
             auto& colliderComp = ecsInterface.GetComponent<BoxColliderComponent>(targetEntity);
             for (const auto& entry : colliderComp.colliders) {
@@ -132,26 +181,38 @@ namespace Framework
                     payload.actionType = 1;
 
                     EventManager::Instance().Fire(entry.interactMessage, &payload);
-                    handledByScript = true;
+
+                    // If a script handles it, we usually don't want to treat it as a pickup item
+                    return;
                 }
             }
         }
 
-        if (handledByScript) return;
-
         if (ecsInterface.HasComponent<ItemComponent>(targetEntity)) {
             auto& item = ecsInterface.GetComponent<ItemComponent>(targetEntity);
-            int itemId = Framework::ItemNameToId(item.name);
 
-            if (itemId >= 0) {
-                int slot = Framework::Inventory::Instance().AddFirstEmpty(itemId);
-                if (slot >= 0) {
-                    g_AudioSystem->PlayAudio("event:/PickingUpHerb");
-                    if (item.toDestroyWhenPicked) {
-                        mPhysicsSystem->RemoveBodyForEntity(targetEntity);
-                        ecsInterface.DestroyEntity(targetEntity);
-                    }
-                }
+            // 1. START ZIP
+            item.isZipping = true;
+
+            // 2. DISABLE PHYSICS COMPLETELY
+            // This ensures it doesn't hit anything while flying.
+            if (mPhysicsSystem) {
+                // Tell the physics world to stop tracking this entity's collisions
+                mPhysicsSystem->RemoveBodyForEntity(targetEntity);
+            }
+
+            // 3. OPTIONAL: Remove the component to be safe, 
+            // but RemoveBodyForEntity is the one that stops collisions.
+            if (ecsInterface.HasComponent<BoxColliderComponent>(targetEntity)) {
+                ecsInterface.RemoveComponent<BoxColliderComponent>(targetEntity);
+            }
+
+            // 4. PREPARE PROPERTIES
+            if (ecsInterface.HasComponent<PhysicsProperties>(targetEntity)) {
+                auto& phys = ecsInterface.GetComponent<PhysicsProperties>(targetEntity);
+                phys.gravityFactor = 0.0f;
+                phys.linearVelocity = glm::vec3(0.0f, 3.0f, 0.0f); // Upward pop
+                phys.startAwake = true;
             }
         }
     }
