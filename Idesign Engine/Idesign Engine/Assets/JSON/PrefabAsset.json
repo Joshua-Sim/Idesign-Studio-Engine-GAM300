@@ -13,12 +13,6 @@
             "isScenePrefab": false
         },
         {
-            "guid": "b9703dc0-4246-4ba0-be36-1507cc721cd1",
-            "name": "Customer_Prefab",
-            "path": "Assets\\Prefabs\\Customer_Prefab.prefab",
-            "isScenePrefab": false
-        },
-        {
             "guid": "5dfc16be-aa4a-420a-9105-f7c9652f3620",
             "name": "ProgressBarFill_Prefab",
             "path": "Assets\\Prefabs\\ProgressBarFill_Prefab.prefab",
@@ -37,21 +31,15 @@
             "isScenePrefab": false
         },
         {
-            "guid": "8be70edb-fb03-4af7-a8b1-4880d8b00107",
-            "name": "ProgressBarFill_Prefab",
-            "path": "Assets\\Prefabs\\ProgressBarFill_Prefab.prefab",
-            "isScenePrefab": false
-        },
-        {
             "guid": "09165696-3faf-4bd5-838f-ca6549af1306",
             "name": "Customer_Dynamic_Prefab",
             "path": "Assets\\Prefabs\\Customer_Dynamic_Prefab.prefab",
             "isScenePrefab": false
         },
         {
-            "guid": "b1e7bea6-ba5d-4a40-be1c-b30224f8868c",
-            "name": "CustomerTextbox_Prefab",
-            "path": "Assets\\Prefabs\\CustomerTextbox_Prefab.prefab",
+            "guid": "8be70edb-fb03-4af7-a8b1-4880d8b00107",
+            "name": "ProgressBarFill_Prefab",
+            "path": "Assets\\Prefabs\\ProgressBarFill_Prefab.prefab",
             "isScenePrefab": false
         },
         {
@@ -61,9 +49,21 @@
             "isScenePrefab": false
         },
         {
+            "guid": "b1e7bea6-ba5d-4a40-be1c-b30224f8868c",
+            "name": "CustomerTextbox_Prefab",
+            "path": "Assets\\Prefabs\\CustomerTextbox_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
             "guid": "cc960fa4-f792-4441-af1b-c0752b8862cd",
             "name": "strength_potion_Prefab",
             "path": "Assets\\Prefabs\\strength_potion_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "eb37c4f0-924e-4edc-af53-c18f22773ba5",
+            "name": "Herb3_Prefab",
+            "path": "Assets\\Prefabs\\Herb3_Prefab.prefab",
             "isScenePrefab": false
         },
         {
@@ -73,9 +73,9 @@
             "isScenePrefab": false
         },
         {
-            "guid": "eb37c4f0-924e-4edc-af53-c18f22773ba5",
-            "name": "Herb3_Prefab",
-            "path": "Assets\\Prefabs\\Herb3_Prefab.prefab",
+            "guid": "2b031b5f-39b1-4596-8f6f-ad7a639fb94d",
+            "name": "Customer_Kinematic_2_Prefab",
+            "path": "Assets\\Prefabs\\Customer_Kinematic_2_Prefab.prefab",
             "isScenePrefab": false
         },
         {

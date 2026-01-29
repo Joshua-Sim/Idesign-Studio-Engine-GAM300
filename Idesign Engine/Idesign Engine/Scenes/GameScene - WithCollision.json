@@ -136,14 +136,14 @@
                     "is3D": true,
                     "minDistance": 1.0,
                     "maxDistance": 100.0,
-                    "volume": 1.0,
+                    "volume": 0.20000000298023224,
                     "loop": false,
                     "playOnStart": true,
-                    "isPlaying": false,
+                    "isPlaying": true,
                     "lastPosition": [
-                        0.0,
-                        0.0,
-                        0.0
+                        -45.934112548828125,
+                        5.300000190734863,
+                        14.715734481811523
                     ]
                 }
             }
@@ -628,9 +628,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -44.64616775512695,
-                        12.687789916992188,
-                        10.0
+                        -45.69948196411133,
+                        11.00235652923584,
+                        7.636120796203613
                     ],
                     "rotation": [
                         0.0,
@@ -659,13 +659,13 @@
                         1.0,
                         1.0
                     ],
-                    "intensity": 0.15800000727176666,
-                    "radius": 100.0,
+                    "intensity": 0.5690000057220459,
+                    "radius": 30.0,
                     "innerCutOffAngle": 0.21816615760326385,
-                    "outerCutOffAngle": 0.2617993950843811,
-                    "castsShadow": false,
+                    "outerCutOffAngle": 0.35899999737739563,
+                    "castsShadow": true,
                     "shadowBiasConst": 0.004999999888241291,
-                    "shadowBiasFactor": 0.05000000074505806,
+                    "shadowBiasFactor": 1.0,
                     "type": "Point"
                 }
             }
@@ -1552,7 +1552,7 @@
                     "is3D": true,
                     "minDistance": 1.0,
                     "maxDistance": 50.0,
-                    "volume": 0.0,
+                    "volume": 1.0,
                     "loop": false,
                     "playOnStart": false,
                     "isPlaying": false,
@@ -1738,9 +1738,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -59.09307861328125,
-                        12.477137565612793,
-                        10.0
+                        -63.99101638793945,
+                        12.025567054748535,
+                        7.2991943359375
                     ],
                     "rotation": [
                         0.0,
@@ -1769,13 +1769,13 @@
                         0.6365410089492798,
                         0.3543917238712311
                     ],
-                    "intensity": 1.0,
-                    "radius": 100.0,
+                    "intensity": 1.5169999599456787,
+                    "radius": 20.0,
                     "innerCutOffAngle": 0.21816615760326385,
                     "outerCutOffAngle": 0.2617993950843811,
-                    "castsShadow": false,
+                    "castsShadow": true,
                     "shadowBiasConst": 0.004999999888241291,
-                    "shadowBiasFactor": 0.05000000074505806,
+                    "shadowBiasFactor": 1.0,
                     "type": "Point"
                 }
             }
@@ -2741,14 +2741,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -56.68317413330078,
-                        6.1445722579956055,
-                        16.818458557128906
+                        -36.0,
+                        8.02456283569336,
+                        9.5
                     ],
                     "rotation": [
-                        0.00001366037849948043,
-                        89.9415054321289,
-                        -90.00001525878906
+                        0.0,
+                        0.0,
+                        0.0
                     ],
                     "scale": [
                         0.9999989867210388,
@@ -2798,7 +2798,7 @@
                 "PhysicsProperties": {
                     "category": 2,
                     "isImmovable": false,
-                    "gravityFactor": 1.0,
+                    "gravityFactor": 10.0,
                     "mass": 1.0,
                     "friction": 0.5,
                     "restitution": 0.0,
@@ -2824,9 +2824,9 @@
                 },
                 "ListenerComponent": {
                     "position": [
-                        -56.68317413330078,
-                        6.1445722579956055,
-                        16.818458557128906
+                        -36.0,
+                        8.02456283569336,
+                        9.5
                     ],
                     "forward": [
                         0.0,
@@ -3144,7 +3144,7 @@
                     "animationSpeed": 1.0,
                     "bLoops": true,
                     "bPlayOnStart": true,
-                    "currentTime": 35.199989318847656
+                    "currentTime": 82.4001693725586
                 },
                 "TextureComponent": {
                     "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
@@ -3215,11 +3215,11 @@
                     "volume": 1.0,
                     "loop": true,
                     "playOnStart": true,
-                    "isPlaying": false,
+                    "isPlaying": true,
                     "lastPosition": [
-                        0.0,
-                        0.0,
-                        0.0
+                        -40.230262756347656,
+                        6.287981033325195,
+                        17.725893020629883
                     ]
                 }
             }
@@ -3406,24 +3406,6 @@
             }
         },
         {
-            "name": "ProgressBarFrame",
-            "guid": "e3bb1d65-0a76-4c4b-9c3e-bcbffd48f2f8",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "6c60686a-c68c-4284-bce0-019cfcbf77fa"
-                }
-            }
-        },
-        {
-            "name": "ProgressBarFill",
-            "guid": "8a232844-018e-41c5-8b2d-0c330a0bda38",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "5dfc16be-aa4a-420a-9105-f7c9652f3620"
-                }
-            }
-        },
-        {
             "name": "unchopped_herb_64",
             "guid": "fdd6444c-3cce-4e0f-a6b4-8f76c3a95e26",
             "components": {
@@ -3564,24 +3546,6 @@
             }
         },
         {
-            "name": "ProgressBarFrame",
-            "guid": "935c4b6c-9776-45bb-8758-055bf13c8c7e",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "6c60686a-c68c-4284-bce0-019cfcbf77fa"
-                }
-            }
-        },
-        {
-            "name": "ProgressBarFill",
-            "guid": "b60854ac-3888-4f8f-80ee-c2fde7a2f57e",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "5dfc16be-aa4a-420a-9105-f7c9652f3620"
-                }
-            }
-        },
-        {
             "name": "pauseScreen",
             "guid": "23491286-9912-4971-b5d4-9145a810d598",
             "components": {
@@ -3627,7 +3591,7 @@
                 },
                 "TextureComponent": {
                     "guid": "cfe18999-459f-4cf9-932c-505c39b02dc3",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ButtonComponent": {
                     "position": [
@@ -3677,7 +3641,7 @@
                 },
                 "TextureComponent": {
                     "guid": "273edb8c-f3da-4c2c-8c25-bab578b94f55",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -3736,7 +3700,7 @@
                 },
                 "TextureComponent": {
                     "guid": "197bc9ec-6f34-40e7-8f8a-5b7d8a951a8c",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -3978,7 +3942,7 @@
                         1929.0,
                         537.0
                     ],
-                    "isHovered": true,
+                    "isHovered": false,
                     "isFrontButton": false
                 }
             }
@@ -4037,7 +4001,7 @@
                         250.0,
                         100.0
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": false
                 }
             }
@@ -4390,9 +4354,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -30.0,
-                        12.477137565612793,
-                        10.0
+                        -27.62851905822754,
+                        11.81338882446289,
+                        11.217090606689453
                     ],
                     "rotation": [
                         0.0,
@@ -4421,13 +4385,13 @@
                         0.6365410089492798,
                         0.3543917238712311
                     ],
-                    "intensity": 1.0,
-                    "radius": 100.0,
+                    "intensity": 1.3270000219345093,
+                    "radius": 30.100000381469727,
                     "innerCutOffAngle": 0.21816615760326385,
                     "outerCutOffAngle": 0.2617993950843811,
-                    "castsShadow": false,
+                    "castsShadow": true,
                     "shadowBiasConst": 0.004999999888241291,
-                    "shadowBiasFactor": 0.05000000074505806,
+                    "shadowBiasFactor": 1.0,
                     "type": "Point"
                 }
             }
@@ -4890,7 +4854,7 @@
                 },
                 "TextureComponent": {
                     "guid": "e4e85e35-08e3-4fb5-9f54-53c971ed3fee",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -4949,7 +4913,7 @@
                 },
                 "TextureComponent": {
                     "guid": "7cf95b2f-4160-4a45-9ce1-2b889b5b40af",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -5008,7 +4972,7 @@
                 },
                 "TextureComponent": {
                     "guid": "c44c9565-d18e-4186-86af-03e26a23eafe",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -5041,7 +5005,7 @@
                     "position": [
                         980.0,
                         500.0,
-                        1.0
+                        -100.0
                     ],
                     "rotation": [
                         0.0,
@@ -5087,7 +5051,7 @@
                         250.0,
                         100.0
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": true
                 }
             }
@@ -5429,6 +5393,19 @@
                     "alignment": 0,
                     "isBillboard": false,
                     "screenSpace": true
+                },
+                "TextProperties": {
+                    "text": "100%",
+                    "scale": 1.0,
+                    "color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "opacity": 0.0,
+                    "alignment": 0,
+                    "isBillboard": false,
+                    "screenSpace": true
                 }
             }
         },
@@ -5466,8 +5443,7 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "0f2ece2c-6b29-43d9-a6ae-1f648d18d86d",
@@ -5580,6 +5556,19 @@
                 "TextureComponent": {
                     "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
                     "isUI": false
+                },
+                "TextProperties": {
+                    "text": "94%",
+                    "scale": 1.0,
+                    "color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "opacity": 0.0,
+                    "alignment": 0,
+                    "isBillboard": false,
+                    "screenSpace": true
                 },
                 "TextProperties": {
                     "text": "94%",
@@ -5756,6 +5745,19 @@
                     "alignment": 0,
                     "isBillboard": false,
                     "screenSpace": true
+                },
+                "TextProperties": {
+                    "text": "100%",
+                    "scale": 1.0,
+                    "color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "opacity": 0.0,
+                    "alignment": 0,
+                    "isBillboard": false,
+                    "screenSpace": true
                 }
             }
         },
@@ -5851,8 +5853,7 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "12c367bb-5f67-4bb7-b7df-6a94466941a5",
@@ -6101,7 +6102,7 @@
                 },
                 "TextureComponent": {
                     "guid": "04e1dcaf-e0d4-49ad-933a-3168d5f6be74",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -6233,6 +6234,19 @@
                     "alignment": 0,
                     "isBillboard": false,
                     "screenSpace": true
+                },
+                "TextProperties": {
+                    "text": "Goodbye!",
+                    "scale": 0.6899999976158142,
+                    "color": [
+                        0.15939366817474365,
+                        0.15866754949092865,
+                        0.06640792638063431
+                    ],
+                    "opacity": 1.0,
+                    "alignment": 0,
+                    "isBillboard": false,
+                    "screenSpace": true
                 }
             }
         },
@@ -6329,6 +6343,19 @@
                     "alignment": 0,
                     "isBillboard": false,
                     "screenSpace": true
+                },
+                "TextProperties": {
+                    "text": "NPC",
+                    "scale": 0.8500000238418579,
+                    "color": [
+                        0.15939366817474365,
+                        0.15866754949092865,
+                        0.06640792638063431
+                    ],
+                    "opacity": 1.0,
+                    "alignment": 0,
+                    "isBillboard": false,
+                    "screenSpace": true
                 }
             }
         },
@@ -6383,6 +6410,19 @@
                     "alignment": 0,
                     "isBillboard": false,
                     "screenSpace": true
+                },
+                "TextProperties": {
+                    "text": "",
+                    "scale": 0.6899999976158142,
+                    "color": [
+                        0.15939366817474365,
+                        0.15866754949092865,
+                        0.06640792638063431
+                    ],
+                    "opacity": 1.0,
+                    "alignment": 0,
+                    "isBillboard": false,
+                    "screenSpace": true
                 }
             }
         },
@@ -6424,6 +6464,19 @@
                 "TextureComponent": {
                     "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
                     "isUI": false
+                },
+                "TextProperties": {
+                    "text": "",
+                    "scale": 0.6899999976158142,
+                    "color": [
+                        0.15939366817474365,
+                        0.15866754949092865,
+                        0.06640792638063431
+                    ],
+                    "opacity": 1.0,
+                    "alignment": 0,
+                    "isBillboard": false,
+                    "screenSpace": true
                 },
                 "TextProperties": {
                     "text": "",
@@ -6616,8 +6669,7 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "7975acc5-88f1-4071-bb7f-14528d6ca857",
@@ -6680,7 +6732,7 @@
                 },
                 "TextureComponent": {
                     "guid": "c43c4719-e688-4409-9c62-6b2508cc3a71",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -6739,7 +6791,7 @@
                 },
                 "TextureComponent": {
                     "guid": "2c284536-13b8-4925-bc73-881eb8825ff2",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -6764,7 +6816,7 @@
                 }
             }
         },
-                {
+        {
             "name": "QuarryGround",
             "guid": "632f7253-5cf6-48bd-b524-3e433103a3a7",
             "components": {
@@ -6783,7 +6835,8 @@
                         1.9999992847442627,
                         0.01999998651444912,
                         1.999973177909851
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "",
@@ -6859,7 +6912,8 @@
                         1.0,
                         1.0,
                         1.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "",
@@ -6913,7 +6967,8 @@
                         5.0,
                         5.000006675720215,
                         5.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "",
@@ -6989,7 +7044,8 @@
                         7.000000476837158,
                         7.999987602233887,
                         5.000000953674316
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "",
@@ -7065,7 +7121,8 @@
                         3.9999983310699463,
                         3.9999988079071045,
                         3.9999959468841553
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "",
@@ -7157,7 +7214,8 @@
                         2.0,
                         0.019999999552965164,
                         2.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "",
@@ -7313,7 +7371,8 @@
                         1.0,
                         1.0,
                         1.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "",
@@ -7367,7 +7426,8 @@
                         0.9999987483024597,
                         0.9999982118606567,
                         0.9999960064888
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "",
@@ -7443,7 +7503,8 @@
                         6.0,
                         4.0,
                         5.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "",
@@ -7518,7 +7579,8 @@
                         0.25,
                         0.25,
                         0.25
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "",
@@ -7557,7 +7619,8 @@
                         0.25,
                         0.25,
                         0.25
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "",
@@ -7596,7 +7659,8 @@
                         0.25,
                         0.25,
                         0.25
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "",
@@ -7635,7 +7699,8 @@
                         0.25,
                         0.25,
                         0.25
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "",
@@ -7696,7 +7761,8 @@
                         0.25,
                         0.25,
                         0.25
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "",
@@ -7735,7 +7801,8 @@
                         0.25,
                         0.25,
                         0.25
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "",
@@ -7774,7 +7841,8 @@
                         0.75,
                         0.75,
                         0.75
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "",
@@ -7813,7 +7881,8 @@
                         0.25,
                         0.25,
                         0.25
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "",
@@ -7852,7 +7921,8 @@
                         0.25,
                         0.25,
                         0.25
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "",
@@ -7891,7 +7961,8 @@
                         0.25,
                         0.25,
                         0.25
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "",
@@ -7930,7 +8001,8 @@
                         0.25,
                         0.25,
                         0.25
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "",
@@ -7969,7 +8041,8 @@
                         7.000000953674316,
                         7.999997138977051,
                         5.000000953674316
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "",
@@ -8045,7 +8118,8 @@
                         7.000000953674316,
                         7.999995231628418,
                         5.000000953674316
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "",
@@ -8121,7 +8195,8 @@
                         7.000000953674316,
                         7.999995231628418,
                         5.000000953674316
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "",
@@ -8197,7 +8272,8 @@
                         5.000000476837158,
                         6.999997138977051,
                         9.999993324279785
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "",
@@ -8236,7 +8312,8 @@
                         5.000001430511475,
                         6.999997138977051,
                         5.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "",
@@ -8275,7 +8352,8 @@
                         4.0,
                         4.0,
                         4.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "",
@@ -8351,7 +8429,8 @@
                         4.999999523162842,
                         0.9999949932098389,
                         4.999995708465576
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "",
@@ -8427,7 +8506,8 @@
                         2.0,
                         1.9999998807907104,
                         2.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "",
@@ -8503,7 +8583,8 @@
                         0.9999951720237732,
                         0.9999937415122986,
                         0.999993622303009
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "",
@@ -8579,7 +8660,8 @@
                         0.9999987483024597,
                         0.9999982118606567,
                         0.9999960064888
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "",
@@ -8655,7 +8737,8 @@
                         0.9999987483024597,
                         0.9999982118606567,
                         0.9999960064888
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "",
@@ -8731,7 +8814,8 @@
                         0.25,
                         0.25,
                         0.25
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "",
@@ -8770,7 +8854,8 @@
                         1.7000000476837158,
                         1.0,
                         2.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "",
@@ -8828,7 +8913,8 @@
                         0.5,
                         0.5,
                         0.5
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -8904,7 +8990,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -8980,7 +9067,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -9056,7 +9144,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -9132,7 +9221,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -9208,7 +9298,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -9284,7 +9375,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -9360,7 +9452,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -9436,7 +9529,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -9512,7 +9606,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -9588,7 +9683,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -9664,7 +9760,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -9740,7 +9837,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -9816,7 +9914,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -9892,7 +9991,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -9968,7 +10068,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -10044,7 +10145,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -10120,7 +10222,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -10196,7 +10299,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -10272,7 +10376,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -10348,7 +10453,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -10424,7 +10530,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -10500,7 +10607,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -10576,7 +10684,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -10652,7 +10761,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -10728,7 +10838,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -10804,7 +10915,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -10880,7 +10992,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -10956,7 +11069,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -11032,7 +11146,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -11108,7 +11223,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -11184,7 +11300,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -11260,7 +11377,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -11336,7 +11454,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -11412,7 +11531,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -11488,7 +11608,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -11564,7 +11685,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -11640,7 +11762,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -11716,7 +11839,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -11792,7 +11916,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -11868,7 +11993,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -11944,7 +12070,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -12020,7 +12147,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -12096,7 +12224,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -12172,7 +12301,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -12248,7 +12378,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -12324,7 +12455,8 @@
                         7.999999046325684,
                         7.999998569488525,
                         7.999999046325684
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -12400,7 +12532,8 @@
                         10.0,
                         10.0,
                         10.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -12476,7 +12609,8 @@
                         8.0,
                         8.0,
                         8.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -12552,7 +12686,8 @@
                         8.0,
                         8.0,
                         8.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -12628,7 +12763,8 @@
                         8.0,
                         8.0,
                         8.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -12704,7 +12840,8 @@
                         8.0,
                         8.0,
                         8.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -12780,7 +12917,8 @@
                         8.0,
                         8.0,
                         8.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -12856,7 +12994,8 @@
                         8.0,
                         8.0,
                         8.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -12932,7 +13071,8 @@
                         1.0,
                         1.0,
                         1.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -13008,7 +13148,8 @@
                         0.5,
                         0.5,
                         0.5
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -13084,7 +13225,8 @@
                         0.5,
                         0.5,
                         0.5
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -13160,7 +13302,8 @@
                         0.5,
                         0.5,
                         0.5
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -13236,7 +13379,8 @@
                         1.0,
                         1.0,
                         1.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -13312,7 +13456,8 @@
                         1.0,
                         1.0,
                         1.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -13388,7 +13533,8 @@
                         1.0,
                         1.0,
                         1.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -13464,7 +13610,8 @@
                         1.0,
                         1.0,
                         1.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -13540,7 +13687,8 @@
                         1.0,
                         1.0,
                         1.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -13616,7 +13764,8 @@
                         1.0,
                         1.0,
                         1.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -13692,7 +13841,8 @@
                         1.0,
                         1.0,
                         1.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -13768,7 +13918,8 @@
                         1.0,
                         1.0,
                         1.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -13844,7 +13995,8 @@
                         1.0,
                         1.0,
                         1.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -13920,7 +14072,8 @@
                         1.0,
                         1.0,
                         1.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -13996,7 +14149,8 @@
                         1.0,
                         1.0,
                         1.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -14072,7 +14226,8 @@
                         1.0,
                         1.0,
                         1.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -14148,7 +14303,8 @@
                         1.0,
                         1.0,
                         1.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -14224,7 +14380,8 @@
                         1.0,
                         1.0,
                         1.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -14300,7 +14457,8 @@
                         1.0,
                         1.0,
                         1.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -14376,7 +14534,8 @@
                         1.0,
                         1.0,
                         1.0
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -14452,7 +14611,8 @@
                         0.5,
                         0.5,
                         0.5
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -14528,7 +14688,8 @@
                         0.5,
                         0.5,
                         0.5
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -14604,7 +14765,8 @@
                         0.5,
                         0.5,
                         0.5
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -14680,7 +14842,8 @@
                         0.5,
                         0.5,
                         0.5
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -14756,7 +14919,8 @@
                         0.5,
                         0.5,
                         0.5
-                    ]
+                    ],
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
@@ -14819,6 +14983,42 @@
             "components": {
                 "PrefabComponent": {
                     "prefabGUID.id": "f2b79bf2-29d4-4577-801d-b6dff82ecb2c"
+                }
+            }
+        },
+        {
+            "name": "LoadingUI",
+            "guid": "48ed5874-7b18-4ada-a0cb-fa9ff061b66b",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        960.0,
+                        540.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 0
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "TextureComponent": {
+                    "guid": "aa40e4be-e3ce-4b7d-8806-dc0f46d34ee8",
+                    "isUI": false
                 }
             }
         }

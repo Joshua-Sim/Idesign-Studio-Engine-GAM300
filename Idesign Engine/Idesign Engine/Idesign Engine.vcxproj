@@ -313,6 +313,7 @@
     <None Include="Assets\JSON\MeshAsset.json" />
     <None Include="Assets\JSON\TextureAsset.json" />
     <None Include="Assets\JSON\WindowAsset.json" />
+    <None Include="Assets\Prefabs\Customer_Kinematic_2_Prefab.prefab" />
     <None Include="Assets\shaders\blur.glsl" />
     <None Include="Assets\shaders\final.glsl" />
     <None Include="Assets\shaders\fragment.glsl" />

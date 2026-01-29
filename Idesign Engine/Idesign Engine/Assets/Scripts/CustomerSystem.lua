@@ -8,6 +8,23 @@ CustomerSystem.spawnPointName = "SpawnPoint"
 CustomerSystem.waitPointName = "CustomerWaitingPoint"
 CustomerSystem.spawn_delay = 3.0
 
+CustomerSystem.customer_models = {
+    { 
+        prefab = "Customer_Kinematic_Prefab",      -- Model A
+        walk = "Armature|WalkAnimation",
+        idle = "Armature|IdleAnimation"
+    },
+    { 
+        prefab = "Customer_Kinematic_2_Prefab",     -- Model B
+        walk = "Armature|WalkAnimation",    -- Change this if Model B has different anim names
+        idle = "Armature|IdleAnimation"
+    }
+}    -- Starts at 1, switches to 2, then back to 1
+
+
+local activeCustomer = nil
+local current_idle_anim = ""    -- Stores the idle anim for the active customer
+local next_model_index = 2      -- Tracks whose turn it is (1 or 2)
 -- [PROGRESS BAR CONFIG]
 CustomerSystem.prefab_frame = "ProgressBarFrame_Prefab"
 CustomerSystem.prefab_fill  = "ProgressBarFill_Prefab"
@@ -126,12 +143,13 @@ function CustomerSystem:on_update(dt)
                     local dist = math.sqrt((cx - wx)^2 + (cy - wy)^2 + (cz - wz)^2)
                     
                     if dist < arrival_threshold then
-                        print("[CustomerSystem] >> ARRIVED! Distance " .. dist .. " < " .. arrival_threshold)
-                        
+                        print("[CustomerSystem] >> ARRIVED! Switching to Idle...")
                         is_at_counter = true
                         
-                        -- [REMOVED] StopAnimation call (Prevent Crash)
-                        StopAnimation(activeCustomer)
+                        SetAnimationSettings(activeCustomer, 1.0, true, true)
+                        
+                        -- Plays the idle animation that matches the current customer
+                        PlayEntityAnimation(activeCustomer, current_idle_anim)
                         
                         current_patience = patience_duration
                         self:SpawnBar(activeCustomer)
@@ -182,31 +200,40 @@ end
 
 function CustomerSystem:spawn_customer()
     local spawnPoint = FindEntityByName(self.spawnPointName)
-    if spawnPoint == nil then 
-        print("[CustomerSystem] ERROR: SpawnPoint not found!")
-        return 
-    end
+    if spawnPoint == nil then return end
     
     self:play_doorbell()
 
-    print("[CustomerSystem] Spawning Prefab: " .. self.customerPrefabGUID)
-    local customer = SpawnPrefab(self.customerPrefabGUID, spawnPoint)
+    -- 1. PICK THE MODEL BASED ON THE INDEX (1 or 2)
+    local modelData = self.customer_models[next_model_index]
+    
+    print("[CustomerSystem] Spawning Model " .. next_model_index .. ": " .. modelData.prefab)
+    local customer = SpawnPrefab(modelData.prefab, spawnPoint)
     
     if customer == nil then 
-        print("[CustomerSystem] ERROR: Failed to spawn customer entity!")
+        print("[CustomerSystem] ERROR: Failed to spawn " .. modelData.prefab)
         return 
     end
     
-    print("[CustomerSystem] >> Spawned customer ID: " .. customer)
-    
     activeCustomer = customer
     hasSpawned = true
-    is_at_counter = false 
+    is_at_counter = false
     
+    -- 2. STORE THE IDLE ANIMATION FOR LATER
+    current_idle_anim = modelData.idle
+  -- 4. PLAY WALK ANIMATION (With forced settings)
+    print("[CustomerSystem] Playing walk: " .. modelData.walk)
+    SetAnimationSettings(activeCustomer, 1.0, true, true) -- Force Speed 1.0, Loop True
+    PlayEntityAnimation(activeCustomer, modelData.walk)
 
-    print("[CustomerSystem] >> Finding path to " .. self.waitPointName .. " for entity " .. customer)
+    -- 4. FLIP THE INDEX FOR NEXT TIME (If 1 go to 2, if 2 go to 1)
+    next_model_index = next_model_index + 1
+    if next_model_index > #self.customer_models then
+        next_model_index = 1
+    end
+
+    print("[CustomerSystem] >> Finding path to " .. self.waitPointName)
     
-    -- Use the Entity ID, not the string name
     PathfindTo("Customer_Kinematic", self.waitPointName)
 end
 

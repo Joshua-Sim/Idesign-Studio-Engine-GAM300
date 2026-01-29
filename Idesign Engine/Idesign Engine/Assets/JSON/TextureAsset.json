@@ -13,34 +13,10 @@
             "isUI": false
         },
         {
-            "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606",
-            "name": "music",
-            "path": "Assets/Textures/music.png",
-            "isUI": false
-        },
-        {
-            "guid": "cabb6b16-8445-4f40-b9c8-bd593ea6b65c",
-            "name": "top",
-            "path": "Assets\\Textures\\top.png",
-            "isUI": false
-        },
-        {
             "guid": "5361d026-4076-490e-bf6c-204ace0da656",
             "name": "SETTINGS BUTTON",
             "path": "Assets\\Textures\\SETTINGS BUTTON.png",
             "isUI": true
-        },
-        {
-            "guid": "e726adb8-bf75-4993-9e77-826f5541ac9d",
-            "name": "chopped_herb3D",
-            "path": "Assets\\Textures\\chopped_herb3D.png",
-            "isUI": false
-        },
-        {
-            "guid": "d4899207-ea5e-473b-870f-aade76e8a7ff",
-            "name": "Door",
-            "path": "Assets\\Textures\\Door.png",
-            "isUI": false
         },
         {
             "guid": "d24a29c5-cd9e-4322-ab59-d38618cba4bf",
@@ -49,27 +25,15 @@
             "isUI": false
         },
         {
-            "guid": "612ba301-6dcc-493b-b15e-0467a047e322",
-            "name": "Goblin",
-            "path": "Assets\\Textures\\Goblin.png",
-            "isUI": false
-        },
-        {
-            "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
-            "name": "Shelf",
-            "path": "Assets\\Textures\\Shelf.png",
-            "isUI": false
-        },
-        {
-            "guid": "312bdb54-477d-47bb-a1ce-2224bc3ec5e3",
-            "name": "Cupboard",
-            "path": "Assets\\Textures\\Cupboard.png",
-            "isUI": false
-        },
-        {
             "guid": "cabb6b16-8445-4f40-b9c8-bd593ea6b65c",
             "name": "top",
             "path": "Assets\\Textures\\top.png",
+            "isUI": false
+        },
+        {
+            "guid": "612ba301-6dcc-493b-b15e-0467a047e322",
+            "name": "Goblin",
+            "path": "Assets\\Textures\\Goblin.png",
             "isUI": false
         },
         {
@@ -85,15 +49,15 @@
             "isUI": false
         },
         {
-            "guid": "d7666fdd-353e-4a3e-9a3f-70f50cea9f7a",
-            "name": "CREDITS BUTTON",
-            "path": "Assets\\Textures\\CREDITS BUTTON.png",
-            "isUI": false
-        },
-        {
             "guid": "6268a735-25b0-4a92-b9df-38ba44a3af1e",
             "name": "SETTING HOVER BUTTON",
             "path": "Assets\\Textures\\SETTING HOVER BUTTON.png",
+            "isUI": false
+        },
+        {
+            "guid": "d7666fdd-353e-4a3e-9a3f-70f50cea9f7a",
+            "name": "CREDITS BUTTON",
+            "path": "Assets\\Textures\\CREDITS BUTTON.png",
             "isUI": false
         },
         {
@@ -157,6 +121,12 @@
             "isUI": false
         },
         {
+            "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606",
+            "name": "music",
+            "path": "Assets/Textures/music.png",
+            "isUI": false
+        },
+        {
             "guid": "e726adb8-bf75-4993-9e77-826f5541ac9d",
             "name": "chopped_herb3D",
             "path": "Assets\\Textures\\chopped_herb3D.png",
@@ -169,15 +139,15 @@
             "isUI": false
         },
         {
-            "guid": "312bdb54-477d-47bb-a1ce-2224bc3ec5e3",
-            "name": "Cupboard",
-            "path": "Assets\\Textures\\Cupboard.png",
-            "isUI": false
-        },
-        {
             "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
             "name": "Shelf",
             "path": "Assets\\Textures\\Shelf.png",
+            "isUI": false
+        },
+        {
+            "guid": "312bdb54-477d-47bb-a1ce-2224bc3ec5e3",
+            "name": "Cupboard",
+            "path": "Assets\\Textures\\Cupboard.png",
             "isUI": false
         },
         {
@@ -220,12 +190,6 @@
             "guid": "0417d7b5-cfcc-4060-b086-fc7aa90068aa",
             "name": "Autumn pine tree small",
             "path": "Assets\\Textures\\Autumn pine tree small.png",
-            "isUI": false
-        },
-        {
-            "guid": "0d960551-d374-438f-b016-ba071589e284",
-            "name": "SkyMidNight_Front",
-            "path": "Assets\\Textures\\SkyMidNight_Front.png",
             "isUI": false
         },
         {
