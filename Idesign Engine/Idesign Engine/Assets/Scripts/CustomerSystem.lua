@@ -24,7 +24,7 @@ CustomerSystem.customer_models = {
 
 local activeCustomer = nil
 local current_idle_anim = ""    -- Stores the idle anim for the active customer
-local next_model_index = 2      -- Tracks whose turn it is (1 or 2)
+local next_model_index = 1      -- Tracks whose turn it is (1 or 2)
 -- [PROGRESS BAR CONFIG]
 CustomerSystem.prefab_frame = "ProgressBarFrame_Prefab"
 CustomerSystem.prefab_fill  = "ProgressBarFill_Prefab"
