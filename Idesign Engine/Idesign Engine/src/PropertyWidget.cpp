@@ -763,6 +763,7 @@ namespace Framework
         TypeRegistry::Instance().Register<BoxColliderComponent>("BoxColliderComponent", &g_BoxColliderProps);
         TypeRegistry::Instance().Register<ItemComponent>("ItemComponent", &g_ItemProps);
         TypeRegistry::Instance().Register<ButtonComponent>("ButtonComponent", &g_ButtonComponentProps);
+        TypeRegistry::Instance().Register<ParticleEmitterComponent>("ParticleEmitterComponent", &g_ParticleEmitterProps);
     }
 
     void AutoRegisterAllReflectedComponents(Coordinator& ecs)

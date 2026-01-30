@@ -46,6 +46,7 @@
 #include "TypeRegistry.h"
 #include "SceneInterface.h"
 #include "LoadingSystem.h"
+#include "ParticleSystem.h"
 
 using namespace Framework;
 
@@ -139,6 +140,7 @@ int main(void)
     auto playerInteractSystem = ecsInterface.RegisterSystem<PlayerInteractSystem>();
     auto eventSystem = ecsInterface.RegisterSystem<EventSystem>();
     auto sceneInterface = ecsInterface.RegisterSystem<SceneInterface>();
+    auto particleSystem = ecsInterface.RegisterSystem<ParticleSystem>();
 
     // Registered components here used for loading screen transition
     ecsInterface.RegisterComponent<TransformComponent>();
@@ -175,6 +177,7 @@ int main(void)
     engine->AddSystem(sceneSystem.get());       // Register scene manager last
     engine->AddSystem(sceneInterface.get());
     engine->AddSystem(loadingSystem.get());
+    engine->AddSystem(particleSystem.get());    // <-- add (simulate particles)
 
     std::filesystem::path root = GetEngineRootPath();
     fileCheckSystem->WatchAllFolders();

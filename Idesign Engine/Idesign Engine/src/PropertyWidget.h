@@ -34,6 +34,7 @@
 #include "AnimationLoader.h"
 #include "LightProperties.h"
 #include "PhysicsProperties.h"
+#include "ParticleComponent.h"
 
 extern Framework::Coordinator ecsInterface;
 namespace Framework

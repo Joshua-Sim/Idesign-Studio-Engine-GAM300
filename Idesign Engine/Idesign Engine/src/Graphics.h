@@ -207,6 +207,10 @@ namespace Framework
         GLuint pineTextureID;
         PebbleRenderer* m_pineRenderer = nullptr;
 
+        //PARTICLES (Jasper)
+        FoliageRenderer* m_particlePixelRenderer = nullptr;
+        GLuint m_particleTextureID = 0;
+
         //END OF INSTANCING DECLARATION
 
         // shaders
