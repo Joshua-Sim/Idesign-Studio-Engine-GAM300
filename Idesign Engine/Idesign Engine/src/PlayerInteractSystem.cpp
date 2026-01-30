@@ -34,6 +34,43 @@ namespace Framework
             SpawnInteractText();
         }
 
+        // In PlayerInteractSystem::Update(float dt)
+        for (auto it = mActiveGroups.begin(); it != mActiveGroups.end(); ) {
+            it->timer -= dt;
+
+            if (it->timer <= 0.0f) {
+                ecsInterface.DestroyEntity(it->background);
+                ecsInterface.DestroyEntity(it->icon);
+                ecsInterface.DestroyEntity(it->nameText);
+                ecsInterface.DestroyEntity(it->quantityText);
+                it = mActiveGroups.erase(it);
+                continue;
+            }
+
+            float moveUp = 20.0f * dt; // Pixels per second
+
+            // Update BG & Icon (Pixels)
+            auto& bT = ecsInterface.GetComponent<TransformComponent>(it->background);
+            auto& iT = ecsInterface.GetComponent<TransformComponent>(it->icon);
+            bT.position.y += moveUp;
+            iT.position.y += moveUp;
+
+            // Update Text (Normalized 0-1)
+            auto& nT = ecsInterface.GetComponent<TransformComponent>(it->nameText);
+            auto& qT = ecsInterface.GetComponent<TransformComponent>(it->quantityText);
+            nT.position.y = bT.position.y / 1080.0f;
+            qT.position.y = bT.position.y / 1080.0f;
+
+            // Optional: Fade them all out
+            float alpha = std::min(it->timer, 1.0f);
+            if (ecsInterface.HasComponent<TextProperties>(it->nameText)) {
+                ecsInterface.GetComponent<TextProperties>(it->nameText).color *= alpha;
+                ecsInterface.GetComponent<TextProperties>(it->quantityText).color *= alpha;
+            }
+
+            ++it;
+        }
+
 
         // --- 2. RAYCAST LOGIC ---
         Camera* gameCamera = mGraphicsSystem ? mGraphicsSystem->getCamera() : nullptr;
@@ -143,11 +180,14 @@ namespace Framework
                     }
                     else
                     {
+
+
                         // REACHED PLAYER: Finalize
                         int itemId = Framework::ItemNameToId(item.name);
                         if (itemId >= 0) {
                             int slot = Framework::Inventory::Instance().AddFirstEmpty(itemId);
                             if (slot >= 0) {
+                                SpawnPickupNotification(itemId, item.name);
                                 g_AudioSystem->PlayAudio("event:/PickingUpHerb");
                                 // IMPORTANT: Don't call RemoveBody here anymore, 
                                 // we already did it in PerformInteract!
@@ -426,6 +466,72 @@ namespace Framework
 
         // (Camera-follow is still in GraphicsSystem; if you want to move it here,
         //  also set cam->position = trans.position + offset, like the old code.)
+    }
+
+    void PlayerInteractSystem::SpawnPickupNotification(int itemId, const std::string& itemName) {
+        // 1. SETUP DIMENSIONS (Pixels)
+        float startX = 200.0f; // Right side of screen
+        float startY = 200.0f;  // Top-ish
+
+        // Offset based on existing popups so they don't overlap
+        startY -= (mActiveGroups.size() * 120.0f);
+
+        // 2. SPAWN BACKGROUND (1920x1080 space)
+        Entity bg = ecsInterface.CreateEntity();
+        TransformComponent bgTrans;
+        bgTrans.position = glm::vec3(startX, startY, 0.0f);
+        bgTrans.scale = glm::vec3(400.0f, 100.0f, 1.0f); // Wide rectangle
+        ecsInterface.AddComponent(bg, bgTrans);
+
+        TextureProperties bgTex;
+        bgTex.path = "Assets/Textures/UI_Notification_BG.png";
+        bgTex.isUI = true;
+        TextureLoader::loadTexture(bgTex, true);
+        ecsInterface.AddComponent(bg, bgTex);
+
+        // 3. SPAWN ICON (1920x1080 space)
+        Entity icon = ecsInterface.CreateEntity();
+        TransformComponent iconTrans;
+        iconTrans.position = glm::vec3(startX - 150.0f, startY, 0.0f); // Left side of BG
+        iconTrans.scale = glm::vec3(80.0f, 80.0f, 1.0f);
+        ecsInterface.AddComponent(icon, iconTrans);
+
+        TextureProperties iconTex;
+        iconTex.path = Framework::MakeItemIconPath(itemId);
+        iconTex.isUI = true;
+        TextureLoader::loadTexture(iconTex, true);
+        ecsInterface.AddComponent(icon, iconTex);
+        ecsInterface.AddComponent(icon, MeshProperties());
+
+        // 4. SPAWN NAME TEXT (0-1 space)
+        Entity nameT = ecsInterface.CreateEntity();
+        TransformComponent nameTrans;
+        // Conversion: PixelY / 1080. We add a small offset so it's next to icon
+        nameTrans.position = glm::vec3((startX - 80.0f) / 1920.0f, startY / 1080.0f, 0.0f);
+        nameTrans.scale = glm::vec3(1.0f, 1.0f, 1.0f);
+        ecsInterface.AddComponent(nameT, nameTrans);
+
+        TextProperties nameProp;
+        nameProp.text = itemName;
+        nameProp.screenSpace = true;
+        nameProp.alignment = 0; // Left align
+        nameProp.color = glm::vec3(1.0f);
+        ecsInterface.AddComponent(nameT, nameProp);
+
+        // 5. SPAWN QUANTITY TEXT (0-1 space)
+        Entity quantT = ecsInterface.CreateEntity();
+        TransformComponent qTrans;
+        qTrans.position = glm::vec3((startX + 100.0f) / 1920.0f, startY / 1080.0f, 0.0f);
+        ecsInterface.AddComponent(quantT, qTrans);
+
+        TextProperties qProp;
+        qProp.text = "x1";
+        qProp.screenSpace = true;
+        qProp.color = glm::vec3(0.8f); // Slightly greyed
+        ecsInterface.AddComponent(quantT, qProp);
+
+        // 6. STORE GROUP
+        mActiveGroups.push_back({ bg, icon, nameT, quantT, 3.0f, startY });
     }
 
 }
