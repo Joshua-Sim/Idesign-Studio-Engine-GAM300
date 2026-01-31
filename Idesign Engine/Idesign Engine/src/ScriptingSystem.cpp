@@ -95,6 +95,25 @@ namespace Framework {
             return 0;
         }
 
+        static int lua_GetScale(lua_State* L)
+        {
+            // 1st arg: entity id
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+
+            if (!ecsInterface.IsEntityValid(e) || !ecsInterface.HasComponent<TransformComponent>(e))
+            {
+                return luaL_error(L, "GetScale: entity %d has no TransformComponent", (int)e);
+            }
+
+            auto& tr = ecsInterface.GetComponent<TransformComponent>(e);
+
+            lua_pushnumber(L, tr.scale.x);
+            lua_pushnumber(L, tr.scale.y);
+            lua_pushnumber(L, tr.scale.z);
+            return 3; // x, y, z
+        }
+
+
         int l_IsKeyDown(lua_State* L) 
         {
             auto* self = lua_self(L);
@@ -1769,6 +1788,7 @@ namespace Framework {
         lua_register(L, "GetPhase", lua_GetPhase);
         
         lua_register(L, "SetScale", lua_SetScale);
+        lua_register(L, "GetScale", lua_GetScale);
 
         // Dialogue System
         lua_register(L, "DialogueClear", lua_DialogueClear);
