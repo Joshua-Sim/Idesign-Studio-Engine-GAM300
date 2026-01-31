@@ -296,7 +296,7 @@
                     "animationSpeed": 10.0,
                     "bLoops": false,
                     "bPlayOnStart": true,
-                    "currentTime": 0.0
+                    "currentTime": 20.0
                 },
                 "TextureComponent": {
                     "guid": "afd25b76-dddc-4c4f-bae4-a6c9a22931e5",
@@ -3144,7 +3144,7 @@
                     "animationSpeed": 1.0,
                     "bLoops": true,
                     "bPlayOnStart": true,
-                    "currentTime": 0.0
+                    "currentTime": 29.999980926513672
                 },
                 "TextureComponent": {
                     "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
@@ -3979,7 +3979,7 @@
                         1929.0,
                         537.0
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": false
                 }
             }
@@ -5250,7 +5250,13 @@
                         "3187757b-34e0-4782-9dca-e4907e192fc5",
                         "33a5fe63-ea06-406e-90e2-c8287af1b8d7",
                         "d2b4dfcc-024b-4f49-ab0a-fdb3dc4fa675",
-                        "2c69c89e-ac72-47a4-8404-3b26b7e561f1"
+                        "2c69c89e-ac72-47a4-8404-3b26b7e561f1",
+                        "bd042d80-a170-4f10-892d-daad459b99ff",
+                        "cfbfef7f-3c16-406c-999f-69a39eada71e",
+                        "523f29f2-c93f-441e-bf24-87c17dca5bc5",
+                        "3dc932f7-aad8-4eaa-a1f9-e3664e42c00e",
+                        "0490bfb4-4191-4237-8f4e-123e40ee3631",
+                        "0278c1ca-ad37-4149-97d9-6a5cec25e9ca"
                     ],
                     "sortIndex": 84
                 },
@@ -5311,7 +5317,7 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "0f2ece2c-6b29-43d9-a6ae-1f648d18d86d",
+                    "guid": "e64bcac7-4def-4fd3-9143-77d5172f557e",
                     "isUI": true
                 },
                 "ButtonComponent": {
@@ -5322,57 +5328,6 @@
                     "size": [
                         1000.0,
                         10.0
-                    ],
-                    "isHovered": false,
-                    "isFrontButton": false
-                }
-            }
-        },
-        {
-            "name": "MasterSliderKnob",
-            "guid": "aba73d1d-a3e1-44c3-8053-4b1bc90130cd",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        1480.0,
-                        700.0,
-                        1.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        100.0,
-                        100.0,
-                        1.0
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
-                    "children": [],
-                    "sortIndex": 1
-                },
-                "TagComponent": {
-                    "tags": [
-                        "settings",
-                        "sliderKnob_master"
-                    ]
-                },
-                "TextureComponent": {
-                    "guid": "73aea7fb-a164-408a-8236-3e3ea5bae6e1",
-                    "isUI": true
-                },
-                "ButtonComponent": {
-                    "position": [
-                        1480.0,
-                        700.0
-                    ],
-                    "size": [
-                        100.0,
-                        100.0
                     ],
                     "isHovered": false,
                     "isFrontButton": false
@@ -5420,7 +5375,7 @@
                     "isUI": false
                 },
                 "TextProperties": {
-                    "text": "100%",
+                    "text": "97%",
                     "scale": 1.0,
                     "color": [
                         1.0,
@@ -5433,7 +5388,7 @@
                     "screenSpace": true
                 },
                 "TextProperties": {
-                    "text": "100%",
+                    "text": "97%",
                     "scale": 1.0,
                     "color": [
                         1.0,
@@ -5481,10 +5436,11 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "0f2ece2c-6b29-43d9-a6ae-1f648d18d86d",
+                    "guid": "e64bcac7-4def-4fd3-9143-77d5172f557e",
                     "isUI": true
                 },
                 "ButtonComponent": {
@@ -5495,60 +5451,6 @@
                     "size": [
                         1000.0,
                         10.0
-                    ],
-                    "isHovered": false,
-                    "isFrontButton": false
-                }
-            }
-        },
-        {
-            "name": "BgmSliderKnob",
-            "guid": "836a215a-f470-4db3-89a1-cb3924e529e0",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        1480.0,
-                        500.0,
-                        1.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        100.0,
-                        100.0,
-                        1.0
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
-                    "children": [],
-                    "sortIndex": 4
-                },
-                "TagComponent": {
-                    "tags": [
-                        "settings",
-                        "sliderKnob_bgm"
-                    ]
-                },
-                "MeshComponent": {
-                    "guid": ""
-                },
-                "TextureComponent": {
-                    "guid": "73aea7fb-a164-408a-8236-3e3ea5bae6e1",
-                    "isUI": true
-                },
-                "ButtonComponent": {
-                    "position": [
-                        1480.0,
-                        500.0
-                    ],
-                    "size": [
-                        100.0,
-                        100.0
                     ],
                     "isHovered": false,
                     "isFrontButton": false
@@ -5657,10 +5559,11 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "0f2ece2c-6b29-43d9-a6ae-1f648d18d86d",
+                    "guid": "e64bcac7-4def-4fd3-9143-77d5172f557e",
                     "isUI": true
                 },
                 "ButtonComponent": {
@@ -5671,60 +5574,6 @@
                     "size": [
                         1000.0,
                         10.0
-                    ],
-                    "isHovered": false,
-                    "isFrontButton": false
-                }
-            }
-        },
-        {
-            "name": "SfxSliderKnob",
-            "guid": "afa11ea0-5905-46aa-9f5b-8522f97ec0c5",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        1480.0,
-                        300.0,
-                        1.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        100.0,
-                        100.0,
-                        1.0
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
-                    "children": [],
-                    "sortIndex": 7
-                },
-                "TagComponent": {
-                    "tags": [
-                        "settings",
-                        "sliderKnob_sfx"
-                    ]
-                },
-                "MeshComponent": {
-                    "guid": ""
-                },
-                "TextureComponent": {
-                    "guid": "73aea7fb-a164-408a-8236-3e3ea5bae6e1",
-                    "isUI": true
-                },
-                "ButtonComponent": {
-                    "position": [
-                        1480.0,
-                        300.0
-                    ],
-                    "size": [
-                        100.0,
-                        100.0
                     ],
                     "isHovered": false,
                     "isFrontButton": false
@@ -5853,7 +5702,7 @@
                         250.0,
                         100.0
                     ],
-                    "isHovered": true,
+                    "isHovered": false,
                     "isFrontButton": false
                 }
             }
@@ -5953,8 +5802,7 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "2353ba51-f8fa-4011-82bd-06015c5adf9a",
@@ -6016,8 +5864,7 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "2353ba51-f8fa-4011-82bd-06015c5adf9a",
@@ -6079,8 +5926,7 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "2353ba51-f8fa-4011-82bd-06015c5adf9a",
@@ -6163,7 +6009,7 @@
                         375.0,
                         150.0
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": false
                 }
             }
@@ -6626,7 +6472,7 @@
                     "position": [
                         980.0,
                         390.0,
-                        -100.0
+                        1.0
                     ],
                     "rotation": [
                         0.0,
@@ -6672,7 +6518,7 @@
                         250.0,
                         100.0
                     ],
-                    "isHovered": true,
+                    "isHovered": false,
                     "isFrontButton": true
                 }
             }
@@ -6806,7 +6652,7 @@
                     "position": [
                         980.0,
                         670.0,
-                        1.0
+                        -100.0
                     ],
                     "rotation": [
                         0.0,
@@ -6852,7 +6698,7 @@
                         375.0,
                         150.0
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": true
                 }
             }
@@ -15063,6 +14909,374 @@
                 "TextureComponent": {
                     "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
                     "isUI": false
+                }
+            }
+        },
+        {
+            "name": "MasterSliderBar (Copy)",
+            "guid": "bd042d80-a170-4f10-892d-daad459b99ff",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        971.25,
+                        700.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        982.5,
+                        10.0,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
+                    "children": [],
+                    "sortIndex": 15
+                },
+                "TagComponent": {
+                    "tags": [
+                        "settings",
+                        "sliderBar_Master",
+                        "sliderFill_master"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "2c2d2ebe-0147-4cec-a750-c36084d58949",
+                    "isUI": true
+                },
+                "ButtonComponent": {
+                    "position": [
+                        971.25,
+                        700.0
+                    ],
+                    "size": [
+                        982.5,
+                        10.0
+                    ],
+                    "isHovered": false,
+                    "isFrontButton": false
+                }
+            }
+        },
+        {
+            "name": "Entity 239",
+            "guid": "ee20c2a3-9cbd-43cf-b116-7ed0e422e7b5",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 6
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "MeshComponent": {
+                    "guid": ""
+                },
+                "TextureComponent": {
+                    "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
+                    "isUI": false
+                }
+            }
+        },
+        {
+            "name": "BgmSliderBar (Copy)",
+            "guid": "cfbfef7f-3c16-406c-999f-69a39eada71e",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        980.0,
+                        500.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1000.0,
+                        10.0,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
+                    "children": [],
+                    "sortIndex": 15
+                },
+                "TagComponent": {
+                    "tags": [
+                        "settings",
+                        "sliderFill_bgm",
+                        "sliderBar_bgm"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "2c2d2ebe-0147-4cec-a750-c36084d58949",
+                    "isUI": true
+                },
+                "ButtonComponent": {
+                    "position": [
+                        980.0,
+                        500.0
+                    ],
+                    "size": [
+                        1000.0,
+                        10.0
+                    ],
+                    "isHovered": false,
+                    "isFrontButton": false
+                }
+            }
+        },
+        {
+            "name": "SfxSliderBar (Copy)",
+            "guid": "523f29f2-c93f-441e-bf24-87c17dca5bc5",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        980.0,
+                        300.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1000.0,
+                        10.0,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
+                    "children": [],
+                    "sortIndex": 15
+                },
+                "TagComponent": {
+                    "tags": [
+                        "settings",
+                        "sliderBar_sfx",
+                        "sliderFill_sfx"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "2c2d2ebe-0147-4cec-a750-c36084d58949",
+                    "isUI": true
+                },
+                "ButtonComponent": {
+                    "position": [
+                        980.0,
+                        300.0
+                    ],
+                    "size": [
+                        1000.0,
+                        10.0
+                    ],
+                    "isHovered": false,
+                    "isFrontButton": false
+                }
+            }
+        },
+        {
+            "name": "SfxSliderKnob",
+            "guid": "3dc932f7-aad8-4eaa-a1f9-e3664e42c00e",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        1480.0,
+                        300.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        100.0,
+                        100.0,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
+                    "children": [],
+                    "sortIndex": 7
+                },
+                "TagComponent": {
+                    "tags": [
+                        "settings",
+                        "sliderKnob_sfx"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "73aea7fb-a164-408a-8236-3e3ea5bae6e1",
+                    "isUI": true
+                },
+                "ButtonComponent": {
+                    "position": [
+                        1480.0,
+                        300.0
+                    ],
+                    "size": [
+                        100.0,
+                        100.0
+                    ],
+                    "isHovered": false,
+                    "isFrontButton": false
+                }
+            }
+        },
+        {
+            "name": "MasterSliderKnob",
+            "guid": "0490bfb4-4191-4237-8f4e-123e40ee3631",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        1462.5,
+                        700.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        100.0,
+                        100.0,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
+                    "children": [],
+                    "sortIndex": 1
+                },
+                "TagComponent": {
+                    "tags": [
+                        "settings",
+                        "sliderKnob_master"
+                    ]
+                },
+                "TextureComponent": {
+                    "guid": "73aea7fb-a164-408a-8236-3e3ea5bae6e1",
+                    "isUI": true
+                },
+                "ButtonComponent": {
+                    "position": [
+                        1462.5,
+                        700.0
+                    ],
+                    "size": [
+                        100.0,
+                        100.0
+                    ],
+                    "isHovered": false,
+                    "isFrontButton": false
+                }
+            }
+        },
+        {
+            "name": "BgmSliderKnob",
+            "guid": "0278c1ca-ad37-4149-97d9-6a5cec25e9ca",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        1480.0,
+                        500.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        100.0,
+                        100.0,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
+                    "children": [],
+                    "sortIndex": 4
+                },
+                "TagComponent": {
+                    "tags": [
+                        "settings",
+                        "sliderKnob_bgm"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "73aea7fb-a164-408a-8236-3e3ea5bae6e1",
+                    "isUI": true
+                },
+                "ButtonComponent": {
+                    "position": [
+                        1480.0,
+                        500.0
+                    ],
+                    "size": [
+                        100.0,
+                        100.0
+                    ],
+                    "isHovered": false,
+                    "isFrontButton": false
                 }
             }
         }

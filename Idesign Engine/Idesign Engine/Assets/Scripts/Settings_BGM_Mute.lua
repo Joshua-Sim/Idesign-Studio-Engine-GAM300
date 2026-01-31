@@ -34,6 +34,13 @@ function M:on_init()
         print("[BGM Mute] Warning: Could not find sliderBar_bgm")
     end
     
+    local fillBars = GetEntitiesByTag("sliderFill_bgm")
+    if fillBars and #fillBars > 0 then
+        fillBarEntity = fillBars[1]
+    else
+        print("[BGM Mute] Warning: Could not find sliderFill_bgm")
+    end
+
     local texts = GetEntitiesByTag("volumeText_bgm")
     if texts and #texts > 0 then
         textEntity = texts[1]
@@ -63,6 +70,17 @@ function M:on_init()
                 -- Move knob to left edge (0%)
                 SetPosition(knobEntity, barLeft, ky, kz)
             end
+
+             -- Update fill bar to 0%
+            if fillBarEntity and barEntity then
+                local bx, by, bz = GetPosition(barEntity)
+                local barWidth, barHeight, barDepth = GetScale(barEntity)
+                local barLeft = bx - 0.5 * barWidth
+                
+                -- Scale to 0 width and position at left edge
+                SetScale(fillBarEntity, 0.01, barHeight, barDepth)  -- Tiny width, not 0 to avoid issues
+                SetPosition(fillBarEntity, barLeft, by, bz)
+            end
             
             if textEntity then
                 SetText(textEntity, "0%")
@@ -76,18 +94,25 @@ function M:on_init()
                 SetPosition(knobEntity, savedKnobX, ky, kz)
             end
             
-            if textEntity then
-                -- Recalculate percentage from saved position
-                if barEntity then
-                    local bx, by, bz = GetPosition(barEntity)
-                    local barWidth, barHeight, barDepth = GetScale(barEntity)
-                    local barLeft = bx - 0.5 * barWidth
-                    local barRight = bx + 0.5 * barWidth
-                    
-                    savedVolume = (savedKnobX - barLeft) / (barRight - barLeft)
-                    savedVolume = math.max(0.0, math.min(1.0, savedVolume))
-                end
+            -- Restore fill bar
+            if fillBarEntity and barEntity then
+                local bx, by, bz = GetPosition(barEntity)
+                local barWidth, barHeight, barDepth = GetScale(barEntity)
+                local barLeft = bx - 0.5 * barWidth
+                local barRight = bx + 0.5 * barWidth
                 
+                savedVolume = (savedKnobX - barLeft) / (barRight - barLeft)
+                savedVolume = math.max(0.0, math.min(1.0, savedVolume))
+                
+                -- Scale fill bar to match volume
+                local fillWidth = barWidth * savedVolume
+                SetScale(fillBarEntity, fillWidth, barHeight, barDepth)
+                
+                -- Position fill bar (left-aligned)
+                SetPosition(fillBarEntity, barLeft + 0.5 * fillWidth, by, bz)
+            end
+            
+            if textEntity then
                 local percent = math.floor(savedVolume * 100)
                 SetText(textEntity, percent .. "%")
             end
