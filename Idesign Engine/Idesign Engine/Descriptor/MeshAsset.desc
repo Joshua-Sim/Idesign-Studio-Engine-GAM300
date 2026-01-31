@@ -92,15 +92,6 @@
             "indexCount": 591
         },
         {
-            "guid": "90a63915-c3e8-40b9-8c48-b8fe58a9bd67",
-            "name": "Drawer",
-            "path": "Assets\\Objects\\Drawer.obj",
-            "vao": 110,
-            "vbo": 208,
-            "ebo": 209,
-            "indexCount": 1560
-        },
-        {
             "guid": "5a92f04b-b30d-44f3-b990-d790fa568494",
             "name": "woodencrate",
             "path": "Assets\\Objects\\woodencrate.obj",
@@ -108,6 +99,15 @@
             "vbo": 334,
             "ebo": 335,
             "indexCount": 28998
+        },
+        {
+            "guid": "90a63915-c3e8-40b9-8c48-b8fe58a9bd67",
+            "name": "Drawer",
+            "path": "Assets\\Objects\\Drawer.obj",
+            "vao": 110,
+            "vbo": 208,
+            "ebo": 209,
+            "indexCount": 1560
         },
         {
             "guid": "b694fbcd-4620-4d40-bc75-a921d1cb799a",
@@ -155,15 +155,6 @@
             "indexCount": 1644
         },
         {
-            "guid": "f597242d-9dba-4259-a91d-036298fb344c",
-            "name": "autumn tree 2 tier",
-            "path": "Assets\\Objects\\autumn tree 2 tier.obj",
-            "vao": 224,
-            "vbo": 436,
-            "ebo": 437,
-            "indexCount": 10098
-        },
-        {
             "guid": "c04abe03-e3e7-4404-839f-630c34cde138",
             "name": "PP_Gemstone_07_Gold",
             "path": "Assets\\Objects\\PP_Gemstone_07_Gold.obj",
@@ -171,6 +162,15 @@
             "vbo": 284,
             "ebo": 285,
             "indexCount": 60
+        },
+        {
+            "guid": "f597242d-9dba-4259-a91d-036298fb344c",
+            "name": "autumn tree 2 tier",
+            "path": "Assets\\Objects\\autumn tree 2 tier.obj",
+            "vao": 224,
+            "vbo": 436,
+            "ebo": 437,
+            "indexCount": 10098
         },
         {
             "guid": "62fa60bd-a3d0-4575-851f-e6d04a326345",
@@ -344,6 +344,15 @@
             "indexCount": 2304
         },
         {
+            "guid": "9e1fcb62-0699-4a0b-ae75-d0670af44b1b",
+            "name": "plane2",
+            "path": "Assets/Objects/plane2.obj",
+            "vao": 37,
+            "vbo": 73,
+            "ebo": 74,
+            "indexCount": 231840
+        },
+        {
             "guid": "e902f0d7-a022-45fc-9c17-2a98cbdb793e",
             "name": "Cylinder",
             "path": "Assets/Objects/Cylinder.obj",
@@ -353,31 +362,22 @@
             "indexCount": 240
         },
         {
-            "guid": "9e1fcb62-0699-4a0b-ae75-d0670af44b1b",
-            "name": "plane2",
-            "path": "Assets/Objects/plane2.obj",
-            "vao": 36,
-            "vbo": 71,
-            "ebo": 72,
-            "indexCount": 231840
+            "guid": "fe86c54b-7cc2-471c-9d7e-0bce31089b5a",
+            "name": "Cylinder",
+            "path": "Assets/Objects/Cylinder.obj",
+            "vao": 39,
+            "vbo": 77,
+            "ebo": 78,
+            "indexCount": 240
         },
         {
             "guid": "a25723a2-f9bf-4939-b80d-962eb537dd2e",
             "name": "strength_potion",
             "path": "Assets\\Objects\\strength_potion.obj",
-            "vao": 39,
-            "vbo": 77,
-            "ebo": 78,
-            "indexCount": 924
-        },
-        {
-            "guid": "fe86c54b-7cc2-471c-9d7e-0bce31089b5a",
-            "name": "Cylinder",
-            "path": "Assets/Objects/Cylinder.obj",
             "vao": 38,
             "vbo": 75,
             "ebo": 76,
-            "indexCount": 240
+            "indexCount": 924
         },
         {
             "guid": "da032094-6e5c-40fe-b6f0-39a9d542ffe5",
@@ -506,22 +506,22 @@
             "indexCount": 157614
         },
         {
-            "guid": "98376e97-180f-4b2c-b7f4-48834019f8ee",
-            "name": "autumn tree",
-            "path": "Assets\\Objects\\autumn tree.obj",
-            "vao": 55,
-            "vbo": 109,
-            "ebo": 110,
-            "indexCount": 19704
-        },
-        {
             "guid": "5ec81f76-0cd6-4d5c-ba71-45bfdd723242",
             "name": "Capsule",
             "path": "Assets\\Objects\\Capsule.obj",
+            "vao": 55,
+            "vbo": 109,
+            "ebo": 110,
+            "indexCount": 3456
+        },
+        {
+            "guid": "98376e97-180f-4b2c-b7f4-48834019f8ee",
+            "name": "autumn tree",
+            "path": "Assets\\Objects\\autumn tree.obj",
             "vao": 54,
             "vbo": 107,
             "ebo": 108,
-            "indexCount": 3456
+            "indexCount": 19704
         },
         {
             "guid": "c5a05b15-f198-42ed-94c4-938c0e5df6a4",
@@ -632,15 +632,6 @@
             "indexCount": 114
         },
         {
-            "guid": "7ee5d1c3-de05-43c0-a3f0-36d807bea0c6",
-            "name": "AUTUMN PINE TREE MED",
-            "path": "Assets\\Objects\\AUTUMN PINE TREE MED.obj",
-            "vao": 225,
-            "vbo": 438,
-            "ebo": 439,
-            "indexCount": 7302
-        },
-        {
             "guid": "eaf2ede8-8f2f-4fa9-b684-d600dada2e45",
             "name": "PP_Gemstone_11_Red",
             "path": "Assets\\Objects\\PP_Gemstone_11_Red.obj",
@@ -648,6 +639,15 @@
             "vbo": 286,
             "ebo": 287,
             "indexCount": 114
+        },
+        {
+            "guid": "7ee5d1c3-de05-43c0-a3f0-36d807bea0c6",
+            "name": "AUTUMN PINE TREE MED",
+            "path": "Assets\\Objects\\AUTUMN PINE TREE MED.obj",
+            "vao": 225,
+            "vbo": 438,
+            "ebo": 439,
+            "indexCount": 7302
         },
         {
             "guid": "92c24922-fff4-4ff0-9821-5a9886d58655",
