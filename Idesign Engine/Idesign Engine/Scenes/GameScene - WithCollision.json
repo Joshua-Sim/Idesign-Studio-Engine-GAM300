@@ -296,7 +296,7 @@
                     "animationSpeed": 10.0,
                     "bLoops": false,
                     "bPlayOnStart": true,
-                    "currentTime": 20.0
+                    "currentTime": 0.0
                 },
                 "TextureComponent": {
                     "guid": "afd25b76-dddc-4c4f-bae4-a6c9a22931e5",
@@ -3144,7 +3144,7 @@
                     "animationSpeed": 1.0,
                     "bLoops": true,
                     "bPlayOnStart": true,
-                    "currentTime": 62.000091552734375
+                    "currentTime": 0.0
                 },
                 "TextureComponent": {
                     "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
@@ -3293,7 +3293,7 @@
                 },
                 "TextureComponent": {
                     "guid": "d24a29c5-cd9e-4322-ab59-d38618cba4bf",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -3313,7 +3313,7 @@
                         250.0,
                         100.0
                     ],
-                    "isHovered": true,
+                    "isHovered": false,
                     "isFrontButton": false
                 }
             }
@@ -3591,7 +3591,7 @@
                 },
                 "TextureComponent": {
                     "guid": "cfe18999-459f-4cf9-932c-505c39b02dc3",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ButtonComponent": {
                     "position": [
@@ -3641,7 +3641,7 @@
                 },
                 "TextureComponent": {
                     "guid": "273edb8c-f3da-4c2c-8c25-bab578b94f55",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -3700,7 +3700,7 @@
                 },
                 "TextureComponent": {
                     "guid": "197bc9ec-6f34-40e7-8f8a-5b7d8a951a8c",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -3920,7 +3920,10 @@
                         "2699ab9b-68cf-45a7-a645-70d5300e57cc",
                         "46b6366c-5bd8-4cf8-b82a-bce0227a175f",
                         "1b4b5d0c-6351-45f6-80e5-9be48c9bf0d8",
-                        "9331907c-cf4a-407f-ac73-fd1ebaf2317f"
+                        "9331907c-cf4a-407f-ac73-fd1ebaf2317f",
+                        "728135e3-b7ad-4b43-987a-fa6b93d193ef",
+                        "24644757-be5d-4366-bc2b-c17f08cd477b",
+                        "02f2f168-08be-48a8-be02-fa39f58e509b"
                     ],
                     "sortIndex": 67
                 },
@@ -3931,7 +3934,7 @@
                 },
                 "TextureComponent": {
                     "guid": "617a5da4-3f2e-41ce-9a4e-5980c77830f5",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ButtonComponent": {
                     "position": [
@@ -3942,7 +3945,7 @@
                         1929.0,
                         537.0
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": false
                 }
             }
@@ -3981,7 +3984,7 @@
                 },
                 "TextureComponent": {
                     "guid": "26deb469-c3d2-45f5-abd0-d5d29655e6e7",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -4854,7 +4857,7 @@
                 },
                 "TextureComponent": {
                     "guid": "e4e85e35-08e3-4fb5-9f54-53c971ed3fee",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -4913,7 +4916,7 @@
                 },
                 "TextureComponent": {
                     "guid": "7cf95b2f-4160-4a45-9ce1-2b889b5b40af",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -4972,7 +4975,7 @@
                 },
                 "TextureComponent": {
                     "guid": "c44c9565-d18e-4186-86af-03e26a23eafe",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -5031,7 +5034,7 @@
                 },
                 "TextureComponent": {
                     "guid": "b27e21d1-6c60-412f-92eb-0b851ce34523",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ButtonComponent": {
                     "position": [
@@ -5055,7 +5058,7 @@
                     "position": [
                         980.0,
                         280.0,
-                        -100.0
+                        1.0
                     ],
                     "rotation": [
                         0.0,
@@ -5081,7 +5084,7 @@
                 },
                 "TextureComponent": {
                     "guid": "7cf95b2f-4160-4a45-9ce1-2b889b5b40af",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -5101,7 +5104,7 @@
                         250.0,
                         100.0
                     ],
-                    "isHovered": true,
+                    "isHovered": false,
                     "isFrontButton": true
                 }
             }
@@ -5636,7 +5639,7 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        1480.0,
+                        1455.0,
                         300.0,
                         1.0
                     ],
@@ -5672,7 +5675,7 @@
                 },
                 "ButtonComponent": {
                     "position": [
-                        1480.0,
+                        1455.0,
                         300.0
                     ],
                     "size": [
@@ -5725,7 +5728,7 @@
                     "isUI": false
                 },
                 "TextProperties": {
-                    "text": "100%",
+                    "text": "97%",
                     "scale": 1.0,
                     "color": [
                         1.0,
@@ -5738,7 +5741,7 @@
                     "screenSpace": true
                 },
                 "TextProperties": {
-                    "text": "100%",
+                    "text": "97%",
                     "scale": 1.0,
                     "color": [
                         1.0,
@@ -5786,7 +5789,7 @@
                 },
                 "TextureComponent": {
                     "guid": "04e1dcaf-e0d4-49ad-933a-3168d5f6be74",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -6093,7 +6096,7 @@
                 },
                 "TextureComponent": {
                     "guid": "04e1dcaf-e0d4-49ad-933a-3168d5f6be74",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -6113,7 +6116,7 @@
                         375.0,
                         150.0
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": false
                 }
             }
@@ -6602,7 +6605,7 @@
                 },
                 "TextureComponent": {
                     "guid": "2c284536-13b8-4925-bc73-881eb8825ff2",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -6723,7 +6726,7 @@
                 },
                 "TextureComponent": {
                     "guid": "c43c4719-e688-4409-9c62-6b2508cc3a71",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -6756,7 +6759,7 @@
                     "position": [
                         980.0,
                         670.0,
-                        1.0
+                        -100.0
                     ],
                     "rotation": [
                         0.0,
@@ -6782,7 +6785,7 @@
                 },
                 "TextureComponent": {
                     "guid": "2c284536-13b8-4925-bc73-881eb8825ff2",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -6802,7 +6805,7 @@
                         375.0,
                         150.0
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": true
                 }
             }
@@ -15010,6 +15013,156 @@
                 "TextureComponent": {
                     "guid": "aa40e4be-e3ce-4b7d-8806-dc0f46d34ee8",
                     "isUI": false
+                }
+            }
+        },
+        {
+            "name": "playbutton (CUTSCENE)",
+            "guid": "728135e3-b7ad-4b43-987a-fa6b93d193ef",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        1290.0,
+                        500.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        250.0,
+                        100.0,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "214c5541-f814-4e7f-bafa-d9e3db5aff2c",
+                    "children": [],
+                    "sortIndex": 68
+                },
+                "TagComponent": {
+                    "tags": [
+                        "cutscene"
+                    ]
+                },
+                "TextureComponent": {
+                    "guid": "26deb469-c3d2-45f5-abd0-d5d29655e6e7",
+                    "isUI": false
+                },
+                "ButtonComponent": {
+                    "position": [
+                        1290.0,
+                        500.0
+                    ],
+                    "size": [
+                        250.0,
+                        100.0
+                    ],
+                    "isHovered": false,
+                    "isFrontButton": false
+                }
+            }
+        },
+        {
+            "name": "CUTSCENE2",
+            "guid": "24644757-be5d-4366-bc2b-c17f08cd477b",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        1290.0,
+                        600.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        250.0,
+                        100.0,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "214c5541-f814-4e7f-bafa-d9e3db5aff2c",
+                    "children": [],
+                    "sortIndex": 68
+                },
+                "TagComponent": {
+                    "tags": [
+                        "cutscene"
+                    ]
+                },
+                "TextureComponent": {
+                    "guid": "c43c4719-e688-4409-9c62-6b2508cc3a71",
+                    "isUI": false
+                },
+                "ButtonComponent": {
+                    "position": [
+                        1290.0,
+                        600.0
+                    ],
+                    "size": [
+                        250.0,
+                        100.0
+                    ],
+                    "isHovered": false,
+                    "isFrontButton": false
+                }
+            }
+        },
+        {
+            "name": "CUTSCENE3",
+            "guid": "02f2f168-08be-48a8-be02-fa39f58e509b",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        1290.0,
+                        700.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        250.0,
+                        100.0,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "214c5541-f814-4e7f-bafa-d9e3db5aff2c",
+                    "children": [],
+                    "sortIndex": 68
+                },
+                "TagComponent": {
+                    "tags": [
+                        "cutscene"
+                    ]
+                },
+                "TextureComponent": {
+                    "guid": "7975acc5-88f1-4071-bb7f-14528d6ca857",
+                    "isUI": false
+                },
+                "ButtonComponent": {
+                    "position": [
+                        1290.0,
+                        700.0
+                    ],
+                    "size": [
+                        250.0,
+                        100.0
+                    ],
+                    "isHovered": false,
+                    "isFrontButton": false
                 }
             }
         }

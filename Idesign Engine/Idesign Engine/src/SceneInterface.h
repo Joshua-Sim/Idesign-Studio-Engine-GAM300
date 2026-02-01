@@ -14,7 +14,6 @@ namespace Framework
 		void Initialize() override;
 		void Update(float deltaTime) override;
 		std::string GetName() override;
-
 	private:
 	};
 

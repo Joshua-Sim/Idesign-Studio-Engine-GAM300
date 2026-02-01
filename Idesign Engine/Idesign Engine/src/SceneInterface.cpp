@@ -13,8 +13,8 @@ namespace Framework
     // Define the global instance
     SceneInterface sceneInterface;
 
-    static float cutsceneT = 0.0f;
-    static bool cutsceneInit = false;
+    // SceneInterface.h (or cpp static)
+    float cutsceneStartTime = -1.0f;
 
     void SceneInterface::Initialize() {}
 
@@ -111,60 +111,41 @@ namespace Framework
                 }
             }
 
-
             // 6. Cutscene (Open after click Play)
             if (engineState.Is(EngineMode::Cutscene))
             {
-                cutsceneT += deltaTime;
+                if (cutsceneStartTime < 0.0f)
+                    cutsceneStartTime = (float)glfwGetTime();
 
-                auto slides = ecsInterface.GetEntitiesByTag("cutscene"); // your 4 PNG entities
+                float now = (float)glfwGetTime();
 
-                // init once
-                if (!cutsceneInit)
+                const float timeScale = 0.4f; 
+                float t = (now - cutsceneStartTime) * timeScale;
+
+                auto slides = ecsInterface.GetEntitiesByTag("cutscene");
+
+                const float fadeDuration = 1.5f;
+                const float gap = 0.8f;
+
+                for (size_t i = 0; i < slides.size(); ++i)
                 {
-                    cutsceneInit = true;
-                    cutsceneT = 0.0f;
-
-                    // optional: sort slides if you need consistent order
-                    // (depends how your GetEntitiesByTag returns them)
-
-                    for (Entity e : slides)
-                    {
-                        if (!ecsInterface.IsEntityValid(e)) continue;
-                        if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
-
-                        auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
-                        tex.isUI = true;
-                        tex.uiAlpha = 0.1f; // start faint
-                    }
-                }
-
-                // Fade timing
-                const float fadeDuration = 1.5f; // seconds to go 0.1 -> 1
-                const float gap = 0.5f;          // delay between slides
-
-                int i = 0;
-                for (Entity e : slides)
-                {
-                    if (!ecsInterface.IsEntityValid(e)) { i++; continue; }
-                    if (!ecsInterface.HasComponent<TextureProperties>(e)) { i++; continue; }
+                    Entity e = slides[i];
+                    if (!ecsInterface.IsEntityValid(e)) continue;
+                    if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
 
                     auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
+                    tex.isUI = true;
 
-                    float start = i * (fadeDuration + gap);
-                    float t = (cutsceneT - start) / fadeDuration;   // 0..1 over fadeDuration
-                    t = glm::clamp(t, 0.0f, 1.0f);
+                    float startTime = i * (fadeDuration + gap);
+                    float localT = (t - startTime) / fadeDuration;
+                    localT = glm::clamp(localT, 0.0f, 1.0f);
 
-                    tex.uiAlpha = 0.1f + t * (1.0f - 0.1f);
-
-                    i++;
+                    tex.uiAlpha = localT;
                 }
             }
             else
             {
-                // reset when leaving cutscene so next time it can init again
-                cutsceneInit = false;
-                cutsceneT = 0.0f;
+                cutsceneStartTime = -1.0f;
             }
         }
     }
