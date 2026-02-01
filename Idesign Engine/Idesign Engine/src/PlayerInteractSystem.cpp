@@ -240,12 +240,7 @@ namespace Framework
         if (!mGraphicsSystem) return;
         if (mGraphicsSystem->GetMouseTargetView() != 0) return; // only in game view
 
-        if (engineState.Is(EngineMode::Paused) ||
-            engineState.Is(EngineMode::HowToPlay) ||
-            engineState.Is(EngineMode::Menu))
-        {
-            return; // skip movement/jump when not in active gameplay
-        }
+        if (engineState.IsAnyMenuOpen()) return; // skip movement/jump when not in active gameplay
 
         GLFWwindow* window = mGraphicsSystem->GetWindow();
         if (!window) return;

@@ -10,7 +10,6 @@ namespace Framework {
     // Keep hotbar size in one place
     // Default and maximum hotbar sizes
     constexpr int kHotbarSlots = 7;
-    constexpr int kMaxHotbarSlots = 10;
 
     // One slot = a single non-stackable item (count can be kept for future proofing)
     struct InvSlot {
@@ -47,7 +46,7 @@ namespace Framework {
         int m_selectedIndex = 0;                    // moved from graphics
         std::vector<InvSlot> m_hotbar;
         int m_maxSlots = kHotbarSlots;              // current capacity
-        static constexpr int kMaxHotbarSlots = 10;  // absolute maximum
+        static constexpr int kMaxHotbarSlots = 12;  // absolute maximum
     };
 
 } // namespace Framework

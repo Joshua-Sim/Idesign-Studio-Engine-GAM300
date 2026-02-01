@@ -151,9 +151,7 @@ namespace Framework {
 
         // OVERRIDE 2: Menus / Pause / HowToPlay
         // If ANY of these are true, we MUST show the cursor, regardless of Editor/Game mode.
-        if (engineState.Is(EngineMode::Menu) || engineState.Is(EngineMode::Paused) || 
-            engineState.Is(EngineMode::HowToPlay) || engineState.Is(EngineMode::Settings) ||
-            engineState.Is(EngineMode::Dialogue))
+        if (engineState.IsAnyMenuOpen())
         {
             desiredMode = GLFW_CURSOR_NORMAL;
         }
@@ -210,16 +208,12 @@ namespace Framework {
 
         // --- [FIX] CHECK GLOBAL ENGINE STATE ---
         // If any menu is open, we must NOT rotate the camera.
-        bool isMenuOpen = engineState.Is(EngineMode::Menu) || engineState.Is(EngineMode::Paused) ||
-                          engineState.Is(EngineMode::HowToPlay) || engineState.Is(EngineMode::Settings) ||
-                          engineState.Is(EngineMode::Dialogue);
-
         bool isRightClickHeld = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
 
         // --- [FIX] UPDATE ROTATION LOGIC ---
         // 1. Editor Mode (isUIFocused): Rotate only if Right Click is held.
         // 2. Game Mode (!isUIFocused): Rotate only if NO menu is open.
-        bool canRotate = (self->isUIFocused && isRightClickHeld) || (!self->isUIFocused && !isMenuOpen);
+        bool canRotate = (self->isUIFocused && isRightClickHeld) || (!self->isUIFocused && !engineState.IsAnyMenuOpen());
 
         if (!self->m_cameraRotationEnabled) canRotate = false;
 

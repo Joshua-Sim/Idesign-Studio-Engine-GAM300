@@ -7,32 +7,25 @@ function M:on_init()
     RegisterButtonCallback(self.entity, function(ent)
         print("[CurrencyUpgrade] Currency upgrade button clicked!")
         
-        -- Get current cost
+        -- Get info for display purposes
         local cost = GetCurrencyUpgradeCost()
         local currentCurrency = GetCurrency()
         
         print("[CurrencyUpgrade] Cost: " .. cost .. ", Current Currency: " .. currentCurrency)
         
-        -- Check if player can afford it
-        if currentCurrency >= cost then
-            -- Deduct the cost
-            AddCurrency(-cost)
-            
-            -- Apply the upgrade (+50% = 0.5)
-            local success = UpgradeCurrencyMultiplier(0.5)
-            
-            if success then
-                local newMultiplier = GetCurrencyMultiplier()
-                local nextCost = GetCurrencyUpgradeCost()
-                print("[CurrencyUpgrade] Upgraded! New multiplier: " .. newMultiplier .. "x")
-                print("[CurrencyUpgrade] Next upgrade cost: " .. nextCost)
-            else
-                print("[CurrencyUpgrade] Upgrade failed!")
-                -- Refund the cost if upgrade failed
-                AddCurrency(cost)
-            end
+        -- Just call the function - C++ handles everything!
+        local success = UpgradeCurrencyMultiplier(0.5)
+        
+        if success then
+            UpdateCurrencyUI()
+            local newMultiplier = GetCurrencyMultiplier()
+            local nextCost = GetCurrencyUpgradeCost()
+            print("[CurrencyUpgrade] Upgraded! New multiplier: " .. newMultiplier .. "x")
+            print("[CurrencyUpgrade] Next upgrade cost: " .. nextCost)
+            print("[CurrencyUpgrade] Remaining currency: " .. GetCurrency())
         else
-            print("[CurrencyUpgrade] Not enough currency! Need " .. cost .. ", have " .. currentCurrency)
+            print("[CurrencyUpgrade] Not enough currency!")
+            print("[CurrencyUpgrade] Need " .. cost .. ", have " .. currentCurrency)
         end
     end)
 end

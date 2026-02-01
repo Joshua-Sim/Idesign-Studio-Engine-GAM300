@@ -74,6 +74,11 @@ namespace Framework {
             if (input) input->SetUIFocused(false); // Hides cursor
         }
 
+        if (m_currentPhase == GamePhase::Upgrade)
+        {
+            input->SetUIFocused(true);
+        }
+
         // =========================================================
         // INTEGRITY: Camera & Graphics Logic
         // =========================================================

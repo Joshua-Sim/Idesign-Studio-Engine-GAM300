@@ -2750,15 +2750,8 @@ namespace Framework {
             );
         }
 
-
         // Do not display inventory boxes while in paused/howtoplay/menu state
-        if (viewIndex == 0 &&
-            !engineState.Is(EngineMode::Paused) &&
-            !engineState.Is(EngineMode::HowToPlay) &&
-            !engineState.Is(EngineMode::Menu) &&
-            !engineState.Is(EngineMode::Settings) &&
-            !engineState.Is(EngineMode::Dialogue) &&
-            !GameSystem::bookOpen) 
+        if (viewIndex == 0 && !engineState.IsAnyMenuOpen() && !GameSystem::bookOpen) 
         {
             DrawHotbar(width, height);
         }
