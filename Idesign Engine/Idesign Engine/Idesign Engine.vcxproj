@@ -301,6 +301,7 @@
     <ClInclude Include="src\TransformProperties.h" />
     <ClInclude Include="src\TypeRegistry.h" />
     <ClInclude Include="src\Types.h" />
+    <ClInclude Include="src\Upgrade.h" />
     <ClInclude Include="src\Vector2D.h" />
     <ClInclude Include="src\Vector3D.h" />
     <ClInclude Include="src\WindowConfigProperties.h" />
@@ -443,6 +444,7 @@
     <ClCompile Include="src\TestSystem.cpp" />
     <ClCompile Include="src\TextureLoader.cpp" />
     <ClCompile Include="src\TextureLoaderDDS.cpp" />
+    <ClCompile Include="src\Upgrade.cpp" />
     <ClCompile Include="src\Vector2D.cpp" />
     <ClCompile Include="src\Vector3D.cpp" />
   </ItemGroup>

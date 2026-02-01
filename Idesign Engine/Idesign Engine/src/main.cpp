@@ -208,14 +208,10 @@ int main(void)
     {
         std::cerr << "[Cook] Lua error: " << lua_tostring(scriptingSystem->GetLuaState(), -1) << "\n";
     }
-   //scriptingSystem->CreateScriptEntity("Assets/Scripts/hello.lua");
-    //scriptingSystem->CreateScriptEntity("Assets/Scripts/controls.lua");
-    //scriptingSystem->CreateScriptEntity("assets/scripts/prove_lua.lua");
 
     engineState.PushState(EngineMode::Play);    // Set to Play active    
     engineState.PushState(EngineMode::Menu);    // Set to Menu active
     sceneManager.LoadScene("Scenes/GameScene - WithCollision.json");
-    
     engine->GameLoop();
 
     // Restore the original directory before saving/compiling

@@ -63,7 +63,7 @@ function CustomerSystem:on_init()
     
     score_text_entity = SpawnPrefab("ScoreText_Prefab")
     if score_text_entity then
-        CustomerSystem:UpdateScoreDisplay()
+        CustomerSystem:UpdateCurrencyDisplay()
     else
         print("[CustomerSystem] ERROR: Failed to spawn ScoreText prefab!")
     end
@@ -228,20 +228,34 @@ function CustomerSystem:SpawnLog(message)
     end
 end
 
-function CustomerSystem:AddScore(amount)
-    local current_score = GetScore()
-    local new_score = current_score + amount
-    if new_score < 0 then new_score = 0 end
-    SetScore(new_score)
-    print("[CustomerSystem] Score changed by " .. amount .. ", new score: " .. new_score)
-    CustomerSystem:UpdateScoreDisplay()
+function CustomerSystem:AddCurrency(amount)
+    local current_currency = GetCurrency()
+    
+    -- Get multiplier from C++ GameSystem (stored as int, 100 = 1.0x)
+    local multiplier_int = GetData("currencyMultiplier")
+    if multiplier_int <= 0 then 
+        multiplier_int = 100  -- Default to 1.0x
+        SetData("currencyMultiplier", 100)
+    end
+    
+    -- Convert to decimal (100 = 1.0x, 200 = 2.0x, 150 = 1.5x)
+    local multiplier = multiplier_int / 100.0
+    
+    local modified_amount = math.floor(amount * multiplier)
+    local new_currency = current_currency + modified_amount
+    if new_currency < 0 then new_currency = 0 end
+    
+    SetCurrency(new_currency)
+    print("[CustomerSystem] Currency changed by " .. modified_amount .. 
+          " (" .. amount .. " x " .. multiplier .. "x), new currency: " .. new_currency)
+    CustomerSystem:UpdateCurrencyDisplay()
 end
 
-function CustomerSystem:UpdateScoreDisplay()
+function CustomerSystem:UpdateCurrencyDisplay()
     if score_text_entity then
-        local current_score = GetScore()
-        local score_text = "Score: " .. tostring(current_score)
-        SetTextComponent(score_text_entity, "text", score_text)
+        local current_currency = GetCurrency()
+        local currency_text = "Currency: " .. tostring(current_currency)
+        SetTextComponent(score_text_entity, "text", currency_text)
     end
 end
 
@@ -263,7 +277,7 @@ function CustomerSystem:ResetNightPhase()
     current_patience = 0.0
     spawnTimer = 0
     current_bar_state = "green"
-    CustomerSystem:UpdateScoreDisplay()
+    CustomerSystem:UpdateCurrencyDisplay()  -- Changed from UpdateScoreDisplay
 end
 
 function CustomerSystem:EndNightPhase()
@@ -274,8 +288,8 @@ end
 
 function CustomerSystem.OnCustomerComplete(senderID, targetID, actionType)
     print("[CustomerSystem] ========== CUSTOMER COMPLETE ==========")
-    CustomerSystem:AddScore(10)
-    CustomerSystem:SpawnLog("Customer served! +10 points")
+    CustomerSystem:AddCurrency(10)  -- Changed from AddScore
+    CustomerSystem:SpawnLog("Customer served! +10 currency")
     customers_served = customers_served + 1
     CustomerSystem:DestroyBar()
     if activeCustomer then DestroyEntity(activeCustomer) end
@@ -289,7 +303,7 @@ end
 
 function CustomerSystem.OnCustomerFailed(senderID, targetID, actionType)
     print("[CustomerSystem] ========== CUSTOMER FAILED ==========")
-    CustomerSystem:AddScore(-10)
+    CustomerSystem:AddCurrency(-10)  -- Changed from AddScore
     customers_served = customers_served + 1
     CustomerSystem:DestroyBar()
     if activeCustomer then DestroyEntity(activeCustomer) end

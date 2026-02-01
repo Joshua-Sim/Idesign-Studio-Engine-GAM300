@@ -12,7 +12,7 @@
 #include <filesystem>
 #include "ScriptProperties.h"
 #include "AudioSystem.h"
-#include "ItemComponent.h" // <--- Add this
+#include "ItemComponent.h"
 #include <GameSystem.h>
 #include <PhysicsSystem.h>
 #include "EngineState.h"
@@ -20,16 +20,17 @@
 #include "ButtonSystem.h"
 #include "SceneManager.h"
 #include "EventManager.h"
-#include "Inventory.h" // Include your Inventory header
+#include "Inventory.h"
 #include "BoxColliderComponent.h"
 #include "InputHandler.h"
 #include "SceneInterface.h"
 #include "DialogueSystem.h"
 #include "PhaseManager.h"
 #include <Core.h>
+#include "Upgrade.h"
+#include "GameSystem.h"
 
 extern Framework::Coordinator ecsInterface;
-
 
 namespace Framework {
 
@@ -1822,6 +1823,7 @@ namespace Framework {
 
         lua_register(L, "GetAnimationGUID", l_GetAnimationGUID);
         lua_register(L, "SetAnimationAsset", l_SetAnimationAsset);
+
         // Navmesh
         lua_register(L, "BuildNavMesh", lua_BuildNavMesh);
         lua_register(L, "PathfindTo", [](lua_State* L) -> int
@@ -1871,6 +1873,69 @@ namespace Framework {
         lua_pushcfunction(L, lua_AudioIsPlaying); lua_setfield(L, -2, "IsPlaying");
         lua_pushcfunction(L, lua_AudioMute);      lua_setfield(L, -2, "Mute");
         lua_setglobal(L, "Sound");
+
+        // Upgrade Screen
+        // Inventory Increase
+        lua_register(L, "GetInventoryMaxSlots", [](lua_State* L) -> int {
+            auto& inv = Inventory::Instance();
+            int maxSlots = inv.GetMaxSlots();
+            lua_pushinteger(L, maxSlots);
+            return 1;
+            });
+
+        lua_register(L, "UpgradeInventorySlots", [](lua_State* L) -> int {
+            int amount = (int)luaL_checkinteger(L, 1);
+            auto& upgradeMgr = UpgradeManager::Instance();
+            bool success = upgradeMgr.UpgradeInventorySlots(amount);
+            lua_pushboolean(L, success);
+            return 1;
+            });
+
+        lua_register(L, "GetInventoryUpgradeCost", [](lua_State* L) -> int {
+            auto& upgradeMgr = UpgradeManager::Instance();
+            int cost = upgradeMgr.GetInventoryUpgradeCost();
+            lua_pushinteger(L, cost);
+            return 1;
+            });
+
+        // Currency Upgrade
+        lua_register(L, "GetCurrency", [](lua_State* L) -> int {
+            int currency = GameSystem::GetCurrency();
+            lua_pushinteger(L, currency);
+            return 1;
+            });
+
+        lua_register(L, "SetCurrency", [](lua_State* L) -> int {
+            int value = static_cast<int>(luaL_checkinteger(L, 1));
+            GameSystem::SetCurrency(value);
+            return 0;
+            });
+
+        lua_register(L, "AddCurrency", [](lua_State* L) -> int {
+            int delta = static_cast<int>(luaL_checkinteger(L, 1));
+            GameSystem::AddCurrency(delta);
+            return 0;
+            });
+
+        // Currency Upgrade functions
+        lua_register(L, "UpgradeCurrencyMultiplier", [](lua_State* L) -> int {
+            float bonus = static_cast<float>(luaL_checknumber(L, 1));
+            bool success = UpgradeManager::Instance().UpgradeCurrencyMultiplier(bonus);
+            lua_pushboolean(L, success);
+            return 1;
+            });
+
+        lua_register(L, "GetCurrencyMultiplier", [](lua_State* L) -> int {
+            float multiplier = UpgradeManager::Instance().GetCurrencyMultiplier();
+            lua_pushnumber(L, multiplier);
+            return 1;
+            });
+
+        lua_register(L, "GetCurrencyUpgradeCost", [](lua_State* L) -> int {
+            int cost = UpgradeManager::Instance().GetCurrencyUpgradeCost();
+            lua_pushinteger(L, cost);
+            return 1;
+            });
 
         std::cout << "[ScriptingSystem] Initialized (Lua VM ready)\n";
     }
