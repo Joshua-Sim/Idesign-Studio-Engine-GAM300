@@ -225,6 +225,8 @@
     </ClCompile>
     <ClCompile Include="src\PebbleRenderer.cpp" />
     <ClCompile Include="src\SceneInterface.cpp" />
+    <ClCompile Include="src\DialogueSystem.cpp" />
+    <ClCompile Include="src\LoadingSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ItemComponent.h" />
@@ -679,6 +681,8 @@
     <ClInclude Include="UILayout.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\DialogueSystem.h" />
+    <ClInclude Include="src\LoadingSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />
@@ -801,6 +805,7 @@
     <None Include="C:\Users\victo\Downloads\To Input\shaders\instancedleave_vert.glsl" />
     <None Include="C:\Users\victo\Downloads\To Input\shaders\instanced_pebble_frag.glsl" />
     <None Include="C:\Users\victo\Downloads\To Input\shaders\instanced_pebble_vert.glsl" />
+    <None Include="Assets\Prefabs\Customer_Kinematic_2_Prefab.prefab" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\back.png" />

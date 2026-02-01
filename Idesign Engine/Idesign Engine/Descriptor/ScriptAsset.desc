@@ -1,5 +1,5 @@
 {
-    "count": 29,
+    "count": 30,
     "entries": [
         {
             "guid": "23de8816-8d7d-42e1-ada2-3fdd7190fe5f",
@@ -200,6 +200,13 @@
         {
             "guid": "5a675a8e-6d41-4326-bfd1-7106b0279459",
             "scriptPath": "Assets\\Scripts\\Settings_Master_Mute.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "df1c2540-8fa0-4c78-899d-2eaee06453e8",
+            "scriptPath": "Assets\\Scripts\\GameStateCutscene.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1

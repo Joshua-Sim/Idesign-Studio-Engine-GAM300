@@ -2695,7 +2695,7 @@ namespace Framework {
             // The inventory system leaves the shader color dark gray. 
             // We must reset it to White (1,1,1) so your normal UI isn't tinted.
             uiShader.setVec3("uColor", glm::vec3(1.0f, 1.0f, 1.0f));
-            uiShader.setFloat("uAlpha", 1.0f);
+            uiShader.setFloat("uAlpha", tex.uiAlpha);
 
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, tr.position);

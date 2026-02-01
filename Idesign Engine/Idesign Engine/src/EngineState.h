@@ -25,7 +25,8 @@ namespace Framework
         HowToPlay,
         Upgrade,
         Settings,
-        Dialogue
+        Dialogue,
+        Cutscene
     };
 
     class EngineState

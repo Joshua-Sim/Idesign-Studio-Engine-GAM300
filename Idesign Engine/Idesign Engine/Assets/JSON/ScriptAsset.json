@@ -202,6 +202,13 @@
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
+        },
+        {
+            "guid": "df1c2540-8fa0-4c78-899d-2eaee06453e8",
+            "scriptPath": "Assets\\Scripts\\GameStateCutscene.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
         }
     ]
 }

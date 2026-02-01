@@ -139,11 +139,11 @@
                     "volume": 0.20000000298023224,
                     "loop": false,
                     "playOnStart": true,
-                    "isPlaying": true,
+                    "isPlaying": false,
                     "lastPosition": [
-                        -45.934112548828125,
-                        5.300000190734863,
-                        14.715734481811523
+                        0.0,
+                        0.0,
+                        0.0
                     ]
                 }
             }
@@ -3144,7 +3144,7 @@
                     "animationSpeed": 1.0,
                     "bLoops": true,
                     "bPlayOnStart": true,
-                    "currentTime": 82.4001693725586
+                    "currentTime": 62.000091552734375
                 },
                 "TextureComponent": {
                     "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
@@ -3215,11 +3215,11 @@
                     "volume": 1.0,
                     "loop": true,
                     "playOnStart": true,
-                    "isPlaying": true,
+                    "isPlaying": false,
                     "lastPosition": [
-                        -40.230262756347656,
-                        6.287981033325195,
-                        17.725893020629883
+                        0.0,
+                        0.0,
+                        0.0
                     ]
                 }
             }
@@ -3313,7 +3313,7 @@
                         250.0,
                         100.0
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": false
                 }
             }
@@ -3591,7 +3591,7 @@
                 },
                 "TextureComponent": {
                     "guid": "cfe18999-459f-4cf9-932c-505c39b02dc3",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ButtonComponent": {
                     "position": [
@@ -3641,7 +3641,7 @@
                 },
                 "TextureComponent": {
                     "guid": "273edb8c-f3da-4c2c-8c25-bab578b94f55",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -3700,7 +3700,7 @@
                 },
                 "TextureComponent": {
                     "guid": "197bc9ec-6f34-40e7-8f8a-5b7d8a951a8c",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -3873,7 +3873,7 @@
                 },
                 "TextureComponent": {
                     "guid": "f16bcc4e-155e-46f3-8a12-a74c1cbad935",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ButtonComponent": {
                     "position": [
@@ -3986,8 +3986,8 @@
                 "ScriptProperties": {
                     "scripts": [
                         {
-                            "guid": "0b25e0c5-79e6-465a-96cd-920b83ef31e6",
-                            "scriptPath": "Assets\\Scripts\\GameStateStart.lua",
+                            "guid": "df1c2540-8fa0-4c78-899d-2eaee06453e8",
+                            "scriptPath": "Assets\\Scripts\\GameStateCutscene.lua",
                             "hotReload": false
                         }
                     ]
@@ -4001,7 +4001,7 @@
                         250.0,
                         100.0
                     ],
-                    "isHovered": true,
+                    "isHovered": false,
                     "isFrontButton": false
                 }
             }
@@ -4040,7 +4040,7 @@
                 },
                 "TextureComponent": {
                     "guid": "197bc9ec-6f34-40e7-8f8a-5b7d8a951a8c",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -4854,7 +4854,7 @@
                 },
                 "TextureComponent": {
                     "guid": "e4e85e35-08e3-4fb5-9f54-53c971ed3fee",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -4913,7 +4913,7 @@
                 },
                 "TextureComponent": {
                     "guid": "7cf95b2f-4160-4a45-9ce1-2b889b5b40af",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -4972,7 +4972,7 @@
                 },
                 "TextureComponent": {
                     "guid": "c44c9565-d18e-4186-86af-03e26a23eafe",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -5005,7 +5005,7 @@
                     "position": [
                         980.0,
                         500.0,
-                        -100.0
+                        1.0
                     ],
                     "rotation": [
                         0.0,
@@ -5033,15 +5033,6 @@
                     "guid": "b27e21d1-6c60-412f-92eb-0b851ce34523",
                     "isUI": false
                 },
-                "ScriptProperties": {
-                    "scripts": [
-                        {
-                            "guid": "0b25e0c5-79e6-465a-96cd-920b83ef31e6",
-                            "scriptPath": "Assets\\Scripts\\GameStateStart.lua",
-                            "hotReload": false
-                        }
-                    ]
-                },
                 "ButtonComponent": {
                     "position": [
                         980.0,
@@ -5051,7 +5042,7 @@
                         250.0,
                         100.0
                     ],
-                    "isHovered": true,
+                    "isHovered": false,
                     "isFrontButton": true
                 }
             }
@@ -5064,7 +5055,7 @@
                     "position": [
                         980.0,
                         280.0,
-                        1.0
+                        -100.0
                     ],
                     "rotation": [
                         0.0,
@@ -5110,7 +5101,7 @@
                         250.0,
                         100.0
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": true
                 }
             }
@@ -6102,7 +6093,7 @@
                 },
                 "TextureComponent": {
                     "guid": "04e1dcaf-e0d4-49ad-933a-3168d5f6be74",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -6122,7 +6113,7 @@
                         375.0,
                         150.0
                     ],
-                    "isHovered": true,
+                    "isHovered": false,
                     "isFrontButton": false
                 }
             }
@@ -6732,7 +6723,7 @@
                 },
                 "TextureComponent": {
                     "guid": "c43c4719-e688-4409-9c62-6b2508cc3a71",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -6765,7 +6756,7 @@
                     "position": [
                         980.0,
                         670.0,
-                        -100.0
+                        1.0
                     ],
                     "rotation": [
                         0.0,
@@ -6791,7 +6782,7 @@
                 },
                 "TextureComponent": {
                     "guid": "2c284536-13b8-4925-bc73-881eb8825ff2",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -6811,7 +6802,7 @@
                         375.0,
                         150.0
                     ],
-                    "isHovered": true,
+                    "isHovered": false,
                     "isFrontButton": true
                 }
             }
