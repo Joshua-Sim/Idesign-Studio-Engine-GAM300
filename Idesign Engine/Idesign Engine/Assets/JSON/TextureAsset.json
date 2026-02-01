@@ -13,9 +13,9 @@
             "isUI": false
         },
         {
-            "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
-            "name": "Shelf",
-            "path": "Assets\\Textures\\Shelf.png",
+            "guid": "84369442-e278-434a-9fa6-c48d9c56bbb3",
+            "name": "playbutton",
+            "path": "Assets\\Textures\\playbutton.png",
             "isUI": false
         },
         {
@@ -124,6 +124,12 @@
             "guid": "c2a1f2a8-98b8-490f-bae9-f3bc714f424c",
             "name": "SkyNoon_Top",
             "path": "Assets\\Textures\\SkyNoon_Top.png",
+            "isUI": false
+        },
+        {
+            "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
+            "name": "Shelf",
+            "path": "Assets\\Textures\\Shelf.png",
             "isUI": false
         },
         {
@@ -592,12 +598,6 @@
             "guid": "6f9a2787-d013-43c4-a38d-13b3e287de87",
             "name": "autumn tree 2 tier",
             "path": "Assets\\Textures\\autumn tree 2 tier.png",
-            "isUI": false
-        },
-        {
-            "guid": "84369442-e278-434a-9fa6-c48d9c56bbb3",
-            "name": "playbutton",
-            "path": "Assets\\Textures\\playbutton.png",
             "isUI": false
         },
         {

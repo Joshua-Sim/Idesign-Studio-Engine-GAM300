@@ -1937,6 +1937,54 @@ namespace Framework {
             return 1;
             });
 
+        // Area Unlock Functions
+        lua_register(L, "UnlockForest", [](lua_State* L) -> int {
+            bool success = UpgradeManager::Instance().UnlockArea(GameArea::Forest);
+            lua_pushboolean(L, success);
+            return 1;
+            });
+
+        lua_register(L, "UnlockQuarry", [](lua_State* L) -> int {
+            bool success = UpgradeManager::Instance().UnlockArea(GameArea::Quarry);
+            lua_pushboolean(L, success);
+            return 1;
+            });
+
+        lua_register(L, "IsForestUnlocked", [](lua_State* L) -> int {
+            bool unlocked = UpgradeManager::Instance().IsAreaUnlocked(GameArea::Forest);
+            lua_pushboolean(L, unlocked);
+            return 1;
+            });
+
+        lua_register(L, "IsQuarryUnlocked", [](lua_State* L) -> int {
+            bool unlocked = UpgradeManager::Instance().IsAreaUnlocked(GameArea::Quarry);
+            lua_pushboolean(L, unlocked);
+            return 1;
+            });
+
+        lua_register(L, "GetForestUnlockCost", [](lua_State* L) -> int {
+            int cost = UpgradeManager::Instance().GetAreaUnlockCost(GameArea::Forest);
+            lua_pushinteger(L, cost);
+            return 1;
+            });
+
+        lua_register(L, "GetQuarryUnlockCost", [](lua_State* L) -> int {
+            int cost = UpgradeManager::Instance().GetAreaUnlockCost(GameArea::Quarry);
+            lua_pushinteger(L, cost);
+            return 1;
+            });
+
+        // Teleport to Area
+        lua_register(L, "TeleportToForest", [](lua_State* L) -> int {
+            if (phaseManager) phaseManager->TeleportToArea(GameArea::Forest);
+            return 0;
+            });
+
+        lua_register(L, "TeleportToQuarry", [](lua_State* L) -> int {
+            if (phaseManager) phaseManager->TeleportToArea(GameArea::Quarry);
+            return 0;
+            });
+
         std::cout << "[ScriptingSystem] Initialized (Lua VM ready)\n";
     }
 

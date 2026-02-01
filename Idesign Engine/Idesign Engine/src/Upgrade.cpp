@@ -110,6 +110,63 @@ namespace Framework
         return m_currencyUpgradeCost;
     }
 
+    bool UpgradeManager::UnlockArea(GameArea area)
+    {
+        // Check if already unlocked
+        if (IsAreaUnlocked(area))
+        {
+            std::cout << "[UpgradeManager] Area already unlocked!" << std::endl;
+            return false;
+        }
+
+        // Check if player can afford it
+        int cost = GetAreaUnlockCost(area);
+        int currentCurrency = GameSystem::GetCurrency();
+
+        if (currentCurrency < cost)
+        {
+            std::cout << "[UpgradeManager] Not enough currency! Need " << cost
+                << ", have " << currentCurrency << std::endl;
+            return false;
+        }
+
+        // Deduct the cost
+        GameSystem::AddCurrency(-cost);
+        std::cout << "[UpgradeManager] Deducted " << cost << " currency" << std::endl;
+
+        // Unlock the area
+        m_unlockedAreas[area] = true;
+
+        // Store in GameSystem for persistence
+        std::string areaKey = "area_" + std::to_string(static_cast<int>(area));
+        GameSystem::SetData(areaKey, 1);  // 1 = unlocked
+
+        std::cout << "[UpgradeManager] Area unlocked! Remaining currency: "
+            << GameSystem::GetCurrency() << std::endl;
+
+        return true;
+    }
+
+    bool UpgradeManager::IsAreaUnlocked(GameArea area) const
+    {
+        auto it = m_unlockedAreas.find(area);
+        if (it != m_unlockedAreas.end())
+        {
+            return it->second;
+        }
+        return false;
+    }
+
+    int UpgradeManager::GetAreaUnlockCost(GameArea area) const
+    {
+        auto it = m_areaUnlockCosts.find(area);
+        if (it != m_areaUnlockCosts.end())
+        {
+            return it->second;
+        }
+        return 0;
+    }
+
     /*
     // C++ - UpgradeManager
     bool UpgradeManager::UpgradeXXX(params)

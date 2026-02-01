@@ -15,8 +15,8 @@
             "tableRef": -1
         },
         {
-            "guid": "418d66c8-8e7c-49e5-90c2-2dd762ddf896",
-            "scriptPath": "Assets\\Scripts\\Points_Increase_Upgrade.lua",
+            "guid": "dc1222af-4b5e-4d38-8c8d-e16e5ae744dc",
+            "scriptPath": "Assets\\Scripts\\QuarryUnlockUpgrade.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
@@ -143,6 +143,13 @@
         {
             "guid": "2a043a0e-5056-4deb-a5db-ef302f3af345",
             "scriptPath": "Assets\\Scripts\\Customer.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "c29df17b-a280-43be-bfd9-900ec398078b",
+            "scriptPath": "Assets\\Scripts\\ForestUnlockUpgrade.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1

@@ -19,6 +19,15 @@
             "indexCount": 888
         },
         {
+            "guid": "473d7163-f81d-41d7-bde2-5106f072d36a",
+            "name": "vitality_potion",
+            "path": "Assets\\Objects\\vitality_potion.obj",
+            "vao": 22,
+            "vbo": 43,
+            "ebo": 44,
+            "indexCount": 780
+        },
+        {
             "guid": "c5b64c53-571e-459e-a52d-37bb8ad05795",
             "name": "shovel-dirt",
             "path": "Assets\\Objects\\shovel-dirt.obj",
@@ -206,15 +215,6 @@
             "vbo": 41,
             "ebo": 42,
             "indexCount": 2016
-        },
-        {
-            "guid": "473d7163-f81d-41d7-bde2-5106f072d36a",
-            "name": "vitality_potion",
-            "path": "Assets\\Objects\\vitality_potion.obj",
-            "vao": 22,
-            "vbo": 43,
-            "ebo": 44,
-            "indexCount": 780
         },
         {
             "guid": "8888d997-f172-4281-be69-fd7546feabc9",

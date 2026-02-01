@@ -163,4 +163,35 @@ namespace Framework {
             }
         }
     }
+
+    void PhaseManager::TeleportToArea(GameArea area)
+    {
+        glm::vec3 targetPos;
+        glm::vec3 targetRot;
+
+        switch (area)
+        {
+        case GameArea::Home:
+            targetPos = m_daySpawnPos;
+            targetRot = m_daySpawnRot;
+            break;
+
+        case GameArea::Forest:
+            targetPos = m_forestSpawnPos;
+            targetRot = m_forestSpawnRot;
+            break;
+
+        case GameArea::Quarry:
+            targetPos = m_quarrySpawnPos;
+            targetRot = m_quarrySpawnRot;
+            break;
+
+        default:
+            std::cout << "[PhaseManager] Unknown area!" << std::endl;
+            return;
+        }
+
+        std::cout << "[PhaseManager] Teleporting to area: " << static_cast<int>(area) << std::endl;
+        TeleportPlayer(targetPos, targetRot);
+    }
 }
