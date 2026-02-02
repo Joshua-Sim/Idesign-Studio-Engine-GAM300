@@ -13,14 +13,13 @@ extern Framework::Coordinator ecsInterface;
 namespace Framework
 {
 
-    struct PickupGroup {
-        Entity background;
+    struct PickupNotification {
+        Entity bg;
         Entity icon;
-        Entity nameText;
-        Entity quantityText;
+        Entity text;
         float timer;
-        float initialY; 
     };
+
 
     class PlayerInteractSystem : public ISystem
     {
@@ -31,6 +30,7 @@ namespace Framework
         
         void HandlePlayerMovementandJump(float dt);
         void SpawnPickupNotification(int itemId, const std::string& itemName);
+        void ClearAllPickupNotifications();
 
     private:
         void PerformInteract(Entity targetEntity);
@@ -47,7 +47,8 @@ namespace Framework
         const float mInteractRange = 3.0f;
 
 
-        std::vector<PickupGroup> mActiveGroups;
+        std::vector<PickupNotification> mActiveNotifications;
+
 
         //set key press once per press
         bool   m_EWasDown = false;        // track last-frame state

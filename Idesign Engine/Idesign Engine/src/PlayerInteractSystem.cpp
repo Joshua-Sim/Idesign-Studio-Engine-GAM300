@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "PlayerInteractSystem.h"
 #include "Camera.h"
 #include "Coordinator.h"
@@ -34,42 +34,62 @@ namespace Framework
             SpawnInteractText();
         }
 
-        // In PlayerInteractSystem::Update(float dt)
-        for (auto it = mActiveGroups.begin(); it != mActiveGroups.end(); ) {
+        // =========================================================
+        // PICKUP NOTIFICATION UPDATE (Simple, RecipeBook-style)
+        // =========================================================
+        for (auto it = mActiveNotifications.begin(); it != mActiveNotifications.end(); )
+        {
             it->timer -= dt;
 
-            if (it->timer <= 0.0f) {
-                ecsInterface.DestroyEntity(it->background);
+            // --- Lifetime end ---
+            if (it->timer <= 0.0f)
+            {
+                ecsInterface.DestroyEntity(it->bg);
                 ecsInterface.DestroyEntity(it->icon);
-                ecsInterface.DestroyEntity(it->nameText);
-                ecsInterface.DestroyEntity(it->quantityText);
-                it = mActiveGroups.erase(it);
+                ecsInterface.DestroyEntity(it->text);
+                it = mActiveNotifications.erase(it);
                 continue;
             }
 
-            float moveUp = 20.0f * dt; // Pixels per second
+            // --- Float upward (pixel space) ---
+            const float moveUp = 25.0f * dt;
 
-            // Update BG & Icon (Pixels)
-            auto& bT = ecsInterface.GetComponent<TransformComponent>(it->background);
-            auto& iT = ecsInterface.GetComponent<TransformComponent>(it->icon);
-            bT.position.y += moveUp;
-            iT.position.y += moveUp;
+            auto& bgT = ecsInterface.GetComponent<TransformComponent>(it->bg);
+            auto& iconT = ecsInterface.GetComponent<TransformComponent>(it->icon);
+            auto& txtT = ecsInterface.GetComponent<TransformComponent>(it->text);
 
-            // Update Text (Normalized 0-1)
-            auto& nT = ecsInterface.GetComponent<TransformComponent>(it->nameText);
-            auto& qT = ecsInterface.GetComponent<TransformComponent>(it->quantityText);
-            nT.position.y = bT.position.y / 1080.0f;
-            qT.position.y = bT.position.y / 1080.0f;
+            bgT.position.y += moveUp;
+            iconT.position.y += moveUp;
 
-            // Optional: Fade them all out
-            float alpha = std::min(it->timer, 1.0f);
-            if (ecsInterface.HasComponent<TextProperties>(it->nameText)) {
-                ecsInterface.GetComponent<TextProperties>(it->nameText).color *= alpha;
-                ecsInterface.GetComponent<TextProperties>(it->quantityText).color *= alpha;
+            // Text is screen-space → convert Y only
+            txtT.position.y = (bgT.position.y - 10.0f) / 1080.0f;
+
+            // --- Fade using opacity ---
+            float alpha = 1.0f;
+
+            // Fade out last 0.5s
+            if (it->timer < 0.5f)
+            {
+                alpha = it->timer / 0.5f;
             }
+            // Fade in first 0.3s
+            else if (it->timer > 2.2f)
+            {
+                alpha = (2.5f - it->timer) / 0.3f;
+            }
+
+            alpha = glm::clamp(alpha, 0.0f, 1.0f);
+
+            if (ecsInterface.HasComponent<TextProperties>(it->text))
+            {
+                auto& tp = ecsInterface.GetComponent<TextProperties>(it->text);
+                tp.opacity = alpha;
+            }
+
 
             ++it;
         }
+
 
 
         // --- 2. RAYCAST LOGIC ---
@@ -187,7 +207,7 @@ namespace Framework
                         if (itemId >= 0) {
                             int slot = Framework::Inventory::Instance().AddFirstEmpty(itemId);
                             if (slot >= 0) {
-                                SpawnPickupNotification(itemId, item.name);
+                                SpawnPickupNotification(itemId, Framework::GetItemDisplayName(itemId));
                                 g_AudioSystem->PlayAudio("event:/PickingUpHerb");
                                 // IMPORTANT: Don't call RemoveBody here anymore, 
                                 // we already did it in PerformInteract!
@@ -325,6 +345,7 @@ namespace Framework
             textComp.scale = 1.0f;
             textComp.screenSpace = true;
             textComp.alignment = 1;
+            
 
             ecsInterface.AddComponent(mPromptTextEntity, transform);
             ecsInterface.AddComponent(mPromptTextEntity, textComp);
@@ -468,70 +489,110 @@ namespace Framework
         //  also set cam->position = trans.position + offset, like the old code.)
     }
 
-    void PlayerInteractSystem::SpawnPickupNotification(int itemId, const std::string& itemName) {
-        // 1. SETUP DIMENSIONS (Pixels)
-        float startX = 200.0f; // Right side of screen
-        float startY = 200.0f;  // Top-ish
+    void PlayerInteractSystem::SpawnPickupNotification(int itemId, const std::string& itemName)
+    {
 
-        // Offset based on existing popups so they don't overlap
-        startY -= (mActiveGroups.size() * 120.0f);
+        ClearAllPickupNotifications();
+        // --- Layout (pixel space) ---
+        const float startX = 180.0f;
+        const float startY = 300.0f;
 
-        // 2. SPAWN BACKGROUND (1920x1080 space)
+        const float bgWidth = 360.0f;
+        const float bgHeight = 70.0f;
+
+        // =========================================================
+        // 1. Background
+        // =========================================================
         Entity bg = ecsInterface.CreateEntity();
-        TransformComponent bgTrans;
-        bgTrans.position = glm::vec3(startX, startY, 0.0f);
-        bgTrans.scale = glm::vec3(400.0f, 100.0f, 1.0f); // Wide rectangle
-        ecsInterface.AddComponent(bg, bgTrans);
+        {
+            TransformComponent trans;
+            trans.position = glm::vec3(startX, startY, 0.1f);
+            trans.scale = glm::vec3(bgWidth, bgHeight, 1.0f);
 
-        TextureProperties bgTex;
-        bgTex.path = "Assets/Textures/UI_Notification_BG.png";
-        bgTex.isUI = true;
-        TextureLoader::loadTexture(bgTex, true);
-        ecsInterface.AddComponent(bg, bgTex);
+            MeshProperties mesh;
+            HierarchyComponent hc;
+            TextureProperties tex;
 
-        // 3. SPAWN ICON (1920x1080 space)
+            tex.path = "Assets/Textures/UI_Notification_BG.png";
+            tex.isUI = true;
+            TextureLoader::loadTexture(tex, true);
+
+            ecsInterface.AddComponent(bg, hc);
+            ecsInterface.AddComponent(bg, trans);
+            ecsInterface.AddComponent(bg, mesh);
+            ecsInterface.AddComponent(bg, tex);
+        }
+
+        // =========================================================
+        // 2. Icon
+        // =========================================================
         Entity icon = ecsInterface.CreateEntity();
-        TransformComponent iconTrans;
-        iconTrans.position = glm::vec3(startX - 150.0f, startY, 0.0f); // Left side of BG
-        iconTrans.scale = glm::vec3(80.0f, 80.0f, 1.0f);
-        ecsInterface.AddComponent(icon, iconTrans);
+        {
+            TransformComponent trans;
+            trans.position = glm::vec3(startX - 130.0f, startY, 0.2f);
+            trans.scale = glm::vec3(48.0f, 48.0f, 1.0f);
 
-        TextureProperties iconTex;
-        iconTex.path = Framework::MakeItemIconPath(itemId);
-        iconTex.isUI = true;
-        TextureLoader::loadTexture(iconTex, true);
-        ecsInterface.AddComponent(icon, iconTex);
-        ecsInterface.AddComponent(icon, MeshProperties());
+            MeshProperties mesh;
+            HierarchyComponent hc;
+            TextureProperties tex;
 
-        // 4. SPAWN NAME TEXT (0-1 space)
-        Entity nameT = ecsInterface.CreateEntity();
-        TransformComponent nameTrans;
-        // Conversion: PixelY / 1080. We add a small offset so it's next to icon
-        nameTrans.position = glm::vec3((startX - 80.0f) / 1920.0f, startY / 1080.0f, 0.0f);
-        nameTrans.scale = glm::vec3(1.0f, 1.0f, 1.0f);
-        ecsInterface.AddComponent(nameT, nameTrans);
+            tex.path = Framework::MakeItemIconPath(itemId);
+            tex.isUI = true;
+            TextureLoader::loadTexture(tex, true);
 
-        TextProperties nameProp;
-        nameProp.text = itemName;
-        nameProp.screenSpace = true;
-        nameProp.alignment = 0; // Left align
-        nameProp.color = glm::vec3(1.0f);
-        ecsInterface.AddComponent(nameT, nameProp);
+            ecsInterface.AddComponent(icon, hc);
+            ecsInterface.AddComponent(icon, trans);
+            ecsInterface.AddComponent(icon, mesh);
+            ecsInterface.AddComponent(icon, tex);
+        }
 
-        // 5. SPAWN QUANTITY TEXT (0-1 space)
-        Entity quantT = ecsInterface.CreateEntity();
-        TransformComponent qTrans;
-        qTrans.position = glm::vec3((startX + 100.0f) / 1920.0f, startY / 1080.0f, 0.0f);
-        ecsInterface.AddComponent(quantT, qTrans);
+        // =========================================================
+        // 3. Text (same pattern as RecipeBook::SpawnText)
+        // =========================================================
+        Entity text = ecsInterface.CreateEntity();
+        {
+            TransformComponent trans;
+            trans.position = glm::vec3(
+                (startX - 80.0f) / 1920.0f,
+                startY,
+                0.3f
+            );
+            trans.scale = glm::vec3(1.0f);
 
-        TextProperties qProp;
-        qProp.text = "x1";
-        qProp.screenSpace = true;
-        qProp.color = glm::vec3(0.8f); // Slightly greyed
-        ecsInterface.AddComponent(quantT, qProp);
+            MeshProperties mesh;
+            HierarchyComponent hc;
+            TextProperties tp;
 
-        // 6. STORE GROUP
-        mActiveGroups.push_back({ bg, icon, nameT, quantT, 3.0f, startY });
+            tp.screenSpace = true;
+            tp.text = itemName + " x1";
+            tp.alignment = 0; // Left
+            tp.opacity = 0.0f;   // start hiddenf
+
+            tp.scale = 1.0f;
+            tp.color = glm::vec3(1.0f);
+
+            ecsInterface.AddComponent(text, hc);
+            ecsInterface.AddComponent(text, trans);
+            ecsInterface.AddComponent(text, mesh);
+            ecsInterface.AddComponent(text, tp);
+        }
+
+        // =========================================================
+        // 4. Store for lifetime handling
+        // =========================================================
+        mActiveNotifications.push_back({ bg, icon, text, 2.5f });
+    }
+
+    void PlayerInteractSystem::ClearAllPickupNotifications()
+    {
+        for (auto& n : mActiveNotifications)
+        {
+            ecsInterface.DestroyEntity(n.bg);
+            ecsInterface.DestroyEntity(n.icon);
+            ecsInterface.DestroyEntity(n.text);
+        }
+
+        mActiveNotifications.clear();
     }
 
 }
