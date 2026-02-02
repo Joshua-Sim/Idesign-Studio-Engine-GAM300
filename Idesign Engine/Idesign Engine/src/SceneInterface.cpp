@@ -11,16 +11,10 @@ extern Framework::Coordinator ecsInterface;
 namespace Framework
 {
     // Define the global instance
-
     SceneInterface sceneInterface;
 
     // SceneInterface.h (or cpp static)
-    float timeScale = 0.4f;
-
-    // Somewhere in SceneInterface (as members)
-    static float cutsceneStartTime = -1.0f;
-    static bool  cutsceneInit = false;
-
+    float cutsceneStartTime = -1.0f;
 
     void SceneInterface::Initialize() {}
 
@@ -120,41 +114,19 @@ namespace Framework
             // 6. Cutscene (Open after click Play)
             if (engineState.Is(EngineMode::Cutscene))
             {
-                // start timer once
                 if (cutsceneStartTime < 0.0f)
                     cutsceneStartTime = (float)glfwGetTime();
 
                 float now = (float)glfwGetTime();
 
-                // SLOW DOWN / SPEED UP HERE
-                const float timeScale = 0.4f; // <--- smaller = slower
+                const float timeScale = 0.4f; 
                 float t = (now - cutsceneStartTime) * timeScale;
 
                 auto slides = ecsInterface.GetEntitiesByTag("cutscene");
-                // If you REALLY want hard-coded order, DO NOT rely on vector order.
-                // Best: tag them cutscene0..cutscene12 and fetch each tag separately.
-                // But if you're ok assuming creation order, this works.
 
-                const float fadeDuration = 1.0f; // slower fade per slide
-                const float gap = 0.5f; // pause between fades
-                const float holdAfter = 1.0f; // optional hold at end before switching
+                const float fadeDuration = 1.5f;
+                const float gap = 0.8f;
 
-                // init once: force all alphas to 0 at the start
-                if (!cutsceneInit)
-                {
-                    cutsceneInit = true;
-                    for (auto e : slides)
-                    {
-                        if (!ecsInterface.IsEntityValid(e)) continue;
-                        if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
-
-                        auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
-                        tex.isUI = true;
-                        tex.uiAlpha = 0.0f; // start invisible
-                    }
-                }
-
-                // Fade each slide in sequence
                 for (size_t i = 0; i < slides.size(); ++i)
                 {
                     Entity e = slides[i];
@@ -164,34 +136,16 @@ namespace Framework
                     auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
                     tex.isUI = true;
 
-                    float startTime = (float)i * (fadeDuration + gap);
-                    float localT = (t - startTime) / fadeDuration;   // 0..1 over fadeDuration
+                    float startTime = i * (fadeDuration + gap);
+                    float localT = (t - startTime) / fadeDuration;
                     localT = glm::clamp(localT, 0.0f, 1.0f);
 
-                    tex.uiAlpha = localT; // 0 -> 1
-                }
-
-                // AUTO TRANSITION when done
-                float totalTime =
-                    (float)slides.size() * fadeDuration +
-                    (float)(slides.size() - 1) * gap +
-                    holdAfter;
-
-                if (t >= totalTime)
-                {
-                    // reset for next time
-                    cutsceneStartTime = -1.0f;
-                    cutsceneInit = false;
-
-                    // move to next state (example)
-                    engineState.PushState(EngineMode::Play); // or Menu/Game/etc
+                    tex.uiAlpha = localT;
                 }
             }
             else
             {
-                // reset when not in cutscene
                 cutsceneStartTime = -1.0f;
-                cutsceneInit = false;
             }
         }
     }
