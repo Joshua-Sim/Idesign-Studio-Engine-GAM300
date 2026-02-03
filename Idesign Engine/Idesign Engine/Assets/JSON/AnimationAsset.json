@@ -87,6 +87,28 @@
             "bPlayOnStart": true,
             "currentTime": 0.0,
             "vbo_skinning": 0
+        },
+        {
+            "guid": "0523545f-05de-4846-8cba-f4e3e58833c3",
+            "name": "GOLBINNEW",
+            "path": "Assets\\Objects\\GOLBINNEW.fbx",
+            "defaultAnimationName": "",
+            "animationSpeed": 1.0,
+            "bLoops": true,
+            "bPlayOnStart": true,
+            "currentTime": 0.0,
+            "vbo_skinning": 0
+        },
+        {
+            "guid": "26be21b4-ff16-44c1-9e5d-921d6516c728",
+            "name": "FISHNEW",
+            "path": "Assets\\Objects\\FISHNEW.fbx",
+            "defaultAnimationName": "",
+            "animationSpeed": 1.0,
+            "bLoops": true,
+            "bPlayOnStart": true,
+            "currentTime": 0.0,
+            "vbo_skinning": 0
         }
     ]
 }

@@ -33,10 +33,10 @@
         "sortIndex": 0
       },
       "MeshReference": {
-        "guid": "838aa11d-be1c-4219-8eb1-8278dc0f41d1"
+        "guid": "eddf23c2-9e8c-49e5-813d-6093f6786bde"
       },
       "TextureComponent": {
-        "guid": "93e52143-0887-43d1-92f6-f656a1cc846e",
+        "guid": "8e82476d-aaef-44c4-a890-491adfade441",
         "isUI": false
       },
       "NavMeshAgentComponent": {
@@ -55,7 +55,7 @@
         ]
       },
       "AnimationProperties": {
-        "path": "Assets/Objects/fishupdated.fbx",
+        "path": "Assets/Objects/FISHNEW.fbx",
         "defaultAnimationName": "",
         "animationSpeed": 1.0,
         "bLoops": true,
