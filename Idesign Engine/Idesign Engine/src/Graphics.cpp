@@ -1991,11 +1991,15 @@ namespace Framework {
         int sel = lastPickedId;
         int hoverSel = mLookAtHighlightedId;
         const glm::vec3 kHighlightAlbedo(1.0f, 0.85f, 0.3f);
+
         std::vector<Entity> opaqueEntities;
         std::multimap<float, Entity> transparentEntities;
         std::vector<Entity> uiEntities;
-        std::vector<Entity> uiTextEntities;    // NEW: for HUD text
+        std::vector<Entity> uiTextEntities;
 
+        // DEFINE YOUR MAX RENDER DISTANCE
+        // Objects further than this will be ignored completely
+        const float MAX_RENDER_DISTANCE = 200.0f;
 
         //for (auto const& entityId : mEntities)
         //{
@@ -2051,9 +2055,14 @@ namespace Framework {
                 continue;
             }
             // Non-UI objects must have a mesh to be rendered in 3D passes
-            if (!ecsInterface.HasComponent<MeshProperties>(entityId))
-                continue;
+            if (ecsInterface.HasComponent<TransformComponent>(entityId))
+            {
+                auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
+                float dist = glm::distance(tr.position, cam.position);
 
+                // If too far, SKIP adding it to the render lists
+                if (dist > MAX_RENDER_DISTANCE) continue;
+            }
             float opacity = 1.0f;
             if (ecsInterface.HasComponent<MaterialProperties>(entityId))
             {
@@ -2361,6 +2370,7 @@ namespace Framework {
 
                 if (meshO.debugShape == DebugShapeType::None && meshO.vao != 0)
                 {
+                    // 1. Calculate the Scaled Model Matrix
                     glm::mat4 baseModel(1.0f);
                     baseModel = glm::translate(baseModel, trO.position);
                     baseModel = glm::rotate(baseModel, glm::radians(trO.rotation.x), { 1,0,0 });
@@ -2368,25 +2378,65 @@ namespace Framework {
                     baseModel = glm::rotate(baseModel, glm::radians(trO.rotation.z), { 0,0,1 });
                     baseModel = glm::scale(baseModel, trO.scale);
 
-                    const float outlineScale = 1.03f; // thickness knob (try 1.02 ~ 1.06)
+                    const float outlineScale = 1.03f; // thickness
                     glm::mat4 outlineModel = glm::scale(baseModel, glm::vec3(outlineScale));
 
+                    // 2. Prepare Stencil/Depth State
                     glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
                     glStencilMask(0x00);
                     glDisable(GL_DEPTH_TEST);
-
                     glEnable(GL_CULL_FACE);
-                    glCullFace(GL_FRONT);
+                    glCullFace(GL_FRONT); // Draw back faces (scaled up)
 
-                    debugShader.use();
-                    debugShader.setMat4("projection", proj);
-                    debugShader.setMat4("view", view);
-                    debugShader.setMat4("model", outlineModel);
-                    debugShader.setVec3("color", glm::vec3(1.0f)); // white outline
+                    // 3. Determine if Skinned or Static
+                    bool isSkinned = ecsInterface.HasComponent<AnimationProperties>(outlineEntity);
 
-                    glBindVertexArray(meshO.vao);
-                    glDrawElements(GL_TRIANGLES, meshO.indexCount, GL_UNSIGNED_INT, 0);
+                    if (isSkinned)
+                    {
+                        // === ANIMATED OUTLINE ===
+                        skinnedShader.use();
+                        skinnedShader.setMat4("uProj", proj);
+                        skinnedShader.setMat4("uView", view);
+                        skinnedShader.setMat4("uModel", outlineModel);
 
+                        // Upload Bones
+                        auto& animator = ecsInterface.GetComponent<AnimationProperties>(outlineEntity);
+                        for (size_t i = 0; i < animator.finalBoneMatrices.size(); ++i)
+                        {
+                            skinnedShader.setMat4(("uBoneMatrices[" + std::to_string(i) + "]").c_str(), animator.finalBoneMatrices[i]);
+                        }
+
+                        // Make it look like a solid flat color (White)
+                        // We "hack" the material properties to be purely bright white
+                        skinnedShader.setVec3("uAlbedo", glm::vec3(1.0f, 1.0f, 1.0f));
+                        skinnedShader.setVec3("uMaterial.ambient", glm::vec3(1.0f));  // Full brightness
+                        skinnedShader.setVec3("uMaterial.specular", glm::vec3(0.0f)); // No shiny spots
+                        skinnedShader.setFloat("uMaterial.shininess", 1.0f);
+                        skinnedShader.setFloat("uMaterial.opacity", 1.0f);
+
+                        // Unbind texture so it draws solid color (uses default white pixel if 0)
+                        glActiveTexture(GL_TEXTURE0);
+                        glBindTexture(GL_TEXTURE_2D, m_WhiteTex); // or 0
+                        skinnedShader.setInt("uTexture", 0);
+
+                        // Bind VAO and Draw
+                        glBindVertexArray(meshO.vao);
+                        glDrawElements(GL_TRIANGLES, meshO.indexCount, GL_UNSIGNED_INT, 0);
+                    }
+                    else
+                    {
+                        // === STATIC OUTLINE (Original Logic) ===
+                        debugShader.use();
+                        debugShader.setMat4("projection", proj);
+                        debugShader.setMat4("view", view);
+                        debugShader.setMat4("model", outlineModel);
+                        debugShader.setVec3("color", glm::vec3(1.0f)); // white outline
+
+                        glBindVertexArray(meshO.vao);
+                        glDrawElements(GL_TRIANGLES, meshO.indexCount, GL_UNSIGNED_INT, 0);
+                    }
+
+                    // 4. Restore State
                     glCullFace(GL_BACK);
                     glEnable(GL_DEPTH_TEST);
                 }

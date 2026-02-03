@@ -1,10 +1,10 @@
 {
-    "count": 8,
+    "count": 5,
     "entries": [
         {
-            "guid": "e8768e36-c957-4c66-a279-56d502dc5a18",
-            "name": "GoblinPixelLatest",
-            "path": "Assets\\Objects\\GoblinPixelLatest.fbx",
+            "guid": "e4d836ef-c0bc-46bb-914c-c1e05246eb81",
+            "name": "knifechoppingwithBONEFIXED4",
+            "path": "Assets/Objects/knifechoppingwithBONEFIXED4.fbx",
             "defaultAnimationName": "",
             "animationSpeed": 1.0,
             "bLoops": true,
@@ -13,9 +13,9 @@
             "vbo_skinning": 0
         },
         {
-            "guid": "e4d836ef-c0bc-46bb-914c-c1e05246eb81",
-            "name": "knifechoppingwithBONEFIXED4",
-            "path": "Assets/Objects/knifechoppingwithBONEFIXED4.fbx",
+            "guid": "48dc6291-f9e1-4a60-8525-4f8a5b5224b9",
+            "name": "fishupdated",
+            "path": "Assets\\Objects\\fishupdated.fbx",
             "defaultAnimationName": "",
             "animationSpeed": 1.0,
             "bLoops": true,
@@ -35,39 +35,6 @@
             "vbo_skinning": 0
         },
         {
-            "guid": "66604d7f-2200-44ca-8964-cce6b7ae81ac",
-            "name": "fish",
-            "path": "Assets\\Objects\\fish.fbx",
-            "defaultAnimationName": "",
-            "animationSpeed": 1.0,
-            "bLoops": true,
-            "bPlayOnStart": true,
-            "currentTime": 0.0,
-            "vbo_skinning": 0
-        },
-        {
-            "guid": "650e0da6-753b-406b-9c12-e77f60602971",
-            "name": "Goblin",
-            "path": "Assets\\Objects\\Goblin.fbx",
-            "defaultAnimationName": "",
-            "animationSpeed": 1.0,
-            "bLoops": true,
-            "bPlayOnStart": true,
-            "currentTime": 0.0,
-            "vbo_skinning": 0
-        },
-        {
-            "guid": "d860e626-e7cf-44dc-b081-9c36f0a7d671",
-            "name": "GoblinPixelLatest(1)",
-            "path": "Assets\\Objects\\GoblinPixelLatest(1).fbx",
-            "defaultAnimationName": "",
-            "animationSpeed": 1.0,
-            "bLoops": true,
-            "bPlayOnStart": true,
-            "currentTime": 0.0,
-            "vbo_skinning": 0
-        },
-        {
             "guid": "e6e64140-6e45-4eb9-986a-e146404672bf",
             "name": "cauldronwithoutspoon",
             "path": "Assets\\Objects\\cauldronwithoutspoon.fbx",
@@ -79,9 +46,9 @@
             "vbo_skinning": 0
         },
         {
-            "guid": "4015f98e-e322-4d64-b938-5868c300ff46",
-            "name": "GoblinPixelLatest",
-            "path": "Assets\\Objects\\GoblinPixelLatest.fbx",
+            "guid": "d1798592-dadf-4d45-b364-7181dce7807b",
+            "name": "UpdatedGoblin",
+            "path": "Assets\\Objects\\UpdatedGoblin.fbx",
             "defaultAnimationName": "",
             "animationSpeed": 1.0,
             "bLoops": true,
