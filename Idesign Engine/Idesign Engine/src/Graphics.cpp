@@ -1089,35 +1089,72 @@ namespace Framework {
     {
         bool nKeyPressed = false;
 
-        if (!engineState.Is(EngineMode::Play)) return;
-
+        if (!engineState.Is(EngineMode::Play) && !engineState.Is(EngineMode::Editor))
+            return;
         // 1. Determine which mode we are in
         // If UI is focused (Editor Mode), we control Scene Camera (Index 1)
         // If Game is focused, we control Game Camera (Index 0)
         // We check InputHandler directly for the source of truth
         bool isEditorMode = InputHandler::GetInstance()->isUIFocused;
-
-        // ============================================================
-        // LOGIC 1: EDITOR MODE (Scene Camera Movement)
-        // ============================================================
+        bool isRightClickHeld = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
        // ============================================================
     // LOGIC 1: EDITOR MODE (Scene Camera Movement)
     // ============================================================
         if (isEditorMode)
         {
-            Camera& cam = sceneCamera;
-            const float baseSpeed = 5.0f;
+            // [FIX A] FREEZE PLAYER PHYSICS
+            // This prevents the player from "sliding" while you are editing
+            Entity player = ecsInterface.GetEntityByName("Player");
+            if (player != -1 && ecsInterface.IsEntityValid(player))
+            {
+                if (ecsInterface.HasComponent<PhysicsProperties>(player)) {
+                    auto& phys = ecsInterface.GetComponent<PhysicsProperties>(player);
+                    // Zero out velocity so they stop moving immediately
+                    phys.linearVelocity = glm::vec3(0.0f);
+                    phys.gravityFactor = 0.0f; // Optional: Stop gravity in editor if needed
+                }
+            }
 
-            // Keyboard Movement
-            if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-                cam.processKeyboard(Camera::Movement::Forward, dt * baseSpeed, false, terrain);
-            if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-                cam.processKeyboard(Camera::Movement::Backward, dt * baseSpeed, false, terrain);
-            if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-                cam.processKeyboard(Camera::Movement::Left, dt * baseSpeed, false, terrain);
-            if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-                cam.processKeyboard(Camera::Movement::Right, dt * baseSpeed, false, terrain);
-        
+            // [FIX B] BETTER IMGUI INPUT HANDLING
+            // We only block movement if ImGui wants text input (typing), 
+            // OR if ImGui wants the keyboard AND we are NOT holding Right Click.
+            // If we hold Right Click, we assume the user wants to fly, ignoring the UI.
+            ImGuiIO& io = ImGui::GetIO();
+            bool isTyping = io.WantTextInput;
+            bool isImGuiBlocking = io.WantCaptureKeyboard && !isRightClickHeld;
+
+            if (!isTyping && !isImGuiBlocking)
+            {
+                Camera& cam = sceneCamera;
+
+                // Boost speed if holding Shift
+                float speed = (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) ? 15.0f : 5.0f;
+
+                if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+                    std::cout << "DEBUG: Moving Forward (W)" << std::endl;
+                    cam.processKeyboard(Camera::Movement::Forward, dt * speed, false, terrain);
+                }
+                if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+                    std::cout << "DEBUG: Moving Backward (S)" << std::endl;
+                    cam.processKeyboard(Camera::Movement::Backward, dt * speed, false, terrain);
+                }
+                if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+                    std::cout << "DEBUG: Moving Left (A)" << std::endl;
+                    cam.processKeyboard(Camera::Movement::Left, dt * speed, false, terrain);
+                }
+                if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+                    std::cout << "DEBUG: Moving Right (D)" << std::endl;
+                    cam.processKeyboard(Camera::Movement::Right, dt * speed, false, terrain);
+                }
+                if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) { // Up
+                    std::cout << "DEBUG: Moving Up (E)" << std::endl;
+                    cam.processKeyboard(Camera::Movement::Up, dt * speed, false, terrain);
+                }
+                if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) { // Down
+                    std::cout << "DEBUG: Moving Down (Q)" << std::endl;
+                    cam.processKeyboard(Camera::Movement::Down, dt * speed, false, terrain);
+                }
+            }
         }
         // ============================================================
         // LOGIC 2: GAME MODE (Player/Game Camera Movement)
