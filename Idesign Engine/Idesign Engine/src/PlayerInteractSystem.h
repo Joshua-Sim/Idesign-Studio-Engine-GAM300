@@ -31,6 +31,7 @@ namespace Framework
         void HandlePlayerMovementandJump(float dt);
         void SpawnPickupNotification(int itemId, const std::string& itemName);
         void ClearAllPickupNotifications();
+        void SpawnZipPickup(int itemId, const glm::vec3& spawnPos);
 
     private:
         void PerformInteract(Entity targetEntity);

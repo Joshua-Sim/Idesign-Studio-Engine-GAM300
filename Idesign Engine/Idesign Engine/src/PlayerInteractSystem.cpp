@@ -15,7 +15,7 @@
 extern Framework::Coordinator ecsInterface;
 namespace Framework
 {
-
+    constexpr float ZIP_TARGET_Y_OFFSET = -3.0f; // tweak this
     void PlayerInteractSystem::Initialize()
     {
         mPhysicsSystem = ecsInterface.GetSystem<PhysicsSystem>();
@@ -188,7 +188,10 @@ namespace Framework
                 if (item.isZipping)
                 {
                     auto& trans = ecsInterface.GetComponent<TransformComponent>(entity);
-                    glm::vec3 toPlayer = playerPos - trans.position;
+                    glm::vec3 targetPos = playerPos;
+                    targetPos.y += ZIP_TARGET_Y_OFFSET;
+
+                    glm::vec3 toPlayer = targetPos - trans.position;
                     float distance = glm::length(toPlayer);
 
                     // Acceleration math: Faster as it gets closer
@@ -228,54 +231,80 @@ namespace Framework
 
     void PlayerInteractSystem::PerformInteract(Entity targetEntity)
     {
-        // --- 1. SCRIPT/EVENT INTERACTION ---
-        // Check if this is a trigger (like a door or button) rather than a physical item
-        if (ecsInterface.HasComponent<BoxColliderComponent>(targetEntity)) {
+        // ---------------------------------------------------------
+        // 1. SCRIPT / EVENT INTERACTIONS (doors, levers, etc.)
+        // ---------------------------------------------------------
+        if (ecsInterface.HasComponent<BoxColliderComponent>(targetEntity))
+        {
             auto& colliderComp = ecsInterface.GetComponent<BoxColliderComponent>(targetEntity);
-            for (const auto& entry : colliderComp.colliders) {
-                if (entry.isInteractable && !entry.interactMessage.empty()) {
 
+            for (const auto& entry : colliderComp.colliders)
+            {
+                if (entry.isInteractable && !entry.interactMessage.empty())
+                {
                     CollisionEventData payload;
                     payload.senderID = ecsInterface.GetEntityByName("Player");
                     payload.targetID = targetEntity;
                     payload.actionType = 1;
 
                     EventManager::Instance().Fire(entry.interactMessage, &payload);
-
-                    // If a script handles it, we usually don't want to treat it as a pickup item
-                    return;
+                    return; // Script handled it
                 }
             }
         }
 
-        if (ecsInterface.HasComponent<ItemComponent>(targetEntity)) {
-            auto& item = ecsInterface.GetComponent<ItemComponent>(targetEntity);
+        // ---------------------------------------------------------
+        // 2. ITEM INTERACTION
+        // ---------------------------------------------------------
+        if (!ecsInterface.HasComponent<ItemComponent>(targetEntity))
+            return;
 
-            // 1. START ZIP
+        auto& item = ecsInterface.GetComponent<ItemComponent>(targetEntity);
+
+        int itemId = Framework::ItemNameToId(item.name);
+        if (itemId < 0)
+            return;
+
+        // Get world position of the source
+        glm::vec3 sourcePos =
+            ecsInterface.GetComponent<TransformComponent>(targetEntity).position;
+
+        // ---------------------------------------------------------
+        // CASE A: Entity itself is the pickup
+        // ---------------------------------------------------------
+        if (item.toDestroyWhenPicked)
+        {
+            // Start zip
             item.isZipping = true;
 
-            // 2. DISABLE PHYSICS COMPLETELY
-            // This ensures it doesn't hit anything while flying.
-            if (mPhysicsSystem) {
-                // Tell the physics world to stop tracking this entity's collisions
+            // Remove physics so it doesn't collide while flying
+            if (mPhysicsSystem)
                 mPhysicsSystem->RemoveBodyForEntity(targetEntity);
-            }
 
-            // 3. OPTIONAL: Remove the component to be safe, 
-            // but RemoveBodyForEntity is the one that stops collisions.
-            if (ecsInterface.HasComponent<BoxColliderComponent>(targetEntity)) {
+            // Remove collider if present
+            if (ecsInterface.HasComponent<BoxColliderComponent>(targetEntity))
                 ecsInterface.RemoveComponent<BoxColliderComponent>(targetEntity);
-            }
 
-            // 4. PREPARE PROPERTIES
-            if (ecsInterface.HasComponent<PhysicsProperties>(targetEntity)) {
+            // Optional: visual pop
+            if (ecsInterface.HasComponent<PhysicsProperties>(targetEntity))
+            {
                 auto& phys = ecsInterface.GetComponent<PhysicsProperties>(targetEntity);
                 phys.gravityFactor = 0.0f;
-                phys.linearVelocity = glm::vec3(0.0f, 3.0f, 0.0f); // Upward pop
+                phys.linearVelocity = glm::vec3(0.0f, 3.0f, 0.0f);
                 phys.startAwake = true;
             }
+
+            return;
         }
+
+        // ---------------------------------------------------------
+        // CASE B: Entity is a SOURCE (crate, animal, plant)
+        // ---------------------------------------------------------
+
+        SpawnZipPickup(itemId, sourcePos);
+
     }
+
 
     void PlayerInteractSystem::SpawnInteractText() {
 
@@ -498,7 +527,7 @@ namespace Framework
         const float startY = 300.0f;
 
         const float bgWidth = 360.0f;
-        const float bgHeight = 70.0f;
+        const float bgHeight = 90.0f;
 
         // =========================================================
         // 1. Background
@@ -529,8 +558,8 @@ namespace Framework
         Entity icon = ecsInterface.CreateEntity();
         {
             TransformComponent trans;
-            trans.position = glm::vec3(startX - 130.0f, startY, 0.2f);
-            trans.scale = glm::vec3(48.0f, 48.0f, 1.0f);
+            trans.position = glm::vec3(startX - 135.0f, startY, 0.2f);
+            trans.scale = glm::vec3(60.0f, 60.0f, 1.0f);
 
             MeshProperties mesh;
             HierarchyComponent hc;
@@ -554,7 +583,7 @@ namespace Framework
             TransformComponent trans;
             trans.position = glm::vec3(
                 (startX - 80.0f) / 1920.0f,
-                startY,
+                startY - 30.0f,
                 0.3f
             );
             trans.scale = glm::vec3(1.0f);
@@ -595,4 +624,32 @@ namespace Framework
         mActiveNotifications.clear();
     }
 
+    void PlayerInteractSystem::SpawnZipPickup(int itemId, const glm::vec3& spawnPos)
+    {
+        Entity e = ecsInterface.CreateEntity();
+
+        TransformComponent trans;
+        trans.position = spawnPos;
+        trans.scale = glm::vec3(0.5f);
+
+        HierarchyComponent hc;
+        TextureProperties tx;
+		tx.path = "Assets/Textures/" + std::string(kItemNames[itemId]) + "3D.png";
+        TextureLoader::loadTexture(tx, false);
+
+        MeshProperties mp;
+        mp.guid = AssetManager::Instance().FindGuid<MeshProperties>(kItemNames[itemId]);
+        MeshLoader::loadMesh("Assets/Objects/" + std::string(kItemNames[itemId]) + ".obj", mp);
+
+        ItemComponent itemComp;
+        itemComp.isZipping = true;
+        itemComp.name = kItemNames[itemId];
+        itemComp.toDestroyWhenPicked = true;
+
+        ecsInterface.AddComponent(e, trans);
+		ecsInterface.AddComponent(e, hc);
+		ecsInterface.AddComponent(e, tx);
+		ecsInterface.AddComponent(e, itemComp);
+        ecsInterface.AddComponent(e, mp);
+    }
 }
