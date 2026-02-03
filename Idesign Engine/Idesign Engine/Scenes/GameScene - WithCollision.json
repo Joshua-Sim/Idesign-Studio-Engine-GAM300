@@ -136,7 +136,7 @@
                     "is3D": true,
                     "minDistance": 1.0,
                     "maxDistance": 100.0,
-                    "volume": 0.20000000298023224,
+                    "volume": 1.0,
                     "loop": false,
                     "playOnStart": true,
                     "isPlaying": true,
@@ -181,8 +181,7 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "afd25b76-dddc-4c4f-bae4-a6c9a22931e5",
@@ -1553,7 +1552,7 @@
                     "is3D": true,
                     "minDistance": 1.0,
                     "maxDistance": 50.0,
-                    "volume": 1.0,
+                    "volume": 0.0,
                     "loop": false,
                     "playOnStart": false,
                     "isPlaying": false,
@@ -2742,19 +2741,19 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -121.55011749267578,
-                        8.423039436340332,
-                        112.08782958984375
+                        -53.96500015258789,
+                        8.02452564239502,
+                        9.5
                     ],
                     "rotation": [
                         0.0,
-                        -0.06674395501613617,
+                        90.0,
                         0.0
                     ],
                     "scale": [
-                        0.9999465346336365,
-                        0.9999823570251465,
-                        0.9999408721923828
+                        0.9999451637268066,
+                        0.9999809861183167,
+                        0.9999403953552246
                     ],
                     "isActive": true
                 },
@@ -2767,8 +2766,7 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -2826,9 +2824,9 @@
                 },
                 "ListenerComponent": {
                     "position": [
-                        -121.55010223388672,
-                        8.423039436340332,
-                        112.0880126953125
+                        -53.96500015258789,
+                        8.02452564239502,
+                        9.5
                     ],
                     "forward": [
                         0.0,
@@ -2843,7 +2841,7 @@
                     "velocity": [
                         0.0,
                         0.0,
-                        -0.010986327193677425
+                        0.0
                     ],
                     "active": true,
                     "listenerIndex": 0
@@ -3146,7 +3144,7 @@
                     "animationSpeed": 1.0,
                     "bLoops": true,
                     "bPlayOnStart": true,
-                    "currentTime": 151.00836181640625
+                    "currentTime": 239.39712524414063
                 },
                 "TextureComponent": {
                     "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
@@ -3456,8 +3454,7 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 }
             }
         },
@@ -3492,8 +3489,7 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 }
             }
         },
@@ -6206,8 +6202,7 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
@@ -6965,8 +6960,7 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
@@ -7456,8 +7450,7 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
@@ -7589,8 +7582,7 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "b2d4bb99-3396-40de-8789-01d6cf083f4e",
@@ -8338,7 +8330,7 @@
                 "TransformComponent": {
                     "position": [
                         -138.69435119628906,
-                        2.8203930854797363,
+                        22.51018714904785,
                         -92.96614837646484
                     ],
                     "rotation": [
@@ -9056,13 +9048,13 @@
                 "TransformComponent": {
                     "position": [
                         -272.06024169921875,
-                        4.80574893951416,
-                        177.75845336914063
+                        7.470790386199951,
+                        177.7584228515625
                     ],
                     "rotation": [
-                        0.00034204701660200953,
+                        0.0003621849464252591,
                         -0.06841623038053513,
-                        -0.0002338709164177999
+                        -0.00026244547916576266
                     ],
                     "scale": [
                         8.0,
@@ -10640,83 +10632,6 @@
                             "center": [
                                 0.0,
                                 1.899999976158142,
-                                0.0
-                            ],
-                            "canPassThrough": false,
-                            "isInteractable": false
-                        }
-                    ]
-                },
-                "PhysicsProperties": {
-                    "category": 0,
-                    "isImmovable": true,
-                    "gravityFactor": 1.0,
-                    "mass": 1.0,
-                    "friction": 0.5,
-                    "restitution": 0.0,
-                    "linearVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "angularVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "startAwake": true
-                }
-            }
-        },
-        {
-            "name": "TreeBoundary (Copy)",
-            "guid": "55fb1862-2ff2-4a27-9b5c-dbab1f1b8d16",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -271.9920654296875,
-                        4.68644905090332,
-                        120.79862213134766
-                    ],
-                    "rotation": [
-                        0.0002604695037007332,
-                        -0.06841623038053513,
-                        -0.00007444275979651138
-                    ],
-                    "scale": [
-                        10.0,
-                        10.0,
-                        10.0
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
-                    "children": [],
-                    "sortIndex": 21
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "a0077014-9884-4a65-b44a-5c96f700552f",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "95b2bdaa-b3c5-42e0-9687-d0edc85dfe01",
-                    "isUI": false
-                },
-                "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                100.0,
-                                100.0,
-                                100.0
-                            ],
-                            "center": [
-                                0.0,
-                                0.0,
                                 0.0
                             ],
                             "canPassThrough": false,
@@ -12599,19 +12514,19 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -271.50897216796875,
-                        4.86187219619751,
-                        165.93109130859375
+                        -273.8133239746094,
+                        5.39396858215332,
+                        166.09140014648438
                     ],
                     "rotation": [
-                        0.0004358376027084887,
-                        -0.06841623038053513,
-                        -0.0003572872083168477
+                        0.0,
+                        -0.0,
+                        0.0
                     ],
                     "scale": [
-                        9.0,
-                        9.0,
-                        9.0
+                        9.00002670288086,
+                        8.999995231628418,
+                        8.999996185302734
                     ],
                     "isActive": true
                 },
@@ -13768,19 +13683,19 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -231.53439331054688,
-                        20.094036102294922,
-                        160.46417236328125
+                        -238.51077270507813,
+                        8.33636474609375,
+                        169.9947052001953
                     ],
                     "rotation": [
-                        19.724088668823242,
-                        0.06450217217206955,
-                        -0.21779130399227142
+                        0.2704314589500427,
+                        -0.530591607093811,
+                        -0.09425321221351624
                     ],
                     "scale": [
-                        0.9999994039535522,
-                        0.9999995827674866,
-                        0.9999995231628418
+                        0.9999967217445374,
+                        0.9999970197677612,
+                        0.9999892711639404
                     ],
                     "isActive": true
                 },
@@ -13820,7 +13735,7 @@
                 },
                 "PhysicsProperties": {
                     "category": 0,
-                    "isImmovable": true,
+                    "isImmovable": false,
                     "gravityFactor": 1.0,
                     "mass": 1.0,
                     "friction": 0.5,
@@ -13845,19 +13760,19 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -247.78195190429688,
-                        19.192914962768555,
-                        158.4984130859375
+                        -248.47203063964844,
+                        8.31491756439209,
+                        185.7870635986328
                     ],
                     "rotation": [
-                        0.0002926716406363994,
-                        -0.06841621547937393,
-                        -0.00015283672837540507
+                        -89.90934753417969,
+                        95.19216918945313,
+                        -0.0941614955663681
                     ],
                     "scale": [
-                        1.0,
-                        1.0,
-                        1.0
+                        0.9999988079071045,
+                        0.999999463558197,
+                        0.999999463558197
                     ],
                     "isActive": true
                 },
@@ -13897,7 +13812,7 @@
                 },
                 "PhysicsProperties": {
                     "category": 0,
-                    "isImmovable": true,
+                    "isImmovable": false,
                     "gravityFactor": 1.0,
                     "mass": 1.0,
                     "friction": 0.5,
@@ -13999,19 +13914,19 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -234.02947998046875,
-                        25.803791046142578,
-                        148.1849822998047
+                        -234.2454833984375,
+                        23.00546646118164,
+                        155.6664276123047
                     ],
                     "rotation": [
-                        0.00025900613400153816,
-                        -0.06841621547937393,
-                        -0.00006916879647178575
+                        20.571002960205078,
+                        -0.14251708984375,
+                        -0.04513949900865555
                     ],
                     "scale": [
-                        1.0,
-                        1.0,
-                        1.0
+                        0.999999463558197,
+                        0.9999994039535522,
+                        0.9999992847442627
                     ],
                     "isActive": true
                 },
@@ -14842,83 +14757,6 @@
         },
         {
             "name": "Mushroom (Copy) (Copy)",
-            "guid": "5f8a88ba-c829-4d7f-ac48-4ecefaca6ced",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -298.7481689453125,
-                        29.08127212524414,
-                        123.74845123291016
-                    ],
-                    "rotation": [
-                        -0.032970402389764786,
-                        -0.019110582768917084,
-                        29.999853134155273
-                    ],
-                    "scale": [
-                        0.19999995827674866,
-                        0.6999997496604919,
-                        2.5
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
-                    "children": [],
-                    "sortIndex": 75
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "eac3e6f4-1bf2-415f-aef8-8f1269d91560",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
-                    "isUI": false
-                },
-                "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                3.0,
-                                4.099999904632568,
-                                4.0
-                            ],
-                            "center": [
-                                0.0,
-                                1.899999976158142,
-                                0.0
-                            ],
-                            "canPassThrough": false,
-                            "isInteractable": false
-                        }
-                    ]
-                },
-                "PhysicsProperties": {
-                    "category": 0,
-                    "isImmovable": true,
-                    "gravityFactor": 1.0,
-                    "mass": 1.0,
-                    "friction": 0.5,
-                    "restitution": 0.0,
-                    "linearVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "angularVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "startAwake": true
-                }
-            }
-        },
-        {
-            "name": "Mushroom (Copy) (Copy)",
             "guid": "07d004a8-1df1-423f-ab49-9653b18faddc",
             "components": {
                 "TransformComponent": {
@@ -15077,160 +14915,6 @@
             "components": {
                 "PrefabComponent": {
                     "prefabGUID.id": "f2b79bf2-29d4-4577-801d-b6dff82ecb2c"
-                }
-            }
-        },
-        {
-            "name": "SLOPE OG",
-            "guid": "ea3d7c60-dcd8-4959-9873-0ef2a87cba2f",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -238.5506591796875,
-                        10.876261711120605,
-                        180.07382202148438
-                    ],
-                    "rotation": [
-                        20.0,
-                        -0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        0.4000000059604645,
-                        0.019999997690320015,
-                        0.9999990463256836
-                    ],
-                    "isActive": false
-                },
-                "HierarchyComponent": {
-                    "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
-                    "children": [],
-                    "sortIndex": 80
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "eac3e6f4-1bf2-415f-aef8-8f1269d91560",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "fc41bc46-1535-4158-86ed-4c6e4e3192ff",
-                    "isUI": false
-                },
-                "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                100.0,
-                                100.0,
-                                100.0
-                            ],
-                            "center": [
-                                -0.10000000149011612,
-                                2.5999999046325684,
-                                0.20000000298023224
-                            ],
-                            "canPassThrough": false,
-                            "isInteractable": false
-                        }
-                    ]
-                },
-                "PhysicsProperties": {
-                    "category": 0,
-                    "isImmovable": true,
-                    "gravityFactor": 1.0,
-                    "mass": 1.0,
-                    "friction": 0.5,
-                    "restitution": 0.0,
-                    "linearVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "angularVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "startAwake": true
-                }
-            }
-        },
-        {
-            "name": "bridgeFlat",
-            "guid": "f2183a8c-3e48-456b-9bf1-05eee8a0f908",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -248.26870727539063,
-                        26.023624420166016,
-                        120.03707122802734
-                    ],
-                    "rotation": [
-                        180.0,
-                        -89.99994659423828,
-                        180.0
-                    ],
-                    "scale": [
-                        4.5,
-                        1.9999998807907104,
-                        1.9999994039535522
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
-                    "children": [],
-                    "sortIndex": 82
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "b788b0ac-54fe-4540-98ec-e45e98d76dd6",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "0bf9f4b3-27bd-42f4-8812-e83f13e8d309",
-                    "isUI": false
-                },
-                "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                3.0,
-                                4.099999904632568,
-                                4.0
-                            ],
-                            "center": [
-                                0.0,
-                                1.899999976158142,
-                                0.0
-                            ],
-                            "canPassThrough": false,
-                            "isInteractable": false
-                        }
-                    ]
-                },
-                "PhysicsProperties": {
-                    "category": 0,
-                    "isImmovable": true,
-                    "gravityFactor": 1.0,
-                    "mass": 1.0,
-                    "friction": 0.5,
-                    "restitution": 0.0,
-                    "linearVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "angularVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "startAwake": true
                 }
             }
         },
@@ -17117,391 +16801,6 @@
                                 0.0,
                                 1.899999976158142,
                                 0.0
-                            ],
-                            "canPassThrough": false,
-                            "isInteractable": false
-                        }
-                    ]
-                },
-                "PhysicsProperties": {
-                    "category": 0,
-                    "isImmovable": true,
-                    "gravityFactor": 1.0,
-                    "mass": 1.0,
-                    "friction": 0.5,
-                    "restitution": 0.0,
-                    "linearVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "angularVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "startAwake": true
-                }
-            }
-        },
-        {
-            "name": "SLOPE OG1",
-            "guid": "ffb35fe7-843f-4e2f-a6e0-ea964f7227a6",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -238.5506591796875,
-                        9.272137641906738,
-                        60.911895751953125
-                    ],
-                    "rotation": [
-                        -19.99999237060547,
-                        -0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        0.4000000059604645,
-                        0.019999999552965164,
-                        0.9999990463256836
-                    ],
-                    "isActive": false
-                },
-                "HierarchyComponent": {
-                    "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
-                    "children": [],
-                    "sortIndex": 80
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "eac3e6f4-1bf2-415f-aef8-8f1269d91560",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "fc41bc46-1535-4158-86ed-4c6e4e3192ff",
-                    "isUI": false
-                },
-                "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                100.0,
-                                100.0,
-                                100.0
-                            ],
-                            "center": [
-                                -0.10000000149011612,
-                                2.5999999046325684,
-                                0.20000000298023224
-                            ],
-                            "canPassThrough": false,
-                            "isInteractable": false
-                        }
-                    ]
-                },
-                "PhysicsProperties": {
-                    "category": 0,
-                    "isImmovable": true,
-                    "gravityFactor": 1.0,
-                    "mass": 1.0,
-                    "friction": 0.5,
-                    "restitution": 0.0,
-                    "linearVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "angularVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "startAwake": true
-                }
-            }
-        },
-        {
-            "name": "modular garden ground",
-            "guid": "62ca02b6-d7de-46c3-8ea4-faa412229d16",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -201.6805877685547,
-                        -0.17866897583007813,
-                        95.57198333740234
-                    ],
-                    "rotation": [
-                        180.0,
-                        -89.99994659423828,
-                        180.0
-                    ],
-                    "scale": [
-                        80.0,
-                        20.0,
-                        60.0
-                    ],
-                    "isActive": false
-                },
-                "HierarchyComponent": {
-                    "parent": "",
-                    "children": [],
-                    "sortIndex": 113
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "c9235b5b-3b4d-4d81-a8b0-be5f5e60c452",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "3fa44413-2b3b-444a-8d06-3475bebf7792",
-                    "isUI": false
-                },
-                "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                106.5,
-                                102.0,
-                                108.30000305175781
-                            ],
-                            "center": [
-                                0.0,
-                                -1.2000000476837158,
-                                0.0
-                            ],
-                            "canPassThrough": false,
-                            "isInteractable": false
-                        }
-                    ]
-                },
-                "PhysicsProperties": {
-                    "category": 0,
-                    "isImmovable": true,
-                    "gravityFactor": 1.0,
-                    "mass": 1.0,
-                    "friction": 0.5,
-                    "restitution": 0.0,
-                    "linearVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "angularVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "startAwake": true
-                }
-            }
-        },
-        {
-            "name": "bridgeFlat (Copy)",
-            "guid": "ee1c6d7d-7af9-41aa-bdab-9ac2c037f467",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -229.11090087890625,
-                        26.023624420166016,
-                        120.03707122802734
-                    ],
-                    "rotation": [
-                        180.0,
-                        -89.99994659423828,
-                        180.0
-                    ],
-                    "scale": [
-                        4.5,
-                        1.9999998807907104,
-                        1.9999994039535522
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
-                    "children": [],
-                    "sortIndex": 82
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "b788b0ac-54fe-4540-98ec-e45e98d76dd6",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "0bf9f4b3-27bd-42f4-8812-e83f13e8d309",
-                    "isUI": false
-                },
-                "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                3.0,
-                                4.099999904632568,
-                                4.0
-                            ],
-                            "center": [
-                                0.0,
-                                1.899999976158142,
-                                0.0
-                            ],
-                            "canPassThrough": false,
-                            "isInteractable": false
-                        }
-                    ]
-                },
-                "PhysicsProperties": {
-                    "category": 0,
-                    "isImmovable": true,
-                    "gravityFactor": 1.0,
-                    "mass": 1.0,
-                    "friction": 0.5,
-                    "restitution": 0.0,
-                    "linearVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "angularVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "startAwake": true
-                }
-            }
-        },
-        {
-            "name": "SLOPE1 (Copy) (Copy)",
-            "guid": "d80f5c42-5e11-44e7-915b-14077678fc61",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -238.0,
-                        14.60751724243164,
-                        158.62869262695313
-                    ],
-                    "rotation": [
-                        20.0,
-                        -89.99994659423828,
-                        0.0
-                    ],
-                    "scale": [
-                        15.000000953674316,
-                        5.0,
-                        9.99997615814209
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
-                    "children": [],
-                    "sortIndex": 80
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "9a02a596-f621-44fe-8748-a236f6cff68a",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "99ab0ba1-f9af-46d4-9e91-0f4c3a14841d",
-                    "isUI": false
-                },
-                "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                100.0,
-                                100.0,
-                                100.0
-                            ],
-                            "center": [
-                                -0.10000000149011612,
-                                2.5999999046325684,
-                                0.20000000298023224
-                            ],
-                            "canPassThrough": false,
-                            "isInteractable": false
-                        }
-                    ]
-                },
-                "PhysicsProperties": {
-                    "category": 0,
-                    "isImmovable": true,
-                    "gravityFactor": 1.0,
-                    "mass": 1.0,
-                    "friction": 0.5,
-                    "restitution": 0.0,
-                    "linearVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "angularVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "startAwake": true
-                }
-            }
-        },
-        {
-            "name": "SLOPE1 (Copy) (Copy) (Copy)",
-            "guid": "4000fa97-fd36-4900-b374-b65bce38da6c",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -238.0,
-                        15.0,
-                        80.59716033935547
-                    ],
-                    "rotation": [
-                        -20.0,
-                        90.0,
-                        0.0
-                    ],
-                    "scale": [
-                        15.0,
-                        5.0,
-                        9.999982833862305
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
-                    "children": [],
-                    "sortIndex": 80
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "9a02a596-f621-44fe-8748-a236f6cff68a",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "99ab0ba1-f9af-46d4-9e91-0f4c3a14841d",
-                    "isUI": false
-                },
-                "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                100.0,
-                                100.0,
-                                100.0
-                            ],
-                            "center": [
-                                -0.10000000149011612,
-                                2.5999999046325684,
-                                0.20000000298023224
                             ],
                             "canPassThrough": false,
                             "isInteractable": false
