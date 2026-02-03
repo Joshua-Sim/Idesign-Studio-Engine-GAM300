@@ -293,162 +293,142 @@ function M.on_update(arg1, arg2)
         if not my_entity_id then return end 
     end
 
-    -- 1. DYNAMIC TEXT
+    ---------------------------------------------------------
+    -- 1. PRE-CALCULATE STIRRING STATE
+    ---------------------------------------------------------
+    local is_stirring_correct_dir = false
+    local px, py, pz, cx, cy, cz
+
+    if is_active and player_id then
+        px, py, pz = GetPosition(player_id)
+        cx, cy, cz = GetPosition(my_entity_id)
+        
+        if px and cx then
+            local dist = math.sqrt((px - cx)^2 + (py - cy)^2 + (pz - cz)^2)
+            if dist > max_distance then
+                M.StopInteraction(my_entity_id)
+            elseif not is_finished then
+                -- Mouse Stirring Math
+                local dx, dy = GetMouseDelta()
+                spoon_x = spoon_x + dx
+                spoon_y = spoon_y + dy
+
+                local len = math.sqrt(spoon_x*spoon_x + spoon_y*spoon_y)
+                if len > 0.1 then
+                    spoon_x = (spoon_x / len) * 100.0
+                    spoon_y = (spoon_y / len) * 100.0
+                end
+
+                local current_angle = math.atan2(spoon_y, spoon_x)
+                local angle_delta = current_angle - last_angle
+                local PI = 3.14159265359
+
+                if angle_delta > PI then angle_delta = angle_delta - (2 * PI) end
+                if angle_delta < -PI then angle_delta = angle_delta + (2 * PI) end
+                last_angle = current_angle
+
+                -- Directional Check
+                is_stirring_correct_dir = (angle_delta < -0.02)
+
+                if is_stirring_correct_dir then
+                    progress = progress + (math.abs(angle_delta) * stir_sensitivity)
+                    SetAnimationSettings(my_entity_id, 1.0, true, true)
+                    PlayStirSound()
+                else
+                    SetAnimationSettings(my_entity_id, 0.0, true, true)
+                    StopStirSound()
+                end
+
+                if progress >= 1.0 then
+                    progress = 1.0
+                    is_finished = true
+                    current_finish_timer = finish_delay
+                end
+            end
+        end
+    end
+
+    ---------------------------------------------------------
+    -- 2. DYNAMIC TEXT & ORBIT SPEED
+    ---------------------------------------------------------
     if SetInteractionText then
         local held_item = GetSelectedItem() 
-        local desired_text = ""
-        if is_active then desired_text = "Stirring..." 
-        elseif held_item ~= -1 then desired_text = "Add Ingredient"
-        else desired_text = "Stir Cauldron" end
-
+        local desired_text = is_active and "Stirring..." or (held_item ~= -1 and "Add Ingredient" or "Stir Cauldron")
         if desired_text ~= last_prompt_state then
             SetInteractionText(my_entity_id, desired_text)
             last_prompt_state = desired_text
         end
     end
 
-    -- 2. CLEANUP & ANIMATION (Using Separate Lists)
-    local count = #visual_entities
-    local i = count
+    -- Update Orbit: Only advance current_orbit_angle if actively stirring
+    if is_active and is_stirring_correct_dir and not is_finished then
+        local dynamic_speed = orbit_speed_start + (orbit_speed_end - orbit_speed_start) * progress
+        current_orbit_angle = current_orbit_angle - (dt * dynamic_speed)
+    elseif not is_active then
+        -- Idle orbit when not in the minigame
+        current_orbit_angle = current_orbit_angle + (dt * orbit_speed_start)
+    end
 
-    while i > 0 do
+    ---------------------------------------------------------
+    -- 3. ITEM ANIMATION & ROTATION
+    ---------------------------------------------------------
+    local count = #visual_entities
+    for i = count, 1, -1 do
         local vis_id = visual_entities[i]
         local is_valid = true
         
-        -- Check validity (Only if ID > 0)
-        if vis_id > 0 and IsEntityValid and not IsEntityValid(vis_id) then
-            is_valid = false
-        end
+        if vis_id > 0 and IsEntityValid and not IsEntityValid(vis_id) then is_valid = false end
 
         if is_valid and vis_id > 0 then
-            -- Animation Math
             local angle_step = (2 * math.pi) / count
             local item_angle = current_orbit_angle + ((i - 1) * angle_step)
             
-            local dynamic_radius = orbit_radius_start 
-            if is_active then
-                dynamic_radius = orbit_radius_start + (orbit_radius_end - orbit_radius_start) * progress
-            end
-
+            local dynamic_radius = is_active and (orbit_radius_start + (orbit_radius_end - orbit_radius_start) * progress) or orbit_radius_start
             local offset_x = math.cos(item_angle) * dynamic_radius
             local offset_z = math.sin(item_angle) * dynamic_radius
-            
-            local current_bob = is_active and 0.0 or bob_height
-            local offset_y = math.sin((accumulated_time * bob_speed) + i) * current_bob
+            local offset_y = math.sin((accumulated_time * bob_speed) + i) * (is_active and 0.0 or bob_height)
             
             local raw_cx, raw_cy, raw_cz = GetPosition(my_entity_id)
             if raw_cx then 
-                local tx = raw_cx + center_offset_x + offset_x
-                local ty = raw_cy + height_offset + offset_y
-                local tz = raw_cz + center_offset_z + offset_z
+                SetPosition(vis_id, raw_cx + center_offset_x + offset_x, raw_cy + height_offset + offset_y, raw_cz + center_offset_z + offset_z)
 
-                -- [FIX] pcall SetPosition
-                if SetPosition then
-                    local ok = pcall(SetPosition, vis_id, tx, ty, tz)
-                    if not ok then is_valid = false end
-                end
-                
-                -- [FIX] pcall SetRotation
-                if is_valid and SetRotation then
-                    local rot_speed = 50.0 
-                    local ok = true
-                    if is_active then 
-                        ok = pcall(SetRotation, vis_id, 0.0, 0.0, 0.0) 
+                -- ROTATION FIX: Only rotate on self-axis when actively stirring correctly
+                if is_active then
+                    if is_stirring_correct_dir and not is_finished then
+                        SetRotation(vis_id, 0.0, accumulated_time * 50.0, 0.0)
                     else
-                        ok = pcall(SetRotation, vis_id, 0.0, accumulated_time * rot_speed, 0.0) 
+                        -- Freeze rotation if player stops or spins wrong way
+                        SetRotation(vis_id, 0.0, 0.0, 0.0) 
                     end
-                    if not ok then is_valid = false end
+                else
+                    -- Normal idle spinning when not interacting
+                    SetRotation(vis_id, 0.0, accumulated_time * 50.0, 0.0)
                 end
             end
         end
 
-        -- Cleanup
         if not is_valid then
-            print("[Lua] Item removed/invalid at index " .. i)
             table.remove(visual_entities, i)
-            table.remove(stored_ingredients, i) -- Remove from data list too
-            
+            table.remove(stored_ingredients, i)
             if is_active then M.StopInteraction(my_entity_id) end
         end
-        i = i - 1
     end
-    
-    -- Update Timer
-    local dynamic_speed = orbit_speed_start
-    if is_active then
-        dynamic_speed = orbit_speed_start + (orbit_speed_end - orbit_speed_start) * progress
-    end
-    current_orbit_angle = current_orbit_angle + (dt * dynamic_speed)
 
-    -- 3. STIRRING LOGIC
-    if is_active and player_id then
-        local px, py, pz = GetPosition(player_id)
-        local cx, cy, cz = GetPosition(my_entity_id)
-        
-        if not px or not cx then 
-            M.StopInteraction(my_entity_id)
-            return
-        end
+    ---------------------------------------------------------
+    -- 4. UI & FINISHING
+    ---------------------------------------------------------
+    if is_active and entity_fill and entity_frame and px then
+        M.UpdateBillboard(px, pz, cx, cz, cy)
 
-        local dist = math.sqrt((px - cx)^2 + (py - cy)^2 + (pz - cz)^2)
-        if dist > max_distance then
-            M.StopInteraction(my_entity_id)
-            return
-        end
-
-        if entity_fill and entity_frame then
-            M.UpdateBillboard(px, pz, cx, cz, cy)
-
-            if is_finished then
-                current_finish_timer = current_finish_timer - dt
-                SetAnimationSettings(my_entity_id, 0.0, true, true) 
-                
-                if current_finish_timer <= 0 then M.OnPotionComplete() end
-                return
-            end
-
-            local dx, dy = GetMouseDelta()
-            spoon_x = spoon_x + dx
-            spoon_y = spoon_y + dy
-
-            local len = math.sqrt(spoon_x*spoon_x + spoon_y*spoon_y)
-            if len > 0.1 then
-                spoon_x = (spoon_x / len) * 100.0
-                spoon_y = (spoon_y / len) * 100.0
-            end
-
-            local current_angle = math.atan2(spoon_y, spoon_x)
-            local angle_delta = current_angle - last_angle
-            local PI = 3.14159265359
-
-            if angle_delta > PI then angle_delta = angle_delta - (2 * PI) end
-            if angle_delta < -PI then angle_delta = angle_delta + (2 * PI) end
-            last_angle = current_angle
-
-            local is_stirring = math.abs(angle_delta) > 0.02
-
-            if is_stirring then
-                progress = progress + (math.abs(angle_delta) * stir_sensitivity)
-                SetAnimationSettings(my_entity_id, 1.0, true, true)
-                PlayStirSound() -- Safe call now
-            else
-                SetAnimationSettings(my_entity_id, 0.0, true, true)
-                StopStirSound() -- Safe call now
-            end
-
-            if progress >= 1.0 then
-                progress = 1.0
-                is_finished = true
-                current_finish_timer = finish_delay
-                print("[Lua] Soup 100% -> Finishing...")
-            end
-
-            local current_length = progress * bar_length_max
-            SetScale(entity_fill, current_length, bar_thickness * 0.9, bar_thickness * 0.9)
+        if is_finished then
+            current_finish_timer = current_finish_timer - dt
+            SetAnimationSettings(my_entity_id, 0.0, true, true) 
+            if current_finish_timer <= 0 then M.OnPotionComplete() end
+        else
+            SetScale(entity_fill, progress * bar_length_max, bar_thickness * 0.9, bar_thickness * 0.9)
         end
     end
 end
-
 -- =============================================================
 -- [HELPER FUNCTIONS]
 -- =============================================================
