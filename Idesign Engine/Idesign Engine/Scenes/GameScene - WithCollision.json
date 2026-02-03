@@ -2741,19 +2741,19 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -53.96500015258789,
-                        8.02452564239502,
-                        9.5
+                        -57.29803466796875,
+                        8.024526596069336,
+                        6.891445636749268
                     ],
                     "rotation": [
                         0.0,
-                        90.0,
+                        26.48879623413086,
                         0.0
                     ],
                     "scale": [
-                        0.9999451637268066,
-                        0.9999809861183167,
-                        0.9999403953552246
+                        0.9999419450759888,
+                        0.999977707862854,
+                        0.9999372959136963
                     ],
                     "isActive": true
                 },
@@ -2766,7 +2766,8 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -2824,9 +2825,9 @@
                 },
                 "ListenerComponent": {
                     "position": [
-                        -53.96500015258789,
-                        8.02452564239502,
-                        9.5
+                        -57.29803466796875,
+                        8.024526596069336,
+                        6.891445636749268
                     ],
                     "forward": [
                         0.0,
@@ -3144,7 +3145,7 @@
                     "animationSpeed": 1.0,
                     "bLoops": true,
                     "bPlayOnStart": true,
-                    "currentTime": 239.39712524414063
+                    "currentTime": 30.55644416809082
                 },
                 "TextureComponent": {
                     "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
@@ -3697,7 +3698,7 @@
                         375.0,
                         150.0
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": false
                 }
             }
@@ -3789,7 +3790,7 @@
                         "60f2e874-560b-418f-8941-5051eaf42703",
                         "ce98accd-a35e-41f8-addd-5874a4a8cc99"
                     ],
-                    "sortIndex": 64
+                    "sortIndex": 63
                 },
                 "TagComponent": {
                     "tags": [
@@ -3839,7 +3840,7 @@
                 "HierarchyComponent": {
                     "parent": "828bfd6d-ea7d-42fd-8535-472b0a692e6e",
                     "children": [],
-                    "sortIndex": 65
+                    "sortIndex": 64
                 },
                 "TagComponent": {
                     "tags": [
@@ -3900,7 +3901,7 @@
                     "children": [
                         "e67dcc0d-7001-43a8-a331-19ea9c0628dd"
                     ],
-                    "sortIndex": 66
+                    "sortIndex": 65
                 },
                 "TagComponent": {
                     "tags": [
@@ -3958,7 +3959,7 @@
                         "1b4b5d0c-6351-45f6-80e5-9be48c9bf0d8",
                         "9331907c-cf4a-407f-ac73-fd1ebaf2317f"
                     ],
-                    "sortIndex": 67
+                    "sortIndex": 66
                 },
                 "TagComponent": {
                     "tags": [
@@ -4008,7 +4009,7 @@
                 "HierarchyComponent": {
                     "parent": "214c5541-f814-4e7f-bafa-d9e3db5aff2c",
                     "children": [],
-                    "sortIndex": 68
+                    "sortIndex": 67
                 },
                 "TagComponent": {
                     "tags": [
@@ -4067,7 +4068,7 @@
                 "HierarchyComponent": {
                     "parent": "214c5541-f814-4e7f-bafa-d9e3db5aff2c",
                     "children": [],
-                    "sortIndex": 69
+                    "sortIndex": 68
                 },
                 "TagComponent": {
                     "tags": [
@@ -4128,7 +4129,7 @@
                     "children": [
                         "65638daa-d78a-497c-8285-fc4077ad4cbd"
                     ],
-                    "sortIndex": 70
+                    "sortIndex": 69
                 },
                 "TagComponent": {
                     "tags": [
@@ -4178,7 +4179,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 71
+                    "sortIndex": 70
                 },
                 "TagComponent": {
                     "tags": []
@@ -4255,7 +4256,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 72
+                    "sortIndex": 71
                 },
                 "TagComponent": {
                     "tags": []
@@ -4332,7 +4333,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 73
+                    "sortIndex": 72
                 },
                 "TagComponent": {
                     "tags": []
@@ -4409,7 +4410,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 74
+                    "sortIndex": 73
                 },
                 "TagComponent": {
                     "tags": []
@@ -4457,7 +4458,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 75
+                    "sortIndex": 74
                 },
                 "TagComponent": {
                     "tags": [
@@ -4553,7 +4554,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 76
+                    "sortIndex": 75
                 },
                 "TagComponent": {
                     "tags": [
@@ -4649,7 +4650,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 77
+                    "sortIndex": 76
                 },
                 "TagComponent": {
                     "tags": [
@@ -4745,7 +4746,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 78
+                    "sortIndex": 77
                 },
                 "TagComponent": {
                     "tags": []
@@ -4822,7 +4823,7 @@
                 "HierarchyComponent": {
                     "parent": "8c4170a2-de7f-472d-a43a-931ed1f45b7a",
                     "children": [],
-                    "sortIndex": 79
+                    "sortIndex": 78
                 },
                 "TagComponent": {
                     "tags": [
@@ -4864,7 +4865,7 @@
                     "position": [
                         980.0,
                         880.0,
-                        1.0
+                        -100.0
                     ],
                     "rotation": [
                         0.0,
@@ -4881,7 +4882,7 @@
                 "HierarchyComponent": {
                     "parent": "23491286-9912-4971-b5d4-9145a810d598",
                     "children": [],
-                    "sortIndex": 63
+                    "sortIndex": 79
                 },
                 "TagComponent": {
                     "tags": [
@@ -4910,7 +4911,7 @@
                         375.0,
                         150.0
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": true
                 }
             }
@@ -4940,7 +4941,7 @@
                 "HierarchyComponent": {
                     "parent": "23491286-9912-4971-b5d4-9145a810d598",
                     "children": [],
-                    "sortIndex": 64
+                    "sortIndex": 80
                 },
                 "TagComponent": {
                     "tags": [
@@ -4999,7 +5000,7 @@
                 "HierarchyComponent": {
                     "parent": "23491286-9912-4971-b5d4-9145a810d598",
                     "children": [],
-                    "sortIndex": 65
+                    "sortIndex": 81
                 },
                 "TagComponent": {
                     "tags": [
@@ -5058,7 +5059,7 @@
                 "HierarchyComponent": {
                     "parent": "214c5541-f814-4e7f-bafa-d9e3db5aff2c",
                     "children": [],
-                    "sortIndex": 70
+                    "sortIndex": 82
                 },
                 "TagComponent": {
                     "tags": [
@@ -5117,7 +5118,7 @@
                 "HierarchyComponent": {
                     "parent": "214c5541-f814-4e7f-bafa-d9e3db5aff2c",
                     "children": [],
-                    "sortIndex": 71
+                    "sortIndex": 83
                 },
                 "TagComponent": {
                     "tags": [
@@ -5176,7 +5177,7 @@
                 "HierarchyComponent": {
                     "parent": "828bfd6d-ea7d-42fd-8535-472b0a692e6e",
                     "children": [],
-                    "sortIndex": 67
+                    "sortIndex": 84
                 },
                 "TagComponent": {
                     "tags": [
@@ -5250,7 +5251,7 @@
                         "33a5fe63-ea06-406e-90e2-c8287af1b8d7",
                         "d2b4dfcc-024b-4f49-ab0a-fdb3dc4fa675"
                     ],
-                    "sortIndex": 80
+                    "sortIndex": 85
                 },
                 "TagComponent": {
                     "tags": [
@@ -5300,7 +5301,7 @@
                 "HierarchyComponent": {
                     "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
                     "children": [],
-                    "sortIndex": 81
+                    "sortIndex": 86
                 },
                 "TagComponent": {
                     "tags": [
@@ -5332,7 +5333,7 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        1194.0,
+                        1418.25,
                         700.0,
                         1.0
                     ],
@@ -5351,7 +5352,7 @@
                 "HierarchyComponent": {
                     "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
                     "children": [],
-                    "sortIndex": 82
+                    "sortIndex": 87
                 },
                 "TagComponent": {
                     "tags": [
@@ -5365,7 +5366,7 @@
                 },
                 "ButtonComponent": {
                     "position": [
-                        1194.0,
+                        1418.25,
                         700.0
                     ],
                     "size": [
@@ -5402,7 +5403,7 @@
                 "HierarchyComponent": {
                     "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
                     "children": [],
-                    "sortIndex": 83
+                    "sortIndex": 88
                 },
                 "TagComponent": {
                     "tags": [
@@ -5418,7 +5419,7 @@
                     "isUI": false
                 },
                 "TextProperties": {
-                    "text": "71%",
+                    "text": "93%",
                     "scale": 1.0,
                     "color": [
                         1.0,
@@ -5431,7 +5432,7 @@
                     "screenSpace": true
                 },
                 "TextProperties": {
-                    "text": "71%",
+                    "text": "93%",
                     "scale": 1.0,
                     "color": [
                         1.0,
@@ -5470,7 +5471,7 @@
                 "HierarchyComponent": {
                     "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
                     "children": [],
-                    "sortIndex": 84
+                    "sortIndex": 89
                 },
                 "TagComponent": {
                     "tags": [
@@ -5524,7 +5525,7 @@
                 "HierarchyComponent": {
                     "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
                     "children": [],
-                    "sortIndex": 85
+                    "sortIndex": 90
                 },
                 "TagComponent": {
                     "tags": [
@@ -5578,7 +5579,7 @@
                 "HierarchyComponent": {
                     "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
                     "children": [],
-                    "sortIndex": 86
+                    "sortIndex": 91
                 },
                 "TagComponent": {
                     "tags": [
@@ -5646,7 +5647,7 @@
                 "HierarchyComponent": {
                     "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
                     "children": [],
-                    "sortIndex": 87
+                    "sortIndex": 92
                 },
                 "TagComponent": {
                     "tags": [
@@ -5700,7 +5701,7 @@
                 "HierarchyComponent": {
                     "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
                     "children": [],
-                    "sortIndex": 88
+                    "sortIndex": 93
                 },
                 "TagComponent": {
                     "tags": [
@@ -5754,7 +5755,7 @@
                 "HierarchyComponent": {
                     "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
                     "children": [],
-                    "sortIndex": 89
+                    "sortIndex": 94
                 },
                 "TagComponent": {
                     "tags": [
@@ -5822,7 +5823,7 @@
                 "HierarchyComponent": {
                     "parent": "214c5541-f814-4e7f-bafa-d9e3db5aff2c",
                     "children": [],
-                    "sortIndex": 90
+                    "sortIndex": 95
                 },
                 "TagComponent": {
                     "tags": [
@@ -5881,7 +5882,7 @@
                 "HierarchyComponent": {
                     "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
                     "children": [],
-                    "sortIndex": 91
+                    "sortIndex": 96
                 },
                 "TagComponent": {
                     "tags": [
@@ -5943,7 +5944,7 @@
                 "HierarchyComponent": {
                     "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
                     "children": [],
-                    "sortIndex": 92
+                    "sortIndex": 97
                 },
                 "TagComponent": {
                     "tags": [
@@ -6005,7 +6006,7 @@
                 "HierarchyComponent": {
                     "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
                     "children": [],
-                    "sortIndex": 93
+                    "sortIndex": 98
                 },
                 "TagComponent": {
                     "tags": [
@@ -6067,7 +6068,7 @@
                 "HierarchyComponent": {
                     "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
                     "children": [],
-                    "sortIndex": 94
+                    "sortIndex": 99
                 },
                 "TagComponent": {
                     "tags": [
@@ -6129,7 +6130,7 @@
                 "HierarchyComponent": {
                     "parent": "23491286-9912-4971-b5d4-9145a810d598",
                     "children": [],
-                    "sortIndex": 95
+                    "sortIndex": 100
                 },
                 "TagComponent": {
                     "tags": [
@@ -6196,7 +6197,7 @@
                         "1ef356ab-007e-49a5-9f22-ed6476b4cc4a",
                         "8ae286b4-616b-4f76-ae16-5624f510d274"
                     ],
-                    "sortIndex": 96
+                    "sortIndex": 101
                 },
                 "TagComponent": {
                     "tags": []
@@ -6244,7 +6245,7 @@
                 "HierarchyComponent": {
                     "parent": "6cb91ce4-34a5-4fb5-9341-5e906ce4cb1d",
                     "children": [],
-                    "sortIndex": 2
+                    "sortIndex": 102
                 },
                 "TagComponent": {
                     "tags": [
@@ -6311,7 +6312,7 @@
                 "HierarchyComponent": {
                     "parent": "6cb91ce4-34a5-4fb5-9341-5e906ce4cb1d",
                     "children": [],
-                    "sortIndex": 0
+                    "sortIndex": 103
                 },
                 "TagComponent": {
                     "tags": [
@@ -6353,7 +6354,7 @@
                 "HierarchyComponent": {
                     "parent": "6cb91ce4-34a5-4fb5-9341-5e906ce4cb1d",
                     "children": [],
-                    "sortIndex": 1
+                    "sortIndex": 104
                 },
                 "TagComponent": {
                     "tags": [
@@ -6420,7 +6421,7 @@
                 "HierarchyComponent": {
                     "parent": "6cb91ce4-34a5-4fb5-9341-5e906ce4cb1d",
                     "children": [],
-                    "sortIndex": 2
+                    "sortIndex": 105
                 },
                 "TagComponent": {
                     "tags": [
@@ -6487,7 +6488,7 @@
                 "HierarchyComponent": {
                     "parent": "6cb91ce4-34a5-4fb5-9341-5e906ce4cb1d",
                     "children": [],
-                    "sortIndex": 2
+                    "sortIndex": 106
                 },
                 "TagComponent": {
                     "tags": [
@@ -6554,7 +6555,7 @@
                 "HierarchyComponent": {
                     "parent": "6cb91ce4-34a5-4fb5-9341-5e906ce4cb1d",
                     "children": [],
-                    "sortIndex": 0
+                    "sortIndex": 107
                 },
                 "TagComponent": {
                     "tags": [
@@ -6596,7 +6597,7 @@
                 "HierarchyComponent": {
                     "parent": "6cb91ce4-34a5-4fb5-9341-5e906ce4cb1d",
                     "children": [],
-                    "sortIndex": 0
+                    "sortIndex": 108
                 },
                 "TagComponent": {
                     "tags": [
@@ -6638,7 +6639,7 @@
                 "HierarchyComponent": {
                     "parent": "214c5541-f814-4e7f-bafa-d9e3db5aff2c",
                     "children": [],
-                    "sortIndex": 90
+                    "sortIndex": 109
                 },
                 "TagComponent": {
                     "tags": [
@@ -6697,7 +6698,7 @@
                 "HierarchyComponent": {
                     "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
                     "children": [],
-                    "sortIndex": 91
+                    "sortIndex": 110
                 },
                 "TagComponent": {
                     "tags": [
@@ -6759,7 +6760,7 @@
                 "HierarchyComponent": {
                     "parent": "23491286-9912-4971-b5d4-9145a810d598",
                     "children": [],
-                    "sortIndex": 65
+                    "sortIndex": 111
                 },
                 "TagComponent": {
                     "tags": [
@@ -6818,7 +6819,7 @@
                 "HierarchyComponent": {
                     "parent": "23491286-9912-4971-b5d4-9145a810d598",
                     "children": [],
-                    "sortIndex": 95
+                    "sortIndex": 112
                 },
                 "TagComponent": {
                     "tags": [
@@ -6877,7 +6878,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 80
+                    "sortIndex": 113
                 },
                 "TagComponent": {
                     "tags": []
@@ -6954,7 +6955,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 81
+                    "sortIndex": 114
                 },
                 "TagComponent": {
                     "tags": []
@@ -7009,7 +7010,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 83
+                    "sortIndex": 115
                 },
                 "TagComponent": {
                     "tags": []
@@ -7086,7 +7087,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 84
+                    "sortIndex": 116
                 },
                 "TagComponent": {
                     "tags": []
@@ -7163,7 +7164,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 85
+                    "sortIndex": 117
                 },
                 "TagComponent": {
                     "tags": []
@@ -7237,21 +7238,21 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -173.37835693359375,
-                        5.1612935066223145,
-                        118.59320831298828
+                        -201.68099975585938,
+                        -0.17900000512599945,
+                        95.5719985961914
                     ],
                     "rotation": [
-                        -0.00850923452526331,
-                        0.028392350301146507,
-                        -0.09430252015590668
+                        180.0,
+                        -90.0,
+                        180.0
                     ],
                     "scale": [
-                        1.9998365640640259,
-                        0.019999951124191284,
-                        1.9999476671218872
+                        80.0,
+                        20.0,
+                        60.0
                     ],
-                    "isActive": true
+                    "isActive": false
                 },
                 "HierarchyComponent": {
                     "parent": "",
@@ -7262,9 +7263,9 @@
                         "e2e50e2b-4995-4b52-8b8d-41eaec588499",
                         "e3a705ee-b0ad-490b-ae03-ce80e79ce43e",
                         "9595c3ee-eff2-4d76-bc06-ccf33f963582",
-                        "d031390b-9392-4328-88de-7094b1e660fc",
-                        "f8b9a985-f7ee-4eee-a0b3-a7cb94264f75",
                         "39ad6962-3011-4388-b7da-25eabdc563e0",
+                        "f8b9a985-f7ee-4eee-a0b3-a7cb94264f75",
+                        "d031390b-9392-4328-88de-7094b1e660fc",
                         "1e609153-ce1a-4b63-9d19-fa78e6e04d69",
                         "2f4e0c8f-b60f-42b1-b56e-d1cae0a9958d",
                         "b27a6c0a-858c-49c8-90cb-4de8184d4b24",
@@ -7275,6 +7276,7 @@
                         "0f6b5f1f-e365-43f6-a5ad-056607ae189e",
                         "2e6a562a-3e39-49c3-888c-d34be45ea56e",
                         "79f9a883-947d-4498-bec5-4e54e8f2fa77",
+                        "6dc016b8-6bae-4a48-b09d-c88ddb0ed6bc",
                         "72193c15-ab65-4927-af93-90b26bdd740e",
                         "796cd174-4de5-409f-a5d5-74020862bb3d",
                         "55fb1862-2ff2-4a27-9b5c-dbab1f1b8d16",
@@ -7367,36 +7369,21 @@
                         "d80f5c42-5e11-44e7-915b-14077678fc61",
                         "4000fa97-fd36-4900-b374-b65bce38da6c"
                     ],
-                    "sortIndex": 113
+                    "sortIndex": 118
                 },
                 "TagComponent": {
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "eac3e6f4-1bf2-415f-aef8-8f1269d91560",
+                    "guid": "c9235b5b-3b4d-4d81-a8b0-be5f5e60c452",
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "bdca4fb8-fc22-4bfc-b886-3a1e1a21ebd7",
+                    "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
                     "isUI": false
                 },
                 "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                106.5,
-                                102.0,
-                                108.30000305175781
-                            ],
-                            "center": [
-                                0.0,
-                                -1.2000000476837158,
-                                0.0
-                            ],
-                            "canPassThrough": false,
-                            "isInteractable": false
-                        }
-                    ]
+                    "colliders": []
                 },
                 "PhysicsProperties": {
                     "category": 0,
@@ -7444,13 +7431,14 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 86
+                    "sortIndex": 120
                 },
                 "TagComponent": {
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
@@ -7499,7 +7487,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 87
+                    "sortIndex": 122
                 },
                 "TagComponent": {
                     "tags": []
@@ -7576,13 +7564,14 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 88
+                    "sortIndex": 119
                 },
                 "TagComponent": {
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "b2d4bb99-3396-40de-8789-01d6cf083f4e",
@@ -7652,7 +7641,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 89
+                    "sortIndex": 121
                 },
                 "TagComponent": {
                     "tags": []
@@ -7695,7 +7684,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 90
+                    "sortIndex": 123
                 },
                 "TagComponent": {
                     "tags": []
@@ -7735,7 +7724,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 91
+                    "sortIndex": 124
                 },
                 "TagComponent": {
                     "tags": []
@@ -7775,7 +7764,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 92
+                    "sortIndex": 125
                 },
                 "TagComponent": {
                     "tags": []
@@ -7837,7 +7826,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 93
+                    "sortIndex": 126
                 },
                 "TagComponent": {
                     "tags": []
@@ -7877,7 +7866,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 94
+                    "sortIndex": 127
                 },
                 "TagComponent": {
                     "tags": []
@@ -7917,7 +7906,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 95
+                    "sortIndex": 128
                 },
                 "TagComponent": {
                     "tags": []
@@ -7957,7 +7946,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 96
+                    "sortIndex": 129
                 },
                 "TagComponent": {
                     "tags": []
@@ -7997,7 +7986,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 97
+                    "sortIndex": 130
                 },
                 "TagComponent": {
                     "tags": []
@@ -8037,7 +8026,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 98
+                    "sortIndex": 131
                 },
                 "TagComponent": {
                     "tags": []
@@ -8077,7 +8066,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 99
+                    "sortIndex": 132
                 },
                 "TagComponent": {
                     "tags": []
@@ -8117,7 +8106,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 100
+                    "sortIndex": 133
                 },
                 "TagComponent": {
                     "tags": []
@@ -8194,7 +8183,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 101
+                    "sortIndex": 134
                 },
                 "TagComponent": {
                     "tags": []
@@ -8271,7 +8260,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 102
+                    "sortIndex": 135
                 },
                 "TagComponent": {
                     "tags": []
@@ -8348,7 +8337,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 103
+                    "sortIndex": 137
                 },
                 "TagComponent": {
                     "tags": []
@@ -8388,7 +8377,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 104
+                    "sortIndex": 136
                 },
                 "TagComponent": {
                     "tags": []
@@ -8428,7 +8417,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 105
+                    "sortIndex": 138
                 },
                 "TagComponent": {
                     "tags": []
@@ -8505,7 +8494,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 106
+                    "sortIndex": 139
                 },
                 "TagComponent": {
                     "tags": []
@@ -8582,7 +8571,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 107
+                    "sortIndex": 140
                 },
                 "TagComponent": {
                     "tags": []
@@ -8659,7 +8648,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 108
+                    "sortIndex": 141
                 },
                 "TagComponent": {
                     "tags": []
@@ -8736,7 +8725,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 109
+                    "sortIndex": 142
                 },
                 "TagComponent": {
                     "tags": []
@@ -8813,7 +8802,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 110
+                    "sortIndex": 143
                 },
                 "TagComponent": {
                     "tags": []
@@ -8890,7 +8879,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 111
+                    "sortIndex": 144
                 },
                 "TagComponent": {
                     "tags": []
@@ -8930,7 +8919,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 112
+                    "sortIndex": 145
                 },
                 "TagComponent": {
                     "tags": []
@@ -8989,7 +8978,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 0
+                    "sortIndex": 146
                 },
                 "TagComponent": {
                     "tags": []
@@ -9066,7 +9055,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 1
+                    "sortIndex": 147
                 },
                 "TagComponent": {
                     "tags": []
@@ -9143,7 +9132,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 2
+                    "sortIndex": 148
                 },
                 "TagComponent": {
                     "tags": []
@@ -9220,7 +9209,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 3
+                    "sortIndex": 149
                 },
                 "TagComponent": {
                     "tags": []
@@ -9297,7 +9286,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 4
+                    "sortIndex": 150
                 },
                 "TagComponent": {
                     "tags": []
@@ -9374,7 +9363,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 5
+                    "sortIndex": 151
                 },
                 "TagComponent": {
                     "tags": []
@@ -9451,7 +9440,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 6
+                    "sortIndex": 152
                 },
                 "TagComponent": {
                     "tags": []
@@ -9528,7 +9517,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 7
+                    "sortIndex": 153
                 },
                 "TagComponent": {
                     "tags": []
@@ -9605,7 +9594,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 8
+                    "sortIndex": 154
                 },
                 "TagComponent": {
                     "tags": []
@@ -9682,7 +9671,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 9
+                    "sortIndex": 155
                 },
                 "TagComponent": {
                     "tags": []
@@ -9759,7 +9748,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 10
+                    "sortIndex": 156
                 },
                 "TagComponent": {
                     "tags": []
@@ -9836,7 +9825,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 11
+                    "sortIndex": 157
                 },
                 "TagComponent": {
                     "tags": []
@@ -9913,7 +9902,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 12
+                    "sortIndex": 158
                 },
                 "TagComponent": {
                     "tags": []
@@ -9990,7 +9979,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 13
+                    "sortIndex": 159
                 },
                 "TagComponent": {
                     "tags": []
@@ -10067,7 +10056,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 14
+                    "sortIndex": 160
                 },
                 "TagComponent": {
                     "tags": []
@@ -10144,7 +10133,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 15
+                    "sortIndex": 161
                 },
                 "TagComponent": {
                     "tags": []
@@ -10221,7 +10210,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 17
+                    "sortIndex": 162
                 },
                 "TagComponent": {
                     "tags": []
@@ -10298,7 +10287,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 16
+                    "sortIndex": 163
                 },
                 "TagComponent": {
                     "tags": []
@@ -10373,9 +10362,9 @@
                     "isActive": true
                 },
                 "HierarchyComponent": {
-                    "parent": "79f9a883-947d-4498-bec5-4e54e8f2fa77",
+                    "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 0
+                    "sortIndex": 164
                 },
                 "TagComponent": {
                     "tags": []
@@ -10451,10 +10440,8 @@
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
-                    "children": [
-                        "6dc016b8-6bae-4a48-b09d-c88ddb0ed6bc"
-                    ],
-                    "sortIndex": 18
+                    "children": [],
+                    "sortIndex": 165
                 },
                 "TagComponent": {
                     "tags": []
@@ -10531,7 +10518,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 19
+                    "sortIndex": 166
                 },
                 "TagComponent": {
                     "tags": []
@@ -10608,7 +10595,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 20
+                    "sortIndex": 167
                 },
                 "TagComponent": {
                     "tags": []
@@ -10685,7 +10672,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 22
+                    "sortIndex": 168
                 },
                 "TagComponent": {
                     "tags": []
@@ -10762,7 +10749,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 23
+                    "sortIndex": 169
                 },
                 "TagComponent": {
                     "tags": []
@@ -10839,7 +10826,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 24
+                    "sortIndex": 170
                 },
                 "TagComponent": {
                     "tags": []
@@ -10897,26 +10884,26 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -202.7420654296875,
-                        4.742811679840088,
-                        208.17201232910156
+                        -202.7902069091797,
+                        4.903605937957764,
+                        207.95460510253906
                     ],
                     "rotation": [
-                        0.00028688646852970123,
-                        -0.06841623038053513,
-                        -0.00014142566942609847
+                        0.0,
+                        0.0,
+                        0.0
                     ],
                     "scale": [
-                        10.0,
-                        10.0,
-                        10.0
+                        9.99999713897705,
+                        9.999996185302734,
+                        9.999961853027344
                     ],
                     "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 25
+                    "sortIndex": 171
                 },
                 "TagComponent": {
                     "tags": []
@@ -10993,7 +10980,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 26
+                    "sortIndex": 172
                 },
                 "TagComponent": {
                     "tags": []
@@ -11070,7 +11057,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 27
+                    "sortIndex": 173
                 },
                 "TagComponent": {
                     "tags": []
@@ -11147,7 +11134,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 28
+                    "sortIndex": 174
                 },
                 "TagComponent": {
                     "tags": []
@@ -11224,7 +11211,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 29
+                    "sortIndex": 175
                 },
                 "TagComponent": {
                     "tags": []
@@ -11301,7 +11288,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 30
+                    "sortIndex": 176
                 },
                 "TagComponent": {
                     "tags": []
@@ -11378,7 +11365,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 31
+                    "sortIndex": 177
                 },
                 "TagComponent": {
                     "tags": []
@@ -11455,7 +11442,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 32
+                    "sortIndex": 178
                 },
                 "TagComponent": {
                     "tags": []
@@ -11532,7 +11519,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 33
+                    "sortIndex": 179
                 },
                 "TagComponent": {
                     "tags": []
@@ -11609,7 +11596,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 34
+                    "sortIndex": 180
                 },
                 "TagComponent": {
                     "tags": []
@@ -11686,7 +11673,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 35
+                    "sortIndex": 181
                 },
                 "TagComponent": {
                     "tags": []
@@ -11763,7 +11750,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 36
+                    "sortIndex": 182
                 },
                 "TagComponent": {
                     "tags": []
@@ -11840,7 +11827,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 37
+                    "sortIndex": 183
                 },
                 "TagComponent": {
                     "tags": []
@@ -11917,7 +11904,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 38
+                    "sortIndex": 184
                 },
                 "TagComponent": {
                     "tags": []
@@ -11994,7 +11981,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 39
+                    "sortIndex": 185
                 },
                 "TagComponent": {
                     "tags": []
@@ -12071,7 +12058,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 40
+                    "sortIndex": 186
                 },
                 "TagComponent": {
                     "tags": []
@@ -12134,9 +12121,9 @@
                         207.70091247558594
                     ],
                     "rotation": [
-                        0.0003379211120773107,
+                        0.0003381933202035725,
                         -0.06841623038053513,
-                        -0.000227788244956173
+                        -0.0002281919150846079
                     ],
                     "scale": [
                         10.0,
@@ -12148,7 +12135,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 41
+                    "sortIndex": 187
                 },
                 "TagComponent": {
                     "tags": []
@@ -12225,7 +12212,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 42
+                    "sortIndex": 188
                 },
                 "TagComponent": {
                     "tags": []
@@ -12302,7 +12289,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 43
+                    "sortIndex": 189
                 },
                 "TagComponent": {
                     "tags": []
@@ -12379,7 +12366,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 44
+                    "sortIndex": 190
                 },
                 "TagComponent": {
                     "tags": []
@@ -12437,14 +12424,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -164.14260864257813,
-                        9.738014221191406,
-                        99.67477416992188
+                        -164.16261291503906,
+                        18.14642333984375,
+                        100.73038482666016
                     ],
                     "rotation": [
-                        180.0,
-                        -89.99994659423828,
-                        180.0
+                        0.07821352779865265,
+                        89.99581146240234,
+                        -47.30487060546875
                     ],
                     "scale": [
                         6.0,
@@ -12456,7 +12443,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 45
+                    "sortIndex": 191
                 },
                 "TagComponent": {
                     "tags": []
@@ -12533,7 +12520,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 46
+                    "sortIndex": 192
                 },
                 "TagComponent": {
                     "tags": []
@@ -12591,14 +12578,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -176.37997436523438,
-                        9.74027156829834,
-                        170.15011596679688
+                        -176.22998046875,
+                        23.389724731445313,
+                        164.58836364746094
                     ],
                     "rotation": [
-                        0.00033282925141975284,
-                        -0.06841623038053513,
-                        -0.00022017215087544173
+                        9.284636497497559,
+                        -2.471997022628784,
+                        -0.1271413415670395
                     ],
                     "scale": [
                         8.0,
@@ -12610,7 +12597,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 47
+                    "sortIndex": 193
                 },
                 "TagComponent": {
                     "tags": []
@@ -12668,14 +12655,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -193.34495544433594,
-                        9.902670860290527,
-                        98.49073028564453
+                        -193.6601104736328,
+                        35.62635040283203,
+                        98.39669036865234
                     ],
                     "rotation": [
-                        0.0004896558239124715,
-                        -0.06841593235731125,
-                        -0.00042126941843889654
+                        -0.32616204023361206,
+                        -0.07011596858501434,
+                        1.101380705833435
                     ],
                     "scale": [
                         8.0,
@@ -12687,7 +12674,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 48
+                    "sortIndex": 194
                 },
                 "TagComponent": {
                     "tags": []
@@ -12764,7 +12751,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 49
+                    "sortIndex": 195
                 },
                 "TagComponent": {
                     "tags": []
@@ -12822,18 +12809,18 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -178.41650390625,
-                        6.839707851409912,
-                        124.2105941772461
+                        -210.21299743652344,
+                        7.071765422821045,
+                        119.76981353759766
                     ],
                     "rotation": [
-                        0.0022043464705348015,
-                        -0.06838724762201309,
-                        -0.002190169645473361
+                        0.000004600703505275305,
+                        -0.06633471697568893,
+                        -0.0000012205031225676066
                     ],
                     "scale": [
-                        5.0,
-                        5.0,
+                        5.000032424926758,
+                        5.000009536743164,
                         5.0
                     ],
                     "isActive": true
@@ -12841,7 +12828,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 50
+                    "sortIndex": 196
                 },
                 "TagComponent": {
                     "tags": []
@@ -12883,6 +12870,20 @@
                             ],
                             "canPassThrough": false,
                             "isInteractable": false
+                        },
+                        {
+                            "size": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ],
+                            "center": [
+                                0.0,
+                                0.800000011920929,
+                                0.0
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
                         }
                     ]
                 },
@@ -12913,14 +12914,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -157.38327026367188,
-                        9.510543823242188,
-                        75.54401397705078
+                        -159.4441680908203,
+                        17.913558959960938,
+                        72.13379669189453
                     ],
                     "rotation": [
-                        0.0006316115614026785,
-                        -0.06841623038053513,
-                        -0.0005802026716992259
+                        0.0,
+                        -0.0,
+                        0.0
                     ],
                     "scale": [
                         5.0,
@@ -12932,7 +12933,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 51
+                    "sortIndex": 197
                 },
                 "TagComponent": {
                     "tags": []
@@ -12990,26 +12991,26 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -156.19775390625,
-                        3.922853946685791,
-                        135.1890106201172
+                        -172.98873901367188,
+                        56.79716873168945,
+                        136.48672485351563
                     ],
                     "rotation": [
-                        0.0004257719265297055,
-                        -0.06841623038053513,
-                        -0.00034493833663873374
+                        -19.274272918701172,
+                        1.5175920724868774,
+                        90.09201049804688
                     ],
                     "scale": [
-                        8.0,
-                        8.0,
-                        8.0
+                        7.9999871253967285,
+                        7.9999775886535645,
+                        7.9999494552612305
                     ],
                     "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 52
+                    "sortIndex": 198
                 },
                 "TagComponent": {
                     "tags": []
@@ -13067,14 +13068,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -233.49285888671875,
-                        22.336645126342773,
-                        88.3599853515625
+                        -233.5449676513672,
+                        8.809993743896484,
+                        88.52275848388672
                     ],
                     "rotation": [
-                        -19.726200103759766,
-                        0.08043327927589417,
-                        0.2730514407157898
+                        -17.374353408813477,
+                        -0.06527874618768692,
+                        -0.06700499355792999
                     ],
                     "scale": [
                         0.9999893307685852,
@@ -13086,7 +13087,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 53
+                    "sortIndex": 199
                 },
                 "TagComponent": {
                     "tags": []
@@ -13163,7 +13164,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 54
+                    "sortIndex": 200
                 },
                 "TagComponent": {
                     "tags": []
@@ -13240,7 +13241,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 55
+                    "sortIndex": 201
                 },
                 "TagComponent": {
                     "tags": []
@@ -13317,7 +13318,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 56
+                    "sortIndex": 202
                 },
                 "TagComponent": {
                     "tags": []
@@ -13375,26 +13376,26 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -120.09358978271484,
-                        9.680809020996094,
-                        137.36471557617188
+                        -136.42657470703125,
+                        25.56959342956543,
+                        137.19229125976563
                     ],
                     "rotation": [
-                        0.00028893115813843906,
-                        -0.06841621547937393,
-                        -0.0001455452584195882
+                        0.030005749315023422,
+                        0.71294766664505,
+                        0.24573743343353271
                     ],
                     "scale": [
-                        1.0,
-                        1.0,
-                        1.0
+                        0.9999997019767761,
+                        0.9999992847442627,
+                        0.9999983906745911
                     ],
                     "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 57
+                    "sortIndex": 203
                 },
                 "TagComponent": {
                     "tags": []
@@ -13471,7 +13472,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 58
+                    "sortIndex": 204
                 },
                 "TagComponent": {
                     "tags": []
@@ -13548,7 +13549,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 59
+                    "sortIndex": 205
                 },
                 "TagComponent": {
                     "tags": []
@@ -13606,26 +13607,26 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -177.57810974121094,
-                        9.850910186767578,
-                        150.85049438476563
+                        -183.3654327392578,
+                        9.870963096618652,
+                        77.06770324707031
                     ],
                     "rotation": [
-                        0.0002824645198415965,
-                        -0.06841621547937393,
-                        -0.0001322431635344401
+                        -0.00004302305023884401,
+                        -0.11993249505758286,
+                        -0.0015428833430632949
                     ],
                     "scale": [
-                        1.0,
-                        1.0,
-                        1.0
+                        0.9999896287918091,
+                        0.9999983310699463,
+                        0.9999909996986389
                     ],
                     "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 60
+                    "sortIndex": 206
                 },
                 "TagComponent": {
                     "tags": []
@@ -13683,26 +13684,26 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -238.51077270507813,
-                        8.33636474609375,
-                        169.9947052001953
+                        -258.44500732421875,
+                        11.861261367797852,
+                        96.823974609375
                     ],
                     "rotation": [
-                        0.2704314589500427,
-                        -0.530591607093811,
-                        -0.09425321221351624
+                        0.03562137857079506,
+                        -0.001940324087627232,
+                        0.32062122225761414
                     ],
                     "scale": [
-                        0.9999967217445374,
-                        0.9999970197677612,
-                        0.9999892711639404
+                        0.9999895691871643,
+                        0.9999932050704956,
+                        0.9999802112579346
                     ],
                     "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 61
+                    "sortIndex": 207
                 },
                 "TagComponent": {
                     "tags": []
@@ -13760,26 +13761,26 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -248.47203063964844,
-                        8.31491756439209,
-                        185.7870635986328
+                        -248.14535522460938,
+                        33.01746368408203,
+                        183.8407745361328
                     ],
                     "rotation": [
-                        -89.90934753417969,
-                        95.19216918945313,
-                        -0.0941614955663681
+                        90.09207153320313,
+                        84.80146789550781,
+                        3.311812162399292
                     ],
                     "scale": [
-                        0.9999988079071045,
-                        0.999999463558197,
-                        0.999999463558197
+                        0.9999966025352478,
+                        0.9999976754188538,
+                        0.9999963641166687
                     ],
                     "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 62
+                    "sortIndex": 208
                 },
                 "TagComponent": {
                     "tags": []
@@ -13812,7 +13813,7 @@
                 },
                 "PhysicsProperties": {
                     "category": 0,
-                    "isImmovable": false,
+                    "isImmovable": true,
                     "gravityFactor": 1.0,
                     "mass": 1.0,
                     "friction": 0.5,
@@ -13856,7 +13857,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 63
+                    "sortIndex": 209
                 },
                 "TagComponent": {
                     "tags": []
@@ -13914,26 +13915,26 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -234.2454833984375,
-                        23.00546646118164,
-                        155.6664276123047
+                        -149.97816467285156,
+                        38.08073806762695,
+                        158.7123260498047
                     ],
                     "rotation": [
-                        20.571002960205078,
-                        -0.14251708984375,
-                        -0.04513949900865555
+                        8.56651070080261e-7,
+                        -0.015399654395878315,
+                        0.0009390484192408621
                     ],
                     "scale": [
-                        0.999999463558197,
-                        0.9999994039535522,
-                        0.9999992847442627
+                        0.9999824166297913,
+                        0.999996542930603,
+                        0.9999818205833435
                     ],
                     "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 64
+                    "sortIndex": 210
                 },
                 "TagComponent": {
                     "tags": []
@@ -14010,7 +14011,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 65
+                    "sortIndex": 211
                 },
                 "TagComponent": {
                     "tags": []
@@ -14069,13 +14070,13 @@
                 "TransformComponent": {
                     "position": [
                         -119.71746063232422,
-                        9.881817817687988,
-                        113.0997085571289
+                        20.104402542114258,
+                        113.09976959228516
                     ],
                     "rotation": [
-                        0.0002592555247247219,
+                        0.00026002369122579694,
                         -0.06841621547937393,
-                        -0.00007009705586824566
+                        -0.00007288729830179363
                     ],
                     "scale": [
                         1.0,
@@ -14087,7 +14088,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 66
+                    "sortIndex": 212
                 },
                 "TagComponent": {
                     "tags": []
@@ -14145,26 +14146,26 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -131.15406799316406,
-                        9.963412284851074,
-                        66.13496398925781
+                        -150.05050659179688,
+                        18.748258590698242,
+                        66.10785675048828
                     ],
                     "rotation": [
-                        0.0004719833377748728,
-                        -0.06841621547937393,
-                        -0.0004005948721896857
+                        0.000012505532140494324,
+                        -0.13521288335323334,
+                        -0.09306740760803223
                     ],
                     "scale": [
+                        0.49999868869781494,
                         0.5,
-                        0.5,
-                        0.5
+                        0.49999773502349854
                     ],
                     "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 67
+                    "sortIndex": 213
                 },
                 "TagComponent": {
                     "tags": []
@@ -14241,7 +14242,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 68
+                    "sortIndex": 214
                 },
                 "TagComponent": {
                     "tags": []
@@ -14300,13 +14301,13 @@
                 "TransformComponent": {
                     "position": [
                         -135.7886962890625,
-                        9.835811614990234,
-                        183.5148162841797
+                        14.680577278137207,
+                        183.51483154296875
                     ],
                     "rotation": [
-                        0.0003099365858361125,
+                        0.00031215278431773186,
                         -0.06841621547937393,
-                        -0.00018375022045802325
+                        -0.0001874641893664375
                     ],
                     "scale": [
                         1.0,
@@ -14318,7 +14319,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 69
+                    "sortIndex": 215
                 },
                 "TagComponent": {
                     "tags": []
@@ -14376,14 +14377,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -159.20150756835938,
-                        9.76792049407959,
-                        184.76821899414063
+                        -159.1924285888672,
+                        18.819887161254883,
+                        184.766845703125
                     ],
                     "rotation": [
-                        0.0005061019328422844,
-                        -0.06841559708118439,
-                        -0.00044028053525835276
+                        -0.0073513067327439785,
+                        -0.07123230397701263,
+                        -0.07896183431148529
                     ],
                     "scale": [
                         1.0,
@@ -14395,7 +14396,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 70
+                    "sortIndex": 216
                 },
                 "TagComponent": {
                     "tags": []
@@ -14453,26 +14454,26 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -142.18728637695313,
-                        9.869019508361816,
-                        73.91595458984375
+                        -198.26927185058594,
+                        14.82016372680664,
+                        183.5786895751953
                     ],
                     "rotation": [
-                        0.0003488778602331877,
-                        -0.06841621547937393,
-                        -0.0002437623479636386
+                        -0.1982143670320511,
+                        -0.9288783669471741,
+                        0.11257156729698181
                     ],
                     "scale": [
-                        1.0,
-                        1.0,
-                        1.0
+                        0.9999821782112122,
+                        0.9999906420707703,
+                        0.9999862909317017
                     ],
                     "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 71
+                    "sortIndex": 217
                 },
                 "TagComponent": {
                     "tags": []
@@ -14530,26 +14531,26 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -144.3286895751953,
-                        9.90912914276123,
-                        106.20674133300781
+                        -144.32620239257813,
+                        14.945717811584473,
+                        106.20633697509766
                     ],
                     "rotation": [
-                        0.0004176405491307378,
-                        -0.06841621547937393,
-                        -0.00033485624589957297
+                        -0.0031666208524256945,
+                        -0.0675579309463501,
+                        -0.021154720336198807
                     ],
                     "scale": [
-                        0.25,
+                        0.24999940395355225,
                         0.3499999940395355,
-                        0.5
+                        0.4999988079071045
                     ],
                     "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 72
+                    "sortIndex": 218
                 },
                 "TagComponent": {
                     "tags": []
@@ -14626,7 +14627,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 73
+                    "sortIndex": 219
                 },
                 "TagComponent": {
                     "tags": []
@@ -14703,7 +14704,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 74
+                    "sortIndex": 220
                 },
                 "TagComponent": {
                     "tags": []
@@ -14761,26 +14762,26 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -150.08718872070313,
-                        7.882270336151123,
-                        122.6754150390625
+                        -179.76266479492188,
+                        10.826001167297363,
+                        124.64949798583984
                     ],
                     "rotation": [
-                        0.00042247993405908346,
-                        -0.06841621547937393,
-                        -0.0003408743941690773
+                        0.00003114551509497687,
+                        -0.0010384394554421306,
+                        0.0003335974761284888
                     ],
                     "scale": [
-                        0.5,
-                        0.5,
-                        0.5
+                        0.4999939799308777,
+                        0.49999991059303284,
+                        0.49999430775642395
                     ],
                     "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 76
+                    "sortIndex": 221
                 },
                 "TagComponent": {
                     "tags": []
@@ -14857,7 +14858,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 77
+                    "sortIndex": 222
                 },
                 "TagComponent": {
                     "tags": []
@@ -14924,26 +14925,26 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -202.55740356445313,
-                        9.884745597839355,
-                        68.97030639648438
+                        -142.20242309570313,
+                        13.243779182434082,
+                        74.51190948486328
                     ],
                     "rotation": [
-                        0.00025320789427496493,
-                        -0.06841621547937393,
-                        -0.00004258715489413589
+                        0.00009862677688943222,
+                        -0.08707388490438461,
+                        0.00007151089084800333
                     ],
                     "scale": [
-                        0.5,
-                        0.5,
-                        0.5
+                        0.49998971819877625,
+                        0.49999821186065674,
+                        0.4999915063381195
                     ],
                     "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 84
+                    "sortIndex": 224
                 },
                 "TagComponent": {
                     "tags": []
@@ -15020,7 +15021,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 85
+                    "sortIndex": 225
                 },
                 "TagComponent": {
                     "tags": []
@@ -15097,7 +15098,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 86
+                    "sortIndex": 226
                 },
                 "TagComponent": {
                     "tags": []
@@ -15174,7 +15175,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 87
+                    "sortIndex": 227
                 },
                 "TagComponent": {
                     "tags": []
@@ -15251,7 +15252,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 112
+                    "sortIndex": 228
                 },
                 "TagComponent": {
                     "tags": []
@@ -15310,7 +15311,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 112
+                    "sortIndex": 229
                 },
                 "TagComponent": {
                     "tags": []
@@ -15369,7 +15370,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 112
+                    "sortIndex": 230
                 },
                 "TagComponent": {
                     "tags": []
@@ -15428,7 +15429,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 112
+                    "sortIndex": 231
                 },
                 "TagComponent": {
                     "tags": []
@@ -15468,26 +15469,26 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -243.8189697265625,
-                        24.816450119018555,
-                        94.91130828857422
+                        -155.18521118164063,
+                        2.882319688796997,
+                        86.08533477783203
                     ],
                     "rotation": [
-                        -19.72675132751465,
-                        0.009164974093437195,
-                        0.2845110297203064
+                        -0.039314087480306625,
+                        -0.8030044436454773,
+                        -179.6182861328125
                     ],
                     "scale": [
-                        0.9999907612800598,
-                        0.9999917149543762,
-                        0.9999923706054688
+                        0.9999715685844421,
+                        0.9999805688858032,
+                        0.9999713897705078
                     ],
                     "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 91
+                    "sortIndex": 232
                 },
                 "TagComponent": {
                     "tags": []
@@ -15520,7 +15521,7 @@
                 },
                 "PhysicsProperties": {
                     "category": 0,
-                    "isImmovable": true,
+                    "isImmovable": false,
                     "gravityFactor": 1.0,
                     "mass": 1.0,
                     "friction": 0.5,
@@ -15545,26 +15546,26 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -249.86563110351563,
-                        17.011255264282227,
-                        143.71141052246094
+                        -249.9173583984375,
+                        23.209218978881836,
+                        126.1944351196289
                     ],
                     "rotation": [
-                        -23.930566787719727,
-                        0.05941132828593254,
-                        -0.20411288738250732
+                        -0.2779061198234558,
+                        -0.1330273598432541,
+                        -0.0708395317196846
                     ],
                     "scale": [
-                        0.9999874830245972,
-                        0.999991238117218,
-                        0.9999918937683105
+                        0.99998539686203,
+                        0.9999885559082031,
+                        0.9999901056289673
                     ],
                     "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 92
+                    "sortIndex": 233
                 },
                 "TagComponent": {
                     "tags": []
@@ -15641,7 +15642,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 93
+                    "sortIndex": 234
                 },
                 "TagComponent": {
                     "tags": []
@@ -15718,7 +15719,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 112
+                    "sortIndex": 235
                 },
                 "TagComponent": {
                     "tags": []
@@ -15777,7 +15778,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 112
+                    "sortIndex": 236
                 },
                 "TagComponent": {
                     "tags": []
@@ -15836,7 +15837,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 85
+                    "sortIndex": 237
                 },
                 "TagComponent": {
                     "tags": []
@@ -15929,7 +15930,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 94
+                    "sortIndex": 238
                 },
                 "TagComponent": {
                     "tags": []
@@ -16006,7 +16007,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 95
+                    "sortIndex": 239
                 },
                 "TagComponent": {
                     "tags": []
@@ -16083,7 +16084,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 96
+                    "sortIndex": 240
                 },
                 "TagComponent": {
                     "tags": []
@@ -16160,7 +16161,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 97
+                    "sortIndex": 241
                 },
                 "TagComponent": {
                     "tags": []
@@ -16237,7 +16238,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 98
+                    "sortIndex": 242
                 },
                 "TagComponent": {
                     "tags": []
@@ -16314,7 +16315,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 99
+                    "sortIndex": 243
                 },
                 "TagComponent": {
                     "tags": []
@@ -16391,7 +16392,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 100
+                    "sortIndex": 244
                 },
                 "TagComponent": {
                     "tags": []
@@ -16468,7 +16469,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 101
+                    "sortIndex": 245
                 },
                 "TagComponent": {
                     "tags": []
@@ -16545,7 +16546,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 102
+                    "sortIndex": 246
                 },
                 "TagComponent": {
                     "tags": []
@@ -16622,7 +16623,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 103
+                    "sortIndex": 247
                 },
                 "TagComponent": {
                     "tags": []
@@ -16699,7 +16700,7 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 104
+                    "sortIndex": 248
                 },
                 "TagComponent": {
                     "tags": []
@@ -16757,26 +16758,26 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -231.8419647216797,
-                        12.32472038269043,
-                        59.96189880371094
+                        -231.75411987304688,
+                        34.670719146728516,
+                        51.962276458740234
                     ],
                     "rotation": [
-                        -19.72669219970703,
-                        -0.01545554306358099,
-                        0.28423789143562317
+                        -19.724706649780273,
+                        -0.28263840079307556,
+                        -0.03384090214967728
                     ],
                     "scale": [
-                        0.9999905228614807,
+                        0.9999902844429016,
                         0.9999912977218628,
-                        0.9999924302101135
+                        0.9999922513961792
                     ],
                     "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "children": [],
-                    "sortIndex": 105
+                    "sortIndex": 249
                 },
                 "TagComponent": {
                     "tags": []
@@ -16813,6 +16814,447 @@
                     "gravityFactor": 1.0,
                     "mass": 1.0,
                     "friction": 0.5,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "startAwake": true
+                }
+            }
+        },
+        {
+            "name": "modular ground",
+            "guid": "60438ca1-74c1-491c-83c5-9bd7a156387b",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -201.68099975585938,
+                        -0.17900000512599945,
+                        95.5719985961914
+                    ],
+                    "rotation": [
+                        180.0,
+                        -90.0,
+                        180.0
+                    ],
+                    "scale": [
+                        80.0,
+                        19.999998092651367,
+                        60.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 250
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "MeshComponent": {
+                    "guid": "c9235b5b-3b4d-4d81-a8b0-be5f5e60c452",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "d24a29c5-cd9e-4322-ab59-d38618cba4bf",
+                    "isUI": false
+                },
+                "BoxColliderComponent": {
+                    "colliders": [
+                        {
+                            "size": [
+                                0.20000000298023224,
+                                0.10000000149011612,
+                                0.10000000149011612
+                            ],
+                            "center": [
+                                0.10000000149011612,
+                                0.25,
+                                0.8500000238418579
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        },
+                        {
+                            "size": [
+                                0.30000001192092896,
+                                0.10000000149011612,
+                                0.10000000149011612
+                            ],
+                            "center": [
+                                0.550000011920929,
+                                0.25,
+                                0.8500000238418579
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        },
+                        {
+                            "size": [
+                                0.4000000059604645,
+                                0.10000000149011612,
+                                0.10000000149011612
+                            ],
+                            "center": [
+                                0.800000011920929,
+                                0.3499999940395355,
+                                0.8500000238418579
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        },
+                        {
+                            "size": [
+                                0.4000000059604645,
+                                0.20000000298023224,
+                                0.30000001192092896
+                            ],
+                            "center": [
+                                1.2000000476837158,
+                                0.4000000059604645,
+                                0.949999988079071
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        },
+                        {
+                            "size": [
+                                0.699999988079071,
+                                0.10000000149011612,
+                                0.10000000149011612
+                            ],
+                            "center": [
+                                -0.30000001192092896,
+                                0.25,
+                                0.949999988079071
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        },
+                        {
+                            "size": [
+                                0.6000000238418579,
+                                0.25,
+                                0.10000000149011612
+                            ],
+                            "center": [
+                                0.30000001192092896,
+                                0.2750000059604645,
+                                0.949999988079071
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        },
+                        {
+                            "size": [
+                                0.6000000238418579,
+                                0.4000000059604645,
+                                0.20000000298023224
+                            ],
+                            "center": [
+                                0.800000011920929,
+                                0.30000001192092896,
+                                1.0
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        },
+                        {
+                            "size": [
+                                0.6000000238418579,
+                                0.10000000149011612,
+                                0.20000000298023224
+                            ],
+                            "center": [
+                                1.0,
+                                0.25,
+                                0.800000011920929
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        },
+                        {
+                            "size": [
+                                0.8999999761581421,
+                                0.10000000149011612,
+                                0.10000000149011612
+                            ],
+                            "center": [
+                                -0.05000000074505806,
+                                0.25,
+                                0.44999998807907104
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        },
+                        {
+                            "size": [
+                                0.20000000298023224,
+                                0.20000000298023224,
+                                0.10000000149011612
+                            ],
+                            "center": [
+                                -0.6000000238418579,
+                                0.30000001192092896,
+                                0.44999998807907104
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        },
+                        {
+                            "size": [
+                                0.6000000238418579,
+                                0.4000000059604645,
+                                2.0999999046325684
+                            ],
+                            "center": [
+                                -0.30000001192092896,
+                                0.30000001192092896,
+                                -0.6499999761581421
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        },
+                        {
+                            "size": [
+                                0.20000000298023224,
+                                1.0,
+                                1.2000000476837158
+                            ],
+                            "center": [
+                                0.10000000149011612,
+                                0.0,
+                                -0.699999988079071
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        },
+                        {
+                            "size": [
+                                0.10000000149011612,
+                                0.20000000298023224,
+                                0.4000000059604645
+                            ],
+                            "center": [
+                                0.05000000074505806,
+                                0.4000000059604645,
+                                0.10000000149011612
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        },
+                        {
+                            "size": [
+                                0.6000000238418579,
+                                0.20000000298023224,
+                                2.0
+                            ],
+                            "center": [
+                                0.30000001192092896,
+                                0.30000001192092896,
+                                -0.6000000238418579
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        },
+                        {
+                            "size": [
+                                0.20000000298023224,
+                                0.10000000149011612,
+                                0.10000000149011612
+                            ],
+                            "center": [
+                                0.699999988079071,
+                                0.25,
+                                0.3499999940395355
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        },
+                        {
+                            "size": [
+                                0.4000000059604645,
+                                0.10000000149011612,
+                                0.10000000149011612
+                            ],
+                            "center": [
+                                1.100000023841858,
+                                0.25,
+                                0.25
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        },
+                        {
+                            "size": [
+                                0.20000000298023224,
+                                0.20000000298023224,
+                                0.10000000149011612
+                            ],
+                            "center": [
+                                0.800000011920929,
+                                0.30000001192092896,
+                                0.25
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        },
+                        {
+                            "size": [
+                                0.20000000298023224,
+                                0.5,
+                                1.100000023841858
+                            ],
+                            "center": [
+                                0.6000000238418579,
+                                0.25,
+                                -0.25
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        },
+                        {
+                            "size": [
+                                0.30000001192092896,
+                                0.20000000298023224,
+                                1.5
+                            ],
+                            "center": [
+                                0.8500000238418579,
+                                0.4000000059604645,
+                                -0.550000011920929
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        },
+                        {
+                            "size": [
+                                0.30000001192092896,
+                                0.10000000149011612,
+                                0.10000000149011612
+                            ],
+                            "center": [
+                                1.149999976158142,
+                                0.3499999940395355,
+                                0.15000000596046448
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        },
+                        {
+                            "size": [
+                                0.30000001192092896,
+                                0.10000000149011612,
+                                1.5
+                            ],
+                            "center": [
+                                1.149999976158142,
+                                0.44999998807907104,
+                                -0.6499999761581421
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        },
+                        {
+                            "size": [
+                                0.10000000149011612,
+                                0.10000000149011612,
+                                0.10000000149011612
+                            ],
+                            "center": [
+                                0.25,
+                                0.44999998807907104,
+                                -0.6499999761581421
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        },
+                        {
+                            "size": [
+                                0.30000001192092896,
+                                0.10000000149011612,
+                                1.0
+                            ],
+                            "center": [
+                                0.3499999940395355,
+                                0.44999998807907104,
+                                -1.2000000476837158
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        },
+                        {
+                            "size": [
+                                0.20000000298023224,
+                                0.10000000149011612,
+                                0.6000000238418579
+                            ],
+                            "center": [
+                                0.6000000238418579,
+                                0.44999998807907104,
+                                -1.2000000476837158
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        },
+                        {
+                            "size": [
+                                0.10000000149011612,
+                                0.10000000149011612,
+                                0.10000000149011612
+                            ],
+                            "center": [
+                                0.6499999761581421,
+                                0.44999998807907104,
+                                -0.8500000238418579
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        },
+                        {
+                            "size": [
+                                0.10000000149011612,
+                                0.10000000149011612,
+                                0.10000000149011612
+                            ],
+                            "center": [
+                                0.550000011920929,
+                                0.3499999940395355,
+                                -0.8500000238418579
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        },
+                        {
+                            "size": [
+                                2.0999999046325684,
+                                0.20000000298023224,
+                                0.6000000238418579
+                            ],
+                            "center": [
+                                0.30000001192092896,
+                                0.10000000149011612,
+                                0.6000000238418579
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": false
+                        }
+                    ]
+                },
+                "PhysicsProperties": {
+                    "category": 1,
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 1.0,
                     "restitution": 0.0,
                     "linearVelocity": [
                         0.0,
