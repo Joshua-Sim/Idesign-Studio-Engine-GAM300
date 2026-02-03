@@ -627,9 +627,25 @@ namespace Framework {
                 }
             }
         }
+        // 1. Define the target physics rate (60 Hz = 0.0166s)
+        const float fixedTimeStep = 1.0f / 60.0f;
 
-        // --- [STEP 4: RUN PHYSICS] ---
-        physicsSystem.Update(dt, 1, tempAllocator, jobSystem);
+        // 2. Accumulate time (Use 'static' to remember time between frames)
+        static float physicsAccumulator = 0.0f;
+        physicsAccumulator += dt;
+
+        // 3. Safety Clamp: Prevent "Death Spiral" if game hangs
+        if (physicsAccumulator > 0.25f) physicsAccumulator = 0.25f;
+
+        // 4. Run as many fixed steps as needed to catch up
+        // (At 20 FPS, this loop runs 3 times per frame. At 60 FPS, it runs 1 time.)
+        while (physicsAccumulator >= fixedTimeStep)
+        {
+            // Run Jolt with a constant 1/60th second step
+            physicsSystem.Update(fixedTimeStep, 1, tempAllocator, jobSystem);
+
+            physicsAccumulator -= fixedTimeStep;
+        }
 
         // --- [STEP 5: POST-PHYSICS SYNC] ---
         for (Entity e : ecsInterface.GetEntities()) {

@@ -13,6 +13,18 @@
             "isUI": false
         },
         {
+            "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606",
+            "name": "music",
+            "path": "Assets/Textures/music.png",
+            "isUI": false
+        },
+        {
+            "guid": "cabb6b16-8445-4f40-b9c8-bd593ea6b65c",
+            "name": "top",
+            "path": "Assets\\Textures\\top.png",
+            "isUI": false
+        },
+        {
             "guid": "5361d026-4076-490e-bf6c-204ace0da656",
             "name": "SETTINGS BUTTON",
             "path": "Assets\\Textures\\SETTINGS BUTTON.png",
@@ -22,12 +34,6 @@
             "guid": "d24a29c5-cd9e-4322-ab59-d38618cba4bf",
             "name": "quitbutton",
             "path": "Assets\\Textures\\quitbutton.png",
-            "isUI": false
-        },
-        {
-            "guid": "cabb6b16-8445-4f40-b9c8-bd593ea6b65c",
-            "name": "top",
-            "path": "Assets\\Textures\\top.png",
             "isUI": false
         },
         {
@@ -49,15 +55,15 @@
             "isUI": false
         },
         {
-            "guid": "6268a735-25b0-4a92-b9df-38ba44a3af1e",
-            "name": "SETTING HOVER BUTTON",
-            "path": "Assets\\Textures\\SETTING HOVER BUTTON.png",
-            "isUI": false
-        },
-        {
             "guid": "d7666fdd-353e-4a3e-9a3f-70f50cea9f7a",
             "name": "CREDITS BUTTON",
             "path": "Assets\\Textures\\CREDITS BUTTON.png",
+            "isUI": false
+        },
+        {
+            "guid": "6268a735-25b0-4a92-b9df-38ba44a3af1e",
+            "name": "SETTING HOVER BUTTON",
+            "path": "Assets\\Textures\\SETTING HOVER BUTTON.png",
             "isUI": false
         },
         {
@@ -118,12 +124,6 @@
             "guid": "c2a1f2a8-98b8-490f-bae9-f3bc714f424c",
             "name": "SkyNoon_Top",
             "path": "Assets\\Textures\\SkyNoon_Top.png",
-            "isUI": false
-        },
-        {
-            "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606",
-            "name": "music",
-            "path": "Assets/Textures/music.png",
             "isUI": false
         },
         {
@@ -850,6 +850,12 @@
             "guid": "1d5d9271-070e-4372-97d5-7b2252b23928",
             "name": "tori gate",
             "path": "Assets\\Textures\\tori gate.png",
+            "isUI": false
+        },
+        {
+            "guid": "b356d807-c87f-4aa1-ba65-331cba8a9421",
+            "name": "UI_Notification_BG",
+            "path": "Assets\\Textures\\UI_Notification_BG.png",
             "isUI": false
         },
         {

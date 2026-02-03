@@ -207,9 +207,10 @@ namespace Framework
     struct ItemClickedEvent { int itemID; };
     struct ItemComponent {
         std::string name;
-        bool isIngredient = false; // for cauldron
-        bool isChoppable = false; // for knife
-        bool toDestroyWhenPicked = false; // for interact
+        bool isIngredient = false;
+        bool isChoppable = false;
+        bool toDestroyWhenPicked = false;
+        bool isZipping = false;
     };
     inline const std::vector g_ItemPropsArray = {
         PROP_STRING(name, ItemComponent), PROP_BOOL(isIngredient, ItemComponent),
