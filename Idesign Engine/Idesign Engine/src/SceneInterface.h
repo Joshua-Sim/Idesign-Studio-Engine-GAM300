@@ -17,6 +17,18 @@ namespace Framework
 	private:
 	};
 
+	enum class CutscenePhase
+	{
+		FadeIn,
+		FadeOut,
+		Done
+	};
+
+	static CutscenePhase cutscenePhase = CutscenePhase::FadeIn;
+	static float cutsceneStartTime = -1.0f;
+	static float fadeOutStartTime = -1.0f;
+
+
 	// Declare the global instance of EngineState
 	extern SceneInterface sceneInterface;
 }
