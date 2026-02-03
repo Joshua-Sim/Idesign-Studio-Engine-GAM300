@@ -11,13 +11,13 @@
         ],
         "rotation": [
           0.0,
-          0.0,
+          -90.0,
           0.0
         ],
         "scale": [
-          0.9,
-          0.9,
-          0.9
+          2.0,
+          2.0,
+          2.0
         ],
         "isActive": true
       },
@@ -33,10 +33,10 @@
         "sortIndex": 0
       },
       "MeshReference": {
-        "guid": "07a14092-65e1-400b-b183-566f419f9039"
+        "guid": "75fe0e7d-b82f-4bdc-b2e3-f8a15ae16eac"
       },
       "TextureComponent": {
-        "guid": "612ba301-6dcc-493b-b15e-0467a047e322",
+        "guid": "93e52143-0887-43d1-92f6-f656a1cc846e",
         "isUI": false
       },
       "NavMeshAgentComponent": {
@@ -55,7 +55,7 @@
         ]
       },
       "AnimationProperties": {
-        "path": "Assets/Objects/Goblin.fbx",
+        "path": "Assets/Objects/UpdatedGoblin.fbx",
         "defaultAnimationName": "",
         "animationSpeed": 1.0,
         "bLoops": true,
