@@ -25,7 +25,8 @@ namespace Framework
         HowToPlay,
         Upgrade,
         Settings,
-        Dialogue
+        Dialogue, 
+        MapSelection
     };
 
     class EngineState

@@ -107,6 +107,29 @@ namespace Framework
                     if (!engineState.Is(EngineMode::Editor)) { text.opacity = engineState.Is(EngineMode::Settings) ? 1.f : 0.f; }
                 }
             }
+
+            // 6. MAP SELECTION LOGIC
+            auto mapEntities = ecsInterface.GetEntitiesByTag("map");
+            for (Entity e : mapEntities)
+            {
+                if (!ecsInterface.IsEntityValid(e)) continue;
+
+                if (ecsInterface.HasComponent<ButtonComponent>(e) &&
+                    ecsInterface.HasComponent<TextureProperties>(e))
+                {
+                    auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
+                    // Only enforce UI flag if NOT in editor mode
+                    if (!engineState.Is(EngineMode::Editor)) { texture.isUI = engineState.Is(EngineMode::MapSelection); }
+                }
+
+                if (ecsInterface.HasComponent<TextProperties>(e))
+                {
+                    auto& text = ecsInterface.GetComponent<TextProperties>(e);
+
+                    // Only enforce opacity if NOT in editor mode
+                    if (!engineState.Is(EngineMode::Editor)) { text.opacity = engineState.Is(EngineMode::MapSelection) ? 1.f : 0.f; }
+                }
+            }
         }
     }
 }

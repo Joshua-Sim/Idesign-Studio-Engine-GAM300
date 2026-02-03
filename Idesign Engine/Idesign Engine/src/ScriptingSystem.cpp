@@ -934,6 +934,113 @@ namespace Framework {
 
         // ============ END AUDIO LUA BINDINGS ============
 
+        // ============================================================================
+        // ENGINE STATE LUA BINDINGS - ADD THESE
+        // ============================================================================
+
+        // Helper to convert string to EngineMode
+        static EngineMode StringToEngineMode(const std::string& stateName)
+        {
+            if (stateName == "Editor") return EngineMode::Editor;
+            if (stateName == "Play") return EngineMode::Play;
+            if (stateName == "Paused") return EngineMode::Paused;
+            if (stateName == "Debug") return EngineMode::Debug;
+            if (stateName == "Menu") return EngineMode::Menu;
+            if (stateName == "HowToPlay") return EngineMode::HowToPlay;
+            if (stateName == "Upgrade") return EngineMode::Upgrade;
+            if (stateName == "Settings") return EngineMode::Settings;
+            if (stateName == "Dialogue") return EngineMode::Dialogue;
+            if (stateName == "MapSelection") return EngineMode::MapSelection;
+
+            std::cerr << "[Lua] Unknown EngineMode: " << stateName << std::endl;
+            return EngineMode::Play; // Default fallback
+        }
+
+        // Helper to convert EngineMode to string
+        static std::string EngineModeToString(EngineMode mode)
+        {
+            switch (mode)
+            {
+            case EngineMode::Editor: return "Editor";
+            case EngineMode::Play: return "Play";
+            case EngineMode::Paused: return "Paused";
+            case EngineMode::Debug: return "Debug";
+            case EngineMode::Menu: return "Menu";
+            case EngineMode::HowToPlay: return "HowToPlay";
+            case EngineMode::Upgrade: return "Upgrade";
+            case EngineMode::Settings: return "Settings";
+            case EngineMode::Dialogue: return "Dialogue";
+            case EngineMode::MapSelection: return "MapSelection";
+            default: return "Unknown";
+            }
+        }
+
+        // Lua Function: PushEngineState(stateName)
+        static int lua_PushEngineState(lua_State* L)
+        {
+            const char* stateName = luaL_checkstring(L, 1);
+            EngineMode mode = StringToEngineMode(std::string(stateName));
+
+            engineState.PushState(mode);
+
+            std::cout << "[Lua] Pushed EngineState: " << stateName << std::endl;
+            return 0;
+        }
+
+        // Lua Function: PopEngineState()
+        static int lua_PopEngineState(lua_State* L)
+        {
+            (void)L; // Unused parameter
+            engineState.PopState();
+
+            std::cout << "[Lua] Popped EngineState, now: "
+                << EngineModeToString(engineState.Current()) << std::endl;
+            return 0;
+        }
+
+        // Lua Function: ClearEngineStates()
+        static int lua_ClearEngineStates(lua_State* L)
+        {
+            (void)L; // Unused parameter
+            engineState.ClearToBase();
+
+            std::cout << "[Lua] Cleared all states to base" << std::endl;
+            return 0;
+        }
+
+        // Lua Function: GetCurrentEngineState()
+        static int lua_GetCurrentEngineState(lua_State* L)
+        {
+            std::string current = EngineModeToString(engineState.Current());
+            lua_pushstring(L, current.c_str());
+            return 1;
+        }
+
+        // Lua Function: IsEngineState(stateName)
+        static int lua_IsEngineState(lua_State* L)
+        {
+            const char* stateName = luaL_checkstring(L, 1);
+            EngineMode mode = StringToEngineMode(std::string(stateName));
+
+            bool result = engineState.Is(mode);
+            lua_pushboolean(L, result);
+            return 1;
+        }
+
+        // Lua Function: HasEngineState(stateName)
+        static int lua_HasEngineState(lua_State* L)
+        {
+            const char* stateName = luaL_checkstring(L, 1);
+            EngineMode mode = StringToEngineMode(std::string(stateName));
+
+            bool result = engineState.HasState(mode);
+            lua_pushboolean(L, result);
+            return 1;
+        }
+
+        // ============================================================================
+        // END ENGINE STATE BINDINGS
+        // ============================================================================
 
         // ============ GAME STATE LUA BINDINGS ============
         static int lua_GameStateStart(lua_State* L)
@@ -1099,6 +1206,8 @@ namespace Framework {
             lua_pushboolean(L, false);
             return 1;
         }
+
+        
 
         // --------- Scene Loading --------------
         static int Lua_RegisterButtonCallback(lua_State* L)
@@ -1852,6 +1961,109 @@ namespace Framework {
                 ScriptPathfindTo(agentName, targetName);
                 return 0;
             });
+
+        // ============ ENGINE STATE LUA BINDINGS ============
+        lua_register(L, "PushEngineState", lua_PushEngineState);
+        lua_register(L, "PopEngineState", lua_PopEngineState);
+        lua_register(L, "ClearEngineStates", lua_ClearEngineStates);
+        lua_register(L, "GetCurrentEngineState", lua_GetCurrentEngineState);
+        lua_register(L, "IsEngineState", lua_IsEngineState);
+        lua_register(L, "HasEngineState", lua_HasEngineState);
+        std::cout << "[ScriptingSystem] EngineState bindings registered" << std::endl;
+        // ============ START MAP LUA BINDINGS ============
+
+        // Set Entity Scale (for showing/hiding UI elements)
+        lua_register(L, "SetEntityScale", [](lua_State* L) -> int {
+            int entityId = (int)lua_tointeger(L, 1);
+            float x = (float)lua_tonumber(L, 2);
+            float y = (float)lua_tonumber(L, 3);
+            float z = (float)lua_tonumber(L, 4);
+    
+            if (ecsInterface.IsEntityValid(entityId)) {
+                if (ecsInterface.HasComponent<TransformComponent>(entityId)) {
+                    auto& transform = ecsInterface.GetComponent<TransformComponent>(entityId);
+                    transform.scale = glm::vec3(x, y, z);
+                    std::cout << "[Lua] SetEntityScale: Entity " << entityId 
+                              << " scale set to (" << x << ", " << y << ", " << z << ")" << std::endl;
+                }
+            } else {
+                std::cerr << "[Lua Error] SetEntityScale: Invalid entity " << entityId << std::endl;
+            }
+    
+            return 0;
+        });
+
+        // Teleport player function
+        lua_register(L, "TeleportPlayer", [](lua_State* L) -> int {
+            float x = (float)lua_tonumber(L, 1);
+            float y = (float)lua_tonumber(L, 2);
+            float z = (float)lua_tonumber(L, 3);
+            float rx = (float)lua_tonumber(L, 4);
+            float ry = (float)lua_tonumber(L, 5);
+            float rz = (float)lua_tonumber(L, 6);
+
+            glm::vec3 pos(x, y, z);
+            glm::vec3 rot(rx, ry, rz);
+
+            if (phaseManager) {
+                phaseManager->TeleportPlayer(pos, rot);
+            }
+
+            return 0;
+            });
+
+        // Start day phase
+        lua_register(L, "StartDayPhase", [](lua_State* L) -> int {
+            if (phaseManager) {
+                phaseManager->SetPhase(GamePhase::Day);
+            }
+            return 0;
+            });
+
+        // Set UI focused (show/hide cursor)
+        lua_register(L, "SetUIFocused", [](lua_State* L) -> int {
+            bool focused = lua_toboolean(L, 1);
+
+            InputHandler* input = InputHandler::GetInstance();
+            if (input) {
+                input->SetUIFocused(focused);
+            }
+
+            return 0;
+            });
+
+        // Call Lua function on entity
+        lua_register(L, "CallLuaFunction", [](lua_State* L) -> int {
+            int entityId = (int)lua_tointeger(L, 1);
+            const char* funcName = lua_tostring(L, 2);
+
+            // This requires access to ScriptingSystem instance
+            // You may need to adjust based on your architecture
+            auto scriptSystem = ecsInterface.GetSystem<ScriptingSystem>();
+            if (scriptSystem) {
+                scriptSystem->Call<void>(entityId, funcName);
+            }
+
+            return 0;
+            });
+
+        // Register button hover callback
+        lua_register(L, "RegisterButtonHoverCallback", [](lua_State* L) -> int {
+            int entityId = (int)lua_tointeger(L, 1);
+
+            if (!lua_isfunction(L, 2)) {
+                return luaL_error(L, "Second argument must be a function");
+            }
+
+            // Store the callback
+            int callbackRef = luaL_ref(L, LUA_REGISTRYINDEX);
+
+            // You'll need to integrate this with your button system
+            // Store the callbackRef in the ButtonComponent or a separate map
+
+            return 0;
+            });
+        // ============ END MAP LUA BINDINGS ============
 
         // Create Cook table with our functions
         lua_newtable(L);                           // Cook

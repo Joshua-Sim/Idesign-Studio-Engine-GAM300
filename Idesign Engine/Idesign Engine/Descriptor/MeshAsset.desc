@@ -128,6 +128,15 @@
             "indexCount": 924
         },
         {
+            "guid": "563cdf50-2687-4991-96cf-c5fa0be850ab",
+            "name": "Sphere",
+            "path": "Assets/Objects/Sphere.obj",
+            "vao": 14,
+            "vbo": 27,
+            "ebo": 28,
+            "indexCount": 2304
+        },
+        {
             "guid": "8e3f6244-37cc-4772-9916-c310ee225654",
             "name": "mushroom single",
             "path": "Assets\\Objects\\mushroom single.obj",
@@ -149,9 +158,9 @@
             "guid": "58c34bb7-ff4d-4b4d-8e24-20ffbd1e78c6",
             "name": "trunk",
             "path": "Assets\\Objects\\trunk.obj",
-            "vao": 16,
-            "vbo": 31,
-            "ebo": 32,
+            "vao": 17,
+            "vbo": 33,
+            "ebo": 34,
             "indexCount": 1644
         },
         {
@@ -185,9 +194,9 @@
             "guid": "2d0d1073-79fb-44de-9d09-86af64b2aabb",
             "name": "GreenPotion2",
             "path": "Assets\\Objects\\GreenPotion2.obj",
-            "vao": 19,
-            "vbo": 37,
-            "ebo": 38,
+            "vao": 20,
+            "vbo": 39,
+            "ebo": 40,
             "indexCount": 924
         },
         {
@@ -203,18 +212,18 @@
             "guid": "9b1a5ea2-0cbf-4533-b25f-a5a6813a35ce",
             "name": "pine",
             "path": "Assets\\Objects\\pine.obj",
-            "vao": 21,
-            "vbo": 41,
-            "ebo": 42,
+            "vao": 22,
+            "vbo": 43,
+            "ebo": 44,
             "indexCount": 2016
         },
         {
             "guid": "473d7163-f81d-41d7-bde2-5106f072d36a",
             "name": "vitality_potion",
             "path": "Assets\\Objects\\vitality_potion.obj",
-            "vao": 22,
-            "vbo": 43,
-            "ebo": 44,
+            "vao": 23,
+            "vbo": 45,
+            "ebo": 46,
             "indexCount": 780
         },
         {
@@ -266,9 +275,9 @@
             "guid": "3a68b780-632d-49d8-b45d-33b1ac035172",
             "name": "plane",
             "path": "Assets/Objects/plane.obj",
-            "vao": 27,
-            "vbo": 53,
-            "ebo": 54,
+            "vao": 28,
+            "vbo": 55,
+            "ebo": 56,
             "indexCount": 76662
         },
         {
@@ -284,9 +293,9 @@
             "guid": "4de6e54b-0df4-4ff4-9d1c-51a61190fe92",
             "name": "GreenPotion3",
             "path": "Assets\\Objects\\GreenPotion3.obj",
-            "vao": 29,
-            "vbo": 57,
-            "ebo": 58,
+            "vao": 30,
+            "vbo": 59,
+            "ebo": 60,
             "indexCount": 780
         },
         {
@@ -327,15 +336,6 @@
         },
         {
             "guid": "61ccf513-cbc9-40a5-828f-95376b1b2c8e",
-            "name": "Sphere",
-            "path": "Assets/Objects/Sphere.obj",
-            "vao": 34,
-            "vbo": 67,
-            "ebo": 68,
-            "indexCount": 2304
-        },
-        {
-            "guid": "563cdf50-2687-4991-96cf-c5fa0be850ab",
             "name": "Sphere",
             "path": "Assets/Objects/Sphere.obj",
             "vao": 35,

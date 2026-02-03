@@ -1,12 +1,6 @@
 {
-    "count": 160,
+    "count": 164,
     "entries": [
-        {
-            "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
-            "name": "",
-            "path": "Assets/PNG/test.png",
-            "isUI": false
-        },
         {
             "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
             "name": "green",
@@ -14,9 +8,9 @@
             "isUI": false
         },
         {
-            "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606",
-            "name": "music",
-            "path": "Assets/Textures/music.png",
+            "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
+            "name": "",
+            "path": "Assets/PNG/test.png",
             "isUI": false
         },
         {
@@ -30,6 +24,12 @@
             "name": "SETTINGS BUTTON",
             "path": "Assets\\Textures\\SETTINGS BUTTON.png",
             "isUI": true
+        },
+        {
+            "guid": "056c90ae-223b-41d3-b39c-3313e6015e3e",
+            "name": "House Button",
+            "path": "Assets\\Textures\\House Button.png",
+            "isUI": false
         },
         {
             "guid": "cabb6b16-8445-4f40-b9c8-bd593ea6b65c",
@@ -116,21 +116,27 @@
             "isUI": false
         },
         {
-            "guid": "af8e75b5-739e-4206-8194-4123598c5a7c",
-            "name": "pausebg",
-            "path": "Assets\\Textures\\pausebg.png",
-            "isUI": false
-        },
-        {
             "guid": "6164f3f9-ba5f-40e6-a04d-c287e57ca0a9",
             "name": "FrogPortrait",
             "path": "Assets\\Textures\\FrogPortrait.png",
             "isUI": false
         },
         {
+            "guid": "af8e75b5-739e-4206-8194-4123598c5a7c",
+            "name": "pausebg",
+            "path": "Assets\\Textures\\pausebg.png",
+            "isUI": false
+        },
+        {
             "guid": "c2a1f2a8-98b8-490f-bae9-f3bc714f424c",
             "name": "SkyNoon_Top",
             "path": "Assets\\Textures\\SkyNoon_Top.png",
+            "isUI": false
+        },
+        {
+            "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606",
+            "name": "music",
+            "path": "Assets/Textures/music.png",
             "isUI": false
         },
         {
@@ -959,6 +965,24 @@
             "guid": "a3024de0-e9b4-4f1e-9b21-be81980f837c",
             "name": "SFX_VOLUME_TEXT",
             "path": "Assets\\Textures\\SFX_VOLUME_TEXT.png",
+            "isUI": false
+        },
+        {
+            "guid": "d7806aaf-571e-432d-af75-d9e3c0703bf7",
+            "name": "Map",
+            "path": "Assets\\Textures\\Map.png",
+            "isUI": false
+        },
+        {
+            "guid": "ce6cea11-f2f7-4440-90ce-a0724235b793",
+            "name": "Forrest Button",
+            "path": "Assets\\Textures\\Forrest Button.png",
+            "isUI": false
+        },
+        {
+            "guid": "3db45502-0b02-41ec-85b1-0ad1d5fbe585",
+            "name": "Quarry button",
+            "path": "Assets\\Textures\\Quarry button.png",
             "isUI": false
         }
     ]
