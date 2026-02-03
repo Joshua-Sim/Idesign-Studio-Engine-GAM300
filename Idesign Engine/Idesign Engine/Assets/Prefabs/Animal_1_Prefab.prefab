@@ -1,17 +1,17 @@
 {
     "entity": {
         "name": "Animal_1",
-        "guid": "046adc27-1f3b-4472-9fd5-ce9cac9610c0",
+        "guid": "4531509c-e3e5-4195-add6-739b9c23d8bd",
         "components": {
             "TransformComponent": {
                 "position": [
-                    -209.26513671875,
+                    -204.21104431152344,
                     4.651084899902344,
-                    135.49591064453125
+                    139.96495056152344
                 ],
                 "rotation": [
                     0.0,
-                    46.85837936401367,
+                    -51.73591613769531,
                     0.0
                 ],
                 "scale": [
@@ -33,10 +33,10 @@
                 "sortIndex": 0
             },
             "MeshReference": {
-                "guid": "d763106f-d464-446f-990f-a9b5eead313b"
+                "guid": "b26ff467-8b01-4f24-a363-8a4b1df7a427"
             },
             "TextureComponent": {
-                "guid": "fb15f365-348f-4005-8d86-c342ada0973d",
+                "guid": "ddfff4cb-33f0-4823-9b91-af724b0aff21",
                 "isUI": false
             },
             "NavMeshAgentComponent": {
@@ -50,9 +50,9 @@
                 "autoRepath": false,
                 "stopOnTargetReached": true,
                 "targetPosition": [
-                    -209.30624389648438,
+                    -204.24180603027344,
                     4.651084899902344,
-                    135.53977966308594
+                    139.92596435546875
                 ]
             },
             "ScriptProperties": {

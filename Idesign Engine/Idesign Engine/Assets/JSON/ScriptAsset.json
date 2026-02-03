@@ -1,13 +1,6 @@
 {
     "scripts": [
         {
-            "guid": "23de8816-8d7d-42e1-ada2-3fdd7190fe5f",
-            "scriptPath": "Assets\\Scripts\\GameStateSettings.lua",
-            "hotReload": true,
-            "initialized": false,
-            "tableRef": -1
-        },
-        {
             "guid": "16f0caaf-2e11-4715-ab0e-06c67810e1ba",
             "scriptPath": "Assets\\Scripts\\InventoryUpgrade.lua",
             "hotReload": true,
@@ -15,8 +8,8 @@
             "tableRef": -1
         },
         {
-            "guid": "dc1222af-4b5e-4d38-8c8d-e16e5ae744dc",
-            "scriptPath": "Assets\\Scripts\\QuarryUnlockUpgrade.lua",
+            "guid": "23de8816-8d7d-42e1-ada2-3fdd7190fe5f",
+            "scriptPath": "Assets\\Scripts\\GameStateSettings.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
@@ -31,6 +24,13 @@
         {
             "guid": "98caa7fe-14e5-4cb0-b0c3-bc039dbde2cf",
             "scriptPath": "Assets\\Scripts\\DialogueSystem.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "e99fded3-5d37-45b1-b3e9-d30799e94914",
+            "scriptPath": "Assets\\Scripts\\Herbivore_AI.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
@@ -66,6 +66,13 @@
         {
             "guid": "48782e7b-a969-4b1f-ad50-0d92ca2e6de2",
             "scriptPath": "Assets\\Scripts\\Settings_BGM_Mute.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "dc1222af-4b5e-4d38-8c8d-e16e5ae744dc",
+            "scriptPath": "Assets\\Scripts\\QuarryUnlockUpgrade.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
