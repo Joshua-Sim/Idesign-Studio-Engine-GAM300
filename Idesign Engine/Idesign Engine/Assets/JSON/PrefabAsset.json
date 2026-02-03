@@ -13,6 +13,12 @@
             "isScenePrefab": false
         },
         {
+            "guid": "5f279032-d551-4137-8772-e24f5ae5af73",
+            "name": "Animal_1_Prefab",
+            "path": "Assets\\Prefabs\\Animal_1_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
             "guid": "5dfc16be-aa4a-420a-9105-f7c9652f3620",
             "name": "ProgressBarFill_Prefab",
             "path": "Assets\\Prefabs\\ProgressBarFill_Prefab.prefab",
@@ -70,6 +76,12 @@
             "guid": "2b031b5f-39b1-4596-8f6f-ad7a639fb94d",
             "name": "Customer_Kinematic_2_Prefab",
             "path": "Assets\\Prefabs\\Customer_Kinematic_2_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "71a83449-8181-416a-8371-acb33d34c4f4",
+            "name": "vitality_potion_Prefab",
+            "path": "Assets\\Prefabs\\vitality_potion_Prefab.prefab",
             "isScenePrefab": false
         },
         {

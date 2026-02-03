@@ -28,6 +28,7 @@ namespace Framework
         float moveSpeed = 3.5f;         // Movement speed in units/second
         float angularSpeed = 120.0f;    // Rotation speed in degrees/second
         float acceleration = 8.0f;      // How quickly agent reaches max speed
+        float rotationOffset = 0.0f;  // adjust rotation angle offset for different models
         float stoppingDistance = 0.1f;  // Distance to waypoint before moving to next
 
         // Pathfinding behavior
@@ -36,6 +37,7 @@ namespace Framework
 
         // Target destination
         glm::vec3 targetPosition = glm::vec3(0.0f);
+
 
         // --- Non-serialized runtime data ---
         std::vector<glm::vec3> currentPath;  // Current path waypoints
@@ -52,6 +54,7 @@ namespace Framework
         PROP_FLOAT(agentRadius, NavMeshAgentComponent),
         PROP_FLOAT(moveSpeed, NavMeshAgentComponent),
         PROP_FLOAT(angularSpeed, NavMeshAgentComponent),
+        PROP_FLOAT(rotationOffset, NavMeshAgentComponent),  
         PROP_FLOAT(acceleration, NavMeshAgentComponent),
         PROP_FLOAT(stoppingDistance, NavMeshAgentComponent),
         PROP_BOOL(autoRepath, NavMeshAgentComponent),

@@ -155,6 +155,9 @@ namespace Framework {
                 // Calculate target yaw
                 float targetYaw = glm::degrees(atan2f(direction.x, direction.z));
 
+                //angle offset
+                targetYaw += agent.rotationOffset;  // Apply model-specific offset
+
                 // Smoothly rotate towards target
                 float currentYaw = transform.rotation.y;
                 float angleDiff = targetYaw - currentYaw;

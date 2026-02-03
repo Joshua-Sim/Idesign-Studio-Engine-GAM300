@@ -45,6 +45,7 @@
 #include "RecipeBookManager.h"
 #include "TypeRegistry.h"
 #include "SceneInterface.h"
+#include "DialogueSystem.h"
 #include "LoadingSystem.h"
 
 using namespace Framework;
@@ -134,6 +135,7 @@ int main(void)
     auto fileCheckSystem = ecsInterface.RegisterSystem<FileCheckSystem>();
     auto audioSystem = ecsInterface.RegisterSystem<AudioSystem>();
     auto physicsSystem = ecsInterface.RegisterSystem<PhysicsSystem>();
+    auto dialogueSystem = ecsInterface.RegisterSystem<DialogueSystem>();
     auto tagManager = ecsInterface.RegisterSystem<TagManager>();
     ecsInterface.RegisterComponent<PlayerComponent>(); // register player component here coz of the interact system
     auto playerInteractSystem = ecsInterface.RegisterSystem<PlayerInteractSystem>();
@@ -172,6 +174,7 @@ int main(void)
     engine->AddSystem(eventSystem.get());
     engine->AddSystem(gameSystem.get());
     engine->AddSystem(buttonSystem.get());
+    engine->AddSystem(dialogueSystem.get());
     engine->AddSystem(sceneSystem.get());       // Register scene manager last
     engine->AddSystem(sceneInterface.get());
     engine->AddSystem(loadingSystem.get());

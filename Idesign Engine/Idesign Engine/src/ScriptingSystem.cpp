@@ -1304,6 +1304,53 @@ namespace Framework {
 
             navSystem->SetAgentDestination(agent, to);
         }
+
+        static int lua_PathfindToPosition(lua_State* L) {
+            // Get entity (can be ID or name)
+            Entity agent = 0;
+
+            if (lua_isnumber(L, 1)) {
+                // Direct entity ID
+                agent = static_cast<Entity>(luaL_checkinteger(L, 1));
+            }
+            else if (lua_isstring(L, 1)) {
+                // Entity name - look it up
+                const char* agentName = lua_tostring(L, 1);
+                agent = ecsInterface.GetEntityByName(agentName);
+            }
+            else {
+                return luaL_error(L, "PathfindToPos: first argument must be entity ID or name");
+            }
+
+            // Get destination coordinates
+            float x = static_cast<float>(luaL_checknumber(L, 2));
+            float y = static_cast<float>(luaL_checknumber(L, 3));
+            float z = static_cast<float>(luaL_checknumber(L, 4));
+
+            // Validate entity
+            if (!ecsInterface.IsEntityValid(agent)) {
+                return luaL_error(L, "PathfindToPos: invalid entity");
+            }
+
+            // Get NavMeshSystem
+            auto navSystem = ecsInterface.GetSystem<Framework::NavMeshSystem>();
+            if (!navSystem) {
+                return luaL_error(L, "PathfindToPos: NavMeshSystem not available");
+            }
+
+            // Snap destination to navmesh (ensures valid position)
+            glm::vec3 destination = navSystem->GetNearestPointOnNavmesh(glm::vec3(x, y, z));
+
+            // Set agent destination
+            navSystem->SetAgentDestination(agent, destination);
+
+            // Return success
+            lua_pushboolean(L, true);
+            return 1;
+        }
+
+  
+
         static int lua_GetEntityName(lua_State* L)
         {
             // 1. Get the Entity ID from the first argument passed in Lua
@@ -1834,6 +1881,7 @@ namespace Framework {
                 ScriptPathfindTo(agentName, targetName);
                 return 0;
             });
+        lua_register(L, "PathfindToPos", lua_PathfindToPosition);
 
         // Create Cook table with our functions
         lua_newtable(L);                           // Cook
