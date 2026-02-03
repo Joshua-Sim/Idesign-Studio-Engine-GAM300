@@ -245,8 +245,8 @@ namespace Framework
                         }
                         else
                         {
-                            std::cerr << "Missing MeshProperties for GUID: " << guid << "\n";
-                            Framework::MeshProperties defaultMesh;
+                            //std::cerr << "Missing MeshProperties for GUID: " << guid << "\n";
+                            MeshProperties defaultMesh;
                             ecsInterface.AddComponent(entity, defaultMesh);
                         }
                     }

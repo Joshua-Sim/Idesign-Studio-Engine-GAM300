@@ -71,6 +71,21 @@ local entity_frame = nil
 local entity_fill = nil
 local current_bar_state = "green"
 local previousPhase = -1 
+local active_logs = {} -- Track spawned logs
+
+-- =========================================================
+-- GLOBAL HELPER FUNCTIONS
+-- =========================================================
+function UpdateCurrencyUI()
+    if score_text_entity then
+        local current_currency = GetCurrency()
+        local currency_text = "Currency: " .. tostring(current_currency)
+        SetTextComponent(score_text_entity, "text", currency_text)
+        print("[UpdateCurrencyUI] Display updated to: " .. current_currency)
+    else
+        print("[UpdateCurrencyUI] Warning: score_text_entity is nil!")
+    end
+end
 
 function CustomerSystem:on_init()
     print("[CustomerSystem] >> Initialized.")
@@ -80,7 +95,7 @@ function CustomerSystem:on_init()
     
     score_text_entity = SpawnPrefab("ScoreText_Prefab")
     if score_text_entity then
-        CustomerSystem:UpdateScoreDisplay()
+        CustomerSystem:UpdateCurrencyDisplay()
     else
         print("[CustomerSystem] ERROR: Failed to spawn ScoreText prefab!")
     end
@@ -252,24 +267,46 @@ function CustomerSystem:SpawnLog(message)
     local logEntity = SpawnPrefab(prefab_log)
     if logEntity then
         SetTextComponent(logEntity, "text", message)
+        table.insert(active_logs, logEntity)    -- Track active logEntity
     end
 end
 
-function CustomerSystem:AddScore(amount)
-    local current_score = GetScore()
-    local new_score = current_score + amount
-    if new_score < 0 then new_score = 0 end
-    SetScore(new_score)
-    print("[CustomerSystem] Score changed by " .. amount .. ", new score: " .. new_score)
-    CustomerSystem:UpdateScoreDisplay()
+    -- Function to clear all logs
+function CustomerSystem:ClearAllLogs()
+    for i, logEntity in ipairs(active_logs) do
+        if logEntity then
+            DestroyEntity(logEntity)
+        end
+    end
+    active_logs = {}
 end
 
-function CustomerSystem:UpdateScoreDisplay()
-    if score_text_entity then
-        local current_score = GetScore()
-        local score_text = "Score: " .. tostring(current_score)
-        SetTextComponent(score_text_entity, "text", score_text)
+function CustomerSystem:AddCurrency(amount)
+    local current_currency = GetCurrency()
+    
+    -- Get multiplier from C++ GameSystem (stored as int, 100 = 1.0x)
+    local multiplier_int = GetData("currencyMultiplier")
+    if multiplier_int <= 0 then 
+        multiplier_int = 100  -- Default to 1.0x
+        SetData("currencyMultiplier", 100)
     end
+    
+    -- Convert to decimal (100 = 1.0x, 200 = 2.0x, 150 = 1.5x)
+    local multiplier = multiplier_int / 100.0
+    
+    local modified_amount = math.floor(amount * multiplier)
+    local new_currency = current_currency + modified_amount
+    if new_currency < 0 then new_currency = 0 end
+    
+    SetCurrency(new_currency)
+    print("[CustomerSystem] Currency changed by " .. modified_amount .. 
+          " (" .. amount .. " x " .. multiplier .. "x), new currency: " .. new_currency)
+
+    CustomerSystem:UpdateCurrencyDisplay()
+end
+
+function CustomerSystem:UpdateCurrencyDisplay()
+    UpdateCurrencyUI()
 end
 
 function CustomerSystem:GetScore()
@@ -278,6 +315,7 @@ end
 
 function CustomerSystem:ResetNightPhase()
     print("[CustomerSystem] Resetting night phase state...")
+    self:ClearAllLogs() -- Clear logs
     customers_served = 0
     SetData("fixedQueue", 2)
     if activeCustomer then 
@@ -290,19 +328,40 @@ function CustomerSystem:ResetNightPhase()
     current_patience = 0.0
     spawnTimer = 0
     current_bar_state = "green"
-    CustomerSystem:UpdateScoreDisplay()
+    CustomerSystem:UpdateCurrencyDisplay()  -- Changed from UpdateScoreDisplay
 end
 
 function CustomerSystem:EndNightPhase()
     print("[CustomerSystem] Ending Night Phase...")
+    self:ClearAllLogs() -- Clear logs
     self:DestroyBar()
     GameStateEndNightPhase()
 end
 
 function CustomerSystem.OnCustomerComplete(senderID, targetID, actionType)
     print("[CustomerSystem] ========== CUSTOMER COMPLETE ==========")
-    CustomerSystem:AddScore(10)
-    CustomerSystem:SpawnLog("Customer served! +10 points")
+    -- Calculate actual currency earned (with multiplier)
+    local base_amount = 100
+    local multiplier_int = GetData("currencyMultiplier")
+    if multiplier_int <= 0 then 
+        multiplier_int = 100  -- Default to 1.0x
+    end
+    
+    local multiplier = multiplier_int / 100.0
+    local actual_earned = math.floor(base_amount * multiplier)
+    
+    -- Award the currency
+    CustomerSystem:AddCurrency(base_amount)  -- This uses the multiplier internally
+
+    -- Show dynamic log message
+    if multiplier > 1.0 then
+        -- Show multiplier in message
+        CustomerSystem:SpawnLog("Customer served! +" .. actual_earned .. " currency (" .. multiplier .. "x)")
+    else
+        -- Normal message
+        CustomerSystem:SpawnLog("Customer served! +" .. actual_earned .. " currency")
+    end
+
     customers_served = customers_served + 1
     CustomerSystem:DestroyBar()
     if activeCustomer then DestroyEntity(activeCustomer) end
@@ -316,7 +375,37 @@ end
 
 function CustomerSystem.OnCustomerFailed(senderID, targetID, actionType)
     print("[CustomerSystem] ========== CUSTOMER FAILED ==========")
-    CustomerSystem:AddScore(-10)
+    
+    local base_penalty = 100  -- Base penalty amount (positive number)
+    
+    -- Get multiplier
+    local multiplier_int = GetData("currencyMultiplier")
+    if multiplier_int <= 0 then multiplier_int = 100 end
+    local multiplier = multiplier_int / 100.0
+    
+    -- Calculate penalty multiplier (50% of the bonus)
+    -- If multiplier is 2.0x, penalty multiplier is 1.5x
+    -- Formula: 1.0 + ((multiplier - 1.0) * 0.5)
+    local penalty_multiplier = 1.0 + ((multiplier - 1.0) * 0.5)
+    local actual_penalty = math.floor(base_penalty * penalty_multiplier)
+    
+    -- Deduct currency (using negative value)
+    local current_currency = GetCurrency()
+    local new_currency = current_currency - actual_penalty
+    if new_currency < 0 then new_currency = 0 end
+    SetCurrency(new_currency)
+    
+    CustomerSystem:UpdateCurrencyDisplay()
+
+    -- Show dynamic penalty message
+    if penalty_multiplier > 1.0 then
+        CustomerSystem:SpawnLog("Customer left angry! -" .. actual_penalty .. " currency (" .. penalty_multiplier .. "x)")
+    else
+        CustomerSystem:SpawnLog("Customer left angry! -" .. actual_penalty .. " currency")
+    end
+    
+    print("[CustomerSystem] Penalty: -" .. actual_penalty .. " (base " .. base_penalty .. " x " .. penalty_multiplier .. "x)")
+    
     customers_served = customers_served + 1
     CustomerSystem:DestroyBar()
     if activeCustomer then DestroyEntity(activeCustomer) end

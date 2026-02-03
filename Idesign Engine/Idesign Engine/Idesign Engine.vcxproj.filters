@@ -225,6 +225,9 @@
     </ClCompile>
     <ClCompile Include="src\PebbleRenderer.cpp" />
     <ClCompile Include="src\SceneInterface.cpp" />
+    <ClCompile Include="src\DialogueSystem.cpp" />
+    <ClCompile Include="src\LoadingSystem.cpp" />
+    <ClCompile Include="src\Upgrade.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ItemComponent.h" />
@@ -679,6 +682,9 @@
     <ClInclude Include="UILayout.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\DialogueSystem.h" />
+    <ClInclude Include="src\LoadingSystem.h" />
+    <ClInclude Include="src\Upgrade.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

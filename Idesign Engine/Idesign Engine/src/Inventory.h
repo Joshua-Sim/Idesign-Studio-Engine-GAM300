@@ -8,7 +8,8 @@
 namespace Framework {
 
     // Keep hotbar size in one place
-    constexpr int kHotbarSlots = 10;
+    // Default and maximum hotbar sizes
+    constexpr int kHotbarSlots = 7;
 
     // One slot = a single non-stackable item (count can be kept for future proofing)
     struct InvSlot {
@@ -35,11 +36,17 @@ namespace Framework {
         void ChangeSelected(int delta); 
         int  GetSelectedItemId() const; 
 
-    private:
-        Inventory() = default;
+        // NEW: Upgrade system
+        int  GetMaxSlots() const { return m_maxSlots; }
+        void UpgradeSlots(int additionalSlots);
+        bool CanUpgradeSlots() const { return m_maxSlots < kMaxHotbarSlots; }
 
-        std::array<InvSlot, kHotbarSlots> m_hotbar{};
-        int m_selectedIndex = 0;                 // moved from Graphics
+    private:
+        Inventory();
+        int m_selectedIndex = 0;                    // moved from graphics
+        std::vector<InvSlot> m_hotbar;
+        int m_maxSlots = kHotbarSlots;              // current capacity
+        static constexpr int kMaxHotbarSlots = 12;  // absolute maximum
     };
 
 } // namespace Framework

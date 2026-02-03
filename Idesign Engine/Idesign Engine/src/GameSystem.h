@@ -26,10 +26,15 @@ namespace Framework {
         static int GetData(const std::string& key);
         static bool HasData(const std::string& key);
 
-        // Legacy score functio ns (now use gameData internally)
-        static void SetScore(int value) { SetData("score", value); }
-        static void AddScore(int delta) { AddData("score", delta); }
-        static int GetScore() { return GetData("score"); }
+        // Currency functions (uses gameData internally)
+        static void SetCurrency(int value) { SetData("currency", value); }
+        static void AddCurrency(int delta) { AddData("currency", delta); }
+        static int GetCurrency() { return GetData("currency"); }
+
+        // Legacy score functions (DEPRECATED - redirects to currency)
+        static void SetScore(int value) { SetCurrency(value); }
+        static void AddScore(int delta) { AddCurrency(delta); }
+        static int GetScore() { return GetCurrency(); }
 
         // Customer queue functions (now use gameData internally)
         static void SetCustomerQueue(int value) { SetData("customerQueue", value); }

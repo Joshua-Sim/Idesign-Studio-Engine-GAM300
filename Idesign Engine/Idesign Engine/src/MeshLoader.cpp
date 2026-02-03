@@ -65,8 +65,7 @@ void MeshLoader::loadMesh(const std::string& path, Framework::MeshProperties& me
 
     if (!scene || !scene->mRootNode || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) {
         // 3. (Optional) Improve error message to show the path it tried
-        std::cerr << "ASSIMP error loading " << absolutePath.string() << ": "
-            << importer.GetErrorString() << std::endl;
+        // std::cerr << "ASSIMP error loading " << absolutePath.string() << ": " << importer.GetErrorString() << std::endl;
         return;
     }
     if (scene->mNumMeshes == 0) {

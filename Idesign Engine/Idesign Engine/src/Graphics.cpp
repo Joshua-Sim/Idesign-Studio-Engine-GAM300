@@ -1486,7 +1486,8 @@ namespace Framework {
         uiShader.use();
         uiShader.setMat4("uProjection", uiProj);
 
-        const int   slots = Framework::kHotbarSlots;
+        auto& inv = Inventory::Instance();
+        const int slots = inv.GetMaxSlots(); 
         const float marginBottom = 24.0f;
         const float gap = 6.0f;
         const float pad = 8.0f;
@@ -1508,7 +1509,6 @@ namespace Framework {
             { 0.05f, 0.05f, 0.06f }, 0.85f);
 
         // Render slots via Inventory
-        auto& inv = Framework::Inventory::Instance();
         const int selected = inv.GetSelectedIndex();
 
         for (int i = 0; i < slots; ++i)
@@ -2787,15 +2787,8 @@ namespace Framework {
             );
         }
 
-
         // Do not display inventory boxes while in paused/howtoplay/menu state
-        if (viewIndex == 0 &&
-            !engineState.Is(EngineMode::Paused) &&
-            !engineState.Is(EngineMode::HowToPlay) &&
-            !engineState.Is(EngineMode::Menu) &&
-            !engineState.Is(EngineMode::Settings) &&
-            !engineState.Is(EngineMode::Dialogue) &&
-            !GameSystem::bookOpen) 
+        if (viewIndex == 0 && !engineState.IsAnyMenuOpen() && !GameSystem::bookOpen) 
         {
             DrawHotbar(width, height);
         }
