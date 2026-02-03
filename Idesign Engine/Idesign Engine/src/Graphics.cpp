@@ -2249,36 +2249,31 @@ namespace Framework {
                             currentshader.setMat4(("uBoneMatrices[" + std::to_string(i) + "]").c_str(), animator.finalBoneMatrices[i]);
                         }
                     }
-
+                    // [Graphics.cpp] - Optimized Material Application
                     if (ecsInterface.HasComponent<MaterialProperties>(entityId))
                     {
                         auto& material = ecsInterface.GetComponent<MaterialProperties>(entityId);
-                        const bool isSelected = ((int)entityId == sel) || ((int)entityId == hoverSel);
-                        glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : material.albedo;
-                        currentshader.setVec3("uAlbedo", finalAlbedo);
 
-                        glActiveTexture(GL_TEXTURE0);
+                        // 1. Determine base color (Yellow if hovered, otherwise material color)
+                        const bool isSelected = ((int)entityId == sel) || ((int)entityId == hoverSel);
+                        glm::vec3 finalAlbedo = isSelected ? glm::vec3(1.0f, 0.85f, 0.3f) : material.albedo;
+
+                        currentshader.setVec3("uAlbedo", finalAlbedo);
                         currentshader.setVec3("uMaterial.ambient", material.ambient);
                         currentshader.setVec3("uMaterial.specular", material.specular);
                         currentshader.setFloat("uMaterial.shininess", material.shininess);
-                        currentshader.setFloat("uMaterial.opacity", material.opacity);
-                        currentshader.setInt("uTexture", 0);
+                        currentshader.setFloat("uMaterial.opacity", material.opacity); // CRITICAL: Reset opacity
                     }
-                    // START ADDITION: Reset to defaults if no material component exists
                     else
                     {
-                        // Default Albedo: White (so textures look normal)
+                        // 2. FALLBACK: Reset to safe defaults so the next object isn't "weird"
                         const bool isSelected = ((int)entityId == sel) || ((int)entityId == hoverSel);
-                        glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : glm::vec3(1.0f, 1.0f, 1.0f);
+                        currentshader.setVec3("uAlbedo", isSelected ? glm::vec3(1.0f, 0.85f, 0.3f) : glm::vec3(1.0f));
 
-                        currentshader.setVec3("uAlbedo", finalAlbedo);
-
-                        // Default Material settings
                         currentshader.setVec3("uMaterial.ambient", glm::vec3(0.1f));
                         currentshader.setVec3("uMaterial.specular", glm::vec3(0.5f));
                         currentshader.setFloat("uMaterial.shininess", 32.0f);
-                        currentshader.setFloat("uMaterial.opacity", 1.0f);
-                        currentshader.setInt("uTexture", 0);
+                        currentshader.setFloat("uMaterial.opacity", 1.0f); // Ensure 100% visible
                     }
 
                     glActiveTexture(GL_TEXTURE0);
@@ -2546,19 +2541,32 @@ namespace Framework {
                     }
                 }
 
-                // **FIX**: Fetch material from the ECS component
+                // [Graphics.cpp] - Optimized Material Application
                 if (ecsInterface.HasComponent<MaterialProperties>(entityId))
                 {
                     auto& material = ecsInterface.GetComponent<MaterialProperties>(entityId);
+
+                    // 1. Determine base color (Yellow if hovered, otherwise material color)
                     const bool isSelected = ((int)entityId == sel) || ((int)entityId == hoverSel);
-                    glm::vec3 finalAlbedo = isSelected ? kHighlightAlbedo : material.albedo;
+                    glm::vec3 finalAlbedo = isSelected ? glm::vec3(1.0f, 0.85f, 0.3f) : material.albedo;
+
                     currentShader.setVec3("uAlbedo", finalAlbedo);
                     currentShader.setVec3("uMaterial.ambient", material.ambient);
                     currentShader.setVec3("uMaterial.specular", material.specular);
                     currentShader.setFloat("uMaterial.shininess", material.shininess);
-                    currentShader.setFloat("uMaterial.opacity", material.opacity);
+                    currentShader.setFloat("uMaterial.opacity", material.opacity); // CRITICAL: Reset opacity
                 }
+                else
+                {
+                    // 2. FALLBACK: Reset to safe defaults so the next object isn't "weird"
+                    const bool isSelected = ((int)entityId == sel) || ((int)entityId == hoverSel);
+                    currentShader.setVec3("uAlbedo", isSelected ? glm::vec3(1.0f, 0.85f, 0.3f) : glm::vec3(1.0f));
 
+                    currentShader.setVec3("uMaterial.ambient", glm::vec3(0.1f));
+                    currentShader.setVec3("uMaterial.specular", glm::vec3(0.5f));
+                    currentShader.setFloat("uMaterial.shininess", 32.0f);
+                    currentShader.setFloat("uMaterial.opacity", 1.0f); // Ensure 100% visible
+                }
                 glActiveTexture(GL_TEXTURE0);
                 currentShader.setInt("uTexture", 0);
                 if (ecsInterface.HasComponent<TextureProperties>(entityId)) {
