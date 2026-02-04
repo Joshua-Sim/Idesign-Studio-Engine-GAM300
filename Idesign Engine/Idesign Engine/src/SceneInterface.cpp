@@ -16,9 +16,9 @@ namespace Framework
     static bool cutsceneFinished = false;
 
     // Tune these
-    static const float fadeDuration = 1.2f;  // slide fade-in time
+    static const float fadeDuration = 2.5f;  // slide fade-in time
     static const float gap = 0.5f;  // delay between slides
-    static const float holdAfterLast = 0.6f;  // hold before fade-out starts
+    static const float holdAfterLast = 1.0f;  // hold before fade-out starts
     static const float fadeOutDuration = 0.8f;  // global fade-out time
 
     void SceneInterface::Initialize() {}
@@ -197,7 +197,7 @@ namespace Framework
                             if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
 
                             auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
-                            tex.uiAlpha *= globalAlpha;
+                            tex.uiAlpha = 0.0f;
                         }
 
                         // When fade-out finishes, hide all cutscene UI and push next state once.

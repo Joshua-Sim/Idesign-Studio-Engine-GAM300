@@ -26,12 +26,6 @@
             "isUI": false
         },
         {
-            "guid": "cabb6b16-8445-4f40-b9c8-bd593ea6b65c",
-            "name": "top",
-            "path": "Assets\\Textures\\top.png",
-            "isUI": false
-        },
-        {
             "guid": "d24a29c5-cd9e-4322-ab59-d38618cba4bf",
             "name": "quitbutton",
             "path": "Assets\\Textures\\quitbutton.png",
@@ -42,6 +36,12 @@
             "name": "SETTINGS BUTTON",
             "path": "Assets\\Textures\\SETTINGS BUTTON.png",
             "isUI": true
+        },
+        {
+            "guid": "cabb6b16-8445-4f40-b9c8-bd593ea6b65c",
+            "name": "top",
+            "path": "Assets\\Textures\\top.png",
+            "isUI": false
         },
         {
             "guid": "612ba301-6dcc-493b-b15e-0467a047e322",
@@ -62,6 +62,12 @@
             "isUI": false
         },
         {
+            "guid": "6268a735-25b0-4a92-b9df-38ba44a3af1e",
+            "name": "SETTING HOVER BUTTON",
+            "path": "Assets\\Textures\\SETTING HOVER BUTTON.png",
+            "isUI": false
+        },
+        {
             "guid": "00b4cffe-6081-4e66-ad01-8af1bdb3178f",
             "name": "CS2",
             "path": "Assets\\Textures\\CS2.png",
@@ -71,12 +77,6 @@
             "guid": "d7666fdd-353e-4a3e-9a3f-70f50cea9f7a",
             "name": "CREDITS BUTTON",
             "path": "Assets\\Textures\\CREDITS BUTTON.png",
-            "isUI": false
-        },
-        {
-            "guid": "6268a735-25b0-4a92-b9df-38ba44a3af1e",
-            "name": "SETTING HOVER BUTTON",
-            "path": "Assets\\Textures\\SETTING HOVER BUTTON.png",
             "isUI": false
         },
         {
@@ -128,15 +128,15 @@
             "isUI": false
         },
         {
-            "guid": "6164f3f9-ba5f-40e6-a04d-c287e57ca0a9",
-            "name": "FrogPortrait",
-            "path": "Assets\\Textures\\FrogPortrait.png",
-            "isUI": false
-        },
-        {
             "guid": "af8e75b5-739e-4206-8194-4123598c5a7c",
             "name": "pausebg",
             "path": "Assets\\Textures\\pausebg.png",
+            "isUI": false
+        },
+        {
+            "guid": "6164f3f9-ba5f-40e6-a04d-c287e57ca0a9",
+            "name": "FrogPortrait",
+            "path": "Assets\\Textures\\FrogPortrait.png",
             "isUI": false
         },
         {
