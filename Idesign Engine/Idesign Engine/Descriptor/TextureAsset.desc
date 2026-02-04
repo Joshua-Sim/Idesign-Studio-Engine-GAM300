@@ -1,5 +1,5 @@
 {
-    "count": 148,
+    "count": 152,
     "entries": [
         {
             "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
@@ -14,18 +14,6 @@
             "isUI": false
         },
         {
-            "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606",
-            "name": "music",
-            "path": "Assets/Textures/music.png",
-            "isUI": false
-        },
-        {
-            "guid": "cabb6b16-8445-4f40-b9c8-bd593ea6b65c",
-            "name": "top",
-            "path": "Assets\\Textures\\top.png",
-            "isUI": false
-        },
-        {
             "guid": "5361d026-4076-490e-bf6c-204ace0da656",
             "name": "SETTINGS BUTTON",
             "path": "Assets\\Textures\\SETTINGS BUTTON.png",
@@ -35,6 +23,12 @@
             "guid": "d24a29c5-cd9e-4322-ab59-d38618cba4bf",
             "name": "quitbutton",
             "path": "Assets\\Textures\\quitbutton.png",
+            "isUI": false
+        },
+        {
+            "guid": "cabb6b16-8445-4f40-b9c8-bd593ea6b65c",
+            "name": "top",
+            "path": "Assets\\Textures\\top.png",
             "isUI": false
         },
         {
@@ -56,21 +50,39 @@
             "isUI": false
         },
         {
-            "guid": "d7666fdd-353e-4a3e-9a3f-70f50cea9f7a",
-            "name": "CREDITS BUTTON",
-            "path": "Assets\\Textures\\CREDITS BUTTON.png",
-            "isUI": false
-        },
-        {
             "guid": "6268a735-25b0-4a92-b9df-38ba44a3af1e",
             "name": "SETTING HOVER BUTTON",
             "path": "Assets\\Textures\\SETTING HOVER BUTTON.png",
             "isUI": false
         },
         {
+            "guid": "d7666fdd-353e-4a3e-9a3f-70f50cea9f7a",
+            "name": "CREDITS BUTTON",
+            "path": "Assets\\Textures\\CREDITS BUTTON.png",
+            "isUI": false
+        },
+        {
+            "guid": "cf6e59fa-490e-4c1d-915b-11f4df02b5a5",
+            "name": "BlueVial",
+            "path": "Assets\\Textures\\BlueVial.png",
+            "isUI": false
+        },
+        {
             "guid": "468efa22-bb31-4660-9af8-2527d6bc5465",
             "name": "bluecloud_lf",
             "path": "Assets\\Textures\\bluecloud_lf.jpg",
+            "isUI": false
+        },
+        {
+            "guid": "0ee031ad-9903-4383-bf79-3e703fd1fe5c",
+            "name": "GreenPotion",
+            "path": "Assets\\Textures\\GreenPotion.png",
+            "isUI": false
+        },
+        {
+            "guid": "f7b72f50-1fbd-45eb-b499-2ad0a8f7d9a5",
+            "name": "autumn tree",
+            "path": "Assets\\Textures\\autumn tree.png",
             "isUI": false
         },
         {
@@ -92,12 +104,6 @@
             "isUI": false
         },
         {
-            "guid": "f7b72f50-1fbd-45eb-b499-2ad0a8f7d9a5",
-            "name": "autumn tree",
-            "path": "Assets\\Textures\\autumn tree.png",
-            "isUI": false
-        },
-        {
             "guid": "b5153be8-0464-48c3-800e-48bfb0c931b9",
             "name": "Key_E",
             "path": "Assets\\Textures\\Key_E.png",
@@ -110,21 +116,27 @@
             "isUI": false
         },
         {
-            "guid": "6164f3f9-ba5f-40e6-a04d-c287e57ca0a9",
-            "name": "FrogPortrait",
-            "path": "Assets\\Textures\\FrogPortrait.png",
-            "isUI": false
-        },
-        {
             "guid": "af8e75b5-739e-4206-8194-4123598c5a7c",
             "name": "pausebg",
             "path": "Assets\\Textures\\pausebg.png",
             "isUI": false
         },
         {
+            "guid": "6164f3f9-ba5f-40e6-a04d-c287e57ca0a9",
+            "name": "FrogPortrait",
+            "path": "Assets\\Textures\\FrogPortrait.png",
+            "isUI": false
+        },
+        {
             "guid": "c2a1f2a8-98b8-490f-bae9-f3bc714f424c",
             "name": "SkyNoon_Top",
             "path": "Assets\\Textures\\SkyNoon_Top.png",
+            "isUI": false
+        },
+        {
+            "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606",
+            "name": "music",
+            "path": "Assets/Textures/music.png",
             "isUI": false
         },
         {
@@ -311,18 +323,6 @@
             "guid": "53b6aedc-c55e-4bd1-bddb-3d1842e4d22a",
             "name": "GreenPotion2",
             "path": "Assets\\Textures\\GreenPotion2.png",
-            "isUI": false
-        },
-        {
-            "guid": "0ee031ad-9903-4383-bf79-3e703fd1fe5c",
-            "name": "GreenPotion",
-            "path": "Assets\\Textures\\GreenPotion.png",
-            "isUI": false
-        },
-        {
-            "guid": "cf6e59fa-490e-4c1d-915b-11f4df02b5a5",
-            "name": "BlueVial",
-            "path": "Assets\\Textures\\BlueVial.png",
             "isUI": false
         },
         {
@@ -887,6 +887,30 @@
             "guid": "e47098ed-91c0-44ed-9b18-8c8e5e0f6c18",
             "name": "grass2",
             "path": "Assets\\Textures\\grass2.png",
+            "isUI": false
+        },
+        {
+            "guid": "c30cd85f-281f-4768-b344-e81389711158",
+            "name": "UI_SkillBar_BG",
+            "path": "Assets\\Textures\\UI_SkillBar_BG.png",
+            "isUI": false
+        },
+        {
+            "guid": "8ebd21a3-4b28-4a24-8e0e-c1a23923925e",
+            "name": "UI_SkillBar_Marker",
+            "path": "Assets\\Textures\\UI_SkillBar_Marker.png",
+            "isUI": false
+        },
+        {
+            "guid": "f1944e1e-2e5d-4cc2-aabd-b644737524d1",
+            "name": "UI_SkillBar_Zone",
+            "path": "Assets\\Textures\\UI_SkillBar_Zone.png",
+            "isUI": false
+        },
+        {
+            "guid": "1a49cbf5-75b0-4236-b52b-2611155c7a7b",
+            "name": "UI_ProgressBar_Fill",
+            "path": "Assets\\Textures\\UI_ProgressBar_Fill.png",
             "isUI": false
         }
     ]

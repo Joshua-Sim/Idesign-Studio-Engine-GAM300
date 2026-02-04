@@ -1,5 +1,5 @@
 {
-    "count": 19,
+    "count": 23,
     "entries": [
         {
             "guid": "898b36fc-aae3-43e4-9e2e-8edcb193e3c1",
@@ -80,6 +80,12 @@
             "isScenePrefab": false
         },
         {
+            "guid": "654ed3fe-c485-4a60-90f4-cac1b387d8c0",
+            "name": "UI_SkillBar_Zone_Prefab",
+            "path": "Assets\\Prefabs\\UI_SkillBar_Zone_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
             "guid": "702b8b28-03cd-448f-bcac-52b8ef5e1856",
             "name": "CustomerLog_Prefab",
             "path": "Assets\\Prefabs\\CustomerLog_Prefab.prefab",
@@ -113,6 +119,24 @@
             "guid": "f2b79bf2-29d4-4577-801d-b6dff82ecb2c",
             "name": "Herb4_Prefab",
             "path": "Assets\\Prefabs\\Herb4_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "0a36a5ea-8321-4d14-9896-9a8610e429ae",
+            "name": "UI_SkillBar_BG_Prefab",
+            "path": "Assets\\Prefabs\\UI_SkillBar_BG_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "61debb8a-d3c7-415e-b373-3d7c6260dff2",
+            "name": "UI_ProgressBar_Fill_Prefab",
+            "path": "Assets\\Prefabs\\UI_ProgressBar_Fill_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "bcdd602a-3c09-4d09-a61b-824cf7a01e80",
+            "name": "UI_SkillBar_Marker_Prefab",
+            "path": "Assets\\Prefabs\\UI_SkillBar_Marker_Prefab.prefab",
             "isScenePrefab": false
         }
     ]
