@@ -341,6 +341,17 @@ namespace Framework {
             return 1;
         }
 
+        static int l_isItemZipping(lua_State* L) {
+            Entity ent = static_cast<Entity>(luaL_checkinteger(L, 1));
+            if (ecsInterface.IsEntityValid(ent) && ecsInterface.HasComponent<ItemComponent>(ent)) {
+                auto& item = ecsInterface.GetComponent<ItemComponent>(ent);
+                lua_pushboolean(L, item.isZipping);
+                return 1;
+            }
+            lua_pushboolean(L, false);
+            return 1;
+        }
+
         static int l_SetInteractionText(lua_State* L)
         {
             // Arg 1: Entity ID
@@ -1777,6 +1788,7 @@ namespace Framework {
         lua_register(L, "RegisterButtonCallback",   Lua_RegisterButtonCallback);
 
         lua_register(L, "SpawnCauldronItem", l_spawnCauldronItem);
+        lua_register(L, "IsItemZipping", l_isItemZipping);
         lua_register(L, "CheckValidRecipe",  l_CheckValidRecipe);
         lua_register(L, "GetEntityName",     lua_GetEntityName);
 

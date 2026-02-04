@@ -372,45 +372,76 @@ function M.on_update(arg1, arg2)
     ---------------------------------------------------------
     -- 3. ITEM ANIMATION & ROTATION
     ---------------------------------------------------------
-    local count = #visual_entities
-    for i = count, 1, -1 do
-        local vis_id = visual_entities[i]
-        local is_valid = true
-        
-        if vis_id > 0 and IsEntityValid and not IsEntityValid(vis_id) then is_valid = false end
+    -- Iterate BACKWARDS (from #visual_entities down to 1) 
+    -- This prevents index-shifting bugs when items are picked up.
+    local total_count = #visual_entities
 
-        if is_valid and vis_id > 0 then
-            local angle_step = (2 * math.pi) / count
+    for i = total_count, 1, -1 do
+        local vis_id = visual_entities[i]
+        local should_remove = false
+
+        -- A. Check if the item is being picked up (Zipping)
+        if vis_id > 0 and IsItemZipping and IsItemZipping(vis_id) then
+            should_remove = true
+            print("[Cauldron] Releasing " .. vis_id .. " to Player (Zip Started)")
+        end
+
+        -- B. Check if the entity still exists in the engine
+        if not should_remove and IsEntityValid and not IsEntityValid(vis_id) then
+            should_remove = true
+            print("[Cauldron] Cleaning up invalid entity: " .. vis_id)
+        end
+
+        if should_remove then
+            -- Remove from both lists to keep them synchronized
+            table.remove(visual_entities, i)
+            table.remove(stored_ingredients, i)
+            
+            -- If the cauldron is now empty, reset the prompt text
+            if #visual_entities == 0 and SetInteractionText then
+                SetInteractionText(my_entity_id, "Stir Cauldron")
+                last_prompt_state = "Stir Cauldron"
+            end
+        else
+            -- C. PHYSICS & VISUAL MATH (Only for items staying in the cauldron)
+            -- We use #visual_entities here so the spacing updates instantly when one is removed
+            local current_count = #visual_entities
+            local angle_step = (2 * math.pi) / current_count
             local item_angle = current_orbit_angle + ((i - 1) * angle_step)
             
+            -- Calculate dynamic radius (spirals inward as progress increases)
             local dynamic_radius = is_active and (orbit_radius_start + (orbit_radius_end - orbit_radius_start) * progress) or orbit_radius_start
+            
             local offset_x = math.cos(item_angle) * dynamic_radius
             local offset_z = math.sin(item_angle) * dynamic_radius
-            local offset_y = math.sin((accumulated_time * bob_speed) + i) * (is_active and 0.0 or bob_height)
+            
+            -- Apply bobbing effect (disabled while actively stirring for better "spinning" look)
+            local vertical_bob = math.sin((accumulated_time * bob_speed) + i) * (is_active and 0.0 or bob_height)
             
             local raw_cx, raw_cy, raw_cz = GetPosition(my_entity_id)
             if raw_cx then 
-                SetPosition(vis_id, raw_cx + center_offset_x + offset_x, raw_cy + height_offset + offset_y, raw_cz + center_offset_z + offset_z)
+                -- Update Position
+                SetPosition(vis_id, 
+                    raw_cx + center_offset_x + offset_x, 
+                    raw_cy + height_offset + vertical_bob, 
+                    raw_cz + center_offset_z + offset_z
+                )
 
-                -- ROTATION FIX: Only rotate on self-axis when actively stirring correctly
+                -- Update Rotation
                 if is_active then
                     if is_stirring_correct_dir and not is_finished then
-                        SetRotation(vis_id, 0.0, accumulated_time * 50.0, 0.0)
+                        -- Spin faster based on time
+                        SetRotation(vis_id, 0.0, accumulated_time * 250.0, 0.0)
                     else
-                        -- Freeze rotation if player stops or spins wrong way
-                        SetRotation(vis_id, 0.0, 0.0, 0.0) 
+                        -- Freeze rotation if player stops or stirs backwards
+                        -- (Prevents the items from feeling "disconnected" from the spoon)
+                        SetRotation(vis_id, 0.0, GetRotation(vis_id), 0.0) 
                     end
                 else
-                    -- Normal idle spinning when not interacting
+                    -- Gentle idle rotation
                     SetRotation(vis_id, 0.0, accumulated_time * 50.0, 0.0)
                 end
             end
-        end
-
-        if not is_valid then
-            table.remove(visual_entities, i)
-            table.remove(stored_ingredients, i)
-            if is_active then M.StopInteraction(my_entity_id) end
         end
     end
 
