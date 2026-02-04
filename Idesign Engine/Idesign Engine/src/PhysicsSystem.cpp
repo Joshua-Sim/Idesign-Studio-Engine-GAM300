@@ -197,8 +197,14 @@ namespace Framework {
             {
                 JPH::ShapeRefC shape = nullptr;
 
-                // Case A: Single Shape
-                if (entries.size() == 1) {
+                // Determine if we can use a simple shape or if we need a compound shape (for offsets/multi-box)
+                bool needsCompound = (entries.size() > 1);
+                if (entries.size() == 1 && entries[0]->center != glm::vec3(0.0f)) {
+                    needsCompound = true;
+                }
+
+                if (!needsCompound) {
+                    // Case A: Single Shape, No Offset
                     const auto* entry = entries[0];
                     JPH::Vec3 half_extents(
                         std::abs(0.5f * entry->size.x * tf.scale.x),
@@ -207,25 +213,16 @@ namespace Framework {
                     );
                     half_extents = JPH::Vec3::sMax(half_extents, JPH::Vec3(0.001f, 0.001f, 0.001f));
 
-                    JPH::BoxShapeSettings bs(half_extents);
-                    auto result = bs.Create();
+                    JPH::BoxShapeSettings settings(half_extents);
+                    auto result = settings.Create();
                     if (result.HasError()) return;
                     shape = result.Get();
-
-                    if (entry->center != glm::vec3(0.0f)) {
-                        // --- FIX 1: Apply Scale to Offset ---
-                        JPH::Vec3 center(
-                            entry->center.x * tf.scale.x,
-                            entry->center.y * tf.scale.y,
-                            entry->center.z * tf.scale.z
-                        );
-                        // ------------------------------------
-                        shape = new JPH::OffsetCenterOfMassShape(shape, center);
-                    }
                 }
-                // Case B: Compound Shape
                 else {
+                    // Case B: Compound Shape (Multiple boxes OR single box with offset)
+                    // This keeps the Physics Center of Mass aligned with your Entity Pivot
                     JPH::StaticCompoundShapeSettings compoundSettings;
+
                     for (const auto* entry : entries) {
                         JPH::Vec3 half_extents(
                             std::abs(0.5f * entry->size.x * tf.scale.x),
@@ -234,18 +231,15 @@ namespace Framework {
                         );
                         half_extents = JPH::Vec3::sMax(half_extents, JPH::Vec3(0.001f, 0.001f, 0.001f));
 
-                        JPH::BoxShapeSettings* box = new JPH::BoxShapeSettings(half_extents);
-
-                        // --- FIX 2: Apply Scale to Offset ---
                         JPH::Vec3 offset(
                             entry->center.x * tf.scale.x,
                             entry->center.y * tf.scale.y,
                             entry->center.z * tf.scale.z
                         );
-                        // ------------------------------------
 
-                        compoundSettings.AddShape(offset, JPH::Quat::sIdentity(), box);
+                        compoundSettings.AddShape(offset, JPH::Quat::sIdentity(), new JPH::BoxShapeSettings(half_extents));
                     }
+
                     auto result = compoundSettings.Create();
                     if (result.HasError()) return;
                     shape = result.Get();
@@ -409,8 +403,7 @@ namespace Framework {
 
             for (const auto& ev : s_TriggerEvents) {
 
-                if (bodyInterface->IsActive(ev.b1) == false && !bodyInterface->IsAdded(ev.b1)) continue;
-                if (bodyInterface->IsActive(ev.b2) == false && !bodyInterface->IsAdded(ev.b2)) continue;
+                if (!bodyInterface->IsAdded(ev.b1) || !bodyInterface->IsAdded(ev.b2)) continue;
 
                 Entity e1 = (Entity)bodyInterface->GetUserData(ev.b1);
                 Entity e2 = (Entity)bodyInterface->GetUserData(ev.b2);
@@ -571,11 +564,21 @@ namespace Framework {
                     }
                     else
                     {
-                        // If grounded, keep player “planted” (avoid micro airborne + prevent hop)
-                        if (prop.isGrounded && finalV.y > 0.0f)
-                            finalV.y = 0.0f;
-                    }
+                        // No input: stop sliding down slope if grounded
+                        if (prop.isGrounded)
+                        {
+                            // FIX: Only zero out X and Z. 
+                            // If we just jumped, finalV.y will be positive; we MUST NOT zero it.
+                            finalV.x = 0.0f;
+                            finalV.z = 0.0f;
 
+                            // Only apply the "stick to ground" bias if we aren't currently jumping
+                            if (!hasYImpulse && finalV.y <= 0.0f)
+                            {
+                                finalV.y = std::min(finalV.y, prop.stickToGroundVel);
+                            }
+                        }
+                    }
                     // Apply input motion
                     if (hasXZ)
                     {
@@ -711,24 +714,19 @@ namespace Framework {
 
 
     // --- Remove Body ---
-    void PhysicsSystem::RemoveBodyForEntity(Entity e)
-    {
-        if (!bodyInterface) return;
-
-        // [FIX] Clean up the static maps to prevent memory growth
-        if (s_lastLin.find(e) != s_lastLin.end()) s_lastLin.erase(e);
-        if (s_lastAng.find(e) != s_lastAng.end()) s_lastAng.erase(e);
-
+    void PhysicsSystem::RemoveBodyForEntity(Entity e) {
         if (!ecsInterface.HasComponent<PhysicsBodyComponent>(e)) return;
-
         auto& pb = ecsInterface.GetComponent<PhysicsBodyComponent>(e);
 
         for (JPH::BodyID id : pb.IDs) {
-            if (!id.IsInvalid()) {
-                bodyInterface->RemoveBody(id);
-                bodyInterface->DestroyBody(id);
-                auto it = std::find(m_createdBodies.begin(), m_createdBodies.end(), id);
-                if (it != m_createdBodies.end()) m_createdBodies.erase(it);
+            bodyInterface->RemoveBody(id);
+            bodyInterface->DestroyBody(id);
+
+            // Efficient removal
+            auto it = std::find(m_createdBodies.begin(), m_createdBodies.end(), id);
+            if (it != m_createdBodies.end()) {
+                std::iter_swap(it, m_createdBodies.end() - 1);
+                m_createdBodies.pop_back();
             }
         }
         ecsInterface.RemoveComponent<PhysicsBodyComponent>(e);
