@@ -2293,36 +2293,7 @@ namespace Framework {
 
 
                     std::cout << "[ECS] Created Text Entity ID: " << textEntity << std::endl;
-                }
-            
-                ImGui::Spacing();
-
-
-                // --- Particle Emitter ---
-                if (ImGui::Button("Create Particle Emitter", ImVec2(220, 35)))
-                {
-                    Entity newEntity = ecsInterface.CreateEntity();
-
-                    // Default components (same pattern as your Basic Entity)
-                    ecsInterface.AddComponent<TransformComponent>(newEntity, TransformComponent{});
-                    ecsInterface.AddComponent<HierarchyComponent>(newEntity, HierarchyComponent{});
-                    ecsInterface.AddComponent<TagComponent>(newEntity, TagComponent{});
-                    ecsInterface.AddComponent<ParticleEmitterComponent>(newEntity, ParticleEmitterComponent{});
-
-                    // Optional: tag it so you can identify it in your tools
-                    auto& tag = ecsInterface.GetComponent<TagComponent>(newEntity);
-                    tag.tags.push_back("ParticleEmitter");
-
-                    // Optional: set some nice defaults
-                    auto& emitter = ecsInterface.GetComponent<ParticleEmitterComponent>(newEntity);
-                    emitter.maxParticles = 2000;
-                    emitter.emissionRate = 120.0f;
-                    emitter.lifetime = 1.0f;
-                    emitter.style = 0;       // 0 = Pixel, 1 = Voxel
-                    emitter.localSpace = false;
-
-                    std::cout << "[ECS] Created Particle Emitter Entity ID: " << newEntity << std::endl;
-                }
+                }                                                   
             }
 
 

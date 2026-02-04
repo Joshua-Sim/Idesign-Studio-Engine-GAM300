@@ -28,8 +28,7 @@ namespace Framework
     // but we store style as int for inspector compatibility.
     enum class ParticleStyle : int
     {
-        Pixel = 0,
-        Voxel = 1
+        Pixel = 0
     };
 
     // Runtime-only particle data (NOT exposed to inspector)
@@ -67,7 +66,7 @@ namespace Framework
         float sizeJitter = 0.0f;
 
         // Style: 0 = Pixel (billboard), 1 = Voxel (cube)
-        int style = static_cast<int>(ParticleStyle::Pixel);
+        int style = 0;
 
         // If true, particles follow emitter transform (spawn & simulate in local space)
         // If false, particles are in world space once spawned
@@ -78,12 +77,7 @@ namespace Framework
         uint32_t rngState = 0x12345678u; // simple per-emitter RNG seed/state
         std::vector<Particle> particles; // particle pool
 
-        ParticleStyle GetStyle() const
-        {
-            return (style == static_cast<int>(ParticleStyle::Voxel))
-                ? ParticleStyle::Voxel
-                : ParticleStyle::Pixel;
-        }
+        
     };
 
     // Property registration for ParticleEmitterComponent
@@ -103,8 +97,7 @@ namespace Framework
         PROP_FLOAT(endSize,          ParticleEmitterComponent),
         PROP_FLOAT(sizeJitter,       ParticleEmitterComponent),
 
-        // 0 = Pixel, 1 = Voxel
-        PROP_INT(style,              ParticleEmitterComponent),
+        
 
         PROP_BOOL(localSpace,        ParticleEmitterComponent),
     };
