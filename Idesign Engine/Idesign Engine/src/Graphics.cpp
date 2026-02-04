@@ -2755,6 +2755,7 @@ namespace Framework {
         if (viewIndex == 0 &&
             !engineState.Is(EngineMode::Paused) &&
             !engineState.Is(EngineMode::HowToPlay) &&
+            !engineState.Is(EngineMode::Cutscene) &&
             !engineState.Is(EngineMode::Menu) &&
             !engineState.Is(EngineMode::Settings) &&
             !engineState.Is(EngineMode::Dialogue) &&

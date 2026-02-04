@@ -12,9 +12,14 @@ namespace Framework
 {
     // Define the global instance
     SceneInterface sceneInterface;
-    // Put these as members/static near your SceneInterface or wherever you store cutscene state:
-    static bool  cutsceneFinished = false;
-    static bool  cutsceneInit = false;
+    // somewhere persistent (SceneInterface members or static in cpp)
+    static bool cutsceneFinished = false;
+
+    // Tune these
+    static const float fadeDuration = 1.2f;  // slide fade-in time
+    static const float gap = 0.5f;  // delay between slides
+    static const float holdAfterLast = 0.6f;  // hold before fade-out starts
+    static const float fadeOutDuration = 0.8f;  // global fade-out time
 
     void SceneInterface::Initialize() {}
 
@@ -119,7 +124,7 @@ namespace Framework
                     cutsceneStartTime = (float)glfwGetTime();
                     cutsceneFinished = false;
 
-                    // Optional: force everything invisible at the start
+                    // Optional: force all cutscene slides visible but alpha 0 at start
                     auto slides = ecsInterface.GetEntitiesByTag("cutscene");
                     for (auto e : slides)
                     {
@@ -135,85 +140,94 @@ namespace Framework
                 float t = now - cutsceneStartTime;
 
                 auto slides = ecsInterface.GetEntitiesByTag("cutscene");
-                const int N = (int)slides.size(); // should be 13
+                // Expecting 13 images: slides[0] is your black screen
+                // Slides must be created in the correct order since you said "no sort".
 
-                // Timing knobs
-                const float fadeInDuration = 1.5f;
-                const float gap = 0.8f;   // delay between slides
-                const float holdAfterLast = 0.4f;   // pause after last is fully visible
-                const float fadeOutDuration = 0.8f;  // fade everything to 0
-
-                // Total time when last slide finishes fading in
-                float lastFadeInEnd = (N > 0) ? ((N - 1) * (fadeInDuration + gap) + fadeInDuration) : 0.0f;
-
-                // Fade-out starts after last fully visible + hold
-                float fadeOutStart = lastFadeInEnd + holdAfterLast;
-                float fadeOutEnd = fadeOutStart + fadeOutDuration;
-
-                // 1) Fade-in sequence (per slide)
-                for (int i = 0; i < N; ++i)
+                const int count = (int)slides.size();
+                if (count > 0)
                 {
-                    Entity e = slides[i];
-                    if (!ecsInterface.IsEntityValid(e)) continue;
-                    if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
+                    // 1) Slide 0: instant black alpha=1
+                    {
+                        Entity e0 = slides[0];
+                        if (ecsInterface.IsEntityValid(e0) && ecsInterface.HasComponent<TextureProperties>(e0))
+                        {
+                            auto& tex0 = ecsInterface.GetComponent<TextureProperties>(e0);
+                            tex0.isUI = true;
+                            tex0.uiAlpha = 1.0f; // INSTANT
+                        }
+                    }
 
-                    auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
-                    tex.isUI = true;
-
-                    float startTime = i * (fadeInDuration + gap);
-                    float localT = (t - startTime) / fadeInDuration;      // 0..1
-                    localT = glm::clamp(localT, 0.0f, 1.0f);
-
-                    tex.uiAlpha = localT; // just fade in to 1
-                }
-
-                // 2) Global fade-out (multiplies everything down to 0)
-                if (t >= fadeOutStart)
-                {
-                    float outT = (t - fadeOutStart) / fadeOutDuration;     // 0..1
-                    outT = glm::clamp(outT, 0.0f, 1.0f);
-
-                    float global = 1.0f - outT; // 1 -> 0
-
-                    for (int i = 0; i < N; ++i)
+                    // 2) Slides 1..(count-1): sequential fade-in
+                    // start time for slide i (i>=1) = (i-1) * (fadeDuration + gap)
+                    for (int i = 1; i < count; ++i)
                     {
                         Entity e = slides[i];
                         if (!ecsInterface.IsEntityValid(e)) continue;
                         if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
 
                         auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
-                        tex.uiAlpha *= global; // ensures they ALL go to 0 smoothly
+                        tex.isUI = true;
+
+                        float startTime = (float)(i - 1) * (fadeDuration + gap);
+                        float localT = (t - startTime) / fadeDuration;
+                        localT = glm::clamp(localT, 0.0f, 1.0f);
+
+                        tex.uiAlpha = localT;
                     }
-                }
 
-                // 3) Done: hard-force alpha 0 so there is NO 1-frame flash
-                if (!cutsceneFinished && t >= fadeOutEnd)
-                {
-                    cutsceneFinished = true;
+                    // 3) Global fade-out after everything has faded in + hold
+                    // total time for last slide fade-in to finish:
+                    // lastIndex = count-1 => start = (count-2)*(fadeDuration+gap)
+                    float lastStart = (float)(count - 2) * (fadeDuration + gap);
+                    float fadeInEnd = lastStart + fadeDuration;
+                    float fadeOutStart = fadeInEnd + holdAfterLast;
 
-                    for (auto e : slides)
+                    if (t >= fadeOutStart)
                     {
-                        if (!ecsInterface.IsEntityValid(e)) continue;
-                        if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
+                        float outT = (t - fadeOutStart) / fadeOutDuration; // 0..1
+                        outT = glm::clamp(outT, 0.0f, 1.0f);
 
-                        auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
-                        tex.uiAlpha = 0.0f;     // HARD zero
-                        tex.isUI = false;       // Hide from UI pass entirely
+                        float globalAlpha = 1.0f - outT; // 1 -> 0
+
+                        // Apply globalAlpha to ALL slides (including black) so it ends fully transparent
+                        for (int i = 0; i < count; ++i)
+                        {
+                            Entity e = slides[i];
+                            if (!ecsInterface.IsEntityValid(e)) continue;
+                            if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
+
+                            auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
+                            tex.uiAlpha *= globalAlpha;
+                        }
+
+                        // When fade-out finishes, hide all cutscene UI and push next state once.
+                        if (outT >= 1.0f && !cutsceneFinished)
+                        {
+                            cutsceneFinished = true;
+
+                            for (int i = 0; i < count; ++i)
+                            {
+                                Entity e = slides[i];
+                                if (!ecsInterface.IsEntityValid(e)) continue;
+                                if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
+
+                                auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
+                                tex.uiAlpha = 0.0f;
+                                tex.isUI = false; // optional: fully remove them from UI pass
+                            }
+
+                            // Move to gameplay
+                            engineState.PushState(EngineMode::Play);    // or whatever your next state is
+                        }
                     }
-
-                    cutsceneStartTime = -1.0f;
-
-                    // Now change state ONCE (example)
-                    engineState.PushState(EngineMode::Play);
                 }
             }
             else
             {
-                // If not in cutscene, reset flags so next time it can start cleanly
+                // Reset for next time
                 cutsceneStartTime = -1.0f;
                 cutsceneFinished = false;
             }
-
 
         }
     }

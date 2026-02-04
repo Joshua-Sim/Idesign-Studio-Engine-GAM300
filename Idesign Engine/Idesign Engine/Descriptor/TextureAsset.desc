@@ -1,6 +1,12 @@
 {
-    "count": 159,
+    "count": 170,
     "entries": [
+        {
+            "guid": "2caa6c98-6478-4c73-9884-dc5cba0ff600",
+            "name": "CSWORD2",
+            "path": "Assets\\Textures\\CSWORD2.png",
+            "isUI": false
+        },
         {
             "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
             "name": "green",
@@ -11,6 +17,12 @@
             "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
             "name": "",
             "path": "Assets/PNG/test.png",
+            "isUI": false
+        },
+        {
+            "guid": "688ee440-8d3a-446a-bb38-374bc8f2d982",
+            "name": "CU4",
+            "path": "Assets\\Textures\\CU4.png",
             "isUI": false
         },
         {
@@ -65,6 +77,12 @@
             "guid": "6268a735-25b0-4a92-b9df-38ba44a3af1e",
             "name": "SETTING HOVER BUTTON",
             "path": "Assets\\Textures\\SETTING HOVER BUTTON.png",
+            "isUI": false
+        },
+        {
+            "guid": "bd53721a-583e-47d7-b196-17af52bd40fe",
+            "name": "blackbar",
+            "path": "Assets\\Textures\\blackbar.png",
             "isUI": false
         },
         {
@@ -329,6 +347,12 @@
             "guid": "0ee031ad-9903-4383-bf79-3e703fd1fe5c",
             "name": "GreenPotion",
             "path": "Assets\\Textures\\GreenPotion.png",
+            "isUI": false
+        },
+        {
+            "guid": "cc478360-49aa-4609-b48d-5b959ce00ffc",
+            "name": "CSWORD1",
+            "path": "Assets\\Textures\\CSWORD1.png",
             "isUI": false
         },
         {
@@ -680,6 +704,12 @@
             "isUI": false
         },
         {
+            "guid": "ab663213-734f-49df-801d-e8c949f7786b",
+            "name": "CU2",
+            "path": "Assets\\Textures\\CU2.png",
+            "isUI": false
+        },
+        {
             "guid": "f33b2c37-d7c5-43b6-9f39-ec0b00ca8a8e",
             "name": "HOW TO PLAY BUTTON",
             "path": "Assets\\Textures\\HOW TO PLAY BUTTON.png",
@@ -908,6 +938,12 @@
             "isUI": false
         },
         {
+            "guid": "cd0ab525-62ba-4859-9dc1-ccab223a60ef",
+            "name": "CU6",
+            "path": "Assets\\Textures\\CU6.png",
+            "isUI": false
+        },
+        {
             "guid": "985b7d55-07cb-4e09-9e74-ef085f230271",
             "name": "CSTEXT3",
             "path": "Assets\\Textures\\CSTEXT3.png",
@@ -953,6 +989,36 @@
             "guid": "4a965a01-e022-42cb-831b-abd089e4b865",
             "name": "CS3",
             "path": "Assets\\Textures\\CS3.png",
+            "isUI": false
+        },
+        {
+            "guid": "c94f32a4-e497-462b-a0b1-cdfebdff4ffe",
+            "name": "CU5",
+            "path": "Assets\\Textures\\CU5.png",
+            "isUI": false
+        },
+        {
+            "guid": "5ac95598-7bf6-45f6-adf0-824396450a48",
+            "name": "CU3",
+            "path": "Assets\\Textures\\CU3.png",
+            "isUI": false
+        },
+        {
+            "guid": "529b1429-8279-4d83-8947-dc8de5f6c37a",
+            "name": "CU1",
+            "path": "Assets\\Textures\\CU1.png",
+            "isUI": false
+        },
+        {
+            "guid": "ac8231e6-be2d-4ae8-a11f-5d65a200211a",
+            "name": "CSTEXT4",
+            "path": "Assets\\Textures\\CSTEXT4.png",
+            "isUI": false
+        },
+        {
+            "guid": "9579b39b-648e-485e-95e4-f4a12bc2f6f4",
+            "name": "CSWORD3",
+            "path": "Assets\\Textures\\CSWORD3.png",
             "isUI": false
         }
     ]
