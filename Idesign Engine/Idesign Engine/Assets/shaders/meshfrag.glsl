@@ -65,29 +65,19 @@ uniform vec3 uViewPos; // We need the camera position for specular
 uniform Material uMaterial; // New material uniforms
 uniform sampler2D uShadowMap;
 
-
 float CalculatePointShadow(int index, vec3 L, vec3 N, vec3 Lnorm)
 {
-    // Direction from light to fragment (for cubemap sampling)
     vec3 lightToFrag = -L;
-
-    // 1. Get the normalized depth [0, 1] from the cubemap
     float closestNormalizedDepth = texture(uPointShadowMaps[index], lightToFrag).r;
 
-    // 2. Reconstruct the world-space distance
-    // Ensure uPointLights[index].radius matches uFarPlane used in point_shadow_frag.glsl
+    // USE RADIUS FOR BOTH: Graphics.cpp sets light.shadowFarPlane = light.radius
     float closestDepth = closestNormalizedDepth * uPointLights[index].radius;
-
-    // 3. Current distance from fragment to light
     float currentDepth = length(L);
 
-    // 4. Check if the fragment is further away than the stored depth
-    // Note: If closestNormalizedDepth is 1.0, it means nothing was hit within 'radius'
     if (closestNormalizedDepth >= 1.0) return 0.0;
 
-    // Adjust bias: Point shadows often need a much smaller bias than directional shadows
-    float bias = max(uPointLights[index].shadowBiasFactor * (1.0 - dot(N, Lnorm)),
-        uPointLights[index].shadowBiasConst);
+    // INCREASE BIAS: Animated voxels need more padding for skinning noise
+    float bias = max(0.015 * (1.0 - dot(N, Lnorm)), 0.005);
 
     return (currentDepth - bias) > closestDepth ? 1.0 : 0.0;
 }

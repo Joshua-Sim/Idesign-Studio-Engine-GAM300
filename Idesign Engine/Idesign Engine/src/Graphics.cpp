@@ -418,6 +418,7 @@ namespace Framework {
         skinnedShader.initGL();
         shadowShader.initGL();
         pointShadowShader.initGL();
+        skinnedPointShadowShader.initGL();
         uiShader.initGL();
         //initialise geometry objects
         cube.initGL();
@@ -755,6 +756,22 @@ namespace Framework {
         float dt = now - lastTime; lastTime = now;
         process_input(dt);
 
+
+        // --- NEW: FRAME MATRIX CACHE ---
+        std::unordered_map<Entity, glm::mat4> frameModelMatrices;
+        for (auto const& entityId : mEntities) {
+            if (ecsInterface.HasComponent<TransformComponent>(entityId)) {
+                auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
+                glm::mat4 model = glm::translate(glm::mat4(1.0f), tr.position);
+                model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
+                model = glm::rotate(model, glm::radians(tr.rotation.y), { 0,1,0 });
+                model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
+                model = glm::scale(model, tr.scale);
+                frameModelMatrices[entityId] = model;
+            }
+        }
+
+
         // ====================================================================
         // 0. LIGHT GATHERING PASS
         // ====================================================================
@@ -849,8 +866,8 @@ namespace Framework {
         // ====================================================================
         //  POINT LIGHT SHADOW PASSES 
         // ====================================================================
-        glDisable(GL_CULL_FACE); 
-        pointShadowShader.use();
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_FRONT);
 
         const unsigned int POINT_SHADOW_WIDTH = 1024, POINT_SHADOW_HEIGHT = 1024;
 
@@ -909,9 +926,9 @@ namespace Framework {
             }
 
             // --- 2. Calculate the 6 View matrices and 1 Projection matrix ---
-            float near_plane = 0.1f;
+            float near_plane = 0.01f;
             glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), 1.0f, near_plane, light.shadowFarPlane);
-
+            light.shadowFarPlane = light.radius;
             std::vector<glm::mat4> shadowTransforms;
             // Standard OpenGL Cubemap Orientations: Target, Up
             shadowTransforms.push_back(shadowProj* glm::lookAt(lightPos, lightPos + glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0))); // +X
@@ -932,13 +949,8 @@ namespace Framework {
                 // FIX 1: Clear to 1.0 instead of FLT_MAX
                 glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-                pointShadowShader.setMat4("uLightSpaceMatrix", shadowTransforms[i]);
-
-                // Render scene
-                pointShadowShader.setMat4("uModel", glm::mat4(1.0f));
-                terrain.draw();
-
+                glEnable(GL_CULL_FACE);
+                glCullFace(GL_FRONT);
                 for (auto const& entityId_inner : mEntities)
                 {
                     if (ecsInterface.HasComponent<MeshProperties>(entityId_inner) &&
@@ -958,18 +970,33 @@ namespace Framework {
                         if (mesh.debugShape == DebugShapeType::None && mesh.vao != 0 && !isTransparent)
                         {
                             auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId_inner);
-                            glm::mat4 model = glm::translate(glm::mat4(1.0f), tr.position);
-                            model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
-                            model = glm::rotate(model, glm::radians(tr.rotation.y), { 0,1,0 });
-                            model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
-                            model = glm::scale(model, tr.scale);
+                            glm::mat4 model = frameModelMatrices[entityId_inner];
+                            bool isSkinned = ecsInterface.HasComponent<AnimationProperties>(entityId_inner);
+                            ShaderProgram& currentShadowShader = isSkinned ? skinnedPointShadowShader : pointShadowShader;
+                            currentShadowShader = pointShadowShader;
+                            currentShadowShader.use();
+                            currentShadowShader.setMat4("uLightSpaceMatrix", shadowTransforms[i]);
+                            currentShadowShader.setMat4("uModel", model);
+                            currentShadowShader.setVec3("uLightPos", lightPos); // Critical for your new light-bias shader
+                            currentShadowShader.setFloat("uFarPlane", light.shadowFarPlane);
 
-                            pointShadowShader.setMat4("uModel", model);
+                            if (isSkinned)
+                            {
+                                auto& animator = ecsInterface.GetComponent<AnimationProperties>(entityId_inner);
+                                // Upload fresh matrices for this frame
+                                for (size_t b = 0; b < animator.finalBoneMatrices.size(); ++b)
+                                {
+                                    std::string boneName = "uBoneMatrices[" + std::to_string(b) + "]";
+                                    currentShadowShader.setMat4(boneName.c_str(), animator.finalBoneMatrices[b]);
+                                }
+                            }
+
                             glBindVertexArray(mesh.vao);
                             glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
                         }
                     }
                 }
+                glCullFace(GL_BACK);
             }
         } 
 
@@ -1902,7 +1929,8 @@ namespace Framework {
         glEnable(GL_STENCIL_TEST);
         glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
         glClearStencil(0);
-        glDisable(GL_CULL_FACE);
+        glEnable(GL_CULL_FACE);  //  Enable culling for main rendering 
+        glCullFace(GL_BACK);     //  Cull back faces (standard)
 
         glViewport(0, 0, width, height);
         glClearColor(0.07f, 0.09f, 0.12f, 1.f);
@@ -2100,9 +2128,7 @@ namespace Framework {
             if (!tr.isActive) continue; // Skip render if isactive is false.
 
             glm::vec3 drawScale = tr.scale;
-
-            glm::mat4 model(1.0f);
-            model = glm::translate(model, tr.position);
+            glm::mat4 model = glm::translate(glm::mat4(1.0f), tr.position); 
             model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
             model = glm::rotate(model, glm::radians(tr.rotation.y), { 0,1,0 });
             model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
