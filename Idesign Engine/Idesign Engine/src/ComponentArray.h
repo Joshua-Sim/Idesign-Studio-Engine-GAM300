@@ -58,28 +58,55 @@ namespace Framework
         // Removes the component associated with the entity passed in 
         void RemoveData(Entity entity)
         {
-            assert(mEntityToIndexMap.find(entity) != mEntityToIndexMap.end() && "Removing non-existent component!");
+            //auto it = mEntityToIndexMap.find(entity);
+            //if (it == mEntityToIndexMap.end() || mSize == 0)
+            //    return; // entity doesn't have this component (or nothing stored)
 
-            size_t indexOfRemovedEntity = mEntityToIndexMap[entity];      // Get the index of the entity to remove 
-            size_t indexOfLastElement = mSize - 1;           // Get the index of the last element 
-            mComponentArray[indexOfRemovedEntity] = mComponentArray[indexOfLastElement]; // Move the last element tot he removed spot 
+            //size_t indexOfRemovedEntity = it->second;
+            //size_t indexOfLastElement = mSize - 1;
+
+            //// Move last element into removed slot (faster + safer for vectors)
+            //mComponentArray[indexOfRemovedEntity] = std::move(mComponentArray[indexOfLastElement]);
+
+            //Entity entityOfLastElement = mIndexToEntityMap[indexOfLastElement];
+            //mEntityToIndexMap[entityOfLastElement] = indexOfRemovedEntity;
+            //mIndexToEntityMap[indexOfRemovedEntity] = entityOfLastElement;
+
+            //mEntityToIndexMap.erase(entity);
+            //mIndexToEntityMap.erase(indexOfLastElement);
+
+            //--mSize;
+
+            auto it = mEntityToIndexMap.find(entity);
+            if (it == mEntityToIndexMap.end() || mSize == 0)
+                return; // removing non-existent component (safe no-op)
+
+            size_t indexOfRemovedEntity = it->second;
+            size_t indexOfLastElement = mSize - 1;
+
+            mComponentArray[indexOfRemovedEntity] = std::move(mComponentArray[indexOfLastElement]);
 
             Entity entityOfLastElement = mIndexToEntityMap[indexOfLastElement];
-            mEntityToIndexMap[entityOfLastElement] = indexOfRemovedEntity;     // Update the Entity-to-Index Maps 
+            mEntityToIndexMap[entityOfLastElement] = indexOfRemovedEntity;
             mIndexToEntityMap[indexOfRemovedEntity] = entityOfLastElement;
 
-            mEntityToIndexMap.erase(entity);            // Erase removed entitiy from respective maps 
+            mEntityToIndexMap.erase(entity);
             mIndexToEntityMap.erase(indexOfLastElement);
 
-            --mSize;                  // Decrease size of the component array 
+            --mSize;
         }
 
         // Returns a reference to the entity's component 
         T& GetData(Entity entity)
         {
-            assert(mEntityToIndexMap.find(entity) != mEntityToIndexMap.end() && "Retrieving non-existent component!");
+            //assert(mEntityToIndexMap.find(entity) != mEntityToIndexMap.end() && "Retrieving non-existent component!");
 
-            return mComponentArray[mEntityToIndexMap[entity]]; // Return a reference to the entity's component 
+            //return mComponentArray[mEntityToIndexMap[entity]]; // Return a reference to the entity's component 
+
+            auto it = mEntityToIndexMap.find(entity);
+            assert(it != mEntityToIndexMap.end() && "Retrieving non-existent component!");
+
+            return mComponentArray[it->second];
         }
 
         // Removes the entity's component. Overrides from the base class to call this function for any T type component 

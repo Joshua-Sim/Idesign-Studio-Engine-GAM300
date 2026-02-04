@@ -197,6 +197,10 @@ namespace Framework
         unsigned int grassTextureID = 0;
         //END OF FOLIAGES
 
+        //PARTICLE (JASPER)
+        FoliageRenderer* m_particlePixelRenderer = nullptr; 
+        unsigned int m_particleTextureID = 0;
+
         //pebbles
         Framework::MeshProperties m_pebbleMesh;
         GLuint pebbleTextureID;

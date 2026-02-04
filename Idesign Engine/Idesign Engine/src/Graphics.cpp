@@ -74,6 +74,7 @@ namespace Framework {
     const auto& assets = AssetManager::Instance().GetAssets();
     bool Graphics::IsCameraRotationEnabled() const { return m_cameraRotationEnabled; }
 
+
     // Constructor
     Graphics::Graphics()
     {
@@ -236,6 +237,7 @@ namespace Framework {
         ecsInterface.RegisterComponent<ItemComponent>();
         ecsInterface.RegisterComponent<ButtonComponent>();
         ecsInterface.RegisterComponent<ParticleEmitterComponent>();
+
 
         //test
 
@@ -551,6 +553,13 @@ namespace Framework {
             "Assets/shaders/instancedleave_vert.glsl",
             "Assets/shaders/instancedleave_frag.glsl"
         );
+
+        m_particlePixelRenderer = new FoliageRenderer(
+            leafQuad,
+            "Assets/shaders/instancedleave_vert.glsl",
+            "Assets/shaders/instancedleave_frag.glsl"
+        );
+
         //// 2. Create the Instancing Renderer
 
         // 3. Generate positions for the trees around the border
@@ -2379,6 +2388,34 @@ namespace Framework {
         glStencilFunc(GL_ALWAYS, 0, 0xFF);
         glDisable(GL_STENCIL_TEST);
 
+        std::vector<glm::mat4> pixelInstances;
+
+        for (Entity e : mEntities)
+        {
+            if (!ecsInterface.HasComponent<ParticleEmitterComponent>(e) ||
+                !ecsInterface.HasComponent<TransformComponent>(e))
+                continue;
+
+            auto& emitter = ecsInterface.GetComponent<ParticleEmitterComponent>(e);
+            auto& xform = ecsInterface.GetComponent<TransformComponent>(e);
+
+            if (!emitter.active) continue;
+
+            const glm::mat4 emitterM = glm::translate(glm::mat4(1.0f), xform.position);
+
+            for (const Particle& p : emitter.particles)
+            {
+                glm::vec3 worldPos = p.position;
+                if (emitter.localSpace)
+                    worldPos = glm::vec3(emitterM * glm::vec4(p.position, 1.0f));
+
+                glm::mat4 M(1.0f);
+                M = glm::translate(M, worldPos);
+                M = glm::scale(M, glm::vec3(p.size));
+
+                pixelInstances.push_back(M);
+            }
+        }
 
         // PARTICLE (Jasper)
         std::vector<glm::mat4> pixelInstances;
@@ -2425,7 +2462,9 @@ namespace Framework {
         }
 
         // --- PARTICLES START --- (Jasper)
-        std::vector<glm::mat4> particleMats;
+
+        // Group instance matrices by texture so each emitter can use its own billboard PNG
+        std::unordered_map<unsigned int, std::vector<glm::mat4>> particleMatsByTex;
 
         for (Entity e : mEntities)
         {
@@ -2440,6 +2479,9 @@ namespace Framework {
 
             const glm::mat4 emitterM = glm::translate(glm::mat4(1.0f), tr.position);
 
+            // Use emitter texture if set, otherwise fallback to the global particle texture
+            unsigned int tex = (emitter.textureID != 0) ? emitter.textureID : m_particleTextureID;
+
             for (const Particle& p : emitter.particles)
             {
                 glm::vec3 worldPos = p.position;
@@ -2451,14 +2493,19 @@ namespace Framework {
                 M = glm::scale(M, glm::vec3(p.size));
 
                 if (emitter.style == 0) // Pixel
-                    particleMats.push_back(M);
+                    particleMatsByTex[tex].push_back(M);
             }
         }
 
-        if (m_particlePixelRenderer && !particleMats.empty())
+        if (m_particlePixelRenderer)
         {
-            m_particlePixelRenderer->setInstances(particleMats);
-            m_particlePixelRenderer->draw(view, proj, glm::mat4(1.0f), m_particleTextureID);
+            for (auto& [tex, mats] : particleMatsByTex)
+            {
+                if (mats.empty()) continue;
+
+                m_particlePixelRenderer->setInstances(mats);
+                m_particlePixelRenderer->draw(view, proj, glm::mat4(1.0f), tex);
+            }
         }
 
         // --- PARTICLES END   --- (Jasper)

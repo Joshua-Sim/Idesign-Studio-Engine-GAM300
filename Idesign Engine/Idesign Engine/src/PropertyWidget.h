@@ -623,5 +623,7 @@ namespace Framework
             comp.scripts.push_back(newEntry);
         }
     }
+
+
 }
 #endif // !_PROPERTY_WIDGET_H_

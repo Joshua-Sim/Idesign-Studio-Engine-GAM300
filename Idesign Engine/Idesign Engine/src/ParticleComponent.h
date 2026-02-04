@@ -1,37 +1,17 @@
-///////////////////////////////////////////////////////////////////////////////
-///
-/// @file ParticleComponent.h
-/// @brief Component for particle emitters (voxel / pixel style)
-///
-/// Notes:
-/// - This follows your engine’s existing component + PropertyMacro pattern
-///   (see AudioComponent.h / TextureProperties.h for reference).
-/// - Because the property system in your repo doesn’t expose enums directly,
-///   `style` is an int:
-///       0 = Pixel (billboard quad)
-///       1 = Voxel (cube)
-///
-///////////////////////////////////////////////////////////////////////////////
-
 #pragma once
 #ifndef PARTICLE_COMPONENT_H
 #define PARTICLE_COMPONENT_H
 
 #include <vector>
-#include <cstdint>
 #include <glm.hpp>
-#include "PropertyMacro.h"   // includes PropertySystem.h + AssetHandler.h
+
+#include "AssetHandler.h"
+#include "PropertySystem.h"
+#include "PropertyMacro.h"
 
 namespace Framework
 {
-    // You can use this enum internally in code if you want,
-    // but we store style as int for inspector compatibility.
-    enum class ParticleStyle : int
-    {
-        Pixel = 0
-    };
-
-    // Runtime-only particle data (NOT exposed to inspector)
+    // Runtime particle (NOT reflected/serialized)
     struct Particle
     {
         glm::vec3 position{ 0.0f };
@@ -39,71 +19,72 @@ namespace Framework
         float age = 0.0f;
         float lifetime = 1.0f;
         float size = 1.0f;
-
-        bool alive() const { return age < lifetime; }
-        float normalizedAge() const { return (lifetime > 0.0001f) ? (age / lifetime) : 1.0f; }
     };
 
-    // Particle emitter component (attach this to an entity)
+    // Emitter component (reflected/serialized fields first)
     struct ParticleEmitterComponent
     {
-        // --- Inspector / serialized-ish config ---
-        bool active = true;
-
-        // Capacity & emission
-        int maxParticles = 512;          // maximum particles in the pool
-        float emissionRate = 60.0f;      // particles per second
-        float lifetime = 1.0f;           // seconds per particle
-
-        // Motion
-        glm::vec3 baseVelocity{ 0.0f, 5.0f, 0.0f };
-        glm::vec3 velocityJitter{ 1.0f, 1.0f, 1.0f }; // random +/- applied per spawn
-        glm::vec3 gravity{ 0.0f, -9.81f, 0.0f };
-
-        // Size
-        float startSize = 0.15f;
-        float endSize = 0.05f;
-        float sizeJitter = 0.0f;
-
-        // Style: 0 = Pixel (billboard), 1 = Voxel (cube)
         int style = 0;
 
-        // If true, particles follow emitter transform (spawn & simulate in local space)
-        // If false, particles are in world space once spawned
-        bool localSpace = false;
+        // --- Requested controls ---
+        bool active = true;
+
+        // Loop vs duration
+        bool  loop = true;
+        float duration = 1.0f;     // only used if loop == false
+
+        // Spray controls
+        glm::vec3 direction{ 0.0f, 1.0f, 0.0f }; // mean direction (normalized at runtime)
+        float spreadAngleDeg = 20.0f;            // cone half-angle
+        float range = 3.0f;                      // approx travel distance
+        float particlesPerSecond = 60.0f;        // number of particles in the spray (rate)
+        float particleSpeed = 5.0f;              // particle speed
+        float particleSize = 0.2f;               // billboard scale
+
+        // Local/world
+        bool localSpace = true;
+
+        // Billboard PNG texture selection
+        AssetHandle textureGuid;   // references TextureProperties in AssetManager
+        bool pixelFilter = true;   // force nearest filtering for pixel look
+
+        // Safety cap
+        int maxParticles = 2000;
 
         // --- Runtime-only ---
-        float emitAccumulator = 0.0f;    // accumulates fractional emission
-        uint32_t rngState = 0x12345678u; // simple per-emitter RNG seed/state
-        std::vector<Particle> particles; // particle pool
-
-        
+        unsigned int textureID = 0;  // cached GL id resolved from textureGuid
+        float timeSinceStart = 0.0f;
+        float emitAccumulator = 0.0f;
+        std::vector<Particle> particles;
     };
 
-    // Property registration for ParticleEmitterComponent
+    // Reflection (Inspector + Scene serialize)
     inline const std::vector g_ParticleEmitterPropsArray =
     {
-        PROP_BOOL(active,            ParticleEmitterComponent),
+        PROP_BOOL(active,                 ParticleEmitterComponent),
 
-        PROP_INT(maxParticles,       ParticleEmitterComponent),
-        PROP_FLOAT(emissionRate,     ParticleEmitterComponent),
-        PROP_FLOAT(lifetime,         ParticleEmitterComponent),
+        PROP_BOOL(loop,                   ParticleEmitterComponent),
+        PROP_FLOAT(duration,              ParticleEmitterComponent),
 
-        PROP_VEC3(baseVelocity,      ParticleEmitterComponent),
-        PROP_VEC3(velocityJitter,    ParticleEmitterComponent),
-        PROP_VEC3(gravity,           ParticleEmitterComponent),
+        PROP_VEC3(direction,              ParticleEmitterComponent),
+        PROP_FLOAT(spreadAngleDeg,        ParticleEmitterComponent),
+        PROP_FLOAT(range,                 ParticleEmitterComponent),
 
-        PROP_FLOAT(startSize,        ParticleEmitterComponent),
-        PROP_FLOAT(endSize,          ParticleEmitterComponent),
-        PROP_FLOAT(sizeJitter,       ParticleEmitterComponent),
+        PROP_FLOAT(particlesPerSecond,    ParticleEmitterComponent),
+        PROP_FLOAT(particleSpeed,         ParticleEmitterComponent),
+        PROP_FLOAT(particleSize,          ParticleEmitterComponent),
 
-        
+        PROP_BOOL(localSpace,             ParticleEmitterComponent),
 
-        PROP_BOOL(localSpace,        ParticleEmitterComponent),
+        // Serialize the chosen texture GUID, but hide it in generic inspector
+        PROP_GUID_FLAGS(textureGuid,      ParticleEmitterComponent, Framework::prop::HIDDEN),
+        PROP_BOOL(pixelFilter,            ParticleEmitterComponent),
+
+        PROP_INT(maxParticles,            ParticleEmitterComponent),
     };
 
     inline const prop_list g_ParticleEmitterProps{ "ParticleEmitterComponent", g_ParticleEmitterPropsArray };
     inline global_registration g_ParticleEmitterReg(&g_ParticleEmitterProps);
 }
 
-#endif // PARTICLE_COMPONENT_H
+#endif

@@ -110,7 +110,8 @@ int main(void)
     auto buttonSystem = ecsInterface.RegisterSystem<ButtonSystem>();
     imguiSystem->SetGraphicsSystem(graphicsSystem.get());
     graphicsSystem->SetImguiManager(imguiSystem.get());
-    
+    auto particleSystem = ecsInterface.RegisterSystem<ParticleSystem>();
+
     //AssetManager::Instance().LoadAllAssets();
     
     //Access the InputHandler instance from the singleton
@@ -151,6 +152,7 @@ int main(void)
 
     ecsInterface.RegisterComponent<EventSenderComponent>(); 
     ecsInterface.RegisterComponent<EventReceiverComponent>();
+    ecsInterface.RegisterComponent<ParticleEmitterComponent>();
 
     {
         Signature signature;
@@ -168,6 +170,7 @@ int main(void)
     engine->AddSystem(navMeshSystem.get());
 	engine->AddSystem(audioSystem.get());
     engine->AddSystem(physicsSystem.get());
+    engine->AddSystem(particleSystem.get()); //Particle
     engine->AddSystem(tagManager.get());
     engine->AddSystem(playerInteractSystem.get());
     engine->AddSystem(fileCheckSystem.get());
