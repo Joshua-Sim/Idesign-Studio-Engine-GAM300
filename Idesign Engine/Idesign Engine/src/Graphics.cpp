@@ -669,11 +669,11 @@ namespace Framework {
         // GENERATE PINES MESH
          // === LOAD PINES MESH ===
         //=== LOAD PINES MESH ===
-        MeshLoader::loadMesh("Assets/Objects/pine.obj", m_pineMesh);
+        MeshLoader::loadMesh("Assets/Objects/AUTUMN PINE TREE MED.obj", m_pineMesh);
 
         // Load texture for pine
         TextureProperties pineProps;
-        pineProps.path = "Assets/Textures/treeLong.png";
+        pineProps.path = "Assets/Textures/mushroom 2.png";
         pineTextureID = TextureLoader::loadTexture(pineProps, true);
 
         // Create renderer
@@ -1930,11 +1930,11 @@ namespace Framework {
         }
         terrain.draw();
 
-        // === DRAW FOLIAGE HERE  ===
-        if (m_treeRenderer && m_treeTextureID != 0) // Only draw if texture is loaded
-        {
-            m_treeRenderer->draw(view, proj, mapModel, m_treeTextureID);
-        }
+        //// === DRAW FOLIAGE HERE  ===
+        //if (m_treeRenderer && m_treeTextureID != 0) // Only draw if texture is loaded
+        //{
+        //    m_treeRenderer->draw(view, proj, mapModel, m_treeTextureID);
+        //}
 
         // === DRAW PEBBLES HERE  ===
         if (m_pebbleRenderer)
@@ -2367,11 +2367,11 @@ namespace Framework {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glDepthMask(GL_FALSE);
 
-        // Billboard leaves
-        if (m_leafRenderer)
-        {
-            m_leafRenderer->draw(view, proj, mapModel, leafTexture);
-        }
+        //// Billboard leaves
+        //if (m_leafRenderer)
+        //{
+        //    m_leafRenderer->draw(view, proj, mapModel, leafTexture);
+        //}
 
         for (auto it = transparentEntities.rbegin(); it != transparentEntities.rend(); ++it)
         {

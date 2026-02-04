@@ -15017,7 +15017,7 @@
             }
         },
         {
-            "name": "CSBLACK",
+            "name": "CUTSCENE",
             "guid": "f2f9401a-c38e-429a-b750-83ab2084c5a5",
             "components": {
                 "TransformComponent": {
@@ -15063,7 +15063,8 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "eb687c6c-3f11-4f0e-b113-a7b451c5f632",
@@ -15432,10 +15433,11 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "2caa6c98-6478-4c73-9884-dc5cba0ff600",
+                    "guid": "e947c023-80a7-4bde-bac1-39fced66d9ee",
                     "isUI": false
                 }
             }
@@ -15473,10 +15475,11 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "9579b39b-648e-485e-95e4-f4a12bc2f6f4",
+                    "guid": "61c47fb7-ac43-43f6-afa6-365cfb81dda4",
                     "isUI": false
                 }
             }
@@ -15514,7 +15517,8 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "bd53721a-583e-47d7-b196-17af52bd40fe",
