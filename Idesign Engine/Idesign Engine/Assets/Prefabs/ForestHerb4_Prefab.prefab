@@ -1,0 +1,93 @@
+{
+    "entity": {
+        "name": "ForestHerb4",
+        "guid": "a06cb268-561d-48e4-8343-cdaf0eb85ad8",
+        "components": {
+            "TransformComponent": {
+                "position": [
+                    -181.59222412109375,
+                    314.0003356933594,
+                    640.6092529296875
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "isActive": true
+            },
+            "TagComponent": {
+                "tags": [
+                    "Interactable"
+                ]
+            },
+            "HierarchyComponent": {
+                "parent": "cacae5c6-d63c-4a92-9a65-b512e4eb2fa0",
+                "children": [],
+                "sortIndex": 5
+            },
+            "MeshReference": {
+                "guid": "4bf0356c-3b1b-4e45-a327-5a7f573a20ef"
+            },
+            "TextureComponent": {
+                "guid": "afd25b76-dddc-4c4f-bae4-a6c9a22931e5",
+                "isUI": false
+            },
+            "ScriptProperties": {
+                "scripts": [
+                    "Assets\\Scripts\\herb_pickup.lua"
+                ]
+            },
+            "BoxColliderComponent": {
+                "colliders": [
+                    {
+                        "size": [
+                            2.9000000953674316,
+                            0.5,
+                            2.299999952316284
+                        ],
+                        "center": [
+                            0.0,
+                            0.30000001192092896,
+                            0.0
+                        ],
+                        "canPassThrough": false,
+                        "isInteractable": true,
+                        "interactMessage": "",
+                        "promptText": ""
+                    }
+                ]
+            },
+            "PhysicsProperties": {
+                "category": 1,
+                "isImmovable": true,
+                "gravityFactor": 1.0,
+                "mass": 1.0,
+                "friction": 0.5,
+                "restitution": 0.0,
+                "linearVelocity": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "angularVelocity": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "startAwake": true
+            },
+            "ItemComponent": {
+                "name": "unchopped_herb",
+                "isIngredient": true,
+                "isChoppable": true,
+                "toDestroyWhenPicked": true
+            }
+        }
+    }
+}
