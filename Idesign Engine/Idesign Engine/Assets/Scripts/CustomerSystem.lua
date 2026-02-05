@@ -10,7 +10,7 @@ CustomerSystem.spawn_delay = 3.0
 
 CustomerSystem.customer_models = {
     { 
-        prefab = "Customer_Kinematic_Prefab",      -- Model A
+        prefab = "Customer_Kinematic_Prefab",       -- Model A
         walk = "Armature|WalkAnimation",
         idle = "Armature|IdleAnimation"
     },
@@ -23,8 +23,6 @@ CustomerSystem.customer_models = {
 
 
 local activeCustomer = nil
-local current_idle_anim = ""    -- Stores the idle anim for the active customer
-local next_model_index = 2      -- Tracks whose turn it is (1 or 2)
 -- [PROGRESS BAR CONFIG]
 CustomerSystem.prefab_frame = "ProgressBarFrame_Prefab"
 CustomerSystem.prefab_fill  = "ProgressBarFill_Prefab"
@@ -72,6 +70,14 @@ local entity_fill = nil
 local current_bar_state = "green"
 local previousPhase = -1 
 local active_logs = {} -- Track spawned logs
+
+-- [ANIMATION STATE]
+local current_idle_anim = ""    -- Stores the idle anim for the active customer
+local current_walk_anim = ""    -- Stores the walk anim for the active customer
+local next_model_index = 2      -- Tracks whose turn it is (1 or 2)
+local last_pos_x = 0
+local last_pos_z = 0
+local is_moving_state = true    -- To prevent spamming PlayAnimation
 
 -- =========================================================
 -- GLOBAL HELPER FUNCTIONS
@@ -149,6 +155,41 @@ function CustomerSystem:on_update(dt)
         -- 2. CUSTOMER ACTIVE LOGIC
         if activeCustomer then
             
+            -- [NEW] VELOCITY CHECK (Handle Waiting in Line)
+            -- Only check if they haven't officially arrived at the counter yet
+            if not is_at_counter then
+                local cx, cy, cz = GetPosition(activeCustomer)
+                
+                -- Calculate distance moved since last frame
+                local dx = cx - last_pos_x
+                local dz = cz - last_pos_z
+                local dist_moved = math.sqrt(dx*dx + dz*dz)
+                local speed = dist_moved / dt -- Units per second
+
+                -- Threshold: If speed < 0.1 units/sec, they are effectively stopped
+                if speed < 0.1 then
+                    if is_moving_state == true then
+                        -- They just stopped (blocked by customer ahead)
+                        print("[CustomerSystem] Blocked! Switching to Idle.")
+                        SetAnimationSettings(activeCustomer, 1.0, true, true)
+                        PlayEntityAnimation(activeCustomer, current_idle_anim)
+                        is_moving_state = false
+                    end
+                else
+                    if is_moving_state == false then
+                        -- They started moving again
+                        print("[CustomerSystem] Moving! Switching to Walk.")
+                        SetAnimationSettings(activeCustomer, 1.0, true, true)
+                        PlayEntityAnimation(activeCustomer, current_walk_anim)
+                        is_moving_state = true
+                    end
+                end
+
+                -- Update last position for next frame
+                last_pos_x = cx
+                last_pos_z = cz
+            end
+
             -- CHECK IF ARRIVED
             if not is_at_counter then
                 if waitPointEntity then
@@ -160,6 +201,7 @@ function CustomerSystem:on_update(dt)
                     if dist < arrival_threshold then
                         print("[CustomerSystem] >> ARRIVED! Switching to Idle...")
                         is_at_counter = true
+                        is_moving_state = false -- Ensure we don't switch back to walk
                         
                         SetAnimationSettings(activeCustomer, 1.0, true, true)
                         
@@ -176,7 +218,7 @@ function CustomerSystem:on_update(dt)
                 if entity_frame and entity_fill then
                     current_patience = current_patience - dt
                     
-                    if current_patience <= 0 then     
+                    if current_patience <= 0 then      
                         print("[CustomerSystem] Time expired! Customer leaving.")
                         CustomerSystem:SpawnLog("Time's up!")
                         if activeCustomer then
@@ -234,14 +276,22 @@ function CustomerSystem:spawn_customer()
     hasSpawned = true
     is_at_counter = false
     
-    -- 2. STORE THE IDLE ANIMATION FOR LATER
+    -- 2. STORE ANIMATIONS
     current_idle_anim = modelData.idle
-  -- 4. PLAY WALK ANIMATION (With forced settings)
+    current_walk_anim = modelData.walk
+    
+    -- 3. PLAY WALK ANIMATION
     print("[CustomerSystem] Playing walk: " .. modelData.walk)
     SetAnimationSettings(activeCustomer, 1.0, true, true) -- Force Speed 1.0, Loop True
     PlayEntityAnimation(activeCustomer, modelData.walk)
 
-    -- 4. FLIP THE INDEX FOR NEXT TIME (If 1 go to 2, if 2 go to 1)
+    -- 4. RESET MOVEMENT STATE FOR VELOCITY CHECK
+    local sx, sy, sz = GetPosition(activeCustomer)
+    last_pos_x = sx
+    last_pos_z = sz
+    is_moving_state = true
+
+    -- 5. FLIP THE INDEX FOR NEXT TIME (If 1 go to 2, if 2 go to 1)
     next_model_index = next_model_index + 1
     if next_model_index > #self.customer_models then
         next_model_index = 1
@@ -328,7 +378,7 @@ function CustomerSystem:ResetNightPhase()
     current_patience = 0.0
     spawnTimer = 0
     current_bar_state = "green"
-    CustomerSystem:UpdateCurrencyDisplay()  -- Changed from UpdateScoreDisplay
+    CustomerSystem:UpdateCurrencyDisplay()
 end
 
 function CustomerSystem:EndNightPhase()
