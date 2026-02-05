@@ -9,15 +9,15 @@
             "tableRef": -1
         },
         {
-            "guid": "c6d4d63d-bced-4890-8a3b-3938e82b13e8",
-            "scriptPath": "Assets\\Scripts\\GameStateExit.lua",
+            "guid": "98caa7fe-14e5-4cb0-b0c3-bc039dbde2cf",
+            "scriptPath": "Assets\\Scripts\\DialogueSystem.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
         },
         {
-            "guid": "98caa7fe-14e5-4cb0-b0c3-bc039dbde2cf",
-            "scriptPath": "Assets\\Scripts\\DialogueSystem.lua",
+            "guid": "c6d4d63d-bced-4890-8a3b-3938e82b13e8",
+            "scriptPath": "Assets\\Scripts\\GameStateExit.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
@@ -30,16 +30,16 @@
             "tableRef": -1
         },
         {
-            "guid": "78bee47a-d444-4c29-a687-a272fd50e5b3",
-            "scriptPath": "Assets/Scripts/prove_lua.lua",
-            "hotReload": false,
+            "guid": "0cf97121-19fa-4fe9-a473-1b2cb85370f8",
+            "scriptPath": "Assets\\Scripts\\TagFunctionExample.lua",
+            "hotReload": true,
             "initialized": false,
             "tableRef": -1
         },
         {
-            "guid": "0cf97121-19fa-4fe9-a473-1b2cb85370f8",
-            "scriptPath": "Assets\\Scripts\\TagFunctionExample.lua",
-            "hotReload": true,
+            "guid": "78bee47a-d444-4c29-a687-a272fd50e5b3",
+            "scriptPath": "Assets/Scripts/prove_lua.lua",
+            "hotReload": false,
             "initialized": false,
             "tableRef": -1
         },
@@ -100,15 +100,15 @@
             "tableRef": -1
         },
         {
-            "guid": "3fec6498-cd0e-40c0-8b7c-6e6d78cc6d5f",
-            "scriptPath": "Assets/Scripts/numpad_Move.lua",
+            "guid": "f2483dea-2693-432a-b1a5-01aed656bd1e",
+            "scriptPath": "Assets\\Scripts\\GameStateResume.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
         },
         {
-            "guid": "f2483dea-2693-432a-b1a5-01aed656bd1e",
-            "scriptPath": "Assets\\Scripts\\GameStateResume.lua",
+            "guid": "3fec6498-cd0e-40c0-8b7c-6e6d78cc6d5f",
+            "scriptPath": "Assets/Scripts/numpad_Move.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
@@ -156,13 +156,6 @@
             "tableRef": -1
         },
         {
-            "guid": "d6628c13-1f36-47dd-9b77-5447605bb81f",
-            "scriptPath": "Assets\\Scripts\\knife.lua",
-            "hotReload": true,
-            "initialized": false,
-            "tableRef": -1
-        },
-        {
             "guid": "0b25e0c5-79e6-465a-96cd-920b83ef31e6",
             "scriptPath": "Assets\\Scripts\\GameStateStart.lua",
             "hotReload": true,
@@ -170,8 +163,8 @@
             "tableRef": -1
         },
         {
-            "guid": "003553a3-ff9c-4a33-b5c3-719a86239b90",
-            "scriptPath": "Assets\\Scripts\\GameStatePaused.lua",
+            "guid": "d6628c13-1f36-47dd-9b77-5447605bb81f",
+            "scriptPath": "Assets\\Scripts\\knife.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
@@ -179,6 +172,13 @@
         {
             "guid": "be141cd7-fad9-4612-8d4c-9452cd03cce0",
             "scriptPath": "Assets\\Scripts\\FloatUpAndDelete.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "003553a3-ff9c-4a33-b5c3-719a86239b90",
+            "scriptPath": "Assets\\Scripts\\GameStatePaused.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
@@ -205,15 +205,15 @@
             "tableRef": -1
         },
         {
-            "guid": "df1c2540-8fa0-4c78-899d-2eaee06453e8",
-            "scriptPath": "Assets\\Scripts\\GameStateCutscene.lua",
+            "guid": "5a675a8e-6d41-4326-bfd1-7106b0279459",
+            "scriptPath": "Assets\\Scripts\\Settings_Master_Mute.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
         },
         {
-            "guid": "5a675a8e-6d41-4326-bfd1-7106b0279459",
-            "scriptPath": "Assets\\Scripts\\Settings_Master_Mute.lua",
+            "guid": "df1c2540-8fa0-4c78-899d-2eaee06453e8",
+            "scriptPath": "Assets\\Scripts\\GameStateCutscene.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1

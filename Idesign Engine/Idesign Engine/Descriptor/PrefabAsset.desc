@@ -14,15 +14,15 @@
             "isScenePrefab": false
         },
         {
-            "guid": "5dfc16be-aa4a-420a-9105-f7c9652f3620",
-            "name": "ProgressBarFill_Prefab",
-            "path": "Assets\\Prefabs\\ProgressBarFill_Prefab.prefab",
-            "isScenePrefab": false
-        },
-        {
             "guid": "b9703dc0-4246-4ba0-be36-1507cc721cd1",
             "name": "Customer_Prefab",
             "path": "Assets\\Prefabs\\Customer_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "5dfc16be-aa4a-420a-9105-f7c9652f3620",
+            "name": "ProgressBarFill_Prefab",
+            "path": "Assets\\Prefabs\\ProgressBarFill_Prefab.prefab",
             "isScenePrefab": false
         },
         {
@@ -32,21 +32,15 @@
             "isScenePrefab": false
         },
         {
-            "guid": "09165696-3faf-4bd5-838f-ca6549af1306",
-            "name": "Customer_Dynamic_Prefab",
-            "path": "Assets\\Prefabs\\Customer_Dynamic_Prefab.prefab",
-            "isScenePrefab": false
-        },
-        {
             "guid": "8be70edb-fb03-4af7-a8b1-4880d8b00107",
             "name": "ProgressBarFill_Prefab",
             "path": "Assets\\Prefabs\\ProgressBarFill_Prefab.prefab",
             "isScenePrefab": false
         },
         {
-            "guid": "584b841f-a181-4adb-a75c-852abf944c79",
-            "name": "Customer_Kinematic_Prefab",
-            "path": "Assets\\Prefabs\\Customer_Kinematic_Prefab.prefab",
+            "guid": "09165696-3faf-4bd5-838f-ca6549af1306",
+            "name": "Customer_Dynamic_Prefab",
+            "path": "Assets\\Prefabs\\Customer_Dynamic_Prefab.prefab",
             "isScenePrefab": false
         },
         {
@@ -56,21 +50,27 @@
             "isScenePrefab": false
         },
         {
+            "guid": "584b841f-a181-4adb-a75c-852abf944c79",
+            "name": "Customer_Kinematic_Prefab",
+            "path": "Assets\\Prefabs\\Customer_Kinematic_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
             "guid": "cc960fa4-f792-4441-af1b-c0752b8862cd",
             "name": "strength_potion_Prefab",
             "path": "Assets\\Prefabs\\strength_potion_Prefab.prefab",
             "isScenePrefab": false
         },
         {
-            "guid": "eb37c4f0-924e-4edc-af53-c18f22773ba5",
-            "name": "Herb3_Prefab",
-            "path": "Assets\\Prefabs\\Herb3_Prefab.prefab",
-            "isScenePrefab": false
-        },
-        {
             "guid": "71a83449-8181-416a-8371-acb33d34c4f4",
             "name": "vitality_potion_Prefab",
             "path": "Assets\\Prefabs\\vitality_potion_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "eb37c4f0-924e-4edc-af53-c18f22773ba5",
+            "name": "Herb3_Prefab",
+            "path": "Assets\\Prefabs\\Herb3_Prefab.prefab",
             "isScenePrefab": false
         },
         {

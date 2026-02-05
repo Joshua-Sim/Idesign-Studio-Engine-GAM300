@@ -3969,7 +3969,7 @@
                         1929.0,
                         537.0
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": false
                 }
             }
@@ -4040,7 +4040,7 @@
                 "TransformComponent": {
                     "position": [
                         980.0,
-                        280.0,
+                        220.0,
                         1.0
                     ],
                     "rotation": [
@@ -4081,7 +4081,7 @@
                 "ButtonComponent": {
                     "position": [
                         980.0,
-                        280.0
+                        220.0
                     ],
                     "size": [
                         250.0,
@@ -5081,7 +5081,7 @@
                 "TransformComponent": {
                     "position": [
                         980.0,
-                        280.0,
+                        220.0,
                         1.0
                     ],
                     "rotation": [
@@ -5122,7 +5122,7 @@
                 "ButtonComponent": {
                     "position": [
                         980.0,
-                        280.0
+                        220.0
                     ],
                     "size": [
                         250.0,
@@ -5640,7 +5640,7 @@
                 "TransformComponent": {
                     "position": [
                         980.0,
-                        390.0,
+                        360.0,
                         1.0
                     ],
                     "rotation": [
@@ -5681,7 +5681,7 @@
                 "ButtonComponent": {
                     "position": [
                         980.0,
-                        390.0
+                        360.0
                     ],
                     "size": [
                         250.0,
@@ -6456,7 +6456,7 @@
                 "TransformComponent": {
                     "position": [
                         980.0,
-                        390.0,
+                        360.0,
                         1.0
                     ],
                     "rotation": [
@@ -6497,7 +6497,7 @@
                 "ButtonComponent": {
                     "position": [
                         980.0,
-                        390.0
+                        360.0
                     ],
                     "size": [
                         250.0,
