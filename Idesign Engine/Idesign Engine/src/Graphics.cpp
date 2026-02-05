@@ -426,6 +426,7 @@ namespace Framework {
         skinnedShader.initGL();
         shadowShader.initGL();
         pointShadowShader.initGL();
+        skinnedPointShadowShader.initGL();
         uiShader.initGL();
         //initialise geometry objects
         cube.initGL();
@@ -739,6 +740,8 @@ namespace Framework {
 
 
         ImguiManager::LogSuccess("Graphics System initialized successfully", "Graphics");
+        glDisableVertexAttribArray(3);
+        glDisableVertexAttribArray(4);
     }
 
     void Graphics::SetImguiManager(ImguiManager* manager)
@@ -781,6 +784,22 @@ namespace Framework {
         float now = (float)glfwGetTime();
         float dt = now - lastTime; lastTime = now;
         process_input(dt);
+
+
+        // --- NEW: FRAME MATRIX CACHE ---
+        std::unordered_map<Entity, glm::mat4> frameModelMatrices;
+        for (auto const& entityId : mEntities) {
+            if (ecsInterface.HasComponent<TransformComponent>(entityId)) {
+                auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
+                glm::mat4 model = glm::translate(glm::mat4(1.0f), tr.position);
+                model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
+                model = glm::rotate(model, glm::radians(tr.rotation.y), { 0,1,0 });
+                model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
+                model = glm::scale(model, tr.scale);
+                frameModelMatrices[entityId] = model;
+            }
+        }
+
 
         // ====================================================================
         // 0. LIGHT GATHERING PASS
@@ -854,21 +873,41 @@ namespace Framework {
                     // 3. Draw based on the MESH component's data
                     if (mesh.debugShape == DebugShapeType::None && mesh.vao != 0 && !isTransparent)
                     {
-                        auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
-                        glm::mat4 model(1.0f);
-                        model = glm::translate(model, tr.position);
-                        model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
-                        model = glm::rotate(model, glm::radians(tr.rotation.y), { 0,1,0 });
-                        model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
-                        model = glm::scale(model, tr.scale);
+                        glm::mat4 model = frameModelMatrices[entityId];
+                        bool isSkinned = ecsInterface.HasComponent<AnimationProperties>(entityId);
 
-                        shadowShader.setMat4("uModel", model);
+                        // Use appropriate shader
+                        ShaderProgram& currentShadowShader = isSkinned ? skinnedPointShadowShader : shadowShader;
+                        currentShadowShader.use();
+                        currentShadowShader.setMat4("uModel", model);
+
+                        // ========== CRITICAL FIX ==========
                         glBindVertexArray(mesh.vao);
+
+                        if (isSkinned)
+                        {
+                            glEnableVertexAttribArray(3);
+                            glEnableVertexAttribArray(4);
+
+                            auto& animator = ecsInterface.GetComponent<AnimationProperties>(entityId);
+                            for (size_t b = 0; b < animator.finalBoneMatrices.size(); ++b)
+                            {
+                                std::string boneName = "uBoneMatrices[" + std::to_string(b) + "]";
+                                currentShadowShader.setMat4(boneName.c_str(), animator.finalBoneMatrices[b]);
+                            }
+                        }
+                        else
+                        {
+                            glDisableVertexAttribArray(3);
+                            glDisableVertexAttribArray(4);
+                        }
+                        // ==================================
+
                         glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
                     }
                 }
             }
-            // 4. Restore state
+             // 4. Restore state
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
             glCullFace(GL_BACK);
         }
@@ -876,13 +915,14 @@ namespace Framework {
         // ====================================================================
         //  POINT LIGHT SHADOW PASSES 
         // ====================================================================
-        glDisable(GL_CULL_FACE); 
-        pointShadowShader.use();
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
 
         const unsigned int POINT_SHADOW_WIDTH = 1024, POINT_SHADOW_HEIGHT = 1024;
 
         for (auto const& entityId : mEntities)
         {
+
             if (!ecsInterface.HasComponent<LightProperties>(entityId)) continue;
 
             auto& light = ecsInterface.GetComponent<LightProperties>(entityId);
@@ -936,9 +976,9 @@ namespace Framework {
             }
 
             // --- 2. Calculate the 6 View matrices and 1 Projection matrix ---
-            float near_plane = 0.1f;
+            float near_plane = 0.01f;
             glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), 1.0f, near_plane, light.shadowFarPlane);
-
+            light.shadowFarPlane = light.radius;
             std::vector<glm::mat4> shadowTransforms;
             // Standard OpenGL Cubemap Orientations: Target, Up
             shadowTransforms.push_back(shadowProj* glm::lookAt(lightPos, lightPos + glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0))); // +X
@@ -960,39 +1000,70 @@ namespace Framework {
                 glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-                pointShadowShader.setMat4("uLightSpaceMatrix", shadowTransforms[i]);
-
-                // Render scene
-                pointShadowShader.setMat4("uModel", glm::mat4(1.0f));
-                terrain.draw();
-
+                glEnable(GL_CULL_FACE);
+                glCullFace(GL_BACK);
+                glEnable(GL_POLYGON_OFFSET_FILL);
+                glPolygonOffset(2.0f, 2.0f);
+           
+              
                 for (auto const& entityId_inner : mEntities)
                 {
+                    auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId_inner);
+
+                    if (!tr.isActive) continue;
                     if (ecsInterface.HasComponent<MeshProperties>(entityId_inner) &&
                         ecsInterface.HasComponent<TransformComponent>(entityId_inner))
                     {
-
                         if (entityId_inner == entityId)
                         {
                             continue;
                         }
+
                         auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId_inner);
                         bool isTransparent = false;
                         if (ecsInterface.HasComponent<MaterialProperties>(entityId_inner))
                         {
                             isTransparent = ecsInterface.GetComponent<MaterialProperties>(entityId_inner).opacity < 1.0f;
                         }
+
                         if (mesh.debugShape == DebugShapeType::None && mesh.vao != 0 && !isTransparent)
                         {
                             auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId_inner);
-                            glm::mat4 model = glm::translate(glm::mat4(1.0f), tr.position);
-                            model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
-                            model = glm::rotate(model, glm::radians(tr.rotation.y), { 0,1,0 });
-                            model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
-                            model = glm::scale(model, tr.scale);
+                            glm::mat4 model = frameModelMatrices[entityId_inner];
+                            bool isSkinned = ecsInterface.HasComponent<AnimationProperties>(entityId_inner);
+                            ShaderProgram& currentShadowShader = isSkinned ? skinnedPointShadowShader : pointShadowShader;
 
-                            pointShadowShader.setMat4("uModel", model);
+                            currentShadowShader.use();
+                            currentShadowShader.setMat4("uLightSpaceMatrix", shadowTransforms[i]);
+                            currentShadowShader.setMat4("uModel", model);
+                            currentShadowShader.setVec3("uLightPos", lightPos);
+                            currentShadowShader.setFloat("uFarPlane", light.shadowFarPlane);
+
+                            // ========== CRITICAL FIX ==========
                             glBindVertexArray(mesh.vao);
+
+                            if (isSkinned)
+                            {
+                                // Enable skinning attributes
+                                glEnableVertexAttribArray(3); // aBoneIDs
+                                glEnableVertexAttribArray(4); // aWeights
+
+                                auto& animator = ecsInterface.GetComponent<AnimationProperties>(entityId_inner);
+                                for (size_t b = 0; b < animator.finalBoneMatrices.size(); ++b)
+                                {
+                                    std::string boneName = "uBoneMatrices[" + std::to_string(b) + "]";
+                                    currentShadowShader.setMat4(boneName.c_str(), animator.finalBoneMatrices[b]);
+                                }
+                            }
+                            else
+                            {
+                                // CRITICAL: Disable skinning attributes for non-skinned meshes
+                                // This prevents reading garbage data from previous skinned mesh
+                                glDisableVertexAttribArray(3); // aBoneIDs
+                                glDisableVertexAttribArray(4); // aWeights
+                            }
+                            // ==================================
+
                             glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
                         }
                     }
@@ -1004,6 +1075,8 @@ namespace Framework {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glViewport(0, 0, m_fbW, m_fbH); // Reset viewport to window size
         glEnable(GL_CULL_FACE);
+        glDisable(GL_POLYGON_OFFSET_FILL);
+
 
         // ====================================================================
         // 1. RENDER VIEW 0: GAME (grounded)
@@ -1129,6 +1202,7 @@ namespace Framework {
     // ============================================================
         if (isEditorMode)
         {
+            engineState.PushState(EngineMode::Play);
             // [FIX A] FREEZE PLAYER PHYSICS
             // This prevents the player from "sliding" while you are editing
             Entity player = ecsInterface.GetEntityByName("Player");
@@ -2201,7 +2275,8 @@ namespace Framework {
         glEnable(GL_STENCIL_TEST);
         glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
         glClearStencil(0);
-        glDisable(GL_CULL_FACE);
+        glEnable(GL_CULL_FACE);  //  Enable culling for main rendering 
+        glCullFace(GL_BACK);     //  Cull back faces (standard)
 
         glViewport(0, 0, width, height);
         glClearColor(0.07f, 0.09f, 0.12f, 1.f);
@@ -2399,14 +2474,12 @@ namespace Framework {
             if (!tr.isActive) continue; // Skip render if isactive is false.
 
             glm::vec3 drawScale = tr.scale;
-
-            glm::mat4 model(1.0f);
-            model = glm::translate(model, tr.position);
+            glm::mat4 model = glm::translate(glm::mat4(1.0f), tr.position); 
             model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
             model = glm::rotate(model, glm::radians(tr.rotation.y), { 0,1,0 });
             model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
             model = glm::scale(model, tr.scale);
-
+ 
             // BOXCOLLIDER COLLISION (NEEDA MOVE IT OUTTA GRAPHICS :SKULL:)
             if (mesh.debugShape == DebugShapeType::Box && ecsInterface.HasComponent<BoxColliderComponent>(entityId))
             {
@@ -2481,7 +2554,7 @@ namespace Framework {
                 if (mesh.vao != 0) {
                     bool isSkinned = ecsInterface.HasComponent<AnimationProperties>(entityId);
                     ShaderProgram& currentshader = isSkinned ? skinnedShader : meshShader;
-
+               
                     currentshader.use();
                     currentshader.setMat4("uProj", proj);
                     currentshader.setMat4("uView", view);

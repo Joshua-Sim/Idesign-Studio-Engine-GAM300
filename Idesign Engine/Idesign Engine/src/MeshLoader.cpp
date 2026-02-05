@@ -60,7 +60,7 @@ void MeshLoader::loadMesh(const std::string& path, Framework::MeshProperties& me
 
     const aiScene* scene = importer.ReadFile(
         absolutePath.string(), // <-- 2. Use the absolute path here
-        aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals
+        aiProcess_Triangulate | aiProcess_GenNormals
     );
 
     if (!scene || !scene->mRootNode || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) {
@@ -154,7 +154,6 @@ void MeshLoader::loadAnimatedMesh(const std::string& path,
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(path,
         aiProcess_Triangulate |
-        aiProcess_FlipUVs |
         aiProcess_GenNormals |
         aiProcess_PopulateArmatureData 
     );
@@ -237,6 +236,10 @@ void MeshLoader::loadAnimatedMesh(const std::string& path,
     for (unsigned int i = 0; i < aimesh->mNumVertices; i++) {
         vertices[i].boneIDs = skinning_data[i].boneIDs;
         vertices[i].weights = skinning_data[i].weights;
+        float totalWeight = vertices[i].weights.x + vertices[i].weights.y + vertices[i].weights.z + vertices[i].weights.w;
+        if (totalWeight > 0.0f) {
+            vertices[i].weights /= totalWeight;
+        }
     }
 
     // --- Create OpenGL Buffers ---
