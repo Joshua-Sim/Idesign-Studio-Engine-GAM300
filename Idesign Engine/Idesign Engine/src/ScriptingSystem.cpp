@@ -243,6 +243,68 @@ namespace Framework {
             return 0;
         }
 
+        // Transform component
+        static int lua_SetTransformComponent(lua_State* L)
+        {
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+            const char* field = luaL_checkstring(L, 2);
+            // Value is at index 3 (type depends on field)
+
+            if (!ecsInterface.IsEntityValid(e) || !ecsInterface.HasComponent<TransformComponent>(e)) {
+                return luaL_error(L, "SetTransformComponent: invalid entity or missing TransformComponent");
+            }
+
+            auto& transform = ecsInterface.GetComponent<TransformComponent>(e);
+
+            if (strcmp(field, "position") == 0) {
+                // Expect a table with x, y, z
+                if (!lua_istable(L, 3)) {
+                    return luaL_error(L, "SetTransformComponent: position must be a table {x, y, z}");
+                }
+                lua_getfield(L, 3, "x");
+                lua_getfield(L, 3, "y");
+                lua_getfield(L, 3, "z");
+                transform.position.x = static_cast<float>(luaL_checknumber(L, -3));
+                transform.position.y = static_cast<float>(luaL_checknumber(L, -2));
+                transform.position.z = static_cast<float>(luaL_checknumber(L, -1));
+                lua_pop(L, 3);
+            }
+            else if (strcmp(field, "rotation") == 0) {
+                // Expect a table with x, y, z
+                if (!lua_istable(L, 3)) {
+                    return luaL_error(L, "SetTransformComponent: rotation must be a table {x, y, z}");
+                }
+                lua_getfield(L, 3, "x");
+                lua_getfield(L, 3, "y");
+                lua_getfield(L, 3, "z");
+                transform.rotation.x = static_cast<float>(luaL_checknumber(L, -3));
+                transform.rotation.y = static_cast<float>(luaL_checknumber(L, -2));
+                transform.rotation.z = static_cast<float>(luaL_checknumber(L, -1));
+                lua_pop(L, 3);
+            }
+            else if (strcmp(field, "scale") == 0) {
+                // Expect a table with x, y, z
+                if (!lua_istable(L, 3)) {
+                    return luaL_error(L, "SetTransformComponent: scale must be a table {x, y, z}");
+                }
+                lua_getfield(L, 3, "x");
+                lua_getfield(L, 3, "y");
+                lua_getfield(L, 3, "z");
+                transform.scale.x = static_cast<float>(luaL_checknumber(L, -3));
+                transform.scale.y = static_cast<float>(luaL_checknumber(L, -2));
+                transform.scale.z = static_cast<float>(luaL_checknumber(L, -1));
+                lua_pop(L, 3);
+            }
+            else if (strcmp(field, "isActive") == 0) {
+                transform.isActive = lua_toboolean(L, 3);
+            }
+            else {
+                return luaL_error(L, "SetTransformComponent: unknown field '%s'", field);
+            }
+
+            return 0;
+        }
+
         static int l_spawnCauldronItem(lua_State* L) {
             // 1. Get Arguments
             Entity parentID = static_cast<Entity>(luaL_checkinteger(L, 1));
@@ -1913,6 +1975,7 @@ namespace Framework {
 
         lua_register(L, "GetTextComponent", lua_GetTextComponent); // Text component get/set
         lua_register(L, "SetTextComponent", lua_SetTextComponent);
+        lua_register(L, "SetTransformComponent", lua_SetTransformComponent);
 
         // Game utility
         lua_register(L, "IsItemChoppable", lua_IsItemChoppable);

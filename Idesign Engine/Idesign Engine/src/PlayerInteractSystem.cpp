@@ -406,7 +406,7 @@ namespace Framework
         if (!mGraphicsSystem) return;
         if (mGraphicsSystem->GetMouseTargetView() != 0) return; // only in game view
 
-        if (engineState.IsAnyMenuOpen()) return; // skip movement/jump when not in active gameplay
+        if (engineState.IsAnyUIOpen()) return; // skip movement/jump when not in active gameplay
 
         GLFWwindow* window = mGraphicsSystem->GetWindow();
         if (!window) return;

@@ -302,15 +302,4 @@ namespace Framework {
             }
         }
     }
-
 }
-
-//    void ButtonSystem::AddButton(ButtonComponent button) {
-//        buttons.push_back(button);
-//    }
-//
-//    std::vector<ButtonComponent> ButtonSystem::GetButtons() const {
-//        return buttons;
-//    }
-//
-//}
