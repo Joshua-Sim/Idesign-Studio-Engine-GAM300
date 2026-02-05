@@ -1336,6 +1336,29 @@ namespace Framework {
             return 0;
         }
 
+        static int lua_SetScale(lua_State* L)
+        {
+            // 1. Get Entity ID
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+
+            // 2. Get X, Y, Z scales
+            // Lua arguments start from index 2
+            float x = static_cast<float>(luaL_checknumber(L, 2));
+            float y = static_cast<float>(luaL_checknumber(L, 3));
+            float z = static_cast<float>(luaL_checknumber(L, 4));
+
+            // 3. Validate Entity & Component
+            if (!ecsInterface.IsEntityValid(e) || !ecsInterface.HasComponent<TransformComponent>(e))
+            {
+                return luaL_error(L, "SetScale: invalid entity %d or missing TransformComponent", (int)e);
+            }
+
+            // 4. Apply Scale
+            auto& tr = ecsInterface.GetComponent<TransformComponent>(e);
+            tr.scale = glm::vec3(x, y, z);
+            return 0;
+        }
+
         int Lua_GetPlayerSelectedItemId(lua_State* L) {
             int itemId = Framework::Inventory::Instance().GetSelectedItemId();
             // In your Inventory.cpp, -1 (unsigned -1) is empty. 
@@ -1998,6 +2021,7 @@ namespace Framework {
         lua_register(L, "CheckValidRecipe",  l_CheckValidRecipe);
         lua_register(L, "GetEntityName",     lua_GetEntityName);
 
+        lua_register(L, "SetScale", lua_SetScale);
         lua_register(L, "GetRotation",  lua_GetRotation);
         lua_register(L, "GetCameraYaw", lua_GetCameraYaw);
 

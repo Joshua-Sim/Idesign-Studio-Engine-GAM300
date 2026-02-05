@@ -226,15 +226,28 @@ namespace Framework
                             int slot = Framework::Inventory::Instance().AddFirstEmpty(itemId);
                             if (slot >= 0) {
                                 SpawnPickupNotification(itemId, Framework::GetItemDisplayName(itemId));
-                                g_AudioSystem->PlayAudio("event:/PickingUpHerb");
-                                // IMPORTANT: Don't call RemoveBody here anymore, 
-                                // we already did it in PerformInteract!
+
+                                // --- NEW AUDIO LOGIC ---
+                                // Cross-check the ID with the item type
+                                // Assuming Framework::GetItemType or similar exists in your Item system
+                                // If you don't have a GetItemType, you can check if the name contains "potion"
+                                std::string lowerName = item.name;
+                                for (auto& c : lowerName) c = (char)tolower(c);
+
+                                if (lowerName.find("potion") != std::string::npos) {
+                                    g_AudioSystem->PlayAudio("event:/PickUpPotion");
+                                }
+                                else {
+                                    g_AudioSystem->PlayAudio("event:/PickingUpHerb");
+                                }
+                                // -----------------------
+
                                 ecsInterface.DestroyEntity(entity);
                             }
                             else {
                                 // Inventory full: Drop it
                                 item.isZipping = false;
-                                // Re-add physics if you want it to fall back to the ground
+                                // Optional: Reset gravity/physics so it falls
                             }
                         }
                     }

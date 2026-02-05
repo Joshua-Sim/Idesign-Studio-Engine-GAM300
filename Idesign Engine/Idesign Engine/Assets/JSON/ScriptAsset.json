@@ -272,6 +272,13 @@
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
+        },
+        {
+            "guid": "c314695a-2a9e-4bf0-acad-f36a8ca7775a",
+            "scriptPath": "Assets\\Scripts\\potion_pickup.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
         }
     ]
 }
