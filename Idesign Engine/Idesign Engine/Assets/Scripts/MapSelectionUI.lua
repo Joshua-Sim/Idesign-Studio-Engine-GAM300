@@ -109,6 +109,11 @@ function M:OnLocationSelected(locData)
         locData.spawnRot.x, locData.spawnRot.y, locData.spawnRot.z
     )
     
+    -- NEW: Trigger the transition event
+    -- This assumes your LoadingSystem listens to "StartPhaseTransition"
+    -- and will eventually fire "EndPhaseTransition" once the animation finishes.
+    FireEvent("StartPhaseTransition")
+
     -- Exit MapSelection state
     print("[MapSelectionUI] Popping MapSelection state")
     GameStateStart()

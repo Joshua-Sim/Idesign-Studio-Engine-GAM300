@@ -5933,7 +5933,7 @@
                     "isUI": false
                 },
                 "TextProperties": {
-                    "text": "Click on How To Play from the menu by pressing ESC",
+                    "text": "",
                     "scale": 0.6899999976158142,
                     "color": [
                         0.15939366817474365,
@@ -5946,7 +5946,7 @@
                     "screenSpace": true
                 },
                 "TextProperties": {
-                    "text": "Click on How To Play from the menu by pressing ESC",
+                    "text": "",
                     "scale": 0.6899999976158142,
                     "color": [
                         0.15939366817474365,
@@ -6053,19 +6053,6 @@
                     "alignment": 0,
                     "isBillboard": false,
                     "screenSpace": true
-                },
-                "TextProperties": {
-                    "text": "Aunt Mira (frog)",
-                    "scale": 0.8500000238418579,
-                    "color": [
-                        0.15939366817474365,
-                        0.15866754949092865,
-                        0.06640792638063431
-                    ],
-                    "opacity": 1.0,
-                    "alignment": 0,
-                    "isBillboard": false,
-                    "screenSpace": true
                 }
             }
         },
@@ -6109,20 +6096,7 @@
                     "isUI": false
                 },
                 "TextProperties": {
-                    "text": "to find out more!",
-                    "scale": 0.6899999976158142,
-                    "color": [
-                        0.15939366817474365,
-                        0.15866754949092865,
-                        0.06640792638063431
-                    ],
-                    "opacity": 1.0,
-                    "alignment": 0,
-                    "isBillboard": false,
-                    "screenSpace": true
-                },
-                "TextProperties": {
-                    "text": "to find out more!",
+                    "text": "",
                     "scale": 0.6899999976158142,
                     "color": [
                         0.15939366817474365,
@@ -6174,19 +6148,6 @@
                 "TextureComponent": {
                     "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
                     "isUI": false
-                },
-                "TextProperties": {
-                    "text": "",
-                    "scale": 0.6899999976158142,
-                    "color": [
-                        0.15939366817474365,
-                        0.15866754949092865,
-                        0.06640792638063431
-                    ],
-                    "opacity": 1.0,
-                    "alignment": 0,
-                    "isBillboard": false,
-                    "screenSpace": true
                 },
                 "TextProperties": {
                     "text": "",

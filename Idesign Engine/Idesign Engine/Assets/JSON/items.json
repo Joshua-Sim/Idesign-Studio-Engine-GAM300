@@ -25,16 +25,22 @@
       "name": "Potion of Vitality",
       "type": "potion"
     },
+        {
+      "id": "warmth_potion",
+      "name": "Potion of Warmth",
+      "type": "potion"
+    },
     {
       "id": "knife",
       "name": "Kitchen Knife",
       "type": "tool"
     },
     {
-      "id": "Sheep_Wool",
-      "name": "Sheep's Wool",
+      "id": "wool",
+      "name": "Sheep Wool",
       "type": "ingredient"
     }
+
   ],
   "recipes": [
     {
@@ -48,11 +54,15 @@
       "inputs": ["unchopped_herb", "chopped_herb"],
       "output": "strength_potion"
     },
-        {
+    {
       "id": "r_vitality_potion",
       "inputs": ["pear", "chopped_herb"],
       "output": "vitality_potion"
+    },
+    {
+      "id": "r_warmth_potion",
+      "inputs": ["wool", "unchopped_herb"],
+      "output": "warmth_potion"
     }
-
   ]
 }

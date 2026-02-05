@@ -54,12 +54,24 @@ namespace Framework {
         auto dialogueSys = ecsInterface.GetSystem<Framework::DialogueSystem>();
         if (!dialogueSys) return;
 
+        bool tutorialToPlay = false;
+
+        // --- NIGHT PHASE TUTORIAL ---
+        if (m_currentPhase == GamePhase::Day && !m_dayTutorialTriggered)
+        {
+
+            dialogueSys->AddLine("Welcome to Runes and Remedies! This is the Day phase where you collect resources by pressing E", "Aunt Mira (frog)", "pear");
+            dialogueSys->AddLine("Click on How To Play from the menu by pressing ESC to find out more!", "Aunt Mira (frog)", "portrait");
+            dialogueSys->AddLine("When you're done with gathering or your inventory is full, interact with the gate to go to the night phase", "Aunt Mira (frog)", "portrait");
+
+            dialogueSys->StartDialogue();
+            m_dayTutorialTriggered = true;
+            tutorialToPlay = true;
+        }
+
         // --- NIGHT PHASE TUTORIAL ---
         if (m_currentPhase == GamePhase::Night && !m_nightTutorialTriggered)
         {
-            // Reset UI state to ensure tutorial visibility
-            engineState.ClearToBase();
-            engineState.PushState(EngineMode::Play);
 
             dialogueSys->AddLine("Look alive, child! The moon is high; 'tis the Night Phase now. Don't just stand there catching flies!", "Aunt Mira (frog)", "pear");
             dialogueSys->AddLine("Staring at the pot won't tell you what to brew. Press 'R' to consult the Recipe Book, or have you forgotten your letters too?", "Aunt Mira (frog)", "portrait");
@@ -67,7 +79,19 @@ namespace Framework {
 
             dialogueSys->StartDialogue();
             m_nightTutorialTriggered = true;
+            tutorialToPlay = true;
         }
+
+        if (tutorialToPlay)
+        {
+            // This prevents the system from "clearing" itself when nothing is happening
+            engineState.ClearToBase();
+            engineState.PushState(EngineMode::Play);
+            engineState.PushState(EngineMode::Dialogue); // Ensure Dialogue mode is active
+
+            dialogueSys->StartDialogue();
+        }
+
     }
 
     void PhaseManager::SetPhase(GamePhase newPhase)
@@ -93,19 +117,6 @@ namespace Framework {
             targetRot = m_daySpawnRot;
             shouldTeleport = true;
             //dialogue system
-            // TUTORIAL, PLAY ONCE
-            if (!dayTutorial) {
-                auto dialogueSys = ecsInterface.GetSystem<Framework::DialogueSystem>();
-                if (dialogueSys) {
-                    engineState.ClearToBase();
-                    engineState.PushState(EngineMode::Play); // Allows physics and animation to run
-                    dialogueSys->AddLine("Welcome to Runes and Remedies! This is the Day phase where you collect resources by pressing E", "Aunt Mira (frog)", "pear");
-                    dialogueSys->AddLine("Click on How To Play from the menu by pressing ESC to find out more!", "Aunt Mira (frog)", "portrait");
-                    dialogueSys->AddLine("When you're done with gathering or your inventory is full, interact with the gate to go to the night phase", "Aunt Mira (frog)", "portrait");
-                    dialogueSys->StartDialogue();
-                }
-                dayTutorial = true;
-            }
             
         }
         else if (m_currentPhase == GamePhase::Night) {

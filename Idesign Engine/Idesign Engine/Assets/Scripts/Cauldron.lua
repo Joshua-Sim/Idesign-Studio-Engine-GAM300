@@ -491,9 +491,10 @@ end
 
 function M.SpawnBar(cauldronID)
     if SpawnPrefab then
+        -- Passing cauldronID as the second argument is CRITICAL for placement
         entity_frame = SpawnPrefab(prefab_frame, cauldronID)
         if entity_frame then
-            SetScale(entity_frame, bar_length_max, bar_thickness, bar_thickness*5)
+            SetScale(entity_frame, bar_length_max, bar_thickness, bar_thickness * 5)
         end
 
         entity_fill = SpawnPrefab(prefab_fill, cauldronID)
@@ -522,6 +523,7 @@ function M.UpdateBillboard(px, pz, cx, cz, cy)
     local angle_rad = math.atan2(dx, dz)
     local angle_deg = math.deg(angle_rad)
 
+    -- Use the working offsets
     local frame_pos_x = cx + x_offset_right
     local frame_pos_y = cy + y_offset
     local frame_pos_z = cz
@@ -532,13 +534,16 @@ function M.UpdateBillboard(px, pz, cx, cz, cy)
     end
 
     if entity_fill then
+        -- Ensure the fill rotates with the frame
         SetRotation(entity_fill, 0.0, angle_deg + 180.0, 0.0)
 
+        -- This specific math slides the fill bar along the "Right" vector of the billboard
         local right_angle = angle_rad + (math.pi / 2.0)
         local side_dist = (bar_length_max * tune_x)
         local side_offset_x = side_dist * math.sin(right_angle)
         local side_offset_z = side_dist * math.cos(right_angle)
 
+        -- Nudge it forward slightly (Z-depth) so it doesn't flicker against the frame
         local depth_offset_x = billboard_depth_adjust * math.sin(angle_rad)
         local depth_offset_z = billboard_depth_adjust * math.cos(angle_rad)
 

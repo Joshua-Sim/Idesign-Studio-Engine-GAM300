@@ -205,6 +205,12 @@
             "isUI": false
         },
         {
+            "guid": "21e71a10-33b3-4b37-a5df-9ebeb8a262e2",
+            "name": "SkyNoon_Front",
+            "path": "Assets\\Textures\\SkyNoon_Front.png",
+            "isUI": false
+        },
+        {
             "guid": "aaaf0f28-4e95-461c-9ed1-33ff97e0823c",
             "name": "Rune for title",
             "path": "Assets\\Textures\\Rune for title.png",
@@ -265,9 +271,15 @@
             "isUI": false
         },
         {
-            "guid": "c7252f22-c44b-408d-a4d5-6410e42eeb52",
-            "name": "GOLBINTEX",
-            "path": "Assets\\Textures\\GOLBINTEX.jpg",
+            "guid": "580158b4-de3a-493d-a63c-c5e021dd2506",
+            "name": "wool",
+            "path": "Assets\\Textures\\wool.png",
+            "isUI": false
+        },
+        {
+            "guid": "dfd43c30-a85a-43c6-bdb6-9f0d2addc014",
+            "name": "front",
+            "path": "Assets\\Textures\\front.png",
             "isUI": false
         },
         {
@@ -277,9 +289,9 @@
             "isUI": false
         },
         {
-            "guid": "dfd43c30-a85a-43c6-bdb6-9f0d2addc014",
-            "name": "front",
-            "path": "Assets\\Textures\\front.png",
+            "guid": "c7252f22-c44b-408d-a4d5-6410e42eeb52",
+            "name": "GOLBINTEX",
+            "path": "Assets\\Textures\\GOLBINTEX.jpg",
             "isUI": false
         },
         {
@@ -1219,6 +1231,12 @@
             "isUI": false
         },
         {
+            "guid": "8064e1a4-94ac-4b43-8c20-7e17836e7d0e",
+            "name": "warmth_potion",
+            "path": "Assets\\Textures\\warmth_potion.png",
+            "isUI": false
+        },
+        {
             "guid": "bbc3bc8b-ac72-4981-a969-5cb0e9839b7f",
             "name": "SETTINGS BUTTON SHADOW",
             "path": "Assets\\Textures\\SETTINGS BUTTON SHADOW.png",
@@ -1423,6 +1441,12 @@
             "isUI": false
         },
         {
+            "guid": "49150815-32f4-4e77-a0cf-f17ec0d95992",
+            "name": "warmth_potion3D",
+            "path": "Assets\\Textures\\warmth_potion3D.png",
+            "isUI": false
+        },
+        {
             "guid": "88cb3c42-0ada-4fbb-a45b-6294d09e9c91",
             "name": "Coin2D",
             "path": "Assets\\Textures\\Coin2D.png",
@@ -1462,6 +1486,12 @@
             "guid": "2885b8d9-fd72-450a-bd0c-d961d8ea0551",
             "name": "UPGRADEBG",
             "path": "Assets\\Textures\\UPGRADEBG.png",
+            "isUI": false
+        },
+        {
+            "guid": "8fb7c330-d25c-4cbe-ac47-cafa095dd829",
+            "name": "wool3D",
+            "path": "Assets\\Textures\\wool3D.png",
             "isUI": false
         }
     ]

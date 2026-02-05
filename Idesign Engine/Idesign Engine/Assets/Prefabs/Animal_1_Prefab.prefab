@@ -103,7 +103,7 @@
                 "receivers": []
             },
             "ItemComponent": {
-                "name": "Sheep_Horn",
+                "name": "wool",
                 "isIngredient": true,
                 "isChoppable": false,
                 "toDestroyWhenPicked": false
