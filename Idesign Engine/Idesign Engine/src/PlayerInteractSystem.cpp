@@ -128,7 +128,7 @@ namespace Framework
             if (ecsInterface.HasComponent<ItemComponent>(targetEntity)) {
                 foundInteractable = true;
                 auto& item = ecsInterface.GetComponent<ItemComponent>(targetEntity);
-                textToShow = "Pick up " + item.name;
+                textToShow = "Pick up " + Framework::GetItemDisplayName(Framework::ItemNameToId(item.name));
             }
             // 2. Check for Generic Collider SECOND (Fallback)
             else if (ecsInterface.HasComponent<BoxColliderComponent>(targetEntity)) {
@@ -172,6 +172,9 @@ namespace Framework
 
             if (foundInteractable) {
                 textComp.text = textToShow;
+            }
+            else {
+				textComp.text = ""; 
             }
         }
 

@@ -24,6 +24,10 @@ namespace Framework {
     void PhaseManager::Initialize()
     {
         std::cout << "[PhaseManager] Initialized. Default Phase: DAY" << std::endl;
+        EventManager::Instance().Subscribe("EndPhaseTransition", [this](void* d) -> bool {
+            this->HandleEndPhaseTransition(d);
+            return true; // or false, depending on your event system's needs
+            });
     }
 
     void PhaseManager::TogglePhase()
@@ -42,6 +46,28 @@ namespace Framework {
             SetPhase(GamePhase::Day);
             break;
         }
+        
+    }
+
+    void PhaseManager::HandleEndPhaseTransition(void* data)
+    {
+        auto dialogueSys = ecsInterface.GetSystem<Framework::DialogueSystem>();
+        if (!dialogueSys) return;
+
+        // --- NIGHT PHASE TUTORIAL ---
+        if (m_currentPhase == GamePhase::Night && !m_nightTutorialTriggered)
+        {
+            // Reset UI state to ensure tutorial visibility
+            engineState.ClearToBase();
+            engineState.PushState(EngineMode::Play);
+
+            dialogueSys->AddLine("Look alive, child! The moon is high; 'tis the Night Phase now. Don't just stand there catching flies!", "Aunt Mira (frog)", "pear");
+            dialogueSys->AddLine("Staring at the pot won't tell you what to brew. Press 'R' to consult the Recipe Book, or have you forgotten your letters too?", "Aunt Mira (frog)", "portrait");
+            dialogueSys->AddLine("Clumsy hands! If you toss the wrong root into my cauldron, you'd best fish it back out before you ruin the whole batch!", "Aunt Mira (frog)", "portrait");
+
+            dialogueSys->StartDialogue();
+            m_nightTutorialTriggered = true;
+        }
     }
 
     void PhaseManager::SetPhase(GamePhase newPhase)
@@ -59,13 +85,7 @@ namespace Framework {
             if (graphicsSystem) {
                 Skybox* skybox = graphicsSystem->getSkybox();
                 if (skybox) skybox->setBlendFactor(0.0f);
-
-                Camera* cam = graphicsSystem->getCamera();
-                if (cam) {
-                    cam->yaw = -180.0f;
-                    cam->pitch = 0.0f;
-                    cam->updateVectors();
-                }
+                glm::vec3 playerRot = ecsInterface.GetComponent<TransformComponent>(ecsInterface.GetEntityByName("Player")).rotation;
             }
 
             EventManager::Instance().Fire("OnDayStart", nullptr);
@@ -81,6 +101,7 @@ namespace Framework {
                     engineState.PushState(EngineMode::Play); // Allows physics and animation to run
                     dialogueSys->AddLine("Welcome to Runes and Remedies! This is the Day phase where you collect resources by pressing E", "Aunt Mira (frog)", "pear");
                     dialogueSys->AddLine("Click on How To Play from the menu by pressing ESC to find out more!", "Aunt Mira (frog)", "portrait");
+                    dialogueSys->AddLine("When you're done with gathering or your inventory is full, interact with the gate to go to the night phase", "Aunt Mira (frog)", "portrait");
                     dialogueSys->StartDialogue();
                 }
                 dayTutorial = true;
@@ -91,19 +112,7 @@ namespace Framework {
             targetPos = m_nightSpawnPos;
             targetRot = m_nightSpawnRot;
             TeleportPlayer(m_nightSpawnPos, m_nightSpawnRot);
-
-            if (!nightTutorial) {
-                auto dialogueSys = ecsInterface.GetSystem<Framework::DialogueSystem>();
-                if (dialogueSys) {
-                    engineState.ClearToBase();
-                    engineState.PushState(EngineMode::Play); // Allows physics and animation to run
-                    dialogueSys->AddLine("This is the night phase!", "Aunt Mira (frog)", "pear");
-                    dialogueSys->AddLine("Press R for the recipe book if you don't know the recipe", "Aunt Mira (frog)", "portrait");
-                    dialogueSys->AddLine("If you ever misplace an item in the cauldron, you can take it back", "Aunt Mira (frog)", "portrait");
-                    dialogueSys->StartDialogue();
-                }
-                nightTutorial = true;
-            }
+            EventManager::Instance().Fire("OnNightStart", nullptr);
         }
 
         // =========================================================
@@ -114,37 +123,6 @@ namespace Framework {
         if (m_currentPhase == GamePhase::Day || m_currentPhase == GamePhase::Night)
         {
             if (input) input->SetUIFocused(false); // Hides cursor
-        }
-
-        // =========================================================
-        // INTEGRITY: Camera & Graphics Logic
-        // =========================================================
-        auto graphicsSystem = ecsInterface.GetSystem<Graphics>();
-        if (graphicsSystem)
-        {
-            Skybox* skybox = graphicsSystem->getSkybox();
-            Camera* cam = graphicsSystem->getCamera();
-
-            if (m_currentPhase == GamePhase::Day) {
-                if (skybox) skybox->setBlendFactor(0.0f);
-                if (cam)
-                {
-                    cam->yaw = -180.0f; // Original Angle
-                    cam->pitch = 0.0f;
-                    cam->updateVectors();
-                }
-                EventManager::Instance().Fire("OnDayStart", nullptr);
-            }
-            else if (m_currentPhase == GamePhase::Night) {
-                if (skybox) skybox->setBlendFactor(1.0f);
-                if (cam)
-                {
-                    cam->yaw = 0.0f; // Original Angle
-                    cam->pitch = 0.0f;
-                    cam->updateVectors();
-                }
-                EventManager::Instance().Fire("OnNightStart", nullptr);
-            }
         }
     }
 
@@ -168,6 +146,7 @@ namespace Framework {
         Entity player = ecsInterface.GetEntityByName("Player");
         if (player == -1 || !ecsInterface.IsEntityValid(player)) return;
 
+        // 1. Force ECS Transform update immediately
         if (ecsInterface.HasComponent<TransformComponent>(player))
         {
             auto& transform = ecsInterface.GetComponent<TransformComponent>(player);
@@ -175,16 +154,21 @@ namespace Framework {
             transform.rotation = rotation;
         }
 
+        // 2. Physics Body Update
         if (ecsInterface.HasComponent<PhysicsBodyComponent>(player))
         {
             auto& pb = ecsInterface.GetComponent<PhysicsBodyComponent>(player);
             auto physicsSystem = ecsInterface.GetSystem<PhysicsSystem>();
+
             if (physicsSystem && !pb.IDs.empty())
             {
                 JPH::BodyInterface* bodyInterface = physicsSystem->GetBodyInterface();
                 if (bodyInterface)
                 {
                     JPH::RVec3 jPos(position.x, position.y, position.z);
+
+                    // FIX: GLM quat constructor is (w, x, y, z) while Jolt is (x, y, z, w)
+                    // Using euler angles to quat conversion to be safe
                     glm::quat q = glm::quat(glm::radians(rotation));
                     JPH::Quat jRot(q.x, q.y, q.z, q.w);
 
@@ -192,8 +176,16 @@ namespace Framework {
                     {
                         if (!id.IsInvalid())
                         {
+                            // FIX: Activate the body and set position
                             bodyInterface->SetPositionAndRotation(id, jPos, jRot, JPH::EActivation::Activate);
+
+                            // FIX: Completely kill all momentum (Linear and Angular)
+                            // This prevents the player from "sliding" or "spinning" upon landing
                             bodyInterface->SetLinearVelocity(id, JPH::Vec3::sZero());
+                            bodyInterface->SetAngularVelocity(id, JPH::Vec3::sZero());
+
+                            // FIX: Reset motion properties if the body is kinematic or has a controller
+                            bodyInterface->ResetSleepTimer(id);
                         }
                     }
                 }

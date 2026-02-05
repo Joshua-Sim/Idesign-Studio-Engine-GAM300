@@ -2375,7 +2375,7 @@ namespace Framework {
 
         // DEFINE YOUR MAX RENDER DISTANCE
         // Objects further than this will be ignored completely
-        const float MAX_RENDER_DISTANCE = 200.0f;
+        const float MAX_RENDER_DISTANCE = 10000.0f;
 
         //for (auto const& entityId : mEntities)
         //{
@@ -3265,10 +3265,6 @@ namespace Framework {
         // --------------------------------------------
         for (auto e : uiTextEntities)
         {
-
-            // ONLY render the Interaction Prompt on the Main Game View (Index 0)
-            if (viewIndex != 0 && ecsInterface.GetEntityName(e) == "InteractionPrompt")
-                continue;
 
             auto& txt = ecsInterface.GetComponent<TextProperties>(e);
             auto& tr = ecsInterface.GetComponent<TransformComponent>(e);

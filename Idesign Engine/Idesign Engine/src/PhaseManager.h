@@ -42,19 +42,23 @@ namespace Framework {
         bool upgradeTutorial = false;
     private:
         Coordinator* coordinator;
-        
+        void HandleEndPhaseTransition(void* data);
+
+        // Trackers to ensure tutorials only play once
+        bool m_nightTutorialTriggered = false;
+        bool m_dayTutorialTriggered = false;
 
         GamePhase m_currentPhase = GamePhase::Day;
 
         glm::vec3 m_daySpawnPos{ -282, 315,  619 };
-        glm::vec3 m_daySpawnRot{ 0.0f, 90.0f, 0.0f };
+        glm::vec3 m_daySpawnRot{ 0.0f, 0.0f, 0.0f };
 
         glm::vec3 m_nightSpawnPos{ -36.0f, 9.0f, 9.5f };
         glm::vec3 m_nightSpawnRot{ 0.0f, 0.0f, 0.0f };
 
         // Temp: Area-specific teleport points
         glm::vec3 m_forestSpawnPos = glm::vec3(-282.0f, 315.0f, 619.0f);
-        glm::vec3 m_forestSpawnRot = glm::vec3(0.0f, 90.0f, 0.0f);
+        glm::vec3 m_forestSpawnRot = glm::vec3(90.0f, 90.0f, 0.0f);
 
         glm::vec3 m_quarrySpawnPos = glm::vec3(200.0f, 0.0f, 0.0f);
         glm::vec3 m_quarrySpawnRot = glm::vec3(0.0f, 180.0f, 0.0f);

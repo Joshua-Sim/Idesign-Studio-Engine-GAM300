@@ -59,7 +59,7 @@ namespace Framework {
             m_CurrentFrame++;
 
             if (m_CurrentFrame >= m_Frames.size()) {
-                OnLoadingEnd(nullptr);
+                EventManager::Instance().Fire("EndPhaseTransition", nullptr);
                 return;
             }
 
@@ -69,6 +69,8 @@ namespace Framework {
                 TextureLoader::loadTexture(tex, true);
             }
         }
+
+
     }
 
     bool LoadingSystem::OnLoadingEnd(void* data) {
@@ -83,6 +85,8 @@ namespace Framework {
             auto& trans = ecsInterface.GetComponent<TransformComponent>(m_LoadingEntity);
             trans.scale = glm::vec3(0.0f);
         }
+
+        
 
         return true;
     }

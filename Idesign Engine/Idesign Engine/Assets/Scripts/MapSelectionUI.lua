@@ -9,8 +9,8 @@ local locations = {
     Forest = {
         name = "Forest",
         buttonEntity = "Forest Button",
-        spawnPos = { x = -282.0, y = 315.0,  z = 619.0 },
-        spawnRot = { x = 0.0,    y = 90.0,  z = 0.0 },
+        spawnPos = { x = -282.0, y = 319.0,  z = 619.0 },
+        spawnRot = { x = 0.0,    y = 0.0,  z = 0.0 },
         ingredients = {"Forest Herbs", "Mushrooms", "Berries"},
         ingredientImageEntity = "ForestIngredientsImage"
     },
@@ -99,11 +99,6 @@ function M:OnLocationSelected(locData)
         self:OnLocationUnhover(loc)
     end
     
-    -- Exit MapSelection state
-    print("[MapSelectionUI] Popping MapSelection state")
-    GameStateStart()
-    SetUIFocused(false)
-    
     -- Teleport player to selected location
     print("[MapSelectionUI] Teleporting player to: " .. locData.name)
     print("[MapSelectionUI]   Position: [" .. locData.spawnPos.x .. ", " .. locData.spawnPos.y .. ", " .. locData.spawnPos.z .. "]")
@@ -113,6 +108,13 @@ function M:OnLocationSelected(locData)
         locData.spawnPos.x, locData.spawnPos.y, locData.spawnPos.z,
         locData.spawnRot.x, locData.spawnRot.y, locData.spawnRot.z
     )
+    
+    -- Exit MapSelection state
+    print("[MapSelectionUI] Popping MapSelection state")
+    GameStateStart()
+    SetUIFocused(false)
+    
+    
     
     print("[MapSelectionUI] ===== TELEPORT COMPLETE =====")
 end

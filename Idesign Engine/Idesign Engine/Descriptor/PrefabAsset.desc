@@ -1,5 +1,5 @@
 {
-    "count": 30,
+    "count": 36,
     "entries": [
         {
             "guid": "898b36fc-aae3-43e4-9e2e-8edcb193e3c1",
@@ -41,6 +41,12 @@
             "guid": "8be70edb-fb03-4af7-a8b1-4880d8b00107",
             "name": "ProgressBarFill_Prefab",
             "path": "Assets\\Prefabs\\ProgressBarFill_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "b317af21-a509-418b-8340-8c6852a41c93",
+            "name": "ForestHerb3_Prefab",
+            "path": "Assets\\Prefabs\\ForestHerb3_Prefab.prefab",
             "isScenePrefab": false
         },
         {
@@ -110,6 +116,12 @@
             "isScenePrefab": false
         },
         {
+            "guid": "fbe80521-4170-4211-a034-8affde47c581",
+            "name": "ForestHerb2_Prefab",
+            "path": "Assets\\Prefabs\\ForestHerb2_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
             "guid": "4727a0ad-4372-49ef-b0d2-c8258cc0d518",
             "name": "Herb2_Prefab",
             "path": "Assets\\Prefabs\\Herb2_Prefab.prefab",
@@ -158,6 +170,12 @@
             "isScenePrefab": false
         },
         {
+            "guid": "7023b721-9f48-4acf-9f24-ba89e0e6b602",
+            "name": "ForestHerb1_Prefab",
+            "path": "Assets\\Prefabs\\ForestHerb1_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
             "guid": "04266e94-331d-4017-8728-a3670b317952",
             "name": "ForestHerb2_Prefab",
             "path": "Assets\\Prefabs\\ForestHerb2_Prefab.prefab",
@@ -176,9 +194,27 @@
             "isScenePrefab": false
         },
         {
+            "guid": "30599f0c-044c-4341-897c-638b396cfb8e",
+            "name": "ForestHerb4_Prefab",
+            "path": "Assets\\Prefabs\\ForestHerb4_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
             "guid": "bcdd602a-3c09-4d09-a61b-824cf7a01e80",
             "name": "UI_SkillBar_Marker_Prefab",
             "path": "Assets\\Prefabs\\UI_SkillBar_Marker_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "c3d15396-ffe4-4053-9556-d28ffe848109",
+            "name": "ForestHerb6_Prefab",
+            "path": "Assets\\Prefabs\\ForestHerb6_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "bbbf04f6-e194-4b88-8b7a-b9ad4639219f",
+            "name": "ForestHerb7_Prefab",
+            "path": "Assets\\Prefabs\\ForestHerb7_Prefab.prefab",
             "isScenePrefab": false
         }
     ]
