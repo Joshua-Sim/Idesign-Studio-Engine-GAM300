@@ -1,7 +1,12 @@
 #version 430 core
 
 // INPUT: From your Vertex Array Object (VAO)
-layout(location=0) in vec3 aPos;
+layout(location = 0) in vec3 aPos;
+
+// OPTIONAL: Declare but don't use attributes 3 & 4
+// This prevents shader compilation warnings
+// layout(location=3) in ivec4 aBoneIDs;  // Don't declare - not used!
+// layout(location=4) in vec4 aWeights;   // Don't declare - not used!
 
 // OUTPUT: To the point_shadow_frag.glsl
 out vec3 vWorldPos;
@@ -12,10 +17,8 @@ uniform mat4 uLightSpaceMatrix;
 
 void main()
 {
-    // 1. Calculate the full vec4 world position
+    // Simple non-skinned vertex transformation
     vec4 worldPos = uModel * vec4(aPos, 1.0);
-    // 2. Pass the xyz part to the fragment shader
     vWorldPos = worldPos.xyz;
-    // 3. Pass the *full* vec4 (including its 'w') to the projection matrix
     gl_Position = uLightSpaceMatrix * worldPos;
 }
