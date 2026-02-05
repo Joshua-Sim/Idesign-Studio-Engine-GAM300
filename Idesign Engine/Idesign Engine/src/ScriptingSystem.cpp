@@ -1184,6 +1184,16 @@ namespace Framework {
             return 0;
         }
 
+        static int lua_GameStateBackToMenu(lua_State* L)
+        {
+            (void)L;
+            engineState.ClearToBase();
+            engineState.PushState(EngineMode::Play);
+            engineState.PushState(EngineMode::Menu);
+
+            return 0;
+        }
+
         static int lua_GameStateEndNightPhase(lua_State* L)
         {
             (void)L;
@@ -2053,6 +2063,7 @@ namespace Framework {
         lua_register(L, "GameStatePaused",        lua_GameStatePaused);
         lua_register(L, "GameStateExit",          lua_GameStateExit);
         lua_register(L, "GameStateHowToPlay",     lua_GameStateHowToPlay);
+        lua_register(L, "GameStateBackToMenu",    lua_GameStateBackToMenu);
         lua_register(L, "GameStateCutscene",      lua_GameStateCutscene);
         lua_register(L, "GameStateSettings",      lua_GameStateSettings);
         lua_register(L, "GameStateBackToPause",   lua_GameStateBackToPause);

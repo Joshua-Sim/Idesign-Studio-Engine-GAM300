@@ -5,6 +5,7 @@
 #include "TextureProperties.h"
 #include "Coordinator.h"
 #include "TextProperties.h"
+#include "TransformProperties.h"
 
 extern Framework::Coordinator ecsInterface;
 
@@ -118,21 +119,24 @@ namespace Framework
                 {
                     if (!ecsInterface.IsEntityValid(e)) continue;
                     if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
+                    if (!ecsInterface.HasComponent<TransformComponent>(e)) continue;
 
                     auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
+                    auto& transform = ecsInterface.GetComponent<TransformComponent>(e);
 
                     texture.isUI = true; // always UI in upgrade screen
+                    bool shouldShow = false;
 
                     // -------------------------
                     // QUARRY STAMPS
                     // -------------------------
                     if (ecsInterface.EntityHasTag(e, "quarrypass"))
                     {
-                        texture.uiAlpha = (quarryHovered && canAffordQuarry) ? 1.0f : 0.0f;
+                        shouldShow = (quarryHovered && canAffordQuarry);
                     }
                     else if (ecsInterface.EntityHasTag(e, "quarryfail"))
                     {
-                        texture.uiAlpha = (quarryHovered && !canAffordQuarry) ? 1.0f : 0.0f;
+                        shouldShow = (quarryHovered && !canAffordQuarry);
                     }
 
                     // -------------------------
@@ -140,11 +144,11 @@ namespace Framework
                     // -------------------------
                     else if (ecsInterface.EntityHasTag(e, "goldpass"))
                     {
-                        texture.uiAlpha = (goldHovered && canAffordGold) ? 1.0f : 0.0f;
+                        shouldShow = (goldHovered && canAffordGold);
                     }
                     else if (ecsInterface.EntityHasTag(e, "goldfail"))
                     {
-                        texture.uiAlpha = (goldHovered && !canAffordGold) ? 1.0f : 0.0f;
+                        shouldShow = (goldHovered && !canAffordGold);
                     }
 
                     // -------------------------
@@ -152,15 +156,15 @@ namespace Framework
                     // -------------------------
                     else if (ecsInterface.EntityHasTag(e, "inventorypass"))
                     {
-                        texture.uiAlpha = (inventoryHovered && canAffordInventory) ? 1.0f : 0.0f;
+                        shouldShow = (inventoryHovered && canAffordInventory);
                     }
                     else if (ecsInterface.EntityHasTag(e, "inventoryfail"))
                     {
-                        texture.uiAlpha = (inventoryHovered && !canAffordInventory) ? 1.0f : 0.0f;
+                        shouldShow = (inventoryHovered && !canAffordInventory);
                     }
 
                     // ------------------------------------------------------------
-                    // MAIN BUTTON BACKGROUNDS (unhovered versions)
+                    // MAIN BUTTON BACKGROUNDS (base/unhovered versions)
                     // ------------------------------------------------------------
                     else
                     {
@@ -169,8 +173,11 @@ namespace Framework
                             (ecsInterface.EntityHasTag(e, "gold") && goldHovered) ||
                             (ecsInterface.EntityHasTag(e, "inventory") && inventoryHovered);
 
-                        texture.uiAlpha = hideBase ? 0.0f : 1.0f;
+                        shouldShow = !hideBase;
                     }
+
+                    // Set Z position based on visibility
+                    transform.position.z = shouldShow ? 1.0f : -100.0f;
                 }
             }
             else
