@@ -305,7 +305,8 @@ namespace Framework
         void DrawUISprite(GLuint tex, const glm::vec2& pos, const glm::vec2& size, float alpha = 1.0f);
         static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
+        void DrawBackpack(int screenW, int screenH);
+        void HandleBackpackDragDrop(int screenW, int screenH);
     };
-    
 }
 #endif // !_GRAPHICS_H_

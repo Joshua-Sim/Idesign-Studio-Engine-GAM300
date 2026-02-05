@@ -1938,7 +1938,7 @@ namespace Framework {
         // Inventory Increase
         lua_register(L, "GetInventoryMaxSlots", [](lua_State* L) -> int {
             auto& inv = Inventory::Instance();
-            int maxSlots = inv.GetMaxSlots();
+            int maxSlots = inv.GetHotbarSlotCount();
             lua_pushinteger(L, maxSlots);
             return 1;
             });

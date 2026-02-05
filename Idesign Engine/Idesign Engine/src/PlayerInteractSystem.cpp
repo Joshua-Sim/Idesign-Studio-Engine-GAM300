@@ -27,7 +27,23 @@ namespace Framework
     {
         // 1. LAZY INIT: Ensure UI entities exist
         // We check for the Text entity. If missing, we assume we need to respawn everything.
+        static bool prevL = false;
+        bool lDown = mInputHandler->IsKeyPressed(GLFW_KEY_J);
+        if (lDown && !prevL)
+        {
+            auto& inv = Framework::Inventory::Instance();
+            inv.SetHotbarLevel(inv.GetHotbarLevel() + 1);
+        }
+        prevL = lDown;
 
+        static bool prevP = false;
+        bool PDown = mInputHandler->IsKeyPressed(GLFW_KEY_P);
+        if (PDown && !prevP)
+        {
+            auto& inv = Framework::Inventory::Instance();
+            inv.SetBackpackLevel(inv.GetBackpackLevel() + 1);
+        }
+        prevP = PDown;
 
         if (!ecsInterface.IsEntityValid(mPromptTextEntity) && !ecsInterface.IsEntityValid(mPromptIconEntity))
         {

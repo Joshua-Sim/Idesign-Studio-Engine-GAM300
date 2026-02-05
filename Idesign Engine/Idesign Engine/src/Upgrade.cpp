@@ -24,11 +24,11 @@ namespace Framework
         auto& inv = Inventory::Instance();
 
         // Check if inventory can be upgraded
-        if (!inv.CanUpgradeSlots())
+        /*if (!inv.CanUpgradeSlots())
         {
             std::cout << "[UpgradeManager] Cannot upgrade inventory slots (already at max)" << std::endl;
             return false;
-        }
+        }*/
 
         // Check if player can afford it
         if (!CanAffordInventoryUpgrade())
@@ -43,12 +43,12 @@ namespace Framework
         std::cout << "[UpgradeManager] Deducted " << m_inventoryUpgradeCost << " currency" << std::endl;
 
         // Apply the upgrade
-        inv.UpgradeSlots(amount);
+        //inv.UpgradeSlots(amount);
 
         // Increase cost for next upgrade
         m_inventoryUpgradeCost += 50;
 
-        std::cout << "[UpgradeManager] Inventory upgraded! New slots: " << inv.GetMaxSlots()
+        std::cout << "[UpgradeManager] Inventory upgraded! New slots: " << inv.GetHotbarSlotCount()
             << ", Next cost: " << m_inventoryUpgradeCost << std::endl;
 
         return true;

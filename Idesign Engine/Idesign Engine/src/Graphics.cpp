@@ -1253,6 +1253,52 @@ namespace Framework {
                 if (isRPressed && !wasRPressed && !isEditorMode) GameSystem::bookOpen = !GameSystem::bookOpen;
                 wasRPressed = isRPressed;
             }
+
+            // ------------------------------------------------------------
+            // Backpack toggle (TAB) - only when in game, not editor focused
+            // ------------------------------------------------------------
+            {
+                static bool wasIPressed = false;
+                bool isIPressed = (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS);
+
+                if (isIPressed && !wasIPressed)
+                {
+                    auto& inv = Framework::Inventory::Instance();
+                    const bool isOpen = inv.IsBackpackOpen();
+
+                    // If it's open, ALWAYS allow closing
+                    if (isOpen)
+                    {
+                        inv.ToggleBackpack();
+
+                        // restore game mouse lock
+                        InputHandler::GetInstance()->isUIFocused = false;
+                    }
+                    else
+                    {
+                        // Only allow opening backpack when in valid gameplay state
+                        const bool canOpen =
+                            !isEditorMode &&
+                            !GameSystem::bookOpen &&
+                            !engineState.Is(EngineMode::Paused) &&
+                            !engineState.Is(EngineMode::HowToPlay) &&
+                            !engineState.Is(EngineMode::Menu) &&
+                            !engineState.Is(EngineMode::Settings) &&
+                            !engineState.Is(EngineMode::Dialogue);
+
+                        if (canOpen)
+                        {
+                            inv.ToggleBackpack();
+
+                            // enable UI cursor
+                            InputHandler::GetInstance()->isUIFocused = true;
+                        }
+                    }
+                }
+
+                wasIPressed = isIPressed;
+            }
+
         //}
 
         // ============================================================
@@ -1514,7 +1560,7 @@ namespace Framework {
         uiShader.setMat4("uProjection", uiProj);
 
         auto& inv = Inventory::Instance();
-        const int slots = inv.GetMaxSlots(); 
+        const int slots = inv.GetHotbarSlotCount(); 
         const float marginBottom = 24.0f;
         const float gap = 6.0f;
         const float pad = 8.0f;
@@ -1579,6 +1625,232 @@ namespace Framework {
         renderQuad();
     }
 
+    void Graphics::DrawBackpack(int screenW, int screenH)
+    {
+        auto& inv = Framework::Inventory::Instance();
+        if (!inv.IsBackpackOpen()) return;
+
+        const int cols = Framework::kBackpackCols;      // 10
+        const int rows = inv.GetBackpackRowCount();     // 0..3
+        if (rows <= 0) return;
+
+        // --- UI Projection (same as hotbar) ---
+        glm::mat4 uiProj = glm::ortho(0.f, (float)screenW, 0.f, (float)screenH);
+        uiShader.use();
+        uiShader.setMat4("uProjection", uiProj);
+
+        // --- UI Render State (IMPORTANT) ---
+        glDisable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        const float gap = 6.0f;
+        const float pad = 8.0f;
+        const float slotSize = std::round(std::min(screenH * 0.085f, 96.0f));
+
+        const float gridW = cols * slotSize + (cols - 1) * gap;
+        const float gridH = rows * slotSize + (rows - 1) * gap;
+
+        // Place centered above hotbar
+        const float hotbarY0 = 24.0f;
+        const float hotbarPanelH = slotSize + 24.0f;
+        const float marginAboveHotbar = 20.0f;
+
+        const float x0 = std::round((screenW - gridW) * 0.5f);
+        const float y0 = std::round(hotbarY0 + hotbarPanelH + marginAboveHotbar);
+
+        //{
+        //    const float hotbarPanelTop = hotbarY0 + hotbarPanelH; // top edge of hotbar panel
+        //    const float backpackPanelBottom = y0 - 12.0f;         // bottom edge of backpack panel
+        //    const float gapH = backpackPanelBottom - hotbarPanelTop;
+
+        //    if (gapH > 0.5f)
+        //    {
+        //        DrawUIRect({ x0 - 12.0f, hotbarPanelTop },
+        //            { gridW + 24.0f, gapH },
+        //            { 0.05f, 0.05f, 0.06f }, 0.90f);
+        //    }
+        //}
+
+        // Back panel
+        DrawUIRect({ x0 - 12.0f, y0 - 12.0f },
+            { gridW + 24.0f, gridH + 24.0f },
+            { 0.05f, 0.05f, 0.06f }, 0.90f);
+
+        const int activeSlots = inv.GetBackpackSlotCount(); // rows*cols
+
+        for (int r = 0; r < rows; ++r)
+        {
+            for (int c = 0; c < cols; ++c)
+            {
+                const int idx = r * cols + c;
+
+                // We draw with top row higher Y:
+                const float sx = x0 + c * (slotSize + gap);
+                const float sy = y0 + (rows - 1 - r) * (slotSize + gap);
+
+                // Slot bg + border
+                DrawUIRect({ sx, sy }, { slotSize, slotSize }, { 0.12f, 0.13f, 0.16f }, 0.95f);
+                DrawUIBorder(this, sx, sy, slotSize, slotSize, 2.0f, { 0.20f, 0.22f, 0.27f }, 1.0f);
+
+                if (idx >= activeSlots) continue;
+
+                const auto& s = inv.GetBackpack(idx);
+                if (s.itemId >= 0)
+                {
+                    GLuint tex = GetOrLoadIconTexFromItemId(s.itemId);
+                    if (tex)
+                    {
+                        const float inner = slotSize - 2 * pad;
+                        DrawUISprite(tex, { sx + pad, sy + pad }, { inner, inner }, 1.0f);
+                    }
+                }
+            }
+        }
+
+        // Restore (match style of DrawHotbar end)
+        glEnable(GL_DEPTH_TEST);
+    }
+
+    void Graphics::HandleBackpackDragDrop(int screenW, int screenH)
+    {
+        auto& inv = Framework::Inventory::Instance();
+        if (!inv.IsBackpackOpen()) return;
+
+        GLFWwindow* window = GetWindow();
+        if (!window) return;
+
+        const int cols = Framework::kBackpackCols;
+        const int rows = inv.GetBackpackRowCount();
+        if (rows <= 0) return;
+
+        const float gap = 6.0f;
+        const float pad = 8.0f;
+        const float slotSize = std::round(std::min(screenH * 0.085f, 96.0f));
+
+        const float gridW = cols * slotSize + (cols - 1) * gap;
+        const float gridH = rows * slotSize + (rows - 1) * gap;
+
+        const float hotbarY0 = 24.0f;
+        const float hotbarPanelH = slotSize + 24.0f;
+        const float marginAboveHotbar = 20.0f;
+
+        const float x0 = std::round((screenW - gridW) * 0.5f);
+        const float y0 = std::round(hotbarY0 + hotbarPanelH + marginAboveHotbar);
+
+        // Mouse (convert to bottom-left origin)
+        double mx, my;
+        glfwGetCursorPos(window, &mx, &my);
+        const float mouseX = (float)mx;
+        const float mouseY = (float)(screenH - my);
+
+        auto hitTestBackpack = [&]() -> Framework::SlotRef
+            {
+                if (mouseX < x0 || mouseX > x0 + gridW || mouseY < y0 || mouseY > y0 + gridH)
+                    return {};
+
+                float localX = mouseX - x0;
+                int c = (int)(localX / (slotSize + gap));
+                if (c < 0 || c >= cols) return {};
+
+                float localY = mouseY - y0;
+                int rFromBottom = (int)(localY / (slotSize + gap));
+                int r = (rows - 1 - rFromBottom);
+                if (r < 0 || r >= rows) return {};
+
+                // gap reject
+                float cellX = localX - c * (slotSize + gap);
+                float cellY = localY - rFromBottom * (slotSize + gap);
+                if (cellX > slotSize || cellY > slotSize) return {};
+
+                int idx = r * cols + c;
+                if (idx < 0 || idx >= inv.GetBackpackSlotCount()) return {};
+
+                return Framework::SlotRef{ Framework::SlotKind::Backpack, idx };
+            };
+
+        auto hitTestHotbar = [&]() -> Framework::SlotRef
+            {
+                const int hotSlots = inv.GetHotbarSlotCount();
+                const float marginBottom = 24.0f;
+                const float hotGap = 6.0f;
+                const float hotSlotSize = slotSize;
+
+                const float totalSlotsW = hotSlots * hotSlotSize + (hotSlots - 1) * hotGap;
+                const float hx0 = std::round((screenW - totalSlotsW) * 0.5f);
+                const float hy0 = std::round(marginBottom);
+
+                if (mouseX < hx0 || mouseX > hx0 + totalSlotsW || mouseY < hy0 || mouseY > hy0 + hotSlotSize)
+                    return {};
+
+                float localX = mouseX - hx0;
+                int i = (int)(localX / (hotSlotSize + hotGap));
+                if (i < 0 || i >= hotSlots) return {};
+
+                float cellX = localX - i * (hotSlotSize + hotGap);
+                if (cellX > hotSlotSize) return {};
+
+                return Framework::SlotRef{ Framework::SlotKind::Hotbar, i };
+            };
+
+        auto hitTestAny = [&]() -> Framework::SlotRef
+            {
+                auto b = hitTestBackpack();
+                if (b.IsValid()) return b;
+                auto h = hitTestHotbar();
+                if (h.IsValid()) return h;
+                return {};
+            };
+
+        static bool prevLDown = false;
+        const bool lDown = (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS);
+
+        if (lDown && !prevLDown)
+        {
+            auto on = hitTestAny();
+            if (on.IsValid()) inv.BeginDrag(on);
+        }
+
+        if (!lDown && prevLDown)
+        {
+            if (inv.IsDragging())
+            {
+                auto on = hitTestAny();
+                if (on.IsValid()) inv.DropOn(on);
+                else inv.CancelDrag();
+            }
+        }
+        prevLDown = lDown;
+
+        // --- Draw dragged icon (needs UI state/projection) ---
+        if (inv.IsDragging())
+        {
+            glm::mat4 uiProj = glm::ortho(0.f, (float)screenW, 0.f, (float)screenH);
+            uiShader.use();
+            uiShader.setMat4("uProjection", uiProj);
+
+            glDisable(GL_DEPTH_TEST);
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+            auto dragged = inv.GetDraggedItemCopy();
+            if (dragged.itemId >= 0)
+            {
+                GLuint tex = GetOrLoadIconTexFromItemId(dragged.itemId);
+                if (tex)
+                {
+                    const float inner = slotSize - 2 * pad;
+                    DrawUISprite(tex,
+                        { mouseX - inner * 0.5f, mouseY - inner * 0.5f },
+                        { inner, inner },
+                        1.0f);
+                }
+            }
+
+            glEnable(GL_DEPTH_TEST);
+        }
+    }
+    
     //JAY
     void Graphics::RenderViewToFramebuffer(Camera& viewCam, GLuint imguiTargetFBO,
         int screenW, int screenH, int viewIndex)
@@ -2954,6 +3226,12 @@ namespace Framework {
         if (viewIndex == 0 && !engineState.IsAnyMenuOpen() && !GameSystem::bookOpen) 
         {
             DrawHotbar(width, height);
+        }
+
+        if (Framework::Inventory::Instance().IsBackpackOpen())
+        {
+            DrawBackpack(width, height);
+            HandleBackpackDragDrop(width, height);
         }
 
         Entity loadingEntity = ecsInterface.GetEntityByName("LoadingUI");
