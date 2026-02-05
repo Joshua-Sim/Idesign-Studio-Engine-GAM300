@@ -90,21 +90,24 @@ namespace Framework
 
         for (Entity e : mEntities)
         {
-            auto& em = ecsInterface.GetComponent<ParticleEmitterComponent>(e);
-            auto& tr = ecsInterface.GetComponent<TransformComponent>(e);
-
-            // Always update existing particles (even if emitter disabled)
-            // but only spawn if active + transform active
-            bool canEmit = true;
-            if (!em.loop)
+            if (ecsInterface.HasComponent<ParticleEmitterComponent>(e) &&
+                ecsInterface.HasComponent<TransformComponent>(e))
             {
-                em.timeSinceStart += dt;
-                if (em.timeSinceStart > em.duration)
-                    canEmit = false;
-            }
+                auto& em = ecsInterface.GetComponent<ParticleEmitterComponent>(e);
+                auto& tr = ecsInterface.GetComponent<TransformComponent>(e);
 
-            EnsureEmitterTextureLoaded(em);
+                // Always update existing particles (even if emitter disabled)
+                // but only spawn if active + transform active
+                bool canEmit = true;
+                if (!em.loop)
+                {
+                    em.timeSinceStart += dt;
+                    if (em.timeSinceStart > em.duration)
+                        canEmit = false;
+                }
 
+                EnsureEmitterTextureLoaded(em);
+            
             // --- Emission timing (loop vs duration) ---
             if (canEmit)
             {
@@ -167,6 +170,7 @@ namespace Framework
             // If non-loop and finished, keep time clamped so it doesn't grow forever
             if (!em.loop && em.timeSinceStart > em.duration + 10.0f)
                 em.timeSinceStart = em.duration + 10.0f;
+            }
         }
     }
 }

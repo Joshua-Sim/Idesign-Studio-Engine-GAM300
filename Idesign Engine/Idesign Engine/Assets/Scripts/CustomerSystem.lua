@@ -79,7 +79,7 @@ local active_logs = {} -- Track spawned logs
 function UpdateCurrencyUI()
     if score_text_entity then
         local current_currency = GetCurrency()
-        local currency_text = "Currency: " .. tostring(current_currency)
+        local currency_text = "$: " .. tostring(current_currency)
         SetTextComponent(score_text_entity, "text", currency_text)
         print("[UpdateCurrencyUI] Display updated to: " .. current_currency)
     else

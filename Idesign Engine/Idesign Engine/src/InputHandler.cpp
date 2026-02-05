@@ -184,7 +184,7 @@ namespace Framework {
         // --- Slider Drag Logic -- 
         int width, height;
         glfwGetWindowSize(window, &width, &height);
-        if (width > 0 && height > 0)
+        if (width > 0 && height > 0 && engineState.Is(EngineMode::Settings))
         {
             float u = static_cast<float>(mouseX) / static_cast<float>(width);
             float v = static_cast<float>(mouseY) / static_cast<float>(height);
@@ -282,9 +282,6 @@ namespace Framework {
             // [FIX] Invert Y-Axis for OpenGL-style rendering
             // If clicking TOP triggered BOTTOM button, this will flip it.
             v = 1.0f - v;
-
-            // Debug Print to confirm
-            //std::cout << "[Input] Click at UV: (" << u << ", " << v << ")" << std::endl;
 
             auto buttonSystem = ecsInterface.GetSystem<ButtonSystem>();
             if (buttonSystem)
