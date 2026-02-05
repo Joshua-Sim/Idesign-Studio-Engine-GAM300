@@ -11,70 +11,147 @@
 
 unsigned int TextureLoader::loadTexture(TextureProperties& props, bool flip)
 {
-    // <-- FIX: Build the absolute path from the relative path
+    // ------------------------------------------------------------------
+    // Resolve absolute path
+    // ------------------------------------------------------------------
     std::filesystem::path root = GetEngineRootPath();
     std::filesystem::path absolutePath = root / props.path;
-    std::string pathStr = absolutePath.string(); // Use this full path for loading
+    std::string pathStr = absolutePath.string();
 
-    // Detect file extension (lowercase)
+    if (!std::filesystem::exists(absolutePath)) {
+        std::cerr << "[TextureLoader] File not found: " << pathStr << std::endl;
+        return 0;
+    }
+
+    // ------------------------------------------------------------------
+    // Extension detection
+    // ------------------------------------------------------------------
     std::string ext;
-    size_t dot = props.path.find_last_of('.'); // Use props.path (relative) for extension
-    if (dot != std::string::npos)
-    {
+    size_t dot = props.path.find_last_of('.');
+    if (dot != std::string::npos) {
         ext = props.path.substr(dot + 1);
         std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
     }
 
-    // 1. DDS compressed path
-    if (ext == "dds")
-    {
-        GLuint texID = LoadDDS(pathStr); // <-- FIX: Use full path string
-        if (texID)
-        {
+    // ------------------------------------------------------------------
+    // DDS handling (must already be OpenGL-safe internally)
+    // ------------------------------------------------------------------
+    if (ext == "dds") {
+        GLuint texID = LoadDDS(pathStr);
+        if (texID != 0) {
             props.textureID = texID;
-            // width/height optional if your loader returns them
-            std::cout << "[TextureLoader] Loaded compressed DDS: " << pathStr << std::endl;
             return texID;
         }
-        std::cerr << "[TextureLoader] Failed to load DDS: " << pathStr << std::endl;
         return 0;
     }
 
-    // 2. Default (STB path)
-    int width, height, channels;
+    // ------------------------------------------------------------------
+    // Load image via STB
+    // ------------------------------------------------------------------
+    int width = 0, height = 0, channels = 0;
+
     stbi_set_flip_vertically_on_load(flip);
+    unsigned char* data = stbi_load(
+        pathStr.c_str(),
+        &width,
+        &height,
+        &channels,
+        0
+    );
+    stbi_set_flip_vertically_on_load(false);
 
-    // <-- FIX: Use the .c_str() of the full path string
-    unsigned char* data = stbi_load(pathStr.c_str(), &width, &height, &channels, 0);
-    if (!data)
-    {
-        // <-- FIX: Use full path in error message
-        std::cerr << "Failed to load texture: " << pathStr << std::endl;
+    if (!data || width <= 0 || height <= 0) {
+        std::cerr << "[STB Error] " << stbi_failure_reason()
+            << " : " << pathStr << std::endl;
         return 0;
     }
 
-    GLenum format = (channels == 1) ? GL_RED :
-        (channels == 3) ? GL_RGB : GL_RGBA;
+    // ------------------------------------------------------------------
+    // Determine OpenGL formats
+    // ------------------------------------------------------------------
+    GLenum internalFormat = 0;
+    GLenum dataFormat = 0;
 
-    GLuint texID;
+    switch (channels) {
+    case 1:
+        internalFormat = GL_R8;
+        dataFormat = GL_RED;
+        break;
+    case 3:
+        internalFormat = GL_RGB8;
+        dataFormat = GL_RGB;
+        break;
+    case 4:
+        internalFormat = GL_RGBA8;
+        dataFormat = GL_RGBA;
+        break;
+    default:
+        std::cerr << "[TextureLoader] Unsupported channel count: "
+            << channels << " (" << pathStr << ")" << std::endl;
+        stbi_image_free(data);
+        return 0;
+    }
+
+    // ------------------------------------------------------------------
+    // Generate texture object
+    // ------------------------------------------------------------------
+    GLuint texID = 0;
     glGenTextures(1, &texID);
+
+    if (texID == 0) {
+        stbi_image_free(data);
+        return 0;
+    }
+
     glBindTexture(GL_TEXTURE_2D, texID);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0,
-        format, GL_UNSIGNED_BYTE, data);
+    // ------------------------------------------------------------------
+    // Upload texture data safely
+    // ------------------------------------------------------------------
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+    while (glGetError() != GL_NO_ERROR);
+
+    glTexImage2D(
+        GL_TEXTURE_2D,
+        0,
+        internalFormat,
+        width,
+        height,
+        0,
+        dataFormat,
+        GL_UNSIGNED_BYTE,
+        data
+    );
+
+    GLenum err = glGetError();
+    if (err != GL_NO_ERROR) {
+        std::cerr << "[OpenGL Error] glTexImage2D failed ("
+            << err << ") : " << pathStr << std::endl;
+        glDeleteTextures(1, &texID);
+        stbi_image_free(data);
+        return 0;
+    }
+
     glGenerateMipmap(GL_TEXTURE_2D);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    // ------------------------------------------------------------------
+    // Sampler parameters
+    // ------------------------------------------------------------------
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+    // ------------------------------------------------------------------
+    // Cleanup & output
+    // ------------------------------------------------------------------
     stbi_image_free(data);
 
     props.textureID = texID;
     props.width = width;
     props.height = height;
 
-    //std::cout << "[TextureLoader] Loaded raw image: " << pathStr << std::endl;
     return texID;
 }
+

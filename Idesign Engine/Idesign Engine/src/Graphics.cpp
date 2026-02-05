@@ -696,11 +696,11 @@ namespace Framework {
         // GENERATE PINES MESH
          // === LOAD PINES MESH ===
         //=== LOAD PINES MESH ===
-        MeshLoader::loadMesh("Assets/Objects/pine.obj", m_pineMesh);
+        MeshLoader::loadMesh("Assets/Objects/AUTUMN PINE TREE MED.obj", m_pineMesh);
 
         // Load texture for pine
         TextureProperties pineProps;
-        pineProps.path = "Assets/Textures/treeLong.png";
+        pineProps.path = "Assets/Textures/mushroom 2.png";
         pineTextureID = TextureLoader::loadTexture(pineProps, true);
 
         // Create renderer
@@ -2266,11 +2266,11 @@ namespace Framework {
         }
         terrain.draw();
 
-        // === DRAW FOLIAGE HERE  ===
-        if (m_treeRenderer && m_treeTextureID != 0) // Only draw if texture is loaded
-        {
-            m_treeRenderer->draw(view, proj, mapModel, m_treeTextureID);
-        }
+        //// === DRAW FOLIAGE HERE  ===
+        //if (m_treeRenderer && m_treeTextureID != 0) // Only draw if texture is loaded
+        //{
+        //    m_treeRenderer->draw(view, proj, mapModel, m_treeTextureID);
+        //}
 
         // === DRAW PEBBLES HERE  ===
         if (m_pebbleRenderer)
@@ -2777,11 +2777,11 @@ namespace Framework {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glDepthMask(GL_FALSE);
 
-        // Billboard leaves
-        if (m_leafRenderer)
-        {
-            m_leafRenderer->draw(view, proj, mapModel, leafTexture);
-        }
+        //// Billboard leaves
+        //if (m_leafRenderer)
+        //{
+        //    m_leafRenderer->draw(view, proj, mapModel, leafTexture);
+        //}
 
         // --- PARTICLES START --- (Jasper)
 
@@ -3167,7 +3167,7 @@ namespace Framework {
             // The inventory system leaves the shader color dark gray. 
             // We must reset it to White (1,1,1) so your normal UI isn't tinted.
             uiShader.setVec3("uColor", glm::vec3(1.0f, 1.0f, 1.0f));
-            uiShader.setFloat("uAlpha", 1.0f);
+            uiShader.setFloat("uAlpha", tex.uiAlpha);
 
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, tr.position);
@@ -3223,7 +3223,15 @@ namespace Framework {
         }
 
         // Do not display inventory boxes while in paused/howtoplay/menu state
-        if (viewIndex == 0 && !engineState.IsAnyMenuOpen() && !GameSystem::bookOpen) 
+        if (viewIndex == 0 &&
+            !engineState.Is(EngineMode::Paused) &&
+            !engineState.Is(EngineMode::HowToPlay) &&
+            !engineState.Is(EngineMode::Cutscene) &&
+            !engineState.Is(EngineMode::Menu) &&
+            !engineState.Is(EngineMode::Settings) &&
+            !engineState.Is(EngineMode::Dialogue) &&
+            !engineState.Is(EngineMode::MapSelection) &&
+            !GameSystem::bookOpen) 
         {
             DrawHotbar(width, height);
         }

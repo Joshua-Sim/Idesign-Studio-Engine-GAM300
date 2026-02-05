@@ -64,6 +64,13 @@
             "tableRef": -1
         },
         {
+            "guid": "d147b738-c2f4-4231-9905-ea0d34658d17",
+            "scriptPath": "Assets\\Scripts\\MapSelectionUI.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
             "guid": "48782e7b-a969-4b1f-ad50-0d92ca2e6de2",
             "scriptPath": "Assets\\Scripts\\Settings_BGM_Mute.lua",
             "hotReload": true,
@@ -225,6 +232,13 @@
             "tableRef": -1
         },
         {
+            "guid": "df1c2540-8fa0-4c78-899d-2eaee06453e8",
+            "scriptPath": "Assets\\Scripts\\GameStateCutscene.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
             "guid": "5a675a8e-6d41-4326-bfd1-7106b0279459",
             "scriptPath": "Assets\\Scripts\\Settings_Master_Mute.lua",
             "hotReload": true,
@@ -234,6 +248,20 @@
         {
             "guid": "42e8ffe5-ac90-4ec7-a592-bc4778c6fe98",
             "scriptPath": "Assets\\Scripts\\CurrencyIncreaseUpgrade.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "e3d7fea7-6e58-4337-8951-9b0b0a7324f5",
+            "scriptPath": "Assets\\Scripts\\MapController.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "b20ceaf5-8708-422e-a0d1-9234f7d411c0",
+            "scriptPath": "Assets\\Scripts\\MapButton.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1

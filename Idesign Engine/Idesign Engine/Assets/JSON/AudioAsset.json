@@ -18,7 +18,8 @@
         },
         {
             "guid": "{c2a095d5-c89c-4658-ae91-5ac8e3728077}",
-            "name": "ForestAmbient",
+            "name": "
+              Ambient",
             "path": "event:/ForestAmbient",
             "mode": "loop",
             "soundType": "background",

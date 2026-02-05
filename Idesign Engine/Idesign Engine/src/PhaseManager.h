@@ -1,4 +1,4 @@
-// --- PhaseManager.h ---
+ // --- PhaseManager.h ---
 #include "pch.h"
 #include <glm/glm/glm.hpp>
 #include <string>
@@ -38,9 +38,11 @@ namespace Framework {
         glm::vec3& GetDaySpawnPosRef() { return m_daySpawnPos; }
         glm::vec3& GetNightSpawnPosRef() { return m_nightSpawnPos; }
 
+        void TeleportPlayer(const glm::vec3& position, const glm::vec3& rotation);
+
     private:
         Coordinator* coordinator;
-        void TeleportPlayer(const glm::vec3& position, const glm::vec3& rotation);
+        
 
         GamePhase m_currentPhase = GamePhase::Day;
 

@@ -75,7 +75,8 @@ namespace Framework {
         /********************************************************************
         * ToggleCheck: Enables or disables a specific debug check.          *
         *              - checkName: The name of the debug check.            *
-        *              - isActive: Set to true to enable, false to disable. *
+        *              - 
+        : Set to true to enable, false to disable. *
         ********************************************************************/
         void ToggleCheck(const std::string& checkName, bool isActive);
 

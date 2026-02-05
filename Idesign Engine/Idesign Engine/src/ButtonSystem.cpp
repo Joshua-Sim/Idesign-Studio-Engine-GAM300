@@ -189,6 +189,39 @@ namespace Framework {
             float volume = (knobTr.position.x - barLeft) / (barRight - barLeft);
             volume = std::clamp(volume, 0.0f, 1.0f);
 
+            /* Update the fill bar visual */
+            std::string fillBarTag;
+            switch (m_activeSliderType)
+            {
+            case SliderType::Master: fillBarTag = "sliderFill_master"; break;
+            case SliderType::BGM:    fillBarTag = "sliderFill_bgm";    break;
+            case SliderType::SFX:    fillBarTag = "sliderFill_sfx";    break;
+            default: break;
+            }
+
+            if (!fillBarTag.empty())
+            {
+                auto fillBars = ecsInterface.GetEntitiesByTag(fillBarTag);
+                if (!fillBars.empty())
+                {
+                    Entity fillBar = fillBars.front();
+                    if (ecsInterface.IsEntityValid(fillBar) &&
+                        ecsInterface.HasComponent<TransformComponent>(fillBar))
+                    {
+                        auto& fillTr = ecsInterface.GetComponent<TransformComponent>(fillBar);
+                        auto& barTr = ecsInterface.GetComponent<TransformComponent>(bar);
+
+                        // Scale the fill bar width based on volume
+                        fillTr.scale.x = barTr.scale.x * volume;
+
+                        // Reposition to align with left edge of background bar
+                        // (since scaling happens from center by default)
+                        float barLeft = barTr.position.x - 0.5f * barTr.scale.x;
+                        fillTr.position.x = barLeft + 0.5f * fillTr.scale.x;
+                    }
+                }
+            }
+
             /* Apply audio */
             switch (m_activeSliderType)
             {

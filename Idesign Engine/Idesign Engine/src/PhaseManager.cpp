@@ -46,10 +46,23 @@ namespace Framework {
         glm::vec3 targetRot(0.0f);
         bool shouldTeleport = false;
 
+        // Don't auto-teleport when starting Day phase
+        // Let the map UI handle it
         if (m_currentPhase == GamePhase::Day) {
-            targetPos = m_daySpawnPos;
-            targetRot = m_daySpawnRot;
-            shouldTeleport = true;
+            auto graphicsSystem = ecsInterface.GetSystem<Graphics>();
+            if (graphicsSystem) {
+                Skybox* skybox = graphicsSystem->getSkybox();
+                if (skybox) skybox->setBlendFactor(0.0f);
+
+                Camera* cam = graphicsSystem->getCamera();
+                if (cam) {
+                    cam->yaw = -180.0f;
+                    cam->pitch = 0.0f;
+                    cam->updateVectors();
+                }
+            }
+
+            EventManager::Instance().Fire("OnDayStart", nullptr);
         }
         else if (m_currentPhase == GamePhase::Night) {
             targetPos = m_nightSpawnPos;
