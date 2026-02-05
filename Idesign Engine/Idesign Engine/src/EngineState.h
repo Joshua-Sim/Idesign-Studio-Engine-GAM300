@@ -74,20 +74,22 @@ namespace Framework
         }
 
         // Check if any MENU/UI overlay is open
-        bool IsAnyMenuOpen() const
+        bool IsAnyUIOpen() const
         {
             return Is(EngineMode::Menu)      ||
                    Is(EngineMode::Paused)    ||
                    Is(EngineMode::HowToPlay) ||
                    Is(EngineMode::Settings)  ||
                    Is(EngineMode::Dialogue)  ||
-                   Is(EngineMode::Upgrade);
+                   Is(EngineMode::Upgrade)   ||
+                   Is(EngineMode::MapSelection) ||
+                   Is(EngineMode::Cutscene);
         }
 
         // Check if current scene is actively in gameplay (Play Mode, with no overlays)
         bool IsInGameplay() const
         {
-            return Is(EngineMode::Play) && !IsAnyMenuOpen();
+            return Is(EngineMode::Play) && !IsAnyUIOpen();
         }
 
         void PrintStack() const

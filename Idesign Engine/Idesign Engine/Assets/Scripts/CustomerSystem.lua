@@ -85,7 +85,7 @@ local is_moving_state = true    -- To prevent spamming PlayAnimation
 function UpdateCurrencyUI()
     if score_text_entity then
         local current_currency = GetCurrency()
-        local currency_text = "$: " .. tostring(current_currency)
+        local currency_text = "        :" .. tostring(current_currency)
         SetTextComponent(score_text_entity, "text", currency_text)
         print("[UpdateCurrencyUI] Display updated to: " .. current_currency)
     else
@@ -99,11 +99,20 @@ function CustomerSystem:on_init()
     player_id = FindEntityByName("Player")
     waitPointEntity = FindEntityByName(self.waitPointName)
     
-    score_text_entity = SpawnPrefab("ScoreText_Prefab")
-    if score_text_entity then
-        CustomerSystem:UpdateCurrencyDisplay()
+    local existing_score = FindEntityByName("ScoreText") 
+    if existing_score then
+        score_text_entity = existing_score
+        print("[CustomerSystem] ScoreText already exists, reusing it.")
     else
-        print("[CustomerSystem] ERROR: Failed to spawn ScoreText prefab!")
+        score_text_entity = SpawnPrefab("ScoreText_Prefab")
+        if score_text_entity then
+            SetTransformComponent(score_text_entity, "position", {x = 0.010, y = 0.060, z = 0})
+            SetTextComponent(score_text_entity, "color", {r = 0, g = 0, b = 0})
+            SetTextComponent(score_text_entity, "scale", 1.5)
+            CustomerSystem:UpdateCurrencyDisplay()
+        else
+            print("[CustomerSystem] ERROR: Failed to spawn ScoreText prefab!")
+        end
     end
 
     if not navMeshBuilt then
@@ -125,6 +134,17 @@ function CustomerSystem:on_init()
 end
 
 function CustomerSystem:on_update(dt)
+
+    -- Update score text visibility based on engine state
+    if score_text_entity then
+        -- Check if we're in Play OR Upgrade mode
+        if IsEngineState("Play") or IsEngineState("Upgrade") or IsEngineState("Editor") then
+            SetTextComponent(score_text_entity, "opacity", 1.0)
+        else
+            SetTextComponent(score_text_entity, "opacity", 0.0)
+        end
+    end
+
     if not navMeshBuilt then return end
     
     local currentPhase = GetPhase()

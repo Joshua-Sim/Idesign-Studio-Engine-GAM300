@@ -151,7 +151,7 @@ namespace Framework {
 
         // OVERRIDE 2: Menus / Pause / HowToPlay
         // If ANY of these are true, we MUST show the cursor, regardless of Editor/Game mode.
-        if (engineState.IsAnyMenuOpen())
+        if (engineState.IsAnyUIOpen())
         {
             desiredMode = GLFW_CURSOR_NORMAL;
         }
@@ -213,7 +213,7 @@ namespace Framework {
         // --- [FIX] UPDATE ROTATION LOGIC ---
         // 1. Editor Mode (isUIFocused): Rotate only if Right Click is held.
         // 2. Game Mode (!isUIFocused): Rotate only if NO menu is open.
-        bool canRotate = (self->isUIFocused && isRightClickHeld) || (!self->isUIFocused && !engineState.IsAnyMenuOpen());
+        bool canRotate = (self->isUIFocused && isRightClickHeld) || (!self->isUIFocused && !engineState.IsAnyUIOpen());
 
         if (!self->m_cameraRotationEnabled) canRotate = false;
 

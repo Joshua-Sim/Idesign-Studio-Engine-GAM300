@@ -3304,19 +3304,13 @@ namespace Framework {
 
         // Do not display inventory boxes while in paused/howtoplay/menu state
         if (viewIndex == 0 &&
-            !engineState.Is(EngineMode::Paused) &&
-            !engineState.Is(EngineMode::HowToPlay) &&
-            !engineState.Is(EngineMode::Cutscene) &&
-            !engineState.Is(EngineMode::Menu) &&
-            !engineState.Is(EngineMode::Settings) &&
-            !engineState.Is(EngineMode::Dialogue) &&
-            !engineState.Is(EngineMode::MapSelection) &&
+            !engineState.IsAnyUIOpen() &&
             !GameSystem::bookOpen) 
         {
             DrawHotbar(width, height);
         }
 
-        if (Framework::Inventory::Instance().IsBackpackOpen())
+        if (Inventory::Instance().IsBackpackOpen())
         {
             DrawBackpack(width, height);
             HandleBackpackDragDrop(width, height);

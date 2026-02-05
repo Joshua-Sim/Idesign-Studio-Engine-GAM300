@@ -103,6 +103,7 @@ namespace Framework
                     ecsInterface.HasComponent<TextureProperties>(e))
                 {
                     auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
+                    
                     // Only enforce UI flag if NOT in editor mode 
                     if (!engineState.Is(EngineMode::Editor)) { texture.isUI = engineState.Is(EngineMode::Settings); }
                 }

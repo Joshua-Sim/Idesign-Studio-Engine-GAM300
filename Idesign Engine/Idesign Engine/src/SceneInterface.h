@@ -5,7 +5,8 @@
 
 #include "System.h"
 #include "EngineState.h"
-
+#include "GameSystem.h"
+#include "Upgrade.h"
 namespace Framework 
 {
 	class SceneInterface : public ISystem
