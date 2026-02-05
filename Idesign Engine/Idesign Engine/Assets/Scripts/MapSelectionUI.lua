@@ -25,7 +25,7 @@ local locations = {
     House = {
         name = "House",
         buttonEntity = "House Button",
-        spawnPos = {x = 0.0, y = 9.0, z = 0.0},
+        spawnPos = {x = -36.0, y = 8.025, z = 9.5},
         spawnRot = {x = 0.0, y = 0.0, z = 0.0},
         ingredients = {"Garden Herbs", "Kitchen Spices"},
         ingredientImageEntity = "HouseIngredientsImage"
@@ -99,12 +99,10 @@ function M:OnLocationSelected(locData)
         self:OnLocationUnhover(loc)
     end
     
-    -- Hide the map
-    self:HideMap()
-    
     -- Exit MapSelection state
     print("[MapSelectionUI] Popping MapSelection state")
     PopEngineState()
+    SetUIFocused(false)
     
     -- Teleport player to selected location
     print("[MapSelectionUI] Teleporting player to: " .. locData.name)
@@ -122,26 +120,9 @@ end
 function M:ShowMap()
     print("[MapSelectionUI] ===== SHOWING MAP =====")
     
-    -- Push MapSelection state
+    -- Push MapSelection state - SceneInterface handles visibility via isUI flag
     PushEngineState("MapSelection")
     print("[MapSelectionUI] Pushed MapSelection state")
-    
-    -- WORKAROUND: Manually show all buttons by setting scale
-    print("[MapSelectionUI] Manually showing buttons...")
-    for locName, locData in pairs(locations) do
-        local buttonId = FindEntityByName(locData.buttonEntity)
-        if buttonId and IsEntityValid(buttonId) then
-            -- Set scale to a large value so buttons are visible
-            SetEntityScale(buttonId, 200.0, 200.0, 1.0)
-            print("[MapSelectionUI]   Set " .. locData.buttonEntity .. " scale to [200, 200, 1]")
-            
-            -- Verify the scale was set
-            local sx, sy, sz = GetScale(buttonId)
-            print("[MapSelectionUI]   Verified scale: [" .. sx .. ", " .. sy .. ", " .. sz .. "]")
-        else
-            print("[MapSelectionUI]   ERROR: Could not find " .. locData.buttonEntity)
-        end
-    end
     
     -- Set UI focus for cursor
     SetUIFocused(true)
@@ -152,14 +133,8 @@ end
 function M:HideMap()
     print("[MapSelectionUI] ===== HIDING MAP =====")
     
-    -- Manually hide all buttons by setting scale to 0
-    for locName, locData in pairs(locations) do
-        local buttonId = FindEntityByName(locData.buttonEntity)
-        if buttonId and IsEntityValid(buttonId) then
-            SetEntityScale(buttonId, 0.0, 0.0, 0.0)
-            print("[MapSelectionUI]   Hid " .. locData.buttonEntity)
-        end
-    end
+    -- Pop MapSelection state - SceneInterface handles visibility
+    PopEngineState()
     
     -- Hide all ingredient images
     for _, locData in pairs(locations) do
@@ -173,3 +148,53 @@ function M:HideMap()
 end
 
 return M
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

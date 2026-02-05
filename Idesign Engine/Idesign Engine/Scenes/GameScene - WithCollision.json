@@ -136,7 +136,7 @@
                     "is3D": true,
                     "minDistance": 1.0,
                     "maxDistance": 100.0,
-                    "volume": 1.0,
+                    "volume": 0.20000000298023224,
                     "loop": false,
                     "playOnStart": true,
                     "isPlaying": true,
@@ -296,7 +296,7 @@
                     "animationSpeed": 10.0,
                     "bLoops": false,
                     "bPlayOnStart": true,
-                    "currentTime": 20.0
+                    "currentTime": 0.0
                 },
                 "TextureComponent": {
                     "guid": "afd25b76-dddc-4c4f-bae4-a6c9a22931e5",
@@ -1552,7 +1552,7 @@
                     "is3D": true,
                     "minDistance": 1.0,
                     "maxDistance": 50.0,
-                    "volume": 0.0,
+                    "volume": 1.0,
                     "loop": false,
                     "playOnStart": false,
                     "isPlaying": false,
@@ -2741,13 +2741,13 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -53.96500015258789,
-                        8.024561882019043,
-                        9.5
+                        0.0,
+                        0.0,
+                        0.0
                     ],
                     "rotation": [
                         0.0,
-                        90.0,
+                        0.0,
                         0.0
                     ],
                     "scale": [
@@ -2824,9 +2824,9 @@
                 },
                 "ListenerComponent": {
                     "position": [
-                        -53.96500015258789,
-                        8.024561882019043,
-                        9.5
+                        0.0,
+                        0.0,
+                        0.0
                     ],
                     "forward": [
                         0.0,
@@ -3144,7 +3144,7 @@
                     "animationSpeed": 1.0,
                     "bLoops": true,
                     "bPlayOnStart": true,
-                    "currentTime": 29.999980926513672
+                    "currentTime": 0.0
                 },
                 "TextureComponent": {
                     "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
@@ -5345,7 +5345,7 @@
                     "isUI": false
                 },
                 "TextProperties": {
-                    "text": "100%",
+                    "text": "99%",
                     "scale": 1.0,
                     "color": [
                         1.0,
@@ -5358,7 +5358,7 @@
                     "screenSpace": true
                 },
                 "TextProperties": {
-                    "text": "100%",
+                    "text": "99%",
                     "scale": 1.0,
                     "color": [
                         1.0,
@@ -5589,7 +5589,7 @@
                     "isUI": false
                 },
                 "TextProperties": {
-                    "text": "89%",
+                    "text": "96%",
                     "scale": 1.0,
                     "color": [
                         1.0,
@@ -5602,7 +5602,7 @@
                     "screenSpace": true
                 },
                 "TextProperties": {
-                    "text": "89%",
+                    "text": "96%",
                     "scale": 1.0,
                     "color": [
                         1.0,
@@ -14886,7 +14886,7 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        1050.0,
+                        1047.0,
                         700.0,
                         1.0
                     ],
@@ -14896,7 +14896,7 @@
                         0.0
                     ],
                     "scale": [
-                        750.0,
+                        744.0,
                         25.0,
                         1.0
                     ],
@@ -14923,11 +14923,11 @@
                 },
                 "ButtonComponent": {
                     "position": [
-                        1050.0,
+                        1047.0,
                         700.0
                     ],
                     "size": [
-                        750.0,
+                        744.0,
                         25.0
                     ],
                     "isHovered": false,
@@ -15049,7 +15049,7 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        1010.25,
+                        1038.75,
                         300.0,
                         1.0
                     ],
@@ -15059,7 +15059,7 @@
                         0.0
                     ],
                     "scale": [
-                        670.5,
+                        727.5,
                         25.0,
                         1.0
                     ],
@@ -15086,11 +15086,11 @@
                 },
                 "ButtonComponent": {
                     "position": [
-                        1010.25,
+                        1038.75,
                         300.0
                     ],
                     "size": [
-                        670.5,
+                        727.5,
                         25.0
                     ],
                     "isHovered": false,
@@ -15104,7 +15104,7 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        1345.5,
+                        1402.5,
                         300.0,
                         1.0
                     ],
@@ -15140,7 +15140,7 @@
                 },
                 "ButtonComponent": {
                     "position": [
-                        1345.5,
+                        1402.5,
                         300.0
                     ],
                     "size": [
@@ -15158,7 +15158,7 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        1425.0,
+                        1419.0,
                         700.0,
                         1.0
                     ],
@@ -15191,7 +15191,7 @@
                 },
                 "ButtonComponent": {
                     "position": [
-                        1425.0,
+                        1419.0,
                         700.0
                     ],
                     "size": [
@@ -15553,7 +15553,12 @@
                         "2092f94a-db08-4191-a8d8-dc955cc433d5",
                         "dd30a16c-7680-4743-b263-dd274c882310",
                         "c3f00981-7a54-49bc-86e7-3b238666aacb",
-                        "992c2024-6333-4500-aef3-8d5d59616088"
+                        "992c2024-6333-4500-aef3-8d5d59616088",
+                        "5e0f0306-1a52-42be-8bbf-ae919abf27c8",
+                        "fc89e578-8f11-4e77-86be-14fb1b310d26",
+                        "bfd552ac-3041-4bd9-b6e2-bd92408d0fb3",
+                        "2dcc2352-5b36-465a-a806-165efd87b11f",
+                        "96b0dccf-d2fd-4b4c-8574-5b4fe3e2f8d8"
                     ],
                     "sortIndex": 68
                 },
@@ -15567,8 +15572,8 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "d7806aaf-571e-432d-af75-d9e3c0703bf7",
-                    "isUI": false
+                    "guid": "8a55939c-a0c8-4dae-9850-bcb0099ded3c",
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -15644,8 +15649,8 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        500.0,
-                        720.0,
+                        450.0,
+                        707.0,
                         1.0
                     ],
                     "rotation": [
@@ -15654,9 +15659,9 @@
                         0.0
                     ],
                     "scale": [
-                        0.0,
-                        0.0,
-                        0.0
+                        500.0,
+                        382.79998779296875,
+                        1.0
                     ],
                     "isActive": true
                 },
@@ -15675,28 +15680,28 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "ce6cea11-f2f7-4440-90ce-a0724235b793",
-                    "isUI": false
+                    "guid": "64ae45f2-6db3-4e77-aa05-4023c3425436",
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
                         {
                             "guid": "b20ceaf5-8708-422e-a0d1-9234f7d411c0",
                             "scriptPath": "Assets\\Scripts\\MapButton.lua",
-                            "hotReload": true
+                            "hotReload": false
                         }
                     ]
                 },
                 "ButtonComponent": {
                     "position": [
-                        500.0,
-                        720.0
+                        450.0,
+                        707.0
                     ],
                     "size": [
-                        0.0,
-                        0.0
+                        500.0,
+                        382.79998779296875
                     ],
-                    "isHovered": true,
+                    "isHovered": false,
                     "isFrontButton": false
                 }
             }
@@ -15707,8 +15712,8 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        1400.0,
-                        640.0,
+                        1355.0,
+                        704.0,
                         1.0
                     ],
                     "rotation": [
@@ -15717,9 +15722,9 @@
                         0.0
                     ],
                     "scale": [
-                        0.0,
-                        0.0,
-                        0.0
+                        500.0,
+                        391.8999938964844,
+                        1.0
                     ],
                     "isActive": true
                 },
@@ -15738,26 +15743,26 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "3db45502-0b02-41ec-85b1-0ad1d5fbe585",
-                    "isUI": false
+                    "guid": "01d096fe-da1e-43fe-9114-d5db34cc7808",
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
                         {
                             "guid": "b20ceaf5-8708-422e-a0d1-9234f7d411c0",
                             "scriptPath": "Assets\\Scripts\\MapButton.lua",
-                            "hotReload": true
+                            "hotReload": false
                         }
                     ]
                 },
                 "ButtonComponent": {
                     "position": [
-                        1400.0,
-                        640.0
+                        1355.0,
+                        704.0
                     ],
                     "size": [
-                        0.0,
-                        0.0
+                        500.0,
+                        391.8999938964844
                     ],
                     "isHovered": false,
                     "isFrontButton": false
@@ -15780,9 +15785,9 @@
                         0.0
                     ],
                     "scale": [
-                        0.0,
-                        0.0,
-                        0.0
+                        350.0,
+                        293.0,
+                        1.0
                     ],
                     "isActive": true
                 },
@@ -15797,19 +15802,18 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "056c90ae-223b-41d3-b39c-3313e6015e3e",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
                         {
                             "guid": "b20ceaf5-8708-422e-a0d1-9234f7d411c0",
                             "scriptPath": "Assets\\Scripts\\MapButton.lua",
-                            "hotReload": true
+                            "hotReload": false
                         }
                     ]
                 },
@@ -15819,11 +15823,173 @@
                         400.0
                     ],
                     "size": [
-                        0.0,
-                        0.0
+                        350.0,
+                        293.0
                     ],
                     "isHovered": false,
                     "isFrontButton": false
+                }
+            }
+        },
+        {
+            "name": "LoadingUI",
+            "guid": "2d45f517-1b31-4967-9bec-0a2005746807",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        960.0,
+                        540.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 0
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "TextureComponent": {
+                    "guid": "aa40e4be-e3ce-4b7d-8806-dc0f46d34ee8",
+                    "isUI": false
+                }
+            }
+        },
+        {
+            "name": "Forest Button (Copy)",
+            "guid": "5e0f0306-1a52-42be-8bbf-ae919abf27c8",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        465.0,
+                        707.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        500.0,
+                        382.79998779296875,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "7f8f7e0e-9a54-4f43-b9d1-5b93d522180a",
+                    "children": [],
+                    "sortIndex": 238
+                },
+                "TagComponent": {
+                    "tags": [
+                        "map"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "2e05f12a-89ae-405e-998b-1a8fc78b5d8b",
+                    "isUI": true
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "b20ceaf5-8708-422e-a0d1-9234f7d411c0",
+                            "scriptPath": "Assets\\Scripts\\MapButton.lua",
+                            "hotReload": false
+                        }
+                    ]
+                },
+                "ButtonComponent": {
+                    "position": [
+                        465.0,
+                        707.0
+                    ],
+                    "size": [
+                        500.0,
+                        382.79998779296875
+                    ],
+                    "isHovered": false,
+                    "isFrontButton": true
+                }
+            }
+        },
+        {
+            "name": "Quarry Button (Copy)",
+            "guid": "fc89e578-8f11-4e77-86be-14fb1b310d26",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        1380.0,
+                        704.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        500.0,
+                        391.8999938964844,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "7f8f7e0e-9a54-4f43-b9d1-5b93d522180a",
+                    "children": [],
+                    "sortIndex": 239
+                },
+                "TagComponent": {
+                    "tags": [
+                        "map"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "a93c9c92-b6e4-48e8-a4ec-daa625695217",
+                    "isUI": true
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "b20ceaf5-8708-422e-a0d1-9234f7d411c0",
+                            "scriptPath": "Assets\\Scripts\\MapButton.lua",
+                            "hotReload": false
+                        }
+                    ]
+                },
+                "ButtonComponent": {
+                    "position": [
+                        1380.0,
+                        704.0
+                    ],
+                    "size": [
+                        500.0,
+                        391.8999938964844
+                    ],
+                    "isHovered": false,
+                    "isFrontButton": true
                 }
             }
         }

@@ -298,6 +298,15 @@
             "indexCount": 780
         },
         {
+            "guid": "2c8bebcc-51e9-46b0-b99a-cbdfb73ea71e",
+            "name": "cauldronwithoutspoon",
+            "path": "Assets\\Objects\\cauldronwithoutspoon.fbx",
+            "vao": 31,
+            "vbo": 61,
+            "ebo": 62,
+            "indexCount": 157614
+        },
+        {
             "guid": "6cbaa85b-562d-4b23-9f64-8639947659cc",
             "name": "knifechoppingwithBONEFIXED4",
             "path": "Assets/Objects/knifechoppingwithBONEFIXED4.fbx",
@@ -337,18 +346,18 @@
             "guid": "61ccf513-cbc9-40a5-828f-95376b1b2c8e",
             "name": "Sphere",
             "path": "Assets/Objects/Sphere.obj",
-            "vao": 35,
-            "vbo": 69,
-            "ebo": 70,
+            "vao": 36,
+            "vbo": 71,
+            "ebo": 72,
             "indexCount": 2304
         },
         {
             "guid": "9e1fcb62-0699-4a0b-ae75-d0670af44b1b",
             "name": "plane2",
             "path": "Assets/Objects/plane2.obj",
-            "vao": 37,
-            "vbo": 73,
-            "ebo": 74,
+            "vao": 38,
+            "vbo": 75,
+            "ebo": 76,
             "indexCount": 231840
         },
         {
@@ -364,18 +373,18 @@
             "guid": "fe86c54b-7cc2-471c-9d7e-0bce31089b5a",
             "name": "Cylinder",
             "path": "Assets/Objects/Cylinder.obj",
-            "vao": 39,
-            "vbo": 77,
-            "ebo": 78,
+            "vao": 40,
+            "vbo": 79,
+            "ebo": 80,
             "indexCount": 240
         },
         {
             "guid": "a25723a2-f9bf-4939-b80d-962eb537dd2e",
             "name": "strength_potion",
             "path": "Assets\\Objects\\strength_potion.obj",
-            "vao": 38,
-            "vbo": 75,
-            "ebo": 76,
+            "vao": 39,
+            "vbo": 77,
+            "ebo": 78,
             "indexCount": 924
         },
         {
@@ -400,9 +409,9 @@
             "guid": "4d2d79f0-74c7-4d6a-9998-aa6c7f0d5bc9",
             "name": "BlueVial",
             "path": "Assets\\Objects\\BlueVial.obj",
-            "vao": 42,
-            "vbo": 83,
-            "ebo": 84,
+            "vao": 43,
+            "vbo": 85,
+            "ebo": 86,
             "indexCount": 1116
         },
         {
@@ -436,27 +445,27 @@
             "guid": "fa8fc24d-ae88-4495-b5b9-75de860dbd54",
             "name": "YellowVIal",
             "path": "Assets\\Objects\\YellowVIal.obj",
-            "vao": 46,
-            "vbo": 91,
-            "ebo": 92,
+            "vao": 47,
+            "vbo": 93,
+            "ebo": 94,
             "indexCount": 1116
         },
         {
             "guid": "81ace677-17ae-4158-9b13-e11aeafc3fe0",
             "name": "RedPotion2",
             "path": "Assets\\Objects\\RedPotion2.obj",
-            "vao": 47,
-            "vbo": 93,
-            "ebo": 94,
+            "vao": 48,
+            "vbo": 95,
+            "ebo": 96,
             "indexCount": 924
         },
         {
             "guid": "a54638fb-f319-4fa3-b94b-a2a06b39e080",
             "name": "RedVial",
             "path": "Assets\\Objects\\RedVial.obj",
-            "vao": 48,
-            "vbo": 95,
-            "ebo": 96,
+            "vao": 49,
+            "vbo": 97,
+            "ebo": 98,
             "indexCount": 1116
         },
         {
@@ -481,9 +490,9 @@
             "guid": "7b437109-ba19-43a9-8d7c-1300ebff9d21",
             "name": "chopped_herb",
             "path": "Assets\\Objects\\chopped_herb.obj",
-            "vao": 51,
-            "vbo": 101,
-            "ebo": 102,
+            "vao": 52,
+            "vbo": 103,
+            "ebo": 104,
             "indexCount": 1860
         },
         {
@@ -493,15 +502,6 @@
             "vao": 134,
             "vbo": 256,
             "ebo": 257,
-            "indexCount": 157614
-        },
-        {
-            "guid": "2c8bebcc-51e9-46b0-b99a-cbdfb73ea71e",
-            "name": "cauldronwithoutspoon",
-            "path": "Assets\\Objects\\cauldronwithoutspoon.fbx",
-            "vao": 53,
-            "vbo": 105,
-            "ebo": 106,
             "indexCount": 157614
         },
         {
