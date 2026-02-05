@@ -1,5 +1,5 @@
 {
-    "count": 191,
+    "count": 222,
     "entries": [
         {
             "guid": "1cd96cbf-24c4-4e43-8783-5af596d9dc7d",
@@ -14,6 +14,12 @@
             "isUI": false
         },
         {
+            "guid": "2caa6c98-6478-4c73-9884-dc5cba0ff600",
+            "name": "CSWORD2",
+            "path": "Assets\\Textures\\CSWORD2.png",
+            "isUI": false
+        },
+        {
             "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
             "name": "",
             "path": "Assets/PNG/test.png",
@@ -23,6 +29,18 @@
             "guid": "d24a29c5-cd9e-4322-ab59-d38618cba4bf",
             "name": "quitbutton",
             "path": "Assets\\Textures\\quitbutton.png",
+            "isUI": false
+        },
+        {
+            "guid": "688ee440-8d3a-446a-bb38-374bc8f2d982",
+            "name": "CU4",
+            "path": "Assets\\Textures\\CU4.png",
+            "isUI": false
+        },
+        {
+            "guid": "cabb6b16-8445-4f40-b9c8-bd593ea6b65c",
+            "name": "top",
+            "path": "Assets\\Textures\\top.png",
             "isUI": false
         },
         {
@@ -77,6 +95,24 @@
             "guid": "733448bc-ad27-447c-8887-ed8a34a0258e",
             "name": "REUME BUTTON SHADOW",
             "path": "Assets\\Textures\\REUME BUTTON SHADOW.png",
+            "isUI": false
+        },
+        {
+            "guid": "00b4cffe-6081-4e66-ad01-8af1bdb3178f",
+            "name": "CS2",
+            "path": "Assets\\Textures\\CS2.png",
+            "isUI": false
+        },
+        {
+            "guid": "6268a735-25b0-4a92-b9df-38ba44a3af1e",
+            "name": "SETTING HOVER BUTTON",
+            "path": "Assets\\Textures\\SETTING HOVER BUTTON.png",
+            "isUI": false
+        },
+        {
+            "guid": "bd53721a-583e-47d7-b196-17af52bd40fe",
+            "name": "blackbar",
+            "path": "Assets\\Textures\\blackbar.png",
             "isUI": false
         },
         {
@@ -158,6 +194,12 @@
             "isUI": false
         },
         {
+            "guid": "dfd43c30-a85a-43c6-bdb6-9f0d2addc014",
+            "name": "front",
+            "path": "Assets\\Textures\\front.png",
+            "isUI": false
+        },
+        {
             "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606",
             "name": "music",
             "path": "Assets/Textures/music.png",
@@ -185,6 +227,12 @@
             "guid": "312bdb54-477d-47bb-a1ce-2224bc3ec5e3",
             "name": "Cupboard",
             "path": "Assets\\Textures\\Cupboard.png",
+            "isUI": false
+        },
+        {
+            "guid": "d1624844-bd9b-44f7-9976-d196954e311f",
+            "name": "ChoppedHerb1",
+            "path": "Assets\\Textures\\ChoppedHerb1.png",
             "isUI": false
         },
         {
@@ -221,6 +269,18 @@
             "guid": "4caccc21-6007-45d5-bb72-a14260f29a35",
             "name": "test",
             "path": "Assets/PNG/test.png",
+            "isUI": false
+        },
+        {
+            "guid": "0d960551-d374-438f-b016-ba071589e284",
+            "name": "SkyMidNight_Front",
+            "path": "Assets\\Textures\\SkyMidNight_Front.png",
+            "isUI": false
+        },
+        {
+            "guid": "0417d7b5-cfcc-4060-b086-fc7aa90068aa",
+            "name": "Autumn pine tree small",
+            "path": "Assets\\Textures\\Autumn pine tree small.png",
             "isUI": false
         },
         {
@@ -287,6 +347,12 @@
             "guid": "14bf7dfb-6b42-44fe-bef3-a97e9f2b2837",
             "name": "autumn tree 2 branches",
             "path": "Assets\\Textures\\autumn tree 2 branches.png",
+            "isUI": false
+        },
+        {
+            "guid": "e947c023-80a7-4bde-bac1-39fced66d9ee",
+            "name": "CSWORDSPECIAL",
+            "path": "Assets\\Textures\\CSWORDSPECIAL.png",
             "isUI": false
         },
         {
@@ -374,6 +440,12 @@
             "isUI": false
         },
         {
+            "guid": "cc478360-49aa-4609-b48d-5b959ce00ffc",
+            "name": "CSWORD1",
+            "path": "Assets\\Textures\\CSWORD1.png",
+            "isUI": false
+        },
+        {
             "guid": "4ea9fc07-9d04-4797-8aa3-7f11446769ae",
             "name": "BottleEmpty",
             "path": "Assets\\Textures\\BottleEmpty.png",
@@ -383,6 +455,12 @@
             "guid": "11bafc18-a375-4a2d-bfb4-221cb46a3278",
             "name": "YellowVIal",
             "path": "Assets\\Textures\\YellowVIal.png",
+            "isUI": false
+        },
+        {
+            "guid": "409a6fd2-c690-4fa6-affc-8b06db2f760f",
+            "name": "CS7",
+            "path": "Assets\\Textures\\CS7.png",
             "isUI": false
         },
         {
@@ -428,12 +506,6 @@
             "isUI": false
         },
         {
-            "guid": "dfd43c30-a85a-43c6-bdb6-9f0d2addc014",
-            "name": "front",
-            "path": "Assets\\Textures\\front.png",
-            "isUI": false
-        },
-        {
             "guid": "e8ceda31-31dc-4c6d-b3ad-181d690311ea",
             "name": "back",
             "path": "Assets\\Textures\\back.png",
@@ -467,6 +539,18 @@
             "guid": "b9067b1d-09fa-4683-8558-437173a865e7",
             "name": "bluecloud_bk",
             "path": "Assets\\Textures\\bluecloud_bk.jpg",
+            "isUI": false
+        },
+        {
+            "guid": "fae4646e-00e9-4d4b-9bcd-25ada266f15b",
+            "name": "CS4",
+            "path": "Assets\\Textures\\CS4.png",
+            "isUI": false
+        },
+        {
+            "guid": "d1717710-3745-4779-a5f4-791474646b86",
+            "name": "resumebuton",
+            "path": "Assets\\Textures\\resumebuton.png",
             "isUI": false
         },
         {
@@ -680,6 +764,12 @@
             "isUI": false
         },
         {
+            "guid": "eb687c6c-3f11-4f0e-b113-a7b451c5f632",
+            "name": "black",
+            "path": "Assets\\Textures\\black.png",
+            "isUI": false
+        },
+        {
             "guid": "ce8becd0-4b4f-467e-b8b7-e4cc0875c4df",
             "name": "instructions",
             "path": "Assets\\Textures\\instructions.png",
@@ -707,6 +797,12 @@
             "guid": "f853ac0f-5340-43ec-a6a5-ab7dc5260b0c",
             "name": "textbox",
             "path": "Assets\\Textures\\textbox.png",
+            "isUI": false
+        },
+        {
+            "guid": "ab663213-734f-49df-801d-e8c949f7786b",
+            "name": "CU2",
+            "path": "Assets\\Textures\\CU2.png",
             "isUI": false
         },
         {
@@ -956,6 +1052,12 @@
             "isUI": false
         },
         {
+            "guid": "cd0ab525-62ba-4859-9dc1-ccab223a60ef",
+            "name": "CU6",
+            "path": "Assets\\Textures\\CU6.png",
+            "isUI": false
+        },
+        {
             "guid": "e47098ed-91c0-44ed-9b18-8c8e5e0f6c18",
             "name": "grass2",
             "path": "Assets\\Textures\\grass2.png",
@@ -1145,6 +1247,90 @@
             "guid": "ee9652cb-fd38-4acf-98e5-fd8f52fbcef4",
             "name": "CLOSE BUTTON SHADOW",
             "path": "Assets\\Textures\\CLOSE BUTTON SHADOW.png",
+            "isUI": false
+        },
+        {
+            "guid": "985b7d55-07cb-4e09-9e74-ef085f230271",
+            "name": "CSTEXT3",
+            "path": "Assets\\Textures\\CSTEXT3.png",
+            "isUI": false
+        },
+        {
+            "guid": "2626eb0c-d85d-43f1-859e-9bac9612aa89",
+            "name": "CSTEXT2",
+            "path": "Assets\\Textures\\CSTEXT2.png",
+            "isUI": false
+        },
+        {
+            "guid": "72d825ce-07a3-45a7-8d63-b9785a18c436",
+            "name": "CSTEXT1",
+            "path": "Assets\\Textures\\CSTEXT1.png",
+            "isUI": false
+        },
+        {
+            "guid": "a4ca793c-7528-43fd-948e-1ede68fe7ef3",
+            "name": "CS1",
+            "path": "Assets\\Textures\\CS1.png",
+            "isUI": false
+        },
+        {
+            "guid": "19f7de95-9109-4f9c-8acb-a63abb9098c6",
+            "name": "CS6",
+            "path": "Assets\\Textures\\CS6.png",
+            "isUI": false
+        },
+        {
+            "guid": "3588552f-ae24-477c-91b4-1b7a53f899fd",
+            "name": "CS8",
+            "path": "Assets\\Textures\\CS8.png",
+            "isUI": false
+        },
+        {
+            "guid": "1b02b595-b01a-453b-bdda-8d117eddbb68",
+            "name": "CS5",
+            "path": "Assets\\Textures\\CS5.png",
+            "isUI": false
+        },
+        {
+            "guid": "4a965a01-e022-42cb-831b-abd089e4b865",
+            "name": "CS3",
+            "path": "Assets\\Textures\\CS3.png",
+            "isUI": false
+        },
+        {
+            "guid": "c94f32a4-e497-462b-a0b1-cdfebdff4ffe",
+            "name": "CU5",
+            "path": "Assets\\Textures\\CU5.png",
+            "isUI": false
+        },
+        {
+            "guid": "5ac95598-7bf6-45f6-adf0-824396450a48",
+            "name": "CU3",
+            "path": "Assets\\Textures\\CU3.png",
+            "isUI": false
+        },
+        {
+            "guid": "529b1429-8279-4d83-8947-dc8de5f6c37a",
+            "name": "CU1",
+            "path": "Assets\\Textures\\CU1.png",
+            "isUI": false
+        },
+        {
+            "guid": "ac8231e6-be2d-4ae8-a11f-5d65a200211a",
+            "name": "CSTEXT4",
+            "path": "Assets\\Textures\\CSTEXT4.png",
+            "isUI": false
+        },
+        {
+            "guid": "9579b39b-648e-485e-95e4-f4a12bc2f6f4",
+            "name": "CSWORD3",
+            "path": "Assets\\Textures\\CSWORD3.png",
+            "isUI": false
+        },
+        {
+            "guid": "61c47fb7-ac43-43f6-afa6-365cfb81dda4",
+            "name": "CSWORDSPECIAL2",
+            "path": "Assets\\Textures\\CSWORDSPECIAL2.png",
             "isUI": false
         }
     ]

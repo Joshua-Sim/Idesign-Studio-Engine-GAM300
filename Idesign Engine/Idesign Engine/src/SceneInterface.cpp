@@ -239,7 +239,7 @@ namespace Framework
                             }
 
                             // Move to gameplay
-                            engineState.PushState(EngineMode::Play);    // or whatever your next state is
+                            engineState.PushState(EngineMode::MapSelection);    // or whatever your next state is
                         }
                     }
                 }
