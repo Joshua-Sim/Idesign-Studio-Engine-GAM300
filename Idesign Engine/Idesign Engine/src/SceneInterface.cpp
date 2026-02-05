@@ -16,10 +16,10 @@ namespace Framework
     static bool cutsceneFinished = false;
 
     // Tune these
-    static const float fadeDuration = 0.1f;  // slide fade-in time
-    static const float gap = 0.5f;  // delay between slides
-    static const float holdAfterLast = 1.0f;  // hold before fade-out starts
-    static const float fadeOutDuration = 0.8f;  // global fade-out time
+    static const float fadeDuration = 0.05f;  // slide fade-in time
+    static const float gap = 0.1f;  // delay between slides
+    static const float holdAfterLast = 0.5f;  // hold before fade-out starts
+    static const float fadeOutDuration = 0.4f;  // global fade-out time
 
     void SceneInterface::Initialize() {}
 

@@ -106,7 +106,7 @@
                 "name": "Sheep_Horn",
                 "isIngredient": true,
                 "isChoppable": false,
-                "toDestroyWhenPicked": true
+                "toDestroyWhenPicked": false
             }
         }
     }

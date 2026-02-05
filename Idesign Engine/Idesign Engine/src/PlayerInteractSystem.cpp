@@ -124,8 +124,14 @@ namespace Framework
         if (didHit) {
             Entity targetEntity = hit.entity;
 
-            // Priority A: BoxCollider with custom text
-            if (ecsInterface.HasComponent<BoxColliderComponent>(targetEntity)) {
+            // 1. Check for Item FIRST (Specific)
+            if (ecsInterface.HasComponent<ItemComponent>(targetEntity)) {
+                foundInteractable = true;
+                auto& item = ecsInterface.GetComponent<ItemComponent>(targetEntity);
+                textToShow = "Pick up " + item.name;
+            }
+            // 2. Check for Generic Collider SECOND (Fallback)
+            else if (ecsInterface.HasComponent<BoxColliderComponent>(targetEntity)) {
                 auto& colliderComp = ecsInterface.GetComponent<BoxColliderComponent>(targetEntity);
                 for (const auto& entry : colliderComp.colliders) {
                     if (entry.isInteractable) {
@@ -134,13 +140,6 @@ namespace Framework
                         break;
                     }
                 }
-            }
-
-            // Priority B: Generic Item Fallback
-            if (!foundInteractable && ecsInterface.HasComponent<ItemComponent>(targetEntity)) {
-                foundInteractable = true;
-                auto& item = ecsInterface.GetComponent<ItemComponent>(targetEntity);
-                textToShow = "Pick up " + item.name;
             }
         }
 
@@ -173,9 +172,6 @@ namespace Framework
 
             if (foundInteractable) {
                 textComp.text = textToShow;
-            }
-            else {
-                textComp.text = ""; // HIDE (Empty string)
             }
         }
 

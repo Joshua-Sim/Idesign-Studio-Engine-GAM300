@@ -8,13 +8,19 @@
 #include <Jolt/Jolt.h>
 #include <glm/glm/gtc/quaternion.hpp>
 #include <Jolt/Physics/Body/BodyInterface.h>
+#include "DialogueSystem.h"
 #include "Graphics.h"
 #include "EngineState.h"
 #include "InputHandler.h" 
 
 extern Framework::Coordinator ecsInterface;
 
+
 namespace Framework {
+
+
+
+
     void PhaseManager::Initialize()
     {
         std::cout << "[PhaseManager] Initialized. Default Phase: DAY" << std::endl;
@@ -63,15 +69,41 @@ namespace Framework {
             }
 
             EventManager::Instance().Fire("OnDayStart", nullptr);
+            targetPos = m_daySpawnPos;
+            targetRot = m_daySpawnRot;
+            shouldTeleport = true;
+            //dialogue system
+            // TUTORIAL, PLAY ONCE
+            if (!dayTutorial) {
+                auto dialogueSys = ecsInterface.GetSystem<Framework::DialogueSystem>();
+                if (dialogueSys) {
+                    engineState.ClearToBase();
+                    engineState.PushState(EngineMode::Play); // Allows physics and animation to run
+                    dialogueSys->AddLine("Welcome to Runes and Remedies! This is the Day phase where you collect resources by pressing E", "Aunt Mira (frog)", "pear");
+                    dialogueSys->AddLine("Click on How To Play from the menu by pressing ESC to find out more!", "Aunt Mira (frog)", "portrait");
+                    dialogueSys->StartDialogue();
+                }
+                dayTutorial = true;
+            }
+            
         }
         else if (m_currentPhase == GamePhase::Night) {
             targetPos = m_nightSpawnPos;
             targetRot = m_nightSpawnRot;
-            shouldTeleport = true;
-        }
+            TeleportPlayer(m_nightSpawnPos, m_nightSpawnRot);
 
-        if (shouldTeleport) {
-            TeleportPlayer(targetPos, targetRot);
+            if (!nightTutorial) {
+                auto dialogueSys = ecsInterface.GetSystem<Framework::DialogueSystem>();
+                if (dialogueSys) {
+                    engineState.ClearToBase();
+                    engineState.PushState(EngineMode::Play); // Allows physics and animation to run
+                    dialogueSys->AddLine("This is the night phase!", "Aunt Mira (frog)", "pear");
+                    dialogueSys->AddLine("Press R for the recipe book if you don't know the recipe", "Aunt Mira (frog)", "portrait");
+                    dialogueSys->AddLine("If you ever misplace an item in the cauldron, you can take it back", "Aunt Mira (frog)", "portrait");
+                    dialogueSys->StartDialogue();
+                }
+                nightTutorial = true;
+            }
         }
 
         // =========================================================
@@ -81,15 +113,7 @@ namespace Framework {
 
         if (m_currentPhase == GamePhase::Day || m_currentPhase == GamePhase::Night)
         {
-            engineState.ClearToBase();
-            engineState.PushState(EngineMode::Play); // Allows physics and animation to run
-
             if (input) input->SetUIFocused(false); // Hides cursor
-        }
-
-        if (m_currentPhase == GamePhase::Upgrade)
-        {
-            input->SetUIFocused(true);
         }
 
         // =========================================================
@@ -175,36 +199,5 @@ namespace Framework {
                 }
             }
         }
-    }
-
-    void PhaseManager::TeleportToArea(GameArea area)
-    {
-        glm::vec3 targetPos;
-        glm::vec3 targetRot;
-
-        switch (area)
-        {
-        case GameArea::Home:
-            targetPos = m_daySpawnPos;
-            targetRot = m_daySpawnRot;
-            break;
-
-        case GameArea::Forest:
-            targetPos = m_forestSpawnPos;
-            targetRot = m_forestSpawnRot;
-            break;
-
-        case GameArea::Quarry:
-            targetPos = m_quarrySpawnPos;
-            targetRot = m_quarrySpawnRot;
-            break;
-
-        default:
-            std::cout << "[PhaseManager] Unknown area!" << std::endl;
-            return;
-        }
-
-        std::cout << "[PhaseManager] Teleporting to area: " << static_cast<int>(area) << std::endl;
-        TeleportPlayer(targetPos, targetRot);
     }
 }

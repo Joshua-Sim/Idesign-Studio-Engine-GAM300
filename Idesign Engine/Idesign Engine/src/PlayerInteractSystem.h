@@ -55,7 +55,7 @@ namespace Framework
         bool   m_EWasDown = false;        // track last-frame state
         double m_nextPickupTime = 0.0;    // debounce timer
         double m_pickupCooldown = 0.15;   // seconds (tweak to taste)
-        Entity mPromptTextEntity = -1;
+        Entity mPromptTextEntity = -3;
         Entity mPromptIconEntity = -2;
     };
 }

@@ -22,6 +22,9 @@ extern Framework::Coordinator ecsInterface;
 
 namespace Framework {
 
+    // Global AudioSystem pointer (replaces GlobalAudio)
+    DialogueSystem* g_DialogueSystem = nullptr;
+
     DialogueSystem::DialogueSystem() {
         // Constructor
     }
@@ -45,6 +48,7 @@ namespace Framework {
         while (!dialogueQueue.empty()) {
             dialogueQueue.pop();
         }
+		g_DialogueSystem = this;
     }
 
     void DialogueSystem::Update(float deltaTime) {

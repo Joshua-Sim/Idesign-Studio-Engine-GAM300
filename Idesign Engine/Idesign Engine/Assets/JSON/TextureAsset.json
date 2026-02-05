@@ -511,6 +511,24 @@
             "isUI": false
         },
         {
+            "guid": "bb5da693-eb86-4523-86bc-ddb15614b98d",
+            "name": "frogPortrait",
+            "path": "Assets\\Textures\\frogPortrait.png",
+            "isUI": false
+        },
+        {
+            "guid": "dfd43c30-a85a-43c6-bdb6-9f0d2addc014",
+            "name": "front",
+            "path": "Assets\\Textures\\front.png",
+            "isUI": false
+        },
+        {
+            "guid": "c7252f22-c44b-408d-a4d5-6410e42eeb52",
+            "name": "GOLBINTEX",
+            "path": "Assets\\Textures\\GOLBINTEX.jpg",
+            "isUI": false
+        },
+        {
             "guid": "e8ceda31-31dc-4c6d-b3ad-181d690311ea",
             "name": "back",
             "path": "Assets\\Textures\\back.png",

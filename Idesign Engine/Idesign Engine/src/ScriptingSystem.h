@@ -95,7 +95,7 @@ namespace Framework {
             }
             return GetDefault<T>();
         }
-
+        std::unordered_map<std::string, std::vector<std::pair<int, int>>> m_LuaEventRegistry;
     private:
         lua_State* L = nullptr;
         Graphics* graphics_ = nullptr;

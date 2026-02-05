@@ -90,8 +90,32 @@ namespace Framework
             return Is(EngineMode::Play) && !IsAnyMenuOpen();
         }
 
+        void PrintStack() const
+        {
+            std::cout << "[EngineState] Current Stack (Bottom -> Top): ";
+            for (size_t i = 0; i < stateStack.size(); ++i)
+            {
+                switch (stateStack[i])
+                {
+                case Editor:    std::cout << "Editor"; break;
+                case Play:      std::cout << "Play"; break;
+                case Paused:    std::cout << "Paused"; break;
+                case Debug:     std::cout << "Debug"; break;
+                case Menu:      std::cout << "Menu"; break;
+                case HowToPlay: std::cout << "HowToPlay"; break;
+                case Upgrade:   std::cout << "Upgrade"; break;
+                case Settings:  std::cout << "Settings"; break;
+                case Dialogue:  std::cout << "Dialogue"; break;
+                default:        std::cout << "Unknown"; break;
+                }
+
+                if (i < stateStack.size() - 1) std::cout << " | ";
+            }
+            std::cout << std::endl;
+        }
+
     private:
-        std::vector<EngineMode> stateStack{ EngineMode::Editor };
+        std::vector<EngineMode> stateStack{ };
     };
     extern EngineState engineState;
 }

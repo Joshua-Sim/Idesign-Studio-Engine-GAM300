@@ -710,12 +710,13 @@ namespace Framework {
             {
                 std::cout << "[ImGui] Editor enabled" << std::endl;
                 gfxSystem->SetMouseTargetView(1);
-                
-                // Clear current gameplay/UI layers
                 engineState.ClearToBase();
-
                 // Push Editor layer
                 engineState.PushState(EngineMode::Editor);
+
+                // Clear current gameplay/UI layers
+
+                engineState.PushState(EngineMode::Play);
 
                 // Stop BGM when returning to editor
                 if (g_AudioSystem) 
@@ -2705,7 +2706,10 @@ namespace Framework {
                     {
                         engineState.PopState();
                     }
-                    else engineState.PushState(EngineMode::Debug);
+                    else {
+                        engineState.PushState(EngineMode::Debug);
+                        engineState.PushState(EngineMode::Play);
+                    }
                     Framework::Graphics::s_RenderDebugColliders = !Framework::Graphics::s_RenderDebugColliders;
                 }
                 ImGui::PopStyleColor(3); // Restore color

@@ -3,9 +3,24 @@ local M = {}
 function M:on_init()
     print("[GameStateStart] on_init called for entity:", self.entity)
 
+    -- Step 3: Spawn Herbs if missing
+        print("[GameStateStart] Step 3: Checking and spawning herbs...")
+        local herbs = {"Herb1", "Herb2", "Herb3", "Herb4", "ForestHerb"}
+        for _, name in ipairs(herbs) do
+            local id = FindEntityByName(name)
+            if not id or not IsEntityValid(id) then
+                print("[GameStateStart] Spawning missing herb: " .. name)
+                SpawnPrefab(name .. "_Prefab")
+            else
+                print("[GameStateStart] " .. name .. " already exists (ID: " .. id .. ")")
+            end
+        end
+
     RegisterButtonCallback(self.entity, function(ent)
         print("[GameStateStart] Play button clicked! Entity:", ent)
         print("[GameStateStart] ==================== GAME START SEQUENCE ====================")
+
+        
 
         -- Step 1: Transition from Menu to Play state
         print("[GameStateStart] Step 1: Transitioning from Menu to Play state...")
@@ -16,18 +31,7 @@ function M:on_init()
         print("[GameStateStart] Step 2: Starting game state...")
         GameStateStart()
 
-        -- Step 3: Spawn Herbs if missing
-        print("[GameStateStart] Step 3: Checking and spawning herbs...")
-        local herbs = {"Herb1", "Herb2", "Herb3", "Herb4"}
-        for _, name in ipairs(herbs) do
-            local id = FindEntityByName(name)
-            if not id or not IsEntityValid(id) then
-                print("[GameStateStart] Spawning missing herb: " .. name)
-                SpawnPrefab(name .. "_Prefab")
-            else
-                print("[GameStateStart] " .. name .. " already exists (ID: " .. id .. ")")
-            end
-        end
+
         
         -- Step 4: Show map selection UI using EngineState
         print("[GameStateStart] Step 4: Showing map selection via EngineState...")

@@ -1352,6 +1352,8 @@ namespace Framework {
         wasXPressed = isXPressed;
         if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS) hdrExposure += 1.0f * dt;
         if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) if (hdrExposure > 0.0f) hdrExposure -= 1.0f * dt;
+
+        if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS) engineState.PrintStack();
     }
 
     void Graphics::MoveCameraFromLua(const std::string& dir, float dt, bool gm)
@@ -3190,6 +3192,11 @@ namespace Framework {
         // --------------------------------------------
         for (auto e : uiTextEntities)
         {
+
+            // ONLY render the Interaction Prompt on the Main Game View (Index 0)
+            if (viewIndex != 0 && ecsInterface.GetEntityName(e) == "InteractionPrompt")
+                continue;
+
             auto& txt = ecsInterface.GetComponent<TextProperties>(e);
             auto& tr = ecsInterface.GetComponent<TransformComponent>(e);
 

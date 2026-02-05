@@ -1,13 +1,13 @@
 {
     "entity": {
         "name": "ForestHerb",
-        "guid": "cacae5c6-d63c-4a92-9a65-b512e4eb2fa0",
+        "guid": "e34t35c6-d63c-4a92-9a65-b512e4eb2fa0",
         "components": {
             "TransformComponent": {
                 "position": [
-                    -211.39651489257813,
+                    -272.39651489257813,
                     316.2244567871094,
-                    671.082763671875
+                    637.082763671875
                 ],
                 "rotation": [
                     0.0,

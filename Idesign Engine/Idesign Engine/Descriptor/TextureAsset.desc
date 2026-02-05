@@ -1,5 +1,5 @@
 {
-    "count": 223,
+    "count": 226,
     "entries": [
         {
             "guid": "2caa6c98-6478-4c73-9884-dc5cba0ff600",
@@ -509,6 +509,24 @@
             "guid": "f2cc2a2e-c2f8-454d-9066-6804fb9552f4",
             "name": "bluecloud_rt",
             "path": "Assets\\Textures\\bluecloud_rt.jpg",
+            "isUI": false
+        },
+        {
+            "guid": "bb5da693-eb86-4523-86bc-ddb15614b98d",
+            "name": "frogPortrait",
+            "path": "Assets\\Textures\\frogPortrait.png",
+            "isUI": false
+        },
+        {
+            "guid": "dfd43c30-a85a-43c6-bdb6-9f0d2addc014",
+            "name": "front",
+            "path": "Assets\\Textures\\front.png",
+            "isUI": false
+        },
+        {
+            "guid": "c7252f22-c44b-408d-a4d5-6410e42eeb52",
+            "name": "GOLBINTEX",
+            "path": "Assets\\Textures\\GOLBINTEX.jpg",
             "isUI": false
         },
         {

@@ -33,27 +33,27 @@ namespace Framework {
         void SetDaySpawn(const glm::vec3& pos, const glm::vec3& rot) { m_daySpawnPos = pos; m_daySpawnRot = rot; }
         void SetNightSpawn(const glm::vec3& pos, const glm::vec3& rot) { m_nightSpawnPos = pos; m_nightSpawnRot = rot; }
 
-        void TeleportToArea(GameArea area);
-
         glm::vec3& GetDaySpawnPosRef() { return m_daySpawnPos; }
         glm::vec3& GetNightSpawnPosRef() { return m_nightSpawnPos; }
 
         void TeleportPlayer(const glm::vec3& position, const glm::vec3& rotation);
-
+        bool dayTutorial = false;
+        bool nightTutorial = false;
+        bool upgradeTutorial = false;
     private:
         Coordinator* coordinator;
         
 
         GamePhase m_currentPhase = GamePhase::Day;
 
-        glm::vec3 m_daySpawnPos{ -53.965, 9.0f, 9.5f };
+        glm::vec3 m_daySpawnPos{ -282, 315,  619 };
         glm::vec3 m_daySpawnRot{ 0.0f, 90.0f, 0.0f };
 
         glm::vec3 m_nightSpawnPos{ -36.0f, 9.0f, 9.5f };
         glm::vec3 m_nightSpawnRot{ 0.0f, 0.0f, 0.0f };
 
         // Temp: Area-specific teleport points
-        glm::vec3 m_forestSpawnPos = glm::vec3(100.0f, 0.0f, 0.0f);
+        glm::vec3 m_forestSpawnPos = glm::vec3(-282.0f, 315.0f, 619.0f);
         glm::vec3 m_forestSpawnRot = glm::vec3(0.0f, 90.0f, 0.0f);
 
         glm::vec3 m_quarrySpawnPos = glm::vec3(200.0f, 0.0f, 0.0f);

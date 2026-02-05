@@ -84,7 +84,6 @@ local prefab_log = "CauldronLog_Prefab" -- Reusing your existing prefab
 -- =============================================================
 -- [AUDIO HELPERS]
 -- =============================================================
--- [AUDIO HELPERS]
 local function PlayStirSound()
     -- [FIX] Debounce: Don't try to play more than once every 0.1 seconds.
     -- This prevents the "Machine Gun" effect while waiting for the engine to report IsPlaying.
@@ -179,6 +178,7 @@ function M.on_init(arg1, arg2)
         SetAnimationAsset(my_entity_id, guid_idle)
         SetAnimationMode(my_entity_id, 0)
         last_angle = math.atan2(spoon_y, spoon_x)
+
     end
     player_id = FindEntityByName("Player")
 end
@@ -291,6 +291,31 @@ function M.on_update(arg1, arg2)
     if not my_entity_id then 
         my_entity_id = FindEntityByName(CAULDRON_NAME)
         if not my_entity_id then return end 
+    end
+
+    ---------------------------------------------------------
+    -- PHASE TRANSITION CHECK (Replacement for RegisterEvent)
+    ---------------------------------------------------------
+    if GetPhase then
+        local current_phase = GetPhase() -- Calls your C++ lua_GetPhase
+        
+        -- If the phase just changed...
+        if current_phase ~= last_phase then
+            
+            -- If we just switched TO Night (Phase 1)
+            -- Note: Check your PhaseManager.h enum. 0=Day, 1=Night, 2=Upgrade
+            if current_phase == 1 then 
+                print("[Cauldron] Phase changed to Night. Resetting...")
+                M.ClearCauldron()
+                
+                if is_active then
+                    M.StopInteraction(my_entity_id)
+                end
+            end
+            
+            -- Update the tracker so this only runs once per transition
+            last_phase = current_phase
+        end
     end
 
     ---------------------------------------------------------

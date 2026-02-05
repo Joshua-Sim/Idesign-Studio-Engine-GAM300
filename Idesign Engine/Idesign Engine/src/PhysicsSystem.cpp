@@ -587,20 +587,10 @@ namespace Framework {
                     }
                     else
                     {
-                        // No input: stop sliding down slope if grounded
-                        if (prop.isGrounded)
-                        {
+
                             finalV.x = 0.0f;
                             finalV.z = 0.0f;
 
-                            // small downward bias keeps contact stable
-                            finalV.y = std::min(finalV.y, prop.stickToGroundVel);
-                        }
-                        else
-                        {
-                            // Airborne: don’t force XZ to zero (keeps natural momentum if any)
-                            // If you WANT air control = 0, then set to 0 here too.
-                        }
                     }
 
                     bodyInterface->SetLinearVelocity(id, JPH::Vec3(finalV.x, finalV.y, finalV.z));

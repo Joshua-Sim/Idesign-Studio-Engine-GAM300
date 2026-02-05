@@ -1063,6 +1063,9 @@ namespace Framework {
             engineState.PushState(EngineMode::Play);                    // Push gameplay layer
             phaseManager->SetPhase(GamePhase::Day);                     // Set game phase
             MessageBus::Get().SendImmediate(EnterPlayModeMessage());    // Send message to start audio and other play-mode systems
+
+            
+            //InstantiatePrefabByName("ForestHerb_Prefab");
             return 0;
         }
 
@@ -2278,17 +2281,6 @@ namespace Framework {
             int cost = UpgradeManager::Instance().GetAreaUnlockCost(GameArea::Quarry);
             lua_pushinteger(L, cost);
             return 1;
-            });
-
-        // Teleport to Area
-        lua_register(L, "TeleportToForest", [](lua_State* L) -> int {
-            if (phaseManager) phaseManager->TeleportToArea(GameArea::Forest);
-            return 0;
-            });
-
-        lua_register(L, "TeleportToQuarry", [](lua_State* L) -> int {
-            if (phaseManager) phaseManager->TeleportToArea(GameArea::Quarry);
-            return 0;
             });
 
         std::cout << "[ScriptingSystem] Initialized (Lua VM ready)\n";

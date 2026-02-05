@@ -7,7 +7,7 @@
 ///  
 ///@Authors: Joshua Sim
 ///Copyright 2024, Digipen Institute of Technology
-///
+///                engineState.ClearToBase();
 ///////////////////////////////////////////////////////////////////////////////mm
 
 #include "pch.h"
