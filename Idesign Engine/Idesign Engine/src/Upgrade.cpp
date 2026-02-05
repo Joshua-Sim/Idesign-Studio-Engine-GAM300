@@ -167,6 +167,53 @@ namespace Framework
         return 0;
     }
 
+    bool UpgradeManager::CanAffordBackpackUpgrade() const
+    {
+        int currentCurrency = GameSystem::GetCurrency();
+        return currentCurrency >= m_backpackUpgradeCost;
+    }
+
+    bool UpgradeManager::UpgradeBackpack()
+    {
+        auto& inv = Inventory::Instance();
+        int currentLevel = inv.GetBackpackLevel();
+
+        // Check if already at max
+        if (currentLevel >= 3)
+        {
+            std::cout << "[UpgradeManager] Backpack already at max level!" << std::endl;
+            return false;
+        }
+
+        // Check if player can afford it
+        if (!CanAffordBackpackUpgrade())
+        {
+            std::cout << "[UpgradeManager] Not enough currency! Need " << m_backpackUpgradeCost
+                << ", have " << GameSystem::GetCurrency() << std::endl;
+            return false;
+        }
+
+        // Deduct the cost
+        GameSystem::AddCurrency(-m_backpackUpgradeCost);
+        std::cout << "[UpgradeManager] Deducted " << m_backpackUpgradeCost << " currency" << std::endl;
+
+        // Apply the upgrade
+        inv.SetBackpackLevel(currentLevel + 1);
+
+        // Increase cost for next upgrade
+        m_backpackUpgradeCost += 150;
+
+        std::cout << "[UpgradeManager] Backpack upgraded to level " << (currentLevel + 1)
+            << "! Next cost: " << m_backpackUpgradeCost << std::endl;
+
+        return true;
+    }
+
+    int UpgradeManager::GetBackpackUpgradeCost() const
+    {
+        return m_backpackUpgradeCost;
+    }
+
     /*
     // C++ - UpgradeManager
     bool UpgradeManager::UpgradeXXX(params)

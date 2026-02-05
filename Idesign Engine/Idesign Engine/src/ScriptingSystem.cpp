@@ -2268,6 +2268,13 @@ namespace Framework {
             return 1;
             });
 
+        // Get inventory upgrade cost
+        lua_register(L, "GetInventoryUpgradeCost", [](lua_State* L) -> int {
+            int cost = UpgradeManager::Instance().GetInventoryUpgradeCost();
+            lua_pushinteger(L, cost);
+            return 1;
+            });
+
         // Get current hotbar slot count
         lua_register(L, "GetInventorySlotCount", [](lua_State* L) -> int {
             int slots = Inventory::Instance().GetHotbarSlotCount();
@@ -2282,22 +2289,17 @@ namespace Framework {
             return 1;
             });
 
-        // Upgrade backpack (optional, for future)
+        // Upgrade backpack
         lua_register(L, "UpgradeBackpack", [](lua_State* L) -> int {
-            auto& inv = Inventory::Instance();
-            int currentLevel = inv.GetBackpackLevel();
+            bool success = UpgradeManager::Instance().UpgradeBackpack();
+            lua_pushboolean(L, success);
+            return 1;
+            });
 
-            if (currentLevel >= 3)
-            {
-                std::cout << "[Lua] Backpack already at max level!" << std::endl;
-                lua_pushboolean(L, false);
-                return 1;
-            }
-
-            inv.SetBackpackLevel(currentLevel + 1);
-            std::cout << "[Lua] Backpack upgraded to level: " << (currentLevel + 1)
-                << ", Rows: " << inv.GetBackpackRowCount() << std::endl;
-            lua_pushboolean(L, true);
+        // Add backpack cost getter
+        lua_register(L, "GetBackpackUpgradeCost", [](lua_State* L) -> int {
+            int cost = UpgradeManager::Instance().GetBackpackUpgradeCost();
+            lua_pushinteger(L, cost);
             return 1;
             });
 

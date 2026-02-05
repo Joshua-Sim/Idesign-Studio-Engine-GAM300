@@ -36,6 +36,11 @@ namespace Framework
         bool IsAreaUnlocked(GameArea area) const;
         int GetAreaUnlockCost(GameArea area) const;
 
+        // Backpack upgrades
+        bool UpgradeBackpack(); 
+        int GetBackpackUpgradeCost() const;
+        bool CanAffordBackpackUpgrade() const;
+
     private:
         UpgradeManager() = default;
         
@@ -46,17 +51,19 @@ namespace Framework
         float m_currencyMultiplier = 1.0f;  // Start at 1.0x
         int m_currencyUpgradeCost = 100;    // Initial cost
 
+        int m_backpackUpgradeCost = 200;  // Initial cost for backpack upgrade
+
         // Area unlock system
         std::unordered_map<GameArea, bool> m_unlockedAreas = 
         {
             {GameArea::Home, true},     // Home is always unlocked
-            {GameArea::Forest, false},  // Forest starts locked
+            {GameArea::Forest, true},   // Forest starts unlocked with Home
             {GameArea::Quarry, false}   // Quarry starts locked
         };
 
         std::unordered_map<GameArea, int> m_areaUnlockCosts = 
         {
-            {GameArea::Forest, 500},  // Forest costs 500 currency
+            {GameArea::Forest, 0},  
             {GameArea::Quarry, 1000}  // Quarry costs 1000 currency
         };
     };

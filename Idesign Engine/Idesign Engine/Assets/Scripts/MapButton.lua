@@ -9,14 +9,17 @@ local locations = {
     ["Forest Button"] = {
         spawnPos = { x = -110.493, y = 7.644,  z = 124.351 },
         spawnRot = { x = 0.0,    y = 90.0,  z = 0.0 }
+        checkUnlocked = function() return IsForestUnlocked() end
     },
     ["Quarry Button"] = {
         spawnPos = { x = -170.856,  y = 7.730,  z = -170.782 },
         spawnRot = { x = 0.0,    y = 0.0,   z = 0.0 }
+        checkUnlocked = function() return IsQuarryUnlocked() end
     },
     ["House Button"] = {
         spawnPos = { x = 0.0,    y = 0.0,   z = 0.0 },
         spawnRot = { x = 0.0,    y = 0.0,   z = 0.0 }
+        checkUnlocked = function() return true end  -- House is always unlocked
     }
 }
 
@@ -45,6 +48,16 @@ function M:on_init()
     -- Register the click handler
     RegisterButtonCallback(self.entity, function(ent)
         print("[MapButton] " .. myName .. " clicked!")
+
+        -- Check if this location is unlocked
+        if not myLocation.checkUnlocked() then
+            print("[MapButton] " .. myLocation.name .. " is LOCKED! Cannot teleport.")
+            -- Optional: Show a "Location Locked" message to the player
+            -- SpawnPrefab("LocationLockedMessage")
+            return
+        end
+
+        print("[MapButton] " .. myLocation.name .. " is unlocked. Teleporting...")
 
         -- Pop the MapSelection state so the map UI hides
         PopEngineState()
