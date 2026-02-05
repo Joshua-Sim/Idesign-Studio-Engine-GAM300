@@ -296,7 +296,7 @@
                     "animationSpeed": 10.0,
                     "bLoops": false,
                     "bPlayOnStart": true,
-                    "currentTime": 0.0
+                    "currentTime": 20.0
                 },
                 "TextureComponent": {
                     "guid": "afd25b76-dddc-4c4f-bae4-a6c9a22931e5",
@@ -3144,7 +3144,7 @@
                     "animationSpeed": 1.0,
                     "bLoops": true,
                     "bPlayOnStart": true,
-                    "currentTime": 0.0
+                    "currentTime": 9.999999046325684
                 },
                 "TextureComponent": {
                     "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
@@ -3258,7 +3258,7 @@
                 },
                 "TextureComponent": {
                     "guid": "d24a29c5-cd9e-4322-ab59-d38618cba4bf",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -3897,7 +3897,7 @@
                 },
                 "TextureComponent": {
                     "guid": "f16bcc4e-155e-46f3-8a12-a74c1cbad935",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ButtonComponent": {
                     "position": [
@@ -3958,7 +3958,7 @@
                 },
                 "TextureComponent": {
                     "guid": "617a5da4-3f2e-41ce-9a4e-5980c77830f5",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ButtonComponent": {
                     "position": [
@@ -4008,7 +4008,7 @@
                 },
                 "TextureComponent": {
                     "guid": "4415e756-4077-4f65-ad9b-b17db4eacc2d",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -4067,7 +4067,7 @@
                 },
                 "TextureComponent": {
                     "guid": "13160290-b42b-4e24-a931-1790196820cc",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -5058,7 +5058,16 @@
                 },
                 "TextureComponent": {
                     "guid": "9b2a50d4-87d4-4ae8-93f8-45df3f721621",
-                    "isUI": true
+                    "isUI": false
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "df1c2540-8fa0-4c78-899d-2eaee06453e8",
+                            "scriptPath": "Assets\\Scripts\\GameStateCutscene.lua",
+                            "hotReload": true
+                        }
+                    ]
                 },
                 "ButtonComponent": {
                     "position": [
@@ -5108,7 +5117,7 @@
                 },
                 "TextureComponent": {
                     "guid": "fbfe0e60-68d8-4c0b-808a-c0a96df742e3",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -5667,7 +5676,7 @@
                 },
                 "TextureComponent": {
                     "guid": "2d77f5aa-e9a6-44b8-b408-7ce097441fdd",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -6483,7 +6492,7 @@
                 },
                 "TextureComponent": {
                     "guid": "bbc3bc8b-ac72-4981-a969-5cb0e9839b7f",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [

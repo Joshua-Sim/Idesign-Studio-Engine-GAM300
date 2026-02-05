@@ -9,24 +9,24 @@ local locations = {
     Forest = {
         name = "Forest",
         buttonEntity = "Forest Button",
-        spawnPos = {x = -53.965, y = 9.0, z = 9.5},
-        spawnRot = {x = 0.0, y = 90.0, z = 0.0},
+        spawnPos = { x = -117.493, y = 10.644,  z = 124.351 },
+        spawnRot = { x = 0.0,    y = 90.0,  z = 0.0 },
         ingredients = {"Forest Herbs", "Mushrooms", "Berries"},
         ingredientImageEntity = "ForestIngredientsImage"
     },
     Quarry = {
         name = "Quarry",
         buttonEntity = "Quarry Button",
-        spawnPos = {x = -36.0, y = 9.0, z = 9.5},
-        spawnRot = {x = 0.0, y = 0.0, z = 0.0},
+        spawnPos = { x = -170.856,  y = 7.730,  z = -170.782 },
+        spawnRot = { x = 0.0,    y = 0.0,   z = 0.0 },
         ingredients = {"Stone Minerals", "Cave Moss", "Crystal Dust"},
         ingredientImageEntity = "QuarryIngredientsImage"
     },
     House = {
         name = "House",
         buttonEntity = "House Button",
-        spawnPos = {x = -36.0, y = 8.025, z = 9.5},
-        spawnRot = {x = 0.0, y = 0.0, z = 0.0},
+        spawnPos = { x = 0.0,    y = 0.0,   z = 0.0 },
+        spawnRot = { x = 0.0,    y = 0.0,   z = 0.0 },
         ingredients = {"Garden Herbs", "Kitchen Spices"},
         ingredientImageEntity = "HouseIngredientsImage"
     }
@@ -134,7 +134,7 @@ function M:HideMap()
     print("[MapSelectionUI] ===== HIDING MAP =====")
     
     -- Pop MapSelection state - SceneInterface handles visibility
-    PopEngineState()
+    GameStateStart()
     
     -- Hide all ingredient images
     for _, locData in pairs(locations) do
