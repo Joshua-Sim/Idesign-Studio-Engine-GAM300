@@ -34,6 +34,7 @@
 #include "MessageSystem.h"
 #include "ButtonSystem.h"
 #include "SceneInterface.h"
+#include "ParticleComponent.h"
 
 extern Framework::Coordinator ecsInterface;
 
@@ -2292,8 +2293,10 @@ namespace Framework {
 
 
                     std::cout << "[ECS] Created Text Entity ID: " << textEntity << std::endl;
-                }
+                }                                                   
             }
+
+
 
             // -------------------------------
             // SECTION 2: ENTITY MANAGEMENT

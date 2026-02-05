@@ -51,6 +51,7 @@
 #include "Inventory.h"
 #include "PhaseManager.h"
 #include "RecipeBookManager.h"
+#include "ParticleComponent.h"
 
 extern Framework::FontSystem fontSystem;
 extern Framework::Coordinator ecsInterface;
@@ -72,6 +73,7 @@ namespace Framework {
     bool GameSystem::bookOpen = false;
     const auto& assets = AssetManager::Instance().GetAssets();
     bool Graphics::IsCameraRotationEnabled() const { return m_cameraRotationEnabled; }
+
 
     // Constructor
     Graphics::Graphics()
@@ -133,6 +135,10 @@ namespace Framework {
         // Assuming PebbleRenderer works the same way
         if (m_pebbleRenderer) { delete m_pebbleRenderer; m_pebbleRenderer = nullptr; }
         if (m_pineRenderer) { delete m_pineRenderer; m_pineRenderer = nullptr; }
+
+        // PARTICLE (Jasper)
+        if (m_particlePixelRenderer) { delete m_particlePixelRenderer; m_particlePixelRenderer = nullptr; }
+
 
         // [FIX] DELETE THE LEAF MESH QUAD
         // You created this with 'new' in Initialize: leafQuad = new Mesh(...)
@@ -230,6 +236,8 @@ namespace Framework {
         ecsInterface.RegisterComponent<BoxColliderComponent>();
         ecsInterface.RegisterComponent<ItemComponent>();
         ecsInterface.RegisterComponent<ButtonComponent>();
+        ecsInterface.RegisterComponent<ParticleEmitterComponent>();
+
 
         //test
 
@@ -527,12 +535,31 @@ namespace Framework {
             "Assets/shaders/instanced_frag.glsl"
         );
 
+        m_particlePixelRenderer = new FoliageRenderer(
+            leafQuad,
+            "Assets/shaders/instancedleave_vert.glsl",
+            "Assets/shaders/instancedleave_frag.glsl"
+        );
+
+        // Load a particle texture (white dot / square PNG)
+        TextureProperties particleTexProps;
+        particleTexProps.path = "Assets/PNG/particle.png";
+        TextureLoader::loadTexture(particleTexProps, true);
+        m_particleTextureID = particleTexProps.textureID;
+
         // LEAF RENDERER (billboards)
         m_leafRenderer = new FoliageRenderer(
             leafQuad,
             "Assets/shaders/instancedleave_vert.glsl",
             "Assets/shaders/instancedleave_frag.glsl"
         );
+
+        m_particlePixelRenderer = new FoliageRenderer(
+            leafQuad,
+            "Assets/shaders/instancedleave_vert.glsl",
+            "Assets/shaders/instancedleave_frag.glsl"
+        );
+
         //// 2. Create the Instancing Renderer
 
         // 3. Generate positions for the trees around the border
@@ -2443,6 +2470,67 @@ namespace Framework {
         glStencilFunc(GL_ALWAYS, 0, 0xFF);
         glDisable(GL_STENCIL_TEST);
 
+        std::vector<glm::mat4> pixelInstances;
+
+        for (Entity e : mEntities)
+        {
+            if (!ecsInterface.HasComponent<ParticleEmitterComponent>(e) ||
+                !ecsInterface.HasComponent<TransformComponent>(e))
+                continue;
+
+            auto& emitter = ecsInterface.GetComponent<ParticleEmitterComponent>(e);
+            auto& xform = ecsInterface.GetComponent<TransformComponent>(e);
+
+            if (!emitter.active) continue;
+
+            const glm::mat4 emitterM = glm::translate(glm::mat4(1.0f), xform.position);
+
+            for (const Particle& p : emitter.particles)
+            {
+                glm::vec3 worldPos = p.position;
+                if (emitter.localSpace)
+                    worldPos = glm::vec3(emitterM * glm::vec4(p.position, 1.0f));
+
+                glm::mat4 M(1.0f);
+                M = glm::translate(M, worldPos);
+                M = glm::scale(M, glm::vec3(p.size));
+
+                pixelInstances.push_back(M);
+            }
+        }
+
+        // PARTICLE (Jasper)
+        std::vector<glm::mat4> pixelInstances;
+        std::vector<glm::mat4> voxelInstances;
+
+        for (Entity e : mEntities)
+        {
+            if (!ecsInterface.HasComponent<ParticleEmitterComponent>(e) ||
+                !ecsInterface.HasComponent<TransformComponent>(e))
+                continue;
+
+            auto& emitter = ecsInterface.GetComponent<ParticleEmitterComponent>(e);
+            auto& xform = ecsInterface.GetComponent<TransformComponent>(e);
+
+            if (!emitter.active) continue;
+
+            const glm::mat4 emitterM = glm::translate(glm::mat4(1.0f), xform.position);
+
+            for (const Particle& p : emitter.particles)
+            {
+                glm::vec3 worldPos = p.position;
+                if (emitter.localSpace)
+                    worldPos = glm::vec3(emitterM * glm::vec4(p.position, 1.0f));
+
+                glm::mat4 M(1.0f);
+                M = glm::translate(M, worldPos);
+                M = glm::scale(M, glm::vec3(p.size));
+
+                if (emitter.style == 1) voxelInstances.push_back(M);
+                else                    pixelInstances.push_back(M);
+            }
+        }
+
 
         // --- 2. TRANSPARENT PASS ---
         glEnable(GL_BLEND);
@@ -2454,6 +2542,55 @@ namespace Framework {
         {
             m_leafRenderer->draw(view, proj, mapModel, leafTexture);
         }
+
+        // --- PARTICLES START --- (Jasper)
+
+        // Group instance matrices by texture so each emitter can use its own billboard PNG
+        std::unordered_map<unsigned int, std::vector<glm::mat4>> particleMatsByTex;
+
+        for (Entity e : mEntities)
+        {
+            if (!ecsInterface.HasComponent<ParticleEmitterComponent>(e) ||
+                !ecsInterface.HasComponent<TransformComponent>(e))
+                continue;
+
+            auto& emitter = ecsInterface.GetComponent<ParticleEmitterComponent>(e);
+            auto& tr = ecsInterface.GetComponent<TransformComponent>(e);
+
+            if (!emitter.active || !tr.isActive) continue;
+
+            const glm::mat4 emitterM = glm::translate(glm::mat4(1.0f), tr.position);
+
+            // Use emitter texture if set, otherwise fallback to the global particle texture
+            unsigned int tex = (emitter.textureID != 0) ? emitter.textureID : m_particleTextureID;
+
+            for (const Particle& p : emitter.particles)
+            {
+                glm::vec3 worldPos = p.position;
+                if (emitter.localSpace)
+                    worldPos = glm::vec3(emitterM * glm::vec4(p.position, 1.0f));
+
+                glm::mat4 M(1.0f);
+                M = glm::translate(M, worldPos);
+                M = glm::scale(M, glm::vec3(p.size));
+
+                if (emitter.style == 0) // Pixel
+                    particleMatsByTex[tex].push_back(M);
+            }
+        }
+
+        if (m_particlePixelRenderer)
+        {
+            for (auto& [tex, mats] : particleMatsByTex)
+            {
+                if (mats.empty()) continue;
+
+                m_particlePixelRenderer->setInstances(mats);
+                m_particlePixelRenderer->draw(view, proj, glm::mat4(1.0f), tex);
+            }
+        }
+
+        // --- PARTICLES END   --- (Jasper)
 
         for (auto it = transparentEntities.rbegin(); it != transparentEntities.rend(); ++it)
         {

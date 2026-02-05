@@ -197,6 +197,10 @@ namespace Framework
         unsigned int grassTextureID = 0;
         //END OF FOLIAGES
 
+        //PARTICLE (JASPER)
+        FoliageRenderer* m_particlePixelRenderer = nullptr; 
+        unsigned int m_particleTextureID = 0;
+
         //pebbles
         Framework::MeshProperties m_pebbleMesh;
         GLuint pebbleTextureID;
@@ -206,6 +210,10 @@ namespace Framework
         Framework::MeshProperties m_pineMesh;
         GLuint pineTextureID;
         PebbleRenderer* m_pineRenderer = nullptr;
+
+        //PARTICLES (Jasper)
+        FoliageRenderer* m_particlePixelRenderer = nullptr;
+        GLuint m_particleTextureID = 0;
 
         //END OF INSTANCING DECLARATION
 

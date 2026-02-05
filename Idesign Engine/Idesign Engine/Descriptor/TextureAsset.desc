@@ -1,5 +1,5 @@
 {
-    "count": 152,
+    "count": 147,
     "entries": [
         {
             "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
@@ -14,9 +14,15 @@
             "isUI": false
         },
         {
-            "guid": "f40353db-bf74-4637-bf2e-f6a64fabe58f",
-            "name": "fir tree large",
-            "path": "Assets\\Textures\\fir tree large.png",
+            "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606",
+            "name": "music",
+            "path": "Assets/Textures/music.png",
+            "isUI": false
+        },
+        {
+            "guid": "cabb6b16-8445-4f40-b9c8-bd593ea6b65c",
+            "name": "top",
+            "path": "Assets\\Textures\\top.png",
             "isUI": false
         },
         {
@@ -29,12 +35,6 @@
             "guid": "d24a29c5-cd9e-4322-ab59-d38618cba4bf",
             "name": "quitbutton",
             "path": "Assets\\Textures\\quitbutton.png",
-            "isUI": false
-        },
-        {
-            "guid": "cabb6b16-8445-4f40-b9c8-bd593ea6b65c",
-            "name": "top",
-            "path": "Assets\\Textures\\top.png",
             "isUI": false
         },
         {
@@ -56,15 +56,15 @@
             "isUI": false
         },
         {
-            "guid": "6268a735-25b0-4a92-b9df-38ba44a3af1e",
-            "name": "SETTING HOVER BUTTON",
-            "path": "Assets\\Textures\\SETTING HOVER BUTTON.png",
-            "isUI": false
-        },
-        {
             "guid": "d7666fdd-353e-4a3e-9a3f-70f50cea9f7a",
             "name": "CREDITS BUTTON",
             "path": "Assets\\Textures\\CREDITS BUTTON.png",
+            "isUI": false
+        },
+        {
+            "guid": "6268a735-25b0-4a92-b9df-38ba44a3af1e",
+            "name": "SETTING HOVER BUTTON",
+            "path": "Assets\\Textures\\SETTING HOVER BUTTON.png",
             "isUI": false
         },
         {
@@ -98,12 +98,6 @@
             "isUI": false
         },
         {
-            "guid": "84369442-e278-434a-9fa6-c48d9c56bbb3",
-            "name": "playbutton",
-            "path": "Assets\\Textures\\playbutton.png",
-            "isUI": false
-        },
-        {
             "guid": "b5153be8-0464-48c3-800e-48bfb0c931b9",
             "name": "Key_E",
             "path": "Assets\\Textures\\Key_E.png",
@@ -131,12 +125,6 @@
             "guid": "c2a1f2a8-98b8-490f-bae9-f3bc714f424c",
             "name": "SkyNoon_Top",
             "path": "Assets\\Textures\\SkyNoon_Top.png",
-            "isUI": false
-        },
-        {
-            "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606",
-            "name": "music",
-            "path": "Assets/Textures/music.png",
             "isUI": false
         },
         {
@@ -398,12 +386,6 @@
             "isUI": false
         },
         {
-            "guid": "c7252f22-c44b-408d-a4d5-6410e42eeb52",
-            "name": "GOLBINTEX",
-            "path": "Assets\\Textures\\GOLBINTEX.jpg",
-            "isUI": false
-        },
-        {
             "guid": "e8ceda31-31dc-4c6d-b3ad-181d690311ea",
             "name": "back",
             "path": "Assets\\Textures\\back.png",
@@ -437,12 +419,6 @@
             "guid": "b9067b1d-09fa-4683-8558-437173a865e7",
             "name": "bluecloud_bk",
             "path": "Assets\\Textures\\bluecloud_bk.jpg",
-            "isUI": false
-        },
-        {
-            "guid": "f55520f7-5d10-4b1d-9e00-2c2fc12bde17",
-            "name": "Sheep_Horn",
-            "path": "Assets\\Textures\\Sheep_Horn.png",
             "isUI": false
         },
         {
@@ -617,6 +593,12 @@
             "guid": "0ae073ca-d11b-4ab6-ab53-94e5324d6415",
             "name": "settings",
             "path": "Assets\\Textures\\settings.png",
+            "isUI": false
+        },
+        {
+            "guid": "84369442-e278-434a-9fa6-c48d9c56bbb3",
+            "name": "playbutton",
+            "path": "Assets\\Textures\\playbutton.png",
             "isUI": false
         },
         {
@@ -860,15 +842,15 @@
             "isUI": false
         },
         {
-            "guid": "1d5d9271-070e-4372-97d5-7b2252b23928",
-            "name": "tori gate",
-            "path": "Assets\\Textures\\tori gate.png",
+            "guid": "f40353db-bf74-4637-bf2e-f6a64fabe58f",
+            "name": "fir tree large",
+            "path": "Assets\\Textures\\fir tree large.png",
             "isUI": false
         },
         {
-            "guid": "b356d807-c87f-4aa1-ba65-331cba8a9421",
-            "name": "UI_Notification_BG",
-            "path": "Assets\\Textures\\UI_Notification_BG.png",
+            "guid": "1d5d9271-070e-4372-97d5-7b2252b23928",
+            "name": "tori gate",
+            "path": "Assets\\Textures\\tori gate.png",
             "isUI": false
         },
         {
@@ -899,18 +881,6 @@
             "guid": "e47098ed-91c0-44ed-9b18-8c8e5e0f6c18",
             "name": "grass2",
             "path": "Assets\\Textures\\grass2.png",
-            "isUI": false
-        },
-        {
-            "guid": "ddfff4cb-33f0-4823-9b91-af724b0aff21",
-            "name": "Sheep",
-            "path": "Assets\\Textures\\Sheep.png",
-            "isUI": false
-        },
-        {
-            "guid": "8e82476d-aaef-44c4-a890-491adfade441",
-            "name": "FISHTEXT",
-            "path": "Assets\\Textures\\FISHTEXT.jpg",
             "isUI": false
         }
     ]

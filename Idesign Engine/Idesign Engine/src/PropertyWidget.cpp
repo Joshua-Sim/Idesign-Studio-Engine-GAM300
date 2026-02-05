@@ -702,6 +702,58 @@ namespace Framework
                         break;
                     }
                 }
+
+                if (typeName == "ParticleEmitterComponent")
+                {
+                    auto& em = *static_cast<ParticleEmitterComponent*>(componentPtr);
+
+                    std::string idSuffix = "##Particle_" + std::to_string((uint32_t)entity);
+
+                    ImGui::Checkbox(("Active" + idSuffix).c_str(), &em.active);
+
+                    ImGui::Separator();
+
+                    // Texture dropdown (billboard PNG)
+                    TextureProperties tmp{};
+                    tmp.guid = em.textureGuid;
+
+                    DrawAssetDropdown<TextureProperties>("Particle Texture" + idSuffix, tmp);
+                    em.textureGuid = tmp.guid;
+
+                    if (tmp.textureID != 0)
+                        ImGui::Image((ImTextureID)(uintptr_t)tmp.textureID, ImVec2(96, 96), ImVec2(0, 1), ImVec2(1, 0));
+
+                    ImGui::Checkbox(("Pixel Filter (Nearest)" + idSuffix).c_str(), &em.pixelFilter);
+
+                    ImGui::Separator();
+
+                    // Loop vs duration
+                    ImGui::Checkbox(("Loop" + idSuffix).c_str(), &em.loop);
+                    if (!em.loop)
+                        ImGui::DragFloat(("Duration (s)" + idSuffix).c_str(), &em.duration, 0.05f, 0.0f, 30.0f);
+
+                    if (ImGui::Button(("Restart Emission" + idSuffix).c_str()))
+                    {
+                        em.timeSinceStart = 0.0f;
+                        em.emitAccumulator = 0.0f;
+                        em.particles.clear();
+                    }
+
+                    ImGui::Separator();
+
+                    // Spray controls
+                    ImGui::DragFloat3(("Direction" + idSuffix).c_str(), &em.direction.x, 0.05f);
+                    ImGui::DragFloat(("Spread Angle (deg)" + idSuffix).c_str(), &em.spreadAngleDeg, 0.1f, 0.0f, 180.0f);
+
+                    ImGui::DragFloat(("Range" + idSuffix).c_str(), &em.range, 0.05f, 0.0f, 100.0f);
+                    ImGui::DragFloat(("Particles/sec" + idSuffix).c_str(), &em.particlesPerSecond, 1.0f, 0.0f, 5000.0f);
+
+                    ImGui::DragFloat(("Particle Speed" + idSuffix).c_str(), &em.particleSpeed, 0.05f, 0.0f, 200.0f);
+                    ImGui::DragFloat(("Particle Size" + idSuffix).c_str(), &em.particleSize, 0.005f, 0.0f, 10.0f);
+
+                    ImGui::Checkbox(("Local Space" + idSuffix).c_str(), &em.localSpace);
+                    ImGui::DragInt(("Max Particles" + idSuffix).c_str(), &em.maxParticles, 10, 0, 200000);
+                }
             }
         }
 
@@ -763,6 +815,7 @@ namespace Framework
         TypeRegistry::Instance().Register<BoxColliderComponent>("BoxColliderComponent", &g_BoxColliderProps);
         TypeRegistry::Instance().Register<ItemComponent>("ItemComponent", &g_ItemProps);
         TypeRegistry::Instance().Register<ButtonComponent>("ButtonComponent", &g_ButtonComponentProps);
+        TypeRegistry::Instance().Register<ParticleEmitterComponent>("ParticleEmitterComponent", &g_ParticleEmitterProps);
     }
 
     void AutoRegisterAllReflectedComponents(Coordinator& ecs)

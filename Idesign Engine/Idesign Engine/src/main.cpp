@@ -47,6 +47,7 @@
 #include "SceneInterface.h"
 #include "DialogueSystem.h"
 #include "LoadingSystem.h"
+#include "ParticleSystem.h"
 
 using namespace Framework;
 
@@ -110,7 +111,8 @@ int main(void)
     auto buttonSystem = ecsInterface.RegisterSystem<ButtonSystem>();
     imguiSystem->SetGraphicsSystem(graphicsSystem.get());
     graphicsSystem->SetImguiManager(imguiSystem.get());
-    
+    auto particleSystem = ecsInterface.RegisterSystem<ParticleSystem>();
+
     //AssetManager::Instance().LoadAllAssets();
     
     //Access the InputHandler instance from the singleton
@@ -141,6 +143,7 @@ int main(void)
     auto playerInteractSystem = ecsInterface.RegisterSystem<PlayerInteractSystem>();
     auto eventSystem = ecsInterface.RegisterSystem<EventSystem>();
     auto sceneInterface = ecsInterface.RegisterSystem<SceneInterface>();
+    auto particleSystem = ecsInterface.RegisterSystem<ParticleSystem>();
 
     // Registered components here used for loading screen transition
     ecsInterface.RegisterComponent<TransformComponent>();
@@ -151,6 +154,7 @@ int main(void)
 
     ecsInterface.RegisterComponent<EventSenderComponent>(); 
     ecsInterface.RegisterComponent<EventReceiverComponent>();
+    ecsInterface.RegisterComponent<ParticleEmitterComponent>();
 
     {
         Signature signature;
@@ -168,6 +172,7 @@ int main(void)
     engine->AddSystem(navMeshSystem.get());
 	engine->AddSystem(audioSystem.get());
     engine->AddSystem(physicsSystem.get());
+    engine->AddSystem(particleSystem.get()); //Particle
     engine->AddSystem(tagManager.get());
     engine->AddSystem(playerInteractSystem.get());
     engine->AddSystem(fileCheckSystem.get());
@@ -178,6 +183,7 @@ int main(void)
     engine->AddSystem(sceneSystem.get());       // Register scene manager last
     engine->AddSystem(sceneInterface.get());
     engine->AddSystem(loadingSystem.get());
+    engine->AddSystem(particleSystem.get());    // <-- add (simulate particles)
 
     std::filesystem::path root = GetEngineRootPath();
     fileCheckSystem->WatchAllFolders();

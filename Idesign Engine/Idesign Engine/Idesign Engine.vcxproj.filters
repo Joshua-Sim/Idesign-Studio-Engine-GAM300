@@ -227,7 +227,7 @@
     <ClCompile Include="src\SceneInterface.cpp" />
     <ClCompile Include="src\DialogueSystem.cpp" />
     <ClCompile Include="src\LoadingSystem.cpp" />
-    <ClCompile Include="src\Upgrade.cpp" />
+    <ClCompile Include="src\ParticleSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ItemComponent.h" />
@@ -684,7 +684,8 @@
     </ClInclude>
     <ClInclude Include="src\DialogueSystem.h" />
     <ClInclude Include="src\LoadingSystem.h" />
-    <ClInclude Include="src\Upgrade.h" />
+    <ClInclude Include="src\ParticleComponent.h" />
+    <ClInclude Include="src\ParticleSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

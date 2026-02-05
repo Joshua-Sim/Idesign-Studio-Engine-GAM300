@@ -155,6 +155,8 @@
     <ClInclude Include="ItemComponent.h" />
     <ClInclude Include="src\DialogueSystem.h" />
     <ClInclude Include="src\LoadingSystem.h" />
+    <ClInclude Include="src\ParticleComponent.h" />
+    <ClInclude Include="src\ParticleSystem.h" />
     <ClInclude Include="src\PlayerInteractSystem.h" />
     <ClInclude Include="src\AnimationLoader.h" />
     <ClInclude Include="src\BoxColliderComponent.h" />
@@ -370,6 +372,7 @@
     <ClCompile Include="..\lib\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\DialogueSystem.cpp" />
     <ClCompile Include="src\LoadingSystem.cpp" />
+    <ClCompile Include="src\ParticleSystem.cpp" />
     <ClCompile Include="src\PlayerInteractSystem.cpp" />
     <ClCompile Include="src\AnimationLoader.cpp" />
     <ClCompile Include="src\AnimationSystem.cpp" />
