@@ -101,7 +101,7 @@ function M:OnLocationSelected(locData)
     
     -- Exit MapSelection state
     print("[MapSelectionUI] Popping MapSelection state")
-    PopEngineState()
+    GameStateStart()
     SetUIFocused(false)
     
     -- Teleport player to selected location

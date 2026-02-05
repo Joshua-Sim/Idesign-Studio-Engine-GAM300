@@ -138,6 +138,8 @@ namespace Framework
                     if (!engineState.Is(EngineMode::Editor)) { text.opacity = engineState.Is(EngineMode::MapSelection) ? 1.f : 0.f; }
                 }
             }
+
+
             // 7. Cutscene (Open after click Play)
             if (engineState.Is(EngineMode::Cutscene))
             {
