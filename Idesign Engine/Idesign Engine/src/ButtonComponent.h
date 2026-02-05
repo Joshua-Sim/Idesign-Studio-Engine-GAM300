@@ -18,9 +18,11 @@ namespace Framework
         bool isHovered;                      // Is the button hovered?
         std::function<void()> onClick;       // Function to be called when clicked
         bool isFrontButton = false;
+        bool interactable = true;   // NEW: hard gate for clicking
 
         void TriggerClick(Entity e) const
         {
+            if (!interactable) return;          // NEW
             if (onClick) 
             {
                 g_AudioSystem->PlayAudio("event:/ButtonClick");

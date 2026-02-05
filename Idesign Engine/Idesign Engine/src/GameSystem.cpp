@@ -52,7 +52,7 @@ namespace Framework {
         }
 
         // Initialize default values
-        SetData("currency", 1000);             // Changed from "score"
+        SetData("currency", 2500);             // Changed from "score"
         SetData("currencyMultiplier", 100); // 100 = 1.0x
         SetData("customerQueue", 0);
     }

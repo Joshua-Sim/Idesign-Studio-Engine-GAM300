@@ -67,8 +67,8 @@ namespace Framework {
 
         for (auto entity : mEntities)
         {
-            if (!ecsInterface.HasComponent<ButtonComponent>(entity)     ||
-                !ecsInterface.HasComponent<TransformComponent>(entity)  ||
+            if (!ecsInterface.HasComponent<ButtonComponent>(entity) ||
+                !ecsInterface.HasComponent<TransformComponent>(entity) ||
                 !ecsInterface.HasComponent<TextureProperties>(entity))
                 continue;
 
@@ -76,10 +76,10 @@ namespace Framework {
             auto& tr = ecsInterface.GetComponent<TransformComponent>(entity);
             auto& tex = ecsInterface.GetComponent<TextureProperties>(entity);
 
-            // only UI quads are treated as buttons
+            // Must be visible UI AND interactable
             if (!tex.isUI) continue;
+            if (!button.interactable) continue;
 
-            // derive bounds from Transform (center + full size)
             float left = tr.position.x - 0.5f * tr.scale.x;
             float right = tr.position.x + 0.5f * tr.scale.x;
             float bottom = tr.position.y - 0.5f * tr.scale.y;
