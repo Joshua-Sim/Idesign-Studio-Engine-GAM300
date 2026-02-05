@@ -11,6 +11,11 @@
             "path": "Assets\\Audio\\Desktop\\BGM.bank"
         },
         {
+            "guid": "98e943fc-62e3-4646-ae60-49ef01e59ff0",
+            "name": "Ambient",
+            "path": "Assets\\Audio\\Desktop\\Ambient.bank"
+        },
+        {
             "guid": "82e361a1-9ec3-4012-a695-66b77c020c17",
             "name": "Master.strings",
             "path": "Assets\\Audio\\Desktop\\Master.strings.bank"
@@ -19,11 +24,6 @@
             "guid": "d6f23fa6-ff6f-4892-91b3-ca11349bb492",
             "name": "SFX",
             "path": "Assets\\Audio\\Desktop\\SFX.bank"
-        },
-        {
-            "guid": "98e943fc-62e3-4646-ae60-49ef01e59ff0",
-            "name": "Ambient",
-            "path": "Assets\\Audio\\Desktop\\Ambient.bank"
         }
     ]
 }

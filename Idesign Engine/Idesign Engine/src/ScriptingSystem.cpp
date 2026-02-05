@@ -1128,6 +1128,14 @@ namespace Framework {
             return 1;
         }
 
+        // Start cutscene
+        static int lua_GameStateCutscene(lua_State* L)
+        {
+            (void)L;
+            engineState.PushState(EngineMode::Cutscene);    // Cutscene UI
+            return 0;
+        }
+
         // ============ END GAME STATE LUA BINDINGS ============
 
 
@@ -1891,6 +1899,7 @@ namespace Framework {
         lua_register(L, "GameStatePaused",        lua_GameStatePaused);
         lua_register(L, "GameStateExit",          lua_GameStateExit);
         lua_register(L, "GameStateHowToPlay",     lua_GameStateHowToPlay);
+        lua_register(L, "GameStateCutscene",      lua_GameStateCutscene);
         lua_register(L, "GameStateSettings",      lua_GameStateSettings);
         lua_register(L, "GameStateBackToPause",   lua_GameStateBackToPause);
         lua_register(L, "GameStateEndNightPhase", lua_GameStateEndNightPhase);

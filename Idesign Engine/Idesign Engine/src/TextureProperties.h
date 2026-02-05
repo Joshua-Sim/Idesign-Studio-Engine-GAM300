@@ -23,6 +23,8 @@ namespace Framework
         std::string path;
         bool isUI = false;
 
+        float uiAlpha = 1.0f; // 0 = invisible, 1 = fully visible
+
         // Runtime-only
         unsigned int textureID = 0;
         int width = 0;

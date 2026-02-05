@@ -296,7 +296,7 @@
                     "animationSpeed": 10.0,
                     "bLoops": false,
                     "bPlayOnStart": true,
-                    "currentTime": 20.0
+                    "currentTime": 0.0
                 },
                 "TextureComponent": {
                     "guid": "afd25b76-dddc-4c4f-bae4-a6c9a22931e5",
@@ -628,9 +628,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -44.64616775512695,
-                        12.687789916992188,
-                        10.0
+                        -45.69948196411133,
+                        11.00235652923584,
+                        7.636120796203613
                     ],
                     "rotation": [
                         0.0,
@@ -659,13 +659,13 @@
                         1.0,
                         1.0
                     ],
-                    "intensity": 0.15800000727176666,
-                    "radius": 100.0,
+                    "intensity": 0.5690000057220459,
+                    "radius": 30.0,
                     "innerCutOffAngle": 0.21816615760326385,
-                    "outerCutOffAngle": 0.2617993950843811,
-                    "castsShadow": false,
+                    "outerCutOffAngle": 0.35899999737739563,
+                    "castsShadow": true,
                     "shadowBiasConst": 0.004999999888241291,
-                    "shadowBiasFactor": 0.05000000074505806,
+                    "shadowBiasFactor": 1.0,
                     "type": "Point"
                 }
             }
@@ -1738,9 +1738,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -59.09307861328125,
-                        12.477137565612793,
-                        10.0
+                        -63.99101638793945,
+                        12.025567054748535,
+                        7.2991943359375
                     ],
                     "rotation": [
                         0.0,
@@ -1769,13 +1769,13 @@
                         0.6365410089492798,
                         0.3543917238712311
                     ],
-                    "intensity": 1.0,
-                    "radius": 100.0,
+                    "intensity": 1.5169999599456787,
+                    "radius": 20.0,
                     "innerCutOffAngle": 0.21816615760326385,
                     "outerCutOffAngle": 0.2617993950843811,
-                    "castsShadow": false,
+                    "castsShadow": true,
                     "shadowBiasConst": 0.004999999888241291,
-                    "shadowBiasFactor": 0.05000000074505806,
+                    "shadowBiasFactor": 1.0,
                     "type": "Point"
                 }
             }
@@ -3258,7 +3258,7 @@
                 },
                 "TextureComponent": {
                     "guid": "d24a29c5-cd9e-4322-ab59-d38618cba4bf",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -3367,24 +3367,6 @@
                     "isIngredient": true,
                     "isChoppable": false,
                     "toDestroyWhenPicked": false
-                }
-            }
-        },
-        {
-            "name": "ProgressBarFrame",
-            "guid": "e3bb1d65-0a76-4c4b-9c3e-bcbffd48f2f8",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "6c60686a-c68c-4284-bce0-019cfcbf77fa"
-                }
-            }
-        },
-        {
-            "name": "ProgressBarFill",
-            "guid": "8a232844-018e-41c5-8b2d-0c330a0bda38",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "5dfc16be-aa4a-420a-9105-f7c9652f3620"
                 }
             }
         },
@@ -3525,24 +3507,6 @@
                 },
                 "MeshComponent": {
                     "guid": ""
-                }
-            }
-        },
-        {
-            "name": "ProgressBarFrame",
-            "guid": "935c4b6c-9776-45bb-8758-055bf13c8c7e",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "6c60686a-c68c-4284-bce0-019cfcbf77fa"
-                }
-            }
-        },
-        {
-            "name": "ProgressBarFill",
-            "guid": "b60854ac-3888-4f8f-80ee-c2fde7a2f57e",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "5dfc16be-aa4a-420a-9105-f7c9652f3620"
                 }
             }
         },
@@ -3692,7 +3656,7 @@
                 "HierarchyComponent": {
                     "parent": "23491286-9912-4971-b5d4-9145a810d598",
                     "children": [],
-                    "sortIndex": 61
+                    "sortIndex": 57
                 },
                 "TagComponent": {
                     "tags": [
@@ -3700,7 +3664,66 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "13160290-b42b-4e24-a931-1790196820cc",
+                    "guid": "273edb8c-f3da-4c2c-8c25-bab578b94f55",
+                    "isUI": false
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "f2483dea-2693-432a-b1a5-01aed656bd1e",
+                            "scriptPath": "Assets\\Scripts\\GameStateResume.lua",
+                            "hotReload": false
+                        }
+                    ]
+                },
+                "ButtonComponent": {
+                    "position": [
+                        980.0,
+                        880.0
+                    ],
+                    "size": [
+                        375.0,
+                        150.0
+                    ],
+                    "isHovered": false,
+                    "isFrontButton": false
+                }
+            }
+        },
+        {
+            "name": "quitbutton",
+            "guid": "59a63bf7-241d-480a-ad05-2601e4773b33",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        980.0,
+                        280.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        375.0,
+                        150.0,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "23491286-9912-4971-b5d4-9145a810d598",
+                    "children": [],
+                    "sortIndex": 58
+                },
+                "TagComponent": {
+                    "tags": [
+                        "pause"
+                    ]
+                },
+                "TextureComponent": {
+                    "guid": "197bc9ec-6f34-40e7-8f8a-5b7d8a951a8c",
                     "isUI": false
                 },
                 "ScriptProperties": {
@@ -3754,7 +3777,7 @@
                         "60f2e874-560b-418f-8941-5051eaf42703",
                         "ce98accd-a35e-41f8-addd-5874a4a8cc99"
                     ],
-                    "sortIndex": 62
+                    "sortIndex": 59
                 },
                 "TagComponent": {
                     "tags": [
@@ -3804,7 +3827,7 @@
                 "HierarchyComponent": {
                     "parent": "828bfd6d-ea7d-42fd-8535-472b0a692e6e",
                     "children": [],
-                    "sortIndex": 63
+                    "sortIndex": 60
                 },
                 "TagComponent": {
                     "tags": [
@@ -3865,7 +3888,7 @@
                     "children": [
                         "e67dcc0d-7001-43a8-a331-19ea9c0628dd"
                     ],
-                    "sortIndex": 64
+                    "sortIndex": 61
                 },
                 "TagComponent": {
                     "tags": [
@@ -3874,7 +3897,7 @@
                 },
                 "TextureComponent": {
                     "guid": "f16bcc4e-155e-46f3-8a12-a74c1cbad935",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ButtonComponent": {
                     "position": [
@@ -3921,9 +3944,12 @@
                         "2699ab9b-68cf-45a7-a645-70d5300e57cc",
                         "46b6366c-5bd8-4cf8-b82a-bce0227a175f",
                         "1b4b5d0c-6351-45f6-80e5-9be48c9bf0d8",
-                        "9331907c-cf4a-407f-ac73-fd1ebaf2317f"
+                        "9331907c-cf4a-407f-ac73-fd1ebaf2317f",
+                        "728135e3-b7ad-4b43-987a-fa6b93d193ef",
+                        "24644757-be5d-4366-bc2b-c17f08cd477b",
+                        "02f2f168-08be-48a8-be02-fa39f58e509b"
                     ],
-                    "sortIndex": 65
+                    "sortIndex": 62
                 },
                 "TagComponent": {
                     "tags": [
@@ -3932,7 +3958,7 @@
                 },
                 "TextureComponent": {
                     "guid": "617a5da4-3f2e-41ce-9a4e-5980c77830f5",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ButtonComponent": {
                     "position": [
@@ -3973,7 +3999,7 @@
                 "HierarchyComponent": {
                     "parent": "214c5541-f814-4e7f-bafa-d9e3db5aff2c",
                     "children": [],
-                    "sortIndex": 66
+                    "sortIndex": 63
                 },
                 "TagComponent": {
                     "tags": [
@@ -3981,14 +4007,14 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "4415e756-4077-4f65-ad9b-b17db4eacc2d",
-                    "isUI": false
+                    "guid": "26deb469-c3d2-45f5-abd0-d5d29655e6e7",
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
                         {
-                            "guid": "0b25e0c5-79e6-465a-96cd-920b83ef31e6",
-                            "scriptPath": "Assets\\Scripts\\GameStateStart.lua",
+                            "guid": "df1c2540-8fa0-4c78-899d-2eaee06453e8",
+                            "scriptPath": "Assets\\Scripts\\GameStateCutscene.lua",
                             "hotReload": false
                         }
                     ]
@@ -4032,7 +4058,7 @@
                 "HierarchyComponent": {
                     "parent": "214c5541-f814-4e7f-bafa-d9e3db5aff2c",
                     "children": [],
-                    "sortIndex": 67
+                    "sortIndex": 64
                 },
                 "TagComponent": {
                     "tags": [
@@ -4040,8 +4066,8 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "13160290-b42b-4e24-a931-1790196820cc",
-                    "isUI": false
+                    "guid": "197bc9ec-6f34-40e7-8f8a-5b7d8a951a8c",
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -4093,7 +4119,7 @@
                     "children": [
                         "65638daa-d78a-497c-8285-fc4077ad4cbd"
                     ],
-                    "sortIndex": 69
+                    "sortIndex": 65
                 },
                 "TagComponent": {
                     "tags": [
@@ -4143,7 +4169,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 70
+                    "sortIndex": 66
                 },
                 "TagComponent": {
                     "tags": []
@@ -4220,7 +4246,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 71
+                    "sortIndex": 67
                 },
                 "TagComponent": {
                     "tags": []
@@ -4297,7 +4323,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 72
+                    "sortIndex": 68
                 },
                 "TagComponent": {
                     "tags": []
@@ -4355,9 +4381,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -30.0,
-                        12.477137565612793,
-                        10.0
+                        -27.62851905822754,
+                        11.81338882446289,
+                        11.217090606689453
                     ],
                     "rotation": [
                         0.0,
@@ -4374,7 +4400,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 73
+                    "sortIndex": 69
                 },
                 "TagComponent": {
                     "tags": []
@@ -4386,13 +4412,13 @@
                         0.6365410089492798,
                         0.3543917238712311
                     ],
-                    "intensity": 1.0,
-                    "radius": 100.0,
+                    "intensity": 1.3270000219345093,
+                    "radius": 30.100000381469727,
                     "innerCutOffAngle": 0.21816615760326385,
                     "outerCutOffAngle": 0.2617993950843811,
-                    "castsShadow": false,
+                    "castsShadow": true,
                     "shadowBiasConst": 0.004999999888241291,
-                    "shadowBiasFactor": 0.05000000074505806,
+                    "shadowBiasFactor": 1.0,
                     "type": "Point"
                 }
             }
@@ -4422,7 +4448,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 74
+                    "sortIndex": 70
                 },
                 "TagComponent": {
                     "tags": [
@@ -4518,7 +4544,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 75
+                    "sortIndex": 71
                 },
                 "TagComponent": {
                     "tags": [
@@ -4614,7 +4640,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 76
+                    "sortIndex": 72
                 },
                 "TagComponent": {
                     "tags": [
@@ -4710,7 +4736,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 77
+                    "sortIndex": 73
                 },
                 "TagComponent": {
                     "tags": []
@@ -4787,7 +4813,7 @@
                 "HierarchyComponent": {
                     "parent": "8c4170a2-de7f-472d-a43a-931ed1f45b7a",
                     "children": [],
-                    "sortIndex": 78
+                    "sortIndex": 74
                 },
                 "TagComponent": {
                     "tags": [
@@ -4846,7 +4872,7 @@
                 "HierarchyComponent": {
                     "parent": "23491286-9912-4971-b5d4-9145a810d598",
                     "children": [],
-                    "sortIndex": 79
+                    "sortIndex": 75
                 },
                 "TagComponent": {
                     "tags": [
@@ -4854,7 +4880,7 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "733448bc-ad27-447c-8887-ed8a34a0258e",
+                    "guid": "e4e85e35-08e3-4fb5-9f54-53c971ed3fee",
                     "isUI": false
                 },
                 "ScriptProperties": {
@@ -4905,7 +4931,7 @@
                 "HierarchyComponent": {
                     "parent": "23491286-9912-4971-b5d4-9145a810d598",
                     "children": [],
-                    "sortIndex": 80
+                    "sortIndex": 76
                 },
                 "TagComponent": {
                     "tags": [
@@ -4913,7 +4939,7 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "fbfe0e60-68d8-4c0b-808a-c0a96df742e3",
+                    "guid": "7cf95b2f-4160-4a45-9ce1-2b889b5b40af",
                     "isUI": false
                 },
                 "ScriptProperties": {
@@ -4964,7 +4990,7 @@
                 "HierarchyComponent": {
                     "parent": "23491286-9912-4971-b5d4-9145a810d598",
                     "children": [],
-                    "sortIndex": 81
+                    "sortIndex": 77
                 },
                 "TagComponent": {
                     "tags": [
@@ -4972,7 +4998,7 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "351d0e4c-fc92-4429-b33a-5aecdce0d8b5",
+                    "guid": "c44c9565-d18e-4186-86af-03e26a23eafe",
                     "isUI": false
                 },
                 "ScriptProperties": {
@@ -5023,7 +5049,7 @@
                 "HierarchyComponent": {
                     "parent": "214c5541-f814-4e7f-bafa-d9e3db5aff2c",
                     "children": [],
-                    "sortIndex": 82
+                    "sortIndex": 78
                 },
                 "TagComponent": {
                     "tags": [
@@ -5031,17 +5057,8 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "9b2a50d4-87d4-4ae8-93f8-45df3f721621",
-                    "isUI": false
-                },
-                "ScriptProperties": {
-                    "scripts": [
-                        {
-                            "guid": "0b25e0c5-79e6-465a-96cd-920b83ef31e6",
-                            "scriptPath": "Assets\\Scripts\\GameStateStart.lua",
-                            "hotReload": false
-                        }
-                    ]
+                    "guid": "b27e21d1-6c60-412f-92eb-0b851ce34523",
+                    "isUI": true
                 },
                 "ButtonComponent": {
                     "position": [
@@ -5082,7 +5099,7 @@
                 "HierarchyComponent": {
                     "parent": "214c5541-f814-4e7f-bafa-d9e3db5aff2c",
                     "children": [],
-                    "sortIndex": 83
+                    "sortIndex": 79
                 },
                 "TagComponent": {
                     "tags": [
@@ -5090,8 +5107,8 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "fbfe0e60-68d8-4c0b-808a-c0a96df742e3",
-                    "isUI": false
+                    "guid": "7cf95b2f-4160-4a45-9ce1-2b889b5b40af",
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -5141,7 +5158,7 @@
                 "HierarchyComponent": {
                     "parent": "828bfd6d-ea7d-42fd-8535-472b0a692e6e",
                     "children": [],
-                    "sortIndex": 84
+                    "sortIndex": 80
                 },
                 "TagComponent": {
                     "tags": [
@@ -5228,7 +5245,7 @@
                         "182bfc08-df21-4842-ba40-7e465530878e",
                         "75b5e044-d3e1-4552-be43-b5187aeb52cd"
                     ],
-                    "sortIndex": 85
+                    "sortIndex": 81
                 },
                 "TagComponent": {
                     "tags": [
@@ -5278,7 +5295,7 @@
                 "HierarchyComponent": {
                     "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
                     "children": [],
-                    "sortIndex": 86
+                    "sortIndex": 82
                 },
                 "TagComponent": {
                     "tags": [
@@ -5329,7 +5346,7 @@
                 "HierarchyComponent": {
                     "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
                     "children": [],
-                    "sortIndex": 87
+                    "sortIndex": 84
                 },
                 "TagComponent": {
                     "tags": [
@@ -5343,19 +5360,6 @@
                 "TextureComponent": {
                     "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
                     "isUI": false
-                },
-                "TextProperties": {
-                    "text": "99%",
-                    "scale": 1.0,
-                    "color": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "opacity": 0.0,
-                    "alignment": 0,
-                    "isBillboard": false,
-                    "screenSpace": true
                 },
                 "TextProperties": {
                     "text": "99%",
@@ -5397,7 +5401,7 @@
                 "HierarchyComponent": {
                     "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
                     "children": [],
-                    "sortIndex": 88
+                    "sortIndex": 85
                 },
                 "TagComponent": {
                     "tags": [
@@ -5414,7 +5418,7 @@
                 },
                 "ButtonComponent": {
                     "position": [
-                        1050.0,
+                        1480.0,
                         500.0
                     ],
                     "size": [
@@ -5451,7 +5455,7 @@
                 "HierarchyComponent": {
                     "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
                     "children": [],
-                    "sortIndex": 89
+                    "sortIndex": 87
                 },
                 "TagComponent": {
                     "tags": [
@@ -5467,20 +5471,7 @@
                     "isUI": false
                 },
                 "TextProperties": {
-                    "text": "0%",
-                    "scale": 1.0,
-                    "color": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "opacity": 0.0,
-                    "alignment": 0,
-                    "isBillboard": false,
-                    "screenSpace": true
-                },
-                "TextProperties": {
-                    "text": "0%",
+                    "text": "100%",
                     "scale": 1.0,
                     "color": [
                         1.0,
@@ -5519,7 +5510,7 @@
                 "HierarchyComponent": {
                     "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
                     "children": [],
-                    "sortIndex": 90
+                    "sortIndex": 88
                 },
                 "TagComponent": {
                     "tags": [
@@ -6089,19 +6080,6 @@
                     "alignment": 0,
                     "isBillboard": false,
                     "screenSpace": true
-                },
-                "TextProperties": {
-                    "text": "Goodbye!",
-                    "scale": 0.6899999976158142,
-                    "color": [
-                        0.15939366817474365,
-                        0.15866754949092865,
-                        0.06640792638063431
-                    ],
-                    "opacity": 1.0,
-                    "alignment": 0,
-                    "isBillboard": false,
-                    "screenSpace": true
                 }
             }
         },
@@ -6198,19 +6176,6 @@
                     "alignment": 0,
                     "isBillboard": false,
                     "screenSpace": true
-                },
-                "TextProperties": {
-                    "text": "NPC",
-                    "scale": 0.8500000238418579,
-                    "color": [
-                        0.15939366817474365,
-                        0.15866754949092865,
-                        0.06640792638063431
-                    ],
-                    "opacity": 1.0,
-                    "alignment": 0,
-                    "isBillboard": false,
-                    "screenSpace": true
                 }
             }
         },
@@ -6265,19 +6230,6 @@
                     "alignment": 0,
                     "isBillboard": false,
                     "screenSpace": true
-                },
-                "TextProperties": {
-                    "text": "",
-                    "scale": 0.6899999976158142,
-                    "color": [
-                        0.15939366817474365,
-                        0.15866754949092865,
-                        0.06640792638063431
-                    ],
-                    "opacity": 1.0,
-                    "alignment": 0,
-                    "isBillboard": false,
-                    "screenSpace": true
                 }
             }
         },
@@ -6319,19 +6271,6 @@
                 "TextureComponent": {
                     "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
                     "isUI": false
-                },
-                "TextProperties": {
-                    "text": "",
-                    "scale": 0.6899999976158142,
-                    "color": [
-                        0.15939366817474365,
-                        0.15866754949092865,
-                        0.06640792638063431
-                    ],
-                    "opacity": 1.0,
-                    "alignment": 0,
-                    "isBillboard": false,
-                    "screenSpace": true
                 },
                 "TextProperties": {
                     "text": "",
@@ -15853,7 +15792,7 @@
                 "HierarchyComponent": {
                     "parent": "",
                     "children": [],
-                    "sortIndex": 0
+                    "sortIndex": 222
                 },
                 "TagComponent": {
                     "tags": []
@@ -15868,11 +15807,11 @@
             "name": "Forest Button (Copy)",
             "guid": "5e0f0306-1a52-42be-8bbf-ae919abf27c8",
             "components": {
-                "TransformComponent": {
+               "TransformComponent": {
                     "position": [
                         465.0,
                         707.0,
-                        1.0
+                        0.0
                     ],
                     "rotation": [
                         0.0,
@@ -15882,24 +15821,28 @@
                     "scale": [
                         500.0,
                         382.79998779296875,
-                        1.0
+                        0.0
                     ],
                     "isActive": true
                 },
-                "HierarchyComponent": {
+                "HierarchyComponent": 
+                {
                     "parent": "7f8f7e0e-9a54-4f43-b9d1-5b93d522180a",
                     "children": [],
                     "sortIndex": 238
                 },
-                "TagComponent": {
+                "TagComponent": 
+                {
                     "tags": [
                         "map"
                     ]
                 },
-                "MeshComponent": {
+                "MeshComponent": 
+                {
                     "guid": ""
                 },
-                "TextureComponent": {
+                "TextureComponent": 
+                {
                     "guid": "2e05f12a-89ae-405e-998b-1a8fc78b5d8b",
                     "isUI": false
                 },
@@ -15911,6 +15854,64 @@
                             "hotReload": false
                         }
                     ]
+                    }
+                }
+            },
+            {
+
+            "name": "CUTSCENE",
+            "guid": "f2f9401a-c38e-429a-b750-83ab2084c5a5",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        960.0,
+                        540.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1920.0,
+                        1080.0,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent":
+                {
+                    "parent": "",
+                    "children": [
+                        "ffa0dd06-e6a2-434c-a660-1eaa3ca16d87",
+                        "1e952323-a56f-4a74-84bc-ef669b63339e",
+                        "b1c682c1-138d-4c8d-994c-d10539340f55",
+                        "b7c1a7b4-8e58-4302-af20-63d18e83fe22",
+                        "c23a061a-498c-4f0c-8e65-0babc3f7f3db",
+                        "6519d37c-22d7-46e1-8d01-81802867c7b4",
+                        "41fdf7f0-2405-42b8-ab07-72c58975fdfc",
+                        "6072b570-419a-4b96-933f-3462fcbbe4b6",
+                        "4ca388a3-e759-431c-9ddf-32d3b309895e",
+                        "453490d2-4556-4ee1-9c23-e0da56d43f5a",
+                        "7779c798-6517-4d38-add0-de6d20fa2a12",
+                        "e5b99d4e-82cb-466e-a8b8-ada33c423058",
+                        "6e309d8c-df5a-49ab-97d8-f2db3f4063d9"
+                    ],
+                    "sortIndex": 223
+                },
+                "TagComponent": {
+                    "tags": [
+                        "cutscene"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "eb687c6c-3f11-4f0e-b113-a7b451c5f632",
+                    "isUI": false
                 },
                 "ButtonComponent": {
                     "position": [
@@ -15922,8 +15923,7 @@
                         382.79998779296875
                     ],
                     "isHovered": false,
-                    "isFrontButton": true
-                }
+                    "isFrontButton": true}
             }
         },
         {
@@ -15985,6 +15985,536 @@
                     ],
                     "isHovered": true,
                     "isFrontButton": true
+                }
+            }
+        },
+            {
+            "name": "CUTSCENE1",
+            "guid": "ffa0dd06-e6a2-434c-a660-1eaa3ca16d87",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        400.0,
+                        830.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        423.0,
+                        400.0,
+                        0.0
+                    ],
+                    "parent": "f2f9401a-c38e-429a-b750-83ab2084c5a5",
+                    "children": [],
+                    "sortIndex": 0
+                },
+                "TagComponent": {
+                    "tags": [
+                        "cutscene"
+                    ]
+                },
+                    "TextureComponent": {
+                    "guid": "529b1429-8279-4d83-8947-dc8de5f6c37a",
+                    "isUI": false
+                }
+            }
+        },
+        {
+            "name": "CUTSCENE2",
+            "guid": "1e952323-a56f-4a74-84bc-ef669b63339e",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        950.0,
+                        840.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        440.0,
+                        405.0,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "f2f9401a-c38e-429a-b750-83ab2084c5a5",
+                    "children": [],
+                    "sortIndex": 1
+                },
+                "TagComponent": {
+                    "tags": [
+                        "cutscene"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": ""
+                },
+                "TextureComponent": {
+                    "guid": "ab663213-734f-49df-801d-e8c949f7786b",
+                    "isUI": false
+                }
+            }
+        },
+        {
+            "name": "CUTSCENE3",
+            "guid": "b1c682c1-138d-4c8d-994c-d10539340f55",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        1500.0,
+                        830.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        423.0,
+                        400.0,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "f2f9401a-c38e-429a-b750-83ab2084c5a5",
+                    "children": [],
+                    "sortIndex": 2
+                },
+                "TagComponent": {
+                    "tags": [
+                        "cutscene"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": ""
+                },
+                "TextureComponent": {
+                    "guid": "5ac95598-7bf6-45f6-adf0-824396450a48",
+                    "isUI": false
+                }
+            }
+        },
+        {
+            "name": "CUTSCENE4",
+            "guid": "b7c1a7b4-8e58-4302-af20-63d18e83fe22",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        430.0,
+                        230.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        423.0,
+                        400.0,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "f2f9401a-c38e-429a-b750-83ab2084c5a5",
+                    "children": [],
+                    "sortIndex": 2
+                },
+                "TagComponent": {
+                    "tags": [
+                        "cutscene"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": ""
+                },
+                "TextureComponent": {
+                    "guid": "688ee440-8d3a-446a-bb38-374bc8f2d982",
+                    "isUI": false
+                }
+            }
+        },
+        {
+            "name": "CUTSCENE5",
+            "guid": "c23a061a-498c-4f0c-8e65-0babc3f7f3db",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        950.0,
+                        220.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        423.0,
+                        400.0,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "f2f9401a-c38e-429a-b750-83ab2084c5a5",
+                    "children": [],
+                    "sortIndex": 2
+                },
+                "TagComponent": {
+                    "tags": [
+                        "cutscene"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": ""
+                },
+                "TextureComponent": {
+                    "guid": "c94f32a4-e497-462b-a0b1-cdfebdff4ffe",
+                    "isUI": false
+                }
+            }
+        },
+        {
+            "name": "CUTSCENE6",
+            "guid": "6519d37c-22d7-46e1-8d01-81802867c7b4",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        1500.0,
+                        230.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        420.0,
+                        400.0,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "f2f9401a-c38e-429a-b750-83ab2084c5a5",
+                    "children": [],
+                    "sortIndex": 2
+                },
+                "TagComponent": {
+                    "tags": [
+                        "cutscene"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": ""
+                },
+                "TextureComponent": {
+                    "guid": "cd0ab525-62ba-4859-9dc1-ccab223a60ef",
+                    "isUI": false
+                }
+            }
+        },
+        {
+            "name": "CUTSCENEWORD1",
+            "guid": "41fdf7f0-2405-42b8-ab07-72c58975fdfc",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        960.0,
+                        520.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        2200.0,
+                        135.0,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "f2f9401a-c38e-429a-b750-83ab2084c5a5",
+                    "children": [],
+                    "sortIndex": 2
+                },
+                "TagComponent": {
+                    "tags": [
+                        "cutscene"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": ""
+                },
+                "TextureComponent": {
+                    "guid": "cc478360-49aa-4609-b48d-5b959ce00ffc",
+                    "isUI": false
+                }
+            }
+        },
+        {
+            "name": "BLACKBAR1",
+            "guid": "6072b570-419a-4b96-933f-3462fcbbe4b6",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        960.0,
+                        540.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1920.0,
+                        150.0,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "f2f9401a-c38e-429a-b750-83ab2084c5a5",
+                    "children": [],
+                    "sortIndex": 2
+                },
+                "TagComponent": {
+                    "tags": [
+                        "cutscene"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": ""
+                },
+                "TextureComponent": {
+                    "guid": "bd53721a-583e-47d7-b196-17af52bd40fe",
+                    "isUI": false
+                }
+            }
+        },
+        {
+            "name": "CUTSCENEWORD2",
+            "guid": "4ca388a3-e759-431c-9ddf-32d3b309895e",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        960.0,
+                        560.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        2200.0,
+                        135.0,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "f2f9401a-c38e-429a-b750-83ab2084c5a5",
+                    "children": [],
+                    "sortIndex": 2
+                },
+                "TagComponent": {
+                    "tags": [
+                        "cutscene"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "e947c023-80a7-4bde-bac1-39fced66d9ee",
+                    "isUI": false
+                }
+            }
+        },
+        {
+            "name": "CUTSCENEWORD3",
+            "guid": "453490d2-4556-4ee1-9c23-e0da56d43f5a",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        960.0,
+                        480.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        2200.0,
+                        135.0,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "f2f9401a-c38e-429a-b750-83ab2084c5a5",
+                    "children": [],
+                    "sortIndex": 2
+                },
+                "TagComponent": {
+                    "tags": [
+                        "cutscene"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "61c47fb7-ac43-43f6-afa6-365cfb81dda4",
+                    "isUI": false
+                }
+            }
+        },
+        {
+            "name": "BLACKBAR2",
+            "guid": "7779c798-6517-4d38-add0-de6d20fa2a12",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        960.0,
+                        540.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1920.0,
+                        170.0,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "f2f9401a-c38e-429a-b750-83ab2084c5a5",
+                    "children": [],
+                    "sortIndex": 2
+                },
+                "TagComponent": {
+                    "tags": [
+                        "cutscene"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "bd53721a-583e-47d7-b196-17af52bd40fe",
+                    "isUI": false
+                }
+            }
+        },
+        {
+            "name": "CUTSCENEWORD4",
+            "guid": "e5b99d4e-82cb-466e-a8b8-ada33c423058",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        960.0,
+                        520.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        2700.0,
+                        300.0,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "f2f9401a-c38e-429a-b750-83ab2084c5a5",
+                    "children": [],
+                    "sortIndex": 2
+                },
+                "TagComponent": {
+                    "tags": [
+                        "cutscene"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": ""
+                },
+                "TextureComponent": {
+                    "guid": "ac8231e6-be2d-4ae8-a11f-5d65a200211a",
+                    "isUI": false
+                }
+            }
+        },
+        {
+            "name": "CSBLACKFINAL (Copy)",
+            "guid": "6e309d8c-df5a-49ab-97d8-f2db3f4063d9",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        960.0,
+                        540.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1920.0,
+                        1080.0,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "f2f9401a-c38e-429a-b750-83ab2084c5a5",
+                    "children": [],
+                    "sortIndex": 2
+                },
+                "TagComponent": {
+                    "tags": [
+                        "cutscene"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": ""
+                },
+                "TextureComponent": {
+                    "guid": "eb687c6c-3f11-4f0e-b113-a7b451c5f632",
+                    "isUI": false
                 }
             }
         }

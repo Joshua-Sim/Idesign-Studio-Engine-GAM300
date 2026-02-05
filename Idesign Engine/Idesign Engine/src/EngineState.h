@@ -26,7 +26,8 @@ namespace Framework
         Upgrade,
         Settings,
         Dialogue, 
-        MapSelection
+        MapSelection,
+        Cutscene
     };
 
     class EngineState

@@ -23,9 +23,42 @@
             "vbo_skinning": 0
         },
         {
+            "guid": "e4d836ef-c0bc-46bb-914c-c1e05246eb81",
+            "name": "knifechoppingwithBONEFIXED4",
+            "path": "Assets/Objects/knifechoppingwithBONEFIXED4.fbx",
+            "defaultAnimationName": "",
+            "animationSpeed": 1.0,
+            "bLoops": true,
+            "bPlayOnStart": true,
+            "currentTime": 0.0,
+            "vbo_skinning": 0
+        },
+        {
             "guid": "af14de83-981d-448a-a6e3-07a92a48e676",
             "name": "CauldronStiring",
             "path": "Assets\\Objects\\CauldronStiring.fbx",
+            "defaultAnimationName": "",
+            "animationSpeed": 1.0,
+            "bLoops": true,
+            "bPlayOnStart": true,
+            "currentTime": 0.0,
+            "vbo_skinning": 0
+        },
+        {
+            "guid": "66604d7f-2200-44ca-8964-cce6b7ae81ac",
+            "name": "fish",
+            "path": "Assets\\Objects\\fish.fbx",
+            "defaultAnimationName": "",
+            "animationSpeed": 1.0,
+            "bLoops": true,
+            "bPlayOnStart": true,
+            "currentTime": 0.0,
+            "vbo_skinning": 0
+        },
+        {
+            "guid": "650e0da6-753b-406b-9c12-e77f60602971",
+            "name": "Goblin",
+            "path": "Assets\\Objects\\Goblin.fbx",
             "defaultAnimationName": "",
             "animationSpeed": 1.0,
             "bLoops": true,

@@ -14,9 +14,12 @@ namespace Framework
 		void Initialize() override;
 		void Update(float deltaTime) override;
 		std::string GetName() override;
-
 	private:
 	};
+
+	static float cutsceneStartTime = -1.0f;
+	static float fadeOutStartTime = -1.0f;
+
 
 	// Declare the global instance of EngineState
 	extern SceneInterface sceneInterface;
