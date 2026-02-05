@@ -5,19 +5,19 @@
         "components": {
             "TransformComponent": {
                 "position": [
-                    -204.21104431152344,
-                    4.651084899902344,
-                    139.96495056152344
+                    -240.16969299316406,
+                    316.1000061035156,
+                    646.4075927734375
                 ],
                 "rotation": [
-                    0.0,
-                    -51.73591613769531,
-                    0.0
+                    0.03514954820275307,
+                    103.96455383300781,
+                    -0.037727031856775284
                 ],
                 "scale": [
                     5.0,
-                    5.0,
-                    5.0
+                    4.999996185302734,
+                    5.000000953674316
                 ],
                 "isActive": true
             },
@@ -33,10 +33,10 @@
                 "sortIndex": 0
             },
             "MeshReference": {
-                "guid": "b26ff467-8b01-4f24-a363-8a4b1df7a427"
+                "guid": "a996d924-d28b-4666-bdd8-6960b3a2fbba"
             },
             "TextureComponent": {
-                "guid": "ddfff4cb-33f0-4823-9b91-af724b0aff21",
+                "guid": "1a928592-b12c-4b21-8af3-1c2cfeb9dd36",
                 "isUI": false
             },
             "NavMeshAgentComponent": {
@@ -50,9 +50,9 @@
                 "autoRepath": false,
                 "stopOnTargetReached": true,
                 "targetPosition": [
-                    -204.24180603027344,
-                    4.651084899902344,
-                    139.92596435546875
+                    -240.1552276611328,
+                    316.1000061035156,
+                    646.4658203125
                 ]
             },
             "ScriptProperties": {

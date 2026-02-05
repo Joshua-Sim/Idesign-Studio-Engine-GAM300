@@ -1,14 +1,14 @@
 {
     "banks": [
         {
-            "guid": "45b5f7d2-94b5-4a7f-a32d-893778248a30",
-            "name": "Master",
-            "path": "Assets\\Audio\\Desktop\\Master.bank"
-        },
-        {
             "guid": "174fa02d-453c-432c-a7ad-3a189353c91b",
             "name": "BGM",
             "path": "Assets\\Audio\\Desktop\\BGM.bank"
+        },
+        {
+            "guid": "45b5f7d2-94b5-4a7f-a32d-893778248a30",
+            "name": "Master",
+            "path": "Assets\\Audio\\Desktop\\Master.bank"
         },
         {
             "guid": "98e943fc-62e3-4646-ae60-49ef01e59ff0",

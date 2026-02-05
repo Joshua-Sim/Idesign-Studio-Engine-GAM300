@@ -115,6 +115,7 @@ namespace Framework {
         }
 
 
+
         int l_IsKeyDown(lua_State* L) 
         {
             auto* self = lua_self(L);
@@ -1969,7 +1970,7 @@ namespace Framework {
         lua_register(L, "GetPhase", lua_GetPhase);
        
         
-        lua_register(L, "SetScale", lua_SetScale);
+       // lua_register(L, "SetScale", lua_SetScale);
         lua_register(L, "GetScale", lua_GetScale);
 
         // Dialogue System

@@ -1,15 +1,15 @@
 {
     "scripts": [
         {
-            "guid": "16f0caaf-2e11-4715-ab0e-06c67810e1ba",
-            "scriptPath": "Assets\\Scripts\\InventoryUpgrade.lua",
+            "guid": "23de8816-8d7d-42e1-ada2-3fdd7190fe5f",
+            "scriptPath": "Assets\\Scripts\\GameStateSettings.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
         },
         {
-            "guid": "23de8816-8d7d-42e1-ada2-3fdd7190fe5f",
-            "scriptPath": "Assets\\Scripts\\GameStateSettings.lua",
+            "guid": "16f0caaf-2e11-4715-ab0e-06c67810e1ba",
+            "scriptPath": "Assets\\Scripts\\InventoryUpgrade.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
@@ -66,6 +66,20 @@
         {
             "guid": "d147b738-c2f4-4231-9905-ea0d34658d17",
             "scriptPath": "Assets\\Scripts\\MapSelectionUI.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "c29df17b-a280-43be-bfd9-900ec398078b",
+            "scriptPath": "Assets\\Scripts\\ForestUnlockUpgrade.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "6d5cf756-cb0e-4343-a7df-ac4c89a09858",
+            "scriptPath": "Assets\\Scripts\\score_test.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
@@ -157,20 +171,6 @@
         {
             "guid": "2a043a0e-5056-4deb-a5db-ef302f3af345",
             "scriptPath": "Assets\\Scripts\\Customer.lua",
-            "hotReload": true,
-            "initialized": false,
-            "tableRef": -1
-        },
-        {
-            "guid": "c29df17b-a280-43be-bfd9-900ec398078b",
-            "scriptPath": "Assets\\Scripts\\ForestUnlockUpgrade.lua",
-            "hotReload": true,
-            "initialized": false,
-            "tableRef": -1
-        },
-        {
-            "guid": "6d5cf756-cb0e-4343-a7df-ac4c89a09858",
-            "scriptPath": "Assets\\Scripts\\score_test.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
