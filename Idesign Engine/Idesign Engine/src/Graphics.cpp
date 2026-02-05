@@ -2499,39 +2499,7 @@ namespace Framework {
             }
         }
 
-        // PARTICLE (Jasper)
-        std::vector<glm::mat4> pixelInstances;
-        std::vector<glm::mat4> voxelInstances;
-
-        for (Entity e : mEntities)
-        {
-            if (!ecsInterface.HasComponent<ParticleEmitterComponent>(e) ||
-                !ecsInterface.HasComponent<TransformComponent>(e))
-                continue;
-
-            auto& emitter = ecsInterface.GetComponent<ParticleEmitterComponent>(e);
-            auto& xform = ecsInterface.GetComponent<TransformComponent>(e);
-
-            if (!emitter.active) continue;
-
-            const glm::mat4 emitterM = glm::translate(glm::mat4(1.0f), xform.position);
-
-            for (const Particle& p : emitter.particles)
-            {
-                glm::vec3 worldPos = p.position;
-                if (emitter.localSpace)
-                    worldPos = glm::vec3(emitterM * glm::vec4(p.position, 1.0f));
-
-                glm::mat4 M(1.0f);
-                M = glm::translate(M, worldPos);
-                M = glm::scale(M, glm::vec3(p.size));
-
-                if (emitter.style == 1) voxelInstances.push_back(M);
-                else                    pixelInstances.push_back(M);
-            }
-        }
-
-
+       
         // --- 2. TRANSPARENT PASS ---
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

@@ -95,7 +95,13 @@ namespace Framework
 
             // Always update existing particles (even if emitter disabled)
             // but only spawn if active + transform active
-            bool canEmit = em.active && tr.isActive;
+            bool canEmit = true;
+            if (!em.loop)
+            {
+                em.timeSinceStart += dt;
+                if (em.timeSinceStart > em.duration)
+                    canEmit = false;
+            }
 
             EnsureEmitterTextureLoaded(em);
 

@@ -111,7 +111,6 @@ int main(void)
     auto buttonSystem = ecsInterface.RegisterSystem<ButtonSystem>();
     imguiSystem->SetGraphicsSystem(graphicsSystem.get());
     graphicsSystem->SetImguiManager(imguiSystem.get());
-    auto particleSystem = ecsInterface.RegisterSystem<ParticleSystem>();
 
     //AssetManager::Instance().LoadAllAssets();
     
@@ -172,7 +171,6 @@ int main(void)
     engine->AddSystem(navMeshSystem.get());
 	engine->AddSystem(audioSystem.get());
     engine->AddSystem(physicsSystem.get());
-    engine->AddSystem(particleSystem.get()); //Particle
     engine->AddSystem(tagManager.get());
     engine->AddSystem(playerInteractSystem.get());
     engine->AddSystem(fileCheckSystem.get());
