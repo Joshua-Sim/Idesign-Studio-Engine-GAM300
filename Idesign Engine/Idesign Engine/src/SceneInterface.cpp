@@ -80,16 +80,81 @@ namespace Framework
             }
 
             // 4. Upgrade
+            // 4. Upgrade - Complete visibility logic
             auto upgradeEntities = ecsInterface.GetEntitiesByTag("upgrade");
             for (Entity e : upgradeEntities)
             {
                 if (!ecsInterface.IsEntityValid(e)) continue;
-
                 if (ecsInterface.HasComponent<ButtonComponent>(e) &&
                     ecsInterface.HasComponent<TextureProperties>(e))
                 {
                     auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
-                    if (!engineState.Is(EngineMode::Editor)) { texture.isUI = engineState.Is(EngineMode::Upgrade); }
+                    auto& button = ecsInterface.GetComponent<ButtonComponent>(e);
+
+                    if (!engineState.Is(EngineMode::Editor))
+                    {
+                        bool inUpgradeMode = engineState.Is(EngineMode::Upgrade);
+
+                        if (inUpgradeMode)
+                        {
+                            auto& upgradeMgr = UpgradeManager::Instance();
+                            bool canAffordQuarry = GameSystem::GetCurrency() >= upgradeMgr.GetAreaUnlockCost(GameArea::Quarry);
+                            bool canAffordGold = upgradeMgr.CanAffordCurrencyUpgrade();
+                            bool canAffordInventory = upgradeMgr.CanAffordInventoryUpgrade();
+
+                            // Check hover state
+                            bool isCurrentlyHovered = button.isHovered;
+
+                            // QUARRY upgrade states
+                            if (ecsInterface.EntityHasTag(e, "quarry"))
+                            {
+                                texture.isUI = !isCurrentlyHovered;
+                            }
+                            else if (ecsInterface.EntityHasTag(e, "quarrypass"))
+                            {
+                                texture.isUI = isCurrentlyHovered && canAffordQuarry;
+                            }
+                            else if (ecsInterface.EntityHasTag(e, "quarryfail"))
+                            {
+                                texture.isUI = isCurrentlyHovered && !canAffordQuarry;
+                            }
+                            // GOLD (currency multiplier) upgrade states
+                            else if (ecsInterface.EntityHasTag(e, "gold"))
+                            {
+                                texture.isUI = !isCurrentlyHovered;
+                            }
+                            else if (ecsInterface.EntityHasTag(e, "goldpass"))
+                            {
+                                texture.isUI = isCurrentlyHovered && canAffordGold;
+                            }
+                            else if (ecsInterface.EntityHasTag(e, "goldfail"))
+                            {
+                                texture.isUI = isCurrentlyHovered && !canAffordGold;
+                            }
+                            // INVENTORY upgrade states
+                            else if (ecsInterface.EntityHasTag(e, "inventory"))
+                            {
+                                texture.isUI = !isCurrentlyHovered;
+                            }
+                            else if (ecsInterface.EntityHasTag(e, "inventorypass"))
+                            {
+                                texture.isUI = isCurrentlyHovered && canAffordInventory;
+                            }
+                            else if (ecsInterface.EntityHasTag(e, "inventoryfail"))
+                            {
+                                texture.isUI = isCurrentlyHovered && !canAffordInventory;
+                            }
+                            else
+                            {
+                                // Other upgrade elements (backgrounds, titles, etc.)
+                                texture.isUI = true;
+                            }
+                        }
+                        else
+                        {
+                            texture.isUI = false;  // Hide when not in upgrade mode
+                        }
+                    }
                 }
             }
 
