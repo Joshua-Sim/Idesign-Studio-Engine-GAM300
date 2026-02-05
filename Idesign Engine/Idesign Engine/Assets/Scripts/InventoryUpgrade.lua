@@ -20,13 +20,15 @@ function M:on_init()
             
             if success then
                 UpdateCurrencyUI()
-                local newSlots = GetInventoryMaxSlots()
+                local newSlots = GetInventorySlotCount()  -- Changed from GetInventoryMaxSlots()
+                local newLevel = GetInventoryLevel()
                 local newCost = GetInventoryUpgradeCost()
-                print("[InventoryUpgrade] Upgraded! New slots: " .. newSlots)
+                print("[InventoryUpgrade] Upgraded! New level: " .. newLevel)
+                print("[InventoryUpgrade] New slots: " .. newSlots)
                 print("[InventoryUpgrade] Next upgrade cost: " .. newCost)
                 print("[InventoryUpgrade] Remaining currency: " .. GetCurrency())
             else
-                print("[InventoryUpgrade] Already at max slots!")
+                print("[InventoryUpgrade] Upgrade failed - not enough currency or already maxed!")
             end
         else
             print("[InventoryUpgrade] Not enough currency!")

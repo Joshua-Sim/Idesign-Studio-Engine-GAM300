@@ -3984,7 +3984,7 @@
                 },
                 "TextureComponent": {
                     "guid": "2885b8d9-fd72-450a-bd0c-d961d8ea0551",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ButtonComponent": {
                     "position": [
@@ -4678,7 +4678,7 @@
                 },
                 "TextureComponent": {
                     "guid": "d3a095a2-cf00-4087-afcd-e20ed3c7e9e9",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -21288,7 +21288,7 @@
                 },
                 "TextureComponent": {
                     "guid": "a634ce59-2f15-4613-aa9f-96ff5dd0417d",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -22082,7 +22082,7 @@
                 },
                 "TextureComponent": {
                     "guid": "ddac64f1-526d-4a66-b51c-d9b80d059181",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -22146,7 +22146,7 @@
                 },
                 "TextureComponent": {
                     "guid": "0d493a57-83b3-4d24-91b8-54bf0daab83a",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -22210,7 +22210,7 @@
                 },
                 "TextureComponent": {
                     "guid": "22ca5ead-31df-4762-acf6-beda50eddb17",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -22338,7 +22338,7 @@
                 },
                 "TextureComponent": {
                     "guid": "62e0924c-6b19-45c9-8d19-8eae26ae5642",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -22400,7 +22400,7 @@
                 },
                 "TextureComponent": {
                     "guid": "88cb3c42-0ada-4fbb-a45b-6294d09e9c91",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ButtonComponent": {
                     "position": [
@@ -22450,7 +22450,7 @@
                 },
                 "TextureComponent": {
                     "guid": "fd9b552e-2c89-4b09-8568-f1a3db6d13ea",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ButtonComponent": {
                     "position": [

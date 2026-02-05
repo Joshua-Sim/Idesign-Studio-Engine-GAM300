@@ -2247,26 +2247,71 @@ namespace Framework {
         lua_setglobal(L, "Sound");
 
         // Upgrade Screen
-        // Inventory Increase
-        lua_register(L, "GetInventoryMaxSlots", [](lua_State* L) -> int {
-            auto& inv = Inventory::Instance();
-            int maxSlots = inv.GetHotbarSlotCount();
-            lua_pushinteger(L, maxSlots);
-            return 1;
-            });
-
+        // Inventory Upgrade - Upgrades hotbar slots
         lua_register(L, "UpgradeInventorySlots", [](lua_State* L) -> int {
             int amount = (int)luaL_checkinteger(L, 1);
             auto& upgradeMgr = UpgradeManager::Instance();
             bool success = upgradeMgr.UpgradeInventorySlots(amount);
+
+            if (success)
+            {
+                // Actually apply the upgrade to inventory
+                auto& inv = Inventory::Instance();
+                int currentLevel = inv.GetHotbarLevel();
+                inv.SetHotbarLevel(currentLevel + 1);
+
+                std::cout << "[Lua] Inventory upgraded! New level: " << (currentLevel + 1)
+                    << ", Slots: " << inv.GetHotbarSlotCount() << std::endl;
+            }
+
             lua_pushboolean(L, success);
             return 1;
             });
 
-        lua_register(L, "GetInventoryUpgradeCost", [](lua_State* L) -> int {
-            auto& upgradeMgr = UpgradeManager::Instance();
-            int cost = upgradeMgr.GetInventoryUpgradeCost();
-            lua_pushinteger(L, cost);
+        // Get current hotbar slot count
+        lua_register(L, "GetInventorySlotCount", [](lua_State* L) -> int {
+            int slots = Inventory::Instance().GetHotbarSlotCount();
+            lua_pushinteger(L, slots);
+            return 1;
+            });
+
+        // Get current hotbar level
+        lua_register(L, "GetInventoryLevel", [](lua_State* L) -> int {
+            int level = Inventory::Instance().GetHotbarLevel();
+            lua_pushinteger(L, level);
+            return 1;
+            });
+
+        // Upgrade backpack (optional, for future)
+        lua_register(L, "UpgradeBackpack", [](lua_State* L) -> int {
+            auto& inv = Inventory::Instance();
+            int currentLevel = inv.GetBackpackLevel();
+
+            if (currentLevel >= 3)
+            {
+                std::cout << "[Lua] Backpack already at max level!" << std::endl;
+                lua_pushboolean(L, false);
+                return 1;
+            }
+
+            inv.SetBackpackLevel(currentLevel + 1);
+            std::cout << "[Lua] Backpack upgraded to level: " << (currentLevel + 1)
+                << ", Rows: " << inv.GetBackpackRowCount() << std::endl;
+            lua_pushboolean(L, true);
+            return 1;
+            });
+
+        // Get backpack level
+        lua_register(L, "GetBackpackLevel", [](lua_State* L) -> int {
+            int level = Inventory::Instance().GetBackpackLevel();
+            lua_pushinteger(L, level);
+            return 1;
+            });
+
+        // Get backpack slot count
+        lua_register(L, "GetBackpackSlotCount", [](lua_State* L) -> int {
+            int slots = Inventory::Instance().GetBackpackSlotCount();
+            lua_pushinteger(L, slots);
             return 1;
             });
 

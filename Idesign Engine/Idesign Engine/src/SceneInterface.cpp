@@ -298,6 +298,23 @@ namespace Framework
                 cutsceneFinished = false;
             }
 
+            // Gold Coin Icon
+            auto coinEntity = ecsInterface.GetEntitiesByTag("coinicon");
+            for (Entity e : coinEntity)
+            {
+                if (!ecsInterface.IsEntityValid(e)) continue;
+                if (ecsInterface.HasComponent<ButtonComponent>(e) &&
+                    ecsInterface.HasComponent<TextureProperties>(e))
+                {
+                    auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
+
+                    // Show only during Play, Upgrade, or Editor modes
+                    bool shouldShow = engineState.Is(EngineMode::Play) ||
+                                      engineState.Is(EngineMode::Upgrade) ||
+                                      engineState.Is(EngineMode::Editor);
+                    texture.isUI = shouldShow;
+                }
+            }
         }
     }
 }

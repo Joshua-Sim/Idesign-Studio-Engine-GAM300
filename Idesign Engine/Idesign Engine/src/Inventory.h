@@ -90,7 +90,7 @@ namespace Framework {
         std::array<InvSlot, kBackpackMaxSlots>  mBackpack{};
 
         int  m_selectedIndex = 0;
-        int  mHotbarLevel = 0;     // 0 => 4 slots
+        int  mHotbarLevel = 1;     // 0 => 4 slots
         int  mBackpackLevel = 1;   // 0..3
         bool mBackpackOpen = false;
 
