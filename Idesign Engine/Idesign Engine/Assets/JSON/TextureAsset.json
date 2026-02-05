@@ -91,12 +91,6 @@
             "isUI": false
         },
         {
-            "guid": "d7666fdd-353e-4a3e-9a3f-70f50cea9f7a",
-            "name": "CREDITS BUTTON",
-            "path": "Assets\\Textures\\CREDITS BUTTON.png",
-            "isUI": false
-        },
-        {
             "guid": "6268a735-25b0-4a92-b9df-38ba44a3af1e",
             "name": "SETTING HOVER BUTTON",
             "path": "Assets\\Textures\\SETTING HOVER BUTTON.png",
@@ -118,6 +112,18 @@
             "guid": "bd53721a-583e-47d7-b196-17af52bd40fe",
             "name": "blackbar",
             "path": "Assets\\Textures\\blackbar.png",
+            "isUI": false
+        },
+        {
+            "guid": "d7666fdd-353e-4a3e-9a3f-70f50cea9f7a",
+            "name": "CREDITS BUTTON",
+            "path": "Assets\\Textures\\CREDITS BUTTON.png",
+            "isUI": false
+        },
+        {
+            "guid": "cf6e59fa-490e-4c1d-915b-11f4df02b5a5",
+            "name": "BlueVial",
+            "path": "Assets\\Textures\\BlueVial.png",
             "isUI": false
         },
         {
@@ -1360,6 +1366,30 @@
             "guid": "99ab0ba1-f9af-46d4-9e91-0f4c3a14841d",
             "name": "bridge_slope",
             "path": "Assets\\Textures\\bridge_slope.png",
+            "isUI": false
+        },
+        {
+            "guid": "c30cd85f-281f-4768-b344-e81389711158",
+            "name": "UI_SkillBar_BG",
+            "path": "Assets\\Textures\\UI_SkillBar_BG.png",
+            "isUI": false
+        },
+        {
+            "guid": "8ebd21a3-4b28-4a24-8e0e-c1a23923925e",
+            "name": "UI_SkillBar_Marker",
+            "path": "Assets\\Textures\\UI_SkillBar_Marker.png",
+            "isUI": false
+        },
+        {
+            "guid": "f1944e1e-2e5d-4cc2-aabd-b644737524d1",
+            "name": "UI_SkillBar_Zone",
+            "path": "Assets\\Textures\\UI_SkillBar_Zone.png",
+            "isUI": false
+        },
+        {
+            "guid": "1a49cbf5-75b0-4236-b52b-2611155c7a7b",
+            "name": "UI_ProgressBar_Fill",
+            "path": "Assets\\Textures\\UI_ProgressBar_Fill.png",
             "isUI": false
         }
     ]

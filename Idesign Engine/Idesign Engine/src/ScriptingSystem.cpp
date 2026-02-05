@@ -1763,7 +1763,8 @@ namespace Framework {
             }
             return 0;
         }
-        static int lua_SetScale(lua_State* L)
+        static int lua_
+        (lua_State* L)
         {
             // 1. Get Entity ID
             Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
@@ -1859,6 +1860,8 @@ namespace Framework {
             lua_pushnumber(L, cam->yaw);
             return 1;
         }
+
+        // ScriptingSystem.cpp
 
 
 
@@ -1964,6 +1967,7 @@ namespace Framework {
         lua_register(L, "GameStateBackToPause",   lua_GameStateBackToPause);
         lua_register(L, "GameStateEndNightPhase", lua_GameStateEndNightPhase);
         lua_register(L, "GetPhase", lua_GetPhase);
+       
         
         lua_register(L, "SetScale", lua_SetScale);
         lua_register(L, "GetScale", lua_GetScale);

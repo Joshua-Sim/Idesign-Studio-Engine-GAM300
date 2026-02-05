@@ -118,6 +118,15 @@
             "indexCount": 1560
         },
         {
+            "guid": "f699e1d9-f947-49e1-9108-ad2ecb610aa0",
+            "name": "center",
+            "path": "Assets\\Objects\\center.obj",
+            "vao": 11,
+            "vbo": 21,
+            "ebo": 22,
+            "indexCount": 12
+        },
+        {
             "guid": "5a92f04b-b30d-44f3-b990-d790fa568494",
             "name": "woodencrate",
             "path": "Assets\\Objects\\woodencrate.obj",
@@ -130,7 +139,7 @@
             "guid": "90a63915-c3e8-40b9-8c48-b8fe58a9bd67",
             "name": "Drawer",
             "path": "Assets\\Objects\\Drawer.obj",
-            "vao": 111,
+            "vao": 110,
             "vbo": 208,
             "ebo": 209,
             "indexCount": 1560
@@ -157,9 +166,9 @@
             "guid": "671f6bcc-5844-4c6d-9093-cb8e0c817831",
             "name": "GreenPotion",
             "path": "Assets\\Objects\\GreenPotion.obj",
-            "vao": 15,
-            "vbo": 29,
-            "ebo": 30,
+            "vao": 14,
+            "vbo": 27,
+            "ebo": 28,
             "indexCount": 924
         },
         {
@@ -211,7 +220,7 @@
             "guid": "f597242d-9dba-4259-a91d-036298fb344c",
             "name": "autumn tree 2 tier",
             "path": "Assets\\Objects\\autumn tree 2 tier.obj",
-            "vao": 225,
+            "vao": 224,
             "vbo": 436,
             "ebo": 437,
             "indexCount": 10098
@@ -229,9 +238,9 @@
             "guid": "2d0d1073-79fb-44de-9d09-86af64b2aabb",
             "name": "GreenPotion2",
             "path": "Assets\\Objects\\GreenPotion2.obj",
-            "vao": 21,
-            "vbo": 41,
-            "ebo": 42,
+            "vao": 20,
+            "vbo": 39,
+            "ebo": 40,
             "indexCount": 924
         },
         {
@@ -442,6 +451,15 @@
             "indexCount": 2304
         },
         {
+            "guid": "9e1fcb62-0699-4a0b-ae75-d0670af44b1b",
+            "name": "plane2",
+            "path": "Assets/Objects/plane2.obj",
+            "vao": 37,
+            "vbo": 73,
+            "ebo": 74,
+            "indexCount": 231840
+        },
+        {
             "guid": "e902f0d7-a022-45fc-9c17-2a98cbdb793e",
             "name": "Cylinder",
             "path": "Assets/Objects/Cylinder.obj",
@@ -458,6 +476,15 @@
             "vbo": 71,
             "ebo": 72,
             "indexCount": 231840
+        },
+        {
+            "guid": "fe86c54b-7cc2-471c-9d7e-0bce31089b5a",
+            "name": "Cylinder",
+            "path": "Assets/Objects/Cylinder.obj",
+            "vao": 39,
+            "vbo": 77,
+            "ebo": 78,
+            "indexCount": 240
         },
         {
             "guid": "a25723a2-f9bf-4939-b80d-962eb537dd2e",
@@ -622,6 +649,15 @@
             "indexCount": 157614
         },
         {
+            "guid": "5ec81f76-0cd6-4d5c-ba71-45bfdd723242",
+            "name": "Capsule",
+            "path": "Assets\\Objects\\Capsule.obj",
+            "vao": 56,
+            "vbo": 111,
+            "ebo": 112,
+            "indexCount": 3456
+        },
+        {
             "guid": "98376e97-180f-4b2c-b7f4-48834019f8ee",
             "name": "autumn tree",
             "path": "Assets\\Objects\\autumn tree.obj",
@@ -778,7 +814,7 @@
             "guid": "7ee5d1c3-de05-43c0-a3f0-36d807bea0c6",
             "name": "AUTUMN PINE TREE MED",
             "path": "Assets\\Objects\\AUTUMN PINE TREE MED.obj",
-            "vao": 226,
+            "vao": 225,
             "vbo": 438,
             "ebo": 439,
             "indexCount": 7302
