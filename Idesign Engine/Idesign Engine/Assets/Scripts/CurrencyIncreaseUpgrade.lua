@@ -18,6 +18,7 @@ function M:on_init()
         
         if success then
             UpdateCurrencyUI()
+            Sound.Play("event:/spendMoney")
             local newMultiplier = GetCurrencyMultiplier()
             local nextCost = GetCurrencyUpgradeCost()
             print("[CurrencyUpgrade] Upgraded! New multiplier: " .. newMultiplier .. "x")

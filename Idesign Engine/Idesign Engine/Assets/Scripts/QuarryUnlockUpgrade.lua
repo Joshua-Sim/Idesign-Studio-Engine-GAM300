@@ -24,7 +24,7 @@ function M:on_init()
         
         if success then
             UpdateCurrencyUI()  -- Update display
-            
+            Sound.Play("event:/spendMoney")
             print("[QuarryUnlock] Quarry unlocked!")
             print("[QuarryUnlock] Remaining currency: " .. GetCurrency())
             

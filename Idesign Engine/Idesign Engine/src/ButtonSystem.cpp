@@ -78,7 +78,7 @@ namespace Framework {
 
             // Must be visible UI AND interactable
             if (!tex.isUI) continue;
-            if (!button.interactable) continue;
+            if (!tex.uiAlpha > 0.0f) continue;
 
             float left = tr.position.x - 0.5f * tr.scale.x;
             float right = tr.position.x + 0.5f * tr.scale.x;
