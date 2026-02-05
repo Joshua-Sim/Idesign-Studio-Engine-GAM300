@@ -218,36 +218,25 @@ namespace Framework
                     }
                     else
                     {
-
-
                         // REACHED PLAYER: Finalize
                         int itemId = Framework::ItemNameToId(item.name);
                         if (itemId >= 0) {
+                            // Double check space one last time
                             int slot = Framework::Inventory::Instance().AddFirstEmpty(itemId);
                             if (slot >= 0) {
                                 SpawnPickupNotification(itemId, Framework::GetItemDisplayName(itemId));
 
-                                // --- NEW AUDIO LOGIC ---
-                                // Cross-check the ID with the item type
-                                // Assuming Framework::GetItemType or similar exists in your Item system
-                                // If you don't have a GetItemType, you can check if the name contains "potion"
+                                // Audio Logic
                                 std::string lowerName = item.name;
                                 for (auto& c : lowerName) c = (char)tolower(c);
-
                                 if (lowerName.find("potion") != std::string::npos) {
                                     g_AudioSystem->PlayAudio("event:/PickUpPotion");
                                 }
                                 else {
                                     g_AudioSystem->PlayAudio("event:/PickingUpHerb");
                                 }
-                                // -----------------------
 
                                 ecsInterface.DestroyEntity(entity);
-                            }
-                            else {
-                                // Inventory full: Drop it
-                                item.isZipping = false;
-                                // Optional: Reset gravity/physics so it falls
                             }
                         }
                     }
@@ -265,7 +254,6 @@ namespace Framework
         if (ecsInterface.HasComponent<BoxColliderComponent>(targetEntity))
         {
             auto& colliderComp = ecsInterface.GetComponent<BoxColliderComponent>(targetEntity);
-
             for (const auto& entry : colliderComp.colliders)
             {
                 if (entry.isInteractable && !entry.interactMessage.empty())
@@ -276,44 +264,57 @@ namespace Framework
                     payload.actionType = 1;
 
                     EventManager::Instance().Fire(entry.interactMessage, &payload);
-                    return; // Script handled it
+                    return;
                 }
             }
         }
 
         // ---------------------------------------------------------
-        // 2. ITEM INTERACTION
-        // ---------------------------------------------------------
+    // 2. ITEM INTERACTION
+    // ---------------------------------------------------------
         if (!ecsInterface.HasComponent<ItemComponent>(targetEntity))
             return;
 
         auto& item = ecsInterface.GetComponent<ItemComponent>(targetEntity);
-
         int itemId = Framework::ItemNameToId(item.name);
-        if (itemId < 0)
+        if (itemId < 0) return;
+
+        // --- CHECK IF FULL ---
+        if (Framework::Inventory::Instance().IsInventoryFull())
+        {
+            auto logEntity = Framework::InstantiatePrefabByName("CauldronLog_Prefab");
+            ecsInterface.GetComponent<TextProperties>(logEntity).text = "Inventory Full! Could not pick up " + Framework::GetItemDisplayName(itemId);
+
+            std::cout << "[PlayerInteractSystem] Interaction blocked: Inventory Full." << std::endl;
             return;
+        }
 
-        // Get world position of the source
-        glm::vec3 sourcePos =
-            ecsInterface.GetComponent<TransformComponent>(targetEntity).position;
+        // --- PROCEED WITH ZIP ---
+        glm::vec3 sourcePos = ecsInterface.GetComponent<TransformComponent>(targetEntity).position;
 
-        // ---------------------------------------------------------
-        // CASE A: Entity itself is the pickup
-        // ---------------------------------------------------------
+        // BEFORE setting isZipping
+        if (Framework::Inventory::Instance().IsInventoryFull())
+        {
+            auto logEntity = Framework::InstantiatePrefabByName("CauldronLog_Prefab");
+            ecsInterface.GetComponent<TextProperties>(logEntity).text =
+                "Inventory Full! Could not pick up " +
+                Framework::GetItemDisplayName(itemId);
+
+            return;
+        }
+
+
         if (item.toDestroyWhenPicked)
         {
-            // Start zip
             item.isZipping = true;
 
-            // Remove physics so it doesn't collide while flying
             if (mPhysicsSystem)
                 mPhysicsSystem->RemoveBodyForEntity(targetEntity);
 
-            // Remove collider if present
             if (ecsInterface.HasComponent<BoxColliderComponent>(targetEntity))
                 ecsInterface.RemoveComponent<BoxColliderComponent>(targetEntity);
 
-            // Optional: visual pop
+            // Visual "pop"
             if (ecsInterface.HasComponent<PhysicsProperties>(targetEntity))
             {
                 auto& phys = ecsInterface.GetComponent<PhysicsProperties>(targetEntity);
@@ -321,16 +322,10 @@ namespace Framework
                 phys.linearVelocity = glm::vec3(0.0f, 3.0f, 0.0f);
                 phys.startAwake = true;
             }
-
             return;
         }
 
-        // ---------------------------------------------------------
-        // CASE B: Entity is a SOURCE (crate, animal, plant)
-        // ---------------------------------------------------------
-
         SpawnZipPickup(itemId, sourcePos);
-
     }
 
 
