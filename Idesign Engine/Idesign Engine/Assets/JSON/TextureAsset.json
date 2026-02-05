@@ -43,6 +43,12 @@
             "isUI": false
         },
         {
+            "guid": "5361d026-4076-490e-bf6c-204ace0da656",
+            "name": "SETTINGS BUTTON",
+            "path": "Assets\\Textures\\SETTINGS BUTTON.png",
+            "isUI": true
+        },
+        {
             "guid": "d24a29c5-cd9e-4322-ab59-d38618cba4bf",
             "name": "quitbutton",
             "path": "Assets\\Textures\\quitbutton.png",
@@ -166,12 +172,18 @@
             "guid": "84369442-e278-434a-9fa6-c48d9c56bbb3",
             "name": "playbutton",
             "path": "Assets\\Textures\\playbutton.png",
-                        "isUI": false
+            "isUI": false
         },
         {
             "guid": "aaaf0f28-4e95-461c-9ed1-33ff97e0823c",
             "name": "Rune for title",
             "path": "Assets\\Textures\\Rune for title.png",
+            "isUI": false
+        },
+        {
+            "guid": "0bf9f4b3-27bd-42f4-8812-e83f13e8d309",
+            "name": "bridge_flat",
+            "path": "Assets\\Textures\\bridge_flat.png",
             "isUI": false
         },
         {
@@ -244,6 +256,12 @@
             "guid": "312bdb54-477d-47bb-a1ce-2224bc3ec5e3",
             "name": "Cupboard",
             "path": "Assets\\Textures\\Cupboard.png",
+            "isUI": false
+        },
+        {
+            "guid": "d1624844-bd9b-44f7-9976-d196954e311f",
+            "name": "ChoppedHerb1",
+            "path": "Assets\\Textures\\ChoppedHerb1.png",
             "isUI": false
         },
         {
@@ -1336,6 +1354,12 @@
             "guid": "61c47fb7-ac43-43f6-afa6-365cfb81dda4",
             "name": "CSWORDSPECIAL2",
             "path": "Assets\\Textures\\CSWORDSPECIAL2.png",
+            "isUI": false
+        },
+        {
+            "guid": "99ab0ba1-f9af-46d4-9e91-0f4c3a14841d",
+            "name": "bridge_slope",
+            "path": "Assets\\Textures\\bridge_slope.png",
             "isUI": false
         }
     ]

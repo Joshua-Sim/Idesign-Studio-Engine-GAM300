@@ -1,0 +1,78 @@
+{
+    "entity": {
+        "name": "ForestHerb3",
+        "guid": "7b32dbde-f572-459d-b68d-39763331100a",
+        "components": {
+            "TransformComponent": {
+                "position": [
+                    -264.7821960449219,
+                    316.1759948730469,
+                    610.513671875
+                ],
+                "rotation": [
+                    -0.03267321363091469,
+                    -0.20280450582504272,
+                    -0.09913946688175201
+                ],
+                "scale": [
+                    0.9999958872795105,
+                    0.9999886155128479,
+                    1.0
+                ],
+                "isActive": true
+            },
+            "TagComponent": {
+                "tags": []
+            },
+            "HierarchyComponent": {
+                "parent": "cacae5c6-d63c-4a92-9a65-b512e4eb2fa0",
+                "children": [],
+                "sortIndex": 1
+            },
+            "MeshReference": {
+                "guid": "4bf0356c-3b1b-4e45-a327-5a7f573a20ef"
+            },
+            "TextureComponent": {
+                "guid": "afd25b76-dddc-4c4f-bae4-a6c9a22931e5",
+                "isUI": false
+            },
+            "BoxColliderComponent": {
+                "colliders": [
+                    {
+                        "size": [
+                            3.0,
+                            4.099999904632568,
+                            4.0
+                        ],
+                        "center": [
+                            0.0,
+                            1.899999976158142,
+                            0.0
+                        ],
+                        "canPassThrough": false,
+                        "isInteractable": false
+                    }
+                ]
+            },
+            "PhysicsProperties": {
+                "category": 0,
+                "isImmovable": true,
+                "gravityFactor": 1.0,
+                "mass": 1.0,
+                "friction": 0.5,
+                "restitution": 0.0,
+                "linearVelocity": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "angularVelocity": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "startAwake": true
+            }
+        }
+    }
+}

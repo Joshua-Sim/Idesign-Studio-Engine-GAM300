@@ -1,5 +1,5 @@
 {
-    "count": 20,
+    "count": 25,
     "entries": [
         {
             "guid": "5f279032-d551-4137-8772-e24f5ae5af73",
@@ -116,9 +116,45 @@
             "isScenePrefab": false
         },
         {
+            "guid": "f8511c2c-d929-4580-a086-c0ce863f85bf",
+            "name": "ForestHerb3_Prefab",
+            "path": "Assets\\Prefabs\\ForestHerb3_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
             "guid": "f2b79bf2-29d4-4577-801d-b6dff82ecb2c",
             "name": "Herb4_Prefab",
             "path": "Assets\\Prefabs\\Herb4_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "f57ba7b7-a429-4a93-8205-926f7d73c15d",
+            "name": "ForestHerb5_Prefab",
+            "path": "Assets\\Prefabs\\ForestHerb5_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "547d1c97-d493-4ad7-8b74-776711960c57",
+            "name": "ForestHerb_Prefab",
+            "path": "Assets\\Prefabs\\ForestHerb_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "e7ef6b5d-76e8-4091-9d4f-5fd7138fb430",
+            "name": "ForestHerb1_Prefab",
+            "path": "Assets\\Prefabs\\ForestHerb1_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "04266e94-331d-4017-8728-a3670b317952",
+            "name": "ForestHerb2_Prefab",
+            "path": "Assets\\Prefabs\\ForestHerb2_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "964598ed-b412-4b29-8e6b-36ac4f9fc530",
+            "name": "ForestHerb4_Prefab",
+            "path": "Assets\\Prefabs\\ForestHerb4_Prefab.prefab",
             "isScenePrefab": false
         }
     ]

@@ -82,30 +82,48 @@
             "indexCount": 780
         },
         {
+            "guid": "c9235b5b-3b4d-4d81-a8b0-be5f5e60c452",
+            "name": "land",
+            "path": "Assets\\Objects\\land.obj",
+            "vao": 282,
+            "vbo": 552,
+            "ebo": 553,
+            "indexCount": 3408
+        },
+        {
             "guid": "71eff974-51b5-4c24-912c-ed68dbe5df8c",
             "name": "Rock3",
             "path": "Assets\\Objects\\Rock3.obj",
-            "vao": 175,
-            "vbo": 336,
-            "ebo": 337,
+            "vao": 177,
+            "vbo": 342,
+            "ebo": 343,
             "indexCount": 37086
         },
         {
             "guid": "1cc97700-7326-4df8-b677-80233b030807",
             "name": "Back Wall",
             "path": "Assets\\Objects\\Back Wall.obj",
-            "vao": 115,
-            "vbo": 216,
-            "ebo": 217,
+            "vao": 117,
+            "vbo": 222,
+            "ebo": 223,
             "indexCount": 591
+        },
+        {
+            "guid": "90a63915-c3e8-40b9-8c48-b8fe58a9bd67",
+            "name": "Drawer",
+            "path": "Assets\\Objects\\Drawer.obj",
+            "vao": 113,
+            "vbo": 214,
+            "ebo": 215,
+            "indexCount": 1560
         },
         {
             "guid": "5a92f04b-b30d-44f3-b990-d790fa568494",
             "name": "woodencrate",
             "path": "Assets\\Objects\\woodencrate.obj",
-            "vao": 174,
-            "vbo": 334,
-            "ebo": 335,
+            "vao": 280,
+            "vbo": 548,
+            "ebo": 549,
             "indexCount": 28998
         },
         {
@@ -166,10 +184,19 @@
             "guid": "58c34bb7-ff4d-4b4d-8e24-20ffbd1e78c6",
             "name": "trunk",
             "path": "Assets\\Objects\\trunk.obj",
-            "vao": 18,
-            "vbo": 35,
-            "ebo": 36,
+            "vao": 17,
+            "vbo": 33,
+            "ebo": 34,
             "indexCount": 1644
+        },
+        {
+            "guid": "f597242d-9dba-4259-a91d-036298fb344c",
+            "name": "autumn tree 2 tier",
+            "path": "Assets\\Objects\\autumn tree 2 tier.obj",
+            "vao": 226,
+            "vbo": 440,
+            "ebo": 441,
+            "indexCount": 10098
         },
         {
             "guid": "c04abe03-e3e7-4404-839f-630c34cde138",
@@ -220,19 +247,91 @@
             "guid": "9b1a5ea2-0cbf-4533-b25f-a5a6813a35ce",
             "name": "pine",
             "path": "Assets\\Objects\\pine.obj",
+            "vao": 22,
+            "vbo": 43,
+            "ebo": 44,
+            "indexCount": 2016
+        },
+        {
+            "guid": "473d7163-f81d-41d7-bde2-5106f072d36a",
+            "name": "vitality_potion",
+            "path": "Assets\\Objects\\vitality_potion.obj",
             "vao": 23,
             "vbo": 45,
             "ebo": 46,
-            "indexCount": 2016
+            "indexCount": 780
         },
         {
             "guid": "8888d997-f172-4281-be69-fd7546feabc9",
             "name": "rock_flat_top",
             "path": "Assets\\Objects\\rock_flat_top.obj",
-            "vao": 21,
-            "vbo": 41,
-            "ebo": 42,
+            "vao": 24,
+            "vbo": 47,
+            "ebo": 48,
             "indexCount": 1329996
+        },
+        {
+            "guid": "52f9947c-0b27-4f5a-9a18-cfef71bcfac3",
+            "name": "layout2-0",
+            "path": "Assets/Objects/layout2-0.obj",
+            "vao": 98,
+            "vbo": 184,
+            "ebo": 185,
+            "indexCount": 40356
+        },
+        {
+            "guid": "177fa052-079f-42bb-b225-97be34770804",
+            "name": "Table",
+            "path": "Assets\\Objects\\Table.obj",
+            "vao": 172,
+            "vbo": 332,
+            "ebo": 333,
+            "indexCount": 528
+        },
+        {
+            "guid": "6ce82b2e-ad7b-45b9-8fad-27f9a046a0ff",
+            "name": "autumn tree 4 branches",
+            "path": "Assets\\Objects\\autumn tree 4 branches.obj",
+            "vao": 231,
+            "vbo": 450,
+            "ebo": 451,
+            "indexCount": 16434
+        },
+        {
+            "guid": "b3d93b20-477b-4aea-ac2f-519a8b9372b5",
+            "name": "fountain",
+            "path": "Assets\\Objects\\fountain.obj",
+            "vao": 229,
+            "vbo": 446,
+            "ebo": 447,
+            "indexCount": 10140
+        },
+        {
+            "guid": "3a68b780-632d-49d8-b45d-33b1ac035172",
+            "name": "plane",
+            "path": "Assets/Objects/plane.obj",
+            "vao": 28,
+            "vbo": 55,
+            "ebo": 56,
+            "indexCount": 76662
+        },
+        {
+            "guid": "f804e240-f4a6-4909-91af-6a69fcb9517c",
+            "name": "rock2",
+            "path": "Assets\\Objects\\rock2.obj",
+            "vao": 155,
+            "vbo": 298,
+            "ebo": 299,
+            "indexCount": 30906
+        },
+        {
+            "guid": "563cdf50-2687-4991-96cf-c5fa0be850ab",
+            "name": "Sphere",
+            "path": "Assets/Objects/Sphere.obj",
+            "vao": 30,
+            "vbo": 59,
+            "ebo": 60,
+            "indexCount": 2304
         },
         {
             "guid": "52f9947c-0b27-4f5a-9a18-cfef71bcfac3",
@@ -343,22 +442,31 @@
             "indexCount": 2304
         },
         {
-            "guid": "9e1fcb62-0699-4a0b-ae75-d0670af44b1b",
-            "name": "plane2",
-            "path": "Assets/Objects/plane2.obj",
-            "vao": 37,
-            "vbo": 73,
-            "ebo": 74,
-            "indexCount": 231840
-        },
-        {
             "guid": "e902f0d7-a022-45fc-9c17-2a98cbdb793e",
             "name": "Cylinder",
             "path": "Assets/Objects/Cylinder.obj",
-            "vao": 108,
-            "vbo": 202,
-            "ebo": 203,
+            "vao": 110,
+            "vbo": 208,
+            "ebo": 209,
             "indexCount": 240
+        },
+        {
+            "guid": "9e1fcb62-0699-4a0b-ae75-d0670af44b1b",
+            "name": "plane2",
+            "path": "Assets/Objects/plane2.obj",
+            "vao": 36,
+            "vbo": 71,
+            "ebo": 72,
+            "indexCount": 231840
+        },
+        {
+            "guid": "a25723a2-f9bf-4939-b80d-962eb537dd2e",
+            "name": "strength_potion",
+            "path": "Assets\\Objects\\strength_potion.obj",
+            "vao": 39,
+            "vbo": 77,
+            "ebo": 78,
+            "indexCount": 924
         },
         {
             "guid": "fe86c54b-7cc2-471c-9d7e-0bce31089b5a",
@@ -514,12 +622,21 @@
             "indexCount": 157614
         },
         {
-            "guid": "5ec81f76-0cd6-4d5c-ba71-45bfdd723242",
-            "name": "Capsule",
-            "path": "Assets\\Objects\\Capsule.obj",
+            "guid": "98376e97-180f-4b2c-b7f4-48834019f8ee",
+            "name": "autumn tree",
+            "path": "Assets\\Objects\\autumn tree.obj",
             "vao": 56,
             "vbo": 111,
             "ebo": 112,
+            "indexCount": 19704
+        },
+        {
+            "guid": "5ec81f76-0cd6-4d5c-ba71-45bfdd723242",
+            "name": "Capsule",
+            "path": "Assets\\Objects\\Capsule.obj",
+            "vao": 55,
+            "vbo": 109,
+            "ebo": 110,
             "indexCount": 3456
         },
         {
@@ -539,6 +656,15 @@
             "vbo": 113,
             "ebo": 114,
             "indexCount": 24
+        },
+        {
+            "guid": "f699e1d9-f947-49e1-9108-ad2ecb610aa0",
+            "name": "center",
+            "path": "Assets\\Objects\\center.obj",
+            "vao": 58,
+            "vbo": 115,
+            "ebo": 116,
+            "indexCount": 12
         },
         {
             "guid": "7dcc7293-e55a-46b3-9015-a9ae51a11694",
@@ -631,6 +757,15 @@
             "indexCount": 114
         },
         {
+            "guid": "7ee5d1c3-de05-43c0-a3f0-36d807bea0c6",
+            "name": "AUTUMN PINE TREE MED",
+            "path": "Assets\\Objects\\AUTUMN PINE TREE MED.obj",
+            "vao": 227,
+            "vbo": 442,
+            "ebo": 443,
+            "indexCount": 7302
+        },
+        {
             "guid": "eaf2ede8-8f2f-4fa9-b684-d600dada2e45",
             "name": "PP_Gemstone_11_Red",
             "path": "Assets\\Objects\\PP_Gemstone_11_Red.obj",
@@ -679,9 +814,9 @@
             "guid": "b0bdcbb9-f3e6-4f07-8c24-875c928d13fa",
             "name": "horsecart",
             "path": "Assets\\Objects\\horsecart.obj",
-            "vao": 171,
-            "vbo": 328,
-            "ebo": 329,
+            "vao": 173,
+            "vbo": 334,
+            "ebo": 335,
             "indexCount": 2130
         },
         {
@@ -773,6 +908,24 @@
             "vbo": 486,
             "ebo": 487,
             "indexCount": 7188
+        },
+        {
+            "guid": "b788b0ac-54fe-4540-98ec-e45e98d76dd6",
+            "name": "bridge_flat",
+            "path": "Assets\\Objects\\bridge_flat.obj",
+            "vao": 78,
+            "vbo": 155,
+            "ebo": 156,
+            "indexCount": 3540
+        },
+        {
+            "guid": "9a02a596-f621-44fe-8748-a236f6cff68a",
+            "name": "bridge_slope",
+            "path": "Assets\\Objects\\bridge_slope.obj",
+            "vao": 79,
+            "vbo": 157,
+            "ebo": 158,
+            "indexCount": 5844
         }
     ]
 }
