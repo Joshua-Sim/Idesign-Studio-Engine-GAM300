@@ -79,63 +79,102 @@ namespace Framework
                 }
             }
 
-            // 4. Upgrade - Complete visibility logic
             if (engineState.Is(EngineMode::Upgrade))
             {
                 auto upgradeEntities = ecsInterface.GetEntitiesByTag("upgrade");
+                auto& upgradeMgr = UpgradeManager::Instance();
+
+                // ------------------------------------------------------------
+                // 1. Cache hover states from the MAIN buttons
+                // ------------------------------------------------------------
+                bool quarryHovered = false;
+                bool goldHovered = false;
+                bool inventoryHovered = false;
+
                 for (Entity e : upgradeEntities)
                 {
                     if (!ecsInterface.IsEntityValid(e)) continue;
-                    if (ecsInterface.HasComponent<ButtonComponent>(e) &&
-                        ecsInterface.HasComponent<TextureProperties>(e))
+                    if (!ecsInterface.HasComponent<ButtonComponent>(e)) continue;
+
+                    auto& btn = ecsInterface.GetComponent<ButtonComponent>(e);
+
+                    if (ecsInterface.EntityHasTag(e, "quarry"))      quarryHovered = btn.isHovered;
+                    if (ecsInterface.EntityHasTag(e, "gold"))        goldHovered = btn.isHovered;
+                    if (ecsInterface.EntityHasTag(e, "inventory"))   inventoryHovered = btn.isHovered;
+                }
+
+                // ------------------------------------------------------------
+                // 2. Affordability checks (do ONCE)
+                // ------------------------------------------------------------
+                bool canAffordQuarry = GameSystem::GetCurrency() >=
+                    upgradeMgr.GetAreaUnlockCost(GameArea::Quarry);
+
+                bool canAffordGold = upgradeMgr.CanAffordCurrencyUpgrade();
+                bool canAffordInventory = upgradeMgr.CanAffordInventoryUpgrade();
+
+                // ------------------------------------------------------------
+                // 3. Apply visibility to ALL upgrade UI entities
+                // ------------------------------------------------------------
+                for (Entity e : upgradeEntities)
+                {
+                    if (!ecsInterface.IsEntityValid(e)) continue;
+                    if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
+
+                    auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
+
+                    texture.isUI = true; // always UI in upgrade screen
+
+                    // -------------------------
+                    // QUARRY STAMPS
+                    // -------------------------
+                    if (ecsInterface.EntityHasTag(e, "quarrypass"))
                     {
-                        auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
-                        auto& button = ecsInterface.GetComponent<ButtonComponent>(e);
+                        texture.uiAlpha = (quarryHovered && canAffordQuarry) ? 1.0f : 0.0f;
+                    }
+                    else if (ecsInterface.EntityHasTag(e, "quarryfail"))
+                    {
+                        texture.uiAlpha = (quarryHovered && !canAffordQuarry) ? 1.0f : 0.0f;
+                    }
 
-                        auto& upgradeMgr = UpgradeManager::Instance();
-                        bool canAffordQuarry = GameSystem::GetCurrency() >= upgradeMgr.GetAreaUnlockCost(GameArea::Quarry);
-                        bool canAffordGold = upgradeMgr.CanAffordCurrencyUpgrade();
-                        bool canAffordInventory = upgradeMgr.CanAffordInventoryUpgrade();
+                    // -------------------------
+                    // GOLD STAMPS
+                    // -------------------------
+                    else if (ecsInterface.EntityHasTag(e, "goldpass"))
+                    {
+                        texture.uiAlpha = (goldHovered && canAffordGold) ? 1.0f : 0.0f;
+                    }
+                    else if (ecsInterface.EntityHasTag(e, "goldfail"))
+                    {
+                        texture.uiAlpha = (goldHovered && !canAffordGold) ? 1.0f : 0.0f;
+                    }
 
+                    // -------------------------
+                    // INVENTORY STAMPS
+                    // -------------------------
+                    else if (ecsInterface.EntityHasTag(e, "inventorypass"))
+                    {
+                        texture.uiAlpha = (inventoryHovered && canAffordInventory) ? 1.0f : 0.0f;
+                    }
+                    else if (ecsInterface.EntityHasTag(e, "inventoryfail"))
+                    {
+                        texture.uiAlpha = (inventoryHovered && !canAffordInventory) ? 1.0f : 0.0f;
+                    }
 
-                        // QUARRY upgrade states
+                    // ------------------------------------------------------------
+                    // MAIN BUTTON BACKGROUNDS (unhovered versions)
+                    // ------------------------------------------------------------
+                    else
+                    {
+                        bool hideBase =
+                            (ecsInterface.EntityHasTag(e, "quarry") && quarryHovered) ||
+                            (ecsInterface.EntityHasTag(e, "gold") && goldHovered) ||
+                            (ecsInterface.EntityHasTag(e, "inventory") && inventoryHovered);
 
-                        if (ecsInterface.EntityHasTag(e, "quarrypass"))
-                        {
-                            texture.isUI =  canAffordQuarry;
-                        }
-                        else if (ecsInterface.EntityHasTag(e, "quarryfail"))
-                        {
-                            texture.isUI =  !canAffordQuarry;
-                        }
-
-                        // GOLD (currency multiplier) upgrade states
-                        if (ecsInterface.EntityHasTag(e, "goldpass"))
-                        {
-                            texture.isUI =  canAffordGold;
-                        }
-                        else if (ecsInterface.EntityHasTag(e, "goldfail"))
-                        {
-                            texture.isUI =  !canAffordGold;
-                        }
-
-                        // INVENTORY upgrade states
-                        if (ecsInterface.EntityHasTag(e, "inventorypass"))
-                        {
-                            texture.isUI =  canAffordInventory;
-                        }
-                        else if (ecsInterface.EntityHasTag(e, "inventoryfail"))
-                        {
-                            texture.isUI =  !canAffordInventory;
-                        }
-                        else
-                        {
-                            // Other upgrade elements (backgrounds, titles, etc.)
-                            texture.isUI = true;
-                        }
+                        texture.uiAlpha = hideBase ? 0.0f : 1.0f;
                     }
                 }
             }
+
 
             // 5. Settings (Vol Control)
             auto settingsEntities = ecsInterface.GetEntitiesByTag("settings");

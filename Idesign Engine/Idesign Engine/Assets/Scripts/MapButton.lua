@@ -9,17 +9,14 @@ local locations = {
     ["Forest Button"] = {
         spawnPos = { x = -110.493, y = 7.644,  z = 124.351 },
         spawnRot = { x = 0.0,    y = 90.0,  z = 0.0 }
-        checkUnlocked = function() return IsForestUnlocked() end
     },
     ["Quarry Button"] = {
         spawnPos = { x = -170.856,  y = 7.730,  z = -170.782 },
         spawnRot = { x = 0.0,    y = 0.0,   z = 0.0 }
-        checkUnlocked = function() return IsQuarryUnlocked() end
     },
     ["House Button"] = {
         spawnPos = { x = 0.0,    y = 0.0,   z = 0.0 },
         spawnRot = { x = 0.0,    y = 0.0,   z = 0.0 }
-        checkUnlocked = function() return true end  -- House is always unlocked
     }
 }
 
