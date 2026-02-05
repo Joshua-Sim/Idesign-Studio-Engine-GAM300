@@ -3048,7 +3048,7 @@
                     "animationSpeed": 1.0,
                     "bLoops": true,
                     "bPlayOnStart": true,
-                    "currentTime": 156.17120361328125
+                    "currentTime": 216.99444580078125
                 },
                 "TextureComponent": {
                     "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
@@ -5168,7 +5168,7 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        0.44999998807907104,
+                        0.48500001430511475,
                         0.699999988079071,
                         1.0
                     ],
@@ -5290,7 +5290,7 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        0.44999998807907104,
+                        0.48500001430511475,
                         0.5,
                         0.0
                     ],
@@ -5412,7 +5412,7 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        0.44999998807907104,
+                        0.48500001430511475,
                         0.30000001192092896,
                         0.0
                     ],
@@ -20974,7 +20974,7 @@
                 "TransformComponent": {
                     "position": [
                         960.0,
-                        530.0,
+                        540.0,
                         1.0
                     ],
                     "rotation": [
@@ -21031,7 +21031,7 @@
                 "ButtonComponent": {
                     "position": [
                         960.0,
-                        530.0
+                        540.0
                     ],
                     "size": [
                         1920.0,
@@ -21335,8 +21335,8 @@
                 "ScriptProperties": {
                     "scripts": [
                         {
-                            "guid": "16f0caaf-2e11-4715-ab0e-06c67810e1ba",
-                            "scriptPath": "Assets\\Scripts\\InventoryUpgrade.lua",
+                            "guid": "dc1222af-4b5e-4d38-8c8d-e16e5ae744dc",
+                            "scriptPath": "Assets\\Scripts\\QuarryUnlockUpgrade.lua",
                             "hotReload": false
                         }
                     ]
@@ -22174,7 +22174,8 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "519c5cfa-c925-4ee9-aec6-ad35bfe29812",
@@ -22183,8 +22184,8 @@
                 "ScriptProperties": {
                     "scripts": [
                         {
-                            "guid": "16f0caaf-2e11-4715-ab0e-06c67810e1ba",
-                            "scriptPath": "Assets\\Scripts\\InventoryUpgrade.lua",
+                            "guid": "42e8ffe5-ac90-4ec7-a592-bc4778c6fe98",
+                            "scriptPath": "Assets\\Scripts\\CurrencyIncreaseUpgrade.lua",
                             "hotReload": false
                         }
                     ]
@@ -22237,7 +22238,8 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "7ab3362c-3412-437e-a341-21c9f0e6e197",
@@ -22291,7 +22293,8 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "23f49aec-96e9-47d2-93e1-d192446c99f2",
@@ -22354,7 +22357,8 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "2761dbfb-8bc7-4073-8065-4689ba0a1aa0",
@@ -22363,8 +22367,8 @@
                 "ScriptProperties": {
                     "scripts": [
                         {
-                            "guid": "16f0caaf-2e11-4715-ab0e-06c67810e1ba",
-                            "scriptPath": "Assets\\Scripts\\InventoryUpgrade.lua",
+                            "guid": "1b87e222-4f27-465d-99e3-cb4e03a24086",
+                            "scriptPath": "Assets\\Scripts\\BackpackUpgrade.lua",
                             "hotReload": false
                         }
                     ]
@@ -22786,7 +22790,8 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "d94104e7-27db-432d-a259-99e662a62568",
@@ -22840,7 +22845,8 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "c62ac124-be74-451d-835f-6e76f3d61508",

@@ -79,6 +79,7 @@ namespace Framework
                 }
             }
 
+            // Upgrade Logic
             if (engineState.Is(EngineMode::Upgrade))
             {
                 auto upgradeEntities = ecsInterface.GetEntitiesByTag("upgrade");
@@ -106,9 +107,7 @@ namespace Framework
                 // ------------------------------------------------------------
                 // 2. Affordability checks (do ONCE)
                 // ------------------------------------------------------------
-                bool canAffordQuarry = GameSystem::GetCurrency() >=
-                    upgradeMgr.GetAreaUnlockCost(GameArea::Quarry);
-
+                bool canAffordQuarry = GameSystem::GetCurrency() >= upgradeMgr.GetAreaUnlockCost(GameArea::Quarry);
                 bool canAffordGold = upgradeMgr.CanAffordCurrencyUpgrade();
                 bool canAffordInventory = upgradeMgr.CanAffordInventoryUpgrade();
 
@@ -171,6 +170,20 @@ namespace Framework
                             (ecsInterface.EntityHasTag(e, "inventory") && inventoryHovered);
 
                         texture.uiAlpha = hideBase ? 0.0f : 1.0f;
+                    }
+                }
+            }
+            else
+            {
+                // NOT in Upgrade mode - hide all upgrade-tagged entities
+                auto upgradeEntities = ecsInterface.GetEntitiesByTag("upgrade");
+                for (Entity e : upgradeEntities)
+                {
+                    if (!ecsInterface.IsEntityValid(e)) continue;
+                    if (ecsInterface.HasComponent<TextureProperties>(e))
+                    {
+                        auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
+                        texture.isUI = false;  // Hide when not in Upgrade mode
                     }
                 }
             }
