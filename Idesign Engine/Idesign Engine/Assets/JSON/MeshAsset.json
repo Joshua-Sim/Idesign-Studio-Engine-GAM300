@@ -148,9 +148,9 @@
             "guid": "a0077014-9884-4a65-b44a-5c96f700552f",
             "name": "fir tree bent",
             "path": "Assets\\Objects\\fir tree bent.obj",
-            "vao": 225,
-            "vbo": 438,
-            "ebo": 439,
+            "vao": 284,
+            "vbo": 556,
+            "ebo": 557,
             "indexCount": 14790
         },
         {
