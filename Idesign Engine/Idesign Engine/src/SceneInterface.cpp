@@ -221,6 +221,8 @@ namespace Framework
             }
 
             // 6. MAP SELECTION LOGIC
+            if(engineState.Is(EngineMode::MapSelection))
+            {
                 auto mapEntities = ecsInterface.GetEntitiesByTag("map");
                 for (Entity e : mapEntities)
                 {
@@ -231,11 +233,18 @@ namespace Framework
                     {
                         auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
                         // Only enforce UI flag if NOT in editor mode
-                        if (!engineState.Is(EngineMode::Editor)) { 
-                            if (!engineState.Is(EngineMode::Editor)) { texture.isUI = engineState.Is(EngineMode::MapSelection) ? 1.f : 0.f; }
-                        }
+                        if (!engineState.Is(EngineMode::Editor)) { texture.isUI = engineState.Is(EngineMode::MapSelection); }
+                    }
+
+                    if (ecsInterface.HasComponent<TextProperties>(e))
+                    {
+                        auto& text = ecsInterface.GetComponent<TextProperties>(e);
+
+                        // Only enforce opacity if NOT in editor mode
+                        if (!engineState.Is(EngineMode::Editor)) { text.opacity = engineState.Is(EngineMode::MapSelection) ? 1.f : 0.f; }
                     }
                 }
+            }
 
 
             // 7. Cutscene (Open after click Play)

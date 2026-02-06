@@ -1,5 +1,5 @@
 {
-    "count": 252,
+    "count": 251,
     "entries": [
         {
             "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
@@ -1505,12 +1505,6 @@
             "guid": "5d78e404-bd5f-4b4a-9122-9e9f0701739a",
             "name": "MAPBG",
             "path": "Assets\\Textures\\MAPBG.png",
-            "isUI": false
-        },
-        {
-            "guid": "983010e3-baa3-4c58-89aa-6d42e02e7832",
-            "name": "FORESTED FRONT BELINDA IMAGE",
-            "path": "Assets\\Textures\\FORESTED FRONT BELINDA IMAGE.png",
             "isUI": false
         }
     ]
