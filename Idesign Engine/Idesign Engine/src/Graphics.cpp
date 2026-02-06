@@ -2366,7 +2366,7 @@ namespace Framework {
         // --- ENTITY SORTING ---
         int sel = lastPickedId;
         int hoverSel = mLookAtHighlightedId;
-        const glm::vec3 kHighlightAlbedo(1.0f, 0.85f, 0.3f);
+        const glm::vec3 kHighlightAlbedo(1.0f, 1.0f, 1.0f);
 
         std::vector<Entity> opaqueEntities;
         std::multimap<float, Entity> transparentEntities;
@@ -2375,7 +2375,7 @@ namespace Framework {
 
         // DEFINE YOUR MAX RENDER DISTANCE
         // Objects further than this will be ignored completely
-        const float MAX_RENDER_DISTANCE = 10000.0f;
+        const float MAX_RENDER_DISTANCE = 4000.0f;
 
         //for (auto const& entityId : mEntities)
         //{
@@ -2630,7 +2630,7 @@ namespace Framework {
 
                         // 1. Determine base color (Yellow if hovered, otherwise material color)
                         const bool isSelected = ((int)entityId == sel) || ((int)entityId == hoverSel);
-                        glm::vec3 finalAlbedo = isSelected ? glm::vec3(1.0f, 0.85f, 0.3f) : material.albedo;
+                        glm::vec3 finalAlbedo = isSelected ? glm::vec3(1.0f, 1.0f, 1.0f) : material.albedo;
 
                         currentshader.setVec3("uAlbedo", finalAlbedo);
                         currentshader.setVec3("uMaterial.ambient", material.ambient);
@@ -2642,7 +2642,7 @@ namespace Framework {
                     {
                         // 2. FALLBACK: Reset to safe defaults so the next object isn't "weird"
                         const bool isSelected = ((int)entityId == sel) || ((int)entityId == hoverSel);
-                        currentshader.setVec3("uAlbedo", isSelected ? glm::vec3(1.0f, 0.85f, 0.3f) : glm::vec3(1.0f));
+                        currentshader.setVec3("uAlbedo", isSelected ? glm::vec3(1.0f, 1.0f, 1.0f) : glm::vec3(1.0f));
 
                         currentshader.setVec3("uMaterial.ambient", glm::vec3(0.1f));
                         currentshader.setVec3("uMaterial.specular", glm::vec3(0.5f));

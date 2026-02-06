@@ -1960,6 +1960,14 @@ namespace Framework {
             return 1;
         }
 
+        static int lua_TogglePhase(lua_State* L)
+        {
+            // Assuming PhaseManager is a singleton or accessible via ecsInterface/ServiceLocator
+            // Replace 'PhaseManager::Instance()' with your actual access method
+            phaseManager->TogglePhase();
+            return 0;
+        }
+
         // ScriptingSystem.cpp
 
 
@@ -2034,6 +2042,7 @@ namespace Framework {
         lua_register(L, "SetScale", lua_SetScale);
         lua_register(L, "GetRotation",  lua_GetRotation);
         lua_register(L, "GetCameraYaw", lua_GetCameraYaw);
+        lua_register(L, "TogglePhase", lua_TogglePhase);
 
         // Inventory Utility
         lua_register(L, "IsItemDestroyOnPick",  Lua_IsItemDestroyOnPick);

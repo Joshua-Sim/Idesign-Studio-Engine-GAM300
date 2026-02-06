@@ -11831,7 +11831,9 @@
                     "sortIndex": 49
                 },
                 "TagComponent": {
-                    "tags": []
+                    "tags": [
+                        "Interactable"
+                    ]
                 },
                 "MeshComponent": {
                     "guid": "a199b6c5-521c-41a8-8140-8b6844286e16",
@@ -11842,10 +11844,27 @@
                     "isUI": false
                 },
                 "BoxColliderComponent": {
-                    "colliders": []
+                    "colliders": [
+                        {
+                            "size": [
+                                2.7,
+                                2.1,
+                                1.1
+                            ],
+                            "center": [
+                                0.0,
+                                0.7,
+                                0.0
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": true,
+                            "interactMessage": "OnInteract",
+                            "promptText": ""
+                        }
+                    ]
                 },
                 "PhysicsProperties": {
-                    "category": 0,
+                    "category": 1,
                     "isImmovable": true,
                     "gravityFactor": 1.0,
                     "mass": 1.0,
@@ -11862,6 +11881,23 @@
                         0.0
                     ],
                     "startAwake": true
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "b8c9be25-1e3f-4d68-a3a7-aad0bf25e985",
+                            "scriptPath": "Assets\\Scripts\\PhaseSwitcher.lua",
+                            "hotReload": false
+                        }
+                    ]
+                },
+                "EventReceiverComponent": {
+                    "receivers": [
+                        {
+                            "messageToListenFor": "OnInteract",
+                            "luaFunctionToCall": "OnInteract"
+                        }
+                    ]
                 }
             }
         },
