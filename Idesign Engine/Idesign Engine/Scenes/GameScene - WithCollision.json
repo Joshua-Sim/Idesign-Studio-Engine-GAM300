@@ -3048,7 +3048,7 @@
                     "animationSpeed": 1.0,
                     "bLoops": true,
                     "bPlayOnStart": true,
-                    "currentTime": 61.59706497192383
+                    "currentTime": 66.59557342529297
                 },
                 "TextureComponent": {
                     "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
@@ -20589,7 +20589,19 @@
                 },
                 "TextureComponent": {
                     "guid": "5d78e404-bd5f-4b4a-9122-9e9f0701739a",
-                    "isUI": true
+                    "isUI": false
+                },
+                "ButtonComponent": {
+                    "position": [
+                        960.0,
+                        540.0
+                    ],
+                    "size": [
+                        1920.0,
+                        1080.0
+                    ],
+                    "isHovered": false,
+                    "isFrontButton": false
                 }
             }
         },
@@ -20626,12 +20638,11 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "983010e3-baa3-4c58-89aa-6d42e02e7832",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -20689,12 +20700,11 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "3db45502-0b02-41ec-85b1-0ad1d5fbe585",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -22188,6 +22198,15 @@
                     ],
                     "isHovered": true,
                     "isFrontButton": false
+                }
+            }
+        },
+        {
+            "name": "Frog",
+            "guid": "9625fc59-444c-4fad-9885-6c7256302a70",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "898b36fc-aae3-43e4-9e2e-8edcb193e3c1"
                 }
             }
         }
