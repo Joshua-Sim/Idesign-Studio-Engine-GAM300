@@ -9,8 +9,15 @@
 #include "EnginePath.h" 
 #include <filesystem>
 
+std::unordered_map<std::string, unsigned int> TextureLoader::s_texCache;
 unsigned int TextureLoader::loadTexture(TextureProperties& props, bool flip)
 {
+    //cache first
+
+    if (s_texCache.find(props.path) != s_texCache.end()) {
+        props.textureID = s_texCache[props.path];
+        return props.textureID;
+    }
     // ------------------------------------------------------------------
     // Resolve absolute path
     // ------------------------------------------------------------------
@@ -94,6 +101,9 @@ unsigned int TextureLoader::loadTexture(TextureProperties& props, bool flip)
         return 0;
     }
 
+
+
+
     // ------------------------------------------------------------------
     // Generate texture object
     // ------------------------------------------------------------------
@@ -149,7 +159,7 @@ unsigned int TextureLoader::loadTexture(TextureProperties& props, bool flip)
     // Cleanup & output
     // ------------------------------------------------------------------
     stbi_image_free(data);
-
+    s_texCache[props.path] = texID;
     props.textureID = texID;
     props.width = width;
     props.height = height;

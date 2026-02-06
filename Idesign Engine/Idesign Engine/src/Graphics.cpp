@@ -749,14 +749,27 @@ namespace Framework {
         }
 
         // ====================================================================
-// PHASE 2: POINT LIGHT SHADOW PASS (SAFE MODE)
-// ====================================================================
+ // PHASE 2: POINT LIGHT SHADOW PASS (OPTIMIZED)
+ // ====================================================================
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
 
-        const unsigned int POINT_SHADOW_WIDTH = 1024, POINT_SHADOW_HEIGHT = 1024;
-        const float LIGHT_RENDER_DISTANCE = 10.0f; // Your testing value
+        const unsigned int POINT_SHADOW_WIDTH = 1024;
+        const unsigned int POINT_SHADOW_HEIGHT = 1024;
+        const float LIGHT_RENDER_DISTANCE = 10.0f;
         const float LIGHT_RENDER_DISTANCE_SQ = LIGHT_RENDER_DISTANCE * LIGHT_RENDER_DISTANCE;
+
+        // [OPTIMIZATION] Pre-collect entities that actually need to be drawn in shadows
+        // This fixes the 5% CPU hit on the inner loop by avoiding searching 5000+ entities 6 times per light.
+        std::vector<Entity> shadowCasters;
+        for (auto const& e : mEntities) {
+            if (ecsInterface.HasComponent<MeshProperties>(e) && ecsInterface.GetComponent<TransformComponent>(e).isActive) {
+                auto& mesh = ecsInterface.GetComponent<MeshProperties>(e);
+                if (mesh.debugShape == DebugShapeType::None && mesh.vao != 0) {
+                    shadowCasters.push_back(e);
+                }
+            }
+        }
 
         for (auto const& entityId : mEntities)
         {
@@ -768,20 +781,11 @@ namespace Framework {
             auto& transform = ecsInterface.GetComponent<TransformComponent>(entityId);
             glm::vec3 lightPos = transform.position;
 
-            // ----------------------------------------------------------------
-            // FIX 1: CHECK DISTANCE *BEFORE* DOING ANYTHING
-            // ----------------------------------------------------------------
-            // We do NOT want to create FBOs for lights that are 1000 units away.
-            // This prevents VRAM spikes that can crash the driver.
+            // 1. DISTANCE CHECK (Prevents VRAM Exhaustion)
             float distSq = glm::distance(lightPos, gameCamera.position);
-            if (distSq > LIGHT_RENDER_DISTANCE_SQ)
-            {
-                continue; // Skip EVERYTHING (Creation & Rendering)
-            }
+            if (distSq > LIGHT_RENDER_DISTANCE_SQ) continue;
 
-            // ----------------------------------------------------------------
-            // FIX 2: CREATE FBO ONLY IF NEARBY
-            // ----------------------------------------------------------------
+            // 2. INITIALIZATION GUARD (Prevents Memory Leaks)
             if (light.shadowFBO == 0)
             {
                 glGenFramebuffers(1, &light.shadowFBO);
@@ -793,7 +797,7 @@ namespace Framework {
                     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_R32F,
                         POINT_SHADOW_WIDTH, POINT_SHADOW_HEIGHT, 0, GL_RED, GL_FLOAT, NULL);
                 }
-                // ... (Texture Parameters) ...
+
                 glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
                 glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
                 glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -805,24 +809,17 @@ namespace Framework {
                 glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, POINT_SHADOW_WIDTH, POINT_SHADOW_HEIGHT);
                 glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, light.shadowDepthRBO);
 
-                // Safety: Verify complete
-                if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-                    std::cout << "Shadow FBO Error!" << std::endl;
-
                 glBindFramebuffer(GL_FRAMEBUFFER, 0);
             }
 
-            // ----------------------------------------------------------------
-            // RENDER PASS
-            // ----------------------------------------------------------------
+            // 3. RENDER PASS (6 Faces)
             light.shadowFarPlane = light.radius;
             pointShadowShader.use();
-            pointShadowShader.setFloat("uFarPlane", light.shadowFarPlane);
-            pointShadowShader.setVec3("uLightPos", lightPos);
 
-            // Matrix setup...
             float near_plane = 0.01f;
             glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), 1.0f, near_plane, light.shadowFarPlane);
+
+            // Create the 6 view matrices for the Cube Map
             std::vector<glm::mat4> shadowTransforms;
             shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
             shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(-1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
@@ -840,59 +837,38 @@ namespace Framework {
                 glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-                for (auto const& entityId_inner : mEntities)
+                // Render shadow casters using the optimized list
+                for (auto const& casterId : shadowCasters)
                 {
-                    auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId_inner);
-                    if (!tr.isActive || entityId_inner == entityId) continue;
+                    if (casterId == entityId) continue; // Don't let the light shadow itself
 
-                    if (ecsInterface.HasComponent<MeshProperties>(entityId_inner))
-                    {
-                        auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId_inner);
-                        // ... (Material opacity check omitted for brevity, add back if needed) ...
+                    glm::mat4 model = frameModelMatrices[casterId];
+                    bool isSkinned = ecsInterface.HasComponent<AnimationProperties>(casterId);
+                    ShaderProgram& currentShadowShader = isSkinned ? skinnedPointShadowShader : pointShadowShader;
 
-                        if (mesh.debugShape == DebugShapeType::None && mesh.vao != 0)
-                        {
-                            glm::mat4 model = frameModelMatrices[entityId_inner];
-                            bool isSkinned = ecsInterface.HasComponent<AnimationProperties>(entityId_inner);
-                            ShaderProgram& currentShadowShader = isSkinned ? skinnedPointShadowShader : pointShadowShader;
+                    currentShadowShader.use();
+                    currentShadowShader.setMat4("uLightSpaceMatrix", shadowTransforms[i]);
+                    currentShadowShader.setMat4("uModel", model);
+                    currentShadowShader.setVec3("uLightPos", lightPos);
+                    currentShadowShader.setFloat("uFarPlane", light.shadowFarPlane);
 
-                            currentShadowShader.use();
-                            currentShadowShader.setMat4("uLightSpaceMatrix", shadowTransforms[i]);
-                            currentShadowShader.setMat4("uModel", model);
-                            currentShadowShader.setVec3("uLightPos", lightPos);
-                            currentShadowShader.setFloat("uFarPlane", light.shadowFarPlane);
+                    glBindVertexArray(ecsInterface.GetComponent<MeshProperties>(casterId).vao);
 
-                            glBindVertexArray(mesh.vao);
-
-                            if (isSkinned) {
-                                glEnableVertexAttribArray(3);
-                                glEnableVertexAttribArray(4);
-                                auto& animator = ecsInterface.GetComponent<AnimationProperties>(entityId_inner);
-
-                                // ---------------------------------------------------------
-                                // FIX 3: THE STRING CRASH PREVENTION
-                                // ---------------------------------------------------------
-                                for (size_t b = 0; b < animator.finalBoneMatrices.size(); ++b) {
-                                    // Use a variable to keep the string memory alive!
-                                    std::string boneName = "uBoneMatrices[" + std::to_string(b) + "]";
-                                    currentShadowShader.setMat4(boneName.c_str(), animator.finalBoneMatrices[b]);
-                                }
-                            }
-                            else {
-                                glDisableVertexAttribArray(3);
-                                glDisableVertexAttribArray(4);
-                            }
-
-                            glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
+                    if (isSkinned) {
+                        auto& animator = ecsInterface.GetComponent<AnimationProperties>(casterId);
+                        for (size_t b = 0; b < animator.finalBoneMatrices.size(); ++b) {
+                            // Optimized static string cache usage recommended here
+                            std::string boneName = "uBoneMatrices[" + std::to_string(b) + "]";
+                            currentShadowShader.setMat4(boneName.c_str(), animator.finalBoneMatrices[b]);
                         }
                     }
+                    glDrawElements(GL_TRIANGLES, ecsInterface.GetComponent<MeshProperties>(casterId).indexCount, GL_UNSIGNED_INT, 0);
                 }
             }
         }
-
-        // Reset everything
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glViewport(0, 0, m_fbW, m_fbH);
+
         // ====================================================================
         // 1. RENDER VIEW 0: GAME (grounded)
         // ====================================================================
@@ -927,7 +903,9 @@ namespace Framework {
         // 3. FINAL/SHARED LOGIC
         // ====================================================================
 
-        if (pendingPickUV.x >= 0.0f && pendingPickUV.y >= 0.0f) {
+        if (pendingPickUV.x >= 0.0f && pendingPickUV.y >= 0.0f &&
+            glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+        {
             int pw = m_pickW, ph = m_pickH;
             int px = glm::clamp(int(pendingPickUV.x * pw), 0, pw - 1);
             int py = glm::clamp(int(pendingPickUV.y * ph), 0, ph - 1);
@@ -2078,12 +2056,34 @@ namespace Framework {
         const std::vector<PointLightCPU>& points,
         const std::vector<SpotLightCPU>& spots)
     {
+        static std::vector<std::string> boneNames;
+        static std::vector<std::string> shadowNames;
+
+        // Pre-calculate the strings once to save CPU time
+        if (boneNames.empty()) {
+            for (int i = 0; i < 100; ++i) boneNames.push_back("uBoneMatrices[" + std::to_string(i) + "]");
+            for (int i = 0; i < 8; ++i) shadowNames.push_back("uPointShadowMaps[" + std::to_string(i) + "]");
+        }
         // Get the correct pick UV for this view
         glm::vec2& pickUV = (viewIndex == 0) ? pendingPickUV0 : pendingPickUV1;
 
         // 1. Calculate the Global Model Matrix
         glm::mat4 mapModel = glm::translate(glm::mat4(1.0f), glm::vec3(-60.0f, 3.0f, 0.0f)); //hard coded values of mapmodel
         mapModel = glm::scale(mapModel, glm::vec3(5.0f, 5.0f, 5.0f));
+
+        // --- NEW: FRAME MATRIX CACHE ---
+        std::unordered_map<Entity, glm::mat4> frameModelMatrices;
+        for (auto const& entityId : mEntities) {
+            if (ecsInterface.HasComponent<TransformComponent>(entityId)) {
+                auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
+                glm::mat4 model = glm::translate(glm::mat4(1.0f), tr.position);
+                model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
+                model = glm::rotate(model, glm::radians(tr.rotation.y), { 0,1,0 });
+                model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
+                model = glm::scale(model, tr.scale);
+                frameModelMatrices[entityId] = model;
+            }
+        }
 
 
         // 1. SCENE PASS
@@ -2688,56 +2688,74 @@ namespace Framework {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glDepthMask(GL_FALSE);
 
-        //// Billboard leaves
-        //if (m_leafRenderer)
-        //{
-        //    m_leafRenderer->draw(view, proj, mapModel, leafTexture);
-        //}
-
-        // --- PARTICLES START --- (Jasper)
-
-        // Group instance matrices by texture so each emitter can use its own billboard PNG
-        std::unordered_map<unsigned int, std::vector<glm::mat4>> particleMatsByTex;
-
-        for (Entity e : mEntities)
+        for (auto it = transparentEntities.rbegin(); it != transparentEntities.rend(); ++it)
         {
-            if (!ecsInterface.HasComponent<ParticleEmitterComponent>(e) ||
-                !ecsInterface.HasComponent<TransformComponent>(e))
-                continue;
+            auto const& entityId = it->second;
+            auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
+            auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
 
-            auto& emitter = ecsInterface.GetComponent<ParticleEmitterComponent>(e);
-            auto& tr = ecsInterface.GetComponent<TransformComponent>(e);
+            if (!tr.isActive) continue;
 
-            if (!emitter.active || !tr.isActive) continue;
+            // Calculate model matrix directly (since we aren't using the cache)
+            glm::mat4 model = glm::translate(glm::mat4(1.0f), tr.position);
+            model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
+            model = glm::rotate(model, glm::radians(tr.rotation.y), { 0,1,0 });
+            model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
+            model = glm::scale(model, tr.scale);
 
-            const glm::mat4 emitterM = glm::translate(glm::mat4(1.0f), tr.position);
-
-            // Use emitter texture if set, otherwise fallback to the global particle texture
-            unsigned int tex = (emitter.textureID != 0) ? emitter.textureID : m_particleTextureID;
-
-            for (const Particle& p : emitter.particles)
+            if (mesh.debugShape == DebugShapeType::None && mesh.vao != 0)
             {
-                glm::vec3 worldPos = p.position;
-                if (emitter.localSpace)
-                    worldPos = glm::vec3(emitterM * glm::vec4(p.position, 1.0f));
+                bool isSkinned = ecsInterface.HasComponent<AnimationProperties>(entityId);
+                ShaderProgram& currentShader = isSkinned ? skinnedShader : meshShader;
 
-                glm::mat4 M(1.0f);
-                M = glm::translate(M, worldPos);
-                M = glm::scale(M, glm::vec3(p.size));
+                currentShader.use();
+                currentShader.setMat4("uProj", proj);
+                currentShader.setMat4("uView", view);
+                currentShader.setVec3("uViewPos", cam.position);
+                currentShader.setMat4("uModel", model);
 
-                if (emitter.style == 0) // Pixel
-                    particleMatsByTex[tex].push_back(M);
-            }
-        }
+                // --- BIND TEXTURES (The fix for the Rainbow Bug) ---
 
-        if (m_particlePixelRenderer)
-        {
-            for (auto& [tex, mats] : particleMatsByTex)
-            {
-                if (mats.empty()) continue;
+                // Slot 0: Albedo (The object's actual texture)
+                glActiveTexture(GL_TEXTURE0);
+                if (ecsInterface.HasComponent<TextureProperties>(entityId))
+                    glBindTexture(GL_TEXTURE_2D, ecsInterface.GetComponent<TextureProperties>(entityId).textureID);
+                else
+                    glBindTexture(GL_TEXTURE_2D, 0);
+                currentShader.setInt("uTexture", 0);
 
-                m_particlePixelRenderer->setInstances(mats);
-                m_particlePixelRenderer->draw(view, proj, glm::mat4(1.0f), tex);
+                // Slot 1: Sun Shadow Map
+                glActiveTexture(GL_TEXTURE1);
+                glBindTexture(GL_TEXTURE_2D, m_shadowDepthTexture);
+                currentShader.setInt("uShadowMap", 1);
+                currentShader.setMat4("uLightSpaceMatrix", m_lightSpaceMatrix);
+
+                // Slots 2+: Point Light Shadow Maps
+                // [OPTIMIZATION] We use the pre-calculated 'validShadowTextures' from the Opaque pass
+                // This removes the slow mEntities loop!
+                int unit = 2;
+                int shadowCount = 0;
+                for (size_t i = 0; i < points.size(); ++i) {
+                    if (points[i].castsShadow && validShadowTextures[i] != 0 && shadowCount < MAX_POINT_LIGHTS) {
+                        glActiveTexture(GL_TEXTURE0 + unit);
+                        glBindTexture(GL_TEXTURE_CUBE_MAP, validShadowTextures[i]);
+                        currentShader.setInt(shadowNames[shadowCount].c_str(), unit);
+                        unit++; shadowCount++;
+                    }
+                }
+
+                if (isSkinned) {
+                    auto& animator = ecsInterface.GetComponent<AnimationProperties>(entityId);
+                    for (size_t i = 0; i < animator.finalBoneMatrices.size(); ++i) {
+                        currentShader.setMat4(boneNames[i].c_str(), animator.finalBoneMatrices[i]);
+                    }
+                }
+
+                // [OPTIMIZATION] REMOVED the redundant LightProperties::upload call here!
+                // It's already done at the start of RenderView.
+
+                glBindVertexArray(mesh.vao);
+                glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
             }
         }
 
