@@ -557,8 +557,8 @@ namespace Framework {
 
         m_particlePixelRenderer = new FoliageRenderer(
             leafQuad,
-            "Assets/shaders/instancedleave_vert.glsl",
-            "Assets/shaders/instancedleave_frag.glsl"
+            "Assets/shaders/instancedparticle_vert.glsl",
+            "Assets/shaders/instancedparticle_frag.glsl"
         );
 
         //// 2. Create the Instancing Renderer

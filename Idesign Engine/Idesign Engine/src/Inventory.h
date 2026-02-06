@@ -22,7 +22,7 @@ namespace Framework {
     };
 
     // Keep hotbar size in one place
-    constexpr int kHotbarSlots = 6;
+    constexpr int kHotbarSlots = 10;
 
     // One slot = a single non-stackable item (count can be kept for future proofing)
     struct InvSlot {

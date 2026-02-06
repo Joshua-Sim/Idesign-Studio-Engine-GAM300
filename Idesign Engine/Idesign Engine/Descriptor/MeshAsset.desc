@@ -41,9 +41,9 @@
             "guid": "eac3e6f4-1bf2-415f-aef8-8f1269d91560",
             "name": "Cube",
             "path": "Assets/Objects/Cube.obj",
-            "vao": 291,
-            "vbo": 568,
-            "ebo": 569,
+            "vao": 290,
+            "vbo": 566,
+            "ebo": 567,
             "indexCount": 36
         },
         {
@@ -59,9 +59,9 @@
             "guid": "ac9a3c32-c3f7-45c7-a375-bd561ecaf0cc",
             "name": "mushroom 2",
             "path": "Assets\\Objects\\mushroom 2.obj",
-            "vao": 341,
-            "vbo": 668,
-            "ebo": 669,
+            "vao": 334,
+            "vbo": 654,
+            "ebo": 655,
             "indexCount": 30054
         },
         {
@@ -113,9 +113,9 @@
             "guid": "c9235b5b-3b4d-4d81-a8b0-be5f5e60c452",
             "name": "land",
             "path": "Assets\\Objects\\land.obj",
-            "vao": 288,
-            "vbo": 562,
-            "ebo": 563,
+            "vao": 287,
+            "vbo": 560,
+            "ebo": 561,
             "indexCount": 3408
         },
         {
@@ -140,9 +140,9 @@
             "guid": "5a92f04b-b30d-44f3-b990-d790fa568494",
             "name": "woodencrate",
             "path": "Assets\\Objects\\woodencrate.obj",
-            "vao": 286,
-            "vbo": 558,
-            "ebo": 559,
+            "vao": 285,
+            "vbo": 556,
+            "ebo": 557,
             "indexCount": 28998
         },
         {
@@ -182,6 +182,15 @@
             "indexCount": 2304
         },
         {
+            "guid": "6fa52b14-d79c-4815-aaff-767eb40b32ca",
+            "name": "Cutting Board",
+            "path": "Assets\\Objects\\Cutting Board.obj",
+            "vao": 126,
+            "vbo": 238,
+            "ebo": 239,
+            "indexCount": 456
+        },
+        {
             "guid": "f699e1d9-f947-49e1-9108-ad2ecb610aa0",
             "name": "center",
             "path": "Assets\\Objects\\center.obj",
@@ -212,9 +221,9 @@
             "guid": "a0077014-9884-4a65-b44a-5c96f700552f",
             "name": "fir tree bent",
             "path": "Assets\\Objects\\fir tree bent.obj",
-            "vao": 290,
-            "vbo": 566,
-            "ebo": 567,
+            "vao": 289,
+            "vbo": 564,
+            "ebo": 565,
             "indexCount": 14790
         },
         {
@@ -239,9 +248,9 @@
             "guid": "f597242d-9dba-4259-a91d-036298fb344c",
             "name": "autumn tree 2 tier",
             "path": "Assets\\Objects\\autumn tree 2 tier.obj",
-            "vao": 304,
-            "vbo": 594,
-            "ebo": 595,
+            "vao": 303,
+            "vbo": 592,
+            "ebo": 593,
             "indexCount": 10098
         },
         {
@@ -284,9 +293,9 @@
             "guid": "52f9947c-0b27-4f5a-9a18-cfef71bcfac3",
             "name": "layout2-0",
             "path": "Assets/Objects/layout2-0.obj",
-            "vao": 353,
-            "vbo": 692,
-            "ebo": 693,
+            "vao": 346,
+            "vbo": 678,
+            "ebo": 679,
             "indexCount": 40356
         },
         {
@@ -302,9 +311,9 @@
             "guid": "6ce82b2e-ad7b-45b9-8fad-27f9a046a0ff",
             "name": "autumn tree 4 branches",
             "path": "Assets\\Objects\\autumn tree 4 branches.obj",
-            "vao": 303,
-            "vbo": 592,
-            "ebo": 593,
+            "vao": 302,
+            "vbo": 590,
+            "ebo": 591,
             "indexCount": 16434
         },
         {
@@ -383,9 +392,9 @@
             "guid": "129121d0-1b79-4037-92cc-441ec6337a1f",
             "name": "Lantern",
             "path": "Assets\\Objects\\Lantern.obj",
-            "vao": 275,
-            "vbo": 536,
-            "ebo": 537,
+            "vao": 274,
+            "vbo": 534,
+            "ebo": 535,
             "indexCount": 4206
         },
         {
@@ -495,15 +504,6 @@
             "vbo": 242,
             "ebo": 243,
             "indexCount": 1116
-        },
-        {
-            "guid": "6fa52b14-d79c-4815-aaff-767eb40b32ca",
-            "name": "Cutting Board",
-            "path": "Assets\\Objects\\Cutting Board.obj",
-            "vao": 126,
-            "vbo": 238,
-            "ebo": 239,
-            "indexCount": 456
         },
         {
             "guid": "4d2d79f0-74c7-4d6a-9998-aa6c7f0d5bc9",
@@ -635,9 +635,9 @@
             "guid": "ea5866c9-c6c4-42a1-ad1d-4ed77ebd533f",
             "name": "pear",
             "path": "Assets\\Objects\\pear.obj",
-            "vao": 319,
-            "vbo": 624,
-            "ebo": 625,
+            "vao": 67,
+            "vbo": 133,
+            "ebo": 134,
             "indexCount": 5526
         },
         {
@@ -806,9 +806,9 @@
             "guid": "3d375724-4c1a-448d-ac97-c67b4c6404fd",
             "name": "grass3",
             "path": "Assets\\Objects\\grass3.obj",
-            "vao": 352,
-            "vbo": 690,
-            "ebo": 691,
+            "vao": 345,
+            "vbo": 676,
+            "ebo": 677,
             "indexCount": 7188
         },
         {

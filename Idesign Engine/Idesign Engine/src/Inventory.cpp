@@ -91,7 +91,7 @@ namespace Framework {
     int Inventory::GetHotbarSlotCount() const
     {
         // base 4, +2 per level
-        int slots = 4 + (mHotbarLevel * 2);
+        int slots = 5 + (mHotbarLevel * 2);
 
         if (slots < 4) slots = 4;
         if (slots > kHotbarSlots) slots = kHotbarSlots;

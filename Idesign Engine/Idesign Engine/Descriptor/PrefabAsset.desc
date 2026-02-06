@@ -1,5 +1,5 @@
 {
-    "count": 37,
+    "count": 43,
     "entries": [
         {
             "guid": "898b36fc-aae3-43e4-9e2e-8edcb193e3c1",
@@ -14,9 +14,27 @@
             "isScenePrefab": false
         },
         {
+            "guid": "ab20d9cc-f552-47fb-8cd9-82403e4c3b22",
+            "name": "Pear4_Prefab",
+            "path": "Assets\\Prefabs\\Pear4_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
             "guid": "5f279032-d551-4137-8772-e24f5ae5af73",
             "name": "Animal_1_Prefab",
             "path": "Assets\\Prefabs\\Animal_1_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "6dd5bda0-0211-4253-87c2-6e39e0eb9ff8",
+            "name": "Pear3_Prefab",
+            "path": "Assets\\Prefabs\\Pear3_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "8af2edf2-5fa6-473b-afaa-8be1f93d519d",
+            "name": "Pear5_Prefab",
+            "path": "Assets\\Prefabs\\Pear5_Prefab.prefab",
             "isScenePrefab": false
         },
         {
@@ -29,6 +47,12 @@
             "guid": "e5d9bff9-1f28-46c5-aca4-68fd5519dcec",
             "name": "ProgressBarFrame_Prefab",
             "path": "Assets\\Prefabs\\ProgressBarFrame_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "610184a6-f0a5-4d4e-a903-6cc938f6f643",
+            "name": "Pear6_Prefab",
+            "path": "Assets\\Prefabs\\Pear6_Prefab.prefab",
             "isScenePrefab": false
         },
         {
@@ -221,6 +245,18 @@
             "guid": "7d4d9a90-0c4c-4b1e-a74c-bf7b45025c10",
             "name": "warmth_potion_Prefab",
             "path": "Assets\\Prefabs\\warmth_potion_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "6c3cd53d-28f8-44bd-b92a-28334ea5d325",
+            "name": "Pear1_Prefab",
+            "path": "Assets\\Prefabs\\Pear1_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "dc0218a7-2241-4356-b827-ae1ca79c9ff3",
+            "name": "Pear2_Prefab",
+            "path": "Assets\\Prefabs\\Pear2_Prefab.prefab",
             "isScenePrefab": false
         }
     ]
