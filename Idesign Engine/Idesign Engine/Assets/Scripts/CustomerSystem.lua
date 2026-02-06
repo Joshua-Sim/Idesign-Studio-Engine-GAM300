@@ -133,7 +133,9 @@ function CustomerSystem:on_init()
 end
 
 function CustomerSystem:on_update(dt)
-
+local queue_count = #waiting_queue
+local has_active = (activeCustomer ~= nil)
+local has_waiting = (queue_count > 0)
     -- Update score text visibility based on engine state
     if score_text_entity then
         if IsEngineState("Play") or IsEngineState("Upgrade") or IsEngineState("Editor") then
@@ -165,15 +167,24 @@ function CustomerSystem:on_update(dt)
         return
     end
     
-    -- 1. SPAWN LOGIC (QUEUE AWARE)
-    -- We can spawn if we haven't hit the nightly max, AND there are fewer than 2 people in the scene
-    if (customers_served + total_alive_count) < MAX_CUSTOMERS and total_alive_count < 2 then
+-- 1. SPAWN LOGIC (STRICT SINGLE CUSTOMER)
+    local total_alive_count = #waiting_queue
+    if activeCustomer then total_alive_count = total_alive_count + 1 end
+
+    -- Only allow spawning if:
+    -- 1. We haven't served the nightly max yet.
+    -- 2. There is absolutely NO ONE currently in the scene.
+    if customers_served < MAX_CUSTOMERS and total_alive_count == 0 then
         spawnTimer = spawnTimer + dt
         if spawnTimer >= self.spawn_delay then
-            print("[CustomerSystem] Spawn timer reached. Spawning now...")
+            print("[CustomerSystem] Scene empty. Spawning next customer...")
             self:spawn_customer()
             spawnTimer = 0
         end
+    else
+        -- If someone is in the world, keep the timer at 0 so it 
+        -- starts fresh the moment they leave.
+        spawnTimer = 0 
     end
 
     -- 2. CUSTOMER ACTIVE LOGIC
@@ -279,44 +290,22 @@ function CustomerSystem:spawn_customer()
     
     self:play_doorbell()
 
-    -- 1. PICK THE MODEL BASED ON THE INDEX (1 or 2)
     local modelData = self.customer_models[next_model_index]
-    
-    print("[CustomerSystem] Spawning Model " .. next_model_index .. ": " .. modelData.prefab)
     local customer = SpawnPrefab(modelData.prefab, spawnPoint)
     
-    if customer == nil then 
-        print("[CustomerSystem] ERROR: Failed to spawn " .. modelData.prefab)
-        return 
-    end
+    if customer == nil then return end
     
-    -- Prepare Data Packet
     local customerData = {
         entity = customer,
         idle = modelData.idle,
         walk = modelData.walk
     }
 
-    -- 2. DECIDE: ACTIVE OR QUEUE?
-    if activeCustomer == nil then
-        -- The spot is free, go immediately
-        print("[CustomerSystem] Counter free. Walking immediately.")
-        self:SetActiveCustomer(customerData)
-    else
-        -- The spot is taken, wait in queue
-        print("[CustomerSystem] Counter busy. Waiting in queue.")
-        table.insert(waiting_queue, customerData)
-        
-        -- Play Idle at the door
-        SetAnimationSettings(customer, 1.0, true, true)
-        PlayEntityAnimation(customer, modelData.idle)
-    end
+    -- Go straight to the counter since we know the scene is empty
+    self:SetActiveCustomer(customerData)
 
-    -- 3. FLIP THE INDEX FOR NEXT TIME
-    next_model_index = next_model_index + 1
-    if next_model_index > #self.customer_models then
-        next_model_index = 1
-    end
+    -- Flip index for next time
+    next_model_index = (next_model_index % #self.customer_models) + 1
 end
 
 -- [NEW] Helper to activate a customer (make them walk to counter)
