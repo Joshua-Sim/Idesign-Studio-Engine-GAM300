@@ -1,16 +1,16 @@
 {
-    "count": 38,
+    "count": 41,
     "entries": [
         {
-            "guid": "23de8816-8d7d-42e1-ada2-3fdd7190fe5f",
-            "scriptPath": "Assets\\Scripts\\GameStateSettings.lua",
+            "guid": "16f0caaf-2e11-4715-ab0e-06c67810e1ba",
+            "scriptPath": "Assets\\Scripts\\InventoryUpgrade.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
         },
         {
-            "guid": "16f0caaf-2e11-4715-ab0e-06c67810e1ba",
-            "scriptPath": "Assets\\Scripts\\InventoryUpgrade.lua",
+            "guid": "23de8816-8d7d-42e1-ada2-3fdd7190fe5f",
+            "scriptPath": "Assets\\Scripts\\GameStateSettings.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
@@ -135,15 +135,15 @@
             "tableRef": -1
         },
         {
-            "guid": "3fec6498-cd0e-40c0-8b7c-6e6d78cc6d5f",
-            "scriptPath": "Assets/Scripts/numpad_Move.lua",
+            "guid": "f2483dea-2693-432a-b1a5-01aed656bd1e",
+            "scriptPath": "Assets\\Scripts\\GameStateResume.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
         },
         {
-            "guid": "f2483dea-2693-432a-b1a5-01aed656bd1e",
-            "scriptPath": "Assets\\Scripts\\GameStateResume.lua",
+            "guid": "3fec6498-cd0e-40c0-8b7c-6e6d78cc6d5f",
+            "scriptPath": "Assets/Scripts/numpad_Move.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
@@ -263,6 +263,27 @@
         {
             "guid": "b20ceaf5-8708-422e-a0d1-9234f7d411c0",
             "scriptPath": "Assets\\Scripts\\MapButton.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "1b87e222-4f27-465d-99e3-cb4e03a24086",
+            "scriptPath": "Assets\\Scripts\\BackpackUpgrade.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "c314695a-2a9e-4bf0-acad-f36a8ca7775a",
+            "scriptPath": "Assets\\Scripts\\potion_pickup.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "9b586251-481f-4167-8d99-3dcfc8c4ed5a",
+            "scriptPath": "Assets\\Scripts\\GameStateBackToMenu.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1

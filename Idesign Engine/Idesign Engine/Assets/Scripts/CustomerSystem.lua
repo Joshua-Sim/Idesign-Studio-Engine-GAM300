@@ -21,8 +21,6 @@ CustomerSystem.customer_models = {
     }
 }    -- Starts at 1, switches to 2, then back to 1
 
-
-local activeCustomer = nil
 -- [PROGRESS BAR CONFIG]
 CustomerSystem.prefab_frame = "ProgressBarFrame_Prefab"
 CustomerSystem.prefab_fill  = "ProgressBarFill_Prefab"
@@ -59,8 +57,9 @@ local customers_served = 0
 -- INTERNAL STATE
 -- =========================================================
 local activeCustomer = nil
+local waiting_queue = {} -- [NEW] Stores customers waiting at the door
 local waitPointEntity = nil 
-local hasSpawned = false
+local hasSpawned = false -- Used to track if the ACTIVE slot is filled
 local is_at_counter = false 
 local spawnTimer = 0
 local navMeshBuilt = false
@@ -137,7 +136,6 @@ function CustomerSystem:on_update(dt)
 
     -- Update score text visibility based on engine state
     if score_text_entity then
-        -- Check if we're in Play OR Upgrade mode
         if IsEngineState("Play") or IsEngineState("Upgrade") or IsEngineState("Editor") then
             SetTextComponent(score_text_entity, "opacity", 1.0)
         else
@@ -157,118 +155,118 @@ function CustomerSystem:on_update(dt)
     
     if currentPhase ~= PHASE_NIGHT then return end
     
-    if customers_served >= MAX_CUSTOMERS then
+    -- Check if we are totally done
+    local total_alive_count = #waiting_queue
+    if activeCustomer then total_alive_count = total_alive_count + 1 end
+    
+    if customers_served >= MAX_CUSTOMERS and total_alive_count == 0 then
         print("[CustomerSystem] Max customers reached. Ending Night Phase.")
         self:EndNightPhase()
         return
     end
     
-    -- 1. SPAWN LOGIC
-    if not hasSpawned then
+    -- 1. SPAWN LOGIC (QUEUE AWARE)
+    -- We can spawn if we haven't hit the nightly max, AND there are fewer than 2 people in the scene
+    if (customers_served + total_alive_count) < MAX_CUSTOMERS and total_alive_count < 2 then
         spawnTimer = spawnTimer + dt
         if spawnTimer >= self.spawn_delay then
-            print("[CustomerSystem] Spawn timer reached (" .. self.spawn_delay .. "s). Spawning now...")
+            print("[CustomerSystem] Spawn timer reached. Spawning now...")
             self:spawn_customer()
             spawnTimer = 0
         end
-    else
-        -- 2. CUSTOMER ACTIVE LOGIC
-        if activeCustomer then
+    end
+
+    -- 2. CUSTOMER ACTIVE LOGIC
+    if activeCustomer then
+        
+        -- [VELOCITY CHECK]
+        if not is_at_counter then
+            local cx, cy, cz = GetPosition(activeCustomer)
             
-            -- [NEW] VELOCITY CHECK (Handle Waiting in Line)
-            -- Only check if they haven't officially arrived at the counter yet
-            if not is_at_counter then
-                local cx, cy, cz = GetPosition(activeCustomer)
-                
-                -- Calculate distance moved since last frame
-                local dx = cx - last_pos_x
-                local dz = cz - last_pos_z
-                local dist_moved = math.sqrt(dx*dx + dz*dz)
-                local speed = dist_moved / dt -- Units per second
+            -- Calculate distance moved since last frame
+            local dx = cx - last_pos_x
+            local dz = cz - last_pos_z
+            local dist_moved = math.sqrt(dx*dx + dz*dz)
+            local speed = dist_moved / dt 
 
-                -- Threshold: If speed < 0.1 units/sec, they are effectively stopped
-                if speed < 0.1 then
-                    if is_moving_state == true then
-                        -- They just stopped (blocked by customer ahead)
-                        print("[CustomerSystem] Blocked! Switching to Idle.")
-                        SetAnimationSettings(activeCustomer, 1.0, true, true)
-                        PlayEntityAnimation(activeCustomer, current_idle_anim)
-                        is_moving_state = false
-                    end
-                else
-                    if is_moving_state == false then
-                        -- They started moving again
-                        print("[CustomerSystem] Moving! Switching to Walk.")
-                        SetAnimationSettings(activeCustomer, 1.0, true, true)
-                        PlayEntityAnimation(activeCustomer, current_walk_anim)
-                        is_moving_state = true
-                    end
-                end
-
-                -- Update last position for next frame
-                last_pos_x = cx
-                last_pos_z = cz
-            end
-
-            -- CHECK IF ARRIVED
-            if not is_at_counter then
-                if waitPointEntity then
-                    local cx, cy, cz = GetPosition(activeCustomer)
-                    local wx, wy, wz = GetPosition(waitPointEntity)
-                    
-                    local dist = math.sqrt((cx - wx)^2 + (cy - wy)^2 + (cz - wz)^2)
-                    
-                    if dist < arrival_threshold then
-                        print("[CustomerSystem] >> ARRIVED! Switching to Idle...")
-                        is_at_counter = true
-                        is_moving_state = false -- Ensure we don't switch back to walk
-                        
-                        SetAnimationSettings(activeCustomer, 1.0, true, true)
-                        
-                        -- Plays the idle animation that matches the current customer
-                        PlayEntityAnimation(activeCustomer, current_idle_anim)
-                        
-                        current_patience = patience_duration
-                        self:SpawnBar(activeCustomer)
-                        FireEvent("OnArrival", activeCustomer, activeCustomer, 0)
-                    end
+            -- Threshold: If speed < 0.1 units/sec, they are effectively stopped
+            if speed < 0.1 then
+                if is_moving_state == true then
+                    print("[CustomerSystem] Blocked! Switching to Idle.")
+                    SetAnimationSettings(activeCustomer, 1.0, true, true)
+                    PlayEntityAnimation(activeCustomer, current_idle_anim)
+                    is_moving_state = false
                 end
             else
-                -- [ARRIVED] HANDLE PATIENCE
-                if entity_frame and entity_fill then
-                    current_patience = current_patience - dt
-                    
-                    if current_patience <= 0 then      
-                        print("[CustomerSystem] Time expired! Customer leaving.")
-                        CustomerSystem:SpawnLog("Time's up!")
-                        if activeCustomer then
-                            FireEvent("CustomerTimeout", activeCustomer, activeCustomer, 0)
-                            FireEvent("CustomerFailed", activeCustomer, activeCustomer, 0)
-                        end
-                        return
-                    end
-                    
-                    -- Visual updates (bar color/scale)
-                    local pct = current_patience / patience_duration
-                    if pct <= color_swap_threshold then
-                        if current_bar_state == "green" then
-                            SetTexture(entity_fill, self.tex_red)
-                            current_bar_state = "red"
-                        end
-                    else
-                        if current_bar_state == "red" then
-                            SetTexture(entity_fill, self.tex_green)
-                            current_bar_state = "green"
-                        end
-                    end
-                    local current_length = pct * bar_length_max
-                    SetScale(entity_fill, current_length, bar_thickness * 0.9, bar_thickness * 0.9)
+                if is_moving_state == false then
+                    print("[CustomerSystem] Moving! Switching to Walk.")
+                    SetAnimationSettings(activeCustomer, 1.0, true, true)
+                    PlayEntityAnimation(activeCustomer, current_walk_anim)
+                    is_moving_state = true
+                end
+            end
 
-                    if player_id then
-                        local px, py, pz = GetPosition(player_id)
-                        local cx, cy, cz = GetPosition(activeCustomer)
-                        self:UpdateBillboard(px, pz, cx, cy, cz)
+            -- Update last position for next frame
+            last_pos_x = cx
+            last_pos_z = cz
+        end
+
+        -- CHECK IF ARRIVED
+        if not is_at_counter then
+            if waitPointEntity then
+                local cx, cy, cz = GetPosition(activeCustomer)
+                local wx, wy, wz = GetPosition(waitPointEntity)
+                
+                local dist = math.sqrt((cx - wx)^2 + (cy - wy)^2 + (cz - wz)^2)
+                
+                if dist < arrival_threshold then
+                    print("[CustomerSystem] >> ARRIVED! Switching to Idle...")
+                    is_at_counter = true
+                    is_moving_state = false 
+                    
+                    SetAnimationSettings(activeCustomer, 1.0, true, true)
+                    PlayEntityAnimation(activeCustomer, current_idle_anim)
+                    
+                    current_patience = patience_duration
+                    self:SpawnBar(activeCustomer)
+                    FireEvent("OnArrival", activeCustomer, activeCustomer, 0)
+                end
+            end
+        else
+            -- [ARRIVED] HANDLE PATIENCE
+            if entity_frame and entity_fill then
+                current_patience = current_patience - dt
+                
+                if current_patience <= 0 then       
+                    print("[CustomerSystem] Time expired! Customer leaving.")
+                    CustomerSystem:SpawnLog("Time's up!")
+                    if activeCustomer then
+                        FireEvent("CustomerTimeout", activeCustomer, activeCustomer, 0)
+                        FireEvent("CustomerFailed", activeCustomer, activeCustomer, 0)
                     end
+                    return
+                end
+                
+                -- Visual updates (bar color/scale)
+                local pct = current_patience / patience_duration
+                if pct <= color_swap_threshold then
+                    if current_bar_state == "green" then
+                        SetTexture(entity_fill, self.tex_red)
+                        current_bar_state = "red"
+                    end
+                else
+                    if current_bar_state == "red" then
+                        SetTexture(entity_fill, self.tex_green)
+                        current_bar_state = "green"
+                    end
+                end
+                local current_length = pct * bar_length_max
+                SetScale(entity_fill, current_length, bar_thickness * 0.9, bar_thickness * 0.9)
+
+                if player_id then
+                    local px, py, pz = GetPosition(player_id)
+                    local cx, cy, cz = GetPosition(activeCustomer)
+                    self:UpdateBillboard(px, pz, cx, cy, cz)
                 end
             end
         end
@@ -292,34 +290,68 @@ function CustomerSystem:spawn_customer()
         return 
     end
     
-    activeCustomer = customer
+    -- Prepare Data Packet
+    local customerData = {
+        entity = customer,
+        idle = modelData.idle,
+        walk = modelData.walk
+    }
+
+    -- 2. DECIDE: ACTIVE OR QUEUE?
+    if activeCustomer == nil then
+        -- The spot is free, go immediately
+        print("[CustomerSystem] Counter free. Walking immediately.")
+        self:SetActiveCustomer(customerData)
+    else
+        -- The spot is taken, wait in queue
+        print("[CustomerSystem] Counter busy. Waiting in queue.")
+        table.insert(waiting_queue, customerData)
+        
+        -- Play Idle at the door
+        SetAnimationSettings(customer, 1.0, true, true)
+        PlayEntityAnimation(customer, modelData.idle)
+    end
+
+    -- 3. FLIP THE INDEX FOR NEXT TIME
+    next_model_index = next_model_index + 1
+    if next_model_index > #self.customer_models then
+        next_model_index = 1
+    end
+end
+
+-- [NEW] Helper to activate a customer (make them walk to counter)
+function CustomerSystem:SetActiveCustomer(data)
+    activeCustomer = data.entity
+    current_idle_anim = data.idle
+    current_walk_anim = data.walk
+    
     hasSpawned = true
     is_at_counter = false
     
-    -- 2. STORE ANIMATIONS
-    current_idle_anim = modelData.idle
-    current_walk_anim = modelData.walk
-    
-    -- 3. PLAY WALK ANIMATION
-    print("[CustomerSystem] Playing walk: " .. modelData.walk)
-    SetAnimationSettings(activeCustomer, 1.0, true, true) -- Force Speed 1.0, Loop True
-    PlayEntityAnimation(activeCustomer, modelData.walk)
+    -- Play Walk
+    SetAnimationSettings(activeCustomer, 1.0, true, true)
+    PlayEntityAnimation(activeCustomer, current_walk_anim)
 
-    -- 4. RESET MOVEMENT STATE FOR VELOCITY CHECK
+    -- Reset Movement State
     local sx, sy, sz = GetPosition(activeCustomer)
     last_pos_x = sx
     last_pos_z = sz
     is_moving_state = true
 
-    -- 5. FLIP THE INDEX FOR NEXT TIME (If 1 go to 2, if 2 go to 1)
-    next_model_index = next_model_index + 1
-    if next_model_index > #self.customer_models then
-        next_model_index = 1
-    end
-
     print("[CustomerSystem] >> Finding path to " .. self.waitPointName)
-    
     PathfindTo("Customer_Kinematic", self.waitPointName)
+end
+
+-- [NEW] Helper to check if someone is waiting
+function CustomerSystem:CheckQueue()
+    if #waiting_queue > 0 then
+        print("[CustomerSystem] Active customer left. Promoting from queue...")
+        local nextData = table.remove(waiting_queue, 1)
+        self:SetActiveCustomer(nextData)
+    else
+        print("[CustomerSystem] Queue empty. Waiting for next spawn.")
+        hasSpawned = false -- Allow logic to know active slot is empty
+    end
 end
 
 -- =========================================================
@@ -388,10 +420,19 @@ function CustomerSystem:ResetNightPhase()
     self:ClearAllLogs() -- Clear logs
     customers_served = 0
     SetData("fixedQueue", 2)
+    
+    -- Clean up active
     if activeCustomer then 
         DestroyEntity(activeCustomer) 
         activeCustomer = nil
     end
+    
+    -- Clean up queue
+    for i, data in ipairs(waiting_queue) do
+        if data.entity then DestroyEntity(data.entity) end
+    end
+    waiting_queue = {}
+    
     self:DestroyBar()
     hasSpawned = false
     is_at_counter = false
@@ -436,11 +477,14 @@ function CustomerSystem.OnCustomerComplete(senderID, targetID, actionType)
     CustomerSystem:DestroyBar()
     if activeCustomer then DestroyEntity(activeCustomer) end
     activeCustomer = nil
-    hasSpawned = false
+    
     is_at_counter = false 
     current_patience = 0.0
     spawnTimer = 0
     current_bar_state = "green"
+    
+    -- [NEW] Check if anyone is waiting
+    CustomerSystem:CheckQueue()
 end
 
 function CustomerSystem.OnCustomerFailed(senderID, targetID, actionType)
@@ -454,8 +498,6 @@ function CustomerSystem.OnCustomerFailed(senderID, targetID, actionType)
     local multiplier = multiplier_int / 100.0
     
     -- Calculate penalty multiplier (50% of the bonus)
-    -- If multiplier is 2.0x, penalty multiplier is 1.5x
-    -- Formula: 1.0 + ((multiplier - 1.0) * 0.5)
     local penalty_multiplier = 1.0 + ((multiplier - 1.0) * 0.5)
     local actual_penalty = math.floor(base_penalty * penalty_multiplier)
     
@@ -480,11 +522,14 @@ function CustomerSystem.OnCustomerFailed(senderID, targetID, actionType)
     CustomerSystem:DestroyBar()
     if activeCustomer then DestroyEntity(activeCustomer) end
     activeCustomer = nil
-    hasSpawned = false
+    
     is_at_counter = false
     current_patience = 0.0
     spawnTimer = 0
     current_bar_state = "green"
+    
+    -- [NEW] Check if anyone is waiting
+    CustomerSystem:CheckQueue()
 end
 
 function CustomerSystem:SpawnBar(parentID)

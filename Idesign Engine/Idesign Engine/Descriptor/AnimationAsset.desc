@@ -1,10 +1,32 @@
 {
-    "count": 10,
+    "count": 12,
     "entries": [
         {
             "guid": "e4d836ef-c0bc-46bb-914c-c1e05246eb81",
             "name": "knifechoppingwithBONEFIXED4",
             "path": "Assets/Objects/knifechoppingwithBONEFIXED4.fbx",
+            "defaultAnimationName": "",
+            "animationSpeed": 1.0,
+            "bLoops": true,
+            "bPlayOnStart": true,
+            "currentTime": 0.0,
+            "vbo_skinning": 0
+        },
+        {
+            "guid": "c15b1abf-52d5-445e-a2fc-2d337fc4969b",
+            "name": "updatedfinalgoblin",
+            "path": "Assets\\Objects\\updatedfinalgoblin.fbx",
+            "defaultAnimationName": "",
+            "animationSpeed": 1.0,
+            "bLoops": true,
+            "bPlayOnStart": true,
+            "currentTime": 0.0,
+            "vbo_skinning": 0
+        },
+        {
+            "guid": "e6e64140-6e45-4eb9-986a-e146404672bf",
+            "name": "cauldronwithoutspoon",
+            "path": "Assets\\Objects\\cauldronwithoutspoon.fbx",
             "defaultAnimationName": "",
             "animationSpeed": 1.0,
             "bLoops": true,
@@ -68,17 +90,6 @@
             "vbo_skinning": 0
         },
         {
-            "guid": "e6e64140-6e45-4eb9-986a-e146404672bf",
-            "name": "cauldronwithoutspoon",
-            "path": "Assets\\Objects\\cauldronwithoutspoon.fbx",
-            "defaultAnimationName": "",
-            "animationSpeed": 1.0,
-            "bLoops": true,
-            "bPlayOnStart": true,
-            "currentTime": 0.0,
-            "vbo_skinning": 0
-        },
-        {
             "guid": "4015f98e-e322-4d64-b938-5868c300ff46",
             "name": "GoblinPixelLatest",
             "path": "Assets\\Objects\\GoblinPixelLatest.fbx",
@@ -104,6 +115,17 @@
             "guid": "26be21b4-ff16-44c1-9e5d-921d6516c728",
             "name": "FISHNEW",
             "path": "Assets\\Objects\\FISHNEW.fbx",
+            "defaultAnimationName": "",
+            "animationSpeed": 1.0,
+            "bLoops": true,
+            "bPlayOnStart": true,
+            "currentTime": 0.0,
+            "vbo_skinning": 0
+        },
+        {
+            "guid": "c161b000-4ea8-4e97-bc56-c0b183eba07c",
+            "name": "FISHFINALUPDATED",
+            "path": "Assets\\Objects\\FISHFINALUPDATED.fbx",
             "defaultAnimationName": "",
             "animationSpeed": 1.0,
             "bLoops": true,

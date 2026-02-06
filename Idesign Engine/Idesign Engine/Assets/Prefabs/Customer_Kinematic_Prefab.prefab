@@ -10,9 +10,9 @@
           13.039908409118652
         ],
         "rotation": [
-          0.0,
-          -90.0,
-          0.0
+          90.0,
+          180.0,
+          90.0
         ],
         "scale": [
           4.0,
@@ -33,16 +33,16 @@
         "sortIndex": 0
       },
       "MeshReference": {
-        "guid": "eddf23c2-9e8c-49e5-813d-6093f6786bde"
+        "guid": "5599d418-30e7-4aa5-96ee-b34bb2739271"
       },
       "TextureComponent": {
-        "guid": "8e82476d-aaef-44c4-a890-491adfade441",
+        "guid": "bc8c90ff-9f41-4d20-b262-d42905d55a55",
         "isUI": false
       },
       "NavMeshAgentComponent": {
         "agentHeight": 10.0,
         "agentRadius": 0.6000000238418579,
-        "moveSpeed": 1.5,
+        "moveSpeed": 3.0,
         "angularSpeed": 0.0,
         "acceleration": 8.0,
         "stoppingDistance": 0.10000000149011612,
@@ -55,7 +55,7 @@
         ]
       },
       "AnimationProperties": {
-        "path": "Assets/Objects/FISHNEW.fbx",
+        "path": "Assets/Objects/FISHFINALUPDATED.fbx",
         "defaultAnimationName": "",
         "animationSpeed": 1.0,
         "bLoops": true,
@@ -70,9 +70,9 @@
         "colliders": [
           {
             "size": [
-              1.20001220703125,
-              3.0,
-              1.0999755859375
+              0.5,
+              1.0,
+              1.5
             ],
             "center": [
               0.0,

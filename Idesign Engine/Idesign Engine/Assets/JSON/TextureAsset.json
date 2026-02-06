@@ -127,15 +127,15 @@
             "isUI": false
         },
         {
-            "guid": "bd53721a-583e-47d7-b196-17af52bd40fe",
-            "name": "blackbar",
-            "path": "Assets\\Textures\\blackbar.png",
-            "isUI": false
-        },
-        {
             "guid": "733448bc-ad27-447c-8887-ed8a34a0258e",
             "name": "REUME BUTTON SHADOW",
             "path": "Assets\\Textures\\REUME BUTTON SHADOW.png",
+            "isUI": false
+        },
+        {
+            "guid": "bd53721a-583e-47d7-b196-17af52bd40fe",
+            "name": "blackbar",
+            "path": "Assets\\Textures\\blackbar.png",
             "isUI": false
         },
         {
@@ -202,6 +202,12 @@
             "guid": "21e71a10-33b3-4b37-a5df-9ebeb8a262e2",
             "name": "SkyNoon_Front",
             "path": "Assets\\Textures\\SkyNoon_Front.png",
+            "isUI": false
+        },
+        {
+            "guid": "bc8c90ff-9f41-4d20-b262-d42905d55a55",
+            "name": "FISHFINALUPDATEDTEX",
+            "path": "Assets\\Textures\\FISHFINALUPDATEDTEX.png",
             "isUI": false
         },
         {
@@ -295,6 +301,12 @@
             "isUI": false
         },
         {
+            "guid": "bdca4fb8-fc22-4bfc-b886-3a1e1a21ebd7",
+            "name": "Rocks007_2K-PNG_Color",
+            "path": "Assets\\Textures\\Rocks007_2K-PNG_Color.png",
+            "isUI": false
+        },
+        {
             "guid": "1cd96cbf-24c4-4e43-8783-5af596d9dc7d",
             "name": "Forest hover",
             "path": "Assets\\Textures\\Forest hover.png",
@@ -310,6 +322,12 @@
             "guid": "77c33f84-c586-48c2-b69b-e2e6fc39d606",
             "name": "music",
             "path": "Assets/Textures/music.png",
+            "isUI": false
+        },
+        {
+            "guid": "dd4ead59-4339-4c03-b3a6-58067d643be0",
+            "name": "goblinUPDATEDTEXTURE",
+            "path": "Assets\\Textures\\goblinUPDATEDTEXTURE.jpg",
             "isUI": false
         },
         {
@@ -989,12 +1007,6 @@
             "name": "pause_fade",
             "path": "Assets\\Textures\\pause_fade.png",
             "isUI": true
-        },
-        {
-            "guid": "bdca4fb8-fc22-4bfc-b886-3a1e1a21ebd7",
-            "name": "Rocks007_2K-PNG_Color",
-            "path": "Assets\\Textures\\Rocks007_2K-PNG_Color.png",
-            "isUI": false
         },
         {
             "guid": "b50ee85f-ff40-438b-9261-9b121ba43a07",

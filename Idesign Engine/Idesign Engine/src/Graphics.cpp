@@ -3266,6 +3266,10 @@ namespace Framework {
         for (auto e : uiTextEntities)
         {
 
+            // ONLY render the Interaction Prompt on the Main Game View (Index 0)
+            if (viewIndex != 0 && ecsInterface.GetEntityName(e) == "InteractionPrompt")
+                continue;
+
             auto& txt = ecsInterface.GetComponent<TextProperties>(e);
             auto& tr = ecsInterface.GetComponent<TransformComponent>(e);
 
@@ -3300,13 +3304,19 @@ namespace Framework {
 
         // Do not display inventory boxes while in paused/howtoplay/menu state
         if (viewIndex == 0 &&
-            !engineState.IsAnyUIOpen() &&
+            !engineState.Is(EngineMode::Paused) &&
+            !engineState.Is(EngineMode::HowToPlay) &&
+            !engineState.Is(EngineMode::Cutscene) &&
+            !engineState.Is(EngineMode::Menu) &&
+            !engineState.Is(EngineMode::Settings) &&
+            !engineState.Is(EngineMode::Dialogue) &&
+            !engineState.Is(EngineMode::MapSelection) &&
             !GameSystem::bookOpen) 
         {
             DrawHotbar(width, height);
         }
 
-        if (Inventory::Instance().IsBackpackOpen())
+        if (Framework::Inventory::Instance().IsBackpackOpen())
         {
             DrawBackpack(width, height);
             HandleBackpackDragDrop(width, height);

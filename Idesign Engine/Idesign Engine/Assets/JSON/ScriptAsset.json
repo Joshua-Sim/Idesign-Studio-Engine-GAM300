@@ -1,15 +1,15 @@
 {
     "scripts": [
         {
-            "guid": "23de8816-8d7d-42e1-ada2-3fdd7190fe5f",
-            "scriptPath": "Assets\\Scripts\\GameStateSettings.lua",
+            "guid": "16f0caaf-2e11-4715-ab0e-06c67810e1ba",
+            "scriptPath": "Assets\\Scripts\\InventoryUpgrade.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
         },
         {
-            "guid": "16f0caaf-2e11-4715-ab0e-06c67810e1ba",
-            "scriptPath": "Assets\\Scripts\\InventoryUpgrade.lua",
+            "guid": "23de8816-8d7d-42e1-ada2-3fdd7190fe5f",
+            "scriptPath": "Assets\\Scripts\\GameStateSettings.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
