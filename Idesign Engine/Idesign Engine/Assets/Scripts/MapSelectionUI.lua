@@ -113,7 +113,7 @@ function M:OnLocationSelected(locData)
     -- This assumes your LoadingSystem listens to "StartPhaseTransition"
     -- and will eventually fire "EndPhaseTransition" once the animation finishes.
     FireEvent("StartPhaseTransition")
-
+    FireEvent("RequestHerbSpawn")
     -- Exit MapSelection state
     print("[MapSelectionUI] Popping MapSelection state")
     GameStateStart()

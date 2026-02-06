@@ -11686,7 +11686,7 @@
                 "TransformComponent": {
                     "position": [
                         -236.49522399902344,
-                        315.2843322753906,
+                        311.0,
                         664.5771484375
                     ],
                     "rotation": [
@@ -11896,6 +11896,87 @@
                         {
                             "messageToListenFor": "OnInteract",
                             "luaFunctionToCall": "OnInteract"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "itemSpawner",
+            "guid": "8548a720-92ed-4e47-9d1c-e74a60c99ccb",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "rotation": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "scale": [
+                        8.0,
+                        8.0,
+                        8.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "children": [],
+                    "sortIndex": 49
+                },
+                "TagComponent": {
+                    "tags": [
+                       
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": "",
+                    "materialGuid": ""
+                },
+                "TextureComponent": {
+                    "guid": "",
+                    "isUI": false
+                },
+                "BoxColliderComponent": {
+                    "colliders": []
+                },
+                "PhysicsProperties": {
+                    "category": 1,
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 0.5,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],  
+                    "startAwake": true
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "ebdbf8aa-d944-40e4-8c1d-2a7415165a8d",
+                            "scriptPath": "Assets\\Scripts\\itemSpawner.lua",
+                            "hotReload": false
+                        }
+                    ]
+                },
+                "EventReceiverComponent": {
+                    "receivers": [
+                        {
+                            "messageToListenFor": "RequestHerbSpawn",
+                            "luaFunctionToCall": "RespawnHerbs"
                         }
                     ]
                 }
@@ -13386,83 +13467,6 @@
                 },
                 "BoxColliderComponent": {
                     "colliders": []
-                },
-                "PhysicsProperties": {
-                    "category": 0,
-                    "isImmovable": true,
-                    "gravityFactor": 1.0,
-                    "mass": 1.0,
-                    "friction": 0.5,
-                    "restitution": 0.0,
-                    "linearVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "angularVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "startAwake": true
-                }
-            }
-        },
-        {
-            "name": "Pear",
-            "guid": "856bde60-2a83-47ce-8c3f-a21b567802d6",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -246.83206176757813,
-                        322.1015319824219,
-                        608.7859497070313
-                    ],
-                    "rotation": [
-                        0.00275529851205647,
-                        -0.06836269050836563,
-                        -0.0027439692057669163
-                    ],
-                    "scale": [
-                        0.75,
-                        0.75,
-                        0.75
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
-                    "children": [],
-                    "sortIndex": 73
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "ea5866c9-c6c4-42a1-ad1d-4ed77ebd533f",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "95b2bdaa-b3c5-42e0-9687-d0edc85dfe01",
-                    "isUI": false
-                },
-                "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                3.0,
-                                4.099999904632568,
-                                4.0
-                            ],
-                            "center": [
-                                0.0,
-                                1.899999976158142,
-                                0.0
-                            ],
-                            "canPassThrough": false,
-                            "isInteractable": false
-                        }
-                    ]
                 },
                 "PhysicsProperties": {
                     "category": 0,
@@ -17747,468 +17751,6 @@
                 },
                 "BoxColliderComponent": {
                     "colliders": []
-                },
-                "PhysicsProperties": {
-                    "category": 0,
-                    "isImmovable": true,
-                    "gravityFactor": 1.0,
-                    "mass": 1.0,
-                    "friction": 0.5,
-                    "restitution": 0.0,
-                    "linearVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "angularVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "startAwake": true
-                }
-            }
-        },
-        {
-            "name": "Pear (Copy)",
-            "guid": "c4b7b07e-aefe-4b75-b2f1-78c15a473916",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -235.48818969726563,
-                        324.0648193359375,
-                        581.548095703125
-                    ],
-                    "rotation": [
-                        0.0006571094854734838,
-                        -0.06841621547937393,
-                        -0.0006078657461330295
-                    ],
-                    "scale": [
-                        0.75,
-                        0.75,
-                        0.75
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
-                    "children": [],
-                    "sortIndex": 133
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "ea5866c9-c6c4-42a1-ad1d-4ed77ebd533f",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "95b2bdaa-b3c5-42e0-9687-d0edc85dfe01",
-                    "isUI": false
-                },
-                "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                3.0,
-                                4.099999904632568,
-                                4.0
-                            ],
-                            "center": [
-                                0.0,
-                                1.899999976158142,
-                                0.0
-                            ],
-                            "canPassThrough": false,
-                            "isInteractable": false
-                        }
-                    ]
-                },
-                "PhysicsProperties": {
-                    "category": 0,
-                    "isImmovable": true,
-                    "gravityFactor": 1.0,
-                    "mass": 1.0,
-                    "friction": 0.5,
-                    "restitution": 0.0,
-                    "linearVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "angularVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "startAwake": true
-                }
-            }
-        },
-        {
-            "name": "Pear (Copy)",
-            "guid": "d2b3b77a-af9f-42a0-9a9c-16c7ca8a33ab",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -237.4768829345703,
-                        324.8591613769531,
-                        582.6113891601563
-                    ],
-                    "rotation": [
-                        0.0008271782426163554,
-                        -0.06841537356376648,
-                        -0.0007886274252086878
-                    ],
-                    "scale": [
-                        0.75,
-                        0.75,
-                        0.75
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
-                    "children": [],
-                    "sortIndex": 134
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "ea5866c9-c6c4-42a1-ad1d-4ed77ebd533f",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "95b2bdaa-b3c5-42e0-9687-d0edc85dfe01",
-                    "isUI": false
-                },
-                "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                3.0,
-                                4.099999904632568,
-                                4.0
-                            ],
-                            "center": [
-                                0.0,
-                                1.899999976158142,
-                                0.0
-                            ],
-                            "canPassThrough": false,
-                            "isInteractable": false
-                        }
-                    ]
-                },
-                "PhysicsProperties": {
-                    "category": 0,
-                    "isImmovable": true,
-                    "gravityFactor": 1.0,
-                    "mass": 1.0,
-                    "friction": 0.5,
-                    "restitution": 0.0,
-                    "linearVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "angularVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "startAwake": true
-                }
-            }
-        },
-        {
-            "name": "Pear (Copy)",
-            "guid": "c39cb1bd-a3ca-4882-bc95-6778ef3432a8",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -231.18186950683594,
-                        326.5130615234375,
-                        586.532958984375
-                    ],
-                    "rotation": [
-                        0.0009916055714711547,
-                        -0.06841287761926651,
-                        -0.0009596800082363188
-                    ],
-                    "scale": [
-                        0.75,
-                        0.75,
-                        0.75
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
-                    "children": [],
-                    "sortIndex": 135
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "ea5866c9-c6c4-42a1-ad1d-4ed77ebd533f",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "95b2bdaa-b3c5-42e0-9687-d0edc85dfe01",
-                    "isUI": false
-                },
-                "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                3.0,
-                                4.099999904632568,
-                                4.0
-                            ],
-                            "center": [
-                                0.0,
-                                1.899999976158142,
-                                0.0
-                            ],
-                            "canPassThrough": false,
-                            "isInteractable": false
-                        }
-                    ]
-                },
-                "PhysicsProperties": {
-                    "category": 0,
-                    "isImmovable": true,
-                    "gravityFactor": 1.0,
-                    "mass": 1.0,
-                    "friction": 0.5,
-                    "restitution": 0.0,
-                    "linearVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "angularVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "startAwake": true
-                }
-            }
-        },
-        {
-            "name": "Pear (Copy)",
-            "guid": "1d2d941f-7342-47fd-a3e5-0e40b44df3cb",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -233.67356872558594,
-                        324.9407043457031,
-                        582.4036254882813
-                    ],
-                    "rotation": [
-                        0.001556871342472732,
-                        -0.0684015229344368,
-                        -0.0015367347514256835
-                    ],
-                    "scale": [
-                        0.75,
-                        0.75,
-                        0.75
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
-                    "children": [],
-                    "sortIndex": 136
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "ea5866c9-c6c4-42a1-ad1d-4ed77ebd533f",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "95b2bdaa-b3c5-42e0-9687-d0edc85dfe01",
-                    "isUI": false
-                },
-                "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                3.0,
-                                4.099999904632568,
-                                4.0
-                            ],
-                            "center": [
-                                0.0,
-                                1.899999976158142,
-                                0.0
-                            ],
-                            "canPassThrough": false,
-                            "isInteractable": false
-                        }
-                    ]
-                },
-                "PhysicsProperties": {
-                    "category": 0,
-                    "isImmovable": true,
-                    "gravityFactor": 1.0,
-                    "mass": 1.0,
-                    "friction": 0.5,
-                    "restitution": 0.0,
-                    "linearVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "angularVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "startAwake": true
-                }
-            }
-        },
-        {
-            "name": "Pear (Copy)",
-            "guid": "3a01b51b-50e5-433b-84d9-112ec7dc0ba1",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -257.88189697265625,
-                        328.52203369140625,
-                        607.8529052734375
-                    ],
-                    "rotation": [
-                        0.001706922659650445,
-                        -0.06839770078659058,
-                        -0.0016885767690837383
-                    ],
-                    "scale": [
-                        0.75,
-                        0.75,
-                        0.75
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
-                    "children": [],
-                    "sortIndex": 137
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "ea5866c9-c6c4-42a1-ad1d-4ed77ebd533f",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "95b2bdaa-b3c5-42e0-9687-d0edc85dfe01",
-                    "isUI": false
-                },
-                "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                3.0,
-                                4.099999904632568,
-                                4.0
-                            ],
-                            "center": [
-                                0.0,
-                                1.899999976158142,
-                                0.0
-                            ],
-                            "canPassThrough": false,
-                            "isInteractable": false
-                        }
-                    ]
-                },
-                "PhysicsProperties": {
-                    "category": 0,
-                    "isImmovable": true,
-                    "gravityFactor": 1.0,
-                    "mass": 1.0,
-                    "friction": 0.5,
-                    "restitution": 0.0,
-                    "linearVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "angularVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "startAwake": true
-                }
-            }
-        },
-        {
-            "name": "Pear (Copy)",
-            "guid": "2f196e98-1b0f-4d73-a788-9cbaa9e90ced",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -253.27902221679688,
-                        326.13922119140625,
-                        615.3010864257813
-                    ],
-                    "rotation": [
-                        0.002112065441906452,
-                        -0.06838604062795639,
-                        -0.002097270917147398
-                    ],
-                    "scale": [
-                        0.75,
-                        0.75,
-                        0.75
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
-                    "children": [],
-                    "sortIndex": 138
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "ea5866c9-c6c4-42a1-ad1d-4ed77ebd533f",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "95b2bdaa-b3c5-42e0-9687-d0edc85dfe01",
-                    "isUI": false
-                },
-                "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                3.0,
-                                4.099999904632568,
-                                4.0
-                            ],
-                            "center": [
-                                0.0,
-                                1.899999976158142,
-                                0.0
-                            ],
-                            "canPassThrough": false,
-                            "isInteractable": false
-                        }
-                    ]
                 },
                 "PhysicsProperties": {
                     "category": 0,

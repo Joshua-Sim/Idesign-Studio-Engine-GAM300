@@ -518,6 +518,39 @@ namespace Framework {
             return 0;
         }
 
+        static int lua_SubscribeToEvent(lua_State* L)
+        {
+            // Arg 1: Event Name (string) - e.g., "RequestHerbSpawn"
+            const char* messageName = luaL_checkstring(L, 1);
+
+            // Arg 2: Lua Function Name (string) - e.g., "RespawnHerbs"
+            const char* funcNameStr = luaL_checkstring(L, 2);
+
+            // Arg 3: Entity ID (integer) - The entity that owns the script
+            Entity ownerEntity = static_cast<Entity>(luaL_checkinteger(L, 3));
+
+            // Get ScriptingSystem pointer from registry
+            auto* self = lua_self(L);
+            if (!self) return 0;
+
+            // Use a string copy for the lambda capture
+            std::string luaFuncName = funcNameStr;
+
+            // Register with C++ EventManager
+            EventManager::Instance().Subscribe(messageName, [self, ownerEntity, luaFuncName](void* payload) {
+
+                // 1. Validation: If entity is gone, unsubscribe
+                if (!ecsInterface.IsEntityValid(ownerEntity)) {
+                    return false;
+                }
+
+                return true; // Stay subscribed
+                });
+
+            std::cout << "[Lua] Entity " << ownerEntity << " Subscribed to: " << messageName << std::endl;
+            return 0;
+        }
+
         // Set a script's variable (Access a scripts local var and edit if needed)
         static int lua_SetScriptVariable(lua_State* L)
         {
@@ -1125,6 +1158,7 @@ namespace Framework {
             engineState.PushState(EngineMode::Play);                    // Push gameplay layer
             phaseManager->SetPhase(GamePhase::Day);                     // Set game phase
             MessageBus::Get().SendImmediate(EnterPlayModeMessage());    // Send message to start audio and other play-mode systems
+            
 
             
             //InstantiatePrefabByName("ForestHerb_Prefab");
@@ -1968,6 +2002,9 @@ namespace Framework {
             return 0;
         }
 
+
+
+
         // ScriptingSystem.cpp
 
 
@@ -2064,6 +2101,7 @@ namespace Framework {
         lua_register(L, "StopAnimation", l_StopEntityAnimation); 
         lua_register(L, "SpawnPrefab", lua_SpawnPrefab);
         lua_register(L, "FireEvent", lua_FireEvent); // Maybe add register if needed
+        lua_register(L, "SubscribeToEvent", lua_SubscribeToEvent); // Maybe add register if needed
         lua_register(L, "SetScriptVariable", lua_SetScriptVariable);
 
         // Engine States
@@ -2089,7 +2127,6 @@ namespace Framework {
         lua_register(L, "DialogueStart", lua_DialogueStart);
         lua_register(L, "DialogueEnd", lua_DialogueEnd);
         lua_register(L, "DialogueIsActive", lua_DialogueIsActive);
-
         
         //cauldron
         lua_register(L, "SetCameraLock", [](lua_State* L) -> int {
