@@ -250,162 +250,6 @@ namespace Framework {
 
         ecsInterface.SetSystemSignature<Graphics>(signature);
 
-        std::stringstream ss;
-        ss << signature;
-        std::cout << "Signature for Graphics system is: " << signature << std::endl;
-        ImguiManager::Log("Graphics signature set: " + ss.str(), "Graphics");
-        //  ---- ECS INITIALIZATION END --- 
-
-
-        // ---------------- Create one ECS object (Frog Agent) (Deserialized next time) -------------------- 
-        Entity newEntity = ecsInterface.CreateEntity(); // FROG ENTITY
-
-        //Add transform
-        TransformComponent transformComponent;
-        transformComponent.position = glm::vec3(10, 0, -3); // Instantiate location
-        transformComponent.scale = glm::vec3(1, 1, 1); // Size of my obj is big, change for test
-        transformComponent.rotation = glm::vec3(0, 0, 0);
-
-        ecsInterface.AddComponent<TransformComponent>(newEntity, transformComponent);
-
-        MaterialProperties materialComponent;
-        materialComponent.ambient = glm::vec3(0.05f, 0.07f, 0.1f);   // Slightly cool ambient tone
-        materialComponent.albedo = glm::vec3(0.8f, 0.6f, 0.3f);      // Warm diffuse color (like wood or bronze)
-        materialComponent.specular = glm::vec3(0.9f, 0.9f, 0.95f);   // Strong specular for shiny surface
-        materialComponent.shininess = 48.0f;                         // Fairly glossy
-        materialComponent.opacity = 0.85f;                           // Slightly transparent
-
-        ecsInterface.AddComponent<MaterialProperties>(newEntity, materialComponent);
-
-        ecsInterface.AddComponent<HierarchyComponent>(newEntity, HierarchyComponent{});
-
-        // Add and load mesh , temporarily hard-code component data 
-        MeshProperties meshComponent;
-        meshComponent.path = "Assets/Objects/layout2-0.obj";
-
-        // Load mesh from its own path, again serialized for each obj in deserialization after.
-        MeshLoader::loadMesh(meshComponent.path, meshComponent);
-        ecsInterface.AddComponent<MeshProperties>(newEntity, meshComponent);
-
-        // Add and load a texture component
-        Framework::TextureProperties textureComponent;
-        textureComponent.path = "Assets/PNG/test.png"; //can put any compressed texture
-        TextureLoader::loadTexture(textureComponent, true);
-
-        // Add NavMesh component to mark this as navmesh source
-        Framework::NavMeshComponent navMeshComp;
-        navMeshComp.isNavMeshSource = true;  // Mark this mesh as navmesh source
-        navMeshComp.guid = meshComponent.guid;  // Optional: store reference
-        ecsInterface.AddComponent<Framework::NavMeshComponent>(newEntity, navMeshComp);
-        ecsInterface.AddComponent<Framework::TextureProperties>(newEntity, textureComponent);
-        // ----------------- End object creation ------------------------------
-
-
-    // ---------------- Create AI Agent Entity -------------------- 
-        Entity agentEntity = ecsInterface.CreateEntity();
-
-        // Add transform - position agent ON the navmesh floor
-        TransformComponent agentTransform;
-        agentTransform.position = glm::vec3(-2, 0.5, 0); // On the floor, slightly offset in X
-        agentTransform.scale = glm::vec3(1, 1, 1);    // Small visual size
-        agentTransform.rotation = glm::vec3(0, 0, 0);  // Rotated to orient correctly
-        ecsInterface.AddComponent<TransformComponent>(agentEntity, agentTransform);
-        ecsInterface.AddComponent<MaterialProperties>(agentEntity, materialComponent);
-        ecsInterface.AddComponent<HierarchyComponent>(agentEntity, HierarchyComponent{});
-
-        // Add mesh for agent (use cube, sphere, or character model)
-        MeshProperties agentMesh;
-        agentMesh.path = "Assets/Objects/Frog.obj"; // Or "sphere.obj" or "character.obj"
-        MeshLoader::loadMesh(agentMesh.path, agentMesh);
-        ecsInterface.AddComponent<MeshProperties>(agentEntity, agentMesh);
-
-        // Set destination here to test
-
-        // Add texture for agent (make it different color so you can see it)
-        Framework::TextureProperties agentTexture;
-        agentTexture.path = "Assets/PNG/test.png"; // Different texture from floor
-        TextureLoader::loadTexture(agentTexture, true);
-        ecsInterface.AddComponent<Framework::TextureProperties>(agentEntity, agentTexture);
-
-        // Add NavMeshAgent component - scaled for your scale 3 world
-        Framework::NavMeshAgentComponent navAgent;
-        navAgent.agentHeight = 2.0f;           // Standard character height in world units
-        navAgent.agentRadius = 0.6f;           // Standard radius for pathfinding
-        navAgent.moveSpeed = 5.0f;             // Movement speed (units per second)
-        navAgent.acceleration = 8.0f;          // How quickly it accelerates
-        navAgent.angularSpeed = 120.0f;        // Rotation speed
-        navAgent.stoppingDistance = 0.3f;      // Distance to stop before waypoint
-        navAgent.targetPosition = glm::vec3(-2.0, 1.0, 1.5); // Destination across the floor
-        navAgent.hasPath = false;              // Will be set when path is calculated
-        navAgent.isMoving = false;
-        ecsInterface.AddComponent<Framework::NavMeshAgentComponent>(agentEntity, navAgent);
-        // ----------------- End agent creation ------------------------------
-
-
-
-        //   //  // ---------------- Create one ANIMATED ECS object (FOR TESTING) --------------------
-        Entity animatedEntity = ecsInterface.CreateEntity();
-
-        // 1. Add transform component
-        TransformComponent transformComponent1;
-        transformComponent1.position = glm::vec3(10, 0.0, 0.3); // Instantiate location
-        transformComponent1.scale = glm::vec3(0.5, 0.5, 0.5); // Size of my obj is big, change for test
-        //transformComponent1.rotation = glm::vec3(90.0f, 0.0f, 0.0f);
-        ecsInterface.AddComponent<TransformComponent>(animatedEntity, transformComponent1);
-        // 2. Add hierarchy component (standard for your entities)
-        ecsInterface.AddComponent<HierarchyComponent>(animatedEntity, HierarchyComponent{});
-
-        // 3. Define the components we need to load into
-        MeshProperties animMesh;
-        Framework::AnimationProperties animProps;
-        auto meshGUID = AssetManager::Instance().FindGuid<MeshProperties>("knifechoppingwithBONEFIXED4");
-        auto animGUID = AssetManager::Instance().FindGuid<AnimationProperties>("knifechoppingwithBONEFIXED4");
-
-
-        if (!meshGUID.empty() && !animGUID.empty())
-        {
-            // 3. Get the actual asset data
-            auto* meshAsset = AssetManager::Instance().Get<MeshProperties>(meshGUID);
-            auto* animAsset = AssetManager::Instance().Get<AnimationProperties>(animGUID);
-
-            // 4. Add components by COPYING the asset data
-            // This is instant - no file loading!
-            ecsInterface.AddComponent<MeshProperties>(animatedEntity, *meshAsset);
-            ecsInterface.AddComponent<AnimationProperties>(animatedEntity, *animAsset);
-
-            // (You would also add a MaterialProperties component here)
-        }
-
-        ecsInterface.AddComponent<MaterialProperties>(animatedEntity, materialComponent);
-
-        Framework::TextureProperties animTexture;
-        // --- !! IMPORTANT: Change this path to your model's texture !! ---
-        animTexture.path = "Assets/Textures/music.png";
-        TextureLoader::loadTexture(animTexture, true);
-        ecsInterface.AddComponent<Framework::TextureProperties>(animatedEntity, animTexture);
-        // ----------------- End animated object creation ---------------------
-
-        // ====================================================================
-        // --- CREATE A TEST LIGHT ENTITY ---
-        // ====================================================================
-        Entity lightEntity = ecsInterface.CreateEntity();
-
-        // 1. Add a Transform for the light's position
-        TransformComponent lightTransform;
-        lightTransform.position = glm::vec3(0.0f, 5.0f, 2.0f); // Position it above the scene
-        ecsInterface.AddComponent<TransformComponent>(lightEntity, lightTransform);
-
-        // 2. Add the LightProperties component
-        LightProperties pointLight;
-        pointLight.type = LightType::Point;
-        pointLight.color = glm::vec3(1.0f, 1.0f, 1.0f); // White light
-        pointLight.intensity = 10.0f; // Make it nice and bright
-        pointLight.radius = 20.0f;    // Give it a large radius
-        pointLight.enabled = true;
-        ecsInterface.AddComponent<LightProperties>(lightEntity, pointLight);
-
-        // 3. Add a Hierarchy component (since your other entities have it)
-        ecsInterface.AddComponent<HierarchyComponent>(lightEntity, HierarchyComponent{});
 
         cube = Mesh::CreateUnitCubeData();
         plane = Mesh::CreateUnitSphereData();
@@ -508,25 +352,6 @@ namespace Framework {
         leafQuad = new Mesh(Mesh::CreateBillboardQuad());
         leafQuad->initGL();
 
-        // Load your leaf texture (PNG with alpha)
-        TextureProperties leafProps;
-        leafProps.path = "Assets/Textures/unchopped_herb.png";
-        leafTexture = TextureLoader::loadTexture(leafProps, true);
-
-        if (!leafTexture)
-            std::cout << "Leaf PNG failed to load!" << std::endl;
-
-        // === 1. LOAD TREE TEXTURE ===
-        TextureProperties treeTexProps;
-        treeTexProps.path = "Assets/Textures/Wood.png"; // <-- CHANGE PATH TO YOUR TEXTURE!
-
-        // Assuming TextureLoader::loadTexture is available (from your uploaded files)
-        // NOTE: loadTexture takes TextureProperties& props and bool flip
-        m_treeTextureID = TextureLoader::loadTexture(treeTexProps, true);
-
-        if (m_treeTextureID == 0) {
-            std::cerr << "[FoliageRenderer] WARNING: Tree texture failed to load! Check path: " << treeTexProps.path << std::endl;
-        }
 
         // 2. Create the Instancing Renderer
         // TRUNK RENDERER (cylinder)
@@ -542,11 +367,6 @@ namespace Framework {
             "Assets/shaders/instancedleave_frag.glsl"
         );
 
-        // Load a particle texture (white dot / square PNG)
-        TextureProperties particleTexProps;
-        particleTexProps.path = "Assets/PNG/particle.png";
-        TextureLoader::loadTexture(particleTexProps, true);
-        m_particleTextureID = particleTexProps.textureID;
 
         // LEAF RENDERER (billboards)
         m_leafRenderer = new FoliageRenderer(
@@ -2465,6 +2285,71 @@ namespace Framework {
         glDisable(GL_BLEND);
         glDepthMask(GL_TRUE);
 
+        // ============================================================================
+          // [OPTIMIZATION] PRE-CALCULATE SHADOW MAPS (Runs once per frame)
+          // ============================================================================
+          // 1. Find the Texture IDs for all active point lights just ONCE.
+        std::vector<GLuint> validShadowTextures;
+        validShadowTextures.reserve(points.size());
+
+        for (const auto& point : points)
+        {
+            GLuint foundID = 0;
+            if (point.castsShadow)
+            {
+                // Perform the slow search here (only happens once per frame now!)
+                for (auto const& e : mEntities)
+                {
+                    if (ecsInterface.HasComponent<LightProperties>(e) &&
+                        ecsInterface.HasComponent<TransformComponent>(e))
+                    {
+                        auto& l = ecsInterface.GetComponent<LightProperties>(e);
+                        auto& t = ecsInterface.GetComponent<TransformComponent>(e);
+
+                        // Match specific light by position and type
+                        if (l.type == LightType::Point && t.position == point.position)
+                        {
+                            foundID = l.shadowDepthCubeMap;
+                            break;
+                        }
+                    }
+                }
+            }
+            validShadowTextures.push_back(foundID);
+        }
+
+        // 2. Bind Textures & Set Uniforms GLOBALLY for this pass.
+        //    This avoids re-binding them thousands of times inside the loop.
+        auto SetupShadowsForShader = [&](ShaderProgram& sh)
+            {
+                sh.use();
+                int unit = 2; // Start at Texture Unit 2 (Unit 0=Albedo, 1=DirShadow)
+                int count = 0;
+                for (size_t i = 0; i < points.size(); ++i)
+                {
+                    // Only bind if light casts shadow AND we found a valid texture
+                    if (points[i].castsShadow && validShadowTextures[i] != 0 && count < MAX_POINT_LIGHTS)
+                    {
+                        glActiveTexture(GL_TEXTURE0 + unit);
+                        glBindTexture(GL_TEXTURE_CUBE_MAP, validShadowTextures[i]);
+
+                        std::string uniformName = "uPointShadowMaps[" + std::to_string(count) + "]";
+                        sh.setInt(uniformName.c_str(), unit);
+
+                        unit++;
+                        count++;
+                    }
+                }
+            };
+
+        // Apply these settings to BOTH shaders used in the loop
+        SetupShadowsForShader(meshShader);
+        SetupShadowsForShader(skinnedShader);
+
+        // Reset active texture to default for the loop
+        glActiveTexture(GL_TEXTURE0);
+        // ============================================================================
+
         for (auto const& entityId : opaqueEntities)
         {
             auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
@@ -2564,52 +2449,8 @@ namespace Framework {
                     currentshader.setInt("uShadowMap", 1);
                     currentshader.setMat4("uLightSpaceMatrix", m_lightSpaceMatrix);
 
-                    int pointShadowUnit = 2;
-                    int pointShadowCount = 0;
-
-                    // 'points' is the std::vector<PointLightCPU> passed into RenderView
-                    for (int i = 0; i < (int)points.size(); ++i)
-                    {
-                        // The 'points' vector is already packed with only enabled lights.
-                        // We just need to check if this enabled light also casts a shadow.
-                        if (points[i].castsShadow && pointShadowCount < MAX_POINT_LIGHTS)
-                        {
-                            // We need to find the *actual* LightProperties component
-                            // to get the shadowDepthCubeMap texture ID.
-                            // This is a bit tricky, but we can search by position.
-
-                            // This is inefficient, but will prove the fix.
-                            // A better long-term fix is to add the textureID to PointLightCPU.
-                            GLuint textureID = 0;
-                            for (auto const& entityId : mEntities)
-                            {
-                                if (!ecsInterface.HasComponent<LightProperties>(entityId)) continue;
-                                auto& light = ecsInterface.GetComponent<LightProperties>(entityId);
-                                auto& transform = ecsInterface.GetComponent<TransformComponent>(entityId);
-
-                                // Check if this is the same light
-                                if (light.type == LightType::Point && transform.position == points[i].position)
-                                {
-                                    textureID = light.shadowDepthCubeMap;
-                                    break;
-                                }
-                            }
-
-                            if (textureID != 0)
-                            {
-                                glActiveTexture(GL_TEXTURE0 + pointShadowUnit);
-                                glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
-
-                                // 'pointShadowCount' will now match the shader's 'i' index
-                                std::string samplerName = "uPointShadowMaps[" + std::to_string(pointShadowCount) + "]";
-                                currentshader.setInt(samplerName.c_str(), pointShadowUnit);
-
-                                pointShadowUnit++;
-                                pointShadowCount++;
-                            }
-                        }
-                    }
-
+                 
+ 
 
                     if (isSkinned) {
                         auto& animator = ecsInterface.GetComponent<AnimationProperties>(entityId);
