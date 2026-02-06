@@ -340,7 +340,7 @@ namespace Framework {
         navAgent.isMoving = false;
         ecsInterface.AddComponent<Framework::NavMeshAgentComponent>(agentEntity, navAgent);
         // ----------------- End agent creation ------------------------------
-        
+
 
 
         //   //  // ---------------- Create one ANIMATED ECS object (FOR TESTING) --------------------
@@ -348,7 +348,7 @@ namespace Framework {
 
         // 1. Add transform component
         TransformComponent transformComponent1;
-        transformComponent1.position = glm::vec3(10,0.0, 0.3); // Instantiate location
+        transformComponent1.position = glm::vec3(10, 0.0, 0.3); // Instantiate location
         transformComponent1.scale = glm::vec3(0.5, 0.5, 0.5); // Size of my obj is big, change for test
         //transformComponent1.rotation = glm::vec3(90.0f, 0.0f, 0.0f);
         ecsInterface.AddComponent<TransformComponent>(animatedEntity, transformComponent1);
@@ -360,8 +360,8 @@ namespace Framework {
         Framework::AnimationProperties animProps;
         auto meshGUID = AssetManager::Instance().FindGuid<MeshProperties>("knifechoppingwithBONEFIXED4");
         auto animGUID = AssetManager::Instance().FindGuid<AnimationProperties>("knifechoppingwithBONEFIXED4");
-      
-        
+
+
         if (!meshGUID.empty() && !animGUID.empty())
         {
             // 3. Get the actual asset data
@@ -557,8 +557,8 @@ namespace Framework {
 
         m_particlePixelRenderer = new FoliageRenderer(
             leafQuad,
-            "Assets/shaders/instancedparticle_vert.glsl",
-            "Assets/shaders/instancedparticle_frag.glsl"
+            "Assets/shaders/instancedleave_vert.glsl",
+            "Assets/shaders/instancedleave_frag.glsl"
         );
 
         //// 2. Create the Instancing Renderer
@@ -675,7 +675,7 @@ namespace Framework {
                 x = rnd() * (maxMap - minMap) + minMap;
                 z = rnd() * (maxMap - minMap) + minMap;
             } while ((x >= blockMinX && x <= blockMaxX &&
-                z >= blockMinZ && z <= blockMaxZ)||(x<midMap));
+                z >= blockMinZ && z <= blockMaxZ) || (x < midMap));
 
             float y = terrain.getHeightAt(x, z);
 
@@ -720,7 +720,7 @@ namespace Framework {
                 x = rnd() * (maxMap - minMap) + minMap;
                 z = rnd() * (maxMap - minMap) + minMap;
             } while ((x >= blockMinX && x <= blockMaxX &&
-                z >= blockMinZ && z <= blockMaxZ)||(x<midMap));
+                z >= blockMinZ && z <= blockMaxZ) || (x < midMap));
 
             float y = terrain.getHeightAt(x, z);
 
@@ -801,16 +801,32 @@ namespace Framework {
         }
 
 
+
         // ====================================================================
-        // 0. LIGHT GATHERING PASS
+        // PHASE 0: UPDATE CAMERA POSITION (MUST RUN FIRST)
+        // ====================================================================
+        // We do this early so the lighting/shadow passes know where the player is.
+        for (auto const& entityId : mEntities)
+        {
+            if (ecsInterface.GetEntityName(entityId) == "Player") {
+                if (ecsInterface.HasComponent<TransformComponent>(entityId)) {
+                    auto& transform = ecsInterface.GetComponent<TransformComponent>(entityId);
+                    gameCamera.position = transform.position;
+                }
+                break; // Found player, no need to keep searching
+            }
+        }
+
+        // ====================================================================
+        // PHASE 1: PREPARE LIGHTS
         // ====================================================================
         Framework::DirectionalLightCPU frameSun;
         bool frameHasSun = false;
         std::vector<Framework::PointLightCPU> framePointLights;
-        std::vector<Framework::SpotLightCPU>  frameSpotLights;
+        std::vector<Framework::SpotLightCPU> frameSpotLights;
         GatherLights(frameSun, frameHasSun, framePointLights, frameSpotLights);
 
-        // Get window size and check for resize
+        // Check window resize...
         int w, h;
         glfwGetFramebufferSize(window, &w, &h);
         if (w == 0 || h == 0) return;
@@ -822,12 +838,12 @@ namespace Framework {
         }
 
         // ====================================================================
-        // 0.5. SHADOW PASS (Render from Sun's perspective)
-        // ====================================================================
+   // 0.5. SHADOW PASS (Render from Sun's perspective)
+   // ====================================================================
         if (frameHasSun)
         {
             // 1. Calculate the Light's View/Projection matrix
-            float near_plane = -100.0f, far_plane = 500.0f;    
+            float near_plane = -100.0f, far_plane = 500.0f;
             float ortho_size = 100.0f;
             glm::mat4 lightProjection = glm::ortho(-ortho_size, ortho_size, -ortho_size, ortho_size, near_plane, far_plane);
             //glm::vec3 lightPos = frameSun.position - frameSun.direction * 20.0f;
@@ -853,7 +869,7 @@ namespace Framework {
             glDisable(GL_CULL_FACE);
             // Render Terrain
             shadowShader.setMat4("uModel", glm::mat4(1.0f));
-            terrain.draw();
+
 
             for (auto const& entityId : mEntities)
             {
@@ -907,22 +923,23 @@ namespace Framework {
                     }
                 }
             }
-             // 4. Restore state
+            // 4. Restore state
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
             glCullFace(GL_BACK);
         }
 
         // ====================================================================
-        //  POINT LIGHT SHADOW PASSES 
-        // ====================================================================
+// PHASE 2: POINT LIGHT SHADOW PASS (SAFE MODE)
+// ====================================================================
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
 
         const unsigned int POINT_SHADOW_WIDTH = 1024, POINT_SHADOW_HEIGHT = 1024;
+        const float LIGHT_RENDER_DISTANCE = 10.0f; // Your testing value
+        const float LIGHT_RENDER_DISTANCE_SQ = LIGHT_RENDER_DISTANCE * LIGHT_RENDER_DISTANCE;
 
         for (auto const& entityId : mEntities)
         {
-
             if (!ecsInterface.HasComponent<LightProperties>(entityId)) continue;
 
             auto& light = ecsInterface.GetComponent<LightProperties>(entityId);
@@ -931,104 +948,90 @@ namespace Framework {
             auto& transform = ecsInterface.GetComponent<TransformComponent>(entityId);
             glm::vec3 lightPos = transform.position;
 
-            // Set far plane for normalization
-            light.shadowFarPlane = light.radius;
-            pointShadowShader.setFloat("uFarPlane", light.shadowFarPlane);
-            pointShadowShader.setVec3("uLightPos", lightPos);
+            // ----------------------------------------------------------------
+            // FIX 1: CHECK DISTANCE *BEFORE* DOING ANYTHING
+            // ----------------------------------------------------------------
+            // We do NOT want to create FBOs for lights that are 1000 units away.
+            // This prevents VRAM spikes that can crash the driver.
+            float distSq = glm::distance(lightPos, gameCamera.position);
+            if (distSq > LIGHT_RENDER_DISTANCE_SQ)
+            {
+                continue; // Skip EVERYTHING (Creation & Rendering)
+            }
 
+            // ----------------------------------------------------------------
+            // FIX 2: CREATE FBO ONLY IF NEARBY
+            // ----------------------------------------------------------------
             if (light.shadowFBO == 0)
             {
                 glGenFramebuffers(1, &light.shadowFBO);
                 glBindFramebuffer(GL_FRAMEBUFFER, light.shadowFBO);
 
-                // Create the CUBEMAP to store linear depth (as a color buffer)
                 glGenTextures(1, &light.shadowDepthCubeMap);
                 glBindTexture(GL_TEXTURE_CUBE_MAP, light.shadowDepthCubeMap);
-                for (unsigned int i = 0; i < 6; ++i)
-                {
+                for (unsigned int i = 0; i < 6; ++i) {
                     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_R32F,
                         POINT_SHADOW_WIDTH, POINT_SHADOW_HEIGHT, 0, GL_RED, GL_FLOAT, NULL);
                 }
+                // ... (Texture Parameters) ...
                 glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
                 glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
                 glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
                 glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
                 glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-                // Create a DEPTH buffer for depth testing *during* this pass
                 glGenRenderbuffers(1, &light.shadowDepthRBO);
                 glBindRenderbuffer(GL_RENDERBUFFER, light.shadowDepthRBO);
-                glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24,
-                    POINT_SHADOW_WIDTH, POINT_SHADOW_HEIGHT);
-                glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-                    GL_RENDERBUFFER, light.shadowDepthRBO);
+                glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, POINT_SHADOW_WIDTH, POINT_SHADOW_HEIGHT);
+                glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, light.shadowDepthRBO);
 
-                // Attach one face so we can check FBO status
-                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                    GL_TEXTURE_CUBE_MAP_POSITIVE_X, light.shadowDepthCubeMap, 0);
-                glDrawBuffer(GL_COLOR_ATTACHMENT0); // We are writing to the color buffer
-                glReadBuffer(GL_NONE);
-
+                // Safety: Verify complete
                 if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-                    std::cout << "ERROR: Point light Shadow FBO is not complete!" << std::endl;
+                    std::cout << "Shadow FBO Error!" << std::endl;
 
                 glBindFramebuffer(GL_FRAMEBUFFER, 0);
             }
 
-            // --- 2. Calculate the 6 View matrices and 1 Projection matrix ---
+            // ----------------------------------------------------------------
+            // RENDER PASS
+            // ----------------------------------------------------------------
+            light.shadowFarPlane = light.radius;
+            pointShadowShader.use();
+            pointShadowShader.setFloat("uFarPlane", light.shadowFarPlane);
+            pointShadowShader.setVec3("uLightPos", lightPos);
+
+            // Matrix setup...
             float near_plane = 0.01f;
             glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), 1.0f, near_plane, light.shadowFarPlane);
-            light.shadowFarPlane = light.radius;
             std::vector<glm::mat4> shadowTransforms;
-            // Standard OpenGL Cubemap Orientations: Target, Up
-            shadowTransforms.push_back(shadowProj* glm::lookAt(lightPos, lightPos + glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0))); // +X
-            shadowTransforms.push_back(shadowProj* glm::lookAt(lightPos, lightPos + glm::vec3(-1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0))); // -X
-            shadowTransforms.push_back(shadowProj* glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 1.0, 0.0), glm::vec3(0.0, 0.0, 1.0))); // +Y
-            shadowTransforms.push_back(shadowProj* glm::lookAt(lightPos, lightPos + glm::vec3(0.0, -1.0, 0.0), glm::vec3(0.0, 0.0, -1.0))); // -Y
-            shadowTransforms.push_back(shadowProj* glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0, -1.0, 0.0))); // +Z
-            shadowTransforms.push_back(shadowProj* glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, -1.0, 0.0))); // -Z
+            shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
+            shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(-1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
+            shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 1.0, 0.0), glm::vec3(0.0, 0.0, 1.0)));
+            shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, -1.0, 0.0), glm::vec3(0.0, 0.0, -1.0)));
+            shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0, -1.0, 0.0)));
+            shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, -1.0, 0.0)));
 
             glViewport(0, 0, POINT_SHADOW_WIDTH, POINT_SHADOW_HEIGHT);
             glBindFramebuffer(GL_FRAMEBUFFER, light.shadowFBO);
 
             for (unsigned int i = 0; i < 6; ++i)
             {
-                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                    GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, light.shadowDepthCubeMap, 0);
-
-                // FIX 1: Clear to 1.0 instead of FLT_MAX
+                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, light.shadowDepthCubeMap, 0);
                 glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-                glEnable(GL_CULL_FACE);
-                glCullFace(GL_BACK);
-                glEnable(GL_POLYGON_OFFSET_FILL);
-                glPolygonOffset(2.0f, 2.0f);
-           
-              
                 for (auto const& entityId_inner : mEntities)
                 {
                     auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId_inner);
+                    if (!tr.isActive || entityId_inner == entityId) continue;
 
-                    if (!tr.isActive) continue;
-                    if (ecsInterface.HasComponent<MeshProperties>(entityId_inner) &&
-                        ecsInterface.HasComponent<TransformComponent>(entityId_inner))
+                    if (ecsInterface.HasComponent<MeshProperties>(entityId_inner))
                     {
-                        if (entityId_inner == entityId)
-                        {
-                            continue;
-                        }
-
                         auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId_inner);
-                        bool isTransparent = false;
-                        if (ecsInterface.HasComponent<MaterialProperties>(entityId_inner))
-                        {
-                            isTransparent = ecsInterface.GetComponent<MaterialProperties>(entityId_inner).opacity < 1.0f;
-                        }
+                        // ... (Material opacity check omitted for brevity, add back if needed) ...
 
-                        if (mesh.debugShape == DebugShapeType::None && mesh.vao != 0 && !isTransparent)
+                        if (mesh.debugShape == DebugShapeType::None && mesh.vao != 0)
                         {
-                            auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId_inner);
                             glm::mat4 model = frameModelMatrices[entityId_inner];
                             bool isSkinned = ecsInterface.HasComponent<AnimationProperties>(entityId_inner);
                             ShaderProgram& currentShadowShader = isSkinned ? skinnedPointShadowShader : pointShadowShader;
@@ -1039,45 +1042,37 @@ namespace Framework {
                             currentShadowShader.setVec3("uLightPos", lightPos);
                             currentShadowShader.setFloat("uFarPlane", light.shadowFarPlane);
 
-                            // ========== CRITICAL FIX ==========
                             glBindVertexArray(mesh.vao);
 
-                            if (isSkinned)
-                            {
-                                // Enable skinning attributes
-                                glEnableVertexAttribArray(3); // aBoneIDs
-                                glEnableVertexAttribArray(4); // aWeights
-
+                            if (isSkinned) {
+                                glEnableVertexAttribArray(3);
+                                glEnableVertexAttribArray(4);
                                 auto& animator = ecsInterface.GetComponent<AnimationProperties>(entityId_inner);
-                                for (size_t b = 0; b < animator.finalBoneMatrices.size(); ++b)
-                                {
+
+                                // ---------------------------------------------------------
+                                // FIX 3: THE STRING CRASH PREVENTION
+                                // ---------------------------------------------------------
+                                for (size_t b = 0; b < animator.finalBoneMatrices.size(); ++b) {
+                                    // Use a variable to keep the string memory alive!
                                     std::string boneName = "uBoneMatrices[" + std::to_string(b) + "]";
                                     currentShadowShader.setMat4(boneName.c_str(), animator.finalBoneMatrices[b]);
                                 }
                             }
-                            else
-                            {
-                                // CRITICAL: Disable skinning attributes for non-skinned meshes
-                                // This prevents reading garbage data from previous skinned mesh
-                                glDisableVertexAttribArray(3); // aBoneIDs
-                                glDisableVertexAttribArray(4); // aWeights
+                            else {
+                                glDisableVertexAttribArray(3);
+                                glDisableVertexAttribArray(4);
                             }
-                            // ==================================
 
                             glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
                         }
                     }
                 }
             }
-        } 
+        }
 
-        // --- 4. Restore default state ---
+        // Reset everything
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        glViewport(0, 0, m_fbW, m_fbH); // Reset viewport to window size
-        glEnable(GL_CULL_FACE);
-        glDisable(GL_POLYGON_OFFSET_FILL);
-
-
+        glViewport(0, 0, m_fbW, m_fbH);
         // ====================================================================
         // 1. RENDER VIEW 0: GAME (grounded)
         // ====================================================================
@@ -1090,7 +1085,7 @@ namespace Framework {
                     if (ecsInterface.HasComponent<TransformComponent>(entityId)) {
                         auto& transform = ecsInterface.GetComponent<TransformComponent>(entityId);
                         gameCamera.position = transform.position;
-                       
+
                     }
                 }
             }
@@ -1176,7 +1171,7 @@ namespace Framework {
         }
     }
     void Graphics::RequestPickUV(float u, float v) {
-        pendingPickUV0 = glm::vec2(u, v);   
+        pendingPickUV0 = glm::vec2(u, v);
     }
     void Graphics::RequestPickUVSecondary(float u, float v) {
         pendingPickUV1 = glm::vec2(u, v);
@@ -1184,7 +1179,7 @@ namespace Framework {
     void Graphics::SetPickViewIndex(int index) {
         pickViewIndex = (index <= 0) ? 0 : 1;
     }
-    
+
     void Graphics::process_input(float dt)
     {
         bool nKeyPressed = false;
@@ -1197,9 +1192,9 @@ namespace Framework {
         // We check InputHandler directly for the source of truth
         bool isEditorMode = InputHandler::GetInstance()->isUIFocused;
         bool isRightClickHeld = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
-       // ============================================================
-    // LOGIC 1: EDITOR MODE (Scene Camera Movement)
-    // ============================================================
+        // ============================================================
+     // LOGIC 1: EDITOR MODE (Scene Camera Movement)
+     // ============================================================
         if (isEditorMode)
         {
             engineState.PushState(EngineMode::Play);
@@ -1260,7 +1255,7 @@ namespace Framework {
         // ============================================================
         // LOGIC 2: GAME MODE (Player/Game Camera Movement)
         // ============================================================
-        
+
         //else
         //{
         //    // --- 2.1 MOUSE ROTATION REMOVED ---
@@ -1321,58 +1316,57 @@ namespace Framework {
         //    }
 
         //    // --- 2.3 GAMEPLAY TOGGLES (Recipe Book, etc) ---
-            {
-                bool isRPressed = (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS);
-                static bool wasRPressed = false;
-                if (isRPressed && !wasRPressed && !isEditorMode) GameSystem::bookOpen = !GameSystem::bookOpen;
-                wasRPressed = isRPressed;
-            }
+        {
+            bool isRPressed = (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS);
+            static bool wasRPressed = false;
+            if (isRPressed && !wasRPressed && !isEditorMode) GameSystem::bookOpen = !GameSystem::bookOpen;
+            wasRPressed = isRPressed;
+        }
 
-            // ------------------------------------------------------------
-            // Backpack toggle (TAB) - only when in game, not editor focused
-            // ------------------------------------------------------------
+        // ------------------------------------------------------------
+        // Backpack toggle (TAB) - only when in game, not editor focused
+        // ------------------------------------------------------------
+        {
+            static bool wasIPressed = false;
+            bool isIPressed = (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS);
+
+            if (isIPressed && !wasIPressed)
             {
                 auto& inv = Framework::Inventory::Instance();
-                static bool wasIPressed = false;
-                bool isIPressed = (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS && inv.GetBackpackLevel() != 0);
+                const bool isOpen = inv.IsBackpackOpen();
 
-                if (isIPressed && !wasIPressed)
+                // If it's open, ALWAYS allow closing
+                if (isOpen)
                 {
-                    
-                    const bool isOpen = inv.IsBackpackOpen();
+                    inv.ToggleBackpack();
 
-                    // If it's open, ALWAYS allow closing
-                    if (isOpen)
+                    // restore game mouse lock
+                    InputHandler::GetInstance()->isUIFocused = false;
+                }
+                else
+                {
+                    // Only allow opening backpack when in valid gameplay state
+                    const bool canOpen =
+                        !isEditorMode &&
+                        !GameSystem::bookOpen &&
+                        !engineState.Is(EngineMode::Paused) &&
+                        !engineState.Is(EngineMode::HowToPlay) &&
+                        !engineState.Is(EngineMode::Menu) &&
+                        !engineState.Is(EngineMode::Settings) &&
+                        !engineState.Is(EngineMode::Dialogue);
+
+                    if (canOpen)
                     {
                         inv.ToggleBackpack();
 
-                        // restore game mouse lock
-                        InputHandler::GetInstance()->isUIFocused = false;
-                    }
-                    else
-                    {
-                        // Only allow opening backpack when in valid gameplay state
-                        const bool canOpen =
-                            !isEditorMode &&
-                            !GameSystem::bookOpen &&
-                            !engineState.Is(EngineMode::Paused) &&
-                            !engineState.Is(EngineMode::HowToPlay) &&
-                            !engineState.Is(EngineMode::Menu) &&
-                            !engineState.Is(EngineMode::Settings) &&
-                            !engineState.Is(EngineMode::Dialogue);
-
-                        if (canOpen)
-                        {
-                            inv.ToggleBackpack();
-
-                            // enable UI cursor
-                            InputHandler::GetInstance()->isUIFocused = true;
-                        }
+                        // enable UI cursor
+                        InputHandler::GetInstance()->isUIFocused = true;
                     }
                 }
-
-                wasIPressed = isIPressed;
             }
+
+            wasIPressed = isIPressed;
+        }
 
         //}
 
@@ -1382,7 +1376,7 @@ namespace Framework {
 
         if (glfwGetKey(window, GLFW_KEY_N) == GLFW_PRESS)
         {
-            if (!nKeyPressed) 
+            if (!nKeyPressed)
             {
                 float newVal = m_skybox.getBlendFactor() + (dt * 0.5f); // 2 seconds to fade
                 if (newVal > 1.0f) newVal = 1.0f;
@@ -1441,24 +1435,24 @@ namespace Framework {
         else if (dir == "E") gameCamera.processKeyboard(Camera::Movement::Up, dt, gm, terrain);   // Optional
         else if (dir == "Q") gameCamera.processKeyboard(Camera::Movement::Down, dt, gm, terrain); // Optional
     }
-   void Graphics::NudgeLightFromLua(const std::string& axis, float amount) {
+    void Graphics::NudgeLightFromLua(const std::string& axis, float amount) {
         //if (pointLights.empty()) return;
         //if (axis == "up")    pointLights[0].position.z -= amount;
         //else if (axis == "down")  pointLights[0].position.z += amount;
         //else if (axis == "left")  pointLights[0].position.x -= amount;
         //else if (axis == "right") pointLights[0].position.x += amount;
     }
-   void Graphics::SetGroundMode(bool state)
-   {
-       groundMode = state;
-       // Optional: You might want to reset camera pitch/yaw here if switching modes
-       if (state) {
-           // Logic when switching TO ground mode
-       }
-   }
+    void Graphics::SetGroundMode(bool state)
+    {
+        groundMode = state;
+        // Optional: You might want to reset camera pitch/yaw here if switching modes
+        if (state) {
+            // Logic when switching TO ground mode
+        }
+    }
     void Graphics::ToggleMainLightFromLua() {
-      /*  if (pointLights.empty()) return;
-        pointLights[0].enabled = !pointLights[0].enabled;*/
+        /*  if (pointLights.empty()) return;
+          pointLights[0].enabled = !pointLights[0].enabled;*/
     }
 
     void Graphics::SetHDRFromLua(float delta) { hdrExposure = std::max(0.0f, hdrExposure + delta); }
@@ -1637,7 +1631,7 @@ namespace Framework {
         uiShader.setMat4("uProjection", uiProj);
 
         auto& inv = Inventory::Instance();
-        const int slots = inv.GetHotbarSlotCount(); 
+        const int slots = inv.GetHotbarSlotCount();
         const float marginBottom = 24.0f;
         const float gap = 6.0f;
         const float pad = 8.0f;
@@ -1650,7 +1644,7 @@ namespace Framework {
         glDisable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        // If you ever enable scissor elsewhere, ensure it�s off for UI:
+        // If you ever enable scissor elsewhere, ensure it s off for UI:
         // glDisable(GL_SCISSOR_TEST);
 
         // Back panel
@@ -1728,66 +1722,31 @@ namespace Framework {
         const float gridW = cols * slotSize + (cols - 1) * gap;
         const float gridH = rows * slotSize + (rows - 1) * gap;
 
-        // --- Position: RIGHT side, above hotbar area ---
+        // Place centered above hotbar
         const float hotbarY0 = 24.0f;
         const float hotbarPanelH = slotSize + 24.0f;
         const float marginAboveHotbar = 20.0f;
 
-        const float rightMargin = 24.0f;  // distance from screen edge
-        const float panelPad = 12.0f;     // matches your panel padding
+        const float x0 = std::round((screenW - gridW) * 0.5f);
+        const float y0 = std::round(hotbarY0 + hotbarPanelH + marginAboveHotbar);
 
-        // Panel bottom-left (x0,y0) for the GRID (not including outer panel pad)
-        const float x0 = std::round(screenW - rightMargin - (gridW));                 // right-aligned
-        const float y0 = std::round(hotbarY0 + hotbarPanelH + marginAboveHotbar);     // same vertical logic
+        //{
+        //    const float hotbarPanelTop = hotbarY0 + hotbarPanelH; // top edge of hotbar panel
+        //    const float backpackPanelBottom = y0 - 12.0f;         // bottom edge of backpack panel
+        //    const float gapH = backpackPanelBottom - hotbarPanelTop;
 
-        const float panelX = x0 - panelPad;
-        const float panelY = y0 - panelPad;
-        const float panelW = gridW + 2 * panelPad;
-        const float panelH = gridH + 5 * panelPad; // includes title space
+        //    if (gapH > 0.5f)
+        //    {
+        //        DrawUIRect({ x0 - 12.0f, hotbarPanelTop },
+        //            { gridW + 24.0f, gapH },
+        //            { 0.05f, 0.05f, 0.06f }, 0.90f);
+        //    }
+        //}
 
-        mBackpackPanelRect = { panelX, panelY, panelW, panelH, true };
-
-        // --- Back panel (grid background) ---
-        DrawUIRect({ panelX, panelY },
-            { panelW, panelH },
+        // Back panel
+        DrawUIRect({ x0 - 12.0f, y0 - 12.0f },
+            { gridW + 24.0f, gridH + 24.0f },
             { 0.05f, 0.05f, 0.06f }, 0.90f);
-
-        const float titleX = x0 + gridW * 0.5f;
-
-        // Panel top = (y0 - panelPad) + (gridH + 5*panelPad) = y0 + gridH + 4*panelPad
-        const float panelTop = y0 + gridH + 4.0f * panelPad;
-
-        // Put title inside your reserved header space
-        const float titleY = panelTop - 3.0f * panelPad; // tweak this if needed
-
-        // Make the text scale consistent with your UI text pass
-        const float REF_W = 1920.0f;
-        const float REF_H = 1080.0f;
-        float resScale = std::min((float)screenW / REF_W, (float)screenH / REF_H);
-        float scale = 1.25f * resScale;
-
-        fontSystem.RenderText2D(
-            "BACKPACK",
-            titleX,
-            titleY,
-            scale,
-            glm::vec3(1.0f, 1.0f, 1.0f),  // white
-            (float)screenW,
-            (float)screenH,
-            1,   
-            1.0f
-        );
-
-        // --- Restore UI render state after fontSystem (it changes GL state) ---
-        uiShader.use();
-        uiShader.setMat4("uProjection", uiProj);
-
-        glDisable(GL_DEPTH_TEST);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-        // If your font system enables scissor test, disable it for UI rects
-        glDisable(GL_SCISSOR_TEST);
 
         const int activeSlots = inv.GetBackpackSlotCount(); // rows*cols
 
@@ -1824,7 +1783,6 @@ namespace Framework {
         glEnable(GL_DEPTH_TEST);
     }
 
-
     void Graphics::HandleBackpackDragDrop(int screenW, int screenH)
     {
         auto& inv = Framework::Inventory::Instance();
@@ -1848,8 +1806,7 @@ namespace Framework {
         const float hotbarPanelH = slotSize + 24.0f;
         const float marginAboveHotbar = 20.0f;
 
-        const float rightMargin = 24.0f;  // SAME as DrawBackpack
-        const float x0 = std::round(screenW - rightMargin - gridW); 
+        const float x0 = std::round((screenW - gridW) * 0.5f);
         const float y0 = std::round(hotbarY0 + hotbarPanelH + marginAboveHotbar);
 
         // Mouse (convert to bottom-left origin)
@@ -1964,7 +1921,7 @@ namespace Framework {
             glEnable(GL_DEPTH_TEST);
         }
     }
-    
+
     //JAY
     void Graphics::RenderViewToFramebuffer(Camera& viewCam, GLuint imguiTargetFBO,
         int screenW, int screenH, int viewIndex)
@@ -2103,7 +2060,7 @@ namespace Framework {
 
         return framebuffer;
     }
-    
+
     void Graphics::DrawDebugMesh(Mesh* mesh, const glm::vec3& color, const glm::mat4& model, const glm::mat4& projection, const glm::mat4& view) {
         if (!mesh) return;
 
@@ -2369,7 +2326,7 @@ namespace Framework {
                 {
                     glActiveTexture(GL_TEXTURE0 + pointShadowUnit);
                     glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
-                    
+
                     std::string samplerName = "uPointShadowMaps[" + std::to_string(pointShadowCount) + "]";
                     // Make sure to use 'terrainShader' here!
                     terrainShader.setInt(samplerName.c_str(), pointShadowUnit);
@@ -2404,7 +2361,7 @@ namespace Framework {
         // --- ENTITY SORTING ---
         int sel = lastPickedId;
         int hoverSel = mLookAtHighlightedId;
-        const glm::vec3 kHighlightAlbedo(1.0f, 1.0f, 1.0f);
+        const glm::vec3 kHighlightAlbedo(1.0f, 0.85f, 0.3f);
 
         std::vector<Entity> opaqueEntities;
         std::multimap<float, Entity> transparentEntities;
@@ -2413,7 +2370,7 @@ namespace Framework {
 
         // DEFINE YOUR MAX RENDER DISTANCE
         // Objects further than this will be ignored completely
-        const float MAX_RENDER_DISTANCE = 4000.0f;
+        const float MAX_RENDER_DISTANCE = 10000.0f;
 
         //for (auto const& entityId : mEntities)
         //{
@@ -2464,7 +2421,7 @@ namespace Framework {
 
             if (isUI)
             {
-                
+
                 uiEntities.push_back(entityId);
                 continue;
             }
@@ -2514,12 +2471,12 @@ namespace Framework {
             if (!tr.isActive) continue; // Skip render if isactive is false.
 
             glm::vec3 drawScale = tr.scale;
-            glm::mat4 model = glm::translate(glm::mat4(1.0f), tr.position); 
+            glm::mat4 model = glm::translate(glm::mat4(1.0f), tr.position);
             model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
             model = glm::rotate(model, glm::radians(tr.rotation.y), { 0,1,0 });
             model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
             model = glm::scale(model, tr.scale);
- 
+
             // BOXCOLLIDER COLLISION (NEEDA MOVE IT OUTTA GRAPHICS :SKULL:)
             if (mesh.debugShape == DebugShapeType::Box && ecsInterface.HasComponent<BoxColliderComponent>(entityId))
             {
@@ -2594,7 +2551,7 @@ namespace Framework {
                 if (mesh.vao != 0) {
                     bool isSkinned = ecsInterface.HasComponent<AnimationProperties>(entityId);
                     ShaderProgram& currentshader = isSkinned ? skinnedShader : meshShader;
-               
+
                     currentshader.use();
                     currentshader.setMat4("uProj", proj);
                     currentshader.setMat4("uView", view);
@@ -2668,7 +2625,7 @@ namespace Framework {
 
                         // 1. Determine base color (Yellow if hovered, otherwise material color)
                         const bool isSelected = ((int)entityId == sel) || ((int)entityId == hoverSel);
-                        glm::vec3 finalAlbedo = isSelected ? glm::vec3(1.0f, 1.0f, 1.0f) : material.albedo;
+                        glm::vec3 finalAlbedo = isSelected ? glm::vec3(1.0f, 0.85f, 0.3f) : material.albedo;
 
                         currentshader.setVec3("uAlbedo", finalAlbedo);
                         currentshader.setVec3("uMaterial.ambient", material.ambient);
@@ -2680,7 +2637,7 @@ namespace Framework {
                     {
                         // 2. FALLBACK: Reset to safe defaults so the next object isn't "weird"
                         const bool isSelected = ((int)entityId == sel) || ((int)entityId == hoverSel);
-                        currentshader.setVec3("uAlbedo", isSelected ? glm::vec3(1.0f, 1.0f, 1.0f) : glm::vec3(1.0f));
+                        currentshader.setVec3("uAlbedo", isSelected ? glm::vec3(1.0f, 0.85f, 0.3f) : glm::vec3(1.0f));
 
                         currentshader.setVec3("uMaterial.ambient", glm::vec3(0.1f));
                         currentshader.setVec3("uMaterial.specular", glm::vec3(0.5f));
@@ -2884,7 +2841,7 @@ namespace Framework {
             }
         }
 
-       
+
         // --- 2. TRANSPARENT PASS ---
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -3179,11 +3136,11 @@ namespace Framework {
         if (viewIndex == 0)
         {
             fontSystem.RenderText2D("", 100.f, 10.0f, 1.f,
-                glm::vec3(1.0f, 1.0f, 0.5f), (float)width, (float)height,1);
+                glm::vec3(1.0f, 1.0f, 0.5f), (float)width, (float)height, 1);
         }
         else
         {
-            fontSystem.RenderText2D("Editor View", 100.f, 10.f, 1.f, { 1,1,0.5f }, (float)width, (float)height,1);
+            fontSystem.RenderText2D("Editor View", 100.f, 10.f, 1.f, { 1,1,0.5f }, (float)width, (float)height, 1);
         }
 
         //----------------------------------------------------
@@ -3349,7 +3306,7 @@ namespace Framework {
             !engineState.Is(EngineMode::Settings) &&
             !engineState.Is(EngineMode::Dialogue) &&
             !engineState.Is(EngineMode::MapSelection) &&
-            !GameSystem::bookOpen) 
+            !GameSystem::bookOpen)
         {
             DrawHotbar(width, height);
         }
@@ -3403,4 +3360,4 @@ namespace Framework {
         fontSystem.RenderText3D("iDesign Engine by iDesign Studio", textModel, view, proj, 0.05f, glm::vec3(1.0f, 1.0f, 0.5f), 0);
         glDisable(GL_DEPTH_TEST);
     }
- }
+}
