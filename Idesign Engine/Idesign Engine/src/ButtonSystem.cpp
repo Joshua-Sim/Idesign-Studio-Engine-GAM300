@@ -246,7 +246,7 @@ namespace Framework {
 
                 if (fabs(volume - *lastVol) > 0.03f)
                 {
-                    g_AudioSystem->PlayAudio("event:/ButtonClick");
+                    //g_AudioSystem->PlayAudio("event:/ButtonClick");
                 }
                 *lastVol = volume;
             }

@@ -86,6 +86,26 @@
                 "isChoppable": true,
                 "toDestroyWhenPicked": true
             }
+            ,
+            "ParticleEmitterComponent": {
+                "active": true,
+                "loop": false,
+                "duration": 1.0,
+                "direction": [
+                    0.0,
+                    1.0,
+                    0.0
+                ],
+                "spreadAngleDeg": 180.0,
+                "range": 3.0,
+                "particlesPerSecond": 100.0,
+                "particleSpeed": 5.0,
+                "particleSize": 0.20000000298023224,
+                "localSpace": true,
+                "textureGuid": "",
+                "pixelFilter": true,
+                "maxParticles": 200
+            }
         }
     }
 }
