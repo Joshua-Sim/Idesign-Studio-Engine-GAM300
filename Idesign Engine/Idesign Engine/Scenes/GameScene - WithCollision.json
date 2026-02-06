@@ -11831,7 +11831,9 @@
                     "sortIndex": 49
                 },
                 "TagComponent": {
-                    "tags": []
+                    "tags": [
+                        "Interactable"
+                    ]
                 },
                 "MeshComponent": {
                     "guid": "a199b6c5-521c-41a8-8140-8b6844286e16",
@@ -11842,10 +11844,27 @@
                     "isUI": false
                 },
                 "BoxColliderComponent": {
-                    "colliders": []
+                    "colliders": [
+                        {
+                            "size": [
+                                2.7,
+                                2.1,
+                                1.1
+                            ],
+                            "center": [
+                                0.0,
+                                0.7,
+                                0.0
+                            ],
+                            "canPassThrough": false,
+                            "isInteractable": true,
+                            "interactMessage": "OnInteract",
+                            "promptText": ""
+                        }
+                    ]
                 },
                 "PhysicsProperties": {
-                    "category": 0,
+                    "category": 1,
                     "isImmovable": true,
                     "gravityFactor": 1.0,
                     "mass": 1.0,
@@ -11862,6 +11881,23 @@
                         0.0
                     ],
                     "startAwake": true
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "b8c9be25-1e3f-4d68-a3a7-aad0bf25e985",
+                            "scriptPath": "Assets\\Scripts\\PhaseSwitcher.lua",
+                            "hotReload": false
+                        }
+                    ]
+                },
+                "EventReceiverComponent": {
+                    "receivers": [
+                        {
+                            "messageToListenFor": "OnInteract",
+                            "luaFunctionToCall": "OnInteract"
+                        }
+                    ]
                 }
             }
         },
@@ -21043,51 +21079,6 @@
             }
         },
         {
-            "name": "Customer_Kinematic",
-            "guid": "c22cdc72-d509-4de7-8678-3cc390728be7",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "584b841f-a181-4adb-a75c-852abf944c79"
-                }
-            }
-        },
-        {
-            "name": "ProgressBarFrame",
-            "guid": "88c546da-a2c0-4f22-a1f3-c2fdc6bac58a",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "6c60686a-c68c-4284-bce0-019cfcbf77fa"
-                }
-            }
-        },
-        {
-            "name": "ProgressBarFill",
-            "guid": "03c4411c-483e-4767-9b5d-6518b782322d",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "5dfc16be-aa4a-420a-9105-f7c9652f3620"
-                }
-            }
-        },
-        {
-            "name": "CustomerTextbox",
-            "guid": "89d0d743-9959-4fe9-8dec-b697544ad052",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "b1e7bea6-ba5d-4a40-be1c-b30224f8868c"
-                }
-            }
-        },
-        {
-            "name": "Customer_Kinematic",
-            "guid": "24e45b5e-a0c7-4cf4-994c-96c54c703e2b",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "584b841f-a181-4adb-a75c-852abf944c79"
-                }
-            }
-        },
-        {
             "name": "Forest Button",
             "guid": "dd30a16c-7680-4743-b263-dd274c882310",
             "components": {
@@ -22295,15 +22286,6 @@
                     "guid": "23f49aec-96e9-47d2-93e1-d192446c99f2",
                     "isUI": false
                 },
-                "ScriptProperties": {
-                    "scripts": [
-                        {
-                            "guid": "16f0caaf-2e11-4715-ab0e-06c67810e1ba",
-                            "scriptPath": "Assets\\Scripts\\InventoryUpgrade.lua",
-                            "hotReload": false
-                        }
-                    ]
-                },
                 "ButtonComponent": {
                     "position": [
                         1440.0,
@@ -22726,15 +22708,6 @@
                     "guid": "3bb281d9-c6a0-43ed-a663-6f8f8c10943f",
                     "isUI": false
                 },
-                "ScriptProperties": {
-                    "scripts": [
-                        {
-                            "guid": "16f0caaf-2e11-4715-ab0e-06c67810e1ba",
-                            "scriptPath": "Assets\\Scripts\\InventoryUpgrade.lua",
-                            "hotReload": false
-                        }
-                    ]
-                },
                 "ButtonComponent": {
                     "position": [
                         450.0,
@@ -22842,15 +22815,6 @@
                 "TextureComponent": {
                     "guid": "c62ac124-be74-451d-835f-6e76f3d61508",
                     "isUI": false
-                },
-                "ScriptProperties": {
-                    "scripts": [
-                        {
-                            "guid": "16f0caaf-2e11-4715-ab0e-06c67810e1ba",
-                            "scriptPath": "Assets\\Scripts\\InventoryUpgrade.lua",
-                            "hotReload": false
-                        }
-                    ]
                 },
                 "ButtonComponent": {
                     "position": [

@@ -1,5 +1,5 @@
 {
-    "count": 36,
+    "count": 37,
     "entries": [
         {
             "guid": "898b36fc-aae3-43e4-9e2e-8edcb193e3c1",
@@ -215,6 +215,12 @@
             "guid": "bbbf04f6-e194-4b88-8b7a-b9ad4639219f",
             "name": "ForestHerb7_Prefab",
             "path": "Assets\\Prefabs\\ForestHerb7_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "7d4d9a90-0c4c-4b1e-a74c-bf7b45025c10",
+            "name": "warmth_potion_Prefab",
+            "path": "Assets\\Prefabs\\warmth_potion_Prefab.prefab",
             "isScenePrefab": false
         }
     ]

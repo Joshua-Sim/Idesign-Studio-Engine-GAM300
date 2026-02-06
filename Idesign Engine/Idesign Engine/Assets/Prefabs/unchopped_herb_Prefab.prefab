@@ -39,7 +39,6 @@
             },
             "ScriptProperties": {
                 "scripts": [
-                    "Assets\\Scripts\\spawnPrompt.lua"
                 ]
             }
         }

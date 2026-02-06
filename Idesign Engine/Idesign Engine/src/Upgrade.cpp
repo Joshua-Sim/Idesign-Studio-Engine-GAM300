@@ -46,7 +46,7 @@ namespace Framework
         //inv.UpgradeSlots(amount);
 
         // Increase cost for next upgrade
-        m_inventoryUpgradeCost += 50;
+        //m_inventoryUpgradeCost += 50;
 
         std::cout << "[UpgradeManager] Inventory upgraded! New slots: " << inv.GetHotbarSlotCount()
             << ", Next cost: " << m_inventoryUpgradeCost << std::endl;
@@ -93,7 +93,7 @@ namespace Framework
             << m_currencyMultiplier << "x" << std::endl;
 
         // Increase cost for next upgrade
-        m_currencyUpgradeCost += 100;
+        //m_currencyUpgradeCost += 100;
 
         std::cout << "[UpgradeManager] Next currency upgrade cost: " << m_currencyUpgradeCost << std::endl;
 
@@ -201,7 +201,7 @@ namespace Framework
         inv.SetBackpackLevel(currentLevel + 1);
 
         // Increase cost for next upgrade
-        m_backpackUpgradeCost += 150;
+        //m_backpackUpgradeCost += 150;
 
         std::cout << "[UpgradeManager] Backpack upgraded to level " << (currentLevel + 1)
             << "! Next cost: " << m_backpackUpgradeCost << std::endl;

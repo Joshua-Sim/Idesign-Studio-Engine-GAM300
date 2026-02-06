@@ -9,7 +9,7 @@ local locations = {
     Forest = {
         name = "Forest",
         buttonEntity = "Forest Button",
-        spawnPos = { x = -282.0, y = 319.0,  z = 619.0 },
+        spawnPos = { x = -276.0, y = 319.0,  z = 620.0 },
         spawnRot = { x = 0.0,    y = 0.0,  z = 0.0 },
         ingredients = {"Forest Herbs", "Mushrooms", "Berries"},
         ingredientImageEntity = "ForestIngredientsImage"
