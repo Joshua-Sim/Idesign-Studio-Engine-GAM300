@@ -1848,7 +1848,8 @@ namespace Framework {
         const float hotbarPanelH = slotSize + 24.0f;
         const float marginAboveHotbar = 20.0f;
 
-        const float x0 = std::round((screenW - gridW) * 0.5f);
+        const float rightMargin = 24.0f;  // SAME as DrawBackpack
+        const float x0 = std::round(screenW - rightMargin - gridW); 
         const float y0 = std::round(hotbarY0 + hotbarPanelH + marginAboveHotbar);
 
         // Mouse (convert to bottom-left origin)
