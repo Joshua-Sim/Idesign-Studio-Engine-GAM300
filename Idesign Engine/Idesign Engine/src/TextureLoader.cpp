@@ -77,12 +77,14 @@ unsigned int TextureLoader::loadTexture(TextureProperties& props, bool flip)
         internalFormat = GL_R8;
         dataFormat = GL_RED;
         break;
-    case 3:
-        internalFormat = GL_RGB8;
+   case 3:
+        // Use GL_COMPRESSED_RGB_S3TC_DXT1_EXT for 6:1 compression
+        internalFormat = GL_COMPRESSED_RGB_S3TC_DXT1_EXT; 
         dataFormat = GL_RGB;
         break;
     case 4:
-        internalFormat = GL_RGBA8;
+        // Use GL_COMPRESSED_RGBA_S3TC_DXT5_EXT for 4:1 compression with alpha
+        internalFormat = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
         dataFormat = GL_RGBA;
         break;
     default:
