@@ -22250,15 +22250,6 @@
                     "guid": "23f49aec-96e9-47d2-93e1-d192446c99f2",
                     "isUI": false
                 },
-                "ScriptProperties": {
-                    "scripts": [
-                        {
-                            "guid": "16f0caaf-2e11-4715-ab0e-06c67810e1ba",
-                            "scriptPath": "Assets\\Scripts\\InventoryUpgrade.lua",
-                            "hotReload": false
-                        }
-                    ]
-                },
                 "ButtonComponent": {
                     "position": [
                         1440.0,
@@ -22681,15 +22672,6 @@
                     "guid": "3bb281d9-c6a0-43ed-a663-6f8f8c10943f",
                     "isUI": false
                 },
-                "ScriptProperties": {
-                    "scripts": [
-                        {
-                            "guid": "16f0caaf-2e11-4715-ab0e-06c67810e1ba",
-                            "scriptPath": "Assets\\Scripts\\InventoryUpgrade.lua",
-                            "hotReload": false
-                        }
-                    ]
-                },
                 "ButtonComponent": {
                     "position": [
                         450.0,
@@ -22797,15 +22779,6 @@
                 "TextureComponent": {
                     "guid": "c62ac124-be74-451d-835f-6e76f3d61508",
                     "isUI": false
-                },
-                "ScriptProperties": {
-                    "scripts": [
-                        {
-                            "guid": "16f0caaf-2e11-4715-ab0e-06c67810e1ba",
-                            "scriptPath": "Assets\\Scripts\\InventoryUpgrade.lua",
-                            "hotReload": false
-                        }
-                    ]
                 },
                 "ButtonComponent": {
                     "position": [

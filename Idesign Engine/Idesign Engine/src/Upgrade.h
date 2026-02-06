@@ -45,13 +45,13 @@ namespace Framework
         UpgradeManager() = default;
         
         // Inventory System Cost
-        int m_inventoryUpgradeCost = 50;
+        int m_inventoryUpgradeCost = 600;
         
         // Currency multiplier system
         float m_currencyMultiplier = 1.0f;  // Start at 1.0x
-        int m_currencyUpgradeCost = 100;    // Initial cost
+        int m_currencyUpgradeCost = 800;    // Initial cost
 
-        int m_backpackUpgradeCost = 200;  // Initial cost for backpack upgrade
+        int m_backpackUpgradeCost = 600;  // Initial cost for backpack upgrade
 
         // Area unlock system
         std::unordered_map<GameArea, bool> m_unlockedAreas = 
@@ -64,7 +64,7 @@ namespace Framework
         std::unordered_map<GameArea, int> m_areaUnlockCosts = 
         {
             {GameArea::Forest, 0},  
-            {GameArea::Quarry, 1000}  // Quarry costs 1000 currency
+            {GameArea::Quarry, 2000}  // Quarry costs 1000 currency
         };
     };
 }
