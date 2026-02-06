@@ -50,7 +50,7 @@ local score_text_entity = nil
 
 -- [PHASE MANAGEMENT]
 local PHASE_NIGHT = 2
-local MAX_CUSTOMERS = 2
+local MAX_CUSTOMERS = 3
 local customers_served = 0
 
 -- =========================================================
@@ -419,7 +419,7 @@ function CustomerSystem:ResetNightPhase()
     print("[CustomerSystem] Resetting night phase state...")
     self:ClearAllLogs() -- Clear logs
     customers_served = 0
-    SetData("fixedQueue", 2)
+    SetData("fixedQueue", 3)
     
     -- Clean up active
     if activeCustomer then 

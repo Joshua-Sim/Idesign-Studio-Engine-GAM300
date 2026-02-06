@@ -4,7 +4,7 @@ local Customer = {}
 Customer.interaction_range = 2.5
 
 -- Available items to request
-local available_items = {"strength_potion", "vitality_potion"}
+local available_items = {"strength_potion", "vitality_potion", "Warmth_Potion"}
 
 -- Textbox configuration
 local prefab_textbox = "CustomerTextbox_Prefab"
@@ -157,24 +157,19 @@ function Customer.GenerateRequest()
     local fixedQueue = GetData("fixedQueue")
     
     if fixedQueue > 0 then
-        -- FIXED QUEUE MODE - Assign based on queue number
         local requestedItem
         
-        if fixedQueue == 2 then
-            -- First customer gets strength potion
-            requestedItem = "strength_potion"
+        if fixedQueue == 3 then
+            requestedItem = "strength_potion"      -- 3rd customer
+        elseif fixedQueue == 2 then
+            requestedItem = "vitality_potion"    -- Second customer
         elseif fixedQueue == 1 then
-            -- Second customer gets vitality potion
-            requestedItem = "vitality_potion"
+            requestedItem = "warmth_potion"    -- First customer 
         else
-            -- Fallback to random if unexpected value
             requestedItem = available_items[math.random(1, #available_items)]
         end
         
-        -- Decrement the queue counter
         SetData("fixedQueue", fixedQueue - 1)
-        
-        print("[Customer] FIXED QUEUE MODE: Generated request: " .. requestedItem .. " (queue was " .. fixedQueue .. ")")
         return requestedItem
     else
         -- RANDOM MODE (when fixedQueue is 0 or doesn't exist)
