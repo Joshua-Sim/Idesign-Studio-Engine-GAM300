@@ -8,8 +8,8 @@
 namespace Framework {
 
     // for backpack size
-    constexpr int kBackpackCols = 10;
-    constexpr int kBackpackRowsMax = 3;
+    constexpr int kBackpackCols = 6;
+    constexpr int kBackpackRowsMax = 10;
     constexpr int kBackpackMaxSlots = kBackpackCols * kBackpackRowsMax;
 
     enum class SlotKind : uint8_t { Hotbar, Backpack, None };
@@ -22,7 +22,7 @@ namespace Framework {
     };
 
     // Keep hotbar size in one place
-    constexpr int kHotbarSlots = 10;
+    constexpr int kHotbarSlots = 6;
 
     // One slot = a single non-stackable item (count can be kept for future proofing)
     struct InvSlot {
@@ -91,7 +91,7 @@ namespace Framework {
 
         int  m_selectedIndex = 0;
         int  mHotbarLevel = 1;     // 0 => 4 slots
-        int  mBackpackLevel = 1;   // 0..3
+        int  mBackpackLevel = 0;   // 0..3
         bool mBackpackOpen = false;
 
         bool   mDragging = false;

@@ -112,6 +112,14 @@ namespace Framework
         GLuint GetOrLoadIconTex(const char* path);
         GLuint GetOrLoadIconTexFromItemId(int itemId);
 
+        struct UIRect
+        {
+            float x = 0, y = 0, w = 0, h = 0;
+            bool  valid = false;
+        };
+
+        const UIRect& GetBackpackPanelRect() const { return mBackpackPanelRect; }
+
         Skybox* getSkybox() {
             return &m_skybox;
         }
@@ -310,6 +318,8 @@ namespace Framework
 
         void DrawBackpack(int screenW, int screenH);
         void HandleBackpackDragDrop(int screenW, int screenH);
+        UIRect mBackpackPanelRect;
+
     };
 }
 #endif // !_GRAPHICS_H_

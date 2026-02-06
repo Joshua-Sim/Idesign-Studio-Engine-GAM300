@@ -1332,12 +1332,13 @@ namespace Framework {
             // Backpack toggle (TAB) - only when in game, not editor focused
             // ------------------------------------------------------------
             {
+                auto& inv = Framework::Inventory::Instance();
                 static bool wasIPressed = false;
-                bool isIPressed = (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS);
+                bool isIPressed = (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS && inv.GetBackpackLevel() != 0);
 
                 if (isIPressed && !wasIPressed)
                 {
-                    auto& inv = Framework::Inventory::Instance();
+                    
                     const bool isOpen = inv.IsBackpackOpen();
 
                     // If it's open, ALWAYS allow closing
@@ -1727,31 +1728,66 @@ namespace Framework {
         const float gridW = cols * slotSize + (cols - 1) * gap;
         const float gridH = rows * slotSize + (rows - 1) * gap;
 
-        // Place centered above hotbar
+        // --- Position: RIGHT side, above hotbar area ---
         const float hotbarY0 = 24.0f;
         const float hotbarPanelH = slotSize + 24.0f;
         const float marginAboveHotbar = 20.0f;
 
-        const float x0 = std::round((screenW - gridW) * 0.5f);
-        const float y0 = std::round(hotbarY0 + hotbarPanelH + marginAboveHotbar);
+        const float rightMargin = 24.0f;  // distance from screen edge
+        const float panelPad = 12.0f;     // matches your panel padding
 
-        //{
-        //    const float hotbarPanelTop = hotbarY0 + hotbarPanelH; // top edge of hotbar panel
-        //    const float backpackPanelBottom = y0 - 12.0f;         // bottom edge of backpack panel
-        //    const float gapH = backpackPanelBottom - hotbarPanelTop;
+        // Panel bottom-left (x0,y0) for the GRID (not including outer panel pad)
+        const float x0 = std::round(screenW - rightMargin - (gridW));                 // right-aligned
+        const float y0 = std::round(hotbarY0 + hotbarPanelH + marginAboveHotbar);     // same vertical logic
 
-        //    if (gapH > 0.5f)
-        //    {
-        //        DrawUIRect({ x0 - 12.0f, hotbarPanelTop },
-        //            { gridW + 24.0f, gapH },
-        //            { 0.05f, 0.05f, 0.06f }, 0.90f);
-        //    }
-        //}
+        const float panelX = x0 - panelPad;
+        const float panelY = y0 - panelPad;
+        const float panelW = gridW + 2 * panelPad;
+        const float panelH = gridH + 5 * panelPad; // includes title space
 
-        // Back panel
-        DrawUIRect({ x0 - 12.0f, y0 - 12.0f },
-            { gridW + 24.0f, gridH + 24.0f },
+        mBackpackPanelRect = { panelX, panelY, panelW, panelH, true };
+
+        // --- Back panel (grid background) ---
+        DrawUIRect({ panelX, panelY },
+            { panelW, panelH },
             { 0.05f, 0.05f, 0.06f }, 0.90f);
+
+        const float titleX = x0 + gridW * 0.5f;
+
+        // Panel top = (y0 - panelPad) + (gridH + 5*panelPad) = y0 + gridH + 4*panelPad
+        const float panelTop = y0 + gridH + 4.0f * panelPad;
+
+        // Put title inside your reserved header space
+        const float titleY = panelTop - 3.0f * panelPad; // tweak this if needed
+
+        // Make the text scale consistent with your UI text pass
+        const float REF_W = 1920.0f;
+        const float REF_H = 1080.0f;
+        float resScale = std::min((float)screenW / REF_W, (float)screenH / REF_H);
+        float scale = 1.25f * resScale;
+
+        fontSystem.RenderText2D(
+            "BACKPACK",
+            titleX,
+            titleY,
+            scale,
+            glm::vec3(1.0f, 1.0f, 1.0f),  // white
+            (float)screenW,
+            (float)screenH,
+            1,   
+            1.0f
+        );
+
+        // --- Restore UI render state after fontSystem (it changes GL state) ---
+        uiShader.use();
+        uiShader.setMat4("uProjection", uiProj);
+
+        glDisable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        // If your font system enables scissor test, disable it for UI rects
+        glDisable(GL_SCISSOR_TEST);
 
         const int activeSlots = inv.GetBackpackSlotCount(); // rows*cols
 
@@ -1787,6 +1823,7 @@ namespace Framework {
         // Restore (match style of DrawHotbar end)
         glEnable(GL_DEPTH_TEST);
     }
+
 
     void Graphics::HandleBackpackDragDrop(int screenW, int screenH)
     {

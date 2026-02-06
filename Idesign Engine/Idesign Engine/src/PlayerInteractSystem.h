@@ -57,5 +57,7 @@ namespace Framework
         double m_pickupCooldown = 0.15;   // seconds (tweak to taste)
         Entity mPromptTextEntity = -3;
         Entity mPromptIconEntity = -2;
+        Entity mBackpackTitleTextEntity = (Entity) - 1;
+
     };
 }

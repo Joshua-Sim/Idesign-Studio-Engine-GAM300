@@ -106,8 +106,6 @@ namespace Framework
             ++it;
         }
 
-
-
         // --- 2. RAYCAST LOGIC ---
         Camera* gameCamera = mGraphicsSystem ? mGraphicsSystem->getCamera() : nullptr;
         if (!gameCamera) return;
@@ -221,8 +219,7 @@ namespace Framework
                         // REACHED PLAYER: Finalize
                         int itemId = Framework::ItemNameToId(item.name);
                         if (itemId >= 0) {
-                            // Double check space one last time
-                            int slot = Framework::Inventory::Instance().AddFirstEmpty(itemId);
+                            int slot = Framework::Inventory::Instance().TryAddItem_BackpackFirst( itemId, 0, 1 );
                             if (slot >= 0) {
                                 SpawnPickupNotification(itemId, Framework::GetItemDisplayName(itemId));
 
@@ -237,6 +234,11 @@ namespace Framework
                                 }
 
                                 ecsInterface.DestroyEntity(entity);
+                            }
+                            else {
+                                // Inventory full: Drop it
+                                item.isZipping = false;
+                                // Re-add physics if you want it to fall back to the ground
                             }
                         }
                     }
@@ -414,7 +416,7 @@ namespace Framework
         if (!mGraphicsSystem) return;
         if (mGraphicsSystem->GetMouseTargetView() != 0) return; // only in game view
 
-        if (engineState.IsAnyUIOpen()) return; // skip movement/jump when not in active gameplay
+        if (engineState.IsAnyUIOpen() && !Framework::Inventory::Instance().IsBackpackOpen()) return; // skip movement/jump when not in active gameplay
 
         GLFWwindow* window = mGraphicsSystem->GetWindow();
         if (!window) return;
@@ -459,9 +461,11 @@ namespace Framework
         const float moveSpeed = 10.0f;
 
         const bool camRotationEnabled = mGraphicsSystem->IsCameraRotationEnabled();
+        const bool inventoryOpen = Framework::Inventory::Instance().IsBackpackOpen();
+        const bool allowMovementInput = camRotationEnabled || inventoryOpen;
 
         // Only accumulate input if camera rotation enabled (same as old code)
-        if (camRotationEnabled)
+        if (allowMovementInput)
         {
             if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) targetVel += fwd;
             if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) targetVel -= fwd;
@@ -472,7 +476,46 @@ namespace Framework
         if (glm::length(targetVel) > 0.1f)
             targetVel = glm::normalize(targetVel) * moveSpeed;
 
-        if (camRotationEnabled)
+        //if (camRotationEnabled)
+        //{
+        //    // NORMAL: apply X/Z and let gravity act on Y
+        //    auto moveToward = [](float cur, float tgt, float maxDelta)
+        //        {
+        //            float diff = tgt - cur;
+        //            if (diff > maxDelta) diff = maxDelta;
+        //            if (diff < -maxDelta) diff = -maxDelta;
+        //            return cur + diff;
+        //        };
+
+        //    const float accel = 30.0f;          // tune: higher = snappier
+        //    const float brake = 120.0f;     // extra strong decel when stopping
+        //    const float maxAccelDelta = accel * dt;
+        //    const float maxBrakeDelta = brake * dt;
+
+        //    phys.linearVelocity.x = moveToward(phys.linearVelocity.x, targetVel.x,
+        //        (glm::abs(targetVel.x) < 0.01f) ? maxBrakeDelta : maxAccelDelta);
+
+        //    phys.linearVelocity.z = moveToward(phys.linearVelocity.z, targetVel.z,
+        //        (glm::abs(targetVel.z) < 0.01f) ? maxBrakeDelta : maxAccelDelta);
+
+        //    phys.gravityFactor = 10.0f;// edit for faster dropdown
+
+        //    const bool noInput = glm::length(targetVel) < 0.01f;
+        //    if (noInput)
+        //    {
+        //        // stop horizontal drift so gravity doesn't pull you down the slope
+        //        phys.linearVelocity.x = 0.0f;
+        //        phys.linearVelocity.z = 0.0f;
+        //    }
+        //}
+        //else
+        //{
+        //    // STIRRING / LOCKED: freeze all motion, turn off gravity
+        //    phys.linearVelocity = glm::vec3(0.0f);
+        //    phys.gravityFactor = 0.0f;
+        //}
+
+        if (allowMovementInput)
         {
             // NORMAL: apply X/Z and let gravity act on Y
             auto moveToward = [](float cur, float tgt, float maxDelta)
@@ -483,8 +526,8 @@ namespace Framework
                     return cur + diff;
                 };
 
-            const float accel = 30.0f;          // tune: higher = snappier
-            const float brake = 120.0f;     // extra strong decel when stopping
+            const float accel = 30.0f;
+            const float brake = 120.0f;
             const float maxAccelDelta = accel * dt;
             const float maxBrakeDelta = brake * dt;
 
@@ -494,22 +537,22 @@ namespace Framework
             phys.linearVelocity.z = moveToward(phys.linearVelocity.z, targetVel.z,
                 (glm::abs(targetVel.z) < 0.01f) ? maxBrakeDelta : maxAccelDelta);
 
-            phys.gravityFactor = 10.0f;// edit for faster dropdown
+            phys.gravityFactor = 10.0f;
 
             const bool noInput = glm::length(targetVel) < 0.01f;
             if (noInput)
             {
-                // stop horizontal drift so gravity doesn't pull you down the slope
                 phys.linearVelocity.x = 0.0f;
                 phys.linearVelocity.z = 0.0f;
             }
         }
         else
         {
-            // STIRRING / LOCKED: freeze all motion, turn off gravity
+            // only freeze for *other menus*, not inventory
             phys.linearVelocity = glm::vec3(0.0f);
             phys.gravityFactor = 0.0f;
         }
+
 
         // Always ensure the body wakes up when we drive it
         phys.startAwake = true;
@@ -522,7 +565,7 @@ namespace Framework
         const bool spaceDown = (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS);
 
         // TODO: later add && mGrounded here once your collision-based grounded is wired
-        if (spaceDown && !prevSpace && jumpLock <= 0.0f && camRotationEnabled)
+        if (spaceDown && !prevSpace && jumpLock <= 0.0f && allowMovementInput)
         {
             const float jumpSpeed = 25.0f;
             phys.linearVelocity.y = jumpSpeed;
