@@ -9,6 +9,7 @@ local locations = {
     Forest = {
         name = "Forest",
         buttonEntity = "Forest Button",
+        checkUnlocked = IsForestUnlocked,  -- ADDED
         spawnPos = { x = -276.0, y = 319.0,  z = 620.0 },
         spawnRot = { x = 0.0,    y = 0.0,  z = 0.0 },
         ingredients = {"Forest Herbs", "Mushrooms", "Berries"},
@@ -17,6 +18,7 @@ local locations = {
     Quarry = {
         name = "Quarry",
         buttonEntity = "Quarry Button",
+        checkUnlocked = IsQuarryUnlocked,  -- ADDED
         spawnPos = { x = -170.856,  y = 7.730,  z = -170.782 },
         spawnRot = { x = 0.0,    y = 0.0,   z = 0.0 },
         ingredients = {"Stone Minerals", "Cave Moss", "Crystal Dust"},
@@ -25,6 +27,7 @@ local locations = {
     House = {
         name = "House",
         buttonEntity = "House Button",
+        checkUnlocked = function() return true end,  -- ADDED
         spawnPos = { x = 0.0,    y = 0.0,   z = 0.0 },
         spawnRot = { x = 0.0,    y = 0.0,   z = 0.0 },
         ingredients = {"Garden Herbs", "Kitchen Spices"},
@@ -94,6 +97,16 @@ end
 function M:OnLocationSelected(locData)
     print("[MapSelectionUI] ===== LOCATION SELECTED: " .. locData.name .. " =====")
     
+    -- ADDED: Check if location is unlocked
+    if not locData.checkUnlocked() then
+        print("[MapSelectionUI] " .. locData.name .. " is LOCKED! Cannot teleport.")
+        -- Optional: Show a "Location Locked" message
+        -- SpawnPrefab("LocationLockedMessage")
+        return
+    end
+    
+    print("[MapSelectionUI] " .. locData.name .. " is UNLOCKED. Proceeding...")
+    
     -- Hide all ingredient images
     for _, loc in pairs(locations) do
         self:OnLocationUnhover(loc)
@@ -110,8 +123,6 @@ function M:OnLocationSelected(locData)
     )
     
     -- NEW: Trigger the transition event
-    -- This assumes your LoadingSystem listens to "StartPhaseTransition"
-    -- and will eventually fire "EndPhaseTransition" once the animation finishes.
     FireEvent("StartPhaseTransition")
     FireEvent("RequestHerbSpawn")
     -- Exit MapSelection state
@@ -119,15 +130,13 @@ function M:OnLocationSelected(locData)
     GameStateStart()
     SetUIFocused(false)
     
-    
-    
     print("[MapSelectionUI] ===== TELEPORT COMPLETE =====")
 end
 
 function M:ShowMap()
     print("[MapSelectionUI] ===== SHOWING MAP =====")
     
-    -- Push MapSelection state - SceneInterface handles visibility via isUI flag
+    -- Push MapSelection state
     PushEngineState("MapSelection")
     print("[MapSelectionUI] Pushed MapSelection state")
     
@@ -140,7 +149,7 @@ end
 function M:HideMap()
     print("[MapSelectionUI] ===== HIDING MAP =====")
     
-    -- Pop MapSelection state - SceneInterface handles visibility
+    -- Pop MapSelection state
     GameStateStart()
     
     -- Hide all ingredient images
@@ -155,53 +164,3 @@ function M:HideMap()
 end
 
 return M
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

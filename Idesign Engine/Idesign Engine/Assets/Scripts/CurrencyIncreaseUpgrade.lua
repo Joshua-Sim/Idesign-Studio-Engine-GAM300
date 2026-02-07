@@ -7,25 +7,37 @@ function M:on_init()
     RegisterButtonCallback(self.entity, function(ent)
         print("[CurrencyUpgrade] Currency upgrade button clicked!")
         
-        -- Get info for display purposes
+        -- Get current level and cost
+        local currentLevel = GetCurrencyLevel()
         local cost = GetCurrencyUpgradeCost()
         local currentCurrency = GetCurrency()
         
+        print("[CurrencyUpgrade] Current Level: " .. currentLevel)
         print("[CurrencyUpgrade] Cost: " .. cost .. ", Current Currency: " .. currentCurrency)
         
-        -- Just call the function - C++ handles everything!
+        -- Check if already at max level
+        if currentLevel >= 3 then
+            print("[CurrencyUpgrade] Already at max currency level!")
+            return
+        end
+        
+        -- Try to upgrade - C++ handles everything!
         local success = UpgradeCurrencyMultiplier(0.5)
         
         if success then
             UpdateCurrencyUI()
             Sound.Play("event:/spendMoney")
+            
+            local newLevel = GetCurrencyLevel()
             local newMultiplier = GetCurrencyMultiplier()
             local nextCost = GetCurrencyUpgradeCost()
-            print("[CurrencyUpgrade] Upgraded! New multiplier: " .. newMultiplier .. "x")
+            
+            print("[CurrencyUpgrade] Upgraded to Level " .. newLevel .. "!")
+            print("[CurrencyUpgrade] New multiplier: " .. newMultiplier .. "x")
             print("[CurrencyUpgrade] Next upgrade cost: " .. nextCost)
             print("[CurrencyUpgrade] Remaining currency: " .. GetCurrency())
         else
-            print("[CurrencyUpgrade] Not enough currency!")
+            print("[CurrencyUpgrade] Failed to upgrade!")
             print("[CurrencyUpgrade] Need " .. cost .. ", have " .. currentCurrency)
         end
     end)

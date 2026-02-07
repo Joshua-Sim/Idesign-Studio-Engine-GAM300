@@ -7,14 +7,20 @@ local M = {}
 -- Spawn data for each location
 local locations = {
     ["Forest Button"] = {
+        name = "Forest",
+        checkUnlocked = IsForestUnlocked,  -- Function reference
         spawnPos = { x = -110.493, y = 7.644,  z = 124.351 },
         spawnRot = { x = 0.0,    y = 90.0,  z = 0.0 }
     },
     ["Quarry Button"] = {
+        name = "Quarry",
+        checkUnlocked = IsQuarryUnlocked,  -- Function reference
         spawnPos = { x = -170.856,  y = 7.730,  z = -170.782 },
         spawnRot = { x = 0.0,    y = 0.0,   z = 0.0 }
     },
     ["House Button"] = {
+        name = "Home",
+        checkUnlocked = function() return true end,  -- Home is always unlocked
         spawnPos = { x = 0.0,    y = 0.0,   z = 0.0 },
         spawnRot = { x = 0.0,    y = 0.0,   z = 0.0 }
     }

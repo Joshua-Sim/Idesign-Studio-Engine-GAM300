@@ -40,7 +40,7 @@ namespace Framework {
         // Where we store/retrieve the ScriptingSystem* inside Lua's registry
         constexpr const char* kRegistryKey = "__ScriptingSystemPtr";
 
-        inline ScriptingSystem* lua_self(lua_State* L) 
+        inline ScriptingSystem* lua_self(lua_State* L)
         {
             lua_getfield(L, LUA_REGISTRYINDEX, kRegistryKey);
             auto* self = static_cast<ScriptingSystem*>(lua_touserdata(L, -1));
@@ -117,7 +117,7 @@ namespace Framework {
 
 
 
-        int l_IsKeyDown(lua_State* L) 
+        int l_IsKeyDown(lua_State* L)
         {
             auto* self = lua_self(L);
             Graphics* g = self ? self->GetGraphicsSystem() : nullptr;     // <-- use getter
@@ -129,7 +129,7 @@ namespace Framework {
             return 1;
         }
 
-        int l_CameraMove(lua_State* L) 
+        int l_CameraMove(lua_State* L)
         {
             auto* self = lua_self(L);
             Graphics* g = self ? self->GetGraphicsSystem() : nullptr;     // <-- use getter
@@ -960,19 +960,19 @@ namespace Framework {
         }
 
         // ============ AUDIO LUA BINDINGS ============
-        static int lua_AudioPlay(lua_State* L) 
+        static int lua_AudioPlay(lua_State* L)
         {
             const char* eventPath = luaL_checkstring(L, 1);
             if (g_AudioSystem) g_AudioSystem->PlayAudio(eventPath);
             return 0;
         }
 
-        static int lua_AudioStop(lua_State* L) 
+        static int lua_AudioStop(lua_State* L)
         {
-            if (g_AudioSystem) 
+            if (g_AudioSystem)
             {
                 // Check if an event name was provided
-                if (lua_gettop(L) >= 1 && lua_isstring(L, 1)) 
+                if (lua_gettop(L) >= 1 && lua_isstring(L, 1))
                 {
                     // Stop specific event
                     const char* eventName = lua_tostring(L, 1);
@@ -983,31 +983,31 @@ namespace Framework {
             return 0;
         }
 
-        static int lua_AudioPause(lua_State* L) 
+        static int lua_AudioPause(lua_State* L)
         {
             (void)L;
             if (g_AudioSystem) g_AudioSystem->PauseAllAudio();
             return 0;
         }
 
-        static int lua_AudioResume(lua_State* L) 
+        static int lua_AudioResume(lua_State* L)
         {
             (void)L;
             if (g_AudioSystem) g_AudioSystem->ResumeAllAudio();
             return 0;
         }
 
-        static int lua_AudioSetVolume(lua_State* L) 
+        static int lua_AudioSetVolume(lua_State* L)
         {
             float volume = (float)luaL_checknumber(L, 1);
-            if (g_AudioSystem) 
+            if (g_AudioSystem)
             {
                 g_AudioSystem->SetMasterVolume(volume);
             }
             return 0;
         }
 
-        static int lua_AudioPlay3D(lua_State* L) 
+        static int lua_AudioPlay3D(lua_State* L)
         {
             const char* eventPath = luaL_checkstring(L, 1);
             float x = (float)luaL_checknumber(L, 2);
@@ -1018,7 +1018,7 @@ namespace Framework {
             return 0;
         }
 
-        static int lua_AudioIsPlaying(lua_State* L) 
+        static int lua_AudioIsPlaying(lua_State* L)
         {
             const char* eventPath = luaL_checkstring(L, 1);
             bool isPlaying = false;
@@ -1159,9 +1159,9 @@ namespace Framework {
             engineState.PushState(EngineMode::Play);                    // Push gameplay layer
             phaseManager->SetPhase(GamePhase::Day);                     // Set game phase
             MessageBus::Get().SendImmediate(EnterPlayModeMessage());    // Send message to start audio and other play-mode systems
-            
 
-            
+
+
             //InstantiatePrefabByName("ForestHerb_Prefab");
             return 0;
         }
@@ -1240,7 +1240,7 @@ namespace Framework {
         // Get current phase for checking incase certain updates shouldn't run in other phases (e.g customer_system.lua)
         static int lua_GetPhase(lua_State* L)
         {
-            if (!phaseManager) 
+            if (!phaseManager)
             {
                 lua_pushnil(L);
                 return 1;
@@ -1338,7 +1338,7 @@ namespace Framework {
             return 1;
         }
 
-        
+
 
         // --------- Scene Loading --------------
         static int Lua_RegisterButtonCallback(lua_State* L)
@@ -2093,33 +2093,33 @@ namespace Framework {
         // Data Entry from engine
         lua_register(L, "GetScore", lua_GetScore);
         lua_register(L, "SetScore", lua_SetScore);
-        lua_register(L, "GetData",  lua_GetData);
-        lua_register(L, "SetData",  lua_SetData);
-        lua_register(L, "AddData",  lua_AddData);
-        lua_register(L, "HasData",  lua_HasData);
+        lua_register(L, "GetData", lua_GetData);
+        lua_register(L, "SetData", lua_SetData);
+        lua_register(L, "AddData", lua_AddData);
+        lua_register(L, "HasData", lua_HasData);
 
-        lua_register(L, "DestroyEntity",            Lua_DestroyEntity);
-        lua_register(L, "GetItemName",              Lua_GetItemName);
-        lua_register(L, "RegisterButtonCallback",   Lua_RegisterButtonCallback);
+        lua_register(L, "DestroyEntity", Lua_DestroyEntity);
+        lua_register(L, "GetItemName", Lua_GetItemName);
+        lua_register(L, "RegisterButtonCallback", Lua_RegisterButtonCallback);
 
         lua_register(L, "SpawnCauldronItem", l_spawnCauldronItem);
         lua_register(L, "IsItemZipping", l_isItemZipping);
-        lua_register(L, "CheckValidRecipe",  l_CheckValidRecipe);
-        lua_register(L, "GetEntityName",     lua_GetEntityName);
+        lua_register(L, "CheckValidRecipe", l_CheckValidRecipe);
+        lua_register(L, "GetEntityName", lua_GetEntityName);
 
         lua_register(L, "SetScale", lua_SetScale);
-        lua_register(L, "GetRotation",  lua_GetRotation);
+        lua_register(L, "GetRotation", lua_GetRotation);
         lua_register(L, "GetCameraYaw", lua_GetCameraYaw);
         lua_register(L, "TogglePhase", lua_TogglePhase);
 
         // Inventory Utility
-        lua_register(L, "IsItemDestroyOnPick",  Lua_IsItemDestroyOnPick);
-        lua_register(L, "GetSelectedItem",      Lua_GetPlayerSelectedItemId);
-        lua_register(L, "ConsumeSelectedItem",  Lua_ConsumePlayerSelectedItem);
-        lua_register(L, "AddToInventory",       Lua_AddToInventory);
-        lua_register(L, "GetItemNameById",      lua_GetItemNameById);
-        lua_register(L, "GetSelectedItemName",  Lua_GetSelectedItemName);
-        lua_register(L, "SetInteractionText",   l_SetInteractionText);
+        lua_register(L, "IsItemDestroyOnPick", Lua_IsItemDestroyOnPick);
+        lua_register(L, "GetSelectedItem", Lua_GetPlayerSelectedItemId);
+        lua_register(L, "ConsumeSelectedItem", Lua_ConsumePlayerSelectedItem);
+        lua_register(L, "AddToInventory", Lua_AddToInventory);
+        lua_register(L, "GetItemNameById", lua_GetItemNameById);
+        lua_register(L, "GetSelectedItemName", Lua_GetSelectedItemName);
+        lua_register(L, "SetInteractionText", l_SetInteractionText);
 
         // Engine utility
         lua_register(L, "FindEntityByName", lua_FindEntityByName);
@@ -2129,27 +2129,27 @@ namespace Framework {
         lua_register(L, "IsEntityValid", lua_IsEntityValid);
         lua_register(L, "AddTagToEntity", lua_AddTagToEntity);
         lua_register(L, "PlayEntityAnimation", l_PlayEntityAnimation);
-        lua_register(L, "StopAnimation", l_StopEntityAnimation); 
+        lua_register(L, "StopAnimation", l_StopEntityAnimation);
         lua_register(L, "SpawnPrefab", lua_SpawnPrefab);
         lua_register(L, "FireEvent", lua_FireEvent); // Maybe add register if needed
         lua_register(L, "SubscribeToEvent", lua_SubscribeToEvent); // Maybe add register if needed
         lua_register(L, "SetScriptVariable", lua_SetScriptVariable);
 
         // Engine States
-        lua_register(L, "GameStateStart",         lua_GameStateStart);
-        lua_register(L, "GameStateResume",        lua_GameStateResume);
-        lua_register(L, "GameStatePaused",        lua_GameStatePaused);
-        lua_register(L, "GameStateExit",          lua_GameStateExit);
-        lua_register(L, "GameStateHowToPlay",     lua_GameStateHowToPlay);
-        lua_register(L, "GameStateBackToMenu",    lua_GameStateBackToMenu);
-        lua_register(L, "GameStateCutscene",      lua_GameStateCutscene);
-        lua_register(L, "GameStateSettings",      lua_GameStateSettings);
-        lua_register(L, "GameStateBackToPause",   lua_GameStateBackToPause);
+        lua_register(L, "GameStateStart", lua_GameStateStart);
+        lua_register(L, "GameStateResume", lua_GameStateResume);
+        lua_register(L, "GameStatePaused", lua_GameStatePaused);
+        lua_register(L, "GameStateExit", lua_GameStateExit);
+        lua_register(L, "GameStateHowToPlay", lua_GameStateHowToPlay);
+        lua_register(L, "GameStateBackToMenu", lua_GameStateBackToMenu);
+        lua_register(L, "GameStateCutscene", lua_GameStateCutscene);
+        lua_register(L, "GameStateSettings", lua_GameStateSettings);
+        lua_register(L, "GameStateBackToPause", lua_GameStateBackToPause);
         lua_register(L, "GameStateEndNightPhase", lua_GameStateEndNightPhase);
         lua_register(L, "GetPhase", lua_GetPhase);
-       
-        
-       // lua_register(L, "SetScale", lua_SetScale);
+
+
+        // lua_register(L, "SetScale", lua_SetScale);
         lua_register(L, "GetScale", lua_GetScale);
 
         // Dialogue System
@@ -2158,7 +2158,7 @@ namespace Framework {
         lua_register(L, "DialogueStart", lua_DialogueStart);
         lua_register(L, "DialogueEnd", lua_DialogueEnd);
         lua_register(L, "DialogueIsActive", lua_DialogueIsActive);
-        
+
         //cauldron
         lua_register(L, "SetCameraLock", [](lua_State* L) -> int {
             // 1. Get argument (true/false)
@@ -2232,20 +2232,21 @@ namespace Framework {
             float x = (float)lua_tonumber(L, 2);
             float y = (float)lua_tonumber(L, 3);
             float z = (float)lua_tonumber(L, 4);
-    
+
             if (ecsInterface.IsEntityValid(entityId)) {
                 if (ecsInterface.HasComponent<TransformComponent>(entityId)) {
                     auto& transform = ecsInterface.GetComponent<TransformComponent>(entityId);
                     transform.scale = glm::vec3(x, y, z);
-                    std::cout << "[Lua] SetEntityScale: Entity " << entityId 
-                              << " scale set to (" << x << ", " << y << ", " << z << ")" << std::endl;
+                    std::cout << "[Lua] SetEntityScale: Entity " << entityId
+                        << " scale set to (" << x << ", " << y << ", " << z << ")" << std::endl;
                 }
-            } else {
+            }
+            else {
                 std::cerr << "[Lua Error] SetEntityScale: Invalid entity " << entityId << std::endl;
             }
-    
+
             return 0;
-        });
+            });
 
         // Craftable potion queries
         lua_register(L, "GetCraftablePotions", lua_GetCraftablePotions);
@@ -2342,14 +2343,14 @@ namespace Framework {
         lua_pushcfunction(L, l_Cook_Material);     lua_setfield(L, -2, "Materials");
         lua_setglobal(L, "Cook");
 
-        lua_register(L, "PlayEntitySound", [](lua_State* L) -> int 
+        lua_register(L, "PlayEntitySound", [](lua_State* L) -> int
             {
                 Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
                 if (g_AudioSystem) g_AudioSystem->PlayEntitySound(e);
                 return 0;
             });
 
-        lua_register(L, "SetEntityVolume", [](lua_State* L) -> int 
+        lua_register(L, "SetEntityVolume", [](lua_State* L) -> int
             {
                 Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
                 float volume = (float)luaL_checknumber(L, 2);
@@ -2477,6 +2478,12 @@ namespace Framework {
         lua_register(L, "GetCurrencyUpgradeCost", [](lua_State* L) -> int {
             int cost = UpgradeManager::Instance().GetCurrencyUpgradeCost();
             lua_pushinteger(L, cost);
+            return 1;
+            });
+
+        lua_register(L, "GetCurrencyLevel", [](lua_State* L) -> int {
+            int level = UpgradeManager::Instance().GetCurrencyLevel();
+            lua_pushinteger(L, level);
             return 1;
             });
 

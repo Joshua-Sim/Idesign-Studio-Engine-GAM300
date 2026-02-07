@@ -1,13 +1,62 @@
-
 #include "pch.h"
 #include "Upgrade.h"
 
 namespace Framework
 {
-    UpgradeManager& UpgradeManager::Instance() 
+    UpgradeManager& UpgradeManager::Instance()
     {
         static UpgradeManager instance;
         return instance;
+    }
+
+    // =========================================================
+    // INITIALIZATION - Load saved states
+    // =========================================================
+    void UpgradeManager::Initialize()
+    {
+        std::cout << "[UpgradeManager] Initializing..." << std::endl;
+
+        // Load area unlock states from GameSystem
+        // If no saved data exists, use default values from constructor
+
+        // Check Quarry unlock state
+        if (GameSystem::HasData("area_2")) {
+            int quarryUnlocked = GameSystem::GetData("area_2");
+            m_unlockedAreas[GameArea::Quarry] = (quarryUnlocked == 1);
+            std::cout << "[UpgradeManager] Loaded Quarry unlock state: " << (quarryUnlocked == 1 ? "UNLOCKED" : "LOCKED") << std::endl;
+        }
+        else {
+            // First time - save default state
+            GameSystem::SetData("area_2", 0);  // 0 = locked
+            std::cout << "[UpgradeManager] Quarry default state: LOCKED" << std::endl;
+        }
+
+        // Check Forest unlock state (though it starts unlocked)
+        if (GameSystem::HasData("area_1")) {
+            int forestUnlocked = GameSystem::GetData("area_1");
+            m_unlockedAreas[GameArea::Forest] = (forestUnlocked == 1);
+            std::cout << "[UpgradeManager] Loaded Forest unlock state: " << (forestUnlocked == 1 ? "UNLOCKED" : "LOCKED") << std::endl;
+        }
+        else {
+            // First time - save default state
+            GameSystem::SetData("area_1", 1);  // 1 = unlocked
+            std::cout << "[UpgradeManager] Forest default state: UNLOCKED" << std::endl;
+        }
+
+        // Load currency multiplier
+        if (GameSystem::HasData("currencyMultiplier")) {
+            int multiplierAsInt = GameSystem::GetData("currencyMultiplier");
+            m_currencyMultiplier = multiplierAsInt / 100.0f;
+            std::cout << "[UpgradeManager] Loaded currency multiplier: " << m_currencyMultiplier << "x" << std::endl;
+        }
+
+        // Load currency level
+        if (GameSystem::HasData("currencyLevel")) {
+            m_currencyLevel = GameSystem::GetData("currencyLevel");
+            std::cout << "[UpgradeManager] Loaded currency level: " << m_currencyLevel << std::endl;
+        }
+
+        std::cout << "[UpgradeManager] Initialization complete!" << std::endl;
     }
 
     // =========================================================
@@ -22,13 +71,6 @@ namespace Framework
     bool UpgradeManager::UpgradeInventorySlots(int amount)
     {
         auto& inv = Inventory::Instance();
-
-        // Check if inventory can be upgraded
-        /*if (!inv.CanUpgradeSlots())
-        {
-            std::cout << "[UpgradeManager] Cannot upgrade inventory slots (already at max)" << std::endl;
-            return false;
-        }*/
 
         // Check if player can afford it
         if (!CanAffordInventoryUpgrade())
@@ -45,7 +87,7 @@ namespace Framework
         // Apply the upgrade
         //inv.UpgradeSlots(amount);
 
-        // Increase cost for next upgrade
+        // Cost stays the same (multiplier disabled)
         //m_inventoryUpgradeCost += 50;
 
         std::cout << "[UpgradeManager] Inventory upgraded! New slots: " << inv.GetHotbarSlotCount()
@@ -54,7 +96,7 @@ namespace Framework
         return true;
     }
 
-    int UpgradeManager::GetInventoryUpgradeCost() const 
+    int UpgradeManager::GetInventoryUpgradeCost() const
     {
         return m_inventoryUpgradeCost;
     }
@@ -70,6 +112,13 @@ namespace Framework
 
     bool UpgradeManager::UpgradeCurrencyMultiplier(float additiveBonus)
     {
+        // Check if already at max level
+        if (m_currencyLevel >= MAX_CURRENCY_LEVEL)
+        {
+            std::cout << "[UpgradeManager] Currency already at max level!" << std::endl;
+            return false;
+        }
+
         // Check if player can afford it
         if (!CanAffordCurrencyUpgrade())
         {
@@ -84,15 +133,17 @@ namespace Framework
 
         // Apply the upgrade
         m_currencyMultiplier += additiveBonus;
+        m_currencyLevel++;  // Increment level
 
         // Store as integer in GameSystem (100 = 1.0x)
         int multiplierAsInt = static_cast<int>(m_currencyMultiplier * 100);
         GameSystem::SetData("currencyMultiplier", multiplierAsInt);
+        GameSystem::SetData("currencyLevel", m_currencyLevel);  // Save level too
 
         std::cout << "[UpgradeManager] Currency multiplier upgraded to "
-            << m_currencyMultiplier << "x" << std::endl;
+            << m_currencyMultiplier << "x (Level " << m_currencyLevel << ")" << std::endl;
 
-        // Increase cost for next upgrade
+        // Cost stays the same (multiplier disabled)
         //m_currencyUpgradeCost += 100;
 
         std::cout << "[UpgradeManager] Next currency upgrade cost: " << m_currencyUpgradeCost << std::endl;
@@ -108,6 +159,11 @@ namespace Framework
     int UpgradeManager::GetCurrencyUpgradeCost() const
     {
         return m_currencyUpgradeCost;
+    }
+
+    int UpgradeManager::GetCurrencyLevel() const
+    {
+        return m_currencyLevel;
     }
 
     bool UpgradeManager::UnlockArea(GameArea area)
@@ -200,7 +256,7 @@ namespace Framework
         // Apply the upgrade
         inv.SetBackpackLevel(currentLevel + 1);
 
-        // Increase cost for next upgrade
+        // Cost stays the same (multiplier disabled)
         //m_backpackUpgradeCost += 150;
 
         std::cout << "[UpgradeManager] Backpack upgraded to level " << (currentLevel + 1)
@@ -214,37 +270,23 @@ namespace Framework
         return m_backpackUpgradeCost;
     }
 
-    /*
-    // C++ - UpgradeManager
-    bool UpgradeManager::UpgradeXXX(params)
+    // =========================================================
+    // MAX LEVEL CHECKS (for UI completion stamps)
+    // =========================================================
+    bool UpgradeManager::IsInventoryMaxLevel() const
     {
-        // 1. Check pre-conditions (max level, etc)
-        if (!CanUpgradeXXX()) return false;
-    
-        // 2. Check affordability
-        if (!CanAffordXXXUpgrade()) return false;
-    
-        // 3. Deduct currency
-        GameSystem::AddCurrency(-m_xxxUpgradeCost);
-    
-        // 4. Apply the upgrade
-        ApplyXXXUpgrade(params);
-    
-        // 5. Increase cost for next time
-        m_xxxUpgradeCost += increment;
-    
-        return true;
+        auto& inv = Inventory::Instance();
+        return inv.GetHotbarLevel() >= MAX_HOTBAR_LEVEL;
     }
 
-    -- Lua - Simple button callback
-    RegisterButtonCallback(self.entity, function(ent)
-        local success = UpgradeXXX(params)
+    bool UpgradeManager::IsCurrencyMaxLevel() const
+    {
+        return m_currencyLevel >= MAX_CURRENCY_LEVEL;
+    }
 
-        if success then
-            print("Upgraded!")
-        else
-            print("Can't upgrade!")
-        end
-    end)
-    */
+    bool UpgradeManager::IsBackpackMaxLevel() const
+    {
+        auto& inv = Inventory::Instance();
+        return inv.GetBackpackLevel() >= MAX_BACKPACK_LEVEL;
+    }
 }
