@@ -245,11 +245,15 @@ namespace Framework
 		doc.SetObject();
 		auto& allocator = doc.GetAllocator();
 
-		// ========================================================================
-		// STEP 1: Load existing JSON and index by GUID
-		// ========================================================================
-		std::map<std::string, rapidjson::Value> assetsByGuid; // std::map = auto-sorted by key
+		// Track which GUIDs already exist (to avoid duplicates)
+		std::set<std::string> existingGuids;
 
+		// Store the array in original order
+		rapidjson::Value array(rapidjson::kArrayType);
+
+		// ========================================================================
+		// STEP 1: Copy existing JSON entries AS-IS (preserve order)
+		// ========================================================================
 		if (std::filesystem::exists(fullPath))
 		{
 			std::ifstream ifs(fullPath);
@@ -259,105 +263,68 @@ namespace Framework
 				rapidjson::Document existingDoc;
 				existingDoc.ParseStream(isw);
 
-				// Validate existing JSON structure
 				if (!existingDoc.HasParseError() &&
 					existingDoc.HasMember(arrayKey.c_str()) &&
 					existingDoc[arrayKey.c_str()].IsArray())
 				{
-					// FIX: Use const reference for GetArray()
-					const rapidjson::Value& arrayValue = existingDoc[arrayKey.c_str()];
+					const rapidjson::Value& existingArray = existingDoc[arrayKey.c_str()];
 
-					std::cout << "[SaveArrayToJson] Loading " << arrayValue.Size()
-						<< " existing " << typeName << " entries from JSON\n";
+					std::cout << "[SaveArrayToJson] Preserving " << existingArray.Size()
+						<< " existing " << typeName << " entries\n";
 
-					// FIX: Iterate over const reference
-					for (rapidjson::SizeType i = 0; i < arrayValue.Size(); ++i)
+					// Copy each entry AS-IS
+					for (rapidjson::SizeType i = 0; i < existingArray.Size(); ++i)
 					{
-						const rapidjson::Value& item = arrayValue[i];
+						const rapidjson::Value& item = existingArray[i];
 
-						// Each asset must have a GUID
 						if (item.HasMember("guid") && item["guid"].IsString())
 						{
 							std::string guid = item["guid"].GetString();
+							existingGuids.insert(guid);
 
-							// Deep copy the JSON object (must use allocator)
+							// Deep copy and append in original order
 							rapidjson::Value copy(item, allocator);
-							assetsByGuid[guid] = std::move(copy);
+							array.PushBack(copy, allocator);
 						}
 						else
 						{
-							std::cerr << "[SaveArrayToJson] Warning: Skipping asset without GUID in "
-								<< filePath << "\n";
+							std::cerr << "[SaveArrayToJson] Warning: Skipping entry without GUID\n";
 						}
 					}
 				}
-				else
-				{
-					std::cerr << "[SaveArrayToJson] Warning: Could not parse existing JSON or array key '"
-						<< arrayKey << "' not found\n";
-				}
 			}
-		}
-		else
-		{
-			std::cout << "[SaveArrayToJson] No existing file found at " << fullPath
-				<< ", will create new file\n";
 		}
 
 		// ========================================================================
-		// STEP 2: Merge current assets from memory (update existing, add new)
+		// STEP 2: Append ONLY new assets (not already in JSON)
 		// ========================================================================
 		const auto& assets = GetAssets();
-		int updatedCount = 0;
 		int addedCount = 0;
 
 		for (const auto& [key, entryObject] : assets)
 		{
 			if (entryObject.typeName != typeName) continue;
 
-			// Serialize the current in-memory asset
+			// Skip if already in JSON
+			if (existingGuids.count(key.guid.id) > 0) continue;
+
+			// This is a NEW asset - append it
 			rapidjson::Value obj(rapidjson::kObjectType);
 			Serialize(entryObject.pObject.get(), *entryObject.pProps, obj, allocator);
-
-			// Check if this GUID already exists
-			bool isNew = (assetsByGuid.find(key.guid.id) == assetsByGuid.end());
-
-			if (isNew)
-			{
-				addedCount++;
-				std::cout << "[SaveArrayToJson] Adding new " << typeName
-					<< " with GUID: " << key.guid.id << "\n";
-			}
-			else
-			{
-				updatedCount++;
-			}
-
-			// Insert or update in the map
-			assetsByGuid[key.guid.id] = std::move(obj);
-		}
-
-		std::cout << "[SaveArrayToJson] Summary for " << typeName << ": "
-			<< addedCount << " added, "
-			<< updatedCount << " updated, "
-			<< assetsByGuid.size() << " total\n";
-
-		// ========================================================================
-		// STEP 3: Write to array in sorted order (by GUID)
-		// ========================================================================
-		rapidjson::Value array(rapidjson::kArrayType);
-
-		// std::map iterates in sorted key order automatically
-		for (auto& [guid, obj] : assetsByGuid)
-		{
-			// Move the object into the array (transfer ownership)
 			array.PushBack(obj, allocator);
+
+			addedCount++;
+			std::cout << "[SaveArrayToJson] Appending new " << typeName
+				<< " with GUID: " << key.guid.id << "\n";
 		}
+
+		std::cout << "[SaveArrayToJson] Added " << addedCount << " new entries, "
+			<< "total now: " << array.Size() << "\n";
 
 		doc.AddMember(rapidjson::Value(arrayKey.c_str(), allocator), array, allocator);
 
 		// ========================================================================
-		// STEP 4: Write to file with pretty formatting
+		// STEP 3: Write to file
 		// ========================================================================
 		std::ofstream ofs(fullPath);
 		if (ofs.is_open())
@@ -367,13 +334,11 @@ namespace Framework
 			writer.SetIndent(' ', 4);
 			doc.Accept(writer);
 
-			std::cout << "[SaveArrayToJson] Successfully saved " << assetsByGuid.size()
-				<< " " << typeName << " entries to " << filePath << "\n";
+			std::cout << "[SaveArrayToJson] Successfully saved to " << filePath << "\n";
 		}
 		else
 		{
-			std::cerr << "[SaveArrayToJson] ERROR: Failed to open file for writing: "
-				<< fullPath << "\n";
+			std::cerr << "[SaveArrayToJson] ERROR: Failed to open file for writing\n";
 		}
 	}
 
