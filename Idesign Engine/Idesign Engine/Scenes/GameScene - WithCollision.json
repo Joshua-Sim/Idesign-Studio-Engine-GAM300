@@ -296,7 +296,7 @@
                     "animationSpeed": 10.0,
                     "bLoops": false,
                     "bPlayOnStart": true,
-                    "currentTime": 0.0
+                    "currentTime": 20.0
                 },
                 "TextureComponent": {
                     "guid": "afd25b76-dddc-4c4f-bae4-a6c9a22931e5",
@@ -3048,7 +3048,7 @@
                     "animationSpeed": 1.0,
                     "bLoops": true,
                     "bPlayOnStart": true,
-                    "currentTime": 0.0
+                    "currentTime": 164.19827270507813
                 },
                 "TextureComponent": {
                     "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
@@ -3568,7 +3568,7 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "13160290-b42b-4e24-a931-1790196820cc",
+                    "guid": "44dd9ce1-94f7-4b94-9fda-b06bde4f0e1e",
                     "isUI": false
                 },
                 "ScriptProperties": {
@@ -4682,7 +4682,7 @@
                 },
                 "TagComponent": {
                     "tags": [
-                        "upgrade"
+                        "nextdaybutt"
                     ]
                 },
                 "TextureComponent": {
@@ -4804,7 +4804,7 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "7cf95b2f-4160-4a45-9ce1-2b889b5b40af",
+                    "guid": "063bc40e-cdcc-44b1-a794-da791ab67aa3",
                     "isUI": false
                 },
                 "ButtonComponent": {
@@ -20580,7 +20580,8 @@
                         "fc89e578-8f11-4e77-86be-14fb1b310d26",
                         "bfd552ac-3041-4bd9-b6e2-bd92408d0fb3",
                         "2dcc2352-5b36-465a-a806-165efd87b11f",
-                        "96b0dccf-d2fd-4b4c-8574-5b4fe3e2f8d8"
+                        "96b0dccf-d2fd-4b4c-8574-5b4fe3e2f8d8",
+                        "359dd368-5b15-456e-98a3-1a77b8c77e9e"
                     ],
                     "sortIndex": 68
                 },
@@ -20593,7 +20594,7 @@
                     "guid": ""
                 },
                 "TextureComponent": {
-                    "guid": "8a55939c-a0c8-4dae-9850-bcb0099ded3c",
+                    "guid": "7f9aade7-0ecf-48c7-8e35-c8654325833e",
                     "isUI": false
                 },
                 "ScriptProperties": {
@@ -20615,174 +20616,6 @@
                         1080.0
                     ],
                     "isHovered": true,
-                    "isFrontButton": false
-                }
-            }
-        },
-        {
-            "name": "Forest Button",
-            "guid": "dd30a16c-7680-4743-b263-dd274c882310",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        450.0,
-                        707.0,
-                        1.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        500.0,
-                        382.79998779296875,
-                        1.0
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "7f8f7e0e-9a54-4f43-b9d1-5b93d522180a",
-                    "children": [],
-                    "sortIndex": 238
-                },
-                "TagComponent": {
-                    "tags": [
-                        "map"
-                    ]
-                },
-                "MeshComponent": {
-                    "guid": ""
-                },
-                "TextureComponent": {
-                    "guid": "64ae45f2-6db3-4e77-aa05-4023c3425436",
-                    "isUI": false
-                },
-                "ButtonComponent": {
-                    "position": [
-                        450.0,
-                        707.0
-                    ],
-                    "size": [
-                        500.0,
-                        382.79998779296875
-                    ],
-                    "isHovered": false,
-                    "isFrontButton": false
-                }
-            }
-        },
-        {
-            "name": "Quarry Button",
-            "guid": "c3f00981-7a54-49bc-86e7-3b238666aacb",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        1355.0,
-                        704.0,
-                        1.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        500.0,
-                        391.8999938964844,
-                        1.0
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "7f8f7e0e-9a54-4f43-b9d1-5b93d522180a",
-                    "children": [],
-                    "sortIndex": 239
-                },
-                "TagComponent": {
-                    "tags": [
-                        "map"
-                    ]
-                },
-                "MeshComponent": {
-                    "guid": ""
-                },
-                "TextureComponent": {
-                    "guid": "01d096fe-da1e-43fe-9114-d5db34cc7808",
-                    "isUI": false
-                },
-                "ButtonComponent": {
-                    "position": [
-                        1355.0,
-                        704.0
-                    ],
-                    "size": [
-                        500.0,
-                        391.8999938964844
-                    ],
-                    "isHovered": true,
-                    "isFrontButton": false
-                }
-            }
-        },
-        {
-            "name": "House Button",
-            "guid": "992c2024-6333-4500-aef3-8d5d59616088",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        900.0,
-                        400.0,
-                        1.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        350.0,
-                        293.0,
-                        1.0
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "7f8f7e0e-9a54-4f43-b9d1-5b93d522180a",
-                    "children": [],
-                    "sortIndex": 240
-                },
-                "TagComponent": {
-                    "tags": [
-                        "map"
-                    ]
-                },
-                "MeshComponent": {
-                    "guid": ""
-                },
-                "TextureComponent": {
-                    "guid": "056c90ae-223b-41d3-b39c-3313e6015e3e",
-                    "isUI": false
-                },
-                "ScriptProperties": {
-                    "scripts": [
-                        {
-                            "guid": "b20ceaf5-8708-422e-a0d1-9234f7d411c0",
-                            "scriptPath": "Assets\\Scripts\\MapButton.lua",
-                            "hotReload": false
-                        }
-                    ]
-                },
-                "ButtonComponent": {
-                    "position": [
-                        900.0,
-                        400.0
-                    ],
-                    "size": [
-                        350.0,
-                        293.0
-                    ],
-                    "isHovered": false,
                     "isFrontButton": false
                 }
             }
@@ -20896,56 +20729,6 @@
             }
         },
         {
-            "name": "Forest Button (Copy)",
-            "guid": "5e0f0306-1a52-42be-8bbf-ae919abf27c8",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        465.0,
-                        707.0,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        500.0,
-                        382.79998779296875,
-                        0.0
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "7f8f7e0e-9a54-4f43-b9d1-5b93d522180a",
-                    "children": [],
-                    "sortIndex": 238
-                },
-                "TagComponent": {
-                    "tags": [
-                        "map"
-                    ]
-                },
-                "MeshComponent": {
-                    "guid": ""
-                },
-                "TextureComponent": {
-                    "guid": "2e05f12a-89ae-405e-998b-1a8fc78b5d8b",
-                    "isUI": false
-                },
-                "ScriptProperties": {
-                    "scripts": [
-                        {
-                            "guid": "b20ceaf5-8708-422e-a0d1-9234f7d411c0",
-                            "scriptPath": "Assets\\Scripts\\MapButton.lua",
-                            "hotReload": false
-                        }
-                    ]
-                }
-            }
-        },
-        {
             "name": "CUTSCENE",
             "guid": "f2f9401a-c38e-429a-b750-83ab2084c5a5",
             "components": {
@@ -20998,14 +20781,14 @@
             }
         },
         {
-            "name": "Quarry Button (Copy)",
+            "name": "Quarry Button",
             "guid": "fc89e578-8f11-4e77-86be-14fb1b310d26",
             "components": {
                 "TransformComponent": {
                     "position": [
-                        1380.0,
-                        704.0,
-                        -100.0
+                        1410.0,
+                        738.0,
+                        1.0
                     ],
                     "rotation": [
                         0.0,
@@ -21013,8 +20796,8 @@
                         0.0
                     ],
                     "scale": [
-                        500.0,
-                        391.8999938964844,
+                        449.0,
+                        357.0,
                         1.0
                     ],
                     "isActive": true
@@ -21033,7 +20816,7 @@
                     "guid": ""
                 },
                 "TextureComponent": {
-                    "guid": "a93c9c92-b6e4-48e8-a4ec-daa625695217",
+                    "guid": "3db45502-0b02-41ec-85b1-0ad1d5fbe585",
                     "isUI": false
                 },
                 "ScriptProperties": {
@@ -21047,14 +20830,14 @@
                 },
                 "ButtonComponent": {
                     "position": [
-                        1380.0,
-                        704.0
+                        1410.0,
+                        738.0
                     ],
                     "size": [
-                        500.0,
-                        391.8999938964844
+                        449.0,
+                        357.0
                     ],
-                    "isHovered": true,
+                    "isHovered": false,
                     "isFrontButton": true
                 }
             }
@@ -21728,7 +21511,7 @@
                         430.0,
                         550.0
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": false
                 }
             }
@@ -21782,7 +21565,7 @@
                         430.0,
                         550.0
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": false
                 }
             }
@@ -21869,7 +21652,7 @@
                 },
                 "TagComponent": {
                     "tags": [
-                        "upgrade"
+                        "nextdaybutt"
                     ]
                 },
                 "TextureComponent": {
@@ -22195,7 +21978,7 @@
                         430.0,
                         550.0
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": false
                 }
             }
@@ -22288,8 +22071,7 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "d60dfbb7-9841-4987-b126-46b53ffb03a5",
@@ -22304,7 +22086,7 @@
                         430.0,
                         480.0
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": false
                 }
             }
@@ -22531,6 +22313,68 @@
                     ],
                     "isHovered": false,
                     "isFrontButton": false
+                }
+            }
+        },
+        {
+            "name": "Forest Button",
+            "guid": "359dd368-5b15-456e-98a3-1a77b8c77e9e",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        462.0,
+                        745.0,
+                        -100.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        449.0,
+                        357.0,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "7f8f7e0e-9a54-4f43-b9d1-5b93d522180a",
+                    "children": [],
+                    "sortIndex": 239
+                },
+                "TagComponent": {
+                    "tags": [
+                        "map"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": ""
+                },
+                "TextureComponent": {
+                    "guid": "a37d067f-322e-47c3-8d53-e0c0cee1a8c6",
+                    "isUI": false
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "b20ceaf5-8708-422e-a0d1-9234f7d411c0",
+                            "scriptPath": "Assets\\Scripts\\MapButton.lua",
+                            "hotReload": false
+                        }
+                    ]
+                },
+                "ButtonComponent": {
+                    "position": [
+                        462.0,
+                        745.0
+                    ],
+                    "size": [
+                        449.0,
+                        357.0
+                    ],
+                    "isHovered": true,
+                    "isFrontButton": true
                 }
             }
         }

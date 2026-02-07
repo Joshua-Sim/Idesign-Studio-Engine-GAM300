@@ -84,6 +84,21 @@ namespace Framework
             if (engineState.Is(EngineMode::Upgrade))
             {
                 auto upgradeEntities = ecsInterface.GetEntitiesByTag("upgrade");
+
+                // NEXT DAY BUTTON ONLY
+                auto nextDayButt = ecsInterface.GetEntitiesByTag("nextdaybutt");
+                for (Entity e : nextDayButt)
+                {
+                    if (!ecsInterface.IsEntityValid(e)) continue;
+
+                    if (ecsInterface.HasComponent<ButtonComponent>(e) &&
+                        ecsInterface.HasComponent<TextureProperties>(e))
+                    {
+                        auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
+                        if (!engineState.Is(EngineMode::Editor)) { texture.isUI = engineState.Is(EngineMode::Upgrade); }
+                    }
+                }
+
                 auto& upgradeMgr = UpgradeManager::Instance();
 
                 // ------------------------------------------------------------
@@ -217,6 +232,20 @@ namespace Framework
                     {
                         auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
                         texture.isUI = false;  // Hide when not in Upgrade mode
+                    }
+                }
+
+                // NOT in Upgrade mode - hide all upgrade-tagged entities
+                auto nextDayButt = ecsInterface.GetEntitiesByTag("nextdaybutt");
+                for (Entity e : nextDayButt)
+                {
+                    if (!ecsInterface.IsEntityValid(e)) continue;
+
+                    if (ecsInterface.HasComponent<ButtonComponent>(e) &&
+                        ecsInterface.HasComponent<TextureProperties>(e))
+                    {
+                        auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
+                        if (!engineState.Is(EngineMode::Editor)) { texture.isUI = false; }
                     }
                 }
             }

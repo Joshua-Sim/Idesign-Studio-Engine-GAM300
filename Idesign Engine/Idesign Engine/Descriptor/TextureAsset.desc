@@ -1,5 +1,5 @@
 {
-    "count": 250,
+    "count": 257,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -1499,6 +1499,48 @@
             "guid": "8fb7c330-d25c-4cbe-ac47-cafa095dd829",
             "name": "wool3D",
             "path": "Assets\\Textures\\wool3D.png",
+            "isUI": false
+        },
+        {
+            "guid": "788c47ef-bbfb-4839-a29a-026601cf53c6",
+            "name": "UpgradeCardInventory_Full",
+            "path": "Assets\\Textures\\UpgradeCardInventory_Full.png",
+            "isUI": false
+        },
+        {
+            "guid": "d60dfbb7-9841-4987-b126-46b53ffb03a5",
+            "name": "UpgradeCardGold_Full",
+            "path": "Assets\\Textures\\UpgradeCardGold_Full.png",
+            "isUI": false
+        },
+        {
+            "guid": "69b50841-6cc3-4514-9f61-12e0178384e9",
+            "name": "UpgradeCardQuarry_Full",
+            "path": "Assets\\Textures\\UpgradeCardQuarry_Full.png",
+            "isUI": false
+        },
+        {
+            "guid": "a37d067f-322e-47c3-8d53-e0c0cee1a8c6",
+            "name": "Forest Front",
+            "path": "Assets\\Textures\\Forest Front.png",
+            "isUI": false
+        },
+        {
+            "guid": "7f9aade7-0ecf-48c7-8e35-c8654325833e",
+            "name": "MAPBG",
+            "path": "Assets\\Textures\\MAPBG.png",
+            "isUI": false
+        },
+        {
+            "guid": "063bc40e-cdcc-44b1-a794-da791ab67aa3",
+            "name": "MAIN MENU BUTTON",
+            "path": "Assets\\Textures\\MAIN MENU BUTTON.png",
+            "isUI": false
+        },
+        {
+            "guid": "44dd9ce1-94f7-4b94-9fda-b06bde4f0e1e",
+            "name": "MAIN MENU HOVER BUTTON",
+            "path": "Assets\\Textures\\MAIN MENU HOVER BUTTON.png",
             "isUI": false
         }
     ]
