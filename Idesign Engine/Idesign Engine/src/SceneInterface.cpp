@@ -17,7 +17,7 @@ namespace Framework
     static bool cutsceneFinished = false;
 
     // Tune these
-    static const float fadeDuration = 1.75f;  // slide fade-in time
+    static const float fadeDuration = 0.05f;  // slide fade-in time
     static const float gap = 0.1f;  // delay between slides
     static const float holdAfterLast = 0.5f;  // hold before fade-out starts
     static const float fadeOutDuration = 0.4f;  // global fade-out time
@@ -104,6 +104,15 @@ namespace Framework
                     if (ecsInterface.EntityHasTag(e, "gold"))        goldHovered = btn.isHovered;
                     if (ecsInterface.EntityHasTag(e, "inventory"))   inventoryHovered = btn.isHovered;
                 }
+
+                // get backpack level
+                // int level = Inventory::Instance().GetBackpackLevel();
+
+                // check if quarry area is unlocked
+                // bool unlocked = UpgradeManager::Instance().IsAreaUnlocked(GameArea::Quarry);
+
+                // check if the gold upgrade level
+                // int goldlevel = GetCurrencyLevel();
 
                 // ------------------------------------------------------------
                 // 2. Affordability checks (do ONCE)
@@ -206,7 +215,7 @@ namespace Framework
                     ecsInterface.HasComponent<TextureProperties>(e))
                 {
                     auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
-                    
+
                     // Only enforce UI flag if NOT in editor mode 
                     if (!engineState.Is(EngineMode::Editor)) { texture.isUI = engineState.Is(EngineMode::Settings); }
                 }
@@ -214,7 +223,7 @@ namespace Framework
                 if (ecsInterface.HasComponent<TextProperties>(e))
                 {
                     auto& text = ecsInterface.GetComponent<TextProperties>(e);
-                    
+
                     // Only enforce opacity if NOT in editor mode 
                     if (!engineState.Is(EngineMode::Editor)) { text.opacity = engineState.Is(EngineMode::Settings) ? 1.f : 0.f; }
                 }
@@ -231,15 +240,9 @@ namespace Framework
                 {
                     auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
                     // Only enforce UI flag if NOT in editor mode
-                    if (!engineState.Is(EngineMode::Editor)) { texture.isUI = engineState.Is(EngineMode::MapSelection); }
-                }
-
-                if (ecsInterface.HasComponent<TextProperties>(e))
-                {
-                    auto& text = ecsInterface.GetComponent<TextProperties>(e);
-
-                    // Only enforce opacity if NOT in editor mode
-                    if (!engineState.Is(EngineMode::Editor)) { text.opacity = engineState.Is(EngineMode::MapSelection) ? 1.f : 0.f; }
+                    if (!engineState.Is(EngineMode::Editor)) {
+                        if (!engineState.Is(EngineMode::Editor)) { texture.isUI = engineState.Is(EngineMode::MapSelection) ? 1.f : 0.f; }
+                    }
                 }
             }
 
@@ -369,8 +372,8 @@ namespace Framework
 
                     // Show only during Play, Upgrade, or Editor modes
                     bool shouldShow = engineState.Is(EngineMode::Play) ||
-                                      engineState.Is(EngineMode::Upgrade) ||
-                                      engineState.Is(EngineMode::Editor);
+                        engineState.Is(EngineMode::Upgrade) ||
+                        engineState.Is(EngineMode::Editor);
                     texture.isUI = shouldShow;
                 }
             }

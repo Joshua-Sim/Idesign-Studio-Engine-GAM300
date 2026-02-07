@@ -1499,6 +1499,24 @@
             "name": "wool3D",
             "path": "Assets\\Textures\\wool3D.png",
             "isUI": false
+        },
+            {
+            "guid": "788c47ef-bbfb-4839-a29a-026601cf53c6",
+            "name": "UpgradeCardInventory_Full",
+            "path": "Assets\\Textures\\UpgradeCardInventory_Full.png",
+            "isUI": false
+        },
+        {
+            "guid": "d60dfbb7-9841-4987-b126-46b53ffb03a5",
+            "name": "UpgradeCardGold_Full",
+            "path": "Assets\\Textures\\UpgradeCardGold_Full.png",
+            "isUI": false
+        },
+        {
+            "guid": "69b50841-6cc3-4514-9f61-12e0178384e9",
+            "name": "UpgradeCardQuarry_Full",
+            "path": "Assets\\Textures\\UpgradeCardQuarry_Full.png",
+            "isUI": false
         }
     ]
 }
