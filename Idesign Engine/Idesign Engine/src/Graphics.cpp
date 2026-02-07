@@ -1127,10 +1127,10 @@ namespace Framework {
         {
             static bool wasIPressed = false;
             bool isIPressed = (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS);
+            auto& inv = Framework::Inventory::Instance();
 
-            if (isIPressed && !wasIPressed)
+            if (isIPressed && !wasIPressed && inv.GetBackpackLevel() != 0)
             {
-                auto& inv = Framework::Inventory::Instance();
                 const bool isOpen = inv.IsBackpackOpen();
 
                 // If it's open, ALWAYS allow closing
@@ -3158,13 +3158,7 @@ namespace Framework {
 
         // Do not display inventory boxes while in paused/howtoplay/menu state
         if (viewIndex == 0 &&
-            !engineState.Is(EngineMode::Paused) &&
-            !engineState.Is(EngineMode::HowToPlay) &&
-            !engineState.Is(EngineMode::Cutscene) &&
-            !engineState.Is(EngineMode::Menu) &&
-            !engineState.Is(EngineMode::Settings) &&
-            !engineState.Is(EngineMode::Dialogue) &&
-            !engineState.Is(EngineMode::MapSelection) &&
+            !engineState.IsAnyUIOpen() &&
             !GameSystem::bookOpen)
         {
             DrawHotbar(width, height);

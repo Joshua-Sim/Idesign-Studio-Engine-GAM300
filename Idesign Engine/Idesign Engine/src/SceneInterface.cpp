@@ -105,21 +105,17 @@ namespace Framework
                     if (ecsInterface.EntityHasTag(e, "inventory"))   inventoryHovered = btn.isHovered;
                 }
 
-                // get backpack level
-                // int level = Inventory::Instance().GetBackpackLevel();
-
-                // check if quarry area is unlocked
-                // bool unlocked = UpgradeManager::Instance().IsAreaUnlocked(GameArea::Quarry);
-
-                // check if the gold upgrade level
-                // int goldlevel = GetCurrencyLevel();
-
                 // ------------------------------------------------------------
-                // 2. Affordability checks (do ONCE)
+                // 2. Affordability and Completion checks
                 // ------------------------------------------------------------
                 bool canAffordQuarry = GameSystem::GetCurrency() >= upgradeMgr.GetAreaUnlockCost(GameArea::Quarry);
                 bool canAffordGold = upgradeMgr.CanAffordCurrencyUpgrade();
                 bool canAffordInventory = upgradeMgr.CanAffordInventoryUpgrade();
+
+                // Completion checks
+                bool quarryComplete = upgradeMgr.IsAreaUnlocked(GameArea::Quarry);
+                bool goldComplete = upgradeMgr.IsCurrencyMaxLevel();
+                bool backpackComplete = upgradeMgr.IsBackpackMaxLevel();
 
                 // ------------------------------------------------------------
                 // 3. Apply visibility to ALL upgrade UI entities
@@ -137,39 +133,55 @@ namespace Framework
                     bool shouldShow = false;
 
                     // -------------------------
-                    // QUARRY STAMPS
+                    // COMPLETE STAMPS (highest priority - always show if complete)
                     // -------------------------
-                    if (ecsInterface.EntityHasTag(e, "quarrypass"))
+                    if (ecsInterface.EntityHasTag(e, "quarrycomplete"))
                     {
-                        shouldShow = (quarryHovered && canAffordQuarry);
+                        shouldShow = quarryComplete;
+                    }
+                    else if (ecsInterface.EntityHasTag(e, "goldcomplete"))
+                    {
+                        shouldShow = goldComplete;
+                    }
+                    else if (ecsInterface.EntityHasTag(e, "inventorycomplete"))
+                    {
+                        shouldShow = backpackComplete;
+                    }
+
+                    // -------------------------
+                    // QUARRY STAMPS (only show if NOT complete)
+                    // -------------------------
+                    else if (ecsInterface.EntityHasTag(e, "quarrypass"))
+                    {
+                        shouldShow = (!quarryComplete && quarryHovered && canAffordQuarry);
                     }
                     else if (ecsInterface.EntityHasTag(e, "quarryfail"))
                     {
-                        shouldShow = (quarryHovered && !canAffordQuarry);
+                        shouldShow = (!quarryComplete && quarryHovered && !canAffordQuarry);
                     }
 
                     // -------------------------
-                    // GOLD STAMPS
+                    // GOLD STAMPS (only show if NOT complete)
                     // -------------------------
                     else if (ecsInterface.EntityHasTag(e, "goldpass"))
                     {
-                        shouldShow = (goldHovered && canAffordGold);
+                        shouldShow = (!goldComplete && goldHovered && canAffordGold);
                     }
                     else if (ecsInterface.EntityHasTag(e, "goldfail"))
                     {
-                        shouldShow = (goldHovered && !canAffordGold);
+                        shouldShow = (!goldComplete && goldHovered && !canAffordGold);
                     }
 
                     // -------------------------
-                    // INVENTORY STAMPS
+                    // INVENTORY STAMPS (only show if NOT complete)
                     // -------------------------
                     else if (ecsInterface.EntityHasTag(e, "inventorypass"))
                     {
-                        shouldShow = (inventoryHovered && canAffordInventory);
+                        shouldShow = (!backpackComplete && inventoryHovered && canAffordInventory);
                     }
                     else if (ecsInterface.EntityHasTag(e, "inventoryfail"))
                     {
-                        shouldShow = (inventoryHovered && !canAffordInventory);
+                        shouldShow = (!backpackComplete && inventoryHovered && !canAffordInventory);
                     }
 
                     // ------------------------------------------------------------
@@ -177,10 +189,15 @@ namespace Framework
                     // ------------------------------------------------------------
                     else
                     {
+                        bool isQuarryBase =    ecsInterface.EntityHasTag(e, "quarry");
+                        bool isGoldBase =      ecsInterface.EntityHasTag(e, "gold");
+                        bool isInventoryBase = ecsInterface.EntityHasTag(e, "inventory");
+
+                        // Hide base card if hovered OR if completed
                         bool hideBase =
-                            (ecsInterface.EntityHasTag(e, "quarry") && quarryHovered) ||
-                            (ecsInterface.EntityHasTag(e, "gold") && goldHovered) ||
-                            (ecsInterface.EntityHasTag(e, "inventory") && inventoryHovered);
+                            (isQuarryBase && (quarryHovered || quarryComplete)) ||
+                            (isGoldBase && (goldHovered || goldComplete)) ||
+                            (isInventoryBase && (inventoryHovered || backpackComplete));
 
                         shouldShow = !hideBase;
                     }

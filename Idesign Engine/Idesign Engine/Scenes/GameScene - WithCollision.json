@@ -296,7 +296,7 @@
                     "animationSpeed": 10.0,
                     "bLoops": false,
                     "bPlayOnStart": true,
-                    "currentTime": 20.0
+                    "currentTime": 0.0
                 },
                 "TextureComponent": {
                     "guid": "afd25b76-dddc-4c4f-bae4-a6c9a22931e5",
@@ -3048,7 +3048,7 @@
                     "animationSpeed": 1.0,
                     "bLoops": true,
                     "bPlayOnStart": true,
-                    "currentTime": 207.19912719726563
+                    "currentTime": 0.0
                 },
                 "TextureComponent": {
                     "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
@@ -3976,7 +3976,13 @@
                         "14a5ddc1-e750-45ac-9e7f-7ef6db4d9183",
                         "205e0e68-0ad1-4f2c-8937-dd46a8575d96",
                         "d4f534eb-9577-479e-a834-bb57fe29ff07",
-                        "7a872d80-fd80-41d4-8b9d-de5cf84e68f0"
+                        "7a872d80-fd80-41d4-8b9d-de5cf84e68f0",
+                        "3b349650-055e-4c0d-8229-f6a39d937f26",
+                        "3f5c2329-c2ca-45d9-9b94-904745d69e89",
+                        "bb4930a6-03a5-4c27-abb9-05fcc7549cfd",
+                        "57dc355d-5a3f-45e4-927b-fbc767274fe1",
+                        "aabe8f0c-0688-4dfc-8378-4290c9ba1f1c",
+                        "26ab5891-04cc-4445-8218-4ec8061b7f06"
                     ],
                     "sortIndex": 69
                 },
@@ -3987,7 +3993,7 @@
                 },
                 "TextureComponent": {
                     "guid": "f659c32b-8e38-4a4d-a052-29ee9e326947",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ButtonComponent": {
                     "position": [
@@ -4681,7 +4687,7 @@
                 },
                 "TextureComponent": {
                     "guid": "d3a095a2-cf00-4087-afcd-e20ed3c7e9e9",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -11843,17 +11849,26 @@
                     "guid": "1d5d9271-070e-4372-97d5-7b2252b23928",
                     "isUI": false
                 },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "b8c9be25-1e3f-4d68-a3a7-aad0bf25e985",
+                            "scriptPath": "Assets\\Scripts\\PhaseSwitcher.lua",
+                            "hotReload": false
+                        }
+                    ]
+                },
                 "BoxColliderComponent": {
                     "colliders": [
                         {
                             "size": [
-                                2.7,
-                                2.1,
-                                1.1
+                                2.700000047683716,
+                                2.0999999046325684,
+                                1.100000023841858
                             ],
                             "center": [
                                 0.0,
-                                0.7,
+                                0.699999988079071,
                                 0.0
                             ],
                             "canPassThrough": false,
@@ -11882,15 +11897,6 @@
                     ],
                     "startAwake": true
                 },
-                "ScriptProperties": {
-                    "scripts": [
-                        {
-                            "guid": "b8c9be25-1e3f-4d68-a3a7-aad0bf25e985",
-                            "scriptPath": "Assets\\Scripts\\PhaseSwitcher.lua",
-                            "hotReload": false
-                        }
-                    ]
-                },
                 "EventReceiverComponent": {
                     "receivers": [
                         {
@@ -11907,14 +11913,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        0,
-                        0,
-                        0
+                        0.0,
+                        0.0,
+                        0.0
                     ],
                     "rotation": [
-                        0,
-                        0,
-                        0
+                        0.0,
+                        0.0,
+                        0.0
                     ],
                     "scale": [
                         8.0,
@@ -11929,17 +11935,19 @@
                     "sortIndex": 49
                 },
                 "TagComponent": {
-                    "tags": [
-                       
-                    ]
+                    "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": ""
+                    "guid": ""
                 },
-                "TextureComponent": {
-                    "guid": "",
-                    "isUI": false
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "ebdbf8aa-d944-40e4-8c1d-2a7415165a8d",
+                            "scriptPath": "Assets\\Scripts\\itemSpawner.lua",
+                            "hotReload": false
+                        }
+                    ]
                 },
                 "BoxColliderComponent": {
                     "colliders": []
@@ -11960,17 +11968,8 @@
                         0.0,
                         0.0,
                         0.0
-                    ],  
+                    ],
                     "startAwake": true
-                },
-                "ScriptProperties": {
-                    "scripts": [
-                        {
-                            "guid": "ebdbf8aa-d944-40e4-8c1d-2a7415165a8d",
-                            "scriptPath": "Assets\\Scripts\\itemSpawner.lua",
-                            "hotReload": false
-                        }
-                    ]
                 },
                 "EventReceiverComponent": {
                     "receivers": [
@@ -20862,7 +20861,7 @@
                 },
                 "TextureComponent": {
                     "guid": "5ce96046-f8cf-4178-aa03-3f71bf34eb9f",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -21655,7 +21654,7 @@
                 },
                 "TextureComponent": {
                     "guid": "37f46a7a-1d66-495f-9f35-34a7cec3ccb1",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ButtonComponent": {
                     "position": [
@@ -21709,7 +21708,7 @@
                 },
                 "TextureComponent": {
                     "guid": "519c5cfa-c925-4ee9-aec6-ad35bfe29812",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -21772,7 +21771,7 @@
                 },
                 "TextureComponent": {
                     "guid": "7ab3362c-3412-437e-a341-21c9f0e6e197",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ButtonComponent": {
                     "position": [
@@ -21784,123 +21783,6 @@
                         550.0
                     ],
                     "isHovered": false,
-                    "isFrontButton": false
-                }
-            }
-        },
-        {
-            "name": "Inventory_unavailble",
-            "guid": "14a5ddc1-e750-45ac-9e7f-7ef6db4d9183",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        1440.0,
-                        600.0,
-                        1.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        430.0,
-                        550.0,
-                        1.0
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "8c4170a2-de7f-472d-a43a-931ed1f45b7a",
-                    "children": [],
-                    "sortIndex": 11
-                },
-                "TagComponent": {
-                    "tags": [
-                        "upgrade",
-                        "inventoryfail"
-                    ]
-                },
-                "MeshComponent": {
-                    "guid": ""
-                },
-                "TextureComponent": {
-                    "guid": "23f49aec-96e9-47d2-93e1-d192446c99f2",
-                    "isUI": false
-                },
-                "ButtonComponent": {
-                    "position": [
-                        1440.0,
-                        600.0
-                    ],
-                    "size": [
-                        430.0,
-                        550.0
-                    ],
-                    "isHovered": true,
-                    "isFrontButton": false
-                }
-            }
-        },
-        {
-            "name": "Inventory_availble",
-            "guid": "205e0e68-0ad1-4f2c-8937-dd46a8575d96",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        1440.0,
-                        600.0,
-                        1.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        430.0,
-                        550.0,
-                        1.0
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "8c4170a2-de7f-472d-a43a-931ed1f45b7a",
-                    "children": [],
-                    "sortIndex": 12
-                },
-                "TagComponent": {
-                    "tags": [
-                        "upgrade",
-                        "inventorypass"
-                    ]
-                },
-                "MeshComponent": {
-                    "guid": ""
-                },
-                "TextureComponent": {
-                    "guid": "2761dbfb-8bc7-4073-8065-4689ba0a1aa0",
-                    "isUI": false
-                },
-                "ScriptProperties": {
-                    "scripts": [
-                        {
-                            "guid": "1b87e222-4f27-465d-99e3-cb4e03a24086",
-                            "scriptPath": "Assets\\Scripts\\BackpackUpgrade.lua",
-                            "hotReload": false
-                        }
-                    ]
-                },
-                "ButtonComponent": {
-                    "position": [
-                        1440.0,
-                        600.0
-                    ],
-                    "size": [
-                        430.0,
-                        550.0
-                    ],
-                    "isHovered": true,
                     "isFrontButton": false
                 }
             }
@@ -21992,7 +21874,7 @@
                 },
                 "TextureComponent": {
                     "guid": "fd9b552e-2c89-4b09-8568-f1a3db6d13ea",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ButtonComponent": {
                     "position": [
@@ -22248,7 +22130,7 @@
                 },
                 "TextureComponent": {
                     "guid": "3bb281d9-c6a0-43ed-a663-6f8f8c10943f",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ButtonComponent": {
                     "position": [
@@ -22302,7 +22184,7 @@
                 },
                 "TextureComponent": {
                     "guid": "d94104e7-27db-432d-a259-99e662a62568",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ButtonComponent": {
                     "position": [
@@ -22319,8 +22201,234 @@
             }
         },
         {
+            "name": "Quarry_complete",
+            "guid": "3b349650-055e-4c0d-8229-f6a39d937f26",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        450.0,
+                        635.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        430.0,
+                        480.0,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "8c4170a2-de7f-472d-a43a-931ed1f45b7a",
+                    "children": [],
+                    "sortIndex": 6
+                },
+                "TagComponent": {
+                    "tags": [
+                        "upgrade",
+                        "quarrycomplete"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": ""
+                },
+                "TextureComponent": {
+                    "guid": "69b50841-6cc3-4514-9f61-12e0178384e9",
+                    "isUI": true
+                },
+                "ButtonComponent": {
+                    "position": [
+                        450.0,
+                        635.0
+                    ],
+                    "size": [
+                        430.0,
+                        480.0
+                    ],
+                    "isHovered": false,
+                    "isFrontButton": false
+                }
+            }
+        },
+        {
+            "name": "Gold_complete",
+            "guid": "3f5c2329-c2ca-45d9-9b94-904745d69e89",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        956.0,
+                        635.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        430.0,
+                        480.0,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "8c4170a2-de7f-472d-a43a-931ed1f45b7a",
+                    "children": [],
+                    "sortIndex": 8
+                },
+                "TagComponent": {
+                    "tags": [
+                        "upgrade",
+                        "goldcomplete"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "d60dfbb7-9841-4987-b126-46b53ffb03a5",
+                    "isUI": true
+                },
+                "ButtonComponent": {
+                    "position": [
+                        956.0,
+                        635.0
+                    ],
+                    "size": [
+                        430.0,
+                        480.0
+                    ],
+                    "isHovered": false,
+                    "isFrontButton": false
+                }
+            }
+        },
+        {
+            "name": "Inventory_unavailble",
+            "guid": "bb4930a6-03a5-4c27-abb9-05fcc7549cfd",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        1440.0,
+                        600.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        430.0,
+                        550.0,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "8c4170a2-de7f-472d-a43a-931ed1f45b7a",
+                    "children": [],
+                    "sortIndex": 12
+                },
+                "TagComponent": {
+                    "tags": [
+                        "upgrade",
+                        "inventoryfail"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": ""
+                },
+                "TextureComponent": {
+                    "guid": "23f49aec-96e9-47d2-93e1-d192446c99f2",
+                    "isUI": true
+                },
+                "ButtonComponent": {
+                    "position": [
+                        1440.0,
+                        600.0
+                    ],
+                    "size": [
+                        430.0,
+                        550.0
+                    ],
+                    "isHovered": false,
+                    "isFrontButton": false
+                }
+            }
+        },
+        {
+            "name": "Inventory_availble",
+            "guid": "57dc355d-5a3f-45e4-927b-fbc767274fe1",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        1440.0,
+                        600.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        430.0,
+                        550.0,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "8c4170a2-de7f-472d-a43a-931ed1f45b7a",
+                    "children": [],
+                    "sortIndex": 12
+                },
+                "TagComponent": {
+                    "tags": [
+                        "upgrade",
+                        "inventorypass"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": ""
+                },
+                "TextureComponent": {
+                    "guid": "2761dbfb-8bc7-4073-8065-4689ba0a1aa0",
+                    "isUI": true
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "1b87e222-4f27-465d-99e3-cb4e03a24086",
+                            "scriptPath": "Assets\\Scripts\\BackpackUpgrade.lua",
+                            "hotReload": true
+                        }
+                    ]
+                },
+                "ButtonComponent": {
+                    "position": [
+                        1440.0,
+                        600.0
+                    ],
+                    "size": [
+                        430.0,
+                        550.0
+                    ],
+                    "isHovered": false,
+                    "isFrontButton": false
+                }
+            }
+        },
+        {
             "name": "Inventory_unhovered",
-            "guid": "7a872d80-fd80-41d4-8b9d-de5cf84e68f0",
+            "guid": "aabe8f0c-0688-4dfc-8378-4290c9ba1f1c",
             "components": {
                 "TransformComponent": {
                     "position": [
@@ -22356,121 +22464,11 @@
                 },
                 "TextureComponent": {
                     "guid": "c62ac124-be74-451d-835f-6e76f3d61508",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ButtonComponent": {
                     "position": [
                         1440.0,
-                        600.0
-                    ],
-                    "size": [
-                        430.0,
-                        550.0
-                    ],
-                    "isHovered": true,
-                    "isFrontButton": false
-                }
-            }
-        },
-        {
-            "name": "Quarry_complete",
-            "guid": "c57966cb-ab3f-4aed-b5ca-193bde7013f4",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        450.0,
-                        600.0,
-                        1.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        430.0,
-                        550.0,
-                        1.0
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "8c4170a2-de7f-472d-a43a-931ed1f45b7a",
-                    "children": [],
-                    "sortIndex": 7
-                },
-                "TagComponent": {
-                    "tags": [
-                        "upgrade",
-                        "quarrycomplete"
-                    ]
-                },
-                "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "69b50841-6cc3-4514-9f61-12e0178384e9",
-                    "isUI": false
-                },
-                "ButtonComponent": {
-                    "position": [
-                        450.0,
-                        600.0
-                    ],
-                    "size": [
-                        430.0,
-                        550.0
-                    ],
-                    "isHovered": false,
-                    "isFrontButton": false
-                }
-            }
-        },
-        {
-            "name": "Gold_complete",
-            "guid": "a4341ad6-1ae7-43cb-a36c-0eeab4029de4",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        956.0,
-                        600.0,
-                        1.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        430.0,
-                        550.0,
-                        1.0
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "8c4170a2-de7f-472d-a43a-931ed1f45b7a",
-                    "children": [],
-                    "sortIndex": 12
-                },
-                "TagComponent": {
-                    "tags": [
-                        "upgrade",
-                        "goldcomplete"
-                    ]
-                },
-                "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "d60dfbb7-9841-4987-b126-46b53ffb03a5",
-                    "isUI": false
-                },
-                "ButtonComponent": {
-                    "position": [
-                        956.0,
                         600.0
                     ],
                     "size": [
@@ -22484,12 +22482,12 @@
         },
         {
             "name": "Inventory_complete",
-            "guid": "10119377-9914-4a23-ab8e-b374754bfefb",
+            "guid": "26ab5891-04cc-4445-8218-4ec8061b7f06",
             "components": {
                 "TransformComponent": {
                     "position": [
                         1440.0,
-                        600.0,
+                        635.0,
                         1.0
                     ],
                     "rotation": [
@@ -22499,7 +22497,7 @@
                     ],
                     "scale": [
                         430.0,
-                        550.0,
+                        480.0,
                         1.0
                     ],
                     "isActive": true
@@ -22507,7 +22505,7 @@
                 "HierarchyComponent": {
                     "parent": "8c4170a2-de7f-472d-a43a-931ed1f45b7a",
                     "children": [],
-                    "sortIndex": 15
+                    "sortIndex": 12
                 },
                 "TagComponent": {
                     "tags": [
@@ -22516,21 +22514,20 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "788c47ef-bbfb-4839-a29a-026601cf53c6",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ButtonComponent": {
                     "position": [
                         1440.0,
-                        600.0
+                        635.0
                     ],
                     "size": [
                         430.0,
-                        550.0
+                        480.0
                     ],
                     "isHovered": false,
                     "isFrontButton": false

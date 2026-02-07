@@ -222,7 +222,7 @@ int main(void)
     std::filesystem::current_path(initialCWD);
     std::cout << "Restored working directory: " << std::filesystem::current_path() << std::endl;
 
-    AssetManager::Instance().SaveAllAssets();
+    //AssetManager::Instance().SaveAllAssets();
 
     // Clear all systems and other dynamically allocated resources
     engine->DestroySystems();
