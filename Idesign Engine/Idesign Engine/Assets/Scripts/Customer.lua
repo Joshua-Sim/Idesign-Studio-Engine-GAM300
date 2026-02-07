@@ -153,30 +153,23 @@ end
 -- =========================================================
 
 function Customer.GenerateRequest()
-    -- Check if using fixed queue mode
     local fixedQueue = GetData("fixedQueue")
     
     if fixedQueue > 0 then
-        local requestedItem
+        -- Demo mode
+        local items = {"warmth_potion", "vitality_potion", "strength_potion"}
+        local item = items[fixedQueue] or "strength_potion"
+        SetData("fixedQueue", fixedQueue - 1)
+        return item
+    else
+        -- Dynamic mode: only craftable potions
+        local requestedItem = GetRandomCraftablePotion()
         
-        if fixedQueue == 3 then
-            requestedItem = "strength_potion"      -- 3rd customer
-        elseif fixedQueue == 2 then
-            requestedItem = "vitality_potion"    -- Second customer
-        elseif fixedQueue == 1 then
-            requestedItem = "warmth_potion"    -- First customer 
-        else
-            requestedItem = available_items[math.random(1, #available_items)]
+        if not requestedItem then
+            print("[Customer] WARNING: No craftable potions!")
+            requestedItem = "strength_potion" -- fallback
         end
         
-        SetData("fixedQueue", fixedQueue - 1)
-        return requestedItem
-    else
-        -- RANDOM MODE (when fixedQueue is 0 or doesn't exist)
-        local randomIndex = math.random(1, #available_items)
-        local requestedItem = available_items[randomIndex]
-        
-        print("[Customer] RANDOM MODE: Generated request: " .. requestedItem)
         return requestedItem
     end
 end

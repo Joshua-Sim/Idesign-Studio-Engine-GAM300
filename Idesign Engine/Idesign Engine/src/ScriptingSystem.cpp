@@ -25,6 +25,7 @@
 #include "InputHandler.h"
 #include "SceneInterface.h"
 #include "DialogueSystem.h"
+#include "Inventory.h"
 #include "PhaseManager.h"
 #include <Core.h>
 #include "Upgrade.h"
@@ -1629,6 +1630,36 @@ namespace Framework {
             return 1;
         }
 
+
+
+        //Potion registry recipe check
+        static int lua_GetCraftablePotions(lua_State* L)
+        {
+            auto craftable = Framework::GetCraftablePotionNames();
+
+            lua_newtable(L);
+            for (size_t i = 0; i < craftable.size(); ++i) {
+                lua_pushstring(L, craftable[i].c_str());
+                lua_rawseti(L, -2, static_cast<int>(i + 1)); // Lua arrays start at 1
+            }
+
+            return 1; // Return the table
+        }
+
+        static int lua_GetRandomCraftablePotion(lua_State* L)
+        {
+            auto craftable = Framework::GetCraftablePotionNames();
+
+            if (craftable.empty()) {
+                lua_pushnil(L);
+                return 1;
+            }
+
+            // Pick random
+            int idx = rand() % craftable.size();
+            lua_pushstring(L, craftable[idx].c_str());
+            return 1; // Return the potion name string
+        }
   
 
         static int lua_GetEntityName(lua_State* L)
@@ -2216,6 +2247,11 @@ namespace Framework {
             return 0;
         });
 
+        // Craftable potion queries
+        lua_register(L, "GetCraftablePotions", lua_GetCraftablePotions);
+        lua_register(L, "GetRandomCraftablePotion", lua_GetRandomCraftablePotion);
+
+
         // Teleport player function
         lua_register(L, "TeleportPlayer", [](lua_State* L) -> int {
             float x = (float)lua_tonumber(L, 1);
@@ -2233,6 +2269,13 @@ namespace Framework {
             }
 
             return 0;
+            });
+
+        // Check if ANY potions are craftable (returns true/false)
+        lua_register(L, "HasCraftablePotions", [](lua_State* L) -> int {
+            auto craftable = Framework::GetCraftablePotionNames();
+            lua_pushboolean(L, !craftable.empty());
+            return 1;
             });
 
         // Start day phase

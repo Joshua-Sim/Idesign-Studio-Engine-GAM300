@@ -4,6 +4,7 @@
 #include <string>
 #include <glm.hpp>
 #include <FontSystem.h>
+#include "ItemComponent.h"
 
 namespace Framework {
 
@@ -83,6 +84,7 @@ namespace Framework {
         bool TryAddItem_BackpackFirst(int itemId, GLuint iconTex, int count);
         bool IsInventoryFull() const;
 
+
     private:
         Inventory() = default;
 
@@ -98,5 +100,12 @@ namespace Framework {
         SlotRef mDragFrom{};
 
     };
+
+
+    //recipe crafting checks
+    static bool CanCraftRecipe(const PotionRecipe& recipe);
+
+    // 2. Get all craftable potion names
+    std::vector<std::string> GetCraftablePotionNames();
 
 } // namespace Framework

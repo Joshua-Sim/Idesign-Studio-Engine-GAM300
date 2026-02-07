@@ -27,6 +27,14 @@ CustomerSystem.prefab_fill  = "ProgressBarFill_Prefab"
 CustomerSystem.tex_green = "Assets/Textures/green.png" 
 CustomerSystem.tex_red   = "Assets/Textures/red.png"
 
+-- [INGREDIENT CHECK TIMER]
+local ingredient_check_timer = 0.0
+local ingredient_check_delay = 2.0      -- Wait 2 seconds after spawn
+local end_phase_timer = 0.0
+local end_phase_delay = 2.0             -- Wait 2 seconds before upgrade
+local waiting_to_end = false            -- Flag: waiting to end phase
+local has_checked_ingredients = false   -- Flag: already checked once
+
 -- Log prefab
 local prefab_log = "CustomerLog_Prefab"
 
@@ -131,11 +139,10 @@ function CustomerSystem:on_init()
         self:OnCustomerComplete()
     end
 end
-
 function CustomerSystem:on_update(dt)
-local queue_count = #waiting_queue
-local has_active = (activeCustomer ~= nil)
-local has_waiting = (queue_count > 0)
+    local queue_count = #waiting_queue
+    local has_active = (activeCustomer ~= nil)
+    
     -- Update score text visibility based on engine state
     if score_text_entity then
         if IsEngineState("Play") or IsEngineState("Upgrade") or IsEngineState("Editor") then
@@ -157,35 +164,79 @@ local has_waiting = (queue_count > 0)
     
     if currentPhase ~= PHASE_NIGHT then return end
     
-    -- Check if we are totally done
+    -- === DELAYED END PHASE LOGIC ===
+    if waiting_to_end then
+        end_phase_timer = end_phase_timer + dt
+        if end_phase_timer >= end_phase_delay then
+            print("[CustomerSystem] Timer complete. Ending night phase now.")
+            self:EndNightPhase()
+            return
+        end
+        -- Still waiting, don't do anything else
+        return
+    end
+    
+    -- === INGREDIENT CHECK (2 seconds after active customer exists) ===
     local total_alive_count = #waiting_queue
     if activeCustomer then total_alive_count = total_alive_count + 1 end
     
+    if activeCustomer and not has_checked_ingredients then
+        ingredient_check_timer = ingredient_check_timer + dt
+        
+        if ingredient_check_timer >= ingredient_check_delay then
+            -- Time to check ingredients
+            if not HasCraftablePotions() then
+                print("[CustomerSystem] No craftable potions detected!")
+                self:SpawnLog("No potions available! Starting upgrade phase...")
+                Sound.Play("event:/wrongSound")  -- Optional: play warning sound
+                
+                -- Start end phase countdown
+                waiting_to_end = true
+                end_phase_timer = 0.0
+                has_checked_ingredients = true
+                return
+            else
+                -- Potions ARE craftable, mark as checked and continue normally
+                has_checked_ingredients = true
+                print("[CustomerSystem] Ingredient check passed. Continuing night phase.")
+            end
+        end
+    end
+    
+    -- === NORMAL END CHECK: Max customers reached ===
     if customers_served >= MAX_CUSTOMERS and total_alive_count == 0 then
         print("[CustomerSystem] Max customers reached. Ending Night Phase.")
         self:EndNightPhase()
         return
     end
     
--- 1. SPAWN LOGIC (STRICT SINGLE CUSTOMER)
-    local total_alive_count = #waiting_queue
-    if activeCustomer then total_alive_count = total_alive_count + 1 end
-
-    -- Only allow spawning if:
-    -- 1. We haven't served the nightly max yet.
-    -- 2. There is absolutely NO ONE currently in the scene.
-    if customers_served < MAX_CUSTOMERS and total_alive_count == 0 then
-        spawnTimer = spawnTimer + dt
-        if spawnTimer >= self.spawn_delay then
-            print("[CustomerSystem] Scene empty. Spawning next customer...")
-            self:spawn_customer()
-            spawnTimer = 0
+   -- === SPAWN LOGIC (with pre-spawn ingredient check) ===
+if customers_served < MAX_CUSTOMERS and total_alive_count == 0 then
+    spawnTimer = spawnTimer + dt
+    if spawnTimer >= self.spawn_delay then
+        -- [PRE-SPAWN CHECK] Don't spawn if no potions available
+        if not HasCraftablePotions() then
+            print("[CustomerSystem] Cannot spawn - no craftable potions!")
+            self:SpawnLog("No potions available! Starting upgrade phase...")
+            Sound.Play("event:/wrongSound")
+            
+            -- Start end phase countdown
+            waiting_to_end = true
+            end_phase_timer = 0.0
+            return
         end
-    else
-        -- If someone is in the world, keep the timer at 0 so it 
-        -- starts fresh the moment they leave.
-        spawnTimer = 0 
+        
+        print("[CustomerSystem] Scene empty. Spawning next customer...")
+        self:spawn_customer()
+        spawnTimer = 0
+        
+        -- Reset ingredient check for new customer
+        ingredient_check_timer = 0.0
+        has_checked_ingredients = false
     end
+else
+    spawnTimer = 0 
+end
 
     -- 2. CUSTOMER ACTIVE LOGIC
     if activeCustomer then
@@ -408,7 +459,7 @@ function CustomerSystem:ResetNightPhase()
     print("[CustomerSystem] Resetting night phase state...")
     self:ClearAllLogs() -- Clear logs
     customers_served = 0
-    SetData("fixedQueue", 3)
+    SetData("fixedQueue", 0)
     
     -- Clean up active
     if activeCustomer then 
@@ -428,6 +479,13 @@ function CustomerSystem:ResetNightPhase()
     current_patience = 0.0
     spawnTimer = 0
     current_bar_state = "green"
+    
+    -- [NEW] Reset ingredient check timers
+    ingredient_check_timer = 0.0
+    end_phase_timer = 0.0
+    waiting_to_end = false
+    has_checked_ingredients = false
+    
     CustomerSystem:UpdateCurrencyDisplay()
 end
 
