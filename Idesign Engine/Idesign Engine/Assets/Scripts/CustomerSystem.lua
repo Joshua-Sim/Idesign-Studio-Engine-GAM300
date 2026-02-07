@@ -345,6 +345,8 @@ function CustomerSystem:spawn_customer()
     local customer = SpawnPrefab(modelData.prefab, spawnPoint)
     
     if customer == nil then return end
+
+    SetData("Type_" .. customer, next_model_index)
     
     local customerData = {
         entity = customer,

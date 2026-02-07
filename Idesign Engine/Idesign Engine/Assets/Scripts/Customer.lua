@@ -124,14 +124,31 @@ function Customer.OnInteract(senderID, targetID, actionType)
         
         -- Fire completion event to CustomerSystem
         FireEvent("CustomerComplete", customer_entity, senderID, 1)
-        Sound.Play("event:/CorrectSound")
+
+        local myType = GetData("Type_" .. targetID)
+
+         if myType == 1 then
+            Sound.Play("event:/FishCorrect")       -- Sound for Customer 1
+            Sound.Play("event:/EarnGold") 
+        else
+            Sound.Play("event:/OrcCorrect2") -- Sound for Customer 2
+            Sound.Play("event:/EarnGold") 
+        end
+
+
+
         print("[Customer] Thank you! Leaving now...")
         DestroyEntity(customer_entity)
     else
         -- WRONG ITEM LOGIC
         wrong_item_count = wrong_item_count + 1
         print("[Customer] Wrong item! Count: " .. wrong_item_count .. "/" .. MAX_WRONG_ATTEMPTS)
-        Sound.Play("event:/wrongSound")
+        if myType == 1 then
+            Sound.Play("event:/FishWrong")       -- Sound for Customer 1
+        else
+            Sound.Play("event:/OrcWrong2") -- Sound for Customer 2
+        end
+
         if wrong_item_count >= MAX_WRONG_ATTEMPTS then
             -- Too many wrong items - customer leaves angry
             print("[Customer] That's it! I've had enough! Leaving...")
