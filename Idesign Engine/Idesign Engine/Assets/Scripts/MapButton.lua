@@ -8,7 +8,7 @@ local M = {}
 local locations = {
     ["Forest Button"] = {
         spawnPos = { x = -282.0, y = 315.0,  z = 619.0 },
-        spawnRot = { x = 0.0,    y = 90.0,  z = 0.0 }
+        spawnRot = { x = 90.0,    y = 0.0,  z = 0.0 }
     },
     ["Quarry Button"] = {
         spawnPos = { x = -170.856,  y = 7.730,  z = -170.782 },
