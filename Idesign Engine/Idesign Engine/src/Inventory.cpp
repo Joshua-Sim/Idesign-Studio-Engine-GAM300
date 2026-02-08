@@ -30,13 +30,13 @@ namespace Framework {
 
     void Inventory::SetHotbarSlot(int idx, int itemId, GLuint iconTex, int count)
     {
-        if (idx < 0 || idx >= kHotbarSlots) return;
+        if (idx < 0 || idx >= GetHotbarSlotCount()) return;
         m_hotbar[idx] = { itemId, iconTex, count };
     }
 
     void Inventory::ClearHotbarSlot(int idx)
     {
-        if (idx < 0 || idx >= kHotbarSlots) return;
+        if (idx < 0 || idx >= GetHotbarSlotCount()) return;
         m_hotbar[idx] = { -1, 0, 0 };
     }
 
@@ -90,11 +90,11 @@ namespace Framework {
 
     int Inventory::GetHotbarSlotCount() const
     {
-        // base 4, +2 per level
-        int slots = 5 + (mHotbarLevel * 2);
+        // base 5, +2 per level
+        int slots = kHotbarSlots + (mHotbarLevel * 2);
 
-        if (slots < 4) slots = 4;
-        if (slots > kHotbarSlots) slots = kHotbarSlots;
+        if (slots < kHotbarSlots) slots = kHotbarSlots;
+        if (slots > MaxHotbarSlots) slots = MaxHotbarSlots;
         return slots;
     }
 

@@ -23,7 +23,8 @@ namespace Framework {
     };
 
     // Keep hotbar size in one place
-    constexpr int kHotbarSlots = 10;
+    constexpr int MaxHotbarSlots = 10;
+    constexpr int kHotbarSlots = 5;
 
     // One slot = a single non-stackable item (count can be kept for future proofing)
     struct InvSlot {
@@ -36,7 +37,10 @@ namespace Framework {
     public:
         static Inventory& Instance();
 
-        const InvSlot& Get(int idx) const { return m_hotbar[idx]; }
+        const InvSlot& Get(int idx) const {
+            static InvSlot empty{ -1, 0, 0 };
+            if (idx < 0 || idx >= MaxHotbarSlots) return empty; 
+            return m_hotbar[idx]; }
         InvSlot& Get(int idx) { return m_hotbar[idx]; }
 
         // Core API
@@ -88,7 +92,7 @@ namespace Framework {
     private:
         Inventory() = default;
 
-        std::array<InvSlot, kHotbarSlots>       m_hotbar{};
+        std::array<InvSlot, MaxHotbarSlots>     m_hotbar{};
         std::array<InvSlot, kBackpackMaxSlots>  mBackpack{};
 
         int  m_selectedIndex = 0;
