@@ -112,6 +112,8 @@ function Customer.OnInteract(senderID, targetID, actionType)
     local itemName = GetItemNameById(heldItemId)
     print("[Customer] Player gave me: " .. itemName)
     print("[Customer] I want: " .. my_requested_item)
+
+    local myType = GetData("Type_" .. targetID)
     
     -- Check if it matches the order
     if itemName == my_requested_item then
@@ -125,7 +127,7 @@ function Customer.OnInteract(senderID, targetID, actionType)
         -- Fire completion event to CustomerSystem
         FireEvent("CustomerComplete", customer_entity, senderID, 1)
 
-        local myType = GetData("Type_" .. targetID)
+  
 
          if myType == 1 then
             Sound.Play("event:/FishCorrect")       -- Sound for Customer 1
