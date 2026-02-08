@@ -120,6 +120,12 @@ namespace Framework {
             
         }
         else if (m_currentPhase == GamePhase::Night) {
+            auto graphicsSystem = ecsInterface.GetSystem<Graphics>();
+            if (graphicsSystem) {
+                Skybox* skybox = graphicsSystem->getSkybox();
+                if (skybox) skybox->setBlendFactor(1.0f);
+                glm::vec3 playerRot = ecsInterface.GetComponent<TransformComponent>(ecsInterface.GetEntityByName("Player")).rotation;
+            }
             targetPos = m_nightSpawnPos;
             targetRot = m_nightSpawnRot;
             TeleportPlayer(m_nightSpawnPos, m_nightSpawnRot);
