@@ -32,6 +32,7 @@ public:
     unsigned int GetVertexCount() const;
 
     GLuint getVBO() const { return vbo; }
+    GLuint getVAO() const { return vao; }
     int getVertexCount() const { return vertexCount; }
 
 private:
