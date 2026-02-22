@@ -69,6 +69,11 @@ namespace Framework {
         // This runs every frame when dialogue is active
         if (!isActive) return;
 
+        // --- Cutscene camera fly ---
+        if (isCutscene && isMidFlight) {   // <-- was !isMidFlight, that was the bug
+            flyToTarget(actualDeltaTime);
+        }
+       
         // Typewriter effect
         if (!fullyDisplayed) {
             textDisplayTimer += actualDeltaTime;  // Use calculated deltaTime
@@ -111,6 +116,53 @@ namespace Framework {
             }
         }
     }
+
+    void DialogueSystem::SetCameraTargetByTag(std::string targetTag) {
+        Entity target = ecsInterface.GetEntitiesByTag(targetTag)[0]; // I assume we always find that one specifically tagged
+        auto& transform = ecsInterface.GetComponent<TransformComponent>(target);
+        LookAtTargetPosition = transform.position;
+   }
+
+    void DialogueSystem::flyToTarget(float deltaTime) {
+        Camera* cam = Graphics::GetInstance()->GetCameraByIndex(0);
+
+        std::cout << "HERE + " << LookAtTargetPosition.x << std::endl;
+        if (!cam) return;
+
+        // Where we want the camera to end up
+        glm::vec3 destPos = LookAtTargetPosition + flyOffset;
+
+        // --- Lerp Position ---
+        cam->position = glm::mix(cam->position, destPos, deltaTime * flySpeed);
+
+        // --- Compute target yaw/pitch to look at the entity ---
+        glm::vec3 dir = glm::normalize(LookAtTargetPosition - cam->position);
+
+        float targetYaw = glm::degrees(atan2f(dir.z, dir.x));
+        float targetPitch = glm::degrees(asinf(glm::clamp(dir.y, -1.0f, 1.0f)));
+
+        // --- Lerp Rotation ---
+        cam->yaw = glm::mix(cam->yaw, targetYaw, deltaTime * flySpeed);
+        cam->pitch = glm::mix(cam->pitch, targetPitch, deltaTime * flySpeed);
+
+        cam->updateVectors();
+
+        // --- Arrival check ---
+        float dist = glm::length(cam->position - destPos);
+        if (dist < arrivalThreshold) {
+            cam->position = destPos;
+            cam->yaw = targetYaw;
+            cam->pitch = targetPitch;
+            cam->updateVectors();
+            isMidFlight = false;
+
+            // Only pop if dialogue isn't about to take over
+            if (!isActive && dialogueQueue.empty()) {
+                engineState.PopState();
+            }
+        }
+    }
+
 
     std::string DialogueSystem::GetName() {
         return "DialogueSystem";

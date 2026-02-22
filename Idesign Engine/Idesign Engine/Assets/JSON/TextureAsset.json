@@ -1541,6 +1541,12 @@
             "name": "MAIN MENU HOVER BUTTON",
             "path": "Assets\\Textures\\MAIN MENU HOVER BUTTON.png",
             "isUI": false
+        },
+        {
+            "guid": "c3fd64dd-725e-45f5-8f09-0308abc96ebb",
+            "name": "BlackOpacityBack",
+            "path": "Assets\\Textures\\BlackOpacityBack.png",
+            "isUI": false
         }
     ]
 }

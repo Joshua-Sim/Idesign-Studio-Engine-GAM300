@@ -1,36 +1,50 @@
 --- dialogue_test_manual.lua
---- Press F8 to trigger dialogue
+--- Press F8 to trigger cutscene + dialogue test
 
 local DialogueTest = {}
 
 DialogueTest.hasTriggered = false
+DialogueTest.waitingForLanding = false
 
 function DialogueTest:on_init()
-    print("[DialogueTest] Press F8 to start dialogue test")
+    print("[DialogueTest] Press F8 to start cutscene dialogue test")
 end
 
 function DialogueTest:on_update(dt)
-    -- Check if F8 key is pressed (GLFW_KEY_F8 = 297)
+    -- Trigger on F8
     if IsKeyDown(297) and not self.hasTriggered then
-        self:StartTestDialogue()
+        self:StartCutscene()
         self.hasTriggered = true
     end
-    
-    -- Reset trigger when key is released (for multiple tests)
+
     if not IsKeyDown(297) then
         self.hasTriggered = false
     end
+
+    -- Poll for camera arrival, then fire dialogue
+    if self.waitingForLanding and not CutsceneIsFlying() then
+        self.waitingForLanding = false
+        self:StartDialogueAfterFly()
+    end
 end
 
-function DialogueTest:StartTestDialogue()
-    print("[DialogueTest] F8 pressed - Starting dialogue...")
-    
+function DialogueTest:StartCutscene()
+    print("[DialogueTest] Starting cutscene fly...")
+
+    CutsceneSetTarget("exampletarget")
+    CutsceneSetOffset(0, 0, 6)
+    CutsceneSetSpeed(2.5)
+    CutsceneStart()
+
+    self.waitingForLanding = true
+end
+
+function DialogueTest:StartDialogueAfterFly()
+    print("[DialogueTest] Camera landed - starting dialogue...")
+
     DialogueClear()
-    
-    DialogueAdd("Hello! Press SPACE to continue.", "NPC", "")
-    DialogueAdd("This is a test of the dialogue system.", "NPC", "")
-    DialogueAdd("Goodbye!", "NPC", "")
-    
+    DialogueAdd("Collect ingredients from all over the area!", "Aunt Mira", "")
+    DialogueAdd("You have but few time, hurry now child!", "Aunt Mira", "")
     DialogueStart()
 end
 

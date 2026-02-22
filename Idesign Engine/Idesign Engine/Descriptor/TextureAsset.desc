@@ -1,5 +1,5 @@
 {
-    "count": 257,
+    "count": 258,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -1541,6 +1541,12 @@
             "guid": "44dd9ce1-94f7-4b94-9fda-b06bde4f0e1e",
             "name": "MAIN MENU HOVER BUTTON",
             "path": "Assets\\Textures\\MAIN MENU HOVER BUTTON.png",
+            "isUI": false
+        },
+        {
+            "guid": "c3fd64dd-725e-45f5-8f09-0308abc96ebb",
+            "name": "BlackOpacityBack",
+            "path": "Assets\\Textures\\BlackOpacityBack.png",
             "isUI": false
         }
     ]
