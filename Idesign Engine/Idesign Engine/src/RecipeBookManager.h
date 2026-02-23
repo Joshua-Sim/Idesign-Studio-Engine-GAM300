@@ -24,6 +24,15 @@ namespace Framework {
         // --- STATE ---
         int m_selectedItemID = -1;
 
+
+        float bookZ = 0.4f;
+        float bookmarkZ = 0.5f;
+        float bookmarkIconZ = 0.6f;
+        float bookflapZ = 0.9f;
+
+        float bookCenterX = 960.0f;
+        float bookCenterY = 540.0f;
+
         // --- LAYOUT CONSTANTS ---
         const float GRID_START_X = 510.0f;  // Top-left of the Left Page
         const float GRID_START_Y = 675.0f;
@@ -31,7 +40,25 @@ namespace Framework {
         const float PADDING = 20.0f;
         const int   GRID_COLUMNS = 3;
 
+        // --- TAB STATE ---
+        enum class BookTab { INGREDIENTS, POTIONS, ITEMS };
+        BookTab m_currentTab = BookTab::INGREDIENTS;
+
+        // --- SIDE TAB CONSTANTS ---
+        const float SIDE_TAB_HIDDEN_X = 380.0f;   // Tucked under the flap
+        const float SIDE_TAB_EXTENDED_X = 342.0f; // Slid out
+        const float SIDE_TAB_START_Y = 700.0f;
+        const float SIDE_TAB_SPACING = 150.0f;
+        const float SIDE_TAB_WIDTH = 100.0f;
+        const float SIDE_TAB_HEIGHT = 120.0f;
+        const float SIDE_UV_MIN_X = 310.0f / 1920.0f; // EXTENDED_X left edge approx
+        const float SIDE_UV_MAX_X = 430.0f / 1920.0f; // HIDDEN_X right edge approx
+        float m_tabVisualX[3] = { 380.0f, 380.0f, 380.0f }; // Start at HIDDEN_X
+
+
+
         int m_hoveredItemID = -1;       // ID of item currently under mouse
+        int m_hoveredSideTab = -1;
         Entity m_tooltipEntity = -1;    // ID of the text entity (so we can delete it)
         bool m_tooltipActive = false;   // Is the text currently showing?
 
@@ -68,12 +95,37 @@ namespace Framework {
         void OnMouseClick(float mouseUV_X, float mouseUV_Y) {
             if (!bookSpawned) return;
 
+            float mouseX = mouseUV_X * 1920.0f;
+            float mouseY = mouseUV_Y * 1080.0f;
+
+            // 1. SIDEBAR TAB DETECTION (Replacing floating middle tabs)
+            // We check a vertical strip on the left where the bookmarks live
+            float sideClickMinX = SIDE_TAB_EXTENDED_X - (SIDE_TAB_WIDTH / 2.0f);
+            float sideClickMaxX = SIDE_TAB_HIDDEN_X + (SIDE_TAB_WIDTH / 2.0f);
+
+            for (int i = 0; i < 3; ++i) {
+                float tabY = SIDE_TAB_START_Y - (i * SIDE_TAB_SPACING);
+
+                bool hitX = mouseX >= sideClickMinX && mouseX <= sideClickMaxX;
+                bool hitY = mouseY >= (tabY - (SIDE_TAB_HEIGHT / 2.0f)) && mouseY <= (tabY + (SIDE_TAB_HEIGHT / 2.0f));
+
+                if (hitX && hitY) {
+                    BookTab clickedTab = static_cast<BookTab>(i);
+                    if (m_currentTab != clickedTab) {
+                        m_currentTab = clickedTab;
+                        m_selectedItemID = -1; // Clear right page on tab switch
+                        g_AudioSystem->PlayAudio("event:/PageTurn"); // Or "event:/PageTurn"
+                        RefreshBook();
+                    }
+                    return; // Exit early: we clicked a sidebar tab
+                }
+            }
+
+            // 2. ITEM GRID DETECTION
             float itemX, itemY;
-            // Use the shared helper function
             int itemID = GetItemAtPosition(mouseUV_X, mouseUV_Y, itemX, itemY);
 
             if (itemID != -1) {
-                std::cout << "CLICKED ITEM: " << itemID << std::endl;
                 ItemClickedEvent data;
                 data.itemID = itemID;
                 EventManager::Instance().Fire("ItemClicked", &data);
@@ -82,18 +134,22 @@ namespace Framework {
 
         // --- MAIN RENDER FUNCTION ---
         void BuildBookUI() {
-            if (!bookSpawned) g_AudioSystem->PlayAudio("event:/PaperUp");
 
             float bookCenterX = 960.0f;
             float bookCenterY = 540.0f;
 
-            // 1. Spawn Main Book Background
-            SpawnBook(bookCenterX, bookCenterY, 1300.0f, 900.0f);
+            // 1. BACK layer: The back cover/shadow
+            SpawnBook(bookCenterX, bookCenterY, 1300.0f, 866.0f, bookZ);
 
-            // 2. Build Left Page (The Grid)
-            BuildLeftPage();
+            // 2. MIDDLE layer: The Side Bookmarks
+            BuildSideTabs(); // Z = 0.1 and 0.2
 
-            // 3. Build Right Page (The Context)
+            // 3. FRONT layer: The Book "Flap" (The page edge that covers the bookmarks)
+            // Assuming you have a texture named "Book_FrontFlap"
+            SpawnGenericSprite(bookCenterX, bookCenterY, "bookflap", 1300.0f, 866.0f, bookflapZ);
+
+            // 4. CONTENT layer: Grid and Text
+            BuildLeftPage(); // Ensure these spawn at Z = 0.4 or higher
             if (m_selectedItemID != -1) {
                 BuildRightPage(m_selectedItemID);
             }
@@ -106,7 +162,7 @@ namespace Framework {
             for (Entity e : uiEntities) {
                 coordinator->DestroyEntity(e);
             }
-            g_AudioSystem->PlayAudio("event:/PaperDown");
+            
             uiEntities.clear();
         }
 
@@ -119,25 +175,65 @@ namespace Framework {
         void OnMouseMove(float mouseUV_X, float mouseUV_Y) {
             if (!bookSpawned) return;
 
+            // 1. SIDEBAR HOVER DETECTION (UV SPACE)
+            int foundSideTab = -1;
+
+            // Check if X is within the sidebar "strip" on the left
+            if (mouseUV_X >= SIDE_UV_MIN_X && mouseUV_X <= SIDE_UV_MAX_X) {
+                for (int i = 0; i < 3; ++i) {
+                    // Calculate UV Y center of the tab
+                    float tabY_UV = (SIDE_TAB_START_Y - (i * SIDE_TAB_SPACING)) / 1080.0f;
+                    float halfHeight_UV = (SIDE_TAB_HEIGHT / 2.0f) / 1080.0f;
+
+                    if (mouseUV_Y >= (tabY_UV - halfHeight_UV) && mouseUV_Y <= (tabY_UV + halfHeight_UV)) {
+                        foundSideTab = i;
+                        break;
+                    }
+                }
+            }
+
+            // Refresh if hover state changed
+            if (foundSideTab != m_hoveredSideTab) {
+                m_hoveredSideTab = foundSideTab;
+                RefreshBook();
+            }
+
+            // 2. ITEM GRID HOVER (Your existing logic)
             float itemX, itemY;
-            // Use the EXACT same helper function
             int foundItemID = GetItemAtPosition(mouseUV_X, mouseUV_Y, itemX, itemY);
 
-            // State Change Check
             if (foundItemID != m_hoveredItemID) {
-
                 RemoveTooltip();
                 m_hoveredItemID = foundItemID;
-
                 if (foundItemID != -1) {
-                    // If we find an item, force a print to console to prove it worked
-                    std::cout << "[Hover] Found Item: " << foundItemID << " at " << itemX << ", " << itemY << std::endl;
                     CreateTooltip(foundItemID, itemX, itemY);
                 }
             }
         }
 
+        // Add to public functions:
+        void UpdateVisuals(float dt) {
+            if (!bookSpawned) return;
 
+            bool needsRefresh = false;
+            for (int i = 0; i < 3; ++i) {
+                // Determine if this tab SHOULD be extended
+                bool active = (static_cast<int>(m_currentTab) == i) || (m_hoveredSideTab == i);
+                float targetX = active ? SIDE_TAB_EXTENDED_X : SIDE_TAB_HIDDEN_X;
+
+                // Check if we need to move (using a small epsilon of 0.1f)
+                if (std::abs(m_tabVisualX[i] - targetX) > 0.1f) {
+                    // Smoothly interpolate: current = current + (dist * speed * dt)
+                    m_tabVisualX[i] += (targetX - m_tabVisualX[i]) * 12.0f * dt;
+                    needsRefresh = true;
+                }
+            }
+
+            // If any tab moved, we rebuild the UI to show the new position
+            if (needsRefresh) {
+                RefreshBook();
+            }
+        }
 
     private:
         void CreateTooltip(int itemID, float itemX, float itemY) {
@@ -238,8 +334,6 @@ namespace Framework {
             }
 
             int GetItemAtPosition(float mouseUV_X, float mouseUV_Y, float& outItemX, float& outItemY) {
-
-                // 1. CONVERT UV TO PIXELS
                 float mouseX = mouseUV_X * 1920.0f;
                 float mouseY = mouseUV_Y * 1080.0f;
 
@@ -249,10 +343,13 @@ namespace Framework {
                 int colCounter = 0;
 
                 for (int i = 0; i < Framework::kItemCount; i++) {
+                    Framework::ItemType type = Framework::GetItemType(i);
 
-                    bool shouldSkip = (Framework::GetItemType(i) == Framework::ItemType::DEFAULT); 
-                    if (shouldSkip) continue; 
-                    
+                    // --- MUST USE EXACT SAME FILTER LOGIC AS BUILDLEFTPAGE ---
+                    if (m_currentTab == BookTab::INGREDIENTS && type != Framework::ItemType::INGREDIENT) continue;
+                    if (m_currentTab == BookTab::POTIONS && type != Framework::ItemType::POTION) continue;
+                    if (m_currentTab == BookTab::ITEMS && type != Framework::ItemType::DEFAULT) continue;
+
                     // STRICT HIT CHECK
                     bool hitX = mouseX >= (currentX - halfSize) && mouseX <= (currentX + halfSize);
                     bool hitY = mouseY >= (currentY - halfSize) && mouseY <= (currentY + halfSize);
@@ -281,38 +378,37 @@ namespace Framework {
         // =========================================================
         //                 LEFT PAGE: ITEM GRID
         // =========================================================
-        void BuildLeftPage() {
-            float currentX = GRID_START_X;
-            float currentY = GRID_START_Y;
-            int colCounter = 0;
+        // --- Inside BuildLeftPage ---
+            void BuildLeftPage() {
+                // 1. Draw Grid (Removed old tab rendering logic from here)
+                float currentX = GRID_START_X;
+                float currentY = GRID_START_Y;
+                int colCounter = 0;
 
-            SpawnText(currentX + 130.0f, currentY + 150.0f, "All Items", 1.5f);
+                for (int i = 0; i < Framework::kItemCount; i++) {
+                    Framework::ItemType type = Framework::GetItemType(i);
 
-            for (int i = 0; i < Framework::kItemCount; i++) {
-             
-                // 1. Determine Background based on Type
-                Framework::ItemType type = Framework::GetItemType(i);
-                if (type == ItemType::DEFAULT) continue;
-                std::string bgTexture = "Item_DefaultBG";
-                if (type == Framework::ItemType::POTION) bgTexture = "Item_PotionBG";
-                else if (type == Framework::ItemType::INGREDIENT) bgTexture = "Item_IngredientBG";
+                    // --- FILTER LOGIC ---
+                    // Tab 0 = Ingredients, Tab 1 = Potions, Tab 2 = MortarPestle (Items/Tools)
+                    if (m_currentTab == BookTab::INGREDIENTS && type != Framework::ItemType::INGREDIENT) continue;
+                    if (m_currentTab == BookTab::POTIONS && type != Framework::ItemType::POTION) continue;
+                    if (m_currentTab == BookTab::ITEMS && type != Framework::ItemType::DEFAULT) continue;
 
-                // 2. Spawn Background & Icon
-                SpawnGenericSprite(currentX, currentY, bgTexture, SLOT_SIZE, SLOT_SIZE);
-                SpawnUISprite(currentX, currentY, Framework::kItemNames[i], 2.0f);
+                    // Spawn Icon
+                    SpawnUISprite(currentX, currentY, Framework::kItemNames[i], 2.0f, 1.0f);
 
-                // 3. Grid Math
-                colCounter++;
-                if (colCounter >= GRID_COLUMNS) {
-                    colCounter = 0;
-                    currentX = GRID_START_X;
-                    currentY -= (SLOT_SIZE + PADDING);
-                }
-                else {
-                    currentX += (SLOT_SIZE + PADDING);
+                    // Grid Math
+                    colCounter++;
+                    if (colCounter >= GRID_COLUMNS) {
+                        colCounter = 0;
+                        currentX = GRID_START_X;
+                        currentY -= (SLOT_SIZE + PADDING);
+                    }
+                    else {
+                        currentX += (SLOT_SIZE + PADDING);
+                    }
                 }
             }
-        }
 
         // =========================================================
         //                  RIGHT PAGE: INGREDIENT BREAKDOWN
@@ -329,8 +425,8 @@ namespace Framework {
 
             // If it's a raw item (no recipe), just show it and return
             if (!primaryRecipe) {
-                SpawnGenericSprite(rightPageX, currentY, "Item_IngredientBG", SLOT_SIZE, SLOT_SIZE);
-                SpawnUISprite(rightPageX, currentY, Framework::kItemNames[selectedID], 2.0f);
+                SpawnGenericSprite(rightPageX, currentY, "Item_IngredientBG", SLOT_SIZE, SLOT_SIZE, 1.0f);
+                SpawnUISprite(rightPageX, currentY, Framework::kItemNames[selectedID], 2.0f, 1.0f);
                 return;
             }
 
@@ -351,8 +447,8 @@ namespace Framework {
                     // Alignment logic to match RenderRecipeRow
                     float alignX = rightPageX - 160.0f;
 
-                    SpawnGenericSprite(alignX, currentY, bg, SLOT_SIZE, SLOT_SIZE);
-                    SpawnUISprite(alignX, currentY, name, 1.5f);
+                    SpawnGenericSprite(alignX, currentY, bg, SLOT_SIZE, SLOT_SIZE, 1.0f);
+                    SpawnUISprite(alignX, currentY, name, 1.5f, 1.0f);
                 }
 
                 currentY -= rowSpacing;
@@ -366,6 +462,25 @@ namespace Framework {
             RenderRecipeRow(rightPageX, currentY - 100.0f, primaryRecipe);
         }
 
+        void BuildSideTabs() {
+            std::vector<std::string> sideIcons = { "RB_Ingredient", "RB_Cauldron", "RB_MortarPestle" };
+            std::vector<std::string> sideBGs = { "RB_Ingredient_BKMK", "RB_Cauldron_BKMK", "RB_MortarPestle_BKMK" };
+
+            for (int i = 0; i < 3; ++i) {
+                float currentY = SIDE_TAB_START_Y - (i * SIDE_TAB_SPACING);
+
+                // --- THE FIX ---
+                // Instead of calculating currentX here based on m_currentTab,
+                // we use the visual value that UpdateVisuals() is moving frame-by-frame.
+                float animatedX = m_tabVisualX[i];
+
+                // 1. Spawn the Bookmark Background using the animated X
+                SpawnGenericSprite(animatedX, currentY, sideBGs[i], SIDE_TAB_WIDTH, SIDE_TAB_HEIGHT, bookmarkZ);
+
+                // 2. Spawn the Icon using the animated X
+                SpawnGenericSprite(animatedX, currentY, sideIcons[i], 60.0f, 60.0f, bookmarkIconZ);
+            }
+        }
        
 
         void RenderRecipeRow(float centerX, float y, const PotionRecipe* recipe) {
@@ -382,12 +497,12 @@ namespace Framework {
             if (recipe->resultItemID >= 0) {
                 std::string resName = Framework::kItemNames[recipe->resultItemID];
                 // [FIX] Use iconSize (120) instead of 70/80
-                SpawnGenericSprite(centerX + colAlignmentX, y, "Item_PotionBG", iconSize, iconSize);
-                SpawnUISprite(centerX + colAlignmentX, y, resName, 1.5f);
+                SpawnGenericSprite(centerX + colAlignmentX, y, "Item_PotionBG", iconSize, iconSize, 1.0f);
+                SpawnUISprite(centerX + colAlignmentX, y, resName, 1.5f, 1.0f);
             }
 
             // --- ARROW (Center) ---
-            SpawnGenericSprite(centerX, y, "arrow", arrowWidth, 40.0f);
+            SpawnGenericSprite(centerX, y, "arrow", arrowWidth, 40.0f, 1.0f);
 
             // --- INGREDIENTS (Right side) ---
             float currentInputX = centerX + inputStartX;
@@ -396,8 +511,8 @@ namespace Framework {
             if (recipe->toolItemID != -1) {
                 std::string toolName = Framework::kItemNames[recipe->toolItemID];
                 // [FIX] Use iconSize (120)
-                SpawnGenericSprite(currentInputX, y, "Item_DefaultBG", iconSize, iconSize);
-                SpawnUISprite(currentInputX, y, toolName, 1.5f);
+                SpawnGenericSprite(currentInputX, y, "Item_DefaultBG", iconSize, iconSize, 1.0f);
+                SpawnUISprite(currentInputX, y, toolName, 1.5f, 1.0f);
 
                 currentInputX += itemSpacing;
             }
@@ -409,8 +524,8 @@ namespace Framework {
                     if (Framework::GetItemType(id) == Framework::ItemType::POTION) bg = "Item_PotionBG";
 
                     // [FIX] Use iconSize (120)
-                    SpawnGenericSprite(currentInputX, y, bg, iconSize, iconSize);
-                    SpawnUISprite(currentInputX, y, Framework::kItemNames[id], 1.5f);
+                    SpawnGenericSprite(currentInputX, y, bg, iconSize, iconSize, 1.0f);
+                    SpawnUISprite(currentInputX, y, Framework::kItemNames[id], 1.5f, 1.0f);
 
                     currentInputX += itemSpacing;
                 }
@@ -420,15 +535,15 @@ namespace Framework {
         // =========================================================
         //                 HELPER FUNCTIONS
         // =========================================================
-        void SpawnUISprite(float x, float y, std::string itemName, float scaleMult = 1.0f) {
+        void SpawnUISprite(float x, float y, std::string itemName, float scaleMult = 1.0f, float z = 1.0f) {
             if (itemName.empty()) return;
-            SpawnGenericSprite(x, y, itemName, 40.0f * scaleMult, 40.0f * scaleMult);
+            SpawnGenericSprite(x, y, itemName, 40.0f * scaleMult, 40.0f * scaleMult, z);
         }
 
-        void SpawnGenericSprite(float x, float y, std::string texName, float width, float height) {
+        void SpawnGenericSprite(float x, float y, std::string texName, float width, float height, float z) {
             Entity e = coordinator->CreateEntity();
             TransformComponent trans;
-            trans.position = glm::vec3(x, y, 0.0f);
+            trans.position = glm::vec3(x, y, z);
             trans.scale = glm::vec3(width, height, 1.0f);
 
             MeshProperties mesh;
@@ -448,8 +563,8 @@ namespace Framework {
             uiEntities.push_back(e);
         }
 
-        void SpawnBook(float x, float y, float width, float height) {
-            SpawnGenericSprite(x, y, "book", width, height);
+        void SpawnBook(float x, float y, float width, float height, float z) {
+            SpawnGenericSprite(x, y, "book", width, height, z);
         }
 
         void SpawnText(float x, float y, std::string textContent, float scaleMult = 1.0f) {

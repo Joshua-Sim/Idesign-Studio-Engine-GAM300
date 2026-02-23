@@ -1,5 +1,5 @@
 {
-    "count": 257,
+    "count": 264,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -1541,6 +1541,48 @@
             "guid": "44dd9ce1-94f7-4b94-9fda-b06bde4f0e1e",
             "name": "MAIN MENU HOVER BUTTON",
             "path": "Assets\\Textures\\MAIN MENU HOVER BUTTON.png",
+            "isUI": false
+        },
+        {
+            "guid": "7c52e4b2-1a03-4fa5-b7d3-071020cb51c2",
+            "name": "RB_MortarPestle_BKMK",
+            "path": "Assets\\Textures\\RB_MortarPestle_BKMK.png",
+            "isUI": false
+        },
+        {
+            "guid": "7d4f96ca-0926-4bb4-9776-63759a2b0ef8",
+            "name": "RB_Cauldron",
+            "path": "Assets\\Textures\\RB_Cauldron.png",
+            "isUI": false
+        },
+        {
+            "guid": "9284ecb4-5f61-43e4-b8f2-72083024c807",
+            "name": "RB_Cauldron_BKMK",
+            "path": "Assets\\Textures\\RB_Cauldron_BKMK.png",
+            "isUI": false
+        },
+        {
+            "guid": "a8c449f2-4ab6-4511-8ab7-3f2a49ba6a0e",
+            "name": "RB_Ingredient",
+            "path": "Assets\\Textures\\RB_Ingredient.png",
+            "isUI": false
+        },
+        {
+            "guid": "12885b7a-a9a3-412e-a516-2822d177bb52",
+            "name": "RB_Ingredient_BKMK",
+            "path": "Assets\\Textures\\RB_Ingredient_BKMK.png",
+            "isUI": false
+        },
+        {
+            "guid": "a1f65fb7-191b-4759-9c4d-96a6b561b3d6",
+            "name": "RB_MortarPestle",
+            "path": "Assets\\Textures\\RB_MortarPestle.png",
+            "isUI": false
+        },
+        {
+            "guid": "81bb2469-abcb-4ca0-b669-80907ab6f2d7",
+            "name": "bookflap",
+            "path": "Assets\\Textures\\bookflap.png",
             "isUI": false
         }
     ]
