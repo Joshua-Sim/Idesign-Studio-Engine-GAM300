@@ -30,13 +30,13 @@ namespace Framework {
 
     void Inventory::SetHotbarSlot(int idx, int itemId, GLuint iconTex, int count)
     {
-        if (idx < 0 || idx >= kHotbarSlots) return;
+        if (idx < 0 || idx >= GetHotbarSlotCount()) return;
         m_hotbar[idx] = { itemId, iconTex, count };
     }
 
     void Inventory::ClearHotbarSlot(int idx)
     {
-        if (idx < 0 || idx >= kHotbarSlots) return;
+        if (idx < 0 || idx >= GetHotbarSlotCount()) return;
         m_hotbar[idx] = { -1, 0, 0 };
     }
 
@@ -90,11 +90,11 @@ namespace Framework {
 
     int Inventory::GetHotbarSlotCount() const
     {
-        // base 4, +2 per level
-        int slots = 4 + (mHotbarLevel * 2);
+        // base 5, +2 per level
+        int slots = kHotbarSlots + (mHotbarLevel * 2);
 
-        if (slots < 4) slots = 4;
-        if (slots > kHotbarSlots) slots = kHotbarSlots;
+        if (slots < kHotbarSlots) slots = kHotbarSlots;
+        if (slots > MaxHotbarSlots) slots = MaxHotbarSlots;
         return slots;
     }
 
@@ -295,6 +295,112 @@ namespace Framework {
         }
 
         CancelDrag();
+    }
+
+    // ---------
+    // Recipe crafting helper from back back / inventory
+    // ---------
+
+   // Helper: Recursively expand a recipe to find base ingredients needed
+    struct RecipeRequirements {
+        std::unordered_map<int, int> baseIngredients; // itemId -> count
+        bool valid = true; // false if circular dependency
+    };
+
+    static RecipeRequirements ExpandRecipeToBase(int itemId, int quantity = 1,
+        std::unordered_set<int> visited = {})
+    {
+        RecipeRequirements result;
+
+        // Circular dependency check
+        if (visited.count(itemId)) {
+            std::cerr << "[Recipe] Circular dependency detected for item " << itemId << "\n";
+            result.valid = false;
+            return result;
+        }
+        visited.insert(itemId);
+
+        // Find recipe that produces this item
+        const PotionRecipe* recipe = GetRecipeForResult(itemId);
+
+        // If no recipe exists, it's a BASE ingredient (can't be crafted)
+        if (!recipe) {
+            result.baseIngredients[itemId] += quantity;
+            return result;
+        }
+
+        // Recursively expand each ingredient in the recipe
+        for (int ingredientId : recipe->ingredientIDs) {
+            auto subReq = ExpandRecipeToBase(ingredientId, quantity, visited);
+
+            if (!subReq.valid) {
+                result.valid = false;
+                return result;
+            }
+
+            // Merge base ingredients
+            for (const auto& [baseId, count] : subReq.baseIngredients) {
+                result.baseIngredients[baseId] += count;
+            }
+        }
+
+        return result;
+    }
+
+    // Check if we can craft a recipe (with chain awareness, ignoring tools)
+    static bool CanCraftRecipe(const PotionRecipe& recipe)
+    {
+        auto& inv = Inventory::Instance();
+
+        // Expand recipe to find what base ingredients it REALLY needs
+        RecipeRequirements req = ExpandRecipeToBase(recipe.resultItemID);
+
+        if (!req.valid) return false;
+
+        // Build inventory availability map
+        std::unordered_map<int, int> available;
+
+        // Scan hotbar
+        for (int i = 0; i < inv.GetHotbarSlotCount(); ++i) {
+            const auto& slot = inv.Get(i);
+            if (slot.itemId >= 0) {
+                available[slot.itemId] += (slot.count > 0 ? slot.count : 1);
+            }
+        }
+
+        // Scan backpack
+        for (int i = 0; i < inv.GetBackpackSlotCount(); ++i) {
+            const auto& slot = inv.GetBackpack(i);
+            if (slot.itemId >= 0) {
+                available[slot.itemId] += (slot.count > 0 ? slot.count : 1);
+            }
+        }
+
+        // Check if we have all BASE ingredients
+        for (const auto& [itemId, needed] : req.baseIngredients) {
+            if (available[itemId] < needed) {
+                return false; // Missing base ingredient
+            }
+        }
+
+        return true;
+    }
+
+    // Get all craftable potion names (with chain awareness)
+    std::vector<std::string> GetCraftablePotionNames()
+    {
+        const auto& recipes = GetGlobalRecipes();
+        std::vector<std::string> craftable;
+
+        for (const auto& recipe : recipes) {
+            // Only include POTIONS (not intermediate ingredients)
+            if (CanCraftRecipe(recipe) &&
+                GetItemType(recipe.resultItemID) == ItemType::POTION) {
+                craftable.push_back(kItemNames[recipe.resultItemID]);
+            }
+        }
+
+        return craftable;
     }
 
 } // namespace Framework

@@ -10,6 +10,7 @@
 #include "ScriptProperties.h"
 #include "ScriptingSystem.h"
 #include <ItemComponent.h>
+#include "ParticleComponent.h"
 
 static const std::map<std::string, LightType> s_stringToLightType = {
     { "Directional", LightType::Directional },
@@ -621,6 +622,21 @@ namespace Framework
                     ecsInterface.AddComponent(entity, textComp);
                 }
 
+                // ParticleEmitterComponent
+                if (components.HasMember("ParticleEmitterComponent"))
+                {
+                    ParticleEmitterComponent em;
+                    Deserialize(&em, g_ParticleEmitterProps, components["ParticleEmitterComponent"]);
+
+                    // Reset runtime-only state (VERY IMPORTANT)
+                    em.textureID = 0;
+                    em.timeSinceStart = 0.0f;
+                    em.emitAccumulator = 0.0f;
+                    em.particles.clear();
+
+                    ecsInterface.AddComponent(entity, em);
+                }
+
                 sceneManager.RegisterEntityToScene(entity, cleanName);
             }
         }
@@ -1008,6 +1024,15 @@ namespace Framework
                     rapidjson::Value textJson(rapidjson::kObjectType);
                     Serialize((void*)&textComp, g_TextComponentProps, textJson, allocator);
                     componentsObj.AddMember("TextProperties", textJson, allocator);
+                }
+
+                // ParticleEmitterComponent
+                if (ecsInterface.HasComponent<ParticleEmitterComponent>(entity))
+                {
+                    const auto& em = ecsInterface.GetComponent<ParticleEmitterComponent>(entity);
+                    rapidjson::Value emJson(rapidjson::kObjectType);
+                    Serialize((void*)&em, g_ParticleEmitterProps, emJson, allocator);
+                    componentsObj.AddMember("ParticleEmitterComponent", emJson, allocator);
                 }
 
             }
@@ -2090,6 +2115,21 @@ namespace Framework
             TextProperties textComp;
             Deserialize(&textComp, g_TextComponentProps, jsonVal);
             ecsInterface.AddComponent(newEntity, textComp);
+        }
+
+        // ParticleEmitterComponent
+        if (components.HasMember("ParticleEmitterComponent"))
+        {
+            ParticleEmitterComponent em;
+            Deserialize(&em, g_ParticleEmitterProps, components["ParticleEmitterComponent"]);
+
+            // Reset runtime-only state (VERY IMPORTANT)
+            em.textureID = 0;
+            em.timeSinceStart = 0.0f;
+            em.emitAccumulator = 0.0f;
+            em.particles.clear();
+
+            ecsInterface.AddComponent(newEntity, em);
         }
 
         if (newEntity != std::numeric_limits<Entity>::max())

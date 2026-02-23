@@ -92,7 +92,6 @@ int main(void)
     ecsInterface.Init();
 
     AssetManager::Instance().CompileAllAssets();
-    //AssetManager::Instance().SaveAllAssets();
     AssetManager::Instance().LoadAllAssets();
 
     // To Connect Prop with ECS
@@ -111,8 +110,6 @@ int main(void)
     auto buttonSystem = ecsInterface.RegisterSystem<ButtonSystem>();
     imguiSystem->SetGraphicsSystem(graphicsSystem.get());
     graphicsSystem->SetImguiManager(imguiSystem.get());
-
-    //AssetManager::Instance().LoadAllAssets();
     
     //Access the InputHandler instance from the singleton
     InputHandler::Initialize(graphicsSystem->GetWindow());
@@ -225,8 +222,7 @@ int main(void)
     std::filesystem::current_path(initialCWD);
     std::cout << "Restored working directory: " << std::filesystem::current_path() << std::endl;
 
-    AssetManager::Instance().SaveAllAssets();
-    AssetManager::Instance().CompileAllAssets();
+    //AssetManager::Instance().SaveAllAssets();
 
     // Clear all systems and other dynamically allocated resources
     engine->DestroySystems();

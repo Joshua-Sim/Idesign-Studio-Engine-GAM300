@@ -25,7 +25,7 @@ public:
     // convenience for lights
     void setDirLight(const glm::vec3& dir, const glm::vec3& color, float intensity);
     void setPointLight(int idx, const glm::vec3& pos, const glm::vec3& color, float intensity, float radius);
-
+    GLuint GetProgramHandle() const { return ID; }
     void destroy();
 
 private:

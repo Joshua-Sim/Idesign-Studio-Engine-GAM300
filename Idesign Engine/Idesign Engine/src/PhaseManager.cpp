@@ -120,6 +120,12 @@ namespace Framework {
             
         }
         else if (m_currentPhase == GamePhase::Night) {
+            auto graphicsSystem = ecsInterface.GetSystem<Graphics>();
+            if (graphicsSystem) {
+                Skybox* skybox = graphicsSystem->getSkybox();
+                if (skybox) skybox->setBlendFactor(1.0f);
+                glm::vec3 playerRot = ecsInterface.GetComponent<TransformComponent>(ecsInterface.GetEntityByName("Player")).rotation;
+            }
             targetPos = m_nightSpawnPos;
             targetRot = m_nightSpawnRot;
             TeleportPlayer(m_nightSpawnPos, m_nightSpawnRot);
@@ -157,7 +163,7 @@ namespace Framework {
         Entity player = ecsInterface.GetEntityByName("Player");
         if (player == -1 || !ecsInterface.IsEntityValid(player)) return;
 
-        // 1. Force ECS Transform update immediately
+        // 1. Update ECS Transform
         if (ecsInterface.HasComponent<TransformComponent>(player))
         {
             auto& transform = ecsInterface.GetComponent<TransformComponent>(player);
@@ -165,7 +171,25 @@ namespace Framework {
             transform.rotation = rotation;
         }
 
-        // 2. Physics Body Update
+        // --- CAMERA SYNC BLOCK ---
+        // Update the camera yaw to match the player's new Y rotation
+        auto* gfx = Graphics::GetInstance();
+        if (gfx) {
+            Camera* cam = gfx->GetCameraByIndex(0);
+            if (cam) {
+                // Usually, Player Y rotation = Camera Yaw
+                // You might need to add/subtract 90 or 180 depending on your forward vector
+                cam->yaw = rotation.y;
+
+                // Optional: Reset pitch to 0 so they are looking straight ahead
+                cam->pitch = rotation.x;
+
+                // IMPORTANT: If your camera has a "UpdateCameraVectors" function, call it here
+                cam->updateVectors(); 
+            }
+        }
+
+        // 2. Physics Body Update (Jolt)
         if (ecsInterface.HasComponent<PhysicsBodyComponent>(player))
         {
             auto& pb = ecsInterface.GetComponent<PhysicsBodyComponent>(player);
@@ -177,9 +201,6 @@ namespace Framework {
                 if (bodyInterface)
                 {
                     JPH::RVec3 jPos(position.x, position.y, position.z);
-
-                    // FIX: GLM quat constructor is (w, x, y, z) while Jolt is (x, y, z, w)
-                    // Using euler angles to quat conversion to be safe
                     glm::quat q = glm::quat(glm::radians(rotation));
                     JPH::Quat jRot(q.x, q.y, q.z, q.w);
 
@@ -187,16 +208,9 @@ namespace Framework {
                     {
                         if (!id.IsInvalid())
                         {
-                            // FIX: Activate the body and set position
                             bodyInterface->SetPositionAndRotation(id, jPos, jRot, JPH::EActivation::Activate);
-
-                            // FIX: Completely kill all momentum (Linear and Angular)
-                            // This prevents the player from "sliding" or "spinning" upon landing
                             bodyInterface->SetLinearVelocity(id, JPH::Vec3::sZero());
                             bodyInterface->SetAngularVelocity(id, JPH::Vec3::sZero());
-
-                            // FIX: Reset motion properties if the body is kinematic or has a controller
-                            bodyInterface->ResetSleepTimer(id);
                         }
                     }
                 }

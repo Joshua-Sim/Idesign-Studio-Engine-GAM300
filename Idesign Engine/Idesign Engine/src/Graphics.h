@@ -45,8 +45,34 @@ namespace Framework
 
 namespace Framework 
 {
+    
+    // ===========================================================================
+    // FRUSTUM CULLING STRUCT
+    // ===========================================================================
+    struct Frustum
+    {
+        glm::vec4 planes[6]; // left, right, bottom, top, near, far
+
+        void ExtractFromMatrix(const glm::mat4& viewProj);
+        bool IsBoxVisible(const glm::vec3& center, const glm::vec3& halfExtents) const;
+    };
+    struct CachedEntityLists
+    {
+        std::vector<Entity> meshEntities;
+        std::vector<Entity> skinnedEntities;
+        std::vector<Entity> uiEntities;
+        std::vector<Entity> textEntities;
+        std::vector<Entity> lightEntities;
+        std::vector<Entity> transparentEntities;
+        bool isDirty = true;
+
+        void MarkDirty() { isDirty = true; }
+    };
     class Graphics : public ISystem
     {
+
+
+
     public:
         Graphics();
         ~Graphics();
@@ -319,6 +345,20 @@ namespace Framework
         void DrawBackpack(int screenW, int screenH);
         void HandleBackpackDragDrop(int screenW, int screenH);
         UIRect mBackpackPanelRect;
+
+
+
+        // ===========================================================================
+        // FRUSTUM CULLING MEMBERS
+        // ===========================================================================
+        Frustum m_frustum;
+        std::vector<Entity> m_visibleEntities;
+        void PerformFrustumCulling(const Camera& cam, float screenW, float screenH);
+
+        CachedEntityLists m_cachedEntities;
+        std::unordered_map<Entity, glm::mat4> m_frameModelMatrices;
+        void BuildFrameModelMatrices();
+        void RebuildEntityCache();
 
     };
 }

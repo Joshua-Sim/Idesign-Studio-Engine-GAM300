@@ -63,6 +63,7 @@ Graphics* g_GraphicsSingleton = nullptr;
 static std::unordered_map<std::string, GLuint> s_iconCache;
 
 namespace Framework {
+
     extern Framework::PhaseManager* phaseManager;
     Graphics* Graphics::s_instance = nullptr;
     bool Graphics::mouseCaptured = true;
@@ -74,6 +75,8 @@ namespace Framework {
     const auto& assets = AssetManager::Instance().GetAssets();
     bool Graphics::IsCameraRotationEnabled() const { return m_cameraRotationEnabled; }
 
+
+   
 
     // Constructor
     Graphics::Graphics()
@@ -250,162 +253,6 @@ namespace Framework {
 
         ecsInterface.SetSystemSignature<Graphics>(signature);
 
-        std::stringstream ss;
-        ss << signature;
-        std::cout << "Signature for Graphics system is: " << signature << std::endl;
-        ImguiManager::Log("Graphics signature set: " + ss.str(), "Graphics");
-        //  ---- ECS INITIALIZATION END --- 
-
-
-        // ---------------- Create one ECS object (Frog Agent) (Deserialized next time) -------------------- 
-        Entity newEntity = ecsInterface.CreateEntity(); // FROG ENTITY
-
-        //Add transform
-        TransformComponent transformComponent;
-        transformComponent.position = glm::vec3(10, 0, -3); // Instantiate location
-        transformComponent.scale = glm::vec3(1, 1, 1); // Size of my obj is big, change for test
-        transformComponent.rotation = glm::vec3(0, 0, 0);
-
-        ecsInterface.AddComponent<TransformComponent>(newEntity, transformComponent);
-
-        MaterialProperties materialComponent;
-        materialComponent.ambient = glm::vec3(0.05f, 0.07f, 0.1f);   // Slightly cool ambient tone
-        materialComponent.albedo = glm::vec3(0.8f, 0.6f, 0.3f);      // Warm diffuse color (like wood or bronze)
-        materialComponent.specular = glm::vec3(0.9f, 0.9f, 0.95f);   // Strong specular for shiny surface
-        materialComponent.shininess = 48.0f;                         // Fairly glossy
-        materialComponent.opacity = 0.85f;                           // Slightly transparent
-
-        ecsInterface.AddComponent<MaterialProperties>(newEntity, materialComponent);
-
-        ecsInterface.AddComponent<HierarchyComponent>(newEntity, HierarchyComponent{});
-
-        // Add and load mesh , temporarily hard-code component data 
-        MeshProperties meshComponent;
-        meshComponent.path = "Assets/Objects/layout2-0.obj";
-
-        // Load mesh from its own path, again serialized for each obj in deserialization after.
-        MeshLoader::loadMesh(meshComponent.path, meshComponent);
-        ecsInterface.AddComponent<MeshProperties>(newEntity, meshComponent);
-
-        // Add and load a texture component
-        Framework::TextureProperties textureComponent;
-        textureComponent.path = "Assets/PNG/test.png"; //can put any compressed texture
-        TextureLoader::loadTexture(textureComponent, true);
-
-        // Add NavMesh component to mark this as navmesh source
-        Framework::NavMeshComponent navMeshComp;
-        navMeshComp.isNavMeshSource = true;  // Mark this mesh as navmesh source
-        navMeshComp.guid = meshComponent.guid;  // Optional: store reference
-        ecsInterface.AddComponent<Framework::NavMeshComponent>(newEntity, navMeshComp);
-        ecsInterface.AddComponent<Framework::TextureProperties>(newEntity, textureComponent);
-        // ----------------- End object creation ------------------------------
-
-
-    // ---------------- Create AI Agent Entity -------------------- 
-        Entity agentEntity = ecsInterface.CreateEntity();
-
-        // Add transform - position agent ON the navmesh floor
-        TransformComponent agentTransform;
-        agentTransform.position = glm::vec3(-2, 0.5, 0); // On the floor, slightly offset in X
-        agentTransform.scale = glm::vec3(1, 1, 1);    // Small visual size
-        agentTransform.rotation = glm::vec3(0, 0, 0);  // Rotated to orient correctly
-        ecsInterface.AddComponent<TransformComponent>(agentEntity, agentTransform);
-        ecsInterface.AddComponent<MaterialProperties>(agentEntity, materialComponent);
-        ecsInterface.AddComponent<HierarchyComponent>(agentEntity, HierarchyComponent{});
-
-        // Add mesh for agent (use cube, sphere, or character model)
-        MeshProperties agentMesh;
-        agentMesh.path = "Assets/Objects/Frog.obj"; // Or "sphere.obj" or "character.obj"
-        MeshLoader::loadMesh(agentMesh.path, agentMesh);
-        ecsInterface.AddComponent<MeshProperties>(agentEntity, agentMesh);
-
-        // Set destination here to test
-
-        // Add texture for agent (make it different color so you can see it)
-        Framework::TextureProperties agentTexture;
-        agentTexture.path = "Assets/PNG/test.png"; // Different texture from floor
-        TextureLoader::loadTexture(agentTexture, true);
-        ecsInterface.AddComponent<Framework::TextureProperties>(agentEntity, agentTexture);
-
-        // Add NavMeshAgent component - scaled for your scale 3 world
-        Framework::NavMeshAgentComponent navAgent;
-        navAgent.agentHeight = 2.0f;           // Standard character height in world units
-        navAgent.agentRadius = 0.6f;           // Standard radius for pathfinding
-        navAgent.moveSpeed = 5.0f;             // Movement speed (units per second)
-        navAgent.acceleration = 8.0f;          // How quickly it accelerates
-        navAgent.angularSpeed = 120.0f;        // Rotation speed
-        navAgent.stoppingDistance = 0.3f;      // Distance to stop before waypoint
-        navAgent.targetPosition = glm::vec3(-2.0, 1.0, 1.5); // Destination across the floor
-        navAgent.hasPath = false;              // Will be set when path is calculated
-        navAgent.isMoving = false;
-        ecsInterface.AddComponent<Framework::NavMeshAgentComponent>(agentEntity, navAgent);
-        // ----------------- End agent creation ------------------------------
-
-
-
-        //   //  // ---------------- Create one ANIMATED ECS object (FOR TESTING) --------------------
-        Entity animatedEntity = ecsInterface.CreateEntity();
-
-        // 1. Add transform component
-        TransformComponent transformComponent1;
-        transformComponent1.position = glm::vec3(10, 0.0, 0.3); // Instantiate location
-        transformComponent1.scale = glm::vec3(0.5, 0.5, 0.5); // Size of my obj is big, change for test
-        //transformComponent1.rotation = glm::vec3(90.0f, 0.0f, 0.0f);
-        ecsInterface.AddComponent<TransformComponent>(animatedEntity, transformComponent1);
-        // 2. Add hierarchy component (standard for your entities)
-        ecsInterface.AddComponent<HierarchyComponent>(animatedEntity, HierarchyComponent{});
-
-        // 3. Define the components we need to load into
-        MeshProperties animMesh;
-        Framework::AnimationProperties animProps;
-        auto meshGUID = AssetManager::Instance().FindGuid<MeshProperties>("knifechoppingwithBONEFIXED4");
-        auto animGUID = AssetManager::Instance().FindGuid<AnimationProperties>("knifechoppingwithBONEFIXED4");
-
-
-        if (!meshGUID.empty() && !animGUID.empty())
-        {
-            // 3. Get the actual asset data
-            auto* meshAsset = AssetManager::Instance().Get<MeshProperties>(meshGUID);
-            auto* animAsset = AssetManager::Instance().Get<AnimationProperties>(animGUID);
-
-            // 4. Add components by COPYING the asset data
-            // This is instant - no file loading!
-            ecsInterface.AddComponent<MeshProperties>(animatedEntity, *meshAsset);
-            ecsInterface.AddComponent<AnimationProperties>(animatedEntity, *animAsset);
-
-            // (You would also add a MaterialProperties component here)
-        }
-
-        ecsInterface.AddComponent<MaterialProperties>(animatedEntity, materialComponent);
-
-        Framework::TextureProperties animTexture;
-        // --- !! IMPORTANT: Change this path to your model's texture !! ---
-        animTexture.path = "Assets/Textures/music.png";
-        TextureLoader::loadTexture(animTexture, true);
-        ecsInterface.AddComponent<Framework::TextureProperties>(animatedEntity, animTexture);
-        // ----------------- End animated object creation ---------------------
-
-        // ====================================================================
-        // --- CREATE A TEST LIGHT ENTITY ---
-        // ====================================================================
-        Entity lightEntity = ecsInterface.CreateEntity();
-
-        // 1. Add a Transform for the light's position
-        TransformComponent lightTransform;
-        lightTransform.position = glm::vec3(0.0f, 5.0f, 2.0f); // Position it above the scene
-        ecsInterface.AddComponent<TransformComponent>(lightEntity, lightTransform);
-
-        // 2. Add the LightProperties component
-        LightProperties pointLight;
-        pointLight.type = LightType::Point;
-        pointLight.color = glm::vec3(1.0f, 1.0f, 1.0f); // White light
-        pointLight.intensity = 10.0f; // Make it nice and bright
-        pointLight.radius = 20.0f;    // Give it a large radius
-        pointLight.enabled = true;
-        ecsInterface.AddComponent<LightProperties>(lightEntity, pointLight);
-
-        // 3. Add a Hierarchy component (since your other entities have it)
-        ecsInterface.AddComponent<HierarchyComponent>(lightEntity, HierarchyComponent{});
 
         cube = Mesh::CreateUnitCubeData();
         plane = Mesh::CreateUnitSphereData();
@@ -508,25 +355,6 @@ namespace Framework {
         leafQuad = new Mesh(Mesh::CreateBillboardQuad());
         leafQuad->initGL();
 
-        // Load your leaf texture (PNG with alpha)
-        TextureProperties leafProps;
-        leafProps.path = "Assets/Textures/unchopped_herb.png";
-        leafTexture = TextureLoader::loadTexture(leafProps, true);
-
-        if (!leafTexture)
-            std::cout << "Leaf PNG failed to load!" << std::endl;
-
-        // === 1. LOAD TREE TEXTURE ===
-        TextureProperties treeTexProps;
-        treeTexProps.path = "Assets/Textures/Wood.png"; // <-- CHANGE PATH TO YOUR TEXTURE!
-
-        // Assuming TextureLoader::loadTexture is available (from your uploaded files)
-        // NOTE: loadTexture takes TextureProperties& props and bool flip
-        m_treeTextureID = TextureLoader::loadTexture(treeTexProps, true);
-
-        if (m_treeTextureID == 0) {
-            std::cerr << "[FoliageRenderer] WARNING: Tree texture failed to load! Check path: " << treeTexProps.path << std::endl;
-        }
 
         // 2. Create the Instancing Renderer
         // TRUNK RENDERER (cylinder)
@@ -542,11 +370,6 @@ namespace Framework {
             "Assets/shaders/instancedleave_frag.glsl"
         );
 
-        // Load a particle texture (white dot / square PNG)
-        TextureProperties particleTexProps;
-        particleTexProps.path = "Assets/PNG/particle.png";
-        TextureLoader::loadTexture(particleTexProps, true);
-        m_particleTextureID = particleTexProps.textureID;
 
         // LEAF RENDERER (billboards)
         m_leafRenderer = new FoliageRenderer(
@@ -557,8 +380,8 @@ namespace Framework {
 
         m_particlePixelRenderer = new FoliageRenderer(
             leafQuad,
-            "Assets/shaders/instancedleave_vert.glsl",
-            "Assets/shaders/instancedleave_frag.glsl"
+            "Assets/shaders/instancedparticle_vert.glsl",
+            "Assets/shaders/instancedparticle_frag.glsl"
         );
 
         //// 2. Create the Instancing Renderer
@@ -785,22 +608,14 @@ namespace Framework {
         float dt = now - lastTime; lastTime = now;
         process_input(dt);
 
+        // ====================================================================
+            // OPTIMIZATION PART 1: UPDATE CACHES
+            // ====================================================================
+            // 1. Rebuild lists (only runs if entities were added/removed)
+        RebuildEntityCache();
 
-        // --- NEW: FRAME MATRIX CACHE ---
-        std::unordered_map<Entity, glm::mat4> frameModelMatrices;
-        for (auto const& entityId : mEntities) {
-            if (ecsInterface.HasComponent<TransformComponent>(entityId)) {
-                auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
-                glm::mat4 model = glm::translate(glm::mat4(1.0f), tr.position);
-                model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
-                model = glm::rotate(model, glm::radians(tr.rotation.y), { 0,1,0 });
-                model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
-                model = glm::scale(model, tr.scale);
-                frameModelMatrices[entityId] = model;
-            }
-        }
-
-
+        // 2. Calculate all matrices once (stored in m_frameModelMatrices)
+        BuildFrameModelMatrices();
 
         // ====================================================================
         // PHASE 0: UPDATE CAMERA POSITION (MUST RUN FIRST)
@@ -816,7 +631,8 @@ namespace Framework {
                 break; // Found player, no need to keep searching
             }
         }
-
+        Camera& activeCam = GetActiveCamera();
+        PerformFrustumCulling(activeCam, (float)m_fbW, (float)m_fbH);
         // ====================================================================
         // PHASE 1: PREPARE LIGHTS
         // ====================================================================
@@ -866,12 +682,13 @@ namespace Framework {
             glClear(GL_DEPTH_BUFFER_BIT);
 
             // 3. Render all shadow-casting objects
-            glDisable(GL_CULL_FACE);
+            glEnable(GL_CULL_FACE);  // Turn culling ON
+            glCullFace(GL_FRONT);    // Cull Front faces (so we only render Back faces)
             // Render Terrain
             shadowShader.setMat4("uModel", glm::mat4(1.0f));
 
 
-            for (auto const& entityId : mEntities)
+            for (auto const& entityId : m_visibleEntities)
             {
                 if (ecsInterface.HasComponent<MeshProperties>(entityId) &&
                     ecsInterface.HasComponent<TransformComponent>(entityId))
@@ -889,35 +706,18 @@ namespace Framework {
                     // 3. Draw based on the MESH component's data
                     if (mesh.debugShape == DebugShapeType::None && mesh.vao != 0 && !isTransparent)
                     {
-                        glm::mat4 model = frameModelMatrices[entityId];
+                        glm::mat4 model = m_frameModelMatrices[entityId];
                         bool isSkinned = ecsInterface.HasComponent<AnimationProperties>(entityId);
 
                         // Use appropriate shader
-                        ShaderProgram& currentShadowShader = isSkinned ? skinnedPointShadowShader : shadowShader;
-                        currentShadowShader.use();
-                        currentShadowShader.setMat4("uModel", model);
+                        shadowShader.use();
+                        shadowShader.setMat4("uModel", model);
 
-                        // ========== CRITICAL FIX ==========
                         glBindVertexArray(mesh.vao);
 
-                        if (isSkinned)
-                        {
-                            glEnableVertexAttribArray(3);
-                            glEnableVertexAttribArray(4);
-
-                            auto& animator = ecsInterface.GetComponent<AnimationProperties>(entityId);
-                            for (size_t b = 0; b < animator.finalBoneMatrices.size(); ++b)
-                            {
-                                std::string boneName = "uBoneMatrices[" + std::to_string(b) + "]";
-                                currentShadowShader.setMat4(boneName.c_str(), animator.finalBoneMatrices[b]);
-                            }
-                        }
-                        else
-                        {
-                            glDisableVertexAttribArray(3);
-                            glDisableVertexAttribArray(4);
-                        }
-                        // ==================================
+                        // Disable attributes 3 & 4 (Bone weights) since we are using the static shader
+                        glDisableVertexAttribArray(3);
+                        glDisableVertexAttribArray(4);
 
                         glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
                     }
@@ -929,14 +729,27 @@ namespace Framework {
         }
 
         // ====================================================================
-// PHASE 2: POINT LIGHT SHADOW PASS (SAFE MODE)
-// ====================================================================
+     // PHASE 2: POINT LIGHT SHADOW PASS (OPTIMIZED)
+     // ====================================================================
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
 
-        const unsigned int POINT_SHADOW_WIDTH = 1024, POINT_SHADOW_HEIGHT = 1024;
-        const float LIGHT_RENDER_DISTANCE = 10.0f; // Your testing value
+        const unsigned int POINT_SHADOW_WIDTH = 1024;
+        const unsigned int POINT_SHADOW_HEIGHT = 1024;
+        const float LIGHT_RENDER_DISTANCE = 10.0f;
         const float LIGHT_RENDER_DISTANCE_SQ = LIGHT_RENDER_DISTANCE * LIGHT_RENDER_DISTANCE;
+
+        // [OPTIMIZATION] Pre-collect entities that actually need to be drawn in shadows
+        // This fixes the 5% CPU hit on the inner loop by avoiding searching 5000+ entities 6 times per light.
+        std::vector<Entity> shadowCasters;
+        for (auto const& e : m_visibleEntities) {
+            if (ecsInterface.HasComponent<MeshProperties>(e) && ecsInterface.GetComponent<TransformComponent>(e).isActive) {
+                auto& mesh = ecsInterface.GetComponent<MeshProperties>(e);
+                if (mesh.debugShape == DebugShapeType::None && mesh.vao != 0) {
+                    shadowCasters.push_back(e);
+                }
+            }
+        }
 
         for (auto const& entityId : mEntities)
         {
@@ -948,20 +761,11 @@ namespace Framework {
             auto& transform = ecsInterface.GetComponent<TransformComponent>(entityId);
             glm::vec3 lightPos = transform.position;
 
-            // ----------------------------------------------------------------
-            // FIX 1: CHECK DISTANCE *BEFORE* DOING ANYTHING
-            // ----------------------------------------------------------------
-            // We do NOT want to create FBOs for lights that are 1000 units away.
-            // This prevents VRAM spikes that can crash the driver.
+            // 1. DISTANCE CHECK (Prevents VRAM Exhaustion)
             float distSq = glm::distance(lightPos, gameCamera.position);
-            if (distSq > LIGHT_RENDER_DISTANCE_SQ)
-            {
-                continue; // Skip EVERYTHING (Creation & Rendering)
-            }
+            if (distSq > LIGHT_RENDER_DISTANCE_SQ) continue;
 
-            // ----------------------------------------------------------------
-            // FIX 2: CREATE FBO ONLY IF NEARBY
-            // ----------------------------------------------------------------
+            // 2. INITIALIZATION GUARD (Prevents Memory Leaks)
             if (light.shadowFBO == 0)
             {
                 glGenFramebuffers(1, &light.shadowFBO);
@@ -973,7 +777,7 @@ namespace Framework {
                     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_R32F,
                         POINT_SHADOW_WIDTH, POINT_SHADOW_HEIGHT, 0, GL_RED, GL_FLOAT, NULL);
                 }
-                // ... (Texture Parameters) ...
+
                 glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
                 glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
                 glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -985,24 +789,17 @@ namespace Framework {
                 glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, POINT_SHADOW_WIDTH, POINT_SHADOW_HEIGHT);
                 glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, light.shadowDepthRBO);
 
-                // Safety: Verify complete
-                if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-                    std::cout << "Shadow FBO Error!" << std::endl;
-
                 glBindFramebuffer(GL_FRAMEBUFFER, 0);
             }
 
-            // ----------------------------------------------------------------
-            // RENDER PASS
-            // ----------------------------------------------------------------
+            // 3. RENDER PASS (6 Faces)
             light.shadowFarPlane = light.radius;
             pointShadowShader.use();
-            pointShadowShader.setFloat("uFarPlane", light.shadowFarPlane);
-            pointShadowShader.setVec3("uLightPos", lightPos);
 
-            // Matrix setup...
             float near_plane = 0.01f;
             glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), 1.0f, near_plane, light.shadowFarPlane);
+
+            // Create the 6 view matrices for the Cube Map
             std::vector<glm::mat4> shadowTransforms;
             shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
             shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(-1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
@@ -1020,59 +817,38 @@ namespace Framework {
                 glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-                for (auto const& entityId_inner : mEntities)
+                // Render shadow casters using the optimized list
+                for (auto const& casterId : shadowCasters)
                 {
-                    auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId_inner);
-                    if (!tr.isActive || entityId_inner == entityId) continue;
+                    if (casterId == entityId) continue; // Don't let the light shadow itself
 
-                    if (ecsInterface.HasComponent<MeshProperties>(entityId_inner))
-                    {
-                        auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId_inner);
-                        // ... (Material opacity check omitted for brevity, add back if needed) ...
+                    glm::mat4 model = m_frameModelMatrices[casterId];
+                    bool isSkinned = ecsInterface.HasComponent<AnimationProperties>(casterId);
+                    ShaderProgram& currentShadowShader = isSkinned ? skinnedPointShadowShader : pointShadowShader;
 
-                        if (mesh.debugShape == DebugShapeType::None && mesh.vao != 0)
-                        {
-                            glm::mat4 model = frameModelMatrices[entityId_inner];
-                            bool isSkinned = ecsInterface.HasComponent<AnimationProperties>(entityId_inner);
-                            ShaderProgram& currentShadowShader = isSkinned ? skinnedPointShadowShader : pointShadowShader;
+                    currentShadowShader.use();
+                    currentShadowShader.setMat4("uLightSpaceMatrix", shadowTransforms[i]);
+                    currentShadowShader.setMat4("uModel", model);
+                    currentShadowShader.setVec3("uLightPos", lightPos);
+                    currentShadowShader.setFloat("uFarPlane", light.shadowFarPlane);
 
-                            currentShadowShader.use();
-                            currentShadowShader.setMat4("uLightSpaceMatrix", shadowTransforms[i]);
-                            currentShadowShader.setMat4("uModel", model);
-                            currentShadowShader.setVec3("uLightPos", lightPos);
-                            currentShadowShader.setFloat("uFarPlane", light.shadowFarPlane);
+                    glBindVertexArray(ecsInterface.GetComponent<MeshProperties>(casterId).vao);
 
-                            glBindVertexArray(mesh.vao);
-
-                            if (isSkinned) {
-                                glEnableVertexAttribArray(3);
-                                glEnableVertexAttribArray(4);
-                                auto& animator = ecsInterface.GetComponent<AnimationProperties>(entityId_inner);
-
-                                // ---------------------------------------------------------
-                                // FIX 3: THE STRING CRASH PREVENTION
-                                // ---------------------------------------------------------
-                                for (size_t b = 0; b < animator.finalBoneMatrices.size(); ++b) {
-                                    // Use a variable to keep the string memory alive!
-                                    std::string boneName = "uBoneMatrices[" + std::to_string(b) + "]";
-                                    currentShadowShader.setMat4(boneName.c_str(), animator.finalBoneMatrices[b]);
-                                }
-                            }
-                            else {
-                                glDisableVertexAttribArray(3);
-                                glDisableVertexAttribArray(4);
-                            }
-
-                            glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
+                    if (isSkinned) {
+                        auto& animator = ecsInterface.GetComponent<AnimationProperties>(casterId);
+                        for (size_t b = 0; b < animator.finalBoneMatrices.size(); ++b) {
+                            // Optimized static string cache usage recommended here
+                            std::string boneName = "uBoneMatrices[" + std::to_string(b) + "]";
+                            currentShadowShader.setMat4(boneName.c_str(), animator.finalBoneMatrices[b]);
                         }
                     }
+                    glDrawElements(GL_TRIANGLES, ecsInterface.GetComponent<MeshProperties>(casterId).indexCount, GL_UNSIGNED_INT, 0);
                 }
             }
         }
-
-        // Reset everything
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glViewport(0, 0, m_fbW, m_fbH);
+
         // ====================================================================
         // 1. RENDER VIEW 0: GAME (grounded)
         // ====================================================================
@@ -1098,32 +874,37 @@ namespace Framework {
         // ====================================================================
         // 2. RENDER VIEW 1: SCENE (free-fly)
         // ====================================================================
-        RenderView(
-            sceneCamera, 1, w, h,
-            frameSun, frameHasSun, framePointLights, frameSpotLights
-        );
-
-        // ====================================================================
-        // 3. FINAL/SHARED LOGIC
-        // ====================================================================
-
-        if (pendingPickUV.x >= 0.0f && pendingPickUV.y >= 0.0f) {
-            int pw = m_pickW, ph = m_pickH;
-            int px = glm::clamp(int(pendingPickUV.x * pw), 0, pw - 1);
-            int py = glm::clamp(int(pendingPickUV.y * ph), 0, ph - 1);
-
-            glBindFramebuffer(GL_READ_FRAMEBUFFER, pickFBO[pickRead]);
-            unsigned char rgb[3] = { 0,0,0 };
-            glReadPixels(px, py, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, rgb);
-            glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-
-            uint32_t id = (uint32_t)rgb[0] | ((uint32_t)rgb[1] << 8) | ((uint32_t)rgb[2] << 16);
-            lastPickedId = (id == 0) ? -1 : int(id) - 1;
-            pendingPickUV = { -1.0f, -1.0f };
-            if (lastPickedId >= 0) {
-                std::cout << "Picked entity: " << lastPickedId << "\n";
-            }
+        if (engineState.Is(EngineMode::Editor))
+        {
+            RenderView(
+                sceneCamera, 1, w, h,
+                frameSun, frameHasSun, framePointLights, frameSpotLights
+            );
         }
+
+        //// ====================================================================
+        //// 3. FINAL/SHARED LOGIC
+        //// ====================================================================
+
+        //if (pendingPickUV.x >= 0.0f && pendingPickUV.y >= 0.0f &&
+        //    glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+        //{
+        //    int pw = m_pickW, ph = m_pickH;
+        //    int px = glm::clamp(int(pendingPickUV.x * pw), 0, pw - 1);
+        //    int py = glm::clamp(int(pendingPickUV.y * ph), 0, ph - 1);
+
+        //    glBindFramebuffer(GL_READ_FRAMEBUFFER, pickFBO[pickRead]);
+        //    unsigned char rgb[3] = { 0,0,0 };
+        //    glReadPixels(px, py, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, rgb);
+        //    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+
+        //    uint32_t id = (uint32_t)rgb[0] | ((uint32_t)rgb[1] << 8) | ((uint32_t)rgb[2] << 16);
+        //    lastPickedId = (id == 0) ? -1 : int(id) - 1;
+        //    pendingPickUV = { -1.0f, -1.0f };
+        //    if (lastPickedId >= 0) {
+        //        std::cout << "Picked entity: " << lastPickedId << "\n";
+        //    }
+        //}
 
         //Showing FPS
         double currentTime = glfwGetTime();
@@ -1329,10 +1110,10 @@ namespace Framework {
         {
             static bool wasIPressed = false;
             bool isIPressed = (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS);
+            auto& inv = Framework::Inventory::Instance();
 
-            if (isIPressed && !wasIPressed)
+            if (isIPressed && !wasIPressed && inv.GetBackpackLevel() != 0)
             {
-                auto& inv = Framework::Inventory::Instance();
                 const bool isOpen = inv.IsBackpackOpen();
 
                 // If it's open, ALWAYS allow closing
@@ -1722,31 +1503,66 @@ namespace Framework {
         const float gridW = cols * slotSize + (cols - 1) * gap;
         const float gridH = rows * slotSize + (rows - 1) * gap;
 
-        // Place centered above hotbar
+        // --- Position: RIGHT side, above hotbar area ---
         const float hotbarY0 = 24.0f;
         const float hotbarPanelH = slotSize + 24.0f;
         const float marginAboveHotbar = 20.0f;
 
-        const float x0 = std::round((screenW - gridW) * 0.5f);
-        const float y0 = std::round(hotbarY0 + hotbarPanelH + marginAboveHotbar);
+        const float rightMargin = 24.0f;  // distance from screen edge
+        const float panelPad = 12.0f;     // matches your panel padding
 
-        //{
-        //    const float hotbarPanelTop = hotbarY0 + hotbarPanelH; // top edge of hotbar panel
-        //    const float backpackPanelBottom = y0 - 12.0f;         // bottom edge of backpack panel
-        //    const float gapH = backpackPanelBottom - hotbarPanelTop;
+        // Panel bottom-left (x0,y0) for the GRID (not including outer panel pad)
+        const float x0 = std::round(screenW - rightMargin - (gridW));                 // right-aligned
+        const float y0 = std::round(hotbarY0 + hotbarPanelH + marginAboveHotbar);     // same vertical logic
 
-        //    if (gapH > 0.5f)
-        //    {
-        //        DrawUIRect({ x0 - 12.0f, hotbarPanelTop },
-        //            { gridW + 24.0f, gapH },
-        //            { 0.05f, 0.05f, 0.06f }, 0.90f);
-        //    }
-        //}
+        const float panelX = x0 - panelPad;
+        const float panelY = y0 - panelPad;
+        const float panelW = gridW + 2 * panelPad;
+        const float panelH = gridH + 5 * panelPad; // includes title space
 
-        // Back panel
-        DrawUIRect({ x0 - 12.0f, y0 - 12.0f },
-            { gridW + 24.0f, gridH + 24.0f },
+        mBackpackPanelRect = { panelX, panelY, panelW, panelH, true };
+
+        // --- Back panel (grid background) ---
+        DrawUIRect({ panelX, panelY },
+            { panelW, panelH },
             { 0.05f, 0.05f, 0.06f }, 0.90f);
+
+        const float titleX = x0 + gridW * 0.5f;
+
+        // Panel top = (y0 - panelPad) + (gridH + 5*panelPad) = y0 + gridH + 4*panelPad
+        const float panelTop = y0 + gridH + 4.0f * panelPad;
+
+        // Put title inside your reserved header space
+        const float titleY = panelTop - 3.0f * panelPad; // tweak this if needed
+
+        // Make the text scale consistent with your UI text pass
+        const float REF_W = 1920.0f;
+        const float REF_H = 1080.0f;
+        float resScale = std::min((float)screenW / REF_W, (float)screenH / REF_H);
+        float scale = 1.25f * resScale;
+
+        fontSystem.RenderText2D(
+            "BACKPACK",
+            titleX,
+            titleY,
+            scale,
+            glm::vec3(1.0f, 1.0f, 1.0f),  // white
+            (float)screenW,
+            (float)screenH,
+            1,
+            1.0f
+        );
+
+        // --- Restore UI render state after fontSystem (it changes GL state) ---
+        uiShader.use();
+        uiShader.setMat4("uProjection", uiProj);
+
+        glDisable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        // If your font system enables scissor test, disable it for UI rects
+        glDisable(GL_SCISSOR_TEST);
 
         const int activeSlots = inv.GetBackpackSlotCount(); // rows*cols
 
@@ -1783,6 +1599,7 @@ namespace Framework {
         glEnable(GL_DEPTH_TEST);
     }
 
+
     void Graphics::HandleBackpackDragDrop(int screenW, int screenH)
     {
         auto& inv = Framework::Inventory::Instance();
@@ -1806,7 +1623,8 @@ namespace Framework {
         const float hotbarPanelH = slotSize + 24.0f;
         const float marginAboveHotbar = 20.0f;
 
-        const float x0 = std::round((screenW - gridW) * 0.5f);
+        const float rightMargin = 24.0f;
+        const float x0 = std::round(screenW - rightMargin - gridW);
         const float y0 = std::round(hotbarY0 + hotbarPanelH + marginAboveHotbar);
 
         // Mouse (convert to bottom-left origin)
@@ -2258,12 +2076,34 @@ namespace Framework {
         const std::vector<PointLightCPU>& points,
         const std::vector<SpotLightCPU>& spots)
     {
+        static std::vector<std::string> boneNames;
+        static std::vector<std::string> shadowNames;
+
+        // Pre-calculate the strings once to save CPU time
+        if (boneNames.empty()) {
+            for (int i = 0; i < 100; ++i) boneNames.push_back("uBoneMatrices[" + std::to_string(i) + "]");
+            for (int i = 0; i < 8; ++i) shadowNames.push_back("uPointShadowMaps[" + std::to_string(i) + "]");
+        }
         // Get the correct pick UV for this view
         glm::vec2& pickUV = (viewIndex == 0) ? pendingPickUV0 : pendingPickUV1;
 
         // 1. Calculate the Global Model Matrix
         glm::mat4 mapModel = glm::translate(glm::mat4(1.0f), glm::vec3(-60.0f, 3.0f, 0.0f)); //hard coded values of mapmodel
         mapModel = glm::scale(mapModel, glm::vec3(5.0f, 5.0f, 5.0f));
+
+        // --- NEW: FRAME MATRIX CACHE ---
+        std::unordered_map<Entity, glm::mat4> frameModelMatrices;
+        for (auto const& entityId : mEntities) {
+            if (ecsInterface.HasComponent<TransformComponent>(entityId)) {
+                auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
+                glm::mat4 model = glm::translate(glm::mat4(1.0f), tr.position);
+                model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
+                model = glm::rotate(model, glm::radians(tr.rotation.y), { 0,1,0 });
+                model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
+                model = glm::scale(model, tr.scale);
+                frameModelMatrices[entityId] = model;
+            }
+        }
 
 
         // 1. SCENE PASS
@@ -2465,6 +2305,71 @@ namespace Framework {
         glDisable(GL_BLEND);
         glDepthMask(GL_TRUE);
 
+        // ============================================================================
+          // [OPTIMIZATION] PRE-CALCULATE SHADOW MAPS (Runs once per frame)
+          // ============================================================================
+          // 1. Find the Texture IDs for all active point lights just ONCE.
+        std::vector<GLuint> validShadowTextures;
+        validShadowTextures.reserve(points.size());
+
+        for (const auto& point : points)
+        {
+            GLuint foundID = 0;
+            if (point.castsShadow)
+            {
+                // Perform the slow search here (only happens once per frame now!)
+                for (auto const& e : mEntities)
+                {
+                    if (ecsInterface.HasComponent<LightProperties>(e) &&
+                        ecsInterface.HasComponent<TransformComponent>(e))
+                    {
+                        auto& l = ecsInterface.GetComponent<LightProperties>(e);
+                        auto& t = ecsInterface.GetComponent<TransformComponent>(e);
+
+                        // Match specific light by position and type
+                        if (l.type == LightType::Point && t.position == point.position)
+                        {
+                            foundID = l.shadowDepthCubeMap;
+                            break;
+                        }
+                    }
+                }
+            }
+            validShadowTextures.push_back(foundID);
+        }
+
+        // 2. Bind Textures & Set Uniforms GLOBALLY for this pass.
+        //    This avoids re-binding them thousands of times inside the loop.
+        auto SetupShadowsForShader = [&](ShaderProgram& sh)
+            {
+                sh.use();
+                int unit = 2; // Start at Texture Unit 2 (Unit 0=Albedo, 1=DirShadow)
+                int count = 0;
+                for (size_t i = 0; i < points.size(); ++i)
+                {
+                    // Only bind if light casts shadow AND we found a valid texture
+                    if (points[i].castsShadow && validShadowTextures[i] != 0 && count < MAX_POINT_LIGHTS)
+                    {
+                        glActiveTexture(GL_TEXTURE0 + unit);
+                        glBindTexture(GL_TEXTURE_CUBE_MAP, validShadowTextures[i]);
+
+                        std::string uniformName = "uPointShadowMaps[" + std::to_string(count) + "]";
+                        sh.setInt(uniformName.c_str(), unit);
+
+                        unit++;
+                        count++;
+                    }
+                }
+            };
+
+        // Apply these settings to BOTH shaders used in the loop
+        SetupShadowsForShader(meshShader);
+        SetupShadowsForShader(skinnedShader);
+
+        // Reset active texture to default for the loop
+        glActiveTexture(GL_TEXTURE0);
+        // ============================================================================
+        glStencilMask(0x00);
         for (auto const& entityId : opaqueEntities)
         {
             auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
@@ -2564,52 +2469,8 @@ namespace Framework {
                     currentshader.setInt("uShadowMap", 1);
                     currentshader.setMat4("uLightSpaceMatrix", m_lightSpaceMatrix);
 
-                    int pointShadowUnit = 2;
-                    int pointShadowCount = 0;
-
-                    // 'points' is the std::vector<PointLightCPU> passed into RenderView
-                    for (int i = 0; i < (int)points.size(); ++i)
-                    {
-                        // The 'points' vector is already packed with only enabled lights.
-                        // We just need to check if this enabled light also casts a shadow.
-                        if (points[i].castsShadow && pointShadowCount < MAX_POINT_LIGHTS)
-                        {
-                            // We need to find the *actual* LightProperties component
-                            // to get the shadowDepthCubeMap texture ID.
-                            // This is a bit tricky, but we can search by position.
-
-                            // This is inefficient, but will prove the fix.
-                            // A better long-term fix is to add the textureID to PointLightCPU.
-                            GLuint textureID = 0;
-                            for (auto const& entityId : mEntities)
-                            {
-                                if (!ecsInterface.HasComponent<LightProperties>(entityId)) continue;
-                                auto& light = ecsInterface.GetComponent<LightProperties>(entityId);
-                                auto& transform = ecsInterface.GetComponent<TransformComponent>(entityId);
-
-                                // Check if this is the same light
-                                if (light.type == LightType::Point && transform.position == points[i].position)
-                                {
-                                    textureID = light.shadowDepthCubeMap;
-                                    break;
-                                }
-                            }
-
-                            if (textureID != 0)
-                            {
-                                glActiveTexture(GL_TEXTURE0 + pointShadowUnit);
-                                glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
-
-                                // 'pointShadowCount' will now match the shader's 'i' index
-                                std::string samplerName = "uPointShadowMaps[" + std::to_string(pointShadowCount) + "]";
-                                currentshader.setInt(samplerName.c_str(), pointShadowUnit);
-
-                                pointShadowUnit++;
-                                pointShadowCount++;
-                            }
-                        }
-                    }
-
+                 
+ 
 
                     if (isSkinned) {
                         auto& animator = ecsInterface.GetComponent<AnimationProperties>(entityId);
@@ -2660,11 +2521,13 @@ namespace Framework {
                         glStencilFunc(GL_ALWAYS, 1, 0xFF);
                         glStencilMask(0xFF);   // enable stencil writes
                     }
-                    else {
-                        glStencilMask(0x00);   // disable stencil writes for normal objects
-                    }
+                  
                     glBindVertexArray(mesh.vao);
                     glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
+                    if (doOutline) {
+                        glStencilMask(0x00);
+                        glStencilFunc(GL_ALWAYS, 0, 0xFF); // Optional: Reset func if needed
+                    }
                 }
                 else if (mesh.debugShape != DebugShapeType::None) {
                     auto it = m_debugMeshes.find(mesh.debugShape);
@@ -2721,7 +2584,9 @@ namespace Framework {
             }
         }
 
-        // ---Hover Outline--- (Jasper)
+        // =========================================================
+        // FIXED OUTLINE RENDERER (STENCIL METHOD)
+        // =========================================================
         if (hoverSel != -1)
         {
             Entity outlineEntity = (Entity)hoverSel;
@@ -2734,7 +2599,7 @@ namespace Framework {
 
                 if (meshO.debugShape == DebugShapeType::None && meshO.vao != 0)
                 {
-                    // 1. Calculate the Scaled Model Matrix
+                    // 1. Calculate Base Model Matrix
                     glm::mat4 baseModel(1.0f);
                     baseModel = glm::translate(baseModel, trO.position);
                     baseModel = glm::rotate(baseModel, glm::radians(trO.rotation.x), { 1,0,0 });
@@ -2742,66 +2607,64 @@ namespace Framework {
                     baseModel = glm::rotate(baseModel, glm::radians(trO.rotation.z), { 0,0,1 });
                     baseModel = glm::scale(baseModel, trO.scale);
 
-                    const float outlineScale = 1.03f; // thickness
-                    glm::mat4 outlineModel = glm::scale(baseModel, glm::vec3(outlineScale));
+                    // 2. Create Scaled Up Matrix (The Outline Thickness)
+                    float scaleFactor = 1.03f; // 3% larger
+                    glm::mat4 outlineModel = glm::scale(baseModel, glm::vec3(scaleFactor));
 
-                    // 2. Prepare Stencil/Depth State
+                    // 3. Configure Stencil to ONLY draw where the object ISN'T
                     glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-                    glStencilMask(0x00);
+                    glStencilMask(0x00); // Do not write to stencil, only read
+
+                    // 4. Disable Depth Test if you want "X-Ray" outlines (visible through walls)
+                    //    Keep ENABLED if you want walls to hide the outline.
                     glDisable(GL_DEPTH_TEST);
-                    glEnable(GL_CULL_FACE);
-                    glCullFace(GL_FRONT); // Draw back faces (scaled up)
 
-                    // 3. Determine if Skinned or Static
+                    // 5. Select Shader
                     bool isSkinned = ecsInterface.HasComponent<AnimationProperties>(outlineEntity);
+                    ShaderProgram& outShader = isSkinned ? skinnedShader : debugShader;
+                    outShader.use();
 
-                    if (isSkinned)
-                    {
-                        // === ANIMATED OUTLINE ===
-                        skinnedShader.use();
-                        skinnedShader.setMat4("uProj", proj);
-                        skinnedShader.setMat4("uView", view);
-                        skinnedShader.setMat4("uModel", outlineModel);
+                    // 6. Setup Uniforms (Draw Pure White)
+                    outShader.setMat4("projection", proj); // Note: debugShader uses 'projection'
+                    outShader.setMat4("view", view);       // debugShader uses 'view'
+
+                    if (isSkinned) {
+                        outShader.setMat4("uProj", proj); // Skinned uses uProj
+                        outShader.setMat4("uView", view); // Skinned uses uView
+                        outShader.setMat4("uModel", outlineModel);
+
+                        // Solid White Material
+                        outShader.setVec3("uAlbedo", glm::vec3(1.0f));
+                        outShader.setVec3("uMaterial.ambient", glm::vec3(1.0f));
+                        outShader.setVec3("uMaterial.specular", glm::vec3(0.0f));
+                        outShader.setFloat("uMaterial.shininess", 1.0f);
+                        outShader.setFloat("uMaterial.opacity", 1.0f);
+
+                        // Unbind texture
+                        glActiveTexture(GL_TEXTURE0);
+                        glBindTexture(GL_TEXTURE_2D, m_WhiteTex);
+                        outShader.setInt("uTexture", 0);
 
                         // Upload Bones
                         auto& animator = ecsInterface.GetComponent<AnimationProperties>(outlineEntity);
-                        for (size_t i = 0; i < animator.finalBoneMatrices.size(); ++i)
-                        {
-                            skinnedShader.setMat4(("uBoneMatrices[" + std::to_string(i) + "]").c_str(), animator.finalBoneMatrices[i]);
+                        for (size_t i = 0; i < animator.finalBoneMatrices.size(); ++i) {
+                            outShader.setMat4(("uBoneMatrices[" + std::to_string(i) + "]").c_str(), animator.finalBoneMatrices[i]);
                         }
-
-                        // Make it look like a solid flat color (White)
-                        // We "hack" the material properties to be purely bright white
-                        skinnedShader.setVec3("uAlbedo", glm::vec3(1.0f, 1.0f, 1.0f));
-                        skinnedShader.setVec3("uMaterial.ambient", glm::vec3(1.0f));  // Full brightness
-                        skinnedShader.setVec3("uMaterial.specular", glm::vec3(0.0f)); // No shiny spots
-                        skinnedShader.setFloat("uMaterial.shininess", 1.0f);
-                        skinnedShader.setFloat("uMaterial.opacity", 1.0f);
-
-                        // Unbind texture so it draws solid color (uses default white pixel if 0)
-                        glActiveTexture(GL_TEXTURE0);
-                        glBindTexture(GL_TEXTURE_2D, m_WhiteTex); // or 0
-                        skinnedShader.setInt("uTexture", 0);
-
-                        // Bind VAO and Draw
-                        glBindVertexArray(meshO.vao);
-                        glDrawElements(GL_TRIANGLES, meshO.indexCount, GL_UNSIGNED_INT, 0);
                     }
-                    else
-                    {
-                        // === STATIC OUTLINE (Original Logic) ===
-                        debugShader.use();
-                        debugShader.setMat4("projection", proj);
-                        debugShader.setMat4("view", view);
-                        debugShader.setMat4("model", outlineModel);
-                        debugShader.setVec3("color", glm::vec3(1.0f)); // white outline
-
-                        glBindVertexArray(meshO.vao);
-                        glDrawElements(GL_TRIANGLES, meshO.indexCount, GL_UNSIGNED_INT, 0);
+                    else {
+                        // Static Mesh (Debug Shader)
+                        outShader.setMat4("model", outlineModel);
+                        outShader.setVec3("color", glm::vec3(1.0f, 1.0f, 0.0f)); // Yellow Outline
                     }
 
-                    // 4. Restore State
-                    glCullFace(GL_BACK);
+                    // 7. Draw
+                    glBindVertexArray(meshO.vao);
+                    glDrawElements(GL_TRIANGLES, meshO.indexCount, GL_UNSIGNED_INT, 0);
+                    glBindVertexArray(0);
+
+                    // 8. Cleanup
+                    glStencilMask(0xFF);
+                    glStencilFunc(GL_ALWAYS, 0, 0xFF);
                     glEnable(GL_DEPTH_TEST);
                 }
             }
@@ -2812,8 +2675,29 @@ namespace Framework {
         glStencilFunc(GL_ALWAYS, 0, 0xFF);
         glDisable(GL_STENCIL_TEST);
 
-        std::vector<glm::mat4> pixelInstances;
+        // =========================================================
+          // FIXED PARTICLE SYSTEM RENDERER
+          // =========================================================
 
+          // 1. Setup Render State for Particles (Transparent + No Depth Write)
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glDepthMask(GL_FALSE); // Don't write to depth, but still test against it
+
+        // 2. Use the Standard Mesh Shader
+        meshShader.use();
+        meshShader.setMat4("uProj", proj);
+        meshShader.setMat4("uView", view);
+        meshShader.setVec3("uViewPos", cam.position);
+
+        // Set neutral material for particles
+        meshShader.setVec3("uAlbedo", glm::vec3(1.0f));
+        meshShader.setVec3("uMaterial.ambient", glm::vec3(1.0f));
+        meshShader.setVec3("uMaterial.specular", glm::vec3(0.0f));
+        meshShader.setFloat("uMaterial.shininess", 1.0f);
+        meshShader.setFloat("uMaterial.opacity", 1.0f);
+
+        // 3. Loop through emitters
         for (Entity e : mEntities)
         {
             if (!ecsInterface.HasComponent<ParticleEmitterComponent>(e) ||
@@ -2823,85 +2707,129 @@ namespace Framework {
             auto& emitter = ecsInterface.GetComponent<ParticleEmitterComponent>(e);
             auto& xform = ecsInterface.GetComponent<TransformComponent>(e);
 
-            if (!emitter.active) continue;
+            if (!emitter.active || emitter.particles.empty()) continue;
 
-            const glm::mat4 emitterM = glm::translate(glm::mat4(1.0f), xform.position);
+            // Bind Particle Texture
+            glActiveTexture(GL_TEXTURE0);
+            if (emitter.textureID != 0) glBindTexture(GL_TEXTURE_2D, emitter.textureID);
+            else                        glBindTexture(GL_TEXTURE_2D, m_WhiteTex);
+            meshShader.setInt("uTexture", 0);
+
+            // Bind the LeafQuad (Billboard Mesh)
+            if (leafQuad) glBindVertexArray(leafQuad->getVAO());
+
+            // Get Camera Vectors for Billboarding
+            // (This ensures particles always face the camera)
+            glm::vec3 camRight = glm::vec3(view[0][0], view[1][0], view[2][0]);
+            glm::vec3 camUp = glm::vec3(view[0][1], view[1][1], view[2][1]);
 
             for (const Particle& p : emitter.particles)
             {
+                if (p.lifetime <= 0.0f) continue;
+
                 glm::vec3 worldPos = p.position;
-                if (emitter.localSpace)
-                    worldPos = glm::vec3(emitterM * glm::vec4(p.position, 1.0f));
+                if (emitter.localSpace) {
+                    // Simple transform: Position only to avoid rotating the billboard wrong
+                    worldPos = xform.position + p.position;
+                }
 
-                glm::mat4 M(1.0f);
-                M = glm::translate(M, worldPos);
-                M = glm::scale(M, glm::vec3(p.size));
+                // Construct Billboard Matrix
+                glm::mat4 model = glm::translate(glm::mat4(1.0f), worldPos);
 
-                pixelInstances.push_back(M);
+                // Rotation: Use camera basis vectors
+                model[0] = glm::vec4(camRight * p.size, 0.0f);
+                model[1] = glm::vec4(camUp * p.size, 0.0f);
+                model[2] = glm::vec4(glm::cross(camRight, camUp), 0.0f);
+
+                meshShader.setMat4("uModel", model);
+
+                // Draw One Particle
+                if (leafQuad) glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
             }
         }
 
+        // Restore State
+        if (leafQuad) glBindVertexArray(0);
+        glDepthMask(GL_TRUE);
 
         // --- 2. TRANSPARENT PASS ---
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glDepthMask(GL_FALSE);
 
-        //// Billboard leaves
-        //if (m_leafRenderer)
-        //{
-        //    m_leafRenderer->draw(view, proj, mapModel, leafTexture);
-        //}
-
-        // --- PARTICLES START --- (Jasper)
-
-        // Group instance matrices by texture so each emitter can use its own billboard PNG
-        std::unordered_map<unsigned int, std::vector<glm::mat4>> particleMatsByTex;
-
-        for (Entity e : mEntities)
+        for (auto it = transparentEntities.rbegin(); it != transparentEntities.rend(); ++it)
         {
-            if (!ecsInterface.HasComponent<ParticleEmitterComponent>(e) ||
-                !ecsInterface.HasComponent<TransformComponent>(e))
-                continue;
+            auto const& entityId = it->second;
+            auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
+            auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
 
-            auto& emitter = ecsInterface.GetComponent<ParticleEmitterComponent>(e);
-            auto& tr = ecsInterface.GetComponent<TransformComponent>(e);
+            if (!tr.isActive) continue;
 
-            if (!emitter.active || !tr.isActive) continue;
+            // Calculate model matrix directly (since we aren't using the cache)
+            glm::mat4 model = glm::translate(glm::mat4(1.0f), tr.position);
+            model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
+            model = glm::rotate(model, glm::radians(tr.rotation.y), { 0,1,0 });
+            model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
+            model = glm::scale(model, tr.scale);
 
-            const glm::mat4 emitterM = glm::translate(glm::mat4(1.0f), tr.position);
-
-            // Use emitter texture if set, otherwise fallback to the global particle texture
-            unsigned int tex = (emitter.textureID != 0) ? emitter.textureID : m_particleTextureID;
-
-            for (const Particle& p : emitter.particles)
+            if (mesh.debugShape == DebugShapeType::None && mesh.vao != 0)
             {
-                glm::vec3 worldPos = p.position;
-                if (emitter.localSpace)
-                    worldPos = glm::vec3(emitterM * glm::vec4(p.position, 1.0f));
+                bool isSkinned = ecsInterface.HasComponent<AnimationProperties>(entityId);
+                ShaderProgram& currentShader = isSkinned ? skinnedShader : meshShader;
 
-                glm::mat4 M(1.0f);
-                M = glm::translate(M, worldPos);
-                M = glm::scale(M, glm::vec3(p.size));
+                currentShader.use();
+                currentShader.setMat4("uProj", proj);
+                currentShader.setMat4("uView", view);
+                currentShader.setVec3("uViewPos", cam.position);
+                currentShader.setMat4("uModel", model);
 
-                if (emitter.style == 0) // Pixel
-                    particleMatsByTex[tex].push_back(M);
-            }
-        }
+                // --- BIND TEXTURES (The fix for the Rainbow Bug) ---
 
-        if (m_particlePixelRenderer)
-        {
-            for (auto& [tex, mats] : particleMatsByTex)
-            {
-                if (mats.empty()) continue;
+                // Slot 0: Albedo (The object's actual texture)
+                glActiveTexture(GL_TEXTURE0);
+                if (ecsInterface.HasComponent<TextureProperties>(entityId))
+                    glBindTexture(GL_TEXTURE_2D, ecsInterface.GetComponent<TextureProperties>(entityId).textureID);
+                else
+                    glBindTexture(GL_TEXTURE_2D, 0);
+                currentShader.setInt("uTexture", 0);
 
-                m_particlePixelRenderer->setInstances(mats);
-                m_particlePixelRenderer->draw(view, proj, glm::mat4(1.0f), tex);
+                // Slot 1: Sun Shadow Map
+                glActiveTexture(GL_TEXTURE1);
+                glBindTexture(GL_TEXTURE_2D, m_shadowDepthTexture);
+                currentShader.setInt("uShadowMap", 1);
+                currentShader.setMat4("uLightSpaceMatrix", m_lightSpaceMatrix);
+
+                // Slots 2+: Point Light Shadow Maps
+                // [OPTIMIZATION] We use the pre-calculated 'validShadowTextures' from the Opaque pass
+                // This removes the slow mEntities loop!
+                int unit = 2;
+                int shadowCount = 0;
+                for (size_t i = 0; i < points.size(); ++i) {
+                    if (points[i].castsShadow && validShadowTextures[i] != 0 && shadowCount < MAX_POINT_LIGHTS) {
+                        glActiveTexture(GL_TEXTURE0 + unit);
+                        glBindTexture(GL_TEXTURE_CUBE_MAP, validShadowTextures[i]);
+                        currentShader.setInt(shadowNames[shadowCount].c_str(), unit);
+                        unit++; shadowCount++;
+                    }
+                }
+
+                if (isSkinned) {
+                    auto& animator = ecsInterface.GetComponent<AnimationProperties>(entityId);
+                    for (size_t i = 0; i < animator.finalBoneMatrices.size(); ++i) {
+                        currentShader.setMat4(boneNames[i].c_str(), animator.finalBoneMatrices[i]);
+                    }
+                }
+
+                // [OPTIMIZATION] REMOVED the redundant LightProperties::upload call here!
+                // It's already done at the start of RenderView.
+
+                glBindVertexArray(mesh.vao);
+                glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
             }
         }
 
         // --- PARTICLES END   --- (Jasper)
-
+        glStencilMask(0x00);
         for (auto it = transparentEntities.rbegin(); it != transparentEntities.rend(); ++it)
         {
 
@@ -3025,16 +2953,18 @@ namespace Framework {
                 }
 
                 LightProperties::upload(currentShader, sun, hasSun, points, spots);
-                bool doOutline = ((int)entityId == hoverSel); // or sel / both
+                bool doOutline = ((int)entityId == hoverSel);
+
                 if (doOutline) {
                     glStencilFunc(GL_ALWAYS, 1, 0xFF);
-                    glStencilMask(0xFF);
-                }
-                else {
-                    glStencilMask(0x00);
+                    glStencilMask(0xFF); // Enable ONLY for this one object
                 }
                 glBindVertexArray(mesh.vao);
                 glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
+                if (doOutline) {
+                    glStencilMask(0x00);
+                    glStencilFunc(GL_ALWAYS, 0, 0xFF); // Optional: Reset func if needed
+                }
             }
         }
 
@@ -3299,13 +3229,7 @@ namespace Framework {
 
         // Do not display inventory boxes while in paused/howtoplay/menu state
         if (viewIndex == 0 &&
-            !engineState.Is(EngineMode::Paused) &&
-            !engineState.Is(EngineMode::HowToPlay) &&
-            !engineState.Is(EngineMode::Cutscene) &&
-            !engineState.Is(EngineMode::Menu) &&
-            !engineState.Is(EngineMode::Settings) &&
-            !engineState.Is(EngineMode::Dialogue) &&
-            !engineState.Is(EngineMode::MapSelection) &&
+            !engineState.IsAnyUIOpen() &&
             !GameSystem::bookOpen)
         {
             DrawHotbar(width, height);
@@ -3360,4 +3284,197 @@ namespace Framework {
         fontSystem.RenderText3D("iDesign Engine by iDesign Studio", textModel, view, proj, 0.05f, glm::vec3(1.0f, 1.0f, 0.5f), 0);
         glDisable(GL_DEPTH_TEST);
     }
+
+
+    // ===========================================================================
+// OPTIMIZATION PART 1: HELPER FUNCTIONS
+// Paste this at the bottom of Graphics.cpp
+// ===========================================================================
+
+    void Framework::Graphics::RebuildEntityCache()
+    {
+        if (!m_cachedEntities.isDirty) return;
+
+        // Clear existing caches
+        m_cachedEntities.meshEntities.clear();
+        m_cachedEntities.skinnedEntities.clear();
+        m_cachedEntities.uiEntities.clear();
+        m_cachedEntities.textEntities.clear();
+        m_cachedEntities.lightEntities.clear();
+        m_cachedEntities.transparentEntities.clear();
+
+        // Iterate ALL entities only once
+        for (Entity e : mEntities)
+        {
+            // CRITICAL FIX: Validate entity before accessing components
+            if (!ecsInterface.IsEntityValid(e))
+                continue;
+
+            // Skip invalid/inactive entities early
+            if (!ecsInterface.HasComponent<TransformComponent>(e))
+                continue;
+
+            auto& transform = ecsInterface.GetComponent<TransformComponent>(e);
+            if (!transform.isActive)
+                continue;
+
+            // 1. LIGHTS
+            if (ecsInterface.HasComponent<LightProperties>(e)) {
+                m_cachedEntities.lightEntities.push_back(e);
+            }
+
+            // 2. UI ELEMENTS
+            if (ecsInterface.HasComponent<TextureProperties>(e)) {
+                auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
+                if (tex.isUI) {
+                    m_cachedEntities.uiEntities.push_back(e);
+                    continue; // UI is handled separately, stop here
+                }
+            }
+
+            // 3. TEXT
+            if (ecsInterface.HasComponent<TextProperties>(e)) {
+                m_cachedEntities.textEntities.push_back(e);
+                // Don't continue, text might also have a mesh background
+            }
+
+            // 4. MESHES (Static & Skinned)
+            if (ecsInterface.HasComponent<MeshProperties>(e))
+            {
+                auto& meshProps = ecsInterface.GetComponent<MeshProperties>(e);
+
+                // Filter out debug shapes if needed, or keep them
+                if (meshProps.vao != 0)
+                {
+                    // Check transparency
+                    bool isTransparent = false;
+                    if (ecsInterface.HasComponent<MaterialProperties>(e)) {
+                        if (ecsInterface.GetComponent<MaterialProperties>(e).opacity < 1.0f)
+                            isTransparent = true;
+                    }
+
+                    if (isTransparent) {
+                        m_cachedEntities.transparentEntities.push_back(e);
+                    }
+                    else if (ecsInterface.HasComponent<AnimationProperties>(e)) {
+                        m_cachedEntities.skinnedEntities.push_back(e);
+                    }
+                    else {
+                        m_cachedEntities.meshEntities.push_back(e);
+                    }
+                }
+            }
+        }
+
+        m_cachedEntities.isDirty = false;
+    }
+    void Framework::Graphics::BuildFrameModelMatrices()
+    {
+        m_frameModelMatrices.clear();
+        m_frameModelMatrices.reserve(mEntities.size());
+
+        for (auto const& entityId : mEntities)
+        {
+            // CRITICAL FIX: Validate entity before accessing
+            if (!ecsInterface.IsEntityValid(entityId))
+                continue;
+
+            if (ecsInterface.HasComponent<TransformComponent>(entityId))
+            {
+                auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
+                if (!tr.isActive) continue;
+
+                // Calculate Matrix ONCE per frame
+                glm::mat4 model = glm::translate(glm::mat4(1.0f), tr.position);
+                model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
+                model = glm::rotate(model, glm::radians(tr.rotation.y), { 0,1,0 });
+                model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
+                model = glm::scale(model, tr.scale);
+
+                m_frameModelMatrices[entityId] = model;
+            }
+        }
+    }
+    // ===========================================================================
+// OPTIMIZATION PART 2: FRUSTUM CULLING LOGIC
+// ===========================================================================
+
+    void Frustum::ExtractFromMatrix(const glm::mat4& viewProj)
+    {
+        // Extract frustum planes from view-projection matrix
+        for (int i = 0; i < 4; ++i) planes[0][i] = viewProj[i][3] + viewProj[i][0]; // Left
+        for (int i = 0; i < 4; ++i) planes[1][i] = viewProj[i][3] - viewProj[i][0]; // Right
+        for (int i = 0; i < 4; ++i) planes[2][i] = viewProj[i][3] + viewProj[i][1]; // Bottom
+        for (int i = 0; i < 4; ++i) planes[3][i] = viewProj[i][3] - viewProj[i][1]; // Top
+        for (int i = 0; i < 4; ++i) planes[4][i] = viewProj[i][3] + viewProj[i][2]; // Near
+        for (int i = 0; i < 4; ++i) planes[5][i] = viewProj[i][3] - viewProj[i][2]; // Far
+
+        // Normalize planes
+        for (int i = 0; i < 6; ++i) {
+            float length = glm::length(glm::vec3(planes[i]));
+            planes[i] /= length;
+        }
+    }
+
+    bool Frustum::IsBoxVisible(const glm::vec3& center, const glm::vec3& halfExtents) const
+    {
+        for (int i = 0; i < 6; ++i) {
+            glm::vec3 normal(planes[i]);
+            float dist = glm::dot(normal, center) + planes[i].w;
+            float r = glm::dot(glm::abs(normal), halfExtents);
+            if (dist < -r) return false; // Fully outside
+        }
+        return true;
+    }
+
+    void Framework::Graphics::PerformFrustumCulling(const Camera& cam, float screenW, float screenH)
+    {
+        m_visibleEntities.clear();
+
+        // 1. Build Frustum
+        glm::mat4 proj = cam.getProjectionMatrix(screenW, screenH);
+        glm::mat4 view = cam.getViewMatrix();
+        m_frustum.ExtractFromMatrix(proj * view);
+
+        // 2. Check Cache - rebuild if dirty or empty
+        if (m_cachedEntities.isDirty ||
+            (m_cachedEntities.meshEntities.empty() && m_cachedEntities.skinnedEntities.empty()))
+        {
+            RebuildEntityCache();
+        }
+
+        // 3. Test Static Meshes
+        for (Entity e : m_cachedEntities.meshEntities)
+        {
+            // CRITICAL FIX: Validate entity before accessing component
+            if (!ecsInterface.IsEntityValid(e))
+                continue;
+
+            if (!ecsInterface.HasComponent<TransformComponent>(e))
+                continue;
+
+            auto& tr = ecsInterface.GetComponent<TransformComponent>(e);
+
+            // Additional safety check
+            if (!tr.isActive)
+                continue;
+
+            // Approximation: scale * 1.5 to handle rotation/corners
+            if (m_frustum.IsBoxVisible(tr.position, tr.scale * 1.5f)) {
+                m_visibleEntities.push_back(e);
+            }
+        }
+
+        // 4. Test Skinned Meshes
+        for (Entity e : m_cachedEntities.skinnedEntities)
+        {
+            // CRITICAL FIX: Validate entity before adding
+            if (!ecsInterface.IsEntityValid(e))
+                continue;
+
+            // For now, just assume visible to avoid animating off-screen characters incorrectly
+            m_visibleEntities.push_back(e);
+        }
+    }
+
 }

@@ -112,6 +112,8 @@ function Customer.OnInteract(senderID, targetID, actionType)
     local itemName = GetItemNameById(heldItemId)
     print("[Customer] Player gave me: " .. itemName)
     print("[Customer] I want: " .. my_requested_item)
+
+    local myType = GetData("Type_" .. targetID)
     
     -- Check if it matches the order
     if itemName == my_requested_item then
@@ -124,14 +126,31 @@ function Customer.OnInteract(senderID, targetID, actionType)
         
         -- Fire completion event to CustomerSystem
         FireEvent("CustomerComplete", customer_entity, senderID, 1)
-        Sound.Play("event:/CorrectSound")
+
+  
+
+         if myType == 1 then
+            Sound.Play("event:/FishCorrect")       -- Sound for Customer 1
+            Sound.Play("event:/EarnGold") 
+        else
+            Sound.Play("event:/OrcCorrect2") -- Sound for Customer 2
+            Sound.Play("event:/EarnGold") 
+        end
+
+
+
         print("[Customer] Thank you! Leaving now...")
         DestroyEntity(customer_entity)
     else
         -- WRONG ITEM LOGIC
         wrong_item_count = wrong_item_count + 1
         print("[Customer] Wrong item! Count: " .. wrong_item_count .. "/" .. MAX_WRONG_ATTEMPTS)
-        Sound.Play("event:/wrongSound")
+        if myType == 1 then
+            Sound.Play("event:/FishWrong")       -- Sound for Customer 1
+        else
+            Sound.Play("event:/OrcWrong2") -- Sound for Customer 2
+        end
+
         if wrong_item_count >= MAX_WRONG_ATTEMPTS then
             -- Too many wrong items - customer leaves angry
             print("[Customer] That's it! I've had enough! Leaving...")
@@ -153,30 +172,23 @@ end
 -- =========================================================
 
 function Customer.GenerateRequest()
-    -- Check if using fixed queue mode
     local fixedQueue = GetData("fixedQueue")
     
     if fixedQueue > 0 then
-        local requestedItem
+        -- Demo mode
+        local items = {"warmth_potion", "vitality_potion", "strength_potion"}
+        local item = items[fixedQueue] or "strength_potion"
+        SetData("fixedQueue", fixedQueue - 1)
+        return item
+    else
+        -- Dynamic mode: only craftable potions
+        local requestedItem = GetRandomCraftablePotion()
         
-        if fixedQueue == 3 then
-            requestedItem = "strength_potion"      -- 3rd customer
-        elseif fixedQueue == 2 then
-            requestedItem = "vitality_potion"    -- Second customer
-        elseif fixedQueue == 1 then
-            requestedItem = "warmth_potion"    -- First customer 
-        else
-            requestedItem = available_items[math.random(1, #available_items)]
+        if not requestedItem then
+            print("[Customer] WARNING: No craftable potions!")
+            requestedItem = "strength_potion" -- fallback
         end
         
-        SetData("fixedQueue", fixedQueue - 1)
-        return requestedItem
-    else
-        -- RANDOM MODE (when fixedQueue is 0 or doesn't exist)
-        local randomIndex = math.random(1, #available_items)
-        local requestedItem = available_items[randomIndex]
-        
-        print("[Customer] RANDOM MODE: Generated request: " .. requestedItem)
         return requestedItem
     end
 end

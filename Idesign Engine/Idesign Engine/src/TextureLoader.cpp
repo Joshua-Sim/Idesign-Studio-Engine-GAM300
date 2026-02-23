@@ -9,8 +9,15 @@
 #include "EnginePath.h" 
 #include <filesystem>
 
+std::unordered_map<std::string, unsigned int> TextureLoader::s_texCache;
 unsigned int TextureLoader::loadTexture(TextureProperties& props, bool flip)
 {
+    //cache first
+
+    if (s_texCache.find(props.path) != s_texCache.end()) {
+        props.textureID = s_texCache[props.path];
+        return props.textureID;
+    }
     // ------------------------------------------------------------------
     // Resolve absolute path
     // ------------------------------------------------------------------
@@ -77,12 +84,14 @@ unsigned int TextureLoader::loadTexture(TextureProperties& props, bool flip)
         internalFormat = GL_R8;
         dataFormat = GL_RED;
         break;
-    case 3:
-        internalFormat = GL_RGB8;
+   case 3:
+        // Use GL_COMPRESSED_RGB_S3TC_DXT1_EXT for 6:1 compression
+        internalFormat = GL_COMPRESSED_RGB_S3TC_DXT1_EXT; 
         dataFormat = GL_RGB;
         break;
     case 4:
-        internalFormat = GL_RGBA8;
+        // Use GL_COMPRESSED_RGBA_S3TC_DXT5_EXT for 4:1 compression with alpha
+        internalFormat = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
         dataFormat = GL_RGBA;
         break;
     default:
@@ -91,6 +100,9 @@ unsigned int TextureLoader::loadTexture(TextureProperties& props, bool flip)
         stbi_image_free(data);
         return 0;
     }
+
+
+
 
     // ------------------------------------------------------------------
     // Generate texture object
@@ -147,7 +159,7 @@ unsigned int TextureLoader::loadTexture(TextureProperties& props, bool flip)
     // Cleanup & output
     // ------------------------------------------------------------------
     stbi_image_free(data);
-
+    s_texCache[props.path] = texID;
     props.textureID = texID;
     props.width = width;
     props.height = height;

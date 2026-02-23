@@ -4,6 +4,7 @@
 #include <string>
 #include <glm.hpp>
 #include <FontSystem.h>
+#include "ItemComponent.h"
 
 namespace Framework {
 
@@ -22,7 +23,8 @@ namespace Framework {
     };
 
     // Keep hotbar size in one place
-    constexpr int kHotbarSlots = 6;
+    constexpr int MaxHotbarSlots = 10;
+    constexpr int kHotbarSlots = 5;
 
     // One slot = a single non-stackable item (count can be kept for future proofing)
     struct InvSlot {
@@ -35,7 +37,10 @@ namespace Framework {
     public:
         static Inventory& Instance();
 
-        const InvSlot& Get(int idx) const { return m_hotbar[idx]; }
+        const InvSlot& Get(int idx) const {
+            static InvSlot empty{ -1, 0, 0 };
+            if (idx < 0 || idx >= MaxHotbarSlots) return empty; 
+            return m_hotbar[idx]; }
         InvSlot& Get(int idx) { return m_hotbar[idx]; }
 
         // Core API
@@ -83,10 +88,11 @@ namespace Framework {
         bool TryAddItem_BackpackFirst(int itemId, GLuint iconTex, int count);
         bool IsInventoryFull() const;
 
+
     private:
         Inventory() = default;
 
-        std::array<InvSlot, kHotbarSlots>       m_hotbar{};
+        std::array<InvSlot, MaxHotbarSlots>     m_hotbar{};
         std::array<InvSlot, kBackpackMaxSlots>  mBackpack{};
 
         int  m_selectedIndex = 0;
@@ -98,5 +104,12 @@ namespace Framework {
         SlotRef mDragFrom{};
 
     };
+
+
+    //recipe crafting checks
+    static bool CanCraftRecipe(const PotionRecipe& recipe);
+
+    // 2. Get all craftable potion names
+    std::vector<std::string> GetCraftablePotionNames();
 
 } // namespace Framework

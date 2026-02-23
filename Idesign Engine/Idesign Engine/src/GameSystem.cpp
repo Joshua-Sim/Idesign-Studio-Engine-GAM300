@@ -1,3 +1,4 @@
+
 #include "pch.h" 
 #include "EventSystem.h"
 #include "EventManager.h"
@@ -12,25 +13,24 @@
 #include <rapidjson/document.h>         
 #include <rapidjson/istreamwrapper.h>   
 #include "ItemComponent.h"
+#include "Upgrade.h"
 
 extern Framework::Coordinator ecsInterface;
 Framework::RecipeBookManager* recipeBookManager = nullptr;
 Framework::InputHandler* inputHandler = nullptr;
 
 
-namespace Framework {
+namespace Framework
+{
     // Static member initialization
     std::unordered_map<std::string, int> GameSystem::gameData;
-
     PhaseManager* phaseManager = nullptr;
 
-
-
-    void GameSystem::Initialize() {
-
-        std::filesystem::path projectRoot = Framework::ScriptingSystem::GetProjectRoot();
+    void GameSystem::Initialize()
+    {
+        std::filesystem::path projectRoot = ScriptingSystem::GetProjectRoot();
         std::string itemsPath = (projectRoot / "Assets/JSON/items.json").string();
-        bool success = Framework::InitializeItemDatabase(itemsPath);
+        bool success = InitializeItemDatabase(itemsPath);
 
         if (!success) {
             std::cerr << "CRITICAL WARNING: Items failed to load!" << std::endl;
@@ -52,9 +52,12 @@ namespace Framework {
         }
 
         // Initialize default values
-        SetData("currency", 10000);             // Changed from "score"
+        SetData("currency", 5000);             // Changed from "score"
         SetData("currencyMultiplier", 100); // 100 = 1.0x
         SetData("customerQueue", 0);
+
+        // IMPORTANT: Initialize UpgradeManager to load saved unlock states
+        UpgradeManager::Instance().Initialize();
     }
 
     GameSystem::~GameSystem()

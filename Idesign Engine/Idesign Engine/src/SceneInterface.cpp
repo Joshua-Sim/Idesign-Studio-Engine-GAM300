@@ -17,7 +17,7 @@ namespace Framework
     static bool cutsceneFinished = false;
 
     // Tune these
-    static const float fadeDuration = 0.05f;  // slide fade-in time
+    static const float fadeDuration = 1.75f;  // slide fade-in time
     static const float gap = 0.1f;  // delay between slides
     static const float holdAfterLast = 0.5f;  // hold before fade-out starts
     static const float fadeOutDuration = 0.4f;  // global fade-out time
@@ -84,6 +84,21 @@ namespace Framework
             if (engineState.Is(EngineMode::Upgrade))
             {
                 auto upgradeEntities = ecsInterface.GetEntitiesByTag("upgrade");
+
+                // NEXT DAY BUTTON ONLY
+                auto nextDayButt = ecsInterface.GetEntitiesByTag("nextdaybutt");
+                for (Entity e : nextDayButt)
+                {
+                    if (!ecsInterface.IsEntityValid(e)) continue;
+
+                    if (ecsInterface.HasComponent<ButtonComponent>(e) &&
+                        ecsInterface.HasComponent<TextureProperties>(e))
+                    {
+                        auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
+                        if (!engineState.Is(EngineMode::Editor)) { texture.isUI = engineState.Is(EngineMode::Upgrade); }
+                    }
+                }
+
                 auto& upgradeMgr = UpgradeManager::Instance();
 
                 // ------------------------------------------------------------
@@ -106,11 +121,16 @@ namespace Framework
                 }
 
                 // ------------------------------------------------------------
-                // 2. Affordability checks (do ONCE)
+                // 2. Affordability and Completion checks
                 // ------------------------------------------------------------
                 bool canAffordQuarry = GameSystem::GetCurrency() >= upgradeMgr.GetAreaUnlockCost(GameArea::Quarry);
                 bool canAffordGold = upgradeMgr.CanAffordCurrencyUpgrade();
                 bool canAffordInventory = upgradeMgr.CanAffordInventoryUpgrade();
+
+                // Completion checks
+                bool quarryComplete = upgradeMgr.IsAreaUnlocked(GameArea::Quarry);
+                bool goldComplete = upgradeMgr.IsCurrencyMaxLevel();
+                bool backpackComplete = upgradeMgr.IsBackpackMaxLevel();
 
                 // ------------------------------------------------------------
                 // 3. Apply visibility to ALL upgrade UI entities
@@ -128,39 +148,55 @@ namespace Framework
                     bool shouldShow = false;
 
                     // -------------------------
-                    // QUARRY STAMPS
+                    // COMPLETE STAMPS (highest priority - always show if complete)
                     // -------------------------
-                    if (ecsInterface.EntityHasTag(e, "quarrypass"))
+                    if (ecsInterface.EntityHasTag(e, "quarrycomplete"))
                     {
-                        shouldShow = (quarryHovered && canAffordQuarry);
+                        shouldShow = quarryComplete;
+                    }
+                    else if (ecsInterface.EntityHasTag(e, "goldcomplete"))
+                    {
+                        shouldShow = goldComplete;
+                    }
+                    else if (ecsInterface.EntityHasTag(e, "inventorycomplete"))
+                    {
+                        shouldShow = backpackComplete;
+                    }
+
+                    // -------------------------
+                    // QUARRY STAMPS (only show if NOT complete)
+                    // -------------------------
+                    else if (ecsInterface.EntityHasTag(e, "quarrypass"))
+                    {
+                        shouldShow = (!quarryComplete && quarryHovered && canAffordQuarry);
                     }
                     else if (ecsInterface.EntityHasTag(e, "quarryfail"))
                     {
-                        shouldShow = (quarryHovered && !canAffordQuarry);
+                        shouldShow = (!quarryComplete && quarryHovered && !canAffordQuarry);
                     }
 
                     // -------------------------
-                    // GOLD STAMPS
+                    // GOLD STAMPS (only show if NOT complete)
                     // -------------------------
                     else if (ecsInterface.EntityHasTag(e, "goldpass"))
                     {
-                        shouldShow = (goldHovered && canAffordGold);
+                        shouldShow = (!goldComplete && goldHovered && canAffordGold);
                     }
                     else if (ecsInterface.EntityHasTag(e, "goldfail"))
                     {
-                        shouldShow = (goldHovered && !canAffordGold);
+                        shouldShow = (!goldComplete && goldHovered && !canAffordGold);
                     }
 
                     // -------------------------
-                    // INVENTORY STAMPS
+                    // INVENTORY STAMPS (only show if NOT complete)
                     // -------------------------
                     else if (ecsInterface.EntityHasTag(e, "inventorypass"))
                     {
-                        shouldShow = (inventoryHovered && canAffordInventory);
+                        shouldShow = (!backpackComplete && inventoryHovered && canAffordInventory);
                     }
                     else if (ecsInterface.EntityHasTag(e, "inventoryfail"))
                     {
-                        shouldShow = (inventoryHovered && !canAffordInventory);
+                        shouldShow = (!backpackComplete && inventoryHovered && !canAffordInventory);
                     }
 
                     // ------------------------------------------------------------
@@ -168,10 +204,15 @@ namespace Framework
                     // ------------------------------------------------------------
                     else
                     {
+                        bool isQuarryBase =    ecsInterface.EntityHasTag(e, "quarry");
+                        bool isGoldBase =      ecsInterface.EntityHasTag(e, "gold");
+                        bool isInventoryBase = ecsInterface.EntityHasTag(e, "inventory");
+
+                        // Hide base card if hovered OR if completed
                         bool hideBase =
-                            (ecsInterface.EntityHasTag(e, "quarry") && quarryHovered) ||
-                            (ecsInterface.EntityHasTag(e, "gold") && goldHovered) ||
-                            (ecsInterface.EntityHasTag(e, "inventory") && inventoryHovered);
+                            (isQuarryBase && (quarryHovered || quarryComplete)) ||
+                            (isGoldBase && (goldHovered || goldComplete)) ||
+                            (isInventoryBase && (inventoryHovered || backpackComplete));
 
                         shouldShow = !hideBase;
                     }
@@ -193,6 +234,20 @@ namespace Framework
                         texture.isUI = false;  // Hide when not in Upgrade mode
                     }
                 }
+
+                // NOT in Upgrade mode - hide all upgrade-tagged entities
+                auto nextDayButt = ecsInterface.GetEntitiesByTag("nextdaybutt");
+                for (Entity e : nextDayButt)
+                {
+                    if (!ecsInterface.IsEntityValid(e)) continue;
+
+                    if (ecsInterface.HasComponent<ButtonComponent>(e) &&
+                        ecsInterface.HasComponent<TextureProperties>(e))
+                    {
+                        auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
+                        if (!engineState.Is(EngineMode::Editor)) { texture.isUI = false; }
+                    }
+                }
             }
 
 
@@ -206,7 +261,7 @@ namespace Framework
                     ecsInterface.HasComponent<TextureProperties>(e))
                 {
                     auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
-                    
+
                     // Only enforce UI flag if NOT in editor mode 
                     if (!engineState.Is(EngineMode::Editor)) { texture.isUI = engineState.Is(EngineMode::Settings); }
                 }
@@ -214,34 +269,25 @@ namespace Framework
                 if (ecsInterface.HasComponent<TextProperties>(e))
                 {
                     auto& text = ecsInterface.GetComponent<TextProperties>(e);
-                    
+
                     // Only enforce opacity if NOT in editor mode 
                     if (!engineState.Is(EngineMode::Editor)) { text.opacity = engineState.Is(EngineMode::Settings) ? 1.f : 0.f; }
                 }
             }
 
             // 6. MAP SELECTION LOGIC
-            if(engineState.Is(EngineMode::MapSelection))
+            auto mapEntities = ecsInterface.GetEntitiesByTag("map");
+            for (Entity e : mapEntities)
             {
-                auto mapEntities = ecsInterface.GetEntitiesByTag("map");
-                for (Entity e : mapEntities)
+                if (!ecsInterface.IsEntityValid(e)) continue;
+
+                if (ecsInterface.HasComponent<ButtonComponent>(e) &&
+                    ecsInterface.HasComponent<TextureProperties>(e))
                 {
-                    if (!ecsInterface.IsEntityValid(e)) continue;
-
-                    if (ecsInterface.HasComponent<ButtonComponent>(e) &&
-                        ecsInterface.HasComponent<TextureProperties>(e))
-                    {
-                        auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
-                        // Only enforce UI flag if NOT in editor mode
-                        if (!engineState.Is(EngineMode::Editor)) { texture.isUI = engineState.Is(EngineMode::MapSelection); }
-                    }
-
-                    if (ecsInterface.HasComponent<TextProperties>(e))
-                    {
-                        auto& text = ecsInterface.GetComponent<TextProperties>(e);
-
-                        // Only enforce opacity if NOT in editor mode
-                        if (!engineState.Is(EngineMode::Editor)) { text.opacity = engineState.Is(EngineMode::MapSelection) ? 1.f : 0.f; }
+                    auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
+                    // Only enforce UI flag if NOT in editor mode
+                    if (!engineState.Is(EngineMode::Editor)) {
+                        if (!engineState.Is(EngineMode::Editor)) { texture.isUI = engineState.Is(EngineMode::MapSelection) ? 1.f : 0.f; }
                     }
                 }
             }
@@ -372,8 +418,8 @@ namespace Framework
 
                     // Show only during Play, Upgrade, or Editor modes
                     bool shouldShow = engineState.Is(EngineMode::Play) ||
-                                      engineState.Is(EngineMode::Upgrade) ||
-                                      engineState.Is(EngineMode::Editor);
+                        engineState.Is(EngineMode::Upgrade) ||
+                        engineState.Is(EngineMode::Editor);
                     texture.isUI = shouldShow;
                 }
             }
