@@ -91,7 +91,7 @@ unsigned int TextureLoader::loadTexture(TextureProperties& props, bool flip)
         break;
     case 4:
         // Use GL_COMPRESSED_RGBA_S3TC_DXT5_EXT for 4:1 compression with alpha
-        internalFormat = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
+        internalFormat = GL_RGBA8;
         dataFormat = GL_RGBA;
         break;
     default:
