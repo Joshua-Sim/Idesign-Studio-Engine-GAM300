@@ -874,7 +874,7 @@ namespace Framework {
         // ====================================================================
         // 2. RENDER VIEW 1: SCENE (free-fly)
         // ====================================================================
-        if (engineState.Is(EngineMode::Editor))
+        if (glfwGetKey(window, GLFW_KEY_EQUAL) == GLFW_PRESS)
         {
             RenderView(
                 sceneCamera, 1, w, h,
