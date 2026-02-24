@@ -176,7 +176,7 @@ namespace Framework {
             });
         AssetManager::Instance().LoadBinaryArray<TextureProperties>("Resource/TextureAsset.bin", g_TexturePropertiesProps, [](TextureProperties& props)
             {
-                TextureLoader::loadTexture(props, true);
+                TextureLoader::loadTextureAsync(props, true);
             });
 
         AssetManager::Instance().LoadBinaryArray<MeshProperties>("Resource/MeshAsset.bin", g_MeshProps, [](MeshProperties& props)
@@ -577,6 +577,8 @@ namespace Framework {
     void Graphics::Update(float deltaTime)
     {
         (void)deltaTime;
+
+        TextureLoader::processUploads(); // drain the queue each frame
 
         if (glfwWindowShouldClose(window)) {
             CORE->EndGameLoop(); // Mark the game loop as done
