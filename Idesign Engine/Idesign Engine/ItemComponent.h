@@ -25,6 +25,8 @@ namespace Framework
         std::string id;
         std::string displayName;
         ItemType type;
+        std::string location;
+        std::string flavorText; // <--- ADD THIS
     };
 
     struct PotionRecipe {
@@ -113,6 +115,14 @@ namespace Framework
                 if (typeStr == "ingredient") def.type = ItemType::INGREDIENT;
                 else if (typeStr == "potion") def.type = ItemType::POTION;
                 else def.type = ItemType::DEFAULT;
+                if (item.HasMember("location") && item["location"].IsString()) {
+                    def.location = item["location"].GetString();
+                }
+                else {
+                    def.location = "Not found anywhere"; // Fallback text
+                }
+                def.flavorText = item["flavor"].GetString();
+
 
                 itemDB.push_back(def);
             }
@@ -200,7 +210,17 @@ namespace Framework
         return items[id].displayName;
     }
 
+    inline std::string GetItemFlavorText(int id) {
+        const auto& items = GetItemDatabase();
+        if (id < 0 || id >= items.size()) return "Unknown";
+        return items[id].flavorText;
+    }
 
+    inline std::string GetItemLocation(int id) {
+        const auto& items = GetItemDatabase();
+        if (id < 0 || id >= items.size()) return "Unknown";
+        return items[id].location;
+    }
 
 
     // --- 6. ECS Components ---

@@ -1583,6 +1583,18 @@
             "name": "bookflap",
             "path": "Assets\\Textures\\bookflap.png",
             "isUI": false
+        },
+        {
+            "guid": "abcf2a31-b778-4d2c-a68f-255081fc8d03",
+            "name": "RB_ItemBackground",
+            "path": "Assets\\Textures\\RB_ItemBackground.png",
+            "isUI": false
+        },
+        {
+            "guid": "3efccc32-05f1-4b34-846e-3157e8dbaf4f",
+            "name": "RB_ItemOutline",
+            "path": "Assets\\Textures\\RB_ItemOutline.png",
+            "isUI": false
         }
     ]
 }

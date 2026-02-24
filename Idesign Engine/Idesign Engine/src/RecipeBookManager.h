@@ -26,18 +26,25 @@ namespace Framework {
 
 
         float bookZ = 0.4f;
+
+		// Left Side Page (Grid)
+        float itemFrameZ = 0.5f;
+		float itemIconZ = 0.65f;
+
+        // Bookmarks
         float bookmarkZ = 0.5f;
-        float bookmarkIconZ = 0.6f;
-        float bookflapZ = 0.9f;
+        float bookmarkIconZ = 0.55f;
+        float bookflapZ = 0.6f;
 
         float bookCenterX = 960.0f;
         float bookCenterY = 540.0f;
 
         // --- LAYOUT CONSTANTS ---
-        const float GRID_START_X = 510.0f;  // Top-left of the Left Page
-        const float GRID_START_Y = 675.0f;
+        const float GRID_START_X = 500.0f;
+        const float GRID_START_Y = 850.0f;
         const float SLOT_SIZE = 120.0f;
-        const float PADDING = 20.0f;
+        const float PADDING_X = 50.0f;   // Horizontal gap between frames
+        const float PADDING_Y = 100.0f;   // Vertical gap (increased for text + underline)
         const int   GRID_COLUMNS = 3;
 
         // --- TAB STATE ---
@@ -381,10 +388,10 @@ namespace Framework {
                     if (colCounter >= GRID_COLUMNS) {
                         colCounter = 0;
                         currentX = GRID_START_X;
-                        currentY -= (SLOT_SIZE + PADDING);
+                        currentY -= (SLOT_SIZE + PADDING_Y);
                     }
                     else {
-                        currentX += (SLOT_SIZE + PADDING);
+                        currentX += (SLOT_SIZE + PADDING_X);
                     }
                 }
 
@@ -394,37 +401,48 @@ namespace Framework {
         // =========================================================
         //                 LEFT PAGE: ITEM GRID
         // =========================================================
-        // --- Inside BuildLeftPage ---
-            void BuildLeftPage() {
-                // 1. Draw Grid (Removed old tab rendering logic from here)
-                float currentX = GRID_START_X;
-                float currentY = GRID_START_Y;
-                int colCounter = 0;
+        void BuildLeftPage() {
+            float currentX = GRID_START_X;
+            float currentY = GRID_START_Y;
+            int colCounter = 0;
 
-                for (int i = 0; i < Framework::kItemCount; i++) {
-                    Framework::ItemType type = Framework::GetItemType(i);
+            for (int i = 0; i < Framework::kItemCount; i++) {
+                Framework::ItemType type = Framework::GetItemType(i);
 
-                    // --- FILTER LOGIC ---
-                    // Tab 0 = Ingredients, Tab 1 = Potions, Tab 2 = MortarPestle (Items/Tools)
-                    if (m_currentTab == BookTab::INGREDIENTS && type != Framework::ItemType::INGREDIENT) continue;
-                    if (m_currentTab == BookTab::POTIONS && type != Framework::ItemType::POTION) continue;
-                    if (m_currentTab == BookTab::ITEMS && type != Framework::ItemType::DEFAULT) continue;
+                // --- FILTER LOGIC ---
+                if (m_currentTab == BookTab::INGREDIENTS && type != Framework::ItemType::INGREDIENT) continue;
+                if (m_currentTab == BookTab::POTIONS && type != Framework::ItemType::POTION) continue;
+                if (m_currentTab == BookTab::ITEMS && type != Framework::ItemType::DEFAULT) continue;
 
-                    // Spawn Icon
-                    SpawnUISprite(currentX, currentY, Framework::kItemNames[i], 2.0f, 1.0f);
+                // 1. Background Frame
+                SpawnGenericSprite(currentX, currentY, "RB_ItemBackground", 125.0f, 125.0f, itemFrameZ);
 
-                    // Grid Math
-                    colCounter++;
-                    if (colCounter >= GRID_COLUMNS) {
-                        colCounter = 0;
-                        currentX = GRID_START_X;
-                        currentY -= (SLOT_SIZE + PADDING);
-                    }
-                    else {
-                        currentX += (SLOT_SIZE + PADDING);
-                    }
+                // 2. Item Icon (Scale 2.0 * 40.0f base = 80.0f width/height to fit inside 120.0f frame)
+                // Spawned at Z = 1.1f to ensure it draws on top of the background
+                SpawnUISprite(currentX, currentY, Framework::kItemNames[i], 2.0f, itemIconZ);
+
+                // 3. Item Name Text (Centered below the slot)
+                float textY = currentY - (SLOT_SIZE / 2.0f) - 25.0f;
+                std::string displayName = Framework::GetItemDisplayName(i);
+                SpawnText(currentX, textY, displayName, 0.5f);
+
+                // 4. Underline (Centered below the text)
+                float underlineY = textY - 10.0f;
+                // Assuming RB_Underline is roughly the width of the slot and relatively thin
+                SpawnGenericSprite(currentX, underlineY, "RB_ItemOutline", 160.0f, 5.0f, itemIconZ);
+
+                // Grid Math
+                colCounter++;
+                if (colCounter >= GRID_COLUMNS) {
+                    colCounter = 0;
+                    currentX = GRID_START_X;
+                    currentY -= (SLOT_SIZE + PADDING_Y); // Use the new vertical padding
+                }
+                else {
+                    currentX += (SLOT_SIZE + PADDING_X); // Use the new horizontal padding
                 }
             }
+        }
 
         // =========================================================
         //                  RIGHT PAGE: INGREDIENT BREAKDOWN
@@ -432,7 +450,7 @@ namespace Framework {
         void BuildRightPage(int selectedID) {
             float rightPageX = 960.0f + 230.0f;
             float currentY = GRID_START_Y;
-            float rowSpacing = SLOT_SIZE + PADDING;
+            float rowSpacing = SLOT_SIZE + PADDING_Y;
 
             SpawnText(rightPageX + 30.0f, currentY + 150.0f, "Ingredients Required", 1.5f);
 
@@ -601,7 +619,7 @@ namespace Framework {
             return e; // Return the ID so we can track it
         }
 
-        void SpawnText(float x, float y, std::string textContent, float scaleMult = 1.0f) {
+        void SpawnText(float x, float y, std::string textContent, float scaleMult = 1.0f, glm::vec4 color = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f)) {
             if (textContent.empty()) return;
 
             Entity e = coordinator->CreateEntity();
@@ -618,7 +636,8 @@ namespace Framework {
             tp.text = textContent;
             tp.alignment = 1; // Center
             tp.scale = scaleMult;
-
+			tp.color = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f);
+            
             coordinator->AddComponent(e, hc);
             coordinator->AddComponent(e, trans);
             coordinator->AddComponent(e, mesh);

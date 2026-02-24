@@ -3170,7 +3170,15 @@ namespace Framework {
             uiShader.setFloat("uAlpha", tex.uiAlpha);
 
             glm::mat4 model = glm::mat4(1.0f);
-            model = glm::translate(model, tr.position);
+
+            // Use std::round to ensure the UI element sits exactly on a pixel
+            glm::vec3 snappedPos = glm::vec3(
+                std::round(tr.position.x),
+                std::round(tr.position.y),
+                tr.position.z
+            );
+
+            model = glm::translate(model, snappedPos);
 
             // [FIX 2] CORRECT SCALE CALCULATION
             // Your renderQuad() is 2x2 (-1 to 1). 
