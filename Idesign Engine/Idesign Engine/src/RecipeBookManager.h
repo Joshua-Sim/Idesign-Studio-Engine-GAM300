@@ -45,7 +45,7 @@ namespace Framework {
         BookTab m_currentTab = BookTab::INGREDIENTS;
 
         // --- SIDE TAB CONSTANTS ---
-        const float SIDE_TAB_HIDDEN_X = 380.0f;   // Tucked under the flap
+        const float SIDE_TAB_HIDDEN_X = 370.0f;   // Tucked under the flap
         const float SIDE_TAB_EXTENDED_X = 342.0f; // Slid out
         const float SIDE_TAB_START_Y = 700.0f;
         const float SIDE_TAB_SPACING = 150.0f;
@@ -55,7 +55,9 @@ namespace Framework {
         const float SIDE_UV_MAX_X = 430.0f / 1920.0f; // HIDDEN_X right edge approx
         float m_tabVisualX[3] = { 380.0f, 380.0f, 380.0f }; // Start at HIDDEN_X
 
-
+        // Private members
+        Entity m_tabBGEntities[3] = { 0, 0, 0 };
+        Entity m_tabIconEntities[3] = { 0, 0, 0 };
 
         int m_hoveredItemID = -1;       // ID of item currently under mouse
         int m_hoveredSideTab = -1;
@@ -114,10 +116,10 @@ namespace Framework {
                     if (m_currentTab != clickedTab) {
                         m_currentTab = clickedTab;
                         m_selectedItemID = -1; // Clear right page on tab switch
-                        g_AudioSystem->PlayAudio("event:/PageTurn"); // Or "event:/PageTurn"
+                        g_AudioSystem->PlayAudio("event:/PaperUp");
                         RefreshBook();
                     }
-                    return; // Exit early: we clicked a sidebar tab
+                    return;
                 }
             }
 
@@ -158,12 +160,25 @@ namespace Framework {
         }
 
         void ClearBook() {
-            RemoveTooltip(); // <--- Add this
+            RemoveTooltip();
+
+            // Use a local copy or clear carefully
             for (Entity e : uiEntities) {
-                coordinator->DestroyEntity(e);
+                // Safety check: is it a valid entity?
+                if (e != 0) {
+                    coordinator->DestroyEntity(e);
+                }
             }
-            
             uiEntities.clear();
+
+            // CRITICAL: Reset these to 0 so UpdateVisuals doesn't 
+            // try to access them after they are destroyed.
+            for (int i = 0; i < 3; ++i) {
+                m_tabBGEntities[i] = 0;
+                m_tabIconEntities[i] = 0;
+            }
+
+            bookSpawned = false;
         }
 
         // Helper to refresh when state changes (avoids destroying/playing audio if not needed)
@@ -215,23 +230,24 @@ namespace Framework {
         void UpdateVisuals(float dt) {
             if (!bookSpawned) return;
 
-            bool needsRefresh = false;
             for (int i = 0; i < 3; ++i) {
-                // Determine if this tab SHOULD be extended
+                // 1. Calculate the goal
                 bool active = (static_cast<int>(m_currentTab) == i) || (m_hoveredSideTab == i);
                 float targetX = active ? SIDE_TAB_EXTENDED_X : SIDE_TAB_HIDDEN_X;
 
-                // Check if we need to move (using a small epsilon of 0.1f)
                 if (std::abs(m_tabVisualX[i] - targetX) > 0.1f) {
-                    // Smoothly interpolate: current = current + (dist * speed * dt)
-                    m_tabVisualX[i] += (targetX - m_tabVisualX[i]) * 12.0f * dt;
-                    needsRefresh = true;
-                }
-            }
+                    m_tabVisualX[i] += (targetX - m_tabVisualX[i]) * 15.0f * dt;
 
-            // If any tab moved, we rebuild the UI to show the new position
-            if (needsRefresh) {
-                RefreshBook();
+                    // Use 0 or your specific NULL_ENTITY constant
+                    if (m_tabBGEntities[i] != 0) {
+                        auto& trans = coordinator->GetComponent<TransformComponent>(m_tabBGEntities[i]);
+                        trans.position.x = m_tabVisualX[i];
+                    }
+                    if (m_tabIconEntities[i] != 0) {
+                        auto& trans = coordinator->GetComponent<TransformComponent>(m_tabIconEntities[i]);
+                        trans.position.x = m_tabVisualX[i];
+                    }
+                }
             }
         }
 
@@ -468,17 +484,11 @@ namespace Framework {
 
             for (int i = 0; i < 3; ++i) {
                 float currentY = SIDE_TAB_START_Y - (i * SIDE_TAB_SPACING);
+                float startX = m_tabVisualX[i]; // Use current animated position
 
-                // --- THE FIX ---
-                // Instead of calculating currentX here based on m_currentTab,
-                // we use the visual value that UpdateVisuals() is moving frame-by-frame.
-                float animatedX = m_tabVisualX[i];
-
-                // 1. Spawn the Bookmark Background using the animated X
-                SpawnGenericSprite(animatedX, currentY, sideBGs[i], SIDE_TAB_WIDTH, SIDE_TAB_HEIGHT, bookmarkZ);
-
-                // 2. Spawn the Icon using the animated X
-                SpawnGenericSprite(animatedX, currentY, sideIcons[i], 60.0f, 60.0f, bookmarkIconZ);
+                // Store the IDs so UpdateVisuals can find them
+                m_tabBGEntities[i] = SpawnGenericSpriteReturnEntity(startX, currentY, sideBGs[i], SIDE_TAB_WIDTH, SIDE_TAB_HEIGHT, bookmarkZ);
+                m_tabIconEntities[i] = SpawnGenericSpriteReturnEntity(startX, currentY, sideIcons[i], 60.0f, 60.0f, bookmarkIconZ);
             }
         }
        
@@ -565,6 +575,30 @@ namespace Framework {
 
         void SpawnBook(float x, float y, float width, float height, float z) {
             SpawnGenericSprite(x, y, "book", width, height, z);
+        }
+
+        Entity SpawnGenericSpriteReturnEntity(float x, float y, std::string texName, float width, float height, float z) {
+            Entity e = coordinator->CreateEntity();
+            TransformComponent trans;
+            trans.position = glm::vec3(x, y, z);
+            trans.scale = glm::vec3(width, height, 1.0f);
+
+            MeshProperties mesh;
+            TextureProperties texComp;
+            HierarchyComponent hc;
+
+            std::string fullPath = "Assets/Textures/" + texName + ".png";
+            texComp.path = fullPath;
+            texComp.isUI = true;
+            TextureLoader::loadTexture(texComp, true);
+
+            coordinator->AddComponent(e, hc);
+            coordinator->AddComponent(e, trans);
+            coordinator->AddComponent(e, mesh);
+            coordinator->AddComponent(e, texComp);
+
+            uiEntities.push_back(e);
+            return e; // Return the ID so we can track it
         }
 
         void SpawnText(float x, float y, std::string textContent, float scaleMult = 1.0f) {
