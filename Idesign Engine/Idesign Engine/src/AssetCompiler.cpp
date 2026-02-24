@@ -1,4 +1,3 @@
-
 #include <pch.h>
 #include <AssetCompiler.h>
 #include "NavMeshProperties.h"
@@ -154,209 +153,121 @@ namespace Framework
                     ecsInterface.AddComponent(entity, transform);
                 }
 
-                // Tag 
+                // Tag
                 if (components.HasMember("TagComponent"))
                 {
+                    TagComponent tagComp;
                     const auto& tagJson = components["TagComponent"];
-                    TagComponent tagComp;
                     if (tagJson.HasMember("tags") && tagJson["tags"].IsArray())
-                    {
                         for (const auto& tag : tagJson["tags"].GetArray())
-                        {
-                            if (tag.IsString())
-                                tagComp.tags.push_back(tag.GetString());
-                        }
-                    }
+                            if (tag.IsString()) tagComp.tags.push_back(tag.GetString());
                     ecsInterface.AddComponent(entity, tagComp);
                 }
-                else
-                {
-                    // Legacy support for pre-tag objects
-                    TagComponent tagComp;
-                    ecsInterface.AddComponent(entity, tagComp);
-                }
-
+                else ecsInterface.AddComponent(entity, TagComponent{}); // legacy support
 
                 // Hierarchy
                 if (components.HasMember("HierarchyComponent"))
                 {
                     HierarchyComponent hierarchy;
-                    const auto& hierarchyJson = components["HierarchyComponent"];
-
-                    if (hierarchyJson.HasMember("parent") && hierarchyJson["parent"].IsString())
-                        hierarchy.parentGUID = hierarchyJson["parent"].GetString();
-
-                    if (hierarchyJson.HasMember("children") && hierarchyJson["children"].IsArray())
-                    {
-                        for (const auto& child : hierarchyJson["children"].GetArray())
-                        {
-                            if (child.IsString())
-                                hierarchy.childrenGUIDs.push_back(child.GetString());
-                        }
-                    }
-
-                    if (hierarchyJson.HasMember("sortIndex") && hierarchyJson["sortIndex"].IsInt())
-                        hierarchy.sortIndex = hierarchyJson["sortIndex"].GetInt();
-
+                    const auto& hj = components["HierarchyComponent"];
+                    if (hj.HasMember("parent")    && hj["parent"].IsString())  hierarchy.parentGUID = hj["parent"].GetString();
+                    if (hj.HasMember("sortIndex") && hj["sortIndex"].IsInt())  hierarchy.sortIndex  = hj["sortIndex"].GetInt();
+                    if (hj.HasMember("children")  && hj["children"].IsArray())
+                        for (const auto& child : hj["children"].GetArray())
+                            if (child.IsString()) hierarchy.childrenGUIDs.push_back(child.GetString());
                     ecsInterface.AddComponent(entity, hierarchy);
                 }
 
-                // Mesh
+                // Mesh (GUID reference — loads actual mesh data below)
                 if (components.HasMember("MeshComponent"))
                 {
                     const auto& meshRef = components["MeshComponent"];
                     if (meshRef.HasMember("guid") && meshRef["guid"].IsString())
                     {
-                        std::string guid = meshRef["guid"].GetString();
-                        MeshProperties* mesh = AssetManager::Instance().Get<MeshProperties>(guid);
+                        MeshProperties* mesh = AssetManager::Instance().Get<MeshProperties>(meshRef["guid"].GetString());                        
                         if (mesh)
                         {
-                            // Load mesh data if path is valid
-                            auto animGUID = AssetManager::Instance().FindGuid<AnimationProperties>(mesh->name);
-                            Framework::AnimationProperties* animAsset = nullptr;
-
-                            if (!animGUID.empty()) {
-                                animAsset = AssetManager::Instance().Get<AnimationProperties>(animGUID);
-                            }
-
-                            // 2. If found, load as Animated. Else, load as Static.
+                            auto animGUID  = AssetManager::Instance().FindGuid<AnimationProperties>(mesh->name);
+                            auto* animAsset = animGUID.empty() ? nullptr : AssetManager::Instance().Get<AnimationProperties>(animGUID);
                             if (animAsset)
                             {
-                                // Ensure skeleton is loaded so we can map bone IDs
-                                if (animAsset->skeleton.bones.empty()) {
+                                if (animAsset->skeleton.bones.empty())
                                     AnimationLoader::loadAnimation(animAsset->path, *animAsset);
-                                }
-
-                                // Load with Weights & IDs
                                 MeshLoader::loadAnimatedMesh(mesh->path, *animAsset, *mesh);
                             }
-                            else
-                            {
-                                // Fallback to static
-                                MeshLoader::loadMesh(mesh->path, *mesh);
-                            }
-                            // Restore material linkage if present
-                            if (meshRef.HasMember("materialGuid") && meshRef["materialGuid"].IsString())
-                            {
-                                std::string matGuid = meshRef["materialGuid"].GetString();
-                                mesh->materialGuid = AssetHandle(matGuid);
-                            }
+                            else MeshLoader::loadMesh(mesh->path, *mesh);
 
+                            if (meshRef.HasMember("materialGuid") && meshRef["materialGuid"].IsString())
+                                mesh->materialGuid = AssetHandle(meshRef["materialGuid"].GetString());
                             ecsInterface.AddComponent(entity, *mesh);
                         }
-                        else
-                        {
-                            //std::cerr << "Missing MeshProperties for GUID: " << guid << "\n";
-                            MeshProperties defaultMesh;
-                            ecsInterface.AddComponent(entity, defaultMesh);
-                        }
+                        else ecsInterface.AddComponent(entity, MeshProperties{});
                     }
                 }
                 
-                // Texture
+                // Texture (GUID reference + per-instance isUI override)
                 if (components.HasMember("TextureComponent"))
                 {
                     const auto& texRef = components["TextureComponent"];
                     if (texRef.HasMember("guid") && texRef["guid"].IsString())
                     {
-                        std::string guid = texRef["guid"].GetString();
-                        const TextureProperties* tex = AssetManager::Instance().Get<TextureProperties>(guid);
+                        const TextureProperties* tex = AssetManager::Instance().Get<TextureProperties>(texRef["guid"].GetString());                        
                         if (tex)
                         {
-                            // 1. Create a local copy of the asset data
-                            TextureProperties instanceTex = *tex;
-
-                            // 2. [FIX] Check if the JSON has the isUI override and apply it
+                            TextureProperties instance = *tex;
                             if (texRef.HasMember("isUI") && texRef["isUI"].IsBool())
-                            {
-                                instanceTex.isUI = texRef["isUI"].GetBool();
-                            }
-
-                            // 3. Add the modified component
-                            ecsInterface.AddComponent(entity, instanceTex);
+                                instance.isUI = texRef["isUI"].GetBool();
+                            ecsInterface.AddComponent(entity, instance);
                         }
-                        else
-                        {
-                            std::cerr << "Missing TextureProperties for GUID: " << guid << "\n";
-                        }
+                        else std::cerr << "Missing TextureProperties for GUID: " << texRef["guid"].GetString() << "\n";
                     }
                 }
 
+                // Light (enum string conversion for 'type' field)
                 if (components.HasMember("LightProperties"))
                 {
                     LightProperties light;
-                    const auto& lightJson = components["LightProperties"];
-
-                    // Manually read the 'type' string and convert it
-                    if (lightJson.HasMember("type") && lightJson["type"].IsString())
-                    {
-                        std::string typeStr = lightJson["type"].GetString();
-                        if (s_stringToLightType.count(typeStr))
-                        {
-                            light.type = s_stringToLightType.at(typeStr);
-                        }
-                    }
-                    Deserialize(&light, g_LightProps, components["LightProperties"]);
+                    const auto& lj = components["LightProperties"];
+                    if (lj.HasMember("type") && lj["type"].IsString() && s_stringToLightType.count(lj["type"].GetString()))
+                        light.type = s_stringToLightType.at(lj["type"].GetString());
+                    Deserialize(&light, g_LightProps, lj);
                     ecsInterface.AddComponent(entity, light);
                 }
 
+                // Animation (GUID reference + per-instance playback overrides)
                 if (components.HasMember("AnimationProperties"))
                 {
                     const auto& animRef = components["AnimationProperties"];
                     if (animRef.HasMember("guid") && animRef["guid"].IsString())
                     {
-                        std::string guid = animRef["guid"].GetString();
-                        AnimationProperties* anim = AssetManager::Instance().Get<AnimationProperties>(guid);
+                        AnimationProperties* anim = AssetManager::Instance().Get<AnimationProperties>(animRef["guid"].GetString());                        
                         if (anim)
                         {
-                            AnimationProperties instanceAnim = *anim;
-                            if (animRef.HasMember("defaultAnimationName") && animRef["defaultAnimationName"].IsString())
-                                instanceAnim.defaultAnimationName = animRef["defaultAnimationName"].GetString();
-
-                            if (animRef.HasMember("animationSpeed") && animRef["animationSpeed"].IsNumber())
-                                instanceAnim.animationSpeed = animRef["animationSpeed"].GetFloat();
-
-                            if (animRef.HasMember("bLoops") && animRef["bLoops"].IsBool())
-                                instanceAnim.bLoops = animRef["bLoops"].GetBool();
-
-                            if (animRef.HasMember("bPlayOnStart") && animRef["bPlayOnStart"].IsBool())
-                                instanceAnim.bPlayOnStart = animRef["bPlayOnStart"].GetBool();
-                            if (animRef.HasMember("currentTime") && animRef["currentTime"].IsNumber())
-                                instanceAnim.currentTime = animRef["currentTime"].GetFloat();
-                            ecsInterface.AddComponent(entity, instanceAnim);
+                            AnimationProperties instance = *anim;
+                            if (animRef.HasMember("defaultAnimationName") && animRef["defaultAnimationName"].IsString()) instance.defaultAnimationName = animRef["defaultAnimationName"].GetString();
+                            if (animRef.HasMember("animationSpeed")       && animRef["animationSpeed"].IsNumber())       instance.animationSpeed       = animRef["animationSpeed"].GetFloat();
+                            if (animRef.HasMember("bLoops")               && animRef["bLoops"].IsBool())                 instance.bLoops               = animRef["bLoops"].GetBool();
+                            if (animRef.HasMember("bPlayOnStart")         && animRef["bPlayOnStart"].IsBool())           instance.bPlayOnStart         = animRef["bPlayOnStart"].GetBool();
+                            if (animRef.HasMember("currentTime")          && animRef["currentTime"].IsNumber())          instance.currentTime          = animRef["currentTime"].GetFloat();
+                            ecsInterface.AddComponent(entity, instance);
                         }
-                        else
-                        {
-                            std::cerr << "Missing AnimationProperties for GUID: " << guid << "\n";
-                        }
+                        else std::cerr << "Missing AnimationProperties for GUID: " << animRef["guid"].GetString() << "\n";
                     }
                 }
 
-           
-
-                // Navmesh
+                // NavMesh (no prop_list — manual fields)
                 if (components.HasMember("NavMeshComponent"))
                 {
-                    const auto& navObj = components["NavMeshComponent"];
                     NavMeshComponent nav;
-
-                    if (navObj.HasMember("guid"))
-                        nav.guid = navObj["guid"].GetString();
-                    if (navObj.HasMember("isNavMeshSource"))
-                        nav.isNavMeshSource = navObj["isNavMeshSource"].GetBool();
-                    if (navObj.HasMember("runtimeGenerated"))
-                        nav.runtimeGenerated = navObj["runtimeGenerated"].GetBool();
-                    if (navObj.HasMember("agentRadius"))
-                        nav.agentRadius = navObj["agentRadius"].GetFloat();
-                    if (navObj.HasMember("agentHeight"))
-                        nav.agentHeight = navObj["agentHeight"].GetFloat();
-                    if (navObj.HasMember("cellSize"))
-                        nav.cellSize = navObj["cellSize"].GetFloat();
-                    if (navObj.HasMember("cellHeight"))
-                        nav.cellHeight = navObj["cellHeight"].GetFloat();
-                    if (navObj.HasMember("maxSlope"))
-                        nav.maxSlope = navObj["maxSlope"].GetFloat();
-
+                    const auto& nj = components["NavMeshComponent"];
+                    if (nj.HasMember("guid"))             nav.guid             = nj["guid"].GetString();
+                    if (nj.HasMember("isNavMeshSource"))  nav.isNavMeshSource  = nj["isNavMeshSource"].GetBool();
+                    if (nj.HasMember("runtimeGenerated")) nav.runtimeGenerated = nj["runtimeGenerated"].GetBool();
+                    if (nj.HasMember("agentRadius"))      nav.agentRadius      = nj["agentRadius"].GetFloat();
+                    if (nj.HasMember("agentHeight"))      nav.agentHeight      = nj["agentHeight"].GetFloat();
+                    if (nj.HasMember("cellSize"))         nav.cellSize         = nj["cellSize"].GetFloat();
+                    if (nj.HasMember("cellHeight"))       nav.cellHeight       = nj["cellHeight"].GetFloat();
+                    if (nj.HasMember("maxSlope"))         nav.maxSlope         = nj["maxSlope"].GetFloat();
                     ecsInterface.AddComponent(entity, nav);
                 }
 
@@ -368,272 +279,143 @@ namespace Framework
                     ecsInterface.AddComponent(entity, agent);
                 }
 
-                // Scripting
+                // Scripts (vector<ScriptEntry>)
                 if (components.HasMember("ScriptProperties"))
                 {
-                    const auto& scriptObj = components["ScriptProperties"];
                     ScriptProperties sp;
-
+                    const auto& scriptObj = components["ScriptProperties"];
                     if (scriptObj.HasMember("scripts") && scriptObj["scripts"].IsArray())
-                    {
-                        const auto& arr = scriptObj["scripts"].GetArray();
-                        for (const auto& s : arr)
+                        for (const auto& s : scriptObj["scripts"].GetArray())
                         {
                             ScriptEntry entry;
-
-                            if (s.HasMember("guid") && s["guid"].IsString())
-                                entry.guid = AssetHandle{ s["guid"].GetString() };
-
-                            if (s.HasMember("scriptPath") && s["scriptPath"].IsString())
-                                entry.scriptPath = s["scriptPath"].GetString();
-
-                            if (s.HasMember("hotReload") && s["hotReload"].IsBool())
-                                entry.hotReload = s["hotReload"].GetBool();
-
+                            if (s.HasMember("guid")       && s["guid"].IsString())       entry.guid       = AssetHandle{ s["guid"].GetString() };
+                            if (s.HasMember("scriptPath") && s["scriptPath"].IsString()) entry.scriptPath = s["scriptPath"].GetString();
+                            if (s.HasMember("hotReload")  && s["hotReload"].IsBool())    entry.hotReload  = s["hotReload"].GetBool();
                             sp.scripts.push_back(entry);
                         }
-                    }
-
-                    if (!sp.scripts.empty())
-                    {
-                        ecsInterface.AddComponent(entity, sp);
-                    }
+                    if (!sp.scripts.empty()) ecsInterface.AddComponent(entity, sp);
                 }
 
-                // Box Collider Component
-                if (components.HasMember("BoxColliderComponent")) 
+                // BoxCollider (vector<BoxColliderEntry>)
+                if (components.HasMember("BoxColliderComponent"))
                 {
                     BoxColliderComponent comp;
-                    auto& json = components["BoxColliderComponent"];
-
-                    if (json.HasMember("colliders") && json["colliders"].IsArray()) {
-                        for (const auto& val : json["colliders"].GetArray()) {
+                    const auto& bcj = components["BoxColliderComponent"];
+                    if (bcj.HasMember("colliders") && bcj["colliders"].IsArray())
+                        for (const auto& val : bcj["colliders"].GetArray())
+                        {
                             BoxColliderEntry entry;
-
-                            // Load Size
-                            if (val.HasMember("size")) {
-                                auto arr = val["size"].GetArray();
-                                entry.size = { arr[0].GetFloat(), arr[1].GetFloat(), arr[2].GetFloat() };
-                            }
-                            // Load Center
-                            if (val.HasMember("center")) {
-                                auto arr = val["center"].GetArray();
-                                entry.center = { arr[0].GetFloat(), arr[1].GetFloat(), arr[2].GetFloat() };
-                            }
-                            if (val.HasMember("canPassThrough")) {
-                                entry.canPassThrough = val["canPassThrough"].GetBool();
-                            }
-                            if (val.HasMember("triggerMessage")) entry.triggerMessage = val["triggerMessage"].GetString();
-                            if (val.HasMember("isInteractable")) {
-                                entry.isInteractable = val["isInteractable"].GetBool();
-                            }
-                            if (val.HasMember("interactMessage") && val["interactMessage"].IsString()) {
-                                entry.interactMessage = val["interactMessage"].GetString();
-                            }
-                            if (val.HasMember("promptText") && val["promptText"].IsString()) {
-                                entry.promptText = val["promptText"].GetString();
-                            }
-
+                            if (val.HasMember("size"))   { auto a = val["size"].GetArray();   entry.size   = { a[0].GetFloat(), a[1].GetFloat(), a[2].GetFloat() }; }
+                            if (val.HasMember("center")) { auto a = val["center"].GetArray(); entry.center = { a[0].GetFloat(), a[1].GetFloat(), a[2].GetFloat() }; }
+                            if (val.HasMember("canPassThrough"))  entry.canPassThrough  = val["canPassThrough"].GetBool();
+                            if (val.HasMember("triggerMessage"))  entry.triggerMessage  = val["triggerMessage"].GetString();
+                            if (val.HasMember("isInteractable"))  entry.isInteractable  = val["isInteractable"].GetBool();
+                            if (val.HasMember("interactMessage")) entry.interactMessage = val["interactMessage"].GetString();
+                            if (val.HasMember("promptText"))      entry.promptText      = val["promptText"].GetString();
                             comp.colliders.push_back(entry);
                         }
-                    }
                     ecsInterface.AddComponent(entity, comp);
                 }
 
-                // PhysicsProperties
+                // Physics
                 if (components.HasMember("PhysicsProperties"))
                 {
-                    Framework::PhysicsProperties phys;
-                    const auto& physJson = components["PhysicsProperties"];
-
-                    // 1. Load 'isImmovable' and all other float properties
-                    Deserialize(&phys, g_PhysicsProps, physJson);
-
-                    if (phys.isImmovable)
-                    {
-                        phys.motionType = 0; // Set to Static
-                    }
-
+                    PhysicsProperties phys;
+                    Deserialize(&phys, g_PhysicsProps, components["PhysicsProperties"]);
+                    if (phys.isImmovable) phys.motionType = 0;
                     ecsInterface.AddComponent(entity, phys);
                 }
 
-                // --- Event Sender ---
+                // EventSender (vector<EventSenderEntry>)
                 if (components.HasMember("EventSenderComponent"))
                 {
-                    const auto& jsonVal = components["EventSenderComponent"];
                     EventSenderComponent senderComp;
-
-                    // Check if the "senders" array exists
-                    if (jsonVal.HasMember("senders") && jsonVal["senders"].IsArray())
-                    {
-                        const auto& senderArray = jsonVal["senders"];
-
-                        for (rapidjson::SizeType i = 0; i < senderArray.Size(); i++)
+                    const auto& esj = components["EventSenderComponent"];
+                    if (esj.HasMember("senders") && esj["senders"].IsArray())
+                        for (const auto& entry : esj["senders"].GetArray())
                         {
-                            const auto& entryObj = senderArray[i];
                             EventSenderEntry newEntry;
-
-                            // Extract Trigger Name
-                            if (entryObj.HasMember("triggerName") && entryObj["triggerName"].IsString()) {
-                                newEntry.triggerName = entryObj["triggerName"].GetString();
-                            }
-
-                            // Extract Message Name
-                            if (entryObj.HasMember("messageName") && entryObj["messageName"].IsString()) {
-                                newEntry.messageName = entryObj["messageName"].GetString();
-                            }
-
-                            // Add to the component's vector
+                            if (entry.HasMember("triggerName") && entry["triggerName"].IsString()) newEntry.triggerName = entry["triggerName"].GetString();
+                            if (entry.HasMember("messageName") && entry["messageName"].IsString()) newEntry.messageName = entry["messageName"].GetString();
                             senderComp.senders.push_back(newEntry);
                         }
-                    }
-
                     ecsInterface.AddComponent(entity, senderComp);
                 }
 
-                // --- Event Receiver ---
+                // EventReceiver (vector<EventReceiverEntry>)
                 if (components.HasMember("EventReceiverComponent"))
                 {
-                    const auto& jsonVal = components["EventReceiverComponent"];
                     EventReceiverComponent receiverComp;
-
-                    // Check if the "receivers" array exists
-                    if (jsonVal.HasMember("receivers") && jsonVal["receivers"].IsArray())
-                    {
-                        const auto& receiverArray = jsonVal["receivers"];
-
-                        for (rapidjson::SizeType i = 0; i < receiverArray.Size(); i++)
+                    const auto& erj = components["EventReceiverComponent"];
+                    if (erj.HasMember("receivers") && erj["receivers"].IsArray())
+                        for (const auto& entry : erj["receivers"].GetArray())
                         {
-                            const auto& entryObj = receiverArray[i];
                             EventReceiverEntry newEntry;
-
-                            // Extract Message to Listen For
-                            if (entryObj.HasMember("messageToListenFor") && entryObj["messageToListenFor"].IsString()) {
-                                newEntry.messageToListenFor = entryObj["messageToListenFor"].GetString();
-                            }
-
-                            // Extract Lua Function
-                            if (entryObj.HasMember("luaFunctionToCall") && entryObj["luaFunctionToCall"].IsString()) {
-                                newEntry.luaFunctionToCall = entryObj["luaFunctionToCall"].GetString();
-                            }
-
-                            // IMPORTANT: Explicitly ensure isSubscribed is false on load
-                            // The EventSystem::Update loop will see this is false and automatically subscribe it.
+                            if (entry.HasMember("messageToListenFor") && entry["messageToListenFor"].IsString()) newEntry.messageToListenFor = entry["messageToListenFor"].GetString();
+                            if (entry.HasMember("luaFunctionToCall")  && entry["luaFunctionToCall"].IsString())  newEntry.luaFunctionToCall  = entry["luaFunctionToCall"].GetString();
                             newEntry.isSubscribed = false;
-
-                            // Add to the component's vector
                             receiverComp.receivers.push_back(newEntry);
                         }
-                    }
-
                     ecsInterface.AddComponent(entity, receiverComp);
                 }
 
-                // --- ListenerComponent ---
+                // Listener
                 if (components.HasMember("ListenerComponent"))
                 {
-                    const auto& jsonVal = components["ListenerComponent"];
-                    ListenerComponent listenerComp;
-
-                    // Deserialize all registered properties
-                    Deserialize(&listenerComp, g_ListenerComponentProps, jsonVal);
-
-                    // Add to ECS
-                    ecsInterface.AddComponent(entity, listenerComp);
+                    ListenerComponent c;
+                    Deserialize(&c, g_ListenerComponentProps, components["ListenerComponent"]);
+                    ecsInterface.AddComponent(entity, c);
                 }
 
-                // --- AudioComponent ---
+                // Audio (reset runtime-only fields after deserializing)
                 if (components.HasMember("AudioComponent"))
                 {
-                    const auto& jsonVal = components["AudioComponent"];
-                    AudioComponent audioComp;
-
-                    // Deserialize all registered properties
-                    Deserialize(&audioComp, g_AudioComponentProps, jsonVal);
-
-                    // Runtime-only fields should be reset
-                    audioComp.eventInstance = nullptr;   // FMOD instance is rebuilt at runtime
-                    audioComp.isPlaying = false;     // don’t persist playback state
-                    audioComp.channelID = -1;        // reset channel handle
-                    audioComp.lastPosition = glm::vec3(0.0f); // will be updated when playing
-
-                    // Add to ECS
-                    ecsInterface.AddComponent(entity, audioComp);
+                    AudioComponent c;
+                    Deserialize(&c, g_AudioComponentProps, components["AudioComponent"]);
+                    c.eventInstance = nullptr;
+                    c.isPlaying     = false;
+                    c.channelID     = -1;
+                    c.lastPosition  = glm::vec3(0.0f);
+                    ecsInterface.AddComponent(entity, c);
                 }
 
-                // --- ButtonComponent ---
+                // Button
                 if (components.HasMember("ButtonComponent"))
                 {
-                    const auto& jsonVal = components["ButtonComponent"];
-                    ButtonComponent buttonComp;
-
-                    // Deserialize all registered properties
-                    Deserialize(&buttonComp, g_ButtonComponentProps, jsonVal);
-
-                    // Add to ECS
-                    ecsInterface.AddComponent(entity, buttonComp);
+                    ButtonComponent c;
+                    Deserialize(&c, g_ButtonComponentProps, components["ButtonComponent"]);
+                    ecsInterface.AddComponent(entity, c);
                 }
-                
-                // --- Item Component ---
+
+                // Item (no prop_list -- manual fields)
                 if (components.HasMember("ItemComponent"))
                 {
-                    const auto& jsonVal = components["ItemComponent"];
                     ItemComponent item;
-
-                    // 1. Name
-                    if (jsonVal.HasMember("name") && jsonVal["name"].IsString())
-                    {
-                        item.name = jsonVal["name"].GetString();
-                    }
-
-                    // 2. Is Ingredient
-                    if (jsonVal.HasMember("isIngredient") && jsonVal["isIngredient"].IsBool())
-                    {
-                        item.isIngredient = jsonVal["isIngredient"].GetBool();
-                    }
-
-                    // 3. Is Choppable
-                    if (jsonVal.HasMember("isChoppable") && jsonVal["isChoppable"].IsBool())
-                    {
-                        item.isChoppable = jsonVal["isChoppable"].GetBool();
-                    }
-
-                    // 3. Is Choppable
-                    if (jsonVal.HasMember("isChoppable") && jsonVal["isChoppable"].IsBool())
-                    {
-                        item.isChoppable = jsonVal["isChoppable"].GetBool();
-                    }
-
-                    // 3. Is Choppable
-                    if (jsonVal.HasMember("toDestroyWhenPicked") && jsonVal["toDestroyWhenPicked"].IsBool())
-                    {
-                        item.toDestroyWhenPicked = jsonVal["toDestroyWhenPicked"].GetBool();
-                    }
-
+                    const auto& ij = components["ItemComponent"];
+                    if (ij.HasMember("name")                && ij["name"].IsString())              item.name                = ij["name"].GetString();
+                    if (ij.HasMember("isIngredient")        && ij["isIngredient"].IsBool())        item.isIngredient        = ij["isIngredient"].GetBool();
+                    if (ij.HasMember("isChoppable")         && ij["isChoppable"].IsBool())         item.isChoppable         = ij["isChoppable"].GetBool();
+                    if (ij.HasMember("toDestroyWhenPicked") && ij["toDestroyWhenPicked"].IsBool()) item.toDestroyWhenPicked = ij["toDestroyWhenPicked"].GetBool();
                     ecsInterface.AddComponent(entity, item);
                 }
 
-                // --- Text Component ---
+                // Text
                 if (components.HasMember("TextProperties"))
                 {
-                    const auto& jsonVal = components["TextProperties"];
-                    TextProperties textComp;
-                    Deserialize(&textComp, g_TextComponentProps, jsonVal);
-                    ecsInterface.AddComponent(entity, textComp);
+                    TextProperties c;
+                    Deserialize(&c, g_TextComponentProps, components["TextProperties"]);
+                    ecsInterface.AddComponent(entity, c);
                 }
 
-                // ParticleEmitterComponent
+                // Particle (reset runtime-only fields after deserializing)
                 if (components.HasMember("ParticleEmitterComponent"))
                 {
                     ParticleEmitterComponent em;
                     Deserialize(&em, g_ParticleEmitterProps, components["ParticleEmitterComponent"]);
-
-                    // Reset runtime-only state (VERY IMPORTANT)
-                    em.textureID = 0;
-                    em.timeSinceStart = 0.0f;
+                    em.textureID       = 0;
+                    em.timeSinceStart  = 0.0f;
                     em.emitAccumulator = 0.0f;
                     em.particles.clear();
-
                     ecsInterface.AddComponent(entity, em);
                 }
 
@@ -687,354 +469,256 @@ namespace Framework
                 // === REGULAR ENTITY - Save all components ===
 
                 // TransformComponent
+                // Transform
                 if (ecsInterface.HasComponent<TransformComponent>(entity))
                 {
-                    const auto& transform = ecsInterface.GetComponent<TransformComponent>(entity);
-                    rapidjson::Value transformJson(rapidjson::kObjectType);
-                    Serialize((void*)&transform, g_TransformProps, transformJson, allocator);
-                    componentsObj.AddMember("TransformComponent", transformJson, allocator);
+                    const auto& c = ecsInterface.GetComponent<TransformComponent>(entity);
+                    rapidjson::Value j(rapidjson::kObjectType);
+                    Serialize((void*)&c, g_TransformProps, j, allocator);
+                    componentsObj.AddMember("TransformComponent", j, allocator);
                 }
 
-                // HierarchyComponent
+                // Hierarchy
                 if (ecsInterface.HasComponent<HierarchyComponent>(entity))
                 {
-                    const auto& hierarchy = ecsInterface.GetComponent<HierarchyComponent>(entity);
-                    rapidjson::Value hierarchyJson(rapidjson::kObjectType);
-
-                    hierarchyJson.AddMember("parent", rapidjson::Value(hierarchy.parentGUID.c_str(), allocator), allocator);
-
-                    rapidjson::Value childrenArray(rapidjson::kArrayType);
-                    for (const std::string& childGUID : hierarchy.childrenGUIDs)
-                    {
-                        childrenArray.PushBack(rapidjson::Value(childGUID.c_str(), allocator), allocator);
-                    }
-                    hierarchyJson.AddMember("children", childrenArray, allocator);
-                    hierarchyJson.AddMember("sortIndex", hierarchy.sortIndex, allocator);
-
-                    componentsObj.AddMember("HierarchyComponent", hierarchyJson, allocator);
+                    const auto& h = ecsInterface.GetComponent<HierarchyComponent>(entity);
+                    rapidjson::Value j(rapidjson::kObjectType);
+                    j.AddMember("parent", rapidjson::Value(h.parentGUID.c_str(), allocator), allocator);
+                    j.AddMember("sortIndex", h.sortIndex, allocator);
+                    rapidjson::Value children(rapidjson::kArrayType);
+                    for (const auto& g : h.childrenGUIDs)
+                        children.PushBack(rapidjson::Value(g.c_str(), allocator), allocator);
+                    j.AddMember("children", children, allocator);
+                    componentsObj.AddMember("HierarchyComponent", j, allocator);
                 }
 
-                // TagComponent
+                // Tag
                 if (ecsInterface.HasComponent<TagComponent>(entity))
                 {
-                    const auto& tagComp = ecsInterface.GetComponent<TagComponent>(entity);
-                    rapidjson::Value tagJson(rapidjson::kObjectType);
-
-                    rapidjson::Value tagsArray(rapidjson::kArrayType);
-                    for (const std::string& tag : tagComp.tags)
-                    {
-                        tagsArray.PushBack(rapidjson::Value(tag.c_str(), allocator), allocator);
-                    }
-
-                    tagJson.AddMember("tags", tagsArray, allocator);
-                    componentsObj.AddMember("TagComponent", tagJson, allocator);
+                    const auto& t = ecsInterface.GetComponent<TagComponent>(entity);
+                    rapidjson::Value j(rapidjson::kObjectType);
+                    rapidjson::Value arr(rapidjson::kArrayType);
+                    for (const auto& tag : t.tags)
+                        arr.PushBack(rapidjson::Value(tag.c_str(), allocator), allocator);
+                    j.AddMember("tags", arr, allocator);
+                    componentsObj.AddMember("TagComponent", j, allocator);
                 }
 
-                // MeshProperties � write only GUID
+                // Mesh (GUID reference only)
                 if (ecsInterface.HasComponent<MeshProperties>(entity))
                 {
-                    const auto& mesh = ecsInterface.GetComponent<MeshProperties>(entity);
-                    rapidjson::Value meshRef(rapidjson::kObjectType);
-                    meshRef.AddMember("guid", rapidjson::Value(mesh.guid.id.c_str(), allocator), allocator);
-
-                    // Linked Material GUID (if valid)
-                    if (!mesh.materialGuid.empty())
-                    {
-                        meshRef.AddMember("materialGuid", rapidjson::Value(mesh.materialGuid.id.c_str(), allocator), allocator);
-                    }
-                    componentsObj.AddMember("MeshComponent", meshRef, allocator);
+                    const auto& m = ecsInterface.GetComponent<MeshProperties>(entity);
+                    rapidjson::Value j(rapidjson::kObjectType);
+                    j.AddMember("guid", rapidjson::Value(m.guid.id.c_str(), allocator), allocator);
+                    if (!m.materialGuid.empty())
+                        j.AddMember("materialGuid", rapidjson::Value(m.materialGuid.id.c_str(), allocator), allocator);
+                    componentsObj.AddMember("MeshComponent", j, allocator);
                 }
 
+                // Animation (GUID reference + per-instance playback fields)
                 if (ecsInterface.HasComponent<AnimationProperties>(entity))
                 {
-                    const auto& anim = ecsInterface.GetComponent<AnimationProperties>(entity);
-                    rapidjson::Value animRef(rapidjson::kObjectType);
-                    animRef.AddMember("guid", rapidjson::Value(anim.guid.id.c_str(), allocator), allocator);
-                    animRef.AddMember("defaultAnimationName", rapidjson::Value(anim.defaultAnimationName.c_str(), allocator), allocator);
-                    animRef.AddMember("animationSpeed", anim.animationSpeed, allocator);
-                    animRef.AddMember("bLoops", anim.bLoops, allocator);
-                    animRef.AddMember("bPlayOnStart", anim.bPlayOnStart, allocator);
-                    animRef.AddMember("currentTime", anim.currentTime, allocator);
-
-                    componentsObj.AddMember("AnimationProperties", animRef, allocator);
+                    const auto& a = ecsInterface.GetComponent<AnimationProperties>(entity);
+                    rapidjson::Value j(rapidjson::kObjectType);
+                    j.AddMember("guid",                 rapidjson::Value(a.guid.id.c_str(), allocator),              allocator);
+                    j.AddMember("defaultAnimationName", rapidjson::Value(a.defaultAnimationName.c_str(), allocator), allocator);
+                    j.AddMember("animationSpeed", a.animationSpeed,   allocator);
+                    j.AddMember("bLoops",         a.bLoops,           allocator);
+                    j.AddMember("bPlayOnStart",   a.bPlayOnStart,     allocator);
+                    j.AddMember("currentTime",    a.currentTime,      allocator);
+                    componentsObj.AddMember("AnimationProperties", j, allocator);
                 }
 
-                // TextureProperties � write only GUID
+                // Texture (GUID reference + per-instance isUI)
                 if (ecsInterface.HasComponent<TextureProperties>(entity))
                 {
-                    const auto& tex = ecsInterface.GetComponent<TextureProperties>(entity);
-                    rapidjson::Value texRef(rapidjson::kObjectType);
-                    texRef.AddMember("guid", rapidjson::Value(tex.guid.id.c_str(), allocator), allocator);
-                    texRef.AddMember("isUI", tex.isUI, allocator);
-                    componentsObj.AddMember("TextureComponent", texRef, allocator);
+                    const auto& t = ecsInterface.GetComponent<TextureProperties>(entity);
+                    rapidjson::Value j(rapidjson::kObjectType);
+                    j.AddMember("guid", rapidjson::Value(t.guid.id.c_str(), allocator), allocator);
+                    j.AddMember("isUI", t.isUI, allocator);
+                    componentsObj.AddMember("TextureComponent", j, allocator);
                 }
 
-                // NavMesh Component
+                // NavMesh (no prop_list -- manual fields)
                 if (ecsInterface.HasComponent<NavMeshComponent>(entity))
                 {
-                    const auto& nav = ecsInterface.GetComponent<NavMeshComponent>(entity);
-                    rapidjson::Value navObj(rapidjson::kObjectType);
-
-                    navObj.AddMember("guid", rapidjson::Value(nav.guid.c_str(), allocator), allocator);
-                    navObj.AddMember("isNavMeshSource", nav.isNavMeshSource, allocator);
-                    navObj.AddMember("runtimeGenerated", nav.runtimeGenerated, allocator);
-                    navObj.AddMember("agentRadius", nav.agentRadius, allocator);
-                    navObj.AddMember("agentHeight", nav.agentHeight, allocator);
-                    navObj.AddMember("cellSize", nav.cellSize, allocator);
-                    navObj.AddMember("cellHeight", nav.cellHeight, allocator);
-                    navObj.AddMember("maxSlope", nav.maxSlope, allocator);
-
-                    componentsObj.AddMember("NavMeshComponent", navObj, allocator);
+                    const auto& n = ecsInterface.GetComponent<NavMeshComponent>(entity);
+                    rapidjson::Value j(rapidjson::kObjectType);
+                    j.AddMember("guid",             rapidjson::Value(n.guid.c_str(), allocator), allocator);
+                    j.AddMember("isNavMeshSource",  n.isNavMeshSource,  allocator);
+                    j.AddMember("runtimeGenerated", n.runtimeGenerated, allocator);
+                    j.AddMember("agentRadius",      n.agentRadius,      allocator);
+                    j.AddMember("agentHeight",      n.agentHeight,      allocator);
+                    j.AddMember("cellSize",         n.cellSize,         allocator);
+                    j.AddMember("cellHeight",       n.cellHeight,       allocator);
+                    j.AddMember("maxSlope",         n.maxSlope,         allocator);
+                    componentsObj.AddMember("NavMeshComponent", j, allocator);
                 }
-                // NavMeshAgentComponent
+
+                // NavMeshAgent
                 if (ecsInterface.HasComponent<NavMeshAgentComponent>(entity))
                 {
-                    const auto& agent = ecsInterface.GetComponent<NavMeshAgentComponent>(entity);
-                    rapidjson::Value agentJson(rapidjson::kObjectType);
-                    Serialize((void*)&agent, g_NavMeshAgentProps, agentJson, allocator);
-                    componentsObj.AddMember("NavMeshAgentComponent", agentJson, allocator);
+                    const auto& c = ecsInterface.GetComponent<NavMeshAgentComponent>(entity);
+                    rapidjson::Value j(rapidjson::kObjectType);
+                    Serialize((void*)&c, g_NavMeshAgentProps, j, allocator);
+                    componentsObj.AddMember("NavMeshAgentComponent", j, allocator);
                 }
 
-                // Scripts            
+                // Scripts (vector<ScriptEntry>)
                 if (ecsInterface.HasComponent<ScriptProperties>(entity))
                 {
                     const auto& sp = ecsInterface.GetComponent<ScriptProperties>(entity);
-
-                    rapidjson::Value scriptObj(rapidjson::kObjectType);
-                    rapidjson::Value scriptsArr(rapidjson::kArrayType);
-
+                    rapidjson::Value arr(rapidjson::kArrayType);
                     for (const auto& entry : sp.scripts)
                     {
-                        rapidjson::Value entryObj(rapidjson::kObjectType);
-
-                        entryObj.AddMember("guid", rapidjson::Value(entry.guid.id.c_str(), allocator), allocator);
-
-                        entryObj.AddMember("scriptPath", rapidjson::Value(entry.scriptPath.c_str(), allocator), allocator);
-
-                        entryObj.AddMember("hotReload", entry.hotReload, allocator);
-
-                        // If later you add more saved fields (e.g. hotReload), add them here.
-
-                        scriptsArr.PushBack(entryObj, allocator);
+                        rapidjson::Value obj(rapidjson::kObjectType);
+                        obj.AddMember("guid",       rapidjson::Value(entry.guid.id.c_str(),    allocator), allocator);
+                        obj.AddMember("scriptPath", rapidjson::Value(entry.scriptPath.c_str(), allocator), allocator);
+                        obj.AddMember("hotReload",  entry.hotReload, allocator);
+                        arr.PushBack(obj, allocator);
                     }
-
-                    scriptObj.AddMember("scripts", scriptsArr, allocator);
-                    componentsObj.AddMember("ScriptProperties", scriptObj, allocator);
+                    rapidjson::Value j(rapidjson::kObjectType);
+                    j.AddMember("scripts", arr, allocator);
+                    componentsObj.AddMember("ScriptProperties", j, allocator);
                 }
+
+                // Light (enum string for 'type' field)
                 if (ecsInterface.HasComponent<LightProperties>(entity))
                 {
-                    const auto& light = ecsInterface.GetComponent<LightProperties>(entity);
-                    rapidjson::Value lightJson(rapidjson::kObjectType);
-
-                    // 1. Run the generic serializer for color, intensity, etc.
-                    Serialize((void*)&light, g_LightProps, lightJson, allocator);
-
-                    // 2. Manually add the 'type' string to the SAME json object
-                    if (s_lightTypeToString.count(light.type))
-                    {
-                        lightJson.AddMember("type", rapidjson::Value(s_lightTypeToString.at(light.type).c_str(), allocator), allocator);
-                    }
-
-                    // 3. Add the complete object to the component list
-                    componentsObj.AddMember("LightProperties", lightJson, allocator);
+                    const auto& c = ecsInterface.GetComponent<LightProperties>(entity);
+                    rapidjson::Value j(rapidjson::kObjectType);
+                    Serialize((void*)&c, g_LightProps, j, allocator);
+                    if (s_lightTypeToString.count(c.type))
+                        j.AddMember("type", rapidjson::Value(s_lightTypeToString.at(c.type).c_str(), allocator), allocator);
+                    componentsObj.AddMember("LightProperties", j, allocator);
                 }
-                if (ecsInterface.HasComponent<BoxColliderComponent>(entity)) {
+
+                // BoxCollider (vector<BoxColliderEntry>)
+                if (ecsInterface.HasComponent<BoxColliderComponent>(entity))
+                {
                     const auto& comp = ecsInterface.GetComponent<BoxColliderComponent>(entity);
-                    rapidjson::Value compJson(rapidjson::kObjectType);
-                    rapidjson::Value arrayVal(rapidjson::kArrayType);
-
-                    for (const auto& entry : comp.colliders) {
+                    rapidjson::Value arr(rapidjson::kArrayType);
+                    for (const auto& entry : comp.colliders)
+                    {
                         rapidjson::Value obj(rapidjson::kObjectType);
-
-                        // Save Vec3 Size
-                        rapidjson::Value sizeVal(rapidjson::kArrayType);
-                        sizeVal.PushBack(entry.size.x, allocator).PushBack(entry.size.y, allocator).PushBack(entry.size.z, allocator);
-                        obj.AddMember("size", sizeVal, allocator);
-
-                        // Save Vec3 Center
-                        rapidjson::Value centerVal(rapidjson::kArrayType);
-                        centerVal.PushBack(entry.center.x, allocator).PushBack(entry.center.y, allocator).PushBack(entry.center.z, allocator);
-                        obj.AddMember("center", centerVal, allocator);
-
-                        obj.AddMember("canPassThrough", entry.canPassThrough, allocator);
-                        if (entry.canPassThrough) {
-                            rapidjson::Value val; val.SetString(entry.triggerMessage.c_str(), allocator);
-                            obj.AddMember("triggerMessage", val, allocator);
-                        }
-
-                        obj.AddMember("isInteractable", entry.isInteractable, allocator);
-                        if (entry.isInteractable) {
-                            rapidjson::Value val; val.SetString(entry.interactMessage.c_str(), allocator);
-                            obj.AddMember("interactMessage", val, allocator);
-                            rapidjson::Value promptVal; promptVal.SetString(entry.promptText.c_str(), allocator);
-                            obj.AddMember("promptText", promptVal, allocator);
-                        }
-
-
-                        arrayVal.PushBack(obj, allocator);
+                        rapidjson::Value sizeArr(rapidjson::kArrayType);
+                        sizeArr.PushBack(entry.size.x, allocator).PushBack(entry.size.y, allocator).PushBack(entry.size.z, allocator);
+                        obj.AddMember("size", sizeArr, allocator);
+                        rapidjson::Value centerArr(rapidjson::kArrayType);
+                        centerArr.PushBack(entry.center.x, allocator).PushBack(entry.center.y, allocator).PushBack(entry.center.z, allocator);
+                        obj.AddMember("center", centerArr, allocator);
+                        obj.AddMember("canPassThrough",  entry.canPassThrough,                                       allocator);
+                        obj.AddMember("triggerMessage",  rapidjson::Value(entry.triggerMessage.c_str(),  allocator), allocator);
+                        obj.AddMember("isInteractable",  entry.isInteractable,                                       allocator);
+                        obj.AddMember("interactMessage", rapidjson::Value(entry.interactMessage.c_str(), allocator), allocator);
+                        obj.AddMember("promptText",      rapidjson::Value(entry.promptText.c_str(),      allocator), allocator);
+                        arr.PushBack(obj, allocator);
                     }
-                    compJson.AddMember("colliders", arrayVal, allocator);
-                    componentsObj.AddMember("BoxColliderComponent", compJson, allocator);
+                    rapidjson::Value j(rapidjson::kObjectType);
+                    j.AddMember("colliders", arr, allocator);
+                    componentsObj.AddMember("BoxColliderComponent", j, allocator);
                 }
-                // PhysicsProperties
+
+                // Physics
                 if (ecsInterface.HasComponent<PhysicsProperties>(entity))
                 {
-                    const auto& phys = ecsInterface.GetComponent<PhysicsProperties>(entity);
-                    rapidjson::Value physJson(rapidjson::kObjectType);
-
-                    // 1. Serialize standard properties (floats, friction, mass, etc.)
-                    Serialize((void*)&phys, g_PhysicsProps, physJson, allocator);
-
-                    // 3. DO NOT save 'motionType'. We rely purely on the boolean.
-
-                    componentsObj.AddMember("PhysicsProperties", physJson, allocator);
+                    const auto& c = ecsInterface.GetComponent<PhysicsProperties>(entity);
+                    rapidjson::Value j(rapidjson::kObjectType);
+                    Serialize((void*)&c, g_PhysicsProps, j, allocator);
+                    componentsObj.AddMember("PhysicsProperties", j, allocator);
                 }
-                // --- Event Sender ---
+
+                // EventSender (vector<EventSenderEntry>)
                 if (ecsInterface.HasComponent<EventSenderComponent>(entity))
                 {
-                    const auto& senderComp = ecsInterface.GetComponent<EventSenderComponent>(entity);
-                    rapidjson::Value compJson(rapidjson::kObjectType);
-
-                    // Create the Array to hold the list of senders
-                    rapidjson::Value senderArray(rapidjson::kArrayType);
-
-                    for (const auto& entry : senderComp.senders)
+                    const auto& comp = ecsInterface.GetComponent<EventSenderComponent>(entity);
+                    rapidjson::Value arr(rapidjson::kArrayType);
+                    for (const auto& entry : comp.senders)
                     {
-                        rapidjson::Value entryObj(rapidjson::kObjectType);
-
-                        // 1. Trigger Name
-                        rapidjson::Value triggerVal;
-                        triggerVal.SetString(entry.triggerName.c_str(), allocator);
-                        entryObj.AddMember("triggerName", triggerVal, allocator);
-
-                        // 2. Message Name
-                        rapidjson::Value msgVal;
-                        msgVal.SetString(entry.messageName.c_str(), allocator);
-                        entryObj.AddMember("messageName", msgVal, allocator);
-
-                        // Push into array
-                        senderArray.PushBack(entryObj, allocator);
+                        rapidjson::Value obj(rapidjson::kObjectType);
+                        obj.AddMember("triggerName", rapidjson::Value(entry.triggerName.c_str(), allocator), allocator);
+                        obj.AddMember("messageName", rapidjson::Value(entry.messageName.c_str(), allocator), allocator);
+                        arr.PushBack(obj, allocator);
                     }
-
-                    // Add the array to the component object
-                    compJson.AddMember("senders", senderArray, allocator);
-                    componentsObj.AddMember("EventSenderComponent", compJson, allocator);
+                    rapidjson::Value j(rapidjson::kObjectType);
+                    j.AddMember("senders", arr, allocator);
+                    componentsObj.AddMember("EventSenderComponent", j, allocator);
                 }
 
-                // --- Event Receiver ---
+                // EventReceiver (vector<EventReceiverEntry>)
                 if (ecsInterface.HasComponent<EventReceiverComponent>(entity))
                 {
-                    const auto& receiverComp = ecsInterface.GetComponent<EventReceiverComponent>(entity);
-                    rapidjson::Value compJson(rapidjson::kObjectType);
-
-                    // Create the Array to hold the list of receivers
-                    rapidjson::Value receiverArray(rapidjson::kArrayType);
-
-                    for (const auto& entry : receiverComp.receivers)
+                    const auto& comp = ecsInterface.GetComponent<EventReceiverComponent>(entity);
+                    rapidjson::Value arr(rapidjson::kArrayType);
+                    for (const auto& entry : comp.receivers)
                     {
-                        rapidjson::Value entryObj(rapidjson::kObjectType);
-
-                        // 1. Message to Listen For
-                        rapidjson::Value msgVal;
-                        msgVal.SetString(entry.messageToListenFor.c_str(), allocator);
-                        entryObj.AddMember("messageToListenFor", msgVal, allocator);
-
-                        // 2. Lua Function
-                        rapidjson::Value funcVal;
-                        funcVal.SetString(entry.luaFunctionToCall.c_str(), allocator);
-                        entryObj.AddMember("luaFunctionToCall", funcVal, allocator);
-
-                        // Note: We intentionally DO NOT save 'isSubscribed'
-
-                        // Push into array
-                        receiverArray.PushBack(entryObj, allocator);
+                        rapidjson::Value obj(rapidjson::kObjectType);
+                        obj.AddMember("messageToListenFor", rapidjson::Value(entry.messageToListenFor.c_str(), allocator), allocator);
+                        obj.AddMember("luaFunctionToCall",  rapidjson::Value(entry.luaFunctionToCall.c_str(),  allocator), allocator);
+                        // isSubscribed intentionally NOT saved
+                        arr.PushBack(obj, allocator);
                     }
-
-                    // Add the array to the component object
-                    compJson.AddMember("receivers", receiverArray, allocator);
-                    componentsObj.AddMember("EventReceiverComponent", compJson, allocator);
+                    rapidjson::Value j(rapidjson::kObjectType);
+                    j.AddMember("receivers", arr, allocator);
+                    componentsObj.AddMember("EventReceiverComponent", j, allocator);
                 }
 
-                // --- ListenerComponent ---
+                // Listener
                 if (ecsInterface.HasComponent<ListenerComponent>(entity))
                 {
-                    const auto& listener = ecsInterface.GetComponent<ListenerComponent>(entity);
-                    rapidjson::Value compJson(rapidjson::kObjectType);
-
-                    // Serialize all registered properties
-                    Serialize((void*)&listener, g_ListenerComponentProps, compJson, allocator);
-
-                    componentsObj.AddMember("ListenerComponent", compJson, allocator);
+                    const auto& c = ecsInterface.GetComponent<ListenerComponent>(entity);
+                    rapidjson::Value j(rapidjson::kObjectType);
+                    Serialize((void*)&c, g_ListenerComponentProps, j, allocator);
+                    componentsObj.AddMember("ListenerComponent", j, allocator);
                 }
 
-                // --- AudioComponent ---
+                // Audio
                 if (ecsInterface.HasComponent<AudioComponent>(entity))
                 {
-                    const auto& audioComp = ecsInterface.GetComponent<AudioComponent>(entity);
-                    rapidjson::Value compJson(rapidjson::kObjectType);
-
-                    // Serialize all registered properties
-                    Serialize((void*)&audioComp, g_AudioComponentProps, compJson, allocator);
-
-                    componentsObj.AddMember("AudioComponent", compJson, allocator);
+                    const auto& c = ecsInterface.GetComponent<AudioComponent>(entity);
+                    rapidjson::Value j(rapidjson::kObjectType);
+                    Serialize((void*)&c, g_AudioComponentProps, j, allocator);
+                    componentsObj.AddMember("AudioComponent", j, allocator);
                 }
 
-                // --- ButtonComponent ---
+                // Button
                 if (ecsInterface.HasComponent<ButtonComponent>(entity))
                 {
-                    const auto& buttonComp = ecsInterface.GetComponent<ButtonComponent>(entity);
-                    rapidjson::Value compJson(rapidjson::kObjectType);
-
-                    // Serialize all registered properties
-                    Serialize((void*)&buttonComp, g_ButtonComponentProps, compJson, allocator);
-
-                    componentsObj.AddMember("ButtonComponent", compJson, allocator);
+                    const auto& c = ecsInterface.GetComponent<ButtonComponent>(entity);
+                    rapidjson::Value j(rapidjson::kObjectType);
+                    Serialize((void*)&c, g_ButtonComponentProps, j, allocator);
+                    componentsObj.AddMember("ButtonComponent", j, allocator);
                 }
+
+                // Text
                 if (ecsInterface.HasComponent<TextProperties>(entity))
                 {
-                    const auto& text = ecsInterface.GetComponent<TextProperties>(entity);
-                    rapidjson::Value textJson(rapidjson::kObjectType);
-                    Serialize((void*)&text, g_TextComponentProps, textJson, allocator);
-                    componentsObj.AddMember("TextProperties", textJson, allocator);
+                    const auto& c = ecsInterface.GetComponent<TextProperties>(entity);
+                    rapidjson::Value j(rapidjson::kObjectType);
+                    Serialize((void*)&c, g_TextComponentProps, j, allocator);
+                    componentsObj.AddMember("TextProperties", j, allocator);
                 }
-                // --- Item Component ---
+
+                // Item (no prop_list -- manual fields)
                 if (ecsInterface.HasComponent<ItemComponent>(entity))
                 {
                     const auto& item = ecsInterface.GetComponent<ItemComponent>(entity);
-                    rapidjson::Value itemJson(rapidjson::kObjectType);
-
-                    // 1. Name
-                    rapidjson::Value nameVal;
-                    nameVal.SetString(item.name.c_str(), allocator);
-                    itemJson.AddMember("name", nameVal, allocator);
-
-                    // 2. Bools
-                    itemJson.AddMember("isIngredient", item.isIngredient, allocator);
-                    itemJson.AddMember("isChoppable", item.isChoppable, allocator);
-                    itemJson.AddMember("toDestroyWhenPicked", item.toDestroyWhenPicked, allocator);
-
-                    componentsObj.AddMember("ItemComponent", itemJson, allocator);
-                }
-               
-                // --- Text Component ---
-
-                if (ecsInterface.HasComponent<TextProperties>(entity))
-                {
-                    const auto& textComp = ecsInterface.GetComponent<TextProperties>(entity);
-                    rapidjson::Value textJson(rapidjson::kObjectType);
-                    Serialize((void*)&textComp, g_TextComponentProps, textJson, allocator);
-                    componentsObj.AddMember("TextProperties", textJson, allocator);
+                    rapidjson::Value j(rapidjson::kObjectType);
+                    j.AddMember("name",                rapidjson::Value(item.name.c_str(), allocator), allocator);
+                    j.AddMember("isIngredient",        item.isIngredient,        allocator);
+                    j.AddMember("isChoppable",         item.isChoppable,         allocator);
+                    j.AddMember("toDestroyWhenPicked", item.toDestroyWhenPicked, allocator);
+                    componentsObj.AddMember("ItemComponent", j, allocator);
                 }
 
-                // ParticleEmitterComponent
+                // Particle
                 if (ecsInterface.HasComponent<ParticleEmitterComponent>(entity))
                 {
-                    const auto& em = ecsInterface.GetComponent<ParticleEmitterComponent>(entity);
-                    rapidjson::Value emJson(rapidjson::kObjectType);
-                    Serialize((void*)&em, g_ParticleEmitterProps, emJson, allocator);
-                    componentsObj.AddMember("ParticleEmitterComponent", emJson, allocator);
+                    const auto& c = ecsInterface.GetComponent<ParticleEmitterComponent>(entity);
+                    rapidjson::Value j(rapidjson::kObjectType);
+                    Serialize((void*)&c, g_ParticleEmitterProps, j, allocator);
+                    componentsObj.AddMember("ParticleEmitterComponent", j, allocator);
                 }
-
             }
             entityObj.AddMember("components", componentsObj, allocator);
             entitiesArray.PushBack(entityObj, allocator);

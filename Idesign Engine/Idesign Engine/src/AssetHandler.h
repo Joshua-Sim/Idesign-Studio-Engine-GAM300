@@ -47,6 +47,7 @@ namespace Framework
 
         AssetHandle() = default;
         AssetHandle(const std::string& identifier) : id(identifier) {}
+        AssetHandle(const char* identifier) : id(identifier) {}
 
         AssetHandle(AssetHandle&&) noexcept = default;
         AssetHandle& operator=(AssetHandle&&) noexcept = default;
