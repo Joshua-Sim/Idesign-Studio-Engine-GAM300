@@ -76,7 +76,7 @@ namespace Framework {
     bool Graphics::IsCameraRotationEnabled() const { return m_cameraRotationEnabled; }
 
 
-   
+
 
     // Constructor
     Graphics::Graphics()
@@ -2470,8 +2470,8 @@ namespace Framework {
                     currentshader.setInt("uShadowMap", 1);
                     currentshader.setMat4("uLightSpaceMatrix", m_lightSpaceMatrix);
 
-                 
- 
+
+
 
                     if (isSkinned) {
                         auto& animator = ecsInterface.GetComponent<AnimationProperties>(entityId);
@@ -2522,7 +2522,7 @@ namespace Framework {
                         glStencilFunc(GL_ALWAYS, 1, 0xFF);
                         glStencilMask(0xFF);   // enable stencil writes
                     }
-                  
+
                     glBindVertexArray(mesh.vao);
                     glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
                     if (doOutline) {
@@ -3133,112 +3133,109 @@ namespace Framework {
         uiShader.setMat4("uProjection", uiProj);
 
 
-        std::sort(uiEntities.begin(), uiEntities.end(),
-            [](Framework::Entity a, Framework::Entity b)
-            {
-                // Get transforms to compare Z values
-                // Note: We use the global 'ecsInterface' here
-                auto& posA = ecsInterface.GetComponent<TransformComponent>(a).position;
-                auto& posB = ecsInterface.GetComponent<TransformComponent>(b).position;
-                return posA.z < posB.z;
-            }
-        );
-        glDisable(GL_DEPTH_TEST); // UI is always on top
-        glEnable(GL_BLEND);       // UI usually has transparency
+        // --------------------------------------------
+           // MERGED UI PASS: sprites + text sorted by Z together
+           // This ensures tooltip backgrounds (sprites) can occlude text behind them.
+           // --------------------------------------------
+
+           // Build a unified list of { z, entity, isText }
+        struct UIDrawItem {
+            float z;
+            Framework::Entity entity;
+            bool isText;
+        };
+        std::vector<UIDrawItem> allUIItems;
+        allUIItems.reserve(uiEntities.size() + uiTextEntities.size());
+
+        for (auto e : uiEntities)
+            allUIItems.push_back({ ecsInterface.GetComponent<TransformComponent>(e).position.z, e, false });
+
+        for (auto e : uiTextEntities)
+            allUIItems.push_back({ ecsInterface.GetComponent<TransformComponent>(e).position.z, e, true });
+
+        // Sort ascending z (low = back, high = front)
+        std::sort(allUIItems.begin(), allUIItems.end(),
+            [](const UIDrawItem& a, const UIDrawItem& b) { return a.z < b.z; });
+
+        glClear(GL_DEPTH_BUFFER_BIT); // fresh depth for UI z-ordering
+
+        // --- FIXED: Disable depth testing so our Z-sort determines draw order ---
+        glDisable(GL_DEPTH_TEST);
+        glDepthMask(GL_FALSE);
+        glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        for (auto const& entityId : uiEntities)
+        for (auto& item : allUIItems)
         {
-            // 1. Check for required components
-            if (!ecsInterface.HasComponent<TransformComponent>(entityId) ||
-                !ecsInterface.HasComponent<TextureProperties>(entityId))
-                continue;
+            auto& tr = ecsInterface.GetComponent<TransformComponent>(item.entity);
+            if (!tr.isActive) continue;
 
-            auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
-            auto& tex = ecsInterface.GetComponent<TextureProperties>(entityId);
+            if (!item.isText)
+            {
+                // --- SPRITE ---
+                if (!ecsInterface.HasComponent<TextureProperties>(item.entity)) continue;
+                auto& tex = ecsInterface.GetComponent<TextureProperties>(item.entity);
 
-            if (!tr.isActive) continue; // Skip pass if isactive is false
+                uiShader.use();
+                uiShader.setMat4("uProjection", uiProj);
+                glActiveTexture(GL_TEXTURE0);
+                glBindTexture(GL_TEXTURE_2D, tex.textureID);
+                uiShader.setInt("uTexture", 0);
+                uiShader.setVec3("uColor", glm::vec3(1.0f, 1.0f, 1.0f));
+                uiShader.setFloat("uAlpha", tex.uiAlpha);
 
-            // 2. Bind Texture
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, tex.textureID);
-            uiShader.setInt("uTexture", 0);
+                glm::mat4 model = glm::mat4(1.0f);
+                glm::vec3 snappedPos = glm::vec3(std::round(tr.position.x), std::round(tr.position.y), tr.position.z);
+                model = glm::translate(model, snappedPos);
+                model = glm::scale(model, glm::vec3(tr.scale.x * 0.5f, tr.scale.y * 0.5f, 1.0f));
+                uiShader.setMat4("uModel", model);
+                renderQuad();
+            }
+            else
+            {
+                // --- TEXT ---
+                // ONLY render the Interaction Prompt on the Main Game View (Index 0)
+                if (ecsInterface.GetEntityName(item.entity) == "InteractionPrompt" &&
+                    (viewIndex != 0 || GameSystem::bookOpen))
+                    continue;
 
-            // [FIX 1] RESET COLOR STATE 
-            // The inventory system leaves the shader color dark gray. 
-            // We must reset it to White (1,1,1) so your normal UI isn't tinted.
-            uiShader.setVec3("uColor", glm::vec3(1.0f, 1.0f, 1.0f));
-            uiShader.setFloat("uAlpha", tex.uiAlpha);
+                if (!ecsInterface.HasComponent<TextProperties>(item.entity)) continue;
+                auto& txt = ecsInterface.GetComponent<TextProperties>(item.entity);
 
-            glm::mat4 model = glm::mat4(1.0f);
+                float px = glm::clamp(tr.position.x, 0.0f, 1.0f);
+                float py = glm::clamp(tr.position.y, 0.0f, 1.0f);
+                float screenX = px * (float)width;
+                float screenY = py * (float)height;
 
-            // Use std::round to ensure the UI element sits exactly on a pixel
-            glm::vec3 snappedPos = glm::vec3(
-                std::round(tr.position.x),
-                std::round(tr.position.y),
-                tr.position.z
-            );
+                const float REF_W = 1920.0f;
+                const float REF_H = 1080.0f;
+                float resScale = std::min((float)width / REF_W, (float)height / REF_H);
+                float effectiveScale = txt.scale * resScale;
 
-            model = glm::translate(model, snappedPos);
+                fontSystem.RenderText2D(
+                    txt.text,
+                    screenX, screenY,
+                    tr.position.z,
+                    effectiveScale,
+                    txt.color,
+                    (float)width, (float)height,
+                    txt.alignment,
+                    txt.opacity
+                );
 
-            // [FIX 2] CORRECT SCALE CALCULATION
-            // Your renderQuad() is 2x2 (-1 to 1). 
-            // You were previously using the raw scale, making everything 2x bigger.
-            // Using * 0.5f makes it pixel-perfect relative to screen coordinates.
-            model = glm::scale(model, glm::vec3(tr.scale.x * 0.5f, tr.scale.y * 0.5f, 1.0f));
+                // fontSystem changes GL state — restore for next sprite
+                uiShader.use();
+                uiShader.setMat4("uProjection", uiProj);
 
-            // Delete the old line below:
-            // model = glm::scale(model, glm::vec3(tr.scale.x, tr.scale.y, 1.0f));
-
-            uiShader.setMat4("uModel", model);
-            renderQuad();
+                // --- FIXED: Ensure it stays disabled when restoring state ---
+                glDisable(GL_DEPTH_TEST);
+                glDepthMask(GL_FALSE);
+                glEnable(GL_BLEND);
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            }
         }
-
-        glClear(GL_DEPTH_BUFFER_BIT);
-
-        // --------------------------------------------
-        // HUD/UI TEXT PASS (2D Screen Space) (Jasper)
-        // --------------------------------------------
-        for (auto e : uiTextEntities)
-        {
-
-            // ONLY render the Interaction Prompt on the Main Game View (Index 0)
-            if (viewIndex != 0 && ecsInterface.GetEntityName(e) == "InteractionPrompt")
-                continue;
-
-            auto& txt = ecsInterface.GetComponent<TextProperties>(e);
-            auto& tr = ecsInterface.GetComponent<TransformComponent>(e);
-
-            if (!tr.isActive) continue; // Skip pass if isactive is false
-
-            // Normalized coordinates (0.0 to 1.0) -> Screen Coordinates
-            float px = glm::clamp(tr.position.x, 0.0f, 1.0f);
-            float py = glm::clamp(tr.position.y, 0.0f, 1.0f);
-
-            float screenX = px * (float)width;
-            float screenY = py * (float)height;
-
-            // scale text with resolution (treat txt.scale as authored at 1920x1080)
-            const float REF_W = 1920.0f;
-            const float REF_H = 1080.0f;
-            float resScale = std::min((float)width / REF_W, (float)height / REF_H);
-
-            float effectiveScale = txt.scale * resScale;
-
-            fontSystem.RenderText2D(
-                txt.text,
-                screenX,
-                screenY,
-                tr.position.z,
-                effectiveScale,   // <-- changed
-                txt.color,
-                (float)width,
-                (float)height,
-                txt.alignment,
-                txt.opacity
-            );
-        }
-
+        glEnable(GL_DEPTH_TEST);
+        glDepthMask(GL_TRUE);
         // Do not display inventory boxes while in paused/howtoplay/menu state
         if (viewIndex == 0 &&
             !engineState.IsAnyUIOpen() &&
@@ -3264,7 +3261,9 @@ namespace Framework {
             {
                 auto& tex = ecsInterface.GetComponent<TextureProperties>(loadingEntity);
 
-                glDisable(GL_DEPTH_TEST);
+                glEnable(GL_DEPTH_TEST);
+                glDepthFunc(GL_LEQUAL);
+                glDepthMask(GL_TRUE);
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
