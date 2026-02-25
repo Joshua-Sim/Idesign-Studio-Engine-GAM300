@@ -84,24 +84,19 @@ unsigned int TextureLoader::loadTexture(TextureProperties& props, bool flip)
         internalFormat = GL_R8;
         dataFormat = GL_RED;
         break;
-   case 3:
-        // Use GL_COMPRESSED_RGB_S3TC_DXT1_EXT for 6:1 compression
-        internalFormat = GL_COMPRESSED_RGB_S3TC_DXT1_EXT; 
+    case 3:
+        internalFormat = GL_RGB8;  // Cleaned up
         dataFormat = GL_RGB;
         break;
     case 4:
-        // Use GL_COMPRESSED_RGBA_S3TC_DXT5_EXT for 4:1 compression with alpha
-        internalFormat = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
+        internalFormat = GL_RGBA8; // Cleaned up
         dataFormat = GL_RGBA;
         break;
     default:
-        std::cerr << "[TextureLoader] Unsupported channel count: "
-            << channels << " (" << pathStr << ")" << std::endl;
+        std::cerr << "[TextureLoader] Unsupported channel count: " << channels << std::endl;
         stbi_image_free(data);
         return 0;
     }
-
-
 
 
     // ------------------------------------------------------------------
@@ -152,8 +147,8 @@ unsigned int TextureLoader::loadTexture(TextureProperties& props, bool flip)
     // ------------------------------------------------------------------
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
     // ------------------------------------------------------------------
     // Cleanup & output

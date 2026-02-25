@@ -152,24 +152,32 @@ namespace Framework {
     }
 
     // 2D HUD text
+// 1. Added 'float z' to the parameters
     void FontSystem::RenderText2D(const std::string& text,
-        float x, float y,
+        float x, float y, float z,
         float scale,
         glm::vec3 color,
         float screenWidth,
         float screenHeight,
         int alignment,
-        float opacity) { // <--- 1. ADDED ARGUMENT (0=Left, 1=Center, 2=Right)
+        float opacity) {
 
         // --- SETUP ---
         shader.Use();
+
         glm::mat4 projection = glm::ortho(0.0f, screenWidth, 0.0f, screenHeight);
+
         shader.SetUniform("textColor", color);
         shader.SetUniform("projection", projection);
-        shader.SetUniform("opacity", opacity);        // --- ENABLE BLENDING ---
+        shader.SetUniform("opacity", opacity);
+
+        // --- ENABLE BLENDING & DEPTH ---
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glDisable(GL_DEPTH_TEST);
+
+        // 3. ENABLE DEPTH TESTING so OpenGL respects your Z values
+        glEnable(GL_DEPTH_TEST);
+
         glActiveTexture(GL_TEXTURE0);
         glBindVertexArray(VAO);
 
@@ -219,7 +227,9 @@ namespace Framework {
             float h = ch.Size.y * scale;
 
             glm::mat4 model = glm::mat4(1.0f);
-            model = glm::translate(model, glm::vec3(xpos, ypos, 0.0f));
+
+            // 4. Use your 'z' variable here instead of 0.0f!
+            model = glm::translate(model, glm::vec3(xpos, ypos, z));
             model = glm::scale(model, glm::vec3(w, h, 1.0f));
 
             shader.SetUniform("model", model);
@@ -247,8 +257,9 @@ namespace Framework {
         glBindVertexArray(0);
         glBindTexture(GL_TEXTURE_2D, 0);
 
-        // --- DISABLE BLENDING ---
-        glEnable(GL_DEPTH_TEST);
+        // --- RESET STATE ---
+        // (Optional: If you want depth testing to remain on globally, leave this alone. 
+        // If you need it off for other 2D stuff, you can disable it here).
         glDisable(GL_BLEND);
     }
 

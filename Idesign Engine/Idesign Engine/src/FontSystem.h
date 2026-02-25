@@ -36,7 +36,7 @@ namespace Framework {
         void SetActiveFont(const std::string& fontName);
 
         void RenderText2D(const std::string& text,
-            float x, float y,
+            float x, float y, float z,
             float scale,
             glm::vec3 color,
             float screenWidth,

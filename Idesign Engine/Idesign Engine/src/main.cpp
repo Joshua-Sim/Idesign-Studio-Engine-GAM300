@@ -203,8 +203,8 @@ int main(void)
 
     ImguiManager::Log("Initializing FontSystem...", "FontSystem");
     fontSystem.Initialize();
-    fontSystem.LoadFont("Assets/Font/arial.ttf", 40, "Arial");
-    fontSystem.SetActiveFont("Arial");
+    fontSystem.LoadFont("Assets/Font/AveriaSerifLibre.ttf", 40, "Averia");
+    fontSystem.SetActiveFont("Averia");
     ImguiManager::LogSuccess("FontSystem ready", "FontSystem");
 
     // Run All Scripts
