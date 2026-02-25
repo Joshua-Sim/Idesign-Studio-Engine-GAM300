@@ -1545,6 +1545,7 @@ namespace Framework {
             "BACKPACK",
             titleX,
             titleY,
+            1.0f,
             scale,
             glm::vec3(1.0f, 1.0f, 1.0f),  // white
             (float)screenW,
@@ -3065,12 +3066,12 @@ namespace Framework {
         // --- 8. HUD/TEXT PASS ---
         if (viewIndex == 0)
         {
-            fontSystem.RenderText2D("", 100.f, 10.0f, 1.f,
+            fontSystem.RenderText2D("", 100.f, 10.0f, 1.0f, 1.f,
                 glm::vec3(1.0f, 1.0f, 0.5f), (float)width, (float)height, 1);
         }
         else
         {
-            fontSystem.RenderText2D("Editor View", 100.f, 10.f, 1.f, { 1,1,0.5f }, (float)width, (float)height, 1);
+            fontSystem.RenderText2D("Editor View", 100.f, 10.f, 1.0f, 1.f, { 1,1,0.5f }, (float)width, (float)height, 1);
         }
 
         //----------------------------------------------------
@@ -3193,6 +3194,8 @@ namespace Framework {
             renderQuad();
         }
 
+        glClear(GL_DEPTH_BUFFER_BIT);
+
         // --------------------------------------------
         // HUD/UI TEXT PASS (2D Screen Space) (Jasper)
         // --------------------------------------------
@@ -3226,6 +3229,7 @@ namespace Framework {
                 txt.text,
                 screenX,
                 screenY,
+                tr.position.z,
                 effectiveScale,   // <-- changed
                 txt.color,
                 (float)width,

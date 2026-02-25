@@ -4,6 +4,7 @@
       "id": "unchopped_herb",
       "name": "Herb",
       "type": "ingredient",
+      "location": "Forest",
       "flavor": "A versatile vegetable, a forager's lifeline."
     },
     {
@@ -16,6 +17,7 @@
       "id": "pear",
       "name": "Fresh Pear",
       "type": "ingredient",
+      "location": "Forest",
       "flavor": "Bruised and sweet. A fleeting luxury in a forager’s pack."
       
     },
@@ -47,6 +49,7 @@
       "id": "wool",
       "name": "Sheep Wool",
       "type": "ingredient",
+            "location": "Forest",
       "flavor": "Coarse, and smelling faintly of rain and high pastures."
     }
 
@@ -55,22 +58,25 @@
     {
       "id": "r_chop_herb",
       "inputs": ["unchopped_herb"],
-      "tool": "knife",
+      "method": "Chopping",
       "output": "chopped_herb"
     },
     {
       "id": "r_strength_potion",
       "inputs": ["unchopped_herb", "chopped_herb"],
+      "method": "Cauldron",
       "output": "strength_potion"
     },
     {
       "id": "r_vitality_potion",
       "inputs": ["pear", "chopped_herb"],
+      "method": "Cauldron",
       "output": "vitality_potion"
     },
     {
       "id": "r_warmth_potion",
       "inputs": ["wool", "unchopped_herb"],
+      "method": "Cauldron",
       "output": "warmth_potion"
     }
   ]

@@ -26,14 +26,14 @@ namespace Framework
         std::string displayName;
         ItemType type;
         std::string location;
-        std::string flavorText; // <--- ADD THIS
+        std::string flavorText;
     };
 
     struct PotionRecipe {
         std::string recipeLabel;
         std::vector<int> ingredientIDs;
-        int toolItemID;
         int resultItemID;
+        std::string method; 
     };
 
     // --- 2. Global Storage ---
@@ -144,8 +144,11 @@ namespace Framework
                         recipe.ingredientIDs.push_back(ItemNameToId(v.GetString()));
                 }
 
-                recipe.toolItemID = recipeJson.HasMember("tool") ? ItemNameToId(recipeJson["tool"].GetString()) : -1;
                 recipe.resultItemID = recipeJson.HasMember("output") ? ItemNameToId(recipeJson["output"].GetString()) : -1;
+
+                if (recipeJson.HasMember("method") && recipeJson["method"].IsString()) {
+                    recipe.method = recipeJson["method"].GetString();
+                }
 
                 recipeDB.push_back(recipe);
             }

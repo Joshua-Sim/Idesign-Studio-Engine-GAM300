@@ -1595,6 +1595,24 @@
             "name": "RB_ItemOutline",
             "path": "Assets\\Textures\\RB_ItemOutline.png",
             "isUI": false
+        },
+        {
+            "guid": "82ec1e4b-01fe-4293-a5ff-4e86d6ee01d5",
+            "name": "RB_Divider",
+            "path": "Assets\\Textures\\RB_Divider.png",
+            "isUI": false
+        },
+        {
+            "guid": "5f6a371f-9edf-4ddb-b3af-aa595990aa5d",
+            "name": "RB_TooltipMethod",
+            "path": "Assets\\Textures\\RB_TooltipMethod.png",
+            "isUI": false
+        },
+        {
+            "guid": "4d0c0221-209c-48a4-9667-e335709ab37b",
+            "name": "RB_TooltipBackground",
+            "path": "Assets\\Textures\\RB_TooltipBackground.png",
+            "isUI": false
         }
     ]
 }
