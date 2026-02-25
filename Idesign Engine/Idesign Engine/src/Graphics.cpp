@@ -3187,6 +3187,11 @@ namespace Framework {
                 glm::mat4 model = glm::mat4(1.0f);
                 glm::vec3 snappedPos = glm::vec3(std::round(tr.position.x), std::round(tr.position.y), tr.position.z);
                 model = glm::translate(model, snappedPos);
+                model = glm::rotate(model, glm::radians(tr.rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+                model = glm::rotate(model, glm::radians(tr.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+                model = glm::rotate(model, glm::radians(tr.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+
+                // 3. Scale
                 model = glm::scale(model, glm::vec3(tr.scale.x * 0.5f, tr.scale.y * 0.5f, 1.0f));
                 uiShader.setMat4("uModel", model);
                 renderQuad();
