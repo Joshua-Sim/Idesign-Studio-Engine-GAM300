@@ -203,8 +203,8 @@ int main(void)
 
     ImguiManager::Log("Initializing FontSystem...", "FontSystem");
     fontSystem.Initialize();
-    fontSystem.LoadFont("Assets/Font/arial.ttf", 40, "Arial");
-    fontSystem.SetActiveFont("Arial");
+    fontSystem.LoadFont("Assets/Font/AveriaSerifLibre.ttf", 40, "Averia");
+    fontSystem.SetActiveFont("Averia");
     ImguiManager::LogSuccess("FontSystem ready", "FontSystem");
 
     // Run All Scripts
@@ -214,7 +214,7 @@ int main(void)
     }
 
     engineState.PushState(EngineMode::Play);    // Set to Play active    
-    engineState.PushState(EngineMode::Menu);    // Set to Menu active
+    engineState.PushState(EngineMode::MapSelection);    // Set to Menu active
     sceneManager.LoadScene("Scenes/GameScene - WithCollision.json");
     engine->GameLoop();
 

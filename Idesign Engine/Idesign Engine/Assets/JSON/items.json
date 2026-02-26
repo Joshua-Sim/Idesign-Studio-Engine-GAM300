@@ -3,42 +3,54 @@
     {
       "id": "unchopped_herb",
       "name": "Herb",
-      "type": "ingredient"
+      "type": "ingredient",
+      "location": "Forest",
+      "flavor": "A versatile vegetable, a forager's lifeline."
     },
     {
       "id": "chopped_herb",
       "name": "Chopped Herb",
-      "type": "ingredient"
+      "type": "ingredient",
+      "flavor": "All chopped up; the preparation is half the magic."
     },
     {
       "id": "pear",
       "name": "Fresh Pear",
-      "type": "ingredient"
+      "type": "ingredient",
+      "location": "Forest",
+      "flavor": "Bruised and sweet. A fleeting luxury in a forager’s pack."
+      
     },
     {
       "id": "strength_potion",
       "name": "Potion of Strength",
-      "type": "potion"
+      "type": "potion",
+      "flavor": "It burns the throat and makes the heart drum like a war march."
     },
     {
       "id": "vitality_potion",
       "name": "Potion of Vitality",
-      "type": "potion"
+      "type": "potion",
+      "flavor": "Cooler than spring water, it washes away the ache of a long journey."
     },
         {
       "id": "warmth_potion",
       "name": "Potion of Warmth",
-      "type": "potion"
+      "type": "potion",
+      "flavor": "A liquid hearth for those caught in the bite of a mountain gale."
     },
     {
       "id": "knife",
       "name": "Kitchen Knife",
-      "type": "tool"
+      "type": "tool",
+      "flavor": ""
     },
     {
       "id": "wool",
       "name": "Sheep Wool",
-      "type": "ingredient"
+      "type": "ingredient",
+            "location": "Forest",
+      "flavor": "Coarse, and smelling faintly of rain and high pastures."
     }
 
   ],
@@ -46,22 +58,25 @@
     {
       "id": "r_chop_herb",
       "inputs": ["unchopped_herb"],
-      "tool": "knife",
+      "method": "Chopping",
       "output": "chopped_herb"
     },
     {
       "id": "r_strength_potion",
       "inputs": ["unchopped_herb", "chopped_herb"],
+      "method": "Cauldron",
       "output": "strength_potion"
     },
     {
       "id": "r_vitality_potion",
       "inputs": ["pear", "chopped_herb"],
+      "method": "Cauldron",
       "output": "vitality_potion"
     },
     {
       "id": "r_warmth_potion",
       "inputs": ["wool", "unchopped_herb"],
+      "method": "Cauldron",
       "output": "warmth_potion"
     }
   ]

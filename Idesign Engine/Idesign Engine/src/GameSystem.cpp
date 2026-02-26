@@ -71,14 +71,21 @@ namespace Framework
             if (GameSystem::bookOpen) {
                 std::cout << "\nBook Opened!" << std::endl;
                 if (recipeBookManager) recipeBookManager->BuildBookUI();
+                g_AudioSystem->PlayAudio("event:/PaperUp");
             }
             else {
                 std::cout << "\nBook Closed!" << std::endl;
                 recipeBookManager->bookSpawned = false;
                 if (recipeBookManager) recipeBookManager->ClearBook();
+                g_AudioSystem->PlayAudio("event:/PaperDown");
             }
             wasBookOpen = GameSystem::bookOpen;
         }
+
+        if (GameSystem::bookOpen && recipeBookManager) {
+            recipeBookManager->UpdateVisuals(timeslice);
+        }
+
     }
 
     // =========================================================
