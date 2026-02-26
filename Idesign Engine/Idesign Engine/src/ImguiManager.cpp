@@ -746,6 +746,8 @@ namespace Framework {
         ImGui::NewFrame();
 
         int w, h;
+        m_isView0Visible = false;
+        m_isView1Visible = false;
         glfwGetFramebufferSize(m_graphicsSystem->GetWindow(), &w, &h);
 
         // JAY
@@ -823,32 +825,35 @@ namespace Framework {
                 ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
                 ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 
-                ImGui::Begin("GameFullscreen", nullptr, windowFlags);
-
-                // Get the available size
-                ImVec2 viewportSize = ImGui::GetContentRegionAvail();
-                float aspectRatio = (m_fboH > 0) ? (float)m_fboW / (float)m_fboH : 16.0f / 9.0f;
-                float newWidth = viewportSize.x;
-                float newHeight = newWidth / aspectRatio;
-
-                if (newHeight > viewportSize.y)
+                bool gameVis = ImGui::Begin("GameFullscreen", nullptr, windowFlags);
+                if (gameVis)
                 {
-                    newHeight = viewportSize.y;
-                    newWidth = newHeight * aspectRatio;
+                    if (g_MainViewIndex == 0) m_isView0Visible = true;
+                    else m_isView1Visible = true;
+                    // Get the available size
+                    ImVec2 viewportSize = ImGui::GetContentRegionAvail();
+                    float aspectRatio = (m_fboH > 0) ? (float)m_fboW / (float)m_fboH : 16.0f / 9.0f;
+                    float newWidth = viewportSize.x;
+                    float newHeight = newWidth / aspectRatio;
+
+                    if (newHeight > viewportSize.y)
+                    {
+                        newHeight = viewportSize.y;
+                        newWidth = newHeight * aspectRatio;
+                    }
+
+                    // Center the image
+                    ImVec2 offset((viewportSize.x - newWidth) * 0.5f, (viewportSize.y - newHeight) * 0.5f);
+                    ImGui::SetCursorPos(offset);
+
+                    // Render the game texture fullscreen
+                    ImGui::Image(
+                        (ImTextureID)(intptr_t)GetGameTexture(g_MainViewIndex),
+                        ImVec2(newWidth, newHeight),
+                        ImVec2(0, 1),
+                        ImVec2(1, 0)
+                    );
                 }
-
-                // Center the image
-                ImVec2 offset((viewportSize.x - newWidth) * 0.5f, (viewportSize.y - newHeight) * 0.5f);
-                ImGui::SetCursorPos(offset);
-
-                // Render the game texture fullscreen
-                ImGui::Image(
-                    (ImTextureID)(intptr_t)GetGameTexture(g_MainViewIndex),
-                    ImVec2(newWidth, newHeight),
-                    ImVec2(0, 1),
-                    ImVec2(1, 0)
-                );
-
                 ImGui::End();
                 ImGui::PopStyleVar(2);
             }
@@ -2718,8 +2723,12 @@ namespace Framework {
 
             bool menuActive = !engineState.Is(EngineMode::Play);
             
-            if (ImGui::Begin("Main Viewport"))
+            bool mainVis = ImGui::Begin("Main Viewport");
+            if (mainVis)
             {
+                if (g_MainViewIndex == 0) m_isView0Visible = true;
+                else m_isView1Visible = true;
+
                 // Get the available size in the ImGui window
                 ImVec2 viewportSize = ImGui::GetContentRegionAvail();
                 float aspectRatio = (m_fboH > 0) ? (float)m_fboW / (float)m_fboH : 16.0f / 9.0f;
@@ -2777,8 +2786,12 @@ namespace Framework {
             ImGui::End();
 
             // Debug second viewport window
-            if (ImGui::Begin("Secondary Viewport"))
+            bool secVis = ImGui::Begin("Secondary Viewport");
+            if (secVis)
             {
+                int secondaryView = (g_MainViewIndex == 0) ? 1 : 0;
+                if (secondaryView == 0) m_isView0Visible = true;
+                else m_isView1Visible = true;
                 // --- 1. Viewport Sizing and Letterboxing ---
                 ImVec2 viewportSize = ImGui::GetContentRegionAvail();
                 float aspectRatio = (m_fboH > 0) ? (float)m_fboW / (float)m_fboH : 16.0f / 9.0f;
@@ -2796,7 +2809,6 @@ namespace Framework {
                 ImGui::SetCursorPos(offset);
 
                 // --- 2. Draw the Viewport Image ---
-                int secondaryView = (g_MainViewIndex == 0) ? 1 : 0;
                 ImGui::Image(
                     (ImTextureID)(intptr_t)GetGameTexture(secondaryView),
                     ImVec2(newWidth, newHeight),

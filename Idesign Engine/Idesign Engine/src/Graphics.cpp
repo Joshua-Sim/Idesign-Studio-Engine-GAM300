@@ -606,7 +606,7 @@ namespace Framework {
 
         float now = (float)glfwGetTime();
         float dt = now - lastTime; lastTime = now;
-        process_input(dt);
+        process_input(deltaTime);
 
         // ====================================================================
             // OPTIMIZATION PART 1: UPDATE CACHES
@@ -866,20 +866,40 @@ namespace Framework {
                 }
             }
         }
-        RenderView(
-            gameCamera, 0, w, h,
-            frameSun, frameHasSun, framePointLights, frameSpotLights
-        );
 
+    // ====================================================================
+        // EXCLUSIVE RENDERING (Saves 10 FPS)
         // ====================================================================
-        // 2. RENDER VIEW 1: SCENE (free-fly)
-        // ====================================================================
-        if (glfwGetKey(window, GLFW_KEY_EQUAL) == GLFW_PRESS)
+        bool renderView0 = true; // Safe defaults
+        bool renderView1 = false;
+
+        if (m_imguiManager) {
+            renderView0 = m_imguiManager->IsView0Visible();
+            renderView1 = m_imguiManager->IsView1Visible();
+        }
+
+        // 1. RENDER VIEW 0: GAME (grounded)
+        if (renderView0)
         {
-            RenderView(
-                sceneCamera, 1, w, h,
-                frameSun, frameHasSun, framePointLights, frameSpotLights
-            );
+            if (groundMode)
+            {
+                gameCamera.position.y = 20.0f;
+                for (auto const& entityId : mEntities) {
+                    if (ecsInterface.GetEntityName(entityId) == "Player") {
+                        if (ecsInterface.HasComponent<TransformComponent>(entityId)) {
+                            auto& transform = ecsInterface.GetComponent<TransformComponent>(entityId);
+                            gameCamera.position = transform.position;
+                        }
+                    }
+                }
+            }
+            RenderView(gameCamera, 0, w, h, frameSun, frameHasSun, framePointLights, frameSpotLights);
+        }
+
+        // 2. RENDER VIEW 1: SCENE (free-fly)
+        if (renderView1)
+        {
+            RenderView(sceneCamera, 1, w, h, frameSun, frameHasSun, framePointLights, frameSpotLights);
         }
         //// ====================================================================
         //// 3. FINAL/SHARED LOGIC
@@ -3292,12 +3312,6 @@ namespace Framework {
             }
         }
         // =========================================================
-
-        glEnable(GL_DEPTH_TEST);
-        glm::mat4 textModel = glm::mat4(1.0f);
-        textModel = glm::translate(textModel, glm::vec3(0.0f, 5.0f, 0.0f));
-        fontSystem.RenderText3D("iDesign Engine by iDesign Studio", textModel, view, proj, 0.05f, glm::vec3(1.0f, 1.0f, 0.5f), 0);
-        glDisable(GL_DEPTH_TEST);
     }
 
 

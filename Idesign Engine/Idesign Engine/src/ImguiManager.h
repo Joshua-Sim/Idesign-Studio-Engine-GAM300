@@ -124,7 +124,8 @@ namespace Framework
 		void RenderSceneAssets();
 		void RenderScriptAssets();
 		void RenderAnimationAssets();
-
+		bool IsView0Visible() const { return m_isView0Visible; }
+		bool IsView1Visible() const { return m_isView1Visible; }
 	private:
 		//Console members 
 		void OnConsoleLog(const ConsoleLogMessage& msg);
@@ -142,5 +143,7 @@ namespace Framework
 		static ImguiManager* instance; 
 		int m_fboW;
 		int m_fboH;
+		bool m_isView0Visible = true;
+		bool m_isView1Visible = false;
 	};
 }
