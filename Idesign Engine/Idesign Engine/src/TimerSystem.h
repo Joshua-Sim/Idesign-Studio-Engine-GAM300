@@ -11,7 +11,6 @@
 #ifndef _TIMER_SYSTEM_H_
 #define _TIMER_SYSTEM_H_
 
-#include "pch.h"
 #include "System.h"
 #include "ComponentList.h"
 #include "TimerComponent.h"

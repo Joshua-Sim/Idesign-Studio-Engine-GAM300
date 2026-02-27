@@ -1,5 +1,5 @@
 {
-    "count": 267,
+    "count": 273,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -1601,6 +1601,42 @@
             "guid": "4d0c0221-209c-48a4-9667-e335709ab37b",
             "name": "RB_TooltipBackground",
             "path": "Assets\\Textures\\RB_TooltipBackground.png",
+            "isUI": false
+        },
+        {
+            "guid": "3e36546e-1611-4e55-ae4a-118cd864a166",
+            "name": "gold&moon",
+            "path": "Assets\\Textures\\gold&moon.png",
+            "isUI": false
+        },
+        {
+            "guid": "353f2aff-798e-4824-a824-51ca41527165",
+            "name": "gold&sun",
+            "path": "Assets\\Textures\\gold&sun.png",
+            "isUI": false
+        },
+        {
+            "guid": "3c9d8dfd-6930-486f-8945-f5522795e3f3",
+            "name": "mini_controlpage",
+            "path": "Assets\\Textures\\mini_controlpage.png",
+            "isUI": false
+        },
+        {
+            "guid": "9f49c10c-189a-4f54-bb78-b6ed491661cc",
+            "name": "clocktimehand",
+            "path": "Assets\\Textures\\clocktimehand.png",
+            "isUI": false
+        },
+        {
+            "guid": "cddcdcdf-d5c9-4eb7-a5b0-19f04bfcd26f",
+            "name": "clock",
+            "path": "Assets\\Textures\\clock.png",
+            "isUI": false
+        },
+        {
+            "guid": "74ebf112-a229-44c5-877f-c99438708a33",
+            "name": "PhaseTimerIcon",
+            "path": "Assets\\Textures\\PhaseTimerIcon.png",
             "isUI": false
         }
     ]
