@@ -234,17 +234,14 @@ namespace Framework {
         ecsInterface.RegisterComponent<MaterialMetadata>();
         ecsInterface.RegisterComponent<LightProperties>();
         ecsInterface.RegisterComponent<PhysicsProperties>();
-
         ecsInterface.RegisterComponent<BoxColliderComponent>();
         ecsInterface.RegisterComponent<ItemComponent>();
         ecsInterface.RegisterComponent<ButtonComponent>();
         ecsInterface.RegisterComponent<ParticleEmitterComponent>();
-
-
-        //test
+        ecsInterface.RegisterComponent<PrefabComponent>();
+        ecsInterface.RegisterComponent<TimerComponent>();
 
         ImguiManager::LogSuccess("Graphics components registered", "Graphics");
-        ecsInterface.RegisterComponent<PrefabComponent>();
 
         //  ---- ECS INITIALIZATION --- 
         Signature signature;

@@ -20,5 +20,6 @@ void main()
 
     // Gamma correction: convert linear -> sRGB for correct brightness
     // sRGB textures are auto-converted to linear on sample, so we convert back
-    FragColor.rgb = pow(FragColor.rgb, vec3(1.0 / 1.5));
+    // Last used for .dds files 
+    // FragColor.rgb = pow(FragColor.rgb, vec3(1.0 / 1.5));
 }
