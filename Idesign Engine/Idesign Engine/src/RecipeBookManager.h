@@ -159,26 +159,32 @@ namespace Framework {
                 ItemClickedEvent data;
                 data.itemID = itemID;
                 EventManager::Instance().Fire("ItemClicked", &data);
+                return; // Stop checking
             }
 
-            // 4. RIGHT PAGE "RECIPE INGREDIENT" CLICK
-            float scrollIconHalf_UV_X = 50.0f / 1920.0f;
-            float scrollIconHalf_UV_Y = 50.0f / 1080.0f;
+            // 3. RIGHT PAGE "USED IN" CLICK
+            float smallIconHalf = 40.0f; // Half of the 80.0f icon
 
-            for (const auto& hit : m_recipeIngredientHitboxes) {
-                float hitUV_X = hit.second.x / 1920.0f;
-                float hitUV_Y = hit.second.y / 1080.0f;
+            for (const auto& hit : m_usedInHitboxes) {
+                // Pixel-based collision check
+                if (mouseX >= (hit.second.x - smallIconHalf) && mouseX <= (hit.second.x + smallIconHalf) &&
+                    mouseY >= (hit.second.y - smallIconHalf) && mouseY <= (hit.second.y + smallIconHalf)) {
 
-                if (mouseUV_X >= (hitUV_X - scrollIconHalf_UV_X) && mouseUV_X <= (hitUV_X + scrollIconHalf_UV_X) &&
-                    mouseUV_Y >= (hitUV_Y - scrollIconHalf_UV_Y) && mouseUV_Y <= (hitUV_Y + scrollIconHalf_UV_Y)) {
+                    // 1. Determine target tab dynamically based on the item type!
+                    Framework::ItemType type = Framework::GetItemType(hit.first);
+                    BookTab targetTab = m_currentTab;
 
-                    // 1. Force the book back to the INGREDIENTS tab
-                    if (m_currentTab != BookTab::INGREDIENTS) {
-                        m_currentTab = BookTab::INGREDIENTS;
+                    if (type == Framework::ItemType::POTION) targetTab = BookTab::POTIONS;
+                    else if (type == Framework::ItemType::INGREDIENT) targetTab = BookTab::INGREDIENTS;
+                    else targetTab = BookTab::ITEMS;
+
+                    // 2. Switch the tab if we aren't already on it
+                    if (m_currentTab != targetTab) {
+                        m_currentTab = targetTab;
                         g_AudioSystem->PlayAudio("event:/PaperUp");
                     }
 
-                    // 2. Fire the click event to select the specific ingredient!
+                    // 3. Fire the click event to select the specific item
                     ItemClickedEvent data;
                     data.itemID = hit.first;
                     EventManager::Instance().Fire("ItemClicked", &data);
@@ -187,7 +193,29 @@ namespace Framework {
                 }
             }
 
-        }
+            // 4. RIGHT PAGE "RECIPE INGREDIENT" CLICK
+            float scrollIconHalf = 50.0f; // Half of the 100.0f icon on the scroll
+
+            for (const auto& hit : m_recipeIngredientHitboxes) {
+                // Pixel-based collision check
+                if (mouseX >= (hit.second.x - scrollIconHalf) && mouseX <= (hit.second.x + scrollIconHalf) &&
+                    mouseY >= (hit.second.y - scrollIconHalf) && mouseY <= (hit.second.y + scrollIconHalf)) {
+
+                    // 1. Force the book back to the INGREDIENTS tab
+                    if (m_currentTab != BookTab::INGREDIENTS) {
+                        m_currentTab = BookTab::INGREDIENTS;
+                        g_AudioSystem->PlayAudio("event:/PaperUp");
+                    }
+
+                    // 2. Fire the click event to select the specific ingredient
+                    ItemClickedEvent data;
+                    data.itemID = hit.first;
+                    EventManager::Instance().Fire("ItemClicked", &data);
+
+                    return; // Stop checking
+                }
+            }
+        } 
 
         // --- MAIN RENDER FUNCTION ---
         void BuildBookUI() {
