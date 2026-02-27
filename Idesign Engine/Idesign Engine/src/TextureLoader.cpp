@@ -13,7 +13,7 @@
 // ------------------------------------------------------------------
 // Static member definitions
 // ------------------------------------------------------------------
-std::unordered_map<std::string, unsigned int> TextureLoader::s_texCache;
+std::unordered_map<std::string, unsigned int>  TextureLoader::s_texCache;
 std::queue<TextureLoader::PendingUpload>       TextureLoader::s_uploadQueue;
 std::mutex                                     TextureLoader::s_queueMutex;
 

@@ -20819,15 +20819,6 @@
                     "guid": "3db45502-0b02-41ec-85b1-0ad1d5fbe585",
                     "isUI": false
                 },
-                "ScriptProperties": {
-                    "scripts": [
-                        {
-                            "guid": "b20ceaf5-8708-422e-a0d1-9234f7d411c0",
-                            "scriptPath": "Assets\\Scripts\\MapButton.lua",
-                            "hotReload": false
-                        }
-                    ]
-                },
                 "ButtonComponent": {
                     "position": [
                         1410.0,
@@ -22354,15 +22345,6 @@
                 "TextureComponent": {
                     "guid": "a37d067f-322e-47c3-8d53-e0c0cee1a8c6",
                     "isUI": false
-                },
-                "ScriptProperties": {
-                    "scripts": [
-                        {
-                            "guid": "b20ceaf5-8708-422e-a0d1-9234f7d411c0",
-                            "scriptPath": "Assets\\Scripts\\MapButton.lua",
-                            "hotReload": false
-                        }
-                    ]
                 },
                 "ButtonComponent": {
                     "position": [
