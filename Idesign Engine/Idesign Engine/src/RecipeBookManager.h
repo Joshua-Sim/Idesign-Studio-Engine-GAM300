@@ -84,8 +84,15 @@ namespace Framework {
         int m_hoveredRightIconID = -1;
         bool m_rightTooltipActive = false;
         std::vector<Entity> m_rightTooltipEntities;
-
         std::vector<Entity> m_tooltipEntities;
+
+        std::vector<std::pair<int, glm::vec2>> m_recipeIngredientHitboxes;
+        int m_hoveredRecipeIngID = -1;
+        bool m_recipeTooltipActive = false;
+        std::vector<Entity> m_recipeTooltipEntities;
+
+        std::map<int, Entity> m_recipeIngredientBGEntities;
+        std::map<int, Entity> m_recipeIngredientIconEntities;
 
     public:
         bool bookSpawned = false;
@@ -153,6 +160,33 @@ namespace Framework {
                 data.itemID = itemID;
                 EventManager::Instance().Fire("ItemClicked", &data);
             }
+
+            // 4. RIGHT PAGE "RECIPE INGREDIENT" CLICK
+            float scrollIconHalf_UV_X = 50.0f / 1920.0f;
+            float scrollIconHalf_UV_Y = 50.0f / 1080.0f;
+
+            for (const auto& hit : m_recipeIngredientHitboxes) {
+                float hitUV_X = hit.second.x / 1920.0f;
+                float hitUV_Y = hit.second.y / 1080.0f;
+
+                if (mouseUV_X >= (hitUV_X - scrollIconHalf_UV_X) && mouseUV_X <= (hitUV_X + scrollIconHalf_UV_X) &&
+                    mouseUV_Y >= (hitUV_Y - scrollIconHalf_UV_Y) && mouseUV_Y <= (hitUV_Y + scrollIconHalf_UV_Y)) {
+
+                    // 1. Force the book back to the INGREDIENTS tab
+                    if (m_currentTab != BookTab::INGREDIENTS) {
+                        m_currentTab = BookTab::INGREDIENTS;
+                        g_AudioSystem->PlayAudio("event:/PaperUp");
+                    }
+
+                    // 2. Fire the click event to select the specific ingredient!
+                    ItemClickedEvent data;
+                    data.itemID = hit.first;
+                    EventManager::Instance().Fire("ItemClicked", &data);
+
+                    return; // Stop checking
+                }
+            }
+
         }
 
         // --- MAIN RENDER FUNCTION ---
@@ -181,9 +215,18 @@ namespace Framework {
         }
 
         void ClearBook() {
-            RemoveRightTooltip(); // Add this!
-            m_usedInHitboxes.clear(); // Add this!
-            m_hoveredRightIconID = -1; // Add this!
+            RemoveRightTooltip(); 
+            m_usedInHitboxes.clear();
+            m_hoveredRightIconID = -1; 
+
+            // --- ADD THESE TWO LINES ---
+            m_recipeIngredientBGEntities.clear();
+            m_recipeIngredientIconEntities.clear();
+
+            RemoveRecipeTooltip();
+            m_recipeIngredientHitboxes.clear();
+            m_hoveredRecipeIngID = -1;
+
             RemoveTooltip();
             // Use a local copy or clear carefully
             for (Entity e : uiEntities) {
@@ -211,17 +254,22 @@ namespace Framework {
         void OnMouseMove(float mouseUV_X, float mouseUV_Y) {
             if (!bookSpawned) return;
 
-            // 1. SIDEBAR HOVER DETECTION (UV SPACE)
+            // --- STANDARDIZATION ---
+            // Convert to pixel space once at the top to avoid doing messy UV division in every loop
+            float mouseX = mouseUV_X * 1920.0f;
+            float mouseY = mouseUV_Y * 1080.0f;
+
+            // 1. SIDEBAR HOVER DETECTION
             int foundSideTab = -1;
 
-            // Check if X is within the sidebar "strip" on the left
+            // Check if X is within the sidebar "strip" on the left (Using your existing UV constants)
             if (mouseUV_X >= SIDE_UV_MIN_X && mouseUV_X <= SIDE_UV_MAX_X) {
                 for (int i = 0; i < 3; ++i) {
-                    // Calculate UV Y center of the tab
-                    float tabY_UV = (SIDE_TAB_START_Y - (i * SIDE_TAB_SPACING)) / 1080.0f;
-                    float halfHeight_UV = (SIDE_TAB_HEIGHT / 2.0f) / 1080.0f;
+                    // Standardized to pixel space checking
+                    float tabY = SIDE_TAB_START_Y - (i * SIDE_TAB_SPACING);
+                    float halfHeight = SIDE_TAB_HEIGHT / 2.0f;
 
-                    if (mouseUV_Y >= (tabY_UV - halfHeight_UV) && mouseUV_Y <= (tabY_UV + halfHeight_UV)) {
+                    if (mouseY >= (tabY - halfHeight) && mouseY <= (tabY + halfHeight)) {
                         foundSideTab = i;
                         break;
                     }
@@ -234,28 +282,23 @@ namespace Framework {
                 RefreshBook();
             }
 
-            // Left Page Hover
+            // 2. LEFT PAGE HOVER
             float itemX, itemY;
+            // GetItemAtPosition already expects UVs based on its parameters
             int foundItemID = GetItemAtPosition(mouseUV_X, mouseUV_Y, itemX, itemY);
             if (foundItemID != m_hoveredItemID) {
                 m_hoveredItemID = foundItemID;
             }
 
-			// Right Page Hover (Used In)
+            // 3. RIGHT PAGE HOVER (Used In)
             int hoveredOutID = -1;
             float hitX = 0, hitY = 0;
+            float smallIconHalf = 40.0f; // Half of the 80.0f icon
 
-            // Convert the half-size of the 80.0f icon (40.0f) to UV space
-            float smallIconHalf_UV_X = 40.0f / 1920.0f;
-            float smallIconHalf_UV_Y = 40.0f / 1080.0f;
-
-            // Check if mouse is inside any of the tracked hitboxes using UV coordinates
+            // Standardized pixel collision
             for (const auto& hit : m_usedInHitboxes) {
-                float hitUV_X = hit.second.x / 1920.0f;
-                float hitUV_Y = hit.second.y / 1080.0f;
-
-                if (mouseUV_X >= (hitUV_X - smallIconHalf_UV_X) && mouseUV_X <= (hitUV_X + smallIconHalf_UV_X) &&
-                    mouseUV_Y >= (hitUV_Y - smallIconHalf_UV_Y) && mouseUV_Y <= (hitUV_Y + smallIconHalf_UV_Y)) {
+                if (mouseX >= (hit.second.x - smallIconHalf) && mouseX <= (hit.second.x + smallIconHalf) &&
+                    mouseY >= (hit.second.y - smallIconHalf) && mouseY <= (hit.second.y + smallIconHalf)) {
 
                     hoveredOutID = hit.first;
                     hitX = hit.second.x; // Keep original pixel coords for spawning the tooltip
@@ -273,6 +316,30 @@ namespace Framework {
                 }
             }
 
+            // 4. RIGHT PAGE "RECIPE INGREDIENT" HOVER
+            int hoveredRecipeIng = -1;
+            float rHitX = 0, rHitY = 0;
+            float scrollIconHalf = 50.0f; // Half of the 100.0f scroll icon
+
+            // Standardized pixel collision
+            for (const auto& hit : m_recipeIngredientHitboxes) {
+                if (mouseX >= (hit.second.x - scrollIconHalf) && mouseX <= (hit.second.x + scrollIconHalf) &&
+                    mouseY >= (hit.second.y - scrollIconHalf) && mouseY <= (hit.second.y + scrollIconHalf)) {
+
+                    hoveredRecipeIng = hit.first;
+                    rHitX = hit.second.x;
+                    rHitY = hit.second.y;
+                    break;
+                }
+            }
+
+            if (hoveredRecipeIng != m_hoveredRecipeIngID) {
+                RemoveRecipeTooltip();
+                m_hoveredRecipeIngID = hoveredRecipeIng;
+                if (hoveredRecipeIng != -1) {
+                    CreateRecipeTooltip(hoveredRecipeIng, rHitX, rHitY);
+                }
+            }
         }
 
         // Add to public functions:
@@ -318,6 +385,31 @@ namespace Framework {
                     if (std::abs(trans.scale.x - targetSize) > 0.1f) {
                         trans.scale.x += (targetSize - trans.scale.x) * lerpSpeed * dt;
                         trans.scale.y += (targetSize - trans.scale.y) * lerpSpeed * dt;
+                    }
+                }
+            }
+
+            // 3. Right Page Recipe Ingredient Hover Animation
+            float baseRecipeBGSize = 100.0f; // The smallIconSize from BuildRightPage
+            float hoveredRecipeBGSize = 115.0f; // Popped out size
+
+            float baseRecipeIconSize = 40.0f * 1.3f; // 52.0f base scale
+            float hoveredRecipeIconSize = baseRecipeIconSize * 1.15f; // Scale up proportionally
+
+            for (const auto& pair : m_recipeIngredientBGEntities) {
+                int ingID = pair.first;
+                Entity bgEnt = pair.second;
+                Entity iconEnt = m_recipeIngredientIconEntities[ingID];
+
+                float targetBGSize = (ingID == m_hoveredRecipeIngID) ? hoveredRecipeBGSize : baseRecipeBGSize;
+                float targetIconSize = (ingID == m_hoveredRecipeIngID) ? hoveredRecipeIconSize : baseRecipeIconSize;
+
+                // Smoothly animate the item icon inside it
+                if (iconEnt != 0) {
+                    auto& trans = coordinator->GetComponent<TransformComponent>(iconEnt);
+                    if (std::abs(trans.scale.x - targetIconSize) > 0.1f) {
+                        trans.scale.x += (targetIconSize - trans.scale.x) * lerpSpeed * dt;
+                        trans.scale.y += (targetIconSize - trans.scale.y) * lerpSpeed * dt;
                     }
                 }
             }
@@ -473,6 +565,37 @@ namespace Framework {
             m_rightTooltipActive = true;
         }
 
+        void RemoveRecipeTooltip() {
+            if (m_recipeTooltipActive) {
+                for (Entity e : m_recipeTooltipEntities) {
+                    coordinator->DestroyEntity(e);
+
+                    auto it = std::remove(uiEntities.begin(), uiEntities.end(), e);
+                    if (it != uiEntities.end()) uiEntities.erase(it, uiEntities.end());
+                }
+                m_recipeTooltipEntities.clear();
+                m_recipeTooltipActive = false;
+            }
+        }
+
+        void CreateRecipeTooltip(int itemID, float iconX, float iconY) {
+            std::string itemName = Framework::GetItemDisplayName(itemID);
+
+            // Dynamic width based on name length
+            float textScale = 0.6f;
+            float charWidth = 15.0f;
+            float bgWidth = (itemName.length() * charWidth) + 30.0f; // 30 is padding
+            float bgHeight = 40.0f;
+
+            float tooltipX = iconX;
+            float tooltipY = iconY + 70.0f; // 70px above the icon
+
+            m_recipeTooltipEntities.push_back(SpawnGenericSpriteReturnEntity(tooltipX, tooltipY, "RB_TooltipBackground", bgWidth, bgHeight, toolTipBackgroundZ));
+            m_recipeTooltipEntities.push_back(SpawnTextReturnEntity(tooltipX, tooltipY - 5.0f, tooltipTextZ, itemName, textScale));
+
+            m_recipeTooltipActive = true;
+        }
+
         int GetItemAtPosition(float mouseUV_X, float mouseUV_Y, float& outItemX, float& outItemY) {
             float mouseX = mouseUV_X * 1920.0f;
             float mouseY = mouseUV_Y * 1080.0f;
@@ -564,83 +687,121 @@ namespace Framework {
         // =========================================================
         //                  RIGHT PAGE: ITEM LORE & USAGE
         // =========================================================
+        // =========================================================
+        //                  RIGHT PAGE: ITEM LORE & USAGE
+        // =========================================================
         void BuildRightPage(int selectedID) {
             float rightPageX = 1250.0f; // 3/4 of 1920
-            float currentY = 767.0f;    // six seven
-			glm::vec4 black = { 0.0f, 0.0f, 0.0f, 1.0f };
-            // --- 1. ENLARGED HEADER ---
-            // Scale up the frame and icon
-            SpawnGenericSprite(rightPageX, currentY, "RB_ItemBackground", 200.0f, 200.0f, itemFrameZ);
-            SpawnUISprite(rightPageX, currentY, Framework::kItemNames[selectedID], 3.5f, itemIconZ);
+            float currentY = 767.0f;
+            glm::vec4 black = { 0.0f, 0.0f, 0.0f, 1.0f };
+
+            // --- 1. SHARED ENLARGED HEADER ---
+            SpawnGenericSpriteReturnEntity(rightPageX, currentY, "RB_ItemBackground", 200.0f, 200.0f, itemFrameZ);
+            SpawnUISpriteReturnEntity(rightPageX, currentY, Framework::kItemNames[selectedID], 3.5f, itemIconZ);
 
             float textY = currentY - 100.0f - 30.0f;
-            SpawnText(rightPageX, textY, baseTextZ, Framework::GetItemDisplayName(selectedID), 0.8f);
-            SpawnGenericSprite(rightPageX, textY - 15.0f, "RB_ItemOutline", 250.0f, 8.0f, itemIconZ);
+            SpawnTextReturnEntity(rightPageX, textY, baseTextZ, Framework::GetItemDisplayName(selectedID), 0.8f);
+            SpawnGenericSpriteReturnEntity(rightPageX, textY - 15.0f, "RB_ItemOutline", 250.0f, 8.0f, itemIconZ);
 
             currentY = textY - 40.0f;
 
-            // --- 2. DIVIDER 1 ---
-            SpawnGenericSprite(rightPageX, std::round(currentY), "RB_Divider", 522.0f, 2.0f, itemFrameZ);
+            // --- 2. SHARED DIVIDER 1 ---
+            SpawnGenericSpriteReturnEntity(rightPageX, std::round(currentY), "RB_Divider", 522.0f, 2.0f, itemFrameZ);
             currentY -= 30.0f;
 
-            // --- 3. LOCATION ---
-            // Left-aligned label relative to the center
-            SpawnText(rightPageX - 160.0f, currentY, baseTextZ, "Found in:", 0.5f, black, 0);
-            currentY -= 40.0f;
-            // Centered location text
-            SpawnText(rightPageX, currentY, baseTextZ, Framework::GetItemLocation(selectedID), 0.8f);
+            // --- BRANCH: POTION vs INGREDIENT ---
+            if (Framework::GetItemType(selectedID) == Framework::ItemType::POTION) {
 
-            currentY -= 30.0f;
+                // --- POTION LAYOUT: RECIPE SCROLL ---
+                SpawnTextReturnEntity(rightPageX - 160.0f, currentY, baseTextZ, "Recipe:", 0.5f, black, 0);
+                currentY -= 70.0f;
 
-            // --- 4. DIVIDER 2 ---
-            SpawnGenericSprite(rightPageX, std::round(currentY), "RB_Divider", 522.0f, 2.0f, itemFrameZ);
-            currentY -= 30.0f;
+                // Spawn the parchment scroll background
+                SpawnGenericSpriteReturnEntity(rightPageX, currentY, "RB_RecipeBackground", 510.0f, 133.0f, itemFrameZ);
 
-            // --- 5. "CAN BE USED IN" ---
-            SpawnText(rightPageX - 160.0f, currentY, baseTextZ, "Can be used in:", 0.5f, black, 0);
-            currentY -= 60.0f;
+                // Fetch the recipe to draw the ingredients
+                const PotionRecipe* recipe = Framework::GetRecipeForResult(selectedID);
 
-            // Find all recipes where this item is an input
-            std::vector<int> usedInOutputs;
-            for (const auto& recipe : Framework::GetGlobalRecipes()) {
-                if (std::find(recipe.ingredientIDs.begin(), recipe.ingredientIDs.end(), selectedID) != recipe.ingredientIDs.end()) {
-                    if (recipe.resultItemID != -1) {
-                        usedInOutputs.push_back(recipe.resultItemID);
+                if (recipe && !recipe->ingredientIDs.empty()) {
+                    float smallIconSize = 90.0f;
+                    float spacing = smallIconSize + 20.0f;
+
+                    // Start rendering ingredients from the left side of the scroll
+                    float startX = rightPageX - 145.0f;
+
+                    for (int ingID : recipe->ingredientIDs) {
+                        // --- CHANGED: Using standard item background and standard Z-layering ---
+                        Entity bg = SpawnGenericSpriteReturnEntity(startX, currentY, "RB_ItemBackground", smallIconSize, smallIconSize, itemFrameZ + 0.01f);
+                        Entity icon = SpawnUISpriteReturnEntity(startX, currentY, Framework::kItemNames[ingID], 1.7f, itemIconZ);
+
+                        // --- STORE ENTITIES FOR ANIMATION ---
+                        m_recipeIngredientBGEntities[ingID] = bg;
+                        m_recipeIngredientIconEntities[ingID] = icon;
+                        m_recipeIngredientHitboxes.push_back({ ingID, glm::vec2(startX, currentY) });
+
+                        startX += spacing;
                     }
                 }
-            }
+                else {
+                    SpawnTextReturnEntity(rightPageX, currentY, baseTextZ, "Recipe Unknown", 0.5f, black, 1);
+                }
 
-            // Display the output items using smaller frames
-            if (usedInOutputs.empty()) {
-                SpawnText(rightPageX, currentY, baseTextZ, "None", 0.5f);
+                currentY -= 90.0f;
+
             }
             else {
-                float smallIconSize = 80.0f;
-                float spacing = smallIconSize + 20.0f;
-                // Calculate start X to keep the row perfectly centered
-                float startX = rightPageX - ((usedInOutputs.size() - 1) * spacing / 2.0f);
 
-                for (int outID : usedInOutputs) {
-                    SpawnGenericSprite(startX, currentY, "RB_ItemBackground", smallIconSize, smallIconSize, itemFrameZ);
-                    SpawnUISprite(startX, currentY, Framework::kItemNames[outID], 1.3f, itemIconZ);
+                // --- INGREDIENT LAYOUT: LORE & USED IN ---
+                SpawnTextReturnEntity(rightPageX - 160.0f, currentY, baseTextZ, "Found in:", 0.5f, black, 0);
+                currentY -= 40.0f;
+                SpawnTextReturnEntity(rightPageX, currentY, baseTextZ, Framework::GetItemLocation(selectedID), 0.8f);
 
-                    // --- ADD THIS TO TRACK HOVER REGIONS ---
-                    m_usedInHitboxes.push_back({ outID, glm::vec2(startX, currentY) });
+                currentY -= 30.0f;
 
-                    startX += spacing;
+                SpawnGenericSpriteReturnEntity(rightPageX, std::round(currentY), "RB_Divider", 522.0f, 2.0f, itemFrameZ);
+                currentY -= 30.0f;
+
+                SpawnTextReturnEntity(rightPageX - 160.0f, currentY, baseTextZ, "Can be used in:", 0.5f, black, 0);
+                currentY -= 60.0f;
+
+                std::vector<int> usedInOutputs;
+                for (const auto& recipe : Framework::GetGlobalRecipes()) {
+                    if (std::find(recipe.ingredientIDs.begin(), recipe.ingredientIDs.end(), selectedID) != recipe.ingredientIDs.end()) {
+                        if (recipe.resultItemID != -1) {
+                            usedInOutputs.push_back(recipe.resultItemID);
+                        }
+                    }
                 }
+
+                if (usedInOutputs.empty()) {
+                    SpawnTextReturnEntity(rightPageX, currentY, baseTextZ, "None", 0.5f);
+                }
+                else {
+                    float smallIconSize = 80.0f;
+                    float spacing = smallIconSize + 20.0f;
+                    float startX = rightPageX - ((usedInOutputs.size() - 1) * spacing / 2.0f);
+
+                    for (int outID : usedInOutputs) {
+                        SpawnGenericSpriteReturnEntity(startX, currentY, "RB_ItemBackground", smallIconSize, smallIconSize, itemFrameZ);
+                        SpawnUISpriteReturnEntity(startX, currentY, Framework::kItemNames[outID], 1.3f, itemIconZ);
+
+                        // Track hover regions for the tooltip
+                        m_usedInHitboxes.push_back({ outID, glm::vec2(startX, currentY) });
+
+                        startX += spacing;
+                    }
+                }
+
+                currentY -= 60.0f;
             }
 
-            currentY -= 60.0f;
-
-            // --- 6. DIVIDER 3 ---
-            SpawnGenericSprite(rightPageX, std::round(currentY), "RB_Divider", 522.0f, 2.0f, itemFrameZ);
+            // --- 3. SHARED DIVIDER 2 ---
+            SpawnGenericSpriteReturnEntity(rightPageX, std::round(currentY), "RB_Divider", 522.0f, 2.0f, itemFrameZ);
             currentY -= 50.0f;
 
-            // --- 7. FLAVOR TEXT ---
-            // Using a slightly faded brown/grey color based on your reference image
+            // --- 4. SHARED FLAVOR TEXT ---
             glm::vec4 flavorColor = glm::vec4(0.5f, 0.45f, 0.4f, 1.0f);
-            SpawnText(rightPageX, currentY, baseTextZ, "\"" + Framework::GetItemFlavorText(selectedID) + "\"", 0.45f, flavorColor);
+            SpawnTextReturnEntity(rightPageX, currentY, baseTextZ, "\"" + Framework::GetItemFlavorText(selectedID) + "\"", 0.45f, flavorColor);
         }
 
         void BuildSideTabs() {
@@ -805,7 +966,7 @@ namespace Framework {
             tp.alignment = alignment;
             tp.scale = scaleMult;
             tp.color = color;
-
+            
             coordinator->AddComponent(e, hc);
             coordinator->AddComponent(e, trans);
             coordinator->AddComponent(e, mesh);

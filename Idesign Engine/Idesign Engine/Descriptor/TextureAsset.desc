@@ -1,5 +1,5 @@
 {
-    "count": 269,
+    "count": 271,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -1613,6 +1613,18 @@
             "guid": "4d0c0221-209c-48a4-9667-e335709ab37b",
             "name": "RB_TooltipBackground",
             "path": "Assets\\Textures\\RB_TooltipBackground.png",
+            "isUI": false
+        },
+        {
+            "guid": "1ed88cb8-94df-44e0-8784-7acdb3af6c31",
+            "name": "RB_RecipeBackground",
+            "path": "Assets\\Textures\\RB_RecipeBackground.png",
+            "isUI": false
+        },
+        {
+            "guid": "27d45a05-9045-458d-8f32-8ae6c6e3b2c5",
+            "name": "RB_IngredientBackground",
+            "path": "Assets\\Textures\\RB_IngredientBackground.png",
             "isUI": false
         }
     ]
