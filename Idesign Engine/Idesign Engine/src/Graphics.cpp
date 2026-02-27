@@ -45,7 +45,6 @@
 #include <ScriptProperties.h>
 #include <BoxColliderComponent.h>
 #include "EventManager.h"
-#include <RecipeBookManager.h>
 #include "GameSystem.h"
 #include "ItemComponent.h"
 #include "Inventory.h"

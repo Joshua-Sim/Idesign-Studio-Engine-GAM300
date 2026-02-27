@@ -12,10 +12,13 @@ void main()
     vec4 texColor = texture(uTexture, TexCoords);
     
     // Apply tint and global alpha
-    // (If you don't send uColor/uAlpha, remove this line and just use texColor)
     FragColor = vec4(texColor.rgb * uColor, texColor.a * uAlpha);
     
     // Optimization: Don't draw invisible pixels
     if(FragColor.a < 0.01)
         discard;
+
+    // Gamma correction: convert linear -> sRGB for correct brightness
+    // sRGB textures are auto-converted to linear on sample, so we convert back
+    FragColor.rgb = pow(FragColor.rgb, vec3(1.0 / 1.5));
 }
