@@ -11,6 +11,8 @@ DayTutorial.timer = 0.0
 DayTutorial.delayDuration = 1.35 
 DayTutorial.sequenceStep = 1 
 
+SetData("dayTutorialPlayed", 0)
+
 function DayTutorial:on_init()
     print("[DayTutorial] Sequenced Script Initialized. Checking persistent flags...")
 end

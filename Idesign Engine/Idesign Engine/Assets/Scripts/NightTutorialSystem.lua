@@ -10,6 +10,8 @@ NightTutorial.timer = 0.0
 NightTutorial.delayDuration = 1.35 
 NightTutorial.sequenceStep = 1
 
+SetData("nightTutorialPlayed", 0)
+
 function NightTutorial:on_init()
     print("[NightTutorial] Night sequence initialized. Checking persistent flags...")
 end

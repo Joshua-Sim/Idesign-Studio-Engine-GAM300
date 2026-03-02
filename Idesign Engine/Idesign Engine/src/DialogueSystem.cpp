@@ -126,7 +126,6 @@ namespace Framework {
     void DialogueSystem::flyToTarget(float deltaTime) {
         Camera* cam = Graphics::GetInstance()->GetCameraByIndex(0);
 
-        std::cout << "HERE + " << LookAtTargetPosition.x << std::endl;
         if (!cam) return;
 
         // Where we want the camera to end up
