@@ -58,7 +58,7 @@ namespace Framework {
         void flyToTarget(float deltaTime);
 
         // Configuration
-        int maxCharsPerLine = 50;  // Default to 40 characters
+        int maxCharsPerLine = 70;  // Default to 40 characters
         float typewriterSpeed = 0.03f;  // Seconds per character
 
         // State queries
