@@ -360,13 +360,6 @@ namespace Framework {
             "Assets/shaders/instanced_frag.glsl"
         );
 
-        m_particlePixelRenderer = new FoliageRenderer(
-            leafQuad,
-            "Assets/shaders/instancedleave_vert.glsl",
-            "Assets/shaders/instancedleave_frag.glsl"
-        );
-
-
         // LEAF RENDERER (billboards)
         m_leafRenderer = new FoliageRenderer(
             leafQuad,
@@ -2726,18 +2719,16 @@ namespace Framework {
             auto& xform = ecsInterface.GetComponent<TransformComponent>(e);
 
             if (!emitter.active || emitter.particles.empty()) continue;
+            if (!m_particlePixelRenderer) continue;
 
-            // Bind Particle Texture
-            glActiveTexture(GL_TEXTURE0);
-            if (emitter.textureID != 0) glBindTexture(GL_TEXTURE_2D, emitter.textureID);
-            else                        glBindTexture(GL_TEXTURE_2D, m_WhiteTex);
-            meshShader.setInt("uTexture", 0);
+            // Pick texture (fallback to white)
+            unsigned int texId = (emitter.textureID != 0) ? emitter.textureID : m_WhiteTex;
 
-            // Bind the LeafQuad (Billboard Mesh)
-            if (leafQuad) glBindVertexArray(leafQuad->getVAO());
+            // Build instance matrices (one per alive particle)
+            std::vector<glm::mat4> particleMats;
+            particleMats.reserve(emitter.particles.size());
 
-            // Get Camera Vectors for Billboarding
-            // (This ensures particles always face the camera)
+            // Camera basis for billboarding
             glm::vec3 camRight = glm::vec3(view[0][0], view[1][0], view[2][0]);
             glm::vec3 camUp = glm::vec3(view[0][1], view[1][1], view[2][1]);
 
@@ -2746,24 +2737,20 @@ namespace Framework {
                 if (p.lifetime <= 0.0f) continue;
 
                 glm::vec3 worldPos = p.position;
-                if (emitter.localSpace) {
-                    // Simple transform: Position only to avoid rotating the billboard wrong
-                    worldPos = xform.position + p.position;
-                }
+                if (emitter.localSpace) worldPos = xform.position + p.position;
 
-                // Construct Billboard Matrix
-                glm::mat4 model = glm::translate(glm::mat4(1.0f), worldPos);
+                glm::mat4 m = glm::translate(glm::mat4(1.0f), worldPos);
+                m[0] = glm::vec4(camRight * p.size, 0.0f);
+                m[1] = glm::vec4(camUp * p.size, 0.0f);
+                m[2] = glm::vec4(glm::cross(camRight, camUp), 0.0f);
 
-                // Rotation: Use camera basis vectors
-                model[0] = glm::vec4(camRight * p.size, 0.0f);
-                model[1] = glm::vec4(camUp * p.size, 0.0f);
-                model[2] = glm::vec4(glm::cross(camRight, camUp), 0.0f);
-
-                meshShader.setMat4("uModel", model);
-
-                // Draw One Particle
-                if (leafQuad) glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+                particleMats.push_back(m);
             }
+
+            if (particleMats.empty()) continue;
+
+            m_particlePixelRenderer->setInstances(particleMats);
+            m_particlePixelRenderer->draw(view, proj, glm::mat4(1.0f), texId);
         }
 
         // Restore State

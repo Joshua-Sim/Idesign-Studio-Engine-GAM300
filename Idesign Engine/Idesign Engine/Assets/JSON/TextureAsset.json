@@ -1643,6 +1643,12 @@
             "name": "rotatingIcon",
             "path": "Assets\\Textures\\rotatingIcon.png",
             "isUI": false
+        },
+        {
+            "guid": "20bfa50e-1760-4ee1-ad9e-409ed900a550",
+            "name": "PARTICLE",
+            "path": "Assets\\Textures\\PARTICLE.png",
+            "isUI": false
         }
     ]
 }
