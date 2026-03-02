@@ -1,5 +1,5 @@
 {
-    "count": 271,
+    "count": 272,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -1625,6 +1625,12 @@
             "guid": "27d45a05-9045-458d-8f32-8ae6c6e3b2c5",
             "name": "RB_IngredientBackground",
             "path": "Assets\\Textures\\RB_IngredientBackground.png",
+            "isUI": false
+        },
+        {
+            "guid": "80f60c84-ef22-4bf4-96aa-00f51deef0e0",
+            "name": "RB_QuestionMark",
+            "path": "Assets\\Textures\\RB_QuestionMark.png",
             "isUI": false
         }
     ]

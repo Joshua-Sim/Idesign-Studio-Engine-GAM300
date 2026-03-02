@@ -1625,6 +1625,12 @@
             "name": "RB_IngredientBackground",
             "path": "Assets\\Textures\\RB_IngredientBackground.png",
             "isUI": false
+        },
+        {
+            "guid": "80f60c84-ef22-4bf4-96aa-00f51deef0e0",
+            "name": "RB_QuestionMark",
+            "path": "Assets\\Textures\\RB_QuestionMark.png",
+            "isUI": false
         }
     ]
 }

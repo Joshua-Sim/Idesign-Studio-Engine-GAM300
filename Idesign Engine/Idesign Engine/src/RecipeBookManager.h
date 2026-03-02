@@ -560,9 +560,12 @@ namespace Framework {
         }
 
         void CreateRightTooltip(int itemID, float iconX, float iconY) {
+            bool isUnlocked = Framework::IsItemUnlocked(itemID);
             const PotionRecipe* recipe = Framework::GetRecipeForResult(itemID);
-            std::string methodText = recipe ? recipe->method : "Unknown";
-            std::string itemName = Framework::GetItemDisplayName(itemID);
+
+            std::string methodText = (recipe && isUnlocked) ? recipe->method : "???";
+            std::string itemName = isUnlocked ? Framework::GetItemDisplayName(itemID) : "???";
+            std::string iconName = isUnlocked ? Framework::kItemNames[itemID] : "RB_QuestionMark";
 
             // --- LAYOUT MATH ---
             float tooltipWidth = 248.0f;
@@ -588,26 +591,14 @@ namespace Framework {
             // 4. Output Icon (Right Side)
             float rightIconX = tooltipX + (tooltipWidth / 2.0f) - 50.0f;
             m_rightTooltipEntities.push_back(SpawnGenericSpriteReturnEntity(rightIconX, tooltipY, "RB_ItemBackground", 40.0f, 40.0f, toolTipIconZ));
-            m_rightTooltipEntities.push_back(SpawnGenericSpriteReturnEntity(rightIconX, tooltipY, Framework::kItemNames[itemID], 30.0f, 30.0f, toolTipIconZ + 0.05f));
+            m_rightTooltipEntities.push_back(SpawnGenericSpriteReturnEntity(rightIconX, tooltipY, iconName, 30.0f, 30.0f, toolTipIconZ + 0.05f));
 
             m_rightTooltipActive = true;
         }
 
-        void RemoveRecipeTooltip() {
-            if (m_recipeTooltipActive) {
-                for (Entity e : m_recipeTooltipEntities) {
-                    coordinator->DestroyEntity(e);
-
-                    auto it = std::remove(uiEntities.begin(), uiEntities.end(), e);
-                    if (it != uiEntities.end()) uiEntities.erase(it, uiEntities.end());
-                }
-                m_recipeTooltipEntities.clear();
-                m_recipeTooltipActive = false;
-            }
-        }
-
         void CreateRecipeTooltip(int itemID, float iconX, float iconY) {
-            std::string itemName = Framework::GetItemDisplayName(itemID);
+            bool isUnlocked = Framework::IsItemUnlocked(itemID);
+            std::string itemName = isUnlocked ? Framework::GetItemDisplayName(itemID) : "???";
 
             // Dynamic width based on name length
             float textScale = 0.6f;
@@ -622,6 +613,19 @@ namespace Framework {
             m_recipeTooltipEntities.push_back(SpawnTextReturnEntity(tooltipX, tooltipY - 5.0f, tooltipTextZ, itemName, textScale));
 
             m_recipeTooltipActive = true;
+        }
+
+        void RemoveRecipeTooltip() {
+            if (m_recipeTooltipActive) {
+                for (Entity e : m_recipeTooltipEntities) {
+                    coordinator->DestroyEntity(e);
+
+                    auto it = std::remove(uiEntities.begin(), uiEntities.end(), e);
+                    if (it != uiEntities.end()) uiEntities.erase(it, uiEntities.end());
+                }
+                m_recipeTooltipEntities.clear();
+                m_recipeTooltipActive = false;
+            }
         }
 
         int GetItemAtPosition(float mouseUV_X, float mouseUV_Y, float& outItemX, float& outItemY) {
@@ -682,21 +686,24 @@ namespace Framework {
                 if (m_currentTab == BookTab::POTIONS && type != Framework::ItemType::POTION) continue;
                 if (m_currentTab == BookTab::ITEMS && type != Framework::ItemType::DEFAULT) continue;
 
+                // --- UNLOCK MASK ---
+                bool isUnlocked = Framework::IsItemUnlocked(i);
+                std::string iconName = isUnlocked ? Framework::kItemNames[i] : "RB_QuestionMark";
+                std::string displayName = isUnlocked ? Framework::GetItemDisplayName(i) : "???";
+
                 // 1. Background Frame
                 SpawnGenericSprite(currentX, currentY, "RB_ItemBackground", 125.0f, 125.0f, itemFrameZ);
 
-				// 2. Spawning Item Icons + Store the entity for hover detection
-                Entity iconEntity = SpawnUISpriteReturnEntity(currentX, currentY, Framework::kItemNames[i], 2.0f, itemIconZ);
+                // 2. Spawning Item Icons + Store the entity for hover detection
+                Entity iconEntity = SpawnUISpriteReturnEntity(currentX, currentY, iconName, 2.0f, itemIconZ);
                 m_leftPageIconEntities[i] = iconEntity;
 
                 // 3. Item Name Text (Centered below the slot)
                 float textY = currentY - (SLOT_SIZE / 2.0f) - 25.0f;
-                std::string displayName = Framework::GetItemDisplayName(i);
                 SpawnText(currentX, textY, baseTextZ, displayName, 0.5f);
 
                 // 4. Underline (Centered below the text)
                 float underlineY = textY - 10.0f;
-                // Assuming RB_Underline is roughly the width of the slot and relatively thin
                 SpawnGenericSprite(currentX, underlineY, "RB_ItemOutline", 160.0f, 5.0f, itemIconZ);
 
                 // Grid Math
@@ -704,17 +711,14 @@ namespace Framework {
                 if (colCounter >= GRID_COLUMNS) {
                     colCounter = 0;
                     currentX = GRID_START_X;
-                    currentY -= (SLOT_SIZE + PADDING_Y); // Use the new vertical padding
+                    currentY -= (SLOT_SIZE + PADDING_Y);
                 }
                 else {
-                    currentX += (SLOT_SIZE + PADDING_X); // Use the new horizontal padding
+                    currentX += (SLOT_SIZE + PADDING_X);
                 }
             }
         }
 
-        // =========================================================
-        //                  RIGHT PAGE: ITEM LORE & USAGE
-        // =========================================================
         // =========================================================
         //                  RIGHT PAGE: ITEM LORE & USAGE
         // =========================================================
@@ -723,46 +727,46 @@ namespace Framework {
             float currentY = 767.0f;
             glm::vec4 black = { 0.0f, 0.0f, 0.0f, 1.0f };
 
-            // --- 1. SHARED ENLARGED HEADER ---
+            bool isUnlocked = Framework::IsItemUnlocked(selectedID);
+            std::string headerIcon = isUnlocked ? Framework::kItemNames[selectedID] : "RB_QuestionMark";
+            std::string headerName = isUnlocked ? Framework::GetItemDisplayName(selectedID) : "???";
+            std::string locationText = isUnlocked ? Framework::GetItemLocation(selectedID) : "???";
+            std::string flavorText = isUnlocked ? ("\"" + Framework::GetItemFlavorText(selectedID) + "\"") : "\"???\"";
+
             SpawnGenericSpriteReturnEntity(rightPageX, currentY, "RB_ItemBackground", 200.0f, 200.0f, itemFrameZ);
-            SpawnUISpriteReturnEntity(rightPageX, currentY, Framework::kItemNames[selectedID], 3.5f, itemIconZ);
+            SpawnUISpriteReturnEntity(rightPageX, currentY, headerIcon, 3.5f, itemIconZ);
 
             float textY = currentY - 100.0f - 30.0f;
-            SpawnTextReturnEntity(rightPageX, textY, baseTextZ, Framework::GetItemDisplayName(selectedID), 0.8f);
+            SpawnTextReturnEntity(rightPageX, textY, baseTextZ, headerName, 0.8f);
             SpawnGenericSpriteReturnEntity(rightPageX, textY - 15.0f, "RB_ItemOutline", 250.0f, 8.0f, itemIconZ);
 
             currentY = textY - 40.0f;
 
-            // --- 2. SHARED DIVIDER 1 ---
             SpawnGenericSpriteReturnEntity(rightPageX, std::round(currentY), "RB_Divider", 522.0f, 2.0f, itemFrameZ);
             currentY -= 30.0f;
 
-            // --- BRANCH: POTION vs INGREDIENT ---
             if (Framework::GetItemType(selectedID) == Framework::ItemType::POTION) {
 
-                // --- POTION LAYOUT: RECIPE SCROLL ---
                 SpawnTextReturnEntity(rightPageX - 160.0f, currentY, baseTextZ, "Recipe:", 0.5f, black, 0);
                 currentY -= 70.0f;
 
-                // Spawn the parchment scroll background
                 SpawnGenericSpriteReturnEntity(rightPageX, currentY, "RB_RecipeBackground", 510.0f, 133.0f, itemFrameZ);
 
-                // Fetch the recipe to draw the ingredients
                 const PotionRecipe* recipe = Framework::GetRecipeForResult(selectedID);
 
                 if (recipe && !recipe->ingredientIDs.empty()) {
                     float smallIconSize = 90.0f;
                     float spacing = smallIconSize + 20.0f;
 
-                    // Start rendering ingredients from the left side of the scroll
                     float startX = rightPageX - 145.0f;
 
                     for (int ingID : recipe->ingredientIDs) {
-                        // --- CHANGED: Using standard item background and standard Z-layering ---
-                        Entity bg = SpawnGenericSpriteReturnEntity(startX, currentY, "RB_ItemBackground", smallIconSize, smallIconSize, itemFrameZ + 0.01f);
-                        Entity icon = SpawnUISpriteReturnEntity(startX, currentY, Framework::kItemNames[ingID], 1.7f, itemIconZ);
+                        bool isIngUnlocked = Framework::IsItemUnlocked(ingID);
+                        std::string ingIcon = isIngUnlocked ? Framework::kItemNames[ingID] : "RB_QuestionMark";
 
-                        // --- STORE ENTITIES FOR ANIMATION ---
+                        Entity bg = SpawnGenericSpriteReturnEntity(startX, currentY, "RB_ItemBackground", smallIconSize, smallIconSize, itemFrameZ + 0.01f);
+                        Entity icon = SpawnUISpriteReturnEntity(startX, currentY, ingIcon, 1.7f, itemIconZ);
+
                         m_recipeIngredientBGEntities[ingID] = bg;
                         m_recipeIngredientIconEntities[ingID] = icon;
                         m_recipeIngredientHitboxes.push_back({ ingID, glm::vec2(startX, currentY) });
@@ -779,10 +783,9 @@ namespace Framework {
             }
             else {
 
-                // --- INGREDIENT LAYOUT: LORE & USED IN ---
                 SpawnTextReturnEntity(rightPageX - 160.0f, currentY, baseTextZ, "Found in:", 0.5f, black, 0);
                 currentY -= 40.0f;
-                SpawnTextReturnEntity(rightPageX, currentY, baseTextZ, Framework::GetItemLocation(selectedID), 0.8f);
+                SpawnTextReturnEntity(rightPageX, currentY, baseTextZ, locationText, 0.8f);
 
                 currentY -= 30.0f;
 
@@ -802,7 +805,7 @@ namespace Framework {
                 }
 
                 if (usedInOutputs.empty()) {
-                    SpawnTextReturnEntity(rightPageX, currentY, baseTextZ, "None", 0.5f);
+                    SpawnTextReturnEntity(rightPageX, currentY, baseTextZ, isUnlocked ? "None" : "???", 0.5f);
                 }
                 else {
                     float smallIconSize = 80.0f;
@@ -810,10 +813,12 @@ namespace Framework {
                     float startX = rightPageX - ((usedInOutputs.size() - 1) * spacing / 2.0f);
 
                     for (int outID : usedInOutputs) {
-                        SpawnGenericSpriteReturnEntity(startX, currentY, "RB_ItemBackground", smallIconSize, smallIconSize, itemFrameZ);
-                        SpawnUISpriteReturnEntity(startX, currentY, Framework::kItemNames[outID], 1.3f, itemIconZ);
+                        bool isOutUnlocked = Framework::IsItemUnlocked(outID);
+                        std::string outIcon = isOutUnlocked ? Framework::kItemNames[outID] : "RB_QuestionMark";
 
-                        // Track hover regions for the tooltip
+                        SpawnGenericSpriteReturnEntity(startX, currentY, "RB_ItemBackground", smallIconSize, smallIconSize, itemFrameZ);
+                        SpawnUISpriteReturnEntity(startX, currentY, outIcon, 1.3f, itemIconZ);
+
                         m_usedInHitboxes.push_back({ outID, glm::vec2(startX, currentY) });
 
                         startX += spacing;
@@ -823,13 +828,11 @@ namespace Framework {
                 currentY -= 60.0f;
             }
 
-            // --- 3. SHARED DIVIDER 2 ---
             SpawnGenericSpriteReturnEntity(rightPageX, std::round(currentY), "RB_Divider", 522.0f, 2.0f, itemFrameZ);
             currentY -= 50.0f;
 
-            // --- 4. SHARED FLAVOR TEXT ---
             glm::vec4 flavorColor = glm::vec4(0.5f, 0.45f, 0.4f, 1.0f);
-            SpawnTextReturnEntity(rightPageX, currentY, baseTextZ, "\"" + Framework::GetItemFlavorText(selectedID) + "\"", 0.45f, flavorColor);
+            SpawnTextReturnEntity(rightPageX, currentY, baseTextZ, flavorText, 0.45f, flavorColor);
         }
 
         void BuildSideTabs() {
@@ -845,8 +848,7 @@ namespace Framework {
                 m_tabIconEntities[i] = SpawnGenericSpriteReturnEntity(startX, currentY, sideIcons[i], 60.0f, 60.0f, bookmarkIconZ);
             }
         }
-       
-
+      
         void RenderRecipeRow(float centerX, float y, const PotionRecipe* recipe) {
             if (!recipe) return;
 
