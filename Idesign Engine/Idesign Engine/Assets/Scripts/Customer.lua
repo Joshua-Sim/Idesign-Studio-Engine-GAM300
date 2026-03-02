@@ -18,10 +18,12 @@ local interaction_cooldown = 0.7
 -- Wrong item tracking
 local MAX_WRONG_ATTEMPTS = 2
 
+-- String store for orders (keyed by entity ID)
+-- Used because SetData/GetData only supports integers
+local customerOrders = {}
+
 -- =========================================================
 -- HELPERS: per-entity state via SetData/GetData
--- All state is keyed by entity ID so each customer instance
--- is fully independent — no shared module-level variables
 -- =========================================================
 local function GetState(entity, key)
     return GetData(key .. "_" .. tostring(entity))
@@ -38,8 +40,16 @@ local function ClearState(entity)
     SetData("WrongCount_"       .. id, 0)
     SetData("LastInteractTime_" .. id, 0)
     SetData("ElapsedTime_"      .. id, 0)
-    SetData("CustomerOrder_"    .. id, "")
+    -- CustomerOrder is stored in customerOrders Lua table, cleared on entity destroy
     SetData("Textbox_"          .. id, 0)
+end
+
+-- =========================================================
+-- GLOBAL ORDER ACCESSOR
+-- Called by CustomerSystem.OnArrival to read the order string
+-- =========================================================
+function GetCustomerOrder(entity)
+    return customerOrders[entity]
 end
 
 -- =========================================================
@@ -49,15 +59,28 @@ function Customer.on_init(self)
     print("[Customer] ===== INIT DEBUG =====")
     print("[Customer] Initialized for entity: " .. tostring(self.entity))
 
-    -- Clear any leftover state from a previous customer in this slot
+    -- Clear any leftover state
     ClearState(self.entity)
 
-    -- Generate and store this customer's order
-    local order = Customer.GenerateRequest()
-    print("[Customer] ✓ Generated order: " .. order)
+    -- Check if this customer is in slot 2 and should gate on inventory
+    -- CustomerSystem sets CheckInventory_<entity> = 1 for slot 2 customers
+    local shouldCheckInventory = GetData("CheckInventory_" .. tostring(self.entity))
 
-    -- Store order for CustomerSystem + HUD to read
-    SetState(self.entity, "CustomerOrder", order)
+    local order
+    if shouldCheckInventory == 1 then
+        -- Slot 2: generate an order from potions the player actually has in inventory
+        order = Customer.GenerateRequestFromInventory()
+        print("[Customer] Slot 2 inventory-gated order: " .. tostring(order))
+    else
+        -- Slot 1 (or free play): generate normally from craftable potions
+        order = Customer.GenerateRequest()
+        print("[Customer] Generated order: " .. tostring(order))
+    end
+
+    -- Store order in Lua string table (SetData only stores integers, can't use it for strings)
+    customerOrders[self.entity] = order
+    -- Also notify CustomerSystem so the HUD slot table gets updated
+    SetData("CustomerOrderReady_" .. tostring(self.entity), 1)
 
     print("[Customer] State initialized for entity: " .. tostring(self.entity))
 end
@@ -66,19 +89,11 @@ end
 -- ON UPDATE
 -- =========================================================
 function Customer.on_update(self, dt)
-    -- Tick elapsed time in milliseconds (SetData only accepts integers)
+    -- Tick elapsed time in milliseconds
     local elapsed_ms = GetState(self.entity, "ElapsedTime") + math.floor(dt * 1000)
     SetState(self.entity, "ElapsedTime", elapsed_ms)
 
-    -- Update textbox billboard if arrived
-    if GetState(self.entity, "HasArrived") == 1 then
-        local player = FindEntityByName("Player")
-        if player then
-            local px, py, pz = GetPosition(player)
-            local cx, cy, cz = GetPosition(self.entity)
-            Customer.UpdateTextboxBillboard(self.entity, px, pz, cx, cy, cz)
-        end
-    end
+    -- Textbox removed: orders are shown in the Active Orders HUD instead
 end
 
 -- =========================================================
@@ -86,13 +101,8 @@ end
 -- =========================================================
 function Customer.OnArrival(senderID, targetID, actionType)
     print("[Customer] Entity " .. tostring(targetID) .. " arrived at counter!")
-
     SetState(targetID, "HasArrived", 1)
-
-    local order = GetState(targetID, "CustomerOrder")
-    local orderText = "Hi, I want a " .. tostring(order) .. "."
-    Customer.SpawnTextbox(targetID, orderText)
-
+    -- Order is displayed in the Active Orders HUD, no textbox needed
     Customer.SpawnLog("Customer arrived!")
 end
 
@@ -108,7 +118,7 @@ function Customer.OnInteract(senderID, targetID, actionType)
         return
     end
 
-    -- Check cooldown (stored in ms, compare in seconds)
+    -- Check cooldown
     local elapsed_ms      = GetState(customer_entity, "ElapsedTime")
     local lastInteract_ms = GetState(customer_entity, "LastInteractTime")
     local time_since_last = (elapsed_ms - lastInteract_ms) / 1000.0
@@ -118,7 +128,6 @@ function Customer.OnInteract(senderID, targetID, actionType)
         return
     end
 
-    -- Store current elapsed ms as last interact time
     SetState(customer_entity, "LastInteractTime", elapsed_ms)
 
     print("[Customer] Customer " .. tostring(customer_entity) .. " interacted by player: " .. tostring(senderID))
@@ -138,7 +147,7 @@ function Customer.OnInteract(senderID, targetID, actionType)
     end
 
     local itemName = GetItemNameById(heldItemId)
-    local my_order = GetState(customer_entity, "CustomerOrder")
+    local my_order = customerOrders[customer_entity]
     local myType   = GetData("Type_" .. tostring(customer_entity))
 
     print("[Customer] Player gave: " .. tostring(itemName))
@@ -152,8 +161,6 @@ function Customer.OnInteract(senderID, targetID, actionType)
         SetState(customer_entity, "HasReceived", 1)
 
         ConsumeSelectedItem()
-        Customer.DestroyTextbox(customer_entity)
-
         -- Fire completion event
         FireEvent("CustomerComplete", customer_entity, senderID, 1)
 
@@ -166,6 +173,7 @@ function Customer.OnInteract(senderID, targetID, actionType)
             Sound.Play("event:/EarnGold")
         end
 
+        customerOrders[customer_entity] = nil
         print("[Customer] Thank you! Leaving now...")
         DestroyEntity(customer_entity)
 
@@ -187,9 +195,10 @@ function Customer.OnInteract(senderID, targetID, actionType)
 
         if wrong_count >= MAX_WRONG_ATTEMPTS then
             print("[Customer] That's it! I've had enough! Leaving...")
-            Customer.DestroyTextbox(customer_entity)
             Customer.SpawnLog("Customer left angry!")
             FireEvent("CustomerFailed", customer_entity, senderID, 0)
+            customerOrders[customer_entity] = nil
+            DestroyEntity(customer_entity)
         else
             local chances_left = MAX_WRONG_ATTEMPTS - wrong_count
             print("[Customer] Sorry, I ordered " .. tostring(my_order) .. ", not " .. tostring(itemName) .. "!")
@@ -203,12 +212,11 @@ end
 -- =========================================================
 function Customer.OnTimeout(senderID, targetID, actionType)
     print("[Customer] Entity " .. tostring(targetID) .. " timed out! Cleaning up...")
-    Customer.DestroyTextbox(targetID)
     print("[Customer] Cleanup complete.")
 end
 
 -- =========================================================
--- ORDER GENERATION
+-- ORDER GENERATION - from craftable potions (Slot 1 / free play)
 -- =========================================================
 function Customer.GenerateRequest()
     local fixedQueue = GetData("fixedQueue")
@@ -231,8 +239,31 @@ function Customer.GenerateRequest()
 end
 
 -- =========================================================
+-- ORDER GENERATION - from player's actual inventory (Slot 2)
+-- Picks a potion the player already has so the order is fulfillable.
+-- Falls back to GenerateRequest() if inventory check isn't available.
+-- =========================================================
+function Customer.GenerateRequestFromInventory()
+    -- GetRandomInventoryPotion() should return a potion name the player
+    -- currently holds, or nil if none are available.
+    local requestedItem = nil
+
+    if GetRandomInventoryPotion then
+        requestedItem = GetRandomInventoryPotion()
+    end
+
+    if requestedItem then
+        print("[Customer] Slot 2 order from inventory: " .. requestedItem)
+        return requestedItem
+    else
+        -- Fallback: behave like slot 1 if no inventory function or empty
+        print("[Customer] Slot 2 fallback to craftable potion (inventory empty or API unavailable)")
+        return Customer.GenerateRequest()
+    end
+end
+
+-- =========================================================
 -- TEXTBOX FUNCTIONS
--- Textbox entity ID stored per-entity via SetData
 -- =========================================================
 function Customer.SpawnTextbox(entity, text)
     local textbox = SpawnPrefab(prefab_textbox, entity)

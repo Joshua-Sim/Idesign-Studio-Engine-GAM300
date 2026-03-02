@@ -1,5 +1,5 @@
 {
-    "count": 274,
+    "count": 262,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -155,12 +155,6 @@
             "guid": "468efa22-bb31-4660-9af8-2527d6bc5465",
             "name": "bluecloud_lf",
             "path": "Assets\\Textures\\bluecloud_lf.jpg",
-            "isUI": false
-        },
-        {
-            "guid": "40835bf8-6300-4c73-8dec-0f9cdb837e60",
-            "name": "Forest Hover Button new_resized",
-            "path": "Assets\\Textures\\Forest Hover Button new_resized.png",
             "isUI": false
         },
         {
@@ -332,12 +326,6 @@
             "isUI": false
         },
         {
-            "guid": "1cd96cbf-24c4-4e43-8783-5af596d9dc7d",
-            "name": "Forest hover",
-            "path": "Assets\\Textures\\Forest hover.png",
-            "isUI": false
-        },
-        {
             "guid": "b5153be8-0464-48c3-800e-48bfb0c931b9",
             "name": "Key_E",
             "path": "Assets\\Textures\\Key_E.png",
@@ -413,12 +401,6 @@
             "guid": "0417d7b5-cfcc-4060-b086-fc7aa90068aa",
             "name": "Autumn pine tree small",
             "path": "Assets\\Textures\\Autumn pine tree small.png",
-            "isUI": false
-        },
-        {
-            "guid": "f40a69c3-bc8f-4e14-a097-3dd6e7326499",
-            "name": "QUIT BUTTON-2",
-            "path": "Assets\\Textures\\QUIT BUTTON-2.png",
             "isUI": false
         },
         {
@@ -878,24 +860,6 @@
             "isUI": false
         },
         {
-            "guid": "857dc62a-1a81-4b73-b73e-fb1e31db0bcb",
-            "name": "QUIT BUTTON-1",
-            "path": "Assets\\Textures\\QUIT BUTTON-1.png",
-            "isUI": false
-        },
-        {
-            "guid": "8176225f-1649-48c9-8ef0-442e22e9b542",
-            "name": "QUIT HOVER BUTTON-1",
-            "path": "Assets\\Textures\\QUIT HOVER BUTTON-1.png",
-            "isUI": false
-        },
-        {
-            "guid": "ce245ff9-d779-4453-83b7-0173ccd82660",
-            "name": "QUIT HOVER BUTTON-2",
-            "path": "Assets\\Textures\\QUIT HOVER BUTTON-2.png",
-            "isUI": false
-        },
-        {
             "guid": "d81503e3-961c-4058-9cd0-3243513ba43f",
             "name": "How to Play screen",
             "path": "Assets\\Textures\\How to Play screen.png",
@@ -1028,12 +992,6 @@
             "isUI": false
         },
         {
-            "guid": "6e800cf5-f843-4deb-bc6b-038204a430b8",
-            "name": "Forest Button",
-            "path": "Assets\\Textures\\Forest Button.png",
-            "isUI": false
-        },
-        {
             "guid": "b52ea343-007a-490b-ae1f-ce5a3ff76c90",
             "name": "Lantern",
             "path": "Assets\\Textures\\Lantern.png",
@@ -1118,18 +1076,6 @@
             "isUI": false
         },
         {
-            "guid": "d6963a8c-d82b-4dc4-bf10-b874c27a386b",
-            "name": "Mute Button",
-            "path": "Assets\\Textures\\Mute Button.png",
-            "isUI": false
-        },
-        {
-            "guid": "6acc942d-a314-4278-b345-db0e2cb15bef",
-            "name": "Unmute Button",
-            "path": "Assets\\Textures\\Unmute Button.png",
-            "isUI": false
-        },
-        {
             "guid": "fff165a8-9c1b-4d69-ae36-7b30d472b01c",
             "name": "Unmute_Button",
             "path": "Assets\\Textures\\Unmute_Button.png",
@@ -1172,45 +1118,15 @@
             "isUI": false
         },
         {
-            "guid": "c196401b-3b43-4ea4-a9e7-1967357deea4",
-            "name": "Forest Hover Button",
-            "path": "Assets\\Textures\\Forest Hover Button.png",
-            "isUI": false
-        },
-        {
             "guid": "f1944e1e-2e5d-4cc2-aabd-b644737524d1",
             "name": "UI_SkillBar_Zone",
             "path": "Assets\\Textures\\UI_SkillBar_Zone.png",
             "isUI": false
         },
         {
-            "guid": "64ae45f2-6db3-4e77-aa05-4023c3425436",
-            "name": "Forest Hover Button (1)",
-            "path": "Assets\\Textures\\Forest Hover Button (1).png",
-            "isUI": false
-        },
-        {
-            "guid": "715f2c65-c36a-478a-96c3-b8c286bb7800",
-            "name": "forest button hover NEW_resized",
-            "path": "Assets\\Textures\\forest button hover NEW_resized.png",
-            "isUI": false
-        },
-        {
-            "guid": "06bd6b23-9683-4028-abfe-35cb96e62fed",
-            "name": "forest front button",
-            "path": "Assets\\Textures\\forest front button.png",
-            "isUI": false
-        },
-        {
             "guid": "3588552f-ae24-477c-91b4-1b7a53f899fd",
             "name": "CS8",
             "path": "Assets\\Textures\\CS8.png",
-            "isUI": false
-        },
-        {
-            "guid": "efaf2d74-bd8b-4a78-89da-7e4607c990a4",
-            "name": "forest hover yellow",
-            "path": "Assets\\Textures\\forest hover yellow.png",
             "isUI": false
         },
         {
@@ -1643,6 +1559,18 @@
             "guid": "50f1a057-2105-46dd-8f52-464424a9a13c",
             "name": "rotatingIcon",
             "path": "Assets\\Textures\\rotatingIcon.png",
+            "isUI": false
+        },
+        {
+            "guid": "20bfa50e-1760-4ee1-ad9e-409ed900a550",
+            "name": "PARTICLE",
+            "path": "Assets\\Textures\\PARTICLE.png",
+            "isUI": false
+        },
+        {
+            "guid": "da0ef587-afae-498e-a41b-3e2a8de5d819",
+            "name": "anti-rotatingIcon",
+            "path": "Assets\\Textures\\anti-rotatingIcon.png",
             "isUI": false
         }
     ]

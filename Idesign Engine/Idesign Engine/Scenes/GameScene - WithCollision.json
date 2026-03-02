@@ -3122,7 +3122,7 @@
                     "animationSpeed": 1.0,
                     "bLoops": true,
                     "bPlayOnStart": true,
-                    "currentTime": 110.18063354492188
+                    "currentTime": 212.79299926757813
                 },
                 "TextureComponent": {
                     "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
@@ -22647,7 +22647,8 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "3c9d8dfd-6930-486f-8945-f5522795e3f3",
@@ -23002,7 +23003,7 @@
             }
         },
         {
-            "name": "rotatingIcon",
+            "name": "anti-rotatingIcon",
             "guid": "bc6d5b95-eff8-49f8-ba8f-ae4805664ea6",
             "components": {
                 "TransformComponent": {
@@ -23030,11 +23031,11 @@
                 },
                 "TagComponent": {
                     "tags": [
-                        "rotating"
+                        "anti-clockwise"
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "50f1a057-2105-46dd-8f52-464424a9a13c",
+                    "guid": "da0ef587-afae-498e-a41b-3e2a8de5d819",
                     "isUI": true
                 }
             }
