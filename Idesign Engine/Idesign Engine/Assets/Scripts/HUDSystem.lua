@@ -26,11 +26,23 @@ local POTION_DISPLAY_NAMES = {
     ["Warmth_Potion"]   = "Warmth Potion",
 }
 
-local BAR_LENGTH_MAX       = 0.5
-local BAR_THICKNESS        = 0.2
-local TEX_GREEN            = "Assets/Textures/green.png"
-local TEX_RED              = "Assets/Textures/red.png"
-local COLOR_SWAP_THRESHOLD = 0.3
+-- TODO: Replace placeholder paths with your actual potion icon textures
+local POTION_ICONS = {
+    ["strength_potion"] = "Assets/Textures/placeholder_strength.png",
+    ["vitality_potion"] = "Assets/Textures/placeholder_vitality.png",
+    ["warmth_potion"]   = "Assets/Textures/placeholder_warmth.png",
+    ["Warmth_Potion"]   = "Assets/Textures/placeholder_warmth.png",
+}
+local POTION_ICON_DEFAULT = "Assets/Textures/placeholder_potion.png"
+
+local BAR_LENGTH_MAX   = 0.5
+local BAR_THICKNESS    = 0.2
+-- TODO: Replace placeholder paths with your actual patience bar textures
+local TEX_GREEN        = "Assets/Textures/placeholder_bar_green.png"
+local TEX_ORANGE       = "Assets/Textures/placeholder_bar_orange.png"
+local TEX_RED          = "Assets/Textures/placeholder_bar_red.png"
+local THRESHOLD_ORANGE = 0.6   -- swap to orange below 60%
+local THRESHOLD_RED    = 0.3   -- swap to red below 30%
 
 -- =========================================================
 -- INTERNAL STATE
@@ -44,7 +56,9 @@ local orderTexts     = { nil, nil }
 local arrivingTexts  = { nil, nil }
 local patienceFrames = { nil, nil }
 local patienceFills  = { nil, nil }
-local barStates      = { "green", "green" }
+local potionIcons    = { nil, nil }
+local potionSlots    = { nil, nil }
+local barStates      = { "green", "green" }   -- "green", "orange", or "red"
 
 -- Free play UI
 local freePlayPanel     = nil
@@ -65,6 +79,8 @@ function HUDSystem:on_init()
         arrivingTexts[i]  = FindEntityByName("ArrivingText_"  .. s)
         patienceFrames[i] = FindEntityByName("PatienceFrame_" .. s)
         patienceFills[i]  = FindEntityByName("PatienceFill_"  .. s)
+        potionIcons[i]    = FindEntityByName("PotionIcon_"    .. s)
+        potionSlots[i]    = FindEntityByName("PotionSlot_"    .. s)
 
         if not slotPanels[i]     then print("[HUDSystem] WARNING: SlotPanel_"     .. s .. " not found!") end
         if not fishIcons[i]      then print("[HUDSystem] WARNING: Icon_Fish_"     .. s .. " not found!") end
@@ -73,6 +89,8 @@ function HUDSystem:on_init()
         if not arrivingTexts[i]  then print("[HUDSystem] WARNING: ArrivingText_"  .. s .. " not found!") end
         if not patienceFrames[i] then print("[HUDSystem] WARNING: PatienceFrame_" .. s .. " not found!") end
         if not patienceFills[i]  then print("[HUDSystem] WARNING: PatienceFill_"  .. s .. " not found!") end
+        if not potionIcons[i]    then print("[HUDSystem] WARNING: PotionIcon_"    .. s .. " not found!") end
+        if not potionSlots[i]    then print("[HUDSystem] WARNING: PotionSlot_"    .. s .. " not found!") end
     end
 
     -- Free play UI (optional scene entities)
@@ -133,6 +151,7 @@ function HUDSystem:ShowSlot(slot, data)
     else
         HUDSystem:SetArrivingMode(slot, false)
         HUDSystem:SetOrderText(slot, data.order)
+        HUDSystem:SetPotionIcon(slot, data.order)
         HUDSystem:SetPatienceBar(slot, data.patience_pct)
     end
 end
@@ -148,6 +167,8 @@ function HUDSystem:HideSlot(slot)
     if arrivingTexts[slot]  then SetVisible(arrivingTexts[slot],  false) end
     if patienceFrames[slot] then SetVisible(patienceFrames[slot], false) end
     if patienceFills[slot]  then SetVisible(patienceFills[slot],  false) end
+    if potionIcons[slot]    then SetVisible(potionIcons[slot],    false) end
+    if potionSlots[slot]    then SetVisible(potionSlots[slot],    false) end
     barStates[slot] = "green"
 end
 
@@ -178,6 +199,17 @@ function HUDSystem:SetOrderText(slot, order)
 end
 
 -- =========================================================
+-- SET POTION ICON
+-- =========================================================
+function HUDSystem:SetPotionIcon(slot, order)
+    if not potionIcons[slot] then return end
+    local tex = POTION_ICONS[order] or POTION_ICON_DEFAULT
+    SetTexture(potionIcons[slot], tex)
+    SetVisible(potionIcons[slot], true)
+    if potionSlots[slot] then SetVisible(potionSlots[slot], true) end
+end
+
+-- =========================================================
 -- SET ARRIVING MODE
 -- =========================================================
 function HUDSystem:SetArrivingMode(slot, is_arriving)
@@ -189,6 +221,8 @@ function HUDSystem:SetArrivingMode(slot, is_arriving)
     end
 
     if orderTexts[slot]     then SetVisible(orderTexts[slot],     not is_arriving) end
+    if potionIcons[slot]    then SetVisible(potionIcons[slot],    not is_arriving) end
+    if potionSlots[slot]    then SetVisible(potionSlots[slot],    not is_arriving) end
     if patienceFrames[slot] then SetVisible(patienceFrames[slot], not is_arriving) end
     if patienceFills[slot]  then SetVisible(patienceFills[slot],  not is_arriving) end
 end
@@ -210,17 +244,26 @@ function HUDSystem:SetPatienceBar(slot, patience_pct)
     end
 
     if patienceFills[slot] then
-        if pct <= COLOR_SWAP_THRESHOLD then
-            if barStates[slot] == "green" then
-                SetTexture(patienceFills[slot], TEX_RED)
-                barStates[slot] = "red"
-                print("[HUDSystem] Slot " .. slot .. " patience low - bar turned red!")
-            end
+        local targetState
+        if pct <= THRESHOLD_RED then
+            targetState = "red"
+        elseif pct <= THRESHOLD_ORANGE then
+            targetState = "orange"
         else
-            if barStates[slot] == "red" then
+            targetState = "green"
+        end
+
+        if barStates[slot] ~= targetState then
+            if targetState == "red" then
+                SetTexture(patienceFills[slot], TEX_RED)
+                print("[HUDSystem] Slot " .. slot .. " patience critical - bar turned red!")
+            elseif targetState == "orange" then
+                SetTexture(patienceFills[slot], TEX_ORANGE)
+                print("[HUDSystem] Slot " .. slot .. " patience low - bar turned orange!")
+            else
                 SetTexture(patienceFills[slot], TEX_GREEN)
-                barStates[slot] = "green"
             end
+            barStates[slot] = targetState
         end
     end
 end

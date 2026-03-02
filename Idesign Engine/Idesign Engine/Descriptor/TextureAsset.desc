@@ -1,5 +1,5 @@
 {
-    "count": 262,
+    "count": 269,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -1571,6 +1571,48 @@
             "guid": "da0ef587-afae-498e-a41b-3e2a8de5d819",
             "name": "anti-rotatingIcon",
             "path": "Assets\\Textures\\anti-rotatingIcon.png",
+            "isUI": false
+        },
+        {
+            "guid": "bdb167fd-7bba-433f-ad25-4ce1d7ebd2cc",
+            "name": "potionslot",
+            "path": "Assets\\Textures\\potionslot.png",
+            "isUI": false
+        },
+        {
+            "guid": "c9f59b41-aa63-4f6a-bced-772e7289bffc",
+            "name": "slotpanel",
+            "path": "Assets\\Textures\\slotpanel.png",
+            "isUI": false
+        },
+        {
+            "guid": "3ea2414e-3cf2-4dcf-9440-e437ca432a22",
+            "name": "patiencebar_base",
+            "path": "Assets\\Textures\\patiencebar_base.png",
+            "isUI": false
+        },
+        {
+            "guid": "943131dd-336b-4192-9686-b41c70b7c9f1",
+            "name": "arrowright",
+            "path": "Assets\\Textures\\arrowright.png",
+            "isUI": false
+        },
+        {
+            "guid": "da5a2728-83a0-4807-99bc-1c292e968987",
+            "name": "patiencebar_red",
+            "path": "Assets\\Textures\\patiencebar_red.png",
+            "isUI": false
+        },
+        {
+            "guid": "6db00ec8-8785-4903-afbd-26008dce6663",
+            "name": "patiencebar_orange",
+            "path": "Assets\\Textures\\patiencebar_orange.png",
+            "isUI": false
+        },
+        {
+            "guid": "3d869cc3-558f-41ee-91d7-e20312bb5f6f",
+            "name": "patiencebar_green",
+            "path": "Assets\\Textures\\patiencebar_green.png",
             "isUI": false
         }
     ]
