@@ -1,5 +1,5 @@
 {
-    "count": 273,
+    "count": 274,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -1637,6 +1637,12 @@
             "guid": "74ebf112-a229-44c5-877f-c99438708a33",
             "name": "PhaseTimerIcon",
             "path": "Assets\\Textures\\PhaseTimerIcon.png",
+            "isUI": false
+        },
+        {
+            "guid": "50f1a057-2105-46dd-8f52-464424a9a13c",
+            "name": "rotatingIcon",
+            "path": "Assets\\Textures\\rotatingIcon.png",
             "isUI": false
         }
     ]

@@ -1637,6 +1637,12 @@
             "name": "PhaseTimerIcon",
             "path": "Assets\\Textures\\PhaseTimerIcon.png",
             "isUI": false
+        },
+        {
+            "guid": "50f1a057-2105-46dd-8f52-464424a9a13c",
+            "name": "rotatingIcon",
+            "path": "Assets\\Textures\\rotatingIcon.png",
+            "isUI": false
         }
     ]
 }

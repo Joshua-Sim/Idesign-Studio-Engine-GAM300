@@ -1684,7 +1684,14 @@ namespace Framework {
             return 1;
         }
 
-
+        static int lua_SetEntityName(lua_State* L)
+        {
+            int entityID = (int)lua_tointeger(L, 1);
+            const char* newName = luaL_checkstring(L, 2);
+            auto& ecs = ecsInterface;
+            ecs.SetEntityName(entityID, std::string(newName));
+            return 0;
+        }
 
         namespace fs = std::filesystem;
 
@@ -2106,6 +2113,7 @@ namespace Framework {
         lua_register(L, "IsItemZipping", l_isItemZipping);
         lua_register(L, "CheckValidRecipe", l_CheckValidRecipe);
         lua_register(L, "GetEntityName", lua_GetEntityName);
+        lua_register(L, "SetEntityName", lua_SetEntityName);
 
         lua_register(L, "SetScale", lua_SetScale);
         lua_register(L, "GetRotation", lua_GetRotation);
