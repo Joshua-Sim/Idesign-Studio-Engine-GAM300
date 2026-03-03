@@ -1,5 +1,5 @@
 {
-    "count": 273,
+    "count": 283,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -1637,6 +1637,66 @@
             "guid": "74ebf112-a229-44c5-877f-c99438708a33",
             "name": "PhaseTimerIcon",
             "path": "Assets\\Textures\\PhaseTimerIcon.png",
+            "isUI": false
+        },
+        {
+            "guid": "f10d2093-68ee-4fff-87e6-6d59a547db9c",
+            "name": "7th",
+            "path": "Assets\\Textures\\7th.png",
+            "isUI": false
+        },
+        {
+            "guid": "be82ae35-fc67-49c7-9696-891588e2d32d",
+            "name": "6th",
+            "path": "Assets\\Textures\\6th.png",
+            "isUI": false
+        },
+        {
+            "guid": "ceb9c428-63bf-42c0-b91e-f614fda3a85a",
+            "name": "4th",
+            "path": "Assets\\Textures\\4th.png",
+            "isUI": false
+        },
+        {
+            "guid": "9e9541c5-588f-4e8b-a74b-b54a778ce6d9",
+            "name": "1st",
+            "path": "Assets\\Textures\\1st.png",
+            "isUI": false
+        },
+        {
+            "guid": "e59d0e59-0f8e-48e9-be3c-68e602cb1a88",
+            "name": "3rd",
+            "path": "Assets\\Textures\\3rd.png",
+            "isUI": false
+        },
+        {
+            "guid": "66a84b73-6e01-4bfc-82b0-ccc5a9f0920c",
+            "name": "2nd",
+            "path": "Assets\\Textures\\2nd.png",
+            "isUI": false
+        },
+        {
+            "guid": "d9cd95d5-bc05-4901-8d1d-f09e01734b0c",
+            "name": "R&R Logo",
+            "path": "Assets\\Textures\\R&R Logo.png",
+            "isUI": false
+        },
+        {
+            "guid": "e91befb6-69ca-414f-83d3-c0049c81603b",
+            "name": "R&R Logo CLEARBG",
+            "path": "Assets\\Textures\\R&R Logo CLEARBG.png",
+            "isUI": false
+        },
+        {
+            "guid": "f1e5e6aa-18d1-4dae-bbea-4fa94d2a2c21",
+            "name": "5th",
+            "path": "Assets\\Textures\\5th.png",
+            "isUI": false
+        },
+        {
+            "guid": "80d848cc-d441-41da-8c5f-0e98d798f3f5",
+            "name": "8th",
+            "path": "Assets\\Textures\\8th.png",
             "isUI": false
         }
     ]
