@@ -731,7 +731,7 @@ namespace Framework {
             std::string headerIcon = isUnlocked ? Framework::kItemNames[selectedID] : "RB_QuestionMark";
             std::string headerName = isUnlocked ? Framework::GetItemDisplayName(selectedID) : "???";
             std::string locationText = isUnlocked ? Framework::GetItemLocation(selectedID) : "???";
-            std::string flavorText = isUnlocked ? ("\"" + Framework::GetItemFlavorText(selectedID) + "\"") : "\"???\"";
+            std::string flavorText = "\"" + Framework::GetItemFlavorText(selectedID) + "\""; // Always show
 
             SpawnGenericSpriteReturnEntity(rightPageX, currentY, "RB_ItemBackground", 200.0f, 200.0f, itemFrameZ);
             SpawnUISpriteReturnEntity(rightPageX, currentY, headerIcon, 3.5f, itemIconZ);
