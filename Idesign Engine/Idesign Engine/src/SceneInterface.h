@@ -21,6 +21,7 @@ namespace Framework
 	static float cutsceneStartTime = -1.0f;
 	static float fadeOutStartTime = -1.0f;
 
+	static float Saturate(float x) { return glm::clamp(x, 0.0f, 1.0f); }
 
 	// Declare the global instance of EngineState
 	extern SceneInterface sceneInterface;

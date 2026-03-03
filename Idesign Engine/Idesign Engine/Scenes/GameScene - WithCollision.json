@@ -3120,7 +3120,7 @@
                     "animationSpeed": 1.0,
                     "bLoops": true,
                     "bPlayOnStart": true,
-                    "currentTime": 6.651954174041748
+                    "currentTime": 220.39590454101563
                 },
                 "TextureComponent": {
                     "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
@@ -3888,7 +3888,7 @@
                         1929.0,
                         537.0
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": false
                 }
             }
@@ -21145,8 +21145,7 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "66a84b73-6e01-4bfc-82b0-ccc5a9f0920c",
@@ -21433,51 +21432,11 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "d9cd95d5-bc05-4901-8d1d-f09e01734b0c",
-                    "isUI": false
-                }
-            }
-        },
-        {
-            "name": "BLACKBAR2",
-            "guid": "7779c798-6517-4d38-add0-de6d20fa2a12",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        960.0,
-                        540.0,
-                        1.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        1920.0,
-                        1080.0,
-                        1.0
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "f2f9401a-c38e-429a-b750-83ab2084c5a5",
-                    "sortIndex": 2,
-                    "children": []
-                },
-                "TagComponent": {
-                    "tags": [
-                        "cutscene"
-                    ]
-                },
-                "MeshComponent": {
-                    "guid": ""
-                },
-                "TextureComponent": {
-                    "guid": "bd53721a-583e-47d7-b196-17af52bd40fe",
                     "isUI": false
                 }
             }
