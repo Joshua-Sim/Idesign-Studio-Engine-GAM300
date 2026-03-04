@@ -64,6 +64,10 @@ namespace Framework {
         // 3. SETTER FUNCTION
         void SetRecipeManager(RecipeBookManager* manager);
 
+        // Custom cursor API
+        bool LoadCustomCursor(const char* relativePath, int hotX = 0, int hotY = 0);
+        void ApplyCustomCursor();
+
     private:
         enum KeyState { KEY_RELEASED = 0, KEY_PRESSED = 1, KEY_HELD = 2 };
 
@@ -94,5 +98,7 @@ namespace Framework {
 
         // for recipe book click
         RecipeBookManager* m_recipeManager = nullptr;
+
+        GLFWcursor* m_customCursor = nullptr;
     };
 }

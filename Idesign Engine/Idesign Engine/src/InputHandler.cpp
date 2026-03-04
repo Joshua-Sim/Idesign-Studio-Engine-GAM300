@@ -5,6 +5,7 @@
 #include "InputHandler.h"
 #include <iostream>
 #include <EngineState.h>
+#include "stb_image.h"
 #include <imgui.h>
 #include <Camera.h>
 #include "Graphics.h"
@@ -44,6 +45,10 @@ namespace Framework {
 
     // [FIX] Destructor Implementation
     InputHandler::~InputHandler() {
+        if (m_customCursor) {
+            glfwDestroyCursor(m_customCursor);
+            m_customCursor = nullptr;
+        }
         keyStates.clear();
         mouseButtonStates.clear();
         messageSystem = nullptr;
@@ -60,6 +65,10 @@ namespace Framework {
         glfwSetKeyCallback(window, KeyCallback);
         glfwSetMouseButtonCallback(window, MouseButtonCallback);
         glfwSetCursorPosCallback(window, CursorPositionCallback);
+
+        // Load your custom cursor here (path example)
+        // NOTE: Keep cursor image small (32x32 or 64x64 is safest)
+        LoadCustomCursor("Assets/Textures/mouseCursor3.png", 0, 0);
     }
 
     void InputHandler::SetCameraRotationEnabled(bool enabled) {
@@ -129,10 +138,16 @@ namespace Framework {
         if (!isUIFocused) {
             io.ConfigFlags |= ImGuiConfigFlags_NoMouse;
             io.ConfigFlags |= ImGuiConfigFlags_NoKeyboard;
+            // Clear the flag so cursor is hidden properly in game
+            io.ConfigFlags &= ~ImGuiConfigFlags_NoMouseCursorChange;
         }
         else {
             io.ConfigFlags &= ~ImGuiConfigFlags_NoMouse;
             io.ConfigFlags &= ~ImGuiConfigFlags_NoKeyboard;
+
+            // CRITICAL: Tell ImGui to stop changing the cursor 
+            // so your custom GLFW cursor stays active.
+            io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
         }
 
         // 4. DETERMINE DESIRED CURSOR MODE
@@ -157,29 +172,33 @@ namespace Framework {
         }
 
         // 5. APPLY CURSOR MODE
-        // Only call GLFW if the mode actually changes to prevent jitter/overhead
         static int currentMode = -1;
         if (currentMode != desiredMode) {
             glfwSetInputMode(window, GLFW_CURSOR, desiredMode);
             currentMode = desiredMode;
 
-            // Reset first mouse if we just hid the cursor to prevent large jumps
+            // Apply custom cursor ONLY when we switch TO visible mode
+            if (desiredMode == GLFW_CURSOR_NORMAL) {
+                ApplyCustomCursor();
+            }
+
+            // Reset first mouse if we just hid the cursor
             if (desiredMode == GLFW_CURSOR_DISABLED) {
                 m_firstMouse = true;
             }
         }
 
-        if (currentMode != desiredMode) {
-            glfwSetInputMode(window, GLFW_CURSOR, desiredMode);
-            currentMode = desiredMode;
+        //if (currentMode != desiredMode) {
+        //    glfwSetInputMode(window, GLFW_CURSOR, desiredMode);
+        //    currentMode = desiredMode;
 
-            // [FIX] CRITICAL: Reset camera logic when entering Game Mode
-            // If we switch to DISABLED mode, treating the next mouse move as a "first move"
-            // prevents the camera from snapping to the old menu cursor position.
-            if (desiredMode == GLFW_CURSOR_DISABLED) {
-                m_firstMouse = true;
-            }
-        }
+        //    // [FIX] CRITICAL: Reset camera logic when entering Game Mode
+        //    // If we switch to DISABLED mode, treating the next mouse move as a "first move"
+        //    // prevents the camera from snapping to the old menu cursor position.
+        //    if (desiredMode == GLFW_CURSOR_DISABLED) {
+        //        m_firstMouse = true;
+        //    }
+        //}
 
         // --- Slider Drag Logic -- 
         int width, height;
@@ -405,6 +424,50 @@ namespace Framework {
         if (!focused) {
             // Force immediate cursor update if needed, 
             // though Update() loop will catch it next frame.
+        }
+    }
+
+    bool Framework::InputHandler::LoadCustomCursor(const char* relativePath, int hotX, int hotY)
+    {
+        std::filesystem::path root = GetEngineRootPath();
+        std::filesystem::path abs = root / relativePath;
+
+        if (!std::filesystem::exists(abs)) {
+            std::cout << "[Cursor] File not found: " << abs.string() << "\n";
+            return false;
+        }
+
+        int w = 0, h = 0, comp = 0;
+        stbi_uc* pixels = stbi_load(abs.string().c_str(), &w, &h, &comp, 4);
+        if (!pixels) {
+            std::cout << "[Cursor] stbi_load failed: " << abs.string()
+                << " reason=" << stbi_failure_reason() << "\n";
+            return false;
+        }
+
+        GLFWimage img{ w, h, pixels };
+
+        if (m_customCursor) {
+            glfwDestroyCursor(m_customCursor);
+            m_customCursor = nullptr;
+        }
+
+        m_customCursor = glfwCreateCursor(&img, hotX, hotY);
+        stbi_image_free(pixels);
+
+        if (!m_customCursor) {
+            std::cout << "[Cursor] glfwCreateCursor failed\n";
+            return false;
+        }
+
+        ApplyCustomCursor();
+        return true;
+    }
+
+    void Framework::InputHandler::ApplyCustomCursor()
+    {
+        if (m_customCursor) {
+            glfwSetCursor(window, m_customCursor);
         }
     }
 }

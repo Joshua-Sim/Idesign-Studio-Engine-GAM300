@@ -1697,6 +1697,72 @@
             "name": "8th",
             "path": "Assets\\Textures\\8th.png",
             "isUI": false
+        },
+        {
+            "guid": "f659e9e1-42f3-48db-a1c1-ac3827d372aa",
+            "name": "Panel 2",
+            "path": "Assets\\Textures\\Panel 2.PNG",
+            "isUI": false
+        },
+        {
+            "guid": "5c63958e-85e4-4a80-89d3-fc4f6c024bd9",
+            "name": "Panel 3",
+            "path": "Assets\\Textures\\Panel 3.png",
+            "isUI": false
+        },
+        {
+            "guid": "37e4c3fc-579c-4972-a4c8-348b1060348e",
+            "name": "Panel 4",
+            "path": "Assets\\Textures\\Panel 4.PNG",
+            "isUI": false
+        },
+        {
+            "guid": "f75bd4a1-3abf-4320-b02f-5f396e0cb3b6",
+            "name": "Panel 5",
+            "path": "Assets\\Textures\\Panel 5.png",
+            "isUI": false
+        },
+        {
+            "guid": "6eee7b71-f1e3-48c1-86cb-ad5012802b7a",
+            "name": "Panel 6",
+            "path": "Assets\\Textures\\Panel 6.png",
+            "isUI": false
+        },
+        {
+            "guid": "ee0a4a1e-c4a9-4c7a-918a-533cb499744d",
+            "name": "Panel 7",
+            "path": "Assets\\Textures\\Panel 7.PNG",
+            "isUI": false
+        },
+        {
+            "guid": "aee1ab22-6cf3-4476-bdaa-ddf741f79486",
+            "name": "Panel 8",
+            "path": "Assets\\Textures\\Panel 8.png",
+            "isUI": false
+        },
+        {
+            "guid": "1261525e-c38b-4e58-ab16-7752a97dfa03",
+            "name": "Panel 1",
+            "path": "Assets\\Textures\\Panel 1.png",
+            "isUI": false
+        },
+        {
+            "guid": "7a68c869-247d-4ed1-b829-baa05c8a5a57",
+            "name": "mouseCursor",
+            "path": "Assets\\Textures\\mouseCursor.png",
+            "isUI": false
+        },
+        {
+            "guid": "1178f313-f4da-4a53-9d0b-cf6818f037a4",
+            "name": "mouseCursor2",
+            "path": "Assets\\Textures\\mouseCursor2.png",
+            "isUI": false
+        },
+        {
+            "guid": "080500b5-701f-402d-a6bf-4e1f461a08ff",
+            "name": "mouseCursor3",
+            "path": "Assets\\Textures\\mouseCursor3.png",
+            "isUI": false
         }
     ]
 }

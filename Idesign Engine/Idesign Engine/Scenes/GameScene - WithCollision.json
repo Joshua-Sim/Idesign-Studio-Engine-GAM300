@@ -3120,7 +3120,7 @@
                     "animationSpeed": 1.0,
                     "bLoops": true,
                     "bPlayOnStart": true,
-                    "currentTime": 220.39590454101563
+                    "currentTime": 225.78826904296875
                 },
                 "TextureComponent": {
                     "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
@@ -21107,7 +21107,7 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "9e9541c5-588f-4e8b-a74b-b54a778ce6d9",
+                    "guid": "1261525e-c38b-4e58-ab16-7752a97dfa03",
                     "isUI": false
                 }
             }
@@ -21145,10 +21145,11 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "66a84b73-6e01-4bfc-82b0-ccc5a9f0920c",
+                    "guid": "f659e9e1-42f3-48db-a1c1-ac3827d372aa",
                     "isUI": false
                 }
             }
@@ -21186,10 +21187,11 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "e59d0e59-0f8e-48e9-be3c-68e602cb1a88",
+                    "guid": "5c63958e-85e4-4a80-89d3-fc4f6c024bd9",
                     "isUI": false
                 }
             }
@@ -21227,10 +21229,11 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "ceb9c428-63bf-42c0-b91e-f614fda3a85a",
+                    "guid": "37e4c3fc-579c-4972-a4c8-348b1060348e",
                     "isUI": false
                 }
             }
@@ -21268,10 +21271,11 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "f1e5e6aa-18d1-4dae-bbea-4fa94d2a2c21",
+                    "guid": "f75bd4a1-3abf-4320-b02f-5f396e0cb3b6",
                     "isUI": false
                 }
             }
@@ -21309,10 +21313,11 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "be82ae35-fc67-49c7-9696-891588e2d32d",
+                    "guid": "6eee7b71-f1e3-48c1-86cb-ad5012802b7a",
                     "isUI": false
                 }
             }
@@ -21350,10 +21355,11 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "f10d2093-68ee-4fff-87e6-6d59a547db9c",
+                    "guid": "ee0a4a1e-c4a9-4c7a-918a-533cb499744d",
                     "isUI": false
                 }
             }
@@ -21391,10 +21397,11 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "80d848cc-d441-41da-8c5f-0e98d798f3f5",
+                    "guid": "aee1ab22-6cf3-4476-bdaa-ddf741f79486",
                     "isUI": false
                 }
             }
