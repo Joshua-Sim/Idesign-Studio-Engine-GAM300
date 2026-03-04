@@ -1637,6 +1637,30 @@
             "name": "PhaseTimerIcon",
             "path": "Assets\\Textures\\PhaseTimerIcon.png",
             "isUI": false
+        },
+        {
+            "guid": "3ace42c0-b18c-4d89-afef-01aacae2bc2b",
+            "name": "MediumPound",
+            "path": "Assets\\Textures\\MediumPound.png",
+            "isUI": false
+        },
+        {
+            "guid": "91b8cbee-e381-4fd2-8924-7fa8169b57ab",
+            "name": "PoorPound",
+            "path": "Assets\\Textures\\PoorPound.png",
+            "isUI": false
+        },
+        {
+            "guid": "70ac7054-a8e0-4aca-ae06-3daa5c9c9a5f",
+            "name": "TapCircle",
+            "path": "Assets\\Textures\\TapCircle.png",
+            "isUI": false
+        },
+        {
+            "guid": "72bdbe81-126e-4bbb-901d-7370bc1e423b",
+            "name": "GoodPound",
+            "path": "Assets\\Textures\\GoodPound.png",
+            "isUI": false
         }
     ]
 }
