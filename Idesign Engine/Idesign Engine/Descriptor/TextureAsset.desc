@@ -1,5 +1,5 @@
 {
-    "count": 269,
+    "count": 266,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -41,12 +41,6 @@
             "guid": "d4899207-ea5e-473b-870f-aade76e8a7ff",
             "name": "Door",
             "path": "Assets\\Textures\\Door.png",
-            "isUI": false
-        },
-        {
-            "guid": "d24a29c5-cd9e-4322-ab59-d38618cba4bf",
-            "name": "quitbutton",
-            "path": "Assets\\Textures\\quitbutton.png",
             "isUI": false
         },
         {
@@ -830,12 +824,6 @@
             "isUI": false
         },
         {
-            "guid": "4c11b083-dc94-4f0b-a988-ae104705857b",
-            "name": "QUIT HOVER BUTTON",
-            "path": "Assets\\Textures\\QUIT HOVER BUTTON.png",
-            "isUI": false
-        },
-        {
             "guid": "ab663213-734f-49df-801d-e8c949f7786b",
             "name": "CU2",
             "path": "Assets\\Textures\\CU2.png",
@@ -851,12 +839,6 @@
             "guid": "2a229a37-805f-4280-be08-3848ef849214",
             "name": "HOW TO PLAY HOVER BUTTON",
             "path": "Assets\\Textures\\HOW TO PLAY HOVER BUTTON.png",
-            "isUI": false
-        },
-        {
-            "guid": "294e195f-2e45-4a56-9d47-cc69d0c0c1d4",
-            "name": "QUIT BUTTON",
-            "path": "Assets\\Textures\\QUIT BUTTON.png",
             "isUI": false
         },
         {

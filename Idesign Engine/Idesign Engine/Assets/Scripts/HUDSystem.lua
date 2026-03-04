@@ -101,8 +101,8 @@ function HUDSystem:on_init()
     for i = 1, MAX_SLOTS do
         HUDSystem:HideSlot(i)
     end
-    if freePlayPanel     then SetVisible(freePlayPanel,     false) end
-    if freePlayTimerText then SetVisible(freePlayTimerText, false) end
+    if freePlayPanel     then SetTransformComponent(freePlayPanel, "isActive", false) end
+    if freePlayTimerText then SetTransformComponent(freePlayTimerText, "isActive", false) end
 
     print("[HUDSystem] Initialized.")
 end
@@ -141,7 +141,7 @@ end
 -- =========================================================
 function HUDSystem:ShowSlot(slot, data)
     if slotPanels[slot] then
-        SetVisible(slotPanels[slot], true)
+        SetTransformComponent(slotPanels[slot], "isActive", true)
     end
 
     HUDSystem:SetIcon(slot, data.icon_type)
@@ -160,15 +160,15 @@ end
 -- HIDE SLOT
 -- =========================================================
 function HUDSystem:HideSlot(slot)
-    if slotPanels[slot]     then SetVisible(slotPanels[slot],     false) end
-    if fishIcons[slot]      then SetVisible(fishIcons[slot],      false) end
-    if orcIcons[slot]       then SetVisible(orcIcons[slot],       false) end
-    if orderTexts[slot]     then SetVisible(orderTexts[slot],     false) end
-    if arrivingTexts[slot]  then SetVisible(arrivingTexts[slot],  false) end
-    if patienceFrames[slot] then SetVisible(patienceFrames[slot], false) end
-    if patienceFills[slot]  then SetVisible(patienceFills[slot],  false) end
-    if potionIcons[slot]    then SetVisible(potionIcons[slot],    false) end
-    if potionSlots[slot]    then SetVisible(potionSlots[slot],    false) end
+    if slotPanels[slot]     then SetTransformComponent(slotPanels[slot], "isActive", false) end
+    if fishIcons[slot]      then SetTransformComponent(fishIcons[slot], "isActive", false) end
+    if orcIcons[slot]       then SetTransformComponent(orcIcons[slot], "isActive", false) end
+    if orderTexts[slot]     then SetTransformComponent(orderTexts[slot], "isActive", false) end
+    if arrivingTexts[slot]  then SetTransformComponent(arrivingTexts[slot], "isActive", false) end
+    if patienceFrames[slot] then SetTransformComponent(patienceFrames[slot], "isActive", false) end
+    if patienceFills[slot]  then SetTransformComponent(patienceFills[slot], "isActive", false) end
+    if potionIcons[slot]    then SetTransformComponent(potionIcons[slot], "isActive", false) end
+    if potionSlots[slot]    then SetTransformComponent(potionSlots[slot], "isActive", false) end
     barStates[slot] = "green"
 end
 
@@ -176,13 +176,13 @@ end
 -- SET ICON
 -- =========================================================
 function HUDSystem:SetIcon(slot, icon_type)
-    if fishIcons[slot] then SetVisible(fishIcons[slot], false) end
-    if orcIcons[slot]  then SetVisible(orcIcons[slot],  false) end
+    if fishIcons[slot] then SetTransformComponent(fishIcons[slot], "isActive", false) end
+    if orcIcons[slot]  then SetTransformComponent(orcIcons[slot], "isActive", false) end
 
     if icon_type == 1 then
-        if fishIcons[slot] then SetVisible(fishIcons[slot], true) end
+        if fishIcons[slot] then SetTransformComponent(fishIcons[slot], "isActive", true) end
     elseif icon_type == 2 then
-        if orcIcons[slot]  then SetVisible(orcIcons[slot],  true) end
+        if orcIcons[slot]  then SetTransformComponent(orcIcons[slot], "isActive", true) end
     else
         print("[HUDSystem] WARNING: Unknown icon_type: " .. tostring(icon_type) .. " for slot " .. slot)
     end
@@ -195,7 +195,7 @@ function HUDSystem:SetOrderText(slot, order)
     if not orderTexts[slot] then return end
     local displayName = POTION_DISPLAY_NAMES[order] or order
     SetTextComponent(orderTexts[slot], "text", displayName)
-    SetVisible(orderTexts[slot], true)
+    SetTransformComponent(orderTexts[slot], "isActive", true)
 end
 
 -- =========================================================
@@ -205,8 +205,8 @@ function HUDSystem:SetPotionIcon(slot, order)
     if not potionIcons[slot] then return end
     local tex = POTION_ICONS[order] or POTION_ICON_DEFAULT
     SetTexture(potionIcons[slot], tex)
-    SetVisible(potionIcons[slot], true)
-    if potionSlots[slot] then SetVisible(potionSlots[slot], true) end
+    SetTransformComponent(potionIcons[slot], "isActive", true)
+    if potionSlots[slot] then SetTransformComponent(potionSlots[slot], "isActive", true) end
 end
 
 -- =========================================================
@@ -214,17 +214,17 @@ end
 -- =========================================================
 function HUDSystem:SetArrivingMode(slot, is_arriving)
     if arrivingTexts[slot] then
-        SetVisible(arrivingTexts[slot], is_arriving)
+        SetTransformComponent(arrivingTexts[slot], "isActive", is_arriving)
         if is_arriving then
             SetTextComponent(arrivingTexts[slot], "text", "Arriving...")
         end
     end
 
-    if orderTexts[slot]     then SetVisible(orderTexts[slot],     not is_arriving) end
-    if potionIcons[slot]    then SetVisible(potionIcons[slot],    not is_arriving) end
-    if potionSlots[slot]    then SetVisible(potionSlots[slot],    not is_arriving) end
-    if patienceFrames[slot] then SetVisible(patienceFrames[slot], not is_arriving) end
-    if patienceFills[slot]  then SetVisible(patienceFills[slot],  not is_arriving) end
+    if orderTexts[slot]     then SetTransformComponent(orderTexts[slot], "isActive", not is_arriving) end
+    if potionIcons[slot]    then SetTransformComponent(potionIcons[slot], "isActive", not is_arriving) end
+    if potionSlots[slot]    then SetTransformComponent(potionSlots[slot], "isActive", not is_arriving) end
+    if patienceFrames[slot] then SetTransformComponent(patienceFrames[slot], "isActive", not is_arriving) end
+    if patienceFills[slot]  then SetTransformComponent(patienceFills[slot], "isActive", not is_arriving) end
 end
 
 -- =========================================================
@@ -236,11 +236,11 @@ function HUDSystem:SetPatienceBar(slot, patience_pct)
     if patienceFills[slot] then
         local current_length = pct * BAR_LENGTH_MAX
         SetScale(patienceFills[slot], current_length, BAR_THICKNESS * 0.9, BAR_THICKNESS * 0.9)
-        SetVisible(patienceFills[slot], true)
+        SetTransformComponent(patienceFills[slot], "isActive", true)
     end
 
     if patienceFrames[slot] then
-        SetVisible(patienceFrames[slot], true)
+        SetTransformComponent(patienceFrames[slot], "isActive", true)
     end
 
     if patienceFills[slot] then
@@ -272,9 +272,9 @@ end
 -- FREE PLAY TIMER
 -- =========================================================
 function HUDSystem:ShowFreePlayTimer(timeLeft)
-    if freePlayPanel     then SetVisible(freePlayPanel,     true)  end
+    if freePlayPanel     then SetTransformComponent(freePlayPanel, "isActive", true)  end
     if freePlayTimerText then
-        SetVisible(freePlayTimerText, true)
+        SetTransformComponent(freePlayTimerText, "isActive", true)
         local mins = math.floor(timeLeft / 60)
         local secs = math.floor(timeLeft % 60)
         SetTextComponent(freePlayTimerText, "text",
@@ -283,8 +283,8 @@ function HUDSystem:ShowFreePlayTimer(timeLeft)
 end
 
 function HUDSystem:HideFreePlayTimer()
-    if freePlayPanel     then SetVisible(freePlayPanel,     false) end
-    if freePlayTimerText then SetVisible(freePlayTimerText, false) end
+    if freePlayPanel     then SetTransformComponent(freePlayPanel, "isActive", false) end
+    if freePlayTimerText then SetTransformComponent(freePlayTimerText, "isActive", false) end
 end
 
 return HUDSystem
