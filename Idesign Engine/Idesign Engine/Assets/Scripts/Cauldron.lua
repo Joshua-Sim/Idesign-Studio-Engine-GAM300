@@ -39,6 +39,17 @@ local billboard_depth_adjust = 0.055
 local stir_sensitivity = 0.005
 local finish_delay = 1.0
 
+-- [STIR DIRECTION SWITCH SETTINGS]
+local dir_threshold = 0.02          -- same idea as your -0.02 check, but absolute
+local dir_segments = 4              -- 4 segments = switch at 25%, 50%, 75%
+-- returns -1 or +1 depending on which segment you're in
+local function GetRequiredDir(p)
+    local seg = math.floor(math.min(p, 0.9999) * dir_segments) -- 0..dir_segments-1
+    return (seg % 2 == 0) and -1 or 1
+end
+local last_required_dir = 0
+local anim_speed_abs = 8.0
+
 -- =============================================================
 -- [STATE VARIABLES]
 -- =============================================================
@@ -353,11 +364,25 @@ function M.on_update(arg1, arg2)
                 last_angle = current_angle
 
                 -- Directional Check
-                is_stirring_correct_dir = (angle_delta < -0.02)
+                --is_stirring_correct_dir = (angle_delta < -0.02)
+                local required_dir = GetRequiredDir(progress)
+
+                -- Flip animation direction when progress segment changes
+                if required_dir ~= last_required_dir then
+                    last_required_dir = required_dir
+                    SetAnimationSettings(my_entity_id, anim_speed_abs * required_dir, true, true)
+                end
+
+                -- Directional Check (alternates as progress increases)
+                if required_dir == -1 then
+                    is_stirring_correct_dir = (angle_delta < -dir_threshold)
+                else
+                    is_stirring_correct_dir = (angle_delta > dir_threshold)
+                end
 
                 if is_stirring_correct_dir then
                     progress = progress + (math.abs(angle_delta) * stir_sensitivity)
-                    SetAnimationSettings(my_entity_id, 1.0, true, true)
+                    SetAnimationSettings(my_entity_id, anim_speed_abs * required_dir, true, true)
                     PlayStirSound()
                 else
                     SetAnimationSettings(my_entity_id, 0.0, true, true)
@@ -387,10 +412,11 @@ function M.on_update(arg1, arg2)
 
     -- Update Orbit: Only advance current_orbit_angle if actively stirring
     if is_active and is_stirring_correct_dir and not is_finished then
-        local dynamic_speed = orbit_speed_start + (orbit_speed_end - orbit_speed_start) * progress
-        current_orbit_angle = current_orbit_angle - (dt * dynamic_speed)
+    local dynamic_speed = orbit_speed_start + (orbit_speed_end - orbit_speed_start) * progress
+
+    local required_dir = GetRequiredDir(progress)
+    current_orbit_angle = current_orbit_angle + (dt * dynamic_speed * required_dir)
     elseif not is_active then
-        -- Idle orbit when not in the minigame
         current_orbit_angle = current_orbit_angle + (dt * orbit_speed_start)
     end
 

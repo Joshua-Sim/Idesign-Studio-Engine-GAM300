@@ -1,5 +1,5 @@
 {
-    "count": 269,
+    "count": 270,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -1613,6 +1613,12 @@
             "guid": "4d0c0221-209c-48a4-9667-e335709ab37b",
             "name": "RB_TooltipBackground",
             "path": "Assets\\Textures\\RB_TooltipBackground.png",
+            "isUI": false
+        },
+        {
+            "guid": "20bfa50e-1760-4ee1-ad9e-409ed900a550",
+            "name": "PARTICLE",
+            "path": "Assets\\Textures\\PARTICLE.png",
             "isUI": false
         }
     ]
