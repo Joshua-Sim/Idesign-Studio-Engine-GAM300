@@ -3122,7 +3122,7 @@
                     "animationSpeed": 1.0,
                     "bLoops": true,
                     "bPlayOnStart": true,
-                    "currentTime": 134.99871826171875
+                    "currentTime": 74.39106750488281
                 },
                 "TextureComponent": {
                     "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
@@ -22857,8 +22857,8 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        950.0,
-                        550.0,
+                        955.0,
+                        475.0,
                         0.0
                     ],
                     "rotation": [
@@ -22867,8 +22867,8 @@
                         0.0
                     ],
                     "scale": [
-                        250.0,
-                        250.0,
+                        350.0,
+                        350.0,
                         1.0
                     ],
                     "isActive": true
@@ -22975,6 +22975,9 @@
                 "ScriptProperties": {
                     "scripts": [
                         {
+                            "guid": "863fc1b9-38e3-4a59-a3f6-8f4ef9378b72",
+                            "scriptPath": "Assets\\Scripts\\HUDSystem.lua",
+                            "hotReload": true
                         }
                     ]
                 }
@@ -23008,7 +23011,9 @@
                     "children": []
                 },
                 "TagComponent": {
-                    "tags": []
+                    "tags": [
+                        "OrderUI"
+                    ]
                 },
                 "TextureComponent": {
                     "guid": "c9f59b41-aa63-4f6a-bced-772e7289bffc",
@@ -23044,7 +23049,9 @@
                     "children": []
                 },
                 "TagComponent": {
-                    "tags": []
+                    "tags": [
+                        "OrderUI"
+                    ]
                 },
                 "TextureComponent": {
                     "guid": "c9f59b41-aa63-4f6a-bced-772e7289bffc",
@@ -23080,7 +23087,9 @@
                     "children": []
                 },
                 "TagComponent": {
-                    "tags": []
+                    "tags": [
+                        "OrderUI"
+                    ]
                 },
                 "TextureComponent": {
                     "guid": "eb687c6c-3f11-4f0e-b113-a7b451c5f632",
@@ -23116,7 +23125,9 @@
                     "children": []
                 },
                 "TagComponent": {
-                    "tags": []
+                    "tags": [
+                        "OrderUI"
+                    ]
                 },
                 "TextureComponent": {
                     "guid": "eb687c6c-3f11-4f0e-b113-a7b451c5f632",
@@ -23152,7 +23163,9 @@
                     "children": []
                 },
                 "TagComponent": {
-                    "tags": []
+                    "tags": [
+                        "OrderUI"
+                    ]
                 },
                 "TextureComponent": {
                     "guid": "943131dd-336b-4192-9686-b41c70b7c9f1",
@@ -23188,7 +23201,9 @@
                     "children": []
                 },
                 "TagComponent": {
-                    "tags": []
+                    "tags": [
+                        "OrderUI"
+                    ]
                 },
                 "TextureComponent": {
                     "guid": "943131dd-336b-4192-9686-b41c70b7c9f1",
@@ -23234,7 +23249,7 @@
                         1.0,
                         1.0
                     ],
-                    "opacity": 1.0,
+                    "opacity": 0.0,
                     "alignment": 0,
                     "isBillboard": false,
                     "screenSpace": true
@@ -23279,7 +23294,7 @@
                         1.0,
                         1.0
                     ],
-                    "opacity": 1.0,
+                    "opacity": 0.0,
                     "alignment": 0,
                     "isBillboard": false,
                     "screenSpace": true
@@ -23293,7 +23308,7 @@
                 "TransformComponent": {
                     "position": [
                         0.07000000029802322,
-                        0.8799999952316284,
+                        0.8600000143051147,
                         0.0
                     ],
                     "rotation": [
@@ -23324,7 +23339,7 @@
                         1.0,
                         1.0
                     ],
-                    "opacity": 1.0,
+                    "opacity": 0.0,
                     "alignment": 0,
                     "isBillboard": false,
                     "screenSpace": true
@@ -23338,7 +23353,7 @@
                 "TransformComponent": {
                     "position": [
                         0.2750000059604645,
-                        0.8799999952316284,
+                        0.8600000143051147,
                         0.0
                     ],
                     "rotation": [
@@ -23369,7 +23384,7 @@
                         1.0,
                         1.0
                     ],
-                    "opacity": 1.0,
+                    "opacity": 0.0,
                     "alignment": 0,
                     "isBillboard": false,
                     "screenSpace": true
@@ -23404,7 +23419,9 @@
                     "children": []
                 },
                 "TagComponent": {
-                    "tags": []
+                    "tags": [
+                        "OrderUI"
+                    ]
                 },
                 "TextureComponent": {
                     "guid": "bdb167fd-7bba-433f-ad25-4ce1d7ebd2cc",
@@ -23440,7 +23457,9 @@
                     "children": []
                 },
                 "TagComponent": {
-                    "tags": []
+                    "tags": [
+                        "OrderUI"
+                    ]
                 },
                 "TextureComponent": {
                     "guid": "bdb167fd-7bba-433f-ad25-4ce1d7ebd2cc",
@@ -23476,7 +23495,9 @@
                     "children": []
                 },
                 "TagComponent": {
-                    "tags": []
+                    "tags": [
+                        "OrderUI"
+                    ]
                 },
                 "TextureComponent": {
                     "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
@@ -23512,7 +23533,9 @@
                     "children": []
                 },
                 "TagComponent": {
-                    "tags": []
+                    "tags": [
+                        "OrderUI"
+                    ]
                 },
                 "TextureComponent": {
                     "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
@@ -23548,7 +23571,9 @@
                     "children": []
                 },
                 "TagComponent": {
-                    "tags": []
+                    "tags": [
+                        "OrderUI"
+                    ]
                 },
                 "TextureComponent": {
                     "guid": "3ea2414e-3cf2-4dcf-9440-e437ca432a22",
@@ -23584,7 +23609,9 @@
                     "children": []
                 },
                 "TagComponent": {
-                    "tags": []
+                    "tags": [
+                        "OrderUI"
+                    ]
                 },
                 "TextureComponent": {
                     "guid": "3ea2414e-3cf2-4dcf-9440-e437ca432a22",
@@ -23620,7 +23647,9 @@
                     "children": []
                 },
                 "TagComponent": {
-                    "tags": []
+                    "tags": [
+                        "OrderUI"
+                    ]
                 },
                 "TextureComponent": {
                     "guid": "3d869cc3-558f-41ee-91d7-e20312bb5f6f",
@@ -23656,7 +23685,9 @@
                     "children": []
                 },
                 "TagComponent": {
-                    "tags": []
+                    "tags": [
+                        "OrderUI"
+                    ]
                 },
                 "TextureComponent": {
                     "guid": "3d869cc3-558f-41ee-91d7-e20312bb5f6f",
@@ -23692,7 +23723,9 @@
                     "children": []
                 },
                 "TagComponent": {
-                    "tags": []
+                    "tags": [
+                        "OrderUI"
+                    ]
                 },
                 "TextureComponent": {
                     "guid": "f853ac0f-5340-43ec-a6a5-ab7dc5260b0c",
@@ -23728,7 +23761,9 @@
                     "children": []
                 },
                 "TagComponent": {
-                    "tags": []
+                    "tags": [
+                        "OrderUI"
+                    ]
                 },
                 "TextureComponent": {
                     "guid": "f853ac0f-5340-43ec-a6a5-ab7dc5260b0c",

@@ -82,7 +82,8 @@ end
 -- BUILD ORDER QUEUE
 -- Runs once at night start. Counts ingredients, works out
 -- how many of each potion type can be crafted, then
--- interleaves them evenly (round-robin).
+-- greedily picks cheapest potion each round so shared ingredients
+-- are correctly deducted and total customer count is maximised.
 -- =========================================================
 local function BuildOrderQueue()
     orderQueue = {}
@@ -94,69 +95,82 @@ local function BuildOrderQueue()
         return
     end
 
-    local potionCounts = {}
-    local names        = {}
-
+    -- Snapshot current ingredient counts into a virtual pool
+    local pool = {}
     for _, potionName in ipairs(craftable) do
         local cost = GetPotionIngredientCost(potionName)
-
-        -- Count finished potions already in inventory
-        local potionId       = GetItemIdByName(potionName)
-        local alreadyCrafted = (potionId >= 0) and GetIngredientCount(potionId) or 0
-
-        -- Count how many more we can craft from raw ingredients
-        local fromIngredients = 0
-        if cost and #cost > 0 then
-            local maxCraftable = math.huge
+        if cost then
             for _, entry in ipairs(cost) do
-                local have  = GetIngredientCount(entry.itemId)
-                local times = math.floor(have / entry.count)
-                if times < maxCraftable then maxCraftable = times end
+                if not pool[entry.itemId] then
+                    pool[entry.itemId] = GetIngredientCount(entry.itemId)
+                end
             end
-            if maxCraftable == math.huge then maxCraftable = 0 end
-            fromIngredients = maxCraftable
         end
-
-        local total = alreadyCrafted + fromIngredients
-        if total > 0 then
-            potionCounts[potionName] = total
-            table.insert(names, potionName)
-            print("[CustomerSystem] " .. potionName .. ": " .. alreadyCrafted .. " ready + " .. fromIngredients .. " craftable = " .. total .. " total")
+        -- Also include finished potions already in inventory
+        local potionId = GetItemIdByName(potionName)
+        if potionId >= 0 and not pool[potionId] then
+            pool[potionId] = GetIngredientCount(potionId)
         end
     end
 
+    -- Can we afford one of this potion from the virtual pool?
+    local function CanAffordOne(potionName)
+        local potionId = GetItemIdByName(potionName)
+        if potionId >= 0 and (pool[potionId] or 0) >= 1 then
+            return true, "ready"
+        end
+        local cost = GetPotionIngredientCost(potionName)
+        if not cost or #cost == 0 then return false, nil end
+        for _, entry in ipairs(cost) do
+            if (pool[entry.itemId] or 0) < entry.count then return false, nil end
+        end
+        return true, "craft"
+    end
 
-    if #names == 0 then
+    -- Deduct ingredients from virtual pool for one of this potion
+    local function DeductOne(potionName, source)
+        if source == "ready" then
+            local potionId = GetItemIdByName(potionName)
+            pool[potionId] = pool[potionId] - 1
+        else
+            local cost = GetPotionIngredientCost(potionName)
+            for _, entry in ipairs(cost) do
+                pool[entry.itemId] = (pool[entry.itemId] or 0) - entry.count
+            end
+        end
+    end
+
+    -- Total ingredient cost of one potion (for tiebreaking)
+    local function TotalCost(potionName)
+        local cost = GetPotionIngredientCost(potionName)
+        if not cost then return 0 end
+        local n = 0
+        for _, entry in ipairs(cost) do n = n + entry.count end
+        return n
+    end
+
+    -- Each round, queue ALL currently affordable potions (deducting as we go).
+    -- This ensures shared ingredients are split fairly across potion types.
+    local keepGoing = true
+    while keepGoing do
+        keepGoing = false
+        for _, name in ipairs(craftable) do
+            local ok, source = CanAffordOne(name)
+            if ok then
+                table.insert(orderQueue, name)
+                DeductOne(name, source)
+                keepGoing = true
+                print("[CustomerSystem] Queued: " .. name .. " (via " .. source .. ")")
+            end
+        end
+    end
+
+    if #orderQueue == 0 then
         print("[CustomerSystem] BuildOrderQueue: No potions affordable.")
         return
     end
 
-    -- Sort for deterministic order
-    table.sort(names)
-
-    -- Round-robin interleave until all counts exhausted
-    local remaining = {}
-    local total     = 0
-    for _, name in ipairs(names) do
-        remaining[name] = potionCounts[name]
-        total = total + potionCounts[name]
-    end
-
-    local inserted = 0
-    while inserted < total do
-        local addedThisRound = false
-        for _, name in ipairs(names) do
-            if remaining[name] and remaining[name] > 0 then
-                table.insert(orderQueue, name)
-                remaining[name] = remaining[name] - 1
-                inserted = inserted + 1
-                addedThisRound = true
-            end
-        end
-        if not addedThisRound then break end
-    end
-
-    -- Shuffle the queue for variety (Fisher-Yates)
+    -- Shuffle for variety (Fisher-Yates)
     for i = #orderQueue, 2, -1 do
         local j = math.random(1, i)
         orderQueue[i], orderQueue[j] = orderQueue[j], orderQueue[i]
@@ -175,74 +189,109 @@ local function DequeueOrder()
     return order
 end
 
--- Called when a customer fails. Tries to append a new random
--- affordable order to the queue, accounting for what pending
--- queue entries will already consume.
+-- Called after a customer completes or fails.
+-- Rebuilds remaining queue slots using a virtual ingredient pool
+-- so all affordable potions are queued at once, filling both slots.
 local function ReplaceFailedOrder()
-    -- Tally ingredients consumed by orders still pending in the queue
-    local pending = {}  -- { [itemId] = count }
+    local craftable = GetCraftablePotionNames()
+    if not craftable or #craftable == 0 then return end
+
+    -- Build virtual pool from current inventory
+    local pool = {}
+    for _, potionName in ipairs(craftable) do
+        local cost = GetPotionIngredientCost(potionName)
+        if cost then
+            for _, entry in ipairs(cost) do
+                if not pool[entry.itemId] then
+                    pool[entry.itemId] = GetIngredientCount(entry.itemId)
+                end
+            end
+        end
+        local potionId = GetItemIdByName(potionName)
+        if potionId >= 0 and not pool[potionId] then
+            pool[potionId] = GetIngredientCount(potionId)
+        end
+    end
+
+    -- Deduct ingredients already committed to pending queue entries
     for i = queueIndex, #orderQueue do
         local cost = GetPotionIngredientCost(orderQueue[i])
         if cost then
             for _, entry in ipairs(cost) do
-                pending[entry.itemId] = (pending[entry.itemId] or 0) + entry.count
+                pool[entry.itemId] = (pool[entry.itemId] or 0) - entry.count
             end
         end
     end
 
-    -- Also tally ingredients committed to active (walking/waiting) customers
+    -- Deduct ingredients committed to active customers
     for slot = 1, MAX_COUNTER_SLOTS do
         local c = activeCustomers[slot]
         if c and c.order and c.order ~= "" then
             local cost = GetPotionIngredientCost(c.order)
             if cost then
                 for _, entry in ipairs(cost) do
-                    pending[entry.itemId] = (pending[entry.itemId] or 0) + entry.count
+                    pool[entry.itemId] = (pool[entry.itemId] or 0) - entry.count
                 end
             end
         end
     end
 
-    -- Find which potions are affordable with what remains
-    local craftable  = GetCraftablePotionNames()
-    local affordable = {}
-    print("[CustomerSystem] ReplaceFailedOrder: checking " .. #craftable .. " potion types")
-    for _, potionName in ipairs(craftable) do
+    -- Can we afford one from the remaining pool?
+    local function CanAffordOne(potionName)
+        local potionId = GetItemIdByName(potionName)
+        if potionId >= 0 and (pool[potionId] or 0) >= 1 then
+            return true, "ready"
+        end
         local cost = GetPotionIngredientCost(potionName)
+        if not cost or #cost == 0 then return false, nil end
+        for _, entry in ipairs(cost) do
+            if (pool[entry.itemId] or 0) < entry.count then return false, nil end
+        end
+        return true, "craft"
+    end
 
-        -- Check finished potions in inventory first (after pending commitment)
-        local potionId       = GetItemIdByName(potionName)
-        local alreadyCrafted = (potionId >= 0) and GetIngredientCount(potionId) or 0
-        local pendingPotions = pending[potionId] or 0
-        print("[CustomerSystem] " .. potionName .. " id=" .. tostring(potionId) .. " crafted=" .. alreadyCrafted .. " pending=" .. pendingPotions)
-        if (alreadyCrafted - pendingPotions) >= 1 then
-            table.insert(affordable, potionName)
-        elseif cost then
-            -- Check if we can craft one more from raw ingredients
-            local canAfford = true
+    local function DeductOne(potionName, source)
+        if source == "ready" then
+            local potionId = GetItemIdByName(potionName)
+            pool[potionId] = pool[potionId] - 1
+        else
+            local cost = GetPotionIngredientCost(potionName)
             for _, entry in ipairs(cost) do
-                local have      = GetIngredientCount(entry.itemId)
-                local committed = pending[entry.itemId] or 0
-                if (have - committed) < entry.count then
-                    canAfford = false
-                    break
-                end
-            end
-            if canAfford then
-                table.insert(affordable, potionName)
+                pool[entry.itemId] = (pool[entry.itemId] or 0) - entry.count
             end
         end
     end
 
-    if #affordable == 0 then
-        print("[CustomerSystem] ReplaceFailedOrder: No affordable replacement found.")
-        return
+    -- Shuffle craftable list so no potion type is always prioritised
+    local shuffled = {}
+    for _, name in ipairs(craftable) do table.insert(shuffled, name) end
+    for i = #shuffled, 2, -1 do
+        local j = math.random(1, i)
+        shuffled[i], shuffled[j] = shuffled[j], shuffled[i]
     end
 
-    -- Pick a random affordable potion and append to queue
-    local replacement = affordable[math.random(1, #affordable)]
-    table.insert(orderQueue, replacement)
-    print("[CustomerSystem] ReplaceFailedOrder: Added " .. replacement .. " to queue (slot " .. #orderQueue .. ")")
+    -- Keep adding affordable potions until pool is exhausted
+    local added = 0
+    local keepGoing = true
+    while keepGoing do
+        keepGoing = false
+        for _, name in ipairs(shuffled) do
+            local ok, source = CanAffordOne(name)
+            if ok then
+                table.insert(orderQueue, name)
+                DeductOne(name, source)
+                added = added + 1
+                keepGoing = true
+                print("[CustomerSystem] ReplaceFailedOrder: Added " .. name .. " (via " .. source .. ")")
+            end
+        end
+    end
+
+    if added == 0 then
+        print("[CustomerSystem] ReplaceFailedOrder: No affordable replacements found.")
+    else
+        print("[CustomerSystem] ReplaceFailedOrder: Added " .. added .. " orders to queue.")
+    end
 end
 
 -- =========================================================
@@ -385,12 +434,17 @@ function CustomerSystem:on_update(dt)
     local active_count = CountActiveSlots()
     local queue_done   = (queueIndex > #orderQueue)
 
-    -- End when queue done and no customers active
+    -- End when queue done and no customers active.
+    -- Try ReplaceFailedOrder first in case leftover ingredients allow a new order.
     if queue_done and active_count == 0 then
-        print("[CustomerSystem] All customers served. Ending night.")
-        waiting_to_end  = true
-        end_phase_timer = 0.0
-        return
+        ReplaceFailedOrder()
+        queue_done = (queueIndex > #orderQueue)
+        if queue_done then
+            print("[CustomerSystem] All customers served. Ending night.")
+            waiting_to_end  = true
+            end_phase_timer = 0.0
+            return
+        end
     end
 
     -- Spawn next customer if slot free and queue has orders
@@ -475,11 +529,15 @@ function CustomerSystem:UpdateSlot(slot, c, dt)
 
         if c.patience <= 0 then
             print("[CustomerSystem] Slot " .. slot .. " timed out!")
-            CustomerSystem:SpawnLog("Time's up!")
             local timedEntity = c.entity
-            CustomerSystem:ClearSlot(slot)
+            -- Apply penalty using native AddCurrency binding
+            local penalty = 100
+            AddCurrency(-penalty)
+            UpdateCurrencyUI()
+            CustomerSystem:SpawnLog("Time's up! -" .. penalty .. " gold")
+            print("[CustomerSystem] Timeout penalty: -" .. penalty)
+            CustomerSystem:ClearSlot(slot, "timeout")
             ReplaceFailedOrder()
-            customers_served = customers_served + 1
             FireEvent("CustomerTimeout", timedEntity, timedEntity, 0)
             FireEvent("CustomerFailed",  timedEntity, timedEntity, 0)
             DestroyEntity(timedEntity)
@@ -586,26 +644,19 @@ end
 -- =========================================================
 function CustomerSystem.OnCustomerComplete(senderID, targetID, actionType)
     print("[CustomerSystem] CUSTOMER COMPLETE")
-    local slot = GetData("Slot_" .. senderID)
-    if not slot or slot < 1 or slot > MAX_COUNTER_SLOTS then
-        print("[CustomerSystem] OnCustomerComplete: invalid slot " .. tostring(slot) .. " for entity " .. tostring(senderID))
+    local slot = nil
+    for i = 1, MAX_COUNTER_SLOTS do
+        if activeCustomers[i] and activeCustomers[i].entity == senderID then
+            slot = i
+            break
+        end
+    end
+    if not slot then
+        print("[CustomerSystem] OnCustomerComplete: entity " .. tostring(senderID) .. " not found in active slots")
         return
     end
-
-    local multiplier_int = GetData("currencyMultiplier")
-    if multiplier_int <= 0 then multiplier_int = 100 end
-    local multiplier    = multiplier_int / 100.0
-    local actual_earned = math.floor(100 * multiplier)
-
-    CustomerSystem:AddCurrency(100)
-    if multiplier > 1.0 then
-        CustomerSystem:SpawnLog("Customer served! +" .. actual_earned .. " currency (" .. multiplier .. "x)")
-    else
-        CustomerSystem:SpawnLog("Customer served! +" .. actual_earned .. " currency")
-    end
-
-    customers_served = customers_served + 1
-    CustomerSystem:ClearSlot(slot)
+    CustomerSystem:ClearSlot(slot, "complete")
+    ReplaceFailedOrder()
 end
 
 -- =========================================================
@@ -613,44 +664,34 @@ end
 -- =========================================================
 function CustomerSystem.OnCustomerFailed(senderID, targetID, actionType)
     print("[CustomerSystem] CUSTOMER FAILED")
-    local slot = GetData("Slot_" .. senderID)
-    if not slot or slot < 1 or slot > MAX_COUNTER_SLOTS then
-        print("[CustomerSystem] OnCustomerFailed: invalid slot " .. tostring(slot) .. " for entity " .. tostring(senderID))
+    local slot = nil
+    for i = 1, MAX_COUNTER_SLOTS do
+        if activeCustomers[i] and activeCustomers[i].entity == senderID then
+            slot = i
+            break
+        end
+    end
+    if not slot then
+        print("[CustomerSystem] OnCustomerFailed: entity " .. tostring(senderID) .. " not found in active slots")
         return
     end
-
-    local multiplier_int     = GetData("currencyMultiplier")
-    if multiplier_int <= 0 then multiplier_int = 100 end
-    local multiplier         = multiplier_int / 100.0
-    local penalty_multiplier = 1.0 + ((multiplier - 1.0) * 0.5)
-    local actual_penalty     = math.floor(100 * penalty_multiplier)
-
-    local new_currency = math.max(0, GetCurrency() - actual_penalty)
-    SetCurrency(new_currency)
-    CustomerSystem:UpdateCurrencyDisplay()
-
-    if penalty_multiplier > 1.0 then
-        CustomerSystem:SpawnLog("Customer left angry! -" .. actual_penalty .. " currency (" .. penalty_multiplier .. "x)")
-    else
-        CustomerSystem:SpawnLog("Customer left angry! -" .. actual_penalty .. " currency")
-    end
-
-    customers_served = customers_served + 1
-    CustomerSystem:ClearSlot(slot)
+    CustomerSystem:ClearSlot(slot, "failed")
     ReplaceFailedOrder()
 end
 
 -- =========================================================
 -- CLEAR SLOT
+-- reason: "complete", "failed", or "timeout"
 -- =========================================================
-function CustomerSystem:ClearSlot(slot)
+function CustomerSystem:ClearSlot(slot, reason)
     local c = activeCustomers[slot]
     if not c then return end
+    customers_served = customers_served + 1
     self:DestroyBarForSlot(slot, c)
     SetData("Slot_" .. tostring(c.entity), -1)
-    customerOrderStrings[c.entity] = nil  -- clean up string store
+    customerOrderStrings[c.entity] = nil
     activeCustomers[slot] = nil
-    print("[CustomerSystem] Slot " .. slot .. " cleared.")
+    print("[CustomerSystem] Slot " .. slot .. " cleared (" .. tostring(reason) .. ").")
 end
 
 -- =========================================================

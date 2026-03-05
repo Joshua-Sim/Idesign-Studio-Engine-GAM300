@@ -544,6 +544,18 @@ namespace Framework
                     }
                 }
             }
+
+            // --- Active Order UI ---
+            auto orderUIEntities = ecsInterface.GetEntitiesByTag("OrderUI");
+            for (auto e : orderUIEntities) 
+            {
+                if (!ecsInterface.IsEntityValid(e)) continue;
+                if (ecsInterface.HasComponent<TextureProperties>(e)) 
+                {
+                    auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
+                    texture.isUI = isNightPlay;
+                }
+            }
         }
     }
 }

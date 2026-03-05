@@ -156,6 +156,13 @@ function Customer.OnInteract(senderID, targetID, actionType)
         ConsumeSelectedItem()
         Customer.DestroyTextbox(customer_entity)
 
+        -- Apply reward using native AddCurrency binding
+        local reward = 100
+        AddCurrency(reward)
+        UpdateCurrencyUI()
+        Customer.SpawnLog("Customer served! +" .. reward .. " gold")
+        print("[Customer] Reward applied: +" .. reward .. " currency")
+
         -- Fire completion event
         FireEvent("CustomerComplete", customer_entity, senderID, 1)
 
@@ -190,8 +197,14 @@ function Customer.OnInteract(senderID, targetID, actionType)
         if wrong_count >= MAX_WRONG_ATTEMPTS then
             print("[Customer] That's it! I've had enough! Leaving...")
             Customer.DestroyTextbox(customer_entity)
-            Customer.SpawnLog("Customer left angry!")
+            -- Apply penalty using native AddCurrency binding
+            local penalty = 100
+            AddCurrency(-penalty)
+            UpdateCurrencyUI()
+            Customer.SpawnLog("Customer left angry! -" .. penalty .. " gold")
+            print("[Customer] Penalty applied: -" .. penalty .. " currency")
             FireEvent("CustomerFailed", customer_entity, senderID, 0)
+            DestroyEntity(customer_entity)
         else
             local chances_left = MAX_WRONG_ATTEMPTS - wrong_count
             print("[Customer] Sorry, I ordered " .. tostring(my_order) .. ", not " .. tostring(itemName) .. "!")
