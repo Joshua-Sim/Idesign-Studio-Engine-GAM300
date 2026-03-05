@@ -300,6 +300,13 @@
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
+        },
+        {
+            "guid": "bb0ce2b0-2754-4eaf-b8e5-3c8603f5cc7a",
+            "scriptPath": "Assets\\Scripts\\Furnace.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
         }
     ]
 }

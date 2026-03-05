@@ -845,6 +845,15 @@
             "vbo": 165,
             "ebo": 166,
             "indexCount": 22494
+        },
+        {
+            "guid": "d85b75be-05a0-4ced-b227-c79dfa52eacc",
+            "name": "furance",
+            "path": "Assets\\Objects\\furance.obj",
+            "vao": 588,
+            "vbo": 1162,
+            "ebo": 1163,
+            "indexCount": 150114
         }
     ]
 }
