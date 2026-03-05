@@ -23,6 +23,11 @@ namespace Framework
     static const float crossfadeDuration = 0.25f;  // fast seamless fade (tweak 0.12 ~ 0.25)
     static const int   kExpectedScenes = 10;
 
+    // ===== Intro tuning (3 slides) =====
+    static const float introSceneDuration = 1.0f;
+    static const float introCrossfadeDuration = 0.20f; // quick, smooth
+
+
     void SceneInterface::Initialize() {}
 
     std::string SceneInterface::GetName()
@@ -428,6 +433,123 @@ namespace Framework
             else
             {
                 // Reset for next time
+                cutsceneStartTime = -1.0f;
+                cutsceneFinished = false;
+            }
+
+
+            // 8. DIGIPEN LOGO INTRO + GROUP LOGO INTRO
+            if (engineState.Is(EngineMode::Intro))
+            {
+                auto slides = ecsInterface.GetEntitiesByTag("intro");
+                int sceneCount = (int)slides.size();
+                if (sceneCount <= 0) return;
+
+                // OPTIONAL but recommended if your ECS order is not guaranteed:
+                // std::sort(slides.begin(), slides.end());
+
+                // 1) Initialization
+                if (cutsceneStartTime < 0.0f)
+                {
+                    cutsceneStartTime = (float)glfwGetTime();
+                    cutsceneFinished = false;
+
+                    for (auto e : slides)
+                    {
+                        if (!ecsInterface.IsEntityValid(e)) continue;
+                        if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
+
+                        auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
+                        tex.isUI = true;
+                        tex.uiAlpha = 0.0f;
+                    }
+
+                    // Slide 0 (black) instant ON
+                    if (ecsInterface.IsEntityValid(slides[0]) && ecsInterface.HasComponent<TextureProperties>(slides[0]))
+                    {
+                        ecsInterface.GetComponent<TextureProperties>(slides[0]).uiAlpha = 1.0f;
+                    }
+                }
+
+                float t = (float)glfwGetTime() - cutsceneStartTime;
+
+                // Which slide we are on
+                int i = (int)glm::floor(t / introSceneDuration);
+
+                // 2) Completion
+                if (i >= sceneCount)
+                {
+                    if (!cutsceneFinished)
+                    {
+                        cutsceneFinished = true;
+
+                        for (auto e : slides)
+                        {
+                            if (!ecsInterface.IsEntityValid(e)) continue;
+                            if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
+
+                            auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
+                            tex.uiAlpha = 0.0f;
+                            tex.isUI = false; // optional
+                        }
+
+                        // Intro to Menu (recommended)
+                        engineState.PushState(EngineMode::Menu);
+
+                        // If you REALLY want Play underneath Menu, do this:
+                        // engineState.PushState(EngineMode::Play);
+                        // engineState.PushState(EngineMode::Menu);
+                    }
+                    return;
+                }
+
+                float sceneT = t - (float)i * introSceneDuration;
+
+                // Crossfade happens at end of slide
+                float fadeStart = introSceneDuration - introCrossfadeDuration;
+                float blend = 0.0f;
+
+                if (sceneT >= fadeStart)
+                    blend = Saturate((sceneT - fadeStart) / introCrossfadeDuration); // 0..1 during fade window
+
+                // 3) Clear all alphas
+                for (int s = 0; s < sceneCount; ++s)
+                {
+                    Entity e = slides[s];
+                    if (!ecsInterface.IsEntityValid(e)) continue;
+                    if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
+
+                    auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
+                    tex.isUI = true;
+                    tex.uiAlpha = 0.0f;
+                }
+
+                // 4) Current slide (1 -> 0 during crossfade)
+                {
+                    Entity cur = slides[i];
+                    if (ecsInterface.IsEntityValid(cur) && ecsInterface.HasComponent<TextureProperties>(cur))
+                    {
+                        auto& texCur = ecsInterface.GetComponent<TextureProperties>(cur);
+                        texCur.uiAlpha = (i == 0) ? 1.0f : (1.0f - blend);
+                        // If you want slide 0 to ALSO fade out, remove (i==0)? and just do (1.0f - blend)
+                        // But since black is instant and should hold, this keeps it stable until fade window.
+                        if (sceneT >= fadeStart) texCur.uiAlpha = 1.0f - blend;
+                    }
+                }
+
+                // 5) Next slide (0 -> 1 during crossfade)
+                if (i + 1 < sceneCount)
+                {
+                    Entity nxt = slides[i + 1];
+                    if (ecsInterface.IsEntityValid(nxt) && ecsInterface.HasComponent<TextureProperties>(nxt))
+                    {
+                        auto& texNext = ecsInterface.GetComponent<TextureProperties>(nxt);
+                        texNext.uiAlpha = blend;
+                    }
+                }
+            }
+            else
+            {
                 cutsceneStartTime = -1.0f;
                 cutsceneFinished = false;
             }

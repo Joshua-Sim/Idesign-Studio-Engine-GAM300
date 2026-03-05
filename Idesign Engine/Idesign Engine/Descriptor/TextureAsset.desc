@@ -1,5 +1,5 @@
 {
-    "count": 294,
+    "count": 295,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -1763,6 +1763,12 @@
             "guid": "080500b5-701f-402d-a6bf-4e1f461a08ff",
             "name": "mouseCursor3",
             "path": "Assets\\Textures\\mouseCursor3.png",
+            "isUI": false
+        },
+        {
+            "guid": "8b4d9c90-142f-4add-b136-e283a129295f",
+            "name": "DigiPen_Singapore_WEB_WHITE",
+            "path": "Assets\\Textures\\DigiPen_Singapore_WEB_WHITE.png",
             "isUI": false
         }
     ]

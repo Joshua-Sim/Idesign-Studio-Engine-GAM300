@@ -27,7 +27,8 @@ namespace Framework
         Settings,
         Dialogue,
         MapSelection,
-        Cutscene
+        Cutscene,
+        Intro
     };
 
     class EngineState
@@ -83,7 +84,8 @@ namespace Framework
                    Is(EngineMode::Dialogue)  ||
                    Is(EngineMode::Upgrade)   ||
                    Is(EngineMode::MapSelection) ||
-                   Is(EngineMode::Cutscene);
+                   Is(EngineMode::Cutscene) ||
+                   Is(EngineMode::Intro);
         }
 
         // Check if current scene is actively in gameplay (Play Mode, with no overlays)
@@ -107,6 +109,8 @@ namespace Framework
                 case HowToPlay: std::cout << "HowToPlay"; break;
                 case Upgrade:   std::cout << "Upgrade"; break;
                 case Settings:  std::cout << "Settings"; break;
+                case Cutscene:  std::cout << "Cutscene"; break;
+                case Intro:     std::cout << "Intro"; break;
                 case Dialogue:  std::cout << "Dialogue"; break;
                 default:        std::cout << "Unknown"; break;
                 }
