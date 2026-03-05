@@ -91,8 +91,12 @@ namespace Framework {
             {
                 return luaL_error(L, "SetPosition: entity %d has no TransformComponent", (int)e);
             }
-
-            auto& tr = ecsInterface.GetComponent<TransformComponent>(e);
+            // --- ADD THIS PRINT STATEMENT ---
+            if (ecsInterface.GetEntityName(e) == "Player") {
+                std::cout << "[Camera Debug] Moving Player to: X=" << x << " Y=" << y << " Z=" << z << std::endl;
+            }
+            // --------------------------------
+                       auto& tr = ecsInterface.GetComponent<TransformComponent>(e);
             tr.position = glm::vec3(x, y, z);
             return 0;
         }
@@ -618,7 +622,17 @@ namespace Framework {
             lua_pushboolean(L, true);
             return 1;
         }
+        static int lua_SetIsUI(lua_State* L)
+        {
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+            bool isUI = lua_toboolean(L, 2);
 
+            if (ecsInterface.IsEntityValid(e) && ecsInterface.HasComponent<TextureProperties>(e)) {
+                auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
+                tex.isUI = isUI;
+            }
+            return 0;
+        }
         //Spawn prefab expose
         static int lua_SpawnPrefab(lua_State* L)
         {
@@ -1982,7 +1996,25 @@ namespace Framework {
                 anim.animationSpeed = 0.0f;
             }
         }
+        static int lua_GetScreenSize(lua_State* L) {
+            auto* self = lua_self(L);
+            Graphics* g = self ? self->GetGraphicsSystem() : nullptr;
+            if (!g) {
+                lua_pushnumber(L, 1920.0);
+                lua_pushnumber(L, 1080.0);
+                return 2;
+            }
 
+            GLFWwindow* win = g->GetWindow();
+            int width = 1920, height = 1080;
+            if (win) {
+                glfwGetWindowSize(win, &width, &height);
+            }
+
+            lua_pushnumber(L, width);
+            lua_pushnumber(L, height);
+            return 2; // Returns width and height to Lua
+        }
         static int lua_GetRotation(lua_State* L)
         {
             Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
@@ -2001,7 +2033,24 @@ namespace Framework {
         }
 
         // In ScriptingSystem.cpp, inside the anonymous namespace
+        static int lua_SetCameraRot(lua_State* L)
+        {
+            float pitch = (float)luaL_checknumber(L, 1);
+            float yaw = (float)luaL_checknumber(L, 2);
 
+            auto* gfx = Graphics::GetInstance();
+            if (gfx) {
+                Camera* cam = gfx->GetCameraByIndex(0); // 0 is the GameCamera
+                if (cam) {
+                    cam->pitch = pitch;
+                    cam->yaw = yaw;
+
+                    // THIS recalculates the front/up/right vectors!
+                    cam->updateVectors();
+                }
+            }
+            return 0;
+        }
         static int lua_GetCameraYaw(lua_State* L)
         {
             // 1. Get the Graphics System
@@ -2110,6 +2159,7 @@ namespace Framework {
         lua_register(L, "SetScale", lua_SetScale);
         lua_register(L, "GetRotation", lua_GetRotation);
         lua_register(L, "GetCameraYaw", lua_GetCameraYaw);
+        lua_register(L, "SetCameraRot", lua_SetCameraRot);
         lua_register(L, "TogglePhase", lua_TogglePhase);
 
         // Inventory Utility
@@ -2151,14 +2201,14 @@ namespace Framework {
 
         // lua_register(L, "SetScale", lua_SetScale);
         lua_register(L, "GetScale", lua_GetScale);
-
+        lua_register(L, "GetScreenSize", lua_GetScreenSize);
         // Dialogue System
         lua_register(L, "DialogueClear", lua_DialogueClear);
         lua_register(L, "DialogueAdd", lua_DialogueAdd);
         lua_register(L, "DialogueStart", lua_DialogueStart);
         lua_register(L, "DialogueEnd", lua_DialogueEnd);
         lua_register(L, "DialogueIsActive", lua_DialogueIsActive);
-
+        lua_register(L, "SetIsUI", lua_SetIsUI);
         //cauldron
         lua_register(L, "SetCameraLock", [](lua_State* L) -> int {
             // 1. Get argument (true/false)
@@ -2331,7 +2381,20 @@ namespace Framework {
             return 0;
             });
         // ============ END MAP LUA BINDINGS ============
+        lua_register(L, "SetLinearVelocity", [](lua_State* L) -> int {
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+            float vx = static_cast<float>(luaL_checknumber(L, 2));
+            float vy = static_cast<float>(luaL_checknumber(L, 3));
+            float vz = static_cast<float>(luaL_checknumber(L, 4));
 
+            if (ecsInterface.IsEntityValid(e) && ecsInterface.HasComponent<PhysicsProperties>(e))
+            {
+                auto& phys = ecsInterface.GetComponent<PhysicsProperties>(e);
+                phys.linearVelocity = glm::vec3(vx, vy, vz);
+                phys.startAwake = true; // Wake up Jolt body so it moves
+            }
+            return 0;
+            });
         // Create Cook table with our functions
         lua_newtable(L);                           // Cook
         lua_pushcfunction(L, l_Cook_WindowConfig); lua_setfield(L, -2, "WindowConfig");

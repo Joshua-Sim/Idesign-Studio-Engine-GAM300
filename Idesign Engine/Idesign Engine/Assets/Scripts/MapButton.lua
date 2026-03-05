@@ -47,7 +47,7 @@ function M:on_init()
         print("[MapButton] " .. myName .. " clicked!")
 
         -- Pop the MapSelection state so the map UI hides
-        PopEngineState
+        PopEngineState()
         SetUIFocused(false)
 
         -- Teleport the player to this location

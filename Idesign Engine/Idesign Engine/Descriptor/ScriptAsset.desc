@@ -1,5 +1,5 @@
 {
-    "count": 43,
+    "count": 44,
     "entries": [
         {
             "guid": "16f0caaf-2e11-4715-ab0e-06c67810e1ba",
@@ -298,6 +298,13 @@
         {
             "guid": "ebdbf8aa-d944-40e4-8c1d-2a7415165a8d",
             "scriptPath": "Assets\\Scripts\\itemSpawner.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "bb0ce2b0-2754-4eaf-b8e5-3c8603f5cc7a",
+            "scriptPath": "Assets\\Scripts\\Furnace.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
