@@ -1300,6 +1300,13 @@ namespace Framework {
             return 1;
         }
 
+        static int lua_GetItemIdByName(lua_State* L) {
+            const char* name = luaL_checkstring(L, 1);
+            int itemId = Framework::ItemNameToId(name);
+            lua_pushinteger(L, itemId); // returns -1 if not found
+            return 1;
+        }
+
         int Lua_AddToInventory(lua_State* L) {
             const char* itemName = lua_tostring(L, 1); // Arg 1: "RedMushroom"
 
@@ -2192,6 +2199,7 @@ namespace Framework {
         lua_register(L, "GetItemNameById", lua_GetItemNameById);
         lua_register(L, "GetSelectedItemName", Lua_GetSelectedItemName);
         lua_register(L, "SetInteractionText", l_SetInteractionText);
+        lua_register(L, "GetItemIdByName", lua_GetItemIdByName);
 
         // Engine utility
         lua_register(L, "FindEntityByName", lua_FindEntityByName);

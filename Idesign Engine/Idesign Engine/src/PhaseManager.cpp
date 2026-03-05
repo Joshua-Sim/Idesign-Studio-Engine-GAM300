@@ -103,7 +103,28 @@ namespace Framework {
             ecsInterface.HasComponent<TimerComponent>(phaseTimerText))
         {
             auto& timer = ecsInterface.GetComponent<TimerComponent>(phaseTimerText);
-            timer.Start(); // uses whatever duration is set on the component
+
+            // Set callback based on which phase just started
+            if (m_currentPhase == GamePhase::Day)
+            {
+                timer.onComplete = [this]() {
+                    std::cout << "[PhaseManager] Day timer expired. Transitioning to Night.\n";
+                    TogglePhase();
+                    };
+            }
+            else if (m_currentPhase == GamePhase::Night)
+            {
+                timer.onComplete = [this]() {
+                    std::cout << "[PhaseManager] Night timer expired. Transitioning to Upgrade.\n";
+                    TogglePhase();
+                    };
+            }
+            else
+            {
+                timer.onComplete = nullptr; // No auto-end for Upgrade phase
+            }
+
+            timer.Start(); // starts countdown with the callback set
         }
 
         glm::vec3 targetPos(0.0f);

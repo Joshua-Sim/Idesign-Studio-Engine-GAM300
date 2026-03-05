@@ -329,15 +329,34 @@ namespace Framework {
     {
         const auto& recipes = GetGlobalRecipes();
         std::vector<std::string> craftable;
+        std::unordered_set<std::string> added;
 
+        // Potions craftable from ingredients
         for (const auto& recipe : recipes) {
             if (CanCraftRecipe(recipe) &&
                 GetItemType(recipe.resultItemID) == ItemType::POTION) {
-                craftable.push_back(kItemNames[recipe.resultItemID]);
+                std::string name = kItemNames[recipe.resultItemID];
+                if (added.insert(name).second)
+                    craftable.push_back(name);
             }
         }
 
+        // Finished potions already in inventory
+        auto& inv = Inventory::Instance();
+        auto checkSlots = [&](auto getSlot, int count) {
+            for (int i = 0; i < count; ++i) {
+                const auto& slot = getSlot(i);
+                if (slot.itemId >= 0 &&
+                    GetItemType(slot.itemId) == ItemType::POTION) {
+                    std::string name = kItemNames[slot.itemId];
+                    if (added.insert(name).second)
+                        craftable.push_back(name);
+                }
+            }
+            };
+        checkSlots([&](int i) { return inv.Get(i); }, inv.GetHotbarSlotCount());
+        checkSlots([&](int i) { return inv.GetBackpack(i); }, inv.GetBackpackSlotCount());
+
         return craftable;
     }
-
 } // namespace Framework

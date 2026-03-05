@@ -22975,9 +22975,6 @@
                 "ScriptProperties": {
                     "scripts": [
                         {
-                            "guid": "863fc1b9-38e3-4a59-a3f6-8f4ef9378b72",
-                            "scriptPath": "Assets\\Scripts\\HUDSystem.lua",
-                            "hotReload": true
                         }
                     ]
                 }
