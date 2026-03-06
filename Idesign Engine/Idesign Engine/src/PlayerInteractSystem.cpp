@@ -241,6 +241,12 @@ namespace Framework
                                 // Re-add physics if you want it to fall back to the ground
                             }
                         }
+
+                        // Unlock it in the global database
+                        if (itemId != -1) {
+                            Framework::UnlockItem(itemId);
+                        }
+
                     }
                 }
             }
@@ -272,8 +278,8 @@ namespace Framework
         }
 
         // ---------------------------------------------------------
-    // 2. ITEM INTERACTION
-    // ---------------------------------------------------------
+        // 2. ITEM INTERACTION
+        // ---------------------------------------------------------
         if (!ecsInterface.HasComponent<ItemComponent>(targetEntity))
             return;
 

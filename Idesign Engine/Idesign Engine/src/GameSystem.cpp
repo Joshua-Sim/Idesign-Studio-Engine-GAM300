@@ -32,9 +32,15 @@ namespace Framework
         std::string itemsPath = (projectRoot / "Assets/JSON/items.json").string();
         bool success = InitializeItemDatabase(itemsPath);
 
+        std::string unlockPath = (projectRoot / "Assets/JSON/save_data.json").string();
+        bool success2 = LoadUnlockedItems(unlockPath);
+
         if (!success) {
             std::cerr << "CRITICAL WARNING: Items failed to load!" << std::endl;
-            // Optional: return -1; if the game cannot function without items
+        }
+
+        if (!success2) {
+            std::cerr << "CRITICAL WARNING: Save Data failed to load!" << std::endl;
         }
 
         if (recipeBookManager == nullptr) {

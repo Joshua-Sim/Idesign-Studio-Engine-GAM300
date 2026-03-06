@@ -12,6 +12,7 @@
 #include "DialogueSystem.h"
 #include "ButtonSystem.h" // Ensure this is included
 #include <RecipeBookManager.h>
+#include "GameSystem.h"
 
 extern Framework::RecipeBookManager* recipeBookManager;
 
@@ -111,6 +112,15 @@ namespace Framework {
                 std::cout << "ESC PRESSED - Toggling pause" << std::endl;
             }
         }
+
+        // ESC: Toggle pause/resume
+        if (IsKeyPressed(GLFW_KEY_R))
+        {
+            isUIFocused = !isUIFocused;
+            GameSystem::bookOpen = !GameSystem::bookOpen;
+        }
+
+        
 
         // ============================================================
             //DIALOGUE INPUT HANDLING

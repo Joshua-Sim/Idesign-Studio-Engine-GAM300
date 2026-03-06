@@ -1117,14 +1117,6 @@ namespace Framework {
         //        gameCamera.position = trans.position + eyeOffset;
         //    }
 
-        //    // --- 2.3 GAMEPLAY TOGGLES (Recipe Book, etc) ---
-        {
-            bool isRPressed = (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS);
-            static bool wasRPressed = false;
-            if (isRPressed && !wasRPressed && !isEditorMode) GameSystem::bookOpen = !GameSystem::bookOpen;
-            wasRPressed = isRPressed;
-        }
-
         // ------------------------------------------------------------
         // Backpack toggle (TAB) - only when in game, not editor focused
         // ------------------------------------------------------------

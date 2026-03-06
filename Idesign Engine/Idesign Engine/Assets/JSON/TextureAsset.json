@@ -1615,195 +1615,21 @@
             "isUI": false
         },
         {
-            "guid": "47b2289b-b61d-4561-9d1d-0d5537e015dc",
-            "name": "progress_cold",
-            "path": "Assets\\Textures\\progress_cold.png",
+            "guid": "1ed88cb8-94df-44e0-8784-7acdb3af6c31",
+            "name": "RB_RecipeBackground",
+            "path": "Assets\\Textures\\RB_RecipeBackground.png",
             "isUI": false
         },
         {
-            "guid": "04ae39e1-9a43-4ed9-bc38-2d6199860ad7",
-            "name": "catch_idle",
-            "path": "Assets\\Textures\\catch_idle.png",
+            "guid": "27d45a05-9045-458d-8f32-8ae6c6e3b2c5",
+            "name": "RB_IngredientBackground",
+            "path": "Assets\\Textures\\RB_IngredientBackground.png",
             "isUI": false
         },
         {
-            "guid": "fc4dd89a-fbb5-444a-b5b7-ee6f7e9968fd",
-            "name": "furance",
-            "path": "Assets\\Textures\\furance.png",
-            "isUI": false
-        },
-        {
-            "guid": "7f6b3324-5436-4864-ae96-83aebe5dcc02",
-            "name": "catch_grace",
-            "path": "Assets\\Textures\\catch_grace.png",
-            "isUI": false
-        },
-        {
-            "guid": "69fee6bc-1c95-4ccd-a25d-6c23903b52ad",
-            "name": "progress_hot",
-            "path": "Assets\\Textures\\progress_hot.png",
-            "isUI": false
-        },
-        {
-            "guid": "26f7cb90-2308-46cc-8ed2-b1a1ed8a2f20",
-            "name": "progress_warm",
-            "path": "Assets\\Textures\\progress_warm.png",
-            "isUI": false
-        },
-        {
-            "guid": "a3cc3f26-7639-4a41-98b3-b3d8ad5bff62",
-            "name": "furance",
-            "path": "Assets\\Textures\\furance.png",
-            "isUI": false
-        },
-        {
-            "guid": "47ef57a2-0898-4068-b4a8-461bba5cffb1",
-            "name": "track_frame",
-            "path": "Assets\\Textures\\track_frame.png",
-            "isUI": false
-        },
-        {
-            "guid": "14e6ec48-a640-4b5d-b618-d6109f403487",
-            "name": "catch_grace",
-            "path": "Assets\\Textures\\catch_grace.png",
-            "isUI": false
-        },
-        {
-            "guid": "28bc8bb3-4f65-4052-aab3-a08c717e551c",
-            "name": "progress_hot",
-            "path": "Assets\\Textures\\progress_hot.png",
-            "isUI": false
-        },
-        {
-            "guid": "e2013d9a-d88a-48b9-adb8-beaf13a7fc29",
-            "name": "catch_idle",
-            "path": "Assets\\Textures\\catch_idle.png",
-            "isUI": false
-        },
-        {
-            "guid": "8089e3e2-e871-4120-8a7e-ea88bbf59cb7",
-            "name": "catch_border_grace",
-            "path": "Assets\\Textures\\catch_border_grace.png",
-            "isUI": false
-        },
-        {
-            "guid": "f1eff834-58cd-428b-a630-f3716a2e15e4",
-            "name": "fish_ember",
-            "path": "Assets\\Textures\\fish_ember.png",
-            "isUI": false
-        },
-        {
-            "guid": "01546e6c-edda-44f2-8f4a-3c46365d72a0",
-            "name": "progress_whitehot",
-            "path": "Assets\\Textures\\progress_whitehot.png",
-            "isUI": false
-        },
-        {
-            "guid": "5b619d1a-2cf1-4953-8441-744170b54dd7",
-            "name": "progress_warm",
-            "path": "Assets\\Textures\\progress_warm.png",
-            "isUI": false
-        },
-        {
-            "guid": "7eef2a97-a2e4-4d38-8a18-fbea47e24b18",
-            "name": "catch_active",
-            "path": "Assets\\Textures\\catch_active.png",
-            "isUI": false
-        },
-        {
-            "guid": "72c058f0-dd60-4298-85db-46006abe5e80",
-            "name": "catch_border_active",
-            "path": "Assets\\Textures\\catch_border_active.png",
-            "isUI": false
-        },
-        {
-            "guid": "9863af90-885a-49ac-9945-5057cce47cd1",
-            "name": "catch_border_idle",
-            "path": "Assets\\Textures\\catch_border_idle.png",
-            "isUI": false
-        },
-        {
-            "guid": "7e11e66d-7b93-4d4b-9743-a89b856eb6f4",
-            "name": "track_frame",
-            "path": "Assets\\Textures\\track_frame.png",
-            "isUI": false
-        },
-        {
-            "guid": "f3029119-6dfd-4e21-a411-803af6195498",
-            "name": "catch_active",
-            "path": "Assets\\Textures\\catch_active.png",
-            "isUI": false
-        },
-        {
-            "guid": "22e21310-e031-4bec-8a03-055178d82e53",
-            "name": "progress_cold",
-            "path": "Assets\\Textures\\progress_cold.png",
-            "isUI": false
-        },
-        {
-            "guid": "e31da169-0295-4fca-80af-0b673024d304",
-            "name": "progress_whitehot",
-            "path": "Assets\\Textures\\progress_whitehot.png",
-            "isUI": false
-        },
-        {
-            "guid": "4e6eef44-8f26-494b-b15d-bbca8ea7ab97",
-            "name": "fish_ember",
-            "path": "Assets\\Textures\\fish_ember.png",
-            "isUI": false
-        },
-        {
-            "guid": "e38ccafd-d699-4b84-9adc-726c592c1000",
-            "name": "progress_whitehot",
-            "path": "Assets\\Textures\\progress_whitehot.png",
-            "isUI": false
-        },
-        {
-            "guid": "6d27553c-9550-44e5-be25-a37fc15c97d8",
-            "name": "fish_ember",
-            "path": "Assets\\Textures\\fish_ember.png",
-            "isUI": false
-        },
-        {
-            "guid": "7cb5baa1-9d16-48fc-8508-8a1f840402a7",
-            "name": "progress_hot",
-            "path": "Assets\\Textures\\progress_hot.png",
-            "isUI": false
-        },
-        {
-            "guid": "8389f442-799c-4ded-b9aa-f884986e2e0e",
-            "name": "catch_grace",
-            "path": "Assets\\Textures\\catch_grace.png",
-            "isUI": false
-        },
-        {
-            "guid": "64700a59-485e-4148-8623-3027cdbb61a1",
-            "name": "catch_active",
-            "path": "Assets\\Textures\\catch_active.png",
-            "isUI": false
-        },
-        {
-            "guid": "f4c1117d-61d5-4ec9-8c2c-510b12413161",
-            "name": "catch_idle",
-            "path": "Assets\\Textures\\catch_idle.png",
-            "isUI": false
-        },
-        {
-            "guid": "f12cf54c-3ed9-4f40-9ef5-700910b950f5",
-            "name": "ui_background",
-            "path": "Assets\\Textures\\ui_background.png",
-            "isUI": false
-        },
-        {
-            "guid": "be51138a-60c0-43c9-bc53-15c7c80c11b1",
-            "name": "furance",
-            "path": "Assets\\Textures\\furance.png",
-            "isUI": false
-        },
-        {
-            "guid": "dd9b6b05-2d4b-4a27-be2a-8b7e754a2ccc",
-            "name": "progress_cold",
-            "path": "Assets\\Textures\\progress_cold.png",
+            "guid": "80f60c84-ef22-4bf4-96aa-00f51deef0e0",
+            "name": "RB_QuestionMark",
+            "path": "Assets\\Textures\\RB_QuestionMark.png",
             "isUI": false
         }
     ]
