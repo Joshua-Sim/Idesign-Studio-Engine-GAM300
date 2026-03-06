@@ -27,7 +27,8 @@ namespace Framework
         Settings,
         Dialogue,
         MapSelection,
-        Cutscene
+        Cutscene,
+        Intro
     };
 
     class EngineState
@@ -76,14 +77,15 @@ namespace Framework
         // Check if any MENU/UI overlay is open
         bool IsAnyUIOpen() const
         {
-            return Is(EngineMode::Menu)      ||
-                   Is(EngineMode::Paused)    ||
-                   Is(EngineMode::HowToPlay) ||
-                   Is(EngineMode::Settings)  ||
-                   Is(EngineMode::Dialogue)  ||
-                   Is(EngineMode::Upgrade)   ||
-                   Is(EngineMode::MapSelection) ||
-                   Is(EngineMode::Cutscene);
+            return Is(EngineMode::Menu) ||
+                Is(EngineMode::Paused) ||
+                Is(EngineMode::HowToPlay) ||
+                Is(EngineMode::Settings) ||
+                Is(EngineMode::Dialogue) ||
+                Is(EngineMode::Upgrade) ||
+                Is(EngineMode::MapSelection) ||
+                Is(EngineMode::Cutscene) ||
+                Is(EngineMode::Intro);
         }
 
         // Check if current scene is actively in gameplay (Play Mode, with no overlays)
