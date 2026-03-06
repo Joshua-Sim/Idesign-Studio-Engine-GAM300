@@ -10,8 +10,10 @@
 #include "pch.h"
 #include "System.h"
 #include <queue>
+#include "Graphics.h"
 #include <string>
 #include <vector>
+#include <glm.hpp>
 
 namespace Framework {
     struct DialogueLine {
@@ -42,13 +44,29 @@ namespace Framework {
         void EndDialogue();
         void ClearAll();
 
+        // Cutscene API Functions
+        bool isCutscene = false;
+        bool isHideDialogue = false;
+        bool isMidFlight = false;
+
+        glm::vec3 LookAtTargetPosition;
+        glm::vec3 flyOffset = { 0.f, 2.f, 5.f };  // Configurable offset from target
+        float flySpeed = 2.0f;                      // Lerp speed
+        float arrivalThreshold = 0.05f;            // Distance to consider "arrived"
+
+        void SetCameraTargetByTag(std::string targetTag);
+        void flyToTarget(float deltaTime);
+
         // Configuration
-        int maxCharsPerLine = 50;  // Default to 40 characters
+        int maxCharsPerLine = 70;  // Default to 40 characters
         float typewriterSpeed = 0.03f;  // Seconds per character
 
         // State queries
         bool IsActive() const { return isActive; }
         bool HasLines() const { return !dialogueQueue.empty(); }
+        void setActive(bool set) {
+            isActive = set;
+        }
 
     private:
         // Internal helpers

@@ -56,15 +56,20 @@ namespace Framework {
 
         bool tutorialToPlay = false;
 
+        dialogueSys->StartDialogue();
+        dialogueSys->EndDialogue();
+
+        /* 
         // --- NIGHT PHASE TUTORIAL ---
         if (m_currentPhase == GamePhase::Day && !m_dayTutorialTriggered)
         {
-
+            
             dialogueSys->AddLine("Welcome to Runes and Remedies! This is the Day phase where you collect resources by pressing E", "Aunt Mira (frog)", "pear");
             dialogueSys->AddLine("Click on How To Play from the menu by pressing ESC to find out more!", "Aunt Mira (frog)", "portrait");
             dialogueSys->AddLine("When you're done with gathering or your inventory is full, interact with the gate to go to the night phase", "Aunt Mira (frog)", "portrait");
 
             dialogueSys->StartDialogue();
+         
             m_dayTutorialTriggered = true;
             tutorialToPlay = true;
         }
@@ -88,9 +93,8 @@ namespace Framework {
             engineState.ClearToBase();
             engineState.PushState(EngineMode::Play);
             engineState.PushState(EngineMode::Dialogue); // Ensure Dialogue mode is active
-
-            dialogueSys->StartDialogue();
         }
+        */
 
     }
 
