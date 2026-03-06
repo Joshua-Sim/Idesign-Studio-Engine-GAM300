@@ -633,17 +633,7 @@ namespace Framework {
             lua_pushboolean(L, true);
             return 1;
         }
-        static int lua_SetIsUI(lua_State* L)
-        {
-            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
-            bool isUI = lua_toboolean(L, 2);
 
-            if (ecsInterface.IsEntityValid(e) && ecsInterface.HasComponent<TextureProperties>(e)) {
-                auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
-                tex.isUI = isUI;
-            }
-            return 0;
-        }
         //Spawn prefab expose
         static int lua_SpawnPrefab(lua_State* L)
         {
