@@ -5,7 +5,7 @@ local CustomerSystem = {}
 -- =========================================================
 CustomerSystem.customerPrefabGUID = "Customer_Kinematic_Prefab"
 CustomerSystem.spawnPointName     = "SpawnPoint"
-CustomerSystem.spawn_delay        = 5.0
+CustomerSystem.spawn_delay        = 5.0     -- Time Delay per customer
 
 CustomerSystem.waitPointNames = {
     "CustomerWaitingPoint_1",
@@ -33,10 +33,10 @@ CustomerSystem.tex_red      = "Assets/Textures/red.png"
 -- =========================================================
 -- CONSTANTS
 -- =========================================================
-local MAX_COUNTER_SLOTS  = 2
-local PHASE_NIGHT        = 2
-local patience_duration  = 120.0
-local arrival_threshold  = 1.5
+local MAX_COUNTER_SLOTS      = 2
+local PHASE_NIGHT            = 2
+local patience_duration      = 120.0
+local arrival_threshold      = 1.5
 local color_swap_threshold   = 0.3
 local bar_length_max         = 0.5
 local bar_thickness          = 0.2
@@ -45,7 +45,7 @@ local x_offset_right         = -0.5
 local tune_x                 = 1.6
 local tune_y                 = -0.04
 local billboard_depth_adjust = 0.055
-local end_phase_delay        = 2.0
+local end_phase_delay        = 2.0      -- Time to delay for ""End Night Phase""
 local prefab_log             = "CustomerLog_Prefab"
 
 

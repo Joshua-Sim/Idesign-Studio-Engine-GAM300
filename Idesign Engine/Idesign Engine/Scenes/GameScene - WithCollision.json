@@ -3040,14 +3040,14 @@
             }
         },
         {
-            "name": "CustomerWaitingPoint",
+            "name": "CustomerWaitingPoint_1",
             "guid": "c121b678-c782-4205-b20e-9695226e60ca",
             "components": {
                 "TransformComponent": {
                     "position": [
                         -25.987422943115234,
                         6.886701583862305,
-                        13.040227890014648
+                        11.040227890014648
                     ],
                     "rotation": [
                         0.0,
