@@ -2812,12 +2812,12 @@
                     "position": [
                         -46.19945526123047,
                         8.02451229095459,
-                        11.982528686523438
+                        11.492565155029297
                     ],
                     "rotation": [
-                        -0.0,
+                        4.979371695377393e-15,
                         -180.0,
-                        180.0
+                        -0.000005008957941754488
                     ],
                     "scale": [
                         0.9999420642852783,
@@ -2898,7 +2898,7 @@
                     "position": [
                         -46.19945526123047,
                         8.02451229095459,
-                        11.982528686523438
+                        11.492565155029297
                     ],
                     "forward": [
                         0.0,
@@ -3079,7 +3079,7 @@
             }
         },
         {
-            "name": "Cauldron",
+            "name": "Furnance",
             "guid": "fffc27d4-57ce-4192-9177-a998866e67f5",
             "components": {
                 "TransformComponent": {
@@ -3115,7 +3115,7 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "fc4dd89a-fbb5-444a-b5b7-ee6f7e9968fd",
+                    "guid": "5e18b4be-2838-4252-b74e-98674b4989b6",
                     "isUI": false
                 },
                 "ScriptProperties": {
@@ -3224,10 +3224,6 @@
                     "tags": [
                         "menu"
                     ]
-                },
-                "TextureComponent": {
-                    "guid": "d24a29c5-cd9e-4322-ab59-d38618cba4bf",
-                    "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [

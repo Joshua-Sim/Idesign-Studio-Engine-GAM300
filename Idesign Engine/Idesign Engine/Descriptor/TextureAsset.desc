@@ -1,5 +1,5 @@
 {
-    "count": 297,
+    "count": 294,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -71,17 +71,6 @@
             "guid": "d4899207-ea5e-473b-870f-aade76e8a7ff",
             "name": "Door",
             "path": "Assets\\Textures\\Door.png",
-            "isUI": false,
-            "uiAlpha": 1.0,
-            "uOffset": 0.0,
-            "vOffset": 0.0,
-            "uScale": 1.0,
-            "vScale": 1.0
-        },
-        {
-            "guid": "d24a29c5-cd9e-4322-ab59-d38618cba4bf",
-            "name": "quitbutton",
-            "path": "Assets\\Textures\\quitbutton.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
@@ -280,17 +269,6 @@
             "guid": "468efa22-bb31-4660-9af8-2527d6bc5465",
             "name": "bluecloud_lf",
             "path": "Assets\\Textures\\bluecloud_lf.jpg",
-            "isUI": false,
-            "uiAlpha": 1.0,
-            "uOffset": 0.0,
-            "vOffset": 0.0,
-            "uScale": 1.0,
-            "vScale": 1.0
-        },
-        {
-            "guid": "40835bf8-6300-4c73-8dec-0f9cdb837e60",
-            "name": "Forest Hover Button new_resized",
-            "path": "Assets\\Textures\\Forest Hover Button new_resized.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
@@ -607,17 +585,6 @@
             "vScale": 1.0
         },
         {
-            "guid": "1cd96cbf-24c4-4e43-8783-5af596d9dc7d",
-            "name": "Forest hover",
-            "path": "Assets\\Textures\\Forest hover.png",
-            "isUI": false,
-            "uiAlpha": 1.0,
-            "uOffset": 0.0,
-            "vOffset": 0.0,
-            "uScale": 1.0,
-            "vScale": 1.0
-        },
-        {
             "guid": "b5153be8-0464-48c3-800e-48bfb0c931b9",
             "name": "Key_E",
             "path": "Assets\\Textures\\Key_E.png",
@@ -753,17 +720,6 @@
             "guid": "0417d7b5-cfcc-4060-b086-fc7aa90068aa",
             "name": "Autumn pine tree small",
             "path": "Assets\\Textures\\Autumn pine tree small.png",
-            "isUI": false,
-            "uiAlpha": 1.0,
-            "uOffset": 0.0,
-            "vOffset": 0.0,
-            "uScale": 1.0,
-            "vScale": 1.0
-        },
-        {
-            "guid": "f40a69c3-bc8f-4e14-a097-3dd6e7326499",
-            "name": "QUIT BUTTON-2",
-            "path": "Assets\\Textures\\QUIT BUTTON-2.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
@@ -1553,17 +1509,6 @@
             "vScale": 1.0
         },
         {
-            "guid": "4c11b083-dc94-4f0b-a988-ae104705857b",
-            "name": "QUIT HOVER BUTTON",
-            "path": "Assets\\Textures\\QUIT HOVER BUTTON.png",
-            "isUI": false,
-            "uiAlpha": 1.0,
-            "uOffset": 0.0,
-            "vOffset": 0.0,
-            "uScale": 1.0,
-            "vScale": 1.0
-        },
-        {
             "guid": "ab663213-734f-49df-801d-e8c949f7786b",
             "name": "CU2",
             "path": "Assets\\Textures\\CU2.png",
@@ -1589,50 +1534,6 @@
             "guid": "2a229a37-805f-4280-be08-3848ef849214",
             "name": "HOW TO PLAY HOVER BUTTON",
             "path": "Assets\\Textures\\HOW TO PLAY HOVER BUTTON.png",
-            "isUI": false,
-            "uiAlpha": 1.0,
-            "uOffset": 0.0,
-            "vOffset": 0.0,
-            "uScale": 1.0,
-            "vScale": 1.0
-        },
-        {
-            "guid": "294e195f-2e45-4a56-9d47-cc69d0c0c1d4",
-            "name": "QUIT BUTTON",
-            "path": "Assets\\Textures\\QUIT BUTTON.png",
-            "isUI": false,
-            "uiAlpha": 1.0,
-            "uOffset": 0.0,
-            "vOffset": 0.0,
-            "uScale": 1.0,
-            "vScale": 1.0
-        },
-        {
-            "guid": "857dc62a-1a81-4b73-b73e-fb1e31db0bcb",
-            "name": "QUIT BUTTON-1",
-            "path": "Assets\\Textures\\QUIT BUTTON-1.png",
-            "isUI": false,
-            "uiAlpha": 1.0,
-            "uOffset": 0.0,
-            "vOffset": 0.0,
-            "uScale": 1.0,
-            "vScale": 1.0
-        },
-        {
-            "guid": "8176225f-1649-48c9-8ef0-442e22e9b542",
-            "name": "QUIT HOVER BUTTON-1",
-            "path": "Assets\\Textures\\QUIT HOVER BUTTON-1.png",
-            "isUI": false,
-            "uiAlpha": 1.0,
-            "uOffset": 0.0,
-            "vOffset": 0.0,
-            "uScale": 1.0,
-            "vScale": 1.0
-        },
-        {
-            "guid": "ce245ff9-d779-4453-83b7-0173ccd82660",
-            "name": "QUIT HOVER BUTTON-2",
-            "path": "Assets\\Textures\\QUIT HOVER BUTTON-2.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
@@ -1883,17 +1784,6 @@
             "vScale": 1.0
         },
         {
-            "guid": "6e800cf5-f843-4deb-bc6b-038204a430b8",
-            "name": "Forest Button",
-            "path": "Assets\\Textures\\Forest Button.png",
-            "isUI": false,
-            "uiAlpha": 1.0,
-            "uOffset": 0.0,
-            "vOffset": 0.0,
-            "uScale": 1.0,
-            "vScale": 1.0
-        },
-        {
             "guid": "b52ea343-007a-490b-ae1f-ce5a3ff76c90",
             "name": "Lantern",
             "path": "Assets\\Textures\\Lantern.png",
@@ -2048,28 +1938,6 @@
             "vScale": 1.0
         },
         {
-            "guid": "d6963a8c-d82b-4dc4-bf10-b874c27a386b",
-            "name": "Mute Button",
-            "path": "Assets\\Textures\\Mute Button.png",
-            "isUI": false,
-            "uiAlpha": 1.0,
-            "uOffset": 0.0,
-            "vOffset": 0.0,
-            "uScale": 1.0,
-            "vScale": 1.0
-        },
-        {
-            "guid": "6acc942d-a314-4278-b345-db0e2cb15bef",
-            "name": "Unmute Button",
-            "path": "Assets\\Textures\\Unmute Button.png",
-            "isUI": false,
-            "uiAlpha": 1.0,
-            "uOffset": 0.0,
-            "vOffset": 0.0,
-            "uScale": 1.0,
-            "vScale": 1.0
-        },
-        {
             "guid": "fff165a8-9c1b-4d69-ae36-7b30d472b01c",
             "name": "Unmute_Button",
             "path": "Assets\\Textures\\Unmute_Button.png",
@@ -2147,17 +2015,6 @@
             "vScale": 1.0
         },
         {
-            "guid": "c196401b-3b43-4ea4-a9e7-1967357deea4",
-            "name": "Forest Hover Button",
-            "path": "Assets\\Textures\\Forest Hover Button.png",
-            "isUI": false,
-            "uiAlpha": 1.0,
-            "uOffset": 0.0,
-            "vOffset": 0.0,
-            "uScale": 1.0,
-            "vScale": 1.0
-        },
-        {
             "guid": "f1944e1e-2e5d-4cc2-aabd-b644737524d1",
             "name": "UI_SkillBar_Zone",
             "path": "Assets\\Textures\\UI_SkillBar_Zone.png",
@@ -2169,53 +2026,9 @@
             "vScale": 1.0
         },
         {
-            "guid": "64ae45f2-6db3-4e77-aa05-4023c3425436",
-            "name": "Forest Hover Button (1)",
-            "path": "Assets\\Textures\\Forest Hover Button (1).png",
-            "isUI": false,
-            "uiAlpha": 1.0,
-            "uOffset": 0.0,
-            "vOffset": 0.0,
-            "uScale": 1.0,
-            "vScale": 1.0
-        },
-        {
-            "guid": "715f2c65-c36a-478a-96c3-b8c286bb7800",
-            "name": "forest button hover NEW_resized",
-            "path": "Assets\\Textures\\forest button hover NEW_resized.png",
-            "isUI": false,
-            "uiAlpha": 1.0,
-            "uOffset": 0.0,
-            "vOffset": 0.0,
-            "uScale": 1.0,
-            "vScale": 1.0
-        },
-        {
-            "guid": "06bd6b23-9683-4028-abfe-35cb96e62fed",
-            "name": "forest front button",
-            "path": "Assets\\Textures\\forest front button.png",
-            "isUI": false,
-            "uiAlpha": 1.0,
-            "uOffset": 0.0,
-            "vOffset": 0.0,
-            "uScale": 1.0,
-            "vScale": 1.0
-        },
-        {
             "guid": "3588552f-ae24-477c-91b4-1b7a53f899fd",
             "name": "CS8",
             "path": "Assets\\Textures\\CS8.png",
-            "isUI": false,
-            "uiAlpha": 1.0,
-            "uOffset": 0.0,
-            "vOffset": 0.0,
-            "uScale": 1.0,
-            "vScale": 1.0
-        },
-        {
-            "guid": "efaf2d74-bd8b-4a78-89da-7e4607c990a4",
-            "name": "forest hover yellow",
-            "path": "Assets\\Textures\\forest hover yellow.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
@@ -2939,6 +2752,39 @@
             "vScale": 1.0
         },
         {
+            "guid": "1ed88cb8-94df-44e0-8784-7acdb3af6c31",
+            "name": "RB_RecipeBackground",
+            "path": "Assets\\Textures\\RB_RecipeBackground.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "27d45a05-9045-458d-8f32-8ae6c6e3b2c5",
+            "name": "RB_IngredientBackground",
+            "path": "Assets\\Textures\\RB_IngredientBackground.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "80f60c84-ef22-4bf4-96aa-00f51deef0e0",
+            "name": "RB_QuestionMark",
+            "path": "Assets\\Textures\\RB_QuestionMark.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
             "guid": "3e36546e-1611-4e55-ae4a-118cd864a166",
             "name": "gold&moon",
             "path": "Assets\\Textures\\gold&moon.png",
@@ -2997,6 +2843,116 @@
             "guid": "74ebf112-a229-44c5-877f-c99438708a33",
             "name": "PhaseTimerIcon",
             "path": "Assets\\Textures\\PhaseTimerIcon.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "50f1a057-2105-46dd-8f52-464424a9a13c",
+            "name": "rotatingIcon",
+            "path": "Assets\\Textures\\rotatingIcon.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "20bfa50e-1760-4ee1-ad9e-409ed900a550",
+            "name": "PARTICLE",
+            "path": "Assets\\Textures\\PARTICLE.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "da0ef587-afae-498e-a41b-3e2a8de5d819",
+            "name": "anti-rotatingIcon",
+            "path": "Assets\\Textures\\anti-rotatingIcon.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "bdb167fd-7bba-433f-ad25-4ce1d7ebd2cc",
+            "name": "potionslot",
+            "path": "Assets\\Textures\\potionslot.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "c9f59b41-aa63-4f6a-bced-772e7289bffc",
+            "name": "slotpanel",
+            "path": "Assets\\Textures\\slotpanel.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "3ea2414e-3cf2-4dcf-9440-e437ca432a22",
+            "name": "patiencebar_base",
+            "path": "Assets\\Textures\\patiencebar_base.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "943131dd-336b-4192-9686-b41c70b7c9f1",
+            "name": "arrowright",
+            "path": "Assets\\Textures\\arrowright.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "da5a2728-83a0-4807-99bc-1c292e968987",
+            "name": "patiencebar_red",
+            "path": "Assets\\Textures\\patiencebar_red.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "6db00ec8-8785-4903-afbd-26008dce6663",
+            "name": "patiencebar_orange",
+            "path": "Assets\\Textures\\patiencebar_orange.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "3d869cc3-558f-41ee-91d7-e20312bb5f6f",
+            "name": "patiencebar_green",
+            "path": "Assets\\Textures\\patiencebar_green.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
@@ -3261,6 +3217,17 @@
             "guid": "ac51ab32-56e2-4cb1-81a6-d128e96b6d3b",
             "name": "GroupLogoAnim",
             "path": "Assets\\Textures\\GroupLogoAnim.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "5e18b4be-2838-4252-b74e-98674b4989b6",
+            "name": "furance",
+            "path": "Assets\\Textures\\furance.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,

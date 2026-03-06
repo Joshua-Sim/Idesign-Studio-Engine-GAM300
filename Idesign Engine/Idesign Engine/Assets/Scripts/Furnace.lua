@@ -4,21 +4,23 @@
 -- [CONFIGURATION]
 -- ============================================================
 
--- ── DYNAMIC SCREEN SCALING ────────────────────────────────────
-local BASE_SCALE = 800         -- The scale at 1080p
-local REF_HEIGHT = 1080        -- Reference resolution height
-local SCREEN_POS_X = 0.65      -- 65% across the screen (Puts it on the Right)
-local SCREEN_POS_Y = 0.35      -- 35% up the screen (Centers it Vertically)
+-- ── SCREEN PLACEMENT ──────────────────────────────────────────
+-- SCREEN_POS_X/Y: 0.0 = left/bottom, 1.0 = right/top, 0.5 = centre
+-- These are fractions of the actual window size from GetScreenSize().
+local SCREEN_POS_X = 0.65      -- 75% across = right side of screen
+local SCREEN_POS_Y = 0.40      -- 50% up     = vertically centred
 
--- ── BAR DIMENSIONS (logical units, scaled by PIXEL_SCALE) ────
-local BAR_HEIGHT   = 0.7     
-local BAR_WIDTH    = 0.14    
-local CATCH_HEIGHT = 0.15      -- INCREASED: Paddle is now much taller/easier to catch with!
-local FISH_SIZE    = 0.05    
+-- Scales the UI relative to window height. 1.0 = bars are 70% of window height.
+local UI_SCALE     = 0.55
 
-local HEAT_WIDTH   = 0.055   
-local BAR_GAP      = 0.05    
-local FLAT_Z       = 0.008   
+-- ── BAR DIMENSIONS (0..1 logical units, scaled to pixels at runtime) ──
+local BAR_HEIGHT   = 0.7
+local BAR_WIDTH    = 0.14
+local CATCH_HEIGHT = 0.15
+local FISH_SIZE    = 0.05
+local HEAT_WIDTH   = 0.055
+local BAR_GAP      = 0.05
+local FLAT_Z       = 0.008
 
 local PREFAB_TRACK = "ProgressBarFrame_Prefab"
 local PREFAB_FILL  = "ProgressBarFill_Prefab"
@@ -37,25 +39,27 @@ local TEX_PROG = {
     "Assets/Textures/progress_whitehot.png",
 }
 
--- ── PLAYER TELEPORT SETTINGS ─────────────────────────────────
--- If the player teleports to the side/back of the furnace, change 
--- this to 0, 180, or 270 until they are facing the fire opening!
-local FURNACE_FACING      = 270  
-local PLAYER_DIST         = 3.0    -- How far back the player stands
-local PLAYER_OFFSET_RIGHT = 0.0    -- Left/right shift from the furnace center
+-- ── PLAYER TELEPORT ───────────────────────────────────────────
+local FURNACE_FACING      = 270
+local PLAYER_DIST         = 3.0
+local PLAYER_OFFSET_RIGHT = 0.0
 local PLAYER_Y_OFFSET     = -2.0
 
--- ── PHYSICS (TWEAKED FOR EASIER DIFFICULTY) ───────────────────
-local CATCH_GRAVITY  = 6.0     -- DECREASED: Paddle falls a bit slower
-local CATCH_LIFT     = 9.0     -- DECREASED: Paddle flies up a bit slower (less jumpy)
-local CATCH_MAX_VEL  = 4.5
-local CATCH_BOUNCE   = 0.20
-local FISH_SPEED_MIN = 0.8     -- DECREASED: Fish moves slower
-local FISH_SPEED_MAX = 4.5     -- DECREASED: Fish top speed is much slower
-local FISH_IDLE_MIN  = 0.50    -- INCREASED: Fish rests longer before moving
-local FISH_IDLE_MAX  = 1.5     -- INCREASED: Fish rests longer before moving
-local PROGRESS_GAIN  = 0.25    -- INCREASED: Heat bar fills up much faster
-local PROGRESS_DRAIN = 0.10    -- DECREASED: Heat bar empties much slower when you miss
+-- ── PHYSICS ───────────────────────────────────────────────────
+-- All values are in logical units/sec (BAR_HEIGHT = 0.7 units = full bar).
+-- These are resolution-independent — they feel the same at any screen size.
+-- To make the game easier: lower CATCH_GRAVITY, raise CATCH_LIFT.
+-- To slow the bounce: lower CATCH_BOUNCE toward 0.0.
+local CATCH_GRAVITY  = 2.8   -- how fast paddle falls (lower = floatier)
+local CATCH_LIFT     = 4.0   -- how fast paddle rises on click (lower = slower rise)
+local CATCH_MAX_VEL  = 2.8   -- terminal velocity cap (lower = less snappy)
+local CATCH_BOUNCE   = 0.05  -- wall bounce (0 = dead stop, 0.2 = bouncy)
+local FISH_SPEED_MIN = 0.6
+local FISH_SPEED_MAX = 2.6
+local FISH_IDLE_MIN  = 0.6
+local FISH_IDLE_MAX  = 1.8
+local PROGRESS_GAIN  = 0.25
+local PROGRESS_DRAIN = 0.10
 local WIN_THRESHOLD  = 1.0
 local START_PROGRESS = 0.15
 local SPAWN_Y_OFFSET = 2.0
@@ -68,7 +72,6 @@ local is_active    = false
 local progress, catch_pos, catch_vel = 0.0, 0.0, 0.0
 local fish_pos, fish_target, fish_speed, fish_timer = 0.2, 0.2, 0.0, 0.0
 local grace_timer  = 0.0
-
 local cur_catch_tex = ""
 local cur_prog_tex  = ""
 
@@ -127,35 +130,28 @@ function M.StartMinigame()
     cur_catch_tex = ""
     cur_prog_tex  = ""
 
-    -- Lock camera and stop player
     SetCameraLock(true)
     local pid = FindEntityByName("Player")
     if pid and SetLinearVelocity then SetLinearVelocity(pid, 0, 0, 0) end
 
-    -- ── TELEPORT PLAYER TO FURNACE ───────────────────────────
+    -- Teleport player in front of furnace
     local cx, cy, cz = GetPosition(my_entity_id)
     local rx, ry, rz = GetRotation(my_entity_id)
-
     if pid and cx then
-        local fr  = math.rad(ry + FURNACE_FACING)
-        local fwd_x = math.cos(fr)
-        local fwd_z = math.sin(fr)
-        local rr    = fr + math.pi * 0.5
-        local right_x = math.cos(rr)
-        local right_z = math.sin(rr)
-       
-        local tx  = cx + fwd_x * PLAYER_DIST + right_x * PLAYER_OFFSET_RIGHT
-        local tz  = cz + fwd_z * PLAYER_DIST + right_z * PLAYER_OFFSET_RIGHT
+        local fr      = math.rad(ry + FURNACE_FACING)
+        local fwd_x   = math.cos(fr);   local fwd_z   = math.sin(fr)
+        local rr      = fr + math.pi * 0.5
+        local right_x = math.cos(rr);   local right_z = math.sin(rr)
+        local tx      = cx + fwd_x * PLAYER_DIST + right_x * PLAYER_OFFSET_RIGHT
+        local tz      = cz + fwd_z * PLAYER_DIST + right_z * PLAYER_OFFSET_RIGHT
         local px, py, pz = GetPosition(pid)
-         local target_y = py + PLAYER_Y_OFFSET
-        local yaw = math.deg(math.atan2(-fwd_z, -fwd_x))
-        if TeleportPlayer then TeleportPlayer(tx, target_y, tz, 0, yaw, 0) end
+        local yaw     = math.deg(math.atan2(-fwd_z, -fwd_x))
+        if TeleportPlayer then TeleportPlayer(tx, py + PLAYER_Y_OFFSET, tz, 0, yaw, 0) end
         if SetCameraRot   then SetCameraRot(0.0, yaw) end
     end
-    -- ─────────────────────────────────────────────────────────
 
-    -- Spawn entities
-    e_background = SpawnPrefab(PREFAB_FILL, my_entity_id)
+    -- Spawn
+    e_background = SpawnPrefab(PREFAB_FILL,  my_entity_id)
     e_bar_frame  = SpawnPrefab(PREFAB_TRACK, my_entity_id)
     e_heat_frame = SpawnPrefab(PREFAB_TRACK, my_entity_id)
     e_catch      = SpawnPrefab(PREFAB_FILL,  my_entity_id)
@@ -191,7 +187,7 @@ function M.StopMinigame()
     Safe(e_background)
     Safe(e_bar_frame); Safe(e_heat_frame)
     Safe(e_catch); Safe(e_fish); Safe(e_heat_fill)
-    e_background = nil
+    e_background                  = nil
     e_bar_frame, e_heat_frame     = nil, nil
     e_catch, e_fish, e_heat_fill  = nil, nil, nil
 end
@@ -242,55 +238,85 @@ function M:on_update(dt)
     cur_catch_tex = SwapTex(e_catch,     ct,                   cur_catch_tex)
     cur_prog_tex  = SwapTex(e_heat_fill, GetProgTex(progress), cur_prog_tex)
 
-    -- 5. DYNAMIC UI POSITIONING & SCALING
-    local screen_w, screen_h = 1920, 1080
-    if GetScreenSize then 
-        screen_w, screen_h = GetScreenSize() 
-    end
+    -- 5. UI POSITIONING
+    -- GetScreenSize() returns the ACTUAL window pixel size (from glfwGetWindowSize).
+    -- PS = pixels per logical unit, scales proportionally with window height.
+    -- UI_BASE_X/Y = pixel anchor of the whole UI group, derived from window size.
+    --
+    -- The engine UI coordinate origin and direction depends on your renderer.
+    -- If the UI appears mirrored vertically, negate UI_BASE_Y.
+    -- If it appears at the wrong corner, adjust SCREEN_POS_X/Y (0..1 fractions).
 
-    -- Calculate current scale and anchor positions
-    local PS = (screen_h / REF_HEIGHT) * BASE_SCALE
+    local screen_w, screen_h = 1920, 1080
+    if GetScreenSize then screen_w, screen_h = GetScreenSize() end
+
+    -- PS: logical → pixel conversion. Tied to window HEIGHT so bars stay proportional.
+    local PS = screen_h * UI_SCALE
+
+    -- Anchor in pixel space.
+    -- screen_w * SCREEN_POS_X = how many pixels from left edge.
+    -- screen_h * SCREEN_POS_Y = how many pixels from bottom (or top, engine-dependent).
     local UI_BASE_X = screen_w * SCREEN_POS_X
     local UI_BASE_Y = screen_h * SCREEN_POS_Y
 
-    -- Offsets and sizes
-    local left_cx  = -(BAR_WIDTH * 0.5 + BAR_GAP * 0.5) * PS
+    -- Horizontal centres of the two bars relative to anchor.
+    -- left bar is slightly left of anchor, right bar slightly right.
+    local left_cx  = -(BAR_WIDTH  * 0.5 + BAR_GAP * 0.5) * PS
     local right_cx =  (HEAT_WIDTH * 0.5 + BAR_GAP * 0.5) * PS
-    local bar_cy   = 0  -- Since we anchor at 0.5 (middle), this needs to just be 0 so it centers!
 
-    -- Depths
-    local D_FRAME = 0.0
-    local D_FILL  = 0.02   
-    local D_FISH  = 0.04
+    -- Vertical: bars are anchored at their CENTRE (Y=0 = bar mid-point).
+    -- catch_pos=0 is bar bottom, so subtract half-bar-height to get pixel offset.
+    local half_bar_px = (BAR_HEIGHT * 0.5) * PS
 
-    -- Apply Dynamic Scales
+    -- Depth layers
+    local D_BG    = -1.0
+    local D_FRAME =  0.0
+    local D_FILL  =  0.02
+    local D_FISH  =  0.04
+
+    -- Scales
     local BG_W = (BAR_WIDTH + BAR_GAP + HEAT_WIDTH + 0.16) * PS
     local BG_H = (BAR_HEIGHT + 0.18) * PS
-    SetScale(e_background, BG_W, BG_H, FLAT_Z)
-    SetScale(e_bar_frame,  BAR_WIDTH * PS, BAR_HEIGHT * PS, FLAT_Z)
-    SetScale(e_heat_frame, HEAT_WIDTH * PS, BAR_HEIGHT * PS, FLAT_Z)
-    SetScale(e_catch,      BAR_WIDTH * 0.72 * PS, CATCH_HEIGHT * PS, FLAT_Z)
-    SetScale(e_fish,       FISH_SIZE * PS, FISH_SIZE * PS, FLAT_Z)
-    
-    local ph = math.max(0.01, (progress / WIN_THRESHOLD) * BAR_HEIGHT)
+    SetScale(e_background, BG_W,                    BG_H,                FLAT_Z)
+    SetScale(e_bar_frame,  BAR_WIDTH   * PS,        BAR_HEIGHT * PS,     FLAT_Z)
+    SetScale(e_heat_frame, HEAT_WIDTH  * PS,        BAR_HEIGHT * PS,     FLAT_Z)
+    SetScale(e_catch,      BAR_WIDTH   * 0.72 * PS, CATCH_HEIGHT * PS,   FLAT_Z)
+    SetScale(e_fish,       FISH_SIZE   * PS,        FISH_SIZE   * PS,    FLAT_Z)
+
+    local ph    = math.max(0.01, (progress / WIN_THRESHOLD) * BAR_HEIGHT)
     local ph_px = ph * PS
-    SetScale(e_heat_fill,  HEAT_WIDTH * 0.72 * PS, ph_px, FLAT_Z)
+    SetScale(e_heat_fill, HEAT_WIDTH * 0.72 * PS, ph_px, FLAT_Z)
 
-    -- Apply Dynamic Positions (Subtracting half the bar height to center the Y anchor)
-    local bg_cx = UI_BASE_X + (left_cx + right_cx) * 0.5
-    local center_y_offset = -(BAR_HEIGHT * 0.5) * PS
-    SetPosition(e_background, bg_cx, UI_BASE_Y, D_FRAME - 1.0)
-    
+    -- Positions
+    -- Background: centred between both bars
+    local bg_centre_x = UI_BASE_X + (left_cx + right_cx) * 0.5
+    SetPosition(e_background, bg_centre_x, UI_BASE_Y, D_BG)
+    SetRotation(e_background, 0, 0, 0)
+
+    -- Frames: static, centred vertically on UI_BASE_Y
     SetPosition(e_bar_frame,  UI_BASE_X + left_cx,  UI_BASE_Y, D_FRAME)
+    SetRotation(e_bar_frame,  0, 0, 0)
     SetPosition(e_heat_frame, UI_BASE_X + right_cx, UI_BASE_Y, D_FRAME)
+    SetRotation(e_heat_frame, 0, 0, 0)
 
-    local catch_cy_px = ((catch_pos + CATCH_HEIGHT * 0.5) * PS) + center_y_offset
-    SetPosition(e_catch, UI_BASE_X + left_cx, UI_BASE_Y + catch_cy_px, D_FILL)
+    -- Catch paddle: catch_pos=0 is bar bottom, catch_pos=BAR_HEIGHT-CATCH_HEIGHT is top.
+    -- Convert to pixel offset from bar centre:
+    --   pixel_y = (catch_pos + CATCH_HEIGHT*0.5 - BAR_HEIGHT*0.5) * PS
+    local catch_y_px = ((catch_pos + CATCH_HEIGHT * 0.5) - BAR_HEIGHT * 0.5) * PS
+    SetPosition(e_catch, UI_BASE_X + left_cx, UI_BASE_Y + catch_y_px, D_FILL)
+    SetRotation(e_catch, 0, 0, 0)
 
-    local fish_cy_px = ((fish_pos + FISH_SIZE * 0.5) * PS) + center_y_offset
-    SetPosition(e_fish, UI_BASE_X + left_cx, UI_BASE_Y + fish_cy_px, D_FISH)
+    -- Fish ember: same logic
+    local fish_y_px = (fish_pos + FISH_SIZE * 0.5 - BAR_HEIGHT * 0.5) * PS
+    SetPosition(e_fish, UI_BASE_X + left_cx, UI_BASE_Y + fish_y_px, D_FISH)
+    SetRotation(e_fish, 0, 0, 0)
 
-    SetPosition(e_heat_fill, UI_BASE_X + right_cx, UI_BASE_Y + (ph_px * 0.5) + center_y_offset, D_FILL)
+    -- Heat fill: grows from bottom of right bar upward.
+    -- Centre of fill = bottom of bar + ph/2
+    --   = (-BAR_HEIGHT*0.5 + ph*0.5) * PS
+    local heat_y_px = (-BAR_HEIGHT * 0.5 + ph * 0.5) * PS
+    SetPosition(e_heat_fill, UI_BASE_X + right_cx, UI_BASE_Y + heat_y_px, D_FILL)
+    SetRotation(e_heat_fill, 0, 0, 0)
 
     -- 6. WIN / LOSE
     if progress >= WIN_THRESHOLD then M.CompleteSmelting()

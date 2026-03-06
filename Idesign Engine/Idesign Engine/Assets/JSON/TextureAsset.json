@@ -1762,6 +1762,17 @@
             "vOffset": 0.0,
             "uScale": 1.0,
             "vScale": 1.0
+        },
+        {
+            "guid": "5e18b4be-2838-4252-b74e-98674b4989b6",
+            "name": "furance",
+            "path": "Assets\\Textures\\furance.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
         }
     ]
 }
