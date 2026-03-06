@@ -118,17 +118,17 @@ function HUDSystem:NightInit()
         potionIcons[i]    = FindEntityByName("PotionIcon_"   .. i)
         arrowRights[i]    = FindEntityByName("arrowRight_"   .. i)
 
-        print("[HUDSystem] Slot " .. i .. " refs:")
-        print("  SlotPanel:     " .. tostring(slotPanels[i]))
-        print("  Icon_Fish:     " .. tostring(fishIcons[i]))
-        print("  Icon_Orc:      " .. tostring(orcIcons[i]))
-        print("  ArrivingText:  " .. tostring(arrivingTexts[i]))
-        print("  OrderText:     " .. tostring(orderTexts[i]))
-        print("  PatienceFrame: " .. tostring(patienceFrames[i]))
-        print("  PatienceFill:  " .. tostring(patienceFills[i]))
-        print("  PotionSlot:    " .. tostring(potionSlots[i]))
-        print("  PotionIcon:    " .. tostring(potionIcons[i]))
-        print("  ArrowRight:    " .. tostring(arrowRights[i]))
+        -- print("[HUDSystem] Slot " .. i .. " refs:")
+        -- print("  SlotPanel:     " .. tostring(slotPanels[i]))
+        -- print("  Icon_Fish:     " .. tostring(fishIcons[i]))
+        -- print("  Icon_Orc:      " .. tostring(orcIcons[i]))
+        -- print("  ArrivingText:  " .. tostring(arrivingTexts[i]))
+        -- print("  OrderText:     " .. tostring(orderTexts[i]))
+        -- print("  PatienceFrame: " .. tostring(patienceFrames[i]))
+        -- print("  PatienceFill:  " .. tostring(patienceFills[i]))
+        -- print("  PotionSlot:    " .. tostring(potionSlots[i]))
+        -- print("  PotionIcon:    " .. tostring(potionIcons[i]))
+        -- print("  ArrowRight:    " .. tostring(arrowRights[i]))
 
         -- Fix 3: Store original positions BEFORE hiding
         StoreOrigin(slotPanels[i])
@@ -244,7 +244,7 @@ end
 -- SET ARRIVING MODE
 -- =========================================================
 function HUDSystem:SetArrivingMode(slot, is_arriving)
-    print("[HUDSystem] SetArrivingMode slot=" .. slot .. " arriving=" .. tostring(is_arriving) .. " frame=" .. tostring(patienceFills[slot]))
+    -- print("[HUDSystem] SetArrivingMode slot=" .. slot .. " arriving=" .. tostring(is_arriving) .. " frame=" .. tostring(patienceFills[slot]))
     if is_arriving then
         ShowText(arrivingTexts[slot], "Arriving...")
         HideText(orderTexts[slot])
@@ -284,7 +284,7 @@ end
 -- =========================================================
 function HUDSystem:SetPatienceBar(slot, pct)
     pct = math.max(0.0, math.min(1.0, pct))
-    print("[HUDSystem] SetPatienceBar slot=" .. slot .. " pct=" .. pct .. " fill=" .. tostring(patienceFills[slot]) .. " shown=" .. tostring(entityShown[patienceFills[slot]]))
+    -- print("[HUDSystem] SetPatienceBar slot=" .. slot .. " pct=" .. pct .. " fill=" .. tostring(patienceFills[slot]) .. " shown=" .. tostring(entityShown[patienceFills[slot]]))
 
     if patienceFills[slot] then
         -- Make sure fill is visible first (restores Z from HIDE_Z if needed)
@@ -313,7 +313,7 @@ function HUDSystem:SetPatienceBar(slot, pct)
                 SetTexture(patienceFills[slot], TEX_GREEN)
             end
             barStates[slot] = targetState
-            print("[HUDSystem] Slot " .. slot .. " bar -> " .. targetState)
+            -- print("[HUDSystem] Slot " .. slot .. " bar -> " .. targetState)
         end
     end
 end
