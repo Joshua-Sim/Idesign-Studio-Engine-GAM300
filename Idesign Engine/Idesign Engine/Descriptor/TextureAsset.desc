@@ -1,5 +1,5 @@
 {
-    "count": 269,
+    "count": 272,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -1613,6 +1613,24 @@
             "guid": "4d0c0221-209c-48a4-9667-e335709ab37b",
             "name": "RB_TooltipBackground",
             "path": "Assets\\Textures\\RB_TooltipBackground.png",
+            "isUI": false
+        },
+        {
+            "guid": "76b2efa1-be60-48cd-9233-2c3634cd3658",
+            "name": "voxel_apple_texture",
+            "path": "Assets\\Textures\\voxel_apple_texture.png",
+            "isUI": false
+        },
+        {
+            "guid": "35a453c3-bea4-4650-baa6-cbae9dce70b2",
+            "name": "apple",
+            "path": "Assets\\Textures\\apple.png",
+            "isUI": false
+        },
+        {
+            "guid": "98f2fb3a-fa08-46de-9360-03b3769aad85",
+            "name": "exit",
+            "path": "Assets\\Textures\\exit.png",
             "isUI": false
         }
     ]

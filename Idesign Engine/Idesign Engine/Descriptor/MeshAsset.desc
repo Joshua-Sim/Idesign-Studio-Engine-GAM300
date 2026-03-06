@@ -1,5 +1,5 @@
 {
-    "count": 94,
+    "count": 98,
     "entries": [
         {
             "guid": "9a248918-705f-4d5a-88a2-17e85868745b",
@@ -846,6 +846,42 @@
             "vbo": 165,
             "ebo": 166,
             "indexCount": 22494
+        },
+        {
+            "guid": "5d8cf460-7ed9-44dd-8acd-d74d9576f07f",
+            "name": "pixel_apple",
+            "path": "Assets\\Objects\\pixel_apple.obj",
+            "vao": 346,
+            "vbo": 678,
+            "ebo": 679,
+            "indexCount": 72
+        },
+        {
+            "guid": "b21f4f1c-5cc7-4235-8a94-a8e3b6c238fb",
+            "name": "voxel_apple",
+            "path": "Assets\\Objects\\voxel_apple.obj",
+            "vao": 347,
+            "vbo": 680,
+            "ebo": 681,
+            "indexCount": 1506
+        },
+        {
+            "guid": "0f76246f-ae7d-4e53-ae3c-33a7a61b3104",
+            "name": "apple",
+            "path": "Assets\\Objects\\apple.obj",
+            "vao": 348,
+            "vbo": 682,
+            "ebo": 683,
+            "indexCount": 40146
+        },
+        {
+            "guid": "5b0e4129-babd-447a-a3f5-d1f5450908d1",
+            "name": "exit",
+            "path": "Assets\\Objects\\exit.obj",
+            "vao": 339,
+            "vbo": 664,
+            "ebo": 665,
+            "indexCount": 1710
         }
     ]
 }
