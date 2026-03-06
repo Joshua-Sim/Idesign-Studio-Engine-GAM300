@@ -304,11 +304,7 @@
         },
         {
             "guid": "bb0ce2b0-2754-4eaf-b8e5-3c8603f5cc7a",
-            "scriptPath": "Assets\\Scripts\\Furnace.lua"
-        },
-        {
-            "guid": "ff7c5bb3-ae58-4e85-bd6d-1b01debe8bce",
-            "scriptPath": "Assets\\Scripts\\NightTutorialSystem.lua",
+            "scriptPath": "Assets\\Scripts\\Furnace.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1

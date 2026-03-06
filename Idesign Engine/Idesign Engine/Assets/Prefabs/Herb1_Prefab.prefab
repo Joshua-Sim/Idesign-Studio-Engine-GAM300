@@ -22,8 +22,7 @@
             },
             "TagComponent": {
                 "tags": [
-                    "Interactable",
-			"Interactable"
+                    "Interactable"
                 ]
             },
             "HierarchyComponent": {

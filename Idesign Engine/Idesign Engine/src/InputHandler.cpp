@@ -123,20 +123,13 @@ namespace Framework {
         
 
         // ============================================================
-        // DIALOGUE INPUT HANDLING
+            //DIALOGUE INPUT HANDLING
         // ============================================================
         if (engineState.Is(EngineMode::Dialogue) && !isUIFocused) {
+            // Only process dialogue-specific input in game mode
             if (IsKeyPressed(GLFW_KEY_SPACE) || IsKeyPressed(GLFW_KEY_ENTER) || IsMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
                 auto dialogueSys = ecsInterface.GetSystem<Framework::DialogueSystem>();
-
-                // [FIX] Check if the camera is mid-flight before allowing "Advance"
-                // If the camera is still flying, we ignore this input entirely.
-                if (dialogueSys && !dialogueSys->isMidFlight) {
-                    dialogueSys->Advance();
-                }
-                else {
-                    std::cout << "[Input] Advance blocked: Camera is still flying!" << std::endl;
-                }
+                if (dialogueSys) dialogueSys->Advance();
             }
         }
 
