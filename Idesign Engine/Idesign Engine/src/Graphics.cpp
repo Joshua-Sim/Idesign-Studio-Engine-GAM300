@@ -1518,11 +1518,10 @@ namespace Framework {
         const float hotbarPanelH = slotSize + 24.0f;
         const float marginAboveHotbar = 20.0f;
 
-        const float rightMargin = 24.0f;  // distance from screen edge
         const float panelPad = 12.0f;     // matches your panel padding
 
         // Panel bottom-left (x0,y0) for the GRID (not including outer panel pad)
-        const float x0 = std::round(screenW - rightMargin - (gridW));                 // right-aligned
+        const float x0 = std::round((screenW - gridW) * 0.5);                 
         const float y0 = std::round(hotbarY0 + hotbarPanelH + marginAboveHotbar);     // same vertical logic
 
         const float panelX = x0 - panelPad;
@@ -1634,8 +1633,7 @@ namespace Framework {
         const float hotbarPanelH = slotSize + 24.0f;
         const float marginAboveHotbar = 20.0f;
 
-        const float rightMargin = 24.0f;
-        const float x0 = std::round(screenW - rightMargin - gridW);
+        const float x0 = std::round((screenW - gridW) * 0.5);
         const float y0 = std::round(hotbarY0 + hotbarPanelH + marginAboveHotbar);
 
         // Mouse (convert to bottom-left origin)
