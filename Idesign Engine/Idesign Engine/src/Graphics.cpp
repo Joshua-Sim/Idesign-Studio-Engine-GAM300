@@ -161,7 +161,7 @@ namespace Framework {
     void Graphics::SetCameraRotationEnabled(bool enabled)
     {
         m_cameraRotationEnabled = enabled;
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        /*glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);*/
     }
 
     // Initialize the system
@@ -1249,7 +1249,10 @@ namespace Framework {
 
     void Graphics::CaptureMouse(bool on) {
         mouseCaptured = on;
-        glfwSetInputMode(window, GLFW_CURSOR, on ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
+        // Tell the InputHandler what we want
+        if (Framework::InputHandler::GetInstance()) {
+            Framework::InputHandler::GetInstance()->SetUIFocused(!on);
+        }
     }
 
     int Graphics::ConsumeLastPickedId()
