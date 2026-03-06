@@ -119,7 +119,18 @@ namespace Framework {
             return 3; // x, y, z
         }
 
+        static int lua_SetIsUI(lua_State* L)
+        {
+            int entityId = (int)luaL_checkinteger(L, 1);
+            bool value = lua_toboolean(L, 2);
 
+            Entity e = (Entity)entityId;
+            if (ecsInterface.IsEntityValid(e) && ecsInterface.HasComponent<TextureProperties>(e))
+            {
+                ecsInterface.GetComponent<TextureProperties>(e).isUI = value;
+            }
+            return 0;
+        }
 
         int l_IsKeyDown(lua_State* L)
         {
@@ -1303,6 +1314,13 @@ namespace Framework {
             return 1;
         }
 
+        static int lua_GetItemIdByName(lua_State* L) {
+            const char* name = luaL_checkstring(L, 1);
+            int itemId = Framework::ItemNameToId(name);
+            lua_pushinteger(L, itemId); // returns -1 if not found
+            return 1;
+        }
+
         int Lua_AddToInventory(lua_State* L) {
             const char* itemName = lua_tostring(L, 1); // Arg 1: "RedMushroom"
 
@@ -1644,8 +1662,6 @@ namespace Framework {
             return 1;
         }
 
-
-
         //Potion registry recipe check
         static int lua_GetCraftablePotions(lua_State* L)
         {
@@ -1675,6 +1691,61 @@ namespace Framework {
             return 1; // Return the potion name string
         }
   
+        static int lua_GetRandomInventoryPotion(lua_State* L)
+        {
+            // Collect names of all potions currently in the player's inventory
+            // (hotbar + backpack). Returns a random one, or nil if none found.
+            auto& inv = Framework::Inventory::Instance();
+            auto& itemDB = Framework::GetItemDatabase();
+
+            std::vector<std::string> potionsInInventory;
+
+            // --- Hotbar ---
+            int hotbarCount = inv.GetHotbarSlotCount();
+            for (int i = 0; i < hotbarCount; ++i)
+            {
+                const auto& slot = inv.Get(i);
+                if (slot.itemId < 0 || slot.count <= 0) continue;
+
+                // Look up item definition to check type
+                for (const auto& def : itemDB)
+                {
+                    if (def.type == Framework::ItemType::POTION && def.id == Framework::kItemNames[slot.itemId])
+                    {
+                        potionsInInventory.push_back(def.id);
+                        break;
+                    }
+                }
+            }
+
+            // --- Backpack ---
+            int backpackCount = inv.GetBackpackSlotCount();
+            for (int i = 0; i < backpackCount; ++i)
+            {
+                const auto& slot = inv.GetBackpack(i);
+                if (slot.itemId < 0 || slot.count <= 0) continue;
+
+                for (const auto& def : itemDB)
+                {
+                    if (def.type == Framework::ItemType::POTION && def.id == Framework::kItemNames[slot.itemId])
+                    {
+                        potionsInInventory.push_back(def.id);
+                        break;
+                    }
+                }
+            }
+
+            if (potionsInInventory.empty())
+            {
+                lua_pushnil(L);
+                return 1;
+            }
+
+            // Pick a random potion from the list
+            int idx = rand() % potionsInInventory.size();
+            lua_pushstring(L, potionsInInventory[idx].c_str());
+            return 1;
+        }
 
         static int lua_GetEntityName(lua_State* L)
         {
@@ -1698,7 +1769,14 @@ namespace Framework {
             return 1;
         }
 
-
+        static int lua_SetEntityName(lua_State* L)
+        {
+            int entityID = (int)lua_tointeger(L, 1);
+            const char* newName = luaL_checkstring(L, 2);
+            auto& ecs = ecsInterface;
+            ecs.SetEntityName(entityID, std::string(newName));
+            return 0;
+        }
 
         namespace fs = std::filesystem;
 
@@ -2155,6 +2233,7 @@ namespace Framework {
         lua_register(L, "IsItemZipping", l_isItemZipping);
         lua_register(L, "CheckValidRecipe", l_CheckValidRecipe);
         lua_register(L, "GetEntityName", lua_GetEntityName);
+        lua_register(L, "SetEntityName", lua_SetEntityName);
 
         lua_register(L, "SetScale", lua_SetScale);
         lua_register(L, "GetRotation", lua_GetRotation);
@@ -2170,6 +2249,7 @@ namespace Framework {
         lua_register(L, "GetItemNameById", lua_GetItemNameById);
         lua_register(L, "GetSelectedItemName", Lua_GetSelectedItemName);
         lua_register(L, "SetInteractionText", l_SetInteractionText);
+        lua_register(L, "GetItemIdByName", lua_GetItemIdByName);
 
         // Engine utility
         lua_register(L, "FindEntityByName", lua_FindEntityByName);
@@ -2202,13 +2282,15 @@ namespace Framework {
         // lua_register(L, "SetScale", lua_SetScale);
         lua_register(L, "GetScale", lua_GetScale);
         lua_register(L, "GetScreenSize", lua_GetScreenSize);
+        lua_register(L, "SetIsUI", lua_SetIsUI);
+
         // Dialogue System
         lua_register(L, "DialogueClear", lua_DialogueClear);
         lua_register(L, "DialogueAdd", lua_DialogueAdd);
         lua_register(L, "DialogueStart", lua_DialogueStart);
         lua_register(L, "DialogueEnd", lua_DialogueEnd);
         lua_register(L, "DialogueIsActive", lua_DialogueIsActive);
-        lua_register(L, "SetIsUI", lua_SetIsUI);
+
         //cauldron
         lua_register(L, "SetCameraLock", [](lua_State* L) -> int {
             // 1. Get argument (true/false)
@@ -2301,7 +2383,7 @@ namespace Framework {
         // Craftable potion queries
         lua_register(L, "GetCraftablePotions", lua_GetCraftablePotions);
         lua_register(L, "GetRandomCraftablePotion", lua_GetRandomCraftablePotion);
-
+        lua_register(L, "GetRandomInventoryPotion", lua_GetRandomInventoryPotion);
 
         // Teleport player function
         lua_register(L, "TeleportPlayer", [](lua_State* L) -> int {
@@ -2326,6 +2408,58 @@ namespace Framework {
         lua_register(L, "HasCraftablePotions", [](lua_State* L) -> int {
             auto craftable = Framework::GetCraftablePotionNames();
             lua_pushboolean(L, !craftable.empty());
+            return 1;
+            });
+
+        // Expose to Lua — returns how many unique potions are currently craftable
+        lua_register(L, "GetCraftablePotionCount", [](lua_State* L) -> int {
+            auto craftable = Framework::GetCraftablePotionNames();
+            lua_pushinteger(L, (int)craftable.size());
+            return 1;
+            });
+
+        // Get total count of a specific ingredient in player inventory
+        lua_register(L, "GetIngredientCount", [](lua_State* L) -> int {
+            int itemId = (int)lua_tointeger(L, 1);
+            auto& inv = Framework::Inventory::Instance();
+            int total = 0;
+            for (int i = 0; i < inv.GetHotbarSlotCount(); ++i) {
+                const auto& slot = inv.Get(i);
+                if (slot.itemId == itemId) total += (slot.count > 0 ? slot.count : 1);
+            }
+            for (int i = 0; i < inv.GetBackpackSlotCount(); ++i) {
+                const auto& slot = inv.GetBackpack(i);
+                if (slot.itemId == itemId) total += (slot.count > 0 ? slot.count : 1);
+            }
+            lua_pushinteger(L, total);
+            return 1;
+            });
+
+        // Get ingredient costs for a potion as a flat table {itemId, count, itemId, count...}
+        lua_register(L, "GetPotionIngredientCost", [](lua_State* L) -> int {
+            const char* potionName = luaL_checkstring(L, 1);
+            int potionId = Framework::ItemNameToId(potionName);
+            if (potionId < 0) { lua_newtable(L); return 1; }
+
+            auto req = Framework::ExpandRecipeToBase(potionId);
+            lua_newtable(L);
+            int idx = 1;
+            for (const auto& [itemId, count] : req.baseIngredients) {
+                lua_newtable(L);
+                lua_pushinteger(L, itemId); lua_setfield(L, -2, "itemId");
+                lua_pushinteger(L, count);  lua_setfield(L, -2, "count");
+                lua_rawseti(L, -2, idx++);
+            }
+            return 1;
+            });
+
+        lua_register(L, "GetCraftablePotionNames", [](lua_State* L) -> int {
+            auto craftable = Framework::GetCraftablePotionNames();
+            lua_newtable(L);
+            for (int i = 0; i < (int)craftable.size(); ++i) {
+                lua_pushstring(L, craftable[i].c_str());
+                lua_rawseti(L, -2, i + 1);
+            }
             return 1;
             });
 

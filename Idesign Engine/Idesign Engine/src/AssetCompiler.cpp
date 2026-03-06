@@ -8,8 +8,9 @@
 #include "PrefabComponent.h"
 #include "ScriptProperties.h"
 #include "ScriptingSystem.h"
-#include <ItemComponent.h>
+#include "ItemComponent.h"
 #include "ParticleComponent.h"
+#include "TimerComponent.h"
 
 static const std::map<std::string, LightType> s_stringToLightType = {
     { "Directional", LightType::Directional },
@@ -387,6 +388,17 @@ namespace Framework
                     ecsInterface.AddComponent(entity, c);
                 }
 
+                // Timer (reset runtime-only fields after deserializing)
+                if (components.HasMember("TimerComponent"))
+                {
+                    TimerComponent c;
+                    Deserialize(&c, g_TimerComponentProps, components["TimerComponent"]);
+                    c.remainingTime = c.duration; // always reset to full on load
+                    c.isRunning = false;
+                    c.isFinished = false;
+                    ecsInterface.AddComponent(entity, c);
+                }
+
                 // Item (no prop_list -- manual fields)
                 if (components.HasMember("ItemComponent"))
                 {
@@ -688,6 +700,16 @@ namespace Framework
                     rapidjson::Value j(rapidjson::kObjectType);
                     Serialize((void*)&c, g_ButtonComponentProps, j, allocator);
                     componentsObj.AddMember("ButtonComponent", j, allocator);
+                }
+
+                // Timer (only save design-time fields: duration and loop)
+                if (ecsInterface.HasComponent<TimerComponent>(entity))
+                {
+                    const auto& c = ecsInterface.GetComponent<TimerComponent>(entity);
+                    rapidjson::Value j(rapidjson::kObjectType);
+                    j.AddMember("duration", c.duration, allocator);
+                    j.AddMember("loop", c.loop, allocator);
+                    componentsObj.AddMember("TimerComponent", j, allocator);
                 }
 
                 // Text

@@ -229,6 +229,7 @@
     <ClCompile Include="src\LoadingSystem.cpp" />
     <ClCompile Include="src\ParticleSystem.cpp" />
     <ClCompile Include="src\Upgrade.cpp" />
+    <ClCompile Include="src\TimerSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ItemComponent.h" />
@@ -688,6 +689,8 @@
     <ClInclude Include="src\ParticleComponent.h" />
     <ClInclude Include="src\ParticleSystem.h" />
     <ClInclude Include="src\Upgrade.h" />
+    <ClInclude Include="src\TimerComponent.h" />
+    <ClInclude Include="src\TimerSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />
