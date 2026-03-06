@@ -1,5 +1,5 @@
 {
-    "count": 43,
+    "count": 45,
     "entries": [
         {
             "guid": "ab20d9cc-f552-47fb-8cd9-82403e4c3b22",
@@ -257,6 +257,18 @@
             "guid": "dc0218a7-2241-4356-b827-ae1ca79c9ff3",
             "name": "Pear2_Prefab",
             "path": "Assets\\Prefabs\\Pear2_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "a588e9c3-7dfd-485a-b174-8ab1aa094c16",
+            "name": "Pickable-rock 1_Prefab",
+            "path": "Assets\\Prefabs\\Pickable-rock 1_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "7a6555f2-3cd3-40bd-a5e5-76347adf2f09",
+            "name": "pickableIron1_Prefab",
+            "path": "Assets\\Prefabs\\pickableIron1_Prefab.prefab",
             "isScenePrefab": false
         }
     ]

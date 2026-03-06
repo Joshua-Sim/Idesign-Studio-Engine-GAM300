@@ -1,0 +1,59 @@
+{
+    "entity": {
+        "name": "pickableIron1",
+        "guid": "f8cee5b8-816b-44b2-9f3e-eb28f6779309",
+        "components": {
+            "TransformComponent": {
+                "position": [
+                    -189.2793731689453,
+                    306.1322937011719,
+                    -138.5117950439453
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scale": [
+                    0.25,
+                    0.25,
+                    0.25
+                ],
+                "isActive": true
+            },
+            "TagComponent": {
+                "tags": []
+            },
+            "HierarchyComponent": {
+                "parent": "",
+                "children": [],
+                "sortIndex": 121
+            },
+            "MeshReference": {
+                "guid": "f804e240-f4a6-4909-91af-6a69fcb9517c"
+            },
+            "TextureComponent": {
+                "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
+                "isUI": false
+            },
+            "BoxColliderComponent": {
+                "colliders": [
+                    {
+                        "size": [
+                            5.199999809265137,
+                            2.700000047683716,
+                            3.4000000953674316
+                        ],
+                        "center": [
+                            0.0,
+                            1.5,
+                            0.0
+                        ],
+                        "canPassThrough": false,
+                        "isInteractable": false
+                    }
+                ]
+            }
+        }
+    }
+}

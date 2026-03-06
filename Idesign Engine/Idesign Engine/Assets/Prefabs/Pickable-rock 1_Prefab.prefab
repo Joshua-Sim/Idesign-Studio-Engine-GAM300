@@ -1,0 +1,86 @@
+{
+    "entity": {
+        "name": "Pickable-rock 1",
+        "guid": "b940044a-d7c4-455f-aff7-1bb31dbed57a",
+        "components": {
+            "TransformComponent": {
+                "position": [
+                    -126.26531219482422,
+                    306.0308532714844,
+                    -110.67659759521484
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scale": [
+                    0.25,
+                    0.4000000059604645,
+                    0.25
+                ],
+                "isActive": true
+            },
+            "TagComponent": {
+                "tags": [
+                    "Interactable"
+                ]
+            },
+            "HierarchyComponent": {
+                "parent": "",
+                "children": [],
+                "sortIndex": 129
+            },
+            "MeshReference": {
+                "guid": "71eff974-51b5-4c24-912c-ed68dbe5df8c"
+            },
+            "TextureComponent": {
+                "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
+                "isUI": false
+            },
+            "BoxColliderComponent": {
+                "colliders": [
+                    {
+                        "size": [
+                            7.0,
+                            2.299999952316284,
+                            4.0
+                        ],
+                        "center": [
+                            0.0,
+                            1.2000000476837158,
+                            0.0
+                        ],
+                        "canPassThrough": false,
+                        "isInteractable": true
+                    }
+                ]
+            },
+            "PhysicsProperties": {
+                "category": 1,
+                "isImmovable": true,
+                "gravityFactor": 1.0,
+                "mass": 1.0,
+                "friction": 0.5,
+                "restitution": 0.0,
+                "linearVelocity": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "angularVelocity": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "startAwake": true
+            },
+            "ItemComponent": {
+                "name": "unchopped_herb",
+                "isIngredient": false,
+                "isChoppable": false,
+                "toDestroyWhenPicked": true
+            }
+        }
+    }
+}
