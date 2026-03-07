@@ -1,0 +1,88 @@
+{
+    "entity": {
+        "name": "copperOre6",
+        "guid": "51ee79f6-123e-4776-b551-d91d5adc2346",
+        "components": {
+            "TransformComponent": {
+                "position": [
+                    -124.65811157226563,
+                    306.2793273925781,
+                    -138.26690673828125
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scale": [
+                    0.6499999761581421,
+                    0.6499999761581421,
+                    0.6499999761581421
+                ],
+                "isActive": true
+            },
+            "TagComponent": {
+                "tags": [
+                    "Interactable"
+                ]
+            },
+            "HierarchyComponent": {
+                "parent": "",
+                "children": [],
+                "sortIndex": 0
+            },
+            "MeshReference": {
+                "guid": "03a2913c-b3ef-4c94-a3b5-f3dce76182fc"
+            },
+            "TextureComponent": {
+                "guid": "93f5a998-8621-4280-a4ee-72da368a5bed",
+                "isUI": false
+            },
+            "BoxColliderComponent": {
+                "colliders": [
+                    {
+                        "size": [
+                            4.599999904632568,
+                            3.299999952316284,
+                            3.799999952316284
+                        ],
+                        "center": [
+                            0.0,
+                            1.399999976158142,
+                            0.0
+                        ],
+                        "canPassThrough": false,
+                        "isInteractable": true,
+                        "interactMessage": "",
+                        "promptText": ""
+                    }
+                ]
+            },
+            "PhysicsProperties": {
+                "category": 0,
+                "isImmovable": true,
+                "gravityFactor": 1.0,
+                "mass": 1.0,
+                "friction": 1.0,
+                "restitution": 0.0,
+                "linearVelocity": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "angularVelocity": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "startAwake": true
+            },
+            "ItemComponent": {
+                "name": "unchopped_herb",
+                "isIngredient": false,
+                "isChoppable": false,
+                "toDestroyWhenPicked": true
+            }
+        }
+    }
+}

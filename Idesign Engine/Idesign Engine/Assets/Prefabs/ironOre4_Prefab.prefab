@@ -1,0 +1,88 @@
+{
+    "entity": {
+        "name": "ironOre4",
+        "guid": "0d7dd5db-9100-4f4f-868f-0cb64500d51d",
+        "components": {
+            "TransformComponent": {
+                "position": [
+                    -188.4362335205078,
+                    306.2148132324219,
+                    -145.77557373046875
+                ],
+                "rotation": [
+                    -0.000008203226570913102,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "isActive": true
+            },
+            "TagComponent": {
+                "tags": [
+                    "Interactable"
+                ]
+            },
+            "HierarchyComponent": {
+                "parent": "",
+                "children": [],
+                "sortIndex": 113
+            },
+            "MeshReference": {
+                "guid": "e78287da-9061-4e51-a2c0-152d8f5189fe"
+            },
+            "TextureComponent": {
+                "guid": "1eaa5c4d-b56a-4c41-9eb9-c872db2066b2",
+                "isUI": false
+            },
+            "BoxColliderComponent": {
+                "colliders": [
+                    {
+                        "size": [
+                            3.9000000953674316,
+                            3.9000000953674316,
+                            3.4000000953674316
+                        ],
+                        "center": [
+                            0.0,
+                            1.899999976158142,
+                            0.0
+                        ],
+                        "canPassThrough": false,
+                        "isInteractable": true,
+                        "interactMessage": "",
+                        "promptText": ""
+                    }
+                ]
+            },
+            "PhysicsProperties": {
+                "category": 0,
+                "isImmovable": true,
+                "gravityFactor": 1.0,
+                "mass": 1.0,
+                "friction": 1.0,
+                "restitution": 0.0,
+                "linearVelocity": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "angularVelocity": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "startAwake": true
+            },
+            "ItemComponent": {
+                "name": "chopped_herb",
+                "isIngredient": false,
+                "isChoppable": false,
+                "toDestroyWhenPicked": true
+            }
+        }
+    }
+}

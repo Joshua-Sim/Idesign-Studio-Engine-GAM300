@@ -269,6 +269,162 @@
             "name": "pickableIron1_Prefab",
             "path": "Assets\\Prefabs\\pickableIron1_Prefab.prefab",
             "isScenePrefab": false
+        },
+        {
+            "guid": "fa4f5b69-67bf-4e8a-b1af-d7d972b7a34c",
+            "name": "ironOre1_Prefab",
+            "path": "Assets\\Prefabs\\ironOre1_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "a102f63a-e917-4885-beba-2486007efe00",
+            "name": "ironOre2_Prefab",
+            "path": "Assets\\Prefabs\\ironOre2_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "bbf04bcc-7a7d-4061-a445-3f553f52c26b",
+            "name": "ironOre3_Prefab",
+            "path": "Assets\\Prefabs\\ironOre3_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "5a8d514e-c78b-4856-bd17-ff6700e004b1",
+            "name": "ironOre4_Prefab",
+            "path": "Assets\\Prefabs\\ironOre4_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "aa9bb09f-97b9-4323-91e9-67b2082c13b0",
+            "name": "ironOre5_Prefab",
+            "path": "Assets\\Prefabs\\ironOre5_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "4ad7e25c-3c77-449d-ac83-74b26afb6d73",
+            "name": "ironOre6_Prefab",
+            "path": "Assets\\Prefabs\\ironOre6_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "94312b68-0356-4dca-8187-c52f66a22d02",
+            "name": "ironOre7_Prefab",
+            "path": "Assets\\Prefabs\\ironOre7_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "2dfdeef2-c8bf-40e7-a1ad-d021200ce3ec",
+            "name": "copperOre1_Prefab",
+            "path": "Assets\\Prefabs\\copperOre1_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "f8be272f-308b-4fd8-a07f-ebec85e1bf63",
+            "name": "copperOre2_Prefab",
+            "path": "Assets\\Prefabs\\copperOre2_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "014d063e-f473-41dd-a23d-35ffb308d2f2",
+            "name": "copperOre3_Prefab",
+            "path": "Assets\\Prefabs\\copperOre3_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "4da3afc6-61fa-456e-8209-dcd63be2948e",
+            "name": "copperOre4_Prefab",
+            "path": "Assets\\Prefabs\\copperOre4_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "6a573de1-860c-4a94-b7db-ce1f132f3476",
+            "name": "copperOre5_Prefab",
+            "path": "Assets\\Prefabs\\copperOre5_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "b657faf5-9921-4296-b530-4e129e2fc87a",
+            "name": "copperOre6_Prefab",
+            "path": "Assets\\Prefabs\\copperOre6_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "969a2933-d39b-4c07-b303-64d3c68700c1",
+            "name": "copperOre7_Prefab",
+            "path": "Assets\\Prefabs\\copperOre7_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "95c58e4a-6465-4488-9137-8170a1e51510",
+            "name": "coalOre1_Prefab",
+            "path": "Assets\\Prefabs\\coalOre1_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "b76722f6-10ea-4bd5-b3d9-171737b22b82",
+            "name": "coalOre2_Prefab",
+            "path": "Assets\\Prefabs\\coalOre2_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "1aba071d-0511-4282-a632-1d1d82449a1b",
+            "name": "coalOre3_Prefab",
+            "path": "Assets\\Prefabs\\coalOre3_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "b346a632-1d41-4ee2-8e0f-d06aad312464",
+            "name": "coalOre4_Prefab",
+            "path": "Assets\\Prefabs\\coalOre4_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "e9a5c545-576f-4ed0-981b-e6d018229c4e",
+            "name": "coalOre5_Prefab",
+            "path": "Assets\\Prefabs\\coalOre5_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "8af84cc5-4b3b-444d-b208-fdde8393fd5f",
+            "name": "coalOre6_Prefab",
+            "path": "Assets\\Prefabs\\coalOre6_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "1b956806-4b63-4900-bd3e-19a05b137641",
+            "name": "coalOre7_Prefab",
+            "path": "Assets\\Prefabs\\coalOre7_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "cdf2d43f-876f-4bbf-bc43-64581ea7d8b1",
+            "name": "coalOre8_Prefab",
+            "path": "Assets\\Prefabs\\coalOre8_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "2cfb400f-686d-4e8e-8728-c5e76cd47b59",
+            "name": "coalOre9_Prefab",
+            "path": "Assets\\Prefabs\\coalOre9_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "821c0e3a-e723-4827-a6fd-afbbf84b4c12",
+            "name": "coalOre10_Prefab",
+            "path": "Assets\\Prefabs\\coalOre10_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "6f8b63ac-fe08-4efd-80fe-9d2eb1f8bba7",
+            "name": "coalOre11_Prefab",
+            "path": "Assets\\Prefabs\\coalOre11_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "42b17a33-0c8d-4b6e-8c0a-d80af9feb1dc",
+            "name": "coalOre12_Prefab",
+            "path": "Assets\\Prefabs\\coalOre12_Prefab.prefab",
+            "isScenePrefab": false
         }
     ]
 }

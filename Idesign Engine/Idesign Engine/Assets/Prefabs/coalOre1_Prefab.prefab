@@ -1,0 +1,88 @@
+{
+    "entity": {
+        "name": "coalOre1",
+        "guid": "e5fd65f6-7050-4f73-93db-796e895983fe",
+        "components": {
+            "TransformComponent": {
+                "position": [
+                    -101.17179107666016,
+                    316.1109619140625,
+                    -100.24129486083984
+                ],
+                "rotation": [
+                    -20.11966896057129,
+                    -57.82495880126953,
+                    122.58329772949219
+                ],
+                "scale": [
+                    0.9999961853027344,
+                    0.9999952912330627,
+                    0.9999865293502808
+                ],
+                "isActive": true
+            },
+            "TagComponent": {
+                "tags": [
+                    "Interactable"
+                ]
+            },
+            "HierarchyComponent": {
+                "parent": "",
+                "children": [],
+                "sortIndex": 111
+            },
+            "MeshReference": {
+                "guid": "76caba09-7322-483a-8377-40902f8bc6ca"
+            },
+            "TextureComponent": {
+                "guid": "f22297b0-3de2-4b62-ba04-fe395aae7566",
+                "isUI": false
+            },
+            "BoxColliderComponent": {
+                "colliders": [
+                    {
+                        "size": [
+                            3.9000000953674316,
+                            3.9000000953674316,
+                            4.199999809265137
+                        ],
+                        "center": [
+                            0.0,
+                            2.0,
+                            0.0
+                        ],
+                        "canPassThrough": false,
+                        "isInteractable": true,
+                        "interactMessage": "",
+                        "promptText": ""
+                    }
+                ]
+            },
+            "PhysicsProperties": {
+                "category": 0,
+                "isImmovable": true,
+                "gravityFactor": 1.0,
+                "mass": 1.0,
+                "friction": 0.5,
+                "restitution": 0.0,
+                "linearVelocity": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "angularVelocity": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "startAwake": true
+            },
+            "ItemComponent": {
+                "name": "unchopped_herb",
+                "isIngredient": false,
+                "isChoppable": false,
+                "toDestroyWhenPicked": true
+            }
+        }
+    }
+}

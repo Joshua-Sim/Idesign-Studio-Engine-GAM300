@@ -881,6 +881,60 @@
             "vbo": 664,
             "ebo": 665,
             "indexCount": 1710
+        },
+        {
+            "guid": "e78287da-9061-4e51-a2c0-152d8f5189fe",
+            "name": "iron",
+            "path": "Assets\\Objects\\iron.obj",
+            "vao": 345,
+            "vbo": 676,
+            "ebo": 677,
+            "indexCount": 34836
+        },
+        {
+            "guid": "03a2913c-b3ef-4c94-a3b5-f3dce76182fc",
+            "name": "copper",
+            "path": "Assets\\Objects\\copper.obj",
+            "vao": 346,
+            "vbo": 678,
+            "ebo": 679,
+            "indexCount": 30822
+        },
+        {
+            "guid": "849e3bac-d193-4af9-88c5-b09cee85c9ab",
+            "name": "coal",
+            "path": "Assets\\Objects\\coal.obj",
+            "vao": 347,
+            "vbo": 680,
+            "ebo": 681,
+            "indexCount": 25836
+        },
+        {
+            "guid": "76caba09-7322-483a-8377-40902f8bc6ca",
+            "name": "updatedcoal",
+            "path": "Assets\\Objects\\updatedcoal.obj",
+            "vao": 360,
+            "vbo": 706,
+            "ebo": 707,
+            "indexCount": 32100
+        },
+        {
+            "guid": "3ac75dff-24fb-4d45-bf0f-24539207a54b",
+            "name": "coalFloor",
+            "path": "Assets\\Objects\\coalFloor.obj",
+            "vao": 362,
+            "vbo": 710,
+            "ebo": 711,
+            "indexCount": 6534
+        },
+        {
+            "guid": "7a6e9206-e1aa-4326-875e-bd10ce0a8e89",
+            "name": "elevationquarryplane",
+            "path": "Assets\\Objects\\elevationquarryplane.obj",
+            "vao": 370,
+            "vbo": 726,
+            "ebo": 727,
+            "indexCount": 1236
         }
     ]
 }

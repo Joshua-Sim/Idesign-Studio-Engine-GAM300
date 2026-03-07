@@ -1,13 +1,13 @@
 {
     "entity": {
-        "name": "Pickable-rock 1",
-        "guid": "b940044a-d7c4-455f-aff7-1bb31dbed57a",
+        "name": "coalOre12",
+        "guid": "41781543-bcba-406d-94dd-50b685cfc5d7",
         "components": {
             "TransformComponent": {
                 "position": [
-                    -126.26531219482422,
-                    306.0308532714844,
-                    -110.67659759521484
+                    -113.91070556640625,
+                    321.8431701660156,
+                    -81.86857604980469
                 ],
                 "rotation": [
                     0.0,
@@ -15,9 +15,9 @@
                     0.0
                 ],
                 "scale": [
-                    0.25,
-                    0.4000000059604645,
-                    0.25
+                    0.75,
+                    0.75,
+                    0.75
                 ],
                 "isActive": true
             },
@@ -29,35 +29,37 @@
             "HierarchyComponent": {
                 "parent": "",
                 "children": [],
-                "sortIndex": 129
+                "sortIndex": 111
             },
             "MeshReference": {
-                "guid": "71eff974-51b5-4c24-912c-ed68dbe5df8c"
+                "guid": "76caba09-7322-483a-8377-40902f8bc6ca"
             },
             "TextureComponent": {
-                "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
+                "guid": "f22297b0-3de2-4b62-ba04-fe395aae7566",
                 "isUI": false
             },
             "BoxColliderComponent": {
                 "colliders": [
                     {
                         "size": [
-                            7.0,
-                            2.299999952316284,
-                            4.0
+                            3.9000000953674316,
+                            3.9000000953674316,
+                            4.199999809265137
                         ],
                         "center": [
                             0.0,
-                            1.2000000476837158,
+                            2.0,
                             0.0
                         ],
                         "canPassThrough": false,
-                        "isInteractable": true
+                        "isInteractable": true,
+                        "interactMessage": "",
+                        "promptText": ""
                     }
                 ]
             },
             "PhysicsProperties": {
-                "category": 1,
+                "category": 0,
                 "isImmovable": true,
                 "gravityFactor": 1.0,
                 "mass": 1.0,

@@ -1631,6 +1631,36 @@
             "name": "exit",
             "path": "Assets\\Textures\\exit.png",
             "isUI": false
+        },
+        {
+            "guid": "1eaa5c4d-b56a-4c41-9eb9-c872db2066b2",
+            "name": "iron",
+            "path": "Assets\\Textures\\iron.png",
+            "isUI": false
+        },
+        {
+            "guid": "93f5a998-8621-4280-a4ee-72da368a5bed",
+            "name": "copper",
+            "path": "Assets\\Textures\\copper.png",
+            "isUI": false
+        },
+        {
+            "guid": "f22297b0-3de2-4b62-ba04-fe395aae7566",
+            "name": "coal",
+            "path": "Assets\\Textures\\coal.png",
+            "isUI": false
+        },
+        {
+            "guid": "4af3de0c-3272-46da-8a4a-66ab42113bc5",
+            "name": "updatedcoal",
+            "path": "Assets\\Textures\\updatedcoal.png",
+            "isUI": false
+        },
+        {
+            "guid": "d99b0a86-6036-4816-b1d7-20ee5ae7a3e9",
+            "name": "elevationquarryplane",
+            "path": "Assets\\Textures\\elevationquarryplane.png",
+            "isUI": false
         }
     ]
 }
