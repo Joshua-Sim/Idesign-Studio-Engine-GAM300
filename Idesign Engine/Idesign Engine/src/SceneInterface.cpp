@@ -597,7 +597,6 @@ namespace Framework
                 IntroFinished = false;
             }
 
-
             // Coin & Sun Icon + Day Text
             bool isDayPlay = engineState.Is(EngineMode::Play) &&
                 phaseManager->GetCurrentPhase() == GamePhase::Day;
@@ -627,6 +626,8 @@ namespace Framework
             bool isNightPlay = engineState.Is(EngineMode::Play) &&
                 phaseManager->GetCurrentPhase() == GamePhase::Night;
 
+            bool showCoinUI = isNightPlay || engineState.Is(EngineMode::Upgrade);
+
             auto coinMoonEntity = ecsInterface.GetEntitiesByTag("coinmoonicon");
             for (Entity e : coinMoonEntity)
             {
@@ -634,7 +635,7 @@ namespace Framework
                 if (ecsInterface.HasComponent<TextureProperties>(e))
                 {
                     auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
-                    texture.isUI = isNightPlay;
+                    texture.isUI = showCoinUI;
                 }
             }
 
@@ -643,9 +644,9 @@ namespace Framework
                 ecsInterface.HasComponent<TextProperties>(nightTextEntity))
             {
                 auto& text = ecsInterface.GetComponent<TextProperties>(nightTextEntity);
-                text.opacity = isNightPlay ? 1.0f : 0.0f;
+                text.opacity = showCoinUI ? 1.0f : 0.0f;
                 if (isNightPlay)
-                    text.text = ": Night 1|7"; // wire up dynamic values later
+                    text.text = ": Night 1|7";
             }
 
             // Mini Controls

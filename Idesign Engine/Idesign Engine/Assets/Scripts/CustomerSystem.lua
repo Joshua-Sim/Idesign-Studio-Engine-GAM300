@@ -370,7 +370,7 @@ function CustomerSystem:on_init()
     else
         score_text_entity = SpawnPrefab("ScoreText_Prefab")
         if score_text_entity then
-            SetTransformComponent(score_text_entity, "position", {x = 0.010, y = 0.060, z = 0})
+            SetTransformComponent(score_text_entity, "position", {x = 0.010, y = 0.060, z = 1.0})
             SetTextComponent(score_text_entity, "color", {r = 0, g = 0, b = 0})
             SetTextComponent(score_text_entity, "scale", 1.5)
             CustomerSystem:UpdateCurrencyDisplay()
