@@ -150,11 +150,11 @@
                     "volume": 0.20000000298023224,
                     "loop": false,
                     "playOnStart": true,
-                    "isPlaying": true,
+                    "isPlaying": false,
                     "lastPosition": [
-                        -45.934112548828125,
-                        5.300000190734863,
-                        14.715734481811523
+                        0.0,
+                        0.0,
+                        0.0
                     ]
                 }
             }
@@ -273,14 +273,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        0.0,
-                        -1000.0,
-                        0.0
+                        -40.5,
+                        7.400000095367432,
+                        1.5
                     ],
                     "rotation": [
                         0.0,
-                        -182.75994873046875,
-                        0.0
+                        90.0,
+                        270.0
                     ],
                     "scale": [
                         0.5,
@@ -492,7 +492,7 @@
                 "TransformComponent": {
                     "position": [
                         -31.71799659729004,
-                        8.331247329711914,
+                        20.915449142456055,
                         20.250329971313477
                     ],
                     "rotation": [
@@ -1608,11 +1608,11 @@
                     "volume": 1.0,
                     "loop": false,
                     "playOnStart": false,
-                    "isPlaying": true,
+                    "isPlaying": false,
                     "lastPosition": [
-                        -28.970077514648438,
-                        7.690000057220459,
-                        8.321422576904297
+                        0.0,
+                        0.0,
+                        0.0
                     ]
                 }
             }
@@ -1624,7 +1624,7 @@
                 "TransformComponent": {
                     "position": [
                         -38.78162384033203,
-                        7.141292572021484,
+                        15.232608795166016,
                         9.871298789978027
                     ],
                     "rotation": [
@@ -1988,11 +1988,11 @@
                     "volume": 1.0,
                     "loop": false,
                     "playOnStart": false,
-                    "isPlaying": true,
+                    "isPlaying": false,
                     "lastPosition": [
-                        -42.68813705444336,
-                        7.379386901855469,
-                        0.6743054986000061
+                        0.0,
+                        0.0,
+                        0.0
                     ]
                 }
             }
@@ -2810,14 +2810,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -40.765811920166016,
-                        8.024513244628906,
-                        15.892706871032715
+                        -46.19945526123047,
+                        8.02451229095459,
+                        11.492565155029297
                     ],
                     "rotation": [
-                        0.0,
-                        -88.05047607421875,
-                        0.0
+                        4.979371695377393e-15,
+                        -180.0,
+                        -0.000005008957941754488
                     ],
                     "scale": [
                         0.9999420642852783,
@@ -2896,9 +2896,9 @@
                 },
                 "ListenerComponent": {
                     "position": [
-                        -40.765811920166016,
-                        8.024513244628906,
-                        15.892706871032715
+                        -46.19945526123047,
+                        8.02451229095459,
+                        11.492565155029297
                     ],
                     "forward": [
                         0.0,
@@ -3079,24 +3079,24 @@
             }
         },
         {
-            "name": "Cauldron",
+            "name": "Furnance",
             "guid": "fffc27d4-57ce-4192-9177-a998866e67f5",
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -40.230262756347656,
-                        6.287981033325195,
-                        17.725893020629883
+                        -49.19884490966797,
+                        5.599999904632568,
+                        11.979232788085938
                     ],
                     "rotation": [
-                        -2.647702501690219e-7,
-                        -0.004017276223748922,
-                        -0.000004445694230525987
+                        0.0,
+                        90.0,
+                        0.0
                     ],
                     "scale": [
-                        0.30000001192092896,
-                        0.30000001192092896,
-                        0.30000001192092896
+                        5.0,
+                        5.0,
+                        5.0
                     ],
                     "isActive": true
                 },
@@ -3111,26 +3111,18 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "95461aed-91bf-4172-9f2c-d7578e059e28",
+                    "guid": "d85b75be-05a0-4ced-b227-c79dfa52eacc",
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
-                "AnimationProperties": {
-                    "guid": "e6e64140-6e45-4eb9-986a-e146404672bf",
-                    "defaultAnimationName": "",
-                    "animationSpeed": 0.0,
-                    "bLoops": true,
-                    "bPlayOnStart": true,
-                    "currentTime": 0.0
-                },
                 "TextureComponent": {
-                    "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
+                    "guid": "5e18b4be-2838-4252-b74e-98674b4989b6",
                     "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [
                         {
-                            "guid": "3a5dd495-f311-4f19-991a-b6bfc5d63825",
-                            "scriptPath": "Assets\\Scripts\\Cauldron.lua",
+                            "guid": "bb0ce2b0-2754-4eaf-b8e5-3c8603f5cc7a",
+                            "scriptPath": "Assets\\Scripts\\Furnace.lua",
                             "hotReload": false
                         }
                     ]
@@ -3139,20 +3131,20 @@
                     "colliders": [
                         {
                             "size": [
-                                6.599999904632568,
-                                6.0,
-                                6.400000095367432
+                                0.6000000238418579,
+                                1.5,
+                                0.6000000238418579
                             ],
                             "center": [
-                                -1.600000023841858,
-                                1.0,
-                                -1.0
+                                0.0,
+                                0.0,
+                                0.0
                             ],
                             "canPassThrough": false,
                             "triggerMessage": "",
                             "isInteractable": true,
                             "interactMessage": "STIR",
-                            "promptText": "Stir Cauldron"
+                            "promptText": "Stirring..."
                         }
                     ]
                 },
@@ -3192,11 +3184,11 @@
                     "volume": 1.0,
                     "loop": true,
                     "playOnStart": true,
-                    "isPlaying": true,
+                    "isPlaying": false,
                     "lastPosition": [
-                        -40.230262756347656,
-                        6.287981033325195,
-                        17.725893020629883
+                        0.0,
+                        0.0,
+                        0.0
                     ]
                 }
             }
@@ -3232,10 +3224,6 @@
                     "tags": [
                         "menu"
                     ]
-                },
-                "TextureComponent": {
-                    "guid": "d24a29c5-cd9e-4322-ab59-d38618cba4bf",
-                    "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -3775,7 +3763,7 @@
                         250.0,
                         129.58999633789063
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": false
                 }
             }
@@ -4659,25 +4647,6 @@
                     "isIngredient": true,
                     "isChoppable": true,
                     "toDestroyWhenPicked": true
-                },
-                "ParticleEmitterComponent": {
-                    "active": true,
-                    "loop": true,
-                    "duration": 1.0,
-                    "direction": [
-                        0.0,
-                        1.0,
-                        0.0
-                    ],
-                    "spreadAngleDeg": 20.0,
-                    "range": 3.0,
-                    "particlesPerSecond": 60.0,
-                    "particleSpeed": 5.0,
-                    "particleSize": 0.20000000298023224,
-                    "localSpace": true,
-                    "textureGuid": "20bfa50e-1760-4ee1-ad9e-409ed900a550",
-                    "pixelFilter": true,
-                    "maxParticles": 2000
                 }
             }
         },
@@ -4815,7 +4784,7 @@
                         225.0,
                         125.0
                     ],
-                    "isHovered": true,
+                    "isHovered": false,
                     "isFrontButton": false
                 }
             }
@@ -5105,7 +5074,7 @@
                     "position": [
                         950.0,
                         175.0,
-                        1.0
+                        -100.0
                     ],
                     "rotation": [
                         0.0,
@@ -5142,7 +5111,7 @@
                         250.0,
                         129.58999633789063
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": true
                 }
             }
@@ -21771,7 +21740,7 @@
                         430.0,
                         550.0
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": false
                 }
             }
@@ -21825,7 +21794,7 @@
                         430.0,
                         550.0
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": false
                 }
             }
@@ -21891,7 +21860,7 @@
                     "position": [
                         950.0,
                         150.0,
-                        -100.0
+                        1.0
                     ],
                     "rotation": [
                         0.0,
@@ -21928,26 +21897,35 @@
                         225.0,
                         125.0
                     ],
-                    "isHovered": true,
+                    "isHovered": false,
                     "isFrontButton": true
                 }
             }
         },
         {
-            "name": "ForestHerb2",
-            "guid": "9b04b93e-bf0e-4d8c-b3f8-0225a646f649",
+            "name": "ForestHerb4",
+            "guid": "4023a4a1-897f-40a3-9daa-946856f52672",
             "components": {
                 "PrefabComponent": {
-                    "prefabGUID.id": "fbe80521-4170-4211-a034-8affde47c581"
+                    "prefabGUID.id": "964598ed-b412-4b29-8e6b-36ac4f9fc530"
                 }
             }
         },
         {
-            "name": "ForestHerb3",
-            "guid": "7ecc8340-5e85-4964-957a-39372734ce86",
+            "name": "ForestHerb6",
+            "guid": "23e48e47-9d4e-4e7b-8012-ecc7d0636aca",
             "components": {
                 "PrefabComponent": {
-                    "prefabGUID.id": "b317af21-a509-418b-8340-8c6852a41c93"
+                    "prefabGUID.id": "c3d15396-ffe4-4053-9556-d28ffe848109"
+                }
+            }
+        },
+        {
+            "name": "ForestHerb7",
+            "guid": "61e7cf7b-622e-4fae-8b7b-50ce8afba324",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "bbbf04f6-e194-4b88-8b7a-b9ad4639219f"
                 }
             }
         },
@@ -22101,11 +22079,11 @@
                     "volume": 0.20000000298023224,
                     "loop": false,
                     "playOnStart": true,
-                    "isPlaying": true,
+                    "isPlaying": false,
                     "lastPosition": [
-                        -45.934112548828125,
-                        5.300000190734863,
-                        14.715734481811523
+                        0.0,
+                        0.0,
+                        0.0
                     ]
                 }
             }
@@ -22172,7 +22150,7 @@
                     "position": [
                         956.0,
                         600.0,
-                        1.0
+                        -100.0
                     ],
                     "rotation": [
                         0.0,
@@ -22213,7 +22191,7 @@
                         430.0,
                         550.0
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": false
                 }
             }
@@ -22280,7 +22258,7 @@
                     "position": [
                         956.0,
                         635.0,
-                        -100.0
+                        1.0
                     ],
                     "rotation": [
                         0.0,
@@ -22321,7 +22299,7 @@
                         430.0,
                         480.0
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": false
                 }
             }
@@ -22425,7 +22403,7 @@
                         {
                             "guid": "1b87e222-4f27-465d-99e3-cb4e03a24086",
                             "scriptPath": "Assets\\Scripts\\BackpackUpgrade.lua",
-                            "hotReload": true
+                            "hotReload": false
                         }
                     ]
                 },
@@ -22615,7 +22593,7 @@
         },
         {
             "name": "Pear1",
-            "guid": "a1c93ca9-4529-40f2-a24b-6f85ef7b6e20",
+            "guid": "e8f0635b-9ff7-45d6-8185-dac38806c6b7",
             "components": {
                 "PrefabComponent": {
                     "prefabGUID.id": "6c3cd53d-28f8-44bd-b92a-28334ea5d325"
@@ -22624,7 +22602,7 @@
         },
         {
             "name": "Pear2",
-            "guid": "bc609672-dc06-4294-a8b3-292937013262",
+            "guid": "52d5dcfd-460d-49a4-81b0-faec9445bd05",
             "components": {
                 "PrefabComponent": {
                     "prefabGUID.id": "dc0218a7-2241-4356-b827-ae1ca79c9ff3"
@@ -22633,7 +22611,7 @@
         },
         {
             "name": "Pear3",
-            "guid": "709b60f1-d5cf-41d1-8a9c-8c732b612e08",
+            "guid": "fa34d00f-70d2-4d6f-af97-3f371d1cd41d",
             "components": {
                 "PrefabComponent": {
                     "prefabGUID.id": "6dd5bda0-0211-4253-87c2-6e39e0eb9ff8"
@@ -22641,8 +22619,17 @@
             }
         },
         {
+            "name": "Pear4",
+            "guid": "528e8eb4-0e21-444e-905e-63fc831ddb28",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "ab20d9cc-f552-47fb-8cd9-82403e4c3b22"
+                }
+            }
+        },
+        {
             "name": "Pear5",
-            "guid": "e8d2d6f9-b166-4795-b269-000959f6df60",
+            "guid": "59d589c1-7a75-4156-9560-ec27ed4d05b0",
             "components": {
                 "PrefabComponent": {
                     "prefabGUID.id": "8af2edf2-5fa6-473b-afaa-8be1f93d519d"
@@ -22651,7 +22638,7 @@
         },
         {
             "name": "Pear6",
-            "guid": "fe7275dd-8218-40f7-9506-6f8afc9d04ea",
+            "guid": "50b06e87-f185-4812-97b0-2520ba879084",
             "components": {
                 "PrefabComponent": {
                     "prefabGUID.id": "610184a6-f0a5-4d4e-a903-6cc938f6f643"
@@ -22659,35 +22646,109 @@
             }
         },
         {
-            "name": "ForestHerb",
-            "guid": "6537a8b6-f78b-465e-b3ee-3e4bd7f0f525",
+            "name": "Customer_Kinematic",
+            "guid": "e596ee84-123d-4012-9f80-884da8ad44ff",
             "components": {
                 "PrefabComponent": {
-                    "prefabGUID.id": "547d1c97-d493-4ad7-8b74-776711960c57"
-                }
-            }
-        },
-        {
-            "name": "ForestHerb6",
-            "guid": "f2a46f99-50fd-41e2-9be0-95a62f1dfdf3",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "c3d15396-ffe4-4053-9556-d28ffe848109"
+                    "prefabGUID.id": "2b031b5f-39b1-4596-8f6f-ad7a639fb94d"
                 }
             }
         },
         {
             "name": "Customer_Kinematic",
-            "guid": "eca7ca2f-ae6f-4237-b2e8-717922d7d71c",
+            "guid": "2dcdb66a-bcc6-4a44-82c0-204950849624",
             "components": {
                 "PrefabComponent": {
-                    "prefabGUID.id": "584b841f-a181-4adb-a75c-852abf944c79"
+                    "prefabGUID.id": "2b031b5f-39b1-4596-8f6f-ad7a639fb94d"
+                }
+            }
+        },
+        {
+            "name": "unchopped_herb_397",
+            "guid": "c18ef2ff-4b83-4e6f-a38c-d8722e011632",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -40.53837585449219,
+                        7.487980842590332,
+                        17.700702667236328
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.30000001192092896,
+                        0.30000001192092896,
+                        0.30000001192092896
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "sortIndex": 0,
+                    "children": []
+                },
+                "TagComponent": {
+                    "tags": [
+                        "Interactable"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": ""
+                },
+                "BoxColliderComponent": {
+                    "colliders": [
+                        {
+                            "size": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ],
+                            "center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "canPassThrough": false,
+                            "triggerMessage": "",
+                            "isInteractable": true,
+                            "interactMessage": "",
+                            "promptText": "Pick up: unchopped_herb"
+                        }
+                    ]
+                },
+                "PhysicsProperties": {
+                    "category": 1,
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 1.0,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "startAwake": true
+                },
+                "ItemComponent": {
+                    "name": "unchopped_herb",
+                    "isIngredient": true,
+                    "isChoppable": false,
+                    "toDestroyWhenPicked": true
                 }
             }
         },
         {
             "name": "ProgressBarFrame",
-            "guid": "4bd2d0f1-1a03-4f52-80e2-3bf2cc17c1b0",
+            "guid": "93974f4c-10ff-44e2-b511-e652b08dc911",
             "components": {
                 "PrefabComponent": {
                     "prefabGUID.id": "6c60686a-c68c-4284-bce0-019cfcbf77fa"
@@ -22696,7 +22757,7 @@
         },
         {
             "name": "ProgressBarFill",
-            "guid": "dbfba18e-a4dc-48ad-8b8e-b57336c38cb1",
+            "guid": "5d12a005-5edf-42ac-af2f-62fe2acc27a3",
             "components": {
                 "PrefabComponent": {
                     "prefabGUID.id": "5dfc16be-aa4a-420a-9105-f7c9652f3620"
@@ -22704,29 +22765,38 @@
             }
         },
         {
-            "name": "CustomerTextbox",
-            "guid": "e1e29e2c-f16c-4eff-8666-4bd594a7387f",
+            "name": "ProgressBarFrame",
+            "guid": "f66b99d2-376a-4b89-a64f-aa3273c4faec",
             "components": {
                 "PrefabComponent": {
-                    "prefabGUID.id": "b1e7bea6-ba5d-4a40-be1c-b30224f8868c"
+                    "prefabGUID.id": "6c60686a-c68c-4284-bce0-019cfcbf77fa"
                 }
             }
         },
         {
-            "name": "Strength potion",
-            "guid": "b8cabb5b-03fe-4631-a416-1f9bb3a7790f",
+            "name": "ProgressBarFill",
+            "guid": "87b10594-d83a-4e42-a39c-ccce8644db7f",
             "components": {
                 "PrefabComponent": {
-                    "prefabGUID.id": "cc960fa4-f792-4441-af1b-c0752b8862cd"
+                    "prefabGUID.id": "5dfc16be-aa4a-420a-9105-f7c9652f3620"
                 }
             }
         },
         {
-            "name": "Customer_Kinematic",
-            "guid": "f3508714-0735-4e7a-8251-f19947a95bad",
+            "name": "ProgressBarFill",
+            "guid": "015bb027-cd03-4e4d-806d-dd31dd08347e",
             "components": {
                 "PrefabComponent": {
-                    "prefabGUID.id": "2b031b5f-39b1-4596-8f6f-ad7a639fb94d"
+                    "prefabGUID.id": "5dfc16be-aa4a-420a-9105-f7c9652f3620"
+                }
+            }
+        },
+        {
+            "name": "ProgressBarFill",
+            "guid": "b36cfc93-e1ed-4abb-a3a7-3b5b3d8bf0bb",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "5dfc16be-aa4a-420a-9105-f7c9652f3620"
                 }
             }
         }

@@ -5,7 +5,7 @@
       "name": "Herb",
       "type": "ingredient",
       "location": "Forest",
-      "flavor": "A versatile vegetable, a forager's lifeline."
+      "flavor": "A versatile vegetable, found commonly on the floors of the woods."
     },
     {
       "id": "chopped_herb",
@@ -18,7 +18,7 @@
       "name": "Fresh Pear",
       "type": "ingredient",
       "location": "Forest",
-      "flavor": "Bruised and sweet. A fleeting luxury in a forager’s pack."
+      "flavor": "Bright green, atop trees, a fleeting luxury in a forager’s pack."
       
     },
     {
@@ -50,7 +50,7 @@
       "name": "Sheep Wool",
       "type": "ingredient",
             "location": "Forest",
-      "flavor": "Coarse, and smelling faintly of rain and high pastures."
+      "flavor": "The smell of high pastures and its fluffiness that keeps warmth in."
     }
 
   ],

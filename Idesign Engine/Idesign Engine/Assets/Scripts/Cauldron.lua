@@ -39,16 +39,9 @@ local billboard_depth_adjust = 0.055
 local stir_sensitivity = 0.005
 local finish_delay = 1.0
 
--- [STIR DIRECTION SWITCH SETTINGS]
-local dir_threshold = 0.02          -- same idea as your -0.02 check, but absolute
-local dir_segments = 4              -- 4 segments = switch at 25%, 50%, 75%
--- returns -1 or +1 depending on which segment you're in
-local function GetRequiredDir(p)
-    local seg = math.floor(math.min(p, 0.9999) * dir_segments) -- 0..dir_segments-1
-    return (seg % 2 == 0) and -1 or 1
-end
-local last_required_dir = 0
-local anim_speed_abs = 8.0
+-- [STIRRING ICON SETTINGS]
+local stir_icon_name = "anti-rotatingIcon"   -- Change this to match your entity name
+local stir_icon_speed = 120.0           -- Degrees per second (tune this)
 
 -- =============================================================
 -- [STATE VARIABLES]
@@ -87,39 +80,37 @@ local last_prompt_state = ""
 
 -- [AUDIO STATE]
 local is_stirring_sound_active = false
-local last_sound_trigger_time = 0.0 -- [NEW] Debounce timer
+local last_sound_trigger_time = 0.0
 
 -- [UI LOG SETTINGS]
-local prefab_log = "CauldronLog_Prefab" -- Reusing your existing prefab
+local prefab_log = "CauldronLog_Prefab"
+
+-- [STIRRING ICON STATE]
+local stir_icon_id = nil
+local stir_icon_rotation = 0.0
 
 -- =============================================================
 -- [AUDIO HELPERS]
 -- =============================================================
 local function PlayStirSound()
-    -- [FIX] Debounce: Don't try to play more than once every 0.1 seconds.
-    -- This prevents the "Machine Gun" effect while waiting for the engine to report IsPlaying.
     if (accumulated_time - last_sound_trigger_time) < 0.1 then return end
 
-    -- 1. Ask Engine: Is this sound already playing?
     local is_playing = false
     if Sound and Sound.IsPlaying then
         is_playing = Sound.IsPlaying("event:/Stirring")
     end
 
-    -- 2. Only play if stopped
     if not is_playing then
         if Sound and Sound.Play then
             Sound.Play("event:/Stirring")
-            last_sound_trigger_time = accumulated_time -- [NEW] Update timer
+            last_sound_trigger_time = accumulated_time
         end
     end
 end
 
 local function StopStirSound()
-    -- Only send stop command if it is actually playing
     if Sound and Sound.IsPlaying and Sound.IsPlaying("event:/Stirring") then
         if Sound.Stop then
-            -- Note: Uses your fixed Stop function that takes an argument
             Sound.Stop("event:/Stirring")
         end
     end
@@ -129,15 +120,11 @@ end
 -- [HELPERS]
 -- =============================================================
 local function ResolveID(arg1, arg2)
-    -- 1. Is the argument the Script Table (self)?
     if type(arg1) == "table" and arg1.entity then 
         return arg1.entity 
     end
-    
-    -- 2. Is the argument a direct number? (Legacy support)
     if type(arg1) == "number" then return arg1 end
     if type(arg2) == "number" then return arg2 end
-
     return nil
 end
 
@@ -156,24 +143,36 @@ local function GetMouseDelta()
     return dx, dy
 end
 
--- [HELPER] GetIngredientIDs
--- Changed to read from 'stored_ingredients' directly
 local function GetIngredientIDs()
-    return stored_ingredients -- Since this is already a list of ints, we just return it
+    return stored_ingredients
 end
 
 local function SpawnLog(message)
     if SpawnPrefab and SetTextComponent then
-        -- Spawn the log UI entity
         local logEntity = SpawnPrefab(prefab_log)
-        
         if logEntity then
-            -- Update the text component on that entity
             SetTextComponent(logEntity, "text", message)
             print("[Cauldron] UI Log: " .. message)
         else
             print("[Cauldron] Failed to spawn log prefab!")
         end
+    end
+end
+
+-- =============================================================
+-- [STIRRING ICON HELPERS]
+-- =============================================================
+local function ShowStirIcon()
+    if stir_icon_id then
+        SetIsUI(stir_icon_id, true)
+    end
+end
+
+local function HideStirIcon()
+    if stir_icon_id then
+        SetIsUI(stir_icon_id, false)
+        stir_icon_rotation = 0.0
+        SetRotation(stir_icon_id, 0.0, 0.0, 0.0)
     end
 end
 
@@ -189,9 +188,17 @@ function M.on_init(arg1, arg2)
         SetAnimationAsset(my_entity_id, guid_idle)
         SetAnimationMode(my_entity_id, 0)
         last_angle = math.atan2(spoon_y, spoon_x)
-
     end
     player_id = FindEntityByName("Player")
+
+    -- Find the stirring icon entity and hide it at start
+    stir_icon_id = FindEntityByName(stir_icon_name)
+    if stir_icon_id then
+        HideStirIcon()
+        print("[Cauldron] Stirring icon found: " .. tostring(stir_icon_id))
+    else
+        print("[Cauldron] WARNING: Stirring icon entity '" .. stir_icon_name .. "' not found!")
+    end
 end
 
 -- =============================================================
@@ -208,16 +215,12 @@ function M.OnInteract(arg1, arg2)
         table.insert(stored_ingredients, held_item_id)
         ConsumeSelectedItem()
         Sound.Play("event:/PlaceDownItem")
-        -- Default to -1 (No Visual) logic
         local vis_id = -1
         if SpawnCauldronItem and id_to_use then
             local res = SpawnCauldronItem(id_to_use, held_item_id)
             if res then vis_id = res end
         end
-        
-        -- CRITICAL: Insert into visual list even if it failed (-1) to keep lists synced
         table.insert(visual_entities, vis_id)
-        
         M.PrintContents()
         return 
     end
@@ -226,7 +229,6 @@ function M.OnInteract(arg1, arg2)
     is_active = not is_active
 
     if is_active then
-        -- Check Recipe using stored_ingredients
         local resultID = -1
         if CheckValidRecipe then
             resultID = CheckValidRecipe(stored_ingredients)
@@ -257,11 +259,13 @@ function M.OnInteract(arg1, arg2)
                 M.SpawnBar(id_to_use)
             end
             if player_id then SetGravity(player_id, 0.0) end
+
+            -- Show the stirring icon
+            ShowStirIcon()
         else
             Sound.Play("event:/InvalidRecipe")
             print("[Lua] Invalid Recipe!")
             SpawnLog("Invalid Recipe!") 
-            
             is_active = false 
         end
     else
@@ -285,6 +289,9 @@ function M.StopInteraction(entity_id)
     if player_id then SetGravity(player_id, 1.0) end
     
     M.DestroyProgressBar()
+
+    -- Hide the stirring icon
+    HideStirIcon()
 end
 
 -- =============================================================
@@ -305,26 +312,19 @@ function M.on_update(arg1, arg2)
     end
 
     ---------------------------------------------------------
-    -- PHASE TRANSITION CHECK (Replacement for RegisterEvent)
+    -- PHASE TRANSITION CHECK
     ---------------------------------------------------------
     if GetPhase then
-        local current_phase = GetPhase() -- Calls your C++ lua_GetPhase
+        local current_phase = GetPhase()
         
-        -- If the phase just changed...
         if current_phase ~= last_phase then
-            
-            -- If we just switched TO Night (Phase 1)
-            -- Note: Check your PhaseManager.h enum. 0=Day, 1=Night, 2=Upgrade
             if current_phase == 1 then 
                 print("[Cauldron] Phase changed to Night. Resetting...")
                 M.ClearCauldron()
-                
                 if is_active then
                     M.StopInteraction(my_entity_id)
                 end
             end
-            
-            -- Update the tracker so this only runs once per transition
             last_phase = current_phase
         end
     end
@@ -363,26 +363,11 @@ function M.on_update(arg1, arg2)
                 if angle_delta < -PI then angle_delta = angle_delta + (2 * PI) end
                 last_angle = current_angle
 
-                -- Directional Check
-                --is_stirring_correct_dir = (angle_delta < -0.02)
-                local required_dir = GetRequiredDir(progress)
-
-                -- Flip animation direction when progress segment changes
-                if required_dir ~= last_required_dir then
-                    last_required_dir = required_dir
-                    SetAnimationSettings(my_entity_id, anim_speed_abs * required_dir, true, true)
-                end
-
-                -- Directional Check (alternates as progress increases)
-                if required_dir == -1 then
-                    is_stirring_correct_dir = (angle_delta < -dir_threshold)
-                else
-                    is_stirring_correct_dir = (angle_delta > dir_threshold)
-                end
+                is_stirring_correct_dir = (angle_delta < -0.02)
 
                 if is_stirring_correct_dir then
                     progress = progress + (math.abs(angle_delta) * stir_sensitivity)
-                    SetAnimationSettings(my_entity_id, anim_speed_abs * required_dir, true, true)
+                    SetAnimationSettings(my_entity_id, 1.0, true, true)
                     PlayStirSound()
                 else
                     SetAnimationSettings(my_entity_id, 0.0, true, true)
@@ -399,7 +384,18 @@ function M.on_update(arg1, arg2)
     end
 
     ---------------------------------------------------------
-    -- 2. DYNAMIC TEXT & ORBIT SPEED
+    -- 2. STIRRING ICON ROTATION
+    ---------------------------------------------------------
+    if is_active and stir_icon_id then
+        stir_icon_rotation = stir_icon_rotation + (stir_icon_speed * dt)
+        if stir_icon_rotation >= 360.0 then
+            stir_icon_rotation = stir_icon_rotation - 360.0
+        end
+        SetRotation(stir_icon_id, 0.0, 0.0, stir_icon_rotation)
+    end
+
+    ---------------------------------------------------------
+    -- 3. DYNAMIC TEXT & ORBIT SPEED
     ---------------------------------------------------------
     if SetInteractionText then
         local held_item = GetSelectedItem() 
@@ -410,86 +406,67 @@ function M.on_update(arg1, arg2)
         end
     end
 
-    -- Update Orbit: Only advance current_orbit_angle if actively stirring
+    -- Update Orbit
     if is_active and is_stirring_correct_dir and not is_finished then
-    local dynamic_speed = orbit_speed_start + (orbit_speed_end - orbit_speed_start) * progress
-
-    local required_dir = GetRequiredDir(progress)
-    current_orbit_angle = current_orbit_angle + (dt * dynamic_speed * required_dir)
+        local dynamic_speed = orbit_speed_start + (orbit_speed_end - orbit_speed_start) * progress
+        current_orbit_angle = current_orbit_angle - (dt * dynamic_speed)
     elseif not is_active then
         current_orbit_angle = current_orbit_angle + (dt * orbit_speed_start)
     end
 
     ---------------------------------------------------------
-    -- 3. ITEM ANIMATION & ROTATION
+    -- 4. ITEM ANIMATION & ROTATION
     ---------------------------------------------------------
-    -- Iterate BACKWARDS (from #visual_entities down to 1) 
-    -- This prevents index-shifting bugs when items are picked up.
     local total_count = #visual_entities
 
     for i = total_count, 1, -1 do
         local vis_id = visual_entities[i]
         local should_remove = false
 
-        -- A. Check if the item is being picked up (Zipping)
         if vis_id > 0 and IsItemZipping and IsItemZipping(vis_id) then
             should_remove = true
             print("[Cauldron] Releasing " .. vis_id .. " to Player (Zip Started)")
         end
 
-        -- B. Check if the entity still exists in the engine
         if not should_remove and IsEntityValid and not IsEntityValid(vis_id) then
             should_remove = true
             print("[Cauldron] Cleaning up invalid entity: " .. vis_id)
         end
 
         if should_remove then
-            -- Remove from both lists to keep them synchronized
             table.remove(visual_entities, i)
             table.remove(stored_ingredients, i)
-            
-            -- If the cauldron is now empty, reset the prompt text
             if #visual_entities == 0 and SetInteractionText then
                 SetInteractionText(my_entity_id, "Stir Cauldron")
                 last_prompt_state = "Stir Cauldron"
             end
         else
-            -- C. PHYSICS & VISUAL MATH (Only for items staying in the cauldron)
-            -- We use #visual_entities here so the spacing updates instantly when one is removed
             local current_count = #visual_entities
             local angle_step = (2 * math.pi) / current_count
             local item_angle = current_orbit_angle + ((i - 1) * angle_step)
             
-            -- Calculate dynamic radius (spirals inward as progress increases)
             local dynamic_radius = is_active and (orbit_radius_start + (orbit_radius_end - orbit_radius_start) * progress) or orbit_radius_start
             
             local offset_x = math.cos(item_angle) * dynamic_radius
             local offset_z = math.sin(item_angle) * dynamic_radius
             
-            -- Apply bobbing effect (disabled while actively stirring for better "spinning" look)
             local vertical_bob = math.sin((accumulated_time * bob_speed) + i) * (is_active and 0.0 or bob_height)
             
             local raw_cx, raw_cy, raw_cz = GetPosition(my_entity_id)
             if raw_cx then 
-                -- Update Position
                 SetPosition(vis_id, 
                     raw_cx + center_offset_x + offset_x, 
                     raw_cy + height_offset + vertical_bob, 
                     raw_cz + center_offset_z + offset_z
                 )
 
-                -- Update Rotation
                 if is_active then
                     if is_stirring_correct_dir and not is_finished then
-                        -- Spin faster based on time
                         SetRotation(vis_id, 0.0, accumulated_time * 250.0, 0.0)
                     else
-                        -- Freeze rotation if player stops or stirs backwards
-                        -- (Prevents the items from feeling "disconnected" from the spoon)
                         SetRotation(vis_id, 0.0, GetRotation(vis_id), 0.0) 
                     end
                 else
-                    -- Gentle idle rotation
                     SetRotation(vis_id, 0.0, accumulated_time * 50.0, 0.0)
                 end
             end
@@ -497,7 +474,7 @@ function M.on_update(arg1, arg2)
     end
 
     ---------------------------------------------------------
-    -- 4. UI & FINISHING
+    -- 5. UI & FINISHING
     ---------------------------------------------------------
     if is_active and entity_fill and entity_frame and px then
         M.UpdateBillboard(px, pz, cx, cz, cy)
@@ -511,13 +488,13 @@ function M.on_update(arg1, arg2)
         end
     end
 end
+
 -- =============================================================
 -- [HELPER FUNCTIONS]
 -- =============================================================
 
 function M.SpawnBar(cauldronID)
     if SpawnPrefab then
-        -- Passing cauldronID as the second argument is CRITICAL for placement
         entity_frame = SpawnPrefab(prefab_frame, cauldronID)
         if entity_frame then
             SetScale(entity_frame, bar_length_max, bar_thickness, bar_thickness * 5)
@@ -549,7 +526,6 @@ function M.UpdateBillboard(px, pz, cx, cz, cy)
     local angle_rad = math.atan2(dx, dz)
     local angle_deg = math.deg(angle_rad)
 
-    -- Use the working offsets
     local frame_pos_x = cx + x_offset_right
     local frame_pos_y = cy + y_offset
     local frame_pos_z = cz
@@ -560,16 +536,13 @@ function M.UpdateBillboard(px, pz, cx, cz, cy)
     end
 
     if entity_fill then
-        -- Ensure the fill rotates with the frame
         SetRotation(entity_fill, 0.0, angle_deg + 180.0, 0.0)
 
-        -- This specific math slides the fill bar along the "Right" vector of the billboard
         local right_angle = angle_rad + (math.pi / 2.0)
         local side_dist = (bar_length_max * tune_x)
         local side_offset_x = side_dist * math.sin(right_angle)
         local side_offset_z = side_dist * math.cos(right_angle)
 
-        -- Nudge it forward slightly (Z-depth) so it doesn't flicker against the frame
         local depth_offset_x = billboard_depth_adjust * math.sin(angle_rad)
         local depth_offset_z = billboard_depth_adjust * math.cos(angle_rad)
 
@@ -585,24 +558,20 @@ end
 -- UTILITY
 -- =============================================================
 function M.OnPotionComplete()
-    -- 1. Stop Minigame (This also stops the stirring sound via StopInteraction)
-    M.StopInteraction(my_entity_id)
+    M.StopInteraction(my_entity_id)  -- This also calls HideStirIcon via StopInteraction
     M.ClearCauldron()
     print("[Lua] Potion Complete! Ingredients Consumed.")
 
-    -- [NEW] Play Success Sound
     if Sound and Sound.Play then
         Sound.Play("event:/RecipeComplete")
     end
 
-    -- 2. CALCULATE SPAWN POSITION
     local cx, cy, cz = GetPosition(my_entity_id)
     if cx then
         local spawn_x = cx + center_offset_x
         local spawn_y = cy + height_offset 
         local spawn_z = cz + center_offset_z
 
-        -- 3. SPAWN PREFAB
         local prefabName = result_item_name .. "_Prefab"
         
         if SpawnPrefab then

@@ -634,7 +634,6 @@ namespace Framework
                         ImGui::PopID();
                         ImGui::Separator();
                     }
-                    // ... remove/add logic ...
                 
 
                     if (indexToRemove != -1)
@@ -647,6 +646,42 @@ namespace Framework
                         colliderComp.colliders.push_back({}); // Add default
                     }
                 }
+                else if (typeName == "ButtonComponent")
+                {
+                    auto& button = *static_cast<ButtonComponent*>(componentPtr);
+
+                    ImGui::Checkbox("Is Hovered (Debug)", &button.isHovered);
+                    ImGui::Checkbox("Is Front Button", &button.isFrontButton);
+                    ImGui::Checkbox("Interactable", &button.interactable);
+
+                    ImGui::Separator();
+                    ImGui::Text("Hover Texture Override");
+
+                    ImGui::PushID("HoverTexDrop");
+
+                    // 1. Setup the wrapper with the saved GUID
+                    TextureProperties tempWrapper;
+                    tempWrapper.guid = button.hoverTextureGuid;
+
+                    // 2. Fetch the real asset to populate the missing data (like size and ID)
+                    if (auto* realTex = AssetManager::Instance().Get<TextureProperties>(button.hoverTextureGuid))
+                    {
+                        tempWrapper.textureID = realTex->textureID;
+                        tempWrapper.width = realTex->width;     // Populates the X size
+                        tempWrapper.height = realTex->height;   // Populates the Y size
+                    }
+
+                    // 3. Draw the dropdown AND your preview function!
+                    DrawAssetDropdown<TextureProperties>("Select Hover Asset", tempWrapper);
+                    DrawTexturePreview(tempWrapper);
+
+                    // 4. Save the modified values back
+                    button.hoverTextureGuid = tempWrapper.guid;
+                    button.hoverTextureID = tempWrapper.textureID;
+
+                    ImGui::PopID();
+                }
+
                 else if (typeName == "ItemComponent")
                 {
                     auto& item = *static_cast<Framework::ItemComponent*>(componentPtr);
@@ -687,6 +722,8 @@ namespace Framework
                     ImGui::Checkbox("Is Choppable", &item.isChoppable);
                     ImGui::Checkbox("Destroy When Pick?", &item.toDestroyWhenPicked);
                 }
+
+               
 
                 // 4. Handle EVERYTHING ELSE (Default Inspector)
                 else

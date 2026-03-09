@@ -43,12 +43,6 @@
             "isUI": false
         },
         {
-            "guid": "d24a29c5-cd9e-4322-ab59-d38618cba4bf",
-            "name": "quitbutton",
-            "path": "Assets\\Textures\\quitbutton.png",
-            "isUI": false
-        },
-        {
             "guid": "5361d026-4076-490e-bf6c-204ace0da656",
             "name": "SETTINGS BUTTON",
             "path": "Assets\\Textures\\SETTINGS BUTTON.png",
@@ -154,12 +148,6 @@
             "guid": "468efa22-bb31-4660-9af8-2527d6bc5465",
             "name": "bluecloud_lf",
             "path": "Assets\\Textures\\bluecloud_lf.jpg",
-            "isUI": false
-        },
-        {
-            "guid": "40835bf8-6300-4c73-8dec-0f9cdb837e60",
-            "name": "Forest Hover Button new_resized",
-            "path": "Assets\\Textures\\Forest Hover Button new_resized.png",
             "isUI": false
         },
         {
@@ -331,12 +319,6 @@
             "isUI": false
         },
         {
-            "guid": "1cd96cbf-24c4-4e43-8783-5af596d9dc7d",
-            "name": "Forest hover",
-            "path": "Assets\\Textures\\Forest hover.png",
-            "isUI": false
-        },
-        {
             "guid": "b5153be8-0464-48c3-800e-48bfb0c931b9",
             "name": "Key_E",
             "path": "Assets\\Textures\\Key_E.png",
@@ -412,12 +394,6 @@
             "guid": "0417d7b5-cfcc-4060-b086-fc7aa90068aa",
             "name": "Autumn pine tree small",
             "path": "Assets\\Textures\\Autumn pine tree small.png",
-            "isUI": false
-        },
-        {
-            "guid": "f40a69c3-bc8f-4e14-a097-3dd6e7326499",
-            "name": "QUIT BUTTON-2",
-            "path": "Assets\\Textures\\QUIT BUTTON-2.png",
             "isUI": false
         },
         {
@@ -847,12 +823,6 @@
             "isUI": false
         },
         {
-            "guid": "4c11b083-dc94-4f0b-a988-ae104705857b",
-            "name": "QUIT HOVER BUTTON",
-            "path": "Assets\\Textures\\QUIT HOVER BUTTON.png",
-            "isUI": false
-        },
-        {
             "guid": "ab663213-734f-49df-801d-e8c949f7786b",
             "name": "CU2",
             "path": "Assets\\Textures\\CU2.png",
@@ -868,30 +838,6 @@
             "guid": "2a229a37-805f-4280-be08-3848ef849214",
             "name": "HOW TO PLAY HOVER BUTTON",
             "path": "Assets\\Textures\\HOW TO PLAY HOVER BUTTON.png",
-            "isUI": false
-        },
-        {
-            "guid": "294e195f-2e45-4a56-9d47-cc69d0c0c1d4",
-            "name": "QUIT BUTTON",
-            "path": "Assets\\Textures\\QUIT BUTTON.png",
-            "isUI": false
-        },
-        {
-            "guid": "857dc62a-1a81-4b73-b73e-fb1e31db0bcb",
-            "name": "QUIT BUTTON-1",
-            "path": "Assets\\Textures\\QUIT BUTTON-1.png",
-            "isUI": false
-        },
-        {
-            "guid": "8176225f-1649-48c9-8ef0-442e22e9b542",
-            "name": "QUIT HOVER BUTTON-1",
-            "path": "Assets\\Textures\\QUIT HOVER BUTTON-1.png",
-            "isUI": false
-        },
-        {
-            "guid": "ce245ff9-d779-4453-83b7-0173ccd82660",
-            "name": "QUIT HOVER BUTTON-2",
-            "path": "Assets\\Textures\\QUIT HOVER BUTTON-2.png",
             "isUI": false
         },
         {
@@ -1027,12 +973,6 @@
             "isUI": false
         },
         {
-            "guid": "6e800cf5-f843-4deb-bc6b-038204a430b8",
-            "name": "Forest Button",
-            "path": "Assets\\Textures\\Forest Button.png",
-            "isUI": false
-        },
-        {
             "guid": "b52ea343-007a-490b-ae1f-ce5a3ff76c90",
             "name": "Lantern",
             "path": "Assets\\Textures\\Lantern.png",
@@ -1117,18 +1057,6 @@
             "isUI": false
         },
         {
-            "guid": "d6963a8c-d82b-4dc4-bf10-b874c27a386b",
-            "name": "Mute Button",
-            "path": "Assets\\Textures\\Mute Button.png",
-            "isUI": false
-        },
-        {
-            "guid": "6acc942d-a314-4278-b345-db0e2cb15bef",
-            "name": "Unmute Button",
-            "path": "Assets\\Textures\\Unmute Button.png",
-            "isUI": false
-        },
-        {
             "guid": "fff165a8-9c1b-4d69-ae36-7b30d472b01c",
             "name": "Unmute_Button",
             "path": "Assets\\Textures\\Unmute_Button.png",
@@ -1171,45 +1099,15 @@
             "isUI": false
         },
         {
-            "guid": "c196401b-3b43-4ea4-a9e7-1967357deea4",
-            "name": "Forest Hover Button",
-            "path": "Assets\\Textures\\Forest Hover Button.png",
-            "isUI": false
-        },
-        {
             "guid": "f1944e1e-2e5d-4cc2-aabd-b644737524d1",
             "name": "UI_SkillBar_Zone",
             "path": "Assets\\Textures\\UI_SkillBar_Zone.png",
             "isUI": false
         },
         {
-            "guid": "64ae45f2-6db3-4e77-aa05-4023c3425436",
-            "name": "Forest Hover Button (1)",
-            "path": "Assets\\Textures\\Forest Hover Button (1).png",
-            "isUI": false
-        },
-        {
-            "guid": "715f2c65-c36a-478a-96c3-b8c286bb7800",
-            "name": "forest button hover NEW_resized",
-            "path": "Assets\\Textures\\forest button hover NEW_resized.png",
-            "isUI": false
-        },
-        {
-            "guid": "06bd6b23-9683-4028-abfe-35cb96e62fed",
-            "name": "forest front button",
-            "path": "Assets\\Textures\\forest front button.png",
-            "isUI": false
-        },
-        {
             "guid": "3588552f-ae24-477c-91b4-1b7a53f899fd",
             "name": "CS8",
             "path": "Assets\\Textures\\CS8.png",
-            "isUI": false
-        },
-        {
-            "guid": "efaf2d74-bd8b-4a78-89da-7e4607c990a4",
-            "name": "forest hover yellow",
-            "path": "Assets\\Textures\\forest hover yellow.png",
             "isUI": false
         },
         {
@@ -1603,6 +1501,24 @@
             "isUI": false
         },
         {
+            "guid": "1ed88cb8-94df-44e0-8784-7acdb3af6c31",
+            "name": "RB_RecipeBackground",
+            "path": "Assets\\Textures\\RB_RecipeBackground.png",
+            "isUI": false
+        },
+        {
+            "guid": "27d45a05-9045-458d-8f32-8ae6c6e3b2c5",
+            "name": "RB_IngredientBackground",
+            "path": "Assets\\Textures\\RB_IngredientBackground.png",
+            "isUI": false
+        },
+        {
+            "guid": "80f60c84-ef22-4bf4-96aa-00f51deef0e0",
+            "name": "RB_QuestionMark",
+            "path": "Assets\\Textures\\RB_QuestionMark.png",
+            "isUI": false
+        },
+        {
             "guid": "3e36546e-1611-4e55-ae4a-118cd864a166",
             "name": "gold&moon",
             "path": "Assets\\Textures\\gold&moon.png",
@@ -1636,6 +1552,298 @@
             "guid": "74ebf112-a229-44c5-877f-c99438708a33",
             "name": "PhaseTimerIcon",
             "path": "Assets\\Textures\\PhaseTimerIcon.png",
+            "isUI": false
+        },
+        {
+            "guid": "50f1a057-2105-46dd-8f52-464424a9a13c",
+            "name": "rotatingIcon",
+            "path": "Assets\\Textures\\rotatingIcon.png",
+            "isUI": false
+        },
+        {
+            "guid": "20bfa50e-1760-4ee1-ad9e-409ed900a550",
+            "name": "PARTICLE",
+            "path": "Assets\\Textures\\PARTICLE.png",
+            "isUI": false
+        },
+        {
+            "guid": "da0ef587-afae-498e-a41b-3e2a8de5d819",
+            "name": "anti-rotatingIcon",
+            "path": "Assets\\Textures\\anti-rotatingIcon.png",
+            "isUI": false
+        },
+        {
+            "guid": "bdb167fd-7bba-433f-ad25-4ce1d7ebd2cc",
+            "name": "potionslot",
+            "path": "Assets\\Textures\\potionslot.png",
+            "isUI": false
+        },
+        {
+            "guid": "c9f59b41-aa63-4f6a-bced-772e7289bffc",
+            "name": "slotpanel",
+            "path": "Assets\\Textures\\slotpanel.png",
+            "isUI": false
+        },
+        {
+            "guid": "3ea2414e-3cf2-4dcf-9440-e437ca432a22",
+            "name": "patiencebar_base",
+            "path": "Assets\\Textures\\patiencebar_base.png",
+            "isUI": false
+        },
+        {
+            "guid": "943131dd-336b-4192-9686-b41c70b7c9f1",
+            "name": "arrowright",
+            "path": "Assets\\Textures\\arrowright.png",
+            "isUI": false
+        },
+        {
+            "guid": "da5a2728-83a0-4807-99bc-1c292e968987",
+            "name": "patiencebar_red",
+            "path": "Assets\\Textures\\patiencebar_red.png",
+            "isUI": false
+        },
+        {
+            "guid": "6db00ec8-8785-4903-afbd-26008dce6663",
+            "name": "patiencebar_orange",
+            "path": "Assets\\Textures\\patiencebar_orange.png",
+            "isUI": false
+        },
+        {
+            "guid": "3d869cc3-558f-41ee-91d7-e20312bb5f6f",
+            "name": "patiencebar_green",
+            "path": "Assets\\Textures\\patiencebar_green.png",
+            "isUI": false
+        },
+        {
+            "guid": "f10d2093-68ee-4fff-87e6-6d59a547db9c",
+            "name": "7th",
+            "path": "Assets\\Textures\\7th.png",
+            "isUI": false
+        },
+        {
+            "guid": "be82ae35-fc67-49c7-9696-891588e2d32d",
+            "name": "6th",
+            "path": "Assets\\Textures\\6th.png",
+            "isUI": false
+        },
+        {
+            "guid": "ceb9c428-63bf-42c0-b91e-f614fda3a85a",
+            "name": "4th",
+            "path": "Assets\\Textures\\4th.png",
+            "isUI": false
+        },
+        {
+            "guid": "9e9541c5-588f-4e8b-a74b-b54a778ce6d9",
+            "name": "1st",
+            "path": "Assets\\Textures\\1st.png",
+            "isUI": false
+        },
+        {
+            "guid": "e59d0e59-0f8e-48e9-be3c-68e602cb1a88",
+            "name": "3rd",
+            "path": "Assets\\Textures\\3rd.png",
+            "isUI": false
+        },
+        {
+            "guid": "66a84b73-6e01-4bfc-82b0-ccc5a9f0920c",
+            "name": "2nd",
+            "path": "Assets\\Textures\\2nd.png",
+            "isUI": false
+        },
+        {
+            "guid": "d9cd95d5-bc05-4901-8d1d-f09e01734b0c",
+            "name": "R&R Logo",
+            "path": "Assets\\Textures\\R&R Logo.png",
+            "isUI": false
+        },
+        {
+            "guid": "e91befb6-69ca-414f-83d3-c0049c81603b",
+            "name": "R&R Logo CLEARBG",
+            "path": "Assets\\Textures\\R&R Logo CLEARBG.png",
+            "isUI": false
+        },
+        {
+            "guid": "f1e5e6aa-18d1-4dae-bbea-4fa94d2a2c21",
+            "name": "5th",
+            "path": "Assets\\Textures\\5th.png",
+            "isUI": false
+        },
+        {
+            "guid": "80d848cc-d441-41da-8c5f-0e98d798f3f5",
+            "name": "8th",
+            "path": "Assets\\Textures\\8th.png",
+            "isUI": false
+        },
+        {
+            "guid": "f659e9e1-42f3-48db-a1c1-ac3827d372aa",
+            "name": "Panel 2",
+            "path": "Assets\\Textures\\Panel 2.PNG",
+            "isUI": false
+        },
+        {
+            "guid": "5c63958e-85e4-4a80-89d3-fc4f6c024bd9",
+            "name": "Panel 3",
+            "path": "Assets\\Textures\\Panel 3.png",
+            "isUI": false
+        },
+        {
+            "guid": "37e4c3fc-579c-4972-a4c8-348b1060348e",
+            "name": "Panel 4",
+            "path": "Assets\\Textures\\Panel 4.PNG",
+            "isUI": false
+        },
+        {
+            "guid": "f75bd4a1-3abf-4320-b02f-5f396e0cb3b6",
+            "name": "Panel 5",
+            "path": "Assets\\Textures\\Panel 5.png",
+            "isUI": false
+        },
+        {
+            "guid": "6eee7b71-f1e3-48c1-86cb-ad5012802b7a",
+            "name": "Panel 6",
+            "path": "Assets\\Textures\\Panel 6.png",
+            "isUI": false
+        },
+        {
+            "guid": "ee0a4a1e-c4a9-4c7a-918a-533cb499744d",
+            "name": "Panel 7",
+            "path": "Assets\\Textures\\Panel 7.PNG",
+            "isUI": false
+        },
+        {
+            "guid": "aee1ab22-6cf3-4476-bdaa-ddf741f79486",
+            "name": "Panel 8",
+            "path": "Assets\\Textures\\Panel 8.png",
+            "isUI": false
+        },
+        {
+            "guid": "1261525e-c38b-4e58-ab16-7752a97dfa03",
+            "name": "Panel 1",
+            "path": "Assets\\Textures\\Panel 1.png",
+            "isUI": false
+        },
+        {
+            "guid": "7a68c869-247d-4ed1-b829-baa05c8a5a57",
+            "name": "mouseCursor",
+            "path": "Assets\\Textures\\mouseCursor.png",
+            "isUI": false
+        },
+        {
+            "guid": "1178f313-f4da-4a53-9d0b-cf6818f037a4",
+            "name": "mouseCursor2",
+            "path": "Assets\\Textures\\mouseCursor2.png",
+            "isUI": false
+        },
+        {
+            "guid": "080500b5-701f-402d-a6bf-4e1f461a08ff",
+            "name": "mouseCursor3",
+            "path": "Assets\\Textures\\mouseCursor3.png",
+            "isUI": false
+        },
+        {
+            "guid": "58c46315-d29b-4ff3-8b07-f87d8e1c59ea",
+            "name": "GroupLogo",
+            "path": "Assets\\Textures\\GroupLogo.png",
+            "isUI": false
+        },
+        {
+            "guid": "01dec9bc-9150-4757-84c4-d68e82211c9e",
+            "name": "DigiPen_Singapore_WEB_WHITE",
+            "path": "Assets\\Textures\\DigiPen_Singapore_WEB_WHITE.png",
+            "isUI": false
+        },
+        {
+            "guid": "ac51ab32-56e2-4cb1-81a6-d128e96b6d3b",
+            "name": "GroupLogoAnim",
+            "path": "Assets\\Textures\\GroupLogoAnim.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "5e18b4be-2838-4252-b74e-98674b4989b6",
+            "name": "furance",
+            "path": "Assets\\Textures\\furance.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "3ace42c0-b18c-4d89-afef-01aacae2bc2b",
+            "name": "MediumPound",
+            "path": "Assets\\Textures\\MediumPound.png",
+            "isUI": false
+        },
+        {
+            "guid": "91b8cbee-e381-4fd2-8924-7fa8169b57ab",
+            "name": "PoorPound",
+            "path": "Assets\\Textures\\PoorPound.png",
+            "isUI": false
+        },
+        {
+            "guid": "70ac7054-a8e0-4aca-ae06-3daa5c9c9a5f",
+            "name": "TapCircle",
+            "path": "Assets\\Textures\\TapCircle.png",
+            "isUI": false
+        },
+        {
+            "guid": "72bdbe81-126e-4bbb-901d-7370bc1e423b",
+            "name": "GoodPound",
+            "path": "Assets\\Textures\\GoodPound.png",
+            "isUI": false
+        },
+        {
+            "guid": "b691c537-b224-461e-83e2-b83502fb0a43",
+            "name": "CopperOre",
+            "path": "Assets\\Textures\\CopperOre.png",
+            "isUI": false
+        },
+        {
+            "guid": "79118230-fed0-420a-b613-63a0c20fb607",
+            "name": "IronBar",
+            "path": "Assets\\Textures\\IronBar.png",
+            "isUI": false
+        },
+        {
+            "guid": "2642ccd9-5c56-48fe-8e85-452b329651f1",
+            "name": "IronOre",
+            "path": "Assets\\Textures\\IronOre.png",
+            "isUI": false
+        },
+        {
+            "guid": "a3cd56a0-4a91-4391-a29f-fa42645c282c",
+            "name": "Bellow",
+            "path": "Assets\\Textures\\Bellow.png",
+            "isUI": false
+        },
+        {
+            "guid": "b418ceb5-cf0b-48e8-9d83-f0f4b8540a20",
+            "name": "CoalOre",
+            "path": "Assets\\Textures\\CoalOre.png",
+            "isUI": false
+        },
+        {
+            "guid": "e72c5720-7b6c-4ee4-b06e-f2ef7b46cfd4",
+            "name": "CopperBar",
+            "path": "Assets\\Textures\\CopperBar.png",
+            "isUI": false
+        },
+        {
+            "guid": "ecbcd709-6d5c-4387-a619-6a2218e0f5ba",
+            "name": "Pestle-0-pestlenonvox",
+            "path": "Assets\\Textures\\Pestle-0-pestlenonvox.png",
+            "isUI": false
+        },
+        {
+            "guid": "3eaa4a84-24c6-474c-9580-92e20dbedcb4",
+            "name": "Mortar_new-0-mortar",
+            "path": "Assets\\Textures\\Mortar_new-0-mortar.png",
             "isUI": false
         }
     ]

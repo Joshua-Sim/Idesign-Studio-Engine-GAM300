@@ -845,6 +845,87 @@
             "vbo": 165,
             "ebo": 166,
             "indexCount": 22494
+        },
+        {
+            "guid": "d85b75be-05a0-4ced-b227-c79dfa52eacc",
+            "name": "furance",
+            "path": "Assets\\Objects\\furance.obj",
+            "vao": 588,
+            "vbo": 1162,
+            "ebo": 1163,
+            "indexCount": 150114
+        },
+        {
+            "guid": "ae3c86d6-9b19-4484-b88b-582606f3bfe7",
+            "name": "CopperOre",
+            "path": "Assets\\Objects\\CopperOre.obj",
+            "vao": 345,
+            "vbo": 676,
+            "ebo": 677,
+            "indexCount": 30810
+        },
+        {
+            "guid": "aedb4577-4302-4a54-a762-b12920503e54",
+            "name": "IronBar",
+            "path": "Assets\\Objects\\IronBar.obj",
+            "vao": 346,
+            "vbo": 678,
+            "ebo": 679,
+            "indexCount": 1458
+        },
+        {
+            "guid": "7c1c5c3c-ec12-4542-84f3-6127123c40ae",
+            "name": "IronOre",
+            "path": "Assets\\Objects\\IronOre.obj",
+            "vao": 347,
+            "vbo": 680,
+            "ebo": 681,
+            "indexCount": 34836
+        },
+        {
+            "guid": "19c2e254-ec34-4989-a9cf-ed7588ea47e4",
+            "name": "Bellow",
+            "path": "Assets\\Objects\\Bellow.obj",
+            "vao": 348,
+            "vbo": 682,
+            "ebo": 683,
+            "indexCount": 8640
+        },
+        {
+            "guid": "0acc0a6b-17a6-48d1-88d2-87d340df6b1b",
+            "name": "CoalOre",
+            "path": "Assets\\Objects\\CoalOre.obj",
+            "vao": 349,
+            "vbo": 684,
+            "ebo": 685,
+            "indexCount": 26688
+        },
+        {
+            "guid": "0df8072a-987f-469c-aeee-5d36ce29055d",
+            "name": "CopperBar",
+            "path": "Assets\\Objects\\CopperBar.obj",
+            "vao": 350,
+            "vbo": 686,
+            "ebo": 687,
+            "indexCount": 1458
+        },
+        {
+            "guid": "00ce9d25-0901-40b6-9bce-0d21d170bf81",
+            "name": "Mortar_new-0-mortar",
+            "path": "Assets\\Objects\\Mortar_new-0-mortar.obj",
+            "vao": 351,
+            "vbo": 688,
+            "ebo": 689,
+            "indexCount": 6900
+        },
+        {
+            "guid": "5911ce61-9333-47a1-99a6-599e2747fa29",
+            "name": "Pestle-0-pestlenonvox",
+            "path": "Assets\\Objects\\Pestle-0-pestlenonvox.obj",
+            "vao": 352,
+            "vbo": 690,
+            "ebo": 691,
+            "indexCount": 4704
         }
     ]
 }

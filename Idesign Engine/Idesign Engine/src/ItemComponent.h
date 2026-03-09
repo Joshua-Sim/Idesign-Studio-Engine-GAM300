@@ -47,8 +47,6 @@ namespace Framework
         return recipes;
     }
 
-    // --- 3. COMPATIBILITY LAYER (Fixes 'kItemNames' errors) ---
-    // This trick allows 'kItemNames[i]' to work dynamically without changing RecipeBookManager code
     struct ItemNamesProxy {
         const char* operator[](size_t index) const {
             const auto& db = GetItemDatabase();
@@ -93,6 +91,26 @@ namespace Framework
         }
         return nullptr;
     }
+
+    inline std::vector<bool> g_UnlockedItems;
+
+    inline void InitializeUnlockedItems() {
+        g_UnlockedItems.assign(kItemCount, false);
+    }
+
+    inline bool IsItemUnlocked(int itemID) {
+        if (itemID >= 0 && itemID < g_UnlockedItems.size()) {
+            return g_UnlockedItems[itemID];
+        }
+        return false;
+    }
+
+    inline void UnlockItem(int itemID) {
+        if (itemID >= 0 && itemID < g_UnlockedItems.size()) {
+            g_UnlockedItems[itemID] = true;
+        }
+    }
+
 
     // --- 5. JSON Loader ---
     inline void LoadItemSystem(const rapidjson::Document& doc) {
@@ -155,6 +173,8 @@ namespace Framework
         }
     }
 
+    
+
     inline bool InitializeItemDatabase(std::string relativePath) {
         // 1. Try to find the file by searching up the directory tree
         std::filesystem::path searchPath = relativePath;
@@ -198,6 +218,66 @@ namespace Framework
         return true;
     }
 
+    inline bool LoadUnlockedItems(std::string relativePath) {
+        InitializeUnlockedItems();
+
+        // 1. Try to find the file by searching up the directory tree
+        std::filesystem::path searchPath = relativePath;
+        bool found = false;
+
+        for (int i = 0; i < 4; ++i) {
+            if (std::filesystem::exists(searchPath)) {
+                found = true;
+                break;
+            }
+            // Move search path one level up
+            searchPath = "../" + searchPath.string();
+        }
+
+        if (!found) {
+            std::cerr << "[ItemSystem] Could not find '" << relativePath
+                << "' in current directory or parent directories." << std::endl;
+            return false;
+        }
+
+        std::cout << "[ItemSystem] Found save data at: " << searchPath << std::endl;
+
+        // 2. Open the found path
+        std::ifstream ifs(searchPath);
+        if (!ifs.is_open()) {
+            std::cerr << "[ItemSystem] Found file but could not open it (Locked? Permissions?)" << std::endl;
+            return false;
+        }
+
+        // 3. Parse JSON
+        rapidjson::IStreamWrapper isw(ifs);
+        rapidjson::Document doc;
+        doc.ParseStream(isw);
+
+        if (doc.HasParseError()) {
+            std::cerr << "[ItemSystem] JSON Parse Error: " << rapidjson::GetParseError_En(doc.GetParseError()) << std::endl;
+            return false;
+        }
+
+        if (doc.HasMember("unlocked_items") && doc["unlocked_items"].IsArray()) {
+            const auto& unlockedArray = doc["unlocked_items"].GetArray();
+            for (rapidjson::SizeType i = 0; i < unlockedArray.Size(); i++) {
+                if (unlockedArray[i].IsString()) {
+                    std::string targetID = unlockedArray[i].GetString();
+
+                    for (int j = 0; j < Framework::kItemCount; ++j) {
+                        if (Framework::kItemNames[j] == targetID) {
+                            Framework::UnlockItem(j);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
     // ImGui needs this specific function signature to read from std::vector
     inline bool ItemGetter(void* data, int idx, const char** out_text)
     {
@@ -224,6 +304,8 @@ namespace Framework
         if (id < 0 || id >= items.size()) return "Unknown";
         return items[id].location;
     }
+
+
 
 
     // --- 6. ECS Components ---

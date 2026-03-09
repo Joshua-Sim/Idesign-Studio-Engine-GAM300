@@ -161,7 +161,7 @@ namespace Framework {
     void Graphics::SetCameraRotationEnabled(bool enabled)
     {
         m_cameraRotationEnabled = enabled;
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        /*glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);*/
     }
 
     // Initialize the system
@@ -1106,14 +1106,6 @@ namespace Framework {
         //        gameCamera.position = trans.position + eyeOffset;
         //    }
 
-        //    // --- 2.3 GAMEPLAY TOGGLES (Recipe Book, etc) ---
-        {
-            bool isRPressed = (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS);
-            static bool wasRPressed = false;
-            if (isRPressed && !wasRPressed && !isEditorMode) GameSystem::bookOpen = !GameSystem::bookOpen;
-            wasRPressed = isRPressed;
-        }
-
         // ------------------------------------------------------------
         // Backpack toggle (TAB) - only when in game, not editor focused
         // ------------------------------------------------------------
@@ -1257,7 +1249,10 @@ namespace Framework {
 
     void Graphics::CaptureMouse(bool on) {
         mouseCaptured = on;
-        glfwSetInputMode(window, GLFW_CURSOR, on ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
+        // Tell the InputHandler what we want
+        if (Framework::InputHandler::GetInstance()) {
+            Framework::InputHandler::GetInstance()->SetUIFocused(!on);
+        }
     }
 
     int Graphics::ConsumeLastPickedId()
@@ -1518,11 +1513,10 @@ namespace Framework {
         const float hotbarPanelH = slotSize + 24.0f;
         const float marginAboveHotbar = 20.0f;
 
-        const float rightMargin = 24.0f;  // distance from screen edge
         const float panelPad = 12.0f;     // matches your panel padding
 
         // Panel bottom-left (x0,y0) for the GRID (not including outer panel pad)
-        const float x0 = std::round(screenW - rightMargin - (gridW));                 // right-aligned
+        const float x0 = std::round((screenW - gridW) * 0.5);                 
         const float y0 = std::round(hotbarY0 + hotbarPanelH + marginAboveHotbar);     // same vertical logic
 
         const float panelX = x0 - panelPad;
@@ -1634,8 +1628,7 @@ namespace Framework {
         const float hotbarPanelH = slotSize + 24.0f;
         const float marginAboveHotbar = 20.0f;
 
-        const float rightMargin = 24.0f;
-        const float x0 = std::round(screenW - rightMargin - gridW);
+        const float x0 = std::round((screenW - gridW) * 0.5);
         const float y0 = std::round(hotbarY0 + hotbarPanelH + marginAboveHotbar);
 
         // Mouse (convert to bottom-left origin)

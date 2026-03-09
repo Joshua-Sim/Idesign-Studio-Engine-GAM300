@@ -284,9 +284,9 @@ int TextureLoader::pendingCount()
 unsigned int TextureLoader::uploadToGPU(PendingUpload& item)
 {
     int memBytes = item.width * item.height * item.channels;
-    std::cout << "[Texture] " << item.path
+    /*std::cout << "[Texture] " << item.path
         << " | " << item.width << "x" << item.height
-        << " | " << (memBytes / 1024 / 1024) << "MB uncompressed" << std::endl;
+        << " | " << (memBytes / 1024 / 1024) << "MB uncompressed" << std::endl;*/
 
     // ------------------------------------------------------------------
     // Determine OpenGL formats
