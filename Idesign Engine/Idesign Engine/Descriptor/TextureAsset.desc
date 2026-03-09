@@ -1,5 +1,5 @@
 {
-    "count": 314,
+    "count": 318,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -3448,6 +3448,50 @@
             "guid": "4349da80-65e4-4492-9229-c860da25587f",
             "name": "defense_potion3D",
             "path": "Assets\\Textures\\defense_potion3D.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "3fc1a032-0b8a-4695-bcd0-f47e4c38ac37",
+            "name": "healing_powder",
+            "path": "Assets\\Textures\\healing_powder.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "0e998b0a-86fd-4129-bddf-7e664699393c",
+            "name": "healing_powder3D",
+            "path": "Assets\\Textures\\healing_powder3D.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "a79ed0bc-21e9-425e-85f6-dede14ec94ec",
+            "name": "preservation_powder3D",
+            "path": "Assets\\Textures\\preservation_powder3D.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "b8037daa-40ab-453f-baea-d5f35ce672ac",
+            "name": "preservation_powder",
+            "path": "Assets\\Textures\\preservation_powder.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,

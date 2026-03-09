@@ -775,6 +775,48 @@ namespace Framework {
             return 1;
         }
 
+        // Dialogue / cutscenes
+        static int lua_CutsceneSetTarget(lua_State* L) {
+            const char* tag = luaL_checkstring(L, 1);
+            auto dialogueSys = ecsInterface.GetSystem<Framework::DialogueSystem>();
+            if (dialogueSys) dialogueSys->SetCameraTargetByTag(tag);
+            return 0;
+        }
+
+        static int lua_CutsceneSetOffset(lua_State* L) {
+            float x = (float)luaL_checknumber(L, 1);
+            float y = (float)luaL_checknumber(L, 2);
+            float z = (float)luaL_checknumber(L, 3);
+            auto dialogueSys = ecsInterface.GetSystem<Framework::DialogueSystem>();
+            if (dialogueSys) dialogueSys->flyOffset = glm::vec3(x, y, z);
+            return 0;
+        }
+
+        static int lua_CutsceneSetSpeed(lua_State* L) {
+            float speed = (float)luaL_checknumber(L, 1);
+            auto dialogueSys = ecsInterface.GetSystem<Framework::DialogueSystem>();
+            if (dialogueSys) dialogueSys->flySpeed = speed;
+            return 0;
+        }
+
+        static int lua_CutsceneStart(lua_State* L) {
+            auto dialogueSys = ecsInterface.GetSystem<Framework::DialogueSystem>();
+            if (dialogueSys) {
+                dialogueSys->setActive(true);  // <-- THIS IS THE KEY LINE= true;
+                dialogueSys->isCutscene = true;
+                dialogueSys->isMidFlight = true;
+                engineState.PushState(EngineMode::Dialogue);  // block all input
+            }
+            return 0;
+        }
+
+        static int lua_CutsceneIsFlying(lua_State* L) {
+            auto dialogueSys = ecsInterface.GetSystem<Framework::DialogueSystem>();
+            bool flying = dialogueSys ? dialogueSys->isMidFlight : false;
+            lua_pushboolean(L, flying);
+            return 1;
+        }
+
         // --------- Tag management functions--------------
 
         static int lua_GetEntitiesByTag(lua_State* L)
@@ -2312,6 +2354,13 @@ namespace Framework {
         lua_register(L, "DialogueStart", lua_DialogueStart);
         lua_register(L, "DialogueEnd", lua_DialogueEnd);
         lua_register(L, "DialogueIsActive", lua_DialogueIsActive);
+
+        // Cutscenes (Camera action)
+        lua_register(L, "CutsceneSetTarget", lua_CutsceneSetTarget);
+        lua_register(L, "CutsceneSetOffset", lua_CutsceneSetOffset);
+        lua_register(L, "CutsceneSetSpeed", lua_CutsceneSetSpeed);
+        lua_register(L, "CutsceneStart", lua_CutsceneStart);
+        lua_register(L, "CutsceneIsFlying", lua_CutsceneIsFlying);
 
         //cauldron
         lua_register(L, "SetCameraLock", [](lua_State* L) -> int {

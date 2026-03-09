@@ -1,5 +1,5 @@
 {
-    "count": 46,
+    "count": 47,
     "entries": [
         {
             "guid": "16f0caaf-2e11-4715-ab0e-06c67810e1ba",
@@ -319,6 +319,13 @@
         {
             "guid": "18045653-72cf-4920-9971-f2782f8edbc1",
             "scriptPath": "Assets\\Scripts\\Mortar.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "32595166-113f-4286-8862-7c6e6c2fbfb5",
+            "scriptPath": "Assets\\Scripts\\NightTutorialSystem.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1

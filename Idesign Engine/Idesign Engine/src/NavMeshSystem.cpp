@@ -66,7 +66,7 @@ namespace Framework {
         //loop for agent
 
         ecsInterface.SetSystemSignature<NavMeshSystem>(signature);
-        std::cout << "Signature for Navmesh system is: " << signature << std::endl;
+        //std::cout << "Signature for Navmesh system is: " << signature << std::endl;
     }
 
     void NavMeshSystem::Update(float deltaTime) {
@@ -104,7 +104,7 @@ namespace Framework {
                 agent.currentPath.clear();
                 agent.currentWaypointIndex = 0;
                 agent.currentSpeed = 0.0f;
-                std::cout << "[NavMeshSystem] Entity " << entity << " reached destination!" << std::endl;
+              //  std::cout << "[NavMeshSystem] Entity " << entity << " reached destination!" << std::endl;
                 continue;
             }
 
@@ -124,7 +124,7 @@ namespace Framework {
                         agent.currentPath.clear();
                         agent.currentWaypointIndex = 0;
                         agent.currentSpeed = 0.0f;
-                        std::cout << "[NavMeshSystem] Entity " << entity << " reached final destination!" << std::endl;
+               //         std::cout << "[NavMeshSystem] Entity " << entity << " reached final destination!" << std::endl;
                     }
                 }
                 continue;
@@ -519,8 +519,8 @@ namespace Framework {
             return false;
         }
 
-        std::cout << "[FindPath] Searching path from (" << start.x << ", " << start.y << ", " << start.z
-            << ") to (" << end.x << ", " << end.y << ", " << end.z << ")" << std::endl;
+       // std::cout << "[FindPath] Searching path from (" << start.x << ", " << start.y << ", " << start.z
+        //    << ") to (" << end.x << ", " << end.y << ", " << end.z << ")" << std::endl;
 
         dtPolyRef startRef = 0, endRef = 0;
         float startNearest[3], endNearest[3];
@@ -535,24 +535,22 @@ namespace Framework {
         dtStatus startStatus = navQuery->findNearestPoly(startPos, extents, &filter, &startRef, startNearest);
         dtStatus endStatus = navQuery->findNearestPoly(endPos, extents, &filter, &endRef, endNearest);
 
-        std::cout << "[FindPath] Start poly search:" << std::endl;
-        std::cout << "  Status: " << (dtStatusSucceed(startStatus) ? "SUCCESS" : "FAILED") << std::endl;
-        std::cout << "  PolyRef: " << startRef << " (0 = not found)" << std::endl;
-        if (startRef) {
-            std::cout << "  Nearest point: (" << startNearest[0] << ", " << startNearest[1] << ", " << startNearest[2] << ")" << std::endl;
-        }
+     //   std::cout << "[FindPath] Start poly search:" << std::endl;
+     //   std::cout << "  Status: " << (dtStatusSucceed(startStatus) ? "SUCCESS" : "FAILED") << std::endl;
+      //  std::cout << "  PolyRef: " << startRef << " (0 = not found)" << std::endl;
 
-        std::cout << "[FindPath] End poly search:" << std::endl;
-        std::cout << "  Status: " << (dtStatusSucceed(endStatus) ? "SUCCESS" : "FAILED") << std::endl;
-        std::cout << "  PolyRef: " << endRef << " (0 = not found)" << std::endl;
+
+  //      std::cout << "[FindPath] End poly search:" << std::endl;
+   //     std::cout << "  Status: " << (dtStatusSucceed(endStatus) ? "SUCCESS" : "FAILED") << std::endl;
+    //    std::cout << "  PolyRef: " << endRef << " (0 = not found)" << std::endl;
         if (endRef) {
-            std::cout << "  Nearest point: (" << endNearest[0] << ", " << endNearest[1] << ", " << endNearest[2] << ")" << std::endl;
+      //      std::cout << "  Nearest point: (" << endNearest[0] << ", " << endNearest[1] << ", " << endNearest[2] << ")" << std::endl;
         }
 
         if (!startRef || !endRef) {
-            std::cerr << "[NavMeshSystem] Start or end not on navmesh!" << std::endl;
-            if (!startRef) std::cerr << "  - Start position not found (try larger search area)" << std::endl;
-            if (!endRef) std::cerr << "  - End position not found (try larger search area)" << std::endl;
+        //    std::cerr << "[NavMeshSystem] Start or end not on navmesh!" << std::endl;
+//            if (!startRef) std::cerr << "  - Start position not found (try larger search area)" << std::endl;
+  //          if (!endRef) std::cerr << "  - End position not found (try larger search area)" << std::endl;
             return false;
         }
 
@@ -562,10 +560,10 @@ namespace Framework {
         dtStatus pathStatus = navQuery->findPath(startRef, endRef, startNearest, endNearest,
             &filter, path, &pathCount, 256);
 
-        std::cout << "[FindPath] Path search: " << pathCount << " polygons" << std::endl;
+     //   std::cout << "[FindPath] Path search: " << pathCount << " polygons" << std::endl;
 
         if (pathCount == 0) {
-            std::cerr << "[NavMeshSystem] No path found between points!" << std::endl;
+  //          std::cerr << "[NavMeshSystem] No path found between points!" << std::endl;
             return false;
         }
 
@@ -587,7 +585,7 @@ namespace Framework {
             );
         }
 
-        std::cout << "[NavMeshSystem] ✓ Path found with " << straightPathCount << " waypoints" << std::endl;
+  //      std::cout << "[NavMeshSystem] ✓ Path found with " << straightPathCount << " waypoints" << std::endl;
         return true;
     }
 
@@ -658,8 +656,8 @@ namespace Framework {
             agent.isMoving = true;
             agent.currentSpeed = 0.0f; // Reset speed for smooth acceleration
 
-            std::cout << "[NavMeshSystem] Entity " << entity << " path set with "
-                << path.size() << " waypoints" << std::endl;
+  //          std::cout << "[NavMeshSystem] Entity " << entity << " path set with "
+    //            << path.size() << " waypoints" << std::endl;
         }
         else {
             std::cerr << "[NavMeshSystem] Failed to find path for entity " << entity << std::endl;
@@ -703,7 +701,7 @@ namespace Framework {
         glm::vec3 from = navSystem->GetNearestPointOnNavmesh(agentXform.position);
         glm::vec3 to = navSystem->GetNearestPointOnNavmesh(targetXform.position);
 
-        std::cout << "[Lua] Pathfinding from '" << agentName << "' to '" << targetName << "'..." << std::endl;
+   //     std::cout << "[Lua] Pathfinding from '" << agentName << "' to '" << targetName << "'..." << std::endl;
 
         navSystem->SetAgentDestination(agent, to);
     }

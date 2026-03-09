@@ -321,6 +321,13 @@
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
+        },
+        {
+            "guid": "32595166-113f-4286-8862-7c6e6c2fbfb5",
+            "scriptPath": "Assets\\Scripts\\NightTutorialSystem.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
         }
     ]
 }

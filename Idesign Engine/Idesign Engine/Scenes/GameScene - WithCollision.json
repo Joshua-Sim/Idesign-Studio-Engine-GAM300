@@ -150,11 +150,11 @@
                     "volume": 0.20000000298023224,
                     "loop": false,
                     "playOnStart": true,
-                    "isPlaying": false,
+                    "isPlaying": true,
                     "lastPosition": [
-                        0.0,
-                        0.0,
-                        0.0
+                        -45.934112548828125,
+                        5.300000190734863,
+                        14.715734481811523
                     ]
                 }
             }
@@ -188,7 +188,8 @@
                 },
                 "TagComponent": {
                     "tags": [
-                        "Interactable"
+                        "Interactable",
+                        "knife"
                     ]
                 },
                 "MeshComponent": {
@@ -1548,7 +1549,8 @@
                 },
                 "TagComponent": {
                     "tags": [
-                        "Interactable"
+                        "Interactable",
+                        "Frog"
                     ]
                 },
                 "MeshComponent": {
@@ -1870,7 +1872,9 @@
                     "children": []
                 },
                 "TagComponent": {
-                    "tags": []
+                    "tags": [
+                        "Cutting_Table"
+                    ]
                 },
                 "MeshComponent": {
                     "guid": "177fa052-079f-42bb-b225-97be34770804",
@@ -1911,7 +1915,8 @@
                 },
                 "TagComponent": {
                     "tags": [
-                        "Interactable"
+                        "Interactable",
+                        "Cutting_Board"
                     ]
                 },
                 "MeshComponent": {
@@ -2810,13 +2815,13 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -170.8560028076172,
-                        7.574932098388672,
-                        -171.2719268798828
+                        -276.0,
+                        318.2962951660156,
+                        620.0
                     ],
                     "rotation": [
                         0.0,
-                        -3.235001884149824e-7,
+                        0.0,
                         0.0
                     ],
                     "scale": [
@@ -2896,9 +2901,9 @@
                 },
                 "ListenerComponent": {
                     "position": [
-                        -170.8560028076172,
-                        7.574932098388672,
-                        -171.2719268798828
+                        -276.0,
+                        318.2962951660156,
+                        620.0
                     ],
                     "forward": [
                         0.0,
@@ -3107,7 +3112,8 @@
                 },
                 "TagComponent": {
                     "tags": [
-                        "Interactable"
+                        "Interactable",
+                        "Cauldron"
                     ]
                 },
                 "MeshComponent": {
@@ -3120,7 +3126,7 @@
                     "animationSpeed": 1.0,
                     "bLoops": true,
                     "bPlayOnStart": true,
-                    "currentTime": 41.99396896362305
+                    "currentTime": 116.79727172851563
                 },
                 "TextureComponent": {
                     "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
@@ -3192,11 +3198,11 @@
                     "volume": 1.0,
                     "loop": true,
                     "playOnStart": true,
-                    "isPlaying": false,
+                    "isPlaying": true,
                     "lastPosition": [
-                        0.0,
-                        0.0,
-                        0.0
+                        -40.230262756347656,
+                        6.287981033325195,
+                        17.725893020629883
                     ]
                 }
             }
@@ -3715,7 +3721,7 @@
                         1929.0,
                         537.0
                     ],
-                    "isHovered": true,
+                    "isHovered": false,
                     "isFrontButton": false,
                     "hoverTextureGuid": ""
                 }
@@ -4606,7 +4612,7 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "063bc40e-cdcc-44b1-a794-da791ab67aa3",
+                    "guid": "44dd9ce1-94f7-4b94-9fda-b06bde4f0e1e",
                     "isUI": false
                 },
                 "ScriptProperties": {
@@ -4627,7 +4633,7 @@
                         250.0,
                         129.58999633789063
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": true,
                     "hoverTextureGuid": "44dd9ce1-94f7-4b94-9fda-b06bde4f0e1e"
                 }
@@ -5265,7 +5271,7 @@
                         250.0,
                         129.58999633789063
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": false,
                     "hoverTextureGuid": "2d77f5aa-e9a6-44b8-b408-7ce097441fdd"
                 }
@@ -5562,7 +5568,8 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
@@ -5573,6 +5580,11 @@
                         {
                             "guid": "98caa7fe-14e5-4cb0-b0c3-bc039dbde2cf",
                             "scriptPath": "Assets\\Scripts\\DialogueSystem.lua",
+                            "hotReload": false
+                        },
+                        {
+                            "guid": "32595166-113f-4286-8862-7c6e6c2fbfb5",
+                            "scriptPath": "Assets\\Scripts\\NightTutorialSystem.lua",
                             "hotReload": false
                         }
                     ]
@@ -5599,7 +5611,7 @@
                         1.0,
                         1.0
                     ],
-                    "isActive": true
+                    "isActive": false
                 },
                 "HierarchyComponent": {
                     "parent": "6cb91ce4-34a5-4fb5-9341-5e906ce4cb1d",
@@ -5619,7 +5631,7 @@
                     "isUI": false
                 },
                 "TextProperties": {
-                    "text": "",
+                    "text": "When you're done with gathering or your inventory",
                     "scale": 0.6899999976158142,
                     "color": [
                         0.15939366817474365,
@@ -5653,7 +5665,7 @@
                         270.0,
                         100.0
                     ],
-                    "isActive": true
+                    "isActive": false
                 },
                 "HierarchyComponent": {
                     "parent": "6cb91ce4-34a5-4fb5-9341-5e906ce4cb1d",
@@ -5695,7 +5707,7 @@
                         1.0,
                         1.0
                     ],
-                    "isActive": true
+                    "isActive": false
                 },
                 "HierarchyComponent": {
                     "parent": "6cb91ce4-34a5-4fb5-9341-5e906ce4cb1d",
@@ -5715,7 +5727,7 @@
                     "isUI": false
                 },
                 "TextProperties": {
-                    "text": "",
+                    "text": "Aunt Mira (frog)",
                     "scale": 0.8500000238418579,
                     "color": [
                         0.15939366817474365,
@@ -5749,7 +5761,7 @@
                         1.0,
                         1.0
                     ],
-                    "isActive": true
+                    "isActive": false
                 },
                 "HierarchyComponent": {
                     "parent": "6cb91ce4-34a5-4fb5-9341-5e906ce4cb1d",
@@ -5769,7 +5781,7 @@
                     "isUI": false
                 },
                 "TextProperties": {
-                    "text": "",
+                    "text": "is full, interact with the gate to go to the night",
                     "scale": 0.6899999976158142,
                     "color": [
                         0.15939366817474365,
@@ -5803,7 +5815,7 @@
                         1.0,
                         1.0
                     ],
-                    "isActive": true
+                    "isActive": false
                 },
                 "HierarchyComponent": {
                     "parent": "6cb91ce4-34a5-4fb5-9341-5e906ce4cb1d",
@@ -5823,7 +5835,7 @@
                     "isUI": false
                 },
                 "TextProperties": {
-                    "text": "",
+                    "text": "phase",
                     "scale": 0.6899999976158142,
                     "color": [
                         0.15939366817474365,
@@ -5857,7 +5869,7 @@
                         270.0,
                         100.0
                     ],
-                    "isActive": true
+                    "isActive": false
                 },
                 "HierarchyComponent": {
                     "parent": "6cb91ce4-34a5-4fb5-9341-5e906ce4cb1d",
@@ -5899,7 +5911,7 @@
                         270.0,
                         100.0
                     ],
-                    "isActive": true
+                    "isActive": false
                 },
                 "HierarchyComponent": {
                     "parent": "6cb91ce4-34a5-4fb5-9341-5e906ce4cb1d",
@@ -5954,7 +5966,7 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "bbc3bc8b-ac72-4981-a969-5cb0e9839b7f",
+                    "guid": "2d77f5aa-e9a6-44b8-b408-7ce097441fdd",
                     "isUI": false
                 },
                 "ScriptProperties": {
@@ -5975,7 +5987,7 @@
                         250.0,
                         129.58999633789063
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": true,
                     "hoverTextureGuid": "2d77f5aa-e9a6-44b8-b408-7ce097441fdd"
                 }
@@ -11539,7 +11551,8 @@
                 },
                 "TagComponent": {
                     "tags": [
-                        "Interactable"
+                        "Interactable",
+                        "Gate"
                     ]
                 },
                 "MeshComponent": {
@@ -20741,7 +20754,7 @@
                         449.0,
                         357.0
                     ],
-                    "isHovered": true,
+                    "isHovered": false,
                     "isFrontButton": true,
                     "hoverTextureGuid": ""
                 }
@@ -21253,7 +21266,7 @@
                         430.0,
                         550.0
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": false,
                     "hoverTextureGuid": ""
                 }
@@ -21308,7 +21321,7 @@
                         430.0,
                         550.0
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": false,
                     "hoverTextureGuid": ""
                 }
@@ -21569,11 +21582,11 @@
                     "volume": 0.20000000298023224,
                     "loop": false,
                     "playOnStart": true,
-                    "isPlaying": false,
+                    "isPlaying": true,
                     "lastPosition": [
-                        0.0,
-                        0.0,
-                        0.0
+                        -45.934112548828125,
+                        5.300000190734863,
+                        14.715734481811523
                     ]
                 }
             }
@@ -21682,7 +21695,7 @@
                         430.0,
                         550.0
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": false,
                     "hoverTextureGuid": ""
                 }
@@ -21847,7 +21860,7 @@
                         430.0,
                         550.0
                     ],
-                    "isHovered": true,
+                    "isHovered": false,
                     "isFrontButton": false,
                     "hoverTextureGuid": ""
                 }
@@ -21911,7 +21924,7 @@
                         430.0,
                         550.0
                     ],
-                    "isHovered": true,
+                    "isHovered": false,
                     "isFrontButton": false,
                     "hoverTextureGuid": ""
                 }
@@ -21966,7 +21979,7 @@
                         430.0,
                         550.0
                     ],
-                    "isHovered": true,
+                    "isHovered": false,
                     "isFrontButton": false,
                     "hoverTextureGuid": ""
                 }
@@ -22021,7 +22034,7 @@
                         430.0,
                         480.0
                     ],
-                    "isHovered": true,
+                    "isHovered": false,
                     "isFrontButton": false,
                     "hoverTextureGuid": ""
                 }
@@ -22056,7 +22069,8 @@
                 },
                 "TagComponent": {
                     "tags": [
-                        "Interactable"
+                        "Interactable",
+                        "Furnace"
                     ]
                 },
                 "MeshComponent": {
@@ -22133,11 +22147,11 @@
                     "volume": 1.0,
                     "loop": true,
                     "playOnStart": true,
-                    "isPlaying": false,
+                    "isPlaying": true,
                     "lastPosition": [
-                        0.0,
-                        0.0,
-                        0.0
+                        -49.19884490966797,
+                        5.599999904632568,
+                        11.979232788085938
                     ]
                 }
             }
@@ -22367,7 +22381,7 @@
                     "rotation": [
                         0.0,
                         0.0,
-                        0.0
+                        15.356246948242188
                     ],
                     "scale": [
                         350.0,
@@ -22506,7 +22520,7 @@
                     "loop": false
                 },
                 "TextProperties": {
-                    "text": "5:00",
+                    "text": "4:35",
                     "scale": 1.149999976158142,
                     "color": [
                         0.0,
@@ -23796,7 +23810,8 @@
                 },
                 "TagComponent": {
                     "tags": [
-                        "Interactable"
+                        "Interactable",
+                        "Mortar"
                     ]
                 },
                 "MeshComponent": {
@@ -23879,6 +23894,60 @@
                         0.0,
                         0.0
                     ]
+                }
+            }
+        },
+        {
+            "name": "Pear1",
+            "guid": "4aba5686-a83f-40b0-8f5e-e9a268d2d8c6",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "6c3cd53d-28f8-44bd-b92a-28334ea5d325"
+                }
+            }
+        },
+        {
+            "name": "Pear2",
+            "guid": "471f3a93-1ce2-4c31-8678-488fd4b253c4",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "dc0218a7-2241-4356-b827-ae1ca79c9ff3"
+                }
+            }
+        },
+        {
+            "name": "Pear3",
+            "guid": "50208abd-b9ce-4258-a242-44c61025c20d",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "6dd5bda0-0211-4253-87c2-6e39e0eb9ff8"
+                }
+            }
+        },
+        {
+            "name": "Pear4",
+            "guid": "3541aeb0-1431-4a80-a118-ca54a110bf53",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "ab20d9cc-f552-47fb-8cd9-82403e4c3b22"
+                }
+            }
+        },
+        {
+            "name": "Pear5",
+            "guid": "ac752184-78c1-48c5-8746-d13681fcde78",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "8af2edf2-5fa6-473b-afaa-8be1f93d519d"
+                }
+            }
+        },
+        {
+            "name": "Pear6",
+            "guid": "cd9a32f5-0d36-4ff2-a972-866db4e63e0b",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "610184a6-f0a5-4d4e-a903-6cc938f6f643"
                 }
             }
         }

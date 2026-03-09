@@ -1,5 +1,5 @@
 {
-    "count": 105,
+    "count": 107,
     "entries": [
         {
             "guid": "9a248918-705f-4d5a-88a2-17e85868745b",
@@ -945,6 +945,24 @@
             "vbo": 701,
             "ebo": 702,
             "indexCount": 2970
+        },
+        {
+            "guid": "9add4c42-1abb-4c37-b4c2-7808966f5e64",
+            "name": "healing_powder",
+            "path": "Assets\\Objects\\healing_powder.obj",
+            "vao": 358,
+            "vbo": 703,
+            "ebo": 704,
+            "indexCount": 20730
+        },
+        {
+            "guid": "407ccfc6-13f2-498d-a329-1445f0bf80bb",
+            "name": "preservation_powder",
+            "path": "Assets\\Objects\\preservation_powder.obj",
+            "vao": 359,
+            "vbo": 705,
+            "ebo": 706,
+            "indexCount": 20730
         }
     ]
 }

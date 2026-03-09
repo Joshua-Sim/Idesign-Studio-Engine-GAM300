@@ -56,6 +56,10 @@ namespace Framework {
 
         bool tutorialToPlay = false;
 
+        dialogueSys->StartDialogue();
+        dialogueSys->EndDialogue();
+
+        /*
         // --- NIGHT PHASE TUTORIAL ---
         if (m_currentPhase == GamePhase::Day && !m_dayTutorialTriggered)
         {
@@ -91,7 +95,7 @@ namespace Framework {
 
             dialogueSys->StartDialogue();
         }
-
+        */
     }
 
     void PhaseManager::SetPhase(GamePhase newPhase)

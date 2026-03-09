@@ -51,6 +51,7 @@
 #include "PhaseManager.h"
 #include "RecipeBookManager.h"
 #include "ParticleComponent.h"
+#include "EngineState.h"
 
 extern Framework::FontSystem fontSystem;
 extern Framework::Coordinator ecsInterface;
@@ -614,7 +615,7 @@ namespace Framework {
         // We do this early so the lighting/shadow passes know where the player is.
         for (auto const& entityId : mEntities)
         {
-            if (ecsInterface.GetEntityName(entityId) == "Player") {
+            if (ecsInterface.GetEntityName(entityId) == "Player" && !engineState.Is(Dialogue)) {
                 if (ecsInterface.HasComponent<TransformComponent>(entityId)) {
                     auto& transform = ecsInterface.GetComponent<TransformComponent>(entityId);
                     gameCamera.position = transform.position;
@@ -843,7 +844,7 @@ namespace Framework {
         // ====================================================================
         // 1. RENDER VIEW 0: GAME (grounded)
         // ====================================================================
-        if (groundMode)
+        if (groundMode && !engineState.Is(EngineMode::Dialogue))
         {
             //float groundY = terrain.getHeightAt(gameCamera.position.x, gameCamera.position.z);
             gameCamera.position.y = 20.0f;
@@ -872,7 +873,7 @@ namespace Framework {
         // 1. RENDER VIEW 0: GAME (grounded)
         if (renderView0)
         {
-            if (groundMode)
+            if (groundMode && !engineState.Is(Dialogue))
             {
                 gameCamera.position.y = 20.0f;
                 for (auto const& entityId : mEntities) {
