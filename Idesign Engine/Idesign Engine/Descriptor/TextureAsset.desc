@@ -1,5 +1,5 @@
 {
-    "count": 306,
+    "count": 330,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -3247,9 +3247,163 @@
             "vScale": 1.0
         },
         {
+            "guid": "3ace42c0-b18c-4d89-afef-01aacae2bc2b",
+            "name": "MediumPound",
+            "path": "Assets\\Textures\\MediumPound.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "91b8cbee-e381-4fd2-8924-7fa8169b57ab",
+            "name": "PoorPound",
+            "path": "Assets\\Textures\\PoorPound.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "70ac7054-a8e0-4aca-ae06-3daa5c9c9a5f",
+            "name": "TapCircle",
+            "path": "Assets\\Textures\\TapCircle.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "72bdbe81-126e-4bbb-901d-7370bc1e423b",
+            "name": "GoodPound",
+            "path": "Assets\\Textures\\GoodPound.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "b691c537-b224-461e-83e2-b83502fb0a43",
+            "name": "copper_ore3D",
+            "path": "Assets\\Textures\\copper_ore3D.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "79118230-fed0-420a-b613-63a0c20fb607",
+            "name": "iron_bar3D",
+            "path": "Assets\\Textures\\iron_bar3D.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "2642ccd9-5c56-48fe-8e85-452b329651f1",
+            "name": "iron_ore3D",
+            "path": "Assets\\Textures\\iron_ore3D.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "a3cd56a0-4a91-4391-a29f-fa42645c282c",
+            "name": "Bellow",
+            "path": "Assets\\Textures\\Bellow.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "b418ceb5-cf0b-48e8-9d83-f0f4b8540a20",
+            "name": "CoalOre",
+            "path": "Assets\\Textures\\CoalOre.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "e72c5720-7b6c-4ee4-b06e-f2ef7b46cfd4",
+            "name": "copper_bar3D",
+            "path": "Assets\\Textures\\copper_bar3D.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "ecbcd709-6d5c-4387-a619-6a2218e0f5ba",
+            "name": "Pestle-0-pestlenonvox",
+            "path": "Assets\\Textures\\Pestle-0-pestlenonvox.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "3eaa4a84-24c6-474c-9580-92e20dbedcb4",
+            "name": "Mortar_new-0-mortar",
+            "path": "Assets\\Textures\\Mortar_new-0-mortar.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "e74753c8-640b-43a9-b0b7-5000e170531b",
+            "name": "copper_ore",
+            "path": "Assets\\Textures\\copper_ore.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
             "guid": "9f95abd9-3e68-4169-85b3-f4a85964aded",
             "name": "dialog_map_overlay",
             "path": "Assets\\Textures\\dialog_map_overlay.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "688b2a4f-90b6-475a-bacc-af8c42a5b9ca",
+            "name": "iron_ore",
+            "path": "Assets\\Textures\\iron_ore.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
@@ -3269,9 +3423,31 @@
             "vScale": 1.0
         },
         {
+            "guid": "ca564843-4632-4f62-aeb1-2c4390d26024",
+            "name": "iron_bar",
+            "path": "Assets\\Textures\\iron_bar.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
             "guid": "00030fa7-0c22-4321-a27c-32fff07924fd",
             "name": "forest_btn_stay_normal",
             "path": "Assets\\Textures\\forest_btn_stay_normal.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "8f11db28-1906-412c-93e2-06f3102e399b",
+            "name": "copper_bar",
+            "path": "Assets\\Textures\\copper_bar.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
@@ -3291,9 +3467,31 @@
             "vScale": 1.0
         },
         {
+            "guid": "2cca73ba-7ab5-4898-bec8-0f37cee7d7b4",
+            "name": "mending_potion3D",
+            "path": "Assets\\Textures\\mending_potion3D.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
             "guid": "bbb48382-fbdf-497a-b818-362ad1aaf20b",
             "name": "forest_btn_travel_normal",
             "path": "Assets\\Textures\\forest_btn_travel_normal.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "bb3c5a6b-d86d-4c61-8a3f-324f60b86b5f",
+            "name": "mending_potion",
+            "path": "Assets\\Textures\\mending_potion.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
@@ -3313,9 +3511,31 @@
             "vScale": 1.0
         },
         {
+            "guid": "d77bfc23-f2f8-483b-acc6-c803494c533d",
+            "name": "defense_potion",
+            "path": "Assets\\Textures\\defense_potion.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
             "guid": "ab07f4b6-60b0-42a0-b6e1-403faf153505",
             "name": "quarry_btn_stay_hover",
             "path": "Assets\\Textures\\quarry_btn_stay_hover.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "4349da80-65e4-4492-9229-c860da25587f",
+            "name": "defense_potion3D",
+            "path": "Assets\\Textures\\defense_potion3D.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
@@ -3335,9 +3555,31 @@
             "vScale": 1.0
         },
         {
+            "guid": "3fc1a032-0b8a-4695-bcd0-f47e4c38ac37",
+            "name": "healing_powder",
+            "path": "Assets\\Textures\\healing_powder.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
             "guid": "a0c2c43c-2d77-4f33-bc6a-b1132d2bf6f4",
             "name": "quarry_btn_travel_hover",
             "path": "Assets\\Textures\\quarry_btn_travel_hover.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "0e998b0a-86fd-4129-bddf-7e664699393c",
+            "name": "healing_powder3D",
+            "path": "Assets\\Textures\\healing_powder3D.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
@@ -3357,9 +3599,31 @@
             "vScale": 1.0
         },
         {
+            "guid": "a79ed0bc-21e9-425e-85f6-dede14ec94ec",
+            "name": "preservation_powder3D",
+            "path": "Assets\\Textures\\preservation_powder3D.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
             "guid": "2bfc972c-d74e-430b-85ee-e45df66ab7ca",
             "name": "quarry_complete",
             "path": "Assets\\Textures\\quarry_complete.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "b8037daa-40ab-453f-baea-d5f35ce672ac",
+            "name": "preservation_powder",
+            "path": "Assets\\Textures\\preservation_powder.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,

@@ -31,7 +31,7 @@ local HIDE_Z = -9999.0
 local initialized  = false
 local textVisible  = {}
 local entityShown   = {}
-local entityOrigin  = {}
+local entityOrigin  = {}  -- never wiped; captured once per entity
 
 local slotPanels     = {}
 local fishIcons      = {}
@@ -49,8 +49,9 @@ local barStates = { "green", "green" }
 -- =========================================================
 -- Z-BASED VISIBILITY HELPERS
 -- =========================================================
-local function StoreOrigin(entity)
+local function StoreOriginOnce(entity)
     if not entity then return end
+    if entityOrigin[entity] then return end  -- already captured, don't overwrite
     local ok, x, y, z = pcall(GetPosition, entity)
     if ok then
         entityOrigin[entity] = { x = x, y = y, z = z }
@@ -101,10 +102,9 @@ end
 -- NIGHT INIT
 -- =========================================================
 function HUDSystem:NightInit()
-    -- Fix 2: Reset all state tables before populating
-    entityShown   = {}
-    entityOrigin  = {}
-    textVisible   = {}
+    entityShown  = {}
+    textVisible  = {}
+    -- entityOrigin is intentionally NOT reset here
 
     for i = 1, MAX_SLOTS do
         slotPanels[i]     = FindEntityByName("SlotPanel_"    .. i)
@@ -118,27 +118,15 @@ function HUDSystem:NightInit()
         potionIcons[i]    = FindEntityByName("PotionIcon_"   .. i)
         arrowRights[i]    = FindEntityByName("arrowRight_"   .. i)
 
-        -- print("[HUDSystem] Slot " .. i .. " refs:")
-        -- print("  SlotPanel:     " .. tostring(slotPanels[i]))
-        -- print("  Icon_Fish:     " .. tostring(fishIcons[i]))
-        -- print("  Icon_Orc:      " .. tostring(orcIcons[i]))
-        -- print("  ArrivingText:  " .. tostring(arrivingTexts[i]))
-        -- print("  OrderText:     " .. tostring(orderTexts[i]))
-        -- print("  PatienceFrame: " .. tostring(patienceFrames[i]))
-        -- print("  PatienceFill:  " .. tostring(patienceFills[i]))
-        -- print("  PotionSlot:    " .. tostring(potionSlots[i]))
-        -- print("  PotionIcon:    " .. tostring(potionIcons[i]))
-        -- print("  ArrowRight:    " .. tostring(arrowRights[i]))
-
-        -- Fix 3: Store original positions BEFORE hiding
-        StoreOrigin(slotPanels[i])
-        StoreOrigin(fishIcons[i])
-        StoreOrigin(orcIcons[i])
-        StoreOrigin(patienceFrames[i])
-        StoreOrigin(patienceFills[i])
-        StoreOrigin(potionSlots[i])
-        StoreOrigin(potionIcons[i])
-        StoreOrigin(arrowRights[i])
+        -- Capture origins only if not already stored (safe across multiple nights)
+        StoreOriginOnce(slotPanels[i])
+        StoreOriginOnce(fishIcons[i])
+        StoreOriginOnce(orcIcons[i])
+        StoreOriginOnce(patienceFrames[i])
+        StoreOriginOnce(patienceFills[i])
+        StoreOriginOnce(potionSlots[i])
+        StoreOriginOnce(potionIcons[i])
+        StoreOriginOnce(arrowRights[i])
     end
 
     -- Hide all slots at night start
@@ -168,9 +156,10 @@ function HUDSystem:on_update(dt)
     if phase ~= PHASE_NIGHT then
         if initialized then
             for i = 1, MAX_SLOTS do HUDSystem:HideSlot(i) end
-            textVisible   = {}
-            entityShown   = {}
-            initialized   = false
+            textVisible  = {}
+            entityShown  = {}
+            -- entityOrigin is intentionally NOT wiped here
+            initialized  = false
         end
         return
     end
@@ -244,7 +233,6 @@ end
 -- SET ARRIVING MODE
 -- =========================================================
 function HUDSystem:SetArrivingMode(slot, is_arriving)
-    -- print("[HUDSystem] SetArrivingMode slot=" .. slot .. " arriving=" .. tostring(is_arriving) .. " frame=" .. tostring(patienceFills[slot]))
     if is_arriving then
         ShowText(arrivingTexts[slot], "Arriving...")
         HideText(orderTexts[slot])
@@ -269,7 +257,6 @@ end
 
 -- =========================================================
 -- SET POTION ICON
-
 -- =========================================================
 function HUDSystem:SetPotionIcon(slot, order)
     if order and potionIcons[slot] then
@@ -284,10 +271,8 @@ end
 -- =========================================================
 function HUDSystem:SetPatienceBar(slot, pct)
     pct = math.max(0.0, math.min(1.0, pct))
-    -- print("[HUDSystem] SetPatienceBar slot=" .. slot .. " pct=" .. pct .. " fill=" .. tostring(patienceFills[slot]) .. " shown=" .. tostring(entityShown[patienceFills[slot]]))
 
     if patienceFills[slot] then
-        -- Make sure fill is visible first (restores Z from HIDE_Z if needed)
         ShowEntity(patienceFills[slot])
 
         local currentWidth = pct * BAR_WIDTH_MAX
@@ -313,21 +298,8 @@ function HUDSystem:SetPatienceBar(slot, pct)
                 SetTexture(patienceFills[slot], TEX_GREEN)
             end
             barStates[slot] = targetState
-            -- print("[HUDSystem] Slot " .. slot .. " bar -> " .. targetState)
         end
     end
 end
-
--- =========================================================
--- FREE PLAY MODE (stub)
--- =========================================================
--- local freePlayPanel     = nil
--- local freePlayTimerText = nil
--- function HUDSystem:ShowFreePlayTimer(timeLeft)
---     if freePlayTimerText then ShowText(freePlayTimerText, string.format("%.0f", timeLeft)) end
--- end
--- function HUDSystem:HideFreePlayTimer()
---     if freePlayTimerText then HideText(freePlayTimerText) end
--- end
 
 return HUDSystem
