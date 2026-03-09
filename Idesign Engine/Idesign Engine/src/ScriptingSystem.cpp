@@ -1400,6 +1400,33 @@ namespace Framework {
             return 1;
         }
 
+        static int lua_RemoveItemByName(lua_State* L) {
+            const char* itemName = luaL_checkstring(L, 1);
+            int itemId = Framework::ItemNameToId(itemName);
+            if (itemId < 0) return 0;
+
+            auto& inv = Framework::Inventory::Instance();
+
+            // Search hotbar
+            int hotSlots = inv.GetHotbarSlotCount();
+            for (int i = 0; i < hotSlots; ++i) {
+                if (inv.Get(i).itemId == itemId) {
+                    inv.ClearHotbarSlot(i);
+                    return 0;
+                }
+            }
+
+            // Search backpack
+            int backSlots = inv.GetBackpackSlotCount();
+            for (int i = 0; i < backSlots; ++i) {
+                if (inv.GetBackpack(i).itemId == itemId) {
+                    inv.GetBackpack(i) = { -1, 0, 0 };
+                    return 0;
+                }
+            }
+            return 0;
+        }
+
         int Lua_DestroyEntity(lua_State* L) {
             int entityID = (int)lua_tointeger(L, 1);
 
@@ -2320,6 +2347,7 @@ namespace Framework {
         lua_register(L, "GetSelectedItem", Lua_GetPlayerSelectedItemId);
         lua_register(L, "ConsumeSelectedItem", Lua_ConsumePlayerSelectedItem);
         lua_register(L, "AddToInventory", Lua_AddToInventory);
+        lua_register(L, "RemoveItemByName", lua_RemoveItemByName);
         lua_register(L, "GetItemNameById", lua_GetItemNameById);
         lua_register(L, "GetSelectedItemName", Lua_GetSelectedItemName);
         lua_register(L, "SetInteractionText", l_SetInteractionText);
