@@ -1,5 +1,5 @@
 {
-    "count": 294,
+    "count": 306,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -3228,6 +3228,138 @@
             "guid": "5e18b4be-2838-4252-b74e-98674b4989b6",
             "name": "furance",
             "path": "Assets\\Textures\\furance.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "3ace42c0-b18c-4d89-afef-01aacae2bc2b",
+            "name": "MediumPound",
+            "path": "Assets\\Textures\\MediumPound.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "91b8cbee-e381-4fd2-8924-7fa8169b57ab",
+            "name": "PoorPound",
+            "path": "Assets\\Textures\\PoorPound.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "70ac7054-a8e0-4aca-ae06-3daa5c9c9a5f",
+            "name": "TapCircle",
+            "path": "Assets\\Textures\\TapCircle.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "72bdbe81-126e-4bbb-901d-7370bc1e423b",
+            "name": "GoodPound",
+            "path": "Assets\\Textures\\GoodPound.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "b691c537-b224-461e-83e2-b83502fb0a43",
+            "name": "CopperOre",
+            "path": "Assets\\Textures\\CopperOre.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "79118230-fed0-420a-b613-63a0c20fb607",
+            "name": "IronBar",
+            "path": "Assets\\Textures\\IronBar.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "2642ccd9-5c56-48fe-8e85-452b329651f1",
+            "name": "IronOre",
+            "path": "Assets\\Textures\\IronOre.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "a3cd56a0-4a91-4391-a29f-fa42645c282c",
+            "name": "Bellow",
+            "path": "Assets\\Textures\\Bellow.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "b418ceb5-cf0b-48e8-9d83-f0f4b8540a20",
+            "name": "CoalOre",
+            "path": "Assets\\Textures\\CoalOre.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "e72c5720-7b6c-4ee4-b06e-f2ef7b46cfd4",
+            "name": "CopperBar",
+            "path": "Assets\\Textures\\CopperBar.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "ecbcd709-6d5c-4387-a619-6a2218e0f5ba",
+            "name": "Pestle-0-pestlenonvox",
+            "path": "Assets\\Textures\\Pestle-0-pestlenonvox.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "3eaa4a84-24c6-474c-9580-92e20dbedcb4",
+            "name": "Mortar_new-0-mortar",
+            "path": "Assets\\Textures\\Mortar_new-0-mortar.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,

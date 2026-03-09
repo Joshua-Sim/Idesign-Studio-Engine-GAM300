@@ -1,5 +1,5 @@
 {
-    "count": 45,
+    "count": 47,
     "entries": [
         {
             "guid": "16f0caaf-2e11-4715-ab0e-06c67810e1ba",
@@ -312,6 +312,20 @@
         {
             "guid": "863fc1b9-38e3-4a59-a3f6-8f4ef9378b72",
             "scriptPath": "Assets\\Scripts\\HUDSystem.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "18045653-72cf-4920-9971-f2782f8edbc1",
+            "scriptPath": "Assets\\Scripts\\Mortar.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "5aa8f34d-8af4-45bf-ab8c-2d79071796ff",
+            "scriptPath": "Assets\\Scripts\\Cauldron(Auto).lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1

@@ -38,9 +38,13 @@ local billboard_depth_adjust = 0.055
 -- [STIRRING SETTINGS]
 local stir_sensitivity = 0.005
 local finish_delay = 1.0
+local dir_threshold = 0.02
+local dir_segments = 4
+local anim_speed_abs = 1.0
 
 -- [STIRRING ICON SETTINGS]
-local stir_icon_name = "anti-rotatingIcon"   -- Change this to match your entity name
+local stir_icon_name_ccw = "anti-rotatingIcon"
+local stir_icon_name_cw  = "rotatingIcon"
 local stir_icon_speed = 120.0           -- Degrees per second (tune this)
 
 -- =============================================================
@@ -67,6 +71,7 @@ local first_frame = true
 local spoon_x = 0.0
 local spoon_y = 100.0
 local last_angle = 0.0
+local last_required_dir = 0
 
 -- Ingredient State
 local guid_stir = ""
@@ -86,7 +91,8 @@ local last_sound_trigger_time = 0.0
 local prefab_log = "CauldronLog_Prefab"
 
 -- [STIRRING ICON STATE]
-local stir_icon_id = nil
+local stir_icon_id_ccw = nil
+local stir_icon_id_cw  = nil
 local stir_icon_rotation = 0.0
 
 -- =============================================================
@@ -162,18 +168,36 @@ end
 -- =============================================================
 -- [STIRRING ICON HELPERS]
 -- =============================================================
-local function ShowStirIcon()
-    if stir_icon_id then
-        SetIsUI(stir_icon_id, true)
+local function ShowStirIcon(required_dir)
+    if required_dir == -1 then
+        if stir_icon_id_ccw then
+            SetIsUI(stir_icon_id_ccw, true)
+        end
+        if stir_icon_id_cw then
+            SetIsUI(stir_icon_id_cw, false)
+            SetRotation(stir_icon_id_cw, 0.0, 0.0, 0.0)
+        end
+    else
+        if stir_icon_id_cw then
+            SetIsUI(stir_icon_id_cw, true)
+        end
+        if stir_icon_id_ccw then
+            SetIsUI(stir_icon_id_ccw, false)
+            SetRotation(stir_icon_id_ccw, 0.0, 0.0, 0.0)
+        end
     end
 end
 
 local function HideStirIcon()
-    if stir_icon_id then
-        SetIsUI(stir_icon_id, false)
-        stir_icon_rotation = 0.0
-        SetRotation(stir_icon_id, 0.0, 0.0, 0.0)
+    if stir_icon_id_ccw then
+        SetIsUI(stir_icon_id_ccw, false)
+        SetRotation(stir_icon_id_ccw, 0.0, 0.0, 0.0)
     end
+    if stir_icon_id_cw then
+        SetIsUI(stir_icon_id_cw, false)
+        SetRotation(stir_icon_id_cw, 0.0, 0.0, 0.0)
+    end
+    stir_icon_rotation = 0.0
 end
 
 -- =============================================================
@@ -192,12 +216,21 @@ function M.on_init(arg1, arg2)
     player_id = FindEntityByName("Player")
 
     -- Find the stirring icon entity and hide it at start
-    stir_icon_id = FindEntityByName(stir_icon_name)
-    if stir_icon_id then
-        HideStirIcon()
-        print("[Cauldron] Stirring icon found: " .. tostring(stir_icon_id))
+    stir_icon_id_ccw = FindEntityByName(stir_icon_name_ccw)
+    stir_icon_id_cw  = FindEntityByName(stir_icon_name_cw)
+
+    HideStirIcon()
+
+    if stir_icon_id_ccw then
+        print("[Cauldron] CCW stirring icon found: " .. tostring(stir_icon_id_ccw))
     else
-        print("[Cauldron] WARNING: Stirring icon entity '" .. stir_icon_name .. "' not found!")
+        print("[Cauldron] WARNING: Stirring icon entity '" .. stir_icon_name_ccw .. "' not found!")
+    end
+
+    if stir_icon_id_cw then
+        print("[Cauldron] CW stirring icon found: " .. tostring(stir_icon_id_cw))
+    else
+        print("[Cauldron] WARNING: Stirring icon entity '" .. stir_icon_name_cw .. "' not found!")
     end
 end
 
@@ -207,6 +240,8 @@ end
 function M.OnInteract(arg1, arg2)
     local id_to_use = my_entity_id or ResolveID(arg1, arg2) or FindEntityByName(CAULDRON_NAME)
     if id_to_use and not my_entity_id then my_entity_id = id_to_use end
+
+    print("[MANUAL] OnInteract called for entity:", tostring(my_entity_id))
 
     local held_item_id = GetSelectedItem()
 
@@ -261,7 +296,7 @@ function M.OnInteract(arg1, arg2)
             if player_id then SetGravity(player_id, 0.0) end
 
             -- Show the stirring icon
-            ShowStirIcon()
+            ShowStirIcon(required_dir)
         else
             Sound.Play("event:/InvalidRecipe")
             print("[Lua] Invalid Recipe!")
@@ -292,6 +327,11 @@ function M.StopInteraction(entity_id)
 
     -- Hide the stirring icon
     HideStirIcon()
+end
+
+function GetRequiredDir(p)
+    local seg = math.floor(math.min(p, 0.9999) * dir_segments)
+    return (seg % 2 == 0) and -1 or 1
 end
 
 -- =============================================================
@@ -363,11 +403,23 @@ function M.on_update(arg1, arg2)
                 if angle_delta < -PI then angle_delta = angle_delta + (2 * PI) end
                 last_angle = current_angle
 
-                is_stirring_correct_dir = (angle_delta < -0.02)
+                local required_dir = GetRequiredDir(progress)
+                ShowStirIcon(required_dir)
+
+                if required_dir ~= last_required_dir then
+                    last_required_dir = required_dir
+                    SetAnimationSettings(my_entity_id, anim_speed_abs * required_dir, true, true)
+                end
+
+                if required_dir == -1 then
+                    is_stirring_correct_dir = (angle_delta < -dir_threshold)
+                else
+                    is_stirring_correct_dir = (angle_delta > dir_threshold)
+                end
 
                 if is_stirring_correct_dir then
                     progress = progress + (math.abs(angle_delta) * stir_sensitivity)
-                    SetAnimationSettings(my_entity_id, 1.0, true, true)
+                    SetAnimationSettings(my_entity_id, anim_speed_abs * required_dir, true, true)
                     PlayStirSound()
                 else
                     SetAnimationSettings(my_entity_id, 0.0, true, true)
@@ -386,12 +438,22 @@ function M.on_update(arg1, arg2)
     ---------------------------------------------------------
     -- 2. STIRRING ICON ROTATION
     ---------------------------------------------------------
-    if is_active and stir_icon_id then
-        stir_icon_rotation = stir_icon_rotation + (stir_icon_speed * dt)
+    if is_active then
+        local required_dir = GetRequiredDir(progress)
+
+        stir_icon_rotation = stir_icon_rotation - (stir_icon_speed * dt * required_dir)
+
         if stir_icon_rotation >= 360.0 then
             stir_icon_rotation = stir_icon_rotation - 360.0
+        elseif stir_icon_rotation <= -360.0 then
+            stir_icon_rotation = stir_icon_rotation + 360.0
         end
-        SetRotation(stir_icon_id, 0.0, 0.0, stir_icon_rotation)
+
+        if required_dir == -1 and stir_icon_id_ccw then
+            SetRotation(stir_icon_id_ccw, 0.0, 0.0, stir_icon_rotation)
+        elseif required_dir == 1 and stir_icon_id_cw then
+            SetRotation(stir_icon_id_cw, 0.0, 0.0, stir_icon_rotation)
+        end
     end
 
     ---------------------------------------------------------
@@ -409,7 +471,8 @@ function M.on_update(arg1, arg2)
     -- Update Orbit
     if is_active and is_stirring_correct_dir and not is_finished then
         local dynamic_speed = orbit_speed_start + (orbit_speed_end - orbit_speed_start) * progress
-        current_orbit_angle = current_orbit_angle - (dt * dynamic_speed)
+        local required_dir = GetRequiredDir(progress)
+        current_orbit_angle = current_orbit_angle + (dt * dynamic_speed * required_dir)
     elseif not is_active then
         current_orbit_angle = current_orbit_angle + (dt * orbit_speed_start)
     end
