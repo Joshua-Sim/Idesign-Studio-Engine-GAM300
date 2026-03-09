@@ -118,7 +118,12 @@
         }
 
         void DialogueSystem::SetCameraTargetByTag(std::string targetTag) {
-            Entity target = ecsInterface.GetEntitiesByTag(targetTag)[0]; // I assume we always find that one specifically tagged
+            auto entities = ecsInterface.GetEntitiesByTag(targetTag);
+            if (entities.empty()) {
+                std::cerr << "[DialogueSystem] No entity found with tag: " << targetTag << "\n";
+                return; // safe early exit
+            }
+            Entity target = entities[0];
             auto& transform = ecsInterface.GetComponent<TransformComponent>(target);
             LookAtTargetPosition = transform.position;
         }
