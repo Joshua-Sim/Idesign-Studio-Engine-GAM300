@@ -816,6 +816,7 @@ namespace Framework
         TypeRegistry::Instance().Register<ItemComponent>("ItemComponent", &g_ItemProps);
         TypeRegistry::Instance().Register<ButtonComponent>("ButtonComponent", &g_ButtonComponentProps);
         TypeRegistry::Instance().Register<ParticleEmitterComponent>("ParticleEmitterComponent", &g_ParticleEmitterProps);
+        TypeRegistry::Instance().Register<TimerComponent>("TimerComponent", &g_TimerComponentProps);
     }
 
     void AutoRegisterAllReflectedComponents(Coordinator& ecs)

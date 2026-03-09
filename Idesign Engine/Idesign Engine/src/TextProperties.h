@@ -23,11 +23,11 @@ namespace Framework
         float opacity = 1.0f;
         // [NEW] 0=Left, 1=Center, 2=Right
         int alignment = 0;
-        bool isBillboard=false;
+        bool isBillboard = false;
 
         //Jasper
         // NEW: when true, use screen-space (UI) rendering instead of world-space text
-        bool screenSpace = false;   
+        bool screenSpace = false;
     };
 
     // 1. Define an array that lists each property
@@ -47,5 +47,15 @@ namespace Framework
 
     inline const prop_list g_TextComponentProps{ "TextProperties", g_TextComponentPropsArray };
     inline global_registration g_TextComponentReg(&g_TextComponentProps);
+
+    // Utility: format a remaining time float into "M:SS" e.g. 299.7f -> "4:59"
+    inline std::string FormatMMSS(float remainingTime)
+    {
+        int total = static_cast<int>(std::ceil(remainingTime));
+        if (total < 0) total = 0;
+        int mins = total / 60;
+        int secs = total % 60;
+        return std::to_string(mins) + ":" + (secs < 10 ? "0" : "") + std::to_string(secs);
+    }
 }
 #endif // !_TEXT_COMPONENT_H_

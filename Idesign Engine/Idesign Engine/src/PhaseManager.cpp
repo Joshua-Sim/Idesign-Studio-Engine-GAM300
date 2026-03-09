@@ -98,6 +98,14 @@ namespace Framework {
     {
         m_currentPhase = newPhase;
 
+        Entity phaseTimerText = ecsInterface.GetEntityByName("PhaseTimerText");
+        if (ecsInterface.IsEntityValid(phaseTimerText) &&
+            ecsInterface.HasComponent<TimerComponent>(phaseTimerText))
+        {
+            auto& timer = ecsInterface.GetComponent<TimerComponent>(phaseTimerText);
+            timer.Start(); // uses whatever duration is set on the component
+        }
+
         glm::vec3 targetPos(0.0f);
         glm::vec3 targetRot(0.0f);
         bool shouldTeleport = false;

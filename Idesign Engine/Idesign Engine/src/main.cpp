@@ -24,8 +24,8 @@
 #include "AssetCompiler.h"
 #include "EngineState.h"
 #include "Collision.h"
-#include <ImguiManager.h>
-#include <SignalHandler.h>
+#include "ImguiManager.h"
+#include "SignalHandler.h"
 #include "Scenemanager.h"
 #include "NavMeshSystem.h"
 #include "AnimationSystem.h"
@@ -36,8 +36,8 @@
 #include "lua.hpp"
 #include "PhysicsSystem.h"
 #include "FileCheckSystem.h"
-#include <EventSystem.h>
-#include <EventManager.h>
+#include "EventSystem.h"
+#include "EventManager.h"
 #include "GameSystem.h"
 #include "PlayerInteractSystem.h"
 #include "ButtonSystem.h"
@@ -47,7 +47,9 @@
 #include "SceneInterface.h"
 #include "DialogueSystem.h"
 #include "LoadingSystem.h"
-#include "ParticleSystem.h"
+#include "ParticleSystem.h""
+#include "TimerComponent.h"
+#include "TimerSystem.h"
 
 using namespace Framework;
 
@@ -140,6 +142,7 @@ int main(void)
     auto eventSystem = ecsInterface.RegisterSystem<EventSystem>();
     auto sceneInterface = ecsInterface.RegisterSystem<SceneInterface>();
     auto particleSystem = ecsInterface.RegisterSystem<ParticleSystem>();
+    auto timerSystem = ecsInterface.RegisterSystem<TimerSystem>();
 
     // Registered components here used for loading screen transition
     ecsInterface.RegisterComponent<TransformComponent>();
@@ -179,6 +182,7 @@ int main(void)
     engine->AddSystem(sceneInterface.get());
     engine->AddSystem(loadingSystem.get());
     engine->AddSystem(particleSystem.get());    // <-- add (simulate particles)
+    engine->AddSystem(timerSystem.get());
 
     std::filesystem::path root = GetEngineRootPath();
     fileCheckSystem->WatchAllFolders();
@@ -214,7 +218,7 @@ int main(void)
     }
 
     engineState.PushState(EngineMode::Play);    // Set to Play active    
-    engineState.PushState(EngineMode::MapSelection);    // Set to Menu active
+    engineState.PushState(EngineMode::Menu);    // Set to Menu active
     sceneManager.LoadScene("Scenes/GameScene - WithCollision.json");
     engine->GameLoop();
 

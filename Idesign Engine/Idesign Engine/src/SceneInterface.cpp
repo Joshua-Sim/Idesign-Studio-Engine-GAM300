@@ -6,6 +6,8 @@
 #include "Coordinator.h"
 #include "TextProperties.h"
 #include "TransformProperties.h"
+#include <PhaseManager.h>
+#include <TimerComponent.h>
 
 extern Framework::Coordinator ecsInterface;
 
@@ -406,21 +408,140 @@ namespace Framework
                 cutsceneFinished = false;
             }
 
-            // Gold Coin Icon
-            auto coinEntity = ecsInterface.GetEntitiesByTag("coinicon");
-            for (Entity e : coinEntity)
+            // Coin & Sun Icon + Day Text
+            bool isDayPlay = engineState.Is(EngineMode::Play) &&
+                phaseManager->GetCurrentPhase() == GamePhase::Day;
+
+            auto coinSunEntity = ecsInterface.GetEntitiesByTag("coinsunicon");
+            for (Entity e : coinSunEntity)
             {
                 if (!ecsInterface.IsEntityValid(e)) continue;
-                if (ecsInterface.HasComponent<ButtonComponent>(e) &&
-                    ecsInterface.HasComponent<TextureProperties>(e))
+                if (ecsInterface.HasComponent<TextureProperties>(e))
                 {
                     auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
+                    texture.isUI = isDayPlay;
+                }
+            }
 
-                    // Show only during Play, Upgrade, or Editor modes
-                    bool shouldShow = engineState.Is(EngineMode::Play) ||
-                        engineState.Is(EngineMode::Upgrade) ||
-                        engineState.Is(EngineMode::Editor);
+            Entity dayTextEntity = ecsInterface.GetEntityByName("dayText");
+            if (ecsInterface.IsEntityValid(dayTextEntity) &&
+                ecsInterface.HasComponent<TextProperties>(dayTextEntity))
+            {
+                auto& text = ecsInterface.GetComponent<TextProperties>(dayTextEntity);
+                text.opacity = isDayPlay ? 1.0f : 0.0f;
+                if (isDayPlay)
+                    text.text = ": Day 1|7"; // wire up dynamic values later
+            }
+
+            // Coin & Moon Icon + Night Text
+            bool isNightPlay = engineState.Is(EngineMode::Play) &&
+                phaseManager->GetCurrentPhase() == GamePhase::Night;
+
+            auto coinMoonEntity = ecsInterface.GetEntitiesByTag("coinmoonicon");
+            for (Entity e : coinMoonEntity)
+            {
+                if (!ecsInterface.IsEntityValid(e)) continue;
+                if (ecsInterface.HasComponent<TextureProperties>(e))
+                {
+                    auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
+                    texture.isUI = isNightPlay;
+                }
+            }
+
+            Entity nightTextEntity = ecsInterface.GetEntityByName("nightText");
+            if (ecsInterface.IsEntityValid(nightTextEntity) &&
+                ecsInterface.HasComponent<TextProperties>(nightTextEntity))
+            {
+                auto& text = ecsInterface.GetComponent<TextProperties>(nightTextEntity);
+                text.opacity = isNightPlay ? 1.0f : 0.0f;
+                if (isNightPlay)
+                    text.text = ": Night 1|7"; // wire up dynamic values later
+            }
+
+            // Mini Controls
+            auto miniControlsEntity = ecsInterface.GetEntitiesByTag("minicontrols");
+            for (Entity e : miniControlsEntity)
+            {
+                if (!ecsInterface.IsEntityValid(e)) continue;
+                if (ecsInterface.HasComponent<TextureProperties>(e))
+                {
+                    auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
+                    bool shouldShow = engineState.Is(EngineMode::Play);
                     texture.isUI = shouldShow;
+                }
+            }
+
+            // Clock Hand Controls
+            auto clockHandIcon = ecsInterface.GetEntitiesByTag("clockhandicon");
+            for (Entity e : clockHandIcon)
+            {
+                if (!ecsInterface.IsEntityValid(e)) continue;
+                if (ecsInterface.HasComponent<TextureProperties>(e))
+                {
+                    auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
+                    bool shouldShow = engineState.Is(EngineMode::Play);
+                    texture.isUI = shouldShow;
+                }
+            }
+
+            // Clock Icon + Phase Timer Icon + Phase Timer Text
+            Entity phaseTimerText = ecsInterface.GetEntityByName("PhaseTimerText");
+            bool isPlay = engineState.Is(EngineMode::Play);
+
+            // --- Clock Icon: isUI + Rotation ---
+            auto clockEntities = ecsInterface.GetEntitiesByTag("clockicon");
+            for (Entity e : clockEntities)
+            {
+                if (!ecsInterface.IsEntityValid(e)) continue;
+
+                if (ecsInterface.HasComponent<TextureProperties>(e))
+                {
+                    auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
+                    texture.isUI = isPlay;
+                }
+
+                if (isPlay &&
+                    ecsInterface.IsEntityValid(phaseTimerText) &&
+                    ecsInterface.HasComponent<TransformComponent>(e) &&
+                    ecsInterface.HasComponent<TimerComponent>(phaseTimerText))
+                {
+                    auto& transform = ecsInterface.GetComponent<TransformComponent>(e);
+                    auto& timer = ecsInterface.GetComponent<TimerComponent>(phaseTimerText);
+
+                    if (timer.isRunning)
+                    {
+                        float progress = 1.0f - timer.GetProgress();
+                        float baseAngle = (phaseManager->GetCurrentPhase() == GamePhase::Night) ? 180.0f : 0.0f;
+                        transform.rotation.z = baseAngle + (progress * 180.0f);
+                    }
+                }
+            }
+
+            // --- Phase Timer Icon: isUI only ---
+            auto phaseTimerEntity = ecsInterface.GetEntitiesByTag("phasetimericon");
+            for (Entity e : phaseTimerEntity)
+            {
+                if (!ecsInterface.IsEntityValid(e)) continue;
+                if (ecsInterface.HasComponent<TextureProperties>(e))
+                {
+                    auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
+                    texture.isUI = isPlay;
+                }
+            }
+
+            // --- Phase Timer Text: opacity + MM:SS display ---
+            if (ecsInterface.IsEntityValid(phaseTimerText))
+            {
+                if (ecsInterface.HasComponent<TextProperties>(phaseTimerText))
+                {
+                    auto& text = ecsInterface.GetComponent<TextProperties>(phaseTimerText);
+                    text.opacity = isPlay ? 1.0f : 0.0f;
+
+                    if (isPlay && ecsInterface.HasComponent<TimerComponent>(phaseTimerText))
+                    {
+                        auto& timer = ecsInterface.GetComponent<TimerComponent>(phaseTimerText);
+                        text.text = FormatMMSS(timer.remainingTime);
+                    }
                 }
             }
         }

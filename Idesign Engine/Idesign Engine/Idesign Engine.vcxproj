@@ -300,6 +300,8 @@
     <ClInclude Include="src\TextureLoader.h" />
     <ClInclude Include="src\TextureLoaderDDS.h" />
     <ClInclude Include="src\TextureProperties.h" />
+    <ClInclude Include="src\TimerComponent.h" />
+    <ClInclude Include="src\TimerSystem.h" />
     <ClInclude Include="src\TransformProperties.h" />
     <ClInclude Include="src\TypeRegistry.h" />
     <ClInclude Include="src\Types.h" />
@@ -448,6 +450,7 @@
     <ClCompile Include="src\TestSystem.cpp" />
     <ClCompile Include="src\TextureLoader.cpp" />
     <ClCompile Include="src\TextureLoaderDDS.cpp" />
+    <ClCompile Include="src\TimerSystem.cpp" />
     <ClCompile Include="src\Upgrade.cpp" />
     <ClCompile Include="src\Vector2D.cpp" />
     <ClCompile Include="src\Vector3D.cpp" />
