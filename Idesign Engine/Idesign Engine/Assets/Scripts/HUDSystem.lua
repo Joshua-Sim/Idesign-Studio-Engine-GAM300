@@ -269,14 +269,14 @@ end
 
 -- =========================================================
 -- SET POTION ICON
--- TODO: uncomment once real potion icon assets exist
+
 -- =========================================================
 function HUDSystem:SetPotionIcon(slot, order)
-    -- local tex = POTION_ICONS[order]
-    -- if tex and potionIcons[slot] then
-    --     SetTexture(potionIcons[slot], tex)
-    --     ShowEntity(potionIcons[slot])
-    -- end
+    if order and potionIcons[slot] then
+        local texPath = "Assets/Textures/" .. order .. ".png"
+        SetTexture(potionIcons[slot], texPath)
+        ShowEntity(potionIcons[slot])
+    end
 end
 
 -- =========================================================

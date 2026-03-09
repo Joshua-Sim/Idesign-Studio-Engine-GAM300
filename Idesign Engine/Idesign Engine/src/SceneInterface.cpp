@@ -294,17 +294,32 @@ namespace Framework
             {
                 if (!ecsInterface.IsEntityValid(e)) continue;
 
-                if (ecsInterface.HasComponent<ButtonComponent>(e) &&
-                    ecsInterface.HasComponent<TextureProperties>(e))
+                if (ecsInterface.HasComponent<TextureProperties>(e))
                 {
                     auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
-                    // Only enforce UI flag if NOT in editor mode
                     if (!engineState.Is(EngineMode::Editor)) {
-                        if (!engineState.Is(EngineMode::Editor)) { texture.isUI = engineState.Is(EngineMode::MapSelection) ? 1.f : 0.f; }
+                        bool inMap = engineState.Is(EngineMode::MapSelection);
+                        texture.isUI = inMap ? 1.f : 0.f;
+                        texture.uiAlpha = inMap ? 1.f : 0.f;
+                        std::cout << "[SceneInterface] map entity " << e << " isUI=" << texture.isUI << " inMapSelection=" << inMap << std::endl;
                     }
                 }
             }
 
+            // 6b. MAP DIALOG LOGIC (non-button dialog entities)
+            auto mapDialogEntities = ecsInterface.GetEntitiesByTag("mapdialog");
+            for (Entity e : mapDialogEntities)
+            {
+                if (!ecsInterface.IsEntityValid(e)) continue;
+                if (ecsInterface.HasComponent<TextureProperties>(e))
+                {
+                    auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
+                    if (!engineState.Is(EngineMode::Editor)) {
+                        texture.isUI = engineState.Is(EngineMode::MapSelection) ? 1.f : 0.f;
+                        texture.uiAlpha = engineState.Is(EngineMode::MapSelection) ? 1.f : 0.f;
+                    }
+                }
+            }
 
             // 7. Cutscene (Open after click Play)
             if (engineState.Is(EngineMode::Cutscene))

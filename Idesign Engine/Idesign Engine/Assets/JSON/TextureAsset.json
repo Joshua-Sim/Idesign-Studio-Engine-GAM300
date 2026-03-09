@@ -1773,6 +1773,138 @@
             "vOffset": 0.0,
             "uScale": 1.0,
             "vScale": 1.0
+        },
+        {
+            "guid": "6aa4b8b1-09c5-4549-b545-bd7dacfda58c",
+            "name": "EmptyBgWithPins",
+            "path": "Assets\\Textures\\EmptyBgWithPins.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "9f95abd9-3e68-4169-85b3-f4a85964aded",
+            "name": "dialog_map_overlay",
+            "path": "Assets\\Textures\\dialog_map_overlay.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "459b2638-ac6f-4831-b554-f269d416552f",
+            "name": "forest_btn_stay_hover",
+            "path": "Assets\\Textures\\forest_btn_stay_hover.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "00030fa7-0c22-4321-a27c-32fff07924fd",
+            "name": "forest_btn_stay_normal",
+            "path": "Assets\\Textures\\forest_btn_stay_normal.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "3e200e42-ddc7-46ae-9f47-7141cbee9d4e",
+            "name": "forest_btn_travel_hover",
+            "path": "Assets\\Textures\\forest_btn_travel_hover.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "bbb48382-fbdf-497a-b818-362ad1aaf20b",
+            "name": "forest_btn_travel_normal",
+            "path": "Assets\\Textures\\forest_btn_travel_normal.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "e57419c7-d6dc-48e3-959d-a2eec9442cca",
+            "name": "forest_complete",
+            "path": "Assets\\Textures\\forest_complete.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "ab07f4b6-60b0-42a0-b6e1-403faf153505",
+            "name": "quarry_btn_stay_hover",
+            "path": "Assets\\Textures\\quarry_btn_stay_hover.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "b33a5edd-5eee-42e5-a715-2a98dd438a9b",
+            "name": "quarry_btn_stay_normal",
+            "path": "Assets\\Textures\\quarry_btn_stay_normal.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "a0c2c43c-2d77-4f33-bc6a-b1132d2bf6f4",
+            "name": "quarry_btn_travel_hover",
+            "path": "Assets\\Textures\\quarry_btn_travel_hover.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "b8558fb4-9448-419c-8d91-0f34ab59ddce",
+            "name": "quarry_btn_travel_normal",
+            "path": "Assets\\Textures\\quarry_btn_travel_normal.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "2bfc972c-d74e-430b-85ee-e45df66ab7ca",
+            "name": "quarry_complete",
+            "path": "Assets\\Textures\\quarry_complete.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
         }
     ]
 }
