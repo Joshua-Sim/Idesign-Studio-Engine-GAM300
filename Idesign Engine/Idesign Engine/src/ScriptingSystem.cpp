@@ -160,6 +160,37 @@ namespace Framework {
             return 2;
         }
 
+        static int lua_GetMouseUV(lua_State* L)
+        {
+            auto* input = Framework::InputHandler::GetInstance();
+            auto* self = lua_self(L);
+            Graphics* g = self ? self->GetGraphicsSystem() : nullptr;
+
+            if (input && g && g->GetWindow())
+            {
+                int width, height;
+                glfwGetWindowSize(g->GetWindow(), &width, &height);
+
+                // Prevent division by zero if window is minimized
+                if (width == 0 || height == 0) {
+                    lua_pushnumber(L, 0.0);
+                    lua_pushnumber(L, 0.0);
+                    return 2;
+                }
+
+                float uvX = static_cast<float>(input->GetMouseX()) / static_cast<float>(width);
+                float uvY = static_cast<float>(input->GetMouseY()) / static_cast<float>(height);
+
+                lua_pushnumber(L, uvX);
+                lua_pushnumber(L, uvY);
+                return 2;
+            }
+
+            lua_pushnumber(L, 0.0);
+            lua_pushnumber(L, 0.0);
+            return 2;
+        }
+
         //For text component
         static int lua_GetTextComponent(lua_State* L)
         {
@@ -2070,6 +2101,7 @@ namespace Framework {
         lua_register(L, "IsKeyDown", l_IsKeyDown);
         lua_register(L, "CameraMove", l_CameraMove);
         lua_register(L, "GetMousePosition", lua_GetMousePosition);
+        lua_register(L, "GetMouseUV", lua_GetMouseUV);
         lua_register(L, "DestroyEntity", l_DestroyEntity);
         lua_register(L, "IsMouseButtonDown", l_IsMouseButtonDown);
         lua_register(L, "SetRotation", lua_SetRotation);

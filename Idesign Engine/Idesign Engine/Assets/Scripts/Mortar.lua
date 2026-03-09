@@ -13,6 +13,10 @@ local feedback_texts = {}
 local click_was_down = false 
 local my_entity_id = nil
 
+-- [INGREDIENT STATE]
+local has_ingredient = false
+local ingredient_visual_id = -1
+
 -- [POUNDING STATE]
 local current_progress = 0 
 local MAX_PROGRESS = 100
@@ -35,10 +39,8 @@ local finish_timer = 0.0
 local FINISH_DELAY = 1.0 
 
 -- --- DISPLAY CALIBRATION ---
-local UI_WIDTH = 1920
-local UI_HEIGHT = 1080       
-local MOUSE_SCALE_X = 1920.0 / 2829.0    
-local MOUSE_SCALE_Y = 1080.0 / 1592.0    
+local UI_WIDTH = 1920.0
+local UI_HEIGHT = 1080.0       
 
 -- --- SETTINGS ---
 local CIRCLE_LIFESPAN = 3.0 
@@ -50,8 +52,7 @@ local CLICK_RADIUS = 75
 
 function Mortar.on_init(self)
     my_entity_id = self.entity
-    print("[Mortar] No-Cancel Phase Initialized.")
-    SetInteractionText(my_entity_id, "Start Minigame")
+    SetInteractionText(my_entity_id, "Place Ingredient")
     math.randomseed(os.time()) 
 end
 
@@ -89,9 +90,12 @@ function Mortar.on_update(self, dt)
             if not click_was_down then
                 click_was_down = true
                 
-                local raw_mouse_x, raw_mouse_y = GetMousePosition()
-                local mouse_x = raw_mouse_x * MOUSE_SCALE_X
-                local mouse_y = UI_HEIGHT - (raw_mouse_y * MOUSE_SCALE_Y)
+                -- NEW: Use UV Coordinates for Resolution Independence!
+                local uv_x, uv_y = GetMouseUV()
+                
+                -- Standardize to your UI Pixel Canvas
+                local mouse_x = uv_x * UI_WIDTH
+                local mouse_y = UI_HEIGHT - (uv_y * UI_HEIGHT) 
                 
                 for i = #active_circles, 1, -1 do
                     local circ = active_circles[i]
@@ -115,7 +119,6 @@ function Mortar.on_update(self, dt)
                         end
                         
                         current_progress = current_progress + points_earned
-                        print("[Mortar] HIT! +" .. points_earned .. " | Total: " .. current_progress .. "/" .. MAX_PROGRESS)
                         
                         local fb_id = SpawnPrefab(popup_prefab, mouse_x, mouse_y + 20, 0.6)
                         if fb_id ~= nil and fb_id ~= -1 then
@@ -139,31 +142,29 @@ function Mortar.on_update(self, dt)
 
         -- 3. TRANSITION TO SPINNING PHASE
         if current_progress >= MAX_PROGRESS then
-            print("[Mortar] Pounding complete! Transitioning to Spinner Phase.")
             is_spinning = true
             is_finished = false
             spin_progress = 0.0
             
-            -- Clean up pounding UI
             for i, circ in ipairs(active_circles) do DestroyEntity(circ.id) end
             active_circles = {}
             for i, fb in ipairs(feedback_texts) do DestroyEntity(fb.id) end
             feedback_texts = {}
             
-            -- Spawn Placeholder Spinner Visual in the center of the UI
             spinner_visual_id = SpawnPrefab(PREFAB_GOOD, UI_WIDTH / 2, UI_HEIGHT / 2, 0.5)
             if spinner_visual_id ~= nil and spinner_visual_id ~= -1 then
                 local dsx, dsy, dsz = GetScale(spinner_visual_id)
                 SetScale(spinner_visual_id, dsx * 2.0, dsy * 2.0, dsz * 2.0)
             end
             
-            -- Initialize mouse tracking
-            last_mx, last_my = GetMousePosition()
+            -- Set up initial mouse tracking for spinner
+            local init_uv_x, init_uv_y = GetMouseUV()
+            last_mx = init_uv_x * UI_WIDTH
+            last_my = UI_HEIGHT - (init_uv_y * UI_HEIGHT)
+            
             spoon_x = 0.0
             spoon_y = 100.0
             last_angle = math.atan2(spoon_y, spoon_x)
-            
-            SetInteractionText(my_entity_id, "Hold Left Click & Spin!")
             return 
         end
 
@@ -203,18 +204,17 @@ function Mortar.on_update(self, dt)
     -- PHASE 2: SPINNING (Osu! Style)
     -- ==========================================
     else
-        -- If we hit the win condition, just tick down the delay timer!
         if is_finished then
             finish_timer = finish_timer - dt
-            
             if finish_timer <= 0 then
-                print("[Mortar] Delay finished! Minigame won.")
                 Mortar.StopMinigame(my_entity_id, true)
             end
-            
-        -- Otherwise, process mouse spinning
         else
-            local mx, my = GetMousePosition()
+            -- NEW: Using UV coordinates for the spinning phase as well
+            local uv_x, uv_y = GetMouseUV()
+            local mx = uv_x * UI_WIDTH
+            local my = UI_HEIGHT - (uv_y * UI_HEIGHT)
+            
             if not last_mx then last_mx = mx; last_my = my end
             
             local dx = mx - last_mx
@@ -248,12 +248,9 @@ function Mortar.on_update(self, dt)
                     SetRotation(spinner_visual_id, 0.0, 0.0, math.deg(current_angle))
                 end
                 
-                -- WIN CONDITION
                 if spin_progress >= SPIN_REQUIREMENT then
-                    print("[Mortar] 100% Spin Reached! Holding camera for 1 second...")
                     is_finished = true
                     finish_timer = FINISH_DELAY
-                    SetInteractionText(my_entity_id, "Done!")
                 end
             end
         end
@@ -267,7 +264,6 @@ function Mortar.StopMinigame(targetID, success)
     is_playing = false
     is_spinning = false
     is_finished = false
-    SetInteractionText(targetID, "Start Minigame")
     
     SetUIFocused(false)
     SetCameraLock(false)
@@ -284,13 +280,46 @@ function Mortar.StopMinigame(targetID, success)
     end
 
     if success then
+        has_ingredient = false 
+        SetInteractionText(targetID, "Place Ingredient")
+        
+        if ingredient_visual_id ~= nil and ingredient_visual_id ~= -1 then
+            DestroyEntity(ingredient_visual_id)
+            ingredient_visual_id = -1
+        end
+
         AddToInventory("chopped_herb") 
         Sound.Play("event:/RecipeComplete") 
+    else
+        SetInteractionText(targetID, "Start Minigame")
     end
 end
 
+-- ==========================================
+-- INTERACTION LOGIC
+-- ==========================================
 function Mortar.OnInteract(senderID, targetID, actionType)
-    if not is_playing then
+    if is_playing then 
+        print("[Mortar] Minigame cancelled by player.")
+        Mortar.StopMinigame(targetID, false)
+        return 
+    end
+    
+    if not has_ingredient then
+        local held_item_id = GetSelectedItem()
+        
+        if held_item_id ~= -1 then
+            ConsumeSelectedItem()
+            has_ingredient = true
+            
+            if SpawnCauldronItem then
+                ingredient_visual_id = SpawnCauldronItem(targetID, held_item_id)
+            end
+            
+            Sound.Play("event:/PlaceDownItem")
+            SetInteractionText(targetID, "Start Minigame")
+        end
+    else
         is_playing = true
         is_spinning = false
         is_finished = false
@@ -298,12 +327,10 @@ function Mortar.OnInteract(senderID, targetID, actionType)
         current_progress = 0 
         click_was_down = false 
         
-        -- Removed the "(Press E to stop)" text
-        SetInteractionText(targetID, "Minigame Running...") 
+        SetInteractionText(targetID, "Stop Grinding") 
         SetUIFocused(true)
         SetCameraLock(true)
     end
-    -- If is_playing is already true, pressing E does absolutely nothing now!
 end
 
 return Mortar
