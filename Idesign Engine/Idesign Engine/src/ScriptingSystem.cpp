@@ -2150,14 +2150,22 @@ namespace Framework {
             return 0;
         }
 
+        static int lua_GetGamma(lua_State* L)
+        {
+            auto* gfx = Graphics::GetInstance();
+            if (!gfx) { lua_pushnumber(L, 2.2); return 1; }
+            lua_pushnumber(L, gfx->GetGamma());
+            return 1;
+        }
 
-
-
-        // ScriptingSystem.cpp
-
-
-
-    } // anonymous namespace
+        static int lua_SetGamma(lua_State* L)
+        {
+            float g = (float)luaL_checknumber(L, 1);
+            auto* gfx = Graphics::GetInstance();
+            if (gfx) gfx->SetGamma(g);
+            return 0;
+        }
+    }
 
     // ---------------------------- class methods --------------------------------
 
@@ -2206,6 +2214,8 @@ namespace Framework {
         // Game utility
         lua_register(L, "IsItemChoppable", lua_IsItemChoppable);
         lua_register(L, "SetText", lua_SetText);
+        lua_register(L, "GetGamma", lua_GetGamma);
+        lua_register(L, "SetGamma", lua_SetGamma);
 
         // Data Entry from engine
         lua_register(L, "GetScore", lua_GetScore);

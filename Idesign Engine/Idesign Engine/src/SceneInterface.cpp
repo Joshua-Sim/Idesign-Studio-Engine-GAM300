@@ -300,8 +300,6 @@ namespace Framework
                     if (!engineState.Is(EngineMode::Editor)) {
                         bool inMap = engineState.Is(EngineMode::MapSelection);
                         texture.isUI = inMap ? 1.f : 0.f;
-                        texture.uiAlpha = inMap ? 1.f : 0.f;
-                        std::cout << "[SceneInterface] map entity " << e << " isUI=" << texture.isUI << " inMapSelection=" << inMap << std::endl;
                     }
                 }
             }
@@ -316,7 +314,6 @@ namespace Framework
                     auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
                     if (!engineState.Is(EngineMode::Editor)) {
                         texture.isUI = engineState.Is(EngineMode::MapSelection) ? 1.f : 0.f;
-                        texture.uiAlpha = engineState.Is(EngineMode::MapSelection) ? 1.f : 0.f;
                     }
                 }
             }

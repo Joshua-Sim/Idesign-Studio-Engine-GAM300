@@ -1817,6 +1817,7 @@ namespace Framework {
         finalShader.setInt("bloomTexture", 1);
         finalShader.setFloat("exposure", hdrExposure);
         finalShader.setFloat("bloomStrength", bloomStrength);
+        finalShader.setFloat("gamma", m_gamma);
         renderQuad();
 
         // === Optional: per-view HUD/text ===
@@ -3058,6 +3059,7 @@ namespace Framework {
         finalShader.setInt("bloomTexture", 1);
         finalShader.setFloat("exposure", hdrExposure);
         finalShader.setFloat("bloomStrength", bloomStrength);
+        finalShader.setFloat("gamma", m_gamma);
         renderQuad();
 
         // --- 8. HUD/TEXT PASS ---

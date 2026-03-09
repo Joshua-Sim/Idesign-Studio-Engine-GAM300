@@ -150,6 +150,8 @@ namespace Framework
             return &m_skybox;
         }
 
+        float GetGamma() const { return m_gamma; }
+        void SetGamma(float g) { m_gamma = glm::clamp(g, 0.1f, 5.0f); }
 
     private:
 
@@ -268,9 +270,10 @@ namespace Framework
         const unsigned int MAX_POINT_LIGHTS = 8;
         const unsigned int MAX_SPOT_LIGHTS = 4;
 
-        // ADD HDR & BLOOM VARIABLES
+        // ADD HDR & BLOOM VARIABLES + GAMMA (NEW)
         float hdrExposure = 1.0f;
         float bloomStrength = 1.0f;
+        float m_gamma = 2.2f;
 
         GLuint hdrFBO = 0;
         GLuint colorBuffer = 0;
