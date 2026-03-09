@@ -1,5 +1,5 @@
 {
-    "count": 330,
+    "count": 331,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -3624,6 +3624,17 @@
             "guid": "b8037daa-40ab-453f-baea-d5f35ce672ac",
             "name": "preservation_powder",
             "path": "Assets\\Textures\\preservation_powder.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "047f174d-116e-487e-a26d-56d9590b3ebc",
+            "name": "gamma_label",
+            "path": "Assets\\Textures\\gamma_label.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,

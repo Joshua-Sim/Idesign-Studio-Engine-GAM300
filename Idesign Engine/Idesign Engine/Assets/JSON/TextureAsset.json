@@ -2049,6 +2049,17 @@
             "vOffset": 0.0,
             "uScale": 1.0,
             "vScale": 1.0
+        },
+        {
+            "guid": "047f174d-116e-487e-a26d-56d9590b3ebc",
+            "name": "gamma_label",
+            "path": "Assets\\Textures\\gamma_label.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
         }
     ]
 }
