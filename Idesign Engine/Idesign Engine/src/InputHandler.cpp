@@ -129,6 +129,17 @@ namespace Framework {
             GameSystem::bookOpen = !GameSystem::bookOpen;
         }
 
+        // ESC: Toggle pause/resume
+        if (IsKeyPressed(GLFW_KEY_M))
+        {
+            if (!engineState.Is(EngineMode::MapSelection)) {
+                engineState.PushState(EngineMode::MapSelection);
+            }
+            else {
+                engineState.PopState();
+            }
+        }
+
         
 
         // ============================================================

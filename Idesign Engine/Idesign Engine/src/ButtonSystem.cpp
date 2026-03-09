@@ -18,6 +18,8 @@
 #include "TextureProperties.h"
 #include "EngineState.h"
 #include "TextProperties.h"
+#include "TextureLoader.h"
+#include "AssetManager.h"
 
 extern Framework::Coordinator ecsInterface;
 namespace Framework {
@@ -34,7 +36,28 @@ namespace Framework {
     }
 
     void ButtonSystem::Initialize() {
-        // Initialize buttons if needed
+        for (auto entity : mEntities) {
+            // Safety check to ensure the entity has the component
+            if (!ecsInterface.HasComponent<ButtonComponent>(entity)) continue;
+
+            auto& button = ecsInterface.GetComponent<ButtonComponent>(entity);
+
+            // If we have a string path (GUID) but no GPU ID yet
+            if (!button.hoverTextureGuid.empty() && button.hoverTextureGuid != "") {
+
+                // This is likely the call you need. 
+                // We want to get the TEXTURE ID from the ASSET PATH.
+                auto textureAsset = AssetManager::Instance().Get<TextureProperties>(button.hoverTextureGuid);
+
+                if (textureAsset) {
+                    button.hoverTextureID = textureAsset->textureID;
+                    std::cout << "[ButtonSystem] Successfully loaded hover texture: " << button.hoverTextureGuid << std::endl;
+                }
+                else {
+                    std::cerr << "[ButtonSystem] Failed to find texture asset for GUID: " << button.hoverTextureGuid << std::endl;
+                }
+            }
+        }
     }
 
     void ButtonSystem::Update(float deltaTime)
@@ -49,6 +72,15 @@ namespace Framework {
 
             auto& button = ecsInterface.GetComponent<ButtonComponent>(entity);
             auto& tr = ecsInterface.GetComponent<TransformComponent>(entity);
+
+            if (button.hoverTextureID == 0 && !button.hoverTextureGuid.empty())
+            {
+                // Assuming AssetManager returns a pointer to a struct containing the textureID
+                auto textureAsset = AssetManager::Instance().Get<TextureProperties>(button.hoverTextureGuid);
+                if (textureAsset) {
+                    button.hoverTextureID = textureAsset->textureID;
+                }
+            }
 
             // interpret Transform as �center + full size� in design space
             // button.position = glm::vec2(tr.position.x - 0.5f * tr.scale.x,tr.position.y - 0.5f * tr.scale.y);
@@ -263,43 +295,54 @@ namespace Framework {
         }
     }
     
-    void ButtonSystem::UpdateHoverUV(float u, float v)
-    {
+    void ButtonSystem::UpdateHoverUV(float u, float v) {
         float designX = u * DESIGN_WIDTH;
         float designY = v * DESIGN_HEIGHT;
 
-        for (auto entity : mEntities)
-        {
+        for (auto entity : mEntities) {
             if (!ecsInterface.HasComponent<ButtonComponent>(entity) ||
                 !ecsInterface.HasComponent<TransformComponent>(entity) ||
-                !ecsInterface.HasComponent<TextureProperties>(entity))
+                !ecsInterface.HasComponent<TextureProperties>(entity)) {
                 continue;
+            }
+                
 
             auto& button = ecsInterface.GetComponent<ButtonComponent>(entity);
             auto& tr = ecsInterface.GetComponent<TransformComponent>(entity);
             auto& tex = ecsInterface.GetComponent<TextureProperties>(entity);
 
-            // only UI quads are treated as buttons
-            if (!tex.isUI) continue;
-
-            // derive bounds from Transform (center + full size)
             float left = tr.position.x - 0.5f * tr.scale.x;
             float right = tr.position.x + 0.5f * tr.scale.x;
             float bottom = tr.position.y - 0.5f * tr.scale.y;
             float top = tr.position.y + 0.5f * tr.scale.y;
 
             bool inside = (designX > left && designX < right && designY > bottom && designY < top);
-            button.isHovered = inside;
 
-            //DO NOT CHANGE ANY Z POSITIONING
-            if (inside && button.isFrontButton == true)
-            {
-                tr.position.z = -100;
+            // TEXTURE SWAP LOGIC
+            if (inside && !button.isHovered) {
+                // --- FIX 2: VALIDATE ORIGINAL ID ---
+                // Only store the original if it's actually valid (> 0).
+                // If it's 0, it means the base texture hasn't loaded yet.
+                if (tex.textureID != 0) {
+                    button.originalTextureID = tex.textureID;
+                    button.originalTextureGuid = tex.guid;
+
+                    // Only swap if we actually have a hover texture ready
+                    if (button.hoverTextureID != 0) {
+                        tex.textureID = button.hoverTextureID;
+                        tex.guid = button.hoverTextureGuid;
+                    }
+                }
             }
-            else
-            {
-                tr.position.z = 1;
+            else if (!inside && button.isHovered) {
+                // Restore only if we have a valid stored original
+                if (button.originalTextureID != 0) {
+                    tex.textureID = button.originalTextureID;
+                    tex.guid = button.originalTextureGuid;
+                }
             }
+
+            button.isHovered = inside;
         }
     }
 }
