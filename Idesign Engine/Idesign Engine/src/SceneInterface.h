@@ -20,6 +20,15 @@ namespace Framework
 
 	static float Saturate(float x) { return glm::clamp(x, 0.0f, 1.0f); }
 
+	int GetTargetDayFromState()
+	{
+		if (engineState.Is(EngineMode::Day2)) return 2;
+		if (engineState.Is(EngineMode::Day3)) return 3;
+		if (engineState.Is(EngineMode::Day4)) return 4;
+		if (engineState.Is(EngineMode::Day5)) return 5;
+		return 0;
+	}
+
 	// Declare the global instance of EngineState
 	extern SceneInterface sceneInterface;
 }
