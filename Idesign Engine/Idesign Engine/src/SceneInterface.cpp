@@ -8,6 +8,8 @@
 #include "TransformProperties.h"
 #include <PhaseManager.h>
 #include <TimerComponent.h>
+#include "InputHandler.h"
+#include "Graphics.h"
 
 extern Framework::Coordinator ecsInterface;
 
@@ -26,6 +28,10 @@ namespace Framework
 
     static float cutsceneStartTime = -1.0f;
     static float fadeOutStartTime = -1.0f;
+
+    static bool  cutsceneSkipHolding = false;
+    static float cutsceneSkipStartTime = 0.0f;
+    static const float cutsceneSkipHoldDuration = 2.0f;
 
     // ===== Intro tuning (3 slides) =====
     static const float introSceneDuration = 3.0f;
@@ -309,12 +315,64 @@ namespace Framework
             // 7. Cutscene (Open after click Play)
             if (engineState.Is(EngineMode::Cutscene))
             {
+                auto slides = ecsInterface.GetEntitiesByTag("cutscene");
+                int count = (int)slides.size();
+
+                // Expecting 9 scenes (but clamp safely)
+                int sceneCount = glm::min(count, kExpectedScenes);
+                if (sceneCount <= 0) return;
+
+                
+
+                // -------------------------------------------------
+                // SKIP CUTSCENE INPUT (put this EARLY, before returns)
+                // -------------------------------------------------
+                // Hold LMB for 2 seconds to skip
+                auto* grapInput = Graphics::GetInstance();
+                if (glfwGetMouseButton(grapInput->GetWindow(), GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+                {
+                    if (!cutsceneSkipHolding)
+                    {
+                        cutsceneSkipHolding = true;
+                        cutsceneSkipStartTime = (float)glfwGetTime();
+                    }
+
+                    float heldTime = (float)glfwGetTime() - cutsceneSkipStartTime;
+
+                    if (heldTime >= cutsceneSkipHoldDuration)
+                    {
+                        for (int s = 0; s < sceneCount; ++s)
+                        {
+                            Entity e = slides[s];
+                            if (!ecsInterface.IsEntityValid(e)) continue;
+                            if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
+
+                            auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
+                            tex.uiAlpha = 0.0f;
+                            tex.isUI = false;
+                        }
+
+                        cutsceneStartTime = -1.0f;
+                        cutsceneFinished = true;
+
+                        cutsceneSkipHolding = false;
+                        cutsceneSkipStartTime = 0.0f;
+
+                        engineState.PopState();
+                        engineState.PushState(EngineMode::MapSelection);
+                        return;
+                    }
+                }
+                else
+                {
+                    cutsceneSkipHolding = false;
+                    cutsceneSkipStartTime = 0.0f;
+                }
+
                 if (cutsceneStartTime < 0.0f)
                 {
                     cutsceneStartTime = (float)glfwGetTime();
                     cutsceneFinished = false;
-
-                    auto slides = ecsInterface.GetEntitiesByTag("cutscene");
 
                     // Init: make them UI fullscreen images, all hidden
                     for (auto e : slides)
@@ -325,16 +383,10 @@ namespace Framework
                         auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
                         tex.isUI = true;
                         tex.uiAlpha = 0.0f;
-
-                        // OPTIONAL: if you have UI sizing/anchoring fields, set them here
-                        // tex.uiAnchor = UIAnchor::Center;
-                        // tex.uiSize   = { viewportW, viewportH };
-                        // tex.uiPos    = { viewportW * 0.5f, viewportH * 0.5f };
                     }
 
-                    // Scene 0 (black screen) should be instant on
-                    if (!slides.empty() &&
-                        ecsInterface.IsEntityValid(slides[0]) &&
+                    // Scene 0 (black screen) instant on
+                    if (ecsInterface.IsEntityValid(slides[0]) &&
                         ecsInterface.HasComponent<TextureProperties>(slides[0]))
                     {
                         ecsInterface.GetComponent<TextureProperties>(slides[0]).uiAlpha = 1.0f;
@@ -343,13 +395,6 @@ namespace Framework
 
                 float now = (float)glfwGetTime();
                 float t = now - cutsceneStartTime;
-
-                auto slides = ecsInterface.GetEntitiesByTag("cutscene");
-                int count = (int)slides.size();
-
-                // Expecting 9 scenes (but clamp safely)
-                int sceneCount = glm::min(count, kExpectedScenes);
-                if (sceneCount <= 0) return;
 
                 // Which scene are we in?
                 int i = (int)glm::floor(t / sceneDuration);
@@ -361,7 +406,6 @@ namespace Framework
                     {
                         cutsceneFinished = true;
 
-                        // Hide all cutscene slides
                         for (int s = 0; s < sceneCount; ++s)
                         {
                             Entity e = slides[s];
@@ -370,39 +414,23 @@ namespace Framework
 
                             auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
                             tex.uiAlpha = 0.0f;
-                            tex.isUI = false; // optional
+                            tex.isUI = false;
                         }
 
-                        // Move to next state
+                        engineState.PopState();
                         engineState.PushState(EngineMode::MapSelection);
                     }
                     return;
                 }
 
-                float sceneT = t - (float)i * sceneDuration;             // 0..sceneDuration
+                float sceneT = t - (float)i * sceneDuration;
                 float fadeStart = sceneDuration - crossfadeDuration;
 
-                // Compute crossfade blend (0..1)
                 float blend = 0.0f;
+                if (sceneT >= fadeStart)
+                    blend = Saturate((sceneT - fadeStart) / crossfadeDuration);
 
-                // Scene 0: instant black screen (no fade-in). Only fade OUT into scene 1 near the end.
-                if (i == 0)
-                {
-                    if (sceneT >= fadeStart)
-                        blend = Saturate((sceneT - fadeStart) / crossfadeDuration);
-                    else
-                        blend = 0.0f;
-                }
-                else
-                {
-                    // Normal scenes: crossfade at the end
-                    if (sceneT >= fadeStart)
-                        blend = Saturate((sceneT - fadeStart) / crossfadeDuration);
-                    else
-                        blend = 0.0f;
-                }
-
-                // Set all alphas to 0 first (so only current + next are visible)
+                // Clear all alphas first
                 for (int s = 0; s < sceneCount; ++s)
                 {
                     Entity e = slides[s];
@@ -414,7 +442,7 @@ namespace Framework
                     tex.uiAlpha = 0.0f;
                 }
 
-                // Current slide alpha goes 1 -> 0 during crossfade
+                // Current slide
                 {
                     Entity cur = slides[i];
                     if (ecsInterface.IsEntityValid(cur) && ecsInterface.HasComponent<TextureProperties>(cur))
@@ -425,7 +453,7 @@ namespace Framework
                     }
                 }
 
-                // Next slide alpha goes 0 -> 1 during crossfade (if exists)
+                // Next slide
                 if (i + 1 < sceneCount)
                 {
                     Entity nxt = slides[i + 1];
@@ -442,6 +470,8 @@ namespace Framework
                 // Reset for next time
                 cutsceneStartTime = -1.0f;
                 cutsceneFinished = false;
+                cutsceneSkipHolding = false;
+                cutsceneSkipStartTime = 0.0f;
             }
 
             // 8. DIGIPEN LOGO INTRO + GROUP LOGO INTRO
@@ -452,7 +482,39 @@ namespace Framework
                 if (sceneCount <= 0) return;
 
                 const int bgIndex = 0;
-                const int logoCount = sceneCount - 1; // slides[1], slides[2], ...
+                const int logoCount = sceneCount - 1;
+
+                // -------------------------------------------------
+                // SKIP INTRO INPUT (put this EARLY, before any return)
+                // -------------------------------------------------
+                auto* input = InputHandler::GetInstance();
+                if (input && input->IsMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT))
+                {
+                    for (auto e : slides)
+                    {
+                        if (!ecsInterface.IsEntityValid(e)) continue;
+                        if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
+
+                        auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
+                        tex.uiAlpha = 0.0f;
+                        tex.isUI = false;
+                    }
+
+                    IntrocutsceneStartTime = -1.0f;
+                    IntroFinished = true;
+
+                    // IMPORTANT:
+                    // If Intro is the current state, remove/replace it properly.
+                    // Prefer ONE of these depending on your engine design:
+
+                    engineState.PopState();                   // remove Intro
+                    engineState.PushState(EngineMode::Menu); // go to Menu
+
+                    // If your engine has SetState / ChangeState, that's even better:
+                    // engineState.SetState(EngineMode::Menu);
+
+                    return;
+                }
 
                 if (logoCount <= 0)
                 {
@@ -480,7 +542,6 @@ namespace Framework
                         tex.uiAlpha = 0.0f;
                     }
 
-                    // Background always on
                     if (ecsInterface.IsEntityValid(slides[bgIndex]) && ecsInterface.HasComponent<TextureProperties>(slides[bgIndex]))
                     {
                         auto& bg = ecsInterface.GetComponent<TextureProperties>(slides[bgIndex]);
@@ -491,10 +552,8 @@ namespace Framework
 
                 float totalT = (float)glfwGetTime() - IntrocutsceneStartTime;
 
-                // Keep first scene only for 3 seconds before logos start
                 if (totalT < introStartDelay)
                 {
-                    // Background visible, all logos hidden
                     for (int s = 1; s < sceneCount; ++s)
                     {
                         if (!ecsInterface.IsEntityValid(slides[s])) continue;
@@ -515,9 +574,7 @@ namespace Framework
                     return;
                 }
 
-                // Start logo timeline only AFTER delay
                 float t = totalT - introStartDelay;
-
                 int logoIndex = (int)glm::floor(t / introSceneDuration);
 
                 if (logoIndex >= logoCount)
@@ -536,6 +593,7 @@ namespace Framework
                             tex.isUI = false;
                         }
 
+                        engineState.PopState();
                         engineState.PushState(EngineMode::Menu);
                     }
                     return;
@@ -544,7 +602,6 @@ namespace Framework
                 float sceneT = t - (float)logoIndex * introSceneDuration;
                 float fadeIn = Saturate(sceneT / introCrossfadeDuration);
 
-                // Clear logo slides only
                 for (int s = 1; s < sceneCount; ++s)
                 {
                     if (!ecsInterface.IsEntityValid(slides[s])) continue;
@@ -555,7 +612,6 @@ namespace Framework
                     tex.uiAlpha = 0.0f;
                 }
 
-                // Keep background always visible
                 if (ecsInterface.IsEntityValid(slides[bgIndex]) && ecsInterface.HasComponent<TextureProperties>(slides[bgIndex]))
                 {
                     auto& bg = ecsInterface.GetComponent<TextureProperties>(slides[bgIndex]);
@@ -563,21 +619,16 @@ namespace Framework
                     bg.uiAlpha = 1.0f;
                 }
 
-                // Current logo slide
-                int currentSlide = logoIndex + 1; // maps 0->1, 1->2
+                int currentSlide = logoIndex + 1;
                 if (currentSlide < sceneCount)
                 {
                     if (ecsInterface.IsEntityValid(slides[currentSlide]) && ecsInterface.HasComponent<TextureProperties>(slides[currentSlide]))
                     {
                         auto& texCur = ecsInterface.GetComponent<TextureProperties>(slides[currentSlide]);
-
-                        // First logo fades in from 0 to 1
-                        // Later logos can also fade in the same way
                         texCur.uiAlpha = fadeIn;
                     }
                 }
 
-                // Optional: fade previous logo out during transition to next
                 if (logoIndex > 0)
                 {
                     int prevSlide = currentSlide - 1;
