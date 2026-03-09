@@ -14,8 +14,20 @@ local click_was_down = false
 local my_entity_id = nil
 
 -- [INGREDIENT STATE]
-local has_ingredient = false
-local ingredient_visual_id = -1
+local stored_ingredients = {}
+local visual_entities = {}
+local MAX_INGREDIENTS = 3
+
+-- Placement offsets for side-by-side layout (Adjust to fit your table perfectly)
+local OFFSET_X_START = -1.5 -- Starting distance to the left of the mortar
+local SPACING_X = -1      -- Gap between each subsequent ingredient
+local OFFSET_Y = 0.1        -- Height adjustment so they sit on the table
+local OFFSET_Z = 0.0        -- Keeps them aligned in depth
+
+-- Rotation to override the C++ default of -90
+local ROT_X = 180.0
+local ROT_Y = 0.0
+local ROT_Z = 0.0
 
 -- [POUNDING STATE]
 local current_progress = 0 
@@ -52,11 +64,50 @@ local CLICK_RADIUS = 75
 
 function Mortar.on_init(self)
     my_entity_id = self.entity
-    SetInteractionText(my_entity_id, "Place Ingredient")
+    SetInteractionText(my_entity_id, "Requires Ingredient")
     math.randomseed(os.time()) 
 end
 
 function Mortar.on_update(self, dt)
+    -- ==========================================
+    -- INGREDIENT MANAGEMENT (Runs even when not playing)
+    -- ==========================================
+    if my_entity_id then
+        local cx, cy, cz = GetPosition(my_entity_id)
+        
+        for i = #visual_entities, 1, -1 do
+            local vis_id = visual_entities[i]
+            local should_remove = false
+
+            -- Check if the player is pulling the item back to their inventory
+            if vis_id > 0 and IsItemZipping and IsItemZipping(vis_id) then
+                should_remove = true
+                print("[Mortar] Ingredient returned to player.")
+            end
+
+            if should_remove then
+                table.remove(visual_entities, i)
+                table.remove(stored_ingredients, i)
+            elseif cx then
+                -- Position ingredients neatly to the left, side-by-side
+                local current_x_offset = OFFSET_X_START + ((i - 1) * SPACING_X)
+                SetPosition(vis_id, cx + current_x_offset, cy + OFFSET_Y, cz + OFFSET_Z)
+            end
+        end
+
+        -- Dynamically update interaction text based on state
+        if not is_playing then
+            local held_item_id = GetSelectedItem()
+            if held_item_id ~= -1 and #stored_ingredients < MAX_INGREDIENTS then
+                SetInteractionText(my_entity_id, "Add Ingredient (" .. #stored_ingredients .. "/" .. MAX_INGREDIENTS .. ")")
+            elseif #stored_ingredients > 0 then
+                SetInteractionText(my_entity_id, "Start Grinding")
+            else
+                SetInteractionText(my_entity_id, "Requires Ingredient")
+            end
+        end
+    end
+
     if not is_playing then return end
 
     -- ==========================================
@@ -90,10 +141,7 @@ function Mortar.on_update(self, dt)
             if not click_was_down then
                 click_was_down = true
                 
-                -- NEW: Use UV Coordinates for Resolution Independence!
                 local uv_x, uv_y = GetMouseUV()
-                
-                -- Standardize to your UI Pixel Canvas
                 local mouse_x = uv_x * UI_WIDTH
                 local mouse_y = UI_HEIGHT - (uv_y * UI_HEIGHT) 
                 
@@ -157,7 +205,6 @@ function Mortar.on_update(self, dt)
                 SetScale(spinner_visual_id, dsx * 2.0, dsy * 2.0, dsz * 2.0)
             end
             
-            -- Set up initial mouse tracking for spinner
             local init_uv_x, init_uv_y = GetMouseUV()
             last_mx = init_uv_x * UI_WIDTH
             last_my = UI_HEIGHT - (init_uv_y * UI_HEIGHT)
@@ -172,7 +219,6 @@ function Mortar.on_update(self, dt)
         for i = #active_circles, 1, -1 do
             local circ = active_circles[i]
             circ.life = circ.life + dt
-            
             if circ.life >= CIRCLE_LIFESPAN then
                 DestroyEntity(circ.id)
                 table.remove(active_circles, i)
@@ -187,7 +233,6 @@ function Mortar.on_update(self, dt)
         for i = #feedback_texts, 1, -1 do
             local fb = feedback_texts[i]
             fb.life = fb.life + dt
-            
             if fb.life >= 1.0 then
                 DestroyEntity(fb.id)
                 table.remove(feedback_texts, i)
@@ -210,7 +255,6 @@ function Mortar.on_update(self, dt)
                 Mortar.StopMinigame(my_entity_id, true)
             end
         else
-            -- NEW: Using UV coordinates for the spinning phase as well
             local uv_x, uv_y = GetMouseUV()
             local mx = uv_x * UI_WIDTH
             local my = UI_HEIGHT - (uv_y * UI_HEIGHT)
@@ -280,18 +324,16 @@ function Mortar.StopMinigame(targetID, success)
     end
 
     if success then
-        has_ingredient = false 
-        SetInteractionText(targetID, "Place Ingredient")
-        
-        if ingredient_visual_id ~= nil and ingredient_visual_id ~= -1 then
-            DestroyEntity(ingredient_visual_id)
-            ingredient_visual_id = -1
+        -- Clear ingredients upon success
+        stored_ingredients = {} 
+        for i, vis_id in ipairs(visual_entities) do
+            if DestroyEntity then DestroyEntity(vis_id) end
         end
+        visual_entities = {}
 
+        -- You can update this to yield a specific mixed paste depending on stored_ingredients!
         AddToInventory("chopped_herb") 
         Sound.Play("event:/RecipeComplete") 
-    else
-        SetInteractionText(targetID, "Start Minigame")
     end
 end
 
@@ -305,21 +347,32 @@ function Mortar.OnInteract(senderID, targetID, actionType)
         return 
     end
     
-    if not has_ingredient then
-        local held_item_id = GetSelectedItem()
-        
-        if held_item_id ~= -1 then
+    local held_item_id = GetSelectedItem()
+
+    -- Branch A: Add an ingredient if holding one and there is space
+    if held_item_id ~= -1 then
+        if #stored_ingredients < MAX_INGREDIENTS then
             ConsumeSelectedItem()
-            has_ingredient = true
+            table.insert(stored_ingredients, held_item_id)
             
+            local vis_id = -1
             if SpawnCauldronItem then
-                ingredient_visual_id = SpawnCauldronItem(targetID, held_item_id)
+                vis_id = SpawnCauldronItem(targetID, held_item_id)
             end
+            table.insert(visual_entities, vis_id)
             
+            -- Override the C++ default rotation instantly!
+            if vis_id ~= -1 and SetRotation then
+                SetRotation(vis_id, ROT_X, ROT_Y, ROT_Z)
+            end
+
             Sound.Play("event:/PlaceDownItem")
-            SetInteractionText(targetID, "Start Minigame")
+        else
+            print("[Mortar] Mortar is full!")
         end
-    else
+
+    -- Branch B: Start the minigame if empty-handed and we have items
+    elseif #stored_ingredients > 0 then
         is_playing = true
         is_spinning = false
         is_finished = false

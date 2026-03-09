@@ -2812,11 +2812,11 @@
                     "position": [
                         -170.8560028076172,
                         7.574932098388672,
-                        -170.78199768066406
+                        -171.2719268798828
                     ],
                     "rotation": [
                         0.0,
-                        0.0,
+                        -3.235001884149824e-7,
                         0.0
                     ],
                     "scale": [
@@ -2898,7 +2898,7 @@
                     "position": [
                         -170.8560028076172,
                         7.574932098388672,
-                        -170.78199768066406
+                        -171.2719268798828
                     ],
                     "forward": [
                         0.0,
@@ -3120,7 +3120,7 @@
                     "animationSpeed": 1.0,
                     "bLoops": true,
                     "bPlayOnStart": true,
-                    "currentTime": 69.6001205444336
+                    "currentTime": 41.99396896362305
                 },
                 "TextureComponent": {
                     "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
@@ -3600,7 +3600,7 @@
                         1720.0,
                         860.0
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": false,
                     "hoverTextureGuid": ""
                 }
@@ -4785,6 +4785,10 @@
                         "howtoplay"
                     ]
                 },
+                "TextureComponent": {
+                    "guid": "ee9652cb-fd38-4acf-98e5-fd8f52fbcef4",
+                    "isUI": false
+                },
                 "ScriptProperties": {
                     "scripts": [
                         {
@@ -4793,10 +4797,6 @@
                             "hotReload": false
                         }
                     ]
-                },
-                "TextureComponent": {
-                    "guid": "ee9652cb-fd38-4acf-98e5-fd8f52fbcef4",
-                    "isUI": false
                 },
                 "ButtonComponent": {
                     "position": [
@@ -4821,7 +4821,7 @@
                     "position": [
                         960.0,
                         540.0,
-                        0.4
+                        0.4000000059604645
                     ],
                     "rotation": [
                         0.0,
@@ -4900,7 +4900,7 @@
                     "position": [
                         1050.0,
                         700.0,
-                        0.7
+                        0.699999988079071
                     ],
                     "rotation": [
                         0.0,
@@ -4952,7 +4952,7 @@
                     "position": [
                         0.48500001430511475,
                         0.699999988079071,
-                        0.6
+                        0.6000000238418579
                     ],
                     "rotation": [
                         0.0,
@@ -5003,7 +5003,7 @@
                     "position": [
                         1050.0,
                         500.0,
-                        0.7
+                        0.699999988079071
                     ],
                     "rotation": [
                         0.0,
@@ -5058,7 +5058,7 @@
                     "position": [
                         0.48500001430511475,
                         0.5,
-                        0.6
+                        0.6000000238418579
                     ],
                     "rotation": [
                         0.0,
@@ -5109,7 +5109,7 @@
                     "position": [
                         1050.0,
                         300.0,
-                        0.7
+                        0.699999988079071
                     ],
                     "rotation": [
                         0.0,
@@ -5164,7 +5164,7 @@
                     "position": [
                         0.48500001430511475,
                         0.30000001192092896,
-                        0.6
+                        0.6000000238418579
                     ],
                     "rotation": [
                         0.0,
@@ -5953,6 +5953,10 @@
                         "menu"
                     ]
                 },
+                "TextureComponent": {
+                    "guid": "bbc3bc8b-ac72-4981-a969-5cb0e9839b7f",
+                    "isUI": false
+                },
                 "ScriptProperties": {
                     "scripts": [
                         {
@@ -5961,10 +5965,6 @@
                             "hotReload": false
                         }
                     ]
-                },
-                "TextureComponent": {
-                    "guid": "bbc3bc8b-ac72-4981-a969-5cb0e9839b7f",
-                    "isUI": false
                 },
                 "ButtonComponent": {
                     "position": [
@@ -6144,7 +6144,6 @@
                     "isFrontButton": true,
                     "hoverTextureGuid": "2d77f5aa-e9a6-44b8-b408-7ce097441fdd"
                 }
-                
             }
         },
         {
@@ -19801,7 +19800,7 @@
                     "position": [
                         1050.0,
                         700.0,
-                        0.8
+                        0.800000011920929
                     ],
                     "rotation": [
                         0.0,
@@ -19857,7 +19856,7 @@
                     "position": [
                         450.0,
                         700.0,
-                        0.8
+                        0.800000011920929
                     ],
                     "rotation": [
                         0.0,
@@ -19911,7 +19910,7 @@
                     "position": [
                         1050.0,
                         500.0,
-                        0.8
+                        0.800000011920929
                     ],
                     "rotation": [
                         0.0,
@@ -19967,7 +19966,7 @@
                     "position": [
                         1050.0,
                         300.0,
-                        0.8
+                        0.800000011920929
                     ],
                     "rotation": [
                         0.0,
@@ -20023,7 +20022,7 @@
                     "position": [
                         1420.0,
                         300.0,
-                        0.9
+                        0.8999999761581421
                     ],
                     "rotation": [
                         0.0,
@@ -20078,7 +20077,7 @@
                     "position": [
                         1420.0,
                         700.0,
-                        0.9
+                        0.8999999761581421
                     ],
                     "rotation": [
                         0.0,
@@ -20130,7 +20129,7 @@
                     "position": [
                         1420.0,
                         500.0,
-                        0.9
+                        0.8999999761581421
                     ],
                     "rotation": [
                         0.0,
@@ -20185,7 +20184,7 @@
                     "position": [
                         450.0,
                         500.0,
-                        0.8
+                        0.800000011920929
                     ],
                     "rotation": [
                         0.0,
@@ -20239,7 +20238,7 @@
                     "position": [
                         450.0,
                         300.0,
-                        0.8
+                        0.800000011920929
                     ],
                     "rotation": [
                         0.0,
@@ -20742,7 +20741,7 @@
                         449.0,
                         357.0
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": true,
                     "hoverTextureGuid": ""
                 }
@@ -21848,7 +21847,7 @@
                         430.0,
                         550.0
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": false,
                     "hoverTextureGuid": ""
                 }
@@ -21912,7 +21911,7 @@
                         430.0,
                         550.0
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": false,
                     "hoverTextureGuid": ""
                 }
@@ -21967,7 +21966,7 @@
                         430.0,
                         550.0
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": false,
                     "hoverTextureGuid": ""
                 }
@@ -22022,7 +22021,7 @@
                         430.0,
                         480.0
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": false,
                     "hoverTextureGuid": ""
                 }
@@ -23685,6 +23684,201 @@
                 "TextureComponent": {
                     "guid": "bd53721a-583e-47d7-b196-17af52bd40fe",
                     "isUI": false
+                }
+            }
+        },
+        {
+            "name": "Table 2",
+            "guid": "53ba3b51-0952-4b55-8b4b-1f2ad5e89c2c",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -47.8031120300293,
+                        5.706251621246338,
+                        0.6743062138557434
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        2.8104922771453857,
+                        1.6536455154418945,
+                        2.9104809761047363
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
+                    "sortIndex": 24,
+                    "children": []
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "MeshComponent": {
+                    "guid": "177fa052-079f-42bb-b225-97be34770804",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "c3eb9787-d36c-4380-a39f-78737901cda2",
+                    "isUI": false
+                },
+                "BoxColliderComponent": {
+                    "colliders": [
+                        {
+                            "size": [
+                                2.0,
+                                2.0,
+                                1.0
+                            ],
+                            "center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "canPassThrough": false,
+                            "triggerMessage": "",
+                            "isInteractable": false,
+                            "interactMessage": "",
+                            "promptText": ""
+                        }
+                    ]
+                },
+                "PhysicsProperties": {
+                    "category": 1,
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 1.0,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "startAwake": true
+                }
+            }
+        },
+        {
+            "name": "Mortar",
+            "guid": "eb2fdb7a-289e-4652-b363-26137da3d2b5",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -45.95479202270508,
+                        7.379386901855469,
+                        0.6743031144142151
+                    ],
+                    "rotation": [
+                        180.0,
+                        -89.99994659423828,
+                        180.0
+                    ],
+                    "scale": [
+                        0.30000001192092896,
+                        0.30000001192092896,
+                        0.30000001192092896
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "sortIndex": 25,
+                    "children": []
+                },
+                "TagComponent": {
+                    "tags": [
+                        "Interactable"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": "00ce9d25-0901-40b6-9bce-0d21d170bf81",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "3eaa4a84-24c6-474c-9580-92e20dbedcb4",
+                    "isUI": false
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "18045653-72cf-4920-9971-f2782f8edbc1",
+                            "scriptPath": "Assets\\Scripts\\Mortar.lua",
+                            "hotReload": false
+                        }
+                    ]
+                },
+                "BoxColliderComponent": {
+                    "colliders": [
+                        {
+                            "size": [
+                                8.100000381469727,
+                                5.699999809265137,
+                                4.699999809265137
+                            ],
+                            "center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "canPassThrough": false,
+                            "triggerMessage": "",
+                            "isInteractable": true,
+                            "interactMessage": "StartGrinding",
+                            "promptText": "Requires Ingredient"
+                        }
+                    ]
+                },
+                "PhysicsProperties": {
+                    "category": 1,
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 0.5,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "startAwake": true
+                },
+                "EventReceiverComponent": {
+                    "receivers": [
+                        {
+                            "messageToListenFor": "StartGrinding",
+                            "luaFunctionToCall": "OnInteract"
+                        }
+                    ]
+                },
+                "AudioComponent": {
+                    "guid": "d6f23fa6-ff6f-4892-91b3-ca11349bb492",
+                    "eventName": "event:/ChoppingHerb",
+                    "is3D": true,
+                    "minDistance": 1.0,
+                    "maxDistance": 100.0,
+                    "volume": 1.0,
+                    "loop": false,
+                    "playOnStart": false,
+                    "isPlaying": false,
+                    "lastPosition": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
                 }
             }
         }
