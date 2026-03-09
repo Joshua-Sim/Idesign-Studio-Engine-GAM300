@@ -1,5 +1,5 @@
 {
-    "count": 306,
+    "count": 314,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -3281,8 +3281,8 @@
         },
         {
             "guid": "b691c537-b224-461e-83e2-b83502fb0a43",
-            "name": "CopperOre",
-            "path": "Assets\\Textures\\CopperOre.png",
+            "name": "copper_ore3D",
+            "path": "Assets\\Textures\\copper_ore3D.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
@@ -3292,8 +3292,8 @@
         },
         {
             "guid": "79118230-fed0-420a-b613-63a0c20fb607",
-            "name": "IronBar",
-            "path": "Assets\\Textures\\IronBar.png",
+            "name": "iron_bar3D",
+            "path": "Assets\\Textures\\iron_bar3D.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
@@ -3303,8 +3303,8 @@
         },
         {
             "guid": "2642ccd9-5c56-48fe-8e85-452b329651f1",
-            "name": "IronOre",
-            "path": "Assets\\Textures\\IronOre.png",
+            "name": "iron_ore3D",
+            "path": "Assets\\Textures\\iron_ore3D.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
@@ -3336,8 +3336,8 @@
         },
         {
             "guid": "e72c5720-7b6c-4ee4-b06e-f2ef7b46cfd4",
-            "name": "CopperBar",
-            "path": "Assets\\Textures\\CopperBar.png",
+            "name": "copper_bar3D",
+            "path": "Assets\\Textures\\copper_bar3D.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
@@ -3360,6 +3360,94 @@
             "guid": "3eaa4a84-24c6-474c-9580-92e20dbedcb4",
             "name": "Mortar_new-0-mortar",
             "path": "Assets\\Textures\\Mortar_new-0-mortar.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "e74753c8-640b-43a9-b0b7-5000e170531b",
+            "name": "copper_ore",
+            "path": "Assets\\Textures\\copper_ore.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "688b2a4f-90b6-475a-bacc-af8c42a5b9ca",
+            "name": "iron_ore",
+            "path": "Assets\\Textures\\iron_ore.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "ca564843-4632-4f62-aeb1-2c4390d26024",
+            "name": "iron_bar",
+            "path": "Assets\\Textures\\iron_bar.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "8f11db28-1906-412c-93e2-06f3102e399b",
+            "name": "copper_bar",
+            "path": "Assets\\Textures\\copper_bar.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "2cca73ba-7ab5-4898-bec8-0f37cee7d7b4",
+            "name": "mending_potion3D",
+            "path": "Assets\\Textures\\mending_potion3D.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "bb3c5a6b-d86d-4c61-8a3f-324f60b86b5f",
+            "name": "mending_potion",
+            "path": "Assets\\Textures\\mending_potion.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "d77bfc23-f2f8-483b-acc6-c803494c533d",
+            "name": "defense_potion",
+            "path": "Assets\\Textures\\defense_potion.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "4349da80-65e4-4492-9229-c860da25587f",
+            "name": "defense_potion3D",
+            "path": "Assets\\Textures\\defense_potion3D.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,

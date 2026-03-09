@@ -857,8 +857,8 @@
         },
         {
             "guid": "ae3c86d6-9b19-4484-b88b-582606f3bfe7",
-            "name": "CopperOre",
-            "path": "Assets\\Objects\\CopperOre.obj",
+            "name": "copper_ore",
+            "path": "Assets\\Objects\\copper_ore.obj",
             "vao": 345,
             "vbo": 676,
             "ebo": 677,
@@ -866,8 +866,8 @@
         },
         {
             "guid": "aedb4577-4302-4a54-a762-b12920503e54",
-            "name": "IronBar",
-            "path": "Assets\\Objects\\IronBar.obj",
+            "name": "iron_bar",
+            "path": "Assets\\Objects\\iron_bar.obj",
             "vao": 346,
             "vbo": 678,
             "ebo": 679,
@@ -875,8 +875,8 @@
         },
         {
             "guid": "7c1c5c3c-ec12-4542-84f3-6127123c40ae",
-            "name": "IronOre",
-            "path": "Assets\\Objects\\IronOre.obj",
+            "name": "iron_ore",
+            "path": "Assets\\Objects\\iron_ore.obj",
             "vao": 347,
             "vbo": 680,
             "ebo": 681,
@@ -902,8 +902,8 @@
         },
         {
             "guid": "0df8072a-987f-469c-aeee-5d36ce29055d",
-            "name": "CopperBar",
-            "path": "Assets\\Objects\\CopperBar.obj",
+            "name": "copper_bar",
+            "path": "Assets\\Objects\\copper_bar.obj",
             "vao": 350,
             "vbo": 686,
             "ebo": 687,
@@ -926,6 +926,42 @@
             "vbo": 690,
             "ebo": 691,
             "indexCount": 4704
+        },
+        {
+            "guid": "cef3cfc3-dd31-45b8-8a86-60e4d3676b3e",
+            "name": "mending_potion",
+            "path": "Assets\\Objects\\mending_potion.obj",
+            "vao": 356,
+            "vbo": 699,
+            "ebo": 700,
+            "indexCount": 1116
+        },
+        {
+            "guid": "442ad97a-1926-4698-828c-778a3bf2a78f",
+            "name": "defense_potion",
+            "path": "Assets\\Objects\\defense_potion.obj",
+            "vao": 357,
+            "vbo": 701,
+            "ebo": 702,
+            "indexCount": 2970
+        },
+        {
+            "guid": "9add4c42-1abb-4c37-b4c2-7808966f5e64",
+            "name": "healing_powder",
+            "path": "Assets\\Objects\\healing_powder.obj",
+            "vao": 358,
+            "vbo": 703,
+            "ebo": 704,
+            "indexCount": 20730
+        },
+        {
+            "guid": "407ccfc6-13f2-498d-a329-1445f0bf80bb",
+            "name": "preservation_powder",
+            "path": "Assets\\Objects\\preservation_powder.obj",
+            "vao": 359,
+            "vbo": 705,
+            "ebo": 706,
+            "indexCount": 20730
         }
     ]
 }
