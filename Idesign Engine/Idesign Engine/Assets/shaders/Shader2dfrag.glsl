@@ -6,6 +6,7 @@ in vec2 TexCoords;
 uniform sampler2D uTexture; // Your 2D image
 uniform vec3 uColor;        // Optional: To tint the image (usually white)
 uniform float uAlpha;       // Optional: To fade the UI (transparency)
+uniform float uGamma;       // Gamma correction (matches scene gamma slider)
 
 void main()
 {
@@ -18,8 +19,9 @@ void main()
     if(FragColor.a < 0.01)
         discard;
 
-    // Gamma correction: convert linear -> sRGB for correct brightness
-    // sRGB textures are auto-converted to linear on sample, so we convert back
-    // Last used for .dds files 
-    // FragColor.rgb = pow(FragColor.rgb, vec3(1.0 / 1.5));
+    // Apply gamma correction to RGB only — alpha must not be affected
+    FragColor.rgb = pow(FragColor.rgb, vec3(1.0 / uGamma));
+
+    // Use a linear brightness multiply:
+    // FragColor.rgb = FragColor.rgb * uGamma;
 }

@@ -27,11 +27,19 @@ local function EnsureState(entity)
         print("[FloatUpAndDelete] Creating state for entity: " .. tostring(entity))
         
         local x, y, z = GetPosition(entity)
+
+        -- Capture the engine state active at spawn time so we can pause
+        -- the animation if the player switches screens mid-float
+        local spawnState = "Play"
+        if GetCurrentEngineState then
+            spawnState = GetCurrentEngineState()
+        end
         
         instances[entity] = {
             elapsed_time = 0.0,
             initial_y = y,
-            is_destroyed = false
+            is_destroyed = false,
+            spawn_state = spawnState,   -- Engine state this log was created in
         }
         
         -- Start at 70% of the prefab scale
@@ -54,6 +62,16 @@ function FloatUpAndDelete.on_update(self, dt)
     -- GUARD: Don't run if already destroyed
     if state.is_destroyed then
         return
+    end
+
+    -- GUARD: Pause animation if we've left the state this log was spawned in.
+    -- Hides the log while in a different screen; resumes when back in the same state.
+    if GetCurrentEngineState then
+        local currentState = GetCurrentEngineState()
+        if currentState ~= state.spawn_state then
+            SetTextComponent(self.entity, "opacity", 0.0)
+            return
+        end
     end
     
     state.elapsed_time = state.elapsed_time + dt
@@ -81,6 +99,10 @@ function FloatUpAndDelete.on_update(self, dt)
         
         -- Update text opacity
         SetTextComponent(self.entity, "opacity", opacity)
+    else
+        -- Ensure opacity is fully visible before fade begins
+        -- (needed to restore visibility after returning from another state)
+        SetTextComponent(self.entity, "opacity", 1.0)
     end
     
     -- Get current position

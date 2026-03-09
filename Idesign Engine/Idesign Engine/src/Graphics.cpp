@@ -859,9 +859,9 @@ namespace Framework {
             }
         }
 
-    // ====================================================================
-        // EXCLUSIVE RENDERING (Saves 10 FPS)
         // ====================================================================
+            // EXCLUSIVE RENDERING (Saves 10 FPS)
+            // ====================================================================
         bool renderView0 = true; // Safe defaults
         bool renderView1 = false;
 
@@ -1517,7 +1517,7 @@ namespace Framework {
         const float panelPad = 12.0f;     // matches your panel padding
 
         // Panel bottom-left (x0,y0) for the GRID (not including outer panel pad)
-        const float x0 = std::round((screenW - gridW) * 0.5);                 
+        const float x0 = std::round((screenW - gridW) * 0.5);
         const float y0 = std::round(hotbarY0 + hotbarPanelH + marginAboveHotbar);     // same vertical logic
 
         const float panelX = x0 - panelPad;
@@ -1818,6 +1818,7 @@ namespace Framework {
         finalShader.setInt("bloomTexture", 1);
         finalShader.setFloat("exposure", hdrExposure);
         finalShader.setFloat("bloomStrength", bloomStrength);
+        finalShader.setFloat("gamma", m_gamma);
         renderQuad();
 
         // === Optional: per-view HUD/text ===
@@ -3059,6 +3060,7 @@ namespace Framework {
         finalShader.setInt("bloomTexture", 1);
         finalShader.setFloat("exposure", hdrExposure);
         finalShader.setFloat("bloomStrength", bloomStrength);
+        finalShader.setFloat("gamma", m_gamma);
         renderQuad();
 
         // --- 8. HUD/TEXT PASS ---
@@ -3129,6 +3131,7 @@ namespace Framework {
 
         uiShader.use();
         uiShader.setMat4("uProjection", uiProj);
+        uiShader.setFloat("uGamma", m_gamma / 2.2f); // normalize: 2.2=neutral(1.0), <2.2=darker, >2.2=brighter
 
 
         // --------------------------------------------
@@ -3484,5 +3487,4 @@ namespace Framework {
             m_visibleEntities.push_back(e);
         }
     }
-
 }

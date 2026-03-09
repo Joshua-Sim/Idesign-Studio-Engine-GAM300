@@ -13,6 +13,7 @@
 
 #include "pch.h"
 #include <iostream>
+#include <sstream>
 #include "Coordinator.h"
 #include "ButtonSystem.h"
 #include "TextureProperties.h"
@@ -20,19 +21,80 @@
 #include "TextProperties.h"
 #include "TextureLoader.h"
 #include "AssetManager.h"
+#include "Graphics.h"
 
 extern Framework::Coordinator ecsInterface;
 namespace Framework {
 
     ButtonSystem::ButtonSystem() : m_inputHandler(nullptr) {}
-    ButtonSystem::ButtonSystem(InputHandler* inputHandler) 
-                            : m_inputHandler(inputHandler), 
-                              m_isDraggingSlider(false), 
-                              m_activeKnob(0) {}
+    ButtonSystem::ButtonSystem(InputHandler* inputHandler)
+        : m_inputHandler(inputHandler),
+        m_isDraggingSlider(false),
+        m_activeKnob(0) {
+    }
 
     void ButtonSystem::SetInputHandler(InputHandler* handler)
     {
         m_inputHandler = handler;
+    }
+
+    // ---------------------------------------------------------------------
+    // Syncs a slider's knob position, fill bar, and text to a given volume
+    // value (0-1). isGamma=true formats text as "X.XX", otherwise "XX%".
+    // ---------------------------------------------------------------------
+    void ButtonSystem::SyncSliderToValue(const std::string& barTag, const std::string& fillTag,
+        const std::string& knobTag, const std::string& textTag,
+        float volume, bool isGamma)
+    {
+        volume = std::clamp(volume, 0.0f, 1.0f);
+
+        // --- Find background bar ---
+        auto bars = ecsInterface.GetEntitiesByTag(barTag);
+        if (bars.empty()) return;
+        Entity bar = bars.front();
+        if (!ecsInterface.IsEntityValid(bar) || !ecsInterface.HasComponent<TransformComponent>(bar)) return;
+        auto& barTr = ecsInterface.GetComponent<TransformComponent>(bar);
+        float barLeft = barTr.position.x - 0.5f * barTr.scale.x;
+        float barRight = barTr.position.x + 0.5f * barTr.scale.x;
+
+        // --- Sync knob X ---
+        auto knobs = ecsInterface.GetEntitiesByTag(knobTag);
+        for (Entity knob : knobs)
+        {
+            if (!ecsInterface.IsEntityValid(knob) || !ecsInterface.HasComponent<TransformComponent>(knob)) continue;
+            auto& knobTr = ecsInterface.GetComponent<TransformComponent>(knob);
+            knobTr.position.x = barLeft + volume * (barRight - barLeft);
+        }
+
+        // --- Sync fill bar ---
+        auto fills = ecsInterface.GetEntitiesByTag(fillTag);
+        for (Entity fill : fills)
+        {
+            if (!ecsInterface.IsEntityValid(fill) || !ecsInterface.HasComponent<TransformComponent>(fill)) continue;
+            auto& fillTr = ecsInterface.GetComponent<TransformComponent>(fill);
+            fillTr.scale.x = barTr.scale.x * volume;
+            fillTr.position.x = barLeft + 0.5f * fillTr.scale.x;
+        }
+
+        // --- Sync text ---
+        auto texts = ecsInterface.GetEntitiesByTag(textTag);
+        for (Entity textEnt : texts)
+        {
+            if (!ecsInterface.IsEntityValid(textEnt) || !ecsInterface.HasComponent<TextProperties>(textEnt)) continue;
+            auto& tp = ecsInterface.GetComponent<TextProperties>(textEnt);
+            if (isGamma)
+            {
+                float gamma = 1.0f + volume * 2.0f; // 1.0=dark, 2.0=neutral, 3.0=bright
+                std::ostringstream oss;
+                oss << std::fixed << std::setprecision(2) << gamma;
+                tp.text = oss.str();
+            }
+            else
+            {
+                int percent = static_cast<int>(volume * 100.0f);
+                tp.text = std::to_string(percent) + "%";
+            }
+        }
     }
 
     void ButtonSystem::Initialize() {
@@ -58,6 +120,14 @@ namespace Framework {
                 }
             }
         }
+
+        // --- Sync all sliders to their starting values on startup ---
+        // Master, BGM, SFX all start at 100% (volume = 1.0)
+        SyncSliderToValue("sliderBar_master", "sliderFill_master", "sliderKnob_master", "volumeText_master", 1.0f, false);
+        SyncSliderToValue("sliderBar_bgm", "sliderFill_bgm", "sliderKnob_bgm", "volumeText_bgm", 1.0f, false);
+        SyncSliderToValue("sliderBar_sfx", "sliderFill_sfx", "sliderKnob_sfx", "volumeText_sfx", 1.0f, false);
+        // Gamma starts at 2.2, which is volume = (2.2 - 1.0) / 2.0 = 0.6
+        SyncSliderToValue("sliderBar_gamma", "sliderFill_gamma", "sliderKnob_gamma", "text_gamma", 0.6f, true); // 0.6 == gamma 2.2
     }
 
     void ButtonSystem::Update(float deltaTime)
@@ -65,8 +135,8 @@ namespace Framework {
         (void)deltaTime;
         for (auto entity : mEntities)
         {
-            if (!ecsInterface.HasComponent<ButtonComponent>(entity)     ||
-                !ecsInterface.HasComponent<TransformComponent>(entity)  ||
+            if (!ecsInterface.HasComponent<ButtonComponent>(entity) ||
+                !ecsInterface.HasComponent<TransformComponent>(entity) ||
                 !ecsInterface.HasComponent<TextureProperties>(entity))
                 continue;
 
@@ -129,9 +199,9 @@ namespace Framework {
         float designX = u * DESIGN_WIDTH;
         float designY = v * DESIGN_HEIGHT;
 
-        auto* input =     InputHandler::GetInstance();
-        bool isPressed =  input->IsMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT);
-        bool isHeld =     input->IsMouseButtonHeld(GLFW_MOUSE_BUTTON_LEFT);
+        auto* input = InputHandler::GetInstance();
+        bool isPressed = input->IsMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT);
+        bool isHeld = input->IsMouseButtonHeld(GLFW_MOUSE_BUTTON_LEFT);
         bool isReleased = input->IsMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT);
 
         /*--------------------------------------------------
@@ -155,15 +225,16 @@ namespace Framework {
             gather(SliderType::Master, "sliderKnob_master");
             gather(SliderType::BGM, "sliderKnob_bgm");
             gather(SliderType::SFX, "sliderKnob_sfx");
+            gather(SliderType::Gamma, "sliderKnob_gamma");
 
             for (const auto& info : knobs)
             {
                 auto& tr = ecsInterface.GetComponent<TransformComponent>(info.knob);
 
-                float left =   tr.position.x - 0.5f * tr.scale.x;
-                float right =  tr.position.x + 0.5f * tr.scale.x;
+                float left = tr.position.x - 0.5f * tr.scale.x;
+                float right = tr.position.x + 0.5f * tr.scale.x;
                 float bottom = tr.position.y - 0.5f * tr.scale.y;
-                float top =    tr.position.y + 0.5f * tr.scale.y;
+                float top = tr.position.y + 0.5f * tr.scale.y;
 
                 if (designX >= left && designX <= right && designY >= bottom && designY <= top)
                 {
@@ -186,22 +257,27 @@ namespace Framework {
 
             switch (m_activeSliderType)
             {
-                case SliderType::Master:
-                    barTag = "sliderBar_master";
-                    textTag = "volumeText_master";
-                    lastVol = &m_lastMasterVol;
-                    break;
-                case SliderType::BGM:
-                    barTag = "sliderBar_bgm";
-                    textTag = "volumeText_bgm";
-                    lastVol = &m_lastBGMVol;
-                    break;
-                case SliderType::SFX:
-                    barTag = "sliderBar_sfx";
-                    textTag = "volumeText_sfx";
-                    lastVol = &m_lastSFXVol;
-                    break;
-                default: return;
+            case SliderType::Master:
+                barTag = "sliderBar_master";
+                textTag = "volumeText_master";
+                lastVol = &m_lastMasterVol;
+                break;
+            case SliderType::BGM:
+                barTag = "sliderBar_bgm";
+                textTag = "volumeText_bgm";
+                lastVol = &m_lastBGMVol;
+                break;
+            case SliderType::SFX:
+                barTag = "sliderBar_sfx";
+                textTag = "volumeText_sfx";
+                lastVol = &m_lastSFXVol;
+                break;
+            case SliderType::Gamma:
+                barTag = "sliderBar_gamma";
+                textTag = "text_gamma";
+                lastVol = &m_lastGamma;
+                break;
+            default: return;
             }
 
             auto bars = ecsInterface.GetEntitiesByTag(barTag);
@@ -228,6 +304,7 @@ namespace Framework {
             case SliderType::Master: fillBarTag = "sliderFill_master"; break;
             case SliderType::BGM:    fillBarTag = "sliderFill_bgm";    break;
             case SliderType::SFX:    fillBarTag = "sliderFill_sfx";    break;
+            case SliderType::Gamma:  fillBarTag = "sliderFill_gamma"; break;
             default: break;
             }
 
@@ -257,22 +334,44 @@ namespace Framework {
             /* Apply audio */
             switch (m_activeSliderType)
             {
-                case SliderType::Master: g_AudioSystem->SetMasterVolume(volume); break;
-                case SliderType::BGM:    g_AudioSystem->SetBGMVolume(volume);    break;
-                case SliderType::SFX:    g_AudioSystem->SetSFXVolume(volume);    break;
-                default: break;
-            }
-
-            /* Update text + click sound only when value changes */
-            if (lastVol && fabs(volume - *lastVol) > 0.01f)
+            case SliderType::Master: g_AudioSystem->SetMasterVolume(volume); break;
+            case SliderType::BGM:    g_AudioSystem->SetBGMVolume(volume);    break;
+            case SliderType::SFX:    g_AudioSystem->SetSFXVolume(volume);    break;
+            case SliderType::Gamma:
             {
+                float gamma = 1.0f + volume * 2.0f; // 1.0=dark, 2.0=neutral, 3.0=bright
+                auto* gfx = Graphics::GetInstance();
+                if (gfx) gfx->SetGamma(gamma);
+
+                // Update text label with actual gamma value
                 auto texts = ecsInterface.GetEntitiesByTag(textTag);
                 for (Entity textEnt : texts)
                 {
                     if (ecsInterface.IsEntityValid(textEnt) && ecsInterface.HasComponent<TextProperties>(textEnt))
                     {
-                        int percent = static_cast<int>(volume * 100.0f);
-                        ecsInterface.GetComponent<TextProperties>(textEnt).text = std::to_string(percent) + "%";
+                        std::ostringstream oss;
+                        oss << std::fixed << std::setprecision(2) << gamma;
+                        ecsInterface.GetComponent<TextProperties>(textEnt).text = oss.str();
+                    }
+                }
+                break;
+            }
+            default: break;
+            }
+
+            /* Update text + click sound only when value changes */
+            if (lastVol && fabs(volume - *lastVol) > 0.01f)
+            {
+                if (m_activeSliderType != SliderType::Gamma)  // ADD THIS GUARD
+                {
+                    auto texts = ecsInterface.GetEntitiesByTag(textTag);
+                    for (Entity textEnt : texts)
+                    {
+                        if (ecsInterface.IsEntityValid(textEnt) && ecsInterface.HasComponent<TextProperties>(textEnt))
+                        {
+                            int percent = static_cast<int>(volume * 100.0f);
+                            ecsInterface.GetComponent<TextProperties>(textEnt).text = std::to_string(percent) + "%";
+                        }
                     }
                 }
 
@@ -280,8 +379,9 @@ namespace Framework {
                 {
                     //g_AudioSystem->PlayAudio("event:/ButtonClick");
                 }
-                *lastVol = volume;
             }
+            // Always update lastVol so text never gets stuck between frames
+            if (lastVol) *lastVol = volume;
         }
 
         /*--------------------------------------------------
@@ -294,7 +394,7 @@ namespace Framework {
             m_activeSliderType = SliderType::None;
         }
     }
-    
+
     void ButtonSystem::UpdateHoverUV(float u, float v) {
         float designX = u * DESIGN_WIDTH;
         float designY = v * DESIGN_HEIGHT;
@@ -305,7 +405,7 @@ namespace Framework {
                 !ecsInterface.HasComponent<TextureProperties>(entity)) {
                 continue;
             }
-                
+
 
             auto& button = ecsInterface.GetComponent<ButtonComponent>(entity);
             auto& tr = ecsInterface.GetComponent<TransformComponent>(entity);

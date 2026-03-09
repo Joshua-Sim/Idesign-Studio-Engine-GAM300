@@ -38,14 +38,14 @@ extern Terrain      terrain;
 extern const int    TerrainSize;
 extern const float  TerrainScale;
 
-namespace Framework 
+namespace Framework
 {
     class ImguiManager;
 }
 
-namespace Framework 
+namespace Framework
 {
-    
+
     // ===========================================================================
     // FRUSTUM CULLING STRUCT
     // ===========================================================================
@@ -78,7 +78,7 @@ namespace Framework
         ~Graphics();
 
         void Initialize() override;
-        
+
         void Update(float deltaTime) override;
         std::string GetName() override;
         static GLuint CreateFramebuffer(int width, int height, GLuint& texture, GLuint& rbo_fb);
@@ -150,6 +150,8 @@ namespace Framework
             return &m_skybox;
         }
 
+        float GetGamma() const { return m_gamma; }
+        void SetGamma(float g) { m_gamma = glm::clamp(g, 0.1f, 5.0f); }
 
     private:
 
@@ -173,7 +175,7 @@ namespace Framework
         float lastTime = 0.0f;
 
         // camera & movement
-       Camera camera{ {0.f, 1.f, 3.f} };
+        Camera camera{ {0.f, 1.f, 3.f} };
         static bool mouseCaptured;
         static bool groundMode;
 
@@ -186,7 +188,7 @@ namespace Framework
         Camera sceneCamera{ {0.f, 3.f, 8.f} }; // Free-fly editor camera
         Camera gameCamera{ {-33, 7.631, 14} }; // Gameplay camera
         CameraMode activeCameraMode = CameraMode::Game;
-       // Camera& cam = GetActiveCamera();
+        // Camera& cam = GetActiveCamera();
 
         Camera& GetActiveCamera()
         {
@@ -232,7 +234,7 @@ namespace Framework
         //END OF FOLIAGES
 
         //PARTICLE (JASPER)
-        FoliageRenderer* m_particlePixelRenderer = nullptr; 
+        FoliageRenderer* m_particlePixelRenderer = nullptr;
         unsigned int m_particleTextureID = 0;
 
         //pebbles
@@ -268,9 +270,10 @@ namespace Framework
         const unsigned int MAX_POINT_LIGHTS = 8;
         const unsigned int MAX_SPOT_LIGHTS = 4;
 
-        // ADD HDR & BLOOM VARIABLES
+        // ADD HDR & BLOOM VARIABLES + GAMMA (NEW)
         float hdrExposure = 1.0f;
         float bloomStrength = 1.0f;
+        float m_gamma = 2.2f;  // 2.2 = standard gamma (neutral for UI and 3D)
 
         GLuint hdrFBO = 0;
         GLuint colorBuffer = 0;

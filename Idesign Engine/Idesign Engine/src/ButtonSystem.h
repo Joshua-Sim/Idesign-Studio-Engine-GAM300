@@ -22,12 +22,12 @@
 #include "ComponentList.h"
 #include "ButtonComponent.h"
 
-namespace Framework 
+namespace Framework
 {
-    class ButtonSystem : public ISystem 
+    class ButtonSystem : public ISystem
     {
     public:
-        enum SliderType { Master, BGM, SFX, None };
+        enum SliderType { Master, BGM, SFX, Gamma, None };
 
         ButtonSystem();
         ButtonSystem(InputHandler* inputHandler);
@@ -42,6 +42,9 @@ namespace Framework
         void HandleClickUV(float u, float v);
         void HandleSliderDrag(float u, float v);
         void UpdateHoverUV(float u, float v);
+        void SyncSliderToValue(const std::string& barTag, const std::string& fillTag,
+            const std::string& knobTag, const std::string& textTag,
+            float volume, bool isGamma);
 
     private:
 
@@ -56,6 +59,7 @@ namespace Framework
         float m_lastMasterVol = -1.0f;
         float m_lastBGMVol = -1.0f;
         float m_lastSFXVol = -1.0f;
+        float m_lastGamma = 0.6f;  // volume=0.6 == gamma 2.2 (neutral default)
 
         SliderType m_activeSliderType = SliderType::None;     // Track which slider type is currently active
     };

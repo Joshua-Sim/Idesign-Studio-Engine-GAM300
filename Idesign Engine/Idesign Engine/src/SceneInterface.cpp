@@ -294,17 +294,29 @@ namespace Framework
             {
                 if (!ecsInterface.IsEntityValid(e)) continue;
 
-                if (ecsInterface.HasComponent<ButtonComponent>(e) &&
-                    ecsInterface.HasComponent<TextureProperties>(e))
+                if (ecsInterface.HasComponent<TextureProperties>(e))
                 {
                     auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
-                    // Only enforce UI flag if NOT in editor mode
                     if (!engineState.Is(EngineMode::Editor)) {
-                        if (!engineState.Is(EngineMode::Editor)) { texture.isUI = engineState.Is(EngineMode::MapSelection) ? 1.f : 0.f; }
+                        bool inMap = engineState.Is(EngineMode::MapSelection);
+                        texture.isUI = inMap ? 1.f : 0.f;
                     }
                 }
             }
 
+            // 6b. MAP DIALOG LOGIC (non-button dialog entities)
+            auto mapDialogEntities = ecsInterface.GetEntitiesByTag("mapdialog");
+            for (Entity e : mapDialogEntities)
+            {
+                if (!ecsInterface.IsEntityValid(e)) continue;
+                if (ecsInterface.HasComponent<TextureProperties>(e))
+                {
+                    auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
+                    if (!engineState.Is(EngineMode::Editor)) {
+                        texture.isUI = engineState.Is(EngineMode::MapSelection) ? 1.f : 0.f;
+                    }
+                }
+            }
 
             // 7. Cutscene (Open after click Play)
             if (engineState.Is(EngineMode::Cutscene))
@@ -597,7 +609,6 @@ namespace Framework
                 IntroFinished = false;
             }
 
-
             // Coin & Sun Icon + Day Text
             bool isDayPlay = engineState.Is(EngineMode::Play) &&
                 phaseManager->GetCurrentPhase() == GamePhase::Day;
@@ -627,6 +638,8 @@ namespace Framework
             bool isNightPlay = engineState.Is(EngineMode::Play) &&
                 phaseManager->GetCurrentPhase() == GamePhase::Night;
 
+            bool showCoinUI = isNightPlay || engineState.Is(EngineMode::Upgrade);
+
             auto coinMoonEntity = ecsInterface.GetEntitiesByTag("coinmoonicon");
             for (Entity e : coinMoonEntity)
             {
@@ -634,7 +647,7 @@ namespace Framework
                 if (ecsInterface.HasComponent<TextureProperties>(e))
                 {
                     auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
-                    texture.isUI = isNightPlay;
+                    texture.isUI = showCoinUI;
                 }
             }
 
@@ -643,9 +656,9 @@ namespace Framework
                 ecsInterface.HasComponent<TextProperties>(nightTextEntity))
             {
                 auto& text = ecsInterface.GetComponent<TextProperties>(nightTextEntity);
-                text.opacity = isNightPlay ? 1.0f : 0.0f;
+                text.opacity = showCoinUI ? 1.0f : 0.0f;
                 if (isNightPlay)
-                    text.text = ": Night 1|7"; // wire up dynamic values later
+                    text.text = ": Night 1|7";
             }
 
             // Mini Controls
