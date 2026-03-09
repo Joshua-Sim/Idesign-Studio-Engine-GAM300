@@ -1548,7 +1548,8 @@
         },
         "TagComponent": {
           "tags": [
-            "Interactable"
+            "Interactable",
+            "Frog"
           ]
         },
         "MeshComponent": {
@@ -1911,7 +1912,8 @@
         },
         "TagComponent": {
           "tags": [
-            "Interactable"
+            "Interactable",
+            "Cutting_Board"
           ]
         },
         "MeshComponent": {
@@ -3107,7 +3109,8 @@
         },
         "TagComponent": {
           "tags": [
-            "Interactable"
+            "Interactable",
+            "Cauldron"
           ]
         },
         "MeshComponent": {
@@ -5526,62 +5529,68 @@
         }
       }
     },
-    {
-      "name": "DialogueSystem",
-      "guid": "6cb91ce4-34a5-4fb5-9341-5e906ce4cb1d",
-      "components": {
-        "TransformComponent": {
-          "position": [
-            0.0,
-            0.0,
-            0.0
-          ],
-          "rotation": [
-            0.0,
-            0.0,
-            0.0
-          ],
-          "scale": [
-            1.0,
-            1.0,
-            1.0
-          ],
-          "isActive": true
-        },
-        "HierarchyComponent": {
-          "parent": "",
-          "sortIndex": 92,
-          "children": [
-            "fb9692a4-7331-45ad-87e9-1b0b96f2279d",
-            "da060ba3-4057-4d30-8a07-0780b111f4b6",
-            "63158d02-64c9-4df7-ab58-caa2c18611ac",
-            "b928e820-addf-48d3-8d83-ad3c35821f2d",
-            "7433fd7c-21bf-4d58-b7a2-8b1904955557",
-            "1ef356ab-007e-49a5-9f22-ed6476b4cc4a",
-            "8ae286b4-616b-4f76-ae16-5624f510d274"
-          ]
-        },
-        "TagComponent": {
-          "tags": []
-        },
-        "MeshComponent": {
-          "guid": ""
-        },
-        "TextureComponent": {
-          "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
-          "isUI": false
-        },
-        "ScriptProperties": {
-          "scripts": [
-            {
-              "guid": "98caa7fe-14e5-4cb0-b0c3-bc039dbde2cf",
-              "scriptPath": "Assets\\Scripts\\DialogueSystem.lua",
-              "hotReload": false
+        {
+            "name": "DialogueSystem",
+            "guid": "6cb91ce4-34a5-4fb5-9341-5e906ce4cb1d",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "sortIndex": 92,
+                    "children": [
+                        "fb9692a4-7331-45ad-87e9-1b0b96f2279d",
+                        "da060ba3-4057-4d30-8a07-0780b111f4b6",
+                        "63158d02-64c9-4df7-ab58-caa2c18611ac",
+                        "b928e820-addf-48d3-8d83-ad3c35821f2d",
+                        "7433fd7c-21bf-4d58-b7a2-8b1904955557",
+                        "1ef356ab-007e-49a5-9f22-ed6476b4cc4a",
+                        "8ae286b4-616b-4f76-ae16-5624f510d274"
+                    ]
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "MeshComponent": {
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "468eb52a-02fa-4f36-b1fc-4a251fffbe58",
+                    "isUI": false
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "98caa7fe-14e5-4cb0-b0c3-bc039dbde2cf",
+                            "scriptPath": "Assets\\Scripts\\DialogueSystem.lua",
+                            "hotReload": false
+                        },
+                        {
+                            "guid": "32595166-113f-4286-8862-7c6e6c2fbfb5",
+                            "scriptPath": "Assets\\Scripts\\NightTutorialSystem.lua",
+                            "hotReload": true
+                        }
+                    ]
+                }
             }
-          ]
-        }
-      }
-    },
+        },
     {
       "name": "DialogueLine1",
       "guid": "63158d02-64c9-4df7-ab58-caa2c18611ac",
@@ -11542,7 +11551,8 @@
         },
         "TagComponent": {
           "tags": [
-            "Interactable"
+            "Interactable",
+            "Gate"
           ]
         },
         "MeshComponent": {
@@ -22052,7 +22062,8 @@
         },
         "TagComponent": {
           "tags": [
-            "Interactable"
+            "Interactable",
+            "Furnace"
           ]
         },
         "MeshComponent": {
@@ -23751,7 +23762,8 @@
         },
         "TagComponent": {
           "tags": [
-            "Interactable"
+            "Interactable",
+            "Mortar"
           ]
         },
         "MeshComponent": {
