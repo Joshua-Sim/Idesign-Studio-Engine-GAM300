@@ -1,4 +1,3 @@
-
 #include "pch.h"
 #include "SceneInterface.h"
 #include "ButtonComponent.h"
@@ -148,6 +147,13 @@ namespace Framework
                 // ------------------------------------------------------------
                 // 3. Apply visibility to ALL upgrade UI entities
                 // ------------------------------------------------------------
+                // Z-layer constants for upgrade UI draw order (higher = in front)
+                // Base cards draw behind hover/complete stamps
+                // ------------------------------------------------------------
+                static constexpr float Z_BASE_CARD = 0.8f;  // idle base card backgrounds
+                static constexpr float Z_HOVER_STAMP = 0.9f;  // pass/fail stamps shown on hover
+                static constexpr float Z_COMPLETE = 1.0f; // purchased/complete stamps (always on top)
+
                 for (Entity e : upgradeEntities)
                 {
                     if (!ecsInterface.IsEntityValid(e)) continue;
@@ -157,8 +163,8 @@ namespace Framework
                     auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
                     auto& transform = ecsInterface.GetComponent<TransformComponent>(e);
 
-                    texture.isUI = true; // always UI in upgrade screen
                     bool shouldShow = false;
+                    float zLayer = Z_BASE_CARD;
 
                     // -------------------------
                     // COMPLETE STAMPS (highest priority - always show if complete)
@@ -166,14 +172,17 @@ namespace Framework
                     if (ecsInterface.EntityHasTag(e, "quarrycomplete"))
                     {
                         shouldShow = quarryComplete;
+                        zLayer = Z_COMPLETE;
                     }
                     else if (ecsInterface.EntityHasTag(e, "goldcomplete"))
                     {
                         shouldShow = goldComplete;
+                        zLayer = Z_COMPLETE;
                     }
                     else if (ecsInterface.EntityHasTag(e, "inventorycomplete"))
                     {
                         shouldShow = backpackComplete;
+                        zLayer = Z_COMPLETE;
                     }
 
                     // -------------------------
@@ -182,10 +191,12 @@ namespace Framework
                     else if (ecsInterface.EntityHasTag(e, "quarrypass"))
                     {
                         shouldShow = (!quarryComplete && quarryHovered && canAffordQuarry);
+                        zLayer = Z_HOVER_STAMP;
                     }
                     else if (ecsInterface.EntityHasTag(e, "quarryfail"))
                     {
                         shouldShow = (!quarryComplete && quarryHovered && !canAffordQuarry);
+                        zLayer = Z_HOVER_STAMP;
                     }
 
                     // -------------------------
@@ -194,10 +205,12 @@ namespace Framework
                     else if (ecsInterface.EntityHasTag(e, "goldpass"))
                     {
                         shouldShow = (!goldComplete && goldHovered && canAffordGold);
+                        zLayer = Z_HOVER_STAMP;
                     }
                     else if (ecsInterface.EntityHasTag(e, "goldfail"))
                     {
                         shouldShow = (!goldComplete && goldHovered && !canAffordGold);
+                        zLayer = Z_HOVER_STAMP;
                     }
 
                     // -------------------------
@@ -206,10 +219,12 @@ namespace Framework
                     else if (ecsInterface.EntityHasTag(e, "inventorypass"))
                     {
                         shouldShow = (!backpackComplete && inventoryHovered && canAffordInventory);
+                        zLayer = Z_HOVER_STAMP;
                     }
                     else if (ecsInterface.EntityHasTag(e, "inventoryfail"))
                     {
                         shouldShow = (!backpackComplete && inventoryHovered && !canAffordInventory);
+                        zLayer = Z_HOVER_STAMP;
                     }
 
                     // ------------------------------------------------------------
@@ -217,8 +232,8 @@ namespace Framework
                     // ------------------------------------------------------------
                     else
                     {
-                        bool isQuarryBase =    ecsInterface.EntityHasTag(e, "quarry");
-                        bool isGoldBase =      ecsInterface.EntityHasTag(e, "gold");
+                        bool isQuarryBase = ecsInterface.EntityHasTag(e, "quarry");
+                        bool isGoldBase = ecsInterface.EntityHasTag(e, "gold");
                         bool isInventoryBase = ecsInterface.EntityHasTag(e, "inventory");
 
                         // Hide base card if hovered OR if completed
@@ -228,10 +243,12 @@ namespace Framework
                             (isInventoryBase && (inventoryHovered || backpackComplete));
 
                         shouldShow = !hideBase;
+                        zLayer = Z_BASE_CARD;
                     }
 
-                    // Set Z position based on visibility
-                    transform.position.z = shouldShow ? 1.0f : -100.0f;
+                    // Use isUI for visibility, z for layering — never use z=-100 as a hide hack
+                    texture.isUI = shouldShow;
+                    transform.position.z = zLayer;
                 }
             }
             else
@@ -298,25 +315,11 @@ namespace Framework
                 {
                     auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
                     if (!engineState.Is(EngineMode::Editor)) {
-                        bool inMap = engineState.Is(EngineMode::MapSelection);
-                        texture.isUI = inMap ? 1.f : 0.f;
-                    }
-                }
-            }
-
-            // 6b. MAP DIALOG LOGIC (non-button dialog entities)
-            auto mapDialogEntities = ecsInterface.GetEntitiesByTag("mapdialog");
-            for (Entity e : mapDialogEntities)
-            {
-                if (!ecsInterface.IsEntityValid(e)) continue;
-                if (ecsInterface.HasComponent<TextureProperties>(e))
-                {
-                    auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
-                    if (!engineState.Is(EngineMode::Editor)) {
                         texture.isUI = engineState.Is(EngineMode::MapSelection) ? 1.f : 0.f;
                     }
                 }
             }
+
 
             // 7. Cutscene (Open after click Play)
             if (engineState.Is(EngineMode::Cutscene))
@@ -750,10 +753,10 @@ namespace Framework
 
             // --- Active Order UI ---
             auto orderUIEntities = ecsInterface.GetEntitiesByTag("OrderUI");
-            for (auto e : orderUIEntities) 
+            for (auto e : orderUIEntities)
             {
                 if (!ecsInterface.IsEntityValid(e)) continue;
-                if (ecsInterface.HasComponent<TextureProperties>(e)) 
+                if (ecsInterface.HasComponent<TextureProperties>(e))
                 {
                     auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
                     texture.isUI = isNightPlay;
