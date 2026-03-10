@@ -18,7 +18,7 @@ namespace Framework
 
 		static int g_CurrentDay;
 
-		int GetCurrentDay();
+		static int GetCurrentDay();
 
 		void SetCurrentDay(int day);
 
@@ -28,7 +28,7 @@ namespace Framework
 
 		void OnNextDayPressed();
 
-		bool WinOrLose();
+		static bool WinOrLose();
 
 	private:
 	};

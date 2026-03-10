@@ -4729,7 +4729,7 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "9b2a50d4-87d4-4ae8-93f8-45df3f721621",
+                    "guid": "4415e756-4077-4f65-ad9b-b17db4eacc2d",
                     "isUI": false
                 },
                 "ScriptProperties": {
@@ -4750,7 +4750,7 @@
                         250.0,
                         129.58999633789063
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": true,
                     "hoverTextureGuid": "4415e756-4077-4f65-ad9b-b17db4eacc2d"
                 }
@@ -4832,7 +4832,7 @@
                         0.0
                     ],
                     "scale": [
-                        1920.0,
+                        1930.0,
                         1080.0,
                         1.0
                     ],
@@ -4891,7 +4891,7 @@
                         540.0
                     ],
                     "size": [
-                        1920.0,
+                        1930.0,
                         1080.0
                     ],
                     "isHovered": true,
@@ -4986,7 +4986,8 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextProperties": {
                     "text": "100%",
@@ -6129,7 +6130,7 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "bbc3bc8b-ac72-4981-a969-5cb0e9839b7f",
+                    "guid": "2d77f5aa-e9a6-44b8-b408-7ce097441fdd",
                     "isUI": false
                 },
                 "ScriptProperties": {
@@ -6150,7 +6151,7 @@
                         250.0,
                         129.58999633789063
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": true,
                     "hoverTextureGuid": "2d77f5aa-e9a6-44b8-b408-7ce097441fdd"
                 }
@@ -20086,7 +20087,7 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        1125.0,
+                        946.5,
                         300.0,
                         0.8999999761581421
                     ],
@@ -20119,7 +20120,7 @@
                 },
                 "ButtonComponent": {
                     "position": [
-                        1125.0,
+                        946.5,
                         300.0
                     ],
                     "size": [
@@ -20166,7 +20167,8 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "73aea7fb-a164-408a-8236-3e3ea5bae6e1",
@@ -20220,7 +20222,8 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "c7c6c4af-9180-4f0e-9ae6-21d0ce8a0e2a",
@@ -20274,7 +20277,8 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "a3024de0-e9b4-4f1e-9b21-be81980f837c",
@@ -20328,7 +20332,8 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -20382,7 +20387,8 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "aaaf0f28-4e95-461c-9ed1-33ff97e0823c",
@@ -20436,7 +20442,8 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "aaaf0f28-4e95-461c-9ed1-33ff97e0823c",
@@ -21264,7 +21271,7 @@
                         430.0,
                         550.0
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": false,
                     "hoverTextureGuid": ""
                 }
@@ -21319,7 +21326,7 @@
                         430.0,
                         550.0
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": false,
                     "hoverTextureGuid": ""
                 }
@@ -21684,7 +21691,7 @@
                         430.0,
                         550.0
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": false,
                     "hoverTextureGuid": ""
                 }
@@ -21794,7 +21801,7 @@
                         430.0,
                         480.0
                     ],
-                    "isHovered": false,
+                    "isHovered": true,
                     "isFrontButton": false,
                     "hoverTextureGuid": ""
                 }
@@ -21849,7 +21856,7 @@
                         430.0,
                         550.0
                     ],
-                    "isHovered": true,
+                    "isHovered": false,
                     "isFrontButton": false,
                     "hoverTextureGuid": ""
                 }
@@ -21913,7 +21920,7 @@
                         430.0,
                         550.0
                     ],
-                    "isHovered": true,
+                    "isHovered": false,
                     "isFrontButton": false,
                     "hoverTextureGuid": ""
                 }
@@ -21968,7 +21975,7 @@
                         430.0,
                         550.0
                     ],
-                    "isHovered": true,
+                    "isHovered": false,
                     "isFrontButton": false,
                     "hoverTextureGuid": ""
                 }
@@ -22023,7 +22030,7 @@
                         430.0,
                         480.0
                     ],
-                    "isHovered": true,
+                    "isHovered": false,
                     "isFrontButton": false,
                     "hoverTextureGuid": ""
                 }
@@ -24313,7 +24320,7 @@
                     "isUI": false
                 },
                 "TextProperties": {
-                    "text": "2.20",
+                    "text": "1.72",
                     "scale": 1.0,
                     "color": [
                         0.0,
@@ -24385,7 +24392,7 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        900.0,
+                        810.75,
                         300.0,
                         0.800000011920929
                     ],
@@ -24395,7 +24402,7 @@
                         0.0
                     ],
                     "scale": [
-                        450.0,
+                        271.5,
                         25.0,
                         1.0
                     ],
@@ -24419,11 +24426,11 @@
                 },
                 "ButtonComponent": {
                     "position": [
-                        900.0,
+                        810.75,
                         300.0
                     ],
                     "size": [
-                        450.0,
+                        271.5,
                         25.0
                     ],
                     "isHovered": false,
@@ -24898,8 +24905,7 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "bd53721a-583e-47d7-b196-17af52bd40fe",
@@ -25028,8 +25034,7 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "eb687c6c-3f11-4f0e-b113-a7b451c5f632",
@@ -25070,8 +25075,7 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "4d16613b-a55e-4156-a0b6-7653c9659051",
@@ -25112,8 +25116,7 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "352066f2-990e-4dfe-9dd4-e16aaf1fc0b2",
@@ -25154,8 +25157,7 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "7b5a1b1e-e92b-4ef4-8bbe-07c66e4f9fc6",
@@ -25196,8 +25198,7 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "4b7a9d1f-6cc3-4cae-a02b-1ae162d313b0",
@@ -25238,8 +25239,7 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "bd53721a-583e-47d7-b196-17af52bd40fe",

@@ -69,7 +69,7 @@ namespace Framework {
 
         // Load your custom cursor here (path example)
         // NOTE: Keep cursor image small (32x32 or 64x64 is safest)
-        LoadCustomCursor("Assets/Textures/mouseCursor3.png", 0, 0);
+        LoadCustomCursor("Assets/Textures/mouseFixed.png", 0, 0);
     }
 
     void InputHandler::SetCameraRotationEnabled(bool enabled) {

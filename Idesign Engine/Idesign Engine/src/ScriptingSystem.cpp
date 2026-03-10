@@ -1319,9 +1319,25 @@ namespace Framework {
 
         static int lua_GameStateEndNightPhase(lua_State* L)
         {
-            (void)L;
-            engineState.PushState(EngineMode::Upgrade);     // Push Upgrade UI
-            phaseManager->SetPhase(GamePhase::Upgrade);     // Set phase to Upgrade
+            // If final day is finished, do NOT enter Upgrade anymore
+            if (SceneInterface::GetCurrentDay() >= 5)
+            {
+                // Or if you do not need a Day6 visual state, directly decide here:
+                 if (SceneInterface::WinOrLose())
+                 {
+                     engineState.PushState(EngineMode::Win);
+                 }
+                 else
+                 {
+                     engineState.PushState(EngineMode::Lose);
+                 }
+
+                return 0;
+            }
+
+            // Normal flow for earlier days
+            engineState.PushState(EngineMode::Upgrade);
+            phaseManager->SetPhase(GamePhase::Upgrade);
             return 0;
         }
 
@@ -1923,7 +1939,8 @@ namespace Framework {
             return 1;
         }
 
-        // This function implements the "IsMouseButtonDown(button)" for Lua
+        // This function implements the "Is
+        // ButtonDown(button)" for Lua
         static int l_IsMouseButtonDown(lua_State* L) {
             // Get the 'self' object (ScriptingSystem or ScriptInstance)
             auto* self = lua_self(L);

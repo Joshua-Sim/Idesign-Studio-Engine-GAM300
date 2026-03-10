@@ -1,5 +1,5 @@
 {
-    "count": 343,
+    "count": 344,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -3767,6 +3767,17 @@
             "guid": "4b7a9d1f-6cc3-4cae-a02b-1ae162d313b0",
             "name": "WINCS4",
             "path": "Assets\\Textures\\WINCS4.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "63d6d0be-1a93-46a3-b411-9a415772e2f6",
+            "name": "mouseFixed",
+            "path": "Assets\\Textures\\mouseFixed.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
