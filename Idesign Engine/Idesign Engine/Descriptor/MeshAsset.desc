@@ -1,5 +1,5 @@
 {
-    "count": 103,
+    "count": 105,
     "entries": [
         {
             "guid": "9a248918-705f-4d5a-88a2-17e85868745b",
@@ -927,6 +927,24 @@
             "vbo": 710,
             "ebo": 711,
             "indexCount": 6534
+        },
+        {
+            "guid": "7a6e9206-e1aa-4326-875e-bd10ce0a8e89",
+            "name": "elevationquarryplane",
+            "path": "Assets\\Objects\\elevationquarryplane.obj",
+            "vao": 370,
+            "vbo": 726,
+            "ebo": 727,
+            "indexCount": 1236
+        },
+        {
+            "guid": "d0126376-7efd-4381-8888-86e51a0719a5",
+            "name": "copper quarry",
+            "path": "Assets\\Objects\\copper quarry.obj",
+            "vao": 378,
+            "vbo": 742,
+            "ebo": 743,
+            "indexCount": 12504
         }
     ]
 }

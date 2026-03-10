@@ -1661,6 +1661,24 @@
             "name": "elevationquarryplane",
             "path": "Assets\\Textures\\elevationquarryplane.png",
             "isUI": false
+        },
+        {
+            "guid": "22bbb1ee-892b-434d-8eca-8d62b38aebda",
+            "name": "copper quarry",
+            "path": "Assets\\Textures\\copper quarry.png",
+            "isUI": false
+        },
+        {
+            "guid": "160c32ac-e216-48f0-8d58-bedd96fc68aa",
+            "name": "QUARRYSTAND",
+            "path": "Assets\\Textures\\QUARRYSTAND.png",
+            "isUI": false
+        },
+        {
+            "guid": "0d384f15-5935-475b-aa4d-8352456b9681",
+            "name": "NEW QUARRY STAND",
+            "path": "Assets\\Textures\\NEW QUARRY STAND.png",
+            "isUI": false
         }
     ]
 }

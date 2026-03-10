@@ -1,5 +1,5 @@
 {
-    "count": 276,
+    "count": 278,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -1655,6 +1655,18 @@
             "guid": "4af3de0c-3272-46da-8a4a-66ab42113bc5",
             "name": "updatedcoal",
             "path": "Assets\\Textures\\updatedcoal.png",
+            "isUI": false
+        },
+        {
+            "guid": "d99b0a86-6036-4816-b1d7-20ee5ae7a3e9",
+            "name": "elevationquarryplane",
+            "path": "Assets\\Textures\\elevationquarryplane.png",
+            "isUI": false
+        },
+        {
+            "guid": "22bbb1ee-892b-434d-8eca-8d62b38aebda",
+            "name": "copper quarry",
+            "path": "Assets\\Textures\\copper quarry.png",
             "isUI": false
         }
     ]
