@@ -63,6 +63,32 @@ local e_progress_frame, e_progress_fill = nil, nil
 local UI_WIDTH, UI_HEIGHT = 1920.0, 1080.0
 local BAR_WIDTH_PX, BAR_HEIGHT_PX, BAR_Y_POS = 600, 40, 400
 
+
+-- =============================================================
+-- [AUDIO HELPERS]
+-- =============================================================
+local function PlayGrinderLoop()
+    local is_looping = false
+    if Sound and Sound.IsPlaying then
+        is_looping = Sound.IsPlaying("event:/GrinderLoop")
+    end
+
+    if not is_looping then
+        if Sound and Sound.Play then
+            Sound.Play("event:/GrinderLoop")
+        end
+    end
+end
+
+local function StopGrinderLoop()
+    if Sound and Sound.IsPlaying and Sound.IsPlaying("event:/GrinderLoop") then
+        if Sound.Stop then
+            Sound.Stop("event:/GrinderLoop")
+        end
+    end
+end
+
+
 -- --- INIT ---
 function Mortar.on_init(self)
     my_entity_id = self.entity
@@ -172,6 +198,10 @@ function Mortar.on_update(self, dt)
                 if math.sqrt((mx - circ.x)^2 + (my - circ.y)^2) <= dyn_rad then
                     current_progress = math.min(current_progress + ((circ.life <= 1.0) and POINTS_GOOD or (circ.life <= 2.0 and POINTS_MEDIUM or POINTS_POOR)), MAX_PROGRESS)
                     
+                    -- Pick a random grinder hit sound (1, 2, or 3) and play it
+                    local random_hit = math.random(1, 3)
+                    Sound.Play("event:/GrinderHit" .. random_hit)
+
                     local prefab = (circ.life <= 1.0 and PREFAB_GOOD or (circ.life <= 2.0 and PREFAB_MEDIUM or PREFAB_POOR))
                     local fb_id = SpawnPrefab(prefab, mx, my + 20, 0.6)
                     if fb_id and fb_id ~= -1 then
@@ -211,7 +241,6 @@ function Mortar.on_update(self, dt)
     else
         if is_finished then
             -- Subtract delta time from the timer
-            -- This now has a value because we set it below!
             finish_timer = finish_timer - dt
             if finish_timer <= 0 then 
                 Mortar.StopMinigame(my_entity_id, true) 
@@ -239,13 +268,24 @@ function Mortar.on_update(self, dt)
                     SetRotation(spinner_visual_id, 0, 0, math.deg(cur_ang)) 
                 end
 
+                -- AUDIO: Only play the looping sound if the mouse is actively being moved
+                if math.abs(delta) > 0.01 then
+                    PlayGrinderLoop()
+                else
+                    StopGrinderLoop()
+                end
+
                 -- CHECK FOR COMPLETION
                 if spin_progress >= SPIN_REQUIREMENT then 
                     is_finished = true
-                    -- INITIALIZE TIMER HERE to prevent Nil error on next frame
                     finish_timer = FINISH_DELAY 
+                    StopGrinderLoop() -- Immediately cut audio on finish
                 end
+            else
+                -- Stop the audio if the player releases the mouse button
+                StopGrinderLoop()
             end
+            
             last_mx, last_my = mx, my
         end
     end
@@ -271,8 +311,10 @@ function Mortar.StopMinigame(targetID, success)
     is_spinning = false
     is_finished = false
     
+    -- Ensure the audio is aggressively cut off if they back out of the minigame early
+    StopGrinderLoop()
+
     -- 1. RESET INTERACTION TEXT
-    -- This removes the "Grinding..." prompt immediately.
     SetInteractionText(my_entity_id, "Requires Ingredient")
     
     -- 2. Return Player to Original Location
@@ -320,7 +362,6 @@ function Mortar.OnInteract(senderID, targetID, actionType)
     local held_item_id = GetSelectedItem()
 
     -- [BRANCH A] ADDING INGREDIENTS (Hand is NOT empty)
-    -- This only adds items to the bowl. It DOES NOT start the camera or game.
     if held_item_id ~= -1 then
         if #stored_ingredients < MAX_INGREDIENTS then
             table.insert(stored_ingredients, held_item_id)
@@ -332,21 +373,24 @@ function Mortar.OnInteract(senderID, targetID, actionType)
             end
             table.insert(visual_entities, vid)
             
-            if vid ~= -1 then 
+            -- Override the C++ default rotation instantly!
+            if vid ~= -1 and SetRotation then
                 SetRotation(vid, ROT_X, ROT_Y, ROT_Z) 
             end
+
             Sound.Play("event:/PlaceDownItem")
         else
-            -- Optional: Play a "Full" sound if they try to add a 4th item
             print("[Mortar] Bowl is full!")
         end
 
     -- [BRANCH B] STARTING THE PROCESS (Hand IS empty)
-    -- This only runs if the player clicks the mortar with nothing in their hand.
     elseif #stored_ingredients > 0 then
-        local resID = CheckValidRecipe(stored_ingredients, "MortarPestle")
+    
+        -- We re-enabled the recipe validation!
+        local resID = CheckValidRecipe(stored_ingredients)
         if resID ~= -1 then
             current_recipe_result_name = GetItemNameById(resID)
+            
             local player_id = FindEntityByName("Player")
             
             if player_id then
@@ -401,13 +445,12 @@ function Mortar.OnInteract(senderID, targetID, actionType)
 
             SetInteractionText(id_to_use, "Grinding...") 
             print("[Mortar] Valid recipe: " .. current_recipe_result_name .. ". Starting grind.")
+            
         else
-            -- Player clicked with empty hand but the items don't match a recipe
             Sound.Play("event:/InvalidRecipe")
             print("[Mortar] These ingredients don't make anything.")
         end
     end
 end
-
 
 return Mortar
