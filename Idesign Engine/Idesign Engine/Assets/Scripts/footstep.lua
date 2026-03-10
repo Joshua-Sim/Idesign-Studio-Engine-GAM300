@@ -8,12 +8,19 @@ local indoorEvent = "event:/Footstep"
 local outdoorEvent = "event:/FootstepBackyard"
 local quarryEvent = "event:/QuarryAmbient"
 
+local level1BGM = "event:/Level1BGM"
+local quarryBGM = "event:/QuarryBGM"
+local shopBGM = "event:/ShopBGM"
+
 --Track state
 local wasInBackyard = false
 local backyardEntity = nil
 local backyardCopyEntity = nil
 local frogEntity = nil 
 local quarryPlaying = false
+
+local wasInQuarry = false
+local wasInShop = false
 
 -- Forest/Backyard bounds (measured in-game)
 local backyardMin = { 
@@ -28,8 +35,8 @@ local backyardMax = {
     z = 726 
 }
 
--- Quarry bounds (calculated from QuarryGround collider)
-local quarryMin = { 
+-- Quarry bounds 
+local quarryMin = {
     x = -246.3, 
     y = -45.9, 
     z = -174.8 
@@ -39,6 +46,19 @@ local quarryMax = {
     x = -143.3, 
     y = 54.2,  
     z = -72.8  
+}
+
+-- Shop bounds 
+local shopMin = { 
+    x = -52, 
+    y = -5, 
+    z = -1 
+}
+
+local shopMax = { 
+    x = -14, 
+    y = 15, 
+    z = 21 
 }
 
 function M:on_init()
@@ -71,6 +91,7 @@ function M:on_init()
     end
 end
 
+-- Zone Check for Forest 
 function M:IsInBackyard()
     local px, py, pz = GetPosition(self.entity)
     
@@ -81,12 +102,22 @@ function M:IsInBackyard()
     return inBackyard
 end
 
+-- Zone Check for Quarry
 function M:IsInQuarry()
     local px, py, pz = GetPosition(self.entity)
     return px >= quarryMin.x and px <= quarryMax.x and
            py >= quarryMin.y and py <= quarryMax.y and
            pz >= quarryMin.z and pz <= quarryMax.z
 end
+
+-- Zone Check for Shop
+function M:IsInShop()
+    local px, py, pz = GetPosition(self.entity)
+    return px >= shopMin.x and px <= shopMax.x and
+           py >= shopMin.y and py <= shopMax.y and
+           pz >= shopMin.z and pz <= shopMax.z
+end
+
 
 function M:on_update(dt)
     local isInBackyard = self:IsInBackyard()
@@ -132,6 +163,33 @@ function M:on_update(dt)
     end 
 
     wasInBackyard = isInBackyard
+
+    -- Handle BGM switching (unified)
+    local isInShop = self:IsInShop()
+    local currentZone = "overworld"
+    if isInQuarry then currentZone = "quarry"
+    elseif isInShop then currentZone = "shop" end
+
+    local previousZone = "overworld"
+    if wasInQuarry then previousZone = "quarry"
+    elseif wasInShop then previousZone = "shop" end
+
+    if currentZone ~= previousZone then
+        -- Stop the old BGM
+        if previousZone == "quarry" then Sound.Stop(quarryBGM)
+        elseif previousZone == "shop" then Sound.Stop(shopBGM)
+        else Sound.Stop(level1BGM) end
+
+        -- Play the new BGM
+        if currentZone == "quarry" then Sound.Play(quarryBGM)
+        elseif currentZone == "shop" then Sound.Play(shopBGM)
+        else Sound.Play(level1BGM) end
+
+        print("[Footsteps] BGM: " .. previousZone .. " -> " .. currentZone)
+    end
+
+    wasInQuarry = isInQuarry
+    wasInShop = isInShop
     
     -- Footstep logic 
     -- Check if player is moving
