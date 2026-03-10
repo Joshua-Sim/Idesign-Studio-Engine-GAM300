@@ -3528,7 +3528,7 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "199e4740-786e-4301-8a8f-b89b91e702c2",
+                    "guid": "e4e85e35-08e3-4fb5-9f54-53c971ed3fee",
                     "isUI": false
                 },
                 "ScriptProperties": {
@@ -4555,7 +4555,7 @@
                 "ScriptProperties": {
                     "scripts": [
                         {
-                            "guid": "8043258f-f02c-43e4-959e-a9dd54cf320f",
+                            "guid": "0b25e0c5-79e6-465a-96cd-920b83ef31e6",
                             "scriptPath": "Assets\\Scripts\\NextDayButton.lua",
                             "hotReload": false
                         }
@@ -4609,7 +4609,7 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "44dd9ce1-94f7-4b94-9fda-b06bde4f0e1e",
+                    "guid": "063bc40e-cdcc-44b1-a794-da791ab67aa3",
                     "isUI": false
                 },
                 "ScriptProperties": {
@@ -4669,7 +4669,7 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "c44c9565-d18e-4186-86af-03e26a23eafe",
+                    "guid": "c43c4719-e688-4409-9c62-6b2508cc3a71",
                     "isUI": false
                 },
                 "ScriptProperties": {
@@ -5964,7 +5964,7 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "2d77f5aa-e9a6-44b8-b408-7ce097441fdd",
+                    "guid": "bbc3bc8b-ac72-4981-a969-5cb0e9839b7f",
                     "isUI": false
                 },
                 "ScriptProperties": {
@@ -6129,7 +6129,7 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "2d77f5aa-e9a6-44b8-b408-7ce097441fdd",
+                    "guid": "bbc3bc8b-ac72-4981-a969-5cb0e9839b7f",
                     "isUI": false
                 },
                 "ScriptProperties": {
@@ -20571,14 +20571,14 @@
             }
         },
         {
-            "name": "Quarry_availble",
+            "name": "Cauldron_availble",
             "guid": "5b35e80d-b0c2-4f5a-9427-9ad2176ae1b8",
             "components": {
                 "TransformComponent": {
                     "position": [
                         450.0,
                         600.0,
-                        0.8999999761581421
+                        1.0
                     ],
                     "rotation": [
                         0.0,
@@ -20600,21 +20600,21 @@
                 "TagComponent": {
                     "tags": [
                         "upgrade",
-                        "quarrypass"
+                        "cauldronpass"
                     ]
                 },
                 "MeshComponent": {
                     "guid": ""
                 },
                 "TextureComponent": {
-                    "guid": "5ce96046-f8cf-4178-aa03-3f71bf34eb9f",
+                    "guid": "350851ab-c956-43e7-aeb3-c234efbb0dcf",
                     "isUI": false
                 },
                 "ScriptProperties": {
                     "scripts": [
                         {
                             "guid": "dc1222af-4b5e-4d38-8c8d-e16e5ae744dc",
-                            "scriptPath": "Assets\\Scripts\\QuarryUnlockUpgrade.lua",
+                            "scriptPath": "Assets\\Scripts\\CauldronUpgrade.lua",
                             "hotReload": false
                         }
                     ]
@@ -21152,14 +21152,14 @@
             }
         },
         {
-            "name": "Quarry_unavailble",
+            "name": "Cauldron_unavailble",
             "guid": "37a6c037-f092-4df3-9144-446beb17b710",
             "components": {
                 "TransformComponent": {
                     "position": [
                         450.0,
                         600.0,
-                        0.8999999761581421
+                        1.0
                     ],
                     "rotation": [
                         0.0,
@@ -21181,14 +21181,14 @@
                 "TagComponent": {
                     "tags": [
                         "upgrade",
-                        "quarryfail"
+                        "cauldronfail"
                     ]
                 },
                 "MeshComponent": {
                     "guid": ""
                 },
                 "TextureComponent": {
-                    "guid": "37f46a7a-1d66-495f-9f35-34a7cec3ccb1",
+                    "guid": "3443301d-71ee-47a1-93de-94c8ab502979",
                     "isUI": false
                 },
                 "ButtonComponent": {
@@ -21278,7 +21278,7 @@
                     "position": [
                         956.0,
                         600.0,
-                        0.8999999761581421
+                        1.0
                     ],
                     "rotation": [
                         0.0,
@@ -21581,14 +21581,14 @@
             }
         },
         {
-            "name": "Quarry_unhovered",
+            "name": "Cauldron_unhovered",
             "guid": "38e0f322-52ef-496f-8c0e-d4052c43ef64",
             "components": {
                 "TransformComponent": {
                     "position": [
                         450.0,
                         600.0,
-                        0.800000011920929
+                        1.0
                     ],
                     "rotation": [
                         0.0,
@@ -21617,7 +21617,7 @@
                     "guid": ""
                 },
                 "TextureComponent": {
-                    "guid": "3bb281d9-c6a0-43ed-a663-6f8f8c10943f",
+                    "guid": "15905e6c-df06-4733-acfc-dc121cf02e5f",
                     "isUI": false
                 },
                 "ButtonComponent": {
@@ -21643,7 +21643,7 @@
                     "position": [
                         956.0,
                         600.0,
-                        0.800000011920929
+                        1.0
                     ],
                     "rotation": [
                         0.0,
@@ -21691,7 +21691,7 @@
             }
         },
         {
-            "name": "Quarry_complete",
+            "name": "Cauldron_complete",
             "guid": "3b349650-055e-4c0d-8229-f6a39d937f26",
             "components": {
                 "TransformComponent": {
@@ -21720,14 +21720,14 @@
                 "TagComponent": {
                     "tags": [
                         "upgrade",
-                        "quarrycomplete"
+                        "cauldroncomplete"
                     ]
                 },
                 "MeshComponent": {
                     "guid": ""
                 },
                 "TextureComponent": {
-                    "guid": "69b50841-6cc3-4514-9f61-12e0178384e9",
+                    "guid": "5402093e-5f4e-44aa-ad5c-eccfb04ef407",
                     "isUI": false
                 },
                 "ButtonComponent": {
@@ -21808,7 +21808,7 @@
                     "position": [
                         1440.0,
                         600.0,
-                        0.8999999761581421
+                        1.0
                     ],
                     "rotation": [
                         0.0,
@@ -21863,7 +21863,7 @@
                     "position": [
                         1440.0,
                         600.0,
-                        0.8999999761581421
+                        1.0
                     ],
                     "rotation": [
                         0.0,
@@ -21927,7 +21927,7 @@
                     "position": [
                         1440.0,
                         600.0,
-                        0.800000011920929
+                        1.0
                     ],
                     "rotation": [
                         0.0,
@@ -23905,7 +23905,7 @@
                         0.0
                     ],
                     "scale": [
-                        750.0,
+                        857.0,
                         600.0,
                         1.0
                     ],
