@@ -56,6 +56,11 @@ namespace Framework {
         int i = (m_selectedIndex + delta) % maxSlots;
         if (i < 0) i += maxSlots;
         m_selectedIndex = i;
+
+        // === PLAY INVENTORY SELECT SFX ===
+        if (g_AudioSystem) {
+            g_AudioSystem->PlayAudio("event:/InventorySelect");
+        }
     }
 
     int Inventory::GetSelectedItemId() const
