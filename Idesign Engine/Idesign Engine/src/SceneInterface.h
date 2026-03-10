@@ -28,6 +28,8 @@ namespace Framework
 
 		void OnNextDayPressed();
 
+		bool WinOrLose();
+
 	private:
 	};
 

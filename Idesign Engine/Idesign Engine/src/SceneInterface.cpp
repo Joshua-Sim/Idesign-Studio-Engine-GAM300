@@ -885,8 +885,9 @@ namespace Framework
             {
                 auto& text = ecsInterface.GetComponent<TextProperties>(dayTextEntity);
                 text.opacity = isDayPlay ? 1.0f : 0.0f;
+
                 if (isDayPlay)
-                    text.text = ": Day 1|7"; // wire up dynamic values later
+                    text.text = "Day " + std::to_string(g_CurrentDay);
             }
 
             // Coin & Moon Icon + Night Text
@@ -1048,6 +1049,9 @@ namespace Framework
         case 5:
             engineState.PushState(EngineMode::Day5);
             break;
+        case 6:
+            engineState.PushState(EngineMode::Day6);
+            break;
         default:
             // If no special transition state exists, just go to play/map directly
             engineState.PushState(EngineMode::Play);
@@ -1065,5 +1069,17 @@ namespace Framework
 
         // Push matching transition
         SceneInterface::PushDayTransitionStateForCurrentDay();
+    }
+
+    bool SceneInterface::WinOrLose()
+    {
+        if (GameSystem::GetCurrency() >= 5000.0f)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }
