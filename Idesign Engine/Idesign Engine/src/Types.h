@@ -27,7 +27,7 @@ namespace Framework {
 		COMPONENT RELATED
 	*/
 	using ComponentType = std::uint8_t;				// A component type, which is just the number of components for later use, is set to be unsigned integer of 8 bits.
-	const ComponentType MAX_COMPONENTS = 32;		// Maxmimum number of components is set to 32, for our array later.
+	const ComponentType MAX_COMPONENTS = 64;		// Maxmimum number of components is set to 32, for our array later.
 
 	/*
 		SIGNATURE / ENTITY AND SYSTEM RELATED

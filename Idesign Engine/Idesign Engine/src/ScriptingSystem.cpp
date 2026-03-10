@@ -119,7 +119,18 @@ namespace Framework {
             return 3; // x, y, z
         }
 
+        static int lua_SetIsUI(lua_State* L)
+        {
+            int entityId = (int)luaL_checkinteger(L, 1);
+            bool value = lua_toboolean(L, 2);
 
+            Entity e = (Entity)entityId;
+            if (ecsInterface.IsEntityValid(e) && ecsInterface.HasComponent<TextureProperties>(e))
+            {
+                ecsInterface.GetComponent<TextureProperties>(e).isUI = value;
+            }
+            return 0;
+        }
 
         int l_IsKeyDown(lua_State* L)
         {
@@ -159,6 +170,37 @@ namespace Framework {
             }
 
             // Fallback if system is missing
+            lua_pushnumber(L, 0.0);
+            lua_pushnumber(L, 0.0);
+            return 2;
+        }
+
+        static int lua_GetMouseUV(lua_State* L)
+        {
+            auto* input = Framework::InputHandler::GetInstance();
+            auto* self = lua_self(L);
+            Graphics* g = self ? self->GetGraphicsSystem() : nullptr;
+
+            if (input && g && g->GetWindow())
+            {
+                int width, height;
+                glfwGetWindowSize(g->GetWindow(), &width, &height);
+
+                // Prevent division by zero if window is minimized
+                if (width == 0 || height == 0) {
+                    lua_pushnumber(L, 0.0);
+                    lua_pushnumber(L, 0.0);
+                    return 2;
+                }
+
+                float uvX = static_cast<float>(input->GetMouseX()) / static_cast<float>(width);
+                float uvY = static_cast<float>(input->GetMouseY()) / static_cast<float>(height);
+
+                lua_pushnumber(L, uvX);
+                lua_pushnumber(L, uvY);
+                return 2;
+            }
+
             lua_pushnumber(L, 0.0);
             lua_pushnumber(L, 0.0);
             return 2;
@@ -622,17 +664,7 @@ namespace Framework {
             lua_pushboolean(L, true);
             return 1;
         }
-        static int lua_SetIsUI(lua_State* L)
-        {
-            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
-            bool isUI = lua_toboolean(L, 2);
 
-            if (ecsInterface.IsEntityValid(e) && ecsInterface.HasComponent<TextureProperties>(e)) {
-                auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
-                tex.isUI = isUI;
-            }
-            return 0;
-        }
         //Spawn prefab expose
         static int lua_SpawnPrefab(lua_State* L)
         {
@@ -740,6 +772,48 @@ namespace Framework {
             }
 
             lua_pushinteger(L, static_cast<lua_Integer>(spawnedEntity));
+            return 1;
+        }
+
+        // Dialogue / cutscenes
+        static int lua_CutsceneSetTarget(lua_State* L) {
+            const char* tag = luaL_checkstring(L, 1);
+            auto dialogueSys = ecsInterface.GetSystem<Framework::DialogueSystem>();
+            if (dialogueSys) dialogueSys->SetCameraTargetByTag(tag);
+            return 0;
+        }
+
+        static int lua_CutsceneSetOffset(lua_State* L) {
+            float x = (float)luaL_checknumber(L, 1);
+            float y = (float)luaL_checknumber(L, 2);
+            float z = (float)luaL_checknumber(L, 3);
+            auto dialogueSys = ecsInterface.GetSystem<Framework::DialogueSystem>();
+            if (dialogueSys) dialogueSys->flyOffset = glm::vec3(x, y, z);
+            return 0;
+        }
+
+        static int lua_CutsceneSetSpeed(lua_State* L) {
+            float speed = (float)luaL_checknumber(L, 1);
+            auto dialogueSys = ecsInterface.GetSystem<Framework::DialogueSystem>();
+            if (dialogueSys) dialogueSys->flySpeed = speed;
+            return 0;
+        }
+
+        static int lua_CutsceneStart(lua_State* L) {
+            auto dialogueSys = ecsInterface.GetSystem<Framework::DialogueSystem>();
+            if (dialogueSys) {
+                dialogueSys->setActive(true);  // <-- THIS IS THE KEY LINE= true;
+                dialogueSys->isCutscene = true;
+                dialogueSys->isMidFlight = true;
+                engineState.PushState(EngineMode::Dialogue);  // block all input
+            }
+            return 0;
+        }
+
+        static int lua_CutsceneIsFlying(lua_State* L) {
+            auto dialogueSys = ecsInterface.GetSystem<Framework::DialogueSystem>();
+            bool flying = dialogueSys ? dialogueSys->isMidFlight : false;
+            lua_pushboolean(L, flying);
             return 1;
         }
 
@@ -1303,6 +1377,13 @@ namespace Framework {
             return 1;
         }
 
+        static int lua_GetItemIdByName(lua_State* L) {
+            const char* name = luaL_checkstring(L, 1);
+            int itemId = Framework::ItemNameToId(name);
+            lua_pushinteger(L, itemId); // returns -1 if not found
+            return 1;
+        }
+
         int Lua_AddToInventory(lua_State* L) {
             const char* itemName = lua_tostring(L, 1); // Arg 1: "RedMushroom"
 
@@ -1317,6 +1398,33 @@ namespace Framework {
 
             lua_pushinteger(L, slot); // Return the slot index (or -1 if full)
             return 1;
+        }
+
+        static int lua_RemoveItemByName(lua_State* L) {
+            const char* itemName = luaL_checkstring(L, 1);
+            int itemId = Framework::ItemNameToId(itemName);
+            if (itemId < 0) return 0;
+
+            auto& inv = Framework::Inventory::Instance();
+
+            // Search hotbar
+            int hotSlots = inv.GetHotbarSlotCount();
+            for (int i = 0; i < hotSlots; ++i) {
+                if (inv.Get(i).itemId == itemId) {
+                    inv.ClearHotbarSlot(i);
+                    return 0;
+                }
+            }
+
+            // Search backpack
+            int backSlots = inv.GetBackpackSlotCount();
+            for (int i = 0; i < backSlots; ++i) {
+                if (inv.GetBackpack(i).itemId == itemId) {
+                    inv.GetBackpack(i) = { -1, 0, 0 };
+                    return 0;
+                }
+            }
+            return 0;
         }
 
         int Lua_DestroyEntity(lua_State* L) {
@@ -1644,8 +1752,6 @@ namespace Framework {
             return 1;
         }
 
-
-
         //Potion registry recipe check
         static int lua_GetCraftablePotions(lua_State* L)
         {
@@ -1675,6 +1781,61 @@ namespace Framework {
             return 1; // Return the potion name string
         }
   
+        static int lua_GetRandomInventoryPotion(lua_State* L)
+        {
+            // Collect names of all potions currently in the player's inventory
+            // (hotbar + backpack). Returns a random one, or nil if none found.
+            auto& inv = Framework::Inventory::Instance();
+            auto& itemDB = Framework::GetItemDatabase();
+
+            std::vector<std::string> potionsInInventory;
+
+            // --- Hotbar ---
+            int hotbarCount = inv.GetHotbarSlotCount();
+            for (int i = 0; i < hotbarCount; ++i)
+            {
+                const auto& slot = inv.Get(i);
+                if (slot.itemId < 0 || slot.count <= 0) continue;
+
+                // Look up item definition to check type
+                for (const auto& def : itemDB)
+                {
+                    if (def.type == Framework::ItemType::POTION && def.id == Framework::kItemNames[slot.itemId])
+                    {
+                        potionsInInventory.push_back(def.id);
+                        break;
+                    }
+                }
+            }
+
+            // --- Backpack ---
+            int backpackCount = inv.GetBackpackSlotCount();
+            for (int i = 0; i < backpackCount; ++i)
+            {
+                const auto& slot = inv.GetBackpack(i);
+                if (slot.itemId < 0 || slot.count <= 0) continue;
+
+                for (const auto& def : itemDB)
+                {
+                    if (def.type == Framework::ItemType::POTION && def.id == Framework::kItemNames[slot.itemId])
+                    {
+                        potionsInInventory.push_back(def.id);
+                        break;
+                    }
+                }
+            }
+
+            if (potionsInInventory.empty())
+            {
+                lua_pushnil(L);
+                return 1;
+            }
+
+            // Pick a random potion from the list
+            int idx = rand() % potionsInInventory.size();
+            lua_pushstring(L, potionsInInventory[idx].c_str());
+            return 1;
+        }
 
         static int lua_GetEntityName(lua_State* L)
         {
@@ -1698,7 +1859,14 @@ namespace Framework {
             return 1;
         }
 
-
+        static int lua_SetEntityName(lua_State* L)
+        {
+            int entityID = (int)lua_tointeger(L, 1);
+            const char* newName = luaL_checkstring(L, 2);
+            auto& ecs = ecsInterface;
+            ecs.SetEntityName(entityID, std::string(newName));
+            return 0;
+        }
 
         namespace fs = std::filesystem;
 
@@ -2051,6 +2219,17 @@ namespace Framework {
             }
             return 0;
         }
+
+        static int lua_GetCameraRot(lua_State* L) {
+            Camera* cam = Graphics::GetInstance()->GetCameraByIndex(0);
+            if (cam) {
+                lua_pushnumber(L, cam->pitch);
+                lua_pushnumber(L, cam->yaw);
+                return 2; // Returning two values to Lua
+            }
+            return 0;
+        }
+
         static int lua_GetCameraYaw(lua_State* L)
         {
             // 1. Get the Graphics System
@@ -2082,14 +2261,30 @@ namespace Framework {
             return 0;
         }
 
+        static int lua_GetGamma(lua_State* L)
+        {
+            auto* gfx = Graphics::GetInstance();
+            if (!gfx) { lua_pushnumber(L, 2.2); return 1; }
+            lua_pushnumber(L, gfx->GetGamma());
+            return 1;
+        }
 
+        static int lua_SetGamma(lua_State* L)
+        {
+            float g = (float)luaL_checknumber(L, 1);
+            auto* gfx = Graphics::GetInstance();
+            if (gfx) gfx->SetGamma(g);
+            return 0;
+        }
 
-
-        // ScriptingSystem.cpp
-
-
-
-    } // anonymous namespace
+        // LUA DAY PHASE SCENES //
+        static int lua_AdvanceDayAndPushTransition(lua_State* L)
+        {
+            SceneInterface::AdvanceToNextDay();
+            SceneInterface::PushDayTransitionStateForCurrentDay();
+            return 0; // no values returned to Lua
+        }
+    }
 
     // ---------------------------- class methods --------------------------------
 
@@ -2119,6 +2314,7 @@ namespace Framework {
         lua_register(L, "IsKeyDown", l_IsKeyDown);
         lua_register(L, "CameraMove", l_CameraMove);
         lua_register(L, "GetMousePosition", lua_GetMousePosition);
+        lua_register(L, "GetMouseUV", lua_GetMouseUV);
         lua_register(L, "DestroyEntity", l_DestroyEntity);
         lua_register(L, "IsMouseButtonDown", l_IsMouseButtonDown);
         lua_register(L, "SetRotation", lua_SetRotation);
@@ -2138,6 +2334,8 @@ namespace Framework {
         // Game utility
         lua_register(L, "IsItemChoppable", lua_IsItemChoppable);
         lua_register(L, "SetText", lua_SetText);
+        lua_register(L, "GetGamma", lua_GetGamma);
+        lua_register(L, "SetGamma", lua_SetGamma);
 
         // Data Entry from engine
         lua_register(L, "GetScore", lua_GetScore);
@@ -2155,21 +2353,25 @@ namespace Framework {
         lua_register(L, "IsItemZipping", l_isItemZipping);
         lua_register(L, "CheckValidRecipe", l_CheckValidRecipe);
         lua_register(L, "GetEntityName", lua_GetEntityName);
+        lua_register(L, "SetEntityName", lua_SetEntityName);
 
         lua_register(L, "SetScale", lua_SetScale);
         lua_register(L, "GetRotation", lua_GetRotation);
         lua_register(L, "GetCameraYaw", lua_GetCameraYaw);
         lua_register(L, "SetCameraRot", lua_SetCameraRot);
         lua_register(L, "TogglePhase", lua_TogglePhase);
+		lua_register(L, "GetCameraRot", lua_GetCameraRot);
 
         // Inventory Utility
         lua_register(L, "IsItemDestroyOnPick", Lua_IsItemDestroyOnPick);
         lua_register(L, "GetSelectedItem", Lua_GetPlayerSelectedItemId);
         lua_register(L, "ConsumeSelectedItem", Lua_ConsumePlayerSelectedItem);
         lua_register(L, "AddToInventory", Lua_AddToInventory);
+        lua_register(L, "RemoveItemByName", lua_RemoveItemByName);
         lua_register(L, "GetItemNameById", lua_GetItemNameById);
         lua_register(L, "GetSelectedItemName", Lua_GetSelectedItemName);
         lua_register(L, "SetInteractionText", l_SetInteractionText);
+        lua_register(L, "GetItemIdByName", lua_GetItemIdByName);
 
         // Engine utility
         lua_register(L, "FindEntityByName", lua_FindEntityByName);
@@ -2197,18 +2399,28 @@ namespace Framework {
         lua_register(L, "GameStateBackToPause", lua_GameStateBackToPause);
         lua_register(L, "GameStateEndNightPhase", lua_GameStateEndNightPhase);
         lua_register(L, "GetPhase", lua_GetPhase);
+        lua_register(L, "AdvanceDayAndPushTransition", lua_AdvanceDayAndPushTransition);
 
 
         // lua_register(L, "SetScale", lua_SetScale);
         lua_register(L, "GetScale", lua_GetScale);
         lua_register(L, "GetScreenSize", lua_GetScreenSize);
+        lua_register(L, "SetIsUI", lua_SetIsUI);
+
         // Dialogue System
         lua_register(L, "DialogueClear", lua_DialogueClear);
         lua_register(L, "DialogueAdd", lua_DialogueAdd);
         lua_register(L, "DialogueStart", lua_DialogueStart);
         lua_register(L, "DialogueEnd", lua_DialogueEnd);
         lua_register(L, "DialogueIsActive", lua_DialogueIsActive);
-        lua_register(L, "SetIsUI", lua_SetIsUI);
+
+        // Cutscenes (Camera action)
+        lua_register(L, "CutsceneSetTarget", lua_CutsceneSetTarget);
+        lua_register(L, "CutsceneSetOffset", lua_CutsceneSetOffset);
+        lua_register(L, "CutsceneSetSpeed", lua_CutsceneSetSpeed);
+        lua_register(L, "CutsceneStart", lua_CutsceneStart);
+        lua_register(L, "CutsceneIsFlying", lua_CutsceneIsFlying);
+
         //cauldron
         lua_register(L, "SetCameraLock", [](lua_State* L) -> int {
             // 1. Get argument (true/false)
@@ -2301,7 +2513,7 @@ namespace Framework {
         // Craftable potion queries
         lua_register(L, "GetCraftablePotions", lua_GetCraftablePotions);
         lua_register(L, "GetRandomCraftablePotion", lua_GetRandomCraftablePotion);
-
+        lua_register(L, "GetRandomInventoryPotion", lua_GetRandomInventoryPotion);
 
         // Teleport player function
         lua_register(L, "TeleportPlayer", [](lua_State* L) -> int {
@@ -2326,6 +2538,58 @@ namespace Framework {
         lua_register(L, "HasCraftablePotions", [](lua_State* L) -> int {
             auto craftable = Framework::GetCraftablePotionNames();
             lua_pushboolean(L, !craftable.empty());
+            return 1;
+            });
+
+        // Expose to Lua — returns how many unique potions are currently craftable
+        lua_register(L, "GetCraftablePotionCount", [](lua_State* L) -> int {
+            auto craftable = Framework::GetCraftablePotionNames();
+            lua_pushinteger(L, (int)craftable.size());
+            return 1;
+            });
+
+        // Get total count of a specific ingredient in player inventory
+        lua_register(L, "GetIngredientCount", [](lua_State* L) -> int {
+            int itemId = (int)lua_tointeger(L, 1);
+            auto& inv = Framework::Inventory::Instance();
+            int total = 0;
+            for (int i = 0; i < inv.GetHotbarSlotCount(); ++i) {
+                const auto& slot = inv.Get(i);
+                if (slot.itemId == itemId) total += (slot.count > 0 ? slot.count : 1);
+            }
+            for (int i = 0; i < inv.GetBackpackSlotCount(); ++i) {
+                const auto& slot = inv.GetBackpack(i);
+                if (slot.itemId == itemId) total += (slot.count > 0 ? slot.count : 1);
+            }
+            lua_pushinteger(L, total);
+            return 1;
+            });
+
+        // Get ingredient costs for a potion as a flat table {itemId, count, itemId, count...}
+        lua_register(L, "GetPotionIngredientCost", [](lua_State* L) -> int {
+            const char* potionName = luaL_checkstring(L, 1);
+            int potionId = Framework::ItemNameToId(potionName);
+            if (potionId < 0) { lua_newtable(L); return 1; }
+
+            auto req = Framework::ExpandRecipeToBase(potionId);
+            lua_newtable(L);
+            int idx = 1;
+            for (const auto& [itemId, count] : req.baseIngredients) {
+                lua_newtable(L);
+                lua_pushinteger(L, itemId); lua_setfield(L, -2, "itemId");
+                lua_pushinteger(L, count);  lua_setfield(L, -2, "count");
+                lua_rawseti(L, -2, idx++);
+            }
+            return 1;
+            });
+
+        lua_register(L, "GetCraftablePotionNames", [](lua_State* L) -> int {
+            auto craftable = Framework::GetCraftablePotionNames();
+            lua_newtable(L);
+            for (int i = 0; i < (int)craftable.size(); ++i) {
+                lua_pushstring(L, craftable[i].c_str());
+                lua_rawseti(L, -2, i + 1);
+            }
             return 1;
             });
 

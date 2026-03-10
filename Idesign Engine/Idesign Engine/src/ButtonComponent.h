@@ -13,37 +13,33 @@ namespace Framework
 {
     struct ButtonComponent
     {
-        glm::vec2 position;                  // Position of the button
-        glm::vec2 size;                      // Size of the button
-        bool isHovered;                      // Is the button hovered?
-        std::function<void()> onClick;       // Function to be called when clicked
+        glm::vec2 position;
+        glm::vec2 size;
+        bool isHovered = false;
+        std::function<void()> onClick;
         bool isFrontButton = false;
-        bool interactable = true;   // NEW: hard gate for clicking
+        bool interactable = true;
+        AssetHandle hoverTextureGuid = ""; // The GUID picked in ImGui
+        unsigned int hoverTextureID = 0;
+        unsigned int originalTextureID = 0;
+        AssetHandle originalTextureGuid = ""; // ADD THIS to remember the original string
 
-        void TriggerClick(Entity e) const
-        {
-            if (!interactable) return;          // NEW
-            if (onClick) 
-            {
+        void TriggerClick(Entity e) const {
+            if (!interactable) return;
+            if (onClick) {
                 g_AudioSystem->PlayAudio("event:/ButtonClick");
                 onClick();
-            }
-            else
-            {
-                // Default debug behaviour if nothing is bound
-                std::cout << "[Button] Entity " << e << " has been clicked!\n";
             }
         }
     };
 
-    // Property registration for ButtonComponent
-    inline const std::vector g_ButtonComponentPropsArray =
-    {
-        PROP_VEC2(position,   ButtonComponent),
-        PROP_VEC2(size,       ButtonComponent),
-        PROP_BOOL(isHovered,  ButtonComponent),
+    // Register the new property for serialization/ImGui
+    inline const std::vector g_ButtonComponentPropsArray = {
+        PROP_VEC2(position, ButtonComponent),
+        PROP_VEC2(size, ButtonComponent),
+        PROP_BOOL(isHovered, ButtonComponent),
         PROP_BOOL(isFrontButton, ButtonComponent),
-        // Note: onClick is a function, not a serializable property, so we don’t register it
+        PROP_GUID_HIDDEN(hoverTextureGuid, ButtonComponent),
     };
 
     inline const prop_list g_ButtonComponentProps{ "ButtonComponent", g_ButtonComponentPropsArray };

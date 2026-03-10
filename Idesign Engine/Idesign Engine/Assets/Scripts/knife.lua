@@ -13,6 +13,7 @@ M.knife_rot_held_z = 0.0
 local player_entity = nil
 local knife_entity = nil
 local is_in_inventory = false
+local last_phase = nil
 
 -- Storage for the original home position
 local start_x, start_y, start_z = 0, 0, 0
@@ -83,6 +84,16 @@ function M.KnifePickUp(entityID)
 end
 
 function M:on_update(dt)
+
+    -- Phase reset check
+    local current_phase = GetPhase()
+    if current_phase ~= last_phase then
+        if current_phase == 1 then  -- Day phase, nid to match enum class GamePhase
+            self:ResetKnife()
+        end
+        last_phase = current_phase
+    end
+
     -- 1. If we haven't picked it up yet, do nothing (it sits on the table)
     if is_in_inventory == false then
 
@@ -123,6 +134,17 @@ function M:UpdateKnifePosition()
 
     SetPosition(knife_entity, kx, ky, kz)
     SetRotation(knife_entity, M.knife_rot_held_x, -camYaw + M.knife_rot_held_y, M.knife_rot_held_z)
+end
+
+function M:ResetKnife()
+    if is_in_inventory then
+        RemoveItemByName("knife")
+        SetPosition(knife_entity, start_x, start_y, start_z)
+        SetRotation(knife_entity, start_rx, start_ry, start_rz)
+        is_in_inventory = false
+        SetInteractionText(self.entity, "Pick up Knife")
+        print("[Knife] Reset to spawn position for Day phase.")
+    end
 end
 
 return M

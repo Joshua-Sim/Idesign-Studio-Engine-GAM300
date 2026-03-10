@@ -15,12 +15,34 @@ namespace Framework
 		void Initialize() override;
 		void Update(float deltaTime) override;
 		std::string GetName() override;
+
+		static int g_CurrentDay;
+
+		int GetCurrentDay();
+
+		void SetCurrentDay(int day);
+
+		static void AdvanceToNextDay();
+
+		static void PushDayTransitionStateForCurrentDay();
+
+		void OnNextDayPressed();
+
+		bool WinOrLose();
+
 	private:
 	};
 
-	static float cutsceneStartTime = -1.0f;
-	static float fadeOutStartTime = -1.0f;
+	static float Saturate(float x) { return glm::clamp(x, 0.0f, 1.0f); }
 
+	//int GetTargetDayFromState()
+	//{
+	//	if (engineState.Is(EngineMode::Day2)) return 2;
+	//	if (engineState.Is(EngineMode::Day3)) return 3;
+	//	if (engineState.Is(EngineMode::Day4)) return 4;
+	//	if (engineState.Is(EngineMode::Day5)) return 5;
+	//	return 0;
+	//}
 
 	// Declare the global instance of EngineState
 	extern SceneInterface sceneInterface;

@@ -29,6 +29,13 @@ namespace Framework
         unsigned int textureID = 0;
         int width = 0;
         int height = 0;
+
+        // spritesheet support
+        float uOffset = 0.0f;
+        float vOffset = 0.0f;
+        float uScale = 1.0f;
+        float vScale = 1.0f;
+
     };
 
     inline const std::vector g_TexturePropertiesPropsArray =
@@ -36,7 +43,12 @@ namespace Framework
         PROP_GUID_HIDDEN(guid, TextureProperties),
         PROP_STRING_HIDDEN(name, TextureProperties),
         PROP_STRING_HIDDEN(path, TextureProperties),
-        PROP_BOOL(isUI, TextureProperties)
+        PROP_BOOL(isUI, TextureProperties),
+        PROP_FLOAT(uiAlpha, TextureProperties),
+        PROP_FLOAT(uOffset, TextureProperties),
+        PROP_FLOAT(vOffset, TextureProperties),
+        PROP_FLOAT(uScale, TextureProperties),
+        PROP_FLOAT(vScale, TextureProperties)
     };
 
     inline const prop_list g_TexturePropertiesProps{ "TextureProperties", g_TexturePropertiesPropsArray };

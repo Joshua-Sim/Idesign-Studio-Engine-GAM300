@@ -4,146 +4,397 @@ local CustomerSystem = {}
 -- CONFIGURATION
 -- =========================================================
 CustomerSystem.customerPrefabGUID = "Customer_Kinematic_Prefab"
-CustomerSystem.spawnPointName = "SpawnPoint"
-CustomerSystem.waitPointName = "CustomerWaitingPoint"
-CustomerSystem.spawn_delay = 3.0
+CustomerSystem.spawnPointName     = "SpawnPoint"
+CustomerSystem.spawn_delay        = 5.0     -- Time Delay per customer
+
+CustomerSystem.waitPointNames = {
+    "CustomerWaitingPoint_1",
+    "CustomerWaitingPoint_2",
+}
 
 CustomerSystem.customer_models = {
-    { 
-        prefab = "Customer_Kinematic_Prefab",       -- Model A
-        walk = "Armature|WalkAnimation",
-        idle = "Armature|IdleAnimation"
+    {
+        prefab = "Customer_Kinematic_Prefab",
+        walk   = "Armature|WalkAnimation",
+        idle   = "Armature|IdleAnimation"
     },
-    { 
-        prefab = "Customer_Kinematic_2_Prefab",     -- Model B
-        walk = "Armature|WalkAnimation",    -- Change this if Model B has different anim names
-        idle = "Armature|IdleAnimation"
+    {
+        prefab = "Customer_Kinematic_2_Prefab",
+        walk   = "Armature|WalkAnimation",
+        idle   = "Armature|IdleAnimation"
     }
-}    -- Starts at 1, switches to 2, then back to 1
+}
 
--- [PROGRESS BAR CONFIG]
 CustomerSystem.prefab_frame = "ProgressBarFrame_Prefab"
 CustomerSystem.prefab_fill  = "ProgressBarFill_Prefab"
-CustomerSystem.tex_green = "Assets/Textures/green.png" 
-CustomerSystem.tex_red   = "Assets/Textures/red.png"
+CustomerSystem.tex_green    = "Assets/Textures/green.png"
+CustomerSystem.tex_red      = "Assets/Textures/red.png"
 
--- [INGREDIENT CHECK TIMER]
-local ingredient_check_timer = 0.0
-local ingredient_check_delay = 2.0      -- Wait 2 seconds after spawn
-local end_phase_timer = 0.0
-local end_phase_delay = 2.0             -- Wait 2 seconds before upgrade
-local waiting_to_end = false            -- Flag: waiting to end phase
-local has_checked_ingredients = false   -- Flag: already checked once
-
--- Log prefab
-local prefab_log = "CustomerLog_Prefab"
-
--- Visual Settings
-local color_swap_threshold = 0.3
-local bar_length_max = 0.5
-local bar_thickness  = 0.2
-local y_offset       = 3.8    
-local x_offset_right = -0.5    
-local tune_x = 1.6
-local tune_y = -0.04
+-- =========================================================
+-- CONSTANTS
+-- =========================================================
+local MAX_COUNTER_SLOTS      = 2
+local PHASE_NIGHT            = 2
+local patience_duration      = 120.0
+local arrival_threshold      = 1.5
+local color_swap_threshold   = 0.3
+local bar_length_max         = 0.5
+local bar_thickness          = 0.2
+local y_offset               = 3.8
+local x_offset_right         = -0.5
+local tune_x                 = 1.6
+local tune_y                 = -0.04
 local billboard_depth_adjust = 0.055
+local end_phase_delay        = 2.0      -- Time to delay for ""End Night Phase""
+local prefab_log             = "CustomerLog_Prefab"
 
--- Patience Settings
-local patience_duration = 120.0 
-local current_patience = 0.0
-local arrival_threshold = 1.5 
-
--- [SCORE TRACKING]
-local score_text_entity = nil
-
--- [PHASE MANAGEMENT]
-local PHASE_NIGHT = 2
-local MAX_CUSTOMERS = 3
-local customers_served = 0
 
 -- =========================================================
 -- INTERNAL STATE
 -- =========================================================
-local activeCustomer = nil
-local waiting_queue = {} -- [NEW] Stores customers waiting at the door
-local waitPointEntity = nil 
-local hasSpawned = false -- Used to track if the ACTIVE slot is filled
-local is_at_counter = false 
-local spawnTimer = 0
-local navMeshBuilt = false
-local player_id = nil
-local entity_frame = nil
-local entity_fill = nil
-local current_bar_state = "green"
-local previousPhase = -1 
-local active_logs = {} -- Track spawned logs
+local score_text_entity = nil
+local previousPhase     = -1
+local customers_served  = 0
+local active_logs       = {}
+local spawnTimer        = 0
+local navMeshBuilt      = false
+local player_id         = nil
+local next_model_index  = 1
+local end_phase_timer   = 0.0
+local waiting_to_end    = false
+local waitPointEntities = { nil, nil }
+local activeCustomers   = { nil, nil }
 
--- [ANIMATION STATE]
-local current_idle_anim = ""    -- Stores the idle anim for the active customer
-local current_walk_anim = ""    -- Stores the walk anim for the active customer
-local next_model_index = 2      -- Tracks whose turn it is (1 or 2)
-local last_pos_x = 0
-local last_pos_z = 0
-local is_moving_state = true    -- To prevent spamming PlayAnimation
+-- Pre-built order queue
+local orderQueue  = {}
+local queueIndex  = 1
+
+-- String store: maps entity ID -> order string
+-- Used because SetData only accepts integers
+local customerOrderStrings = {}
+
+-- Global getter so Customer.lua can read the order by entity ID
+function GetCustomerOrder(entityId)
+    return customerOrderStrings[entityId]
+end
 
 -- =========================================================
--- GLOBAL HELPER FUNCTIONS
+-- BUILD ORDER QUEUE
+-- Runs once at night start. Counts ingredients, works out
+-- how many of each potion type can be crafted, then
+-- greedily picks cheapest potion each round so shared ingredients
+-- are correctly deducted and total customer count is maximised.
+-- =========================================================
+local function BuildOrderQueue()
+    orderQueue = {}
+    queueIndex = 1
+
+    local craftable = GetCraftablePotionNames()
+    if not craftable or #craftable == 0 then
+        print("[CustomerSystem] BuildOrderQueue: No potions available.")
+        return
+    end
+
+    -- Snapshot current ingredient counts into a virtual pool
+    local pool = {}
+    for _, potionName in ipairs(craftable) do
+        local cost = GetPotionIngredientCost(potionName)
+        if cost then
+            for _, entry in ipairs(cost) do
+                if not pool[entry.itemId] then
+                    pool[entry.itemId] = GetIngredientCount(entry.itemId)
+                end
+            end
+        end
+        -- Also include finished potions already in inventory
+        local potionId = GetItemIdByName(potionName)
+        if potionId >= 0 and not pool[potionId] then
+            pool[potionId] = GetIngredientCount(potionId)
+        end
+    end
+
+    -- Can we afford one of this potion from the virtual pool?
+    local function CanAffordOne(potionName)
+        local potionId = GetItemIdByName(potionName)
+        if potionId >= 0 and (pool[potionId] or 0) >= 1 then
+            return true, "ready"
+        end
+        local cost = GetPotionIngredientCost(potionName)
+        if not cost or #cost == 0 then return false, nil end
+        for _, entry in ipairs(cost) do
+            if (pool[entry.itemId] or 0) < entry.count then return false, nil end
+        end
+        return true, "craft"
+    end
+
+    -- Deduct ingredients from virtual pool for one of this potion
+    local function DeductOne(potionName, source)
+        if source == "ready" then
+            local potionId = GetItemIdByName(potionName)
+            pool[potionId] = pool[potionId] - 1
+        else
+            local cost = GetPotionIngredientCost(potionName)
+            for _, entry in ipairs(cost) do
+                pool[entry.itemId] = (pool[entry.itemId] or 0) - entry.count
+            end
+        end
+    end
+
+    -- Total ingredient cost of one potion (for tiebreaking)
+    local function TotalCost(potionName)
+        local cost = GetPotionIngredientCost(potionName)
+        if not cost then return 0 end
+        local n = 0
+        for _, entry in ipairs(cost) do n = n + entry.count end
+        return n
+    end
+
+    -- Each round, queue ALL currently affordable potions (deducting as we go).
+    -- This ensures shared ingredients are split fairly across potion types.
+    local keepGoing = true
+    while keepGoing do
+        keepGoing = false
+        for _, name in ipairs(craftable) do
+            local ok, source = CanAffordOne(name)
+            if ok then
+                table.insert(orderQueue, name)
+                DeductOne(name, source)
+                keepGoing = true
+                print("[CustomerSystem] Queued: " .. name .. " (via " .. source .. ")")
+            end
+        end
+    end
+
+    if #orderQueue == 0 then
+        print("[CustomerSystem] BuildOrderQueue: No potions affordable.")
+        return
+    end
+
+    -- Shuffle for variety (Fisher-Yates)
+    for i = #orderQueue, 2, -1 do
+        local j = math.random(1, i)
+        orderQueue[i], orderQueue[j] = orderQueue[j], orderQueue[i]
+    end
+
+    print("[CustomerSystem] Queue built with " .. #orderQueue .. " orders:")
+    for i, o in ipairs(orderQueue) do
+        print("  [" .. i .. "] " .. o)
+    end
+end
+
+local function DequeueOrder()
+    if queueIndex > #orderQueue then return nil end
+    local order = orderQueue[queueIndex]
+    queueIndex  = queueIndex + 1
+    return order
+end
+
+-- Called after a customer completes or fails.
+-- Rebuilds remaining queue slots using a virtual ingredient pool
+-- so all affordable potions are queued at once, filling both slots.
+local function ReplaceFailedOrder()
+    local craftable = GetCraftablePotionNames()
+    if not craftable or #craftable == 0 then return end
+
+    -- Build virtual pool from current inventory
+    local pool = {}
+    for _, potionName in ipairs(craftable) do
+        local cost = GetPotionIngredientCost(potionName)
+        if cost then
+            for _, entry in ipairs(cost) do
+                if not pool[entry.itemId] then
+                    pool[entry.itemId] = GetIngredientCount(entry.itemId)
+                end
+            end
+        end
+        local potionId = GetItemIdByName(potionName)
+        if potionId >= 0 and not pool[potionId] then
+            pool[potionId] = GetIngredientCount(potionId)
+        end
+    end
+
+    -- Deduct ingredients already committed to pending queue entries
+    for i = queueIndex, #orderQueue do
+        local cost = GetPotionIngredientCost(orderQueue[i])
+        if cost then
+            for _, entry in ipairs(cost) do
+                pool[entry.itemId] = (pool[entry.itemId] or 0) - entry.count
+            end
+        end
+    end
+
+    -- Deduct ingredients committed to active customers
+    for slot = 1, MAX_COUNTER_SLOTS do
+        local c = activeCustomers[slot]
+        if c and c.order and c.order ~= "" then
+            local cost = GetPotionIngredientCost(c.order)
+            if cost then
+                for _, entry in ipairs(cost) do
+                    pool[entry.itemId] = (pool[entry.itemId] or 0) - entry.count
+                end
+            end
+        end
+    end
+
+    -- Can we afford one from the remaining pool?
+    local function CanAffordOne(potionName)
+        local potionId = GetItemIdByName(potionName)
+        if potionId >= 0 and (pool[potionId] or 0) >= 1 then
+            return true, "ready"
+        end
+        local cost = GetPotionIngredientCost(potionName)
+        if not cost or #cost == 0 then return false, nil end
+        for _, entry in ipairs(cost) do
+            if (pool[entry.itemId] or 0) < entry.count then return false, nil end
+        end
+        return true, "craft"
+    end
+
+    local function DeductOne(potionName, source)
+        if source == "ready" then
+            local potionId = GetItemIdByName(potionName)
+            pool[potionId] = pool[potionId] - 1
+        else
+            local cost = GetPotionIngredientCost(potionName)
+            for _, entry in ipairs(cost) do
+                pool[entry.itemId] = (pool[entry.itemId] or 0) - entry.count
+            end
+        end
+    end
+
+    -- Shuffle craftable list so no potion type is always prioritised
+    local shuffled = {}
+    for _, name in ipairs(craftable) do table.insert(shuffled, name) end
+    for i = #shuffled, 2, -1 do
+        local j = math.random(1, i)
+        shuffled[i], shuffled[j] = shuffled[j], shuffled[i]
+    end
+
+    -- Keep adding affordable potions until pool is exhausted
+    local added = 0
+    local keepGoing = true
+    while keepGoing do
+        keepGoing = false
+        for _, name in ipairs(shuffled) do
+            local ok, source = CanAffordOne(name)
+            if ok then
+                table.insert(orderQueue, name)
+                DeductOne(name, source)
+                added = added + 1
+                keepGoing = true
+                print("[CustomerSystem] ReplaceFailedOrder: Added " .. name .. " (via " .. source .. ")")
+            end
+        end
+    end
+
+    if added == 0 then
+        print("[CustomerSystem] ReplaceFailedOrder: No affordable replacements found.")
+    else
+        print("[CustomerSystem] ReplaceFailedOrder: Added " .. added .. " orders to queue.")
+    end
+end
+
+-- =========================================================
+-- SLOT HELPERS
+-- =========================================================
+local function CountActiveSlots()
+    local n = 0
+    for i = 1, MAX_COUNTER_SLOTS do
+        if activeCustomers[i] ~= nil then n = n + 1 end
+    end
+    return n
+end
+
+local function GetFreeSlot()
+    for i = 1, MAX_COUNTER_SLOTS do
+        if activeCustomers[i] == nil then return i end
+    end
+    return nil
+end
+
+-- =========================================================
+-- CURRENCY UI
 -- =========================================================
 function UpdateCurrencyUI()
     if score_text_entity then
-        local current_currency = GetCurrency()
-        local currency_text = "        :" .. tostring(current_currency)
-        SetTextComponent(score_text_entity, "text", currency_text)
-        print("[UpdateCurrencyUI] Display updated to: " .. current_currency)
+        local c = GetCurrency()
+        SetTextComponent(score_text_entity, "text", "        :" .. tostring(c))
+        print("[UpdateCurrencyUI] updated: " .. c)
     else
         print("[UpdateCurrencyUI] Warning: score_text_entity is nil!")
     end
 end
 
+-- =========================================================
+-- HUD DATA ACCESSOR
+-- =========================================================
+function GetCustomerUIData()
+    local result = {}
+    for i = 1, MAX_COUNTER_SLOTS do
+        if activeCustomers[i] then
+            local c = activeCustomers[i]
+            result[i] = {
+                slot         = i,
+                order        = c.order,
+                icon_type    = c.icon_type,
+                patience     = c.patience,
+                patience_pct = c.patience / patience_duration,
+                is_arriving  = not c.is_at_counter,
+            }
+        else
+            result[i] = nil
+        end
+    end
+    return result
+end
+
+-- =========================================================
+-- ON INIT
+-- =========================================================
 function CustomerSystem:on_init()
     print("[CustomerSystem] >> Initialized.")
-    
     player_id = FindEntityByName("Player")
-    waitPointEntity = FindEntityByName(self.waitPointName)
-    
-    local existing_score = FindEntityByName("ScoreText") 
+
+    for i = 1, MAX_COUNTER_SLOTS do
+        waitPointEntities[i] = FindEntityByName(self.waitPointNames[i])
+        if waitPointEntities[i] then
+            print("[CustomerSystem] Found wait point: " .. self.waitPointNames[i])
+        else
+            print("[CustomerSystem] WARNING: Missing wait point: " .. self.waitPointNames[i])
+        end
+    end
+
+    local existing_score = FindEntityByName("ScoreText")
     if existing_score then
         score_text_entity = existing_score
-        print("[CustomerSystem] ScoreText already exists, reusing it.")
     else
         score_text_entity = SpawnPrefab("ScoreText_Prefab")
         if score_text_entity then
-            SetTransformComponent(score_text_entity, "position", {x = 0.010, y = 0.060, z = 0})
+            SetTransformComponent(score_text_entity, "position", {x = 0.010, y = 0.060, z = 1.0})
             SetTextComponent(score_text_entity, "color", {r = 0, g = 0, b = 0})
             SetTextComponent(score_text_entity, "scale", 1.5)
             CustomerSystem:UpdateCurrencyDisplay()
-        else
-            print("[CustomerSystem] ERROR: Failed to spawn ScoreText prefab!")
         end
     end
 
     if not navMeshBuilt then
-        print("[CustomerSystem] Building NavMesh...")
         local success = BuildNavMesh()
         if success then
-            print("[CustomerSystem] NavMesh built successfully!")
             navMeshBuilt = true
+            print("[CustomerSystem] NavMesh built.")
         else
-            print("[CustomerSystem] ERROR: Failed to build NavMesh!")
+            print("[CustomerSystem] ERROR: NavMesh failed!")
         end
     end
-    
+
     self:ResetNightPhase()
-    
-    CustomerSystemNotifyComplete = function()
-        self:OnCustomerComplete()
-    end
 end
+
+-- =========================================================
+-- ON UPDATE
+-- =========================================================
 function CustomerSystem:on_update(dt)
-    local queue_count = #waiting_queue
-    local has_active = (activeCustomer ~= nil)
-    
-    -- Update score text visibility based on engine state
+
     if score_text_entity then
         if IsEngineState("Play") or IsEngineState("Upgrade") or IsEngineState("Editor") then
             SetTextComponent(score_text_entity, "opacity", 1.0)
@@ -153,483 +404,419 @@ function CustomerSystem:on_update(dt)
     end
 
     if not navMeshBuilt then return end
-    
+
     local currentPhase = GetPhase()
-    
+
+    -- Night phase transition: reset and build queue
     if currentPhase == PHASE_NIGHT and previousPhase ~= PHASE_NIGHT then
         print("[CustomerSystem] --- Transition INTO Night Phase ---")
         self:ResetNightPhase()
+        BuildOrderQueue()
+        if #orderQueue == 0 then
+            print("[CustomerSystem] No craftable potions. Ending night immediately.")
+            waiting_to_end  = true
+            end_phase_timer = 0.0
+        end
     end
     previousPhase = currentPhase
-    
+
     if currentPhase ~= PHASE_NIGHT then return end
-    
-    -- === DELAYED END PHASE LOGIC ===
+
+    -- Delayed end phase
     if waiting_to_end then
         end_phase_timer = end_phase_timer + dt
         if end_phase_timer >= end_phase_delay then
-            print("[CustomerSystem] Timer complete. Ending night phase now.")
             self:EndNightPhase()
-            return
         end
-        -- Still waiting, don't do anything else
         return
     end
-    
-    -- === INGREDIENT CHECK (2 seconds after active customer exists) ===
-    local total_alive_count = #waiting_queue
-    if activeCustomer then total_alive_count = total_alive_count + 1 end
-    
-    if activeCustomer and not has_checked_ingredients then
-        ingredient_check_timer = ingredient_check_timer + dt
-        
-        if ingredient_check_timer >= ingredient_check_delay then
-            -- Time to check ingredients
-            if not HasCraftablePotions() then
-                print("[CustomerSystem] No craftable potions detected!")
-                self:SpawnLog("No potions available! Starting upgrade phase...")
-                Sound.Play("event:/wrongSound")  -- Optional: play warning sound
-                
-                -- Start end phase countdown
-                waiting_to_end = true
-                end_phase_timer = 0.0
-                has_checked_ingredients = true
-                return
-            else
-                -- Potions ARE craftable, mark as checked and continue normally
-                has_checked_ingredients = true
-                print("[CustomerSystem] Ingredient check passed. Continuing night phase.")
-            end
-        end
-    end
-    
-    -- === NORMAL END CHECK: Max customers reached ===
-    if customers_served >= MAX_CUSTOMERS and total_alive_count == 0 then
-        print("[CustomerSystem] Max customers reached. Ending Night Phase.")
-        self:EndNightPhase()
-        return
-    end
-    
-   -- === SPAWN LOGIC (with pre-spawn ingredient check) ===
-if customers_served < MAX_CUSTOMERS and total_alive_count == 0 then
-    spawnTimer = spawnTimer + dt
-    if spawnTimer >= self.spawn_delay then
-        -- [PRE-SPAWN CHECK] Don't spawn if no potions available
-        if not HasCraftablePotions() then
-            print("[CustomerSystem] Cannot spawn - no craftable potions!")
-            self:SpawnLog("No potions available! Starting upgrade phase...")
-            Sound.Play("event:/wrongSound")
-            
-            -- Start end phase countdown
-            waiting_to_end = true
+
+    local active_count = CountActiveSlots()
+    local queue_done   = (queueIndex > #orderQueue)
+
+    -- End when queue done and no customers active.
+    -- Try ReplaceFailedOrder first in case leftover ingredients allow a new order.
+    if queue_done and active_count == 0 then
+        ReplaceFailedOrder()
+        queue_done = (queueIndex > #orderQueue)
+        if queue_done then
+            print("[CustomerSystem] All customers served. Ending night.")
+            waiting_to_end  = true
             end_phase_timer = 0.0
             return
         end
-        
-        print("[CustomerSystem] Scene empty. Spawning next customer...")
-        self:spawn_customer()
-        spawnTimer = 0
-        
-        -- Reset ingredient check for new customer
-        ingredient_check_timer = 0.0
-        has_checked_ingredients = false
     end
-else
-    spawnTimer = 0 
-end
 
-    -- 2. CUSTOMER ACTIVE LOGIC
-    if activeCustomer then
-        
-        -- [VELOCITY CHECK]
-        if not is_at_counter then
-            local cx, cy, cz = GetPosition(activeCustomer)
-            
-            -- Calculate distance moved since last frame
-            local dx = cx - last_pos_x
-            local dz = cz - last_pos_z
-            local dist_moved = math.sqrt(dx*dx + dz*dz)
-            local speed = dist_moved / dt 
-
-            -- Threshold: If speed < 0.1 units/sec, they are effectively stopped
-            if speed < 0.1 then
-                if is_moving_state == true then
-                    print("[CustomerSystem] Blocked! Switching to Idle.")
-                    SetAnimationSettings(activeCustomer, 1.0, true, true)
-                    PlayEntityAnimation(activeCustomer, current_idle_anim)
-                    is_moving_state = false
-                end
-            else
-                if is_moving_state == false then
-                    print("[CustomerSystem] Moving! Switching to Walk.")
-                    SetAnimationSettings(activeCustomer, 1.0, true, true)
-                    PlayEntityAnimation(activeCustomer, current_walk_anim)
-                    is_moving_state = true
+    -- Spawn next customer if slot free and queue has orders
+    if not queue_done and active_count < MAX_COUNTER_SLOTS then
+        spawnTimer = spawnTimer + dt
+        if spawnTimer >= self.spawn_delay then
+            local freeSlot = GetFreeSlot()
+            if freeSlot then
+                local order = DequeueOrder()
+                if order then
+                    self:spawn_customer(freeSlot, order)
+                    spawnTimer = 0
                 end
             end
+        end
+    else
+        -- Reset timer while slots full so next spawn is prompt when one clears
+        if active_count >= MAX_COUNTER_SLOTS then
+            spawnTimer = 0
+        end
+    end
 
-            -- Update last position for next frame
-            last_pos_x = cx
-            last_pos_z = cz
+    -- Update active slots
+    for slot = 1, MAX_COUNTER_SLOTS do
+        if activeCustomers[slot] then
+            self:UpdateSlot(slot, activeCustomers[slot], dt)
+        end
+    end
+end
+
+-- =========================================================
+-- UPDATE SLOT
+-- =========================================================
+function CustomerSystem:UpdateSlot(slot, c, dt)
+    local waitPt = waitPointEntities[slot]
+
+    if not c.is_at_counter then
+        local ok, cx, cy, cz = pcall(GetPosition, c.entity)
+        if not ok then
+            self:ClearSlot(slot)
+            return
         end
 
-        -- CHECK IF ARRIVED
-        if not is_at_counter then
-            if waitPointEntity then
-                local cx, cy, cz = GetPosition(activeCustomer)
-                local wx, wy, wz = GetPosition(waitPointEntity)
-                
-                local dist = math.sqrt((cx - wx)^2 + (cy - wy)^2 + (cz - wz)^2)
-                
-                if dist < arrival_threshold then
-                    print("[CustomerSystem] >> ARRIVED! Switching to Idle...")
-                    is_at_counter = true
-                    is_moving_state = false 
-                    
-                    SetAnimationSettings(activeCustomer, 1.0, true, true)
-                    PlayEntityAnimation(activeCustomer, current_idle_anim)
-                    
-                    current_patience = patience_duration
-                    self:SpawnBar(activeCustomer)
-                    FireEvent("OnArrival", activeCustomer, activeCustomer, 0)
-                end
+        local dx    = cx - c.last_pos_x
+        local dz    = cz - c.last_pos_z
+        local speed = math.sqrt(dx*dx + dz*dz) / dt
+
+        if speed < 0.1 then
+            if c.is_moving then
+                SetAnimationSettings(c.entity, 1.0, true, true)
+                PlayEntityAnimation(c.entity, c.idle_anim)
+                c.is_moving = false
             end
         else
-            -- [ARRIVED] HANDLE PATIENCE
-            if entity_frame and entity_fill then
-                current_patience = current_patience - dt
-                
-                if current_patience <= 0 then       
-                    print("[CustomerSystem] Time expired! Customer leaving.")
-                    CustomerSystem:SpawnLog("Time's up!")
-                    if activeCustomer then
-                        FireEvent("CustomerTimeout", activeCustomer, activeCustomer, 0)
-                        FireEvent("CustomerFailed", activeCustomer, activeCustomer, 0)
-                    end
-                    return
-                end
-                
-                -- Visual updates (bar color/scale)
-                local pct = current_patience / patience_duration
-                if pct <= color_swap_threshold then
-                    if current_bar_state == "green" then
-                        SetTexture(entity_fill, self.tex_red)
-                        current_bar_state = "red"
-                    end
-                else
-                    if current_bar_state == "red" then
-                        SetTexture(entity_fill, self.tex_green)
-                        current_bar_state = "green"
-                    end
-                end
-                local current_length = pct * bar_length_max
-                SetScale(entity_fill, current_length, bar_thickness * 0.9, bar_thickness * 0.9)
+            if not c.is_moving then
+                SetAnimationSettings(c.entity, 1.0, true, true)
+                PlayEntityAnimation(c.entity, c.walk_anim)
+                c.is_moving = true
+            end
+        end
 
-                if player_id then
-                    local px, py, pz = GetPosition(player_id)
-                    local cx, cy, cz = GetPosition(activeCustomer)
-                    self:UpdateBillboard(px, pz, cx, cy, cz)
+        c.last_pos_x = cx
+        c.last_pos_z = cz
+
+        if waitPt then
+            local wx, wy, wz = GetPosition(waitPt)
+            local dist = math.sqrt((cx-wx)^2 + (cy-wy)^2 + (cz-wz)^2)
+            if dist < arrival_threshold then
+                print("[CustomerSystem] Slot " .. slot .. " arrived!")
+                c.is_at_counter = true
+                c.is_moving     = false
+                SetAnimationSettings(c.entity, 1.0, true, true)
+                PlayEntityAnimation(c.entity, c.idle_anim)
+                c.patience = patience_duration
+                self:SpawnBarForSlot(slot, c)
+                FireEvent("OnArrival", c.entity, c.entity, 0)
+            end
+        end
+
+    else
+        c.patience = c.patience - dt
+
+        if c.patience <= 0 then
+            print("[CustomerSystem] Slot " .. slot .. " timed out!")
+            local timedEntity = c.entity
+            -- Apply penalty using native AddCurrency binding
+            local penalty = 100
+            AddCurrency(-penalty)
+            UpdateCurrencyUI()
+            CustomerSystem:SpawnLog("Time's up! -" .. penalty .. " gold")
+            print("[CustomerSystem] Timeout penalty: -" .. penalty)
+            CustomerSystem:ClearSlot(slot, "timeout")
+            ReplaceFailedOrder()
+            FireEvent("CustomerTimeout", timedEntity, timedEntity, 0)
+            FireEvent("CustomerFailed",  timedEntity, timedEntity, 0)
+            DestroyEntity(timedEntity)
+            return
+        end
+
+        local pct = c.patience / patience_duration
+
+        if c.bar_fill then
+            if pct <= color_swap_threshold then
+                if c.bar_state == "green" then
+                    SetTexture(c.bar_fill, self.tex_red)
+                    c.bar_state = "red"
+                end
+            else
+                if c.bar_state == "red" then
+                    SetTexture(c.bar_fill, self.tex_green)
+                    c.bar_state = "green"
                 end
             end
+            SetScale(c.bar_fill, pct * bar_length_max, bar_thickness * 0.9, bar_thickness * 0.9)
+        end
+
+        if player_id then
+            local ok, cx, cy, cz = pcall(GetPosition, c.entity)
+            if not ok then
+                CustomerSystem:ClearSlot(slot)
+                return
+            end
+            local px, py, pz = GetPosition(player_id)
+            self:UpdateBillboardForSlot(c, px, pz, cx, cy, cz)
         end
     end
 end
 
-function CustomerSystem:spawn_customer()
+-- =========================================================
+-- SPAWN CUSTOMER
+-- =========================================================
+function CustomerSystem:spawn_customer(slot, order)
     local spawnPoint = FindEntityByName(self.spawnPointName)
-    if spawnPoint == nil then return end
-    
+    if not spawnPoint then
+        print("[CustomerSystem] ERROR: SpawnPoint not found!")
+        return
+    end
+
     self:play_doorbell()
 
     local modelData = self.customer_models[next_model_index]
-    local customer = SpawnPrefab(modelData.prefab, spawnPoint)
-    
-    if customer == nil then return end
+    local customer  = SpawnPrefab(modelData.prefab, spawnPoint)
+    if not customer then
+        print("[CustomerSystem] ERROR: Failed to spawn prefab!")
+        return
+    end
 
+    local uniqueName = "Customer_Slot_" .. slot
+    SetEntityName(customer, uniqueName)
     SetData("Type_" .. customer, next_model_index)
-    
-    local customerData = {
-        entity = customer,
-        idle = modelData.idle,
-        walk = modelData.walk
+    SetData("Slot_" .. customer, slot)
+    -- Store order string in Lua table (SetData is int-only)
+    customerOrderStrings[customer] = order
+
+    activeCustomers[slot] = {
+        entity        = customer,
+        entity_name   = uniqueName,
+        order         = order,
+        icon_type     = next_model_index,
+        idle_anim     = modelData.idle,
+        walk_anim     = modelData.walk,
+        patience      = patience_duration,
+        is_at_counter = false,
+        bar_state     = "green",
+        bar_frame     = nil,
+        bar_fill      = nil,
+        last_pos_x    = 0,
+        last_pos_z    = 0,
+        is_moving     = true,
     }
 
-    -- Go straight to the counter since we know the scene is empty
-    self:SetActiveCustomer(customerData)
+    SetAnimationSettings(customer, 1.0, true, true)
+    PlayEntityAnimation(customer, modelData.walk)
 
-    -- Flip index for next time
+    local sx, sy, sz = GetPosition(customer)
+    activeCustomers[slot].last_pos_x = sx
+    activeCustomers[slot].last_pos_z = sz
+
+    PathfindTo(uniqueName, self.waitPointNames[slot])
     next_model_index = (next_model_index % #self.customer_models) + 1
-end
-
--- [NEW] Helper to activate a customer (make them walk to counter)
-function CustomerSystem:SetActiveCustomer(data)
-    activeCustomer = data.entity
-    current_idle_anim = data.idle
-    current_walk_anim = data.walk
-    
-    hasSpawned = true
-    is_at_counter = false
-    
-    -- Play Walk
-    SetAnimationSettings(activeCustomer, 1.0, true, true)
-    PlayEntityAnimation(activeCustomer, current_walk_anim)
-
-    -- Reset Movement State
-    local sx, sy, sz = GetPosition(activeCustomer)
-    last_pos_x = sx
-    last_pos_z = sz
-    is_moving_state = true
-
-    print("[CustomerSystem] >> Finding path to " .. self.waitPointName)
-    PathfindTo("Customer_Kinematic", self.waitPointName)
-end
-
--- [NEW] Helper to check if someone is waiting
-function CustomerSystem:CheckQueue()
-    if #waiting_queue > 0 then
-        print("[CustomerSystem] Active customer left. Promoting from queue...")
-        local nextData = table.remove(waiting_queue, 1)
-        self:SetActiveCustomer(nextData)
-    else
-        print("[CustomerSystem] Queue empty. Waiting for next spawn.")
-        hasSpawned = false -- Allow logic to know active slot is empty
-    end
+    print("[CustomerSystem] Spawned slot " .. slot .. " order: " .. order)
 end
 
 -- =========================================================
--- HELPER FUNCTIONS
+-- ON ARRIVAL
 -- =========================================================
-
-function CustomerSystem:play_doorbell()
-    local frogEntity = FindEntityByName("Frog")
-    if frogEntity then
-        PlayEntitySound(frogEntity)
-    end
-end 
-
-function CustomerSystem:SpawnLog(message)
-    local logEntity = SpawnPrefab(prefab_log)
-    if logEntity then
-        SetTextComponent(logEntity, "text", message)
-        table.insert(active_logs, logEntity)    -- Track active logEntity
-    end
+function CustomerSystem.OnArrival(senderID, targetID, actionType)
+    local slot = GetData("Slot_" .. targetID)
+    if not slot or slot < 1 or slot > MAX_COUNTER_SLOTS then return end
+    local c = activeCustomers[slot]
+    if not c then return end
+    print("[CustomerSystem] Slot " .. slot .. " arrived. Order: " .. c.order)
 end
 
-    -- Function to clear all logs
-function CustomerSystem:ClearAllLogs()
-    for i, logEntity in ipairs(active_logs) do
-        if logEntity then
-            DestroyEntity(logEntity)
+-- =========================================================
+-- ON CUSTOMER COMPLETE
+-- =========================================================
+function CustomerSystem.OnCustomerComplete(senderID, targetID, actionType)
+    print("[CustomerSystem] CUSTOMER COMPLETE")
+    local slot = nil
+    for i = 1, MAX_COUNTER_SLOTS do
+        if activeCustomers[i] and activeCustomers[i].entity == senderID then
+            slot = i
+            break
         end
     end
-    active_logs = {}
-end
-
-function CustomerSystem:AddCurrency(amount)
-    local current_currency = GetCurrency()
-    
-    -- Get multiplier from C++ GameSystem (stored as int, 100 = 1.0x)
-    local multiplier_int = GetData("currencyMultiplier")
-    if multiplier_int <= 0 then 
-        multiplier_int = 100  -- Default to 1.0x
-        SetData("currencyMultiplier", 100)
+    if not slot then
+        print("[CustomerSystem] OnCustomerComplete: entity " .. tostring(senderID) .. " not found in active slots")
+        return
     end
-    
-    -- Convert to decimal (100 = 1.0x, 200 = 2.0x, 150 = 1.5x)
-    local multiplier = multiplier_int / 100.0
-    
-    local modified_amount = math.floor(amount * multiplier)
-    local new_currency = current_currency + modified_amount
-    if new_currency < 0 then new_currency = 0 end
-    
-    SetCurrency(new_currency)
-    print("[CustomerSystem] Currency changed by " .. modified_amount .. 
-          " (" .. amount .. " x " .. multiplier .. "x), new currency: " .. new_currency)
-
-    CustomerSystem:UpdateCurrencyDisplay()
+    CustomerSystem:ClearSlot(slot, "complete")
+    ReplaceFailedOrder()
 end
 
-function CustomerSystem:UpdateCurrencyDisplay()
-    UpdateCurrencyUI()
+-- =========================================================
+-- ON CUSTOMER FAILED
+-- =========================================================
+function CustomerSystem.OnCustomerFailed(senderID, targetID, actionType)
+    print("[CustomerSystem] CUSTOMER FAILED")
+    local slot = nil
+    for i = 1, MAX_COUNTER_SLOTS do
+        if activeCustomers[i] and activeCustomers[i].entity == senderID then
+            slot = i
+            break
+        end
+    end
+    if not slot then
+        print("[CustomerSystem] OnCustomerFailed: entity " .. tostring(senderID) .. " not found in active slots")
+        return
+    end
+    CustomerSystem:ClearSlot(slot, "failed")
+    ReplaceFailedOrder()
 end
 
-function CustomerSystem:GetScore()
-    return GetScore()
+-- =========================================================
+-- CLEAR SLOT
+-- reason: "complete", "failed", or "timeout"
+-- =========================================================
+function CustomerSystem:ClearSlot(slot, reason)
+    local c = activeCustomers[slot]
+    if not c then return end
+    customers_served = customers_served + 1
+    self:DestroyBarForSlot(slot, c)
+    SetData("Slot_" .. tostring(c.entity), -1)
+    customerOrderStrings[c.entity] = nil
+    activeCustomers[slot] = nil
+    print("[CustomerSystem] Slot " .. slot .. " cleared (" .. tostring(reason) .. ").")
 end
 
+-- =========================================================
+-- PROGRESS BAR
+-- =========================================================
+function CustomerSystem:SpawnBarForSlot(slot, c)
+    c.bar_frame = SpawnPrefab(self.prefab_frame, c.entity)
+    if c.bar_frame then SetScale(c.bar_frame, bar_length_max, bar_thickness, bar_thickness * 5) end
+    c.bar_fill = SpawnPrefab(self.prefab_fill, c.entity)
+    if c.bar_fill then SetScale(c.bar_fill, bar_length_max, bar_thickness, bar_thickness) end
+    SetTexture(c.bar_fill, self.tex_green)
+    c.bar_state = "green"
+end
+
+function CustomerSystem:DestroyBarForSlot(slot, c)
+    if c.bar_frame then DestroyEntity(c.bar_frame); c.bar_frame = nil end
+    if c.bar_fill  then DestroyEntity(c.bar_fill);  c.bar_fill  = nil end
+    c.bar_state = "green"
+end
+
+-- =========================================================
+-- BILLBOARD
+-- =========================================================
+function CustomerSystem:UpdateBillboardForSlot(c, px, pz, cx, cy, cz)
+    local angle_rad = math.atan2(px - cx, pz - cz)
+    local angle_deg = math.deg(angle_rad)
+    local frame_x   = cx + x_offset_right
+    local frame_y   = cy + y_offset
+    local frame_z   = cz
+
+    if c.bar_frame then
+        SetPosition(c.bar_frame, frame_x, frame_y, frame_z)
+        SetRotation(c.bar_frame, 0.0, angle_deg, 0.0)
+    end
+
+    if c.bar_fill then
+        SetRotation(c.bar_fill, 0.0, angle_deg + 180.0, 0.0)
+        local right_angle   = angle_rad + (math.pi / 2.0)
+        local side_offset_x = (bar_length_max * tune_x) * math.sin(right_angle)
+        local side_offset_z = (bar_length_max * tune_x) * math.cos(right_angle)
+        SetPosition(c.bar_fill,
+            frame_x + side_offset_x + billboard_depth_adjust * math.sin(angle_rad),
+            frame_y + tune_y,
+            frame_z + side_offset_z + billboard_depth_adjust * math.cos(angle_rad))
+    end
+end
+
+-- =========================================================
+-- RESET
+-- =========================================================
 function CustomerSystem:ResetNightPhase()
-    print("[CustomerSystem] Resetting night phase state...")
-    self:ClearAllLogs() -- Clear logs
+    print("[CustomerSystem] Resetting...")
+    self:ClearAllLogs()
     customers_served = 0
     SetData("fixedQueue", 0)
-    
-    -- Clean up active
-    if activeCustomer then 
-        DestroyEntity(activeCustomer) 
-        activeCustomer = nil
+
+    for slot = 1, MAX_COUNTER_SLOTS do
+        if activeCustomers[slot] then
+            self:DestroyBarForSlot(slot, activeCustomers[slot])
+            DestroyEntity(activeCustomers[slot].entity)
+            activeCustomers[slot] = nil
+        end
     end
-    
-    -- Clean up queue
-    for i, data in ipairs(waiting_queue) do
-        if data.entity then DestroyEntity(data.entity) end
-    end
-    waiting_queue = {}
-    
-    self:DestroyBar()
-    hasSpawned = false
-    is_at_counter = false
-    current_patience = 0.0
-    spawnTimer = 0
-    current_bar_state = "green"
-    
-    -- [NEW] Reset ingredient check timers
-    ingredient_check_timer = 0.0
-    end_phase_timer = 0.0
-    waiting_to_end = false
-    has_checked_ingredients = false
-    
+
+    orderQueue            = {}
+    queueIndex            = 1
+    customerOrderStrings  = {}
+    spawnTimer       = 0
+    next_model_index = 1
+    end_phase_timer  = 0.0
+    waiting_to_end   = false
+
     CustomerSystem:UpdateCurrencyDisplay()
 end
 
+-- =========================================================
+-- END NIGHT
+-- =========================================================
 function CustomerSystem:EndNightPhase()
     print("[CustomerSystem] Ending Night Phase...")
-    self:ClearAllLogs() -- Clear logs
-    self:DestroyBar()
+    self:ClearAllLogs()
+    for slot = 1, MAX_COUNTER_SLOTS do
+        if activeCustomers[slot] then
+            self:DestroyBarForSlot(slot, activeCustomers[slot])
+        end
+    end
     GameStateEndNightPhase()
 end
 
-function CustomerSystem.OnCustomerComplete(senderID, targetID, actionType)
-    print("[CustomerSystem] ========== CUSTOMER COMPLETE ==========")
-    -- Calculate actual currency earned (with multiplier)
-    local base_amount = 100
+-- =========================================================
+-- CURRENCY
+-- =========================================================
+function CustomerSystem:AddCurrency(amount)
     local multiplier_int = GetData("currencyMultiplier")
-    if multiplier_int <= 0 then 
-        multiplier_int = 100  -- Default to 1.0x
-    end
-    
-    local multiplier = multiplier_int / 100.0
-    local actual_earned = math.floor(base_amount * multiplier)
-    
-    -- Award the currency
-    CustomerSystem:AddCurrency(base_amount)  -- This uses the multiplier internally
-
-    -- Show dynamic log message
-    if multiplier > 1.0 then
-        -- Show multiplier in message
-        CustomerSystem:SpawnLog("Customer served! +" .. actual_earned .. " currency (" .. multiplier .. "x)")
-    else
-        -- Normal message
-        CustomerSystem:SpawnLog("Customer served! +" .. actual_earned .. " currency")
-    end
-
-    customers_served = customers_served + 1
-    CustomerSystem:DestroyBar()
-    if activeCustomer then DestroyEntity(activeCustomer) end
-    activeCustomer = nil
-    
-    is_at_counter = false 
-    current_patience = 0.0
-    spawnTimer = 0
-    current_bar_state = "green"
-    
-    -- [NEW] Check if anyone is waiting
-    CustomerSystem:CheckQueue()
-end
-
-function CustomerSystem.OnCustomerFailed(senderID, targetID, actionType)
-    print("[CustomerSystem] ========== CUSTOMER FAILED ==========")
-    
-    local base_penalty = 100  -- Base penalty amount (positive number)
-    
-    -- Get multiplier
-    local multiplier_int = GetData("currencyMultiplier")
-    if multiplier_int <= 0 then multiplier_int = 100 end
-    local multiplier = multiplier_int / 100.0
-    
-    -- Calculate penalty multiplier (50% of the bonus)
-    local penalty_multiplier = 1.0 + ((multiplier - 1.0) * 0.5)
-    local actual_penalty = math.floor(base_penalty * penalty_multiplier)
-    
-    -- Deduct currency (using negative value)
-    local current_currency = GetCurrency()
-    local new_currency = current_currency - actual_penalty
-    if new_currency < 0 then new_currency = 0 end
+    if multiplier_int <= 0 then multiplier_int = 100; SetData("currencyMultiplier", 100) end
+    local multiplier      = multiplier_int / 100.0
+    local modified_amount = math.floor(amount * multiplier)
+    local new_currency    = math.max(0, GetCurrency() + modified_amount)
     SetCurrency(new_currency)
-    
+    print("[CustomerSystem] Currency +" .. modified_amount .. " total: " .. new_currency)
     CustomerSystem:UpdateCurrencyDisplay()
-
-    -- Show dynamic penalty message
-    if penalty_multiplier > 1.0 then
-        CustomerSystem:SpawnLog("Customer left angry! -" .. actual_penalty .. " currency (" .. penalty_multiplier .. "x)")
-    else
-        CustomerSystem:SpawnLog("Customer left angry! -" .. actual_penalty .. " currency")
-    end
-    
-    print("[CustomerSystem] Penalty: -" .. actual_penalty .. " (base " .. base_penalty .. " x " .. penalty_multiplier .. "x)")
-    
-    customers_served = customers_served + 1
-    CustomerSystem:DestroyBar()
-    if activeCustomer then DestroyEntity(activeCustomer) end
-    activeCustomer = nil
-    
-    is_at_counter = false
-    current_patience = 0.0
-    spawnTimer = 0
-    current_bar_state = "green"
-    
-    -- [NEW] Check if anyone is waiting
-    CustomerSystem:CheckQueue()
 end
 
-function CustomerSystem:SpawnBar(parentID)
-    entity_frame = SpawnPrefab(self.prefab_frame, parentID)
-    if entity_frame then
-        SetScale(entity_frame, bar_length_max, bar_thickness, bar_thickness * 5)
-    end
-    entity_fill = SpawnPrefab(self.prefab_fill, parentID)
-    if entity_fill then
-        SetScale(entity_fill, bar_length_max, bar_thickness, bar_thickness) 
-    end
-    SetTexture(entity_fill, self.tex_green)
+function CustomerSystem:UpdateCurrencyDisplay() UpdateCurrencyUI() end
+function CustomerSystem:GetScore() return GetScore() end
+
+-- =========================================================
+-- LOGS
+-- =========================================================
+function CustomerSystem:SpawnLog(message)
+    local e = SpawnPrefab(prefab_log)
+    if e then SetTextComponent(e, "text", message); table.insert(active_logs, e) end
 end
 
-function CustomerSystem:DestroyBar()
-    if entity_frame then DestroyEntity(entity_frame); entity_frame = nil end
-    if entity_fill then DestroyEntity(entity_fill); entity_fill = nil end
-    current_bar_state = "green"
+function CustomerSystem:ClearAllLogs()
+    for _, e in ipairs(active_logs) do if e then DestroyEntity(e) end end
+    active_logs = {}
 end
 
-function CustomerSystem:UpdateBillboard(px, pz, cx, cy, cz)
-    local dx = px - cx
-    local dz = pz - cz
-    local angle_rad = math.atan2(dx, dz) 
-    local angle_deg = math.deg(angle_rad)
-
-    local frame_pos_x = cx + x_offset_right
-    local frame_pos_y = cy + y_offset
-    local frame_pos_z = cz 
-
-    if entity_frame then
-        SetPosition(entity_frame, frame_pos_x, frame_pos_y, frame_pos_z)
-        SetRotation(entity_frame, 0.0, angle_deg, 0.0)
-    end
-
-    if entity_fill then
-        SetRotation(entity_fill, 0.0, angle_deg + 180.0, 0.0)
-        
-        local right_angle = angle_rad + (math.pi / 2.0)
-        local side_dist = (bar_length_max * tune_x)
-        local side_offset_x = side_dist * math.sin(right_angle)
-        local side_offset_z = side_dist * math.cos(right_angle)
-        local depth_offset_x = billboard_depth_adjust * math.sin(angle_rad)
-        local depth_offset_z = billboard_depth_adjust * math.cos(angle_rad)
-
-        local fill_x = frame_pos_x + side_offset_x + depth_offset_x
-        local fill_y = frame_pos_y + tune_y
-        local fill_z = frame_pos_z + side_offset_z + depth_offset_z
-
-        SetPosition(entity_fill, fill_x, fill_y, fill_z)
-    end
+-- =========================================================
+-- DOORBELL
+-- =========================================================
+function CustomerSystem:play_doorbell()
+    local f = FindEntityByName("Frog")
+    if f then PlayEntitySound(f) end
 end
 
 return CustomerSystem

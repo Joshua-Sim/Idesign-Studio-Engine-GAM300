@@ -56,6 +56,10 @@ namespace Framework {
 
         bool tutorialToPlay = false;
 
+        dialogueSys->StartDialogue();
+        dialogueSys->EndDialogue();
+
+        /*
         // --- NIGHT PHASE TUTORIAL ---
         if (m_currentPhase == GamePhase::Day && !m_dayTutorialTriggered)
         {
@@ -91,12 +95,41 @@ namespace Framework {
 
             dialogueSys->StartDialogue();
         }
-
+        */
     }
 
     void PhaseManager::SetPhase(GamePhase newPhase)
     {
         m_currentPhase = newPhase;
+
+        Entity phaseTimerText = ecsInterface.GetEntityByName("PhaseTimerText");
+        if (ecsInterface.IsEntityValid(phaseTimerText) &&
+            ecsInterface.HasComponent<TimerComponent>(phaseTimerText))
+        {
+            auto& timer = ecsInterface.GetComponent<TimerComponent>(phaseTimerText);
+
+            // Set callback based on which phase just started
+            if (m_currentPhase == GamePhase::Day)
+            {
+                timer.onComplete = [this]() {
+                    std::cout << "[PhaseManager] Day timer expired. Transitioning to Night.\n";
+                    TogglePhase();
+                    };
+            }
+            else if (m_currentPhase == GamePhase::Night)
+            {
+                timer.onComplete = [this]() {
+                    std::cout << "[PhaseManager] Night timer expired. Transitioning to Upgrade.\n";
+                    TogglePhase();
+                    };
+            }
+            else
+            {
+                timer.onComplete = nullptr; // No auto-end for Upgrade phase
+            }
+
+            timer.Start(); // starts countdown with the callback set
+        }
 
         glm::vec3 targetPos(0.0f);
         glm::vec3 targetRot(0.0f);

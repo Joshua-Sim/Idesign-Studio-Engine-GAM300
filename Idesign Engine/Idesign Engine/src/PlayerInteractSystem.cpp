@@ -53,57 +53,101 @@ namespace Framework
         // =========================================================
         // PICKUP NOTIFICATION UPDATE (Simple, RecipeBook-style)
         // =========================================================
-        for (auto it = mActiveNotifications.begin(); it != mActiveNotifications.end(); )
+
+        // Clear immediately if in Dialogue, Upgrade, or Menu state
+        if (engineState.HasState(EngineMode::Dialogue) ||
+            engineState.HasState(EngineMode::Upgrade) ||
+            engineState.HasState(EngineMode::Menu))
         {
-            it->timer -= dt;
+            ClearAllPickupNotifications();
+        }
+        else
+        {
+            // Hide + pause if in Settings or HowToPlay — frozen and invisible, resumes when back
+            const bool hiddenAndFrozen = engineState.HasState(EngineMode::Settings) ||
+                engineState.HasState(EngineMode::HowToPlay);
 
-            // --- Lifetime end ---
-            if (it->timer <= 0.0f)
+            for (auto it = mActiveNotifications.begin(); it != mActiveNotifications.end(); )
             {
-                ecsInterface.DestroyEntity(it->bg);
-                ecsInterface.DestroyEntity(it->icon);
-                ecsInterface.DestroyEntity(it->text);
-                it = mActiveNotifications.erase(it);
-                continue;
+                if (hiddenAndFrozen)
+                {
+                    // Hide all notification entities while frozen
+                    if (ecsInterface.HasComponent<TextureProperties>(it->bg))
+                        ecsInterface.GetComponent<TextureProperties>(it->bg).isUI = false;
+                    if (ecsInterface.HasComponent<TextureProperties>(it->icon))
+                        ecsInterface.GetComponent<TextureProperties>(it->icon).isUI = false;
+                    if (ecsInterface.HasComponent<TextProperties>(it->text))
+                        ecsInterface.GetComponent<TextProperties>(it->text).opacity = 0.0f;
+                    ++it;
+                    continue;
+                }
+
+                // Paused: freeze timer, float, and fade — skip all updates this frame
+                // Opacity is left as-is (notification stays visible while paused)
+                if (engineState.HasState(EngineMode::Paused))
+                {
+                    ++it;
+                    continue;
+                }
+
+                // Restore visibility when returning from a hidden+frozen state (Settings/HowToPlay)
+                // Only needed here since Paused leaves opacity untouched
+                if (ecsInterface.HasComponent<TextureProperties>(it->bg))
+                    ecsInterface.GetComponent<TextureProperties>(it->bg).isUI = true;
+                if (ecsInterface.HasComponent<TextureProperties>(it->icon))
+                    ecsInterface.GetComponent<TextureProperties>(it->icon).isUI = true;
+                // (opacity is restored naturally by the fade logic below)
+
+                it->timer -= dt;
+
+                // --- Lifetime end ---
+                if (it->timer <= 0.0f)
+                {
+                    ecsInterface.DestroyEntity(it->bg);
+                    ecsInterface.DestroyEntity(it->icon);
+                    ecsInterface.DestroyEntity(it->text);
+                    it = mActiveNotifications.erase(it);
+                    continue;
+                }
+
+                // --- Float upward (pixel space) ---
+                const float moveUp = 25.0f * dt;
+
+                auto& bgT = ecsInterface.GetComponent<TransformComponent>(it->bg);
+                auto& iconT = ecsInterface.GetComponent<TransformComponent>(it->icon);
+                auto& txtT = ecsInterface.GetComponent<TransformComponent>(it->text);
+
+                bgT.position.y += moveUp;
+                iconT.position.y += moveUp;
+
+                // Text is screen-space → convert Y only
+                txtT.position.y = (bgT.position.y - 10.0f) / 1080.0f;
+
+                // --- Fade using opacity ---
+                float alpha = 1.0f;
+
+                // Fade out last 0.5s
+                if (it->timer < 0.5f)
+                {
+                    alpha = it->timer / 0.5f;
+                }
+                // Fade in first 0.3s
+                else if (it->timer > 2.2f)
+                {
+                    alpha = (2.5f - it->timer) / 0.3f;
+                }
+
+                alpha = glm::clamp(alpha, 0.0f, 1.0f);
+
+                if (ecsInterface.HasComponent<TextProperties>(it->text))
+                {
+                    auto& tp = ecsInterface.GetComponent<TextProperties>(it->text);
+                    tp.opacity = alpha;
+                }
+
+
+                ++it;
             }
-
-            // --- Float upward (pixel space) ---
-            const float moveUp = 25.0f * dt;
-
-            auto& bgT = ecsInterface.GetComponent<TransformComponent>(it->bg);
-            auto& iconT = ecsInterface.GetComponent<TransformComponent>(it->icon);
-            auto& txtT = ecsInterface.GetComponent<TransformComponent>(it->text);
-
-            bgT.position.y += moveUp;
-            iconT.position.y += moveUp;
-
-            // Text is screen-space → convert Y only
-            txtT.position.y = (bgT.position.y - 10.0f) / 1080.0f;
-
-            // --- Fade using opacity ---
-            float alpha = 1.0f;
-
-            // Fade out last 0.5s
-            if (it->timer < 0.5f)
-            {
-                alpha = it->timer / 0.5f;
-            }
-            // Fade in first 0.3s
-            else if (it->timer > 2.2f)
-            {
-                alpha = (2.5f - it->timer) / 0.3f;
-            }
-
-            alpha = glm::clamp(alpha, 0.0f, 1.0f);
-
-            if (ecsInterface.HasComponent<TextProperties>(it->text))
-            {
-                auto& tp = ecsInterface.GetComponent<TextProperties>(it->text);
-                tp.opacity = alpha;
-            }
-
-
-            ++it;
         }
 
         // --- 2. RAYCAST LOGIC ---
@@ -172,7 +216,7 @@ namespace Framework
                 textComp.text = textToShow;
             }
             else {
-				textComp.text = ""; 
+                textComp.text = "";
             }
         }
 
@@ -219,7 +263,7 @@ namespace Framework
                         // REACHED PLAYER: Finalize
                         int itemId = Framework::ItemNameToId(item.name);
                         if (itemId >= 0) {
-                            int slot = Framework::Inventory::Instance().TryAddItem_BackpackFirst( itemId, 0, 1 );
+                            int slot = Framework::Inventory::Instance().TryAddItem_BackpackFirst(itemId, 0, 1);
                             if (slot >= 0) {
                                 SpawnPickupNotification(itemId, Framework::GetItemDisplayName(itemId));
 
@@ -241,6 +285,12 @@ namespace Framework
                                 // Re-add physics if you want it to fall back to the ground
                             }
                         }
+
+                        // Unlock it in the global database
+                        if (itemId != -1) {
+                            Framework::UnlockItem(itemId);
+                        }
+
                     }
                 }
             }
@@ -272,8 +322,8 @@ namespace Framework
         }
 
         // ---------------------------------------------------------
-    // 2. ITEM INTERACTION
-    // ---------------------------------------------------------
+        // 2. ITEM INTERACTION
+        // ---------------------------------------------------------
         if (!ecsInterface.HasComponent<ItemComponent>(targetEntity))
             return;
 
@@ -399,7 +449,7 @@ namespace Framework
             textComp.scale = 1.0f;
             textComp.screenSpace = true;
             textComp.alignment = 1;
-            
+
 
             ecsInterface.AddComponent(mPromptTextEntity, transform);
             ecsInterface.AddComponent(mPromptTextEntity, textComp);
@@ -581,6 +631,11 @@ namespace Framework
 
     void PlayerInteractSystem::SpawnPickupNotification(int itemId, const std::string& itemName)
     {
+        // Don't spawn notifications in Dialogue, Upgrade, or Menu states
+        if (engineState.HasState(EngineMode::Dialogue) ||
+            engineState.HasState(EngineMode::Upgrade) ||
+            engineState.HasState(EngineMode::Menu))
+            return;
 
         ClearAllPickupNotifications();
         // --- Layout (pixel space) ---
@@ -695,7 +750,7 @@ namespace Framework
 
         HierarchyComponent hc;
         TextureProperties tx;
-		tx.path = "Assets/Textures/" + std::string(kItemNames[itemId]) + "3D.png";
+        tx.path = "Assets/Textures/" + std::string(kItemNames[itemId]) + "3D.png";
         TextureLoader::loadTexture(tx, false);
 
         MeshProperties mp;
@@ -708,9 +763,9 @@ namespace Framework
         itemComp.toDestroyWhenPicked = true;
 
         ecsInterface.AddComponent(e, trans);
-		ecsInterface.AddComponent(e, hc);
-		ecsInterface.AddComponent(e, tx);
-		ecsInterface.AddComponent(e, itemComp);
+        ecsInterface.AddComponent(e, hc);
+        ecsInterface.AddComponent(e, tx);
+        ecsInterface.AddComponent(e, itemComp);
         ecsInterface.AddComponent(e, mp);
     }
 }

@@ -24,7 +24,8 @@
             "TagComponent": {
                 "tags": [
                     "Interactable",
-                    "interactable"
+                    "interactable",
+		    "Sheep"
                 ]
             },
             "HierarchyComponent": {

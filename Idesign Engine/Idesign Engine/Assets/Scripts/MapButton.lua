@@ -47,6 +47,9 @@ function M:on_init()
         print("[MapButton] " .. myName .. " clicked!")
 
         -- Pop the MapSelection state so the map UI hides
+        -- Parenthesis here is missing for PopEngineState
+        -- MapSelectionUI.lua & MapButton.lua are doing the same exact thing, double calling functions/states
+        -- which caused an issue in states being broken
         PopEngineState()
         SetUIFocused(false)
 

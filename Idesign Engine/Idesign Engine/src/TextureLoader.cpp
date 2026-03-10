@@ -13,7 +13,7 @@
 // ------------------------------------------------------------------
 // Static member definitions
 // ------------------------------------------------------------------
-std::unordered_map<std::string, unsigned int> TextureLoader::s_texCache;
+std::unordered_map<std::string, unsigned int>  TextureLoader::s_texCache;
 std::queue<TextureLoader::PendingUpload>       TextureLoader::s_uploadQueue;
 std::mutex                                     TextureLoader::s_queueMutex;
 
@@ -54,7 +54,7 @@ unsigned int TextureLoader::loadTexture(TextureProperties& props, bool flip)
     }
 
     // ------------------------------------------------------------------
-    // DDS – handled separately (already GPU-safe internally)
+    // DDS ï¿½ handled separately (already GPU-safe internally)
     // ------------------------------------------------------------------
     if (ext == "dds") {
         GLuint texID = LoadDDS(pathStr);
@@ -80,7 +80,7 @@ unsigned int TextureLoader::loadTexture(TextureProperties& props, bool flip)
     }
 
     // ------------------------------------------------------------------
-    // GPU upload  (must be on main / GL thread — which it is here)
+    // GPU upload  (must be on main / GL thread ï¿½ which it is here)
     // ------------------------------------------------------------------
     PendingUpload item;
     item.data = data;
@@ -139,7 +139,7 @@ void TextureLoader::loadTextureAsync(
             }
 
             // ------------------------------------------------------------------
-            // Extension check  (DDS can't be loaded off-thread easily — fall back
+            // Extension check  (DDS can't be loaded off-thread easily ï¿½ fall back
             // to synchronous for DDS files)
             // ------------------------------------------------------------------
             std::string ext;
@@ -166,7 +166,7 @@ void TextureLoader::loadTextureAsync(
 
             // ------------------------------------------------------------------
             // Heavy CPU work: stbi_load  (safe to run on background thread)
-            // NOTE: stbi_set_flip_vertically_on_load is GLOBAL state — not thread
+            // NOTE: stbi_set_flip_vertically_on_load is GLOBAL state ï¿½ not thread
             // safe. We load without flipping, then manually flip rows in-place if
             // needed, so concurrent threads never clobber each other's flip state.
             // ------------------------------------------------------------------
@@ -179,7 +179,7 @@ void TextureLoader::loadTextureAsync(
                 return;
             }
 
-            // Manual vertical flip — swap top and bottom rows in-place
+            // Manual vertical flip ï¿½ swap top and bottom rows in-place
             if (flip) {
                 int rowSize = width * channels;
                 std::vector<unsigned char> rowBuf(rowSize);
@@ -193,7 +193,7 @@ void TextureLoader::loadTextureAsync(
             }
 
             // ------------------------------------------------------------------
-            // Push to upload queue — main thread will call glTexImage2D
+            // Push to upload queue ï¿½ main thread will call glTexImage2D
             // ------------------------------------------------------------------
             PendingUpload item;
             item.data = data;
@@ -212,7 +212,7 @@ void TextureLoader::loadTextureAsync(
 }
 
 // ======================================================================
-//  processUploads  — call once per frame on the main / GL thread
+//  processUploads  ï¿½ call once per frame on the main / GL thread
 // ======================================================================
 int TextureLoader::processUploads()
 {
@@ -278,15 +278,15 @@ int TextureLoader::pendingCount()
 }
 
 // ======================================================================
-//  uploadToGPU  (private helper — MUST be called on the GL thread)
+//  uploadToGPU  (private helper ï¿½ MUST be called on the GL thread)
 //  Frees item.data before returning.
 // ======================================================================
 unsigned int TextureLoader::uploadToGPU(PendingUpload& item)
 {
     int memBytes = item.width * item.height * item.channels;
-    std::cout << "[Texture] " << item.path
+    /*std::cout << "[Texture] " << item.path
         << " | " << item.width << "x" << item.height
-        << " | " << (memBytes / 1024 / 1024) << "MB uncompressed" << std::endl;
+        << " | " << (memBytes / 1024 / 1024) << "MB uncompressed" << std::endl;*/
 
     // ------------------------------------------------------------------
     // Determine OpenGL formats
@@ -308,8 +308,7 @@ unsigned int TextureLoader::uploadToGPU(PendingUpload& item)
         dataFormat = GL_RGBA;
         break;
     default:
-        std::cerr << "[TextureLoader] Unsupported channel count: "
-            << item.channels << " : " << item.path << std::endl;
+        std::cerr << "[TextureLoader] Unsupported channel count: " << item.channels << " : " << item.path << std::endl;
         stbi_image_free(item.data);
         item.data = nullptr;
         return 0;
@@ -358,9 +357,9 @@ unsigned int TextureLoader::uploadToGPU(PendingUpload& item)
     // ------------------------------------------------------------------
     // Sampler parameters
     // ------------------------------------------------------------------
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     // ------------------------------------------------------------------

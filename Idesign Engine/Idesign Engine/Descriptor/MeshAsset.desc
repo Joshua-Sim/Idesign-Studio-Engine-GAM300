@@ -1,5 +1,5 @@
 {
-    "count": 95,
+    "count": 107,
     "entries": [
         {
             "guid": "9a248918-705f-4d5a-88a2-17e85868745b",
@@ -855,6 +855,114 @@
             "vbo": 1162,
             "ebo": 1163,
             "indexCount": 150114
+        },
+        {
+            "guid": "ae3c86d6-9b19-4484-b88b-582606f3bfe7",
+            "name": "copper_ore",
+            "path": "Assets\\Objects\\copper_ore.obj",
+            "vao": 345,
+            "vbo": 676,
+            "ebo": 677,
+            "indexCount": 30810
+        },
+        {
+            "guid": "aedb4577-4302-4a54-a762-b12920503e54",
+            "name": "iron_bar",
+            "path": "Assets\\Objects\\iron_bar.obj",
+            "vao": 346,
+            "vbo": 678,
+            "ebo": 679,
+            "indexCount": 1458
+        },
+        {
+            "guid": "7c1c5c3c-ec12-4542-84f3-6127123c40ae",
+            "name": "iron_ore",
+            "path": "Assets\\Objects\\iron_ore.obj",
+            "vao": 347,
+            "vbo": 680,
+            "ebo": 681,
+            "indexCount": 34836
+        },
+        {
+            "guid": "19c2e254-ec34-4989-a9cf-ed7588ea47e4",
+            "name": "Bellow",
+            "path": "Assets\\Objects\\Bellow.obj",
+            "vao": 348,
+            "vbo": 682,
+            "ebo": 683,
+            "indexCount": 8640
+        },
+        {
+            "guid": "0acc0a6b-17a6-48d1-88d2-87d340df6b1b",
+            "name": "CoalOre",
+            "path": "Assets\\Objects\\CoalOre.obj",
+            "vao": 349,
+            "vbo": 684,
+            "ebo": 685,
+            "indexCount": 26688
+        },
+        {
+            "guid": "0df8072a-987f-469c-aeee-5d36ce29055d",
+            "name": "copper_bar",
+            "path": "Assets\\Objects\\copper_bar.obj",
+            "vao": 350,
+            "vbo": 686,
+            "ebo": 687,
+            "indexCount": 1458
+        },
+        {
+            "guid": "00ce9d25-0901-40b6-9bce-0d21d170bf81",
+            "name": "Mortar_new-0-mortar",
+            "path": "Assets\\Objects\\Mortar_new-0-mortar.obj",
+            "vao": 351,
+            "vbo": 688,
+            "ebo": 689,
+            "indexCount": 6900
+        },
+        {
+            "guid": "5911ce61-9333-47a1-99a6-599e2747fa29",
+            "name": "Pestle-0-pestlenonvox",
+            "path": "Assets\\Objects\\Pestle-0-pestlenonvox.obj",
+            "vao": 352,
+            "vbo": 690,
+            "ebo": 691,
+            "indexCount": 4704
+        },
+        {
+            "guid": "cef3cfc3-dd31-45b8-8a86-60e4d3676b3e",
+            "name": "mending_potion",
+            "path": "Assets\\Objects\\mending_potion.obj",
+            "vao": 356,
+            "vbo": 699,
+            "ebo": 700,
+            "indexCount": 1116
+        },
+        {
+            "guid": "442ad97a-1926-4698-828c-778a3bf2a78f",
+            "name": "defense_potion",
+            "path": "Assets\\Objects\\defense_potion.obj",
+            "vao": 357,
+            "vbo": 701,
+            "ebo": 702,
+            "indexCount": 2970
+        },
+        {
+            "guid": "9add4c42-1abb-4c37-b4c2-7808966f5e64",
+            "name": "healing_powder",
+            "path": "Assets\\Objects\\healing_powder.obj",
+            "vao": 358,
+            "vbo": 703,
+            "ebo": 704,
+            "indexCount": 20730
+        },
+        {
+            "guid": "407ccfc6-13f2-498d-a329-1445f0bf80bb",
+            "name": "preservation_powder",
+            "path": "Assets\\Objects\\preservation_powder.obj",
+            "vao": 359,
+            "vbo": 705,
+            "ebo": 706,
+            "indexCount": 20730
         }
     ]
 }
