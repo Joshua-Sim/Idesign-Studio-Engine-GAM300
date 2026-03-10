@@ -16,31 +16,25 @@ namespace Framework
     {
         std::cout << "[UpgradeManager] Initializing..." << std::endl;
 
-        // Load area unlock states from GameSystem
-        // If no saved data exists, use default values from constructor
-
-        // Check Quarry unlock state
-        if (GameSystem::HasData("area_2")) {
-            int quarryUnlocked = GameSystem::GetData("area_2");
-            m_unlockedAreas[GameArea::Quarry] = (quarryUnlocked == 1);
-            std::cout << "[UpgradeManager] Loaded Quarry unlock state: " << (quarryUnlocked == 1 ? "UNLOCKED" : "LOCKED") << std::endl;
-        }
-        else {
-            // First time - save default state
-            GameSystem::SetData("area_2", 0);  // 0 = locked
-            std::cout << "[UpgradeManager] Quarry default state: LOCKED" << std::endl;
-        }
-
-        // Check Forest unlock state (though it starts unlocked)
+        // Check Forest unlock state (starts unlocked, but load saved state)
         if (GameSystem::HasData("area_1")) {
             int forestUnlocked = GameSystem::GetData("area_1");
             m_unlockedAreas[GameArea::Forest] = (forestUnlocked == 1);
             std::cout << "[UpgradeManager] Loaded Forest unlock state: " << (forestUnlocked == 1 ? "UNLOCKED" : "LOCKED") << std::endl;
         }
         else {
-            // First time - save default state
             GameSystem::SetData("area_1", 1);  // 1 = unlocked
             std::cout << "[UpgradeManager] Forest default state: UNLOCKED" << std::endl;
+        }
+
+        // Check Cauldron upgrade state
+        if (GameSystem::HasData("cauldron_unlocked")) {
+            m_cauldronUnlocked = (GameSystem::GetData("cauldron_unlocked") == 1);
+            std::cout << "[UpgradeManager] Loaded Cauldron state: " << (m_cauldronUnlocked ? "UNLOCKED" : "LOCKED") << std::endl;
+        }
+        else {
+            GameSystem::SetData("cauldron_unlocked", 0);  // 0 = locked
+            std::cout << "[UpgradeManager] Cauldron default state: LOCKED" << std::endl;
         }
 
         // Load currency multiplier
@@ -168,14 +162,12 @@ namespace Framework
 
     bool UpgradeManager::UnlockArea(GameArea area)
     {
-        // Check if already unlocked
         if (IsAreaUnlocked(area))
         {
             std::cout << "[UpgradeManager] Area already unlocked!" << std::endl;
             return false;
         }
 
-        // Check if player can afford it
         int cost = GetAreaUnlockCost(area);
         int currentCurrency = GameSystem::GetCurrency();
 
@@ -186,16 +178,11 @@ namespace Framework
             return false;
         }
 
-        // Deduct the cost
         GameSystem::AddCurrency(-cost);
-        std::cout << "[UpgradeManager] Deducted " << cost << " currency" << std::endl;
-
-        // Unlock the area
         m_unlockedAreas[area] = true;
 
-        // Store in GameSystem for persistence
         std::string areaKey = "area_" + std::to_string(static_cast<int>(area));
-        GameSystem::SetData(areaKey, 1);  // 1 = unlocked
+        GameSystem::SetData(areaKey, 1);
 
         std::cout << "[UpgradeManager] Area unlocked! Remaining currency: "
             << GameSystem::GetCurrency() << std::endl;
@@ -207,9 +194,7 @@ namespace Framework
     {
         auto it = m_unlockedAreas.find(area);
         if (it != m_unlockedAreas.end())
-        {
             return it->second;
-        }
         return false;
     }
 
@@ -217,10 +202,51 @@ namespace Framework
     {
         auto it = m_areaUnlockCosts.find(area);
         if (it != m_areaUnlockCosts.end())
-        {
             return it->second;
-        }
         return 0;
+    }
+
+    // =========================================================
+    // CAULDRON UPGRADE (one-time - unlocks 2nd auto-stir cauldron)
+    // =========================================================
+    bool UpgradeManager::CanAffordCauldronUpgrade() const
+    {
+        return GameSystem::GetCurrency() >= m_cauldronUpgradeCost;
+    }
+
+    bool UpgradeManager::UpgradeCauldron()
+    {
+        if (m_cauldronUnlocked)
+        {
+            std::cout << "[UpgradeManager] Cauldron already unlocked!" << std::endl;
+            return false;
+        }
+
+        if (!CanAffordCauldronUpgrade())
+        {
+            std::cout << "[UpgradeManager] Not enough currency! Need " << m_cauldronUpgradeCost
+                << ", have " << GameSystem::GetCurrency() << std::endl;
+            return false;
+        }
+
+        GameSystem::AddCurrency(-m_cauldronUpgradeCost);
+        m_cauldronUnlocked = true;
+        GameSystem::SetData("cauldron_unlocked", 1);
+
+        std::cout << "[UpgradeManager] Cauldron unlocked! Remaining currency: "
+            << GameSystem::GetCurrency() << std::endl;
+
+        return true;
+    }
+
+    bool UpgradeManager::IsCauldronUnlocked() const
+    {
+        return m_cauldronUnlocked;
+    }
+
+    int UpgradeManager::GetCauldronUpgradeCost() const
+    {
+        return m_cauldronUpgradeCost;
     }
 
     bool UpgradeManager::CanAffordBackpackUpgrade() const

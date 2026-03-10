@@ -94,7 +94,7 @@
         },
         {
             "guid": "dc1222af-4b5e-4d38-8c8d-e16e5ae744dc",
-            "scriptPath": "Assets\\Scripts\\QuarryUnlockUpgrade.lua",
+            "scriptPath": "Assets\\Scripts\\CauldronUpgrade.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1

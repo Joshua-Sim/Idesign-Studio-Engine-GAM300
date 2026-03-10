@@ -1,5 +1,5 @@
 {
-    "count": 331,
+    "count": 335,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -3635,6 +3635,50 @@
             "guid": "047f174d-116e-487e-a26d-56d9590b3ebc",
             "name": "gamma_label",
             "path": "Assets\\Textures\\gamma_label.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "15905e6c-df06-4733-acfc-dc121cf02e5f",
+            "name": "UpgradeCardCauldron_Unhovered",
+            "path": "Assets\\Textures\\UpgradeCardCauldron_Unhovered.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "350851ab-c956-43e7-aeb3-c234efbb0dcf",
+            "name": "UpgradeCardCauldron_Available",
+            "path": "Assets\\Textures\\UpgradeCardCauldron_Available.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "5402093e-5f4e-44aa-ad5c-eccfb04ef407",
+            "name": "UpgradeCardCauldron_Full",
+            "path": "Assets\\Textures\\UpgradeCardCauldron_Full.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "3443301d-71ee-47a1-93de-94c8ab502979",
+            "name": "UpgradeCardCauldron_Unavailable",
+            "path": "Assets\\Textures\\UpgradeCardCauldron_Unavailable.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
