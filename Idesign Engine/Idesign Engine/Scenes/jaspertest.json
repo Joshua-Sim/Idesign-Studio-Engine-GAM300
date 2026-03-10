@@ -2810,13 +2810,13 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -265.31243896484375,
-                        318.3052978515625,
-                        641.1734619140625
+                        -276.0,
+                        319.0,
+                        619.51025390625
                     ],
                     "rotation": [
                         0.0,
-                        -66.16281127929688,
+                        0.0,
                         0.0
                     ],
                     "scale": [
@@ -2896,9 +2896,9 @@
                 },
                 "ListenerComponent": {
                     "position": [
-                        -265.31243896484375,
-                        318.3052978515625,
-                        641.1734619140625
+                        -276.0,
+                        319.0,
+                        619.51025390625
                     ],
                     "forward": [
                         0.0,
@@ -3120,7 +3120,7 @@
                     "animationSpeed": 1.0,
                     "bLoops": true,
                     "bPlayOnStart": true,
-                    "currentTime": 22.992431640625
+                    "currentTime": 70.58350372314453
                 },
                 "TextureComponent": {
                     "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
@@ -3152,7 +3152,7 @@
                             "triggerMessage": "",
                             "isInteractable": true,
                             "interactMessage": "STIR",
-                            "promptText": "Add Ingredient"
+                            "promptText": "Stir Cauldron"
                         }
                     ]
                 },
@@ -5619,7 +5619,7 @@
                     "isUI": false
                 },
                 "TextProperties": {
-                    "text": "When you're done with gathering or your inventory",
+                    "text": "Clumsy hands! If you toss the wrong root into my",
                     "scale": 0.6899999976158142,
                     "color": [
                         0.15939366817474365,
@@ -5769,7 +5769,7 @@
                     "isUI": false
                 },
                 "TextProperties": {
-                    "text": "is full, interact with the gate to go to the night",
+                    "text": "cauldron, you'd best fish it back out before you",
                     "scale": 0.6899999976158142,
                     "color": [
                         0.15939366817474365,
@@ -5823,7 +5823,7 @@
                     "isUI": false
                 },
                 "TextProperties": {
-                    "text": "phase",
+                    "text": "ruin the whole batch!",
                     "scale": 0.6899999976158142,
                     "color": [
                         0.15939366817474365,
@@ -20567,7 +20567,7 @@
                     "position": [
                         450.0,
                         600.0,
-                        1.0
+                        -100.0
                     ],
                     "rotation": [
                         0.0,
@@ -21148,7 +21148,7 @@
                     "position": [
                         450.0,
                         600.0,
-                        1.0
+                        -100.0
                     ],
                     "rotation": [
                         0.0,
@@ -21267,7 +21267,7 @@
                     "position": [
                         956.0,
                         600.0,
-                        1.0
+                        -100.0
                     ],
                     "rotation": [
                         0.0,
@@ -21632,7 +21632,7 @@
                     "position": [
                         956.0,
                         600.0,
-                        1.0
+                        -100.0
                     ],
                     "rotation": [
                         0.0,
@@ -21687,7 +21687,7 @@
                     "position": [
                         450.0,
                         635.0,
-                        1.0
+                        -100.0
                     ],
                     "rotation": [
                         0.0,
@@ -21742,7 +21742,7 @@
                     "position": [
                         956.0,
                         635.0,
-                        1.0
+                        -100.0
                     ],
                     "rotation": [
                         0.0,
@@ -21797,7 +21797,7 @@
                     "position": [
                         1440.0,
                         600.0,
-                        1.0
+                        -100.0
                     ],
                     "rotation": [
                         0.0,
@@ -21852,7 +21852,7 @@
                     "position": [
                         1440.0,
                         600.0,
-                        1.0
+                        -100.0
                     ],
                     "rotation": [
                         0.0,
@@ -21971,7 +21971,7 @@
                     "position": [
                         1440.0,
                         635.0,
-                        1.0
+                        -100.0
                     ],
                     "rotation": [
                         0.0,
@@ -22358,7 +22358,7 @@
                     "rotation": [
                         0.0,
                         0.0,
-                        57.1760368347168
+                        58.265777587890625
                     ],
                     "scale": [
                         350.0,
@@ -22497,7 +22497,7 @@
                     "loop": false
                 },
                 "TextProperties": {
-                    "text": "3:25",
+                    "text": "3:23",
                     "scale": 1.149999976158142,
                     "color": [
                         0.0,
@@ -22768,7 +22768,7 @@
                     "position": [
                         180.0,
                         985.0,
-                        0.0
+                        -9999.0
                     ],
                     "rotation": [
                         0.0,
@@ -22806,7 +22806,7 @@
                     "position": [
                         575.0,
                         985.0,
-                        0.0
+                        -9999.0
                     ],
                     "rotation": [
                         0.0,
@@ -22844,7 +22844,7 @@
                     "position": [
                         65.0,
                         1015.0,
-                        0.0
+                        -9999.0
                     ],
                     "rotation": [
                         0.0,
@@ -22882,7 +22882,7 @@
                     "position": [
                         465.0,
                         1015.0,
-                        0.0
+                        -9999.0
                     ],
                     "rotation": [
                         0.0,
@@ -22920,7 +22920,7 @@
                     "position": [
                         150.0,
                         1010.0,
-                        0.0
+                        -9999.0
                     ],
                     "rotation": [
                         0.0,
@@ -22958,7 +22958,7 @@
                     "position": [
                         550.0,
                         1010.0,
-                        0.0
+                        -9999.0
                     ],
                     "rotation": [
                         0.0,
@@ -23019,7 +23019,7 @@
                     "tags": []
                 },
                 "TextProperties": {
-                    "text": "Arriving...",
+                    "text": "",
                     "scale": 0.75,
                     "color": [
                         1.0,
@@ -23064,7 +23064,7 @@
                     "tags": []
                 },
                 "TextProperties": {
-                    "text": "Arriving...",
+                    "text": "",
                     "scale": 0.75,
                     "color": [
                         1.0,
@@ -23109,7 +23109,7 @@
                     "tags": []
                 },
                 "TextProperties": {
-                    "text": "Order",
+                    "text": "",
                     "scale": 0.75,
                     "color": [
                         1.0,
@@ -23154,7 +23154,7 @@
                     "tags": []
                 },
                 "TextProperties": {
-                    "text": "Order",
+                    "text": "",
                     "scale": 0.75,
                     "color": [
                         1.0,
@@ -23176,7 +23176,7 @@
                     "position": [
                         265.0,
                         1015.0,
-                        0.0
+                        -9999.0
                     ],
                     "rotation": [
                         0.0,
@@ -23214,7 +23214,7 @@
                     "position": [
                         665.0,
                         1015.0,
-                        0.0
+                        -9999.0
                     ],
                     "rotation": [
                         0.0,
@@ -23252,7 +23252,7 @@
                     "position": [
                         265.0,
                         1015.0,
-                        0.0
+                        -9999.0
                     ],
                     "rotation": [
                         0.0,
@@ -23290,7 +23290,7 @@
                     "position": [
                         665.0,
                         1015.0,
-                        0.0
+                        -9999.0
                     ],
                     "rotation": [
                         0.0,
@@ -23328,7 +23328,7 @@
                     "position": [
                         180.0,
                         910.0,
-                        0.0
+                        -9999.0
                     ],
                     "rotation": [
                         0.0,
@@ -23366,7 +23366,7 @@
                     "position": [
                         575.0,
                         910.0,
-                        0.0
+                        -9999.0
                     ],
                     "rotation": [
                         0.0,
@@ -23404,7 +23404,7 @@
                     "position": [
                         180.0,
                         910.0,
-                        0.0
+                        -9999.0
                     ],
                     "rotation": [
                         0.0,
@@ -23442,7 +23442,7 @@
                     "position": [
                         575.0,
                         910.0,
-                        0.0
+                        -9999.0
                     ],
                     "rotation": [
                         0.0,
@@ -23480,7 +23480,7 @@
                     "position": [
                         65.0,
                         1015.0,
-                        0.0
+                        -9999.0
                     ],
                     "rotation": [
                         0.0,
@@ -23518,7 +23518,7 @@
                     "position": [
                         465.0,
                         1015.0,
-                        0.0
+                        -9999.0
                     ],
                     "rotation": [
                         0.0,
@@ -23771,7 +23771,7 @@
             }
         },
         {
-            "name": "Cauldron (Auto)",
+            "name": "Cauldron(Auto)",
             "guid": "d7e8b84d-db46-4c97-8272-a61f60658091",
             "components": {
                 "TransformComponent": {
@@ -23821,8 +23821,8 @@
                 "ScriptProperties": {
                     "scripts": [
                         {
-                            "guid": "3a5dd495-f311-4f19-991a-b6bfc5d63825",
-                            "scriptPath": "Assets\\Scripts\\Cauldron.lua",
+                            "guid": "5aa8f34d-8af4-45bf-ab8c-2d79071796ff",
+                            "scriptPath": "Assets\\Scripts\\Cauldron(Auto).lua",
                             "hotReload": false
                         }
                     ]
@@ -23843,7 +23843,7 @@
                             "canPassThrough": false,
                             "triggerMessage": "",
                             "isInteractable": true,
-                            "interactMessage": "STIR",
+                            "interactMessage": "AutoAdd",
                             "promptText": "Add Ingredient"
                         }
                     ]
@@ -23870,7 +23870,7 @@
                 "EventReceiverComponent": {
                     "receivers": [
                         {
-                            "messageToListenFor": "STIR",
+                            "messageToListenFor": "AutoAdd",
                             "luaFunctionToCall": "OnInteract"
                         }
                     ]
@@ -23886,10 +23886,19 @@
                     "playOnStart": true,
                     "isPlaying": true,
                     "lastPosition": [
-                        -45.22999954223633,
-                        6.287981033325195,
-                        17.725893020629883
+                        0.0,
+                        0.0,
+                        0.0
                     ]
+                }
+            }
+        },
+        {
+            "name": "ForestHerb",
+            "guid": "88457bd3-1fba-4167-8e09-1850004d3fa8",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "547d1c97-d493-4ad7-8b74-776711960c57"
                 }
             }
         }

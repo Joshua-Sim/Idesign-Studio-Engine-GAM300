@@ -81,6 +81,8 @@ local guid_idle = ""
 local stored_ingredients = {} 
 local visual_entities = {}    
 local item_names = { [0] = "unchopped_herb", [1] = "chopped_herb", [2] = "pear" }
+local auto_min_ingredients = 2
+local brew_result_name = ""
 
 -- Player Interact Prompt
 local last_prompt_state = ""
@@ -265,48 +267,65 @@ end
 
 
 function M.OnInteract(arg1, arg2)
+
     local id_to_use = ResolveID(arg1, arg2) or my_entity_id or FindEntityByName(CAULDRON_NAME)
     if id_to_use then my_entity_id = id_to_use end
 
-    print("[AUTO] OnInteract called for entity:", tostring(my_entity_id))
-
     local held_item_id = GetSelectedItem()
 
-    -- [BRANCH A] ADDING INGREDIENT
+    -------------------------------------------------
+    -- 1. ADD INGREDIENT
+    -------------------------------------------------
     if held_item_id ~= -1 then
+
+        if is_active then
+            print("[AUTO] Cannot add ingredients while brewing.")
+            return
+        end
+
         table.insert(stored_ingredients, held_item_id)
         ConsumeSelectedItem()
         Sound.Play("event:/PlaceDownItem")
 
         local vis_id = -1
-        if SpawnCauldronItem and id_to_use then
-            local res = SpawnCauldronItem(id_to_use, held_item_id)
-            if res then vis_id = res end
+        if SpawnCauldronItem then
+            vis_id = SpawnCauldronItem(my_entity_id, held_item_id)
         end
+
         table.insert(visual_entities, vis_id)
+
         M.PrintContents()
 
-        -- Auto-cauldron: start brewing as soon as recipe becomes valid
-        if is_auto_cauldron and not is_active then
-            local resultID = -1
-            if CheckValidRecipe then
-                resultID = CheckValidRecipe(stored_ingredients)
-            end
-
-            if resultID ~= -1 then
-                print("[Lua] Auto Cauldron: Valid recipe detected. Starting auto brew.")
-                StartAutoBrew(id_to_use, resultID)
-            end
-        end
-
+        -- IMPORTANT: DO NOT START BREW HERE
         return
     end
 
-    -- [BRANCH B] AUTO CAULDRON: no manual stirring
-    if is_auto_cauldron then
-        print("[Lua] Auto Cauldron: insert ingredients only.")
+    -------------------------------------------------
+    -- 2. START BREW (EMPTY HAND INTERACT)
+    -------------------------------------------------
+    if is_active then
+        print("[AUTO] Already brewing.")
         return
     end
+
+    if #stored_ingredients == 0 then
+        print("[AUTO] No ingredients.")
+        return
+    end
+
+    local resultID = -1
+    if CheckValidRecipe then
+        resultID = CheckValidRecipe(stored_ingredients)
+    end
+
+    if resultID ~= -1 then
+        print("[AUTO] Player started auto brew.")
+        StartAutoBrew(my_entity_id, resultID)
+    else
+        Sound.Play("event:/InvalidRecipe")
+        SpawnLog("Invalid Recipe!")
+    end
+
 end
 
 function M.StopInteraction(entity_id)
@@ -504,8 +523,13 @@ function M.on_update(arg1, arg2)
     ---------------------------------------------------------
     -- 5. UI & FINISHING
     ---------------------------------------------------------
-    if is_active and entity_fill and entity_frame and px then
-        M.UpdateBillboard(px, pz, cx, cz, cy)
+    if is_active and entity_fill and entity_frame then
+        local px, py, pz = GetPosition(player_id)
+        local cx, cy, cz = GetPosition(my_entity_id)
+
+        if px and cx then
+            M.UpdateBillboard(px, pz, cx, cz, cy)
+        end
 
         if is_finished then
             current_finish_timer = current_finish_timer - dt
