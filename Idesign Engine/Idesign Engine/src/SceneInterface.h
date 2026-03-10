@@ -15,6 +15,19 @@ namespace Framework
 		void Initialize() override;
 		void Update(float deltaTime) override;
 		std::string GetName() override;
+
+		static int g_CurrentDay;
+
+		int GetCurrentDay();
+
+		void SetCurrentDay(int day);
+
+		static void AdvanceToNextDay();
+
+		static void PushDayTransitionStateForCurrentDay();
+
+		void OnNextDayPressed();
+
 	private:
 	};
 

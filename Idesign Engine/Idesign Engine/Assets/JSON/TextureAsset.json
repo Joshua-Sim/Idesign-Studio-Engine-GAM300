@@ -2060,6 +2060,50 @@
             "vOffset": 0.0,
             "uScale": 1.0,
             "vScale": 1.0
+        },
+        {
+            "guid": "9ee43811-6db7-422d-bea4-3e6078afcd94",
+            "name": "DAY5",
+            "path": "Assets\\Textures\\DAY5.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "dc57e3cd-91d1-4b13-a11e-843979173982",
+            "name": "DAY4",
+            "path": "Assets\\Textures\\DAY4.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "af5d6035-8409-4595-82a3-30dd1a8c0f93",
+            "name": "DAY3",
+            "path": "Assets\\Textures\\DAY3.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "b843a7b4-4d83-4c7a-9749-e2f47d9c0c16",
+            "name": "DAY2",
+            "path": "Assets\\Textures\\DAY2.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
         }
     ]
 }

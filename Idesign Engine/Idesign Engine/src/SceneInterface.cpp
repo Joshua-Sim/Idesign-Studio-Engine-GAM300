@@ -20,6 +20,8 @@ namespace Framework
     static bool cutsceneFinished = false;
     static bool IntroFinished = false;
 
+    int SceneInterface::g_CurrentDay = 1;
+
     // Tune these
     static const float sceneDuration = 3.0f;   // each scene lasts x second(s) total
     static const float crossfadeDuration = 0.25f;  // fast seamless fade (tweak 0.12 ~ 0.25)
@@ -43,15 +45,14 @@ namespace Framework
     static float dayPhaseStartTime = -1.0f;
     static bool  dayPhaseFinished = false;
 
-    // Tuning
-    static const float dayPhaseFadeInDuration = 0.4f;
-    static const float dayPhaseSlideDuration = 1.2f;
-    static const float dayPhaseHoldDuration = 0.8f;
-    static const float dayPhaseFadeOutDuration = 0.5f;
+    // TUNING
+    static const float dayPhaseFadeInDuration = 0.90f;
+    static const float dayPhaseSlideDuration = 2.0f;
+    static const float dayPhaseHoldDuration = 1.0f;
+    static const float dayPhaseFadeOutDuration = 0.8f;
 
-    // X positions (tune these to your UI layout)
-    static const float dayPhaseStartX = -900.0f; // off-screen left
-    static const float dayPhaseCenterX = 0.0f;    // center position
+    static const float dayPhaseStartX = 3300.0f; // start off-screen
+    static const float dayPhaseCenterX = 960.0f;     // centered
 
 
     void SceneInterface::Initialize() {}
@@ -685,33 +686,28 @@ namespace Framework
                 engineState.Is(EngineMode::Day5)
                 )
             {
-                // All day images should share the same tag, e.g. "dayphase"
-                auto dayEntities = ecsInterface.GetEntitiesByTag("dayphase");
+                std::vector<Entity> dayEntities;
+
+                if (engineState.Is(EngineMode::Day2))
+                    dayEntities = ecsInterface.GetEntitiesByTag("day2phase");
+                else if (engineState.Is(EngineMode::Day3))
+                    dayEntities = ecsInterface.GetEntitiesByTag("day3phase");
+                else if (engineState.Is(EngineMode::Day4))
+                    dayEntities = ecsInterface.GetEntitiesByTag("day4phase");
+                else if (engineState.Is(EngineMode::Day5))
+                    dayEntities = ecsInterface.GetEntitiesByTag("day5phase");
+
                 int totalEntities = (int)dayEntities.size();
-                if (totalEntities <= 0) return;
+                if (totalEntities < 3) return; // need exactly 3 pieces
 
-                // Determine which day we are transitioning TO
-                int targetDay = 0;
-                if (engineState.Is(EngineMode::Day2)) targetDay = 2;
-                else if (engineState.Is(EngineMode::Day3)) targetDay = 3;
-                else if (engineState.Is(EngineMode::Day4)) targetDay = 4;
-                else if (engineState.Is(EngineMode::Day5)) targetDay = 5;
+                // Expected:
+                // [0] = permanent black background
+                // [1] = moving day image
+                // [2] = black fade-out overlay
+                Entity bgEntity = dayEntities[0];
+                Entity bannerEntity = dayEntities[1];
+                Entity fadeEntity = dayEntities[2];
 
-                if (targetDay <= 0) return;
-
-                // Example:
-                // targetDay = 2 -> show 1 image? or 2 images?
-                // Based on your description:
-                // Day2 shows Day2
-                // Day3 shows Day2, Day3
-                // Day4 shows Day2, Day3, Day4
-                //
-                // So index 0 = Day2, index 1 = Day3, index 2 = Day4, ...
-                int visibleCount = glm::min(targetDay - 1, totalEntities);
-
-                if (visibleCount <= 0) return;
-
-                // Timeline
                 const float fadeInEnd = dayPhaseFadeInDuration;
                 const float slideEnd = fadeInEnd + dayPhaseSlideDuration;
                 const float holdEnd = slideEnd + dayPhaseHoldDuration;
@@ -722,22 +718,46 @@ namespace Framework
                     dayPhaseStartTime = (float)glfwGetTime();
                     dayPhaseFinished = false;
 
-                    // Initialize all day entities hidden/offscreen
-                    for (int i = 0; i < totalEntities; ++i)
+                    // Init all 3 entities
+                    for (Entity e : dayEntities)
                     {
-                        Entity e = dayEntities[i];
                         if (!ecsInterface.IsEntityValid(e)) continue;
                         if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
-                        if (!ecsInterface.HasComponent<TransformComponent>(e)) continue;
 
                         auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
-                        auto& tr = ecsInterface.GetComponent<TransformComponent>(e);
-
                         tex.isUI = true;
                         tex.uiAlpha = 0.0f;
+                    }
 
-                        // Start all off-screen left
-                        tr.position.x = dayPhaseStartX;
+                    // Background black: instant on
+                    if (ecsInterface.IsEntityValid(bgEntity) &&
+                        ecsInterface.HasComponent<TextureProperties>(bgEntity))
+                    {
+                        auto& bgTex = ecsInterface.GetComponent<TextureProperties>(bgEntity);
+                        bgTex.isUI = true;
+                        bgTex.uiAlpha = 1.0f;
+                    }
+
+                    // Moving banner starts off-screen left
+                    if (ecsInterface.IsEntityValid(bannerEntity) &&
+                        ecsInterface.HasComponent<TextureProperties>(bannerEntity) &&
+                        ecsInterface.HasComponent<TransformComponent>(bannerEntity))
+                    {
+                        auto& bannerTex = ecsInterface.GetComponent<TextureProperties>(bannerEntity);
+                        auto& bannerTr = ecsInterface.GetComponent<TransformComponent>(bannerEntity);
+
+                        bannerTex.isUI = true;
+                        bannerTex.uiAlpha = 0.0f;
+                        bannerTr.position.x = dayPhaseStartX;
+                    }
+
+                    // Fade overlay starts invisible
+                    if (ecsInterface.IsEntityValid(fadeEntity) &&
+                        ecsInterface.HasComponent<TextureProperties>(fadeEntity))
+                    {
+                        auto& fadeTex = ecsInterface.GetComponent<TextureProperties>(fadeEntity);
+                        fadeTex.isUI = true;
+                        fadeTex.uiAlpha = 0.0f;
                     }
                 }
 
@@ -750,9 +770,8 @@ namespace Framework
                     {
                         dayPhaseFinished = true;
 
-                        for (int i = 0; i < totalEntities; ++i)
+                        for (Entity e : dayEntities)
                         {
-                            Entity e = dayEntities[i];
                             if (!ecsInterface.IsEntityValid(e)) continue;
                             if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
 
@@ -762,85 +781,81 @@ namespace Framework
                         }
 
                         engineState.PopState();
-                        engineState.PushState(EngineMode::Play);
+                        engineState.PushState(EngineMode::MapSelection);
                     }
                     return;
                 }
 
-                // Alpha control
-                float globalAlpha = 1.0f;
-
-                if (t < fadeInEnd)
+                // -------------------------------------------------
+                // 1) Permanent black background
+                // -------------------------------------------------
+                if (ecsInterface.IsEntityValid(bgEntity) &&
+                    ecsInterface.HasComponent<TextureProperties>(bgEntity))
                 {
-                    globalAlpha = Saturate(t / dayPhaseFadeInDuration);
-                }
-                else if (t < holdEnd)
-                {
-                    globalAlpha = 1.0f;
-                }
-                else
-                {
-                    float fadeOutT = (t - holdEnd) / dayPhaseFadeOutDuration;
-                    globalAlpha = 1.0f - Saturate(fadeOutT);
+                    auto& bgTex = ecsInterface.GetComponent<TextureProperties>(bgEntity);
+                    bgTex.isUI = true;
+                    bgTex.uiAlpha = 1.0f;
                 }
 
-                // Slide X control
-                float currentX = dayPhaseCenterX;
-
-                if (t < fadeInEnd)
+                // -------------------------------------------------
+                // 2) Moving banner
+                //    - fade in
+                //    - slide from left to center
+                //    - hold in middle
+                // -------------------------------------------------
+                if (ecsInterface.IsEntityValid(bannerEntity) &&
+                    ecsInterface.HasComponent<TextureProperties>(bannerEntity) &&
+                    ecsInterface.HasComponent<TransformComponent>(bannerEntity))
                 {
-                    currentX = dayPhaseStartX;
+                    auto& bannerTex = ecsInterface.GetComponent<TextureProperties>(bannerEntity);
+                    auto& bannerTr = ecsInterface.GetComponent<TransformComponent>(bannerEntity);
+
+                    bannerTex.isUI = true;
+
+                    // Fade in only during first segment
+                    if (t < fadeInEnd)
+                        bannerTex.uiAlpha = Saturate(t / dayPhaseFadeInDuration);
+                    else
+                        bannerTex.uiAlpha = 1.0f;
+
+                    // Slide X movement
+                    if (t < fadeInEnd)
+                    {
+                        bannerTr.position.x = dayPhaseStartX;
+                    }
+                    else if (t < slideEnd)
+                    {
+                        float slideT = (t - fadeInEnd) / dayPhaseSlideDuration;
+                        slideT = Saturate(slideT);
+
+                        float eased = slideT * slideT * (3.0f - 2.0f * slideT); // smoothstep
+                        bannerTr.position.x = glm::mix(dayPhaseStartX, dayPhaseCenterX, eased);
+                    }
+                    else
+                    {
+                        bannerTr.position.x = dayPhaseCenterX;
+                    }
                 }
-                else if (t < slideEnd)
+
+                // -------------------------------------------------
+                // 3) Fade-to-black overlay
+                //    starts only at the end
+                // -------------------------------------------------
+                if (ecsInterface.IsEntityValid(fadeEntity) &&
+                    ecsInterface.HasComponent<TextureProperties>(fadeEntity))
                 {
-                    float slideT = (t - fadeInEnd) / dayPhaseSlideDuration;
-                    slideT = Saturate(slideT);
+                    auto& fadeTex = ecsInterface.GetComponent<TextureProperties>(fadeEntity);
+                    fadeTex.isUI = true;
 
-                    // smoothstep-like easing
-                    float eased = slideT * slideT * (3.0f - 2.0f * slideT);
-                    currentX = glm::mix(dayPhaseStartX, dayPhaseCenterX, eased);
-                }
-                else
-                {
-                    currentX = dayPhaseCenterX;
-                }
-
-                // Hide all first
-                for (int i = 0; i < totalEntities; ++i)
-                {
-                    Entity e = dayEntities[i];
-                    if (!ecsInterface.IsEntityValid(e)) continue;
-                    if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
-
-                    auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
-                    tex.isUI = false;
-                    tex.uiAlpha = 0.0f;
-                }
-
-                // Show only the needed day images
-                // Example:
-                // targetDay=3 => show indices 0..1  (Day2, Day3)
-                // targetDay=4 => show indices 0..2  (Day2, Day3, Day4)
-                for (int i = 0; i < visibleCount; ++i)
-                {
-                    Entity e = dayEntities[i];
-                    if (!ecsInterface.IsEntityValid(e)) continue;
-                    if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
-                    if (!ecsInterface.HasComponent<TransformComponent>(e)) continue;
-
-                    auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
-                    auto& tr = ecsInterface.GetComponent<TransformComponent>(e);
-
-                    tex.isUI = true;
-                    tex.uiAlpha = globalAlpha;
-
-                    // Move the strip horizontally
-                    //
-                    // Each image should be placed next to the previous one.
-                    // Replace 600.0f with your actual image spacing.
-                    float imageSpacing = 600.0f;
-
-                    tr.position.x = currentX + i * imageSpacing;
+                    if (t < holdEnd)
+                    {
+                        fadeTex.uiAlpha = 0.0f;
+                    }
+                    else
+                    {
+                        float fadeOutT = (t - holdEnd) / dayPhaseFadeOutDuration;
+                        fadeTex.uiAlpha = Saturate(fadeOutT); // 0 -> 1
+                    }
                 }
             }
             else
@@ -1000,5 +1015,55 @@ namespace Framework
                 }
             }
         }
+    }
+
+    int SceneInterface::GetCurrentDay()
+    {
+        return g_CurrentDay;
+    }
+
+    void SceneInterface::SetCurrentDay(int day)
+    {
+        g_CurrentDay = day;
+    }
+
+    void SceneInterface::AdvanceToNextDay()
+    {
+        ++g_CurrentDay;
+    }
+
+    void SceneInterface::PushDayTransitionStateForCurrentDay()
+    {
+        switch (g_CurrentDay)
+        {
+        case 2:
+            engineState.PushState(EngineMode::Day2);
+            break;
+        case 3:
+            engineState.PushState(EngineMode::Day3);
+            break;
+        case 4:
+            engineState.PushState(EngineMode::Day4);
+            break;
+        case 5:
+            engineState.PushState(EngineMode::Day5);
+            break;
+        default:
+            // If no special transition state exists, just go to play/map directly
+            engineState.PushState(EngineMode::Play);
+            break;
+        }
+    }
+
+    void SceneInterface::OnNextDayPressed()
+    {
+        // Leave upgrade first
+        engineState.PopState(); // pop Upgrade if Upgrade is the current state
+
+        // Advance day
+        SceneInterface::AdvanceToNextDay();
+
+        // Push matching transition
+        SceneInterface::PushDayTransitionStateForCurrentDay();
     }
 }

@@ -287,6 +287,12 @@
             "name": "TapCircle_Prefab",
             "path": "Assets\\Prefabs\\TapCircle_Prefab.prefab",
             "isScenePrefab": false
+        },
+        {
+            "guid": "68900b6c-9902-4d58-92b0-9baf74f5aa0f",
+            "name": "BLACK-DAY2_Prefab",
+            "path": "Assets\\Prefabs\\BLACK-DAY2_Prefab.prefab",
+            "isScenePrefab": false
         }
     ]
 }

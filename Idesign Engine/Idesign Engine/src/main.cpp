@@ -218,7 +218,7 @@ int main(void)
     }
 
     engineState.PushState(EngineMode::Play);    // Set to Play active    
-    engineState.PushState(EngineMode::Intro);    // Set to Menu active
+    engineState.PushState(EngineMode::Upgrade);    // Set to Menu active
     sceneManager.LoadScene("Scenes/GameScene - WithCollision.json");
     engine->GameLoop();
 

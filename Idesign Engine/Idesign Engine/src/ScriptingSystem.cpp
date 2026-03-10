@@ -2265,6 +2265,14 @@ namespace Framework {
             if (gfx) gfx->SetGamma(g);
             return 0;
         }
+
+        // LUA DAY PHASE SCENES //
+        static int lua_AdvanceDayAndPushTransition(lua_State* L)
+        {
+            SceneInterface::AdvanceToNextDay();
+            SceneInterface::PushDayTransitionStateForCurrentDay();
+            return 0; // no values returned to Lua
+        }
     }
 
     // ---------------------------- class methods --------------------------------
@@ -2379,6 +2387,7 @@ namespace Framework {
         lua_register(L, "GameStateBackToPause", lua_GameStateBackToPause);
         lua_register(L, "GameStateEndNightPhase", lua_GameStateEndNightPhase);
         lua_register(L, "GetPhase", lua_GetPhase);
+        lua_register(L, "AdvanceDayAndPushTransition", lua_AdvanceDayAndPushTransition);
 
 
         // lua_register(L, "SetScale", lua_SetScale);
