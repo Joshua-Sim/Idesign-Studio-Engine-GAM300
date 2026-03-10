@@ -2851,6 +2851,24 @@ namespace Framework {
             return 1;
             });
 
+        lua_register(L, "UpgradeCauldron", [](lua_State* L) -> int {
+            bool success = UpgradeManager::Instance().UpgradeCauldron();
+            lua_pushboolean(L, success);
+            return 1;
+            });
+
+        lua_register(L, "IsCauldronUnlocked", [](lua_State* L) -> int {
+            bool unlocked = UpgradeManager::Instance().IsCauldronUnlocked();
+            lua_pushboolean(L, unlocked);
+            return 1;
+            });
+
+        lua_register(L, "GetCauldronUpgradeCost", [](lua_State* L) -> int {
+            int cost = UpgradeManager::Instance().GetCauldronUpgradeCost();
+            lua_pushinteger(L, cost);
+            return 1;
+            });
+
         std::cout << "[ScriptingSystem] Initialized (Lua VM ready)\n";
     }
 

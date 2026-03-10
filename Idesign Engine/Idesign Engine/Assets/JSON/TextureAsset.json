@@ -2065,7 +2065,7 @@
             "guid": "15905e6c-df06-4733-acfc-dc121cf02e5f",
             "name": "UpgradeCardCauldron_Unhovered",
             "path": "Assets\\Textures\\UpgradeCardCauldron_Unhovered.png",
-            "isUI": false,
+            "isUI": false
         },
         {
             "guid": "9ee43811-6db7-422d-bea4-3e6078afcd94",
@@ -2082,7 +2082,7 @@
             "guid": "350851ab-c956-43e7-aeb3-c234efbb0dcf",
             "name": "UpgradeCardCauldron_Available",
             "path": "Assets\\Textures\\UpgradeCardCauldron_Available.png",
-            "isUI": false,
+            "isUI": false
         },
         {
             "guid": "dc57e3cd-91d1-4b13-a11e-843979173982",
@@ -2099,7 +2099,7 @@
             "guid": "5402093e-5f4e-44aa-ad5c-eccfb04ef407",
             "name": "UpgradeCardCauldron_Full",
             "path": "Assets\\Textures\\UpgradeCardCauldron_Full.png",
-            "isUI": false,
+            "isUI": false
         },
         {
             "guid": "af5d6035-8409-4595-82a3-30dd1a8c0f93",
@@ -2116,7 +2116,7 @@
             "guid": "3443301d-71ee-47a1-93de-94c8ab502979",
             "name": "UpgradeCardCauldron_Unavailable",
             "path": "Assets\\Textures\\UpgradeCardCauldron_Unavailable.png",
-            "isUI": false,
+            "isUI": false
         },
         {
             "guid": "b843a7b4-4d83-4c7a-9749-e2f47d9c0c16",

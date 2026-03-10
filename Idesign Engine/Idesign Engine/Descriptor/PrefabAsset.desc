@@ -1,5 +1,5 @@
 {
-    "count": 49,
+    "count": 53,
     "entries": [
         {
             "guid": "ab20d9cc-f552-47fb-8cd9-82403e4c3b22",
@@ -101,6 +101,30 @@
             "guid": "71a83449-8181-416a-8371-acb33d34c4f4",
             "name": "vitality_potion_Prefab",
             "path": "Assets\\Prefabs\\vitality_potion_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "12a83449-8181-416a-8371-dfg33d34c4f4",
+            "name": "iron_bar_Prefab",
+            "path": "Assets\\Prefabs\\iron_bar_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "22a83449-8181-416a-8371-dfg67d34c462",
+            "name": "preservation_powder_Prefab",
+            "path": "Assets\\Prefabs\\preservation_powder_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "33a83449-6767-416a-8371-67667d34c462",
+            "name": "healing_powder_Prefab",
+            "path": "Assets\\Prefabs\\healing_powder_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "67a83449-8181-416a-8371-dfg33d34c467",
+            "name": "copper_bar_Prefab",
+            "path": "Assets\\Prefabs\\copper_bar_Prefab.prefab",
             "isScenePrefab": false
         },
         {
