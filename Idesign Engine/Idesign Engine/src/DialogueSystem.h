@@ -14,6 +14,7 @@
 #include "Graphics.h"
 #include <vector>
 #include <glm.hpp>
+#include <AudioSystem.h>
 
 namespace Framework {
     struct DialogueLine {
@@ -88,5 +89,8 @@ namespace Framework {
         size_t currentCharIndex = 0;                // Character position in current line
         float textDisplayTimer = 0.0f;
         bool fullyDisplayed = true;
+
+		// For Typewriter sound effect
+        bool typewriterSoundPlaying = false;
     };
 } // namespace Framework
