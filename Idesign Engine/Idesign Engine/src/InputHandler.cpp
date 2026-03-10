@@ -122,11 +122,17 @@ namespace Framework {
             }
         }
 
-        // ESC: Toggle pause/resume
+		// toggle recipe book
         if (IsKeyPressed(GLFW_KEY_R))
         {
             isUIFocused = !isUIFocused;
             GameSystem::bookOpen = !GameSystem::bookOpen;
+        }
+
+		// toggle debug reveal
+        if (IsKeyPressed(GLFW_KEY_SLASH))
+        {
+			GameSystem::ToggleDebugReveal();
         }
 
         // ESC: Toggle pause/resume

@@ -12,6 +12,7 @@
 #include "ItemComponent.h" // Must include your updated ItemComponent with GetRecipeForResult & ItemType
 #include "AudioSystem.h"
 #include "EventManager.h"  // Must include your EventManager
+#include "GameSystem.h"
 
 namespace Framework {
 
@@ -93,7 +94,6 @@ namespace Framework {
 
         std::map<int, Entity> m_recipeIngredientBGEntities;
         std::map<int, Entity> m_recipeIngredientIconEntities;
-
     public:
         bool bookSpawned = false;
 
@@ -560,7 +560,7 @@ namespace Framework {
         }
 
         void CreateRightTooltip(int itemID, float iconX, float iconY) {
-            bool isUnlocked = Framework::IsItemUnlocked(itemID);
+            bool isUnlocked = GameSystem::m_debugRevealAll || Framework::IsItemUnlocked(itemID);
             const PotionRecipe* recipe = Framework::GetRecipeForResult(itemID);
 
             std::string methodText = (recipe && isUnlocked) ? recipe->method : "???";
@@ -687,7 +687,7 @@ namespace Framework {
                 if (m_currentTab == BookTab::ITEMS && type != Framework::ItemType::DEFAULT) continue;
 
                 // --- UNLOCK MASK ---
-                bool isUnlocked = Framework::IsItemUnlocked(i);
+                bool isUnlocked = GameSystem::m_debugRevealAll || Framework::IsItemUnlocked(i);
                 std::string iconName = isUnlocked ? Framework::kItemNames[i] : "RB_QuestionMark";
                 std::string displayName = isUnlocked ? Framework::GetItemDisplayName(i) : "???";
 
@@ -727,11 +727,18 @@ namespace Framework {
             float currentY = 767.0f;
             glm::vec4 black = { 0.0f, 0.0f, 0.0f, 1.0f };
 
-            bool isUnlocked = Framework::IsItemUnlocked(selectedID);
+            bool isUnlocked = GameSystem::m_debugRevealAll || Framework::IsItemUnlocked(selectedID);
             std::string headerIcon = isUnlocked ? Framework::kItemNames[selectedID] : "RB_QuestionMark";
             std::string headerName = isUnlocked ? Framework::GetItemDisplayName(selectedID) : "???";
-            std::string locationText = isUnlocked ? Framework::GetItemLocation(selectedID) : "???";
-            std::string flavorText = "\"" + Framework::GetItemFlavorText(selectedID) + "\""; // Always show
+            std::string locationText = Framework::GetItemLocation(selectedID);
+            // Wrap the text at roughly 35-40 characters based on your book's width
+            std::string flavorText = "\"" + Framework::GetItemFlavorText(selectedID) + "\"";
+            std::string wrappedFlavor = WordWrap(flavorText, 50);
+
+            // 2. Split into individual strings
+            std::vector<std::string> flavorLines = SplitLines(wrappedFlavor);
+            // 3. Render each line separately
+            float lineSpacing = 20.0f; // Adjust this to match your font height
 
             SpawnGenericSpriteReturnEntity(rightPageX, currentY, "RB_ItemBackground", 200.0f, 200.0f, itemFrameZ);
             SpawnUISpriteReturnEntity(rightPageX, currentY, headerIcon, 3.5f, itemIconZ);
@@ -832,7 +839,12 @@ namespace Framework {
             currentY -= 50.0f;
 
             glm::vec4 flavorColor = glm::vec4(0.5f, 0.45f, 0.4f, 1.0f);
-            SpawnTextReturnEntity(rightPageX, currentY, baseTextZ, flavorText, 0.45f, flavorColor);
+            for (const std::string& line : flavorLines) {
+                if (!line.empty()) {
+                    SpawnTextReturnEntity(rightPageX, currentY, baseTextZ, line, 0.5f, flavorColor);
+                    currentY -= lineSpacing; // Move the pen down for the next line
+                }
+            }
         }
 
         void BuildSideTabs() {
@@ -1004,6 +1016,40 @@ namespace Framework {
 
             uiEntities.push_back(e);
             return e;
+        }
+
+        void ToggleDebugShowAll() {
+            GameSystem::m_debugRevealAll = !GameSystem::m_debugRevealAll;
+            RefreshBook();
+        }
+
+        std::string WordWrap(const std::string& text, size_t lineLength) {
+            std::string result = text;
+            size_t lastSpace = std::string::npos;
+            size_t lineStart = 0;
+
+            for (size_t i = 0; i < result.length(); ++i) {
+                if (result[i] == ' ') lastSpace = i;
+
+                if (i - lineStart >= lineLength) {
+                    if (lastSpace != std::string::npos && lastSpace > lineStart) {
+                        result[lastSpace] = '\n';
+                        lineStart = lastSpace + 1;
+                        lastSpace = std::string::npos;
+                    }
+                }
+            }
+            return result;
+        }
+
+        std::vector<std::string> SplitLines(const std::string& text) {
+            std::vector<std::string> lines;
+            std::stringstream ss(text);
+            std::string line;
+            while (std::getline(ss, line, '\n')) {
+                lines.push_back(line);
+            }
+            return lines;
         }
     };
 

@@ -24,7 +24,7 @@ namespace Framework
     // Static member initialization
     std::unordered_map<std::string, int> GameSystem::gameData;
     PhaseManager* phaseManager = nullptr;
-
+    bool GameSystem::m_debugRevealAll = false;
     // =========================================================
     // NIGHT SCALING CONFIG
     // Tweak these to adjust difficulty curve.
@@ -170,6 +170,16 @@ namespace Framework
     bool GameSystem::HasData(const std::string& key)
     {
         return gameData.find(key) != gameData.end();
+    }
+
+    void GameSystem::ToggleDebugReveal() {
+        m_debugRevealAll = !m_debugRevealAll;
+        std::cout << "[GameSystem] Debug Reveal All: " << (m_debugRevealAll ? "ON" : "OFF") << std::endl;
+
+        // If the book is open, tell the manager to rebuild the UI with new visibility
+        if (GameSystem::bookOpen && recipeBookManager) {
+            recipeBookManager->RefreshBook();
+        }
     }
 
     void GameSystem::Shutdown()

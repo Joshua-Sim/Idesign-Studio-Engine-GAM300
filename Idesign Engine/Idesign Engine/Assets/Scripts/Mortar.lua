@@ -62,6 +62,10 @@ local MIN_Y = 200
 local MAX_Y = 880
 local CLICK_RADIUS = 75 
 
+-- [NEW STATE VARIABLES FOR RECIPES]
+local current_recipe_result_id = -1
+local current_recipe_result_name = ""
+
 function Mortar.on_init(self)
     my_entity_id = self.entity
     SetInteractionText(my_entity_id, "Requires Ingredient")
@@ -302,7 +306,7 @@ function Mortar.on_update(self, dt)
 end
 
 -- ==========================================
--- HELPER: STOP MINIGAME
+-- HELPER: STOP MINIGAME (Modified to use Recipe Result)
 -- ==========================================
 function Mortar.StopMinigame(targetID, success)
     is_playing = false
@@ -331,25 +335,25 @@ function Mortar.StopMinigame(targetID, success)
         end
         visual_entities = {}
 
-        -- You can update this to yield a specific mixed paste depending on stored_ingredients!
-        AddToInventory("chopped_herb") 
+        AddToInventory(current_recipe_result_name) 
+        print("[Mortar] Crafted: " .. current_recipe_result_name)
+
         Sound.Play("event:/RecipeComplete") 
     end
 end
 
 -- ==========================================
--- INTERACTION LOGIC
+-- INTERACTION LOGIC (Modified for Method Validation)
 -- ==========================================
 function Mortar.OnInteract(senderID, targetID, actionType)
     if is_playing then 
-        print("[Mortar] Minigame cancelled by player.")
         Mortar.StopMinigame(targetID, false)
         return 
     end
     
     local held_item_id = GetSelectedItem()
 
-    -- Branch A: Add an ingredient if holding one and there is space
+    -- Branch A: Add an ingredient
     if held_item_id ~= -1 then
         if #stored_ingredients < MAX_INGREDIENTS then
             ConsumeSelectedItem()
@@ -361,28 +365,50 @@ function Mortar.OnInteract(senderID, targetID, actionType)
             end
             table.insert(visual_entities, vis_id)
             
-            -- Override the C++ default rotation instantly!
             if vis_id ~= -1 and SetRotation then
                 SetRotation(vis_id, ROT_X, ROT_Y, ROT_Z)
             end
 
             Sound.Play("event:/PlaceDownItem")
-        else
-            print("[Mortar] Mortar is full!")
         end
 
-    -- Branch B: Start the minigame if empty-handed and we have items
+    -- Branch B: Start the minigame ONLY if recipe method is MortarPestle
     elseif #stored_ingredients > 0 then
-        is_playing = true
-        is_spinning = false
-        is_finished = false
-        spawn_timer = 1.0 
-        current_progress = 0 
-        click_was_down = false 
         
-        SetInteractionText(targetID, "Stop Grinding") 
-        SetUIFocused(true)
-        SetCameraLock(true)
+        -- [NEW RECIPE VALIDATION]
+        local resultID = -1
+        local method = ""
+        
+        if CheckValidRecipe then
+            -- We assume CheckValidRecipe returns (resultID, method) or similar
+            -- If your C++ only returns ID, you'll need a GetRecipeMethod(resultID) helper
+            resultID, method = CheckValidRecipe(stored_ingredients)
+        end
+
+        if resultID ~= -1 and method == "MortarPestle" then
+            current_recipe_result_id = resultID
+            if GetItemNameById then
+                current_recipe_result_name = GetItemNameById(resultID)
+            end
+
+            is_playing = true
+            is_spinning = false
+            is_finished = false
+            spawn_timer = 1.0 
+            current_progress = 0 
+            click_was_down = false 
+            
+            SetInteractionText(targetID, "Stop Grinding") 
+            SetUIFocused(true)
+            SetCameraLock(true)
+            print("[Mortar] Starting minigame for: " .. current_recipe_result_name)
+        else
+            -- [INVALID RECIPE OR WRONG METHOD]
+            Sound.Play("event:/InvalidRecipe")
+            print("[Mortar] Invalid recipe for Mortar & Pestle.")
+            -- Optional: Clear the mortar if it's a "failed" mix
+            -- Mortar.ClearMortar() 
+        end
     end
 end
 

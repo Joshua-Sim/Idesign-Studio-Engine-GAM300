@@ -11,11 +11,14 @@ namespace Framework {
 
         static bool bookOpen;
         static bool bookOpened;
+        static bool m_debugRevealAll; 
 
         void Initialize() override;
         void Update(float timeslice) override;
         std::string GetName() override { return "GameSystem"; }
         void Shutdown();
+
+        static void ToggleDebugReveal();
 
         // NEW: Flexible data storage
         static std::unordered_map<std::string, int> gameData;
