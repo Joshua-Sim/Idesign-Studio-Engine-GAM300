@@ -962,6 +962,24 @@
             "vbo": 705,
             "ebo": 706,
             "indexCount": 20730
+        },
+        {
+            "guid": "f63a9551-ef39-454e-a670-111cd80f263e",
+            "name": "bellow",
+            "path": "Assets\\Objects\\bellow.fbx",
+            "vao": 363,
+            "vbo": 713,
+            "ebo": 714,
+            "indexCount": 8640
+        },
+        {
+            "guid": "2948390c-fdc4-4ab8-8a25-b6e36302dbea",
+            "name": "furance_fire",
+            "path": "Assets\\Objects\\furance_fire.fbx",
+            "vao": 364,
+            "vbo": 715,
+            "ebo": 716,
+            "indexCount": 150108
         }
     ]
 }
