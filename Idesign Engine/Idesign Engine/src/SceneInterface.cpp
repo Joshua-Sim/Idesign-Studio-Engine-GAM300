@@ -18,6 +18,8 @@ namespace Framework
     static bool cutsceneFinished = false;
     static bool IntroFinished = false;
 
+    int SceneInterface::g_CurrentDay = 1;
+
     // Tune these
     static const float sceneDuration = 3.0f;   // each scene lasts x second(s) total
     static const float crossfadeDuration = 0.25f;  // fast seamless fade (tweak 0.12 ~ 0.25)
@@ -32,6 +34,19 @@ namespace Framework
     static const float introStartDelay = 3.0f; // wait 3 seconds before logo 1 fades in
     static float IntrocutsceneStartTime = -2.0f;
     static float IntrofadeOutStartTime = -1.0f;
+
+    // ===== Day Phases =====
+    static float dayPhaseStartTime = -1.0f;
+    static bool  dayPhaseFinished = false;
+
+    // TUNING
+    static const float dayPhaseFadeInDuration = 0.90f;
+    static const float dayPhaseSlideDuration = 2.0f;
+    static const float dayPhaseHoldDuration = 1.0f;
+    static const float dayPhaseFadeOutDuration = 0.8f;
+
+    static const float dayPhaseStartX = 3300.0f; // start off-screen
+    static const float dayPhaseCenterX = 960.0f;     // centered
 
 
     void SceneInterface::Initialize() {}
@@ -606,6 +621,192 @@ namespace Framework
                 IntroFinished = false;
             }
 
+            // 9. DAY PHASE TRANSITION
+            if (
+                engineState.Is(EngineMode::Day2) ||
+                engineState.Is(EngineMode::Day3) ||
+                engineState.Is(EngineMode::Day4) ||
+                engineState.Is(EngineMode::Day5)
+                )
+            {
+                std::vector<Entity> dayEntities;
+
+                if (engineState.Is(EngineMode::Day2))
+                    dayEntities = ecsInterface.GetEntitiesByTag("day2phase");
+                else if (engineState.Is(EngineMode::Day3))
+                    dayEntities = ecsInterface.GetEntitiesByTag("day3phase");
+                else if (engineState.Is(EngineMode::Day4))
+                    dayEntities = ecsInterface.GetEntitiesByTag("day4phase");
+                else if (engineState.Is(EngineMode::Day5))
+                    dayEntities = ecsInterface.GetEntitiesByTag("day5phase");
+
+                int totalEntities = (int)dayEntities.size();
+                if (totalEntities < 3) return; // need exactly 3 pieces
+
+                // Expected:
+                // [0] = permanent black background
+                // [1] = moving day image
+                // [2] = black fade-out overlay
+                Entity bgEntity = dayEntities[0];
+                Entity bannerEntity = dayEntities[1];
+                Entity fadeEntity = dayEntities[2];
+
+                const float fadeInEnd = dayPhaseFadeInDuration;
+                const float slideEnd = fadeInEnd + dayPhaseSlideDuration;
+                const float holdEnd = slideEnd + dayPhaseHoldDuration;
+                const float fadeOutEnd = holdEnd + dayPhaseFadeOutDuration;
+
+                if (dayPhaseStartTime < 0.0f)
+                {
+                    dayPhaseStartTime = (float)glfwGetTime();
+                    dayPhaseFinished = false;
+
+                    // Init all 3 entities
+                    for (Entity e : dayEntities)
+                    {
+                        if (!ecsInterface.IsEntityValid(e)) continue;
+                        if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
+
+                        auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
+                        tex.isUI = true;
+                        tex.uiAlpha = 0.0f;
+                    }
+
+                    // Background black: instant on
+                    if (ecsInterface.IsEntityValid(bgEntity) &&
+                        ecsInterface.HasComponent<TextureProperties>(bgEntity))
+                    {
+                        auto& bgTex = ecsInterface.GetComponent<TextureProperties>(bgEntity);
+                        bgTex.isUI = true;
+                        bgTex.uiAlpha = 1.0f;
+                    }
+
+                    // Moving banner starts off-screen left
+                    if (ecsInterface.IsEntityValid(bannerEntity) &&
+                        ecsInterface.HasComponent<TextureProperties>(bannerEntity) &&
+                        ecsInterface.HasComponent<TransformComponent>(bannerEntity))
+                    {
+                        auto& bannerTex = ecsInterface.GetComponent<TextureProperties>(bannerEntity);
+                        auto& bannerTr = ecsInterface.GetComponent<TransformComponent>(bannerEntity);
+
+                        bannerTex.isUI = true;
+                        bannerTex.uiAlpha = 0.0f;
+                        bannerTr.position.x = dayPhaseStartX;
+                    }
+
+                    // Fade overlay starts invisible
+                    if (ecsInterface.IsEntityValid(fadeEntity) &&
+                        ecsInterface.HasComponent<TextureProperties>(fadeEntity))
+                    {
+                        auto& fadeTex = ecsInterface.GetComponent<TextureProperties>(fadeEntity);
+                        fadeTex.isUI = true;
+                        fadeTex.uiAlpha = 0.0f;
+                    }
+                }
+
+                float t = (float)glfwGetTime() - dayPhaseStartTime;
+
+                // Done
+                if (t >= fadeOutEnd)
+                {
+                    if (!dayPhaseFinished)
+                    {
+                        dayPhaseFinished = true;
+
+                        for (Entity e : dayEntities)
+                        {
+                            if (!ecsInterface.IsEntityValid(e)) continue;
+                            if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
+
+                            auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
+                            tex.uiAlpha = 0.0f;
+                            tex.isUI = false;
+                        }
+
+                        engineState.PopState();
+                        engineState.PushState(EngineMode::MapSelection);
+                    }
+                    return;
+                }
+
+                // -------------------------------------------------
+                // 1) Permanent black background
+                // -------------------------------------------------
+                if (ecsInterface.IsEntityValid(bgEntity) &&
+                    ecsInterface.HasComponent<TextureProperties>(bgEntity))
+                {
+                    auto& bgTex = ecsInterface.GetComponent<TextureProperties>(bgEntity);
+                    bgTex.isUI = true;
+                    bgTex.uiAlpha = 1.0f;
+                }
+
+                // -------------------------------------------------
+                // 2) Moving banner
+                //    - fade in
+                //    - slide from left to center
+                //    - hold in middle
+                // -------------------------------------------------
+                if (ecsInterface.IsEntityValid(bannerEntity) &&
+                    ecsInterface.HasComponent<TextureProperties>(bannerEntity) &&
+                    ecsInterface.HasComponent<TransformComponent>(bannerEntity))
+                {
+                    auto& bannerTex = ecsInterface.GetComponent<TextureProperties>(bannerEntity);
+                    auto& bannerTr = ecsInterface.GetComponent<TransformComponent>(bannerEntity);
+
+                    bannerTex.isUI = true;
+
+                    // Fade in only during first segment
+                    if (t < fadeInEnd)
+                        bannerTex.uiAlpha = Saturate(t / dayPhaseFadeInDuration);
+                    else
+                        bannerTex.uiAlpha = 1.0f;
+
+                    // Slide X movement
+                    if (t < fadeInEnd)
+                    {
+                        bannerTr.position.x = dayPhaseStartX;
+                    }
+                    else if (t < slideEnd)
+                    {
+                        float slideT = (t - fadeInEnd) / dayPhaseSlideDuration;
+                        slideT = Saturate(slideT);
+
+                        float eased = slideT * slideT * (3.0f - 2.0f * slideT); // smoothstep
+                        bannerTr.position.x = glm::mix(dayPhaseStartX, dayPhaseCenterX, eased);
+                    }
+                    else
+                    {
+                        bannerTr.position.x = dayPhaseCenterX;
+                    }
+                }
+
+                // -------------------------------------------------
+                // 3) Fade-to-black overlay
+                //    starts only at the end
+                // -------------------------------------------------
+                if (ecsInterface.IsEntityValid(fadeEntity) &&
+                    ecsInterface.HasComponent<TextureProperties>(fadeEntity))
+                {
+                    auto& fadeTex = ecsInterface.GetComponent<TextureProperties>(fadeEntity);
+                    fadeTex.isUI = true;
+
+                    if (t < holdEnd)
+                    {
+                        fadeTex.uiAlpha = 0.0f;
+                    }
+                    else
+                    {
+                        float fadeOutT = (t - holdEnd) / dayPhaseFadeOutDuration;
+                        fadeTex.uiAlpha = Saturate(fadeOutT); // 0 -> 1
+                    }
+                }
+            }
+            else
+            {
+                dayPhaseStartTime = -1.0f;
+                dayPhaseFinished = false;
+            }
+
             // Coin & Sun Icon + Day Text
             bool isDayPlay = engineState.Is(EngineMode::Play) &&
                 phaseManager->GetCurrentPhase() == GamePhase::Day;
@@ -627,8 +828,9 @@ namespace Framework
             {
                 auto& text = ecsInterface.GetComponent<TextProperties>(dayTextEntity);
                 text.opacity = isDayPlay ? 1.0f : 0.0f;
+
                 if (isDayPlay)
-                    text.text = ": Day 1|7"; // wire up dynamic values later
+                    text.text = "Day " + std::to_string(g_CurrentDay);
             }
 
             // Coin & Moon Icon + Night Text
@@ -756,6 +958,71 @@ namespace Framework
                     texture.isUI = isNightPlay;
                 }
             }
+        }
+    }
+
+    int SceneInterface::GetCurrentDay()
+    {
+        return g_CurrentDay;
+    }
+
+    void SceneInterface::SetCurrentDay(int day)
+    {
+        g_CurrentDay = day;
+    }
+
+    void SceneInterface::AdvanceToNextDay()
+    {
+        ++g_CurrentDay;
+    }
+
+    void SceneInterface::PushDayTransitionStateForCurrentDay()
+    {
+        switch (g_CurrentDay)
+        {
+        case 2:
+            engineState.PushState(EngineMode::Day2);
+            break;
+        case 3:
+            engineState.PushState(EngineMode::Day3);
+            break;
+        case 4:
+            engineState.PushState(EngineMode::Day4);
+            break;
+        case 5:
+            engineState.PushState(EngineMode::Day5);
+            break;
+        case 6:
+            engineState.PushState(EngineMode::Day6);
+            break;
+        default:
+            // If no special transition state exists, just go to play/map directly
+            engineState.PushState(EngineMode::Play);
+            break;
+        }
+    }
+
+    void SceneInterface::OnNextDayPressed()
+    {
+        // Leave upgrade first
+        engineState.PopState(); // pop Upgrade if Upgrade is the current state
+
+        // Advance day
+        SceneInterface::AdvanceToNextDay();
+
+        // Push matching transition
+        SceneInterface::PushDayTransitionStateForCurrentDay();
+    }
+
+    bool SceneInterface::WinOrLose()
+    {
+        if (GameSystem::GetCurrency() >= 5000.0f)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }

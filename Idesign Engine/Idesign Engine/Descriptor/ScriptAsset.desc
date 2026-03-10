@@ -1,5 +1,5 @@
 {
-    "count": 47,
+    "count": 48,
     "entries": [
         {
             "guid": "16f0caaf-2e11-4715-ab0e-06c67810e1ba",
@@ -326,6 +326,13 @@
         {
             "guid": "32595166-113f-4286-8862-7c6e6c2fbfb5",
             "scriptPath": "Assets\\Scripts\\NightTutorialSystem.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "8043258f-f02c-43e4-959e-a9dd54cf320f",
+            "scriptPath": "Assets\\Scripts\\NextDayButton.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1

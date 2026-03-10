@@ -1,5 +1,5 @@
 {
-    "count": 48,
+    "count": 49,
     "entries": [
         {
             "guid": "ab20d9cc-f552-47fb-8cd9-82403e4c3b22",
@@ -287,6 +287,12 @@
             "guid": "ff92c088-16c9-4dfa-89e3-496283748893",
             "name": "TapCircle_Prefab",
             "path": "Assets\\Prefabs\\TapCircle_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "68900b6c-9902-4d58-92b0-9baf74f5aa0f",
+            "name": "BLACK-DAY2_Prefab",
+            "path": "Assets\\Prefabs\\BLACK-DAY2_Prefab.prefab",
             "isScenePrefab": false
         }
     ]

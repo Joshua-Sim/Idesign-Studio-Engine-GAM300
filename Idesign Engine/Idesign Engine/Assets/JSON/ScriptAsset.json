@@ -328,6 +328,13 @@
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
+        },
+        {
+            "guid": "8043258f-f02c-43e4-959e-a9dd54cf320f",
+            "scriptPath": "Assets\\Scripts\\NextDayButton.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
         }
     ]
 }

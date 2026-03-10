@@ -7,6 +7,15 @@
 -- ── SCREEN PLACEMENT ──────────────────────────────────────────
 -- SCREEN_POS_X/Y: 0.0 = left/bottom, 1.0 = right/top, 0.5 = centre
 -- These are fractions of the actual window size from GetScreenSize().
+
+-- [STATE]
+local stored_ingredients = {} 
+local visual_entities    = {}    
+local result_item_id     = nil -- Stores the output (e.g., "iron_bar")
+
+-- Mapping ID to name (optional, for logging)
+local item_names = { [0] = "iron_ore", [1] = "coal" }
+
 local SCREEN_POS_X = 0.65      -- 75% across = right side of screen
 local SCREEN_POS_Y = 0.40      -- 50% up     = vertically centred
 
@@ -111,7 +120,41 @@ function M.on_init(self)
 end
 
 function M.OnInteract()
-    if is_active then M.StopMinigame() else M.StartMinigame() end
+    local held_item_id = GetSelectedItem()
+
+    -- [BRANCH A] ADDING INGREDIENT
+    if held_item_id ~= -1 then
+        table.insert(stored_ingredients, held_item_id)
+        ConsumeSelectedItem()
+        
+        if Sound and Sound.Play then Sound.Play("event:/PlaceDownItem") end
+        
+        -- Visual representation
+        local vis_id = -1
+        if SpawnFurnaceItem and my_entity_id then
+            vis_id = SpawnFurnaceItem(my_entity_id, held_item_id)
+        end
+        table.insert(visual_entities, vis_id)
+
+        -- CHECK RECIPE IMMEDIATELY AFTER ADDING
+        local resultID = -1
+        if CheckValidRecipe then
+            -- We pass "Furnace" to ensure we don't accidentally start a Cauldron recipe
+            resultID = CheckValidRecipe(stored_ingredients, "Furnace")
+        end
+
+        if resultID ~= -1 then
+            print("[Furnace] Valid recipe detected! Starting smelting...")
+            result_item_id = resultID
+            M.StartMinigame()
+        end
+        return 
+    end
+
+    -- [BRANCH B] MANUAL TOGGLE (Optional, if they click with empty hands)
+    if is_active then 
+        M.StopMinigame() 
+    end
 end
 
 -- ============================================================
@@ -322,13 +365,28 @@ function M:on_update(dt)
     if progress >= WIN_THRESHOLD then M.CompleteSmelting()
     elseif progress <= 0.0 and grace_timer <= 0 then M.FailSmelting() end
 end
-
 function M.CompleteSmelting()
     M.StopMinigame()
-    local cx, cy, cz = GetPosition(my_entity_id)
-    if cx then SpawnPrefab("iron_bar_Prefab", cx, cy + SPAWN_Y_OFFSET, cz) end
-end
+    
+    -- 1. Clear the furnace contents
+    for _, vis_id in ipairs(visual_entities) do
+        if vis_id ~= -1 then DestroyEntity(vis_id) end
+    end
+    stored_ingredients = {}
+    visual_entities = {}
 
+    -- 2. Add to Player Inventory
+    if result_item_id then
+        local prefabName = GetItemNameById(result_item_id) .. "_Prefab"
+        SpawnPrefab(prefabName, -48, 7, 12)
+
+        if Sound and Sound.Play then
+            Sound.Play("event:/RecipeComplete")
+        end
+    end
+    
+    result_item_id = nil
+end
 function M.FailSmelting() M.StopMinigame() end
 
 return M
