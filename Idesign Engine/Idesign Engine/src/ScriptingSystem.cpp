@@ -2219,6 +2219,17 @@ namespace Framework {
             }
             return 0;
         }
+
+        static int lua_GetCameraRot(lua_State* L) {
+            Camera* cam = Graphics::GetInstance()->GetCameraByIndex(0);
+            if (cam) {
+                lua_pushnumber(L, cam->pitch);
+                lua_pushnumber(L, cam->yaw);
+                return 2; // Returning two values to Lua
+            }
+            return 0;
+        }
+
         static int lua_GetCameraYaw(lua_State* L)
         {
             // 1. Get the Graphics System
@@ -2349,6 +2360,7 @@ namespace Framework {
         lua_register(L, "GetCameraYaw", lua_GetCameraYaw);
         lua_register(L, "SetCameraRot", lua_SetCameraRot);
         lua_register(L, "TogglePhase", lua_TogglePhase);
+		lua_register(L, "GetCameraRot", lua_GetCameraRot);
 
         // Inventory Utility
         lua_register(L, "IsItemDestroyOnPick", Lua_IsItemDestroyOnPick);

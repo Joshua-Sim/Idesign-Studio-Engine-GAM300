@@ -1,415 +1,413 @@
 local Mortar = {}
 
+-- --- PREFABS ---
 local PREFAB_CIRCLE = "TapCircle_Prefab"
 local PREFAB_GOOD   = "GoodPound_Prefab"
 local PREFAB_MEDIUM = "MediumPound_Prefab"
 local PREFAB_POOR   = "PoorPound_Prefab"
+local PREFAB_FRAME  = "ProgressBarFrame_Prefab"
+local PREFAB_FILL   = "ProgressBarFill_Prefab"
+
+-- --- CONFIGURATION ---
+local DECAY_RATE = 5.0 
+local MORTAR_CAM_HEIGHT = 2.5
+local TARGET_CAM_PITCH = -70.0
+local FLIGHT_DURATION = 0.8
+local PLAYER_Y_OFFSET = 0.0
+
+-- How far away from the mortar the camera should sit
+local FIXED_OFFSET_X = 0.0   -- 0 means centered on X
+local FIXED_OFFSET_Z = 1.0   -- 2.5 units "back" on Z
+local FIXED_OFFSET_Y = 3.0   -- 4.0 units "up" on Y
+
+-- The fixed angles the camera should have once it arrives
+local FIXED_TARGET_PITCH = -70.0 -- Looking down at an angle
+local FIXED_TARGET_YAW   = 270.0 -- Facing the workstation
 
 -- --- INTERNAL STATE ---
 local is_playing = false
+local is_camera_flying = false
+local camera_flight_t = 0.0
+local start_cam_pos = {x=0, y=0, z=0}
+local start_cam_rot = {pitch=0, yaw=0}
+local target_cam_pos = {x=0, y=0, z=0}
+
 local spawn_timer = 0.0
 local active_circles = {} 
 local feedback_texts = {} 
 local click_was_down = false 
 local my_entity_id = nil
 
+local FINISH_DELAY = 1.0  -- Seconds to wait after finishing before closing the UI
+
 -- [INGREDIENT STATE]
 local stored_ingredients = {}
 local visual_entities = {}
 local MAX_INGREDIENTS = 3
+local OFFSET_X_START, SPACING_X = -1.5, -1 
+local OFFSET_Y, OFFSET_Z = 0.1, 0.0
+local ROT_X, ROT_Y, ROT_Z = 180.0, 0.0, 0.0
 
--- Placement offsets for side-by-side layout (Adjust to fit your table perfectly)
-local OFFSET_X_START = -1.5 -- Starting distance to the left of the mortar
-local SPACING_X = -1      -- Gap between each subsequent ingredient
-local OFFSET_Y = 0.1        -- Height adjustment so they sit on the table
-local OFFSET_Z = 0.0        -- Keeps them aligned in depth
-
--- Rotation to override the C++ default of -90
-local ROT_X = 180.0
-local ROT_Y = 0.0
-local ROT_Z = 0.0
-
--- [POUNDING STATE]
-local current_progress = 0 
-local MAX_PROGRESS = 100
-local POINTS_GOOD = 20
-local POINTS_MEDIUM = 10
-local POINTS_POOR = 5
-
--- [SPINNING STATE]
-local is_spinning = false
-local spin_progress = 0.0
+-- [POUNDING/SPINNING STATE]
+local current_progress, MAX_PROGRESS = 0, 100
+local POINTS_GOOD, POINTS_MEDIUM, POINTS_POOR = 20, 10, 5
+local CLICK_RADIUS = 75 
+local is_spinning, spin_progress = false, 0.0
 local SPIN_REQUIREMENT = math.pi * 10 
-local spinner_visual_id = nil
+local spinner_visual_id, last_angle = nil, 0.0
 local last_mx, last_my = nil, nil
 local spoon_x, spoon_y = 0.0, 100.0
-local last_angle = 0.0
 
--- [FINISH STATE]
-local is_finished = false
-local finish_timer = 0.0
-local FINISH_DELAY = 1.0 
+-- [2D UI]
+local e_progress_frame, e_progress_fill = nil, nil
+local UI_WIDTH, UI_HEIGHT = 1920.0, 1080.0
+local BAR_WIDTH_PX, BAR_HEIGHT_PX, BAR_Y_POS = 600, 40, 400
 
--- --- DISPLAY CALIBRATION ---
-local UI_WIDTH = 1920.0
-local UI_HEIGHT = 1080.0       
-
--- --- SETTINGS ---
-local CIRCLE_LIFESPAN = 3.0 
-local MIN_X = 200
-local MAX_X = 1720
-local MIN_Y = 200
-local MAX_Y = 880
-local CLICK_RADIUS = 75 
-
--- [NEW STATE VARIABLES FOR RECIPES]
-local current_recipe_result_id = -1
-local current_recipe_result_name = ""
-
+-- --- INIT ---
 function Mortar.on_init(self)
     my_entity_id = self.entity
     SetInteractionText(my_entity_id, "Requires Ingredient")
     math.randomseed(os.time()) 
 end
 
+-- --- UPDATE ---
 function Mortar.on_update(self, dt)
-    -- ==========================================
-    -- INGREDIENT MANAGEMENT (Runs even when not playing)
-    -- ==========================================
+    -- 1. MANUAL CAMERA FLIGHT
+    if is_camera_flying then
+        camera_flight_t = camera_flight_t + dt
+        local t = math.min(camera_flight_t / FLIGHT_DURATION, 1.0)
+        local smooth_t = t * t * (3 - 2 * t)
+
+        -- Shortest Path Yaw Calculation
+        local delta_yaw = target_cam_rot.yaw - start_cam_rot.yaw
+        if delta_yaw > 180 then delta_yaw = delta_yaw - 360
+        elseif delta_yaw < -180 then delta_yaw = delta_yaw + 360 end
+
+        local cur_x = start_cam_pos.x + (target_cam_pos.x - start_cam_pos.x) * smooth_t
+        local cur_y = start_cam_pos.y + (target_cam_pos.y - start_cam_pos.y) * smooth_t
+        local cur_z = start_cam_pos.z + (target_cam_pos.z - start_cam_pos.z) * smooth_t
+        
+        local cur_p = start_cam_rot.pitch + (target_cam_rot.pitch - start_cam_rot.pitch) * smooth_t
+        local cur_y_rot = start_cam_rot.yaw + (delta_yaw * smooth_t)
+
+        TeleportPlayer(cur_x, cur_y, cur_z, 0, cur_y_rot, 0)
+        SetCameraRot(cur_p, cur_y_rot)
+
+        if t >= 1.0 then is_camera_flying = false end
+        return 
+    end
+
+    -- 2. INGREDIENT VISUALS (Always update positions)
     if my_entity_id then
         local cx, cy, cz = GetPosition(my_entity_id)
         
         for i = #visual_entities, 1, -1 do
             local vis_id = visual_entities[i]
-            local should_remove = false
+            local item_id = stored_ingredients[i] -- Get the actual item ID
 
-            -- Check if the player is pulling the item back to their inventory
-            if vis_id > 0 and IsItemZipping and IsItemZipping(vis_id) then
-                should_remove = true
-                print("[Mortar] Ingredient returned to player.")
-            end
-
-            if should_remove then
-                table.remove(visual_entities, i)
-                table.remove(stored_ingredients, i)
-            elseif cx then
-                -- Position ingredients neatly to the left, side-by-side
+            if vis_id > 0 and (not IsItemZipping or not IsItemZipping(vis_id)) and cx then
+                -- 1. Calculate Position
                 local current_x_offset = OFFSET_X_START + ((i - 1) * SPACING_X)
                 SetPosition(vis_id, cx + current_x_offset, cy + OFFSET_Y, cz + OFFSET_Z)
-            end
-        end
-
-        -- Dynamically update interaction text based on state
-        if not is_playing then
-            local held_item_id = GetSelectedItem()
-            if held_item_id ~= -1 and #stored_ingredients < MAX_INGREDIENTS then
-                SetInteractionText(my_entity_id, "Add Ingredient (" .. #stored_ingredients .. "/" .. MAX_INGREDIENTS .. ")")
-            elseif #stored_ingredients > 0 then
-                SetInteractionText(my_entity_id, "Start Grinding")
-            else
-                SetInteractionText(my_entity_id, "Requires Ingredient")
+                
+                -- 2. Conditional Rotation Logic
+                local itemName = GetItemNameById(item_id)
+                
+                -- We check if "Herb" is in the name and it doesn't say "Chopped"
+                if string.find(itemName, "Herb") and not string.find(itemName, "Chopped") then
+                    -- Rotate the unchopped herb (e.g., laying it flat)
+                    SetRotation(vis_id, 180.0, 0.0, 0.0) 
+                else
+                    -- Keep everything else (Mushrooms, Chopped herbs, etc.) at default upright
+                    SetRotation(vis_id, 0.0, 0.0, 0.0)
+                end
             end
         end
     end
 
     if not is_playing then return end
 
-    -- ==========================================
-    -- PHASE 1: POUNDING
-    -- ==========================================
+    -- =============================================================
+    -- 3. PHASE 1: POUNDING
+    -- =============================================================
     if not is_spinning then
-        -- 1. SPAWN LOGIC
+        current_progress = math.max(0, current_progress - (DECAY_RATE * dt))
+        
+        if e_progress_fill then
+            local ratio = math.min(current_progress / MAX_PROGRESS, 1.0)
+            SetScale(e_progress_fill, ratio * BAR_WIDTH_PX, BAR_HEIGHT_PX * 0.8, 1.0)
+            SetPosition(e_progress_fill, (UI_WIDTH / 2) - (BAR_WIDTH_PX / 2) + (ratio * BAR_WIDTH_PX / 2), BAR_Y_POS, 0.9)
+        end
+
         spawn_timer = spawn_timer + dt
         if spawn_timer >= 1.0 then
-            spawn_timer = spawn_timer - 1.0 
-
-            local random_x = math.random(MIN_X, MAX_X)
-            local random_y = math.random(MIN_Y, MAX_Y)
-            
-            local circle_id = SpawnPrefab(PREFAB_CIRCLE, random_x, random_y, 0.5)
-            
-            if circle_id ~= nil and circle_id ~= -1 then
-                local default_sx, default_sy, default_sz = GetScale(circle_id)
-                table.insert(active_circles, { 
-                    id = circle_id, life = 0.0,
-                    x = random_x, y = random_y, 
-                    base_sx = default_sx, base_sy = default_sy, base_sz = default_sz
-                })
+            spawn_timer = 0
+            local rx, ry = math.random(200, 1720), math.random(200, 880)
+            local cid = SpawnPrefab(PREFAB_CIRCLE, rx, ry, 0.5)
+            if cid and cid ~= -1 then
+                local sx, sy, sz = GetScale(cid)
+                table.insert(active_circles, { id = cid, life = 0.0, x = rx, y = ry, base_sx = sx, base_sy = sy, base_sz = sz })
             end
         end
 
-        -- 2. CLICK DETECTION & PROGRESS LOGIC
-        local is_clicked = IsMouseButtonDown(0)
+        -- Circle Animation
+        for i = #active_circles, 1, -1 do
+            local c = active_circles[i]
+            c.life = c.life + dt
+            if c.life >= 3.0 then 
+                DestroyEntity(c.id); table.remove(active_circles, i)
+            else
+                local s = math.max(1.0 - (c.life / 3.0), 0.05)
+                SetScale(c.id, c.base_sx * s, c.base_sy * s, c.base_sz * s)
+            end
+        end
 
-        if is_clicked then
-            if not click_was_down then
-                click_was_down = true
-                
-                local uv_x, uv_y = GetMouseUV()
-                local mouse_x = uv_x * UI_WIDTH
-                local mouse_y = UI_HEIGHT - (uv_y * UI_HEIGHT) 
-                
-                for i = #active_circles, 1, -1 do
-                    local circ = active_circles[i]
-                    local dx = mouse_x - circ.x
-                    local dy = mouse_y - circ.y
-                    local distance = math.sqrt((dx * dx) + (dy * dy))
+        if IsMouseButtonDown(0) and not click_was_down then
+            click_was_down = true
+            local uvx, uvy = GetMouseUV()
+            local mx, my = uvx * UI_WIDTH, UI_HEIGHT - (uvy * UI_HEIGHT)
+            for i = #active_circles, 1, -1 do
+                local circ = active_circles[i]
+                local dyn_rad = CLICK_RADIUS * math.max(1.0 - (circ.life / 3.0), 0.05)
+                if math.sqrt((mx - circ.x)^2 + (my - circ.y)^2) <= dyn_rad then
+                    current_progress = math.min(current_progress + ((circ.life <= 1.0) and POINTS_GOOD or (circ.life <= 2.0 and POINTS_MEDIUM or POINTS_POOR)), MAX_PROGRESS)
                     
-                    if distance <= CLICK_RADIUS then
-                        local popup_prefab = ""
-                        local points_earned = 0
-                        
-                        if circ.life <= 1.0 then
-                            popup_prefab = PREFAB_GOOD
-                            points_earned = POINTS_GOOD
-                        elseif circ.life <= 2.0 then
-                            popup_prefab = PREFAB_MEDIUM
-                            points_earned = POINTS_MEDIUM
-                        else
-                            popup_prefab = PREFAB_POOR
-                            points_earned = POINTS_POOR
-                        end
-                        
-                        current_progress = current_progress + points_earned
-                        
-                        local fb_id = SpawnPrefab(popup_prefab, mouse_x, mouse_y + 20, 0.6)
-                        if fb_id ~= nil and fb_id ~= -1 then
-                            local dsx, dsy, dsz = GetScale(fb_id)
-                            table.insert(feedback_texts, { 
-                                id = fb_id, life = 0.0, 
-                                start_x = mouse_x, start_y = mouse_y + 20,
-                                base_sx = dsx, base_sy = dsy, base_sz = dsz 
-                            })
-                        end
-                        
-                        DestroyEntity(circ.id)
-                        table.remove(active_circles, i)
-                        break 
+                    local prefab = (circ.life <= 1.0 and PREFAB_GOOD or (circ.life <= 2.0 and PREFAB_MEDIUM or PREFAB_POOR))
+                    local fb_id = SpawnPrefab(prefab, mx, my + 20, 0.6)
+                    if fb_id and fb_id ~= -1 then
+                        local dsx, dsy, dsz = GetScale(fb_id)
+                        table.insert(feedback_texts, { id = fb_id, life = 0.0, start_x = mx, start_y = my + 20, base_sx = dsx, base_sy = dsy, base_sz = dsz })
                     end
+                    DestroyEntity(circ.id); table.remove(active_circles, i); break
                 end
             end
-        else
-            click_was_down = false
-        end
+        elseif not IsMouseButtonDown(0) then click_was_down = false end
 
-        -- 3. TRANSITION TO SPINNING PHASE
+        -- TRANSITION TO SPINNING
         if current_progress >= MAX_PROGRESS then
             is_spinning = true
-            is_finished = false
+            -- UI Snap to Full
+            if e_progress_fill then 
+                SetPosition(e_progress_fill, UI_WIDTH / 2, BAR_Y_POS, 0.9)
+                SetScale(e_progress_fill, BAR_WIDTH_PX, BAR_HEIGHT_PX * 0.8, 1.0) 
+            end
+            
+            -- Clear Pounding UI
+            for _, c in ipairs(active_circles) do DestroyEntity(c.id) end; active_circles = {}
+            
+            -- Initialize Spinning State
+            local uvx, uvy = GetMouseUV()
+            last_mx, last_my = uvx * UI_WIDTH, UI_HEIGHT - (uvy * UI_HEIGHT)
             spin_progress = 0.0
             
-            for i, circ in ipairs(active_circles) do DestroyEntity(circ.id) end
-            active_circles = {}
-            for i, fb in ipairs(feedback_texts) do DestroyEntity(fb.id) end
-            feedback_texts = {}
-            
             spinner_visual_id = SpawnPrefab(PREFAB_GOOD, UI_WIDTH / 2, UI_HEIGHT / 2, 0.5)
-            if spinner_visual_id ~= nil and spinner_visual_id ~= -1 then
-                local dsx, dsy, dsz = GetScale(spinner_visual_id)
-                SetScale(spinner_visual_id, dsx * 2.0, dsy * 2.0, dsz * 2.0)
-            end
-            
-            local init_uv_x, init_uv_y = GetMouseUV()
-            last_mx = init_uv_x * UI_WIDTH
-            last_my = UI_HEIGHT - (init_uv_y * UI_HEIGHT)
-            
-            spoon_x = 0.0
-            spoon_y = 100.0
-            last_angle = math.atan2(spoon_y, spoon_x)
-            return 
+            SetScale(spinner_visual_id, 200, 200, 1)
+            last_angle = math.atan2(100, 0)
         end
 
-        -- 4. CIRCLE SHRINK & DESPAWN
-        for i = #active_circles, 1, -1 do
-            local circ = active_circles[i]
-            circ.life = circ.life + dt
-            if circ.life >= CIRCLE_LIFESPAN then
-                DestroyEntity(circ.id)
-                table.remove(active_circles, i)
-            else
-                local scale_pct = 1.0 - (circ.life / CIRCLE_LIFESPAN)
-                scale_pct = math.max(scale_pct, 0.05) 
-                SetScale(circ.id, circ.base_sx * scale_pct, circ.base_sy * scale_pct, circ.base_sz * scale_pct)
-            end
-        end
-        
-        -- 5. POPUP FLOAT & FADE
-        for i = #feedback_texts, 1, -1 do
-            local fb = feedback_texts[i]
-            fb.life = fb.life + dt
-            if fb.life >= 1.0 then
-                DestroyEntity(fb.id)
-                table.remove(feedback_texts, i)
-            else
-                local float_y = fb.start_y + (fb.life * 100)
-                SetPosition(fb.id, fb.start_x, float_y, 0.6)
-                local scale_pct = 1.0 - fb.life
-                scale_pct = math.max(scale_pct, 0.01) 
-                SetScale(fb.id, fb.base_sx * scale_pct, fb.base_sy * scale_pct, fb.base_sz * scale_pct)
-            end
-        end
-
-    -- ==========================================
-    -- PHASE 2: SPINNING (Osu! Style)
-    -- ==========================================
+    -- =============================================================
+    -- 4. PHASE 2: SPINNING
+    -- =============================================================
     else
         if is_finished then
+            -- Subtract delta time from the timer
+            -- This now has a value because we set it below!
             finish_timer = finish_timer - dt
-            if finish_timer <= 0 then
-                Mortar.StopMinigame(my_entity_id, true)
+            if finish_timer <= 0 then 
+                Mortar.StopMinigame(my_entity_id, true) 
             end
         else
-            local uv_x, uv_y = GetMouseUV()
-            local mx = uv_x * UI_WIDTH
-            local my = UI_HEIGHT - (uv_y * UI_HEIGHT)
+            local uvx, uvy = GetMouseUV()
+            local mx, my = uvx * UI_WIDTH, UI_HEIGHT - (uvy * UI_HEIGHT)
             
-            if not last_mx then last_mx = mx; last_my = my end
-            
-            local dx = mx - last_mx
-            local dy = my - last_my
-            last_mx = mx
-            last_my = my
-
-            local is_held = IsMouseButtonDown(0)
-
-            if is_held then
-                spoon_x = spoon_x + dx
-                spoon_y = spoon_y + dy
+            if IsMouseButtonDown(0) then
+                -- Calculate movement delta for the stirring motion
+                spoon_x, spoon_y = spoon_x + (mx - last_mx), spoon_y + (my - last_my)
+                local len = math.sqrt(spoon_x^2 + spoon_y^2)
+                if len > 0.1 then spoon_x, spoon_y = (spoon_x/len)*100, (spoon_y/len)*100 end
                 
-                local len = math.sqrt(spoon_x * spoon_x + spoon_y * spoon_y)
-                if len > 0.1 then
-                    spoon_x = (spoon_x / len) * 100.0
-                    spoon_y = (spoon_y / len) * 100.0
+                local cur_ang = math.atan2(spoon_y, spoon_x)
+                local delta = cur_ang - last_angle
+                
+                -- Wrap angle difference [-pi, pi]
+                if delta > math.pi then delta = delta - 2*math.pi 
+                elseif delta < -math.pi then delta = delta + 2*math.pi end
+                
+                spin_progress, last_angle = spin_progress + math.abs(delta), cur_ang
+                
+                if spinner_visual_id then 
+                    SetRotation(spinner_visual_id, 0, 0, math.deg(cur_ang)) 
                 end
-                
-                local current_angle = math.atan2(spoon_y, spoon_x)
-                local angle_delta = current_angle - last_angle
-                local PI = 3.14159265359
-                
-                if angle_delta > PI then angle_delta = angle_delta - (2 * PI) end
-                if angle_delta < -PI then angle_delta = angle_delta + (2 * PI) end
-                last_angle = current_angle
-                
-                spin_progress = spin_progress + math.abs(angle_delta)
-                
-                if spinner_visual_id ~= nil and spinner_visual_id ~= -1 then
-                    SetRotation(spinner_visual_id, 0.0, 0.0, math.deg(current_angle))
-                end
-                
-                if spin_progress >= SPIN_REQUIREMENT then
+
+                -- CHECK FOR COMPLETION
+                if spin_progress >= SPIN_REQUIREMENT then 
                     is_finished = true
-                    finish_timer = FINISH_DELAY
+                    -- INITIALIZE TIMER HERE to prevent Nil error on next frame
+                    finish_timer = FINISH_DELAY 
                 end
             end
+            last_mx, last_my = mx, my
+        end
+    end
+
+    -- 5. FEEDBACK TEXT ANIMATION (Moved outside phases so they always clean up)
+    for i = #feedback_texts, 1, -1 do
+        local f = feedback_texts[i]
+        f.life = f.life + dt
+        if f.life >= 1.0 then 
+            DestroyEntity(f.id); table.remove(feedback_texts, i)
+        else
+            SetPosition(f.id, f.start_x, f.start_y + (f.life * 100), 0.6)
+            local s = math.max(1.0 - f.life, 0.01)
+            SetScale(f.id, f.base_sx * s, f.base_sy * s, f.base_sz * s)
         end
     end
 end
 
--- ==========================================
--- HELPER: STOP MINIGAME (Modified to use Recipe Result)
--- ==========================================
+-- --- STOP MINIGAME ---
 function Mortar.StopMinigame(targetID, success)
     is_playing = false
+    is_camera_flying = false
     is_spinning = false
     is_finished = false
+    
+    -- 1. RESET INTERACTION TEXT
+    -- This removes the "Grinding..." prompt immediately.
+    SetInteractionText(my_entity_id, "Requires Ingredient")
+    
+    -- 2. Return Player to Original Location
+    if start_cam_pos and start_cam_rot then
+        TeleportPlayer(start_cam_pos.x, start_cam_pos.y, start_cam_pos.z, 0, start_cam_rot.yaw, 0)
+        SetCameraRot(start_cam_rot.pitch, start_cam_rot.yaw)
+    end
     
     SetUIFocused(false)
     SetCameraLock(false)
     
-    for i, circ in ipairs(active_circles) do DestroyEntity(circ.id) end
+    -- 3. Cleanup UI Entities
+    if e_progress_frame then DestroyEntity(e_progress_frame); e_progress_frame = nil end
+    if e_progress_fill then DestroyEntity(e_progress_fill); e_progress_fill = nil end
+    if spinner_visual_id then DestroyEntity(spinner_visual_id); spinner_visual_id = nil end
+    
+    for _, c in ipairs(active_circles) do DestroyEntity(c.id) end
     active_circles = {}
     
-    for i, fb in ipairs(feedback_texts) do DestroyEntity(fb.id) end
-    feedback_texts = {}
-    
-    if spinner_visual_id ~= nil and spinner_visual_id ~= -1 then
-        DestroyEntity(spinner_visual_id)
-        spinner_visual_id = nil
-    end
-
-    if success then
-        -- Clear ingredients upon success
-        stored_ingredients = {} 
-        for i, vis_id in ipairs(visual_entities) do
-            if DestroyEntity then DestroyEntity(vis_id) end
+    -- 4. Handle Crafting Success
+    if success and current_recipe_result_name ~= "" then
+        stored_ingredients = {}
+        for _, v in ipairs(visual_entities) do 
+            if v ~= -1 then DestroyEntity(v) end 
         end
         visual_entities = {}
-
-        AddToInventory(current_recipe_result_name) 
-        print("[Mortar] Crafted: " .. current_recipe_result_name)
-
-        Sound.Play("event:/RecipeComplete") 
+        
+        local prefabName = current_recipe_result_name .. "_Prefab"
+        -- Spawning at the collection coordinates
+        SpawnPrefab(prefabName, -47, 7.4, 1.2) 
+        Sound.Play("event:/RecipeComplete")
     end
 end
 
--- ==========================================
--- INTERACTION LOGIC (Modified for Method Validation)
--- ==========================================
+-- --- INTERACT ---
 function Mortar.OnInteract(senderID, targetID, actionType)
+    local id_to_use = my_entity_id or targetID
+    
+    -- 1. Prevent interaction if already playing
     if is_playing then 
-        Mortar.StopMinigame(targetID, false)
+        Mortar.StopMinigame(id_to_use, false)
         return 
     end
     
     local held_item_id = GetSelectedItem()
 
-    -- Branch A: Add an ingredient
+    -- [BRANCH A] ADDING INGREDIENTS (Hand is NOT empty)
+    -- This only adds items to the bowl. It DOES NOT start the camera or game.
     if held_item_id ~= -1 then
         if #stored_ingredients < MAX_INGREDIENTS then
-            ConsumeSelectedItem()
             table.insert(stored_ingredients, held_item_id)
+            ConsumeSelectedItem()
             
-            local vis_id = -1
-            if SpawnCauldronItem then
-                vis_id = SpawnCauldronItem(targetID, held_item_id)
+            local vid = -1
+            if SpawnCauldronItem then 
+                vid = SpawnCauldronItem(id_to_use, held_item_id) 
             end
-            table.insert(visual_entities, vis_id)
+            table.insert(visual_entities, vid)
             
-            if vis_id ~= -1 and SetRotation then
-                SetRotation(vis_id, ROT_X, ROT_Y, ROT_Z)
+            if vid ~= -1 then 
+                SetRotation(vid, ROT_X, ROT_Y, ROT_Z) 
             end
-
             Sound.Play("event:/PlaceDownItem")
+        else
+            -- Optional: Play a "Full" sound if they try to add a 4th item
+            print("[Mortar] Bowl is full!")
         end
 
-    -- Branch B: Start the minigame ONLY if recipe method is MortarPestle
+    -- [BRANCH B] STARTING THE PROCESS (Hand IS empty)
+    -- This only runs if the player clicks the mortar with nothing in their hand.
     elseif #stored_ingredients > 0 then
-        
-        -- [NEW RECIPE VALIDATION]
-        local resultID = -1
-        local method = ""
-        
-        if CheckValidRecipe then
-            -- We assume CheckValidRecipe returns (resultID, method) or similar
-            -- If your C++ only returns ID, you'll need a GetRecipeMethod(resultID) helper
-            resultID, method = CheckValidRecipe(stored_ingredients)
-        end
+        local resID = CheckValidRecipe(stored_ingredients, "MortarPestle")
+        if resID ~= -1 then
+            current_recipe_result_name = GetItemNameById(resID)
+            local player_id = FindEntityByName("Player")
+            
+            if player_id then
+                -- 1. CAPTURE STARTING POINT (For the Lerp)
+                local px, py, pz = GetPosition(player_id)
+                local cp, cy = GetCameraRot() 
+                start_cam_pos = {x = px, y = py, z = pz}
+                start_cam_rot = {pitch = cp, yaw = cy}
 
-        if resultID ~= -1 and method == "MortarPestle" then
-            current_recipe_result_id = resultID
-            if GetItemNameById then
-                current_recipe_result_name = GetItemNameById(resultID)
+                -- 2. DEFINE THE FIXED TARGET (Relative to Mortar)
+                local mx, my, mz = GetPosition(id_to_use)
+                
+                target_cam_pos = {
+                    x = mx + FIXED_OFFSET_X,
+                    y = my + FIXED_OFFSET_Y,
+                    z = mz + FIXED_OFFSET_Z
+                }
+
+                target_cam_rot = {
+                    pitch = FIXED_TARGET_PITCH,
+                    yaw   = FIXED_TARGET_YAW
+                }
+
+                -- 3. INITIALIZE FLIGHT
+                if SetLinearVelocity then SetLinearVelocity(player_id, 0, 0, 0) end
+                SetCameraLock(true)
+                SetUIFocused(true)
+                is_camera_flying = true
+                camera_flight_t = 0.0
             end
 
+            -- 2. RESET MINIGAME STATE
             is_playing = true
             is_spinning = false
             is_finished = false
-            spawn_timer = 1.0 
             current_progress = 0 
             click_was_down = false 
             
-            SetInteractionText(targetID, "Stop Grinding") 
-            SetUIFocused(true)
-            SetCameraLock(true)
-            print("[Mortar] Starting minigame for: " .. current_recipe_result_name)
+            -- 3. SPAWN 2D UI PROGRESS BAR
+            e_progress_frame = SpawnPrefab(PREFAB_FRAME, UI_WIDTH / 2, BAR_Y_POS, 0.8)
+            e_progress_fill  = SpawnPrefab(PREFAB_FILL, UI_WIDTH / 2, BAR_Y_POS, 0.9)
+            
+            if e_progress_frame and e_progress_fill then
+                SetIsUI(e_progress_frame, true)
+                SetIsUI(e_progress_fill, true)
+                SetScale(e_progress_frame, BAR_WIDTH_PX, BAR_HEIGHT_PX, 1.0)
+                SetScale(e_progress_fill, 0, BAR_HEIGHT_PX * 0.8, 1.0) 
+                SetPosition(e_progress_frame, UI_WIDTH / 2, BAR_Y_POS, 0.8)
+                -- Anchor the fill to the left side of the frame
+                SetPosition(e_progress_fill, (UI_WIDTH / 2) - (BAR_WIDTH_PX / 2), BAR_Y_POS, 0.9)
+            end
+
+            SetInteractionText(id_to_use, "Grinding...") 
+            print("[Mortar] Valid recipe: " .. current_recipe_result_name .. ". Starting grind.")
         else
-            -- [INVALID RECIPE OR WRONG METHOD]
+            -- Player clicked with empty hand but the items don't match a recipe
             Sound.Play("event:/InvalidRecipe")
-            print("[Mortar] Invalid recipe for Mortar & Pestle.")
-            -- Optional: Clear the mortar if it's a "failed" mix
-            -- Mortar.ClearMortar() 
+            print("[Mortar] These ingredients don't make anything.")
         end
     end
 end
+
 
 return Mortar

@@ -146,6 +146,18 @@ namespace Framework {
             }
         }
 
+        // ESC: Toggle pause/resume
+        if (IsKeyPressed(GLFW_KEY_KP_1)) {
+            Framework::Inventory::Instance().TryAddItem_BackpackFirst(0, 0, 1);
+            Framework::Inventory::Instance().TryAddItem_BackpackFirst(0, 0, 1);
+            Framework::Inventory::Instance().TryAddItem_BackpackFirst(8, 0, 1);
+            Framework::Inventory::Instance().TryAddItem_BackpackFirst(9, 0, 1);
+            Framework::Inventory::Instance().TryAddItem_BackpackFirst(8, 0, 1);
+            Framework::Inventory::Instance().TryAddItem_BackpackFirst(9, 0, 1);
+        }
+       
+
+
         
 
         // ============================================================
