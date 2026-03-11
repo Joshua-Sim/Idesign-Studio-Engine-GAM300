@@ -9,6 +9,7 @@
 #include "InputHandler.h"
 #include <PhaseManager.h>
 #include <TimerComponent.h>
+#include "AudioSystem.h"
 
 extern Framework::Coordinator ecsInterface;
 
@@ -380,6 +381,11 @@ namespace Framework
                         cutsceneSkipHolding = false;
                         cutsceneSkipStartTime = 0.0f;
 
+                        if (g_AudioSystem) {
+                            g_AudioSystem->StopEvent("event:/QuarryBGM");
+                            g_AudioSystem->PlayAudio("event:/Level1BGM");
+                        }
+
                         engineState.PopState();
                         engineState.PushState(EngineMode::MapSelection);
                         return;
@@ -395,6 +401,12 @@ namespace Framework
                 {
                     cutsceneStartTime = (float)glfwGetTime();
                     cutsceneFinished = false;
+
+                    // Play quarry BGM during cutscene
+                    if (g_AudioSystem) {
+                        g_AudioSystem->StopEvent("event:/Level1BGM");
+                        g_AudioSystem->PlayAudio("event:/QuarryBGM");
+                    }
 
                     // Init: make them UI fullscreen images, all hidden
                     for (auto e : slides)
@@ -437,6 +449,11 @@ namespace Framework
                             auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
                             tex.uiAlpha = 0.0f;
                             tex.isUI = false;
+                        }
+
+                        if (g_AudioSystem) {
+                            g_AudioSystem->StopEvent("event:/QuarryBGM");
+                            g_AudioSystem->PlayAudio("event:/Level1BGM");
                         }
 
                         engineState.PopState();

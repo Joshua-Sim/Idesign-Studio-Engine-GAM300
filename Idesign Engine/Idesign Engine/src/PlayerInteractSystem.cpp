@@ -273,6 +273,11 @@ namespace Framework
                                 if (lowerName.find("potion") != std::string::npos) {
                                     g_AudioSystem->PlayAudio("event:/PickUpPotion");
                                 }
+                                else if (lowerName.find("wool") != std::string::npos) {
+                                    glm::vec3 pos = ecsInterface.GetComponent<TransformComponent>(entity).position;
+                                    g_AudioSystem->PlaySound3D("event:/Sheep7",
+                                        Framework::Vector3(pos.x, pos.y, pos.z));
+                                }
                                 else {
                                     g_AudioSystem->PlayAudio("event:/PickingUpHerb");
                                 }
