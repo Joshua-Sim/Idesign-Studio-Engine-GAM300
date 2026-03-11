@@ -222,6 +222,12 @@ function M.StartMinigame()
     cur_prog_tex   = ""
 
     SetCameraLock(true)
+
+    -- Play furnace loop sound (3D at furnace position)
+    if Sound and Sound.Play3D then
+        local fx, fy, fz = GetPosition(my_entity_id)
+        Sound.Play3D("event:/FurnaceLoop", fx, fy, fz)
+    end
     
     -- ── START ANIMATION ──
     if SetAnimationSettings and PlayEntityAnimation then
@@ -296,6 +302,11 @@ end
 function M.StopMinigame()
     is_active = false
     SetCameraLock(false)
+
+    -- Stop furnace loop sound
+    if Sound and Sound.Stop then
+        Sound.Stop("event:/FurnaceLoop")
+    end
     
     -- ── STOP ANIMATION ──
     if SetAnimationSettings then
