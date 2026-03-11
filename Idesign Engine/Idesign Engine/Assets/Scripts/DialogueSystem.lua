@@ -4,6 +4,7 @@
 
 local DayTutorial = {}
 SetData("dayTutorialPlayed", 0)
+SetData("mapSelectionTutorialPlayed", 0)
 
 DayTutorial.waitingForLanding = false
 DayTutorial.waitingForDialogue = false
@@ -12,7 +13,9 @@ DayTutorial.delayDuration = 1.35
 DayTutorial.sequenceStep = 1
 DayTutorial.skipKeyHeld = false
 
-SetData("dayTutorialPlayed", 0)
+DayTutorial.mapSelWaitingForDialogue = false
+DayTutorial.mapSelTimer = 0.0
+DayTutorial.mapSelDelayDuration = 1.0
 
 function DayTutorial:on_init()
     print("[DayTutorial] Sequenced Script Initialized. Checking persistent flags...")
@@ -38,17 +41,39 @@ function DayTutorial:SkipSequence()
     print("[DayTutorial] Full sequence complete. Player control restored.")
 end
 
+function DayTutorial:SkipMapSelSequence()
+    print("[DayTutorial] MapSelection sequence skipped via F9.")
+
+    SetData("mapSelectionTutorialPlayed", 1)
+
+    if DialogueIsActive() then
+        DialogueClear()
+    end
+
+    self.mapSelWaitingForDialogue = false
+    self.mapSelTimer = 0.0
+
+    print("[DayTutorial] MapSelection sequence complete.")
+end
+
 function DayTutorial:on_update(dt)
     local inGameplay = IsEngineState("Play")
+    local inMapSelection = IsEngineState("MapSelection")
     local isDayPhase = (GetPhase() == 1)
     local playedFlag = GetData("dayTutorialPlayed")
+    local mapSelPlayedFlag = GetData("mapSelectionTutorialPlayed")
 
     -- F9 skip with debounce: only fires once per key press
     local skipPressed = IsKeyDown(298)
-    if skipPressed and not self.skipKeyHeld and inGameplay and isDayPhase then
-        if playedFlag == 0 or self.waitingForLanding or self.waitingForDialogue then
+    if skipPressed and not self.skipKeyHeld then
+        if inGameplay and isDayPhase and (playedFlag == 0 or self.waitingForLanding or self.waitingForDialogue) then
             self.skipKeyHeld = true
             self:SkipSequence()
+            return
+        end
+        if inMapSelection and (mapSelPlayedFlag == 0 or self.mapSelWaitingForDialogue) then
+            self.skipKeyHeld = true
+            self:SkipMapSelSequence()
             return
         end
     end
@@ -56,6 +81,7 @@ function DayTutorial:on_update(dt)
         self.skipKeyHeld = false
     end
 
+    -- Day tutorial
     if inGameplay and isDayPhase and playedFlag == 0 then
         self.timer = self.timer + dt
         if self.timer >= self.delayDuration then
@@ -79,6 +105,21 @@ function DayTutorial:on_update(dt)
         else
             print("[DayTutorial] Full sequence complete. Player control restored.")
         end
+    end
+
+    -- MapSelection tutorial
+    if inMapSelection and mapSelPlayedFlag == 0 then
+        self.mapSelTimer = self.mapSelTimer + dt
+        if self.mapSelTimer >= self.mapSelDelayDuration then
+            SetData("mapSelectionTutorialPlayed", 1)
+            print("[DayTutorial] First time MapSelection detected. Starting dialogue.")
+            self:PlayMapSelDialogue()
+        end
+    end
+
+    if self.mapSelWaitingForDialogue and not DialogueIsActive() then
+        self.mapSelWaitingForDialogue = false
+        print("[DayTutorial] MapSelection dialogue complete.")
     end
 end
 
@@ -130,6 +171,17 @@ function DayTutorial:StartDialogueForCurrentStep()
 
     DialogueStart()
     self.waitingForDialogue = true
+end
+
+function DayTutorial:PlayMapSelDialogue()
+    DialogueClear()
+
+    -- TODO: replace with real map selection tutorial lines
+    DialogueAdd("Testing! This is the map selection screen.", "Aunt Mira", "portrait")
+    DialogueAdd("Pick a location to begin your journey.", "Aunt Mira", "portrait")
+
+    DialogueStart()
+    self.mapSelWaitingForDialogue = true
 end
 
 return DayTutorial
