@@ -316,12 +316,12 @@ namespace Framework {
             }
         }
 
-        if (!engineState.HasState(EngineMode::Play) && !audioPaused) 
+        if (!engineState.HasState(EngineMode::Play) && !audioPaused)
         {
             PauseAllAudio();
             audioPaused = true;
         }
-        else if (engineState.HasState(EngineMode::Play) && audioPaused) 
+        else if (engineState.HasState(EngineMode::Play) && audioPaused)
         {
             ResumeAllAudio();
             audioPaused = false;
@@ -532,6 +532,17 @@ namespace Framework {
             return;
         }
 
+        // Stop and release old instance if one exists for this event
+        auto oldIt = activeEvents.find(eventPath);
+        if (oldIt != activeEvents.end() && oldIt->second) {
+            FMOD_STUDIO_PLAYBACK_STATE oldState;
+            oldIt->second->getPlaybackState(&oldState);
+            if (oldState != FMOD_STUDIO_PLAYBACK_STOPPED) {
+                oldIt->second->stop(FMOD_STUDIO_STOP_IMMEDIATE);
+            }
+            oldIt->second->release();
+        }
+
         // Store in active events
         activeEvents[eventPath] = instance;
         int channelId = GetNextChannelId();
@@ -668,6 +679,34 @@ namespace Framework {
 
         instance->setVolume(volume * masterVolume);
         instance->start();
+
+        // Auto-release one-shot (non-looping) events after playback ends
+        bool isOneshot = false;
+        eventDesc->isOneshot(&isOneshot);
+        if (isOneshot) {
+            instance->release();
+            // Don't track released instances - they auto-clean
+            // Still need a channelId for the return value
+            int channelId = GetNextChannelId();
+
+            // Track 3D info
+            Channel3DInfo info;
+            info.position = position;
+            info.velocity = velocity;
+            info.baseVolume = volume;
+            info.type = sourceType;
+            channel3DInfo[channelId] = info;
+
+            return channelId;
+        }
+
+        // Looping event: stop old instance if one exists with this name
+        auto oldIt = activeEvents.find(customName);
+        if (oldIt != activeEvents.end() && oldIt->second) {
+            oldIt->second->stop(FMOD_STUDIO_STOP_IMMEDIATE);
+            oldIt->second->release();
+        }
+        activeEvents[customName] = instance;
 
         int channelId = GetNextChannelId();
         activeEventsById[channelId] = instance;
@@ -1235,10 +1274,10 @@ namespace Framework {
             loadedBanks.erase(it);
         }
     }
-    
+
     void AudioSystem::setBusMute(const std::string& path, bool mute)
     {
-        FMOD::Studio::Bus* bus = nullptr; 
+        FMOD::Studio::Bus* bus = nullptr;
         studioSystem->getBus(path.c_str(), &bus);
         if (bus) bus->setMute(mute);
     }
