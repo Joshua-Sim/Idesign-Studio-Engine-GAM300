@@ -3205,6 +3205,129 @@
             }
         },
         {
+            "name": "Cauldron(Auto)",
+            "guid": "d7e8b84d-db46-4c97-8272-a61f60658091",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -45.22999954223633,
+                        6.287981033325195,
+                        17.725893020629883
+                    ],
+                    "rotation": [
+                        -2.647702501690219e-7,
+                        -0.004017276223748922,
+                        -0.000004445694230525987
+                    ],
+                    "scale": [
+                        0.30000001192092896,
+                        0.30000001192092896,
+                        0.30000001192092896
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "sortIndex": 47,
+                    "children": []
+                },
+                "TagComponent": {
+                    "tags": [
+                        "Interactable"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": "95461aed-91bf-4172-9f2c-d7578e059e28",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "AnimationProperties": {
+                    "guid": "e6e64140-6e45-4eb9-986a-e146404672bf",
+                    "defaultAnimationName": "",
+                    "animationSpeed": 1.0,
+                    "bLoops": true,
+                    "bPlayOnStart": true,
+                    "currentTime": 0.40000003576278687
+                },
+                "TextureComponent": {
+                    "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
+                    "isUI": false
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "5aa8f34d-8af4-45bf-ab8c-2d79071796ff",
+                            "scriptPath": "Assets\\Scripts\\Cauldron(Auto).lua",
+                            "hotReload": false
+                        }
+                    ]
+                },
+                "BoxColliderComponent": {
+                    "colliders": [
+                        {
+                            "size": [
+                                6.599999904632568,
+                                6.0,
+                                6.400000095367432
+                            ],
+                            "center": [
+                                -1.600000023841858,
+                                1.0,
+                                -1.0
+                            ],
+                            "canPassThrough": false,
+                            "triggerMessage": "",
+                            "isInteractable": true,
+                            "interactMessage": "AutoAdd",
+                            "promptText": "Add Ingredient"
+                        }
+                    ]
+                },
+                "PhysicsProperties": {
+                    "category": 1,
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 0.5,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "startAwake": true
+                },
+                "EventReceiverComponent": {
+                    "receivers": [
+                        {
+                            "messageToListenFor": "AutoAdd",
+                            "luaFunctionToCall": "OnInteract"
+                        }
+                    ]
+                },
+                "AudioComponent": {
+                    "guid": "d6f23fa6-ff6f-4892-91b3-ca11349bb492",
+                    "eventName": "event:/Boiling",
+                    "is3D": true,
+                    "minDistance": 1.0,
+                    "maxDistance": 15.0,
+                    "volume": 1.0,
+                    "loop": true,
+                    "playOnStart": true,
+                    "isPlaying": true,
+                    "lastPosition": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            }
+        },
+        {
             "name": "Pear_Crate",
             "guid": "72ec9390-2f62-47d9-9fc5-63e4dc887a65",
             "components": {
@@ -22257,6 +22380,44 @@
                 },
                 "TextureComponent": {
                     "guid": "da0ef587-afae-498e-a41b-3e2a8de5d819",
+                    "isUI": false
+                }
+            }
+        },
+        {
+            "name": "rotatingIcon",
+            "guid": "287d068d-97b8-4b0d-a4c6-2d58b15ec47c",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        955.0,
+                        475.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        350.0,
+                        350.0,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "sortIndex": 364,
+                    "children": []
+                },
+                "TagComponent": {
+                    "tags": [
+                        "clockwise"
+                    ]
+                },
+                "TextureComponent": {
+                    "guid": "50f1a057-2105-46dd-8f52-464424a9a13c",
                     "isUI": false
                 }
             }
