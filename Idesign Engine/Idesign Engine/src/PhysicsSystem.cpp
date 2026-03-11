@@ -472,23 +472,48 @@ namespace Framework {
             auto& prop = ecsInterface.GetComponent<PhysicsProperties>(e);
             if (pb.IDs.empty()) continue;
 
-            // Only really needed for Player, but harmless for others if you want
-            // (If you want: if (ecsInterface.GetEntityName(e) != "Player") continue;)
-
-            // Get current physics position (more accurate than transform mid-step)
+            // Get current physics position
             JPH::RVec3 jp = bodyInterface->GetPosition(pb.IDs[0]);
             glm::vec3 pos(jp.GetX(), jp.GetY(), jp.GetZ());
 
             float halfH = ComputeEntityHalfHeight(ecsInterface, e);
 
-            // Ray origin slightly above bottom of collider
-            glm::vec3 origin = pos + glm::vec3(0.0f, 0.05f, 0.0f);
-            float rayLen = halfH + prop.groundCheckExtra + 0.05f;
+            // Start just above the feet, not near body center
+            const float footProbeBelowBody = 0.05f;
+
+            // Start slightly BELOW the player's bottom so we don't hit our own body
+            glm::vec3 origin = pos - glm::vec3(0.0f, halfH + footProbeBelowBody, 0.0f);
+
+            // Short ray downward from just below feet
+            float rayLen = prop.groundCheckExtra + 0.15f;
 
             RaycastHit hit;
-            bool didHit = Raycast(origin, glm::vec3(0.0f, -1.0f, 0.0f), rayLen, hit, /*targetCategory*/ -1);
+            bool didHit = Raycast(origin, glm::vec3(0.0f, -1.0f, 0.0f), rayLen, hit, -1);
 
-            if (didHit && hit.hit)
+            /*if (ecsInterface.GetEntityName(e) == "Player")
+            {
+                std::cout
+                    << "[GroundCheck] pos=(" << pos.x << ", " << pos.y << ", " << pos.z << ") "
+                    << "halfH=" << halfH
+                    << " origin=(" << origin.x << ", " << origin.y << ", " << origin.z << ") "
+                    << " groundExtra=" << prop.groundCheckExtra
+                    << " rayLen=" << rayLen
+                    << " didHit=" << didHit;
+
+                if (didHit && hit.hit)
+                {
+                    std::cout
+                        << " hitDist=" << hit.distance
+                        << " normal=(" << hit.normal.x << ", " << hit.normal.y << ", " << hit.normal.z << ")"
+                        << " entity=" << (int)hit.entity;
+                }
+
+                std::cout << std::endl;
+            }*/
+
+            if (didHit && hit.hit &&
+                hit.normal.y > 0.5f &&
+                hit.entity != e)
             {
                 prop.groundNormal = hit.normal;
                 prop.isGrounded = IsWalkableGround(hit.normal, prop.maxSlopeAngleDeg);

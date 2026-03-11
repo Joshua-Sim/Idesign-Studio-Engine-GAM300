@@ -612,19 +612,20 @@ namespace Framework
         // Always ensure the body wakes up when we drive it
         phys.startAwake = true;
 
-        // --- Jump (no startAwake, same style as movement) ---
-        static bool  prevSpace = false;  // edge trigger
-        static float jumpLock = 0.0f;   // anti-spam
-        if (jumpLock > 0.0f) jumpLock -= dt;
-
+        // --- Jump ---
+        static bool prevSpace = false; // edge trigger
         const bool spaceDown = (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS);
 
-        // TODO: later add && mGrounded here once your collision-based grounded is wired
-        if (spaceDown && !prevSpace && jumpLock <= 0.0f && allowMovementInput)
+        std::cout << "isGrounded: " << phys.isGrounded
+            << "  velY: " << phys.linearVelocity.y
+            << "  allowMovementInput: " << allowMovementInput
+            << std::endl;
+
+        // Jump only if grounded
+        if (spaceDown && !prevSpace && phys.isGrounded && allowMovementInput)
         {
             const float jumpSpeed = 25.0f;
             phys.linearVelocity.y = jumpSpeed;
-            jumpLock = 1.25f;
             phys.startAwake = true;
         }
 
