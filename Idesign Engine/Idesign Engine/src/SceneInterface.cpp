@@ -331,7 +331,7 @@ namespace Framework
                 {
                     auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
                     if (!engineState.Is(EngineMode::Editor)) {
-                        texture.isUI = engineState.has(EngineMode::MapSelection) ? 1.f : 0.f;
+                        texture.isUI = engineState.HasState(EngineMode::MapSelection) ? 1.f : 0.f;
                     }
                 }
             }
