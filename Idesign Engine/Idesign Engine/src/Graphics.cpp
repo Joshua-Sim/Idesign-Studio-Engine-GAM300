@@ -1133,7 +1133,7 @@ namespace Framework {
             bool isIPressed = (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS);
             auto& inv = Framework::Inventory::Instance();
 
-            if (isIPressed && !wasIPressed && inv.GetBackpackLevel() != 0)
+            if (isIPressed && !wasIPressed/* && inv.GetBackpackLevel() != 0*/)
             {
                 const bool isOpen = inv.IsBackpackOpen();
 
@@ -1446,15 +1446,13 @@ namespace Framework {
         glDisable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        // If you ever enable scissor elsewhere, ensure it s off for UI:
-        // glDisable(GL_SCISSOR_TEST);
 
-        // Back panel
+        // ── Back panel ──────────────────────────────────────────────────────────
         DrawUIRect({ x0 - 12.0f, y0 - 12.0f },
             { totalSlots + 24.0f, slotSize + 24.0f },
             { 0.05f, 0.05f, 0.06f }, 0.85f);
 
-        // Render slots via Inventory
+        // ── Hotbar slots ────────────────────────────────────────────────────────
         const int selected = inv.GetSelectedIndex();
 
         for (int i = 0; i < slots; ++i)
@@ -1462,28 +1460,74 @@ namespace Framework {
             const float sx = x0 + i * (slotSize + gap);
             const float sy = y0;
 
-            // slot fill + normal border
             DrawUIRect({ sx, sy }, { slotSize, slotSize }, { 0.12f, 0.13f, 0.16f }, 0.95f);
             DrawUIBorder(this, sx, sy, slotSize, slotSize, 2.0f, { 0.20f, 0.22f, 0.27f }, 1.0f);
 
-            // selected border
             if (i == selected)
                 DrawUIBorder(this, sx, sy, slotSize, slotSize, 4.0f, { 1.0f, 0.88f, 0.25f }, 1.0f);
 
             const auto& s = inv.Get(i);
-
-            // icon
-            if (s.itemId >= 0) {
-                GLuint tex = GetOrLoadIconTexFromItemId(s.itemId);  // uses cache
-                if (tex) {
+            if (s.itemId >= 0)
+            {
+                GLuint tex = GetOrLoadIconTexFromItemId(s.itemId);
+                if (tex)
+                {
                     const float inner = slotSize - 2 * pad;
                     DrawUISprite(tex, { sx + pad, sy + pad }, { inner, inner }, 1.0f);
                 }
             }
         }
 
+        // ── Trash slot — placed immediately right of the hotbar panel ────────────
+        //   Hotbar panel right edge = (x0 - 12) + (totalSlots + 24) = x0 + totalSlots + 12
+        //   Add a comfortable gap so it sits flush-but-separate.
+        const float trashGap = 10.0f;
+        const float trashSize = slotSize;
+        const float trashX = std::round(x0 + totalSlots + 12.0f + trashGap);
+        const float trashY = y0;   // vertically aligned with hotbar slots
+
+        // Slot background (dark red tint to signal "danger zone")
+        DrawUIRect({ trashX, trashY }, { trashSize, trashSize },
+            { 0.20f, 0.04f, 0.04f }, 0.95f);
+
+        // Normal border
+        DrawUIBorder(this, trashX, trashY, trashSize, trashSize,
+            2.0f, { 0.60f, 0.10f, 0.10f }, 1.0f);
+
+        // Draw trash.png icon inside the slot
+        GLuint trashTex = GetOrLoadIconTex("Assets/Textures/wood.png");
+        if (trashTex)
+        {
+            const float inner = trashSize - 2 * pad;
+            DrawUISprite(trashTex,
+                { trashX + pad, trashY + pad },
+                { inner, inner }, 1.0f);
+        }
+
+        // Hover highlight when the player is dragging over it
+        if (inv.IsDragging())
+        {
+            GLFWwindow* window = GetWindow();
+            if (window)
+            {
+                double mx, my;
+                glfwGetCursorPos(window, &mx, &my);
+                const float mouseX = (float)mx;
+                const float mouseY = (float)(screenH - my);
+
+                const bool hoveringTrash =
+                    mouseX >= trashX && mouseX <= trashX + trashSize &&
+                    mouseY >= trashY && mouseY <= trashY + trashSize;
+
+                if (hoveringTrash)
+                    DrawUIBorder(this, trashX, trashY, trashSize, trashSize,
+                        5.0f, { 1.0f, 0.20f, 0.20f }, 1.0f);
+            }
+        }
+
         glEnable(GL_DEPTH_TEST);
     }
+
 
     void Graphics::DrawUISprite(GLuint tex, const glm::vec2& pos, const glm::vec2& size, float alpha)
     {
@@ -1503,16 +1547,14 @@ namespace Framework {
         auto& inv = Framework::Inventory::Instance();
         if (!inv.IsBackpackOpen()) return;
 
-        const int cols = Framework::kBackpackCols;      // 10
-        const int rows = inv.GetBackpackRowCount();     // 0..3
+        const int cols = Framework::kBackpackCols;
+        const int rows = inv.GetBackpackRowCount();
         if (rows <= 0) return;
 
-        // --- UI Projection (same as hotbar) ---
         glm::mat4 uiProj = glm::ortho(0.f, (float)screenW, 0.f, (float)screenH);
         uiShader.use();
         uiShader.setMat4("uProjection", uiProj);
 
-        // --- UI Render State (IMPORTANT) ---
         glDisable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -1524,39 +1566,30 @@ namespace Framework {
         const float gridW = cols * slotSize + (cols - 1) * gap;
         const float gridH = rows * slotSize + (rows - 1) * gap;
 
-        // --- Position: RIGHT side, above hotbar area ---
         const float hotbarY0 = 24.0f;
         const float hotbarPanelH = slotSize + 24.0f;
         const float marginAboveHotbar = 20.0f;
+        const float rightMargin = 24.0f;
+        const float panelPad = 12.0f;
 
-        const float rightMargin = 24.0f;  // distance from screen edge
-        const float panelPad = 12.0f;     // matches your panel padding
-
-        // Panel bottom-left (x0,y0) for the GRID (not including outer panel pad)
-        const float x0 = std::round(screenW - rightMargin - (gridW));                 // right-aligned
-        const float y0 = std::round(hotbarY0 + hotbarPanelH + marginAboveHotbar);     // same vertical logic
+        const float x0 = std::round(screenW - rightMargin - gridW);
+        const float y0 = std::round(hotbarY0 + hotbarPanelH + marginAboveHotbar);
 
         const float panelX = x0 - panelPad;
         const float panelY = y0 - panelPad;
         const float panelW = gridW + 2 * panelPad;
-        const float panelH = gridH + 5 * panelPad; // includes title space
+        const float panelH = gridH + 5 * panelPad;
 
         mBackpackPanelRect = { panelX, panelY, panelW, panelH, true };
 
-        // --- Back panel (grid background) ---
-        DrawUIRect({ panelX, panelY },
-            { panelW, panelH },
+        DrawUIRect({ panelX, panelY }, { panelW, panelH },
             { 0.05f, 0.05f, 0.06f }, 0.90f);
 
+        // Title
         const float titleX = x0 + gridW * 0.5f;
-
-        // Panel top = (y0 - panelPad) + (gridH + 5*panelPad) = y0 + gridH + 4*panelPad
         const float panelTop = y0 + gridH + 4.0f * panelPad;
+        const float titleY = panelTop - 3.0f * panelPad;
 
-        // Put title inside your reserved header space
-        const float titleY = panelTop - 3.0f * panelPad; // tweak this if needed
-
-        // Make the text scale consistent with your UI text pass
         const float REF_W = 1920.0f;
         const float REF_H = 1080.0f;
         float resScale = std::min((float)screenW / REF_W, (float)screenH / REF_H);
@@ -1564,41 +1597,33 @@ namespace Framework {
 
         fontSystem.RenderText2D(
             "BACKPACK",
-            titleX,
-            titleY,
-            1.0f,
-            scale,
-            glm::vec3(1.0f, 1.0f, 1.0f),  // white
-            (float)screenW,
-            (float)screenH,
-            1,
-            1.0f
+            titleX, titleY,
+            1.0f, scale,
+            glm::vec3(1.0f, 1.0f, 1.0f),
+            (float)screenW, (float)screenH,
+            1, 1.0f
         );
 
-        // --- Restore UI render state after fontSystem (it changes GL state) ---
+        // NOTE: Trash slot has been moved to DrawHotbar — no trash code here anymore.
+
+        // Restore GL state after font system
         uiShader.use();
         uiShader.setMat4("uProjection", uiProj);
-
         glDisable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-        // If your font system enables scissor test, disable it for UI rects
         glDisable(GL_SCISSOR_TEST);
 
-        const int activeSlots = inv.GetBackpackSlotCount(); // rows*cols
+        const int activeSlots = inv.GetBackpackSlotCount();
 
         for (int r = 0; r < rows; ++r)
         {
             for (int c = 0; c < cols; ++c)
             {
-                const int idx = r * cols + c;
-
-                // We draw with top row higher Y:
+                const int   idx = r * cols + c;
                 const float sx = x0 + c * (slotSize + gap);
                 const float sy = y0 + (rows - 1 - r) * (slotSize + gap);
 
-                // Slot bg + border
                 DrawUIRect({ sx, sy }, { slotSize, slotSize }, { 0.12f, 0.13f, 0.16f }, 0.95f);
                 DrawUIBorder(this, sx, sy, slotSize, slotSize, 2.0f, { 0.20f, 0.22f, 0.27f }, 1.0f);
 
@@ -1617,10 +1642,8 @@ namespace Framework {
             }
         }
 
-        // Restore (match style of DrawHotbar end)
         glEnable(GL_DEPTH_TEST);
     }
-
 
     void Graphics::HandleBackpackDragDrop(int screenW, int screenH)
     {
@@ -1632,14 +1655,14 @@ namespace Framework {
 
         const int cols = Framework::kBackpackCols;
         const int rows = inv.GetBackpackRowCount();
-        if (rows <= 0) return;
+        const bool hasBackpackGrid = (rows > 0);
 
         const float gap = 6.0f;
         const float pad = 8.0f;
         const float slotSize = std::round(std::min(screenH * 0.085f, 96.0f));
 
         const float gridW = cols * slotSize + (cols - 1) * gap;
-        const float gridH = rows * slotSize + (rows - 1) * gap;
+        const float gridH = hasBackpackGrid ? (rows * slotSize + (rows - 1) * gap) : 0.0f;
 
         const float hotbarY0 = 24.0f;
         const float hotbarPanelH = slotSize + 24.0f;
@@ -1657,6 +1680,8 @@ namespace Framework {
 
         auto hitTestBackpack = [&]() -> Framework::SlotRef
             {
+                if (!hasBackpackGrid) return {};
+
                 if (mouseX < x0 || mouseX > x0 + gridW || mouseY < y0 || mouseY > y0 + gridH)
                     return {};
 
@@ -1704,12 +1729,39 @@ namespace Framework {
                 return Framework::SlotRef{ Framework::SlotKind::Hotbar, i };
             };
 
+        auto hitTestTrash = [&]() -> Framework::SlotRef
+            {
+                // Must match DrawBackpack() trash position
+                const int hotSlots = inv.GetHotbarSlotCount();
+                const float hotGap = 6.0f;
+                const float hotSlotSize = slotSize;
+                const float hotbarTotalW = hotSlots * hotSlotSize + (hotSlots - 1) * hotGap;
+                const float hotbarX0 = std::round((screenW - hotbarTotalW) * 0.5f);
+                const float hotbarY0Exact = std::round(24.0f);
+
+                float trashSize = slotSize;
+                float trashGapFromHotbar = 18.0f;
+                float trashX = hotbarX0 + hotbarTotalW + trashGapFromHotbar;
+                float trashY = hotbarY0Exact;
+
+                if (mouseX < trashX || mouseX > trashX + trashSize ||
+                    mouseY < trashY || mouseY > trashY + trashSize)
+                    return {};
+
+                return Framework::SlotRef{ Framework::SlotKind::Trash, 0 };
+            };
+
         auto hitTestAny = [&]() -> Framework::SlotRef
             {
+                auto t = hitTestTrash();
+                if (t.IsValid()) return t;
+
                 auto b = hitTestBackpack();
                 if (b.IsValid()) return b;
+
                 auto h = hitTestHotbar();
                 if (h.IsValid()) return h;
+
                 return {};
             };
 
