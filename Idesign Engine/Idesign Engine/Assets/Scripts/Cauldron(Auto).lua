@@ -42,7 +42,16 @@ local dir_threshold = 0.02
 local dir_segments = 4
 local anim_speed_abs = 20.0
 local is_auto_cauldron = true
-local auto_stir_duration = 10.0
+local auto_stir_duration = 10.0   -- fallback default
+
+-- [POTION BREW DURATIONS] (seconds) — tune these to your liking
+local potion_brew_durations = {
+    ["strength_potion"] = 10.0,
+    ["mending_potion"]  = 10.0,
+    ["defense_potion"]  = 10.0,
+    ["vitality_potion"] = 10.0,
+    ["warmth_potion"]   = 10.0,
+}
 
 -- [STIRRING ICON SETTINGS]
 local stir_icon_name_ccw = ""
@@ -98,6 +107,10 @@ local prefab_log = "CauldronLog_Prefab"
 local stir_icon_id_ccw = nil
 local stir_icon_id_cw  = nil
 local stir_icon_rotation = 0.0
+
+-- [TIMER TEXT STATE]
+local timer_text_entity = nil
+local brew_time_left    = 0.0
 
 -- =============================================================
 -- [AUDIO HELPERS]
@@ -225,6 +238,16 @@ function M.on_init(arg1, arg2)
 
     HideStirIcon()
 
+    -- Find the brew timer text entity and hide it at start
+    timer_text_entity = FindEntityByName("AutoCauldronText")
+    if timer_text_entity then
+        SetTextComponent(timer_text_entity, "text", "")
+        SetTextComponent(timer_text_entity, "opacity", 0.0)
+        print("[Cauldron] Timer text entity found: " .. tostring(timer_text_entity))
+    else
+        print("[Cauldron] WARNING: AutoCauldronText entity not found!")
+    end
+
     if stir_icon_id_ccw then
         print("[Cauldron] CCW stirring icon found: " .. tostring(stir_icon_id_ccw))
     else
@@ -255,6 +278,11 @@ local function StartAutoBrew(id_to_use, resultID)
         result_item_name = GetItemNameById(resultID)
     end
 
+    -- Look up per-potion duration; fall back to default if not found
+    local looked_up = potion_brew_durations[result_item_name]
+    auto_stir_duration = looked_up or 10.0
+    print("[Cauldron] Brew duration for '" .. tostring(result_item_name) .. "': " .. auto_stir_duration .. "s")
+
     if id_to_use then
         SetAnimationAsset(id_to_use, guid_stir)
         SetAnimationMode(id_to_use, 1)
@@ -263,10 +291,24 @@ local function StartAutoBrew(id_to_use, resultID)
 
     ShowStirIcon(GetRequiredDir(0.0))
     PlayStirSound()
+
+    -- Start timer text countdown
+    brew_time_left = auto_stir_duration
+    if timer_text_entity then
+        SetTextComponent(timer_text_entity, "opacity", 1.0)
+    end
 end
 
 
 function M.OnInteract(arg1, arg2)
+
+    -- Check if auto cauldron is unlocked
+    if not IsCauldronUnlocked() then
+        SpawnLog("Auto Cauldron Locked!")
+        Sound.Play("event:/InvalidRecipe") 
+        print("[AUTO] Cauldron not unlocked yet.")
+        return
+    end
 
     local id_to_use = ResolveID(arg1, arg2) or my_entity_id or FindEntityByName(CAULDRON_NAME)
     if id_to_use then my_entity_id = id_to_use end
@@ -347,6 +389,13 @@ function M.StopInteraction(entity_id)
 
     -- Hide the stirring icon
     HideStirIcon()
+
+    -- Hide timer text
+    brew_time_left = 0.0
+    if timer_text_entity then
+        SetTextComponent(timer_text_entity, "text", "")
+        SetTextComponent(timer_text_entity, "opacity", 0.0)
+    end
 end
 
 function GetRequiredDir(p)
@@ -407,6 +456,16 @@ function M.on_update(arg1, arg2)
 
             is_stirring_correct_dir = true
             progress = progress + (dt / auto_stir_duration)
+
+            -- Tick and display countdown
+            brew_time_left = brew_time_left - dt
+            if brew_time_left < 0.0 then brew_time_left = 0.0 end
+            if timer_text_entity then
+                local secs = math.ceil(brew_time_left)
+                local mins = math.floor(secs / 60)
+                local rem  = secs % 60
+                SetTextComponent(timer_text_entity, "text", string.format("%d:%02d", mins, rem))
+            end
 
             SetAnimationSettings(my_entity_id, anim_speed_abs * required_dir, true, true)
             PlayStirSound()

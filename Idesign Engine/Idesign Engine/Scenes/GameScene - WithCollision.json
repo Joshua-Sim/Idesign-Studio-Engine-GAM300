@@ -22573,10 +22573,10 @@
                         "OrderUI"
                     ]
                 },
-                "TextureComponent": {
-                    "guid": "eb687c6c-3f11-4f0e-b113-a7b451c5f632",
-                    "isUI": false
-                }
+              "TextureComponent": {
+                "guid": "faa37630-25ba-425a-88ea-07ddf4d46bea",
+                "isUI": false
+              }
             }
         },
         {
@@ -22611,10 +22611,10 @@
                         "OrderUI"
                     ]
                 },
-                "TextureComponent": {
-                    "guid": "eb687c6c-3f11-4f0e-b113-a7b451c5f632",
-                    "isUI": false
-                }
+              "TextureComponent": {
+                "guid": "faa37630-25ba-425a-88ea-07ddf4d46bea",
+                "isUI": false
+              }
             }
         },
         {
@@ -23209,10 +23209,10 @@
                         "OrderUI"
                     ]
                 },
-                "TextureComponent": {
-                    "guid": "f853ac0f-5340-43ec-a6a5-ab7dc5260b0c",
-                    "isUI": false
-                }
+              "TextureComponent": {
+                "guid": "a173d13b-1d81-4778-a55d-c2bd0b6b3761",
+                "isUI": false
+              }
             }
         },
         {
@@ -23247,10 +23247,10 @@
                         "OrderUI"
                     ]
                 },
-                "TextureComponent": {
-                    "guid": "f853ac0f-5340-43ec-a6a5-ab7dc5260b0c",
-                    "isUI": false
-                }
+              "TextureComponent": {
+                "guid": "a173d13b-1d81-4778-a55d-c2bd0b6b3761",
+                "isUI": false
+              }
             }
         },
         {
@@ -29148,47 +29148,88 @@
                 }
             }
         },
-        {
-            "name": "minicontrolUI_2",
-            "guid": "63c15a5b-0514-4e22-868d-0a364f007b05",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        1800.0,
-                        90.0,
-                        1.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        250.0,
-                        125.0,
-                        1.0
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "",
-                    "sortIndex": 333,
-                    "children": []
-                },
-                "TagComponent": {
-                    "tags": [
-                        "minicontrols"
-                    ]
-                },
-                "MeshComponent": {
-                    "guid": ""
-                },
-                "TextureComponent": {
-                    "guid": "f6a80947-3bc0-43d5-b515-f348d6354e8e",
-                    "isUI": true
-                }
-            }
-        },
+      {
+        "name": "minicontrolUI_2",
+        "guid": "63c15a5b-0514-4e22-868d-0a364f007b05",
+        "components": {
+          "TransformComponent": {
+            "position": [
+              1800.0,
+              90.0,
+              1.0
+            ],
+            "rotation": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "scale": [
+              250.0,
+              125.0,
+              1.0
+            ],
+            "isActive": true
+          },
+          "HierarchyComponent": {
+            "parent": "",
+            "sortIndex": 333,
+            "children": []
+          },
+          "TagComponent": {
+            "tags": [
+              "minicontrols"
+            ]
+          },
+          "MeshComponent": {
+            "guid": ""
+          },
+          "TextureComponent": {
+            "guid": "f6a80947-3bc0-43d5-b515-f348d6354e8e",
+            "isUI": true
+          }
+        }
+      },
+      {
+        "name": "minicontrolUI_3",
+        "guid": "63c15a5b-0514-4e22-868d-0a364f007b08",
+        "components": {
+          "TransformComponent": {
+            "position": [
+              1800.0,
+              360.0,
+              1.0
+            ],
+            "rotation": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "scale": [
+              250.0,
+              125.0,
+              1.0
+            ],
+            "isActive": true
+          },
+          "HierarchyComponent": {
+            "parent": "",
+            "sortIndex": 333,
+            "children": []
+          },
+          "TagComponent": {
+            "tags": [
+              "minicontrols"
+            ]
+          },
+          "MeshComponent": {
+            "guid": ""
+          },
+          "TextureComponent": {
+            "guid": "983ecaa9-d1c7-4fd5-8631-5a83db05671d",
+            "isUI": true
+          }
+        }
+      },
         {
             "name": "copperOre1",
             "guid": "9a64ae4a-e501-4a83-9f65-5d0685b3a2db",
@@ -29386,85 +29427,130 @@
                 }
             }
         },
-        {
-            "name": "rampUp3",
-            "guid": "d6df4e66-9679-4cae-8026-4549dc40c2c1",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -234.7117919921875,
-                        306.1333312988281,
-                        -141.1156005859375
-                    ],
-                    "rotation": [
-                        0.5,
-                        24.5,
-                        -13.0
-                    ],
-                    "scale": [
-                        0.1809999942779541,
-                        0.050999999046325684,
-                        0.10100000351667404
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "",
-                    "sortIndex": 440,
-                    "children": []
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "eac3e6f4-1bf2-415f-aef8-8f1269d91560",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "b50ee85f-ff40-438b-9261-9b121ba43a07",
-                    "isUI": false
-                },
-                "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                99.80000305175781,
-                                102.4000015258789,
-                                101.80000305175781
-                            ],
-                            "center": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ],
-                            "canPassThrough": false,
-                            "triggerMessage": "",
-                            "isInteractable": false,
-                            "interactMessage": "",
-                            "promptText": ""
-                        }
-                    ]
-                },
-                "PhysicsProperties": {
-                    "category": 0,
-                    "isImmovable": true,
-                    "gravityFactor": 1.0,
-                    "mass": 1.0,
-                    "friction": 0.5,
-                    "restitution": 0.0,
-                    "linearVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "angularVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "startAwake": true
-                }
-            }
+      {
+        "name": "rampUp3",
+        "guid": "d6df4e66-9679-4cae-8026-4549dc40c2c1",
+        "components": {
+          "TransformComponent": {
+            "position": [
+              -234.7117919921875,
+              306.1333312988281,
+              -141.1156005859375
+            ],
+            "rotation": [
+              0.5,
+              24.5,
+              -13.0
+            ],
+            "scale": [
+              0.1809999942779541,
+              0.050999999046325684,
+              0.10100000351667404
+            ],
+            "isActive": true
+          },
+          "HierarchyComponent": {
+            "parent": "",
+            "sortIndex": 440,
+            "children": []
+          },
+          "TagComponent": {
+            "tags": []
+          },
+          "MeshComponent": {
+            "guid": "eac3e6f4-1bf2-415f-aef8-8f1269d91560",
+            "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+          },
+          "TextureComponent": {
+            "guid": "b50ee85f-ff40-438b-9261-9b121ba43a07",
+            "isUI": false
+          },
+          "BoxColliderComponent": {
+            "colliders": [
+              {
+                "size": [
+                  99.80000305175781,
+                  102.4000015258789,
+                  101.80000305175781
+                ],
+                "center": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "canPassThrough": false,
+                "triggerMessage": "",
+                "isInteractable": false,
+                "interactMessage": "",
+                "promptText": ""
+              }
+            ]
+          },
+          "PhysicsProperties": {
+            "category": 0,
+            "isImmovable": true,
+            "gravityFactor": 1.0,
+            "mass": 1.0,
+            "friction": 0.5,
+            "restitution": 0.0,
+            "linearVelocity": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "angularVelocity": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "startAwake": true
+          }
         }
+      },
+      {
+        "name": "AutoCauldronText",
+        "guid": "d199b606-7653-4fe0-bb1c-4fdb9dc4d611",
+        "components": {
+          "TransformComponent": {
+            "position": [
+              -45.712,
+              8.037,
+              17.361
+            ],
+            "rotation": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "isActive": true
+          },
+          "HierarchyComponent": {
+            "parent": "",
+            "sortIndex": 0,
+            "children": []
+          },
+          "TagComponent": {
+            "tags": []
+          },
+          "TextProperties": {
+            "text": "",
+            "scale": 0.01,
+            "color": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "opacity": 1.0,
+            "alignment": 1,
+            "isBillboard": true,
+            "screenSpace": false
+          }
+        }
+      }
     ]
 }

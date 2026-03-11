@@ -278,7 +278,9 @@ function HUDSystem:SetPatienceBar(slot, pct)
         local currentWidth = pct * BAR_WIDTH_MAX
         local centerX      = BAR_LEFT_EDGE[slot] + (currentWidth / 2)
         SetScale(patienceFills[slot], currentWidth, BAR_HEIGHT, 1.0)
-        SetTransformComponent(patienceFills[slot], "position", { x = centerX, y = BAR_CENTER_Y, z = 0 })
+
+        local originZ = entityOrigin[patienceFills[slot]] and entityOrigin[patienceFills[slot]].z or 0
+        SetTransformComponent(patienceFills[slot], "position", { x = centerX, y = BAR_CENTER_Y, z = originZ })
 
         local targetState
         if pct <= THRESHOLD_RED then

@@ -1,5 +1,5 @@
 {
-    "count": 350,
+    "count": 353,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -3844,6 +3844,39 @@
             "guid": "f6a80947-3bc0-43d5-b515-f348d6354e8e",
             "name": "mini_controlpage2",
             "path": "Assets\\Textures\\mini_controlpage2.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "a173d13b-1d81-4778-a55d-c2bd0b6b3761",
+            "name": "Icon_Troll_Bordered",
+            "path": "Assets\\Textures\\Icon_Troll_Bordered.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "983ecaa9-d1c7-4fd5-8631-5a83db05671d",
+            "name": "mini_controlpage3",
+            "path": "Assets\\Textures\\mini_controlpage3.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "faa37630-25ba-425a-88ea-07ddf4d46bea",
+            "name": "Icon_Fish_Bordered",
+            "path": "Assets\\Textures\\Icon_Fish_Bordered.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,

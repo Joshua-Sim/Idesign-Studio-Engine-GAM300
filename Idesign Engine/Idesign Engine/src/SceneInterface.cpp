@@ -1124,6 +1124,12 @@ namespace Framework
                         // Always show during play
                         shouldShow = engineState.Is(EngineMode::Play);
                     }
+                    else if (name == "minicontrolUI_3")
+                    {
+                        // Only show if Quarry has been unlocked via Day Counter
+                        bool quarryUnlocked = SceneInterface::GetCurrentDay() >= 3;
+                        shouldShow = engineState.Is(EngineMode::Play) && quarryUnlocked;
+                    }
                     texture.isUI = shouldShow;
                 }
             }
