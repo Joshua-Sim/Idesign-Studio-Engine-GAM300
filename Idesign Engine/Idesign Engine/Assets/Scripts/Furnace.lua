@@ -4,16 +4,15 @@
 -- [CONFIGURATION]
 -- ============================================================
 
+-- ── RECIPE CONFIGURATION ──────────────────────────────────────
+local MAX_INGREDIENTS = 2 -- Maximum number of items the furnace can hold
+
 -- ── SCREEN PLACEMENT ──────────────────────────────────────────
--- SCREEN_POS_X/Y: 0.0 = left/bottom, 1.0 = right/top, 0.5 = centre
--- These are fractions of the actual window size from GetScreenSize().
 local SCREEN_POS_X = 0.65      -- 75% across = right side of screen
 local SCREEN_POS_Y = 0.40      -- 50% up     = vertically centred
-
--- Scales the UI relative to window height. 1.0 = bars are 70% of window height.
 local UI_SCALE     = 0.55
 
--- ── BAR DIMENSIONS (0..1 logical units, scaled to pixels at runtime) ──
+-- ── BAR DIMENSIONS ──
 local BAR_HEIGHT   = 0.7
 local BAR_WIDTH    = 0.14
 local CATCH_HEIGHT = 0.15
@@ -24,6 +23,10 @@ local FLAT_Z       = 0.008
 
 local PREFAB_TRACK = "ProgressBarFrame_Prefab"
 local PREFAB_FILL  = "ProgressBarFill_Prefab"
+
+-- ── ANIMATION NAMES ──────────────────────────────────────────
+local ANIM_BELLOWS = "Bellows"
+local ANIM_FURNACE = "Furnance"
 
 -- ── TEXTURES ─────────────────────────────────────────────────
 local TEX_BG           = "Assets/Textures/ui_background.png"
@@ -40,35 +43,46 @@ local TEX_PROG = {
 }
 
 -- ── PLAYER TELEPORT ───────────────────────────────────────────
-local FURNACE_FACING      = 270
+local FURNACE_FACING      = 0
 local PLAYER_DIST         = 3.0
 local PLAYER_OFFSET_RIGHT = 0.0
 local PLAYER_Y_OFFSET     = -2.0
 
--- ── PHYSICS ───────────────────────────────────────────────────
--- All values are in logical units/sec (BAR_HEIGHT = 0.7 units = full bar).
--- These are resolution-independent — they feel the same at any screen size.
--- To make the game easier: lower CATCH_GRAVITY, raise CATCH_LIFT.
--- To slow the bounce: lower CATCH_BOUNCE toward 0.0.
-local CATCH_GRAVITY  = 2.8   -- how fast paddle falls (lower = floatier)
-local CATCH_LIFT     = 4.0   -- how fast paddle rises on click (lower = slower rise)
-local CATCH_MAX_VEL  = 2.8   -- terminal velocity cap (lower = less snappy)
-local CATCH_BOUNCE   = 0.05  -- wall bounce (0 = dead stop, 0.2 = bouncy)
-local FISH_SPEED_MIN = 0.6
-local FISH_SPEED_MAX = 2.6
-local FISH_IDLE_MIN  = 0.6
-local FISH_IDLE_MAX  = 1.8
-local PROGRESS_GAIN  = 0.25
-local PROGRESS_DRAIN = 0.10
-local WIN_THRESHOLD  = 1.0
-local START_PROGRESS = 0.15
-local SPAWN_Y_OFFSET = 2.0
+-- ── PHYSICS & SPAWN MATH ──────────────────────────────────────
+local CATCH_GRAVITY      = 2.8   
+local CATCH_LIFT         = 4.0   
+local CATCH_MAX_VEL      = 2.8   
+local CATCH_BOUNCE       = 0.05  
+local FISH_SPEED_MIN     = 0.6
+local FISH_SPEED_MAX     = 2.6
+local FISH_IDLE_MIN      = 0.6
+local FISH_IDLE_MAX      = 1.8
+local PROGRESS_GAIN      = 0.25
+local PROGRESS_DRAIN     = 0.10
+local WIN_THRESHOLD      = 1.0
+local START_PROGRESS     = 0.15
+
+-- SPAWN OFFSET LOGIC:
+local SPAWN_Y_OFFSET     = 0.5 
+local SPAWN_FORWARD_DIST = 3.0 
 
 -- ============================================================
 -- [STATE]
 -- ============================================================
 local my_entity_id = nil
-local is_active    = false
+local bellows_id   = nil
+local stored_ingredients = {} 
+local visual_entities    = {}    
+local result_item_id     = nil
+
+local is_active        = false
+local was_mouse_down   = false 
+
+-- Memory for the Bellows original transform
+local orig_bellows_pos = {x = 0, y = 0, z = 0}
+local orig_bellows_rot = {x = 0, y = 0, z = 0}
+local orig_bellows_scl = {x = 1, y = 1, z = 1} -- New scale memory
+
 local progress, catch_pos, catch_vel = 0.0, 0.0, 0.0
 local fish_pos, fish_target, fish_speed, fish_timer = 0.2, 0.2, 0.0, 0.0
 local grace_timer  = 0.0
@@ -108,29 +122,132 @@ end
 function M.on_init(self)
     my_entity_id = self.entity
     math.randomseed(os.time())
+    bellows_id = FindEntityByName("Bellows")
 end
 
+-- ============================================================
+-- EJECT BAD INGREDIENTS
+-- ============================================================
+function M.EjectItems()
+    print("[Furnace] Invalid recipe! Ejecting items...")
+    
+    for _, vis_id in ipairs(visual_entities) do
+        if vis_id ~= -1 then DestroyEntity(vis_id) end
+    end
+    
+    local cx, cy, cz = GetPosition(my_entity_id)
+    local rx, ry, rz = GetRotation(my_entity_id)
+    
+    if cx then
+        local fr      = math.rad(ry + FURNACE_FACING)
+        local fwd_x   = math.cos(fr)
+        local fwd_z   = math.sin(fr)
+        
+        local spawn_x = cx + (fwd_x * SPAWN_FORWARD_DIST)
+        local spawn_y = cy + SPAWN_Y_OFFSET
+        local spawn_z = cz + (fwd_z * SPAWN_FORWARD_DIST)
+        
+        for _, item_id in ipairs(stored_ingredients) do
+            local prefabName = GetItemNameById(item_id) .. "_Prefab"
+            SpawnPrefab(prefabName, spawn_x, spawn_y, spawn_z) 
+        end
+    end
+    
+    stored_ingredients = {}
+    visual_entities = {}
+end
+
+-- ============================================================
+-- INTERACT LOGIC
+-- ============================================================
 function M.OnInteract()
-    if is_active then M.StopMinigame() else M.StartMinigame() end
+    local held_item_id = GetSelectedItem()
+
+    -- [BRANCH A] ADDING INGREDIENT
+    if held_item_id ~= -1 then
+        if #stored_ingredients >= MAX_INGREDIENTS then
+            print("[Furnace] Furnace is already full!")
+            return 
+        end
+
+        table.insert(stored_ingredients, held_item_id)
+        ConsumeSelectedItem()
+        
+        if Sound and Sound.Play then Sound.Play("event:/PlaceDownItem") end
+        
+        local vis_id = -1
+        if SpawnFurnaceItem and my_entity_id then
+            vis_id = SpawnFurnaceItem(my_entity_id, held_item_id)
+        end
+        table.insert(visual_entities, vis_id)
+
+        local resultID = -1
+        if CheckValidRecipe then
+            resultID = CheckValidRecipe(stored_ingredients, "Furnace")
+        end
+
+        if resultID ~= -1 then
+            print("[Furnace] Valid recipe detected! Starting smelting...")
+            result_item_id = resultID
+            M.StartMinigame()
+            
+        elseif #stored_ingredients >= MAX_INGREDIENTS then
+            M.EjectItems()
+        end
+        
+        return 
+    end
+
+    -- [BRANCH B] MANUAL TOGGLE
+    if is_active then 
+        M.StopMinigame() 
+    end
 end
 
 -- ============================================================
 -- START
 -- ============================================================
 function M.StartMinigame()
-    is_active   = true
-    progress    = START_PROGRESS
-    catch_pos   = BAR_HEIGHT * 0.5 - CATCH_HEIGHT * 0.5
-    catch_vel   = 0.0
-    fish_pos    = 0.2
-    fish_target = RandRange(0.1, BAR_HEIGHT - 0.1)
-    fish_speed  = RandRange(FISH_SPEED_MIN, FISH_SPEED_MAX)
-    fish_timer  = RandRange(FISH_IDLE_MIN,  FISH_IDLE_MAX)
-    grace_timer = 1.2
-    cur_catch_tex = ""
-    cur_prog_tex  = ""
+    is_active      = true
+    was_mouse_down = false
+    progress       = START_PROGRESS
+    catch_pos      = BAR_HEIGHT * 0.5 - CATCH_HEIGHT * 0.5
+    catch_vel      = 0.0
+    fish_pos       = 0.2
+    fish_target    = RandRange(0.1, BAR_HEIGHT - 0.1)
+    fish_speed     = RandRange(FISH_SPEED_MIN, FISH_SPEED_MAX)
+    fish_timer     = RandRange(FISH_IDLE_MIN,  FISH_IDLE_MAX)
+    grace_timer    = 1.2
+    cur_catch_tex  = ""
+    cur_prog_tex   = ""
 
     SetCameraLock(true)
+    
+    -- ── START ANIMATION ──
+    if SetAnimationSettings and PlayEntityAnimation then
+        SetAnimationSettings(my_entity_id, 1.0, true, false)
+        PlayEntityAnimation(my_entity_id, ANIM_FURNACE)
+    end
+    
+    -- ── RELOCATE BELLOWS ──
+    if bellows_id then
+        local bx, by, bz = GetPosition(bellows_id)
+        local brx, bry, brz = GetRotation(bellows_id)
+        local bsx, bsy, bsz = GetScale(bellows_id) -- Get current scale
+        
+        if bx then
+            -- Store original position, rotation, and scale
+            orig_bellows_pos.x, orig_bellows_pos.y, orig_bellows_pos.z = bx, by, bz
+            orig_bellows_rot.x, orig_bellows_rot.y, orig_bellows_rot.z = brx, bry, brz
+            orig_bellows_scl.x, orig_bellows_scl.y, orig_bellows_scl.z = bsx, bsy, bsz
+        end
+        
+        -- Move to minigame view and scale it down
+        SetPosition(bellows_id, -48.00, 7.700, 13.200)
+        SetRotation(bellows_id, 270.000, 180.000, 30.000)
+        SetScale(bellows_id, 0.2, 0.2, 0.2)
+    end
+
     local pid = FindEntityByName("Player")
     if pid and SetLinearVelocity then SetLinearVelocity(pid, 0, 0, 0) end
 
@@ -150,7 +267,7 @@ function M.StartMinigame()
         if SetCameraRot   then SetCameraRot(0.0, yaw) end
     end
 
-    -- Spawn
+    -- Spawn UI
     e_background = SpawnPrefab(PREFAB_FILL,  my_entity_id)
     e_bar_frame  = SpawnPrefab(PREFAB_TRACK, my_entity_id)
     e_heat_frame = SpawnPrefab(PREFAB_TRACK, my_entity_id)
@@ -179,6 +296,21 @@ end
 function M.StopMinigame()
     is_active = false
     SetCameraLock(false)
+    
+    -- ── STOP ANIMATION ──
+    if SetAnimationSettings then
+        SetAnimationSettings(my_entity_id, 0.0, false, false)
+    end
+    if StopAnimation then
+        StopAnimation(my_entity_id)
+    end
+
+    -- ── RESTORE BELLOWS LOCATION & SCALE ──
+    if bellows_id and orig_bellows_pos.x ~= 0 then
+        SetPosition(bellows_id, orig_bellows_pos.x, orig_bellows_pos.y, orig_bellows_pos.z)
+        SetRotation(bellows_id, orig_bellows_rot.x, orig_bellows_rot.y, orig_bellows_rot.z)
+        SetScale(bellows_id, orig_bellows_scl.x, orig_bellows_scl.y, orig_bellows_scl.z)
+    end
 
     local pid = FindEntityByName("Player")
     if pid and SetLinearVelocity then SetLinearVelocity(pid, 0, 0, 0) end
@@ -200,9 +332,24 @@ function M:on_update(dt)
     if dt > 0.05 then dt = 0.05 end
     if grace_timer > 0 then grace_timer = grace_timer - dt end
 
-    -- 1. CATCH PHYSICS
-    if IsMouseButtonDown(0) then catch_vel = catch_vel + CATCH_LIFT * dt
-    else                         catch_vel = catch_vel - CATCH_GRAVITY * dt end
+    -- 1. CATCH PHYSICS & ANIMATION
+    local is_down = IsMouseButtonDown(0)
+
+    if is_down then 
+        catch_vel = catch_vel + CATCH_LIFT * dt
+        
+        if bellows_id and not was_mouse_down and PlayEntityAnimation then
+            if SetAnimationSettings then
+                SetAnimationSettings(bellows_id, 1.0, false, false)
+            end
+            PlayEntityAnimation(bellows_id, ANIM_BELLOWS)
+        end
+    else                         
+        catch_vel = catch_vel - CATCH_GRAVITY * dt 
+    end
+    
+    was_mouse_down = is_down 
+    
     catch_vel = Clamp(catch_vel, -CATCH_MAX_VEL, CATCH_MAX_VEL)
     local np = catch_pos + catch_vel * dt
     if     np <= 0                       then np = 0;                       catch_vel =  math.abs(catch_vel) * CATCH_BOUNCE
@@ -239,42 +386,22 @@ function M:on_update(dt)
     cur_prog_tex  = SwapTex(e_heat_fill, GetProgTex(progress), cur_prog_tex)
 
     -- 5. UI POSITIONING
-    -- GetScreenSize() returns the ACTUAL window pixel size (from glfwGetWindowSize).
-    -- PS = pixels per logical unit, scales proportionally with window height.
-    -- UI_BASE_X/Y = pixel anchor of the whole UI group, derived from window size.
-    --
-    -- The engine UI coordinate origin and direction depends on your renderer.
-    -- If the UI appears mirrored vertically, negate UI_BASE_Y.
-    -- If it appears at the wrong corner, adjust SCREEN_POS_X/Y (0..1 fractions).
-
     local screen_w, screen_h = 1920, 1080
     if GetScreenSize then screen_w, screen_h = GetScreenSize() end
 
-    -- PS: logical → pixel conversion. Tied to window HEIGHT so bars stay proportional.
     local PS = screen_h * UI_SCALE
-
-    -- Anchor in pixel space.
-    -- screen_w * SCREEN_POS_X = how many pixels from left edge.
-    -- screen_h * SCREEN_POS_Y = how many pixels from bottom (or top, engine-dependent).
     local UI_BASE_X = screen_w * SCREEN_POS_X
     local UI_BASE_Y = screen_h * SCREEN_POS_Y
 
-    -- Horizontal centres of the two bars relative to anchor.
-    -- left bar is slightly left of anchor, right bar slightly right.
     local left_cx  = -(BAR_WIDTH  * 0.5 + BAR_GAP * 0.5) * PS
     local right_cx =  (HEAT_WIDTH * 0.5 + BAR_GAP * 0.5) * PS
-
-    -- Vertical: bars are anchored at their CENTRE (Y=0 = bar mid-point).
-    -- catch_pos=0 is bar bottom, so subtract half-bar-height to get pixel offset.
     local half_bar_px = (BAR_HEIGHT * 0.5) * PS
 
-    -- Depth layers
     local D_BG    = -1.0
     local D_FRAME =  0.0
     local D_FILL  =  0.02
     local D_FISH  =  0.04
 
-    -- Scales
     local BG_W = (BAR_WIDTH + BAR_GAP + HEAT_WIDTH + 0.16) * PS
     local BG_H = (BAR_HEIGHT + 0.18) * PS
     SetScale(e_background, BG_W,                    BG_H,                FLAT_Z)
@@ -287,33 +414,23 @@ function M:on_update(dt)
     local ph_px = ph * PS
     SetScale(e_heat_fill, HEAT_WIDTH * 0.72 * PS, ph_px, FLAT_Z)
 
-    -- Positions
-    -- Background: centred between both bars
     local bg_centre_x = UI_BASE_X + (left_cx + right_cx) * 0.5
     SetPosition(e_background, bg_centre_x, UI_BASE_Y, D_BG)
     SetRotation(e_background, 0, 0, 0)
 
-    -- Frames: static, centred vertically on UI_BASE_Y
     SetPosition(e_bar_frame,  UI_BASE_X + left_cx,  UI_BASE_Y, D_FRAME)
     SetRotation(e_bar_frame,  0, 0, 0)
     SetPosition(e_heat_frame, UI_BASE_X + right_cx, UI_BASE_Y, D_FRAME)
     SetRotation(e_heat_frame, 0, 0, 0)
 
-    -- Catch paddle: catch_pos=0 is bar bottom, catch_pos=BAR_HEIGHT-CATCH_HEIGHT is top.
-    -- Convert to pixel offset from bar centre:
-    --   pixel_y = (catch_pos + CATCH_HEIGHT*0.5 - BAR_HEIGHT*0.5) * PS
     local catch_y_px = ((catch_pos + CATCH_HEIGHT * 0.5) - BAR_HEIGHT * 0.5) * PS
     SetPosition(e_catch, UI_BASE_X + left_cx, UI_BASE_Y + catch_y_px, D_FILL)
     SetRotation(e_catch, 0, 0, 0)
 
-    -- Fish ember: same logic
     local fish_y_px = (fish_pos + FISH_SIZE * 0.5 - BAR_HEIGHT * 0.5) * PS
     SetPosition(e_fish, UI_BASE_X + left_cx, UI_BASE_Y + fish_y_px, D_FISH)
     SetRotation(e_fish, 0, 0, 0)
 
-    -- Heat fill: grows from bottom of right bar upward.
-    -- Centre of fill = bottom of bar + ph/2
-    --   = (-BAR_HEIGHT*0.5 + ph*0.5) * PS
     local heat_y_px = (-BAR_HEIGHT * 0.5 + ph * 0.5) * PS
     SetPosition(e_heat_fill, UI_BASE_X + right_cx, UI_BASE_Y + heat_y_px, D_FILL)
     SetRotation(e_heat_fill, 0, 0, 0)
@@ -325,8 +442,39 @@ end
 
 function M.CompleteSmelting()
     M.StopMinigame()
-    local cx, cy, cz = GetPosition(my_entity_id)
-    if cx then SpawnPrefab("iron_bar_Prefab", cx, cy + SPAWN_Y_OFFSET, cz) end
+    
+    for _, vis_id in ipairs(visual_entities) do
+        if vis_id ~= -1 then DestroyEntity(vis_id) end
+    end
+    stored_ingredients = {}
+    visual_entities = {}
+
+    -- ── DYNAMIC ITEM SPAWN (PUSHED FORWARD) ──
+    if result_item_id then
+        local prefabName = GetItemNameById(result_item_id) .. "_Prefab"
+        local cx, cy, cz = GetPosition(my_entity_id)
+        local rx, ry, rz = GetRotation(my_entity_id)
+        
+        if cx then
+            local fr      = math.rad(ry + FURNACE_FACING)
+            local fwd_x   = math.cos(fr)
+            local fwd_z   = math.sin(fr)
+            
+            local spawn_x = cx + (fwd_x * SPAWN_FORWARD_DIST)
+            local spawn_y = cy + SPAWN_Y_OFFSET
+            local spawn_z = cz + (fwd_z * SPAWN_FORWARD_DIST)
+
+            SpawnPrefab(prefabName, spawn_x, spawn_y, spawn_z)
+        else
+            SpawnPrefab(prefabName, -48, 7, 12)
+        end
+
+        if Sound and Sound.Play then
+            Sound.Play("event:/RecipeComplete")
+        end
+    end
+    
+    result_item_id = nil
 end
 
 function M.FailSmelting() M.StopMinigame() end

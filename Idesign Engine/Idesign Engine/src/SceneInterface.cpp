@@ -21,6 +21,8 @@ namespace Framework
     static bool cutsceneFinished = false;
     static bool IntroFinished = false;
 
+    int SceneInterface::g_CurrentDay = 4;
+
     // Tune these
     static const float sceneDuration = 3.0f;   // each scene lasts x second(s) total
     static const float crossfadeDuration = 0.25f;  // fast seamless fade (tweak 0.12 ~ 0.25)
@@ -44,15 +46,14 @@ namespace Framework
     static float dayPhaseStartTime = -1.0f;
     static bool  dayPhaseFinished = false;
 
-    // Tuning
-    static const float dayPhaseFadeInDuration = 0.4f;
-    static const float dayPhaseSlideDuration = 1.2f;
-    static const float dayPhaseHoldDuration = 0.8f;
-    static const float dayPhaseFadeOutDuration = 0.5f;
+    // TUNING
+    static const float dayPhaseFadeInDuration = 0.90f;
+    static const float dayPhaseSlideDuration = 2.0f;
+    static const float dayPhaseHoldDuration = 1.0f;
+    static const float dayPhaseFadeOutDuration = 0.8f;
 
-    // X positions (tune these to your UI layout)
-    static const float dayPhaseStartX = -900.0f; // off-screen left
-    static const float dayPhaseCenterX = 0.0f;    // center position
+    static const float dayPhaseStartX = 3300.0f; // start off-screen
+    static const float dayPhaseCenterX = 960.0f; // centered
 
 
     void SceneInterface::Initialize() {}
@@ -137,7 +138,7 @@ namespace Framework
                 // ------------------------------------------------------------
                 // 1. Cache hover states from the MAIN buttons
                 // ------------------------------------------------------------
-                bool quarryHovered = false;
+                bool cauldronHovered = false;
                 bool goldHovered = false;
                 bool inventoryHovered = false;
 
@@ -148,7 +149,7 @@ namespace Framework
 
                     auto& btn = ecsInterface.GetComponent<ButtonComponent>(e);
 
-                    if (ecsInterface.EntityHasTag(e, "quarry"))      quarryHovered = btn.isHovered;
+                    if (ecsInterface.EntityHasTag(e, "cauldron"))    cauldronHovered = btn.isHovered;
                     if (ecsInterface.EntityHasTag(e, "gold"))        goldHovered = btn.isHovered;
                     if (ecsInterface.EntityHasTag(e, "inventory"))   inventoryHovered = btn.isHovered;
                 }
@@ -156,25 +157,18 @@ namespace Framework
                 // ------------------------------------------------------------
                 // 2. Affordability and Completion checks
                 // ------------------------------------------------------------
-                bool canAffordQuarry = GameSystem::GetCurrency() >= upgradeMgr.GetAreaUnlockCost(GameArea::Quarry);
+                bool canAffordCauldron = upgradeMgr.CanAffordCauldronUpgrade();
                 bool canAffordGold = upgradeMgr.CanAffordCurrencyUpgrade();
                 bool canAffordInventory = upgradeMgr.CanAffordInventoryUpgrade();
 
                 // Completion checks
-                bool quarryComplete = upgradeMgr.IsAreaUnlocked(GameArea::Quarry);
+                bool cauldronComplete = upgradeMgr.IsCauldronUnlocked();
                 bool goldComplete = upgradeMgr.IsCurrencyMaxLevel();
                 bool backpackComplete = upgradeMgr.IsBackpackMaxLevel();
 
                 // ------------------------------------------------------------
                 // 3. Apply visibility to ALL upgrade UI entities
                 // ------------------------------------------------------------
-                // Z-layer constants for upgrade UI draw order (higher = in front)
-                // Base cards draw behind hover/complete stamps
-                // ------------------------------------------------------------
-                static constexpr float Z_BASE_CARD = 0.8f;  // idle base card backgrounds
-                static constexpr float Z_HOVER_STAMP = 0.9f;  // pass/fail stamps shown on hover
-                static constexpr float Z_COMPLETE = 1.0f; // purchased/complete stamps (always on top)
-
                 for (Entity e : upgradeEntities)
                 {
                     if (!ecsInterface.IsEntityValid(e)) continue;
@@ -184,40 +178,41 @@ namespace Framework
                     auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
                     auto& transform = ecsInterface.GetComponent<TransformComponent>(e);
 
+                    texture.isUI = true; // always UI in upgrade screen
                     bool shouldShow = false;
-                    float zLayer = Z_BASE_CARD;
+                    float zLayer = 0.3f;
 
                     // -------------------------
                     // COMPLETE STAMPS (highest priority - always show if complete)
                     // -------------------------
-                    if (ecsInterface.EntityHasTag(e, "quarrycomplete"))
+                    if (ecsInterface.EntityHasTag(e, "cauldroncomplete"))
                     {
-                        shouldShow = quarryComplete;
-                        zLayer = Z_COMPLETE;
+                        shouldShow = cauldronComplete;
+                        zLayer = 0.9f;
                     }
                     else if (ecsInterface.EntityHasTag(e, "goldcomplete"))
                     {
                         shouldShow = goldComplete;
-                        zLayer = Z_COMPLETE;
+                        zLayer = 0.9f;
                     }
                     else if (ecsInterface.EntityHasTag(e, "inventorycomplete"))
                     {
                         shouldShow = backpackComplete;
-                        zLayer = Z_COMPLETE;
+                        zLayer = 0.9f;
                     }
 
                     // -------------------------
-                    // QUARRY STAMPS (only show if NOT complete)
+                    // CAULDRON STAMPS (only show if NOT complete)
                     // -------------------------
-                    else if (ecsInterface.EntityHasTag(e, "quarrypass"))
+                    else if (ecsInterface.EntityHasTag(e, "cauldronpass"))
                     {
-                        shouldShow = (!quarryComplete && quarryHovered && canAffordQuarry);
-                        zLayer = Z_HOVER_STAMP;
+                        shouldShow = (!cauldronComplete && cauldronHovered && canAffordCauldron);
+                        zLayer = 0.6f;
                     }
-                    else if (ecsInterface.EntityHasTag(e, "quarryfail"))
+                    else if (ecsInterface.EntityHasTag(e, "cauldronfail"))
                     {
-                        shouldShow = (!quarryComplete && quarryHovered && !canAffordQuarry);
-                        zLayer = Z_HOVER_STAMP;
+                        shouldShow = (!cauldronComplete && cauldronHovered && !canAffordCauldron);
+                        zLayer = 0.6f;
                     }
 
                     // -------------------------
@@ -226,12 +221,12 @@ namespace Framework
                     else if (ecsInterface.EntityHasTag(e, "goldpass"))
                     {
                         shouldShow = (!goldComplete && goldHovered && canAffordGold);
-                        zLayer = Z_HOVER_STAMP;
+                        zLayer = 0.6f;
                     }
                     else if (ecsInterface.EntityHasTag(e, "goldfail"))
                     {
                         shouldShow = (!goldComplete && goldHovered && !canAffordGold);
-                        zLayer = Z_HOVER_STAMP;
+                        zLayer = 0.6f;
                     }
 
                     // -------------------------
@@ -240,12 +235,12 @@ namespace Framework
                     else if (ecsInterface.EntityHasTag(e, "inventorypass"))
                     {
                         shouldShow = (!backpackComplete && inventoryHovered && canAffordInventory);
-                        zLayer = Z_HOVER_STAMP;
+                        zLayer = 0.6f;
                     }
                     else if (ecsInterface.EntityHasTag(e, "inventoryfail"))
                     {
                         shouldShow = (!backpackComplete && inventoryHovered && !canAffordInventory);
-                        zLayer = Z_HOVER_STAMP;
+                        zLayer = 0.6f;
                     }
 
                     // ------------------------------------------------------------
@@ -253,21 +248,21 @@ namespace Framework
                     // ------------------------------------------------------------
                     else
                     {
-                        bool isQuarryBase = ecsInterface.EntityHasTag(e, "quarry");
+                        bool isCauldronBase = ecsInterface.EntityHasTag(e, "cauldron");
                         bool isGoldBase = ecsInterface.EntityHasTag(e, "gold");
                         bool isInventoryBase = ecsInterface.EntityHasTag(e, "inventory");
 
                         // Hide base card if hovered OR if completed
                         bool hideBase =
-                            (isQuarryBase && (quarryHovered || quarryComplete)) ||
+                            (isCauldronBase && (cauldronHovered || cauldronComplete)) ||
                             (isGoldBase && (goldHovered || goldComplete)) ||
                             (isInventoryBase && (inventoryHovered || backpackComplete));
 
                         shouldShow = !hideBase;
-                        zLayer = Z_BASE_CARD;
+                        zLayer = 0.3f;
                     }
 
-                    // Use isUI for visibility, z for layering — never use z=-100 as a hide hack
+                    // Use isUI for visibility, z for layering
                     texture.isUI = shouldShow;
                     transform.position.z = zLayer;
                 }
@@ -351,8 +346,6 @@ namespace Framework
                 // Expecting 9 scenes (but clamp safely)
                 int sceneCount = glm::min(count, kExpectedScenes);
                 if (sceneCount <= 0) return;
-
-
 
                 // -------------------------------------------------
                 // SKIP CUTSCENE INPUT (put this EARLY, before returns)
@@ -702,33 +695,28 @@ namespace Framework
                 engineState.Is(EngineMode::Day5)
                 )
             {
-                // All day images should share the same tag, e.g. "dayphase"
-                auto dayEntities = ecsInterface.GetEntitiesByTag("dayphase");
+                std::vector<Entity> dayEntities;
+
+                if (engineState.Is(EngineMode::Day2))
+                    dayEntities = ecsInterface.GetEntitiesByTag("day2phase");
+                else if (engineState.Is(EngineMode::Day3))
+                    dayEntities = ecsInterface.GetEntitiesByTag("day3phase");
+                else if (engineState.Is(EngineMode::Day4))
+                    dayEntities = ecsInterface.GetEntitiesByTag("day4phase");
+                else if (engineState.Is(EngineMode::Day5))
+                    dayEntities = ecsInterface.GetEntitiesByTag("day5phase");
+
                 int totalEntities = (int)dayEntities.size();
-                if (totalEntities <= 0) return;
+                if (totalEntities < 3) return; // need exactly 3 pieces
 
-                // Determine which day we are transitioning TO
-                int targetDay = 0;
-                if (engineState.Is(EngineMode::Day2)) targetDay = 2;
-                else if (engineState.Is(EngineMode::Day3)) targetDay = 3;
-                else if (engineState.Is(EngineMode::Day4)) targetDay = 4;
-                else if (engineState.Is(EngineMode::Day5)) targetDay = 5;
+                // Expected:
+                // [0] = permanent black background
+                // [1] = moving day image
+                // [2] = black fade-out overlay
+                Entity bgEntity = dayEntities[0];
+                Entity bannerEntity = dayEntities[1];
+                Entity fadeEntity = dayEntities[2];
 
-                if (targetDay <= 0) return;
-
-                // Example:
-                // targetDay = 2 -> show 1 image? or 2 images?
-                // Based on your description:
-                // Day2 shows Day2
-                // Day3 shows Day2, Day3
-                // Day4 shows Day2, Day3, Day4
-                //
-                // So index 0 = Day2, index 1 = Day3, index 2 = Day4, ...
-                int visibleCount = glm::min(targetDay - 1, totalEntities);
-
-                if (visibleCount <= 0) return;
-
-                // Timeline
                 const float fadeInEnd = dayPhaseFadeInDuration;
                 const float slideEnd = fadeInEnd + dayPhaseSlideDuration;
                 const float holdEnd = slideEnd + dayPhaseHoldDuration;
@@ -739,22 +727,46 @@ namespace Framework
                     dayPhaseStartTime = (float)glfwGetTime();
                     dayPhaseFinished = false;
 
-                    // Initialize all day entities hidden/offscreen
-                    for (int i = 0; i < totalEntities; ++i)
+                    // Init all 3 entities
+                    for (Entity e : dayEntities)
                     {
-                        Entity e = dayEntities[i];
                         if (!ecsInterface.IsEntityValid(e)) continue;
                         if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
-                        if (!ecsInterface.HasComponent<TransformComponent>(e)) continue;
 
                         auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
-                        auto& tr = ecsInterface.GetComponent<TransformComponent>(e);
-
                         tex.isUI = true;
                         tex.uiAlpha = 0.0f;
+                    }
 
-                        // Start all off-screen left
-                        tr.position.x = dayPhaseStartX;
+                    // Background black: instant on
+                    if (ecsInterface.IsEntityValid(bgEntity) &&
+                        ecsInterface.HasComponent<TextureProperties>(bgEntity))
+                    {
+                        auto& bgTex = ecsInterface.GetComponent<TextureProperties>(bgEntity);
+                        bgTex.isUI = true;
+                        bgTex.uiAlpha = 1.0f;
+                    }
+
+                    // Moving banner starts off-screen left
+                    if (ecsInterface.IsEntityValid(bannerEntity) &&
+                        ecsInterface.HasComponent<TextureProperties>(bannerEntity) &&
+                        ecsInterface.HasComponent<TransformComponent>(bannerEntity))
+                    {
+                        auto& bannerTex = ecsInterface.GetComponent<TextureProperties>(bannerEntity);
+                        auto& bannerTr = ecsInterface.GetComponent<TransformComponent>(bannerEntity);
+
+                        bannerTex.isUI = true;
+                        bannerTex.uiAlpha = 0.0f;
+                        bannerTr.position.x = dayPhaseStartX;
+                    }
+
+                    // Fade overlay starts invisible
+                    if (ecsInterface.IsEntityValid(fadeEntity) &&
+                        ecsInterface.HasComponent<TextureProperties>(fadeEntity))
+                    {
+                        auto& fadeTex = ecsInterface.GetComponent<TextureProperties>(fadeEntity);
+                        fadeTex.isUI = true;
+                        fadeTex.uiAlpha = 0.0f;
                     }
                 }
 
@@ -767,9 +779,8 @@ namespace Framework
                     {
                         dayPhaseFinished = true;
 
-                        for (int i = 0; i < totalEntities; ++i)
+                        for (Entity e : dayEntities)
                         {
-                            Entity e = dayEntities[i];
                             if (!ecsInterface.IsEntityValid(e)) continue;
                             if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
 
@@ -779,85 +790,81 @@ namespace Framework
                         }
 
                         engineState.PopState();
-                        engineState.PushState(EngineMode::Play);
+                        engineState.PushState(EngineMode::MapSelection);
                     }
                     return;
                 }
 
-                // Alpha control
-                float globalAlpha = 1.0f;
-
-                if (t < fadeInEnd)
+                // -------------------------------------------------
+                // 1) Permanent black background
+                // -------------------------------------------------
+                if (ecsInterface.IsEntityValid(bgEntity) &&
+                    ecsInterface.HasComponent<TextureProperties>(bgEntity))
                 {
-                    globalAlpha = Saturate(t / dayPhaseFadeInDuration);
-                }
-                else if (t < holdEnd)
-                {
-                    globalAlpha = 1.0f;
-                }
-                else
-                {
-                    float fadeOutT = (t - holdEnd) / dayPhaseFadeOutDuration;
-                    globalAlpha = 1.0f - Saturate(fadeOutT);
+                    auto& bgTex = ecsInterface.GetComponent<TextureProperties>(bgEntity);
+                    bgTex.isUI = true;
+                    bgTex.uiAlpha = 1.0f;
                 }
 
-                // Slide X control
-                float currentX = dayPhaseCenterX;
-
-                if (t < fadeInEnd)
+                // -------------------------------------------------
+                // 2) Moving banner
+                //    - fade in
+                //    - slide from left to center
+                //    - hold in middle
+                // -------------------------------------------------
+                if (ecsInterface.IsEntityValid(bannerEntity) &&
+                    ecsInterface.HasComponent<TextureProperties>(bannerEntity) &&
+                    ecsInterface.HasComponent<TransformComponent>(bannerEntity))
                 {
-                    currentX = dayPhaseStartX;
+                    auto& bannerTex = ecsInterface.GetComponent<TextureProperties>(bannerEntity);
+                    auto& bannerTr = ecsInterface.GetComponent<TransformComponent>(bannerEntity);
+
+                    bannerTex.isUI = true;
+
+                    // Fade in only during first segment
+                    if (t < fadeInEnd)
+                        bannerTex.uiAlpha = Saturate(t / dayPhaseFadeInDuration);
+                    else
+                        bannerTex.uiAlpha = 1.0f;
+
+                    // Slide X movement
+                    if (t < fadeInEnd)
+                    {
+                        bannerTr.position.x = dayPhaseStartX;
+                    }
+                    else if (t < slideEnd)
+                    {
+                        float slideT = (t - fadeInEnd) / dayPhaseSlideDuration;
+                        slideT = Saturate(slideT);
+
+                        float eased = slideT * slideT * (3.0f - 2.0f * slideT); // smoothstep
+                        bannerTr.position.x = glm::mix(dayPhaseStartX, dayPhaseCenterX, eased);
+                    }
+                    else
+                    {
+                        bannerTr.position.x = dayPhaseCenterX;
+                    }
                 }
-                else if (t < slideEnd)
+
+                // -------------------------------------------------
+                // 3) Fade-to-black overlay
+                //    starts only at the end
+                // -------------------------------------------------
+                if (ecsInterface.IsEntityValid(fadeEntity) &&
+                    ecsInterface.HasComponent<TextureProperties>(fadeEntity))
                 {
-                    float slideT = (t - fadeInEnd) / dayPhaseSlideDuration;
-                    slideT = Saturate(slideT);
+                    auto& fadeTex = ecsInterface.GetComponent<TextureProperties>(fadeEntity);
+                    fadeTex.isUI = true;
 
-                    // smoothstep-like easing
-                    float eased = slideT * slideT * (3.0f - 2.0f * slideT);
-                    currentX = glm::mix(dayPhaseStartX, dayPhaseCenterX, eased);
-                }
-                else
-                {
-                    currentX = dayPhaseCenterX;
-                }
-
-                // Hide all first
-                for (int i = 0; i < totalEntities; ++i)
-                {
-                    Entity e = dayEntities[i];
-                    if (!ecsInterface.IsEntityValid(e)) continue;
-                    if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
-
-                    auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
-                    tex.isUI = false;
-                    tex.uiAlpha = 0.0f;
-                }
-
-                // Show only the needed day images
-                // Example:
-                // targetDay=3 => show indices 0..1  (Day2, Day3)
-                // targetDay=4 => show indices 0..2  (Day2, Day3, Day4)
-                for (int i = 0; i < visibleCount; ++i)
-                {
-                    Entity e = dayEntities[i];
-                    if (!ecsInterface.IsEntityValid(e)) continue;
-                    if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
-                    if (!ecsInterface.HasComponent<TransformComponent>(e)) continue;
-
-                    auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
-                    auto& tr = ecsInterface.GetComponent<TransformComponent>(e);
-
-                    tex.isUI = true;
-                    tex.uiAlpha = globalAlpha;
-
-                    // Move the strip horizontally
-                    //
-                    // Each image should be placed next to the previous one.
-                    // Replace 600.0f with your actual image spacing.
-                    float imageSpacing = 600.0f;
-
-                    tr.position.x = currentX + i * imageSpacing;
+                    if (t < holdEnd)
+                    {
+                        fadeTex.uiAlpha = 0.0f;
+                    }
+                    else
+                    {
+                        float fadeOutT = (t - holdEnd) / dayPhaseFadeOutDuration;
+                        fadeTex.uiAlpha = Saturate(fadeOutT); // 0 -> 1
+                    }
                 }
             }
             else
@@ -887,8 +894,9 @@ namespace Framework
             {
                 auto& text = ecsInterface.GetComponent<TextProperties>(dayTextEntity);
                 text.opacity = isDayPlay ? 1.0f : 0.0f;
+
                 if (isDayPlay)
-                    text.text = ": Day 1|7"; // wire up dynamic values later
+                    text.text = "Day " + std::to_string(g_CurrentDay);
             }
 
             // Coin & Moon Icon + Night Text
@@ -915,7 +923,7 @@ namespace Framework
                 auto& text = ecsInterface.GetComponent<TextProperties>(nightTextEntity);
                 text.opacity = showCoinUI ? 1.0f : 0.0f;
                 if (isNightPlay)
-                    text.text = ": Night 1|7";
+                    text.text = "Night " + std::to_string(g_CurrentDay);
             }
 
             // Mini Controls
@@ -1016,6 +1024,69 @@ namespace Framework
                     texture.isUI = isNightPlay;
                 }
             }
+        }
+    }
+
+    int SceneInterface::GetCurrentDay()
+    {
+        return g_CurrentDay;
+    }
+
+    void SceneInterface::SetCurrentDay(int day)
+    {
+        g_CurrentDay = day;
+    }
+
+    void SceneInterface::AdvanceToNextDay()
+    {
+        ++g_CurrentDay;
+    }
+
+    void SceneInterface::PushDayTransitionStateForCurrentDay()
+    {
+        switch (g_CurrentDay)
+        {
+        case 2:
+            engineState.PushState(EngineMode::Day2);
+            break;
+        case 3:
+            engineState.PushState(EngineMode::Day3);
+            break;
+        case 4:
+            engineState.PushState(EngineMode::Day4);
+            break;
+        case 5:
+            engineState.PushState(EngineMode::Day5);
+            break;
+        default:
+            // If no special transition state exists, just go to play/map directly
+            engineState.PushState(EngineMode::Play);
+            break;
+        }
+    }
+
+    void SceneInterface::OnNextDayPressed()
+    {
+        // Leave upgrade first
+        engineState.PopState(); // pop Upgrade if Upgrade is the current state
+
+        // Advance day
+        SceneInterface::AdvanceToNextDay();
+
+        // Push matching transition
+        SceneInterface::PushDayTransitionStateForCurrentDay();
+    }
+
+    // Checks if player has >= 5000.0f gold to show player Win or Lose game
+    bool SceneInterface::WinOrLose()
+    {
+        if (GameSystem::GetCurrency() >= 5000.0f)
+        {
+            return true; //win game so push EngineMode::Win
+        }
+        else
+        {
+            return false;
         }
     }
 }

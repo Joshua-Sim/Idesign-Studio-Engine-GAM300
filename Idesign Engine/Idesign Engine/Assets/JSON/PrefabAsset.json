@@ -103,6 +103,30 @@
             "isScenePrefab": false
         },
         {
+            "guid": "12a83449-8181-416a-8371-dfg33d34c4f4",
+            "name": "iron_bar_Prefab",
+            "path": "Assets\\Prefabs\\iron_bar_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "22a83449-8181-416a-8371-dfg67d34c462",
+            "name": "preservation_powder_Prefab",
+            "path": "Assets\\Prefabs\\preservation_powder_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "33a83449-6767-416a-8371-67667d34c462",
+            "name": "healing_powder_Prefab",
+            "path": "Assets\\Prefabs\\healing_powder_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "67a83449-8181-416a-8371-dfg33d34c467",
+            "name": "copper_bar_Prefab",
+            "path": "Assets\\Prefabs\\copper_bar_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
             "guid": "eb37c4f0-924e-4edc-af53-c18f22773ba5",
             "name": "Herb3_Prefab",
             "path": "Assets\\Prefabs\\Herb3_Prefab.prefab",
@@ -286,6 +310,12 @@
             "guid": "ff92c088-16c9-4dfa-89e3-496283748893",
             "name": "TapCircle_Prefab",
             "path": "Assets\\Prefabs\\TapCircle_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "68900b6c-9902-4d58-92b0-9baf74f5aa0f",
+            "name": "BLACK-DAY2_Prefab",
+            "path": "Assets\\Prefabs\\BLACK-DAY2_Prefab.prefab",
             "isScenePrefab": false
         }
     ]

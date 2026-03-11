@@ -1,4 +1,3 @@
-
 #pragma once
 #ifndef _UPGRADE_H_
 #define _UPGRADE_H_
@@ -33,12 +32,18 @@ namespace Framework
         float GetCurrencyMultiplier() const;
         int GetCurrencyUpgradeCost() const;
         bool CanAffordCurrencyUpgrade() const;
-        int GetCurrencyLevel() const;  // NEW: Get current currency upgrade level
+        int GetCurrencyLevel() const;
 
-        // Area unlock upgrades
+        // Area unlock upgrades (Forest only now)
         bool UnlockArea(GameArea area);
         bool IsAreaUnlocked(GameArea area) const;
         int GetAreaUnlockCost(GameArea area) const;
+
+        // Cauldron upgrade (one-time purchase - unlocks 2nd auto-stir cauldron)
+        bool UpgradeCauldron();
+        bool IsCauldronUnlocked() const;
+        int GetCauldronUpgradeCost() const;
+        bool CanAffordCauldronUpgrade() const;
 
         // Backpack upgrades
         bool UpgradeBackpack();
@@ -69,18 +74,20 @@ namespace Framework
 
         int m_currencyLevel = 0;            // Track currency upgrade level (0-3)
 
-        // Area unlock system
+        // Cauldron upgrade (one-time)
+        bool m_cauldronUnlocked = false;
+        int  m_cauldronUpgradeCost = 1000;
+
+        // Area unlock system (Forest only)
         std::unordered_map<GameArea, bool> m_unlockedAreas =
         {
-            {GameArea::Home, true},     // Home is always unlocked
+            {GameArea::Home,   true},   // Home is always unlocked
             {GameArea::Forest, true},   // Forest starts unlocked with Home
-            {GameArea::Quarry, false}   // Quarry starts locked
         };
 
         std::unordered_map<GameArea, int> m_areaUnlockCosts =
         {
             {GameArea::Forest, 0},
-            {GameArea::Quarry, 2000}  // Quarry costs 1000 currency
         };
     };
 }

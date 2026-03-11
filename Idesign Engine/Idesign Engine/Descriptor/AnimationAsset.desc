@@ -1,5 +1,5 @@
 {
-    "count": 12,
+    "count": 14,
     "entries": [
         {
             "guid": "e4d836ef-c0bc-46bb-914c-c1e05246eb81",
@@ -126,6 +126,28 @@
             "guid": "c161b000-4ea8-4e97-bc56-c0b183eba07c",
             "name": "FISHFINALUPDATED",
             "path": "Assets\\Objects\\FISHFINALUPDATED.fbx",
+            "defaultAnimationName": "",
+            "animationSpeed": 1.0,
+            "bLoops": true,
+            "bPlayOnStart": true,
+            "currentTime": 0.0,
+            "vbo_skinning": 0
+        },
+        {
+            "guid": "f02e9dd9-f0c5-491d-84e2-1d01daed4a9d",
+            "name": "bellow",
+            "path": "Assets\\Objects\\bellow.fbx",
+            "defaultAnimationName": "",
+            "animationSpeed": 1.0,
+            "bLoops": true,
+            "bPlayOnStart": true,
+            "currentTime": 0.0,
+            "vbo_skinning": 0
+        },
+        {
+            "guid": "37152dff-3566-4f91-a676-a7d7ad4d7813",
+            "name": "furance_fire",
+            "path": "Assets\\Objects\\furance_fire.fbx",
             "defaultAnimationName": "",
             "animationSpeed": 1.0,
             "bLoops": true,
