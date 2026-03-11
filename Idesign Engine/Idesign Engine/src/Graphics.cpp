@@ -1557,8 +1557,6 @@ namespace Framework {
         const float rightMargin = 24.0f;
         const float panelPad = 12.0f;
 
-        const float panelPad = 12.0f;     // matches your panel padding
-
         // Panel bottom-left (x0,y0) for the GRID (not including outer panel pad)
         const float x0 = std::round((screenW - gridW) * 0.5);
         const float y0 = std::round(hotbarY0 + hotbarPanelH + marginAboveHotbar);     // same vertical logic

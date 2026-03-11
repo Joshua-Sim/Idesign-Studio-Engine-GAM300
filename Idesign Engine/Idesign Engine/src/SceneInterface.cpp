@@ -17,14 +17,12 @@ namespace Framework
 {
     // Define the global instance
     SceneInterface sceneInterface;
-    // somewhere persistent (SceneInterface members or static in cpp)
+
+    // ======= CUTSCENE TUNING =======
     static bool cutsceneFinished = false;
     static bool IntroFinished = false;
 
-    int SceneInterface::g_CurrentDay = 4;
-
-    // Tune these
-    static const float sceneDuration = 3.0f;   // each scene lasts x second(s) total
+    static const float sceneDuration = 6.0f;   // each scene lasts x second(s) total
     static const float crossfadeDuration = 0.25f;  // fast seamless fade (tweak 0.12 ~ 0.25)
     static const int   kExpectedScenes = 10;
 
@@ -35,18 +33,17 @@ namespace Framework
     static float cutsceneSkipStartTime = 0.0f;
     static const float cutsceneSkipHoldDuration = 2.0f;
 
-    // ===== Intro tuning (3 slides) =====
+    // ===== INTRO TUNING =====
     static const float introSceneDuration = 3.0f;
     static const float introCrossfadeDuration = 1.0f; // quick, smooth
     static const float introStartDelay = 3.0f; // wait 3 seconds before logo 1 fades in
     static float IntrocutsceneStartTime = -2.0f;
     static float IntrofadeOutStartTime = -1.0f;
 
-    // ===== Day Phases =====
+    // ===== DAY PHASE TUNING =====
     static float dayPhaseStartTime = -1.0f;
     static bool  dayPhaseFinished = false;
 
-    // TUNING
     static const float dayPhaseFadeInDuration = 0.90f;
     static const float dayPhaseSlideDuration = 2.0f;
     static const float dayPhaseHoldDuration = 1.0f;
@@ -54,6 +51,16 @@ namespace Framework
 
     static const float dayPhaseStartX = 3300.0f; // start off-screen
     static const float dayPhaseCenterX = 960.0f; // centered
+
+    int SceneInterface::g_CurrentDay = 4;
+
+    // ======== WIN CUTSCENE TUNING ============ 
+    static float winCutsceneStartTime = -1.0f;
+    static bool  winCutsceneFinished = false;
+
+    static const float winStartDelay = 3.0f;          // hold black first
+    static const float winSceneDuration = 5.0f;       // per scene
+    static const float winCrossfadeDuration = 1.8f;   // fade between scenes
 
 
     void SceneInterface::Initialize() {}
@@ -872,6 +879,173 @@ namespace Framework
                 dayPhaseStartTime = -1.0f;
                 dayPhaseFinished = false;
             }
+
+            // WIN CUTSCENE
+            if (engineState.Is(EngineMode::Win))
+            {
+                auto slides = ecsInterface.GetEntitiesByTag("wincs");
+                int sceneCount = (int)slides.size();
+                if (sceneCount <= 0) return;
+
+                const int bgIndex = 0;                  // permanent black background
+                const int animatedCount = sceneCount - 1; // everything after background
+
+                if (animatedCount <= 0)
+                {
+                    if (ecsInterface.IsEntityValid(slides[0]) &&
+                        ecsInterface.HasComponent<TextureProperties>(slides[0]))
+                    {
+                        auto& tex = ecsInterface.GetComponent<TextureProperties>(slides[0]);
+                        tex.isUI = true;
+                        tex.uiAlpha = 1.0f;
+                    }
+                    return;
+                }
+
+                // 1) Init
+                if (winCutsceneStartTime < 0.0f)
+                {
+                    winCutsceneStartTime = (float)glfwGetTime();
+                    winCutsceneFinished = false;
+
+                    for (auto e : slides)
+                    {
+                        if (!ecsInterface.IsEntityValid(e)) continue;
+                        if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
+
+                        auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
+                        tex.isUI = true;
+                        tex.uiAlpha = 0.0f;
+                    }
+
+                    // Permanent black background ON
+                    if (ecsInterface.IsEntityValid(slides[bgIndex]) &&
+                        ecsInterface.HasComponent<TextureProperties>(slides[bgIndex]))
+                    {
+                        auto& bg = ecsInterface.GetComponent<TextureProperties>(slides[bgIndex]);
+                        bg.isUI = true;
+                        bg.uiAlpha = 1.0f;
+                    }
+                }
+
+                float totalT = (float)glfwGetTime() - winCutsceneStartTime;
+
+                // Hold on pure black first
+                if (totalT < winStartDelay)
+                {
+                    for (int s = 1; s < sceneCount; ++s)
+                    {
+                        if (!ecsInterface.IsEntityValid(slides[s])) continue;
+                        if (!ecsInterface.HasComponent<TextureProperties>(slides[s])) continue;
+
+                        auto& tex = ecsInterface.GetComponent<TextureProperties>(slides[s]);
+                        tex.isUI = true;
+                        tex.uiAlpha = 0.0f;
+                    }
+
+                    if (ecsInterface.IsEntityValid(slides[bgIndex]) &&
+                        ecsInterface.HasComponent<TextureProperties>(slides[bgIndex]))
+                    {
+                        auto& bg = ecsInterface.GetComponent<TextureProperties>(slides[bgIndex]);
+                        bg.isUI = true;
+                        bg.uiAlpha = 1.0f;
+                    }
+
+                    return;
+                }
+
+                // Start animated sequence after delay
+                float t = totalT - winStartDelay;
+
+                // Animated slides are [1..sceneCount-1]
+                int animIndex = (int)glm::floor(t / winSceneDuration);
+
+                // Finished sequence
+                if (animIndex >= animatedCount)
+                {
+                    if (!winCutsceneFinished)
+                    {
+                        winCutsceneFinished = true;
+
+                        for (auto e : slides)
+                        {
+                            if (!ecsInterface.IsEntityValid(e)) continue;
+                            if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
+
+                            auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
+                            tex.uiAlpha = 0.0f;
+                            tex.isUI = false;
+                        }
+
+                        //NEXT STATE
+                        engineState.PushState(EngineMode::Menu);
+                        //engineState.PushState(EngineMode::Credit); //set this to true after this state
+                    }
+                    return;
+                }
+
+                float sceneT = t - (float)animIndex * winSceneDuration;
+                float fadeStart = winSceneDuration - winCrossfadeDuration;
+                float blend = 0.0f;
+
+                if (sceneT >= fadeStart)
+                    blend = Saturate((sceneT - fadeStart) / winCrossfadeDuration);
+
+                // Clear all animated slides first
+                for (int s = 1; s < sceneCount; ++s)
+                {
+                    Entity e = slides[s];
+                    if (!ecsInterface.IsEntityValid(e)) continue;
+                    if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
+
+                    auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
+                    tex.isUI = true;
+                    tex.uiAlpha = 0.0f;
+                }
+
+                // Keep permanent black background visible the whole time
+                if (ecsInterface.IsEntityValid(slides[bgIndex]) &&
+                    ecsInterface.HasComponent<TextureProperties>(slides[bgIndex]))
+                {
+                    auto& bg = ecsInterface.GetComponent<TextureProperties>(slides[bgIndex]);
+                    bg.isUI = true;
+                    bg.uiAlpha = 1.0f;
+                }
+
+                // Current animated slide
+                int currentSlide = animIndex + 1; // maps 0->1, 1->2, ...
+                if (currentSlide < sceneCount)
+                {
+                    if (ecsInterface.IsEntityValid(slides[currentSlide]) &&
+                        ecsInterface.HasComponent<TextureProperties>(slides[currentSlide]))
+                    {
+                        auto& texCur = ecsInterface.GetComponent<TextureProperties>(slides[currentSlide]);
+                        texCur.uiAlpha = 1.0f;
+
+                        if (sceneT >= fadeStart)
+                            texCur.uiAlpha = 1.0f - blend;
+                    }
+                }
+
+                // Next animated slide
+                int nextSlide = currentSlide + 1;
+                if (nextSlide < sceneCount)
+                {
+                    if (ecsInterface.IsEntityValid(slides[nextSlide]) &&
+                        ecsInterface.HasComponent<TextureProperties>(slides[nextSlide]))
+                    {
+                        auto& texNext = ecsInterface.GetComponent<TextureProperties>(slides[nextSlide]);
+                        texNext.uiAlpha = blend;
+                    }
+                }
+            }
+            else
+            {
+                winCutsceneStartTime = -1.0f;
+                winCutsceneFinished = false;
+            }
+
+            // ===================== END OF CUTSCENES / LOGIC SCENES ========================== //
 
             // Coin & Sun Icon + Day Text
             bool isDayPlay = engineState.Is(EngineMode::Play) &&
