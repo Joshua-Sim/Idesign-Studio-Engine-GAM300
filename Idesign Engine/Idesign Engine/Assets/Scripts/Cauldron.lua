@@ -40,7 +40,7 @@ local stir_sensitivity = 0.005
 local finish_delay = 1.0
 local dir_threshold = 0.02
 local dir_segments = 4
-local anim_speed_abs = 1.0
+local anim_speed_abs = 20.0
 
 -- [STIRRING ICON SETTINGS]
 local stir_icon_name_ccw = "anti-rotatingIcon"
@@ -169,7 +169,7 @@ end
 -- [STIRRING ICON HELPERS]
 -- =============================================================
 local function ShowStirIcon(required_dir)
-    if required_dir == -1 then
+    if required_dir == 1 then
         if stir_icon_id_ccw then
             SetIsUI(stir_icon_id_ccw, true)
         end
@@ -189,13 +189,13 @@ local function ShowStirIcon(required_dir)
 end
 
 local function HideStirIcon()
-    if stir_icon_id_ccw then
-        SetIsUI(stir_icon_id_ccw, false)
-        SetRotation(stir_icon_id_ccw, 0.0, 0.0, 0.0)
-    end
     if stir_icon_id_cw then
         SetIsUI(stir_icon_id_cw, false)
         SetRotation(stir_icon_id_cw, 0.0, 0.0, 0.0)
+    end
+    if stir_icon_id_ccw then
+        SetIsUI(stir_icon_id_ccw, false)
+        SetRotation(stir_icon_id_ccw, 0.0, 0.0, 0.0)
     end
     stir_icon_rotation = 0.0
 end
@@ -296,7 +296,7 @@ function M.OnInteract(arg1, arg2)
             if player_id then SetGravity(player_id, 0.0) end
 
             -- Show the stirring icon
-            ShowStirIcon(required_dir)
+            ShowStirIcon(GetRequiredDir(0.0))
         else
             Sound.Play("event:/InvalidRecipe")
             print("[Lua] Invalid Recipe!")
@@ -411,7 +411,7 @@ function M.on_update(arg1, arg2)
                     SetAnimationSettings(my_entity_id, anim_speed_abs * required_dir, true, true)
                 end
 
-                if required_dir == -1 then
+                if required_dir == 1 then
                     is_stirring_correct_dir = (angle_delta < -dir_threshold)
                 else
                     is_stirring_correct_dir = (angle_delta > dir_threshold)
@@ -441,7 +441,7 @@ function M.on_update(arg1, arg2)
     if is_active then
         local required_dir = GetRequiredDir(progress)
 
-        stir_icon_rotation = stir_icon_rotation - (stir_icon_speed * dt * required_dir)
+        stir_icon_rotation = stir_icon_rotation + (stir_icon_speed * dt * required_dir)
 
         if stir_icon_rotation >= 360.0 then
             stir_icon_rotation = stir_icon_rotation - 360.0
@@ -449,10 +449,10 @@ function M.on_update(arg1, arg2)
             stir_icon_rotation = stir_icon_rotation + 360.0
         end
 
-        if required_dir == -1 and stir_icon_id_ccw then
-            SetRotation(stir_icon_id_ccw, 0.0, 0.0, stir_icon_rotation)
-        elseif required_dir == 1 and stir_icon_id_cw then
+        if required_dir == -1 and stir_icon_id_cw then
             SetRotation(stir_icon_id_cw, 0.0, 0.0, stir_icon_rotation)
+        elseif required_dir == 1 and stir_icon_id_ccw then
+            SetRotation(stir_icon_id_ccw, 0.0, 0.0, stir_icon_rotation)
         end
     end
 

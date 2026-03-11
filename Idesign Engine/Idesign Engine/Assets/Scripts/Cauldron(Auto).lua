@@ -40,7 +40,7 @@ local stir_sensitivity = 0.005
 local finish_delay = 1.0
 local dir_threshold = 0.02
 local dir_segments = 4
-local anim_speed_abs = 1.0
+local anim_speed_abs = 20.0
 local is_auto_cauldron = true
 local auto_stir_duration = 10.0
 
