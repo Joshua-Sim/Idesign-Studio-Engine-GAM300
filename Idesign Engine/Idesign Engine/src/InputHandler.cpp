@@ -163,7 +163,7 @@ namespace Framework {
         // ============================================================
             //DIALOGUE INPUT HANDLING
         // ============================================================
-        if (engineState.Is(EngineMode::Dialogue) && !isUIFocused) {
+        if (engineState.Is(EngineMode::Dialogue)) {
             // Only process dialogue-specific input in game mode
             if (IsKeyPressed(GLFW_KEY_SPACE) || IsKeyPressed(GLFW_KEY_ENTER) || IsMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
                 auto dialogueSys = ecsInterface.GetSystem<Framework::DialogueSystem>();

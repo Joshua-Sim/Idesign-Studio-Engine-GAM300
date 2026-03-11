@@ -6,16 +6,19 @@ local DayTutorial = {}
 SetData("dayTutorialPlayed", 0)
 SetData("mapSelectionTutorialPlayed", 0)
 
-DayTutorial.waitingForLanding = false
-DayTutorial.waitingForDialogue = false
-DayTutorial.timer = 0.0
-DayTutorial.delayDuration = 1.35 
-DayTutorial.sequenceStep = 1
-DayTutorial.skipKeyHeld = false
+DayTutorial.waitingForLanding    = false
+DayTutorial.waitingForDialogue   = false
+DayTutorial.sequenceStep         = 1
+DayTutorial.skipKeyHeld          = false
 
 DayTutorial.mapSelWaitingForDialogue = false
-DayTutorial.mapSelTimer = 0.0
-DayTutorial.mapSelDelayDuration = 1.0
+
+-- Snapshot timers: record the RealTime when each phase first becomes active
+DayTutorial.dayStartTime         = nil
+DayTutorial.mapSelStartTime      = nil
+
+local DAY_DELAY    = 1.65 -- custo mto fit loading and timing
+local MAPSEL_DELAY = 0.5
 
 function DayTutorial:on_init()
     print("[DayTutorial] Sequenced Script Initialized. Checking persistent flags...")
@@ -23,47 +26,34 @@ end
 
 function DayTutorial:SkipSequence()
     print("[DayTutorial] Sequence skipped via F9.")
-
     SetData("dayTutorialPlayed", 1)
-
-    if CutsceneIsFlying() then
-        CutsceneStop()
-    end
-    if DialogueIsActive() then
-        DialogueClear()
-    end
-
-    self.waitingForLanding = false
+    if CutsceneIsFlying() then CutsceneStop() end
+    if DialogueIsActive() then DialogueClear() end
+    self.waitingForLanding  = false
     self.waitingForDialogue = false
-    self.sequenceStep = 5
-    self.timer = 0.0
-
+    self.sequenceStep       = 5
+    self.dayStartTime       = nil
     print("[DayTutorial] Full sequence complete. Player control restored.")
 end
 
 function DayTutorial:SkipMapSelSequence()
     print("[DayTutorial] MapSelection sequence skipped via F9.")
-
     SetData("mapSelectionTutorialPlayed", 1)
-
-    if DialogueIsActive() then
-        DialogueClear()
-    end
-
+    if DialogueIsActive() then DialogueClear() end
     self.mapSelWaitingForDialogue = false
-    self.mapSelTimer = 0.0
-
+    self.mapSelStartTime          = nil
     print("[DayTutorial] MapSelection sequence complete.")
 end
 
 function DayTutorial:on_update(dt)
-    local inGameplay = IsEngineState("Play")
+    local inGameplay     = IsEngineState("Play")
     local inMapSelection = IsEngineState("MapSelection")
-    local isDayPhase = (GetPhase() == 1)
-    local playedFlag = GetData("dayTutorialPlayed")
-    local mapSelPlayedFlag = GetData("mapSelectionTutorialPlayed")
+    local isDayPhase     = (GetPhase() == 1)
+    local playedFlag     = GetData("dayTutorialPlayed")
+    local mapSelFlag     = GetData("mapSelectionTutorialPlayed")
+    local now            = GetRealTime()
 
-    -- F9 skip with debounce: only fires once per key press
+    -- F9 skip with debounce
     local skipPressed = IsKeyDown(298)
     if skipPressed and not self.skipKeyHeld then
         if inGameplay and isDayPhase and (playedFlag == 0 or self.waitingForLanding or self.waitingForDialogue) then
@@ -71,24 +61,29 @@ function DayTutorial:on_update(dt)
             self:SkipSequence()
             return
         end
-        if inMapSelection and (mapSelPlayedFlag == 0 or self.mapSelWaitingForDialogue) then
+        if inMapSelection and (mapSelFlag == 0 or self.mapSelWaitingForDialogue) then
             self.skipKeyHeld = true
             self:SkipMapSelSequence()
             return
         end
     end
-    if not skipPressed then
-        self.skipKeyHeld = false
-    end
+    if not skipPressed then self.skipKeyHeld = false end
 
-    -- Day tutorial
+    -- -------------------------------------------------------
+    -- Day tutorial: snapshot start time on first eligible frame
+    -- -------------------------------------------------------
     if inGameplay and isDayPhase and playedFlag == 0 then
-        self.timer = self.timer + dt
-        if self.timer >= self.delayDuration then
+        if not self.dayStartTime then
+            self.dayStartTime = now
+        end
+        if now - self.dayStartTime >= DAY_DELAY then
+            self.dayStartTime = nil
             SetData("dayTutorialPlayed", 1)
             print("[DayTutorial] First time day detected. Starting sequence.")
             self:PlayNextStep()
         end
+    else
+        self.dayStartTime = nil  -- reset if we leave the condition
     end
 
     if self.waitingForLanding and not CutsceneIsFlying() then
@@ -99,7 +94,6 @@ function DayTutorial:on_update(dt)
     if self.waitingForDialogue and not DialogueIsActive() then
         self.waitingForDialogue = false
         self.sequenceStep = self.sequenceStep + 1
-        
         if self.sequenceStep <= 4 then
             self:PlayNextStep()
         else
@@ -107,14 +101,22 @@ function DayTutorial:on_update(dt)
         end
     end
 
-    -- MapSelection tutorial
-    if inMapSelection and mapSelPlayedFlag == 0 then
-        self.mapSelTimer = self.mapSelTimer + dt
-        if self.mapSelTimer >= self.mapSelDelayDuration then
+    -- -------------------------------------------------------
+    -- MapSelection tutorial: snapshot start time on first eligible frame
+    -- Uses GetRealTime so dt=0 from engine is irrelevant
+    -- -------------------------------------------------------
+    if inMapSelection and mapSelFlag == 0 then
+        if not self.mapSelStartTime then
+            self.mapSelStartTime = now
+        end
+        if now - self.mapSelStartTime >= MAPSEL_DELAY then
+            self.mapSelStartTime = nil
             SetData("mapSelectionTutorialPlayed", 1)
             print("[DayTutorial] First time MapSelection detected. Starting dialogue.")
             self:PlayMapSelDialogue()
         end
+    else
+        self.mapSelStartTime = nil  -- reset if we leave MapSelection
     end
 
     if self.mapSelWaitingForDialogue and not DialogueIsActive() then
@@ -126,7 +128,7 @@ end
 function DayTutorial:PlayNextStep()
     local target = ""
     local offX, offY, offZ = 0, 5, 8
-    
+
     if self.sequenceStep == 1 then
         target = "Sheep"
     elseif self.sequenceStep == 2 then
@@ -140,12 +142,10 @@ function DayTutorial:PlayNextStep()
     end
 
     print("[DayTutorial] Stage " .. self.sequenceStep .. " | Flying to: " .. target)
-
     CutsceneSetTarget(target)
     CutsceneSetOffset(offX, offY, offZ)
     CutsceneSetSpeed(2.5)
     CutsceneStart()
-
     self.waitingForLanding = true
 end
 
@@ -155,15 +155,12 @@ function DayTutorial:StartDialogueForCurrentStep()
     if self.sequenceStep == 1 then
         DialogueAdd("Look at these fluffy sheep! They aren't just for show.", "Aunt Mira", "pear")
         DialogueAdd("Gather their wool, it may prove useful in certain recipes!", "Aunt Mira", "portrait")
-    
     elseif self.sequenceStep == 2 then
         DialogueAdd("Ah, a fine pear! Some recipes require more than just roots.", "Aunt Mira", "pear")
         DialogueAdd("Keep your eyes peeled for fruit hanging in the brush.", "Aunt Mira", "portrait")
-
     elseif self.sequenceStep == 3 then
         DialogueAdd("These are the herbs you need for your remedies.", "Aunt Mira", "pear")
         DialogueAdd("Gather them by pressing 'E' until your bag is heavy.", "Aunt Mira", "portrait")
-
     elseif self.sequenceStep == 4 then
         DialogueAdd("Finally, the Gate. Use it once you are finished here.", "Aunt Mira", "pear")
         DialogueAdd("The moon waits for no one, child. Now get to work!", "Aunt Mira", "portrait")
@@ -175,11 +172,8 @@ end
 
 function DayTutorial:PlayMapSelDialogue()
     DialogueClear()
-
-    -- TODO: replace with real map selection tutorial lines
-    DialogueAdd("Testing! This is the map selection screen.", "Aunt Mira", "portrait")
-    DialogueAdd("Pick a location to begin your journey.", "Aunt Mira", "portrait")
-
+    DialogueAdd("This is the map selection screen.", "Aunt Mira", "portrait")
+    DialogueAdd("Pick the forest area to start gathering ingredients, we'll head to the shop right after.", "Aunt Mira", "portrait")
     DialogueStart()
     self.mapSelWaitingForDialogue = true
 end
