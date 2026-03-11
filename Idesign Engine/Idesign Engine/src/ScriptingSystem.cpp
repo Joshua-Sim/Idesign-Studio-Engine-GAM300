@@ -2851,7 +2851,7 @@ namespace Framework {
             });
 
         lua_register(L, "IsQuarryUnlocked", [](lua_State* L) -> int {
-            bool unlocked = UpgradeManager::Instance().IsAreaUnlocked(GameArea::Quarry);
+            bool unlocked = SceneInterface::GetCurrentDay() >= 3; // whatever day you want
             lua_pushboolean(L, unlocked);
             return 1;
             });

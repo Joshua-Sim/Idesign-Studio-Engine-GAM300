@@ -3123,7 +3123,7 @@
                     "animationSpeed": 1.0,
                     "bLoops": true,
                     "bPlayOnStart": true,
-                    "currentTime": 51.032962799072266
+                    "currentTime": 31.99997901916504
                 },
                 "TextureComponent": {
                     "guid": "2b27f501-a163-4398-bbe4-869717e7f7c0",
@@ -5609,7 +5609,7 @@
                         1.0,
                         1.0
                     ],
-                    "isActive": false
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "6cb91ce4-34a5-4fb5-9341-5e906ce4cb1d",
@@ -5629,7 +5629,7 @@
                     "isUI": false
                 },
                 "TextProperties": {
-                    "text": "The moon waits for no one, child. Now get to work!",
+                    "text": "Look at these fluffy sheep! They aren't just for show.",
                     "scale": 0.6899999976158142,
                     "color": [
                         0.15939366817474365,
@@ -5663,7 +5663,7 @@
                         270.0,
                         100.0
                     ],
-                    "isActive": false
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "6cb91ce4-34a5-4fb5-9341-5e906ce4cb1d",
@@ -5705,7 +5705,7 @@
                         1.0,
                         1.0
                     ],
-                    "isActive": false
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "6cb91ce4-34a5-4fb5-9341-5e906ce4cb1d",
@@ -5759,7 +5759,7 @@
                         1.0,
                         1.0
                     ],
-                    "isActive": false
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "6cb91ce4-34a5-4fb5-9341-5e906ce4cb1d",
@@ -5813,7 +5813,7 @@
                         1.0,
                         1.0
                     ],
-                    "isActive": false
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "6cb91ce4-34a5-4fb5-9341-5e906ce4cb1d",
@@ -5867,7 +5867,7 @@
                         270.0,
                         100.0
                     ],
-                    "isActive": false
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "6cb91ce4-34a5-4fb5-9341-5e906ce4cb1d",
@@ -5909,7 +5909,7 @@
                         270.0,
                         100.0
                     ],
-                    "isActive": false
+                    "isActive": true
                 },
                 "HierarchyComponent": {
                     "parent": "6cb91ce4-34a5-4fb5-9341-5e906ce4cb1d",
@@ -19689,7 +19689,7 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        946.5,
+                        1125,
                         300.0,
                         0.8999999761581421
                     ],
@@ -20111,7 +20111,7 @@
                 },
                 "TextureComponent": {
                     "guid": "7f9aade7-0ecf-48c7-8e35-c8654325833e",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -20335,7 +20335,7 @@
                 },
                 "TextureComponent": {
                     "guid": "3db45502-0b02-41ec-85b1-0ad1d5fbe585",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -21793,7 +21793,7 @@
                 },
                 "TextureComponent": {
                     "guid": "a37d067f-322e-47c3-8d53-e0c0cee1a8c6",
-                    "isUI": false
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -21826,7 +21826,7 @@
                 "TransformComponent": {
                     "position": [
                         1800.0,
-                        170.0,
+                        225.0,
                         1.0
                     ],
                     "rotation": [
@@ -21836,7 +21836,7 @@
                     ],
                     "scale": [
                         250.0,
-                        330.0,
+                        125.0,
                         1.0
                     ],
                     "isActive": true
@@ -21852,11 +21852,12 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "3c9d8dfd-6930-486f-8945-f5522795e3f3",
-                    "isUI": true
+                    "isUI": false
                 }
             }
         },
@@ -21951,7 +21952,7 @@
                 },
                 "TextureComponent": {
                     "guid": "353f2aff-798e-4824-a824-51ca41527165",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ButtonComponent": {
                     "position": [
@@ -22002,7 +22003,7 @@
                 },
                 "TextureComponent": {
                     "guid": "cddcdcdf-d5c9-4eb7-a5b0-19f04bfcd26f",
-                    "isUI": true
+                    "isUI": false
                 }
             }
         },
@@ -22040,7 +22041,7 @@
                 },
                 "TextureComponent": {
                     "guid": "9f49c10c-189a-4f54-bb78-b6ed491661cc",
-                    "isUI": true
+                    "isUI": false
                 }
             }
         },
@@ -22086,7 +22087,7 @@
                         0.0,
                         0.0
                     ],
-                    "opacity": 1.0,
+                    "opacity": 0.0,
                     "alignment": 0,
                     "isBillboard": false,
                     "screenSpace": true
@@ -22131,7 +22132,7 @@
                         0.0,
                         0.0
                     ],
-                    "opacity": 1.0,
+                    "opacity": 0.0,
                     "alignment": 0,
                     "isBillboard": false,
                     "screenSpace": true
@@ -23924,7 +23925,7 @@
                     "isUI": false
                 },
                 "TextProperties": {
-                    "text": "1.72",
+                    "text": "2.20",
                     "scale": 1.0,
                     "color": [
                         0.0,
@@ -28867,6 +28868,48 @@
                         0.0
                     ],
                     "startAwake": true
+                }
+            }
+        },
+        {
+            "name": "minicontrolUI_2",
+            "guid": "63c15a5b-0514-4e22-868d-0a364f007b05",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        1800.0,
+                        90.0,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        250.0,
+                        125.0,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "sortIndex": 333,
+                    "children": []
+                },
+                "TagComponent": {
+                    "tags": [
+                        "minicontrols"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "f6a80947-3bc0-43d5-b515-f348d6354e8e",
+                    "isUI": false
                 }
             }
         }

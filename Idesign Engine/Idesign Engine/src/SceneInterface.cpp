@@ -917,7 +917,22 @@ namespace Framework
                 if (ecsInterface.HasComponent<TextureProperties>(e))
                 {
                     auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
-                    bool shouldShow = engineState.Is(EngineMode::Play);
+                    bool shouldShow = false;
+
+                    std::string name = ecsInterface.GetEntityName(e);
+
+                    if (name == "minicontrolUI")
+                    {
+                        // Only show if inventory has been upgraded
+                        auto& inv = Inventory::Instance();
+                        bool inventoryUnlocked = inv.GetBackpackLevel() > 0;
+                        shouldShow = engineState.Is(EngineMode::Play) && inventoryUnlocked;
+                    }
+                    else if (name == "minicontrolUI_2")
+                    {
+                        // Always show during play
+                        shouldShow = engineState.Is(EngineMode::Play);
+                    }
                     texture.isUI = shouldShow;
                 }
             }
