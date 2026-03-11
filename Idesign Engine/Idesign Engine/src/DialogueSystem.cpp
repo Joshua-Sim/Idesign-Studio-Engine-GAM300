@@ -103,6 +103,12 @@
                             // Check if we're done with all lines
                             if (currentLineIndex >= fullTextLines.size()) {
                                 fullyDisplayed = true;
+
+                                // Stop typewriter sound 
+                                if (g_AudioSystem && typewriterSoundPlaying) {
+                                    g_AudioSystem->StopEvent("event:/TypeWriterSounds");
+                                    typewriterSoundPlaying = false;
+                                }
                             }
                             else {
                                 // Initialize next line as empty
@@ -248,6 +254,14 @@
             if (!fullyDisplayed) {
                 fullyDisplayed = true;
 
+				//Stop typewriter sound effect immediately
+
+                if (g_AudioSystem && typewriterSoundPlaying) {
+                    g_AudioSystem->StopEvent("event:/TypeWriterSounds");
+                    typewriterSoundPlaying = false;
+                }
+
+
                 // Instantly show all remaining text
                 for (size_t i = 0; i < fullTextLines.size(); i++) {
                     visibleTextLines[i] = fullTextLines[i];
@@ -274,6 +288,13 @@
 
         void DialogueSystem::EndDialogue() {
             std::cout << "[DialogueSystem] Ending dialogue" << std::endl;
+
+            //  STOP TYPEWRITER SOUND 
+            if (g_AudioSystem && typewriterSoundPlaying) {
+                g_AudioSystem->StopEvent("event:/TypeWriterSounds");
+                typewriterSoundPlaying = false;
+            }
+
             isActive = false;
             engineState.PopState();
             SetDialogueUIVisible(false);
@@ -387,6 +408,12 @@
             currentCharIndex = 0;
             fullyDisplayed = false;
             textDisplayTimer = 0.0f;
+
+            // Start typewriter sound effect 
+            if (g_AudioSystem && !typewriterSoundPlaying) {
+                g_AudioSystem->PlayAudio("event:/TypeWriterSounds");
+                typewriterSoundPlaying = true;
+            }
 
             // Update speaker name
             Entity textSpeaker = FindDialogueEntity("Name_text");

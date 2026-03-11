@@ -240,6 +240,8 @@ namespace Framework
             if (animator.bLoops)
             {
                 animator.currentTime = fmod(animator.currentTime, animation.duration);
+                if (animator.currentTime < 0.0f)
+                    animator.currentTime += animation.duration;
             }
             else
             {

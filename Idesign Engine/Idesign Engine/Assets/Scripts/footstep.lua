@@ -4,27 +4,71 @@ local M = {}
 local stepTimer = 0
 local stepInterval = 0.5
 
+local sheepTimer = 0
+local sheepInterval = 0.5
+local sheepSounds = {
+    "event:/Sheep1", "event:/Sheep2", "event:/Sheep3",
+    "event:/Sheep4", "event:/Sheep5", "event:/Sheep6",
+    "event:/Sheep8", "event:/Sheep9",
+}
+local sheepEntities = {}
+
+
 local indoorEvent = "event:/Footstep"
 local outdoorEvent = "event:/FootstepBackyard"
+local quarryEvent = "event:/QuarryAmbient"
+
+local level1BGM = "event:/Level1BGM"
+local quarryBGM = "event:/QuarryBGM"
+local shopBGM = "event:/ShopBGM"
 
 --Track state
 local wasInBackyard = false
 local backyardEntity = nil
+local backyardCopyEntity = nil
 local frogEntity = nil 
+local quarryPlaying = false
 
--- Backyard bounds (calculated from your scene data)
--- Backyard position: (-45.93, 5.3, 14.72)
--- Backyard collider: size (19.5, 5.8, 20), center offset (-15.3, 2.8, -5)
--- Actual bounds in world space:
+local wasInQuarry = false
+local wasInShop = false
+
+-- Forest/Backyard bounds (measured in-game)
 local backyardMin = { 
-    x = -45.93 + (-15.3 - 19.5/2),  -- -70.68
-    y = 5.3 + (2.8 - 5.8/2),          -- 5.2
-    z = 14.72 + (-5 - 20/2)           -- -0.28
+    x = -296, 
+    y = 300, 
+    z = 533 
 }
+
 local backyardMax = { 
-    x = -45.93 + (-15.3 + 19.5/2),  -- -51.48
-    y = 5.3 + (2.8 + 5.8/2),          -- 11.2
-    z = 14.72 + (-5 + 20/2)           -- 19.72
+    x = -120, 
+    y = 330, 
+    z = 726 
+}
+
+-- Quarry bounds 
+local quarryMin = {
+    x = -246.3, 
+    y = -45.9, 
+    z = -174.8 
+}
+
+local quarryMax = { 
+    x = -143.3, 
+    y = 54.2,  
+    z = -72.8  
+}
+
+-- Shop bounds 
+local shopMin = { 
+    x = -52, 
+    y = -5, 
+    z = -1 
+}
+
+local shopMax = { 
+    x = -14, 
+    y = 15, 
+    z = 21 
 }
 
 function M:on_init()
@@ -32,14 +76,21 @@ function M:on_init()
     print(string.format("[Footsteps] Backyard bounds: X(%.2f to %.2f), Y(%.2f to %.2f), Z(%.2f to %.2f)", 
         backyardMin.x, backyardMax.x, backyardMin.y, backyardMax.y, backyardMin.z, backyardMax.z))
 
-    -- Find the backyard entity for volume control
+    -- Find both backyard entities for volume control
     backyardEntity = FindEntityByName("Backyard")
+    backyardCopyEntity = FindEntityByName("Backyard (Copy)")
 
     if backyardEntity then
         print("[Footsteps] Found Backyard entity: " .. backyardEntity)
     else
-        print("[Footsteps] WARNING: Could not find backyard entity!")
+        print("[Footsteps] WARNING: Could not find Backyard entity!")
     end 
+
+    if backyardCopyEntity then
+        print("[Footsteps] Found Backyard (Copy) entity: " .. backyardCopyEntity)
+    else
+        print("[Footsteps] WARNING: Could not find Backyard (Copy) entity!")
+    end
 
     -- Find the frog entity for volume control
     frogEntity = FindEntityByName("Frog")
@@ -48,8 +99,20 @@ function M:on_init()
     else
         print("[Footsteps] WARNING: Could not find Frog entity!")
     end
+
+    -- Find sheep entities
+    local animalNames = {"Animal_1", "Animal_2", "Animal_3", "Animal_4"}
+    for _, name in ipairs(animalNames) do
+        local ent = FindEntityByName(name)
+        if ent then
+            table.insert(sheepEntities, ent)
+            print("[Footsteps] Found sheep: " .. name .. " (entity " .. ent .. ")")
+        end
+    end
+
 end
 
+-- Zone Check for Forest 
 function M:IsInBackyard()
     local px, py, pz = GetPosition(self.entity)
     
@@ -60,39 +123,111 @@ function M:IsInBackyard()
     return inBackyard
 end
 
+-- Zone Check for Quarry
+function M:IsInQuarry()
+    local px, py, pz = GetPosition(self.entity)
+    return px >= quarryMin.x and px <= quarryMax.x and
+           py >= quarryMin.y and py <= quarryMax.y and
+           pz >= quarryMin.z and pz <= quarryMax.z
+end
+
+-- Zone Check for Shop
+function M:IsInShop()
+    local px, py, pz = GetPosition(self.entity)
+    return px >= shopMin.x and px <= shopMax.x and
+           py >= shopMin.y and py <= shopMax.y and
+           pz >= shopMin.z and pz <= shopMax.z
+end
+
+
 function M:on_update(dt)
     local isInBackyard = self:IsInBackyard()
 
     -- Handle ambient occlusion (volume control based on location)
-    if backyardEntity then
-        if isInBackyard then
-            --Full volume when in backyard (outdoor)
-            SetEntityVolume(backyardEntity, 1.0)
-        else 
-            SetEntityVolume(backyardEntity, 0.2)
-        end 
+    -- Must mute BOTH Backyard and Backyard (Copy) entities
+    if isInBackyard then
+        if backyardEntity then SetEntityVolume(backyardEntity, 1.0) end
+        if backyardCopyEntity then SetEntityVolume(backyardCopyEntity, 1.0) end
+    else
+        if backyardEntity then SetEntityVolume(backyardEntity, 0.0) end
+        if backyardCopyEntity then SetEntityVolume(backyardCopyEntity, 0.0) end
     end
 
     -- Handle frog occlusion (opposite of backyard)
     if frogEntity then
         if isInBackyard then
-            -- Muted/very quiet when in backyard (outdoor)
-            SetEntityVolume(frogEntity, 0.0)  -- Silent outdoors
+            -- Muted when in backyard (outdoor)
+            SetEntityVolume(frogEntity, 0.0)
         else
             -- Full volume when indoors
             SetEntityVolume(frogEntity, 1.0)
         end
     end
 
+    -- Handle quarry ambient sound
+    local isInQuarry = self:IsInQuarry()
+    if isInQuarry and not quarryPlaying then
+        Sound.Play(quarryEvent)
+        quarryPlaying = true
+        print("[Footsteps] Entered quarry - playing QuarryAmbient")
+    elseif not isInQuarry and quarryPlaying then
+        Sound.Stop(quarryEvent)
+        quarryPlaying = false
+        print("[Footsteps] Left quarry - stopped QuarryAmbient")
+    end
 
-    --Log zone transitions for debugging 
-    if IsInBackyard and not wasInBackyard then
+    -- Log zone transitions for debugging 
+    if isInBackyard and not wasInBackyard then
         print("[Footsteps] Entered backyard - ambient at full volume, frog muted")
     elseif not isInBackyard and wasInBackyard then
-        print("[Footsteps] Left backyard - ambient muffled , frog audible")
+        print("[Footsteps] Left backyard - ambient muffled, frog audible")
     end 
 
     wasInBackyard = isInBackyard
+
+    -- Handle BGM switching (unified)
+    local isInShop = self:IsInShop()
+    local currentZone = "overworld"
+    if isInQuarry then currentZone = "quarry"
+    elseif isInShop then currentZone = "shop" end
+
+    local previousZone = "overworld"
+    if wasInQuarry then previousZone = "quarry"
+    elseif wasInShop then previousZone = "shop" end
+
+    if currentZone ~= previousZone then
+        -- Stop the old BGM
+        if previousZone == "quarry" then Sound.Stop(quarryBGM)
+        elseif previousZone == "shop" then Sound.Stop(shopBGM)
+        else Sound.Stop(level1BGM) end
+
+        -- Play the new BGM
+        if currentZone == "quarry" then Sound.Play(quarryBGM)
+        elseif currentZone == "shop" then Sound.Play(shopBGM)
+        else Sound.Play(level1BGM) end
+
+        print("[Footsteps] BGM: " .. previousZone .. " -> " .. currentZone)
+    end
+
+    wasInQuarry = isInQuarry
+    wasInShop = isInShop
+
+    -- Sheep ambient sounds
+    if #sheepEntities > 0 then
+        sheepTimer = sheepTimer + dt
+        if sheepTimer >= sheepInterval then
+            -- Pick a random sheep entity
+            local sheepEnt = sheepEntities[math.random(1, #sheepEntities)]
+            -- Pick a random sound
+            local sound = sheepSounds[math.random(1, #sheepSounds)]
+            -- Play at sheep's position
+            local sx, sy, sz = GetPosition(sheepEnt)
+            Sound.Play3D(sound, sx, sy, sz)
+            -- Reset with some randomness (15-25 seconds)
+            sheepTimer = -(math.random() * 10.0)
+            print("[Footsteps] Sheep ambient: " .. sound .. " at entity " .. sheepEnt)
+        end
+    end
     
     -- Footstep logic 
     -- Check if player is moving
@@ -106,7 +241,6 @@ function M:on_update(dt)
         stepTimer = stepTimer + dt
         if stepTimer >= stepInterval then
             -- Check zone and play appropriate footstep
-            local isInBackyard = self:IsInBackyard()
             local eventToPlay = isInBackyard and outdoorEvent or indoorEvent
             
             Sound.Play(eventToPlay)

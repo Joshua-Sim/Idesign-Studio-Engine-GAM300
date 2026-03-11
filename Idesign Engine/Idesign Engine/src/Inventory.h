@@ -7,6 +7,7 @@
 #include <glm.hpp>
 #include <FontSystem.h>
 #include "ItemComponent.h"
+#include "AudioSystem.h"
 
 namespace Framework {
 
