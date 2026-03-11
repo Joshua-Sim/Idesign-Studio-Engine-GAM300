@@ -142,6 +142,10 @@ namespace Framework {
             return r.idx >= 0 && r.idx < GetHotbarSlotCount();
         if (r.kind == SlotKind::Backpack)
             return r.idx >= 0 && r.idx < GetBackpackSlotCount();
+
+        if (r.kind == SlotKind::Trash)
+            return true;
+
         return false;
     }
 
@@ -221,9 +225,21 @@ namespace Framework {
 
     void Inventory::DropOn(SlotRef to)
     {
-        if (!mDragging || !mDragFrom.IsValid()) return;
-        if (!IsSlotActive(to)) { CancelDrag(); return; }
-        if (to.kind == mDragFrom.kind && to.idx == mDragFrom.idx) { CancelDrag(); return; }
+        if (!mDragging || !mDragFrom.IsValid())
+            return;
+
+        if (!IsSlotActive(to))
+        {
+            CancelDrag();
+            return;
+        }
+
+        // Dropping onto the same source slot = do nothing
+        if (to.kind == mDragFrom.kind && to.idx == mDragFrom.idx)
+        {
+            CancelDrag();
+            return;
+        }
 
         auto getSlotPtr = [&](SlotRef r) -> InvSlot*
             {
@@ -233,8 +249,28 @@ namespace Framework {
             };
 
         InvSlot* src = getSlotPtr(mDragFrom);
+        if (!src)
+        {
+            CancelDrag();
+            return;
+        }
+
+        // -------------------------
+        // TRASH: delete dragged item
+        // -------------------------
+        if (to.kind == SlotKind::Trash)
+        {
+            *src = InvSlot{ -1, 0, 0 };
+            CancelDrag();
+            return;
+        }
+
         InvSlot* dst = getSlotPtr(to);
-        if (!src || !dst) { CancelDrag(); return; }
+        if (!dst)
+        {
+            CancelDrag();
+            return;
+        }
 
         if (dst->itemId < 0) { *dst = *src; *src = InvSlot{ -1, 0, 0 }; }
         else { std::swap(*src, *dst); }

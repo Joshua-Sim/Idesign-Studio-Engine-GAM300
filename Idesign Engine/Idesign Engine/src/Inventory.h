@@ -16,7 +16,7 @@ namespace Framework {
     constexpr int kBackpackRowsMax = 10;
     constexpr int kBackpackMaxSlots = kBackpackCols * kBackpackRowsMax;
 
-    enum class SlotKind : uint8_t { Hotbar, Backpack, None };
+    enum class SlotKind : uint8_t { Hotbar, Backpack, Trash, None };
 
     struct SlotRef
     {

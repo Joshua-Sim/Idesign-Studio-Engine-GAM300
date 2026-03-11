@@ -197,14 +197,8 @@ namespace Framework {
             {
                 JPH::ShapeRefC shape = nullptr;
 
-                // Determine if we can use a simple shape or if we need a compound shape (for offsets/multi-box)
-                bool needsCompound = (entries.size() > 1);
-                if (entries.size() == 1 && entries[0]->center != glm::vec3(0.0f)) {
-                    needsCompound = true;
-                }
-
-                if (!needsCompound) {
-                    // Case A: Single Shape, No Offset
+                // Focus on Case A (Single box) which is what most slanted ramps use
+                if (entries.size() == 1) {
                     const auto* entry = entries[0];
                     JPH::Vec3 half_extents(
                         std::abs(0.5f * entry->size.x * tf.scale.x),
@@ -213,10 +207,18 @@ namespace Framework {
                     );
                     half_extents = JPH::Vec3::sMax(half_extents, JPH::Vec3(0.001f, 0.001f, 0.001f));
 
-                    JPH::BoxShapeSettings settings(half_extents);
-                    auto result = settings.Create();
-                    if (result.HasError()) return;
-                    shape = result.Get();
+                    shape = new JPH::BoxShape(half_extents);
+
+                    // If there's an offset, wrap it in an OffsetCenterOfMassShape 
+                    // This is WAY more reliable for rotated single boxes than StaticCompoundShape
+                    if (glm::length(entry->center) > 0.001f) {
+                        JPH::Vec3 joltOffset(
+                            entry->center.x * tf.scale.x,
+                            entry->center.y * tf.scale.y,
+                            entry->center.z * tf.scale.z
+                        );
+                        shape = new JPH::OffsetCenterOfMassShape(shape, joltOffset);
+                    }
                 }
                 else {
                     // Case B: Compound Shape (Multiple boxes OR single box with offset)
@@ -272,6 +274,7 @@ namespace Framework {
                 }
 
                 if (prop.motionType == 1) {
+
                     bcs.mMotionQuality = JPH::EMotionQuality::LinearCast;
                     bcs.mAllowSleeping = false;
                 }
@@ -472,23 +475,48 @@ namespace Framework {
             auto& prop = ecsInterface.GetComponent<PhysicsProperties>(e);
             if (pb.IDs.empty()) continue;
 
-            // Only really needed for Player, but harmless for others if you want
-            // (If you want: if (ecsInterface.GetEntityName(e) != "Player") continue;)
-
-            // Get current physics position (more accurate than transform mid-step)
+            // Get current physics position
             JPH::RVec3 jp = bodyInterface->GetPosition(pb.IDs[0]);
             glm::vec3 pos(jp.GetX(), jp.GetY(), jp.GetZ());
 
             float halfH = ComputeEntityHalfHeight(ecsInterface, e);
 
-            // Ray origin slightly above bottom of collider
-            glm::vec3 origin = pos + glm::vec3(0.0f, 0.05f, 0.0f);
-            float rayLen = halfH + prop.groundCheckExtra + 0.05f;
+            // Start just above the feet, not near body center
+            const float footProbeBelowBody = 0.05f;
+
+            // Start slightly BELOW the player's bottom so we don't hit our own body
+            glm::vec3 origin = pos - glm::vec3(0.0f, halfH + footProbeBelowBody, 0.0f);
+
+            // Short ray downward from just below feet
+            float rayLen = prop.groundCheckExtra + 0.15f;
 
             RaycastHit hit;
-            bool didHit = Raycast(origin, glm::vec3(0.0f, -1.0f, 0.0f), rayLen, hit, /*targetCategory*/ -1);
+            bool didHit = Raycast(origin, glm::vec3(0.0f, -1.0f, 0.0f), rayLen, hit, -1);
 
-            if (didHit && hit.hit)
+            /*if (ecsInterface.GetEntityName(e) == "Player")
+            {
+                std::cout
+                    << "[GroundCheck] pos=(" << pos.x << ", " << pos.y << ", " << pos.z << ") "
+                    << "halfH=" << halfH
+                    << " origin=(" << origin.x << ", " << origin.y << ", " << origin.z << ") "
+                    << " groundExtra=" << prop.groundCheckExtra
+                    << " rayLen=" << rayLen
+                    << " didHit=" << didHit;
+
+                if (didHit && hit.hit)
+                {
+                    std::cout
+                        << " hitDist=" << hit.distance
+                        << " normal=(" << hit.normal.x << ", " << hit.normal.y << ", " << hit.normal.z << ")"
+                        << " entity=" << (int)hit.entity;
+                }
+
+                std::cout << std::endl;
+            }*/
+
+            if (didHit && hit.hit &&
+                hit.normal.y > 0.5f &&
+                hit.entity != e)
             {
                 prop.groundNormal = hit.normal;
                 prop.isGrounded = IsWalkableGround(hit.normal, prop.maxSlopeAngleDeg);

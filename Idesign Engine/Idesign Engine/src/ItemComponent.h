@@ -19,7 +19,7 @@
 namespace Framework
 {
     // --- 1. Internal Structures ---
-    enum class ItemType { DEFAULT = 0, INGREDIENT, POTION };
+    enum class ItemType { DEFAULT = 0, INGREDIENT, POTION, POWDER };
 
     struct ItemDefinition {
         std::string id;
@@ -132,7 +132,8 @@ namespace Framework
                 std::string typeStr = item["type"].GetString();
                 if (typeStr == "ingredient") def.type = ItemType::INGREDIENT;
                 else if (typeStr == "potion") def.type = ItemType::POTION;
-                else def.type = ItemType::DEFAULT;
+                else if (typeStr == "powder") def.type = ItemType::POWDER;
+				else def.type = ItemType::DEFAULT;
                 if (item.HasMember("location") && item["location"].IsString()) {
                     def.location = item["location"].GetString();
                 }

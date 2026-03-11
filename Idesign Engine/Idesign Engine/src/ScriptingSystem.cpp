@@ -1542,6 +1542,7 @@ namespace Framework {
             return 0;
         }
 
+
         int Lua_GetPlayerSelectedItemId(lua_State* L) {
             int itemId = Framework::Inventory::Instance().GetSelectedItemId();
             // In your Inventory.cpp, -1 (unsigned -1) is empty. 
@@ -2449,6 +2450,11 @@ namespace Framework {
                 input->SetCameraRotationEnabled(!locked);
             }
             return 0;
+            });
+
+        lua_register(L, "GetRealTime", [](lua_State* L) -> int {
+            lua_pushnumber(L, (float)glfwGetTime());
+            return 1;
             });
 
         lua_register(L, "SetGravity", [](lua_State* L) -> int {

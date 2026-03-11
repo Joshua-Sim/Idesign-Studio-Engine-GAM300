@@ -151,34 +151,41 @@ namespace Framework {
 
     std::string ImguiManager::SaveFileDialog()
     {
-        OPENFILENAMEA ofn;
-        // Increased buffer to MAX_PATH (260) or even 4096 if you want to be safe
-        char szFile[MAX_PATH] = { 0 };
+        // 1. USE A STATIC BUFFER
+        // This ensures the memory address remains constant and valid 
+        // while the Windows Dialog is "blocking" your main thread.
+        static char szFile[260];
+        std::memset(szFile, 0, sizeof(szFile));
 
-        ZeroMemory(&ofn, sizeof(ofn));
-        ofn.lStructSize = sizeof(ofn);
-        ofn.hwndOwner = GetActiveWindow(); // Better to provide the handle than NULL
+        OPENFILENAMEA ofn;
+        std::memset(&ofn, 0, sizeof(ofn)); // Use memset for absolute safety
+
+        ofn.lStructSize = sizeof(OPENFILENAMEA);
+        ofn.hwndOwner = GetActiveWindow();
         ofn.lpstrFile = szFile;
-        ofn.nMaxFile = MAX_PATH; // Use the count, not sizeof()
-        ofn.lpstrFilter = "Scene Files\0*.json;*.scene;*.xml\0All Files\0*.*\0";
+        ofn.nMaxFile = sizeof(szFile);
+
+        // 2. ENSURE DOUBLE NULL TERMINATOR
+        // The filter string MUST end with \0\0
+        ofn.lpstrFilter = "Scene Files\0*.json;*.scene;*.xml\0All Files\0*.*\0\0";
         ofn.nFilterIndex = 1;
-        ofn.Flags = OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT | OFN_EXPLORER | OFN_NOCHANGEDIR;
+        ofn.lpstrFileTitle = NULL;
+        ofn.nMaxFileTitle = 0;
+        ofn.lpstrInitialDir = NULL;
+        ofn.Flags = OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR | OFN_EXPLORER;
 
         if (GetSaveFileNameA(&ofn))
         {
-            std::string fullPath(ofn.lpstrFile);
+            std::string fullPath(szFile);
             std::replace(fullPath.begin(), fullPath.end(), '\\', '/');
 
-            // Safer extension check: check only the filename part, not the whole path
+            // Extension check
             size_t lastDot = fullPath.find_last_of('.');
             size_t lastSlash = fullPath.find_last_of('/');
-
-            // If no dot exists, or the last dot is part of a folder name (before the last slash)
             if (lastDot == std::string::npos || (lastSlash != std::string::npos && lastDot < lastSlash))
             {
                 fullPath += ".json";
             }
-
             return fullPath;
         }
         return "";
@@ -1044,6 +1051,8 @@ namespace Framework {
                     std::cout << savePath;
                     std::cout << "\n============================\n";
                     Framework::sceneManager.SaveScene(savePath);
+
+
                 }
 
                 ImGui::Separator();  // Visual separator
