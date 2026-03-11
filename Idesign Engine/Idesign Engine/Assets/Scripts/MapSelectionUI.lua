@@ -1,10 +1,10 @@
 -- MapSelectionUI.lua
 --
 -- DIALOG VISIBILITY: SetIsUI called directly on the 6 cached dialog entity IDs.
--- No tag dependency for dialog — we own visibility entirely from Lua.
+-- No tag dependency for dialog ï¿½ we own visibility entirely from Lua.
 -- Forest/Quarry/House map buttons still rely on SceneInterface via "map" tag.
 --
--- HOVER SWAP: Z trick — hover entity pushed to HIDE_Z until mouse is over button.
+-- HOVER SWAP: Z trick ï¿½ hover entity pushed to HIDE_Z until mouse is over button.
 
 local M = {}
 
@@ -34,7 +34,7 @@ local locations = {
         name = "Quarry",
         buttonEntity = "Quarry Button",
         checkUnlocked = IsQuarryUnlocked,
-        spawnPos = { x = -170.856, y = 7.730, z = -170.782 },
+        spawnPos = { x = -170.856, y = 370.0, z = -170.782 },
         spawnRot = { x = 0.0,     y = 0.0,   z = 0.0 },
         ingredients = { "Stone Minerals", "Cave Moss", "Crystal Dust" },
         ingredientImageEntity = "QuarryIngredientsImage",
@@ -61,7 +61,7 @@ local locations = {
 -- =========================================================
 -- DIALOG ENTITY NAMES
 -- =========================================================
--- 6 entities. Do NOT need "map" tag — visibility fully managed here via SetIsUI.
+-- 6 entities. Do NOT need "map" tag ï¿½ visibility fully managed here via SetIsUI.
 -- dialog_btn_travel_normal / hover / stay_normal / stay_hover need ButtonComponent.
 
 local DIALOG_OVERLAY           = "dialog_overlay"
@@ -71,7 +71,7 @@ local DIALOG_BTN_TRAVEL_HOVER  = "dialog_btn_travel_hover"
 local DIALOG_BTN_STAY_NORMAL   = "dialog_btn_stay_normal"
 local DIALOG_BTN_STAY_HOVER    = "dialog_btn_stay_hover"
 
--- Cached entity IDs — populated once in on_init
+-- Cached entity IDs ï¿½ populated once in on_init
 local de = {}  -- dialogEntities shorthand
 
 -- Cached original Z for all 4 button entities
@@ -82,7 +82,7 @@ local travelHovered   = false
 local stayHovered     = false
 
 -- =========================================================
--- SETISUI HELPERS — only called on known dialog entity IDs
+-- SETISUI HELPERS ï¿½ only called on known dialog entity IDs
 -- =========================================================
 local function ShowDialog(e)
     if e and IsEntityValid(e) then
@@ -97,7 +97,7 @@ local function HideDialog(e)
 end
 
 -- =========================================================
--- Z TRICK HELPERS — for hover swap only
+-- Z TRICK HELPERS ï¿½ for hover swap only
 -- =========================================================
 local function HideByZ(e)
     if e and IsEntityValid(e) then
@@ -224,14 +224,14 @@ function M:on_init()
     -- Register STAY callbacks (normal + hover both cancel)
     if de.stayNormal and IsEntityValid(de.stayNormal) then
         RegisterButtonCallback(de.stayNormal, function()
-            -- print("[MapSelectionUI] Stay clicked — cancelling.")
+            -- print("[MapSelectionUI] Stay clicked ï¿½ cancelling.")
             pendingLocation = nil
             SetDialogVisible(false)
         end)
     end
     if de.stayHover and IsEntityValid(de.stayHover) then
         RegisterButtonCallback(de.stayHover, function()
-            -- print("[MapSelectionUI] Stay clicked — cancelling.")
+            -- print("[MapSelectionUI] Stay clicked ï¿½ cancelling.")
             pendingLocation = nil
             SetDialogVisible(false)
         end)
@@ -249,7 +249,7 @@ function M:on_init()
 end
 
 -- =========================================================
--- ON UPDATE — hover swap via Z trick
+-- ON UPDATE ï¿½ hover swap via Z trick
 -- =========================================================
 function M:on_update(dt)
     if not IsEngineState("MapSelection") then return end
@@ -283,13 +283,13 @@ function M:on_update(dt)
 end
 
 -- =========================================================
--- LOCATION SELECTED — show dialog
+-- LOCATION SELECTED ï¿½ show dialog
 -- =========================================================
 function M:OnLocationSelected(locData)
     -- print("[MapSelectionUI] Location selected: " .. locData.name)
 
     if not IsEngineState("MapSelection") then
-        -- print("[MapSelectionUI] Ignoring — not in MapSelection state")
+        -- print("[MapSelectionUI] Ignoring ï¿½ not in MapSelection state")
         return
     end
 

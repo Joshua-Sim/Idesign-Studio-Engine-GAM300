@@ -616,10 +616,10 @@ namespace Framework
         static bool prevSpace = false; // edge trigger
         const bool spaceDown = (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS);
 
-        std::cout << "isGrounded: " << phys.isGrounded
-            << "  velY: " << phys.linearVelocity.y
-            << "  allowMovementInput: " << allowMovementInput
-            << std::endl;
+        //std::cout << "isGrounded: " << phys.isGrounded
+        //    << "  velY: " << phys.linearVelocity.y
+        //    << "  allowMovementInput: " << allowMovementInput
+        //    << std::endl;
 
         // Jump only if grounded
         if (spaceDown && !prevSpace && phys.isGrounded && allowMovementInput)

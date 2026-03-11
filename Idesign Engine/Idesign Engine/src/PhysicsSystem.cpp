@@ -197,14 +197,8 @@ namespace Framework {
             {
                 JPH::ShapeRefC shape = nullptr;
 
-                // Determine if we can use a simple shape or if we need a compound shape (for offsets/multi-box)
-                bool needsCompound = (entries.size() > 1);
-                if (entries.size() == 1 && entries[0]->center != glm::vec3(0.0f)) {
-                    needsCompound = true;
-                }
-
-                if (!needsCompound) {
-                    // Case A: Single Shape, No Offset
+                // Focus on Case A (Single box) which is what most slanted ramps use
+                if (entries.size() == 1) {
                     const auto* entry = entries[0];
                     JPH::Vec3 half_extents(
                         std::abs(0.5f * entry->size.x * tf.scale.x),
@@ -213,10 +207,18 @@ namespace Framework {
                     );
                     half_extents = JPH::Vec3::sMax(half_extents, JPH::Vec3(0.001f, 0.001f, 0.001f));
 
-                    JPH::BoxShapeSettings settings(half_extents);
-                    auto result = settings.Create();
-                    if (result.HasError()) return;
-                    shape = result.Get();
+                    shape = new JPH::BoxShape(half_extents);
+
+                    // If there's an offset, wrap it in an OffsetCenterOfMassShape 
+                    // This is WAY more reliable for rotated single boxes than StaticCompoundShape
+                    if (glm::length(entry->center) > 0.001f) {
+                        JPH::Vec3 joltOffset(
+                            entry->center.x * tf.scale.x,
+                            entry->center.y * tf.scale.y,
+                            entry->center.z * tf.scale.z
+                        );
+                        shape = new JPH::OffsetCenterOfMassShape(shape, joltOffset);
+                    }
                 }
                 else {
                     // Case B: Compound Shape (Multiple boxes OR single box with offset)
@@ -272,6 +274,7 @@ namespace Framework {
                 }
 
                 if (prop.motionType == 1) {
+
                     bcs.mMotionQuality = JPH::EMotionQuality::LinearCast;
                     bcs.mAllowSleeping = false;
                 }

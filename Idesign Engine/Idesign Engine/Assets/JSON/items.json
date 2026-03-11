@@ -5,13 +5,13 @@
       "name": "Herb",
       "type": "ingredient",
       "location": "Forest",
-      "flavor": "A versatile vegetable, found commonly on the floors of the woods."
+      "flavor": "A versatile vegetable, found commonly on the floors of the woods. Maybe you could chop this up"
     },
     {
       "id": "chopped_herb",
       "name": "Chopped Herb",
       "type": "ingredient",
-      "flavor": "All chopped up; the preparation is half the magic."
+      "flavor": "All diced up, it's served as toppings on food."
     },
     {
       "id": "pear",
@@ -57,25 +57,25 @@
       "name": "Iron Ore",
       "type": "ingredient",
       "location": "Quarry",
-      "flavor": "Heavy and cold to the touch, it holds the potential of a thousand blades."
+      "flavor": "Heavy and cold to the touch, it holds limitless potential for a craftsman. Maybe you could smelt this"
     },
     {
       "id": "copper_ore",
       "name": "Copper Ore",
       "type": "ingredient",
       "location": "Quarry",
-      "flavor": "Streaked with dull orange, it hums faintly when held near a heat source."
+      "flavor": "Streaked with dull orange, it hums faintly when held near a heat source. Maybe you could smelt this"
     },
     {
       "id": "iron_bar",
       "name": "Iron Bar",
-      "type": "material",
+      "type": "ingredient",
       "flavor": "Refined and unyielding, the backbone of any sturdy defense."
     },
     {
       "id": "copper_bar",
       "name": "Copper Bar",
-      "type": "material",
+      "type": "ingredient",
       "flavor": "Gleaming with a soft luster, it conducts both heat and magic with ease."
     },
     {
@@ -93,13 +93,13 @@
     {
       "id": "preservation_powder",
       "name": "Preservation Powder",
-      "type": "ingredient",
+      "type": "powder",
       "flavor": "Fine as stardust, it keeps the rot at bay and the essence fresh."
     },
     {
       "id": "healing_powder",
       "name": "Healing Powder",
-      "type": "ingredient",
+      "type": "powder",
       "flavor": "A gritty, glowing dust that stings briefly before the warmth of mending sets in."
     }
     

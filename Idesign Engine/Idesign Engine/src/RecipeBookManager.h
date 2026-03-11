@@ -56,7 +56,7 @@ namespace Framework {
         const int   GRID_COLUMNS = 3;
 
         // --- TAB STATE ---
-        enum class BookTab { INGREDIENTS, POTIONS, ITEMS };
+        enum class BookTab { INGREDIENTS, POTIONS, POWDER };
         BookTab m_currentTab = BookTab::INGREDIENTS;
 
         // --- SIDE TAB CONSTANTS ---
@@ -176,7 +176,7 @@ namespace Framework {
 
                     if (type == Framework::ItemType::POTION) targetTab = BookTab::POTIONS;
                     else if (type == Framework::ItemType::INGREDIENT) targetTab = BookTab::INGREDIENTS;
-                    else targetTab = BookTab::ITEMS;
+                    else  if (type == Framework::ItemType::POWDER) targetTab = BookTab::POWDER;
 
                     // 2. Switch the tab if we aren't already on it
                     if (m_currentTab != targetTab) {
@@ -643,7 +643,7 @@ namespace Framework {
                 // --- MUST USE EXACT SAME FILTER LOGIC AS BUILDLEFTPAGE ---
                 if (m_currentTab == BookTab::INGREDIENTS && type != Framework::ItemType::INGREDIENT) continue;
                 if (m_currentTab == BookTab::POTIONS && type != Framework::ItemType::POTION) continue;
-                if (m_currentTab == BookTab::ITEMS && type != Framework::ItemType::DEFAULT) continue;
+                if (m_currentTab == BookTab::POWDER && type != Framework::ItemType::POWDER) continue;
 
                 // STRICT HIT CHECK
                 bool hitX = mouseX >= (currentX - halfSize) && mouseX <= (currentX + halfSize);
@@ -684,7 +684,7 @@ namespace Framework {
                 // --- FILTER LOGIC ---
                 if (m_currentTab == BookTab::INGREDIENTS && type != Framework::ItemType::INGREDIENT) continue;
                 if (m_currentTab == BookTab::POTIONS && type != Framework::ItemType::POTION) continue;
-                if (m_currentTab == BookTab::ITEMS && type != Framework::ItemType::DEFAULT) continue;
+                if (m_currentTab == BookTab::POWDER && type != Framework::ItemType::POWDER) continue;
 
                 // --- UNLOCK MASK ---
                 bool isUnlocked = GameSystem::m_debugRevealAll || Framework::IsItemUnlocked(i);
@@ -752,7 +752,8 @@ namespace Framework {
             SpawnGenericSpriteReturnEntity(rightPageX, std::round(currentY), "RB_Divider", 522.0f, 2.0f, itemFrameZ);
             currentY -= 30.0f;
 
-            if (Framework::GetItemType(selectedID) == Framework::ItemType::POTION) {
+            Framework::ItemType selectedType = Framework::GetItemType(selectedID);
+            if (selectedType == Framework::ItemType::POTION || selectedType == Framework::ItemType::POWDER) {
 
                 SpawnTextReturnEntity(rightPageX - 160.0f, currentY, baseTextZ, "Recipe:", 0.5f, black, 0);
                 currentY -= 70.0f;
@@ -768,7 +769,9 @@ namespace Framework {
                     float startX = rightPageX - 145.0f;
 
                     for (int ingID : recipe->ingredientIDs) {
-                        bool isIngUnlocked = Framework::IsItemUnlocked(ingID);
+                        // Check BOTH the actual progress and the debug flag
+                        bool isIngUnlocked = GameSystem::m_debugRevealAll || Framework::IsItemUnlocked(ingID);
+
                         std::string ingIcon = isIngUnlocked ? Framework::kItemNames[ingID] : "RB_QuestionMark";
 
                         Entity bg = SpawnGenericSpriteReturnEntity(startX, currentY, "RB_ItemBackground", smallIconSize, smallIconSize, itemFrameZ + 0.01f);
@@ -820,14 +823,15 @@ namespace Framework {
                     float startX = rightPageX - ((usedInOutputs.size() - 1) * spacing / 2.0f);
 
                     for (int outID : usedInOutputs) {
-                        bool isOutUnlocked = Framework::IsItemUnlocked(outID);
+                        // Reveal if unlocked OR if debug reveal is active
+                        bool isOutUnlocked = GameSystem::m_debugRevealAll || Framework::IsItemUnlocked(outID);
+
                         std::string outIcon = isOutUnlocked ? Framework::kItemNames[outID] : "RB_QuestionMark";
 
                         SpawnGenericSpriteReturnEntity(startX, currentY, "RB_ItemBackground", smallIconSize, smallIconSize, itemFrameZ);
                         SpawnUISpriteReturnEntity(startX, currentY, outIcon, 1.3f, itemIconZ);
 
                         m_usedInHitboxes.push_back({ outID, glm::vec2(startX, currentY) });
-
                         startX += spacing;
                     }
                 }
