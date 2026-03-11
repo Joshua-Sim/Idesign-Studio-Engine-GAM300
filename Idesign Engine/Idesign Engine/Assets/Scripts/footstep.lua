@@ -4,6 +4,16 @@ local M = {}
 local stepTimer = 0
 local stepInterval = 0.5
 
+local sheepTimer = 0
+local sheepInterval = 0.5
+local sheepSounds = {
+    "event:/Sheep1", "event:/Sheep2", "event:/Sheep3",
+    "event:/Sheep4", "event:/Sheep5", "event:/Sheep6",
+    "event:/Sheep8", "event:/Sheep9",
+}
+local sheepEntities = {}
+
+
 local indoorEvent = "event:/Footstep"
 local outdoorEvent = "event:/FootstepBackyard"
 local quarryEvent = "event:/QuarryAmbient"
@@ -89,6 +99,17 @@ function M:on_init()
     else
         print("[Footsteps] WARNING: Could not find Frog entity!")
     end
+
+    -- Find sheep entities
+    local animalNames = {"Animal_1", "Animal_2", "Animal_3", "Animal_4"}
+    for _, name in ipairs(animalNames) do
+        local ent = FindEntityByName(name)
+        if ent then
+            table.insert(sheepEntities, ent)
+            print("[Footsteps] Found sheep: " .. name .. " (entity " .. ent .. ")")
+        end
+    end
+
 end
 
 -- Zone Check for Forest 
@@ -190,6 +211,23 @@ function M:on_update(dt)
 
     wasInQuarry = isInQuarry
     wasInShop = isInShop
+
+    -- Sheep ambient sounds
+    if #sheepEntities > 0 then
+        sheepTimer = sheepTimer + dt
+        if sheepTimer >= sheepInterval then
+            -- Pick a random sheep entity
+            local sheepEnt = sheepEntities[math.random(1, #sheepEntities)]
+            -- Pick a random sound
+            local sound = sheepSounds[math.random(1, #sheepSounds)]
+            -- Play at sheep's position
+            local sx, sy, sz = GetPosition(sheepEnt)
+            Sound.Play3D(sound, sx, sy, sz)
+            -- Reset with some randomness (15-25 seconds)
+            sheepTimer = -(math.random() * 10.0)
+            print("[Footsteps] Sheep ambient: " .. sound .. " at entity " .. sheepEnt)
+        end
+    end
     
     -- Footstep logic 
     -- Check if player is moving
