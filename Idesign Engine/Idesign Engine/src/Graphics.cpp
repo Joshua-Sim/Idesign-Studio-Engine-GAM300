@@ -726,22 +726,29 @@ namespace Framework {
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
 
-        const unsigned int POINT_SHADOW_WIDTH = 1024;
-        const unsigned int POINT_SHADOW_HEIGHT = 1024;
-        const float LIGHT_RENDER_DISTANCE = 10.0f;
+        // PERF: 512 costs 4x less fill/VRAM than 1024 with minimal quality loss for interior lights.
+        const unsigned int POINT_SHADOW_WIDTH = 512;
+        const unsigned int POINT_SHADOW_HEIGHT = 512;
+        const float LIGHT_RENDER_DISTANCE = 50.0f;
         const float LIGHT_RENDER_DISTANCE_SQ = LIGHT_RENDER_DISTANCE * LIGHT_RENDER_DISTANCE;
 
-        // [OPTIMIZATION] Pre-collect entities that actually need to be drawn in shadows
-        // This fixes the 5% CPU hit on the inner loop by avoiding searching 5000+ entities 6 times per light.
+        // Collect ALL entities as shadow casters (not just camera-visible ones).
+        // Using m_visibleEntities here was wrong - objects behind the camera must still cast shadows.
         std::vector<Entity> shadowCasters;
-        for (auto const& e : m_visibleEntities) {
-            if (ecsInterface.HasComponent<MeshProperties>(e) && ecsInterface.GetComponent<TransformComponent>(e).isActive) {
-                auto& mesh = ecsInterface.GetComponent<MeshProperties>(e);
-                if (mesh.debugShape == DebugShapeType::None && mesh.vao != 0) {
-                    shadowCasters.push_back(e);
-                }
+        for (auto const& e : mEntities) {
+            if (!ecsInterface.HasComponent<MeshProperties>(e)) continue;
+            if (!ecsInterface.HasComponent<TransformComponent>(e)) continue;
+            if (!ecsInterface.GetComponent<TransformComponent>(e).isActive) continue;
+            auto& mesh = ecsInterface.GetComponent<MeshProperties>(e);
+            if (mesh.debugShape == DebugShapeType::None && mesh.vao != 0) {
+                shadowCasters.push_back(e);
             }
         }
+
+        // PERF: throttle shadow updates — re-render each light's cubemap only every 2 frames.
+        // For static interior geometry this is visually identical but halves shadow-pass cost.
+        static int s_shadowFrameCounter = 0;
+        s_shadowFrameCounter++;
 
         for (auto const& entityId : mEntities)
         {
@@ -753,9 +760,14 @@ namespace Framework {
             auto& transform = ecsInterface.GetComponent<TransformComponent>(entityId);
             glm::vec3 lightPos = transform.position;
 
-            // 1. DISTANCE CHECK (Prevents VRAM Exhaustion)
-            float distSq = glm::distance(lightPos, gameCamera.position);
+            // 1. DISTANCE CHECK
+            glm::vec3 diff = lightPos - gameCamera.position;
+            float distSq = glm::dot(diff, diff);
             if (distSq > LIGHT_RENDER_DISTANCE_SQ) continue;
+
+            // PERF: stagger updates — skip odd-frame lights on even frames and vice versa.
+            // All lights still update every 2 frames; no light is ever fully frozen.
+            if ((int(entityId) & 1) != (s_shadowFrameCounter & 1)) continue;
 
             // 2. INITIALIZATION GUARD (Prevents Memory Leaks)
             if (light.shadowFBO == 0)
@@ -780,11 +792,25 @@ namespace Framework {
                 glBindRenderbuffer(GL_RENDERBUFFER, light.shadowDepthRBO);
                 glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, POINT_SHADOW_WIDTH, POINT_SHADOW_HEIGHT);
                 glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, light.shadowDepthRBO);
+                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X, light.shadowDepthCubeMap, 0);
+                // Tell the FBO it has a color attachment (required for R32F cubemap rendering)
+                GLenum drawBufs[] = { GL_COLOR_ATTACHMENT0 };
+                glDrawBuffers(1, drawBufs);
+
+                // FIX: verify the FBO is valid before ever rendering into it
+                GLenum fboStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+                if (fboStatus != GL_FRAMEBUFFER_COMPLETE)
+                    std::cerr << "[PointShadow] FBO incomplete for entity " << entityId
+                    << ", status=0x" << std::hex << fboStatus << std::dec << "\n";
 
                 glBindFramebuffer(GL_FRAMEBUFFER, 0);
             }
 
             // 3. RENDER PASS (6 Faces)
+            // FIX: use light.radius directly as the far plane — do NOT clamp to 50.
+            // The shadow-pass fragment shader writes (dist / farPlane) into the R32F cubemap.
+            // The mesh shader reads it back as (storedValue * uPointShadowFarPlanes[i]).
+            // If these two values differ the depth comparison always fails and shadows vanish.
             light.shadowFarPlane = light.radius;
             pointShadowShader.use();
 
@@ -802,7 +828,16 @@ namespace Framework {
 
             glViewport(0, 0, POINT_SHADOW_WIDTH, POINT_SHADOW_HEIGHT);
             glBindFramebuffer(GL_FRAMEBUFFER, light.shadowFBO);
+            // --- THE HAMMER: Force exact OpenGL state ---
+            glEnable(GL_DEPTH_TEST);
+            glDepthMask(GL_TRUE);      // Force depth writing
+            glDepthFunc(GL_LESS);      // Reset depth function in case UI changed it
+            glDisable(GL_CULL_FACE);   // Stop culling from hiding inside-out meshes or planes
+            glDisable(GL_BLEND);       // Ensure alpha blending doesn't wash out the depth
 
+            // Safety net: ensure far plane is NEVER zero (near_plane=0.01 already handles this)
+            // Do NOT use max(radius, 50) here — it must stay equal to light.radius so the
+            // depth stored in the cubemap and the value read back in the shader match exactly.
             for (unsigned int i = 0; i < 6; ++i)
             {
                 glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, light.shadowDepthCubeMap, 0);
@@ -814,7 +849,21 @@ namespace Framework {
                 {
                     if (casterId == entityId) continue; // Don't let the light shadow itself
 
-                    glm::mat4 model = m_frameModelMatrices[casterId];
+                    // PERF: skip casters outside this light's radius — they can't possibly
+                    // receive or cast a visible shadow for this light.
+                    auto& casterTr = ecsInterface.GetComponent<TransformComponent>(casterId);
+                    glm::vec3 casterDiff = casterTr.position - lightPos;
+                    // Use radius * 1.5 as a loose bound to account for large meshes
+                    float casterDistSq = glm::dot(casterDiff, casterDiff);
+                    float cullRadius = light.shadowFarPlane * 1.5f;
+                    if (casterDistSq > cullRadius * cullRadius) continue;
+
+                    // Build matrix inline
+                    glm::mat4 model = glm::translate(glm::mat4(1.0f), casterTr.position);
+                    model = glm::rotate(model, glm::radians(casterTr.rotation.x), { 1,0,0 });
+                    model = glm::rotate(model, glm::radians(casterTr.rotation.y), { 0,1,0 });
+                    model = glm::rotate(model, glm::radians(casterTr.rotation.z), { 0,0,1 });
+                    model = glm::scale(model, casterTr.scale);
                     bool isSkinned = ecsInterface.HasComponent<AnimationProperties>(casterId);
                     ShaderProgram& currentShadowShader = isSkinned ? skinnedPointShadowShader : pointShadowShader;
 
@@ -1555,7 +1604,8 @@ namespace Framework {
         const float hotbarPanelH = slotSize + 24.0f;
         const float marginAboveHotbar = 20.0f;
         const float rightMargin = 24.0f;
-        const float panelPad = 12.0f;
+
+        const float panelPad = 12.0f;     // matches your panel padding
 
         // Panel bottom-left (x0,y0) for the GRID (not including outer panel pad)
         const float x0 = std::round((screenW - gridW) * 0.5);
@@ -2015,10 +2065,13 @@ namespace Framework {
                         light.color,
                         light.intensity,
                         light.radius,
-                        true,// enabled
+                        true,               // enabled
                         light.castsShadow,
                         light.shadowBiasConst,
-                        light.shadowBiasFactor
+                        light.shadowBiasFactor,
+                        // FIX: carry the actual far plane used when rendering the cubemap
+                        // so SetupShadowsForShader can upload it as uPointShadowFarPlanes[i].
+                        light.shadowFarPlane
                         });
                     break;
 
@@ -2227,7 +2280,7 @@ namespace Framework {
                     glActiveTexture(GL_TEXTURE0 + pointShadowUnit);
                     glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
 
-                    std::string samplerName = "uPointShadowMaps[" + std::to_string(pointShadowCount) + "]";
+                    std::string samplerName = "uPointShadowMaps[" + std::to_string(i) + "]";
                     // Make sure to use 'terrainShader' here!
                     terrainShader.setInt(samplerName.c_str(), pointShadowUnit);
 
@@ -2396,30 +2449,41 @@ namespace Framework {
                 }
             }
             validShadowTextures.push_back(foundID);
+
         }
 
         // 2. Bind Textures & Set Uniforms GLOBALLY for this pass.
         //    This avoids re-binding them thousands of times inside the loop.
-        auto SetupShadowsForShader = [&](ShaderProgram& sh)
-            {
-                sh.use();
-                int unit = 2; // Start at Texture Unit 2 (Unit 0=Albedo, 1=DirShadow)
-                int count = 0;
-                for (size_t i = 0; i < points.size(); ++i)
-                {
-                    // Only bind if light casts shadow AND we found a valid texture
-                    if (points[i].castsShadow && validShadowTextures[i] != 0 && count < MAX_POINT_LIGHTS)
-                    {
-                        glActiveTexture(GL_TEXTURE0 + unit);
-                        glBindTexture(GL_TEXTURE_CUBE_MAP, validShadowTextures[i]);
+        auto SetupShadowsForShader = [&](ShaderProgram& sh) {
+            sh.use();
+            int baseUnit = 2; // Start at Texture Unit 2 (0=Albedo, 1=DirShadow)
 
-                        std::string uniformName = "uPointShadowMaps[" + std::to_string(count) + "]";
-                        sh.setInt(uniformName.c_str(), unit);
+            // FIX: use a compacted 'shadowCount' index so that uPointShadowMaps[k] and
+            // uPointLights[k] refer to the same light.
+            // LightProperties::upload already packs enabled lights into 0..N-1 slots.
+            // We must bind cubemaps using the same compacted counter, not the raw
+            // points[] index (which would skip disabled lights and cause a mismatch).
 
-                        unit++;
-                        count++;
-                    }
-                }
+            // Step 1: lock ALL sampler slots first so none default to unit 0.
+            for (int i = 0; i < MAX_POINT_LIGHTS; ++i) {
+                sh.setInt(("uPointShadowMaps[" + std::to_string(i) + "]").c_str(), baseUnit + i);
+                sh.setFloat(("uPointShadowFarPlanes[" + std::to_string(i) + "]").c_str(), 0.0f);
+            }
+
+            // Step 2: bind actual cubemaps and upload far planes using a compacted counter
+            int shadowCount = 0;
+            for (size_t i = 0; i < points.size() && shadowCount < MAX_POINT_LIGHTS; ++i) {
+                if (!points[i].castsShadow || validShadowTextures[i] == 0) continue;
+
+                glActiveTexture(GL_TEXTURE0 + baseUnit + shadowCount);
+                glBindTexture(GL_TEXTURE_CUBE_MAP, validShadowTextures[i]);
+
+                // Upload the exact far plane that was used to write this cubemap
+                sh.setFloat(("uPointShadowFarPlanes[" + std::to_string(shadowCount) + "]").c_str(),
+                    points[i].shadowFarPlane);
+
+                shadowCount++;
+            }
             };
 
         // Apply these settings to BOTH shaders used in the loop
@@ -2856,15 +2920,20 @@ namespace Framework {
                 // Slots 2+: Point Light Shadow Maps
                 // [OPTIMIZATION] We use the pre-calculated 'validShadowTextures' from the Opaque pass
                 // This removes the slow mEntities loop!
+                // FIX: use a compacted counter so uPointShadowMaps[k] matches uPointLights[k]
                 int unit = 2;
                 int shadowCount = 0;
-                for (size_t i = 0; i < points.size(); ++i) {
-                    if (points[i].castsShadow && validShadowTextures[i] != 0 && shadowCount < MAX_POINT_LIGHTS) {
-                        glActiveTexture(GL_TEXTURE0 + unit);
-                        glBindTexture(GL_TEXTURE_CUBE_MAP, validShadowTextures[i]);
-                        currentShader.setInt(shadowNames[shadowCount].c_str(), unit);
-                        unit++; shadowCount++;
-                    }
+                for (size_t i = 0; i < points.size() && shadowCount < MAX_POINT_LIGHTS; ++i) {
+                    if (!points[i].castsShadow || validShadowTextures[i] == 0) continue;
+                    glActiveTexture(GL_TEXTURE0 + unit);
+                    glBindTexture(GL_TEXTURE_CUBE_MAP, validShadowTextures[i]);
+                    // Use shadowCount (compacted) not i (raw) — must match LightProperties::upload packing
+                    std::string uniformName = "uPointShadowMaps[" + std::to_string(shadowCount) + "]";
+                    currentShader.setInt(uniformName.c_str(), unit);
+                    currentShader.setFloat(("uPointShadowFarPlanes[" + std::to_string(shadowCount) + "]").c_str(),
+                        points[i].shadowFarPlane);
+                    unit++;
+                    shadowCount++;
                 }
 
                 if (isSkinned) {

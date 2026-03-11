@@ -43,8 +43,14 @@ namespace Framework
         float radius{ 10.0f };
         bool enabled{ true };
         bool castsShadow{ false };
-        float shadowBiasConst{ 0.005f };
-        float shadowBiasFactor{ 0.05f };
+        // ACNE FIX: shadowBiasConst is the flat floor bias (world-space units).
+        // shadowBiasFactor scales with surface slope in the shader.
+        // 0.005 was too small for interior scenes — bumped to safer defaults.
+        // Tune per-light via the editor if Peter-Panning appears.
+        float shadowBiasConst{ 0.08f };
+        float shadowBiasFactor{ 0.04f };
+        // Carry the actual far plane used when rendering the cubemap
+        float shadowFarPlane{ 0.0f };
     };
 
     struct SpotLightCPU {
@@ -57,8 +63,6 @@ namespace Framework
         float innerCutOffAngle{ glm::radians(12.5f) };
         float outerCutOffAngle{ glm::radians(15.0f) };
         bool enabled{ true };
- 
-
     };
 
     // ========================================================================
@@ -85,8 +89,8 @@ namespace Framework
         float innerCutOffAngle = glm::radians(12.5f);
         float outerCutOffAngle = glm::radians(15.0f);
         bool castsShadow = false;
-        float shadowBiasConst{ 0.005f };
-        float shadowBiasFactor{ 0.05f };
+        float shadowBiasConst{ 0.08f };
+        float shadowBiasFactor{ 0.04f };
         // --- Shadow Resources ---
         // share the FBO ID for all light types)
         GLuint    shadowFBO = 0;
@@ -98,7 +102,7 @@ namespace Framework
         // For Point lights (samplerCube)
         GLuint    shadowDepthCubeMap = 0; // The 6-sided texture
         GLuint    shadowDepthRBO = 0;     // Depth buffer for the FBO
-        float     shadowFarPlane = 0.0f;  // Store the radius here
+        float     shadowFarPlane = 0.0f;  // The far plane used when the cubemap was rendered
 
 
         static void upload(ShaderProgram& shader,
@@ -149,7 +153,6 @@ namespace Framework
                 // Send the cosine of the angles, which the shader expects
                 shader.setFloat((base + ".innerCutoff").c_str(), std::cos(spotLights[i].innerCutOffAngle));
                 shader.setFloat((base + ".outerCutoff").c_str(), std::cos(spotLights[i].outerCutOffAngle));
-
 
                 activeSpots++;
             }

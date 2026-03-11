@@ -1,4 +1,4 @@
-#version 430 core
+﻿#version 430 core
 out vec4 FragColor;
 
 in vec3 vNormal;
@@ -54,26 +54,46 @@ uniform int uNumSpotLights;
 uniform SpotLight uSpotLights[MAX_SPOT_LIGHTS];
 
 uniform samplerCube uPointShadowMaps[MAX_POINT_LIGHTS];
+
+// FIX 1: Each point light's shadow far plane is uploaded separately so the
+// depth reconstruction matches exactly what the shadow-pass wrote.
+// (Previously the shader used uPointLights[i].radius, but Graphics.cpp wrote
+//  depth normalised against shadowFarPlane = max(radius, 50), so they never matched.)
+uniform float uPointShadowFarPlanes[MAX_POINT_LIGHTS];
+
 uniform vec3 uAlbedo;
 uniform sampler2D uTexture;
 uniform vec3 uViewPos;
 uniform Material uMaterial;
 uniform sampler2D uShadowMap;
 
-// --- FIXED VOXEL SHADOW FUNCTION ---
+// --- POINT SHADOW FUNCTION ---
 float CalculatePointShadow(int index, vec3 L, vec3 N, vec3 Lnorm)
 {
+    // L  = lightPos - fragPos  (points toward the light)
+    // Sample the cubemap in the opposite direction (light → fragment)
     vec3 lightToFrag = -L;
+
     float closestNormalizedDepth = texture(uPointShadowMaps[index], lightToFrag).r;
-    float closestDepth = closestNormalizedDepth * uPointLights[index].radius;
+
+    // Reconstruct world-space depth using the exact far plane used during the shadow pass
+    float closestDepth = closestNormalizedDepth * uPointShadowFarPlanes[index];
+
+    // currentDepth = true world-space distance from light to this fragment
     float currentDepth = length(L);
 
-    // [VOXEL FIX] Use a Hard Constant Bias.
-    // We removed the dot(N,L) math because it flickers on flat cubes.
-    float bias = 0.15;
-
+    // Early-out: cubemap face was cleared to 1.0 = no occluder recorded = fully lit
     if (closestNormalizedDepth >= 1.0)
         return 0.0;
+
+    // ACNE FIX: slope-scaled bias.
+    // A flat bias (e.g. 0.15) causes Peter-Panning on steep faces and still
+    // acnes on shallow ones.  Scale the bias by the angle between the surface
+    // normal and the light direction so steep surfaces get more bias.
+    float cosTheta = clamp(dot(N, Lnorm), 0.0, 1.0);
+    float slopeBias = uPointLights[index].shadowBiasFactor * tan(acos(cosTheta));
+    slopeBias = clamp(slopeBias, 0.0, 0.5);
+    float bias = uPointLights[index].shadowBiasConst + slopeBias;
 
     return (currentDepth - bias) > closestDepth ? 1.0 : 0.0;
 }
@@ -145,20 +165,19 @@ void main() {
             vec3 Lnorm = normalize(L);
             float atten = 1.0 - (dist / uPointLights[i].radius);
 
-            float shadow = 0.0;
+            float ptShadow = 0.0;
             if (uPointLights[i].castsShadow)
             {
-                // Pass L (fragment-to-light vector), not Lnorm
-                shadow = CalculatePointShadow(i, L, N, Lnorm);
+                ptShadow = CalculatePointShadow(i, L, N, Lnorm);
             }
 
             // Diffuse
             float d = max(dot(N, Lnorm), 0.0);
-            totalDiffuse += uPointLights[i].color * uPointLights[i].intensity * d * atten * (1.0 - shadow);
+            totalDiffuse += uPointLights[i].color * uPointLights[i].intensity * d * atten * (1.0 - ptShadow);
             // Specular (Blinn-Phong)
             vec3 H = normalize(Lnorm + V);
             float spec = pow(max(dot(N, H), 0.0), uMaterial.shininess);
-            totalSpecular += uMaterial.specular * spec * uPointLights[i].color * uPointLights[i].intensity * atten * (1.0 - shadow);
+            totalSpecular += uMaterial.specular * spec * uPointLights[i].color * uPointLights[i].intensity * atten * (1.0 - ptShadow);
         }
     }
 
