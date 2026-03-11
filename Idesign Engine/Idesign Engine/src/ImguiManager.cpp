@@ -152,31 +152,33 @@ namespace Framework {
     std::string ImguiManager::SaveFileDialog()
     {
         OPENFILENAMEA ofn;
-        char szFile[260] = { 0 };
+        // Increased buffer to MAX_PATH (260) or even 4096 if you want to be safe
+        char szFile[MAX_PATH] = { 0 };
+
         ZeroMemory(&ofn, sizeof(ofn));
         ofn.lStructSize = sizeof(ofn);
-        ofn.hwndOwner = NULL;
+        ofn.hwndOwner = GetActiveWindow(); // Better to provide the handle than NULL
         ofn.lpstrFile = szFile;
-        ofn.nMaxFile = sizeof(szFile);
-        ofn.lpstrFilter = "Scene Files\0*.json;*.scene;*.xml\0All Files\0*.*\0\0";
+        ofn.nMaxFile = MAX_PATH; // Use the count, not sizeof()
+        ofn.lpstrFilter = "Scene Files\0*.json;*.scene;*.xml\0All Files\0*.*\0";
         ofn.nFilterIndex = 1;
-        ofn.lpstrFileTitle = NULL;
-        ofn.nMaxFileTitle = 0;
-        ofn.lpstrInitialDir = NULL;
+        ofn.Flags = OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT | OFN_EXPLORER | OFN_NOCHANGEDIR;
 
-        // Change flag to allow new file creation and prompt for overwrite
-        ofn.Flags = OFN_OVERWRITEPROMPT | OFN_PATHMUSTEXIST;
-
-        if (GetSaveFileNameA(&ofn) == TRUE)
+        if (GetSaveFileNameA(&ofn))
         {
             std::string fullPath(ofn.lpstrFile);
             std::replace(fullPath.begin(), fullPath.end(), '\\', '/');
 
-            // Ensure .json extension if not already provided
-            if (fullPath.substr(fullPath.find_last_of(".") + 1) != "json")
+            // Safer extension check: check only the filename part, not the whole path
+            size_t lastDot = fullPath.find_last_of('.');
+            size_t lastSlash = fullPath.find_last_of('/');
+
+            // If no dot exists, or the last dot is part of a folder name (before the last slash)
+            if (lastDot == std::string::npos || (lastSlash != std::string::npos && lastDot < lastSlash))
             {
-                fullPath += ".json"; // Add .json extension
+                fullPath += ".json";
             }
+
             return fullPath;
         }
         return "";
@@ -2964,32 +2966,36 @@ namespace Framework {
             glm::value_ptr(delta),
             snap))
         {
-            if (op == ImGuizmo::ROTATE)
+            if (ImGuizmo::IsUsing()) // Only update if the user is actually interacting
             {
-                // Apply only the incremental rotation (degrees) to avoid Euler flip/jitter
-                float dt[3], dr[3], ds[3];
-                ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(delta), dt, dr, ds);
-
-                tr.rotation += glm::vec3(dr[0], dr[1], dr[2]); // add delta Euler (deg)
-
-                // keep angles tidy
-                auto wrap = [](float a) {
-                    if (a > 180.f) a = fmodf(a + 180.f, 360.f) - 180.f;
-                    if (a < -180.f) a = fmodf(a - 180.f, 360.f) + 180.f;
-                    return a;
-                    };
-                tr.rotation.x = wrap(tr.rotation.x);
-                tr.rotation.y = wrap(tr.rotation.y);
-                tr.rotation.z = wrap(tr.rotation.z);
-            }
-            else
-            {
-                // For translate/scale, full decompose is fine
                 float t[3], r[3], s[3];
-                ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(model), t, r, s);
-                tr.position = { t[0], t[1], t[2] };
-                tr.rotation = { r[0], r[1], r[2] };  // degrees
-                tr.scale = { s[0], s[1], s[2] };
+
+                if (op == ImGuizmo::TRANSLATE)
+                {
+                    ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(model), t, r, s);
+                    tr.position = glm::vec3(t[0], t[1], t[2]);
+                }
+                else if (op == ImGuizmo::ROTATE)
+                {
+                    // Use the DELTA matrix for rotation to avoid Euler flip jitter
+                    float dt[3], dr[3], ds[3];
+                    ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(delta), dt, dr, ds);
+
+                    tr.rotation += glm::vec3(dr[0], dr[1], dr[2]);
+
+                    // Helper to keep angles in -180 to 180 range
+                    auto wrap = [](float a) {
+                        return fmodf(a + 180.0f, 360.0f) - 180.0f;
+                        };
+                    tr.rotation.x = wrap(tr.rotation.x);
+                    tr.rotation.y = wrap(tr.rotation.y);
+                    tr.rotation.z = wrap(tr.rotation.z);
+                }
+                else if (op == ImGuizmo::SCALE)
+                {
+                    ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(model), t, r, s);
+                    tr.scale = glm::vec3(s[0], s[1], s[2]);
+                }
             }
         }
     }

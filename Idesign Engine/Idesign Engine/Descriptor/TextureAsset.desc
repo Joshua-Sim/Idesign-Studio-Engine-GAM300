@@ -1,5 +1,5 @@
 {
-    "count": 344,
+    "count": 349,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -3778,6 +3778,61 @@
             "guid": "63d6d0be-1a93-46a3-b411-9a415772e2f6",
             "name": "mouseFixed",
             "path": "Assets\\Textures\\mouseFixed.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "98f2fb3a-fa08-46de-9360-03b3769aad85",
+            "name": "exit",
+            "path": "Assets\\Textures\\exit.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "d99b0a86-6036-4816-b1d7-20ee5ae7a3e9",
+            "name": "elevationquarryplane",
+            "path": "Assets\\Textures\\elevationquarryplane.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "22bbb1ee-892b-434d-8eca-8d62b38aebda",
+            "name": "copper quarry",
+            "path": "Assets\\Textures\\copper quarry.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "160c32ac-e216-48f0-8d58-bedd96fc68aa",
+            "name": "QUARRYSTAND",
+            "path": "Assets\\Textures\\QUARRYSTAND.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "0d384f15-5935-475b-aa4d-8352456b9681",
+            "name": "NEW QUARRY STAND",
+            "path": "Assets\\Textures\\NEW QUARRY STAND.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,

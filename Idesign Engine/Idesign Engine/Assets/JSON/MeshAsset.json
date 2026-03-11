@@ -980,6 +980,105 @@
             "vbo": 715,
             "ebo": 716,
             "indexCount": 150108
+        },
+                {
+            "guid": "0f76246f-ae7d-4e53-ae3c-33a7a61b3104",
+            "name": "apple",
+            "path": "Assets\\Objects\\apple.obj",
+            "vao": 348,
+            "vbo": 682,
+            "ebo": 683,
+            "indexCount": 40146
+        },
+        {
+            "guid": "5b0e4129-babd-447a-a3f5-d1f5450908d1",
+            "name": "exit",
+            "path": "Assets\\Objects\\exit.obj",
+            "vao": 339,
+            "vbo": 664,
+            "ebo": 665,
+            "indexCount": 1710
+        },
+        {
+            "guid": "e78287da-9061-4e51-a2c0-152d8f5189fe",
+            "name": "iron",
+            "path": "Assets\\Objects\\iron.obj",
+            "vao": 345,
+            "vbo": 676,
+            "ebo": 677,
+            "indexCount": 34836
+        },
+        {
+            "guid": "03a2913c-b3ef-4c94-a3b5-f3dce76182fc",
+            "name": "copper",
+            "path": "Assets\\Objects\\copper.obj",
+            "vao": 346,
+            "vbo": 678,
+            "ebo": 679,
+            "indexCount": 30822
+        },
+        {
+            "guid": "849e3bac-d193-4af9-88c5-b09cee85c9ab",
+            "name": "coal",
+            "path": "Assets\\Objects\\coal.obj",
+            "vao": 347,
+            "vbo": 680,
+            "ebo": 681,
+            "indexCount": 25836
+        },
+        {
+            "guid": "76caba09-7322-483a-8377-40902f8bc6ca",
+            "name": "updatedcoal",
+            "path": "Assets\\Objects\\updatedcoal.obj",
+            "vao": 360,
+            "vbo": 706,
+            "ebo": 707,
+            "indexCount": 32100
+        },
+        {
+            "guid": "3ac75dff-24fb-4d45-bf0f-24539207a54b",
+            "name": "coalFloor",
+            "path": "Assets\\Objects\\coalFloor.obj",
+            "vao": 362,
+            "vbo": 710,
+            "ebo": 711,
+            "indexCount": 6534
+        },
+        {
+            "guid": "7a6e9206-e1aa-4326-875e-bd10ce0a8e89",
+            "name": "elevationquarryplane",
+            "path": "Assets\\Objects\\elevationquarryplane.obj",
+            "vao": 370,
+            "vbo": 726,
+            "ebo": 727,
+            "indexCount": 1236
+        },
+        {
+            "guid": "d0126376-7efd-4381-8888-86e51a0719a5",
+            "name": "copper quarry",
+            "path": "Assets\\Objects\\copper quarry.obj",
+            "vao": 378,
+            "vbo": 742,
+            "ebo": 743,
+            "indexCount": 12504
+        },
+        {
+            "guid": "b9e6f8a5-b0a7-4dfc-af73-b871bc1d0bcb",
+            "name": "QUARRYSTAND",
+            "path": "Assets\\Objects\\QUARRYSTAND.obj",
+            "vao": 382,
+            "vbo": 750,
+            "ebo": 751,
+            "indexCount": 2646
+        },
+        {
+            "guid": "f0246a62-8aaf-4b31-9dcc-33aad664943f",
+            "name": "NEW QUARRY STAND",
+            "path": "Assets\\Objects\\NEW QUARRY STAND.obj",
+            "vao": 384,
+            "vbo": 754,
+            "ebo": 755,
+            "indexCount": 2664
         }
     ]
 }

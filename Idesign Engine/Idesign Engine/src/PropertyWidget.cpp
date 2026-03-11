@@ -251,7 +251,49 @@ namespace Framework
 
             if (ImGui::CollapsingHeader(propList->m_pName, ImGuiTreeNodeFlags_DefaultOpen))
             {
-                if (typeName == "TextureProperties")
+                if (typeName == "TransformComponent")
+                {
+                    auto& tr = *static_cast<TransformComponent*>(componentPtr);
+
+                    // We use a unique ID scope for the transform to prevent widget conflicts
+                    ImGui::PushID("TransformProps");
+
+                    // 1. Position
+                    if (ImGui::DragFloat3("Position", &tr.position.x, 0.1f))
+                    {
+                        // Optional: Add logic here if you need to wake up physics bodies 
+                        // when the position is manually changed in the editor.
+                    }
+
+                    // 2. Rotation
+                    // Note: Most engines wrap these to keep the inspector clean
+                    if (ImGui::DragFloat3("Rotation", &tr.rotation.x, 0.5f))
+                    {
+                        auto wrap = [](float a) {
+                            return fmodf(a + 180.0f, 360.0f) - 180.0f;
+                            };
+                        tr.rotation.x = wrap(tr.rotation.x);
+                        tr.rotation.y = wrap(tr.rotation.y);
+                        tr.rotation.z = wrap(tr.rotation.z);
+                    }
+
+                    // 3. Scale
+                    if (ImGui::DragFloat3("Scale", &tr.scale.x, 0.01f))
+                    {
+                        // Prevent negative scale or zero scale which can break matrix math
+                        if (tr.scale.x < 0.001f) tr.scale.x = 0.001f;
+                        if (tr.scale.y < 0.001f) tr.scale.y = 0.001f;
+                        if (tr.scale.z < 0.001f) tr.scale.z = 0.001f;
+                    }
+
+                    ImGui::PopID();
+
+                    // IMPORTANT: Skip the default DrawInspector for this component 
+                    // because we just manually drew the fields.
+                    continue;
+                }
+
+                else if (typeName == "TextureProperties")
                 {
                     auto& tex = *static_cast<TextureProperties*>(componentPtr);
                     DrawAssetDropdown<TextureProperties>("Select Texture", tex);
