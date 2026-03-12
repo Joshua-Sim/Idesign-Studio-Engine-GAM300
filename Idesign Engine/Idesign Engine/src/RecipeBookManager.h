@@ -561,13 +561,19 @@ namespace Framework {
 
         void CreateRightTooltip(int itemID, float iconX, float iconY) {
             bool isUnlocked = GameSystem::m_debugRevealAll || Framework::IsItemUnlocked(itemID);
+            Framework::ItemType type = Framework::GetItemType(itemID); // Get the type
             const PotionRecipe* recipe = Framework::GetRecipeForResult(itemID);
 
-            std::string methodText = (recipe && isUnlocked) ? recipe->method : "???";
-            std::string itemName = isUnlocked ? Framework::GetItemDisplayName(itemID) : "???";
+            // NEW LOGIC: Reveal text if it's a Potion/Powder OR if already unlocked
+            bool shouldRevealText = isUnlocked || type == Framework::ItemType::POTION || type == Framework::ItemType::POWDER;
+
+            std::string itemName = shouldRevealText ? Framework::GetItemDisplayName(itemID) : "???";
+            std::string methodText = recipe->method;
+
+            // Keep the icon hidden (Question Mark) unless actually unlocked/debugged
             std::string iconName = isUnlocked ? Framework::kItemNames[itemID] : "RB_QuestionMark";
 
-            // --- LAYOUT MATH ---
+            // --- LAYOUT MATH (Keep existing) ---
             float tooltipWidth = 248.0f;
             float tooltipHeight = 42.0f;
             float tooltipX = iconX;
@@ -576,7 +582,7 @@ namespace Framework {
             // 1. Tooltip Background
             m_rightTooltipEntities.push_back(SpawnGenericSpriteReturnEntity(tooltipX, tooltipY, "RB_TooltipBackground", tooltipWidth, tooltipHeight, toolTipBackgroundZ));
 
-            // 2. Method Pill (Top Left, overlapping the edge)
+            // 2. Method Pill
             float methodWidth = 98.0f;
             float methodHeight = 20.0f;
             float methodX = tooltipX - (tooltipWidth / 2.0f) + (methodWidth / 2.0f) + 15.0f;
@@ -588,7 +594,7 @@ namespace Framework {
             // 3. Output Item Text
             m_rightTooltipEntities.push_back(SpawnTextReturnEntity(tooltipX - 40.0f, tooltipY - 10.0f, tooltipTextZ, itemName, 0.5f));
 
-            // 4. Output Icon (Right Side)
+            // 4. Output Icon (Remains RB_QuestionMark if not actually unlocked)
             float rightIconX = tooltipX + (tooltipWidth / 2.0f) - 50.0f;
             m_rightTooltipEntities.push_back(SpawnGenericSpriteReturnEntity(rightIconX, tooltipY, "RB_ItemBackground", 40.0f, 40.0f, toolTipIconZ));
             m_rightTooltipEntities.push_back(SpawnGenericSpriteReturnEntity(rightIconX, tooltipY, iconName, 30.0f, 30.0f, toolTipIconZ + 0.05f));
@@ -811,10 +817,44 @@ namespace Framework {
 
             }
             else {
+                // --- Inside BuildRightPage ---
 
-                SpawnTextReturnEntity(rightPageX - 160.0f, currentY, baseTextZ, "Found in:", 0.5f, black, 0);
+                std::string finalLocationText = locationText;
+                std::string locationLabel = "Found in:"; // Default label
+
+                // 1. Check if this item is a derivative (result of a recipe)
+                const auto& recipes = Framework::GetGlobalRecipes();
+                for (const auto& recipe : recipes) {
+                    if (recipe.resultItemID == selectedID) {
+                        // Change label because it's a crafted derivative
+                        locationLabel = "Found by:";
+
+                        std::string method = recipe.method;
+                        std::string ingredientName = "???"; // Default to obfuscated
+
+                        if (!recipe.ingredientIDs.empty()) {
+                            int primaryIngID = recipe.ingredientIDs[0];
+
+                            // Check if the primary ingredient is unlocked or debug reveal is on
+                            bool ingUnlocked = GameSystem::m_debugRevealAll || Framework::IsItemUnlocked(primaryIngID);
+
+                            if (ingUnlocked) {
+                                ingredientName = Framework::GetItemDisplayName(primaryIngID);
+                            }
+                        }
+
+                        // Construct the string: e.g., "Chopping ???" or "Smelting Iron Ore"
+                        finalLocationText = method + " " + ingredientName;
+                        break;
+                    }
+                }
+
+                // 2. Render the Label (Found in vs Found by)
+                SpawnTextReturnEntity(rightPageX - 160.0f, currentY, baseTextZ, locationLabel, 0.5f, black, 0);
                 currentY -= 40.0f;
-                SpawnTextReturnEntity(rightPageX, currentY, baseTextZ, locationText, 0.8f);
+
+                // 3. Render the Text (Obfuscated or Revealed)
+                SpawnTextReturnEntity(rightPageX, currentY, baseTextZ, finalLocationText, 0.8f);
 
                 currentY -= 30.0f;
 
