@@ -121,13 +121,13 @@
     {
       "id": "r_iron_bar",
       "inputs": ["iron_ore"],
-      "method": "Furnace",
+      "method": "Smelting",
       "output": "iron_bar"
     },
     {
       "id": "r_copper_bar",
       "inputs": ["copper_ore"],
-      "method": "Furnace",
+      "method": "Smelting",
       "output": "copper_bar"
     },
     {

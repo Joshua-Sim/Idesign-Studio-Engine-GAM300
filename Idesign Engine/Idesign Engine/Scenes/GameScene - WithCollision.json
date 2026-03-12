@@ -7555,19 +7555,19 @@
             }
         },
         {
-            "name": "Quarry-rock1 (Copy) (Copy)",
+            "name": "mineSign",
             "guid": "35ca9f9e-b0b5-4680-94c9-98bcb93d75d5",
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -219.97482299804688,
+                        -221.200,
                         306.1709899902344,
-                        -171.0207977294922
+                        -174.324
                     ],
                     "rotation": [
-                        0.000017812313672038727,
-                        0.0006514148553833365,
-                        -0.0002958997501991689
+                        0,
+                        47.0,
+                        0
                     ],
                     "scale": [
                         4.0,
@@ -7582,7 +7582,19 @@
                     "children": []
                 },
                 "TagComponent": {
-                    "tags": []
+                    "tags": [
+                        "interactable",
+                        "minesign"
+                    ]
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "b8c9be25-1e3f-4d68-a3a7-aad0bf25e985",
+                            "scriptPath": "Assets\\Scripts\\PhaseSwitcher.lua",
+                            "hotReload": false
+                        }
+                    ]
                 },
                 "MeshComponent": {
                     "guid": "c88635f7-0838-4fef-adcf-32a32dc48ea5",
@@ -7596,25 +7608,25 @@
                     "colliders": [
                         {
                             "size": [
-                                0.5,
-                                -4.050000190734863,
-                                0.6000000238418579
+                                2.5,
+                                -3.75,
+                                0.4
                             ],
                             "center": [
-                                -1.100000023841858,
-                                1.7999999523162842,
-                                -0.07500000298023224
+                                0.0,
+                                1.8,
+                                0
                             ],
                             "canPassThrough": false,
                             "triggerMessage": "",
-                            "isInteractable": false,
-                            "interactMessage": "",
+                            "isInteractable": true,
+                            "interactMessage": "OnInteract",
                             "promptText": ""
                         }
                     ]
                 },
                 "PhysicsProperties": {
-                    "category": 0,
+                    "category": 1,
                     "isImmovable": true,
                     "gravityFactor": 1.0,
                     "mass": 1.0,

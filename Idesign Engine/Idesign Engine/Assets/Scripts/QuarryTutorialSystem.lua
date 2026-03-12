@@ -19,7 +19,7 @@ QuarryTutorial.skipKeyHeld        = false
 -- =========================================================
 -- Total number of tutorial steps (update if you add/remove steps)
 -- =========================================================
-local TOTAL_STEPS = 2
+local TOTAL_STEPS = 3
 
 -- =========================================================
 -- Step 1 flies to copper (welcome + copper dialogue).
@@ -28,6 +28,7 @@ local TOTAL_STEPS = 2
 local STEP_TARGETS = {
     [1] = { entity = "copper", offX =  2.0, offY = 4.0, offZ =  4.0 },     -- copper deposit
     [2] = { entity = "iron",   offX = -2.0, offY = 3.5, offZ =  4.0 },     -- iron deposit
+    [3] = { entity = "minesign",   offX = -10.0, offY = 10.5, offZ = 10.0 }, 
 }
 
 -- =========================================================
@@ -125,6 +126,9 @@ function QuarryTutorial:StartDialogueForCurrentStep()
     elseif self.sequenceStep == 2 then
         DialogueAdd("And here's iron — tougher to crack, but worth every swing.", "Aunt Mira", "pear")
         DialogueAdd("Fill that bag and head back when you're done. The cauldron won't stir itself!", "Aunt Mira", "portrait")
+    elseif self.sequenceStep == 3 then
+        DialogueAdd("This is the exit for the mine", "Aunt Mira", "pear")
+        DialogueAdd("Make sure you don't leave anything behind!", "Aunt Mira", "portrait")
     end
 
     DialogueStart()

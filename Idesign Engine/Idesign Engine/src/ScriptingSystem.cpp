@@ -947,15 +947,15 @@ namespace Framework {
         // Update your existing lua bindings
         static int lua_GetScore(lua_State* L)
         {
-            int s = Framework::GameSystem::GetScore();
-            lua_pushinteger(L, s);
+            //int s = Framework::GameSystem::GetScore();
+            //lua_pushinteger(L, s);
             return 1;
         }
 
         static int lua_SetScore(lua_State* L)
         {
-            int value = (int)luaL_checkinteger(L, 1);
-            Framework::GameSystem::SetScore(value);
+            //int value = (int)luaL_checkinteger(L, 1);
+            //Framework::GameSystem::SetScore(value);
             return 0;
         }
 

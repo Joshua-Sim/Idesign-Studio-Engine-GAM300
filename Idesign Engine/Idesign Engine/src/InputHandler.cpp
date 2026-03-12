@@ -165,6 +165,22 @@ namespace Framework {
             Framework::Inventory::Instance().TryAddItem_BackpackFirst(10, 0, 1);
             Framework::Inventory::Instance().TryAddItem_BackpackFirst(11, 0, 1);
         }
+
+
+        // ESC: Toggle pause/resume
+        if (IsKeyPressed(GLFW_KEY_KP_3)) {
+            Framework::Inventory::Instance().TryAddItem_BackpackFirst(9, 0, 1);
+            Framework::Inventory::Instance().TryAddItem_BackpackFirst(9, 0, 1);
+            Framework::Inventory::Instance().TryAddItem_BackpackFirst(9, 0, 1);
+            Framework::Inventory::Instance().TryAddItem_BackpackFirst(8, 0, 1);
+            Framework::Inventory::Instance().TryAddItem_BackpackFirst(8, 0, 1);
+            Framework::Inventory::Instance().TryAddItem_BackpackFirst(8, 0, 1);
+        }
+
+        // ESC: Toggle pause/resume
+        if (IsKeyPressed(GLFW_KEY_KP_4)) {
+            GameSystem::AddCurrency(600);
+        }
        
 
 
