@@ -395,6 +395,24 @@
             "name": "ironOre6_Prefab",
             "path": "Assets\\Prefabs\\ironOre6_Prefab.prefab",
             "isScenePrefab": false
+        },
+        {
+            "guid": "1a8824fb-65db-4cd3-b3cf-1186bb545b05",
+            "name": "ProgressBarTick_Prefab",
+            "path": "Assets\\Prefabs\\ProgressBarTick_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "43ee45ec-54c0-45a7-b0c7-6695a7e7f47d",
+            "name": "Entity 8_Prefab",
+            "path": "Assets\\Prefabs\\Entity 8_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "ec0756fc-946b-49cc-b962-188fa926c182",
+            "name": "Prefab_Test_Prefab",
+            "path": "Assets\\Prefabs\\Prefab_Test_Prefab.prefab",
+            "isScenePrefab": false
         }
     ]
 }

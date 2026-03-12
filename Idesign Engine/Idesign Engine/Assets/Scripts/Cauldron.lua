@@ -27,6 +27,10 @@ local center_offset_z = -0.3
 -- [PROGRESS BAR SETTINGS]
 local prefab_frame = "ProgressBarFrame_Prefab"
 local prefab_fill = "ProgressBarFill_Prefab"
+local prefab_tick = "ProgressBarTick_Prefab"
+local entity_tick_25 = nil
+local entity_tick_50 = nil
+local entity_tick_75 = nil
 local bar_length_max = 0.5
 local bar_thickness = 0.2
 local y_offset = 1.5
@@ -198,6 +202,18 @@ local function HideStirIcon()
         SetRotation(stir_icon_id_ccw, 0.0, 0.0, 0.0)
     end
     stir_icon_rotation = 0.0
+end
+
+local function UpdateTickVisibility()
+    if entity_tick_25 then
+        SetScale(entity_tick_25, (progress < 0.24) and 0.01 or 0.0, (progress < 0.24) and bar_thickness or 0.0, (progress < 0.24) and bar_thickness or 0.0)
+    end
+    if entity_tick_50 then
+        SetScale(entity_tick_50, (progress < 0.49) and 0.01 or 0.0, (progress < 0.49) and bar_thickness or 0.0, (progress < 0.49) and bar_thickness or 0.0)
+    end
+    if entity_tick_75 then
+        SetScale(entity_tick_75, (progress < 0.74) and 0.01 or 0.0, (progress < 0.74) and bar_thickness or 0.0, (progress < 0.74) and bar_thickness or 0.0)
+    end
 end
 
 -- =============================================================
@@ -550,6 +566,11 @@ function M.on_update(arg1, arg2)
             SetScale(entity_fill, progress * bar_length_max, bar_thickness * 0.9, bar_thickness * 0.9)
         end
     end
+
+    if is_active then
+    UpdateTickVisibility()
+    end
+
 end
 
 -- =============================================================
@@ -567,6 +588,15 @@ function M.SpawnBar(cauldronID)
         if entity_fill then
             SetScale(entity_fill, 0.0, bar_thickness, bar_thickness)
         end
+
+        entity_tick_25 = SpawnPrefab(prefab_tick, cauldronID)
+        entity_tick_50 = SpawnPrefab(prefab_tick, cauldronID)
+        entity_tick_75 = SpawnPrefab(prefab_tick, cauldronID)
+
+        if entity_tick_25 then SetScale(entity_tick_25, 0.01, bar_thickness * 0.9, bar_thickness * 0.9) end
+        if entity_tick_50 then SetScale(entity_tick_50, 0.01, bar_thickness * 0.9, bar_thickness * 0.9) end
+        if entity_tick_75 then SetScale(entity_tick_75, 0.01, bar_thickness * 0.9, bar_thickness * 0.9) end
+        
     else
         print("[Lua ERROR] SpawnPrefab function missing!")
     end
@@ -581,9 +611,14 @@ function M.DestroyProgressBar()
         DestroyEntity(entity_fill) 
         entity_fill = nil
     end
+
+    if entity_tick_25 then DestroyEntity(entity_tick_25) entity_tick_25 = nil end
+    if entity_tick_50 then DestroyEntity(entity_tick_50) entity_tick_50 = nil end
+    if entity_tick_75 then DestroyEntity(entity_tick_75) entity_tick_75 = nil end
 end
 
 function M.UpdateBillboard(px, pz, cx, cz, cy)
+
     local dx = px - cx
     local dz = pz - cz
     local angle_rad = math.atan2(dx, dz)
@@ -593,28 +628,47 @@ function M.UpdateBillboard(px, pz, cx, cz, cy)
     local frame_pos_y = cy + y_offset
     local frame_pos_z = cz
 
+    local right_angle = angle_rad + (math.pi / 2.0)
+    local side_dist = (bar_length_max * tune_x)
+
+    local depth_offset_x = billboard_depth_adjust * math.sin(angle_rad)
+    local depth_offset_z = billboard_depth_adjust * math.cos(angle_rad)
+
     if entity_frame then
         SetPosition(entity_frame, frame_pos_x, frame_pos_y, frame_pos_z)
         SetRotation(entity_frame, 0.0, angle_deg + 180.0, 0.0)
     end
 
     if entity_fill then
-        SetRotation(entity_fill, 0.0, angle_deg + 180.0, 0.0)
-
-        local right_angle = angle_rad + (math.pi / 2.0)
-        local side_dist = (bar_length_max * tune_x)
         local side_offset_x = side_dist * math.sin(right_angle)
         local side_offset_z = side_dist * math.cos(right_angle)
-
-        local depth_offset_x = billboard_depth_adjust * math.sin(angle_rad)
-        local depth_offset_z = billboard_depth_adjust * math.cos(angle_rad)
 
         local fill_x = frame_pos_x + side_offset_x + depth_offset_x
         local fill_y = frame_pos_y + tune_y
         local fill_z = frame_pos_z + side_offset_z + depth_offset_z
 
+        SetRotation(entity_fill, 0.0, angle_deg + 180.0, 0.0)
         SetPosition(entity_fill, fill_x, fill_y, fill_z)
     end
+
+    local function SetTickPosition(tickEntity, t)
+        if not tickEntity then return end
+
+        local tick_dist = side_dist * (1.0 - 2.0 * t)
+        local tick_offset_x = tick_dist * math.sin(right_angle)
+        local tick_offset_z = tick_dist * math.cos(right_angle)
+
+        local tick_x = frame_pos_x + tick_offset_x + depth_offset_x
+        local tick_y = frame_pos_y + tune_y
+        local tick_z = frame_pos_z + tick_offset_z + depth_offset_z
+
+        SetPosition(tickEntity, tick_x, tick_y, tick_z)
+        SetRotation(tickEntity, 0.0, angle_deg + 180.0, 0.0)
+    end
+
+    SetTickPosition(entity_tick_25, 0.25)
+    SetTickPosition(entity_tick_50, 0.50)
+    SetTickPosition(entity_tick_75, 0.75)
 end
 
 -- =============================================================
