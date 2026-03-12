@@ -44,7 +44,7 @@ local anim_speed_abs = 20.0
 local is_auto_cauldron = true
 local auto_stir_duration = 10.0   -- fallback default
 
--- [POTION BREW DURATIONS] (seconds) — tune these to your liking
+-- [POTION BREW DURATIONS] (seconds) - tune these to your liking
 local potion_brew_durations = {
     ["strength_potion"] = 10.0,
     ["mending_potion"]  = 10.0,
@@ -111,6 +111,12 @@ local stir_icon_rotation = 0.0
 -- [TIMER TEXT STATE]
 local timer_text_entity = nil
 local brew_time_left    = 0.0
+
+-- [LOCK/VISIBILITY STATE]
+local is_unlocked = false
+local origin_x = nil
+local origin_y = nil
+local origin_z = nil
 
 -- =============================================================
 -- [AUDIO HELPERS]
@@ -218,6 +224,23 @@ local function HideStirIcon()
 end
 
 -- =============================================================
+-- [LOCK VISIBILITY HELPER]
+-- =============================================================
+local function SetCauldronVisible(visible)
+    if not my_entity_id then return end
+    if visible then
+        if origin_x then
+            SetPosition(my_entity_id, origin_x, origin_y, origin_z)
+        end
+    else
+        local cx, cy, cz = GetPosition(my_entity_id)
+        if cx then
+            SetPosition(my_entity_id, cx, -9999.0, cz)
+        end
+    end
+end
+
+-- =============================================================
 -- 1. INIT
 -- =============================================================
 function M.on_init(arg1, arg2)
@@ -229,6 +252,13 @@ function M.on_init(arg1, arg2)
         SetAnimationAsset(my_entity_id, guid_idle)
         SetAnimationMode(my_entity_id, 0)
         last_angle = math.atan2(spoon_y, spoon_x)
+
+        -- Capture origin ONCE before any hide ops
+        origin_x, origin_y, origin_z = GetPosition(my_entity_id)
+
+        -- Apply initial lock state
+        is_unlocked = IsCauldronUnlocked()
+        SetCauldronVisible(is_unlocked)
     end
     player_id = FindEntityByName("Player")
 
@@ -437,6 +467,19 @@ function M.on_update(arg1, arg2)
             last_phase = current_phase
         end
     end
+
+    ---------------------------------------------------------
+    -- UNLOCK VISIBILITY POLL
+    ---------------------------------------------------------
+    local unlocked_now = IsCauldronUnlocked()
+    if unlocked_now ~= is_unlocked then
+        is_unlocked = unlocked_now
+        SetCauldronVisible(is_unlocked)
+        last_prompt_state = ""  -- force prompt refresh on unlock
+    end
+
+    -- Skip all further updates if locked
+    if not is_unlocked then return end
 
     ---------------------------------------------------------
     -- 1. PRE-CALCULATE STIRRING STATE
