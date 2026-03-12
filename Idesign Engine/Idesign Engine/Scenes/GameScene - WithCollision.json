@@ -6054,8 +6054,8 @@
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "bb5da693-eb86-4523-86bc-ddb15614b98d",
-                    "isUI": true
+                  "guid": "6164f3f9-ba5f-40e6-a04d-c287e57ca0a9",
+                  "isUI": true
                 }
             }
         },

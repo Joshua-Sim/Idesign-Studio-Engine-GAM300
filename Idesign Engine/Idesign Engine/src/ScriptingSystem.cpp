@@ -512,6 +512,31 @@ namespace Framework {
             return 0; // Returns nothing to Lua
         }
 
+        int Lua_SetColliderPromptText(lua_State* L) {
+            int entityId = (int)lua_tointeger(L, 1);
+            const char* text = lua_tostring(L, 2);
+            Entity e = (Entity)entityId;
+            if (ecsInterface.IsEntityValid(e) && ecsInterface.HasComponent<BoxColliderComponent>(e)) {
+                auto& col = ecsInterface.GetComponent<BoxColliderComponent>(e);
+                if (!col.colliders.empty()) {
+                    col.colliders[0].promptText = text;
+                }
+            }
+            return 0;
+        }
+
+        int Lua_SetColliderInteractable(lua_State* L) {
+            int entityId = (int)lua_tointeger(L, 1);
+            bool state = lua_toboolean(L, 2);
+            Entity e = (Entity)entityId;
+            if (ecsInterface.IsEntityValid(e) && ecsInterface.HasComponent<BoxColliderComponent>(e)) {
+                auto& col = ecsInterface.GetComponent<BoxColliderComponent>(e);
+                if (!col.colliders.empty())
+                    col.colliders[0].isInteractable = state;
+            }
+            return 0;
+        }
+
         static int l_DestroyEntity(lua_State* L) {
             // 1. Get Entity ID from Lua
             Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
@@ -1431,9 +1456,14 @@ namespace Framework {
             }
 
             auto& inv = Framework::Inventory::Instance();
-            int slot = inv.AddFirstEmpty(itemId);
+            bool added = inv.TryAddItem_BackpackFirst(itemId, 0, 1);
+            lua_pushinteger(L, added ? 0 : -1); // 0 = success, -1 = full
+            return 1;
+        }
 
-            lua_pushinteger(L, slot); // Return the slot index (or -1 if full)
+        int Lua_IsInventoryFull(lua_State* L) {
+            bool full = Framework::Inventory::Instance().IsInventoryFull();
+            lua_pushboolean(L, full);
             return 1;
         }
 
@@ -1497,7 +1527,21 @@ namespace Framework {
             return 1;
         }
 
+        int Lua_SpawnZipPickup(lua_State* L) {
+            const char* itemName = lua_tostring(L, 1);
+            float x = (float)lua_tonumber(L, 2);
+            float y = (float)lua_tonumber(L, 3);
+            float z = (float)lua_tonumber(L, 4);
 
+            int itemId = Framework::ItemNameToId(itemName);
+            if (itemId < 0) return 0;
+
+            auto playerInteract = ecsInterface.GetSystem<PlayerInteractSystem>();
+            if (playerInteract)
+                playerInteract->SpawnZipPickup(itemId, glm::vec3(x, y, z));
+
+            return 0;
+        }
 
         // --------- Scene Loading --------------
         static int Lua_RegisterButtonCallback(lua_State* L)
@@ -2458,6 +2502,7 @@ namespace Framework {
 		lua_register(L, "GetItemValue", lua_GetItemValue);
         lua_register(L, "TriggerZipPickup", lua_TriggerZipPickup);
 		lua_register(L, "GetItemDisplayName", lua_GetItemDisplayNameById);
+        lua_register(L, "IsInventoryFull", Lua_IsInventoryFull);
 
         // Engine utility
         lua_register(L, "FindEntityByName", lua_FindEntityByName);
@@ -2487,11 +2532,13 @@ namespace Framework {
         lua_register(L, "GetPhase", lua_GetPhase);
         lua_register(L, "AdvanceDayAndPushTransition", lua_AdvanceDayAndPushTransition);
 
-
         // lua_register(L, "SetScale", lua_SetScale);
         lua_register(L, "GetScale", lua_GetScale);
         lua_register(L, "GetScreenSize", lua_GetScreenSize);
         lua_register(L, "SetIsUI", lua_SetIsUI);
+        lua_register(L, "SetColliderPromptText", Lua_SetColliderPromptText);
+        lua_register(L, "SpawnZipPickup", Lua_SpawnZipPickup);
+        lua_register(L, "SetColliderInteractable", Lua_SetColliderInteractable);
 
         // Dialogue System
         lua_register(L, "DialogueClear", lua_DialogueClear);

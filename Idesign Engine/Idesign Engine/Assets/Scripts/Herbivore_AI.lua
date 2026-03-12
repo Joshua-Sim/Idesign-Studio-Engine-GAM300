@@ -101,6 +101,17 @@ function M.OnInteract(senderID, targetID, actionType)
     -- so we don't need 'self' or any extra checks!
     
     if GetState(targetID, "IsSheared") == 0 then
+
+        -- Check inventory before shearing
+        if IsInventoryFull() then
+            local log = SpawnPrefab("CauldronLog_Prefab")
+            if log and log ~= -1 then
+                SetTextComponent(log, "text", "Inventory Full! Could not pick up Wool")
+                Sound.Play("event:/InvalidRecipe") 
+            end
+            return
+        end
+
         print("[Herbivore_AI] Sheep " .. tostring(targetID) .. " sheared!")
 
         -- 1. Trigger the native C++ Zip Pickup!

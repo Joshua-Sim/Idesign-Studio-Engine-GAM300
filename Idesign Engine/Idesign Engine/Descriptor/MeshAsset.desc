@@ -1,5 +1,5 @@
 {
-    "count": 120,
+    "count": 122,
     "entries": [
         {
             "guid": "9a248918-705f-4d5a-88a2-17e85868745b",
@@ -822,7 +822,7 @@
         },
         {
             "guid": "a996d924-d28b-4666-bdd8-6960b3a2fbba",
-            "name": "Sheep",
+            "name": "",
             "path": "Assets\\Objects\\Sheep.obj",
             "vao": 81,
             "vbo": 161,
@@ -1080,6 +1080,24 @@
             "vbo": 754,
             "ebo": 755,
             "indexCount": 2664
+        },
+        {
+            "guid": "58328ef6-2b84-4dd3-b935-6b58b34bb052",
+            "name": "SheepWithWool",
+            "path": "Assets\\Objects\\SheepWithWool.obj",
+            "vao": 396,
+            "vbo": 779,
+            "ebo": 780,
+            "indexCount": 15270
+        },
+        {
+            "guid": "709d75f8-cd91-4e19-8021-6a83b6ca15ab",
+            "name": "SheepWithoutWool",
+            "path": "Assets\\Objects\\SheepWithoutWool.obj",
+            "vao": 397,
+            "vbo": 781,
+            "ebo": 782,
+            "indexCount": 9072
         }
     ]
 }

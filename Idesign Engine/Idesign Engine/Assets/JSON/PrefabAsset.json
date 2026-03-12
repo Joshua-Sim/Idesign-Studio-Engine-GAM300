@@ -421,10 +421,16 @@
             "isScenePrefab": false
         },
         {
-            "guid": "c26d9aa1-e8bc-4f97-878c-6659f3dd7bdb",
-            "name": "defense_potion_Prefab",
-            "path": "Assets\\Prefabs\\defense_potion_Prefab.prefab",
-            "isScenePrefab": false
+          "guid": "c26d9aa1-e8bc-4f97-878c-6659f3dd7bdb",
+          "name": "defense_potion_Prefab",
+          "path": "Assets\\Prefabs\\defense_potion_Prefab.prefab",
+          "isScenePrefab": false
+        },
+        {
+          "guid": "c26d9aa1-e8bc-4f97-878c-6659f3dd7bd7",
+          "name": "chopped_herb_Prefab",
+          "path": "Assets\\Prefabs\\chopped_herb_prefab.prefab",
+          "isScenePrefab": false
         }
     ]
 }

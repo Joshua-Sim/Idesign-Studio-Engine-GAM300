@@ -77,6 +77,9 @@ function M.OnInteract(entityID)
         M:StartChoppingSession(itemName)
         ConsumeSelectedItem()
         Sound.Play("event:/PlaceDownItem")
+        -- Update prompt now that herb is placed
+        SetColliderPromptText(entityID, "Chop!")
+        -- SetColliderInteractable(entityID, false)  -- hide E icon
     end
 end
 
@@ -232,12 +235,13 @@ end
 
 function M:EndChoppingSession()
     if current_herb_entity then
-        if AddToInventory("chopped_herb") >= 0 then
-            print("Lua: Added to inventory.")
-        end    
+        local bx, by, bz = GetPosition(self.entity)
+        SpawnPrefab("chopped_herb_Prefab", bx, by + M.place_offset_y, bz + M.place_offset_z)
         DestroyEntity(current_herb_entity)
         current_herb_entity = nil
         self:ClearUI()
+        SetColliderPromptText(self.entity, "Place ingredient")
+        -- SetColliderInteractable(self.entity, true)
     end
 end
 

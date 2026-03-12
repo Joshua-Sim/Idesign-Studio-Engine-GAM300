@@ -1529,7 +1529,7 @@ namespace Framework {
             2.0f, { 0.60f, 0.10f, 0.10f }, 1.0f);
 
         // Draw trash.png icon inside the slot
-        GLuint trashTex = GetOrLoadIconTex("Assets/Textures/wood.png");
+        GLuint trashTex = GetOrLoadIconTex("Assets/Textures/trashbin.png");
         if (trashTex)
         {
             const float inner = trashSize - 2 * pad;

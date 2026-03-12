@@ -7,7 +7,15 @@ function M.OnPickup(entityID)
     -- [DEBUG] Check exactly what this string is
     print("Lua Debug: Item Name is '" .. tostring(myName) .. "'")
 
-    -- 2. Try to add it
+    if IsInventoryFull() then
+        local log = SpawnPrefab("CauldronLog_Prefab")
+        if log and log ~= -1 then
+            SetTextComponent(log, "text", "Inventory Full!")
+            Sound.Play("event:/InvalidRecipe") 
+        end
+        return true
+    end
+
     local slot = AddToInventory(myName)
 
     -- 3. Check result

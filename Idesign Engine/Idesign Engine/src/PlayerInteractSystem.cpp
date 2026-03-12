@@ -341,6 +341,7 @@ namespace Framework
         {
             auto logEntity = Framework::InstantiatePrefabByName("CauldronLog_Prefab");
             ecsInterface.GetComponent<TextProperties>(logEntity).text = "Inventory Full! Could not pick up " + Framework::GetItemDisplayName(itemId);
+            g_AudioSystem->PlayAudio("event:/InvalidRecipe");
 
             std::cout << "[PlayerInteractSystem] Interaction blocked: Inventory Full." << std::endl;
             return;

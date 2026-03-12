@@ -273,7 +273,7 @@
         {
             "guid": "6164f3f9-ba5f-40e6-a04d-c287e57ca0a9",
             "name": "FrogPortrait",
-            "path": "Assets\\Textures\\FrogPortrait.png",
+            "path": "Assets\\Textures\\FrogPortrait.jpg",
             "isUI": false
         },
         {
@@ -292,12 +292,6 @@
             "guid": "c7252f22-c44b-408d-a4d5-6410e42eeb52",
             "name": "GOLBINTEX",
             "path": "Assets\\Textures\\GOLBINTEX.jpg",
-            "isUI": false
-        },
-        {
-            "guid": "bb5da693-eb86-4523-86bc-ddb15614b98d",
-            "name": "frogPortrait",
-            "path": "Assets\\Textures\\frogPortrait.png",
             "isUI": false
         },
         {
@@ -2317,6 +2311,17 @@
             "guid": "faa37630-25ba-425a-88ea-07ddf4d46bea",
             "name": "Icon_Fish_Bordered",
             "path": "Assets\\Textures\\Icon_Fish_Bordered.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "be74f90c-0cce-43b5-b30e-d61b6407a28c",
+            "name": "trashbin",
+            "path": "Assets\\Textures\\trashbin.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,

@@ -1,5 +1,5 @@
 {
-    "count": 354,
+    "count": 359,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -499,7 +499,7 @@
         {
             "guid": "6164f3f9-ba5f-40e6-a04d-c287e57ca0a9",
             "name": "FrogPortrait",
-            "path": "Assets\\Textures\\FrogPortrait.png",
+            "path": "Assets\\Textures\\FrogPortrait.jpg",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
@@ -533,17 +533,6 @@
             "guid": "c7252f22-c44b-408d-a4d5-6410e42eeb52",
             "name": "GOLBINTEX",
             "path": "Assets\\Textures\\GOLBINTEX.jpg",
-            "isUI": false,
-            "uiAlpha": 1.0,
-            "uOffset": 0.0,
-            "vOffset": 0.0,
-            "uScale": 1.0,
-            "vScale": 1.0
-        },
-        {
-            "guid": "bb5da693-eb86-4523-86bc-ddb15614b98d",
-            "name": "frogPortrait",
-            "path": "Assets\\Textures\\frogPortrait.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
@@ -3863,9 +3852,31 @@
             "vScale": 1.0
         },
         {
+            "guid": "a173d13b-1d81-4778-a55d-c2bd0b6b3761",
+            "name": "Icon_Troll_Bordered",
+            "path": "Assets\\Textures\\Icon_Troll_Bordered.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
             "guid": "c3e503b8-4acc-437a-b335-ff3631a19f64",
             "name": "Credits 3",
             "path": "Assets\\Textures\\Credits 3.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "983ecaa9-d1c7-4fd5-8631-5a83db05671d",
+            "name": "mini_controlpage3",
+            "path": "Assets\\Textures\\mini_controlpage3.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
@@ -3888,6 +3899,50 @@
             "guid": "ebbc4826-5ae8-43b8-aca4-85bba85339a2",
             "name": "Credits 2",
             "path": "Assets\\Textures\\Credits 2.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "5365f2f9-cd4d-4554-9648-a872fbc4aef5",
+            "name": "SheepWithoutWool",
+            "path": "Assets\\Textures\\SheepWithoutWool.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "cb835734-627c-46b7-8267-7a9cb3ddebdc",
+            "name": "SheepWithWool",
+            "path": "Assets\\Textures\\SheepWithWool.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "faa37630-25ba-425a-88ea-07ddf4d46bea",
+            "name": "Icon_Fish_Bordered",
+            "path": "Assets\\Textures\\Icon_Fish_Bordered.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "be74f90c-0cce-43b5-b30e-d61b6407a28c",
+            "name": "trashbin",
+            "path": "Assets\\Textures\\trashbin.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
