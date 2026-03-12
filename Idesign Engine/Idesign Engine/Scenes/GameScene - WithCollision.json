@@ -5697,7 +5697,7 @@
                     "isUI": false
                 },
                 "ScriptProperties": {
-                    "scripts": [
+                   "scripts": [
                         {
                             "guid": "98caa7fe-14e5-4cb0-b0c3-bc039dbde2cf",
                             "scriptPath": "Assets\\Scripts\\DialogueSystem.lua",
@@ -5706,6 +5706,11 @@
                         {
                             "guid": "32595166-113f-4286-8862-7c6e6c2fbfb5",
                             "scriptPath": "Assets\\Scripts\\NightTutorialSystem.lua",
+                            "hotReload": false
+                        },
+                        {
+                            "guid": "222194d1-12f8-41fe-ad7a-6c3e621835ee",
+                            "scriptPath": "Assets\\Scripts\\QuarryTutorialSystem.lua",
                             "hotReload": false
                         }
                     ]

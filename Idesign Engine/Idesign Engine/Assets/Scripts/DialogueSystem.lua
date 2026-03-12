@@ -5,17 +5,20 @@
 local DayTutorial = {}
 SetData("dayTutorialPlayed", 0)
 SetData("mapSelectionTutorialPlayed", 0)
+SetData("quarryUnlockAnnouncePlayed", 0)
 
 DayTutorial.waitingForLanding    = false
 DayTutorial.waitingForDialogue   = false
 DayTutorial.sequenceStep         = 1
 DayTutorial.skipKeyHeld          = false
 
-DayTutorial.mapSelWaitingForDialogue = false
+DayTutorial.mapSelWaitingForDialogue     = false
+DayTutorial.quarryUnlockWaitingForDialogue = false
 
 -- Snapshot timers: record the RealTime when each phase first becomes active
-DayTutorial.dayStartTime         = nil
-DayTutorial.mapSelStartTime      = nil
+DayTutorial.dayStartTime            = nil
+DayTutorial.mapSelStartTime         = nil
+DayTutorial.quarryUnlockStartTime   = nil
 
 local DAY_DELAY    = 1.65 -- custo mto fit loading and timing
 local MAPSEL_DELAY = 0.5
@@ -45,13 +48,23 @@ function DayTutorial:SkipMapSelSequence()
     print("[DayTutorial] MapSelection sequence complete.")
 end
 
+function DayTutorial:SkipQuarryUnlockSequence()
+    print("[DayTutorial] Quarry unlock announcement skipped via F9.")
+    SetData("quarryUnlockAnnouncePlayed", 1)
+    if DialogueIsActive() then DialogueClear() end
+    self.quarryUnlockWaitingForDialogue = false
+    self.quarryUnlockStartTime          = nil
+    print("[DayTutorial] Quarry unlock announcement complete.")
+end
+
 function DayTutorial:on_update(dt)
     local inGameplay     = IsEngineState("Play")
     local inMapSelection = IsEngineState("MapSelection")
     local isDayPhase     = (GetPhase() == 1)
     local playedFlag     = GetData("dayTutorialPlayed")
-    local mapSelFlag     = GetData("mapSelectionTutorialPlayed")
-    local now            = GetRealTime()
+    local mapSelFlag          = GetData("mapSelectionTutorialPlayed")
+    local quarryAnnounceFlag  = GetData("quarryUnlockAnnouncePlayed")
+    local now                 = GetRealTime()
 
     -- F9 skip with debounce
     local skipPressed = IsKeyDown(298)
@@ -64,6 +77,11 @@ function DayTutorial:on_update(dt)
         if inMapSelection and (mapSelFlag == 0 or self.mapSelWaitingForDialogue) then
             self.skipKeyHeld = true
             self:SkipMapSelSequence()
+            return
+        end
+        if inMapSelection and (quarryAnnounceFlag == 0 or self.quarryUnlockWaitingForDialogue) then
+            self.skipKeyHeld = true
+            self:SkipQuarryUnlockSequence()
             return
         end
     end
@@ -123,6 +141,31 @@ function DayTutorial:on_update(dt)
         self.mapSelWaitingForDialogue = false
         print("[DayTutorial] MapSelection dialogue complete.")
     end
+
+    -- -------------------------------------------------------
+    -- Quarry unlock announcement: fires once on MapSelection when quarry is available
+    -- Waits for the same MAPSEL_DELAY to avoid fighting loading
+    -- -------------------------------------------------------
+    if inMapSelection and quarryAnnounceFlag == 0 and IsQuarryUnlocked() then
+        if not self.quarryUnlockStartTime then
+            self.quarryUnlockStartTime = now
+        end
+        if now - self.quarryUnlockStartTime >= MAPSEL_DELAY then
+            self.quarryUnlockStartTime = nil
+            SetData("quarryUnlockAnnouncePlayed", 1)
+            print("[DayTutorial] Quarry unlocked and MapSelection open. Playing announcement.")
+            self:PlayQuarryUnlockDialogue()
+        end
+    else
+        if not (inMapSelection and quarryAnnounceFlag == 0) then
+            self.quarryUnlockStartTime = nil  -- reset if we leave the condition
+        end
+    end
+
+    if self.quarryUnlockWaitingForDialogue and not DialogueIsActive() then
+        self.quarryUnlockWaitingForDialogue = false
+        print("[DayTutorial] Quarry unlock announcement complete.")
+    end
 end
 
 function DayTutorial:PlayNextStep()
@@ -172,10 +215,18 @@ end
 
 function DayTutorial:PlayMapSelDialogue()
     DialogueClear()
-    DialogueAdd("This is the map selection screen.", "Aunt Mira", "portrait")
-    DialogueAdd("Pick the forest area to start gathering ingredients, we'll head to the shop right after.", "Aunt Mira", "portrait")
+    DialogueAdd("This is the map. Every location you unlock will show itself here.", "Aunt Mira", "portrait")
+    DialogueAdd("Start with the forest — herbs won't gather themselves, and we've potions to brew.", "Aunt Mira", "portrait")
     DialogueStart()
     self.mapSelWaitingForDialogue = true
+end
+
+function DayTutorial:PlayQuarryUnlockDialogue()
+    DialogueClear()
+    DialogueAdd("The Quarry is open to you now, child. Rich in ore and not without its dangers.", "Aunt Mira", "portrait")
+    DialogueAdd("Head there when you need minerals. Some of our finer recipes demand nothing less.", "Aunt Mira", "portrait")
+    DialogueStart()
+    self.quarryUnlockWaitingForDialogue = true
 end
 
 return DayTutorial

@@ -1,0 +1,134 @@
+--- QuarryTutorialSystem.lua
+--- Plays a camera onboarding sequence the first time the player enters the Quarry.
+--- Triggered by MapSelectionUI.lua flicking "quarryFirstEntered" on travel confirm.
+--- Pattern mirrors NightTutorialSystem.lua / DialogueSystem.lua.
+
+local QuarryTutorial = {}
+
+-- Initialise persistent flags (engine resets these on fresh run)
+SetData("quarryFirstEntered",  0)
+SetData("quarryTutorialPlayed", 0)
+
+QuarryTutorial.waitingForLanding  = false
+QuarryTutorial.waitingForDialogue = false
+QuarryTutorial.timer              = 0.0
+QuarryTutorial.delayDuration      = 1.5   -- seconds after arrival before sequence starts
+QuarryTutorial.sequenceStep       = 1
+QuarryTutorial.skipKeyHeld        = false
+
+-- =========================================================
+-- Total number of tutorial steps (update if you add/remove steps)
+-- =========================================================
+local TOTAL_STEPS = 2
+
+-- =========================================================
+-- Step 1 flies to copper (welcome + copper dialogue).
+-- Step 2 flies to iron.
+-- =========================================================
+local STEP_TARGETS = {
+    [1] = { entity = "copper", offX =  2.0, offY = 4.0, offZ =  4.0 },     -- copper deposit
+    [2] = { entity = "iron",   offX = -2.0, offY = 3.5, offZ =  4.0 },     -- iron deposit
+}
+
+-- =========================================================
+function QuarryTutorial:on_init()
+    print("[QuarryTutorial] Initialized.")
+end
+
+-- =========================================================
+function QuarryTutorial:SkipSequence()
+    print("[QuarryTutorial] Sequence skipped via F9.")
+
+    SetData("quarryTutorialPlayed", 1)
+
+    if CutsceneIsFlying() then CutsceneStop() end
+    if DialogueIsActive() then DialogueClear() end
+
+    self.waitingForLanding  = false
+    self.waitingForDialogue = false
+    self.sequenceStep       = TOTAL_STEPS + 1
+    self.timer              = 0.0
+
+    print("[QuarryTutorial] Sequence complete. Control restored.")
+end
+
+-- =========================================================
+function QuarryTutorial:on_update(dt)
+    local inGameplay    = IsEngineState("Play")
+    local isDayPhase    = (GetPhase() == 1)
+    local enteredFlag   = GetData("quarryFirstEntered")
+    local playedFlag    = GetData("quarryTutorialPlayed")
+
+    -- F9 skip with debounce
+    local skipPressed = IsKeyDown(298)
+    if skipPressed and not self.skipKeyHeld and inGameplay and isDayPhase then
+        if enteredFlag == 1 and (playedFlag == 0 or self.waitingForLanding or self.waitingForDialogue) then
+            self.skipKeyHeld = true
+            self:SkipSequence()
+            return
+        end
+    end
+    if not skipPressed then self.skipKeyHeld = false end
+
+    -- Wait for first eligible frame after arriving in quarry, then start sequence
+    if inGameplay and isDayPhase and enteredFlag == 1 and playedFlag == 0 then
+        self.timer = self.timer + dt
+        if self.timer >= self.delayDuration then
+            SetData("quarryTutorialPlayed", 1)
+            print("[QuarryTutorial] First quarry entry detected. Starting sequence.")
+            self:PlayNextStep()
+        end
+    end
+
+    -- Advance after camera lands
+    if self.waitingForLanding and not CutsceneIsFlying() then
+        self.waitingForLanding = false
+        self:StartDialogueForCurrentStep()
+    end
+
+    -- Advance after dialogue finishes
+    if self.waitingForDialogue and not DialogueIsActive() then
+        self.waitingForDialogue = false
+        self.sequenceStep = self.sequenceStep + 1
+        if self.sequenceStep <= TOTAL_STEPS then
+            self:PlayNextStep()
+        else
+            print("[QuarryTutorial] Sequence complete. Control restored.")
+        end
+    end
+end
+
+-- =========================================================
+function QuarryTutorial:PlayNextStep()
+    local step = STEP_TARGETS[self.sequenceStep]
+    if not step then
+        print("[QuarryTutorial] WARNING: no target defined for step " .. self.sequenceStep)
+        return
+    end
+
+    print("[QuarryTutorial] Step " .. self.sequenceStep .. " | Flying to: " .. step.entity)
+    CutsceneSetTarget(step.entity)
+    CutsceneSetOffset(step.offX, step.offY, step.offZ)
+    CutsceneSetSpeed(1.8)
+    CutsceneStart()
+    self.waitingForLanding = true
+end
+
+-- =========================================================
+function QuarryTutorial:StartDialogueForCurrentStep()
+    DialogueClear()
+
+    if self.sequenceStep == 1 then
+        DialogueAdd("Welcome to the Quarry, child! A fine place to stock up on rare minerals for more elaborate potions!", "Aunt Mira", "portrait")
+        DialogueAdd("Copper! A sturdy ore, useful in many of our recipes.", "Aunt Mira", "pear")
+        DialogueAdd("Press 'E' near any ore to mine it. Don't leave empty-handed!", "Aunt Mira", "portrait")
+    elseif self.sequenceStep == 2 then
+        DialogueAdd("And here's iron — tougher to crack, but worth every swing.", "Aunt Mira", "pear")
+        DialogueAdd("Fill that bag and head back when you're done. The cauldron won't stir itself!", "Aunt Mira", "portrait")
+    end
+
+    DialogueStart()
+    self.waitingForDialogue = true
+end
+
+return QuarryTutorial

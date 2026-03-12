@@ -8,6 +8,10 @@
 
 local M = {}
 
+-- Initialise quarry tutorial flags so GetData never errors on first read
+SetData("quarryFirstEntered",  0)
+SetData("quarryTutorialPlayed", 0)
+
 local HIDE_Z = -99999.0  -- offscreen Z to hide an entity from rendering
 
 -- =========================================================
@@ -315,6 +319,11 @@ function M:ConfirmTravel(locData)
     for _, loc in pairs(locations) do
         local img = FindEntityByName(loc.ingredientImageEntity)
         if img and IsEntityValid(img) then SetEntityScale(img, 0, 0, 0) end
+    end
+
+    -- Flick quarry first-enter flag so QuarryTutorialSystem knows to play onboarding
+    if locData.name == "Quarry" and GetData("quarryTutorialPlayed") == 0 then
+        SetData("quarryFirstEntered", 1)
     end
 
     TeleportPlayer(
