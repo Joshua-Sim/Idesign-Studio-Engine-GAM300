@@ -4,10 +4,8 @@ local Customer = {}
 Customer.interaction_range = 2.5
 
 -- Textbox configuration
-local prefab_textbox         = "CustomerTextbox_Prefab"
-local textbox_y_offset       = 4.5
-local billboard_depth_adjust = 0.055
-local x_offset_right         = -0.5
+local prefab_textbox   = "CustomerTextbox_Prefab"
+local textbox_y_offset = 4.5
 
 -- Log prefab
 local prefab_log = "CustomerLog_Prefab"
@@ -71,16 +69,6 @@ function Customer.on_update(self, dt)
     -- Tick elapsed time in milliseconds (SetData only accepts integers)
     local elapsed_ms = GetState(self.entity, "ElapsedTime") + math.floor(dt * 1000)
     SetState(self.entity, "ElapsedTime", elapsed_ms)
-
-    -- Update textbox billboard if arrived
-    if GetState(self.entity, "HasArrived") == 1 then
-        local player = FindEntityByName("Player")
-        if player then
-            local px, py, pz = GetPosition(player)
-            local cx, cy, cz = GetPosition(self.entity)
-            Customer.UpdateTextboxBillboard(self.entity, px, pz, cx, cy, cz)
-        end
-    end
 end
 
 -- =========================================================
@@ -90,6 +78,9 @@ function Customer.OnArrival(senderID, targetID, actionType)
     print("[Customer] Entity " .. tostring(targetID) .. " arrived at counter!")
 
     SetState(targetID, "HasArrived", 1)
+
+    -- Guard: destroy any existing textbox before spawning a new one
+    Customer.DestroyTextbox(targetID)
 
     local order = GetCustomerOrder(targetID) or "something"
     local orderText = "Hi, I want a " .. tostring(order) .. "."
@@ -254,17 +245,35 @@ end
 
 -- =========================================================
 -- TEXTBOX FUNCTIONS
--- Textbox entity ID stored per-entity via SetData
+-- Textbox entity ID stored per-entity via SetData.
+-- isBillboard=true in the prefab so the engine handles facing;
+-- we only need to set the world position once on spawn.
 -- =========================================================
 function Customer.SpawnTextbox(entity, text)
-    local textbox = SpawnPrefab(prefab_textbox, entity)
-    if textbox then
-        SetTextComponent(textbox, "text", text)
-        SetData("Textbox_" .. tostring(entity), textbox)
-        print("[Customer] Spawned textbox for entity " .. tostring(entity) .. ": " .. text)
-    else
-        print("[Customer] ERROR: Failed to spawn textbox for entity " .. tostring(entity))
+    local textboxKey = "Textbox_" .. tostring(entity)
+    -- Guard: already has a live textbox, don't spawn a duplicate
+    local existing = GetData(textboxKey)
+    if existing and existing > 0 then
+        print("[Customer] Textbox already exists for entity " .. tostring(entity) .. ", skipping spawn.")
+        return
     end
+
+    local textbox = SpawnPrefab(prefab_textbox, entity)
+    if not textbox then
+        print("[Customer] ERROR: Failed to spawn textbox for entity " .. tostring(entity))
+        return
+    end
+
+    SetTextComponent(textbox, "text", text)
+    SetData(textboxKey, textbox)
+
+    -- Position above the customer with a per-slot Y stagger to avoid overlap
+    local cx, cy, cz = GetPosition(entity)
+    local slot = GetData("Slot_" .. tostring(entity))
+    local slot_y_stagger = (slot == 2) and 0.7 or 0.0
+    SetPosition(textbox, cx, cy + textbox_y_offset + slot_y_stagger, cz)
+
+    print("[Customer] Spawned textbox for entity " .. tostring(entity) .. ": " .. text)
 end
 
 function Customer.DestroyTextbox(entity)
@@ -275,23 +284,6 @@ function Customer.DestroyTextbox(entity)
         SetData(textboxKey, 0)
         print("[Customer] Destroyed textbox for entity " .. tostring(entity))
     end
-end
-
-function Customer.UpdateTextboxBillboard(entity, px, pz, cx, cy, cz)
-    local textbox = GetData("Textbox_" .. tostring(entity))
-    if not textbox or textbox <= 0 then return end
-
-    local dx        = px - cx
-    local dz        = pz - cz
-    local angle_rad = math.atan2(dx, dz)
-    local angle_deg = math.deg(angle_rad)
-
-    local textbox_x = cx + x_offset_right + billboard_depth_adjust * math.sin(angle_rad)
-    local textbox_y = cy + textbox_y_offset
-    local textbox_z = cz                  + billboard_depth_adjust * math.cos(angle_rad)
-
-    SetPosition(textbox, textbox_x, textbox_y, textbox_z)
-    SetRotation(textbox, 0.0, angle_deg, 0.0)
 end
 
 -- =========================================================

@@ -22137,7 +22137,7 @@
                     "position": [
                         955.0,
                         976.0,
-                        0.0
+                        0.1
                     ],
                     "rotation": [
                         0.0,
@@ -22573,10 +22573,10 @@
                         "OrderUI"
                     ]
                 },
-                "TextureComponent": {
-                    "guid": "eb687c6c-3f11-4f0e-b113-a7b451c5f632",
-                    "isUI": false
-                }
+              "TextureComponent": {
+                "guid": "faa37630-25ba-425a-88ea-07ddf4d46bea",
+                "isUI": false
+              }
             }
         },
         {
@@ -22611,10 +22611,10 @@
                         "OrderUI"
                     ]
                 },
-                "TextureComponent": {
-                    "guid": "eb687c6c-3f11-4f0e-b113-a7b451c5f632",
-                    "isUI": false
-                }
+              "TextureComponent": {
+                "guid": "faa37630-25ba-425a-88ea-07ddf4d46bea",
+                "isUI": false
+              }
             }
         },
         {
@@ -23209,10 +23209,10 @@
                         "OrderUI"
                     ]
                 },
-                "TextureComponent": {
-                    "guid": "f853ac0f-5340-43ec-a6a5-ab7dc5260b0c",
-                    "isUI": false
-                }
+              "TextureComponent": {
+                "guid": "a173d13b-1d81-4778-a55d-c2bd0b6b3761",
+                "isUI": false
+              }
             }
         },
         {
@@ -23247,10 +23247,10 @@
                         "OrderUI"
                     ]
                 },
-                "TextureComponent": {
-                    "guid": "f853ac0f-5340-43ec-a6a5-ab7dc5260b0c",
-                    "isUI": false
-                }
+              "TextureComponent": {
+                "guid": "a173d13b-1d81-4778-a55d-c2bd0b6b3761",
+                "isUI": false
+              }
             }
         },
         {
@@ -24157,7 +24157,7 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        810.75,
+                        900.0,
                         300.0,
                         0.800000011920929
                     ],
@@ -24167,7 +24167,7 @@
                         0.0
                     ],
                     "scale": [
-                        271.5,
+                        450.0,
                         25.0,
                         1.0
                     ],
@@ -29152,41 +29152,82 @@
             "name": "minicontrolUI_2",
             "guid": "63c15a5b-0514-4e22-868d-0a364f007b05",
             "components": {
-                "TransformComponent": {
-                    "position": [
-                        1800.0,
-                        90.0,
-                        1.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        250.0,
-                        125.0,
-                        1.0
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "",
-                    "sortIndex": 447,
-                    "children": []
-                },
-                "TagComponent": {
-                    "tags": [
-                        "minicontrols"
-                    ]
-                },
-                "MeshComponent": {
-                    "guid": ""
-                },
-                "TextureComponent": {
-                    "guid": "f6a80947-3bc0-43d5-b515-f348d6354e8e",
-                    "isUI": true
-                }
+            "TransformComponent": {
+                "position": [
+                1800.0,
+                90.0,
+                1.0
+                ],
+                "rotation": [
+                0.0,
+                0.0,
+                0.0
+                ],
+                "scale": [
+                250.0,
+                125.0,
+                1.0
+                ],
+                "isActive": true
+            },
+            "HierarchyComponent": {
+                "parent": "",
+                "sortIndex": 333,
+                "children": []
+            },
+            "TagComponent": {
+                "tags": [
+                "minicontrols"
+                ]
+            },
+            "MeshComponent": {
+                "guid": ""
+            },
+            "TextureComponent": {
+                "guid": "f6a80947-3bc0-43d5-b515-f348d6354e8e",
+                "isUI": true
+            }
+            }
+        },
+        {
+            "name": "minicontrolUI_3",
+            "guid": "63c15a5b-0514-4e22-868d-0a364f007b08",
+            "components": {
+            "TransformComponent": {
+                "position": [
+                1800.0,
+                360.0,
+                1.0
+                ],
+                "rotation": [
+                0.0,
+                0.0,
+                0.0
+                ],
+                "scale": [
+                250.0,
+                125.0,
+                1.0
+                ],
+                "isActive": true
+            },
+            "HierarchyComponent": {
+                "parent": "",
+                "sortIndex": 333,
+                "children": []
+            },
+            "TagComponent": {
+                "tags": [
+                "minicontrols"
+                ]
+            },
+            "MeshComponent": {
+                "guid": ""
+            },
+            "TextureComponent": {
+                "guid": "983ecaa9-d1c7-4fd5-8631-5a83db05671d",
+                "isUI": true
+            }
             }
         },
         {
@@ -29715,6 +29756,51 @@
                 "TextureComponent": {
                     "guid": "c3e503b8-4acc-437a-b335-ff3631a19f64",
                     "isUI": false
+                }
+            }
+        },
+        {
+            "name": "AutoCauldronText",
+            "guid": "d199b606-7653-4fe0-bb1c-4fdb9dc4d611",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                    -45.712,
+                    8.037,
+                    17.361
+                    ],
+                    "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                    ],
+                    "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "sortIndex": 0,
+                    "children": []
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "TextProperties": {
+                    "text": "",
+                    "scale": 0.01,
+                    "color": [
+                    1.0,
+                    1.0,
+                    1.0
+                    ],
+                    "opacity": 1.0,
+                    "alignment": 1,
+                    "isBillboard": true,
+                    "screenSpace": false
                 }
             }
         }
