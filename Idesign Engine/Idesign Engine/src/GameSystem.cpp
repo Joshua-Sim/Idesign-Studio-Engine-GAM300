@@ -139,7 +139,8 @@ namespace Framework
         gameData[key] = value;
         if (key.find("ElapsedTime") == std::string::npos)
         {
-            std::cout << "[GameSystem] Set " << key << " = " << value << std::endl;
+            // RegrowthTimer keeps getting spammed here
+            //std::cout << "[GameSystem] Set " << key << " = " << value << std::endl;
         }
     }
 

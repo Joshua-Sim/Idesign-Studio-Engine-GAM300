@@ -376,9 +376,12 @@ namespace Framework {
         std::unordered_set<std::string> added;
 
         // Potions craftable from ingredients
-        for (const auto& recipe : recipes) {
+        for (const auto& recipe : recipes) 
+        {
             if (CanCraftRecipe(recipe) &&
-                GetItemType(recipe.resultItemID) == ItemType::POTION) {
+                GetItemType(recipe.resultItemID) == ItemType::POTION ||
+                GetItemType(recipe.resultItemID) == ItemType::POWDER) 
+            {
                 std::string name = kItemNames[recipe.resultItemID];
                 if (added.insert(name).second)
                     craftable.push_back(name);
