@@ -413,6 +413,18 @@
             "name": "Prefab_Test_Prefab",
             "path": "Assets\\Prefabs\\Prefab_Test_Prefab.prefab",
             "isScenePrefab": false
+        },
+        {
+            "guid": "6800e96c-6bd6-4974-a3a0-edbe5457558f",
+            "name": "mending_potion_Prefab",
+            "path": "Assets\\Prefabs\\mending_potion_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "c26d9aa1-e8bc-4f97-878c-6659f3dd7bdb",
+            "name": "defense_potion_Prefab",
+            "path": "Assets\\Prefabs\\defense_potion_Prefab.prefab",
+            "isScenePrefab": false
         }
     ]
 }

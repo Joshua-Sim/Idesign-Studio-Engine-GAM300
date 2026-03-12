@@ -336,29 +336,32 @@ namespace Framework {
     {
         auto& inv = Inventory::Instance();
 
-        RecipeRequirements req = ExpandRecipeToBase(recipe.resultItemID);
-        if (!req.valid) return false;
-
-        // Build available ingredient map from hotbar + backpack
+        // Build available map from hotbar + backpack
         std::unordered_map<int, int> available;
-
         for (int i = 0; i < inv.GetHotbarSlotCount(); ++i) {
             const auto& slot = inv.Get(i);
             if (slot.itemId >= 0)
                 available[slot.itemId] += (slot.count > 0 ? slot.count : 1);
         }
-
         for (int i = 0; i < inv.GetBackpackSlotCount(); ++i) {
             const auto& slot = inv.GetBackpack(i);
             if (slot.itemId >= 0)
                 available[slot.itemId] += (slot.count > 0 ? slot.count : 1);
         }
 
-        // Check all base ingredients are covered
+        // Check direct recipe inputs first (e.g. iron_bar + copper_bar)
+        bool directSatisfied = true;
+        for (int ingredientId : recipe.ingredientIDs) {
+            if (available[ingredientId] < 1) { directSatisfied = false; break; }
+        }
+        if (directSatisfied) return true;
+
+        // Fall back to expanded base ingredients (e.g. iron_ore + copper_ore)
+        RecipeRequirements req = ExpandRecipeToBase(recipe.resultItemID);
+        if (!req.valid) return false;
         for (const auto& [itemId, needed] : req.baseIngredients) {
             if (available[itemId] < needed) return false;
         }
-
         return true;
     }
 

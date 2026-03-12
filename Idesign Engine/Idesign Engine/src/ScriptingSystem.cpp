@@ -1647,7 +1647,7 @@ namespace Framework {
         }
 
         // Lua Call: int CheckValidRecipe(table ingredientIDs)
-// Returns: -1 if invalid, or the ItemID (int) of the result if valid
+        // Returns: -1 if invalid, or the ItemID (int) of the result if valid
         static int l_CheckValidRecipe(lua_State* L) {
             // 1. Validate Input
             if (!lua_istable(L, 1)) {
@@ -2679,6 +2679,22 @@ namespace Framework {
             lua_newtable(L);
             for (int i = 0; i < (int)craftable.size(); ++i) {
                 lua_pushstring(L, craftable[i].c_str());
+                lua_rawseti(L, -2, i + 1);
+            }
+            return 1;
+            });
+
+        lua_register(L, "GetPotionDirectCost", [](lua_State* L) -> int {
+            const char* potionName = luaL_checkstring(L, 1);
+            int potionId = Framework::ItemNameToId(potionName);
+            lua_newtable(L);
+            if (potionId < 0) return 1;
+            const PotionRecipe* recipe = Framework::GetRecipeForResult(potionId);
+            if (!recipe) return 1;
+            for (int i = 0; i < (int)recipe->ingredientIDs.size(); ++i) {
+                lua_newtable(L);
+                lua_pushinteger(L, recipe->ingredientIDs[i]); lua_setfield(L, -2, "itemId");
+                lua_pushinteger(L, 1);                        lua_setfield(L, -2, "count");
                 lua_rawseti(L, -2, i + 1);
             }
             return 1;

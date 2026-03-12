@@ -89,7 +89,14 @@ local function BuildOrderQueue()
     orderQueue = {}
     queueIndex = 1
 
+    local cost = GetPotionIngredientCost("mending_potion")
+    print("[DEBUG] mending_potion base cost:")
+    for _, e in ipairs(cost) do
+        print("  itemId=" .. e.itemId .. " count=" .. e.count)
+    end
+
     local craftable = GetCraftablePotionNames()
+    print("[DEBUG] craftable list:")
     if not craftable or #craftable == 0 then
         print("[CustomerSystem] BuildOrderQueue: No potions available.")
         return
@@ -106,6 +113,17 @@ local function BuildOrderQueue()
                 end
             end
         end
+
+        -- NEW: also seed direct inputs (e.g. iron_bar, copper_bar)
+        local direct = GetPotionDirectCost(potionName)
+        if direct then
+            for _, entry in ipairs(direct) do
+                if not pool[entry.itemId] then
+                    pool[entry.itemId] = GetIngredientCount(entry.itemId)
+                end
+            end
+        end
+
         -- Also include finished potions already in inventory
         local potionId = GetItemIdByName(potionName)
         if potionId >= 0 and not pool[potionId] then
@@ -115,10 +133,21 @@ local function BuildOrderQueue()
 
     -- Can we afford one of this potion from the virtual pool?
     local function CanAffordOne(potionName)
+        -- Check if already have the finished potion
         local potionId = GetItemIdByName(potionName)
         if potionId >= 0 and (pool[potionId] or 0) >= 1 then
             return true, "ready"
         end
+        -- Check direct recipe inputs first
+        local direct = GetPotionDirectCost(potionName)  -- need new binding
+        if direct and #direct > 0 then
+            local ok = true
+            for _, entry in ipairs(direct) do
+                if (pool[entry.itemId] or 0) < entry.count then ok = false; break end
+            end
+            if ok then return true, "direct" end
+        end
+        -- Fall back to base ingredients
         local cost = GetPotionIngredientCost(potionName)
         if not cost or #cost == 0 then return false, nil end
         for _, entry in ipairs(cost) do
@@ -132,6 +161,11 @@ local function BuildOrderQueue()
         if source == "ready" then
             local potionId = GetItemIdByName(potionName)
             pool[potionId] = pool[potionId] - 1
+        elseif source == "direct" then
+            local direct = GetPotionDirectCost(potionName)
+            for _, entry in ipairs(direct) do
+                pool[entry.itemId] = (pool[entry.itemId] or 0) - entry.count
+            end
         else
             local cost = GetPotionIngredientCost(potionName)
             for _, entry in ipairs(cost) do
@@ -207,6 +241,15 @@ local function ReplaceFailedOrder()
                 end
             end
         end
+        -- NEW: also seed direct inputs (e.g. iron_bar, copper_bar)
+        local direct = GetPotionDirectCost(potionName)
+        if direct then
+            for _, entry in ipairs(direct) do
+                if not pool[entry.itemId] then
+                    pool[entry.itemId] = GetIngredientCount(entry.itemId)
+                end
+            end
+        end
         local potionId = GetItemIdByName(potionName)
         if potionId >= 0 and not pool[potionId] then
             pool[potionId] = GetIngredientCount(potionId)
@@ -242,6 +285,14 @@ local function ReplaceFailedOrder()
         if potionId >= 0 and (pool[potionId] or 0) >= 1 then
             return true, "ready"
         end
+        local direct = GetPotionDirectCost(potionName)
+        if direct and #direct > 0 then
+            local ok = true
+            for _, entry in ipairs(direct) do
+                if (pool[entry.itemId] or 0) < entry.count then ok = false; break end
+            end
+            if ok then return true, "direct" end
+        end
         local cost = GetPotionIngredientCost(potionName)
         if not cost or #cost == 0 then return false, nil end
         for _, entry in ipairs(cost) do
@@ -254,6 +305,11 @@ local function ReplaceFailedOrder()
         if source == "ready" then
             local potionId = GetItemIdByName(potionName)
             pool[potionId] = pool[potionId] - 1
+        elseif source == "direct" then
+            local direct = GetPotionDirectCost(potionName)
+            for _, entry in ipairs(direct) do
+                pool[entry.itemId] = (pool[entry.itemId] or 0) - entry.count
+            end
         else
             local cost = GetPotionIngredientCost(potionName)
             for _, entry in ipairs(cost) do
@@ -411,6 +467,12 @@ function CustomerSystem:on_update(dt)
     if currentPhase == PHASE_NIGHT and previousPhase ~= PHASE_NIGHT then
         print("[CustomerSystem] --- Transition INTO Night Phase ---")
         self:ResetNightPhase()
+
+        -- DEBUG: dump inventory
+        print("[DEBUG] iron_ore count: " .. GetIngredientCount(8))
+        print("[DEBUG] copper_ore count: " .. GetIngredientCount(9))
+        print("[DEBUG] iron_bar count: " .. GetIngredientCount(GetItemIdByName('iron_bar')))
+
         BuildOrderQueue()
         if #orderQueue == 0 then
             print("[CustomerSystem] No craftable potions. Ending night immediately.")
