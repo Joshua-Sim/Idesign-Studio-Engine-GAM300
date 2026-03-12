@@ -92,13 +92,9 @@ namespace Framework
             if (required > REQUIRED_CUSTOMERS_MAX) required = REQUIRED_CUSTOMERS_MAX;
             GameSystem::SetData("requiredCustomers", required);
 
-            // Scale currency multiplier: grows 10% per night (100 = 1.0x, 110 = 1.1x, ...)
-            int multiplier = 100 + (night - 1) * 10;
-            GameSystem::SetData("currencyMultiplier", multiplier);
-
-            std::cout << "[GameSystem] Night " << night
-                << " started. Required customers: " << required
-                << ". Currency multiplier: " << multiplier << "%" << std::endl;
+            // Inside OnNightStart callback
+            int baseMultiplier = GameSystem::GetData("currencyMultiplier");
+            GameSystem::SetData("currencyMultiplier", baseMultiplier);
 
             return true;
             });

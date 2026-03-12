@@ -33,25 +33,32 @@ namespace Framework {
         static void SetCurrency(int value) { SetData("currency", value); }
         // In GameSystem.cpp
         static void AddCurrency(int delta) {
-            // 1. Get the raw multiplier (stored as an int where 100 = 1.0x)
-            int multiplierInt = GetData("currencyMultiplier");
+            // Change this temporarily:
+            int mInt = GetData("currencyMultiplier");
 
-            // Safety check: if it hasn't been initialized yet, default to 100 (1.0x)
-            if (multiplierInt <= 0) multiplierInt = 100;
+            // 2. Safety: If it's 0 or unitialized, default to 100%
+            if (mInt < 100) mInt = 100;
 
-            float multiplier = multiplierInt / 100.0f;
+            // 3. Convert to FLOAT (Crucial: use .0f)
+            float multiplier = mInt / 100.0f;
+            std::cout << std::endl;
+            std::cout << "[GameSystem] Adding currency with multiplier: " << mInt << "%" << std::endl;
 
-            // 2. Apply multiplier ONLY if the delta is positive (don't multiply penalties/costs)
-            int modifiedDelta = delta;
+            // 4. Multiply for income, keep raw for expenses
+            int finalAmount = delta;
             if (delta > 0) {
-                modifiedDelta = static_cast<int>(delta * multiplier);
+                finalAmount = static_cast<int>(delta * multiplier);
             }
 
-            // 3. Add to the total
-            AddData("currency", modifiedDelta);
+			std::cout << "[GameSystem] Final currency change after multiplier: " << finalAmount << std::endl;
+            std::cout << std::endl;
+            // 5. Apply the data
+            AddData("currency", finalAmount);
 
-            std::cout << "[GameSystem] Added " << modifiedDelta << " gold (Raw: " << delta << " x " << multiplier << ")" << std::endl;
+            // Debug this line to see the math in the console!
+            std::cout << "[C++ Math] " << delta << " * " << multiplier << " = " << finalAmount << std::endl;
         }
+
         static int GetCurrency() { return GetData("currency"); }
 
         // Customer queue functions (now use gameData internally)

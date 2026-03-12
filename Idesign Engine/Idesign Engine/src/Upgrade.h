@@ -72,7 +72,7 @@ namespace Framework
 
         int m_backpackUpgradeCost = 300;    // Initial cost for backpack upgrade
 
-        int m_currencyLevel = 0;            // Track currency upgrade level (0-3)
+        int m_currencyLevel = 1;            // Track currency upgrade level (0-3)
 
         // Cauldron upgrade (one-time)
         bool m_cauldronUnlocked = false;

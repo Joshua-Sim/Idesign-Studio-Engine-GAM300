@@ -847,14 +847,10 @@ end
 -- CURRENCY
 -- =========================================================
 function CustomerSystem:AddCurrency(amount)
-    local multiplier_int = GetData("currencyMultiplier")
-    if multiplier_int <= 0 then multiplier_int = 100; SetData("currencyMultiplier", 100) end
-    local multiplier      = multiplier_int / 100.0
-    local modified_amount = math.floor(amount * multiplier)
-    local new_currency    = math.max(0, GetCurrency() + modified_amount)
-    SetCurrency(new_currency)
-    print("[CustomerSystem] Currency +" .. modified_amount .. " total: " .. new_currency)
-    CustomerSystem:UpdateCurrencyDisplay()
+    -- Call the global C++ binding
+    AddCurrency(amount) 
+    -- Update the UI
+    self:UpdateCurrencyDisplay()
 end
 
 function CustomerSystem:UpdateCurrencyDisplay() UpdateCurrencyUI() end

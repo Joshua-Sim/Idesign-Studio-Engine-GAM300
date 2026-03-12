@@ -448,7 +448,7 @@ function M:on_update(dt)
 
     -- 6. WIN / LOSE
     if progress >= WIN_THRESHOLD then M.CompleteSmelting()
-    elseif progress <= 0.0 and grace_timer <= 0 then M.FailSmelting() end
+    end
 end
 
 function M.CompleteSmelting()
