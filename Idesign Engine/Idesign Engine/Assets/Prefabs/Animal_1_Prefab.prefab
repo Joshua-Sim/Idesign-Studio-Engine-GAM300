@@ -15,9 +15,9 @@
                     -0.037727031856775284
                 ],
                 "scale": [
-                    3.0,
-                    3.0,
-                    3.0
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "isActive": true
             },
@@ -25,7 +25,7 @@
                 "tags": [
                     "Interactable",
                     "interactable",
-		    "Sheep"
+                    "Sheep"
                 ]
             },
             "HierarchyComponent": {
@@ -34,10 +34,10 @@
                 "sortIndex": 0
             },
             "MeshReference": {
-                "guid": "a996d924-d28b-4666-bdd8-6960b3a2fbba"
+                "guid": "58328ef6-2b84-4dd3-b935-6b58b34bb052"
             },
             "TextureComponent": {
-                "guid": "1a928592-b12c-4b21-8af3-1c2cfeb9dd36",
+                "guid": "cb835734-627c-46b7-8267-7a9cb3ddebdc",
                 "isUI": false
             },
             "NavMeshAgentComponent": {
@@ -45,7 +45,7 @@
                 "agentRadius": 0.6000000238418579,
                 "moveSpeed": 3.5,
                 "angularSpeed": 360.0,
-                "rotationOffset": 90.0,
+                "rotationOffset": 0.0, 
                 "acceleration": 8.0,
                 "stoppingDistance": 0.10000000149011612,
                 "autoRepath": false,
@@ -65,19 +65,19 @@
                 "colliders": [
                     {
                         "size": [
-                            0.800000011920929,
                             2.0,
-                            0.800000011920929
+                            4.0,
+                            4.0
                         ],
                         "center": [
                             0.0,
-                            0.0,
+                            1.0,
                             0.0
                         ],
                         "canPassThrough": false,
                         "isInteractable": true,
-                        "interactMessage": "",
-                        "promptText": ""
+                        "interactMessage": "ShearSheep",
+                        "promptText": "Collect Wool"
                     }
                 ]
             },
@@ -101,13 +101,12 @@
                 "startAwake": true
             },
             "EventReceiverComponent": {
-                "receivers": []
-            },
-            "ItemComponent": {
-                "name": "wool",
-                "isIngredient": true,
-                "isChoppable": false,
-                "toDestroyWhenPicked": false
+                "receivers": [
+                    {
+                        "messageToListenFor": "ShearSheep",
+                        "luaFunctionToCall": "OnInteract"
+                    }
+                ]
             }
         }
     }
