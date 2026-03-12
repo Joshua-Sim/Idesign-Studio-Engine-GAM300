@@ -60,7 +60,7 @@ namespace Framework {
 
 
         // Configuration
-        int maxCharsPerLine = 70;  // Default to 40 characters
+        int maxCharsPerLine = 90;  // Default to 40 characters
         float typewriterSpeed = 0.03f;  // Seconds per character
 
         // State queries
