@@ -25,13 +25,18 @@ local BAR_LEFT_EDGE = {
 
 local HIDE_Z = -9999.0
 
+-- Display Z per layer
+local Z = {
+    panel = 0.1,  -- SlotPanel
+    mid   = 0.2,  -- PatienceFrame, PotionSlot, arrowRight, Icon_Fish/Orc
+    top   = 0.3,  -- PatienceFill, PotionIcon
+    text  = 0.2,  -- ArrivingText, OrderText
+}
+
 -- =========================================================
 -- STATE
 -- =========================================================
-local initialized  = false
-local textVisible  = {}
-local entityShown   = {}
-local entityOrigin  = {}  -- never wiped; captured once per entity
+local initialized = false
 
 local slotPanels     = {}
 local fishIcons      = {}
@@ -44,67 +49,64 @@ local potionSlots    = {}
 local potionIcons    = {}
 local arrowRights    = {}
 
+-- Cached X/Y per entity, captured once at NightInit
+local entityPos = {}
+
 local barStates = { "green", "green" }
 
 -- =========================================================
--- Z-BASED VISIBILITY HELPERS
+-- POSITION CACHE
 -- =========================================================
-local function StoreOriginOnce(entity)
+local function CachePos(entity)
     if not entity then return end
-    if entityOrigin[entity] then return end  -- already captured, don't overwrite
-    local ok, x, y, z = pcall(GetPosition, entity)
+    if entityPos[entity] then return end
+    local ok, x, y, _ = pcall(GetPosition, entity)
     if ok then
-        entityOrigin[entity] = { x = x, y = y, z = z }
+        entityPos[entity] = { x = x, y = y }
     end
-end
-
-local function ShowEntity(entity)
-    if not entity then return end
-    if entityShown[entity] == true then return end
-    local o = entityOrigin[entity]
-    if o then
-        SetTransformComponent(entity, "position", { x = o.x, y = o.y, z = o.z })
-    end
-    entityShown[entity] = true
-end
-
-local function HideEntity(entity)
-    if not entity then return end
-    if entityShown[entity] == false then return end
-    local o = entityOrigin[entity]
-    if o then
-        SetTransformComponent(entity, "position", { x = o.x, y = o.y, z = HIDE_Z })
-    end
-    entityShown[entity] = false
 end
 
 -- =========================================================
--- TEXT HELPERS
+-- VISIBILITY HELPERS
+-- =========================================================
+local function ShowAt(entity, z)
+    if not entity then return end
+    local p = entityPos[entity]
+    if p then
+        SetTransformComponent(entity, "position", { x = p.x, y = p.y, z = z })
+    end
+end
+
+local function Hide(entity)
+    if not entity then return end
+    local p = entityPos[entity]
+    if p then
+        SetTransformComponent(entity, "position", { x = p.x, y = p.y, z = HIDE_Z })
+    end
+end
+
+-- =========================================================
+-- TEXT HELPERS (Z + opacity)
 -- =========================================================
 local function ShowText(entity, text)
     if not entity then return end
-    local t = text or ""
-    if textVisible[entity] == t then return end
-    SetTextComponent(entity, "text", t)
+    ShowAt(entity, Z.text)
+    SetTextComponent(entity, "text", text or "")
     SetTextComponent(entity, "opacity", 1.0)
-    textVisible[entity] = t
 end
 
 local function HideText(entity)
     if not entity then return end
-    if textVisible[entity] == "" then return end
+    Hide(entity)
     SetTextComponent(entity, "opacity", 0.0)
     SetTextComponent(entity, "text", "")
-    textVisible[entity] = ""
 end
 
 -- =========================================================
 -- NIGHT INIT
 -- =========================================================
 function HUDSystem:NightInit()
-    entityShown  = {}
-    textVisible  = {}
-    -- entityOrigin is intentionally NOT reset here
+    entityPos = {}
 
     for i = 1, MAX_SLOTS do
         slotPanels[i]     = FindEntityByName("SlotPanel_"    .. i)
@@ -118,23 +120,23 @@ function HUDSystem:NightInit()
         potionIcons[i]    = FindEntityByName("PotionIcon_"   .. i)
         arrowRights[i]    = FindEntityByName("arrowRight_"   .. i)
 
-        -- Capture origins only if not already stored (safe across multiple nights)
-        StoreOriginOnce(slotPanels[i])
-        StoreOriginOnce(fishIcons[i])
-        StoreOriginOnce(orcIcons[i])
-        StoreOriginOnce(patienceFrames[i])
-        StoreOriginOnce(patienceFills[i])
-        StoreOriginOnce(potionSlots[i])
-        StoreOriginOnce(potionIcons[i])
-        StoreOriginOnce(arrowRights[i])
-    end
-
-    -- Hide all slots at night start
-    for i = 1, MAX_SLOTS do
-        HUDSystem:HideSlot(i)
+        CachePos(slotPanels[i])
+        CachePos(fishIcons[i])
+        CachePos(orcIcons[i])
+        CachePos(arrivingTexts[i])
+        CachePos(orderTexts[i])
+        CachePos(patienceFrames[i])
+        CachePos(patienceFills[i])
+        CachePos(potionSlots[i])
+        CachePos(potionIcons[i])
+        CachePos(arrowRights[i])
     end
 
     barStates = { "green", "green" }
+
+    for i = 1, MAX_SLOTS do
+        HUDSystem:HideSlot(i)
+    end
 
     initialized = true
     print("[HUDSystem] NightInit complete.")
@@ -156,10 +158,7 @@ function HUDSystem:on_update(dt)
     if phase ~= PHASE_NIGHT then
         if initialized then
             for i = 1, MAX_SLOTS do HUDSystem:HideSlot(i) end
-            textVisible  = {}
-            entityShown  = {}
-            -- entityOrigin is intentionally NOT wiped here
-            initialized  = false
+            initialized = false
         end
         return
     end
@@ -167,6 +166,8 @@ function HUDSystem:on_update(dt)
     if not initialized then
         HUDSystem:NightInit()
     end
+
+    local isPaused = HasEngineState("Paused")
 
     local uiData = GetCustomerUIData()
     if uiData then
@@ -179,14 +180,22 @@ function HUDSystem:on_update(dt)
             end
         end
     end
+
+    -- Hide text during pause (sprites handled by SceneInterface)
+    if isPaused then
+        for i = 1, MAX_SLOTS do
+            if arrivingTexts[i] then SetTextComponent(arrivingTexts[i], "opacity", 0.0) end
+            if orderTexts[i]    then SetTextComponent(orderTexts[i],    "opacity", 0.0) end
+        end
+    end
 end
 
 -- =========================================================
 -- SHOW SLOT
 -- =========================================================
 function HUDSystem:ShowSlot(slot, data)
-    ShowEntity(slotPanels[slot])
-    ShowEntity(arrowRights[slot])
+    ShowAt(slotPanels[slot], Z.panel)
+    ShowAt(arrowRights[slot], Z.mid)
     HUDSystem:SetIcon(slot, data.icon_type)
 
     if data.is_arriving then
@@ -203,14 +212,14 @@ end
 -- HIDE SLOT
 -- =========================================================
 function HUDSystem:HideSlot(slot)
-    HideEntity(slotPanels[slot])
-    HideEntity(arrowRights[slot])
-    HideEntity(fishIcons[slot])
-    HideEntity(orcIcons[slot])
-    HideEntity(patienceFrames[slot])
-    HideEntity(patienceFills[slot])
-    HideEntity(potionSlots[slot])
-    HideEntity(potionIcons[slot])
+    Hide(slotPanels[slot])
+    Hide(arrowRights[slot])
+    Hide(fishIcons[slot])
+    Hide(orcIcons[slot])
+    Hide(patienceFrames[slot])
+    Hide(patienceFills[slot])
+    Hide(potionSlots[slot])
+    Hide(potionIcons[slot])
     HideText(arrivingTexts[slot])
     HideText(orderTexts[slot])
     barStates[slot] = "green"
@@ -221,11 +230,11 @@ end
 -- =========================================================
 function HUDSystem:SetIcon(slot, icon_type)
     if icon_type == 1 then
-        ShowEntity(fishIcons[slot])
-        HideEntity(orcIcons[slot])
+        ShowAt(fishIcons[slot], Z.mid)
+        Hide(orcIcons[slot])
     else
-        ShowEntity(orcIcons[slot])
-        HideEntity(fishIcons[slot])
+        ShowAt(orcIcons[slot], Z.mid)
+        Hide(fishIcons[slot])
     end
 end
 
@@ -236,14 +245,14 @@ function HUDSystem:SetArrivingMode(slot, is_arriving)
     if is_arriving then
         ShowText(arrivingTexts[slot], "Arriving...")
         HideText(orderTexts[slot])
-        HideEntity(patienceFrames[slot])
-        HideEntity(patienceFills[slot])
-        HideEntity(potionSlots[slot])
-        HideEntity(potionIcons[slot])
+        Hide(patienceFrames[slot])
+        Hide(patienceFills[slot])
+        Hide(potionSlots[slot])
+        Hide(potionIcons[slot])
     else
         HideText(arrivingTexts[slot])
-        ShowEntity(patienceFrames[slot])
-        ShowEntity(potionSlots[slot])
+        ShowAt(patienceFrames[slot], Z.mid)
+        ShowAt(potionSlots[slot], Z.mid)
     end
 end
 
@@ -260,9 +269,8 @@ end
 -- =========================================================
 function HUDSystem:SetPotionIcon(slot, order)
     if order and potionIcons[slot] then
-        local texPath = "Assets/Textures/" .. order .. ".png"
-        SetTexture(potionIcons[slot], texPath)
-        ShowEntity(potionIcons[slot])
+        SetTexture(potionIcons[slot], "Assets/Textures/" .. order .. ".png")
+        ShowAt(potionIcons[slot], Z.top)
     end
 end
 
@@ -273,14 +281,10 @@ function HUDSystem:SetPatienceBar(slot, pct)
     pct = math.max(0.0, math.min(1.0, pct))
 
     if patienceFills[slot] then
-        ShowEntity(patienceFills[slot])
-
         local currentWidth = pct * BAR_WIDTH_MAX
         local centerX      = BAR_LEFT_EDGE[slot] + (currentWidth / 2)
         SetScale(patienceFills[slot], currentWidth, BAR_HEIGHT, 1.0)
-
-        local originZ = entityOrigin[patienceFills[slot]] and entityOrigin[patienceFills[slot]].z or 0
-        SetTransformComponent(patienceFills[slot], "position", { x = centerX, y = BAR_CENTER_Y, z = originZ })
+        SetTransformComponent(patienceFills[slot], "position", { x = centerX, y = BAR_CENTER_Y, z = Z.top })
 
         local targetState
         if pct <= THRESHOLD_RED then
