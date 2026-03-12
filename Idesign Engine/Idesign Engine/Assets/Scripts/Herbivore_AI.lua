@@ -6,7 +6,7 @@ M.waitMin = 2.0
 M.waitMax = 5.0
 M.arrivalDist = 1.5
 
--- 30 seconds converted to milliseconds for SetData
+-- 10 seconds converted to milliseconds for SetData
 local REGROWTH_TIME_MS = 10000 
 
 -- =========================================================
