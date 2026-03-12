@@ -92,6 +92,12 @@ namespace Framework
                 Is(EngineMode::Upgrade) ||
                 Is(EngineMode::MapSelection) ||
                 Is(EngineMode::Cutscene) ||
+                Is(EngineMode::Win) ||
+                Is(EngineMode::Day2) ||
+                Is(EngineMode::Day3) ||
+                Is(EngineMode::Day4) ||
+                Is(EngineMode::Day5) ||
+                Is(EngineMode::Credit) ||
                 Is(EngineMode::Intro);
         }
 

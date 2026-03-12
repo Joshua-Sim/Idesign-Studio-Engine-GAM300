@@ -1,5 +1,5 @@
 {
-    "count": 350,
+    "count": 354,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -3844,6 +3844,50 @@
             "guid": "f6a80947-3bc0-43d5-b515-f348d6354e8e",
             "name": "mini_controlpage2",
             "path": "Assets\\Textures\\mini_controlpage2.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "cff49230-aad4-4351-a255-ac17e27072ba",
+            "name": "Credits 4",
+            "path": "Assets\\Textures\\Credits 4.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "c3e503b8-4acc-437a-b335-ff3631a19f64",
+            "name": "Credits 3",
+            "path": "Assets\\Textures\\Credits 3.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "2353044e-9b64-4580-abc8-be524faaf82d",
+            "name": "Credits 1",
+            "path": "Assets\\Textures\\Credits 1.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "ebbc4826-5ae8-43b8-aca4-85bba85339a2",
+            "name": "Credits 2",
+            "path": "Assets\\Textures\\Credits 2.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,

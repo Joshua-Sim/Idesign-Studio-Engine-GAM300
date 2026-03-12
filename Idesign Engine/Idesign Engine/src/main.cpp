@@ -47,7 +47,7 @@
 #include "SceneInterface.h"
 #include "DialogueSystem.h"
 #include "LoadingSystem.h"
-#include "ParticleSystem.h""
+#include "ParticleSystem.h"
 #include "TimerComponent.h"
 #include "TimerSystem.h"
 

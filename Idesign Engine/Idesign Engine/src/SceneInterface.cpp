@@ -62,6 +62,18 @@ namespace Framework
     static const float winSceneDuration = 5.0f;       // per scene
     static const float winCrossfadeDuration = 1.8f;   // fade between scenes
 
+    // ========= CREDITS TUNING ===============
+    static float creditStartTime = -1.0f;
+    static bool  creditFinished = false;
+
+    static const float creditStartDelay = 1.0f;       // black screen hold
+    static const float creditPanelScrollDuration = 5.0f;
+    static const float creditPanelFadeInDuration = 0.6f;
+    static const float creditPanelStaggerDelay = 1.0f;
+
+    static const float creditStartY = -1400.0f; // below screen
+    static const float creditEndY = 1400.0f;  // above screen
+
 
     void SceneInterface::Initialize() {}
 
@@ -978,8 +990,7 @@ namespace Framework
                         }
 
                         //NEXT STATE
-                        engineState.PushState(EngineMode::Menu);
-                        //engineState.PushState(EngineMode::Credit); //set this to true after this state
+                        engineState.PushState(EngineMode::Credit);
                     }
                     return;
                 }
@@ -1043,6 +1054,111 @@ namespace Framework
             {
                 winCutsceneStartTime = -1.0f;
                 winCutsceneFinished = false;
+            }
+
+            // CREDIT CUTSCENE
+            // CREDIT CUTSCENE
+            if (engineState.Is(EngineMode::Credit))
+            {
+                auto slides = ecsInterface.GetEntitiesByTag("credit");
+                int sceneCount = (int)slides.size();
+                if (sceneCount < 2) return;
+
+                const int bgIndex = 0;
+
+                const float startY = -900.0f;
+                const float endY = 2500.0f;
+                const float speed = 300.0f;   // movement speed
+
+                if (creditStartTime < 0.0f)
+                {
+                    creditStartTime = (float)glfwGetTime();
+                    creditFinished = false;
+
+                    // Init panels
+                    for (int i = 0; i < sceneCount; ++i)
+                    {
+                        Entity e = slides[i];
+                        if (!ecsInterface.IsEntityValid(e)) continue;
+                        if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
+
+                        auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
+                        tex.isUI = true;
+                        tex.uiAlpha = 1.0f;
+                    }
+
+                    // Place panels at bottom
+                    for (int i = 1; i < sceneCount; ++i)
+                    {
+                        Entity e = slides[i];
+                        if (!ecsInterface.HasComponent<TransformComponent>(e)) continue;
+
+                        auto& tr = ecsInterface.GetComponent<TransformComponent>(e);
+                        tr.position.y = startY;
+                    }
+                }
+
+                float t = (float)glfwGetTime() - creditStartTime;
+
+                // Background always visible
+                if (ecsInterface.HasComponent<TextureProperties>(slides[bgIndex]))
+                {
+                    auto& bg = ecsInterface.GetComponent<TextureProperties>(slides[bgIndex]);
+                    bg.isUI = true;
+                    bg.uiAlpha = 1.0f;
+                }
+
+                bool allFinished = true;
+
+                for (int i = 1; i < sceneCount; ++i)
+                {
+                    Entity e = slides[i];
+
+                    if (!ecsInterface.HasComponent<TransformComponent>(e)) continue;
+                    if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
+
+                    auto& tr = ecsInterface.GetComponent<TransformComponent>(e);
+                    auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
+
+                    float delay = (i - 1) * 5.0f; // 0s, 2s, 4s, 6s
+
+                    if (t >= delay)
+                    {
+                        float localT = t - delay;
+
+                        tr.position.y = startY + speed * localT;
+                        tex.isUI = true;
+
+                        if (tr.position.y < endY)
+                            allFinished = false;
+                    }
+                    else
+                    {
+                        tex.isUI = false;
+                        allFinished = false;
+                    }
+                }
+
+                if (allFinished && !creditFinished)
+                {
+                    creditFinished = true;
+
+                    for (auto e : slides)
+                    {
+                        if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
+
+                        auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
+                        tex.isUI = false;
+                    }
+
+                    engineState.PopState();
+                    engineState.PushState(EngineMode::Menu);
+                }
+            }
+            else
+            {
+                creditStartTime = -1.0f;
+                creditFinished = false;
             }
 
             // ===================== END OF CUTSCENES / LOGIC SCENES ========================== //
