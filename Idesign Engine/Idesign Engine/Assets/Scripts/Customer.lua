@@ -153,11 +153,18 @@ function Customer.OnInteract(senderID, targetID, actionType)
         print("[Customer] Perfect! That's exactly what I wanted!")
         SetState(customer_entity, "HasReceived", 1)
 
+        -- 1. Get the dynamic reward from the item data
+        -- We use the heldItemId we already fetched earlier in the function
+        local reward = GetItemValue(heldItemId) 
+        
+        -- Fallback safety check
+        if not reward or reward <= 0 then
+            reward = 100 -- Minimum fallback price
+        end
+
         ConsumeSelectedItem()
         Customer.DestroyTextbox(customer_entity)
 
-        -- Apply reward using native AddCurrency binding
-        local reward = 100
         AddCurrency(reward)
         UpdateCurrencyUI()
         Customer.SpawnLog("Customer served! +" .. reward .. " gold")

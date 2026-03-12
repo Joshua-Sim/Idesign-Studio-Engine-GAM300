@@ -688,8 +688,17 @@ namespace Framework {
 
                 // --- UNLOCK MASK ---
                 bool isUnlocked = GameSystem::m_debugRevealAll || Framework::IsItemUnlocked(i);
+
                 std::string iconName = isUnlocked ? Framework::kItemNames[i] : "RB_QuestionMark";
-                std::string displayName = isUnlocked ? Framework::GetItemDisplayName(i) : "???";
+
+                // NEW LOGIC: If it's a Potion or Powder, always show the name
+                std::string displayName;
+                if (isUnlocked || type == Framework::ItemType::POTION || type == Framework::ItemType::POWDER) {
+                    displayName = Framework::GetItemDisplayName(i);
+                }
+                else {
+                    displayName = "???";
+                }
 
                 // 1. Background Frame
                 SpawnGenericSprite(currentX, currentY, "RB_ItemBackground", 125.0f, 125.0f, itemFrameZ);
@@ -728,8 +737,18 @@ namespace Framework {
             glm::vec4 black = { 0.0f, 0.0f, 0.0f, 1.0f };
 
             bool isUnlocked = GameSystem::m_debugRevealAll || Framework::IsItemUnlocked(selectedID);
+            Framework::ItemType type = Framework::GetItemType(selectedID);
+
+            // NEW LOGIC: Keep icon as question mark if locked, but reveal name for Potions/Powders
             std::string headerIcon = isUnlocked ? Framework::kItemNames[selectedID] : "RB_QuestionMark";
-            std::string headerName = isUnlocked ? Framework::GetItemDisplayName(selectedID) : "???";
+
+            std::string headerName;
+            if (isUnlocked || type == Framework::ItemType::POTION || type == Framework::ItemType::POWDER) {
+                headerName = Framework::GetItemDisplayName(selectedID);
+            }
+            else {
+                headerName = "???";
+            }
             std::string locationText = Framework::GetItemLocation(selectedID);
             // Wrap the text at roughly 35-40 characters based on your book's width
             std::string flavorText = "\"" + Framework::GetItemFlavorText(selectedID) + "\"";

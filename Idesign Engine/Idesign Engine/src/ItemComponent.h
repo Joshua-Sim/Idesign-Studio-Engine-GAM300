@@ -27,6 +27,7 @@ namespace Framework
         ItemType type;
         std::string location;
         std::string flavorText;
+        int value;
     };
 
     struct PotionRecipe {
@@ -139,6 +140,14 @@ namespace Framework
                 }
                 else {
                     def.location = "Not found anywhere"; // Fallback text
+                }
+                // Add this block to load the gold value
+                if (item.HasMember("value") && item["value"].IsInt()) {
+                    def.value = item["value"].GetInt();
+                }
+                else {
+                    // Optional: Default value if not specified in JSON
+                    def.value = 0;
                 }
                 def.flavorText = item["flavor"].GetString();
 
@@ -286,6 +295,12 @@ namespace Framework
         if (idx < 0 || idx >= items.size()) return false;
         *out_text = items[idx].id.c_str(); // Returns the ID string (e.g., "tool_knife")
         return true;
+    }
+
+    inline int GetItemValue(int id) {
+        const auto& items = GetItemDatabase();
+        if (id < 0 || id >= items.size()) return 0;
+        return items[id].value;
     }
 
     inline std::string GetItemDisplayName(int id) {

@@ -1671,6 +1671,21 @@ namespace Framework {
             return 1;
         }
 
+        static int lua_GetItemValue(lua_State* L) {
+            // 1. Get the itemId from the first argument passed in Lua
+            int itemId = static_cast<int>(luaL_checkinteger(L, 1));
+
+            // 2. Access the database using your helper function in ItemComponent.h
+            // This will return the goldValue loaded from your JSON
+            int value = Framework::GetItemValue(itemId);
+
+            // 3. Push the result back to Lua
+            lua_pushinteger(L, value);
+
+            // Return 1 because we are returning 1 value to Lua
+            return 1;
+        }
+
         // REGISTER IN SCRIPT SYSTEM
         // lua_register(L, "CheckValidRecipe", l_CheckValidRecipe);
 
@@ -2390,6 +2405,7 @@ namespace Framework {
         lua_register(L, "GetSelectedItemName", Lua_GetSelectedItemName);
         lua_register(L, "SetInteractionText", l_SetInteractionText);
         lua_register(L, "GetItemIdByName", lua_GetItemIdByName);
+		lua_register(L, "GetItemValue", lua_GetItemValue);
 
         // Engine utility
         lua_register(L, "FindEntityByName", lua_FindEntityByName);
