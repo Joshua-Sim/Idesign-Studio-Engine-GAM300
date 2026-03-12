@@ -3,6 +3,7 @@
 #include "Coordinator.h"
 #include "Graphics.h"          // to call Graphics* methods
 #include <lua.hpp>
+#include "PlayerInteractSystem.h"
 #include <iostream>
 #include "AssetCompiler.h"
 #include "WindowConfigProperties.h"  // g_WindowConfigProps
@@ -2317,6 +2318,35 @@ namespace Framework {
             SceneInterface::PushDayTransitionStateForCurrentDay();
             return 0; // no values returned to Lua
         }
+        
+        //FOR ZIPPING ITEMS
+        static int lua_TriggerZipPickup(lua_State* L)
+        {
+            // 1. Extract arguments from Lua
+            const char* itemName = luaL_checkstring(L, 1);
+            float x = static_cast<float>(luaL_checknumber(L, 2));
+            float y = static_cast<float>(luaL_checknumber(L, 3));
+            float z = static_cast<float>(luaL_checknumber(L, 4));
+
+            // 2. Convert name to ID
+            int itemId = Framework::ItemNameToId(itemName);
+
+            // 3. Trigger the C++ system if valid
+            if (itemId >= 0)
+            {
+                auto interactSystem = ecsInterface.GetSystem<Framework::PlayerInteractSystem>();
+                if (interactSystem)
+                {
+                    interactSystem->SpawnZipPickup(itemId, glm::vec3(x, y, z));
+                }
+            }
+            else
+            {
+                std::cout << "[ScriptingSystem] Warning: Invalid item name passed to TriggerZipPickup: " << itemName << std::endl;
+            }
+
+            return 0; // Return nothing to Lua
+        }
     }
 
     // ---------------------------- class methods --------------------------------
@@ -2406,6 +2436,7 @@ namespace Framework {
         lua_register(L, "SetInteractionText", l_SetInteractionText);
         lua_register(L, "GetItemIdByName", lua_GetItemIdByName);
 		lua_register(L, "GetItemValue", lua_GetItemValue);
+        lua_register(L, "TriggerZipPickup", lua_TriggerZipPickup);
 
         // Engine utility
         lua_register(L, "FindEntityByName", lua_FindEntityByName);
