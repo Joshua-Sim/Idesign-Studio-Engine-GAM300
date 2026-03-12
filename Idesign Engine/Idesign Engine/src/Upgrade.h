@@ -68,9 +68,9 @@ namespace Framework
 
         // Currency multiplier system
         float m_currencyMultiplier = 1.0f;  // Start at 1.0x
-        int m_currencyUpgradeCost = 800;    // Initial cost
+        int m_currencyUpgradeCost = 300;    // Initial cost
 
-        int m_backpackUpgradeCost = 600;    // Initial cost for backpack upgrade
+        int m_backpackUpgradeCost = 300;    // Initial cost for backpack upgrade
 
         int m_currencyLevel = 0;            // Track currency upgrade level (0-3)
 

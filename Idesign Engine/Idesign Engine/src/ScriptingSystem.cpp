@@ -1401,6 +1401,26 @@ namespace Framework {
             return 1;
         }
 
+        static int lua_GetItemDisplayNameById(lua_State* L) {
+            // 1. Get the internal string ID (e.g., "warmth_potion")
+            const char* stringId = luaL_checkstring(L, 1);
+
+            // 2. Convert string ID to numeric ID
+            int numericId = Framework::ItemNameToId(stringId);
+
+            // 3. Get the display name using your existing C++ helper
+            if (numericId != -1) {
+                std::string displayName = Framework::GetItemDisplayName(numericId);
+                lua_pushstring(L, displayName.c_str());
+            }
+            else {
+                // Fallback if ID is invalid
+                lua_pushstring(L, stringId);
+            }
+
+            return 1;
+        }
+
         int Lua_AddToInventory(lua_State* L) {
             const char* itemName = lua_tostring(L, 1); // Arg 1: "RedMushroom"
 
@@ -2437,6 +2457,7 @@ namespace Framework {
         lua_register(L, "GetItemIdByName", lua_GetItemIdByName);
 		lua_register(L, "GetItemValue", lua_GetItemValue);
         lua_register(L, "TriggerZipPickup", lua_TriggerZipPickup);
+		lua_register(L, "GetItemDisplayName", lua_GetItemDisplayNameById);
 
         // Engine utility
         lua_register(L, "FindEntityByName", lua_FindEntityByName);

@@ -68,7 +68,7 @@ namespace Framework
         // =========================================================
         // Initialize default values
         // =========================================================
-        SetData("currency", 5000);
+        SetData("currency", 0);
         SetData("currencyMultiplier", 100);   // 100 = 1.0x
         SetData("customerQueue", 0);
 

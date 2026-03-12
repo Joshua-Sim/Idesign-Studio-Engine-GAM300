@@ -79,11 +79,14 @@ function Customer.OnArrival(senderID, targetID, actionType)
 
     SetState(targetID, "HasArrived", 1)
 
-    -- Guard: destroy any existing textbox before spawning a new one
-    Customer.DestroyTextbox(targetID)
+    -- 1. Get the internal string ID from the system (e.g., "warmth_potion")
+    local orderIDString = GetCustomerOrder(targetID) or "strength_potion"
+    
+    -- 2. Call your newly registered C++ function
+    local displayName = GetItemDisplayName(orderIDString)
 
-    local order = GetCustomerOrder(targetID) or "something"
-    local orderText = "Hi, I want a " .. tostring(order) .. "."
+    -- 3. Display the fancy name in the speech bubble
+    local orderText = "Hi, I want a " .. tostring(displayName) .. "."
     Customer.SpawnTextbox(targetID, orderText)
 
     Customer.SpawnLog("Customer arrived!")
@@ -191,7 +194,7 @@ function Customer.OnInteract(senderID, targetID, actionType)
         else
             Sound.Play("event:/OrcWrong2")
         end
-
+        local niceName = GetItemDisplayName(my_order)
         if wrong_count >= MAX_WRONG_ATTEMPTS then
             print("[Customer] That's it! I've had enough! Leaving...")
             Customer.DestroyTextbox(customer_entity)
@@ -205,7 +208,8 @@ function Customer.OnInteract(senderID, targetID, actionType)
             DestroyEntity(customer_entity)
         else
             local chances_left = MAX_WRONG_ATTEMPTS - wrong_count
-            print("[Customer] Sorry, I ordered " .. tostring(my_order) .. ", not " .. tostring(itemName) .. "!")
+        -- Say "I ordered Potion of Warmth" instead of "I ordered warmth_potion"
+            print("[Customer] Sorry, I ordered " .. tostring(niceName) .. ", not " .. tostring(itemName) .. "!")
             Customer.SpawnLog("Wrong item! " .. chances_left .. " chance(s) left")
         end
     end
@@ -228,7 +232,7 @@ function Customer.GenerateRequest()
 
     if fixedQueue > 0 then
         -- Demo mode
-        local items = {"warmth_potion", "vitality_potion", "strength_potion"}
+        local items = {"warmth_potion", "vitality_potion", "strength_potion", "mending_potion", "defense_potion", "preservation_powder", "healing_powder"}
         local item  = items[fixedQueue] or "strength_potion"
         SetData("fixedQueue", fixedQueue - 1)
         return item
