@@ -207,20 +207,19 @@ namespace Framework {
 
         // 3. ImGui Configuration
         ImGuiIO& io = ImGui::GetIO();
-        if (!isUIFocused) {
-            io.ConfigFlags |= ImGuiConfigFlags_NoMouse;
-            io.ConfigFlags |= ImGuiConfigFlags_NoKeyboard;
-            // Clear the flag so cursor is hidden properly in game
-            io.ConfigFlags &= ~ImGuiConfigFlags_NoMouseCursorChange;
-        }
-        else {
-            io.ConfigFlags &= ~ImGuiConfigFlags_NoMouse;
-            io.ConfigFlags &= ~ImGuiConfigFlags_NoKeyboard;
 
-            // CRITICAL: Tell ImGui to stop changing the cursor 
-            // so your custom GLFW cursor stays active.
-            io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
-        }
+        io.ConfigFlags |= ImGuiConfigFlags_NoMouse;
+        io.ConfigFlags |= ImGuiConfigFlags_NoKeyboard;
+        // Clear the flag so cursor is hidden properly in game
+        io.ConfigFlags &= ~ImGuiConfigFlags_NoMouseCursorChange;
+
+        io.ConfigFlags &= ~ImGuiConfigFlags_NoMouse;
+        io.ConfigFlags &= ~ImGuiConfigFlags_NoKeyboard;
+
+        // CRITICAL: Tell ImGui to stop changing the cursor 
+        // so your custom GLFW cursor stays active.
+        io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
+
 
         // 4. DETERMINE DESIRED CURSOR MODE
         // Default assumption: If we are in the Editor (UI Focused), cursor is visible.
@@ -249,15 +248,19 @@ namespace Framework {
             glfwSetInputMode(window, GLFW_CURSOR, desiredMode);
             currentMode = desiredMode;
 
-            // Apply custom cursor ONLY when we switch TO visible mode
+            // FIX: Always apply the custom cursor when switching to NORMAL mode
             if (desiredMode == GLFW_CURSOR_NORMAL) {
                 ApplyCustomCursor();
             }
 
-            // Reset first mouse if we just hid the cursor
             if (desiredMode == GLFW_CURSOR_DISABLED) {
                 m_firstMouse = true;
             }
+        }
+        else if (desiredMode == GLFW_CURSOR_NORMAL) {
+            // PERSISTENCE FIX: Occasionally reapplying ensures that even if 
+            // another system changed the cursor, yours takes priority.
+            ApplyCustomCursor();
         }
 
         //if (currentMode != desiredMode) {
