@@ -52,7 +52,9 @@ namespace Framework
     static const float dayPhaseStartX = 3300.0f; // start off-screen
     static const float dayPhaseCenterX = 960.0f; // centered
 
-    int SceneInterface::g_CurrentDay = 1;
+	// DO NOT TOUCH THIS 
+    // DAY COUNTER 
+    int SceneInterface::g_CurrentDay = 2;
 
     // ======== WIN CUTSCENE TUNING ============ 
     static float winCutsceneStartTime = -1.0f;

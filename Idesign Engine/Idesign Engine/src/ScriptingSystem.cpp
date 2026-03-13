@@ -1346,7 +1346,7 @@ namespace Framework {
         static int lua_GameStateEndNightPhase(lua_State* L)
         {
             // If final day is finished, do NOT enter Upgrade anymore
-            if (SceneInterface::GetCurrentDay() >= 5)
+            if (SceneInterface::GetCurrentDay() >= 3)
             {
                 // Or if you do not need a Day6 visual state, directly decide here:
                  if (SceneInterface::WinOrLose())

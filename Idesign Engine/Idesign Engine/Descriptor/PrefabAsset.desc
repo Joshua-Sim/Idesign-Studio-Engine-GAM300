@@ -1,5 +1,5 @@
 {
-    "count": 72,
+    "count": 74,
     "entries": [
         {
             "guid": "ab20d9cc-f552-47fb-8cd9-82403e4c3b22",
@@ -395,6 +395,18 @@
             "guid": "fd865278-0ed5-4779-9d56-2fdaeab583aa",
             "name": "ironOre6_Prefab",
             "path": "Assets\\Prefabs\\ironOre6_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "bedade6d-684c-44a9-676a-47b86a1531fb",
+            "name": "ironOre7_Prefab",
+            "path": "Assets\\Prefabs\\ironOre7_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "bedade6d-684c-44a9-676a-47b86a6761fb",
+            "name": "ironOre8_Prefab",
+            "path": "Assets\\Prefabs\\ironOre8_Prefab.prefab",
             "isScenePrefab": false
         },
         {
