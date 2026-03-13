@@ -15,9 +15,9 @@
           0.0
         ],
         "scale": [
-          1.0,
-          1.0,
-          1.0
+          0.75,
+          0.75,
+          0.75
         ]
       },
       "TagComponent": {
@@ -31,10 +31,10 @@
         "sortIndex": 48
       },
       "MeshReference": {
-        "guid": "b220352c-c200-46f5-b805-578eb29bb705"
+        "guid": "7b437109-ba19-43a9-8d7c-1300ebff9d21"
       },
       "TextureComponent": {
-        "guid": "294eaf04-f5e3-404b-a262-ae25b04ef993",
+        "guid": "e726adb8-bf75-4993-9e77-826f5541ac9d",
         "isUI": false
       },
       "ScriptProperties": {

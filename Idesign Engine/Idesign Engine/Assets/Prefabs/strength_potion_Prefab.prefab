@@ -39,7 +39,7 @@
             },
             "ScriptProperties": {
                 "scripts": [
-                    "Assets\\Scripts\\herb_pickup.lua"
+                    "Assets\\Scripts\\potion_pickup.lua"
                 ]
             },
             "BoxColliderComponent": {
@@ -57,9 +57,7 @@
                         ],
                         "canPassThrough": true,
                         "triggerMessage": "deez",
-                        "isInteractable": true,
-                        "interactMessage": "strength_potion_Pickup",
-                        "promptText": "Pick up: Strength Potion"
+                        "isInteractable": true
                     }
                 ]
             },
@@ -81,14 +79,6 @@
                     0.0
                 ],
                 "startAwake": true
-            },
-            "EventReceiverComponent": {
-                "receivers": [
-                    {
-                        "messageToListenFor": "strength_potion_Pickup",
-                        "luaFunctionToCall": "OnPickup"
-                    }
-                ]
             },
             "ItemComponent": {
                 "name": "strength_potion",

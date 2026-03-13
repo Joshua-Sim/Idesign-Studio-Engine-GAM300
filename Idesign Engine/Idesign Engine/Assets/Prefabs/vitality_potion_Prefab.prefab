@@ -57,9 +57,7 @@
                         ],
                         "canPassThrough": true,
                         "triggerMessage": "deez",
-                        "isInteractable": true,
-                        "interactMessage": "vitality_potion_pickup",
-                        "promptText": "Pick up: Vitality Potion"
+                        "isInteractable": true
                     }
                 ]
             },
@@ -81,14 +79,6 @@
                     0.0
                 ],
                 "startAwake": true
-            },
-            "EventReceiverComponent": {
-                "receivers": [
-                    {
-                        "messageToListenFor": "vitality_potion_pickup",
-                        "luaFunctionToCall": "OnPickup"
-                    }
-                ]
             },
             "ItemComponent": {
                 "name": "vitality_potion",
