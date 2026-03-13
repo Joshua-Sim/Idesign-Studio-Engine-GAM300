@@ -177,6 +177,8 @@ function M:StartMinigameUI()
     marker_pos_x = 0 
     marker_dir = 1   
     
+    SetCameraLock(true) -- LOCK CAMERA HERE
+    
     -- Ensure speed is reset if UI is reopened
     current_speed = M.marker_speed_base
     
@@ -253,6 +255,8 @@ function M:ClearUI()
     ui_active = false
     active_marker_id = nil 
     active_zone_id = nil
+    
+    SetCameraLock(false) -- UNLOCK CAMERA HERE
 end
 
 return M

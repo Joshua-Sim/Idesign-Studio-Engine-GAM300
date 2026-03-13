@@ -11,7 +11,7 @@ extern Framework::Coordinator ecsInterface;
 namespace Framework {
     bool LoadingSystem::OnLoadingStart(void* data) {
         m_IsActive = true;
-        m_AnimationTimer = 0.0f;
+        m_AnimationTimer -= 0.1f;
         m_CurrentFrame = 0;
 
         m_LoadingEntity = ecsInterface.GetEntityByName("LoadingUI");
