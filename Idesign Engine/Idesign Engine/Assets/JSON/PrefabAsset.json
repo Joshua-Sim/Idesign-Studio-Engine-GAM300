@@ -396,13 +396,13 @@
             "path": "Assets\\Prefabs\\ironOre6_Prefab.prefab",
             "isScenePrefab": false
         },
-                {
+        {
             "guid": "bedade6d-684c-44a9-676a-47b86a1531fb",
             "name": "ironOre7_Prefab",
             "path": "Assets\\Prefabs\\ironOre7_Prefab.prefab",
             "isScenePrefab": false
         },
-                {
+        {
             "guid": "bedade6d-684c-44a9-676a-47b86a6761fb",
             "name": "ironOre8_Prefab",
             "path": "Assets\\Prefabs\\ironOre8_Prefab.prefab",
@@ -433,16 +433,22 @@
             "isScenePrefab": false
         },
         {
-          "guid": "c26d9aa1-e8bc-4f97-878c-6659f3dd7bdb",
-          "name": "defense_potion_Prefab",
-          "path": "Assets\\Prefabs\\defense_potion_Prefab.prefab",
-          "isScenePrefab": false
+            "guid": "c26d9aa1-e8bc-4f97-878c-6659f3dd7bdb",
+            "name": "defense_potion_Prefab",
+            "path": "Assets\\Prefabs\\defense_potion_Prefab.prefab",
+            "isScenePrefab": false
         },
         {
-          "guid": "c26d9aa1-e8bc-4f97-878c-6659f3dd7bd7",
-          "name": "chopped_herb_Prefab",
-          "path": "Assets\\Prefabs\\chopped_herb_prefab.prefab",
-          "isScenePrefab": false
+            "guid": "c26d9aa1-e8bc-4f97-878c-6659f3dd7bd7",
+            "name": "chopped_herb_Prefab",
+            "path": "Assets\\Prefabs\\chopped_herb_prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "88eeea08-85e0-47fd-9297-fd858ee22464",
+            "name": "Spinner_Prefab",
+            "path": "Assets\\Prefabs\\Spinner_Prefab.prefab",
+            "isScenePrefab": false
         }
     ]
 }

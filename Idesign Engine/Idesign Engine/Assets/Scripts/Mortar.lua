@@ -3,6 +3,7 @@ local Mortar = {}
 -- --- PREFABS ---
 local PREFAB_CIRCLE = "TapCircle_Prefab"
 local PREFAB_GOOD   = "GoodPound_Prefab"
+local PREFAB_SPINNER = "Spinner_Prefab"
 local PREFAB_MEDIUM = "MediumPound_Prefab"
 local PREFAB_POOR   = "PoorPound_Prefab"
 local PREFAB_FRAME  = "ProgressBarFrame_Prefab"
@@ -227,7 +228,7 @@ function Mortar.on_update(self, dt)
             local uvx, uvy = GetMouseUV()
             last_mx, last_my = uvx * UI_WIDTH, UI_HEIGHT - (uvy * UI_HEIGHT)
             spin_progress = 0.0
-            spinner_visual_id = SpawnPrefab(PREFAB_GOOD, UI_WIDTH / 2, UI_HEIGHT / 2, 0.5)
+            spinner_visual_id = SpawnPrefab(PREFAB_SPINNER, UI_WIDTH / 2, UI_HEIGHT / 2, 0.5)
             SetScale(spinner_visual_id, 200, 200, 1)
             last_angle = math.atan2(100, 0)
         end
