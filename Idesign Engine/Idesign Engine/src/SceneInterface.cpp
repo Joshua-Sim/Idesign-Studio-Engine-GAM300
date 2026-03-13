@@ -154,6 +154,19 @@ namespace Framework
                     }
                 }
 
+                auto* input = InputHandler::GetInstance();
+                if (input && input->IsKeyPressed(GLFW_KEY_KP_8))
+                {
+
+                    engineState.PopState();                   // remove Intro
+                    engineState.PushState(EngineMode::Win); // go to Menu
+
+                    // If your engine has SetState / ChangeState, that's even better:
+                    // engineState.SetState(EngineMode::Menu);
+
+                    return;
+                }
+
                 auto& upgradeMgr = UpgradeManager::Instance();
 
                 // ------------------------------------------------------------

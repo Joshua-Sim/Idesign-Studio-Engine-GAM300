@@ -47,15 +47,15 @@ local backyardMax = {
 
 -- Quarry bounds 
 local quarryMin = {
-    x = -230, 
-    y = 270, 
-    z = -180
+    x = -350,
+    y = 240,
+    z = -300
 }
 
 local quarryMax = { 
-    x = -140, 
-    y = 350,  
-    z = -80  
+    x = -80,
+    y = 400,
+    z = 0
 }
 
 -- Shop bounds 
