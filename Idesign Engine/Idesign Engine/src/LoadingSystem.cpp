@@ -55,7 +55,7 @@ namespace Framework {
         m_AnimationTimer += deltaTime;
 
         if (m_AnimationTimer >= 0.1f) {
-            m_AnimationTimer = 0.0f;
+          m_AnimationTimer -= 0.1f;
             m_CurrentFrame++;
 
             if (m_CurrentFrame >= m_Frames.size()) {
