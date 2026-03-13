@@ -104,7 +104,6 @@ function Mortar.on_update(self, dt)
         local t = math.min(camera_flight_t / FLIGHT_DURATION, 1.0)
         local smooth_t = t * t * (3 - 2 * t)
 
-        -- Shortest Path Yaw Calculation
         local delta_yaw = target_cam_rot.yaw - start_cam_rot.yaw
         if delta_yaw > 180 then delta_yaw = delta_yaw - 360
         elseif delta_yaw < -180 then delta_yaw = delta_yaw + 360 end
@@ -123,28 +122,38 @@ function Mortar.on_update(self, dt)
         return 
     end
 
-    -- 2. INGREDIENT VISUALS (Always update positions)
+    -- 2. INGREDIENT VISUALS & DYNAMIC REMOVAL
     if my_entity_id then
         local cx, cy, cz = GetPosition(my_entity_id)
         
         for i = #visual_entities, 1, -1 do
             local vis_id = visual_entities[i]
-            local item_id = stored_ingredients[i] -- Get the actual item ID
 
-            if vis_id > 0 and (not IsItemZipping or not IsItemZipping(vis_id)) and cx then
-                -- 1. Calculate Position
+            -- Check if the item is being picked up by the player
+            if vis_id and vis_id > 0 and IsItemZipping and IsItemZipping(vis_id) then
+                table.remove(visual_entities, i)
+                table.remove(stored_ingredients, i)
+                print("[Mortar] Ingredient removed. Bowl count: " .. #stored_ingredients)
+                
+                -- If we were mid-game, check if the recipe is still valid
+                if is_playing then
+                    local resID = CheckValidRecipe(stored_ingredients)
+                    if resID == -1 then
+                        print("[Mortar] Recipe broken! Stopping minigame.")
+                        Mortar.StopMinigame(my_entity_id, false)
+                    end
+                end
+            elseif vis_id > 0 and cx then
+                -- Standard Position Update
                 local current_x_offset = OFFSET_X_START + ((i - 1) * SPACING_X)
                 SetPosition(vis_id, cx + current_x_offset, cy + OFFSET_Y, cz + OFFSET_Z)
                 
-                -- 2. Conditional Rotation Logic
+                local item_id = stored_ingredients[i]
                 local itemName = GetItemNameById(item_id)
                 
-                -- We check if "Herb" is in the name and it doesn't say "Chopped"
                 if string.find(itemName, "Herb") and not string.find(itemName, "Chopped") then
-                    -- Rotate the unchopped herb (e.g., laying it flat)
                     SetRotation(vis_id, 180.0, 0.0, 0.0) 
                 else
-                    -- Keep everything else (Mushrooms, Chopped herbs, etc.) at default upright
                     SetRotation(vis_id, 0.0, 0.0, 0.0)
                 end
             end
@@ -153,9 +162,7 @@ function Mortar.on_update(self, dt)
 
     if not is_playing then return end
 
-    -- =============================================================
     -- 3. PHASE 1: POUNDING
-    -- =============================================================
     if not is_spinning then
         current_progress = math.max(0, current_progress - (DECAY_RATE * dt))
         
@@ -176,7 +183,6 @@ function Mortar.on_update(self, dt)
             end
         end
 
-        -- Circle Animation
         for i = #active_circles, 1, -1 do
             local c = active_circles[i]
             c.life = c.life + dt
@@ -197,8 +203,6 @@ function Mortar.on_update(self, dt)
                 local dyn_rad = CLICK_RADIUS * math.max(1.0 - (circ.life / 3.0), 0.05)
                 if math.sqrt((mx - circ.x)^2 + (my - circ.y)^2) <= dyn_rad then
                     current_progress = math.min(current_progress + ((circ.life <= 1.0) and POINTS_GOOD or (circ.life <= 2.0 and POINTS_MEDIUM or POINTS_POOR)), MAX_PROGRESS)
-                    
-                    -- Pick a random grinder hit sound (1, 2, or 3) and play it
                     local random_hit = math.random(1, 3)
                     Sound.Play("event:/GrinderHit" .. random_hit)
 
@@ -213,34 +217,24 @@ function Mortar.on_update(self, dt)
             end
         elseif not IsMouseButtonDown(0) then click_was_down = false end
 
-        -- TRANSITION TO SPINNING
         if current_progress >= MAX_PROGRESS then
             is_spinning = true
-            -- UI Snap to Full
             if e_progress_fill then 
                 SetPosition(e_progress_fill, UI_WIDTH / 2, BAR_Y_POS, 0.9)
                 SetScale(e_progress_fill, BAR_WIDTH_PX, BAR_HEIGHT_PX * 0.8, 1.0) 
             end
-            
-            -- Clear Pounding UI
             for _, c in ipairs(active_circles) do DestroyEntity(c.id) end; active_circles = {}
-            
-            -- Initialize Spinning State
             local uvx, uvy = GetMouseUV()
             last_mx, last_my = uvx * UI_WIDTH, UI_HEIGHT - (uvy * UI_HEIGHT)
             spin_progress = 0.0
-            
             spinner_visual_id = SpawnPrefab(PREFAB_GOOD, UI_WIDTH / 2, UI_HEIGHT / 2, 0.5)
             SetScale(spinner_visual_id, 200, 200, 1)
             last_angle = math.atan2(100, 0)
         end
 
-    -- =============================================================
     -- 4. PHASE 2: SPINNING
-    -- =============================================================
     else
         if is_finished then
-            -- Subtract delta time from the timer
             finish_timer = finish_timer - dt
             if finish_timer <= 0 then 
                 Mortar.StopMinigame(my_entity_id, true) 
@@ -250,47 +244,30 @@ function Mortar.on_update(self, dt)
             local mx, my = uvx * UI_WIDTH, UI_HEIGHT - (uvy * UI_HEIGHT)
             
             if IsMouseButtonDown(0) then
-                -- Calculate movement delta for the stirring motion
                 spoon_x, spoon_y = spoon_x + (mx - last_mx), spoon_y + (my - last_my)
                 local len = math.sqrt(spoon_x^2 + spoon_y^2)
                 if len > 0.1 then spoon_x, spoon_y = (spoon_x/len)*100, (spoon_y/len)*100 end
-                
                 local cur_ang = math.atan2(spoon_y, spoon_x)
                 local delta = cur_ang - last_angle
-                
-                -- Wrap angle difference [-pi, pi]
                 if delta > math.pi then delta = delta - 2*math.pi 
                 elseif delta < -math.pi then delta = delta + 2*math.pi end
-                
                 spin_progress, last_angle = spin_progress + math.abs(delta), cur_ang
                 
-                if spinner_visual_id then 
-                    SetRotation(spinner_visual_id, 0, 0, math.deg(cur_ang)) 
-                end
-
-                -- AUDIO: Only play the looping sound if the mouse is actively being moved
-                if math.abs(delta) > 0.01 then
-                    PlayGrinderLoop()
-                else
-                    StopGrinderLoop()
-                end
-
-                -- CHECK FOR COMPLETION
+                if spinner_visual_id then SetRotation(spinner_visual_id, 0, 0, math.deg(cur_ang)) end
+                if math.abs(delta) > 0.01 then PlayGrinderLoop() else StopGrinderLoop() end
                 if spin_progress >= SPIN_REQUIREMENT then 
                     is_finished = true
                     finish_timer = FINISH_DELAY 
-                    StopGrinderLoop() -- Immediately cut audio on finish
+                    StopGrinderLoop() 
                 end
             else
-                -- Stop the audio if the player releases the mouse button
                 StopGrinderLoop()
             end
-            
             last_mx, last_my = mx, my
         end
     end
 
-    -- 5. FEEDBACK TEXT ANIMATION (Moved outside phases so they always clean up)
+    -- 5. FEEDBACK CLEANUP
     for i = #feedback_texts, 1, -1 do
         local f = feedback_texts[i]
         f.life = f.life + dt
@@ -353,7 +330,6 @@ end
 function Mortar.OnInteract(senderID, targetID, actionType)
     local id_to_use = my_entity_id or targetID
     
-    -- 1. Prevent interaction if already playing
     if is_playing then 
         Mortar.StopMinigame(id_to_use, false)
         return 
@@ -361,7 +337,7 @@ function Mortar.OnInteract(senderID, targetID, actionType)
     
     local held_item_id = GetSelectedItem()
 
-    -- [BRANCH A] ADDING INGREDIENTS (Hand is NOT empty)
+    -- [BRANCH A] ADDING INGREDIENTS
     if held_item_id ~= -1 then
         if #stored_ingredients < MAX_INGREDIENTS then
             table.insert(stored_ingredients, held_item_id)
@@ -373,48 +349,42 @@ function Mortar.OnInteract(senderID, targetID, actionType)
             end
             table.insert(visual_entities, vid)
             
-            -- Override the C++ default rotation instantly!
             if vid ~= -1 and SetRotation then
                 SetRotation(vid, ROT_X, ROT_Y, ROT_Z) 
             end
-
             Sound.Play("event:/PlaceDownItem")
+            
+            -- Update text prompt to show we have items
+            SetInteractionText(id_to_use, "Grind Ingredients")
         else
             print("[Mortar] Bowl is full!")
         end
 
-    -- [BRANCH B] STARTING THE PROCESS (Hand IS empty)
+    -- [BRANCH B] STARTING THE PROCESS
     elseif #stored_ingredients > 0 then
-    
-        -- We re-enabled the recipe validation!
         local resID = CheckValidRecipe(stored_ingredients)
+        
         if resID ~= -1 then
             current_recipe_result_name = GetItemNameById(resID)
-            
             local player_id = FindEntityByName("Player")
             
             if player_id then
-                -- 1. CAPTURE STARTING POINT (For the Lerp)
                 local px, py, pz = GetPosition(player_id)
                 local cp, cy = GetCameraRot() 
                 start_cam_pos = {x = px, y = py, z = pz}
                 start_cam_rot = {pitch = cp, yaw = cy}
 
-                -- 2. DEFINE THE FIXED TARGET (Relative to Mortar)
                 local mx, my, mz = GetPosition(id_to_use)
-                
                 target_cam_pos = {
                     x = mx + FIXED_OFFSET_X,
                     y = my + FIXED_OFFSET_Y,
                     z = mz + FIXED_OFFSET_Z
                 }
-
                 target_cam_rot = {
                     pitch = FIXED_TARGET_PITCH,
                     yaw   = FIXED_TARGET_YAW
                 }
 
-                -- 3. INITIALIZE FLIGHT
                 if SetLinearVelocity then SetLinearVelocity(player_id, 0, 0, 0) end
                 SetCameraLock(true)
                 SetUIFocused(true)
@@ -422,14 +392,12 @@ function Mortar.OnInteract(senderID, targetID, actionType)
                 camera_flight_t = 0.0
             end
 
-            -- 2. RESET MINIGAME STATE
             is_playing = true
             is_spinning = false
             is_finished = false
             current_progress = 0 
             click_was_down = false 
             
-            -- 3. SPAWN 2D UI PROGRESS BAR
             e_progress_frame = SpawnPrefab(PREFAB_FRAME, UI_WIDTH / 2, BAR_Y_POS, 0.8)
             e_progress_fill  = SpawnPrefab(PREFAB_FILL, UI_WIDTH / 2, BAR_Y_POS, 0.9)
             
@@ -439,17 +407,18 @@ function Mortar.OnInteract(senderID, targetID, actionType)
                 SetScale(e_progress_frame, BAR_WIDTH_PX, BAR_HEIGHT_PX, 1.0)
                 SetScale(e_progress_fill, 0, BAR_HEIGHT_PX * 0.8, 1.0) 
                 SetPosition(e_progress_frame, UI_WIDTH / 2, BAR_Y_POS, 0.8)
-                -- Anchor the fill to the left side of the frame
                 SetPosition(e_progress_fill, (UI_WIDTH / 2) - (BAR_WIDTH_PX / 2), BAR_Y_POS, 0.9)
             end
 
             SetInteractionText(id_to_use, "Grinding...") 
-            print("[Mortar] Valid recipe: " .. current_recipe_result_name .. ". Starting grind.")
-            
         else
+            -- FAIL: Reset result name so nothing spawns on accidental clicks
+            current_recipe_result_name = ""
             Sound.Play("event:/InvalidRecipe")
-            print("[Mortar] These ingredients don't make anything.")
+            print("[Mortar] Invalid recipe.")
         end
+    else
+        SetInteractionText(id_to_use, "Requires Ingredient")
     end
 end
 

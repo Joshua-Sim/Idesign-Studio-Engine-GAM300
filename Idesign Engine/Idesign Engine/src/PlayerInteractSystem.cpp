@@ -275,8 +275,12 @@ namespace Framework
                                 }
                                 else if (lowerName.find("wool") != std::string::npos) {
                                     glm::vec3 pos = ecsInterface.GetComponent<TransformComponent>(entity).position;
-                                    g_AudioSystem->PlaySound3D("event:/Sheep7",
-                                        Framework::Vector3(pos.x, pos.y, pos.z));
+                                    // Only play sheep sound if wool was picked up in the backyard (sheep area)
+                                    if (pos.x >= -296.0f && pos.x <= -120.0f &&
+                                        pos.y >= 300.0f && pos.y <= 330.0f &&
+                                        pos.z >= 533.0f && pos.z <= 726.0f) {
+                                        g_AudioSystem->PlaySound3D("event:/Sheep7", Framework::Vector3(pos.x, pos.y, pos.z));
+                                    }
                                 }
                                 else {
                                     g_AudioSystem->PlayAudio("event:/PickingUpHerb");

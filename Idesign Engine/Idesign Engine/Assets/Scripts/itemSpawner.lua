@@ -11,7 +11,7 @@ function M.RespawnHerbs()
         "ForestHerb7", "Pear1", "Pear2", "Pear3", "Pear4", "Pear5", 
         "Pear6", "Pear7", "copperOre1", "copperOre2", "copperOre3", 
         "copperOre4", "copperOre5", "copperOre6", "copperOre7", 
-        "ironOre1", "ironOre2", "ironOre3", "ironOre4", "ironOre5", "ironOre6"
+        "ironOre1", "ironOre2", "ironOre3", "ironOre4", "ironOre5", "ironOre6", "ironOre7", "ironOre8"
     }
 
     for _, name in ipairs(herbs) do

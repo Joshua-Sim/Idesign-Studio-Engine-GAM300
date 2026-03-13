@@ -146,35 +146,22 @@ namespace Framework {
             }
         }
 
-        // ESC: Toggle pause/resume
+        // Herb, Pear
         if (IsKeyPressed(GLFW_KEY_KP_1)) {
+            Framework::Inventory::Instance().TryAddItem_BackpackFirst(0, 0, 1);
             Framework::Inventory::Instance().TryAddItem_BackpackFirst(2, 0, 1);
-            Framework::Inventory::Instance().TryAddItem_BackpackFirst(2, 0, 1);
-            Framework::Inventory::Instance().TryAddItem_BackpackFirst(2, 0, 1);
-            Framework::Inventory::Instance().TryAddItem_BackpackFirst(7, 0, 1);
-            Framework::Inventory::Instance().TryAddItem_BackpackFirst(7, 0, 1);
-            Framework::Inventory::Instance().TryAddItem_BackpackFirst(7, 0, 1);
         }
 
-        // ESC: Toggle pause/resume
+        // Wool, Pear
         if (IsKeyPressed(GLFW_KEY_KP_2)) {
-            Framework::Inventory::Instance().TryAddItem_BackpackFirst(10, 0, 1);
-            Framework::Inventory::Instance().TryAddItem_BackpackFirst(11, 0, 1);
-            Framework::Inventory::Instance().TryAddItem_BackpackFirst(10, 0, 1);
-            Framework::Inventory::Instance().TryAddItem_BackpackFirst(11, 0, 1);
-            Framework::Inventory::Instance().TryAddItem_BackpackFirst(10, 0, 1);
-            Framework::Inventory::Instance().TryAddItem_BackpackFirst(11, 0, 1);
+            Framework::Inventory::Instance().TryAddItem_BackpackFirst(2, 0, 1);
+            Framework::Inventory::Instance().TryAddItem_BackpackFirst(7, 0, 1);
         }
 
-
-        // ESC: Toggle pause/resume
+        // Wool, Pear
         if (IsKeyPressed(GLFW_KEY_KP_3)) {
-            Framework::Inventory::Instance().TryAddItem_BackpackFirst(9, 0, 1);
-            Framework::Inventory::Instance().TryAddItem_BackpackFirst(9, 0, 1);
-            Framework::Inventory::Instance().TryAddItem_BackpackFirst(9, 0, 1);
             Framework::Inventory::Instance().TryAddItem_BackpackFirst(8, 0, 1);
-            Framework::Inventory::Instance().TryAddItem_BackpackFirst(8, 0, 1);
-            Framework::Inventory::Instance().TryAddItem_BackpackFirst(8, 0, 1);
+            Framework::Inventory::Instance().TryAddItem_BackpackFirst(9, 0, 1);
         }
 
         // ESC: Toggle pause/resume

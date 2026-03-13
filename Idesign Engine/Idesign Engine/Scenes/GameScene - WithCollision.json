@@ -651,8 +651,8 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -45.69948196411133,
-                        11.00235652923584,
+                        -43.69948196411133,
+                        10.00235652923584,
                         7.636120796203613
                     ],
                     "rotation": [
@@ -687,7 +687,7 @@
                     "innerCutOffAngle": 0.21816615760326385,
                     "outerCutOffAngle": 0.35899999737739563,
                     "castsShadow": true,
-                    "shadowBiasConst": 0.004999999888241291,
+                    "shadowBiasConst": 0.45,
                     "shadowBiasFactor": 1.0,
                     "type": "Point"
                 }

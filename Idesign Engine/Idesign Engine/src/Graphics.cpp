@@ -727,8 +727,8 @@ namespace Framework {
         glCullFace(GL_BACK);
 
         // PERF: 512 costs 4x less fill/VRAM than 1024 with minimal quality loss for interior lights.
-        const unsigned int POINT_SHADOW_WIDTH = 512;
-        const unsigned int POINT_SHADOW_HEIGHT = 512;
+        const unsigned int POINT_SHADOW_WIDTH = 1024;
+        const unsigned int POINT_SHADOW_HEIGHT = 1024;
         const float LIGHT_RENDER_DISTANCE = 50.0f;
         const float LIGHT_RENDER_DISTANCE_SQ = LIGHT_RENDER_DISTANCE * LIGHT_RENDER_DISTANCE;
 
