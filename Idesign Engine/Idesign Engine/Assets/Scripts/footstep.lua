@@ -5,12 +5,8 @@ local stepTimer = 0
 local stepInterval = 0.5
 
 local sheepTimer = 0
-local sheepInterval = 0.5
-local sheepSounds = {
-    "event:/Sheep1", "event:/Sheep2", "event:/Sheep3",
-    "event:/Sheep4", "event:/Sheep5", "event:/Sheep6",
-    "event:/Sheep8", "event:/Sheep9",
-}
+local sheepInterval = math.random(15, 25) -- seconds between sheep sounds
+
 local sheepEntities = {}
 
 
@@ -21,6 +17,8 @@ local quarryEvent = "event:/QuarryAmbient"
 local level1BGM = "event:/Level1BGM"
 local quarryBGM = "event:/QuarryBGM"
 local shopBGM = "event:/ShopBGM"
+
+local sheepSounds = "event:/SheepAmbient"
 
 --Track state
 local wasInBackyard = false
@@ -215,20 +213,23 @@ function M:on_update(dt)
     -- Sheep ambient sounds
     if #sheepEntities > 0 then
         sheepTimer = sheepTimer + dt
+
         if sheepTimer >= sheepInterval then
-            -- Pick a random sheep entity
+            -- Pick a random sheep
             local sheepEnt = sheepEntities[math.random(1, #sheepEntities)]
-            -- Pick a random sound
-            local sound = sheepSounds[math.random(1, #sheepSounds)]
-            -- Play at sheep's position
+
+            -- Play sheep sound (FMOD randomizes internally)
             local sx, sy, sz = GetPosition(sheepEnt)
-            Sound.Play3D(sound, sx, sy, sz)
-            -- Reset with some randomness (15-25 seconds)
-            sheepTimer = -(math.random() * 10.0)
-            print("[Footsteps] Sheep ambient: " .. sound .. " at entity " .. sheepEnt)
+            Sound.Play3D(sheepEvent, sx, sy, sz)
+
+            print("[Footsteps] Sheep bleat from entity " .. sheepEnt)
+
+            -- Reset timer
+            sheepTimer = 0
+            sheepInterval = math.random(15, 25)
         end
     end
-    
+
     -- Footstep logic 
     -- Check if player is moving
     local isMoving = false
