@@ -204,8 +204,7 @@ function Mortar.on_update(self, dt)
                 local dyn_rad = CLICK_RADIUS * math.max(1.0 - (circ.life / 3.0), 0.05)
                 if math.sqrt((mx - circ.x)^2 + (my - circ.y)^2) <= dyn_rad then
                     current_progress = math.min(current_progress + ((circ.life <= 1.0) and POINTS_GOOD or (circ.life <= 2.0 and POINTS_MEDIUM or POINTS_POOR)), MAX_PROGRESS)
-                    local random_hit = math.random(1, 3)
-                    Sound.Play("event:/GrinderHit" .. random_hit)
+                    Sound.Play("event:/GrinderHit")
 
                     local prefab = (circ.life <= 1.0 and PREFAB_GOOD or (circ.life <= 2.0 and PREFAB_MEDIUM or PREFAB_POOR))
                     local fb_id = SpawnPrefab(prefab, mx, my + 20, 0.6)
