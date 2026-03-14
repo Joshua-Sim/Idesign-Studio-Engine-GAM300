@@ -9,16 +9,19 @@ local sheepInterval = math.random(15, 25) -- seconds between sheep sounds
 
 local sheepEntities = {}
 
-
+-- Footstep
 local indoorEvent = "event:/Footstep"
 local outdoorEvent = "event:/FootstepBackyard"
-local quarryEvent = "event:/QuarryAmbient"
+local quarryFootstepEvent = "event:/FootstepQuarry"
 
+-- BGM 
 local level1BGM = "event:/Level1BGM"
 local quarryBGM = "event:/QuarryBGM"
 local shopBGM = "event:/ShopBGM"
 
+-- Ambient related sounds 
 local sheepEvent = "event:/SheepAmbient"
+local quarryEvent = "event:/QuarryAmbient"
 
 --Track state
 local wasInBackyard = false
@@ -242,7 +245,12 @@ function M:on_update(dt)
         stepTimer = stepTimer + dt
         if stepTimer >= stepInterval then
             -- Check zone and play appropriate footstep
-            local eventToPlay = isInBackyard and outdoorEvent or indoorEvent
+            local eventToPlay = indoorEvent
+
+            if isInBackyard then eventToPlay = outdoorEvent
+            elseif isInQuarry then eventToPlay = quarryFootstepEvent 
+            
+            end
             
             Sound.Play(eventToPlay)
             stepTimer = 0
