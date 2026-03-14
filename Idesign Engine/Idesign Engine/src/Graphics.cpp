@@ -729,7 +729,7 @@ namespace Framework {
         // PERF: 512 costs 4x less fill/VRAM than 1024 with minimal quality loss for interior lights.
         const unsigned int POINT_SHADOW_WIDTH = 1024;
         const unsigned int POINT_SHADOW_HEIGHT = 1024;
-        const float LIGHT_RENDER_DISTANCE = 50.0f;
+        const float LIGHT_RENDER_DISTANCE = 200.0f;
         const float LIGHT_RENDER_DISTANCE_SQ = LIGHT_RENDER_DISTANCE * LIGHT_RENDER_DISTANCE;
 
         // Collect ALL entities as shadow casters (not just camera-visible ones).
@@ -814,7 +814,7 @@ namespace Framework {
             light.shadowFarPlane = light.radius;
             pointShadowShader.use();
 
-            float near_plane = 0.01f;
+            float near_plane = 0.1f;
             glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), 1.0f, near_plane, light.shadowFarPlane);
 
             // Create the 6 view matrices for the Cube Map

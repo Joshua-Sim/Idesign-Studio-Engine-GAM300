@@ -193,7 +193,7 @@ namespace Framework
                 // ------------------------------------------------------------
                 bool canAffordCauldron = upgradeMgr.CanAffordCauldronUpgrade();
                 bool canAffordGold = upgradeMgr.CanAffordCurrencyUpgrade();
-                bool canAffordInventory = upgradeMgr.CanAffordInventoryUpgrade();
+                bool canAffordBackpack = upgradeMgr.CanAffordBackpackUpgrade();
 
                 // Completion checks
                 bool cauldronComplete = upgradeMgr.IsCauldronUnlocked();
@@ -268,12 +268,12 @@ namespace Framework
                     // -------------------------
                     else if (ecsInterface.EntityHasTag(e, "inventorypass"))
                     {
-                        shouldShow = (!backpackComplete && inventoryHovered && canAffordInventory);
+                        shouldShow = (!backpackComplete && inventoryHovered && canAffordBackpack);
                         zLayer = 0.6f;
                     }
                     else if (ecsInterface.EntityHasTag(e, "inventoryfail"))
                     {
-                        shouldShow = (!backpackComplete && inventoryHovered && !canAffordInventory);
+                        shouldShow = (!backpackComplete && inventoryHovered && !canAffordBackpack);
                         zLayer = 0.6f;
                     }
 
@@ -285,6 +285,11 @@ namespace Framework
                         bool isCauldronBase = ecsInterface.EntityHasTag(e, "cauldron");
                         bool isGoldBase = ecsInterface.EntityHasTag(e, "gold");
                         bool isInventoryBase = ecsInterface.EntityHasTag(e, "inventory");
+
+                        // Temporary debug - add before line 289
+                        std::cout << "[DEBUG] backpackComplete=" << backpackComplete
+                            << " backpackLevel=" << Inventory::Instance().GetBackpackLevel()
+                            << " MAX=" << UpgradeManager::MAX_BACKPACK_LEVEL << std::endl;
 
                         // Hide base card if hovered OR if completed
                         bool hideBase =
