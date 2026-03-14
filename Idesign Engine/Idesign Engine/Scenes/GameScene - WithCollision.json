@@ -6370,9 +6370,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -227.60000610351563,
-                        337.11785888671875,
-                        -154.98800659179688
+                        -189.60000610351563,
+                        332.11785888671875,
+                        -125.98800659179688
                     ],
                     "rotation": [
                         0.0,
@@ -6408,13 +6408,13 @@
                         1.0,
                         1.0
                     ],
-                    "intensity": 2.8959999084472656,
+                    "intensity": 0.836,
                     "radius": 200.0,
                     "innerCutOffAngle": 0.21816615760326385,
                     "outerCutOffAngle": 0.2617993950843811,
-                    "castsShadow": false,
+                    "castsShadow": true,
                     "shadowBiasConst": 0.004999999888241291,
-                    "shadowBiasFactor": 0.05000000074505806,
+                    "shadowBiasFactor": 0.10000000074505806,
                     "type": "Point"
                 }
             }
