@@ -22091,7 +22091,7 @@
                 },
                 "TextureComponent": {
                     "guid": "353f2aff-798e-4824-a824-51ca41527165",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ButtonComponent": {
                     "position": [
@@ -22142,7 +22142,7 @@
                 },
                 "TextureComponent": {
                     "guid": "cddcdcdf-d5c9-4eb7-a5b0-19f04bfcd26f",
-                    "isUI": true
+                    "isUI": false
                 }
             }
         },
@@ -22180,7 +22180,7 @@
                 },
                 "TextureComponent": {
                     "guid": "9f49c10c-189a-4f54-bb78-b6ed491661cc",
-                    "isUI": true
+                    "isUI": false
                 }
             }
         },
@@ -29202,7 +29202,7 @@
             },
             "TextureComponent": {
                 "guid": "f6a80947-3bc0-43d5-b515-f348d6354e8e",
-                "isUI": true
+                "isUI": false
             }
             }
         },
@@ -29243,7 +29243,7 @@
             },
             "TextureComponent": {
                 "guid": "983ecaa9-d1c7-4fd5-8631-5a83db05671d",
-                "isUI": true
+                "isUI": false
             }
             }
         },
