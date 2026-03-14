@@ -5,10 +5,19 @@ M.chop_button = 0
 M.interaction_range = 2.5
 M.max_health = 5         
 
+-- [CAMERA FLIGHT SETTINGS]
+M.FLIGHT_DURATION = 0.8
+-- Tweak these to position the camera perfectly over your chopping board!
+M.FIXED_OFFSET_X = -0.5
+M.FIXED_OFFSET_Y = 2.5
+M.FIXED_OFFSET_Z = 3.0
+M.FIXED_TARGET_PITCH = -50.0 
+M.FIXED_TARGET_YAW = 270.0
+
 -- Minigame Settings
-M.marker_speed_base = 500.0     -- Starting Speed
-M.marker_speed_increase = 150.0 -- How much faster per hit?
-M.marker_limit = 540.0          -- Boundary
+M.marker_speed_base = 500.0     
+M.marker_speed_increase = 150.0 
+M.marker_limit = 540.0          
 M.center_x = 960         
 M.center_y = 340         
 
@@ -50,6 +59,14 @@ local knife_entity = nil
 local current_health = 0
 local click_was_down = false
 
+-- Camera Flight State
+local is_camera_flying = false
+local camera_flight_t = 0.0
+local start_cam_pos = {x=0, y=0, z=0}
+local start_cam_rot = {pitch=0, yaw=0}
+local target_cam_pos = {x=0, y=0, z=0}
+local target_cam_rot = {pitch=0, yaw=0}
+
 -- UI State
 local spawned_ui_ids = {}
 local ui_active = false
@@ -60,7 +77,7 @@ local active_zone_id = nil
 local marker_pos_x = 0.0    
 local marker_dir = 1        
 local zone_pos_x = 0.0 
-local current_speed = 500.0 -- Tracks the current active speed
+local current_speed = 500.0 
 
 function M:on_init()
     print("[ChoppingBoard] Initialized.")
@@ -77,19 +94,40 @@ function M.OnInteract(entityID)
         M:StartChoppingSession(itemName)
         ConsumeSelectedItem()
         Sound.Play("event:/PlaceDownItem")
-        -- Update prompt now that herb is placed
         SetColliderPromptText(entityID, "Chop!")
-        -- SetColliderInteractable(entityID, false)  -- hide E icon
     end
 end
 
 function M:on_update(dt)
     if not player_entity then player_entity = FindEntityByName("Player") end
     
+    -- --- 0. MANUAL CAMERA FLIGHT ---
+    if is_camera_flying then
+        camera_flight_t = camera_flight_t + dt
+        local t = math.min(camera_flight_t / self.FLIGHT_DURATION, 1.0)
+        local smooth_t = t * t * (3 - 2 * t)
+
+        local delta_yaw = target_cam_rot.yaw - start_cam_rot.yaw
+        if delta_yaw > 180 then delta_yaw = delta_yaw - 360
+        elseif delta_yaw < -180 then delta_yaw = delta_yaw + 360 end
+
+        local cur_x = start_cam_pos.x + (target_cam_pos.x - start_cam_pos.x) * smooth_t
+        local cur_y = start_cam_pos.y + (target_cam_pos.y - start_cam_pos.y) * smooth_t
+        local cur_z = start_cam_pos.z + (target_cam_pos.z - start_cam_pos.z) * smooth_t
+        
+        local cur_p = start_cam_rot.pitch + (target_cam_rot.pitch - start_cam_rot.pitch) * smooth_t
+        local cur_y_rot = start_cam_rot.yaw + (delta_yaw * smooth_t)
+
+        TeleportPlayer(cur_x, cur_y, cur_z, 0, cur_y_rot, 0)
+        SetCameraRot(cur_p, cur_y_rot)
+
+        if t >= 1.0 then is_camera_flying = false end
+        return -- Prevent chopping logic while camera is moving
+    end
+    -- ----------------------------------
+
     -- --- 1. MINIGAME ANIMATION LOOP ---
     if ui_active and active_marker_id ~= nil then
-        
-        -- Use 'current_speed' instead of the static config
         marker_pos_x = marker_pos_x + (current_speed * marker_dir * dt)
 
         if marker_pos_x > M.marker_limit then
@@ -104,14 +142,21 @@ function M:on_update(dt)
     end
     -- ----------------------------------
 
-    -- --- 2. INPUT HANDLING ---
+-- --- 2. INPUT HANDLING ---
     if IsMouseButtonDown(self.chop_button) then
         if not self.click_was_down then
             self.click_was_down = true
-            local heldItemName = GetSelectedItemName()
             
-            if current_herb_entity ~= nil and self:IsPlayerInRange() and heldItemName == "knife" then
-                self:AttemptChop() 
+            if ui_active then
+                -- The camera is locked and the minigame is running. Just chop!
+                self:AttemptChop()
+            else
+                -- Trying to start the minigame. Check for knife and distance.
+                local heldItemName = GetSelectedItemName()
+                
+                if current_herb_entity ~= nil and self:IsPlayerInRange() and heldItemName == "knife" then
+                    self:AttemptChop() 
+                end
             end
         end
     else
@@ -139,7 +184,6 @@ function M:StartChoppingSession(itemName)
         SetMesh(current_herb_entity, self.mesh_raw)
         SetTexture(current_herb_entity, self.tex_raw)
         
-        -- Reset speed when starting a new herb
         current_speed = M.marker_speed_base
     end
 end
@@ -159,14 +203,10 @@ function M:AttemptChop()
     else
         print("[Minigame] MISS! Distance: " .. diff)
         
-        -- PENALTY: Decrease Speed on Miss
         current_speed = current_speed - M.marker_speed_increase
-        
-        -- Clamp so it never goes below base speed
         if current_speed < M.marker_speed_base then
             current_speed = M.marker_speed_base
         end
-        
         print("[Minigame] Speed Decreased to: " .. current_speed)
     end
 end
@@ -177,11 +217,32 @@ function M:StartMinigameUI()
     marker_pos_x = 0 
     marker_dir = 1   
     
-    SetCameraLock(true) -- LOCK CAMERA HERE
+    -- Camera Flight Setup
+    if player_entity then
+        local px, py, pz = GetPosition(player_entity)
+        local cp, cy = GetCameraRot() 
+        start_cam_pos = {x = px, y = py, z = pz}
+        start_cam_rot = {pitch = cp, yaw = cy}
+
+        local bx, by, bz = GetPosition(self.entity)
+        target_cam_pos = {
+            x = bx + self.FIXED_OFFSET_X,
+            y = by + self.FIXED_OFFSET_Y,
+            z = bz + self.FIXED_OFFSET_Z
+        }
+        target_cam_rot = {
+            pitch = self.FIXED_TARGET_PITCH,
+            yaw   = self.FIXED_TARGET_YAW
+        }
+
+        if SetLinearVelocity then SetLinearVelocity(player_entity, 0, 0, 0) end
+        SetCameraLock(true)
+        SetUIFocused(true)
+        is_camera_flying = true
+        camera_flight_t = 0.0
+    end
     
-    -- Ensure speed is reset if UI is reopened
     current_speed = M.marker_speed_base
-    
     zone_pos_x = math.random(-M.zone_safe_margin, M.zone_safe_margin)
 
     for _, prefabName in ipairs(M.ui_prefabs) do
@@ -208,8 +269,6 @@ end
 
 function M:ExecuteSuccessfulChop()
     current_health = current_health - 1
-    
-    -- BONUS: Increase Speed on Hit!
     current_speed = current_speed + M.marker_speed_increase
     print("[Minigame] Speed Increased to: " .. current_speed)
     
@@ -243,7 +302,6 @@ function M:EndChoppingSession()
         current_herb_entity = nil
         self:ClearUI()
         SetColliderPromptText(self.entity, "Place ingredient")
-        -- SetColliderInteractable(self.entity, true)
     end
 end
 
@@ -255,8 +313,16 @@ function M:ClearUI()
     ui_active = false
     active_marker_id = nil 
     active_zone_id = nil
+    is_camera_flying = false
     
-    SetCameraLock(false) -- UNLOCK CAMERA HERE
+    -- Return Player to Original Location
+    if start_cam_pos and start_cam_rot and start_cam_pos.x ~= 0 then
+        TeleportPlayer(start_cam_pos.x, start_cam_pos.y, start_cam_pos.z, 0, start_cam_rot.yaw, 0)
+        SetCameraRot(start_cam_rot.pitch, start_cam_rot.yaw)
+    end
+    
+    SetCameraLock(false) 
+    SetUIFocused(false)
 end
 
 return M
