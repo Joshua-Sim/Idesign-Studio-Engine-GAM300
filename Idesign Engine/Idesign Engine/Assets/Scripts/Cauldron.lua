@@ -7,15 +7,21 @@ local CAULDRON_NAME = "Cauldron"
 local name_stir = "CauldronStiring"       
 local name_idle = "cauldronwithoutspoon" 
 
+-- [CAMERA FLIGHT SETTINGS]
+local FLIGHT_DURATION = 0.8
+local FIXED_OFFSET_X = -0.5
+local FIXED_OFFSET_Y = 1.5
+local FIXED_OFFSET_Z = -3.0
+local FIXED_TARGET_PITCH = 0.0
+local FIXED_TARGET_YAW = 90.0
+
 -- [RESULT SETTINGS]
--- The name of the item to spawn when done.
--- The script will look for "strength_potion_Prefab" (automatically adds "_Prefab")
 local result_item_name = "strength_potion" 
 
 -- [VISUAL ITEMS SETTINGS]
 local orbit_radius_start = 0.5    
 local orbit_speed_start = 1.5     
-local orbit_radius_end = 0.0      -- Merge to center
+local orbit_radius_end = 0.0      
 local orbit_speed_end = 15.0      
 
 local bob_speed = 1.5       
@@ -33,7 +39,7 @@ local entity_tick_50 = nil
 local entity_tick_75 = nil
 local bar_length_max = 0.5
 local bar_thickness = 0.2
-local y_offset = 1.5
+local y_offset = 2.0
 local x_offset_right = -0.5
 local tune_x = 1.6
 local tune_y = -0.04
@@ -49,7 +55,7 @@ local anim_speed_abs = 20.0
 -- [STIRRING ICON SETTINGS]
 local stir_icon_name_ccw = "anti-rotatingIcon"
 local stir_icon_name_cw  = "rotatingIcon"
-local stir_icon_speed = 120.0           -- Degrees per second (tune this)
+local stir_icon_speed = 120.0           
 
 -- =============================================================
 -- [STATE VARIABLES]
@@ -60,6 +66,14 @@ local max_distance = 5.0
 local player_id = nil
 local accumulated_time = 0.0 
 local current_orbit_angle = 0.0 
+
+-- Camera Flight State
+local is_camera_flying = false
+local camera_flight_t = 0.0
+local start_cam_pos = {x=0, y=0, z=0}
+local start_cam_rot = {pitch=0, yaw=0}
+local target_cam_pos = {x=0, y=0, z=0}
+local target_cam_rot = {pitch=0, yaw=0}
 
 -- Progress State
 local current_finish_timer = 0.0
@@ -231,7 +245,6 @@ function M.on_init(arg1, arg2)
     end
     player_id = FindEntityByName("Player")
 
-    -- Find the stirring icon entity and hide it at start
     stir_icon_id_ccw = FindEntityByName(stir_icon_name_ccw)
     stir_icon_id_cw  = FindEntityByName(stir_icon_name_cw)
 
@@ -294,6 +307,32 @@ function M.OnInteract(arg1, arg2)
                 result_item_name = GetItemNameById(resultID)
             end
 
+            -- Camera Flight Setup
+            if player_id then
+                local px, py, pz = GetPosition(player_id)
+                local cp, cy = GetCameraRot() 
+                start_cam_pos = {x = px, y = py, z = pz}
+                start_cam_rot = {pitch = cp, yaw = cy}
+
+                local mx, my, mz = GetPosition(id_to_use)
+                target_cam_pos = {
+                    x = mx + FIXED_OFFSET_X,
+                    y = my + FIXED_OFFSET_Y,
+                    z = mz + FIXED_OFFSET_Z
+                }
+                target_cam_rot = {
+                    pitch = FIXED_TARGET_PITCH,
+                    yaw   = FIXED_TARGET_YAW
+                }
+
+                if SetLinearVelocity then SetLinearVelocity(player_id, 0, 0, 0) end
+                SetCameraLock(true)
+                SetUIFocused(true)
+                SetGravity(player_id, 0.0)
+                is_camera_flying = true
+                camera_flight_t = 0.0
+            end
+
             -- Reset State
             progress = 0.0
             current_finish_timer = 0.0
@@ -302,16 +341,12 @@ function M.OnInteract(arg1, arg2)
             spoon_y = 100.0
             last_angle = math.atan2(spoon_y, spoon_x)
             
-            SetCameraLock(true) 
-            
             if id_to_use then
                 SetAnimationAsset(id_to_use, guid_stir)
                 SetAnimationMode(id_to_use, 1) 
                 M.SpawnBar(id_to_use)
             end
-            if player_id then SetGravity(player_id, 0.0) end
 
-            -- Show the stirring icon
             ShowStirIcon(GetRequiredDir(0.0))
         else
             Sound.Play("event:/InvalidRecipe")
@@ -328,11 +363,20 @@ function M.StopInteraction(entity_id)
     local id = entity_id or my_entity_id
     is_active = false
     is_finished = false
+    is_camera_flying = false
     print("[Lua] Stirring Stopped")
     
     StopStirSound() 
     
+    -- Return Player to Original Location
+    if start_cam_pos and start_cam_rot then
+        TeleportPlayer(start_cam_pos.x, start_cam_pos.y, start_cam_pos.z, 0, start_cam_rot.yaw, 0)
+        SetCameraRot(start_cam_rot.pitch, start_cam_rot.yaw)
+    end
+    
+    SetUIFocused(false)
     SetCameraLock(false)
+    
     if id then
         SetAnimationAsset(id, guid_idle)
         SetAnimationMode(id, 0) 
@@ -340,8 +384,6 @@ function M.StopInteraction(entity_id)
     if player_id then SetGravity(player_id, 1.0) end
     
     M.DestroyProgressBar()
-
-    -- Hide the stirring icon
     HideStirIcon()
 end
 
@@ -365,6 +407,32 @@ function M.on_update(arg1, arg2)
     if not my_entity_id then 
         my_entity_id = FindEntityByName(CAULDRON_NAME)
         if not my_entity_id then return end 
+    end
+
+    ---------------------------------------------------------
+    -- 0. MANUAL CAMERA FLIGHT
+    ---------------------------------------------------------
+    if is_camera_flying then
+        camera_flight_t = camera_flight_t + dt
+        local t = math.min(camera_flight_t / FLIGHT_DURATION, 1.0)
+        local smooth_t = t * t * (3 - 2 * t)
+
+        local delta_yaw = target_cam_rot.yaw - start_cam_rot.yaw
+        if delta_yaw > 180 then delta_yaw = delta_yaw - 360
+        elseif delta_yaw < -180 then delta_yaw = delta_yaw + 360 end
+
+        local cur_x = start_cam_pos.x + (target_cam_pos.x - start_cam_pos.x) * smooth_t
+        local cur_y = start_cam_pos.y + (target_cam_pos.y - start_cam_pos.y) * smooth_t
+        local cur_z = start_cam_pos.z + (target_cam_pos.z - start_cam_pos.z) * smooth_t
+        
+        local cur_p = start_cam_rot.pitch + (target_cam_rot.pitch - start_cam_rot.pitch) * smooth_t
+        local cur_y_rot = start_cam_rot.yaw + (delta_yaw * smooth_t)
+
+        TeleportPlayer(cur_x, cur_y, cur_z, 0, cur_y_rot, 0)
+        SetCameraRot(cur_p, cur_y_rot)
+
+        if t >= 1.0 then is_camera_flying = false end
+        return -- Prevent stirring logic while camera is moving
     end
 
     ---------------------------------------------------------
@@ -568,7 +636,7 @@ function M.on_update(arg1, arg2)
     end
 
     if is_active then
-    UpdateTickVisibility()
+        UpdateTickVisibility()
     end
 
 end
@@ -675,7 +743,7 @@ end
 -- UTILITY
 -- =============================================================
 function M.OnPotionComplete()
-    M.StopInteraction(my_entity_id)  -- This also calls HideStirIcon via StopInteraction
+    M.StopInteraction(my_entity_id)  
     M.ClearCauldron()
     print("[Lua] Potion Complete! Ingredients Consumed.")
 
