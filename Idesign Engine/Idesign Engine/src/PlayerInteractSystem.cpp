@@ -282,6 +282,9 @@ namespace Framework
                                         g_AudioSystem->PlaySound3D("event:/Sheep7", Framework::Vector3(pos.x, pos.y, pos.z));
                                     }
                                 }
+                                else if (lowerName.find("ore") != std::string::npos) {
+                                    g_AudioSystem->PlayAudio("event:/PickUpOre");
+                                }
                                 else {
                                     g_AudioSystem->PlayAudio("event:/PickingUpHerb");
                                 }
