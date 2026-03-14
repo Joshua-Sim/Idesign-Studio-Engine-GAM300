@@ -935,6 +935,15 @@ namespace Framework
                     winCutsceneStartTime = (float)glfwGetTime();
                     winCutsceneFinished = false;
 
+                    // Play win cutscene BGM
+                    if (g_AudioSystem)
+                    {
+                        g_AudioSystem->StopEvent("event:/Level1BGM");
+                        g_AudioSystem->StopEvent("event:/QuarryBGM");
+                        g_AudioSystem->StopEvent("event:/ShopBGM");
+                        g_AudioSystem->PlayAudio("event:/WinCutsceneBGM");
+                    }
+
                     for (auto e : slides)
                     {
                         if (!ecsInterface.IsEntityValid(e)) continue;
@@ -1164,6 +1173,12 @@ namespace Framework
 
                         auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
                         tex.isUI = false;
+                    }
+
+                    // Stop ending BGM, play menu BGM
+                    if (g_AudioSystem) {
+                        g_AudioSystem->StopEvent("event:/WinCutsceneBGM");
+                        g_AudioSystem->PlayAudio("event:/Level1BGM");
                     }
 
                     engineState.PopState();

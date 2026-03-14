@@ -18,7 +18,7 @@ local level1BGM = "event:/Level1BGM"
 local quarryBGM = "event:/QuarryBGM"
 local shopBGM = "event:/ShopBGM"
 
-local sheepSounds = "event:/SheepAmbient"
+local sheepEvent = "event:/SheepAmbient"
 
 --Track state
 local wasInBackyard = false
