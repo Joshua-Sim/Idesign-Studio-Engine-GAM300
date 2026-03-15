@@ -267,7 +267,7 @@ namespace Framework
         GLuint m_shadowDepthTexture = 0;
         glm::mat4 m_lightSpaceMatrix;
         const unsigned int SHADOW_WIDTH = 2048, SHADOW_HEIGHT = 2048;
-        const unsigned int MAX_POINT_LIGHTS = 8;
+        const unsigned int MAX_POINT_LIGHTS = 16;
         const unsigned int MAX_SPOT_LIGHTS = 4;
 
         // ADD HDR & BLOOM VARIABLES + GAMMA (NEW)

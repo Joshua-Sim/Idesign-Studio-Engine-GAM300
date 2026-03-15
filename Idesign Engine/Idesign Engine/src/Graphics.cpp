@@ -709,9 +709,6 @@ namespace Framework {
                 shadowShader.setMat4("uModel", model);
                 glBindVertexArray(mesh.vao);
 
-                glDisableVertexAttribArray(3);
-                glDisableVertexAttribArray(4);
-
                 glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
             }
 
@@ -731,16 +728,7 @@ namespace Framework {
 
         // Collect ALL entities as shadow casters (not just camera-visible ones).
         // Using m_visibleEntities here was wrong - objects behind the camera must still cast shadows.
-  
-        for (auto const& e : mEntities) {
-            if (!ecsInterface.HasComponent<MeshProperties>(e)) continue;
-            if (!ecsInterface.HasComponent<TransformComponent>(e)) continue;
-            if (!ecsInterface.GetComponent<TransformComponent>(e).isActive) continue;
-            auto& mesh = ecsInterface.GetComponent<MeshProperties>(e);
-            if (mesh.debugShape == DebugShapeType::None && mesh.vao != 0) {
-                shadowCasters.push_back(e);
-            }
-        }
+
 
         // PERF: throttle shadow updates — re-render each light's cubemap only every 2 frames.
         // For static interior geometry this is visually identical but halves shadow-pass cost.

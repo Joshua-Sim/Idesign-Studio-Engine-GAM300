@@ -41,7 +41,7 @@ struct Material {
     float opacity;
 };
 
-#define MAX_POINT_LIGHTS 8
+#define MAX_POINT_LIGHTS 16
 #define MAX_SPOT_LIGHTS  4
 
 uniform DirectionalLight uDirLight;
