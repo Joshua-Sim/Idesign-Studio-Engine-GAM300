@@ -286,11 +286,6 @@ namespace Framework
                         bool isGoldBase = ecsInterface.EntityHasTag(e, "gold");
                         bool isInventoryBase = ecsInterface.EntityHasTag(e, "inventory");
 
-                        // Temporary debug - add before line 289
-                        std::cout << "[DEBUG] backpackComplete=" << backpackComplete
-                            << " backpackLevel=" << Inventory::Instance().GetBackpackLevel()
-                            << " MAX=" << UpgradeManager::MAX_BACKPACK_LEVEL << std::endl;
-
                         // Hide base card if hovered OR if completed
                         bool hideBase =
                             (isCauldronBase && (cauldronHovered || cauldronComplete)) ||
