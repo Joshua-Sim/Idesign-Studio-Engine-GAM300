@@ -807,13 +807,23 @@ end
 -- END NIGHT
 -- =========================================================
 function CustomerSystem:EndNightPhase()
+    if not waiting_to_end then
+        return
+    end
+
     print("[CustomerSystem] Ending Night Phase...")
+
+    -- stop this from firing again next frame
+    waiting_to_end = false
+    end_phase_timer = 0.0
+
     self:ClearAllLogs()
     for slot = 1, MAX_COUNTER_SLOTS do
         if activeCustomers[slot] then
             self:DestroyBarForSlot(slot, activeCustomers[slot])
         end
     end
+
     GameStateEndNightPhase()
 end
 
