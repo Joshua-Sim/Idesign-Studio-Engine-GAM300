@@ -646,80 +646,77 @@ namespace Framework {
         }
 
         // ====================================================================
-   // 0.5. SHADOW PASS (Render from Sun's perspective)
-   // ====================================================================
+           // BUILD GLOBAL SHADOW CASTERS LIST FIRST
+           // ====================================================================
+        std::vector<Entity> shadowCasters;
+        for (auto const& e : mEntities) {
+            if (!ecsInterface.HasComponent<MeshProperties>(e)) continue;
+            if (!ecsInterface.HasComponent<TransformComponent>(e)) continue;
+            if (!ecsInterface.GetComponent<TransformComponent>(e).isActive) continue;
+            auto& mesh = ecsInterface.GetComponent<MeshProperties>(e);
+
+            // Check for transparency so glass/water doesn't cast solid shadows
+            bool isTransparent = false;
+            if (ecsInterface.HasComponent<MaterialProperties>(e)) {
+                isTransparent = ecsInterface.GetComponent<MaterialProperties>(e).opacity < 1.0f;
+            }
+
+            if (mesh.debugShape == DebugShapeType::None && mesh.vao != 0 && !isTransparent) {
+                shadowCasters.push_back(e);
+            }
+        }
+
+        // ====================================================================
+        // 0.5. SHADOW PASS (Render from Sun's perspective)
+        // ====================================================================
         if (frameHasSun)
         {
-            // 1. Calculate the Light's View/Projection matrix
             float near_plane = -100.0f, far_plane = 500.0f;
             float ortho_size = 100.0f;
             glm::mat4 lightProjection = glm::ortho(-ortho_size, ortho_size, -ortho_size, ortho_size, near_plane, far_plane);
-            //glm::vec3 lightPos = frameSun.position - frameSun.direction * 20.0f;
-            glm::vec3 lookTarget = gameCamera.position;
 
-            // 2. Position the light *relative to the target*, far enough back to see everything
-            //    (frameSun.direction is the vector the light shines *along*)
-            float shadow_distance = 200.0f; // Pulls the camera back
+            glm::vec3 lookTarget = gameCamera.position;
+            float shadow_distance = 200.0f;
             glm::vec3 lightPos = lookTarget - frameSun.direction * shadow_distance;
 
-            // 3. Create the view matrix
-            glm::mat4 lightView = glm::lookAt(lightPos, lookTarget, glm::vec3(0.0f, 1.0f, 0.0f));
+            // FIX: Prevent NaN matrix if sun is pointing straight down
+            glm::vec3 upVector = glm::vec3(0.0f, 1.0f, 0.0f);
+            if (abs(frameSun.direction.y) > 0.999f) {
+                upVector = glm::vec3(0.0f, 0.0f, 1.0f);
+            }
+
+            glm::mat4 lightView = glm::lookAt(lightPos, lookTarget, upVector);
             m_lightSpaceMatrix = lightProjection * lightView;
-            // 2. Bind the shadow shader and FBO
+
             shadowShader.use();
             shadowShader.setMat4("uLightSpaceMatrix", m_lightSpaceMatrix);
             glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
             glBindFramebuffer(GL_FRAMEBUFFER, m_shadowFBO);
+
             glEnable(GL_DEPTH_TEST);
+            glDepthMask(GL_TRUE); // Ensure we are actually writing to the depth buffer
             glClear(GL_DEPTH_BUFFER_BIT);
 
-            // 3. Render all shadow-casting objects
-            glEnable(GL_CULL_FACE);  // Turn culling ON
-            glCullFace(GL_FRONT);    // Cull Front faces (so we only render Back faces)
-            // Render Terrain
-            shadowShader.setMat4("uModel", glm::mat4(1.0f));
+            glEnable(GL_CULL_FACE);
+            glCullFace(GL_FRONT); // Changed to BACK to prevent thin flat meshes from disappearing 
 
-
-            for (auto const& entityId : m_visibleEntities)
+            // Render all shadow-casting objects (using the fixed global list!)
+            for (auto const& entityId : shadowCasters)
             {
-                if (ecsInterface.HasComponent<MeshProperties>(entityId) &&
-                    ecsInterface.HasComponent<TransformComponent>(entityId))
-                {
-                    // 1. Get the MESH component
-                    auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
-                    bool isTransparent = false;
+                auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
+                glm::mat4 model = m_frameModelMatrices[entityId];
 
-                    // 2. Check for a MATERIAL component to determine opacity
-                    if (ecsInterface.HasComponent<MaterialProperties>(entityId))
-                    {
-                        auto& material = ecsInterface.GetComponent<MaterialProperties>(entityId);
-                        isTransparent = material.opacity < 1.0f;
-                    }
-                    // 3. Draw based on the MESH component's data
-                    if (mesh.debugShape == DebugShapeType::None && mesh.vao != 0 && !isTransparent)
-                    {
-                        glm::mat4 model = m_frameModelMatrices[entityId];
-                        bool isSkinned = ecsInterface.HasComponent<AnimationProperties>(entityId);
+                shadowShader.setMat4("uModel", model);
+                glBindVertexArray(mesh.vao);
 
-                        // Use appropriate shader
-                        shadowShader.use();
-                        shadowShader.setMat4("uModel", model);
+                glDisableVertexAttribArray(3);
+                glDisableVertexAttribArray(4);
 
-                        glBindVertexArray(mesh.vao);
-
-                        // Disable attributes 3 & 4 (Bone weights) since we are using the static shader
-                        glDisableVertexAttribArray(3);
-                        glDisableVertexAttribArray(4);
-
-                        glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
-                    }
-                }
+                glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
             }
-            // 4. Restore state
-            glBindFramebuffer(GL_FRAMEBUFFER, 0);
-            glCullFace(GL_BACK);
-        }
 
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        }
         // ====================================================================
      // PHASE 2: POINT LIGHT SHADOW PASS (OPTIMIZED)
      // ====================================================================
@@ -734,7 +731,7 @@ namespace Framework {
 
         // Collect ALL entities as shadow casters (not just camera-visible ones).
         // Using m_visibleEntities here was wrong - objects behind the camera must still cast shadows.
-        std::vector<Entity> shadowCasters;
+  
         for (auto const& e : mEntities) {
             if (!ecsInterface.HasComponent<MeshProperties>(e)) continue;
             if (!ecsInterface.HasComponent<TransformComponent>(e)) continue;

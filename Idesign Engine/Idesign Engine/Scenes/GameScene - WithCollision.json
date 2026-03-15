@@ -6568,7 +6568,7 @@
                     "castsShadow": false,
                     "shadowBiasConst": 0.004999999888241291,
                     "shadowBiasFactor": 0.05000000074505806,
-                    "type": "Directional"
+                    "type": "Point"
                 },
                 "BoxColliderComponent": {
                     "colliders": [
@@ -14239,7 +14239,7 @@
                     "castsShadow": false,
                     "shadowBiasConst": 0.004999999888241291,
                     "shadowBiasFactor": 0.05000000074505806,
-                    "type": "Directional"
+                    "type": "Point"
                 },
                 "BoxColliderComponent": {
                     "colliders": [
@@ -29776,50 +29776,106 @@
                 }
             }
         },
-        {
-            "name": "AutoCauldronText",
-            "guid": "d199b606-7653-4fe0-bb1c-4fdb9dc4d611",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                    -45.712,
-                    8.037,
-                    17.361
-                    ],
-                    "rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                    ],
-                    "scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "",
-                    "sortIndex": 0,
-                    "children": []
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "TextProperties": {
-                    "text": "",
-                    "scale": 0.01,
-                    "color": [
-                    1.0,
-                    1.0,
-                    1.0
-                    ],
-                    "opacity": 1.0,
-                    "alignment": 1,
-                    "isBillboard": true,
-                    "screenSpace": false
-                }
-            }
+      {
+        "name": "AutoCauldronText",
+        "guid": "d199b606-7653-4fe0-bb1c-4fdb9dc4d611",
+        "components": {
+          "TransformComponent": {
+            "position": [
+              -45.712,
+              8.037,
+              17.361
+            ],
+            "rotation": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "isActive": true
+          },
+          "HierarchyComponent": {
+            "parent": "",
+            "sortIndex": 0,
+            "children": []
+          },
+          "TagComponent": {
+            "tags": []
+          },
+          "TextProperties": {
+            "text": "",
+            "scale": 0.01,
+            "color": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "opacity": 1.0,
+            "alignment": 1,
+            "isBillboard": true,
+            "screenSpace": false
+          }
         }
+      },
+      {
+        "name": "THE SUN",
+        "guid": "98d4fb81-1064-4790-8c01-09f60f8fcd5c",
+        "components": {
+          "TransformComponent": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "rotation": [
+              -69.0,
+              0.0,
+              0.0
+            ],
+            "scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "isActive": true
+          },
+          "HierarchyComponent": {
+            "parent": "",
+            "sortIndex": 0,
+            "children": []
+          },
+          "TagComponent": {
+            "tags": []
+          },
+          "MeshComponent": {
+            "guid": "",
+            "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+          },
+          "TextureComponent": {
+            "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
+            "isUI": false
+          },
+          "LightProperties": {
+            "enabled": true,
+            "color": [
+              0.9310978651046753,
+              0.9027817845344543,
+              0.8070655465126038
+            ],
+            "intensity": 0.23999999463558197,
+            "radius": 10.0,
+            "innerCutOffAngle": 0.21816615760326385,
+            "outerCutOffAngle": 0.2617993950843811,
+            "castsShadow": false,
+            "shadowBiasConst": 0.07999999821186066,
+            "shadowBiasFactor": 0.03999999910593033,
+            "type": "Directional"
+          }
+        }
+      }
     ]
 }
