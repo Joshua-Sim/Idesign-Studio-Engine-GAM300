@@ -56,8 +56,9 @@ namespace Framework {
         const int   GRID_COLUMNS = 3;
 
         // --- TAB STATE ---
-        enum class BookTab { INGREDIENTS, POTIONS, POWDER };
+        enum class BookTab { INGREDIENTS, POTIONS, POWDER, INFO };
         BookTab m_currentTab = BookTab::INGREDIENTS;
+        BookTab m_previousTab = BookTab::INGREDIENTS; // [NEW] Track previous state
 
         // --- SIDE TAB CONSTANTS ---
         const float SIDE_TAB_HIDDEN_X = 370.0f;   // Tucked under the flap
@@ -68,11 +69,11 @@ namespace Framework {
         const float SIDE_TAB_HEIGHT = 120.0f;
         const float SIDE_UV_MIN_X = 310.0f / 1920.0f; // EXTENDED_X left edge approx
         const float SIDE_UV_MAX_X = 430.0f / 1920.0f; // HIDDEN_X right edge approx
-        float m_tabVisualX[3] = { 380.0f, 380.0f, 380.0f }; // Start at HIDDEN_X
+        float m_tabVisualX[4] = { 380.0f, 380.0f, 380.0f, 380.0f }; // Start at HIDDEN_X
 
         // Private members
-        Entity m_tabBGEntities[3] = { 0, 0, 0 };
-        Entity m_tabIconEntities[3] = { 0, 0, 0 };
+        Entity m_tabBGEntities[4] = { 0, 0, 0, 0 };
+        Entity m_tabIconEntities[4] = { 0, 0, 0, 0 };
 
         // HOVER STUFF
         int m_hoveredItemID = -1;      
@@ -128,12 +129,21 @@ namespace Framework {
             float mouseX = mouseUV_X * 1920.0f;
             float mouseY = mouseUV_Y * 1080.0f;
 
+            // --- REVERT LOGIC ---
+            // If we are in INFO mode, ANY click returns us to the previous tab
+            if (m_currentTab == BookTab::INFO) {
+                m_currentTab = m_previousTab;
+                g_AudioSystem->PlayAudio("event:/PaperDown");
+                RefreshBook();
+                return;
+            }
+
             // 1. SIDEBAR TAB DETECTION (Replacing floating middle tabs)
             // We check a vertical strip on the left where the bookmarks live
             float sideClickMinX = SIDE_TAB_EXTENDED_X - (SIDE_TAB_WIDTH / 2.0f);
             float sideClickMaxX = SIDE_TAB_HIDDEN_X + (SIDE_TAB_WIDTH / 2.0f);
 
-            for (int i = 0; i < 3; ++i) {
+            for (int i = 0; i < 4; ++i) {
                 float tabY = SIDE_TAB_START_Y - (i * SIDE_TAB_SPACING);
 
                 bool hitX = mouseX >= sideClickMinX && mouseX <= sideClickMaxX;
@@ -217,26 +227,25 @@ namespace Framework {
             }
         } 
 
-        // --- MAIN RENDER FUNCTION ---
         void BuildBookUI() {
-
             float bookCenterX = 960.0f;
             float bookCenterY = 540.0f;
 
-            // 1. BACK layer: The back cover/shadow
+            // 1. Always spawn the base layers
             SpawnBook(bookCenterX, bookCenterY, 1300.0f, 866.0f, bookZ);
-
-            // 2. MIDDLE layer: The Side Bookmarks
-            BuildSideTabs(); // Z = 0.1 and 0.2
-
-            // 3. FRONT layer: The Book "Flap" (The page edge that covers the bookmarks)
-            // Assuming you have a texture named "Book_FrontFlap"
+            BuildSideTabs();
             SpawnGenericSprite(bookCenterX, bookCenterY, "bookflap", 1300.0f, 866.0f, bookflapZ);
 
-            // 4. CONTENT layer: Grid and Text
-            BuildLeftPage(); // Ensure these spawn at Z = 0.4 or higher
-            if (m_selectedItemID != -1) {
-                BuildRightPage(m_selectedItemID);
+            // 2. Conditional Rendering: Only show Info OR the Grid, never both
+            if (m_currentTab == BookTab::INFO) {
+                BuildInfoPage();
+            }
+            else {
+                // Only build the grid and details if NOT in Info mode
+                BuildLeftPage();
+                if (m_selectedItemID != -1) {
+                    BuildRightPage(m_selectedItemID);
+                }
             }
 
             bookSpawned = true;
@@ -279,6 +288,12 @@ namespace Framework {
             BuildBookUI();
         }
 
+        void ForceOpenTutorial() {
+            m_currentTab = BookTab::INFO;
+            GameSystem::bookOpen = true; // Ensure the global flag is set
+            RefreshBook();
+        }
+
         void OnMouseMove(float mouseUV_X, float mouseUV_Y) {
             if (!bookSpawned) return;
 
@@ -292,7 +307,7 @@ namespace Framework {
 
             // Check if X is within the sidebar "strip" on the left (Using your existing UV constants)
             if (mouseUV_X >= SIDE_UV_MIN_X && mouseUV_X <= SIDE_UV_MAX_X) {
-                for (int i = 0; i < 3; ++i) {
+                for (int i = 0; i < 4; ++i) {
                     // Standardized to pixel space checking
                     float tabY = SIDE_TAB_START_Y - (i * SIDE_TAB_SPACING);
                     float halfHeight = SIDE_TAB_HEIGHT / 2.0f;
@@ -374,7 +389,7 @@ namespace Framework {
         void UpdateVisuals(float dt) {
             if (!bookSpawned) return;
 
-            for (int i = 0; i < 3; ++i) {
+            for (int i = 0; i < 4; ++i) {
                 // 1. Calculate the goal
                 bool active = (static_cast<int>(m_currentTab) == i) || (m_hoveredSideTab == i);
                 float targetX = active ? SIDE_TAB_EXTENDED_X : SIDE_TAB_HIDDEN_X;
@@ -815,6 +830,30 @@ namespace Framework {
 
                 currentY -= 90.0f;
 
+                // --- Render the Worth/Value Section ---
+                int itemValue = Framework::GetItemValue(selectedID);
+
+                // Only display if the item has a value (usually potions/powders)
+                if (itemValue > 0) {
+                    // 3. Add a divider line after the value
+                    SpawnGenericSpriteReturnEntity(rightPageX, std::round(currentY), "RB_Divider", 522.0f, 2.0f, itemFrameZ);
+                    currentY -= 30.0f;
+
+                    // 1. Render the "Worth:" Label
+                    SpawnTextReturnEntity(rightPageX - 160.0f, currentY, baseTextZ, "Worth:", 0.5f, black, 0);
+                    currentY -= 35.0f;
+
+                    // 2. Render the actual value (e.g., "$50")
+                    std::string valueString = "$" + std::to_string(itemValue);
+                    // Using a slightly golden or dark green color for currency if you prefer, 
+                    // or stick to 'black' for consistency.
+                    SpawnTextReturnEntity(rightPageX, currentY, baseTextZ, valueString, 0.7f, glm::vec4(0.1f, 0.4f, 0.1f, 1.0f), 1);
+
+                    currentY -= 45.0f;
+
+
+                }
+
             }
             else {
                 // --- Inside BuildRightPage ---
@@ -911,10 +950,10 @@ namespace Framework {
         }
 
         void BuildSideTabs() {
-            std::vector<std::string> sideIcons = { "RB_Ingredient", "RB_Cauldron", "RB_MortarPestle" };
-            std::vector<std::string> sideBGs = { "RB_Ingredient_BKMK", "RB_Cauldron_BKMK", "RB_MortarPestle_BKMK" };
+            std::vector<std::string> sideIcons = { "RB_Ingredient", "RB_Cauldron", "RB_MortarPestle", "RB_QuestionMark"};
+            std::vector<std::string> sideBGs = { "RB_Ingredient_BKMK", "RB_Cauldron_BKMK", "RB_MortarPestle_BKMK", "RB_Info_BKMK"};
 
-            for (int i = 0; i < 3; ++i) {
+            for (int i = 0; i < 4; ++i) {
                 float currentY = SIDE_TAB_START_Y - (i * SIDE_TAB_SPACING);
                 float startX = m_tabVisualX[i]; // Use current animated position
 
@@ -924,6 +963,20 @@ namespace Framework {
             }
         }
       
+        void BuildInfoPage() {
+            float bookCenterX = 960.0f;
+            float bookCenterY = 540.0f;
+            float overlayZ = 0.9f; // Sit on top of all other book elements
+
+            // 1. Spawn the main tutorial graphic
+            // This image should be a transparent PNG with your arrows/circles baked in
+            SpawnGenericSprite(bookCenterX, bookCenterY, "RB_Tutorial_Background", 1920.0f, 1080.0f, overlayZ);
+            SpawnGenericSprite(bookCenterX, bookCenterY, "RB_Tutorial", 1835.0f, 881.0f, overlayZ+0.01f);
+
+            // 2. Optional: Add a "Click to Exit" or "Back" prompt
+            SpawnText(bookCenterX, 180.0f, overlayZ + 0.05f, "Click anywhere to return", 0.6f, glm::vec4(1.0f, 1.0f, 1.0f, 0.8f));
+        }
+
         void RenderRecipeRow(float centerX, float y, const PotionRecipe* recipe) {
             if (!recipe) return;
 

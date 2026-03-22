@@ -1,5 +1,5 @@
 {
-    "count": 359,
+    "count": 362,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -3943,6 +3943,39 @@
             "guid": "be74f90c-0cce-43b5-b30e-d61b6407a28c",
             "name": "trashbin",
             "path": "Assets\\Textures\\trashbin.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "8ee4ece9-1a9e-417f-aa56-51d0243d1c94",
+            "name": "RB_Info_BKMK",
+            "path": "Assets\\Textures\\RB_Info_BKMK.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "a4d1ccd1-e836-4b74-95c1-748189870fff",
+            "name": "RB_Tutorial",
+            "path": "Assets\\Textures\\RB_Tutorial.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "201a6573-d291-4534-91da-f38d52aa02b4",
+            "name": "RB_Tutorial_Background",
+            "path": "Assets\\Textures\\RB_Tutorial_Background.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
