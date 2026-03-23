@@ -30,6 +30,8 @@ end
 function DayTutorial:SkipSequence()
     print("[DayTutorial] Sequence skipped via F9.")
     SetData("dayTutorialPlayed", 1)
+    if self.infoBG then DestroyEntity(self.infoBG) end
+    if self.infoUI then DestroyEntity(self.infoUI) end
     if CutsceneIsFlying() then CutsceneStop() end
     if DialogueIsActive() then DialogueClear() end
     self.waitingForLanding  = false
@@ -65,6 +67,28 @@ function DayTutorial:on_update(dt)
     local mapSelFlag          = GetData("mapSelectionTutorialPlayed")
     local quarryAnnounceFlag  = GetData("quarryUnlockAnnouncePlayed")
     local now                 = GetRealTime()
+
+    -- -------------------------------------------------------
+    -- Cleanup for le recipe book tutorial
+    -- -------------------------------------------------------
+    if self.waitingForDialogue and not DialogueIsActive() then
+        self.waitingForDialogue = false
+        
+        -- CLEANUP: If we just finished step 5, remove the prefabs
+        if self.sequenceStep == 5 then
+            if self.infoBG then DestroyEntity(self.infoBG) end
+            if self.infoUI then DestroyEntity(self.infoUI) end
+            print("[DayTutorial] UI Prefabs cleared.")
+        end
+
+        self.sequenceStep = self.sequenceStep + 1
+        if self.sequenceStep <= 5 then -- Updated limit to 5
+            self:PlayNextStep()
+        else
+            print("[DayTutorial] Full sequence complete. Player control restored.")
+        end
+    end
+
 
     -- F9 skip with debounce
     local skipPressed = IsKeyDown(298)
@@ -112,12 +136,13 @@ function DayTutorial:on_update(dt)
     if self.waitingForDialogue and not DialogueIsActive() then
         self.waitingForDialogue = false
         self.sequenceStep = self.sequenceStep + 1
-        if self.sequenceStep <= 4 then
+        if self.sequenceStep <= 5 then
             self:PlayNextStep()
         else
             print("[DayTutorial] Full sequence complete. Player control restored.")
         end
     end
+
 
     -- -------------------------------------------------------
     -- MapSelection tutorial: snapshot start time on first eligible frame
@@ -182,14 +207,18 @@ function DayTutorial:PlayNextStep()
     elseif self.sequenceStep == 4 then
         target = "Gate"
         offX, offY, offZ = 25, 6, 12
+    else if self.sequenceStep == 5 then
+        print("[DayTutorial] Stage 5 | Spawning Recipe Book Info Prefabs")
+        self.infoBG = SpawnPrefab("RecipeBook_Info_BG_Prefab")
+        self.infoUI = SpawnPrefab("RecipeBook_Info_Prefab")
+    else
+        print("[DayTutorial] Stage " .. self.sequenceStep .. " | Flying to: " .. target)
+        CutsceneSetTarget(target)
+        CutsceneSetOffset(offX, offY, offZ)
+        CutsceneSetSpeed(2.5)
+        CutsceneStart()
+        self.waitingForLanding = true
     end
-
-    print("[DayTutorial] Stage " .. self.sequenceStep .. " | Flying to: " .. target)
-    CutsceneSetTarget(target)
-    CutsceneSetOffset(offX, offY, offZ)
-    CutsceneSetSpeed(2.5)
-    CutsceneStart()
-    self.waitingForLanding = true
 end
 
 function DayTutorial:StartDialogueForCurrentStep()
@@ -207,6 +236,10 @@ function DayTutorial:StartDialogueForCurrentStep()
     elseif self.sequenceStep == 4 then
         DialogueAdd("Finally, the Gate. Use it once you are finished here.", "Aunt Mira", "pear")
         DialogueAdd("The moon waits for no one, child. Now get to work!", "Aunt Mira", "portrait")
+    elseif self.sequenceStep == 5 then
+        DialogueAdd("Before you go, take a look at your Recipe Book.", "Aunt Mira", "portrait")
+        DialogueAdd("It shows you what ingredients you've found and, more importantly, what they are worth!", "Aunt Mira", "portrait")
+        DialogueAdd("You can open it anytime by pressing 'R'. Now, get to work!", "Aunt Mira", "portrait")
     end
 
     DialogueStart()

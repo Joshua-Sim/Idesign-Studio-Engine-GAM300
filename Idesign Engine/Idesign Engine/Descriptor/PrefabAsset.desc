@@ -1,5 +1,5 @@
 {
-    "count": 75,
+    "count": 77,
     "entries": [
         {
             "guid": "ab20d9cc-f552-47fb-8cd9-82403e4c3b22",
@@ -449,6 +449,18 @@
             "guid": "88eeea08-85e0-47fd-9297-fd858ee22464",
             "name": "Spinner_Prefab",
             "path": "Assets\\Prefabs\\Spinner_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "c69ebf89-e895-48fd-900b-eda44a422dd1",
+            "name": "RecipeBook_Info_Prefab",
+            "path": "Assets\\Prefabs\\RecipeBook_Info_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "c69ebf89-e895-48fd-6767-eda44a422dd1",
+            "name": "RecipeBook_Info_BG_Prefab",
+            "path": "Assets\\Prefabs\\RecipeBook_Info_BG_Prefab.prefab",
             "isScenePrefab": false
         }
     ]

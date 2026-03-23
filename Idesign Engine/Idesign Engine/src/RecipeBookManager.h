@@ -63,7 +63,7 @@ namespace Framework {
         // --- SIDE TAB CONSTANTS ---
         const float SIDE_TAB_HIDDEN_X = 370.0f;   // Tucked under the flap
         const float SIDE_TAB_EXTENDED_X = 342.0f; // Slid out
-        const float SIDE_TAB_START_Y = 700.0f;
+        const float SIDE_TAB_START_Y = 800.0f;
         const float SIDE_TAB_SPACING = 150.0f;
         const float SIDE_TAB_WIDTH = 100.0f;
         const float SIDE_TAB_HEIGHT = 120.0f;
@@ -129,14 +129,16 @@ namespace Framework {
             float mouseX = mouseUV_X * 1920.0f;
             float mouseY = mouseUV_Y * 1080.0f;
 
-            // --- REVERT LOGIC ---
-            // If we are in INFO mode, ANY click returns us to the previous tab
-            if (m_currentTab == BookTab::INFO) {
-                m_currentTab = m_previousTab;
-                g_AudioSystem->PlayAudio("event:/PaperDown");
-                RefreshBook();
-                return;
-            }
+            //// --- REVERT LOGIC ---
+            //// If we are in INFO mode, ANY click returns us to the previous tab
+            //if (m_currentTab == BookTab::INFO) {
+            //    m_currentTab = m_previousTab;
+            //    g_AudioSystem->PlayAudio("event:/PaperDown");
+            //    RefreshBook();
+            //    return;
+            //}
+
+
 
             // 1. SIDEBAR TAB DETECTION (Replacing floating middle tabs)
             // We check a vertical strip on the left where the bookmarks live
@@ -152,7 +154,11 @@ namespace Framework {
                 if (hitX && hitY) {
                     BookTab clickedTab = static_cast<BookTab>(i);
                     if (m_currentTab != clickedTab) {
+                        if (clickedTab == BookTab::INFO) {
+                            m_previousTab = m_currentTab;
+                        }
                         m_currentTab = clickedTab;
+
                         m_selectedItemID = -1; // Clear right page on tab switch
                         g_AudioSystem->PlayAudio("event:/PaperUp");
                         RefreshBook();
@@ -236,6 +242,7 @@ namespace Framework {
             BuildSideTabs();
             SpawnGenericSprite(bookCenterX, bookCenterY, "bookflap", 1300.0f, 866.0f, bookflapZ);
 
+
             // 2. Conditional Rendering: Only show Info OR the Grid, never both
             if (m_currentTab == BookTab::INFO) {
                 BuildInfoPage();
@@ -247,6 +254,8 @@ namespace Framework {
                     BuildRightPage(m_selectedItemID);
                 }
             }
+
+
 
             bookSpawned = true;
         }

@@ -449,6 +449,18 @@
             "name": "Spinner_Prefab",
             "path": "Assets\\Prefabs\\Spinner_Prefab.prefab",
             "isScenePrefab": false
+        },
+        {
+            "guid": "c69ebf89-e895-48fd-900b-eda44a422dd1",
+            "name": "RecipeBook_Info_Prefab",
+            "path": "Assets\\Prefabs\\RecipeBook_Info_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "c69ebf89-e895-48fd-6767-eda44a422dd1",
+            "name": "RecipeBook_Info_BG_Prefab",
+            "path": "Assets\\Prefabs\\RecipeBook_Info_BG_Prefab.prefab",
+            "isScenePrefab": false
         }
     ]
 }

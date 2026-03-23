@@ -1273,9 +1273,6 @@ namespace Framework {
             engineState.PushState(EngineMode::Play);                    // Push gameplay layer
             phaseManager->SetPhase(GamePhase::Day);                     // Set game phase
             MessageBus::Get().SendImmediate(EnterPlayModeMessage());    // Send message to start audio and other play-mode systems
-
-
-
             //InstantiatePrefabByName("ForestHerb_Prefab");
             return 0;
         }
