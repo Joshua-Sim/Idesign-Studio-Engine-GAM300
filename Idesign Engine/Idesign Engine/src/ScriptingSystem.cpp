@@ -1305,7 +1305,7 @@ namespace Framework {
             MessageBus::Get().SendImmediate(ExitPlayModeMessage());     // Send exit message
 
             if (CORE) CORE->EndGameLoop();
-            exit(0);        // immediately terminate app
+            //exit(0);        // immediately terminate app
             return 0;
         }
 
