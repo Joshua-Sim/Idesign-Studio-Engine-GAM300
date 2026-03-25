@@ -2411,6 +2411,20 @@ namespace Framework {
 
             return 0; // Return nothing to Lua
         }
+
+        // Returns the entity ID the player's camera is currently pointing at (up to mLookRange).
+        // Returns 0 if nothing is hit. Used by Lua to control customer textbox opacity.
+        static int lua_GetLookedAtEntity(lua_State* L)
+        {
+            auto playerInteract = ecsInterface.GetSystem<PlayerInteractSystem>();
+            if (!playerInteract)
+            {
+                lua_pushinteger(L, 0);
+                return 1;
+            }
+            lua_pushinteger(L, static_cast<lua_Integer>(playerInteract->GetLookAtEntity()));
+            return 1;
+        }
     }
 
     // ---------------------------- class methods --------------------------------
@@ -2517,6 +2531,7 @@ namespace Framework {
         lua_register(L, "FireEvent", lua_FireEvent); // Maybe add register if needed
         lua_register(L, "SubscribeToEvent", lua_SubscribeToEvent); // Maybe add register if needed
         lua_register(L, "SetScriptVariable", lua_SetScriptVariable);
+        lua_register(L, "GetLookedAtEntity", lua_GetLookedAtEntity);
 
         // Engine States
         lua_register(L, "GameStateStart", lua_GameStateStart);

@@ -32,6 +32,7 @@ namespace Framework
         void SpawnPickupNotification(int itemId, const std::string& itemName);
         void ClearAllPickupNotifications();
         void SpawnZipPickup(int itemId, const glm::vec3& spawnPos);
+        Entity GetLookAtEntity() const { return mLookAtEntity; }
 
     private:
         void PerformInteract(Entity targetEntity);
@@ -46,7 +47,8 @@ namespace Framework
 
         // --- Interaction Properties ---
         const float mInteractRange = 3.0f;
-
+        const float mLookRange     = 5.0f;   // Wider range used only for customer text visibility
+        Entity      mLookAtEntity  = 0;       // Entity currently under the look-at ray (0 = none)
 
         std::vector<PickupNotification> mActiveNotifications;
 

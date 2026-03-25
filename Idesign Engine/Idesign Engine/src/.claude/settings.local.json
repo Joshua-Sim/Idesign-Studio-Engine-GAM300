@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find C:testIdesign-Studio-Engine-GAM300 -type f -name *.lua)"
+    ]
+  }
+}

@@ -185,6 +185,14 @@ namespace Framework
             }
         }
 
+        // --- 2.25 CUSTOMER LOOK-AT RAYCAST (drives customer textbox visibility via Lua) ---
+        // targetCategory=3 maps to Jolt layer 4 (Customer), so it skips player, walls, and items.
+        {
+            Framework::RaycastHit customerHit;
+            bool customerDidHit = mPhysicsSystem->Raycast(origin, direction, mLookRange, customerHit, 3);
+            mLookAtEntity = (customerDidHit && customerHit.hit) ? customerHit.entity : 0;
+        }
+
         // --- 2.5 LOOK-AT HIGHLIGHT ---
         if (mGraphicsSystem)
         {
