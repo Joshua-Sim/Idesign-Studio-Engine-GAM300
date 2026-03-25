@@ -76,61 +76,26 @@ namespace Framework {
     bool Graphics::IsCameraRotationEnabled() const { return m_cameraRotationEnabled; }
 
 
+
+
+    // Constructor
     Graphics::Graphics()
     {
         g_GraphicsSingleton = this;
+        WindowConfig* config = AssetManager::Instance().Get<WindowConfig>(AssetManager::Instance().FindGuid<WindowConfig>());
+        if (!glfwInit()) { std::cerr << "GLFW init failed\n"; return; }
         s_instance = this;
-
-        if (!glfwInit()) {
-            std::cerr << "GLFW init failed\n";
-            return;
-        }
-
-        // 1. Get Monitor and Video Mode info FIRST
-        GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-        const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-
-        // 2. Set Hints
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-        // Borderless Hints
-        glfwWindowHint(GLFW_RED_BITS, mode->redBits);
-        glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
-        glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
-        glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
-
-        // This is the magic hint for "True" Borderless Fullscreen:
-        // It tells GLFW not to change the resolution, just take over the screen.
-        glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
-
-        // 3. Create the window
-        // Passing 'monitor' here instead of nullptr makes it Fullscreen.
-        // Because we matched the monitor bits/refresh rate above, it won't flicker or "pop."
-        window = glfwCreateWindow(
-            mode->width,
-            mode->height,
-            "My Engine",
-            monitor,
-            nullptr
-        );
-
-        if (!window) {
-            std::cerr << "Window creation failed\n";
-            glfwTerminate();
-            return;
-        }
-
+        window = glfwCreateWindow(config->x, config->y, config->programName.c_str(), nullptr, nullptr);
+        if (!window) { std::cerr << "Window creation failed\n"; glfwTerminate(); return; }
         glfwMakeContextCurrent(window);
-        glfwSwapInterval(0); // VSync Off
+        glfwSwapInterval(0); //disable V Sync
 
-        if (glewInit() != GLEW_OK) {
-            std::cerr << "GLEW init failed\n";
-            return;
-        }
-
-        glViewport(0, 0, mode->width, mode->height);
+        //glewExperimental = GL_TRUE; //optional to include can remove
+        if (glewInit() != GLEW_OK) { std::cerr << "GLEW init failed\n"; return; }
     }
 
     // Destructor
@@ -191,8 +156,7 @@ namespace Framework {
             glfwDestroyWindow(window);
             window = nullptr;
         }
-        glfwDestroyWindow(window);
-        glfwTerminate(); // This restores the taskbar and resolution!;
+        glfwTerminate();
     }
 
     void Graphics::SetCameraRotationEnabled(bool enabled)
