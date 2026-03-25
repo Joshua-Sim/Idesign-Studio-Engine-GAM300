@@ -110,15 +110,24 @@ namespace Framework {
         {
             g_AudioSystem->PlayAudio("event:/ButtonClick");
 
-            if (engineState.Is(EngineMode::Play))
-            {
-                engineState.PushState(EngineMode::Paused);
-                std::cout << "ESC PRESSED - Hiding How To Play page" << std::endl;
-            }
-            else 
+            // Check if we are ALREADY paused to resume
+            if (engineState.Is(EngineMode::Paused))
             {
                 engineState.PopState();
-                std::cout << "ESC PRESSED - Toggling pause" << std::endl;
+                std::cout << "Resuming game..." << std::endl;
+            }
+            else
+            {
+                // Define only the states where the Pause Menu is allowed to open
+                bool canPause = engineState.Is(EngineMode::Play) ||
+                    engineState.Is(EngineMode::Dialogue) ||
+                    engineState.Is(EngineMode::MapSelection);
+
+                if (canPause)
+                {
+                    engineState.PushState(EngineMode::Paused);
+                    std::cout << "Game Paused" << std::endl;
+                }
             }
         }
 
