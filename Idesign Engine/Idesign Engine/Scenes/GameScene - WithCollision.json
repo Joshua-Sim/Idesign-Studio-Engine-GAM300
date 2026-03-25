@@ -22215,7 +22215,7 @@
                     "tags": []
                 },
                 "TimerComponent": {
-                    "duration": 300.0,
+                    "duration": 90.0,
                     "loop": false
                 },
                 "TextProperties": {

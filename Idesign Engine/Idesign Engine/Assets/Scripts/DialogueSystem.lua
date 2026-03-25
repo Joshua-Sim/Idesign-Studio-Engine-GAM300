@@ -207,18 +207,22 @@ function DayTutorial:PlayNextStep()
     elseif self.sequenceStep == 4 then
         target = "Gate"
         offX, offY, offZ = 25, 6, 12
-    else if self.sequenceStep == 5 then
+    elseif self.sequenceStep == 5 then -- Fixed: used elseif (one word)
         print("[DayTutorial] Stage 5 | Spawning Recipe Book Info Prefabs")
         self.infoBG = SpawnPrefab("RecipeBook_Info_BG_Prefab")
         self.infoUI = SpawnPrefab("RecipeBook_Info_Prefab")
-    else
-        print("[DayTutorial] Stage " .. self.sequenceStep .. " | Flying to: " .. target)
-        CutsceneSetTarget(target)
-        CutsceneSetOffset(offX, offY, offZ)
-        CutsceneSetSpeed(2.5)
-        CutsceneStart()
-        self.waitingForLanding = true
+        -- Since there is no cutscene for step 5, trigger dialogue manually
+        self:StartDialogueForCurrentStep() 
+        return -- Exit early so we don't run the Cutscene code below
     end
+
+    -- This part only runs for steps 1-4
+    print("[DayTutorial] Stage " .. self.sequenceStep .. " | Flying to: " .. target)
+    CutsceneSetTarget(target)
+    CutsceneSetOffset(offX, offY, offZ)
+    CutsceneSetSpeed(2.5)
+    CutsceneStart()
+    self.waitingForLanding = true
 end
 
 function DayTutorial:StartDialogueForCurrentStep()
