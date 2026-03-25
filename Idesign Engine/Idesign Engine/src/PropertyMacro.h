@@ -263,10 +263,20 @@ struct TypeName;
 //------------------------------------------------------------------------------------------------------------------------------------
 //  WIDGET || OTHER MACROS
 //------------------------------------------------------------------------------------------------------------------------------------
-#define PROP_DRAG_FLOAT(field, type) \
+#define PROP_DRAG_FLOAT_FLAGS(field, type, flags) \
     Framework::prop(#field, Framework::prop::DRAG_FLOAT, \
         [](void* obj, const void* in) { static_cast<type*>(obj)->field = *static_cast<const float*>(in); }, \
-        [](const void* obj, void* out) { *static_cast<float*>(out) = static_cast<const type*>(obj)->field; })
+        [](const void* obj, void* out) { *static_cast<float*>(out) = static_cast<const type*>(obj)->field; }, \
+        {}, {}, false, nullptr, nullptr, 0, flags, {})
+
+#define PROP_DRAG_FLOAT(field, type) \
+    PROP_DRAG_FLOAT_FLAGS(field, type, Framework::prop::NONE)
+
+#define PROP_DRAG_FLOAT_HIDDEN(field, type) \
+    PROP_DRAG_FLOAT_FLAGS(field, type, Framework::prop::HIDDEN)
+
+#define PROP_DRAG_FLOAT_READONLY(field, type) \
+    PROP_DRAG_FLOAT_FLAGS(field, type, Framework::prop::READ_ONLY)
 
 #define PROP_COLOR3(field, type) \
     Framework::prop(#field, Framework::prop::COLOR3, \

@@ -11,7 +11,7 @@
         ],
         "rotation": [
           90.0,
-          180.0,
+          90.0,
           90.0
         ],
         "scale": [
@@ -33,7 +33,7 @@
         "sortIndex": 0
       },
       "MeshReference": {
-        "guid": "5599d418-30e7-4aa5-96ee-b34bb2739271"
+        "guid": "0a406b67-1c83-478b-b638-73b2330bd588"
       },
       "TextureComponent": {
         "guid": "bc8c90ff-9f41-4d20-b262-d42905d55a55",
@@ -55,7 +55,7 @@
         ]
       },
       "AnimationProperties": {
-        "path": "Assets/Objects/FISHFINALUPDATED.fbx",
+        "path": "Assets/Objects/FISHFINALWITHFEEDBACK.fbx",
         "defaultAnimationName": "",
         "animationSpeed": 1.0,
         "bLoops": true,

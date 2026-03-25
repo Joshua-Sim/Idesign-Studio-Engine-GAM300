@@ -11,7 +11,7 @@
         ],
         "rotation": [
           90.0,
-          180.0,
+          90.0,
           90.0
         ],
         "scale": [
@@ -33,7 +33,7 @@
         "sortIndex": 0
       },
       "MeshReference": {
-        "guid": "d33b0f4f-4a71-4085-bc40-5f9e05c0820d"
+        "guid": "79b35663-72a2-4a38-a85b-0cd642f46f11"
       },
       "TextureComponent": {
         "guid": "dd4ead59-4339-4c03-b3a6-58067d643be0",
@@ -55,7 +55,7 @@
         ]
       },
       "AnimationProperties": {
-        "path": "Assets/Objects/updatedfinalgoblin.fbx",
+        "path": "Assets/Objects/Finalgoblinwithfeedback.fbx",
         "defaultAnimationName": "",
         "animationSpeed": 1.0,
         "bLoops": true,

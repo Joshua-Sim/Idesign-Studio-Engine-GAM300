@@ -53,7 +53,7 @@
 
         void DialogueSystem::Update(float deltaTime) {
             (void)deltaTime; // Ignore the passed parameter since it's 0
-
+      
             // Calculate our own deltaTime
             static float lastTime = 0.0f;
             float currentTime = (float)glfwGetTime();
@@ -207,6 +207,7 @@
         }
 
         void DialogueSystem::StartDialogue() {
+            return;
             std::cout << "[DialogueSystem] ===== StartDialogue() CALLED =====" << std::endl;
 
             if (dialogueQueue.empty()) {

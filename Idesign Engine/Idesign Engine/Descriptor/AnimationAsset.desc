@@ -1,131 +1,10 @@
 {
-    "count": 14,
+    "count": 7,
     "entries": [
         {
             "guid": "e4d836ef-c0bc-46bb-914c-c1e05246eb81",
             "name": "knifechoppingwithBONEFIXED4",
             "path": "Assets/Objects/knifechoppingwithBONEFIXED4.fbx",
-            "defaultAnimationName": "",
-            "animationSpeed": 1.0,
-            "bLoops": true,
-            "bPlayOnStart": true,
-            "currentTime": 0.0,
-            "vbo_skinning": 0
-        },
-        {
-            "guid": "c15b1abf-52d5-445e-a2fc-2d337fc4969b",
-            "name": "updatedfinalgoblin",
-            "path": "Assets\\Objects\\updatedfinalgoblin.fbx",
-            "defaultAnimationName": "",
-            "animationSpeed": 1.0,
-            "bLoops": true,
-            "bPlayOnStart": true,
-            "currentTime": 0.0,
-            "vbo_skinning": 0
-        },
-        {
-            "guid": "e6e64140-6e45-4eb9-986a-e146404672bf",
-            "name": "cauldronwithoutspoon",
-            "path": "Assets\\Objects\\cauldronwithoutspoon.fbx",
-            "defaultAnimationName": "",
-            "animationSpeed": 1.0,
-            "bLoops": true,
-            "bPlayOnStart": true,
-            "currentTime": 0.0,
-            "vbo_skinning": 0
-        },
-        {
-            "guid": "e8768e36-c957-4c66-a279-56d502dc5a18",
-            "name": "GoblinPixelLatest",
-            "path": "Assets\\Objects\\GoblinPixelLatest.fbx",
-            "defaultAnimationName": "",
-            "animationSpeed": 1.0,
-            "bLoops": true,
-            "bPlayOnStart": true,
-            "currentTime": 0.0,
-            "vbo_skinning": 0
-        },
-        {
-            "guid": "af14de83-981d-448a-a6e3-07a92a48e676",
-            "name": "CauldronStiring",
-            "path": "Assets\\Objects\\CauldronStiring.fbx",
-            "defaultAnimationName": "",
-            "animationSpeed": 1.0,
-            "bLoops": true,
-            "bPlayOnStart": true,
-            "currentTime": 0.0,
-            "vbo_skinning": 0
-        },
-        {
-            "guid": "66604d7f-2200-44ca-8964-cce6b7ae81ac",
-            "name": "fish",
-            "path": "Assets\\Objects\\fish.fbx",
-            "defaultAnimationName": "",
-            "animationSpeed": 1.0,
-            "bLoops": true,
-            "bPlayOnStart": true,
-            "currentTime": 0.0,
-            "vbo_skinning": 0
-        },
-        {
-            "guid": "650e0da6-753b-406b-9c12-e77f60602971",
-            "name": "Goblin",
-            "path": "Assets\\Objects\\Goblin.fbx",
-            "defaultAnimationName": "",
-            "animationSpeed": 1.0,
-            "bLoops": true,
-            "bPlayOnStart": true,
-            "currentTime": 0.0,
-            "vbo_skinning": 0
-        },
-        {
-            "guid": "d860e626-e7cf-44dc-b081-9c36f0a7d671",
-            "name": "GoblinPixelLatest(1)",
-            "path": "Assets\\Objects\\GoblinPixelLatest(1).fbx",
-            "defaultAnimationName": "",
-            "animationSpeed": 1.0,
-            "bLoops": true,
-            "bPlayOnStart": true,
-            "currentTime": 0.0,
-            "vbo_skinning": 0
-        },
-        {
-            "guid": "4015f98e-e322-4d64-b938-5868c300ff46",
-            "name": "GoblinPixelLatest",
-            "path": "Assets\\Objects\\GoblinPixelLatest.fbx",
-            "defaultAnimationName": "",
-            "animationSpeed": 1.0,
-            "bLoops": true,
-            "bPlayOnStart": true,
-            "currentTime": 0.0,
-            "vbo_skinning": 0
-        },
-        {
-            "guid": "0523545f-05de-4846-8cba-f4e3e58833c3",
-            "name": "GOLBINNEW",
-            "path": "Assets\\Objects\\GOLBINNEW.fbx",
-            "defaultAnimationName": "",
-            "animationSpeed": 1.0,
-            "bLoops": true,
-            "bPlayOnStart": true,
-            "currentTime": 0.0,
-            "vbo_skinning": 0
-        },
-        {
-            "guid": "26be21b4-ff16-44c1-9e5d-921d6516c728",
-            "name": "FISHNEW",
-            "path": "Assets\\Objects\\FISHNEW.fbx",
-            "defaultAnimationName": "",
-            "animationSpeed": 1.0,
-            "bLoops": true,
-            "bPlayOnStart": true,
-            "currentTime": 0.0,
-            "vbo_skinning": 0
-        },
-        {
-            "guid": "c161b000-4ea8-4e97-bc56-c0b183eba07c",
-            "name": "FISHFINALUPDATED",
-            "path": "Assets\\Objects\\FISHFINALUPDATED.fbx",
             "defaultAnimationName": "",
             "animationSpeed": 1.0,
             "bLoops": true,
@@ -145,9 +24,53 @@
             "vbo_skinning": 0
         },
         {
+            "guid": "af14de83-981d-448a-a6e3-07a92a48e676",
+            "name": "CauldronStiring",
+            "path": "Assets\\Objects\\CauldronStiring.fbx",
+            "defaultAnimationName": "",
+            "animationSpeed": 1.0,
+            "bLoops": true,
+            "bPlayOnStart": true,
+            "currentTime": 0.0,
+            "vbo_skinning": 0
+        },
+        {
             "guid": "37152dff-3566-4f91-a676-a7d7ad4d7813",
             "name": "furance_fire",
             "path": "Assets\\Objects\\furance_fire.fbx",
+            "defaultAnimationName": "",
+            "animationSpeed": 1.0,
+            "bLoops": true,
+            "bPlayOnStart": true,
+            "currentTime": 0.0,
+            "vbo_skinning": 0
+        },
+        {
+            "guid": "644b6937-9091-45a9-882a-e90c0ea0793e",
+            "name": "cauldronwithoutspoon)",
+            "path": "Assets\\Objects\\cauldronwithoutspoon).fbx",
+            "defaultAnimationName": "",
+            "animationSpeed": 1.0,
+            "bLoops": true,
+            "bPlayOnStart": true,
+            "currentTime": 0.0,
+            "vbo_skinning": 0
+        },
+        {
+            "guid": "549d7a18-39fa-480b-8477-3ac6fd1bf574",
+            "name": "Finalgoblinwithfeedback",
+            "path": "Assets\\Objects\\Finalgoblinwithfeedback.fbx",
+            "defaultAnimationName": "",
+            "animationSpeed": 1.0,
+            "bLoops": true,
+            "bPlayOnStart": true,
+            "currentTime": 0.0,
+            "vbo_skinning": 0
+        },
+        {
+            "guid": "9d229382-b04c-4fc1-8a98-b9e938aa51ae",
+            "name": "FISHFINALWITHFEEDBACK",
+            "path": "Assets\\Objects\\FISHFINALWITHFEEDBACK.fbx",
             "defaultAnimationName": "",
             "animationSpeed": 1.0,
             "bLoops": true,

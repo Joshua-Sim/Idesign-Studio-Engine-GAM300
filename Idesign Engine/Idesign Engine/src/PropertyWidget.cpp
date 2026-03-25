@@ -7,6 +7,75 @@
 
 namespace Framework
 {
+
+    
+    inline void DrawAnimationWidget(AnimationProperties& anim)
+    {
+        ImGui::Separator();
+        ImGui::Text("Animation Controls");
+
+        // --- Current animation name display ---
+        std::string currentName = anim.currentAnimation
+            ? anim.currentAnimation->name
+            : "None";
+        ImGui::LabelText("Playing", "%s", currentName.c_str());
+        ImGui::DragFloat("Current Time", &anim.currentTime, 0.1f, 0.0f,
+            anim.currentAnimation ? anim.currentAnimation->duration : 0.0f);
+
+        // --- Dropdown of all available animations ---
+        if (anim.availableAnimations.empty())
+        {
+            ImGui::TextDisabled("No animations loaded");
+            return;
+        }
+
+        // Build list once per frame from the map keys
+        std::vector<const char*> animNames;
+        std::vector<std::string> animKeys;
+        int currentIndex = -1;
+        int i = 0;
+        for (auto& [key, ptr] : anim.availableAnimations)
+        {
+            animKeys.push_back(key);
+            animNames.push_back(animKeys.back().c_str());
+            if (anim.currentAnimation == ptr)
+                currentIndex = i;
+            ++i;
+        }
+
+        if (ImGui::BeginCombo("Play Animation", currentIndex >= 0
+            ? animNames[currentIndex] : "Select..."))
+        {
+            for (int j = 0; j < (int)animNames.size(); ++j)
+            {
+                bool selected = (j == currentIndex);
+                if (ImGui::Selectable(animNames[j], selected))
+                {
+                    // Force play even if same animation (reset time)
+                    anim.currentAnimation = anim.availableAnimations[animKeys[j]];
+                    anim.currentTime = 0.0f;
+                    // Also update defaultAnimationName so it serialises correctly
+                    anim.defaultAnimationName = animKeys[j];
+                }
+                if (selected) ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
+
+        // --- Loop / Speed controls inline ---
+        ImGui::Checkbox("Loop", &anim.bLoops);
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(120.f);
+        ImGui::DragFloat("Speed", &anim.animationSpeed, 0.01f, 0.0f, 5.0f);
+
+        // --- Manual stop/play buttons ---
+        if (ImGui::Button("Restart"))
+            anim.currentTime = 0.0f;
+        ImGui::SameLine();
+        if (ImGui::Button("Stop"))
+            anim.currentAnimation = nullptr;
+    }
+
     void DrawInspector(void* pObject, const prop_list& propList)
     {
         int propIndex = 0;
@@ -310,23 +379,7 @@ namespace Framework
 
                     if (ImGui::Button("Reload Mesh"))
                     {
-                        if (ecs.HasComponent<AnimationProperties>(entity))
-                        {
-                            auto& animComp = ecs.GetComponent<AnimationProperties>(entity);
-
-                            // Reload Skeleton to be safe
-                            if (!animComp.path.empty()) {
-                                AnimationLoader::loadAnimation(animComp.path, animComp);
-                            }
-
-                            // Load Mesh using the Component's Skeleton
-                            MeshLoader::loadAnimatedMesh(mesh.path, animComp, mesh);
-                        }
-                        else
-                        {
-                            // No animation component? Load as static.
-                            MeshLoader::loadMesh(mesh.path, mesh);
-                        }
+                         MeshLoader::loadMesh(mesh.path, mesh);
                     }
                     DrawMaterialSelector(mesh.materialGuid);
                 }
@@ -362,6 +415,13 @@ namespace Framework
                 {
                     auto& anim = *static_cast<AnimationProperties*>(componentPtr);
                     DrawAssetDropdown<AnimationProperties>("Select Animation", anim);
+                    DrawAnimationWidget(anim);
+
+                    if (ImGui::Button("Remove AnimationProperties"))
+                    {
+                        TypeRegistry::Instance().RemoveComponent(typeName, ecs, entity);
+                    }
+                    continue;  // skip DrawInspector — all fields are handled above
                 }
                 else if (typeName == "LightProperties")
                 {
@@ -925,4 +985,5 @@ namespace Framework
             }
         }
     }
+
 }

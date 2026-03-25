@@ -826,11 +826,13 @@ namespace Framework {
         }
 
         static int lua_CutsceneStart(lua_State* L) {
+            return 0;
+
             auto dialogueSys = ecsInterface.GetSystem<Framework::DialogueSystem>();
             if (dialogueSys) {
-                dialogueSys->setActive(true);  // <-- THIS IS THE KEY LINE= true;
-                dialogueSys->isCutscene = true;
-                dialogueSys->isMidFlight = true;
+                dialogueSys->setActive(false);  // <-- THIS IS THE KEY LINE= true;
+                dialogueSys->isCutscene = false;
+                dialogueSys->isMidFlight = false;
                 engineState.PushState(EngineMode::Dialogue);  // block all input
             }
             return 0;
@@ -1055,6 +1057,7 @@ namespace Framework {
         }
 
         static int lua_DialogueStart(lua_State* L) {
+            return 0;
             auto dialogueSys = ecsInterface.GetSystem<Framework::DialogueSystem>();
             if (dialogueSys) dialogueSys->StartDialogue();
             return 0;
@@ -1271,11 +1274,10 @@ namespace Framework {
             (void)L;
             engineState.ClearToBase();                                  // Clear everything except base
             engineState.PushState(EngineMode::Play);                    // Push gameplay layer
-            phaseManager->SetPhase(GamePhase::Day);                     // Set game phase
+            phaseManager->SetPhase(GamePhase::Night);                     // Set game phase
+            Framework::Inventory::Instance().TryAddItem_BackpackFirst(3, 0, 1);
+            Framework::Inventory::Instance().TryAddItem_BackpackFirst(3, 0, 1);
             MessageBus::Get().SendImmediate(EnterPlayModeMessage());    // Send message to start audio and other play-mode systems
-
-
-
             //InstantiatePrefabByName("ForestHerb_Prefab");
             return 0;
         }

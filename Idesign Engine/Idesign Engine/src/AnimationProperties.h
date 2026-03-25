@@ -82,15 +82,11 @@ namespace Framework
         PROP_GUID_HIDDEN(guid, AnimationProperties),
         PROP_STRING_HIDDEN(name, AnimationProperties),
         PROP_STRING_HIDDEN(path, AnimationProperties),
-
-        PROP_STRING(defaultAnimationName, AnimationProperties),
-        PROP_DRAG_FLOAT(animationSpeed, AnimationProperties),
-        PROP_BOOL(bLoops, AnimationProperties),
-        PROP_BOOL(bPlayOnStart, AnimationProperties),
-
-        // --- Show runtime data as Read-Only for debugging ---
-        PROP_DRAG_FLOAT(currentTime, AnimationProperties),
-        // --- Hide complex/unsupported data ---
+        PROP_STRING_HIDDEN(defaultAnimationName, AnimationProperties),
+        PROP_DRAG_FLOAT_HIDDEN(animationSpeed, AnimationProperties),
+        PROP_BOOL_HIDDEN(bLoops, AnimationProperties),
+        PROP_BOOL_HIDDEN(bPlayOnStart, AnimationProperties),
+        PROP_DRAG_FLOAT_HIDDEN(currentTime, AnimationProperties),
         PROP_UINT_HIDDEN(vbo_skinning, AnimationProperties)
     };
 

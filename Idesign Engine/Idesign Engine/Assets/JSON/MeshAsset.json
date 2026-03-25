@@ -1097,6 +1097,42 @@
             "vbo": 781,
             "ebo": 782,
             "indexCount": 9072
+        },
+        {
+            "guid": "3f03d74b-6497-4b87-ad92-ef7a38fdc552",
+            "name": "cauldronwithoutspoon)",
+            "path": "Assets\\Objects\\cauldronwithoutspoon).fbx",
+            "vao": 396,
+            "vbo": 779,
+            "ebo": 780,
+            "indexCount": 157614
+        },
+        {
+            "guid": "79b35663-72a2-4a38-a85b-0cd642f46f11",
+            "name": "Finalgoblinwithfeedback",
+            "path": "Assets\\Objects\\Finalgoblinwithfeedback.fbx",
+            "vao": 397,
+            "vbo": 781,
+            "ebo": 782,
+            "indexCount": 448440
+        },
+        {
+            "guid": "0a406b67-1c83-478b-b638-73b2330bd588",
+            "name": "FISHFINALWITHFEEDBACK",
+            "path": "Assets\\Objects\\FISHFINALWITHFEEDBACK.fbx",
+            "vao": 398,
+            "vbo": 783,
+            "ebo": 784,
+            "indexCount": 22494
+        },
+        {
+            "guid": "87491114-5ba9-4a95-be7f-fd35c7db45ac",
+            "name": "cauldronwithoutspoon",
+            "path": "Assets\\Objects\\cauldronwithoutspoon.fbx",
+            "vao": 398,
+            "vbo": 783,
+            "ebo": 784,
+            "indexCount": 157614
         }
     ]
 }
