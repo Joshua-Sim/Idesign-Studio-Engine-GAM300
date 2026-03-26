@@ -230,6 +230,9 @@
     <ClCompile Include="src\ParticleSystem.cpp" />
     <ClCompile Include="src\Upgrade.cpp" />
     <ClCompile Include="src\TimerSystem.cpp" />
+    <ClCompile Include="src\GardenTreeRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ItemComponent.h" />
@@ -691,6 +694,9 @@
     <ClInclude Include="src\Upgrade.h" />
     <ClInclude Include="src\TimerComponent.h" />
     <ClInclude Include="src\TimerSystem.h" />
+    <ClInclude Include="src\GardenTreeRenderer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />
@@ -814,6 +820,12 @@
     <None Include="C:\Users\victo\Downloads\To Input\shaders\instanced_pebble_frag.glsl" />
     <None Include="C:\Users\victo\Downloads\To Input\shaders\instanced_pebble_vert.glsl" />
     <None Include="Assets\Prefabs\Customer_Kinematic_2_Prefab.prefab" />
+    <None Include="Assets\shaders\GardenTree_vert.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Assets\shaders\GardenTree_frag.glsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\back.png" />
