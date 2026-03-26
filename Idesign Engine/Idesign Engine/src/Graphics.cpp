@@ -1170,7 +1170,8 @@ namespace Framework {
                         !engineState.Is(EngineMode::Paused) &&
                         !engineState.Is(EngineMode::HowToPlay) &&
                         !engineState.Is(EngineMode::Menu) &&
-                        !engineState.Is(EngineMode::Settings) &&
+                        !engineState.Is(EngineMode::Settings_Audio) &&
+                        !engineState.Is(EngineMode::Settings_Gamma) &&
                         !engineState.Is(EngineMode::Dialogue);
 
                     if (canOpen)

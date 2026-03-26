@@ -2438,6 +2438,39 @@
             "vOffset": 0.0,
             "uScale": 1.0,
             "vScale": 1.0
+        },
+        {
+            "guid": "2f48ac04-97b3-41f0-a43f-ce9b5ab9eb3f",
+            "name": "gamma_1.0",
+            "path": "Assets\\Textures\\gamma_1.0.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "6ed8904a-3279-4c0b-96a6-6c4cc20f4ef4",
+            "name": "gamma_2.2",
+            "path": "Assets\\Textures\\gamma_2.2.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "845d7f68-4fdb-430d-ac27-d9afd3464c1c",
+            "name": "gamma_3.0",
+            "path": "Assets\\Textures\\gamma_3.0.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
         }
     ]
 }

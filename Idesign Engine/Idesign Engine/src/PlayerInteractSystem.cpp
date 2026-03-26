@@ -64,8 +64,9 @@ namespace Framework
         else
         {
             // Hide + pause if in Settings or HowToPlay — frozen and invisible, resumes when back
-            const bool hiddenAndFrozen = engineState.HasState(EngineMode::Settings) ||
-                engineState.HasState(EngineMode::HowToPlay);
+            const bool hiddenAndFrozen = engineState.HasState(EngineMode::Settings_Audio) || 
+                                         engineState.HasState(EngineMode::Settings_Gamma) ||
+                                         engineState.HasState(EngineMode::HowToPlay);
 
             for (auto it = mActiveNotifications.begin(); it != mActiveNotifications.end(); )
             {

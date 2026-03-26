@@ -1163,18 +1163,19 @@ namespace Framework {
         // Helper to convert string to EngineMode
         static EngineMode StringToEngineMode(const std::string& stateName)
         {
-            if (stateName == "Editor") return EngineMode::Editor;
-            if (stateName == "Play") return EngineMode::Play;
-            if (stateName == "Paused") return EngineMode::Paused;
-            if (stateName == "Debug") return EngineMode::Debug;
-            if (stateName == "Menu") return EngineMode::Menu;
-            if (stateName == "HowToPlay") return EngineMode::HowToPlay;
-            if (stateName == "Upgrade") return EngineMode::Upgrade;
-            if (stateName == "Settings") return EngineMode::Settings;
-            if (stateName == "Dialogue") return EngineMode::Dialogue;
-            if (stateName == "MapSelection") return EngineMode::MapSelection;
-            if (stateName == "DayStats")     return EngineMode::DayStats;
-            if (stateName == "EndStats")     return EngineMode::EndStats;
+            if (stateName == "Editor")          return EngineMode::Editor;
+            if (stateName == "Play")            return EngineMode::Play;
+            if (stateName == "Paused")          return EngineMode::Paused;
+            if (stateName == "Debug")           return EngineMode::Debug;
+            if (stateName == "Menu")            return EngineMode::Menu;
+            if (stateName == "HowToPlay")       return EngineMode::HowToPlay;
+            if (stateName == "Upgrade")         return EngineMode::Upgrade;
+            if (stateName == "Settings_Audio")  return EngineMode::Settings_Audio;
+            if (stateName == "Settings_Gamma")  return EngineMode::Settings_Gamma;
+            if (stateName == "Dialogue")        return EngineMode::Dialogue;
+            if (stateName == "MapSelection")    return EngineMode::MapSelection;
+            if (stateName == "DayStats")        return EngineMode::DayStats;
+            if (stateName == "EndStats")        return EngineMode::EndStats;
 
             std::cerr << "[Lua] Unknown EngineMode: " << stateName << std::endl;
             return EngineMode::Play; // Default fallback
@@ -1185,18 +1186,19 @@ namespace Framework {
         {
             switch (mode)
             {
-            case EngineMode::Editor: return "Editor";
-            case EngineMode::Play: return "Play";
-            case EngineMode::Paused: return "Paused";
-            case EngineMode::Debug: return "Debug";
-            case EngineMode::Menu: return "Menu";
-            case EngineMode::HowToPlay: return "HowToPlay";
-            case EngineMode::Upgrade: return "Upgrade";
-            case EngineMode::Settings: return "Settings";
-            case EngineMode::Dialogue: return "Dialogue";
-            case EngineMode::MapSelection: return "MapSelection";
-            case EngineMode::DayStats:     return "DayStats";
-            case EngineMode::EndStats:     return "EndStats";
+            case EngineMode::Editor:         return "Editor";
+            case EngineMode::Play:           return "Play";
+            case EngineMode::Paused:         return "Paused";
+            case EngineMode::Debug:          return "Debug";
+            case EngineMode::Menu:           return "Menu";
+            case EngineMode::HowToPlay:      return "HowToPlay";
+            case EngineMode::Upgrade:        return "Upgrade";
+            case EngineMode::Settings_Audio: return "Settings_Audio";
+            case EngineMode::Settings_Gamma: return "Settings_Gamma";
+            case EngineMode::Dialogue:       return "Dialogue";
+            case EngineMode::MapSelection:   return "MapSelection";
+            case EngineMode::DayStats:       return "DayStats";
+            case EngineMode::EndStats:       return "EndStats";
             default: return "Unknown";
             }
         }
@@ -1320,10 +1322,18 @@ namespace Framework {
             return 0;
         }
 
-        static int lua_GameStateSettings(lua_State* L)
+        static int lua_GameStateSettingsAudio(lua_State* L)
         {
             (void)L;
-            engineState.PushState(EngineMode::Settings);    // Settings UI on top
+            engineState.PushState(EngineMode::Settings_Audio);    // Settings Audio UI on top
+
+            return 0;
+        }
+
+        static int lua_GameStateSettingsGamma(lua_State* L)
+        {
+            (void)L;
+            engineState.PushState(EngineMode::Settings_Gamma);    // Settings Gamma UI on top
 
             return 0;
         }
@@ -2531,18 +2541,19 @@ namespace Framework {
         lua_register(L, "SetScriptVariable", lua_SetScriptVariable);
 
         // Engine States
-        lua_register(L, "GameStateStart", lua_GameStateStart);
-        lua_register(L, "GameStateResume", lua_GameStateResume);
-        lua_register(L, "GameStatePaused", lua_GameStatePaused);
-        lua_register(L, "GameStateExit", lua_GameStateExit);
-        lua_register(L, "GameStateHowToPlay", lua_GameStateHowToPlay);
-        lua_register(L, "GameStateBackToMenu", lua_GameStateBackToMenu);
-        lua_register(L, "GameStateCutscene", lua_GameStateCutscene);
-        lua_register(L, "GameStateSettings", lua_GameStateSettings);
-        lua_register(L, "GameStateBackToPause", lua_GameStateBackToPause);
-        lua_register(L, "GameStateEndNightPhase", lua_GameStateEndNightPhase);
-        lua_register(L, "GetPhase", lua_GetPhase);
-        lua_register(L, "AdvanceDayAndPushTransition", lua_AdvanceDayAndPushTransition);
+        lua_register(L, "GameStateStart",               lua_GameStateStart);
+        lua_register(L, "GameStateResume",              lua_GameStateResume);
+        lua_register(L, "GameStatePaused",              lua_GameStatePaused);
+        lua_register(L, "GameStateExit",                lua_GameStateExit);
+        lua_register(L, "GameStateHowToPlay",           lua_GameStateHowToPlay);
+        lua_register(L, "GameStateBackToMenu",          lua_GameStateBackToMenu);
+        lua_register(L, "GameStateCutscene",            lua_GameStateCutscene);
+        lua_register(L, "GameStateSettingsAudio",            lua_GameStateSettingsAudio);
+        lua_register(L, "GameStateSettingsGamma",       lua_GameStateSettingsGamma);
+        lua_register(L, "GameStateBackToPause",         lua_GameStateBackToPause);
+        lua_register(L, "GameStateEndNightPhase",       lua_GameStateEndNightPhase);
+        lua_register(L, "GetPhase",                     lua_GetPhase);
+        lua_register(L, "AdvanceDayAndPushTransition",  lua_AdvanceDayAndPushTransition);
 
         // lua_register(L, "SetScale", lua_SetScale);
         lua_register(L, "GetScale", lua_GetScale);

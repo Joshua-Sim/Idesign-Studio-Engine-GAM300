@@ -5001,7 +5001,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings"
+            "settings_audio"
           ]
         },
         "TextureComponent": {
@@ -5052,7 +5052,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings",
+            "settings_audio",
             "sliderBar_master"
           ]
         },
@@ -5105,7 +5105,7 @@
         "TagComponent": {
           "tags": [
             "volumeText_master",
-            "settings"
+            "settings_audio"
           ]
         },
         "MeshComponent": {
@@ -5155,7 +5155,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings",
+            "settings_audio",
             "sliderBar_bgm"
           ]
         },
@@ -5211,7 +5211,7 @@
         "TagComponent": {
           "tags": [
             "volumeText_bgm",
-            "settings"
+            "settings_audio"
           ]
         },
         "MeshComponent": {
@@ -5261,7 +5261,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings",
+            "settings_audio",
             "sliderBar_sfx"
           ]
         },
@@ -5317,7 +5317,7 @@
         "TagComponent": {
           "tags": [
             "volumeText_sfx",
-            "settings"
+            "settings_audio"
           ]
         },
         "TextureComponent": {
@@ -5378,8 +5378,8 @@
         "ScriptProperties": {
           "scripts": [
             {
-              "guid": "23de8816-8d7d-42e1-ada2-3fdd7190fe5f",
-              "scriptPath": "Assets\\Scripts\\GameStateSettings.lua",
+              "guid": "9e9bb12e-919b-4628-8bc5-98719e3f89a4",
+              "scriptPath": "Assets\\Scripts\\GameStateSettingsGamma.lua",
               "hotReload": false
             }
           ]
@@ -5428,7 +5428,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings"
+            "settings_gamma"
           ]
         },
         "MeshComponent": {
@@ -5491,7 +5491,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings"
+            "settings_audio"
           ]
         },
         "MeshComponent": {
@@ -5554,7 +5554,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings"
+            "settings_audio"
           ]
         },
         "MeshComponent": {
@@ -5617,7 +5617,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings"
+            "settings_audio"
           ]
         },
         "MeshComponent": {
@@ -6098,8 +6098,8 @@
         "ScriptProperties": {
           "scripts": [
             {
-              "guid": "23de8816-8d7d-42e1-ada2-3fdd7190fe5f",
-              "scriptPath": "Assets\\Scripts\\GameStateSettings.lua",
+              "guid": "9e9bb12e-919b-4628-8bc5-98719e3f89a4",
+              "scriptPath": "Assets\\Scripts\\GameStateSettingsGamma.lua",
               "hotReload": false
             }
           ]
@@ -6148,7 +6148,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings"
+            "settings_gamma"
           ]
         },
         "MeshComponent": {
@@ -6263,8 +6263,8 @@
         "ScriptProperties": {
           "scripts": [
             {
-              "guid": "23de8816-8d7d-42e1-ada2-3fdd7190fe5f",
-              "scriptPath": "Assets\\Scripts\\GameStateSettings.lua",
+              "guid": "9e9bb12e-919b-4628-8bc5-98719e3f89a4",
+              "scriptPath": "Assets\\Scripts\\GameStateSettingsGamma.lua",
               "hotReload": false
             }
           ]
@@ -19575,7 +19575,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings",
+            "settings_audio",
             "sliderBar_Master",
             "sliderFill_master"
           ]
@@ -19631,7 +19631,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings"
+            "settings_audio"
           ]
         },
         "MeshComponent": {
@@ -19685,7 +19685,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings",
+            "settings_audio",
             "sliderFill_bgm",
             "sliderBar_bgm"
           ]
@@ -19741,7 +19741,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings",
+            "settings_audio",
             "sliderBar_sfx",
             "sliderFill_sfx"
           ]
@@ -19797,7 +19797,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings",
+            "settings_audio",
             "sliderKnob_sfx"
           ]
         },
@@ -19846,13 +19846,13 @@
           "isActive": true
         },
         "HierarchyComponent": {
-          "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
+          "parent": "17b6c352-df16-43d4-9033-a1a243d319a6",
           "sortIndex": 290,
           "children": []
         },
         "TagComponent": {
           "tags": [
-            "settings",
+            "settings_gamma",
             "sliderKnob_gamma"
           ]
         },
@@ -19904,7 +19904,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings",
+            "settings_audio",
             "sliderKnob_bgm"
           ]
         },
@@ -19959,7 +19959,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings"
+            "settings_audio"
           ]
         },
         "MeshComponent": {
@@ -20013,7 +20013,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings"
+            "settings_audio"
           ]
         },
         "MeshComponent": {
@@ -20067,7 +20067,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings"
+            "settings_audio"
           ]
         },
         "MeshComponent": {
@@ -20121,7 +20121,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings"
+            "settings_audio"
           ]
         },
         "MeshComponent": {
@@ -20175,7 +20175,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings"
+            "settings_audio"
           ]
         },
         "MeshComponent": {
@@ -24036,13 +24036,13 @@
           "isActive": true
         },
         "HierarchyComponent": {
-          "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
+          "parent": "17b6c352-df16-43d4-9033-a1a243d319a6",
           "sortIndex": 386,
           "children": []
         },
         "TagComponent": {
           "tags": [
-            "settings"
+            "settings_gamma"
           ]
         },
         "TextureComponent": {
@@ -24087,13 +24087,13 @@
           "isActive": true
         },
         "HierarchyComponent": {
-          "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
+          "parent": "17b6c352-df16-43d4-9033-a1a243d319a6",
           "sortIndex": 387,
           "children": []
         },
         "TagComponent": {
           "tags": [
-            "settings",
+            "settings_gamma",
             "text_gamma"
           ]
         },
@@ -24139,13 +24139,13 @@
           "isActive": true
         },
         "HierarchyComponent": {
-          "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
+          "parent": "17b6c352-df16-43d4-9033-a1a243d319a6",
           "sortIndex": 388,
           "children": []
         },
         "TagComponent": {
           "tags": [
-            "settings",
+            "settings_gamma",
             "sliderBar_gamma"
           ]
         },
@@ -24191,13 +24191,13 @@
           "isActive": true
         },
         "HierarchyComponent": {
-          "parent": "17b6c352-df16-43d4-9033-a1a276d259a6",
+          "parent": "17b6c352-df16-43d4-9033-a1a243d319a6",
           "sortIndex": 389,
           "children": []
         },
         "TagComponent": {
           "tags": [
-            "settings",
+            "settings_gamma",
             "sliderBar_gamma",
             "sliderFill_gamma"
           ]
@@ -24250,7 +24250,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings",
+            "settings_audio",
             "sliderKnob_master"
           ]
         },
@@ -31336,6 +31336,171 @@
           "isHovered": false,
           "isFrontButton": false,
           "hoverTextureGuid": "2aaf4580-53f7-46d5-b47f-4349d269b9dd"
+        }
+      }
+    },
+    {
+      "name": "settingsGammaScreen",
+      "guid": "17b6c352-df16-43d4-9033-a1a243d319a6",
+      "components": {
+        "TransformComponent": {
+          "position": [
+            960.0,
+            540.0,
+            0.4000000059604645
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "scale": [
+            1930.0,
+            1080.0,
+            1.0
+          ],
+          "isActive": true
+        },
+        "HierarchyComponent": {
+          "parent": "",
+          "sortIndex": 74,
+          "children": []
+        },
+        "TagComponent": {
+          "tags": [
+            "settings_gamma"
+          ]
+        },
+        "TextureComponent": {
+          "guid": "f16bcc4e-155e-46f3-8a12-a74c1cbad935",
+          "isUI": false
+        },
+        "ButtonComponent": {
+          "position": [
+            960.0,
+            540.0
+          ],
+          "size": [
+            1930.0,
+            1080.0
+          ],
+          "isHovered": true,
+          "isFrontButton": false,
+          "hoverTextureGuid": ""
+        }
+      }
+    },
+    {
+      "name": "gamma_1.0",
+      "guid": "a3f2d891-bc47-4e1f-9c28-d7e405f61b83",
+      "components": {
+        "TransformComponent": {
+          "position": [
+            400.0,
+            600.0,
+            0.4000000059604645
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "scale": [
+            520.0,
+            450.0,
+            1.0
+          ],
+          "isActive": true
+        },
+        "HierarchyComponent": {
+          "parent": "",
+          "sortIndex": 74,
+          "children": []
+        },
+        "TagComponent": {
+          "tags": [
+            "settings_gamma"
+          ]
+        },
+        "TextureComponent": {
+          "guid": "2f48ac04-97b3-41f0-a43f-ce9b5ab9eb3f",
+          "isUI": false
+        }
+      }
+    },
+    {
+      "name": "gamma_2.2",
+      "guid": "5c8a1d64-ef93-47b2-a815-293f0e8c4d71",
+      "components": {
+        "TransformComponent": {
+          "position": [
+            960.0,
+            600.0,
+            0.5
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "scale": [
+            520.0,
+            450.0,
+            1.0
+          ],
+          "isActive": true
+        },
+        "HierarchyComponent": {
+          "parent": "",
+          "sortIndex": 74,
+          "children": []
+        },
+        "TagComponent": {
+          "tags": [
+            "settings_gamma"
+          ]
+        },
+        "TextureComponent": {
+          "guid": "6ed8904a-3279-4c0b-96a6-6c4cc20f4ef4",
+          "isUI": false
+        }
+      }
+    },
+    {
+      "name": "gamma_3.0",
+      "guid": "b7e930a2-1c58-4d8f-e651-8a4f72b39c05",
+      "components": {
+        "TransformComponent": {
+          "position": [
+            1520.0,
+            600.0,
+            0.5
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "scale": [
+            520.0,
+            450.0,
+            1.0
+          ],
+          "isActive": true
+        },
+        "HierarchyComponent": {
+          "parent": "",
+          "sortIndex": 74,
+          "children": []
+        },
+        "TagComponent": {
+          "tags": [
+            "settings_gamma"
+          ]
+        },
+        "TextureComponent": {
+          "guid": "845d7f68-4fdb-430d-ac27-d9afd3464c1c",
+          "isUI": false
         }
       }
     }

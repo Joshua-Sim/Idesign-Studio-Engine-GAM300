@@ -24,7 +24,8 @@ namespace Framework
         Menu,
         HowToPlay,
         Upgrade,
-        Settings,
+        Settings_Audio,
+        Settings_Gamma,
         Dialogue,
         MapSelection,
         Cutscene,
@@ -89,7 +90,8 @@ namespace Framework
             return Is(EngineMode::Menu) ||
                    Is(EngineMode::Paused) ||
                    Is(EngineMode::HowToPlay) ||
-                   Is(EngineMode::Settings) ||
+                   Is(EngineMode::Settings_Audio) ||
+                   Is(EngineMode::Settings_Gamma) ||
                    Is(EngineMode::Dialogue) ||
                    Is(EngineMode::Upgrade) ||
                    Is(EngineMode::MapSelection) ||
@@ -118,18 +120,19 @@ namespace Framework
             {
                 switch (stateStack[i])
                 {
-                    case Editor:       std::cout << "Editor";    break;
-                    case Play:         std::cout << "Play";      break;
-                    case Paused:       std::cout << "Paused";    break;
-                    case Debug:        std::cout << "Debug";     break;
-                    case Menu:         std::cout << "Menu";      break;
-                    case HowToPlay:    std::cout << "HowToPlay"; break;
-                    case Upgrade:      std::cout << "Upgrade";   break;
-                    case Settings:     std::cout << "Settings";  break;
-                    case Dialogue:     std::cout << "Dialogue";  break;
-                    case DayStats:     std::cout << "DayStats";  break;
-                    case EndStats:     std::cout << "EndStats";  break;
-                    default:           std::cout << "Unknown";   break;
+                    case Editor:         std::cout << "Editor";          break;
+                    case Play:           std::cout << "Play";            break;
+                    case Paused:         std::cout << "Paused";          break;
+                    case Debug:          std::cout << "Debug";           break;
+                    case Menu:           std::cout << "Menu";            break;
+                    case HowToPlay:      std::cout << "HowToPlay";       break;
+                    case Upgrade:        std::cout << "Upgrade";         break;
+                    case Settings_Audio: std::cout << "Settings_Audio";  break;
+                    case Settings_Gamma: std::cout << "Settings_Gamma";  break;
+                    case Dialogue:       std::cout << "Dialogue";        break;
+                    case DayStats:       std::cout << "DayStats";        break;
+                    case EndStats:       std::cout << "EndStats";        break;
+                    default:             std::cout << "Unknown";         break;
                 }
                 if (i < stateStack.size() - 1) std::cout << " | ";
             }

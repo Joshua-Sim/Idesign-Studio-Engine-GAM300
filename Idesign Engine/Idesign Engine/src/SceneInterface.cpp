@@ -331,8 +331,8 @@ namespace Framework
             }
 
 
-            // 5. Settings (Vol Control)
-            auto settingsEntities = ecsInterface.GetEntitiesByTag("settings");
+            // 5. Settings_Audio (Vol Control)
+            auto settingsEntities = ecsInterface.GetEntitiesByTag("settings_audio");
             for (Entity e : settingsEntities)
             {
                 if (!ecsInterface.IsEntityValid(e)) continue;
@@ -343,7 +343,7 @@ namespace Framework
                     auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
 
                     // Only enforce UI flag if NOT in editor mode 
-                    if (!engineState.Is(EngineMode::Editor)) { texture.isUI = engineState.Is(EngineMode::Settings); }
+                    if (!engineState.Is(EngineMode::Editor)) { texture.isUI = engineState.Is(EngineMode::Settings_Audio); }
                 }
 
                 if (ecsInterface.HasComponent<TextProperties>(e))
@@ -351,7 +351,30 @@ namespace Framework
                     auto& text = ecsInterface.GetComponent<TextProperties>(e);
 
                     // Only enforce opacity if NOT in editor mode 
-                    if (!engineState.Is(EngineMode::Editor)) { text.opacity = engineState.Is(EngineMode::Settings) ? 1.f : 0.f; }
+                    if (!engineState.Is(EngineMode::Editor)) { text.opacity = engineState.Is(EngineMode::Settings_Audio) ? 1.f : 0.f; }
+                }
+            }
+
+            // 5. Settings_Gamma (Gamma)
+            auto gammaEntities = ecsInterface.GetEntitiesByTag("settings_gamma");
+            for (Entity e : gammaEntities)
+            {
+                if (!ecsInterface.IsEntityValid(e)) continue;
+
+                if (ecsInterface.HasComponent<TextureProperties>(e))
+                {
+                    auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
+
+                    // Only enforce UI flag if NOT in editor mode 
+                    if (!engineState.Is(EngineMode::Editor)) { texture.isUI = engineState.Is(EngineMode::Settings_Gamma); }
+                }
+
+                if (ecsInterface.HasComponent<TextProperties>(e))
+                {
+                    auto& text = ecsInterface.GetComponent<TextProperties>(e);
+
+                    // Only enforce opacity if NOT in editor mode 
+                    if (!engineState.Is(EngineMode::Editor)) { text.opacity = engineState.Is(EngineMode::Settings_Gamma) ? 1.f : 0.f; }
                 }
             }
 

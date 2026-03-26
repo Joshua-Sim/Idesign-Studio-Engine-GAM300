@@ -725,7 +725,7 @@ namespace Framework {
 
                 // Clear current gameplay/UI layers
 
-                engineState.PushState(EngineMode::Play);
+                engineState.PushState(EngineMode::Settings_Gamma);
 
                 // Stop BGM when returning to editor
                 if (g_AudioSystem) 
