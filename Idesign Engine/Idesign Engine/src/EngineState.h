@@ -93,6 +93,7 @@ namespace Framework
                 Is(EngineMode::MapSelection) ||
                 Is(EngineMode::Cutscene) ||
                 Is(EngineMode::Win) ||
+                Is(EngineMode::Lose) ||
                 Is(EngineMode::Day2) ||
                 Is(EngineMode::Day3) ||
                 Is(EngineMode::Day4) ||

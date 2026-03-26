@@ -154,19 +154,6 @@ namespace Framework
                     }
                 }
 
-                auto* input = InputHandler::GetInstance();
-                if (input && input->IsKeyPressed(GLFW_KEY_KP_8))
-                {
-
-                    engineState.PopState();                   // remove Intro
-                    engineState.PushState(EngineMode::Win); // go to Menu
-
-                    // If your engine has SetState / ChangeState, that's even better:
-                    // engineState.SetState(EngineMode::Menu);
-
-                    return;
-                }
-
                 auto& upgradeMgr = UpgradeManager::Instance();
 
                 // ------------------------------------------------------------
@@ -1080,7 +1067,179 @@ namespace Framework
                 winCutsceneFinished = false;
             }
 
-            // CREDIT CUTSCENE
+            //// LOSE CUTSCENE
+            //if (engineState.Is(EngineMode::Lose))
+            //{
+            //    auto slides = ecsInterface.GetEntitiesByTag("losecs");
+            //    int sceneCount = (int)slides.size();
+            //    if (sceneCount <= 0) return;
+
+            //    const int bgIndex = 0;                  // permanent black background
+            //    const int animatedCount = sceneCount - 1; // everything after background
+
+            //    if (animatedCount <= 0)
+            //    {
+            //        if (ecsInterface.IsEntityValid(slides[0]) &&
+            //            ecsInterface.HasComponent<TextureProperties>(slides[0]))
+            //        {
+            //            auto& tex = ecsInterface.GetComponent<TextureProperties>(slides[0]);
+            //            tex.isUI = true;
+            //            tex.uiAlpha = 1.0f;
+            //        }
+            //        return;
+            //    }
+
+            //    // 1) Init
+            //    if (winCutsceneStartTime < 0.0f)
+            //    {
+            //        winCutsceneStartTime = (float)glfwGetTime();
+            //        winCutsceneFinished = false;
+
+            //        // Play win cutscene BGM
+            //        if (g_AudioSystem)
+            //        {
+            //            g_AudioSystem->StopEvent("event:/Level1BGM");
+            //            g_AudioSystem->StopEvent("event:/QuarryBGM");
+            //            g_AudioSystem->StopEvent("event:/ShopBGM");
+            //            g_AudioSystem->PlayAudio("event:/WinCutsceneBGM");
+            //        }
+
+            //        for (auto e : slides)
+            //        {
+            //            if (!ecsInterface.IsEntityValid(e)) continue;
+            //            if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
+
+            //            auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
+            //            tex.isUI = true;
+            //            tex.uiAlpha = 0.0f;
+            //        }
+
+            //        // Permanent black background ON
+            //        if (ecsInterface.IsEntityValid(slides[bgIndex]) &&
+            //            ecsInterface.HasComponent<TextureProperties>(slides[bgIndex]))
+            //        {
+            //            auto& bg = ecsInterface.GetComponent<TextureProperties>(slides[bgIndex]);
+            //            bg.isUI = true;
+            //            bg.uiAlpha = 1.0f;
+            //        }
+            //    }
+
+            //    float totalT = (float)glfwGetTime() - winCutsceneStartTime;
+
+            //    // Hold on pure black first
+            //    if (totalT < winStartDelay)
+            //    {
+            //        for (int s = 1; s < sceneCount; ++s)
+            //        {
+            //            if (!ecsInterface.IsEntityValid(slides[s])) continue;
+            //            if (!ecsInterface.HasComponent<TextureProperties>(slides[s])) continue;
+
+            //            auto& tex = ecsInterface.GetComponent<TextureProperties>(slides[s]);
+            //            tex.isUI = true;
+            //            tex.uiAlpha = 0.0f;
+            //        }
+
+            //        if (ecsInterface.IsEntityValid(slides[bgIndex]) &&
+            //            ecsInterface.HasComponent<TextureProperties>(slides[bgIndex]))
+            //        {
+            //            auto& bg = ecsInterface.GetComponent<TextureProperties>(slides[bgIndex]);
+            //            bg.isUI = true;
+            //            bg.uiAlpha = 1.0f;
+            //        }
+
+            //        return;
+            //    }
+
+            //    // Start animated sequence after delay
+            //    float t = totalT - winStartDelay;
+
+            //    // Animated slides are [1..sceneCount-1]
+            //    int animIndex = (int)glm::floor(t / winSceneDuration);
+
+            //    // Finished sequence
+            //    if (animIndex >= animatedCount)
+            //    {
+            //        if (!winCutsceneFinished)
+            //        {
+            //            winCutsceneFinished = true;
+
+            //            for (auto e : slides)
+            //            {
+            //                if (!ecsInterface.IsEntityValid(e)) continue;
+            //                if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
+
+            //                auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
+            //                tex.uiAlpha = 0.0f;
+            //                tex.isUI = false;
+            //            }
+
+            //            //NEXT STATE
+            //            engineState.PushState(EngineMode::Credit);
+            //        }
+            //        return;
+            //    }
+
+            //    float sceneT = t - (float)animIndex * winSceneDuration;
+            //    float fadeStart = winSceneDuration - winCrossfadeDuration;
+            //    float blend = 0.0f;
+
+            //    if (sceneT >= fadeStart)
+            //        blend = Saturate((sceneT - fadeStart) / winCrossfadeDuration);
+
+            //    // Clear all animated slides first
+            //    for (int s = 1; s < sceneCount; ++s)
+            //    {
+            //        Entity e = slides[s];
+            //        if (!ecsInterface.IsEntityValid(e)) continue;
+            //        if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
+
+            //        auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
+            //        tex.isUI = true;
+            //        tex.uiAlpha = 0.0f;
+            //    }
+
+            //    // Keep permanent black background visible the whole time
+            //    if (ecsInterface.IsEntityValid(slides[bgIndex]) &&
+            //        ecsInterface.HasComponent<TextureProperties>(slides[bgIndex]))
+            //    {
+            //        auto& bg = ecsInterface.GetComponent<TextureProperties>(slides[bgIndex]);
+            //        bg.isUI = true;
+            //        bg.uiAlpha = 1.0f;
+            //    }
+
+            //    // Current animated slide
+            //    int currentSlide = animIndex + 1; // maps 0->1, 1->2, ...
+            //    if (currentSlide < sceneCount)
+            //    {
+            //        if (ecsInterface.IsEntityValid(slides[currentSlide]) &&
+            //            ecsInterface.HasComponent<TextureProperties>(slides[currentSlide]))
+            //        {
+            //            auto& texCur = ecsInterface.GetComponent<TextureProperties>(slides[currentSlide]);
+            //            texCur.uiAlpha = 1.0f;
+
+            //            if (sceneT >= fadeStart)
+            //                texCur.uiAlpha = 1.0f - blend;
+            //        }
+            //    }
+
+            //    // Next animated slide
+            //    int nextSlide = currentSlide + 1;
+            //    if (nextSlide < sceneCount)
+            //    {
+            //        if (ecsInterface.IsEntityValid(slides[nextSlide]) &&
+            //            ecsInterface.HasComponent<TextureProperties>(slides[nextSlide]))
+            //        {
+            //            auto& texNext = ecsInterface.GetComponent<TextureProperties>(slides[nextSlide]);
+            //            texNext.uiAlpha = blend;
+            //        }
+            //    }
+            //}
+            //else
+            //{
+            //    winCutsceneStartTime = -1.0f;
+            //    winCutsceneFinished = false;
+            //}
+
             // CREDIT CUTSCENE
             if (engineState.Is(EngineMode::Credit))
             {
