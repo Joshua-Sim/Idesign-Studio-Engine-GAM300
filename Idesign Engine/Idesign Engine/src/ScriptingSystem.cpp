@@ -1274,7 +1274,7 @@ namespace Framework {
             (void)L;
             engineState.ClearToBase();                                  // Clear everything except base
             engineState.PushState(EngineMode::Play);                    // Push gameplay layer
-            phaseManager->SetPhase(GamePhase::Night);                     // Set game phase
+            phaseManager->SetPhase(GamePhase::Day);                     // Set game phase
             Framework::Inventory::Instance().TryAddItem_BackpackFirst(3, 0, 1);
             Framework::Inventory::Instance().TryAddItem_BackpackFirst(3, 0, 1);
             MessageBus::Get().SendImmediate(EnterPlayModeMessage());    // Send message to start audio and other play-mode systems
