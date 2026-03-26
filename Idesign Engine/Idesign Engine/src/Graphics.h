@@ -33,7 +33,7 @@
 #include "Skybox.h"
 #include "FoliageRenderer.h"
 #include "PebbleRenderer.h"
-
+#include "GardenTreeRenderer.h"
 extern Terrain      terrain;
 extern const int    TerrainSize;
 extern const float  TerrainScale;
@@ -232,7 +232,18 @@ namespace Framework
         unsigned int m_treeTextureID = 0;
         unsigned int grassTextureID = 0;
         //END OF FOLIAGES
+        
+        //GARDEN TREE
+        GardenTreeRenderer* m_gardenTreeRendererA = nullptr;
+        GardenTreeRenderer* m_gardenTreeRendererB = nullptr;
 
+        Framework::MeshProperties m_gardenTreeMeshA;
+        Framework::MeshProperties m_gardenTreeMeshB;
+
+        GLuint gardenTreeTextureA = 0;
+        GLuint gardenTreeTextureB = 0;
+        //END OF GARDEN TREE
+       
         //PARTICLE (JASPER)
         FoliageRenderer* m_particlePixelRenderer = nullptr;
         unsigned int m_particleTextureID = 0;

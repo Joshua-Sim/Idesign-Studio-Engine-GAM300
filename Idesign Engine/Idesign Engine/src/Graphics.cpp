@@ -52,7 +52,7 @@
 #include "RecipeBookManager.h"
 #include "ParticleComponent.h"
 #include "EngineState.h"
-
+#include "cmath"
 extern Framework::FontSystem fontSystem;
 extern Framework::Coordinator ecsInterface;
 
@@ -168,7 +168,8 @@ namespace Framework {
         if (m_treeRenderer) { delete m_treeRenderer; m_treeRenderer = nullptr; }
         if (m_leafRenderer) { delete m_leafRenderer; m_leafRenderer = nullptr; }
         if (m_grassRenderer) { delete m_grassRenderer; m_grassRenderer = nullptr; }
-
+        if (m_gardenTreeRendererA) { delete m_gardenTreeRendererA; m_gardenTreeRendererA = nullptr; }
+        if (m_gardenTreeRendererB) { delete m_gardenTreeRendererB; m_gardenTreeRendererB = nullptr; }
         // [FIX] DELETE THE PEBBLE/PINE RENDERERS
         // Assuming PebbleRenderer works the same way
         if (m_pebbleRenderer) { delete m_pebbleRenderer; m_pebbleRenderer = nullptr; }
@@ -194,7 +195,111 @@ namespace Framework {
         glfwDestroyWindow(window);
         glfwTerminate(); // This restores the taskbar and resolution!;
     }
+    // ============================
+   // GARDEN TREE HELPERS
+   // ============================
 
+    static float GardenRnd()
+    {
+        return static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+    }
+
+    static GardenTreeInstance MakeGardenInstance(float x, float y, float z, float minScale, float maxScale)
+    {
+        GardenTreeInstance inst{};
+
+        glm::mat4 M(1.0f);
+        M = glm::translate(M, glm::vec3(x, y, z));
+
+        float rot = GardenRnd() * 360.0f;
+        M = glm::rotate(M, glm::radians(rot), glm::vec3(0.0f, 1.0f, 0.0f));
+
+        float s = minScale + GardenRnd() * (maxScale - minScale);
+        M = glm::scale(M, glm::vec3(s));
+
+        inst.model = M;
+        inst.opacity = 0.35f + GardenRnd() * 0.65f;
+        inst.variation = GardenRnd();
+
+        return inst;
+    }
+
+    static void AddBoundaryGardenTreesDirected(
+        std::vector<GardenTreeInstance>& outA,
+        std::vector<GardenTreeInstance>& outB,
+        const glm::vec3& start,
+        const glm::vec3& end,
+        int count,
+        const glm::vec3& inwardDir,
+        float inwardDepth,
+        float meshARatio = 0.65f)
+    {
+        for (int i = 0; i < count; ++i)
+        {
+            float t = GardenRnd();
+            glm::vec3 basePos = start + t * (end - start);
+
+            // smaller inward range so trees stay closer to the wall
+            float inwardAmount = 1.5f + GardenRnd() * inwardDepth;
+
+            // slight sideways jitter so they do not look like a perfect line
+            glm::vec3 wallDir = glm::normalize(end - start);
+            float sideJitter = (GardenRnd() - 0.5f) * 4.0f;
+            float wallOffset = 2.0f;
+            glm::vec3 pos = basePos + inwardDir * inwardAmount + wallDir * sideJitter - inwardDir * 2.0f;
+
+            float yOffset = (GardenRnd() - 0.5f) * 3.0f; // -1.5 to +1.5
+            GardenTreeInstance inst = MakeGardenInstance(
+                pos.x,
+                312.0f + yOffset,
+                pos.z,
+                9.0f,
+                12.0f
+            );
+
+            if (GardenRnd() < meshARatio)
+                outA.push_back(inst);
+            else
+                outB.push_back(inst);
+        }
+    }
+
+    static void AddCornerGardenClusterTight(
+        std::vector<GardenTreeInstance>& outA,
+        std::vector<GardenTreeInstance>& outB,
+        const glm::vec3& corner,
+        const glm::vec3& inwardDir1,
+        const glm::vec3& inwardDir2,
+        int count,
+        float depth1,
+        float depth2,
+        float meshARatio = 0.35f)
+    {
+        for (int i = 0; i < count; ++i)
+        {
+            float d1 = GardenRnd() * depth1;
+            float d2 = GardenRnd() * depth2;
+
+            glm::vec3 pos = corner + inwardDir1 * d1 + inwardDir2 * d2;
+            float yOffset = (GardenRnd() - 0.5f) * 3.0f; // -1.5 to +1.5
+            GardenTreeInstance inst = MakeGardenInstance(
+                pos.x,
+                312.0f + yOffset,
+                pos.z,
+                9.0f,
+                12.0f
+            );
+
+            if (GardenRnd() < meshARatio)
+                outA.push_back(inst);
+            else
+                outB.push_back(inst);
+        }
+    }
+
+    // ============================
+    // END OF GARDEN TREE HELPERS
+    // ============================
     void Graphics::SetCameraRotationEnabled(bool enabled)
     {
         m_cameraRotationEnabled = enabled;
@@ -587,6 +692,116 @@ namespace Framework {
 
         m_pineRenderer->setInstances(pineTransform);
 
+        // =====================================
+       // GARDEN TREE SYSTEM (2 MESHES)
+       // =====================================
+
+       // Load 2 garden meshes
+        MeshLoader::loadMesh("Assets/Objects/fir tree bent.obj", m_gardenTreeMeshA);
+        MeshLoader::loadMesh("Assets/Objects/fir tree large.obj", m_gardenTreeMeshB);
+
+        // Load textures
+        TextureProperties gardenPropsA;
+        gardenPropsA.path = "Assets/Textures/mushroom 2.png";
+        gardenTreeTextureA = TextureLoader::loadTexture(gardenPropsA, true);
+
+        TextureProperties gardenPropsB;
+        gardenPropsB.path = "Assets/Textures/mushroom 2.png";
+        gardenTreeTextureB = TextureLoader::loadTexture(gardenPropsB, true);
+
+        // Create renderers
+        m_gardenTreeRendererA = new GardenTreeRenderer(&m_gardenTreeMeshA);
+        m_gardenTreeRendererB = new GardenTreeRenderer(&m_gardenTreeMeshB);
+
+        // Garden instance lists
+        std::vector<GardenTreeInstance> gardenInstancesA;
+        std::vector<GardenTreeInstance> gardenInstancesB;
+
+        // Garden wall corners
+        glm::vec3 topLeft(-296.966f, 316.066f, 725.413f);
+        glm::vec3 topRight(-120.939f, 316.066f, 725.623f);
+        glm::vec3 bottomLeft(-297.058f, 316.067f, 535.841f);
+        glm::vec3 bottomRight(-120.711f, 316.067f, 534.264f);
+
+        // Top wall -> inward toward -Z
+        AddBoundaryGardenTreesDirected(
+            gardenInstancesA, gardenInstancesB,
+            topLeft, topRight,
+            65,
+            glm::vec3(0.0f, 0.0f, -1.0f),
+            14.0f,
+            0.70f
+        );
+
+        // Bottom wall -> inward toward +Z
+        AddBoundaryGardenTreesDirected(
+            gardenInstancesA, gardenInstancesB,
+            bottomLeft, bottomRight,
+            65,
+            glm::vec3(0.0f, 0.0f, 1.0f),
+            14.0f,
+            0.70f
+        );
+
+        // Left wall -> inward toward +X
+        AddBoundaryGardenTreesDirected(
+            gardenInstancesA, gardenInstancesB,
+            bottomLeft, topLeft,
+            65,
+            glm::vec3(1.0f, 0.0f, 0.0f),
+            14.0f,
+            0.70f
+        );
+
+        // Right wall -> inward toward -X
+        AddBoundaryGardenTreesDirected(
+            gardenInstancesA, gardenInstancesB,
+            bottomRight, topRight,
+            65,
+            glm::vec3(-1.0f, 0.0f, 0.0f),
+            14.0f,
+            0.70f
+        );
+
+        // Tight corner clusters
+        AddCornerGardenClusterTight(
+            gardenInstancesA, gardenInstancesB,
+            topLeft,
+            glm::vec3(1.0f, 0.0f, 0.0f),
+            glm::vec3(0.0f, 0.0f, -1.0f),
+            16, 10.0f, 10.0f, 0.35f
+        );
+
+        AddCornerGardenClusterTight(
+            gardenInstancesA, gardenInstancesB,
+            topRight,
+            glm::vec3(-1.0f, 0.0f, 0.0f),
+            glm::vec3(0.0f, 0.0f, -1.0f),
+            16, 10.0f, 10.0f, 0.35f
+        );
+
+        AddCornerGardenClusterTight(
+            gardenInstancesA, gardenInstancesB,
+            bottomLeft,
+            glm::vec3(1.0f, 0.0f, 0.0f),
+            glm::vec3(0.0f, 0.0f, 1.0f),
+            16, 10.0f, 10.0f, 0.35f
+        );
+
+        AddCornerGardenClusterTight(
+            gardenInstancesA, gardenInstancesB,
+            bottomRight,
+            glm::vec3(-1.0f, 0.0f, 0.0f),
+            glm::vec3(0.0f, 0.0f, 1.0f),
+            16, 10.0f, 10.0f, 0.35f
+        );
+
+        m_gardenTreeRendererA->setInstances(gardenInstancesA);
+        m_gardenTreeRendererB->setInstances(gardenInstancesB);
+
+        // =====================================
+        // END OF GARDEN TREE SYSTEM (2 MESHES)
+        // =====================================
 
         ImguiManager::LogSuccess("Graphics System initialized successfully", "Graphics");
         glDisableVertexAttribArray(3);
@@ -2329,7 +2544,17 @@ namespace Framework {
         {
             m_pineRenderer->draw(view, proj, mapModel, pineTextureID);
         }
+        // === DRAW GARDEN TREE HERE  ===
+        glm::mat4 identity(1.0f);
 
+        if (m_gardenTreeRendererA)
+        {
+            m_gardenTreeRendererA->draw(view, proj, identity, gardenTreeTextureA);
+        }
+        if (m_gardenTreeRendererB)
+        {
+            m_gardenTreeRendererB->draw(view, proj, identity, gardenTreeTextureB);
+        }
 
 
         // --- ENTITY SORTING ---
