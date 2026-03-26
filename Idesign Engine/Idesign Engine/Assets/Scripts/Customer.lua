@@ -290,9 +290,7 @@ function Customer.SpawnTextbox(entity, text)
     SetData(textboxKey, textbox)
 
     local cx, cy, cz = GetPosition(entity)
-    local slot = GetData("Slot_" .. tostring(entity))
-    local slot_y_stagger = (slot == 2) and 0.7 or 0.0
-    SetPosition(textbox, cx, cy + textbox_y_offset + slot_y_stagger, cz)
+    SetPosition(textbox, cx, cy + textbox_y_offset, cz)
 end
 
 function Customer.DestroyTextbox(entity)
