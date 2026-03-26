@@ -449,6 +449,12 @@
             "name": "Spinner_Prefab",
             "path": "Assets\\Prefabs\\Spinner_Prefab.prefab",
             "isScenePrefab": false
+        },
+        {
+            "guid": "296ed7cc-88cf-4420-8035-06949f393e61",
+            "name": "TreeBoundary (Copy)_Prefab",
+            "path": "Assets\\Prefabs\\TreeBoundary (Copy)_Prefab.prefab",
+            "isScenePrefab": false
         }
     ]
 }
