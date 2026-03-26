@@ -248,13 +248,13 @@ namespace Framework {
             float wallOffset = 2.0f;
             glm::vec3 pos = basePos + inwardDir * inwardAmount + wallDir * sideJitter - inwardDir * 2.0f;
 
-            float yOffset = (GardenRnd() - 0.5f) * 3.0f; // -1.5 to +1.5
+            float yOffset = (GardenRnd() - 0.5f) * 5.0f; // -1.5 to +1.5
             GardenTreeInstance inst = MakeGardenInstance(
                 pos.x,
-                312.0f + yOffset,
+                314.5f + yOffset,
                 pos.z,
-                9.0f,
-                12.0f
+                8.0f,
+                13.0f
             );
 
             if (GardenRnd() < meshARatio)
@@ -281,13 +281,13 @@ namespace Framework {
             float d2 = GardenRnd() * depth2;
 
             glm::vec3 pos = corner + inwardDir1 * d1 + inwardDir2 * d2;
-            float yOffset = (GardenRnd() - 0.5f) * 3.0f; // -1.5 to +1.5
+            float yOffset = (GardenRnd() - 0.5f) * 5.0f; // -1.5 to +1.5
             GardenTreeInstance inst = MakeGardenInstance(
                 pos.x,
-                312.0f + yOffset,
+                314.5f + yOffset,
                 pos.z,
-                9.0f,
-                12.0f
+                8.0f,
+                13.0f
             );
 
             if (GardenRnd() < meshARatio)
