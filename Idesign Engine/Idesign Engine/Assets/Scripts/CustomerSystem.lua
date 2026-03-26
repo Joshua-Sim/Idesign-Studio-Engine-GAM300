@@ -499,6 +499,19 @@ function CustomerSystem:on_update(dt)
             self:UpdateSlot(slot, activeCustomers[slot], dt)
         end
     end
+
+    -- Textbox visibility: only show speech bubble for the customer being looked at
+    local lookTarget = GetLookedAtEntity()
+    for slot = 1, MAX_COUNTER_SLOTS do
+        local c = activeCustomers[slot]
+        if c and c.is_at_counter then
+            local textbox = GetData("Textbox_" .. tostring(c.entity))
+            if textbox and textbox > 0 then
+                local opacity = (lookTarget == c.entity) and 2.4 or 0.0
+                SetTextComponent(textbox, "opacity", opacity)
+            end
+        end
+    end
 end
 
 -- =========================================================
