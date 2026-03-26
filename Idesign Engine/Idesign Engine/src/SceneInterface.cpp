@@ -1191,6 +1191,31 @@ namespace Framework
                 creditFinished = false;
             }
 
+            // ===================== STATS SCREENS ========================== //
+            // DAYSTATS — per-day results overlay (shown after night phase ends)
+            {
+                bool isDayStats = engineState.Is(EngineMode::DayStats);
+                auto dayStatsEntities = ecsInterface.GetEntitiesByTag("daystats");
+                for (Entity e : dayStatsEntities)
+                {
+                    if (!ecsInterface.IsEntityValid(e)) continue;
+                    if (ecsInterface.HasComponent<TextureProperties>(e))
+                        ecsInterface.GetComponent<TextureProperties>(e).isUI = isDayStats;
+                }
+            }
+
+            // ENDSTATS — journey summary (shown after day 5 night ends)
+            {
+                bool isEndStats = engineState.Is(EngineMode::EndStats);
+                auto endStatsEntities = ecsInterface.GetEntitiesByTag("endstats");
+                for (Entity e : endStatsEntities)
+                {
+                    if (!ecsInterface.IsEntityValid(e)) continue;
+                    if (ecsInterface.HasComponent<TextureProperties>(e))
+                        ecsInterface.GetComponent<TextureProperties>(e).isUI = isEndStats;
+                }
+            }
+
             // ===================== END OF CUTSCENES / LOGIC SCENES ========================== //
 
             // Coin & Sun Icon + Day Text

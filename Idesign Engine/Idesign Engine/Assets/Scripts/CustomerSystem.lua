@@ -656,6 +656,7 @@ function CustomerSystem:spawn_customer(slot, order)
     PathfindTo(uniqueName, self.waitPointNames[slot])
     next_model_index = (next_model_index % #self.customer_models) + 1
     print("[CustomerSystem] Spawned slot " .. slot .. " order: " .. order)
+    AddCustomerSpawned()   -- [STATS] count every queued order
 end
 
 -- =========================================================
@@ -722,6 +723,10 @@ function CustomerSystem:ClearSlot(slot, reason)
     local c = activeCustomers[slot]
     if not c then return end
     customers_served = customers_served + 1
+
+    -- Old Code below, not working, shifted code over to customer.lua
+    -- if reason == "complete" then AddCustomerServed() end   -- [STATS]
+
     self:DestroyBarForSlot(slot, c)
     SetData("Slot_" .. tostring(c.entity), -1)
     customerOrderStrings[c.entity] = nil

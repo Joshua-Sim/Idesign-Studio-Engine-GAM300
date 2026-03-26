@@ -18,13 +18,14 @@ extern Framework::Coordinator ecsInterface;
 Framework::RecipeBookManager* recipeBookManager = nullptr;
 Framework::InputHandler* inputHandler = nullptr;
 
-
 namespace Framework
 {
-    // Static member initialization
+    // Static member initialisation
     std::unordered_map<std::string, int> GameSystem::gameData;
+    std::vector<GameSystem::DayStats>    GameSystem::s_dayHistory;
     PhaseManager* phaseManager = nullptr;
     bool GameSystem::m_debugRevealAll = false;
+
     // =========================================================
     // NIGHT SCALING CONFIG
     // Tweak these to adjust difficulty curve.
@@ -69,14 +70,26 @@ namespace Framework
         // Initialize default values
         // =========================================================
         SetData("currency", 0);
-        SetData("currencyMultiplier", 100);   // 100 = 1.0x
-        SetData("customerQueue", 0);
+        SetData("currencyMultiplier", 100);     // 100 = 1.0x
+        SetData("customerQueue", 0);        
+        SetData("currentNight", 0);             // Night tracking - starts at 0, incremented to 1 on first OnNightStart
+        SetData("requiredCustomers", REQUIRED_CUSTOMERS_BASE);  // Required customers - set properly when night starts
 
-        // Night tracking - starts at 0, incremented to 1 on first OnNightStart
-        SetData("currentNight", 0);
+        // ---- Per-day accumulators (reset each Day phase) ----
+        SetData("dayGoldFromCustomers", 0);
+        SetData("dayCustomersServed", 0);
+        SetData("dayCustomersSpawned", 0);
+        SetData("dayTimeRemainingX100", 0);
+        SetData("dayTimeBonusGold", 0);
 
-        // Required customers - set properly when night starts
-        SetData("requiredCustomers", REQUIRED_CUSTOMERS_BASE);
+        // Clear history on full game init
+        s_dayHistory.clear();
+
+        // OnDayStart -> reset per-day accumulators
+        EventManager::Instance().Subscribe("OnDayStart", [](void*) -> bool {
+            GameSystem::ResetDayAccumulators();
+            return true;
+            });
 
         // =========================================================
         // Subscribe to OnNightStart to increment night counter
@@ -137,11 +150,11 @@ namespace Framework
     void GameSystem::SetData(const std::string& key, int value)
     {
         gameData[key] = value;
-        if (key.find("ElapsedTime") == std::string::npos)
-        {
-            // RegrowthTimer keeps getting spammed here
-            //std::cout << "[GameSystem] Set " << key << " = " << value << std::endl;
-        }
+        //if (key.find("ElapsedTime") == std::string::npos)
+        //{
+        //    RegrowthTimer keeps getting spammed here
+        //    std::cout << "[GameSystem] Set " << key << " = " << value << std::endl;
+        //}
     }
 
     void GameSystem::AddData(const std::string& key, int delta)
@@ -179,6 +192,75 @@ namespace Framework
         }
     }
 
+    // =========================================================
+    // DAY STATS IMPLEMENTATION
+    // =========================================================
+
+    void GameSystem::ResetDayAccumulators()
+    {
+        SetData("dayGoldFromCustomers", 0);
+        SetData("dayCustomersServed", 0);
+        SetData("dayCustomersSpawned", 0);
+        SetData("dayTimeRemainingX100", 0);
+        SetData("dayTimeBonusGold", 0);
+        std::cout << "[GameSystem] Day accumulators reset." << std::endl;
+    }
+
+    void GameSystem::SaveDayStats(float timeRemaining)
+    {
+        DayStats day;
+        day.dayIndex = (int)s_dayHistory.size() + 1;
+        day.goldFromCustomers = GetData("dayGoldFromCustomers");
+        day.timeRemainingX100 = static_cast<int>(timeRemaining * 100.0f);
+        day.timeBonusGold = static_cast<int>(timeRemaining * TIME_BONUS_RATE);        
+        
+        // Award time bonus to player currency
+        if (day.timeBonusGold > 0)
+            AddData("currency", day.timeBonusGold);
+
+        day.totalGold = day.goldFromCustomers + day.timeBonusGold;
+        day.customersServed = GetData("dayCustomersServed");
+        day.customersSpawned = GetData("dayCustomersSpawned");
+        day.stars = ComputeStars(day.customersServed, day.customersSpawned, day.totalGold);
+
+        s_dayHistory.push_back(day);
+
+        std::cout << "[GameSystem] SaveDayStats"
+            << " | Day " << day.dayIndex
+            << " | Gold: " << day.totalGold
+            << " | Served " << day.customersServed << "/" << day.customersSpawned
+            << " | Stars: " << day.stars
+            << " | TimeLeft " << timeRemaining << "s\n";
+    }
+
+    GameSystem::DayStats GameSystem::GetLastDayStats()
+    {
+        if (s_dayHistory.empty()) return DayStats{};
+        return s_dayHistory.back();
+    }
+
+    // Star computation:
+    //   servedRatio = customersServed / customersSpawned
+    //   goldRatio   = totalGold / EXPECTED_GOLD_PER_DAY  (capped at 1.0)
+    //   final ratio = min(servedRatio, goldRatio) — both must be good
+    //
+    // Tune EXPECTED_GOLD_PER_DAY to match your typical maximum daily earning.
+    int GameSystem::ComputeStars(int served, int spawned, int totalGold)
+    {
+        static constexpr float EXPECTED_GOLD_PER_DAY = 300.0f;
+        float goldRatio = (float)totalGold / EXPECTED_GOLD_PER_DAY;
+        if (goldRatio > 1.0f) goldRatio = 1.0f;
+
+        float servedRatio = (spawned > 0) ? (float)served / (float)spawned : goldRatio;
+
+        float ratio = (servedRatio < goldRatio) ? servedRatio : goldRatio;
+
+        if (ratio >= 0.85f) return 3;
+        if (ratio >= 0.55f) return 2;
+        if (ratio >= 0.25f) return 1;
+        return 0;
+    }
+
     void GameSystem::Shutdown()
     {
         if (recipeBookManager) {
@@ -193,7 +275,7 @@ namespace Framework
         }
 
         gameData.clear();
-
+        s_dayHistory.clear();
         std::cout << "[GameSystem] Shutdown complete. Managers freed." << std::endl;
     }
 }

@@ -30,7 +30,6 @@
 #include "PhaseManager.h"
 #include <Core.h>
 #include "Upgrade.h"
-#include "GameSystem.h"
 
 extern Framework::Coordinator ecsInterface;
 
@@ -1174,6 +1173,8 @@ namespace Framework {
             if (stateName == "Settings") return EngineMode::Settings;
             if (stateName == "Dialogue") return EngineMode::Dialogue;
             if (stateName == "MapSelection") return EngineMode::MapSelection;
+            if (stateName == "DayStats")     return EngineMode::DayStats;
+            if (stateName == "EndStats")     return EngineMode::EndStats;
 
             std::cerr << "[Lua] Unknown EngineMode: " << stateName << std::endl;
             return EngineMode::Play; // Default fallback
@@ -1194,6 +1195,8 @@ namespace Framework {
             case EngineMode::Settings: return "Settings";
             case EngineMode::Dialogue: return "Dialogue";
             case EngineMode::MapSelection: return "MapSelection";
+            case EngineMode::DayStats:     return "DayStats";
+            case EngineMode::EndStats:     return "EndStats";
             default: return "Unknown";
             }
         }
@@ -1345,25 +1348,34 @@ namespace Framework {
 
         static int lua_GameStateEndNightPhase(lua_State* L)
         {
-            // If final day is finished, do NOT enter Upgrade anymore
+            // Full day loop (day + night) is complete — save stats now
+            float timeLeft = GameSystem::GetData("dayTimeRemainingX100") / 100.0f;
+            GameSystem::SaveDayStats(timeLeft);
+
+            // If final day is finished, skip Upgrade and go to Win/Lose
+            // Stats screen still shows first, then Win/Lose on Continue
             if (SceneInterface::GetCurrentDay() >= 5)
             {
-                // Or if you do not need a Day6 visual state, directly decide here:
-                 if (SceneInterface::WinOrLose())
-                 {
-                     engineState.PushState(EngineMode::Win);
-                 }
-                 else
-                 {
-                     engineState.PushState(EngineMode::Lose);
-                 }
+                engineState.ClearToBase();
+                engineState.PushState(EngineMode::Play);
+                engineState.PushState(EngineMode::Paused);
+                engineState.PushState(EngineMode::EndStats);
+
+                InputHandler* input = InputHandler::GetInstance();
+                if (input) input->SetUIFocused(true);
 
                 return 0;
             }
 
-            // Normal flow for earlier days
-            engineState.PushState(EngineMode::Upgrade);
-            phaseManager->SetPhase(GamePhase::Upgrade);
+            // Normal flow — show DayStats screen before Upgrade
+            engineState.ClearToBase();
+            engineState.PushState(EngineMode::Play);
+            engineState.PushState(EngineMode::Paused);
+            engineState.PushState(EngineMode::DayStats);
+
+            InputHandler* input = InputHandler::GetInstance();
+            if (input) input->SetUIFocused(true);
+
             return 0;
         }
 
@@ -2755,6 +2767,29 @@ namespace Framework {
             return 0;
             });
 
+        // Called by DayStatsNextButton to proceed to Upgrade after stats screen
+        lua_register(L, "ApplyUpgradePhase", [](lua_State* L) -> int {
+            engineState.ClearToBase();
+            engineState.PushState(EngineMode::Play);
+            engineState.PushState(EngineMode::Upgrade);
+            if (phaseManager) phaseManager->SetPhase(GamePhase::Upgrade);
+            InputHandler* input = InputHandler::GetInstance();
+            if (input) input->SetUIFocused(true);
+            return 0;
+            });
+
+        // Returns current day index (1-5)
+        lua_register(L, "GetCurrentDay", [](lua_State* L) -> int {
+            lua_pushinteger(L, SceneInterface::GetCurrentDay());
+            return 1;
+            });
+
+        // Returns true if player met win condition
+        lua_register(L, "WinOrLose", [](lua_State* L) -> int {
+            lua_pushboolean(L, SceneInterface::WinOrLose());
+            return 1;
+            });
+
         // Set UI focused (show/hide cursor)
         lua_register(L, "SetUIFocused", [](lua_State* L) -> int {
             bool focused = lua_toboolean(L, 1);
@@ -2965,6 +3000,60 @@ namespace Framework {
         lua_register(L, "GetCurrencyLevel", [](lua_State* L) -> int {
             int level = UpgradeManager::Instance().GetCurrencyLevel();
             lua_pushinteger(L, level);
+            return 1;
+            });
+
+        // =========================================================
+        // DAY STATS BINDINGS
+        // =========================================================
+
+        lua_register(L, "AddCustomerServed", [](lua_State* L) -> int {
+            GameSystem::AddData("dayCustomersServed", 1);
+            return 0;
+            });
+
+        lua_register(L, "AddCustomerSpawned", [](lua_State* L) -> int {
+            GameSystem::AddData("dayCustomersSpawned", 1);
+            return 0;
+            });
+
+        lua_register(L, "GetLastDayStats", [](lua_State* L) -> int {
+            Framework::GameSystem::DayStats d = GameSystem::GetLastDayStats();
+            lua_newtable(L);
+            lua_pushinteger(L, d.dayIndex);           lua_setfield(L, -2, "dayIndex");
+            lua_pushinteger(L, d.goldFromCustomers);  lua_setfield(L, -2, "goldFromCustomers");
+            lua_pushinteger(L, d.timeBonusGold);      lua_setfield(L, -2, "timeBonusGold");
+            lua_pushinteger(L, d.totalGold);          lua_setfield(L, -2, "totalGold");
+            lua_pushinteger(L, d.customersServed);    lua_setfield(L, -2, "customersServed");
+            lua_pushinteger(L, d.customersSpawned);   lua_setfield(L, -2, "customersSpawned");
+            lua_pushnumber(L, d.timeRemainingX100 / 100.0); lua_setfield(L, -2, "timeRemaining");
+            lua_pushinteger(L, d.stars);              lua_setfield(L, -2, "stars");
+            return 1;
+            });
+        lua_register(L, "GetAllDayStats", [](lua_State* L) -> int {
+            const auto& history = GameSystem::GetDayHistory();
+            lua_newtable(L);
+            for (int i = 0; i < (int)history.size(); ++i) {
+                const Framework::GameSystem::DayStats& d = history[i];
+                lua_newtable(L);
+                lua_pushinteger(L, d.dayIndex);           lua_setfield(L, -2, "dayIndex");
+                lua_pushinteger(L, d.goldFromCustomers);  lua_setfield(L, -2, "goldFromCustomers");
+                lua_pushinteger(L, d.timeBonusGold);      lua_setfield(L, -2, "timeBonusGold");
+                lua_pushinteger(L, d.totalGold);          lua_setfield(L, -2, "totalGold");
+                lua_pushinteger(L, d.customersServed);    lua_setfield(L, -2, "customersServed");
+                lua_pushinteger(L, d.customersSpawned);   lua_setfield(L, -2, "customersSpawned");
+                lua_pushnumber(L, d.timeRemainingX100 / 100.0); lua_setfield(L, -2, "timeRemaining");
+                lua_pushinteger(L, d.stars);              lua_setfield(L, -2, "stars");
+                lua_rawseti(L, -2, i + 1);
+            }
+            return 1;
+            });
+
+        lua_register(L, "GetTotalStars", [](lua_State* L) -> int {
+            const auto& history = GameSystem::GetDayHistory();
+            int total = 0;
+            for (const auto& d : history) total += d.stars;
+            lua_pushinteger(L, total);
             return 1;
             });
 

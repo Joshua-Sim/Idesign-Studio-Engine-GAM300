@@ -2328,6 +2328,116 @@
             "vOffset": 0.0,
             "uScale": 1.0,
             "vScale": 1.0
+        },
+        {
+            "guid": "6554f959-c11d-4b17-be64-0671c6246f74",
+            "name": "dayStats_continue_unhovered",
+            "path": "Assets\\Textures\\dayStats_continue_unhovered.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "c69c2270-9e38-48cf-b344-6c9fecd77362",
+            "name": "dayStats_continue_hovered",
+            "path": "Assets\\Textures\\dayStats_continue_hovered.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "51dbf4a0-11f5-4636-b91a-a8fec3bc56af",
+            "name": "dayStats_mainmenu_unhovered",
+            "path": "Assets\\Textures\\dayStats_mainmenu_unhovered.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "86de3b7d-8d49-4159-a059-dfcd2824537d",
+            "name": "dayStats_mainmenu_hovered",
+            "path": "Assets\\Textures\\dayStats_mainmenu_hovered.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "2aaf4580-53f7-46d5-b47f-4349d269b9dd",
+            "name": "dayStats_viewcredits_hovered",
+            "path": "Assets\\Textures\\dayStats_viewcredits_hovered.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "a1d5ed54-2b7b-4ba4-8d98-285268203e4a",
+            "name": "dayStats_viewcredits_unhovered",
+            "path": "Assets\\Textures\\dayStats_viewcredits_unhovered.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "bf120410-667b-433d-9a03-1a1690ce1888",
+            "name": "dayStats_base",
+            "path": "Assets\\Textures\\dayStats_base.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "0bae8bdb-0725-4491-a7f8-68698992acd1",
+            "name": "endStats_base",
+            "path": "Assets\\Textures\\endStats_base.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "414b250f-1132-45b6-977c-4055957ef961",
+            "name": "small_star",
+            "path": "Assets\\Textures\\small_star.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "62a82545-829b-49bb-854d-5733bc2e09bd",
+            "name": "blackbg_lowopacity",
+            "path": "Assets\\Textures\\blackbg_lowopacity.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
         }
     ]
 }

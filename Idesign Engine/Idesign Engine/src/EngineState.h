@@ -35,7 +35,9 @@ namespace Framework
         Day5,
         Win,
         Lose,
-        Credit
+        Credit,
+        DayStats,   // Per-day results screen       (shown after night phase ends)
+        EndStats    // End-of-game journey screen   (shown after win/lose cutscene)
     };
 
     class EngineState
@@ -85,20 +87,22 @@ namespace Framework
         bool IsAnyUIOpen() const
         {
             return Is(EngineMode::Menu) ||
-                Is(EngineMode::Paused) ||
-                Is(EngineMode::HowToPlay) ||
-                Is(EngineMode::Settings) ||
-                Is(EngineMode::Dialogue) ||
-                Is(EngineMode::Upgrade) ||
-                Is(EngineMode::MapSelection) ||
-                Is(EngineMode::Cutscene) ||
-                Is(EngineMode::Win) ||
-                Is(EngineMode::Day2) ||
-                Is(EngineMode::Day3) ||
-                Is(EngineMode::Day4) ||
-                Is(EngineMode::Day5) ||
-                Is(EngineMode::Credit) ||
-                Is(EngineMode::Intro);
+                   Is(EngineMode::Paused) ||
+                   Is(EngineMode::HowToPlay) ||
+                   Is(EngineMode::Settings) ||
+                   Is(EngineMode::Dialogue) ||
+                   Is(EngineMode::Upgrade) ||
+                   Is(EngineMode::MapSelection) ||
+                   Is(EngineMode::Cutscene) ||
+                   Is(EngineMode::Win) ||
+                   Is(EngineMode::Day2) ||
+                   Is(EngineMode::Day3) ||
+                   Is(EngineMode::Day4) ||
+                   Is(EngineMode::Day5) ||
+                   Is(EngineMode::Credit) ||
+                   Is(EngineMode::DayStats) ||
+                   Is(EngineMode::EndStats) ||
+                   Is(EngineMode::Intro);
         }
 
         // Check if current scene is actively in gameplay (Play Mode, with no overlays)
@@ -114,18 +118,19 @@ namespace Framework
             {
                 switch (stateStack[i])
                 {
-                case Editor:    std::cout << "Editor"; break;
-                case Play:      std::cout << "Play"; break;
-                case Paused:    std::cout << "Paused"; break;
-                case Debug:     std::cout << "Debug"; break;
-                case Menu:      std::cout << "Menu"; break;
-                case HowToPlay: std::cout << "HowToPlay"; break;
-                case Upgrade:   std::cout << "Upgrade"; break;
-                case Settings:  std::cout << "Settings"; break;
-                case Dialogue:  std::cout << "Dialogue"; break;
-                default:        std::cout << "Unknown"; break;
+                    case Editor:       std::cout << "Editor";    break;
+                    case Play:         std::cout << "Play";      break;
+                    case Paused:       std::cout << "Paused";    break;
+                    case Debug:        std::cout << "Debug";     break;
+                    case Menu:         std::cout << "Menu";      break;
+                    case HowToPlay:    std::cout << "HowToPlay"; break;
+                    case Upgrade:      std::cout << "Upgrade";   break;
+                    case Settings:     std::cout << "Settings";  break;
+                    case Dialogue:     std::cout << "Dialogue";  break;
+                    case DayStats:     std::cout << "DayStats";  break;
+                    case EndStats:     std::cout << "EndStats";  break;
+                    default:           std::cout << "Unknown";   break;
                 }
-
                 if (i < stateStack.size() - 1) std::cout << " | ";
             }
             std::cout << std::endl;

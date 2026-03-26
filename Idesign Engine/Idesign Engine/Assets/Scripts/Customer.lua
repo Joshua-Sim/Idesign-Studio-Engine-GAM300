@@ -160,6 +160,7 @@ function Customer.OnInteract(senderID, targetID, actionType)
         Customer.DestroyTextbox(customer_entity)
 
         AddCurrency(reward)
+        AddCustomerServed()   -- [STATS]
         UpdateCurrencyUI()
         Customer.SpawnLog("Customer served! +" .. reward .. " gold")
         print("[Customer] Reward applied: +" .. reward .. " currency")
