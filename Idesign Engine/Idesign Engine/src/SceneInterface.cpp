@@ -330,8 +330,7 @@ namespace Framework
                 }
             }
 
-
-            // 5. Settings_Audio (Vol Control)
+            // 5.1 Settings_Audio (Vol Control)
             auto settingsEntities = ecsInterface.GetEntitiesByTag("settings_audio");
             for (Entity e : settingsEntities)
             {
@@ -355,7 +354,7 @@ namespace Framework
                 }
             }
 
-            // 5. Settings_Gamma (Gamma)
+            // 5.2 Settings_Gamma (Gamma)
             auto gammaEntities = ecsInterface.GetEntitiesByTag("settings_gamma");
             for (Entity e : gammaEntities)
             {

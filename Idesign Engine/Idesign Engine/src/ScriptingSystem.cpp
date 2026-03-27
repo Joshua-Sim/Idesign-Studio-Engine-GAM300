@@ -3028,6 +3028,11 @@ namespace Framework {
             return 0;
             });
 
+        lua_register(L, "AddCustomerFailed", [](lua_State* L) -> int {
+            GameSystem::AddData("dayCustomersFailed", 1);
+            return 0;
+            });
+
         lua_register(L, "GetLastDayStats", [](lua_State* L) -> int {
             Framework::GameSystem::DayStats d = GameSystem::GetLastDayStats();
             lua_newtable(L);

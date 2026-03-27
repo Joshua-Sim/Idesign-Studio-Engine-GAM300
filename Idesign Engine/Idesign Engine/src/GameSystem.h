@@ -114,6 +114,6 @@ namespace Framework
 
     private:
         static std::vector<DayStats> s_dayHistory;
-        static int ComputeStars(int served, int spawned, int totalGold);
+        static int ComputeStars(int served, int spawned, int totalGold, int failed);
     };
 }

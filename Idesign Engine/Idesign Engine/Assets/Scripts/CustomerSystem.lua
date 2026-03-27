@@ -726,7 +726,8 @@ function CustomerSystem:ClearSlot(slot, reason)
 
     -- Old Code below, not working, shifted code over to customer.lua
     -- if reason == "complete" then AddCustomerServed() end   -- [STATS]
-
+    -- if reason == "timeout" or reason == "failed" then AddCustomerFailed() end  -- [STATS]
+    
     self:DestroyBarForSlot(slot, c)
     SetData("Slot_" .. tostring(c.entity), -1)
     customerOrderStrings[c.entity] = nil

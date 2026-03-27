@@ -202,6 +202,7 @@ function Customer.OnInteract(senderID, targetID, actionType)
             -- Apply penalty using native AddCurrency binding
             local penalty = 100
             AddCurrency(-penalty)
+            AddCustomerFailed()
             UpdateCurrencyUI()
             Customer.SpawnLog("Customer left angry! -" .. penalty .. " gold")
             print("[Customer] Penalty applied: -" .. penalty .. " currency")

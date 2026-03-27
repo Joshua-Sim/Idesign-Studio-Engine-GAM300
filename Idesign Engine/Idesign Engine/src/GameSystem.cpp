@@ -203,6 +203,7 @@ namespace Framework
         SetData("dayCustomersSpawned", 0);
         SetData("dayTimeRemainingX100", 0);
         SetData("dayTimeBonusGold", 0);
+        SetData("dayCustomersFailed", 0);
         std::cout << "[GameSystem] Day accumulators reset." << std::endl;
     }
 
@@ -221,7 +222,9 @@ namespace Framework
         day.totalGold = day.goldFromCustomers + day.timeBonusGold;
         day.customersServed = GetData("dayCustomersServed");
         day.customersSpawned = GetData("dayCustomersSpawned");
-        day.stars = ComputeStars(day.customersServed, day.customersSpawned, day.totalGold);
+        int failed = GetData("dayCustomersFailed");
+
+        day.stars = ComputeStars(day.customersServed, day.customersSpawned, day.totalGold, failed);
 
         s_dayHistory.push_back(day);
 
@@ -245,7 +248,7 @@ namespace Framework
     //   final ratio = min(servedRatio, goldRatio) — both must be good
     //
     // Tune EXPECTED_GOLD_PER_DAY to match your typical maximum daily earning.
-    int GameSystem::ComputeStars(int served, int spawned, int totalGold)
+    int GameSystem::ComputeStars(int served, int spawned, int totalGold, int failed)
     {
         static constexpr float EXPECTED_GOLD_PER_DAY = 300.0f;
         float goldRatio = (float)totalGold / EXPECTED_GOLD_PER_DAY;
@@ -253,11 +256,15 @@ namespace Framework
 
         float servedRatio = (spawned > 0) ? (float)served / (float)spawned : goldRatio;
 
-        float ratio = (servedRatio < goldRatio) ? servedRatio : goldRatio;
+        // Penalise for failures — each failure reduces efficiency
+        int totalAttempts = served + failed;
+        float efficiency = (totalAttempts > 0) ? (float)served / (float)totalAttempts : 1.0f;
 
-        if (ratio >= 0.85f) return 3;
-        if (ratio >= 0.55f) return 2;
-        if (ratio >= 0.25f) return 1;
+        float ratio = servedRatio * goldRatio * efficiency;
+
+        if (ratio >= 0.70f) return 3;
+        if (ratio >= 0.40f) return 2;
+        if (ratio >= 0.15f) return 1;
         return 0;
     }
 
