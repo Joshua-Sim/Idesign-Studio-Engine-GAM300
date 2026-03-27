@@ -449,6 +449,12 @@
             "name": "Spinner_Prefab",
             "path": "Assets\\Prefabs\\Spinner_Prefab.prefab",
             "isScenePrefab": false
+        },
+        {
+            "guid": "eb18b3df-9602-4719-ad6a-68af33bca681",
+            "name": "star_Prefab",
+            "path": "Assets\\Prefabs\\star_Prefab.prefab",
+            "isScenePrefab": false
         }
     ]
 }

@@ -102,6 +102,51 @@ namespace Framework {
     {
         m_currentPhase = newPhase;
 
+        glm::vec3 targetPos(0.0f);
+        glm::vec3 targetRot(0.0f);
+        bool shouldTeleport = false;
+
+        // Don't auto-teleport when starting Day phase
+        // Let the map UI handle it
+        if (m_currentPhase == GamePhase::Day) {
+            auto graphicsSystem = ecsInterface.GetSystem<Graphics>();
+            if (graphicsSystem) {
+                Skybox* skybox = graphicsSystem->getSkybox();
+                if (skybox) skybox->setBlendFactor(0.0f);
+                glm::vec3 playerRot = ecsInterface.GetComponent<TransformComponent>(ecsInterface.GetEntityByName("Player")).rotation;
+            }
+
+            EventManager::Instance().Fire("OnDayStart", nullptr);
+            targetPos = m_daySpawnPos;
+            targetRot = m_daySpawnRot;
+            shouldTeleport = true;
+            //dialogue system
+            
+        }
+        else if (m_currentPhase == GamePhase::Night) 
+        {
+            // Snapshot day timer remaining for stats (stored, used when night ends)
+            float timeLeft = 0.0f;
+            Entity dayTimer = ecsInterface.GetEntityByName("PhaseTimerText");
+            if (ecsInterface.IsEntityValid(dayTimer) &&
+                ecsInterface.HasComponent<TimerComponent>(dayTimer))
+            {
+                timeLeft = ecsInterface.GetComponent<TimerComponent>(dayTimer).remainingTime;
+            }
+            GameSystem::SetData("dayTimeRemainingX100", static_cast<int>(timeLeft * 100.0f));
+
+            auto graphicsSystem = ecsInterface.GetSystem<Graphics>();
+            if (graphicsSystem) {
+                Skybox* skybox = graphicsSystem->getSkybox();
+                if (skybox) skybox->setBlendFactor(1.0f);
+                glm::vec3 playerRot = ecsInterface.GetComponent<TransformComponent>(ecsInterface.GetEntityByName("Player")).rotation;
+            }
+            targetPos = m_nightSpawnPos;
+            targetRot = m_nightSpawnRot;
+            TeleportPlayer(m_nightSpawnPos, m_nightSpawnRot);
+            EventManager::Instance().Fire("OnNightStart", nullptr);
+        }
+
         Entity phaseTimerText = ecsInterface.GetEntityByName("PhaseTimerText");
         if (ecsInterface.IsEntityValid(phaseTimerText) &&
             ecsInterface.HasComponent<TimerComponent>(phaseTimerText))
@@ -129,40 +174,6 @@ namespace Framework {
             }
 
             timer.Start(); // starts countdown with the callback set
-        }
-
-        glm::vec3 targetPos(0.0f);
-        glm::vec3 targetRot(0.0f);
-        bool shouldTeleport = false;
-
-        // Don't auto-teleport when starting Day phase
-        // Let the map UI handle it
-        if (m_currentPhase == GamePhase::Day) {
-            auto graphicsSystem = ecsInterface.GetSystem<Graphics>();
-            if (graphicsSystem) {
-                Skybox* skybox = graphicsSystem->getSkybox();
-                if (skybox) skybox->setBlendFactor(0.0f);
-                glm::vec3 playerRot = ecsInterface.GetComponent<TransformComponent>(ecsInterface.GetEntityByName("Player")).rotation;
-            }
-
-            EventManager::Instance().Fire("OnDayStart", nullptr);
-            targetPos = m_daySpawnPos;
-            targetRot = m_daySpawnRot;
-            shouldTeleport = true;
-            //dialogue system
-            
-        }
-        else if (m_currentPhase == GamePhase::Night) {
-            auto graphicsSystem = ecsInterface.GetSystem<Graphics>();
-            if (graphicsSystem) {
-                Skybox* skybox = graphicsSystem->getSkybox();
-                if (skybox) skybox->setBlendFactor(1.0f);
-                glm::vec3 playerRot = ecsInterface.GetComponent<TransformComponent>(ecsInterface.GetEntityByName("Player")).rotation;
-            }
-            targetPos = m_nightSpawnPos;
-            targetRot = m_nightSpawnRot;
-            TeleportPlayer(m_nightSpawnPos, m_nightSpawnRot);
-            EventManager::Instance().Fire("OnNightStart", nullptr);
         }
 
         // =========================================================

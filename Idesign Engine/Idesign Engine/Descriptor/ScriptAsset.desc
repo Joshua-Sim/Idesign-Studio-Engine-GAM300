@@ -1,5 +1,5 @@
 {
-    "count": 48,
+    "count": 52,
     "entries": [
         {
             "guid": "16f0caaf-2e11-4715-ab0e-06c67810e1ba",
@@ -10,7 +10,7 @@
         },
         {
             "guid": "23de8816-8d7d-42e1-ada2-3fdd7190fe5f",
-            "scriptPath": "Assets\\Scripts\\GameStateSettings.lua",
+            "scriptPath": "Assets\\Scripts\\GameStateSettingsAudio.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
@@ -333,6 +333,34 @@
         {
             "guid": "222194d1-12f8-41fe-ad7a-6c3e621835ee",
             "scriptPath": "Assets\\Scripts\\QuarryTutorialSystem.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "28376f19-0136-4e10-8b4e-e88ec410c54c",
+            "scriptPath": "Assets\\Scripts\\EndStatsButtonController.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "d9936a81-a487-4c79-8b31-bcdc665aff8f",
+            "scriptPath": "Assets\\Scripts\\StatsSystem.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "ab4e1a2c-14d2-4389-ab5c-78e0e8491a76",
+            "scriptPath": "Assets\\Scripts\\DayStatsNextButton.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "9e9bb12e-919b-4628-8bc5-98719e3f89a4",
+            "scriptPath": "Assets\\Scripts\\GameStateSettingsGamma.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1

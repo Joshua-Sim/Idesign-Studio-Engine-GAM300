@@ -173,6 +173,7 @@ function Customer.OnInteract(senderID, targetID, actionType)
         Customer.DestroyTextbox(customer_entity)
 
         AddCurrency(reward)
+        AddCustomerServed()   -- [STATS]
         UpdateCurrencyUI()
         Customer.SpawnLog("Customer served! +" .. reward .. " gold")
 
@@ -215,6 +216,7 @@ function Customer.OnInteract(senderID, targetID, actionType)
             
             local penalty = 100
             AddCurrency(-penalty)
+            AddCustomerFailed()
             UpdateCurrencyUI()
             Customer.SpawnLog("Customer left angry! -" .. penalty .. " gold")
             FireEvent("CustomerFailed", customer_entity, senderID, 0)

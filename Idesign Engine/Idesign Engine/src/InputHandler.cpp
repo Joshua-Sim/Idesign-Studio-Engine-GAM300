@@ -274,7 +274,8 @@ namespace Framework {
         // --- Slider Drag Logic -- 
         int width, height;
         glfwGetWindowSize(window, &width, &height);
-        if (width > 0 && height > 0 && engineState.Is(EngineMode::Settings))
+        if (width > 0 && height > 0 && (engineState.Is(EngineMode::Settings_Audio) 
+                                    || engineState.Is(EngineMode::Settings_Gamma)))
         {
             float u = static_cast<float>(mouseX) / static_cast<float>(width);
             float v = static_cast<float>(mouseY) / static_cast<float>(height);

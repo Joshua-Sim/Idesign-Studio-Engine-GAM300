@@ -2341,9 +2341,31 @@
             "vScale": 1.0
         },
         {
+            "guid": "6554f959-c11d-4b17-be64-0671c6246f74",
+            "name": "dayStats_continue_unhovered",
+            "path": "Assets\\Textures\\dayStats_continue_unhovered.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
             "guid": "b69450f1-e264-432f-a868-c0f3d28716d8",
             "name": "ENDCSPANEL_3",
             "path": "Assets\\Textures\\ENDCSPANEL_3.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "c69c2270-9e38-48cf-b344-6c9fecd77362",
+            "name": "dayStats_continue_hovered",
+            "path": "Assets\\Textures\\dayStats_continue_hovered.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
@@ -2363,9 +2385,31 @@
             "vScale": 1.0
         },
         {
+            "guid": "51dbf4a0-11f5-4636-b91a-a8fec3bc56af",
+            "name": "dayStats_mainmenu_unhovered",
+            "path": "Assets\\Textures\\dayStats_mainmenu_unhovered.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
             "guid": "af9adb22-77dc-40e7-bd61-4b8d4280b7f6",
             "name": "ENDCSPANEL_1",
             "path": "Assets\\Textures\\ENDCSPANEL_1.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "86de3b7d-8d49-4159-a059-dfcd2824537d",
+            "name": "dayStats_mainmenu_hovered",
+            "path": "Assets\\Textures\\dayStats_mainmenu_hovered.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
@@ -2385,9 +2429,31 @@
             "vScale": 1.0
         },
         {
+            "guid": "2aaf4580-53f7-46d5-b47f-4349d269b9dd",
+            "name": "dayStats_viewcredits_hovered",
+            "path": "Assets\\Textures\\dayStats_viewcredits_hovered.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
             "guid": "ddbe1188-c56a-40c2-a176-fea5de4ab2da",
             "name": "WINCSPANEL_2",
             "path": "Assets\\Textures\\WINCSPANEL_2.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "a1d5ed54-2b7b-4ba4-8d98-285268203e4a",
+            "name": "dayStats_viewcredits_unhovered",
+            "path": "Assets\\Textures\\dayStats_viewcredits_unhovered.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
@@ -2407,9 +2473,31 @@
             "vScale": 1.0
         },
         {
+            "guid": "bf120410-667b-433d-9a03-1a1690ce1888",
+            "name": "dayStats_base",
+            "path": "Assets\\Textures\\dayStats_base.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
             "guid": "7b2cfab8-6f94-490e-a959-1c83c31fc0b3",
             "name": "WINCSPANEL_4",
             "path": "Assets\\Textures\\WINCSPANEL_4.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "0bae8bdb-0725-4491-a7f8-68698992acd1",
+            "name": "endStats_base",
+            "path": "Assets\\Textures\\endStats_base.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
@@ -2429,9 +2517,31 @@
             "vScale": 1.0
         },
         {
+            "guid": "414b250f-1132-45b6-977c-4055957ef961",
+            "name": "small_star",
+            "path": "Assets\\Textures\\small_star.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
             "guid": "ac45b45b-7bec-4dff-94d6-d2fed1f86f91",
             "name": "STARTINGCS_2",
             "path": "Assets\\Textures\\STARTINGCS_2.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "62a82545-829b-49bb-854d-5733bc2e09bd",
+            "name": "blackbg_lowopacity",
+            "path": "Assets\\Textures\\blackbg_lowopacity.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
@@ -2451,9 +2561,31 @@
             "vScale": 1.0
         },
         {
+            "guid": "2f48ac04-97b3-41f0-a43f-ce9b5ab9eb3f",
+            "name": "gamma_1.0",
+            "path": "Assets\\Textures\\gamma_1.0.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
             "guid": "1c30364e-4da3-403b-b33a-6465d44d4e7f",
             "name": "STARTINGCS_4",
             "path": "Assets\\Textures\\STARTINGCS_4.PNG",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "6ed8904a-3279-4c0b-96a6-6c4cc20f4ef4",
+            "name": "gamma_2.2",
+            "path": "Assets\\Textures\\gamma_2.2.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
@@ -2509,6 +2641,17 @@
             "guid": "6b63ca8a-7fa7-46cc-a30b-f352b0b61001",
             "name": "iDesignStudio_Grey",
             "path": "Assets\\Textures\\iDesignStudio_Grey.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "845d7f68-4fdb-430d-ac27-d9afd3464c1c",
+            "name": "gamma_3.0",
+            "path": "Assets\\Textures\\gamma_3.0.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,

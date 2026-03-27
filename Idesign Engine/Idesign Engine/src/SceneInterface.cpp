@@ -317,9 +317,8 @@ namespace Framework
                 }
             }
 
-
-            // 5. Settings (Vol Control)
-            auto settingsEntities = ecsInterface.GetEntitiesByTag("settings");
+            // 5.1 Settings_Audio (Vol Control)
+            auto settingsEntities = ecsInterface.GetEntitiesByTag("settings_audio");
             for (Entity e : settingsEntities)
             {
                 if (!ecsInterface.IsEntityValid(e)) continue;
@@ -330,7 +329,7 @@ namespace Framework
                     auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
 
                     // Only enforce UI flag if NOT in editor mode 
-                    if (!engineState.Is(EngineMode::Editor)) { texture.isUI = engineState.Is(EngineMode::Settings); }
+                    if (!engineState.Is(EngineMode::Editor)) { texture.isUI = engineState.Is(EngineMode::Settings_Audio); }
                 }
 
                 if (ecsInterface.HasComponent<TextProperties>(e))
@@ -338,7 +337,30 @@ namespace Framework
                     auto& text = ecsInterface.GetComponent<TextProperties>(e);
 
                     // Only enforce opacity if NOT in editor mode 
-                    if (!engineState.Is(EngineMode::Editor)) { text.opacity = engineState.Is(EngineMode::Settings) ? 1.f : 0.f; }
+                    if (!engineState.Is(EngineMode::Editor)) { text.opacity = engineState.Is(EngineMode::Settings_Audio) ? 1.f : 0.f; }
+                }
+            }
+
+            // 5.2 Settings_Gamma (Gamma)
+            auto gammaEntities = ecsInterface.GetEntitiesByTag("settings_gamma");
+            for (Entity e : gammaEntities)
+            {
+                if (!ecsInterface.IsEntityValid(e)) continue;
+
+                if (ecsInterface.HasComponent<TextureProperties>(e))
+                {
+                    auto& texture = ecsInterface.GetComponent<TextureProperties>(e);
+
+                    // Only enforce UI flag if NOT in editor mode 
+                    if (!engineState.Is(EngineMode::Editor)) { texture.isUI = engineState.Is(EngineMode::Settings_Gamma); }
+                }
+
+                if (ecsInterface.HasComponent<TextProperties>(e))
+                {
+                    auto& text = ecsInterface.GetComponent<TextProperties>(e);
+
+                    // Only enforce opacity if NOT in editor mode 
+                    if (!engineState.Is(EngineMode::Editor)) { text.opacity = engineState.Is(EngineMode::Settings_Gamma) ? 1.f : 0.f; }
                 }
             }
 
@@ -1348,6 +1370,31 @@ namespace Framework
             {
                 creditStartTime = -1.0f;
                 creditFinished = false;
+            }
+
+            // ===================== STATS SCREENS ========================== //
+            // DAYSTATS — per-day results overlay (shown after night phase ends)
+            {
+                bool isDayStats = engineState.Is(EngineMode::DayStats);
+                auto dayStatsEntities = ecsInterface.GetEntitiesByTag("daystats");
+                for (Entity e : dayStatsEntities)
+                {
+                    if (!ecsInterface.IsEntityValid(e)) continue;
+                    if (ecsInterface.HasComponent<TextureProperties>(e))
+                        ecsInterface.GetComponent<TextureProperties>(e).isUI = isDayStats;
+                }
+            }
+
+            // ENDSTATS — journey summary (shown after day 5 night ends)
+            {
+                bool isEndStats = engineState.Is(EngineMode::EndStats);
+                auto endStatsEntities = ecsInterface.GetEntitiesByTag("endstats");
+                for (Entity e : endStatsEntities)
+                {
+                    if (!ecsInterface.IsEntityValid(e)) continue;
+                    if (ecsInterface.HasComponent<TextureProperties>(e))
+                        ecsInterface.GetComponent<TextureProperties>(e).isUI = isEndStats;
+                }
             }
 
             // ===================== END OF CUTSCENES / LOGIC SCENES ========================== //
