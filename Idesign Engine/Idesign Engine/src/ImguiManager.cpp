@@ -720,9 +720,11 @@ namespace Framework {
                 std::cout << "[ImGui] Editor enabled" << std::endl;
                 gfxSystem->SetMouseTargetView(1);
                 engineState.ClearToBase();
+                
                 // Push Editor layer
                 engineState.PushState(EngineMode::Editor);
-
+                
+                // engineState.PushState(EngineMode::Settings_Gamma);
                 // Stop BGM when returning to editor
                 if (g_AudioSystem) 
                 {

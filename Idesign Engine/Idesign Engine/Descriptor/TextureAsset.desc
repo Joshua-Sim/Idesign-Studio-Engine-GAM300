@@ -1,5 +1,5 @@
 {
-    "count": 389,
+    "count": 392,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -3962,9 +3962,31 @@
             "vScale": 1.0
         },
         {
+            "guid": "8ee4ece9-1a9e-417f-aa56-51d0243d1c94",
+            "name": "RB_Info_BKMK",
+            "path": "Assets\\Textures\\RB_Info_BKMK.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
             "guid": "6554f959-c11d-4b17-be64-0671c6246f74",
             "name": "dayStats_continue_unhovered",
             "path": "Assets\\Textures\\dayStats_continue_unhovered.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "a4d1ccd1-e836-4b74-95c1-748189870fff",
+            "name": "RB_Tutorial",
+            "path": "Assets\\Textures\\RB_Tutorial.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
@@ -4273,6 +4295,17 @@
             "guid": "845d7f68-4fdb-430d-ac27-d9afd3464c1c",
             "name": "gamma_3.0",
             "path": "Assets\\Textures\\gamma_3.0.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "201a6573-d291-4534-91da-f38d52aa02b4",
+            "name": "RB_Tutorial_Background",
+            "path": "Assets\\Textures\\RB_Tutorial_Background.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,

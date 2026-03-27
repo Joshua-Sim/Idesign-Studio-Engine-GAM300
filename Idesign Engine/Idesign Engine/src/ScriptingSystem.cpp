@@ -2565,7 +2565,7 @@ namespace Framework {
         lua_register(L, "GameStateHowToPlay",           lua_GameStateHowToPlay);
         lua_register(L, "GameStateBackToMenu",          lua_GameStateBackToMenu);
         lua_register(L, "GameStateCutscene",            lua_GameStateCutscene);
-        lua_register(L, "GameStateSettingsAudio",            lua_GameStateSettingsAudio);
+        lua_register(L, "GameStateSettingsAudio",       lua_GameStateSettingsAudio);
         lua_register(L, "GameStateSettingsGamma",       lua_GameStateSettingsGamma);
         lua_register(L, "GameStateBackToPause",         lua_GameStateBackToPause);
         lua_register(L, "GameStateEndNightPhase",       lua_GameStateEndNightPhase);

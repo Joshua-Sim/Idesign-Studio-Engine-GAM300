@@ -126,8 +126,8 @@ namespace Framework {
         SyncSliderToValue("sliderBar_master", "sliderFill_master", "sliderKnob_master", "volumeText_master", 1.0f, false);
         SyncSliderToValue("sliderBar_bgm", "sliderFill_bgm", "sliderKnob_bgm", "volumeText_bgm", 1.0f, false);
         SyncSliderToValue("sliderBar_sfx", "sliderFill_sfx", "sliderKnob_sfx", "volumeText_sfx", 1.0f, false);
-        // Gamma starts at 2.2, which is volume = (2.2 - 1.0) / 2.0 = 0.6
-        SyncSliderToValue("sliderBar_gamma", "sliderFill_gamma", "sliderKnob_gamma", "text_gamma", 0.6f, true); // 0.6 == gamma 2.2
+        // Gamma starts at 2.2, which is volume = (2.2 - 1.0) / 3.0 = 0.4
+        SyncSliderToValue("sliderBar_gamma", "sliderFill_gamma", "sliderKnob_gamma", "text_gamma", 0.4f, true); // 0.4 == gamma 2.2
     }
 
     void ButtonSystem::Update(float deltaTime)
@@ -339,7 +339,7 @@ namespace Framework {
             case SliderType::SFX:    g_AudioSystem->SetSFXVolume(volume);    break;
             case SliderType::Gamma:
             {
-                float gamma = 1.0f + volume * 2.0f; // 1.0=dark, 2.0=neutral, 3.0=bright
+                float gamma = 1.0f + volume * 3.0f; // 1.0=dark, 2.0=neutral, 4.0=bright
                 auto* gfx = Graphics::GetInstance();
                 if (gfx) gfx->SetGamma(gamma);
 
