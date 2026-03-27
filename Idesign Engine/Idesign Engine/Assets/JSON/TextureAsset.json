@@ -2328,6 +2328,17 @@
             "vOffset": 0.0,
             "uScale": 1.0,
             "vScale": 1.0
+        },
+        {
+            "guid": "7f81f0a1-cb99-4e9a-ac72-e1f7193092f7",
+            "name": "PARTICLE TEST PNG",
+            "path": "Assets\\Textures\\PARTICLE TEST PNG.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
         }
     ]
 }

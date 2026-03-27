@@ -22,7 +22,7 @@ local locations = {
         name = "Forest",
         buttonEntity = "Forest Button",
         checkUnlocked = IsForestUnlocked,
-        spawnPos = { x = -276.0, y = 319.0, z = 620.0 },
+        spawnPos = { x = -261.0, y = 319.0, z = 620.0 },
         spawnRot = { x = 0.0,   y = 0.0,   z = 0.0 },
         ingredients = { "Forest Herbs", "Mushrooms", "Berries" },
         ingredientImageEntity = "ForestIngredientsImage",

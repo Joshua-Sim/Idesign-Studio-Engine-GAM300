@@ -1,5 +1,5 @@
 {
-    "count": 359,
+    "count": 360,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -3943,6 +3943,17 @@
             "guid": "be74f90c-0cce-43b5-b30e-d61b6407a28c",
             "name": "trashbin",
             "path": "Assets\\Textures\\trashbin.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "7f81f0a1-cb99-4e9a-ac72-e1f7193092f7",
+            "name": "PARTICLE TEST PNG",
+            "path": "Assets\\Textures\\PARTICLE TEST PNG.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
