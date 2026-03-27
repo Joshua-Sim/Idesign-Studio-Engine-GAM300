@@ -86,33 +86,31 @@ namespace Framework {
             return;
         }
 
-        // 1. Get Monitor and Video Mode info FIRST
+        // 1. Get Monitor info (useful for centering the window)
         GLFWmonitor* monitor = glfwGetPrimaryMonitor();
         const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 
-        // 2. Set Hints
+        // 2. Reset and Set Windowed Hints
+        glfwDefaultWindowHints();
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-        // Borderless Hints
-        glfwWindowHint(GLFW_RED_BITS, mode->redBits);
-        glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
-        glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
-        glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+        // Make sure the window has a close button, title bar, and borders
+        glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-        // This is the magic hint for "True" Borderless Fullscreen:
-        // It tells GLFW not to change the resolution, just take over the screen.
-        glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+        // 3. Create the windowed-mode window
+        // Use fixed dimensions (like 1280x720) instead of mode->width/height 
+        // so it doesn't overlap your taskbar.
+        int width = 1280;
+        int height = 720;
 
-        // 3. Create the window
-        // Passing 'monitor' here instead of nullptr makes it Fullscreen.
-        // Because we matched the monitor bits/refresh rate above, it won't flicker or "pop."
         window = glfwCreateWindow(
-            mode->width,
-            mode->height,
+            width,
+            height,
             "My Engine",
-            monitor,
+            nullptr, // <--- CHANGED: nullptr makes it windowed
             nullptr
         );
 
@@ -122,15 +120,19 @@ namespace Framework {
             return;
         }
 
+        // 4. Center the window on your screen
+        glfwSetWindowPos(window, (mode->width - width) / 2, (mode->height - height) / 2);
+
         glfwMakeContextCurrent(window);
-        glfwSwapInterval(0); // VSync Off
+        glfwSwapInterval(0);
 
         if (glewInit() != GLEW_OK) {
             std::cerr << "GLEW init failed\n";
             return;
         }
 
-        glViewport(0, 0, mode->width, mode->height);
+        // Ensure the viewport matches the new window size
+        glViewport(0, 0, width, height);
     }
 
     // Destructor
