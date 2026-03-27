@@ -4978,7 +4978,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings"
+            "settings_audio"
           ]
         },
         "TextureComponent": {
@@ -5029,7 +5029,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings",
+            "settings_audio",
             "sliderBar_master"
           ]
         },
@@ -5072,7 +5072,7 @@
         "TagComponent": {
           "tags": [
             "volumeText_master",
-            "settings"
+            "settings_audio"
           ]
         },
         "TextProperties": {
@@ -5135,7 +5135,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings",
+            "settings_audio",
             "sliderBar_bgm"
           ]
         },
@@ -5178,7 +5178,7 @@
         "TagComponent": {
           "tags": [
             "volumeText_bgm",
-            "settings"
+            "settings_audio"
           ]
         },
         "TextProperties": {
@@ -5241,7 +5241,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings",
+            "settings_audio",
             "sliderBar_sfx"
           ]
         },
@@ -5281,7 +5281,7 @@
         "TagComponent": {
           "tags": [
             "volumeText_sfx",
-            "settings"
+            "settings_audio"
           ]
         },
         "TextProperties": {
@@ -5348,7 +5348,7 @@
             {
               "guid": "23de8816-8d7d-42e1-ada2-3fdd7190fe5f",
               "hotReload": false,
-              "scriptPath": "Assets\\Scripts\\GameStateSettings.lua"
+              "scriptPath": "Assets\\Scripts\\GameStateSettingsGamma.lua"
             }
           ]
         },
@@ -5417,7 +5417,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings"
+            "settings_audio"
           ]
         },
         "TextureComponent": {
@@ -5480,7 +5480,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings"
+            "settings_audio"
           ]
         },
         "TextureComponent": {
@@ -5543,7 +5543,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings"
+            "settings_audio"
           ]
         },
         "TextureComponent": {
@@ -5606,7 +5606,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings"
+            "settings_audio"
           ]
         },
         "TextureComponent": {
@@ -6068,7 +6068,7 @@
             {
               "guid": "23de8816-8d7d-42e1-ada2-3fdd7190fe5f",
               "hotReload": false,
-              "scriptPath": "Assets\\Scripts\\GameStateSettings.lua"
+              "scriptPath": "Assets\\Scripts\\GameStateSettingsGamma.lua"
             }
           ]
         },
@@ -6128,7 +6128,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings"
+            "settings_audio"
           ]
         },
         "TextureComponent": {
@@ -6233,7 +6233,7 @@
             {
               "guid": "23de8816-8d7d-42e1-ada2-3fdd7190fe5f",
               "hotReload": false,
-              "scriptPath": "Assets\\Scripts\\GameStateSettings.lua"
+              "scriptPath": "Assets\\Scripts\\GameStateSettingsGamma.lua"
             }
           ]
         },
@@ -19555,7 +19555,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings",
+            "settings_audio",
             "sliderBar_Master",
             "sliderFill_master"
           ]
@@ -19611,7 +19611,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings"
+            "settings_audio"
           ]
         },
         "TextureComponent": {
@@ -19665,7 +19665,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings",
+            "settings_audio",
             "sliderFill_bgm",
             "sliderBar_bgm"
           ]
@@ -19721,7 +19721,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings",
+            "settings_audio",
             "sliderBar_sfx",
             "sliderFill_sfx"
           ]
@@ -19777,7 +19777,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings",
+            "settings_audio",
             "sliderKnob_sfx"
           ]
         },
@@ -19829,7 +19829,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings",
+            "settings_gamma",
             "sliderKnob_gamma"
           ]
         },
@@ -19884,7 +19884,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings",
+            "settings_audio",
             "sliderKnob_bgm"
           ]
         },
@@ -19939,7 +19939,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings"
+            "settings_audio"
           ]
         },
         "TextureComponent": {
@@ -19993,7 +19993,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings"
+            "settings_audio"
           ]
         },
         "TextureComponent": {
@@ -20047,7 +20047,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings"
+            "settings_audio"
           ]
         },
         "TextureComponent": {
@@ -20101,7 +20101,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings"
+            "settings_audio"
           ]
         },
         "TextureComponent": {
@@ -20155,7 +20155,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings"
+            "settings_audio"
           ]
         },
         "TextureComponent": {
@@ -24029,7 +24029,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings"
+            "settings_gamma"
           ]
         },
         "TextureComponent": {
@@ -24067,19 +24067,19 @@
         },
         "TagComponent": {
           "tags": [
-            "settings",
+            "settings_gamma",
             "text_gamma"
           ]
         },
         "TextProperties": {
           "alignment": 0,
           "color": [
-            0,
-            0,
-            0
+            1,
+            1,
+            1
           ],
           "isBillboard": false,
-          "opacity": 0,
+          "opacity": 1,
           "scale": 1,
           "screenSpace": true,
           "text": "2.20"
@@ -24093,7 +24093,7 @@
           "position": [
             0.26499998569488525,
             0.27000001072883606,
-            0.6000000238418579
+            0.8
           ],
           "rotation": [
             0,
@@ -24132,7 +24132,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings",
+            "settings_gamma",
             "sliderBar_gamma"
           ]
         },
@@ -24184,7 +24184,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings",
+            "settings_gamma",
             "sliderBar_gamma",
             "sliderFill_gamma"
           ]
@@ -24237,7 +24237,7 @@
         },
         "TagComponent": {
           "tags": [
-            "settings",
+            "settings_audio",
             "sliderKnob_master"
           ]
         },
@@ -29181,7 +29181,7 @@
         },
         "TextureComponent": {
           "guid": "f6a80947-3bc0-43d5-b515-f348d6354e8e",
-          "isUI": true
+          "isUI": false
         },
         "TransformComponent": {
           "isActive": true,
