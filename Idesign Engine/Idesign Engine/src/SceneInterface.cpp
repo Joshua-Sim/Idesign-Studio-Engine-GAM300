@@ -154,6 +154,19 @@ namespace Framework
                     }
                 }
 
+                auto* input = InputHandler::GetInstance();
+                if (input && input->IsKeyPressed(GLFW_KEY_KP_8))
+                {
+
+                    engineState.PopState();                   // remove Intro
+                    engineState.PushState(EngineMode::Win); // go to Menu
+                    
+                    // If your engine has SetState / ChangeState, that's even better:
+                    // engineState.SetState(EngineMode::Menu);
+
+                    return;
+                }
+
                 auto& upgradeMgr = UpgradeManager::Instance();
 
                 // ------------------------------------------------------------
@@ -1373,7 +1386,7 @@ namespace Framework
             }
 
             // ===================== STATS SCREENS ========================== //
-            // DAYSTATS — per-day results overlay (shown after night phase ends)
+            // DAYSTATS ï¿½ per-day results overlay (shown after night phase ends)
             {
                 bool isDayStats = engineState.Is(EngineMode::DayStats);
                 auto dayStatsEntities = ecsInterface.GetEntitiesByTag("daystats");
@@ -1385,7 +1398,7 @@ namespace Framework
                 }
             }
 
-            // ENDSTATS — journey summary (shown after day 5 night ends)
+            // ENDSTATS ï¿½ journey summary (shown after day 5 night ends)
             {
                 bool isEndStats = engineState.Is(EngineMode::EndStats);
                 auto endStatsEntities = ecsInterface.GetEntitiesByTag("endstats");

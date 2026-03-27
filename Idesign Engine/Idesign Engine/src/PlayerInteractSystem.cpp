@@ -10,6 +10,7 @@
 #include "MeshLoader.h" // [IMPORTANT] Needed to load the Quad for the icon
 #include <iostream>
 #include "AudioSystem.h"
+#include "PhaseManager.h"
 #include "EngineState.h"
 
 extern Framework::Coordinator ecsInterface;
@@ -248,6 +249,7 @@ namespace Framework
                 if (!ecsInterface.HasComponent<ItemComponent>(entity)) continue;
 
                 auto& item = ecsInterface.GetComponent<ItemComponent>(entity);
+                
 
                 // Only move items that have been flagged by PerformInteract
                 if (item.isZipping)
@@ -296,6 +298,15 @@ namespace Framework
                                 else {
                                     g_AudioSystem->PlayAudio("event:/PickingUpHerb");
                                 }
+                                
+                                if (phaseManager->GetCurrentPhase() == GamePhase::Day) {
+                                    Entity timerEnt = ecsInterface.GetEntityByName("PhaseTimerText");
+                                    ecsInterface.GetComponent<TimerComponent>(timerEnt).remainingTime += 5.0f;
+                                    if (ecsInterface.GetComponent<TimerComponent>(timerEnt).remainingTime >= 90.0f) {
+                                        ecsInterface.GetComponent<TimerComponent>(timerEnt).remainingTime = 90.0f;
+                                    }
+                                }
+
 
                                 ecsInterface.DestroyEntity(entity);
                             }
