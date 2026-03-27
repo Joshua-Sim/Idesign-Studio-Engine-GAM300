@@ -723,10 +723,6 @@ namespace Framework {
                 // Push Editor layer
                 engineState.PushState(EngineMode::Editor);
 
-                // Clear current gameplay/UI layers
-
-                engineState.PushState(EngineMode::Settings_Gamma);
-
                 // Stop BGM when returning to editor
                 if (g_AudioSystem) 
                 {
