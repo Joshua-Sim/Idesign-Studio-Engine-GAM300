@@ -3,6 +3,7 @@
 
 #include <random>
 #include <algorithm>
+#include <cmath>
 #include <glm.hpp>
 #include <gtc/constants.hpp>
 
@@ -51,6 +52,40 @@ namespace Framework
         return glm::normalize(u * x + v * y + w * z);
     }
 
+    static glm::vec3 SampleEmissionPosition(const ParticleEmitterComponent& em)
+    {
+        switch (em.emissionShape)
+        {
+        case 1: // Box
+            return glm::vec3(
+                (Rand01() * 2.0f - 1.0f) * em.emissionBoxHalfExtents.x,
+                (Rand01() * 2.0f - 1.0f) * em.emissionBoxHalfExtents.y,
+                (Rand01() * 2.0f - 1.0f) * em.emissionBoxHalfExtents.z
+            );
+
+        case 2: // Sphere
+        {
+            glm::vec3 dir;
+            do
+            {
+                dir = glm::vec3(
+                    Rand01() * 2.0f - 1.0f,
+                    Rand01() * 2.0f - 1.0f,
+                    Rand01() * 2.0f - 1.0f
+                );
+            } while (glm::dot(dir, dir) < 1e-6f);
+
+            dir = glm::normalize(dir);
+            float radius = std::cbrt(Rand01()) * std::max(0.0f, em.emissionRadius);
+            return dir * radius;
+        }
+
+        case 0:
+        default:
+            return glm::vec3(0.0f); // Point
+        }
+    }
+
     static void EnsureEmitterTextureLoaded(ParticleEmitterComponent& em)
     {
         if (!em.textureGuid) { em.textureID = 0; return; }
@@ -85,7 +120,7 @@ namespace Framework
 
     void ParticleSystem::Update(float dt)
     {
-        if (dt > 0.1f) 
+        if (dt > 0.1f)
             dt = 0.016f;
 
         for (Entity e : mEntities)
@@ -107,69 +142,69 @@ namespace Framework
                 }
 
                 EnsureEmitterTextureLoaded(em);
-            
-            // --- Emission timing (loop vs duration) ---
-            if (canEmit)
-            {
-                em.timeSinceStart += dt;
 
-                if (!em.loop && em.timeSinceStart > em.duration)
+                // --- Emission timing (loop vs duration) ---
+                if (canEmit)
                 {
-                    canEmit = false; // stop emitting, but keep updating remaining particles
+                    em.timeSinceStart += dt;
+
+                    if (!em.loop && em.timeSinceStart > em.duration)
+                    {
+                        canEmit = false; // stop emitting, but keep updating remaining particles
+                    }
                 }
-            }
 
-            // --- Spawn ---
-            if (canEmit && em.particlesPerSecond > 0.0f && em.particles.size() < (size_t)em.maxParticles)
-            {
-                em.emitAccumulator += dt * em.particlesPerSecond;
-
-                const float spreadRad = glm::radians(std::max(0.0f, em.spreadAngleDeg));
-                glm::vec3 baseDir = em.direction;
-                if (glm::dot(baseDir, baseDir) < 1e-6f)
-                    baseDir = glm::vec3(0, 1, 0);
-
-                while (em.emitAccumulator >= 1.0f && em.particles.size() < (size_t)em.maxParticles)
+                // --- Spawn ---
+                if (canEmit && em.particlesPerSecond > 0.0f && em.particles.size() < (size_t)em.maxParticles)
                 {
-                    em.emitAccumulator -= 1.0f;
+                    em.emitAccumulator += dt * em.particlesPerSecond;
 
-                    Particle p;
-                    p.position = glm::vec3(0.0f); // local; Graphics.cpp already supports localSpace
-                    glm::vec3 dir = SampleCone(baseDir, spreadRad);
+                    const float spreadRad = glm::radians(std::max(0.0f, em.spreadAngleDeg));
+                    glm::vec3 baseDir = em.direction;
+                    if (glm::dot(baseDir, baseDir) < 1e-6f)
+                        baseDir = glm::vec3(0, 1, 0);
 
-                    float speed = std::max(0.0f, em.particleSpeed);
-                    p.velocity = dir * speed;
+                    while (em.emitAccumulator >= 1.0f && em.particles.size() < (size_t)em.maxParticles)
+                    {
+                        em.emitAccumulator -= 1.0f;
 
-                    // Derive lifetime from requested range + speed
-                    float denom = std::max(0.01f, speed);
-                    p.lifetime = std::max(0.05f, em.range / denom);
+                        Particle p;
+                        p.position = em.emitterOffset + SampleEmissionPosition(em); // local/world handled later by Graphics.cpp
+                        glm::vec3 dir = SampleCone(baseDir, spreadRad);
 
-                    p.size = std::max(0.001f, em.particleSize);
-                    p.age = 0.0f;
+                        float speed = std::max(0.0f, em.particleSpeed);
+                        p.velocity = dir * speed;
 
-                    em.particles.push_back(p);
+                        // Derive lifetime from requested range + speed
+                        float denom = std::max(0.01f, speed);
+                        p.lifetime = std::max(0.05f, em.range / denom);
+
+                        p.size = std::max(0.001f, em.particleSize);
+                        p.age = 0.0f;
+
+                        em.particles.push_back(p);
+                    }
                 }
-            }
 
-            // --- Simulate + kill ---
-            for (size_t i = 0; i < em.particles.size();)
-            {
-                Particle& p = em.particles[i];
-                p.age += dt;
-                p.position += p.velocity * dt;
-
-                if (p.age >= p.lifetime)
+                // --- Simulate + kill ---
+                for (size_t i = 0; i < em.particles.size();)
                 {
-                    em.particles[i] = em.particles.back();
-                    em.particles.pop_back();
-                    continue;
-                }
-                ++i;
-            }
+                    Particle& p = em.particles[i];
+                    p.age += dt;
+                    p.position += p.velocity * dt;
 
-            // If non-loop and finished, keep time clamped so it doesn't grow forever
-            if (!em.loop && em.timeSinceStart > em.duration + 10.0f)
-                em.timeSinceStart = em.duration + 10.0f;
+                    if (p.age >= p.lifetime)
+                    {
+                        em.particles[i] = em.particles.back();
+                        em.particles.pop_back();
+                        continue;
+                    }
+                    ++i;
+                }
+
+                // If non-loop and finished, keep time clamped so it doesn't grow forever
+                if (!em.loop && em.timeSinceStart > em.duration + 10.0f)
+                    em.timeSinceStart = em.duration + 10.0f;
             }
         }
     }

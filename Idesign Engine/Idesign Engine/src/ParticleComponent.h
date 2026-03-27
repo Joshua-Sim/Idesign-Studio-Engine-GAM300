@@ -43,6 +43,12 @@ namespace Framework
 
         // Local/world
         bool localSpace = true;
+        glm::vec3 emitterOffset{ 0.0f, 0.0f, 0.0f }; // local/world spawn offset from entity center
+
+        // Spawn shape
+        int emissionShape = 0; // 0 = Point, 1 = Box, 2 = Sphere
+        glm::vec3 emissionBoxHalfExtents{ 0.0f, 0.0f, 0.0f };
+        float emissionRadius = 0.0f;
 
         // Billboard PNG texture selection
         AssetHandle textureGuid;   // references TextureProperties in AssetManager
@@ -75,6 +81,11 @@ namespace Framework
         PROP_FLOAT(particleSize,          ParticleEmitterComponent),
 
         PROP_BOOL(localSpace,             ParticleEmitterComponent),
+        PROP_VEC3(emitterOffset,           ParticleEmitterComponent),
+
+        PROP_INT(emissionShape,            ParticleEmitterComponent),
+        PROP_VEC3(emissionBoxHalfExtents,  ParticleEmitterComponent),
+        PROP_FLOAT(emissionRadius,         ParticleEmitterComponent),
 
         // Serialize the chosen texture GUID, but hide it in generic inspector
         PROP_GUID_FLAGS(textureGuid,      ParticleEmitterComponent, Framework::prop::HIDDEN),

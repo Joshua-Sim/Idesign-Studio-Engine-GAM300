@@ -300,7 +300,7 @@ namespace Framework
                     DrawTexturePreview(tex);
 
                 }
-                
+
                 else if (typeName == "MeshProperties")
                 {
                     auto& mesh = *static_cast<MeshProperties*>(componentPtr);
@@ -330,13 +330,13 @@ namespace Framework
                     }
                     DrawMaterialSelector(mesh.materialGuid);
                 }
-                
+
                 else if (typeName == "AudioComponent")
                 {
                     auto& audio = *static_cast<AudioComponent*>(componentPtr);
                     DrawAssetDropdown<AudioComponent>("Select Audio", audio);
                 }
-                
+
                 else if (typeName == "NavMeshComponent")
                 {
                     auto& navMesh = *static_cast<NavMeshComponent*>(componentPtr);
@@ -357,7 +357,7 @@ namespace Framework
                         navMesh = NavMeshComponent{};
                     }
                 }
-                
+
                 else if (typeName == "AnimationProperties")
                 {
                     auto& anim = *static_cast<AnimationProperties*>(componentPtr);
@@ -427,7 +427,7 @@ namespace Framework
                     {
                         TypeRegistry::Instance().RemoveComponent(typeName, ecs, entity);
                     }
-                    continue;   
+                    continue;
                 }
                 // 1. Handle EVENT RECEIVER (List Version)
                 if (typeName == "EventReceiverComponent")
@@ -676,7 +676,7 @@ namespace Framework
                         ImGui::PopID();
                         ImGui::Separator();
                     }
-                
+
 
                     if (indexToRemove != -1)
                     {
@@ -765,14 +765,14 @@ namespace Framework
                     ImGui::Checkbox("Destroy When Pick?", &item.toDestroyWhenPicked);
                 }
 
-               
+
 
                 // 4. Handle EVERYTHING ELSE (Default Inspector)
                 else
                 {
                     DrawInspector(componentPtr, *propList);
                 }
-                
+
                 if (typeName != "CollectibleProperties")
                 {
                     if (ImGui::Button(std::string("Remove ").append(typeName).c_str()))
@@ -831,6 +831,27 @@ namespace Framework
                     ImGui::DragFloat(("Particle Size" + idSuffix).c_str(), &em.particleSize, 0.005f, 0.0f, 10.0f);
 
                     ImGui::Checkbox(("Local Space" + idSuffix).c_str(), &em.localSpace);
+                    ImGui::DragFloat3(("Emitter Offset" + idSuffix).c_str(), &em.emitterOffset.x, 0.05f);
+
+                    const char* emissionShapeNames[] = { "Point", "Box", "Sphere" };
+                    int emissionShape = em.emissionShape;
+                    if (emissionShape < 0 || emissionShape > 2)
+                        emissionShape = 0;
+
+                    if (ImGui::Combo(("Emission Shape" + idSuffix).c_str(), &emissionShape, emissionShapeNames, IM_ARRAYSIZE(emissionShapeNames)))
+                    {
+                        em.emissionShape = emissionShape;
+                    }
+
+                    if (em.emissionShape == 1)
+                    {
+                        ImGui::DragFloat3(("Box Half Extents" + idSuffix).c_str(), &em.emissionBoxHalfExtents.x, 0.05f, 0.0f, 100.0f);
+                    }
+                    else if (em.emissionShape == 2)
+                    {
+                        ImGui::DragFloat(("Emission Radius" + idSuffix).c_str(), &em.emissionRadius, 0.05f, 0.0f, 100.0f);
+                    }
+
                     ImGui::DragInt(("Max Particles" + idSuffix).c_str(), &em.maxParticles, 10, 0, 200000);
                 }
             }
@@ -861,16 +882,16 @@ namespace Framework
 
                         std::cout << "[Editor] Auto-added Debug Mesh for BoxCollider on Entity " << entity << std::endl;
                     }
-                    else 
+                    else
                     {
                         MeshProperties& meshComponent = ecs.GetComponent<MeshProperties>(entity);
                         meshComponent.debugShape = DebugShapeType::Box;
                         meshComponent.debugcolor = glm::vec3(0.0f, 1.0f, 0.0f); // Green
                         MeshLoader::loadMesh(meshComponent.path, meshComponent);
                     }
-                }                
+                }
             }
-        }      
+        }
     }
 
     void RegisterComponentTypes()
