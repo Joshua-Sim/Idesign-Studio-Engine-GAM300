@@ -2834,7 +2834,14 @@ namespace Framework {
                 if (p.lifetime <= 0.0f) continue;
 
                 glm::vec3 worldPos = p.position;
-                if (emitter.localSpace) worldPos = xform.position + p.position;
+                if (emitter.localSpace)
+                {
+                    worldPos = xform.position + emitter.emitterOffset + p.position;
+                }
+                else
+                {
+                    worldPos = emitter.emitterOffset + p.position;
+                }
 
                 glm::mat4 m = glm::translate(glm::mat4(1.0f), worldPos);
                 m[0] = glm::vec4(camRight * p.size, 0.0f);
