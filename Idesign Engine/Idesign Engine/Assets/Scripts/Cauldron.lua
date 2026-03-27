@@ -34,9 +34,8 @@ local center_offset_z = -0.3
 local prefab_frame = "ProgressBarFrame_Prefab"
 local prefab_fill = "ProgressBarFill_Prefab"
 local prefab_tick = "ProgressBarTick_Prefab"
-local entity_tick_25 = nil
-local entity_tick_50 = nil
-local entity_tick_75 = nil
+local entity_ticks = {}
+local active_tick_points = {}
 local bar_length_max = 0.5
 local bar_thickness = 0.2
 local y_offset = 2.0
@@ -49,8 +48,49 @@ local billboard_depth_adjust = 0.055
 local stir_sensitivity = 0.005
 local finish_delay = 1.0
 local dir_threshold = 0.02
-local dir_segments = 4
 local anim_speed_abs = 20.0
+
+-- [PER-RECIPE STIR PATTERNS]
+-- dir = -1 means clockwise, dir = 1 means counter-clockwise.
+-- The first segment must stay clockwise because the animation is authored that way.
+local recipe_stir_patterns = {
+    strength_potion = {
+        { dir = -1, portion = 0.20 },
+        { dir =  1, portion = 0.25 },
+        { dir = -1, portion = 0.20 },
+        { dir =  1, portion = 0.35 },
+    },
+    vitality_potion = {
+        { dir = -1, portion = 0.15 },
+        { dir =  1, portion = 0.20 },
+        { dir = -1, portion = 0.25 },
+        { dir =  1, portion = 0.15 },
+        { dir = -1, portion = 0.25 },
+    },
+    warmth_potion = {
+        { dir = -1, portion = 0.30 },
+        { dir =  1, portion = 0.20 },
+        { dir = -1, portion = 0.50 },
+    },
+    mending_potion = {
+        { dir = -1, portion = 0.12 },
+        { dir =  1, portion = 0.18 },
+        { dir = -1, portion = 0.10 },
+        { dir =  1, portion = 0.20 },
+        { dir = -1, portion = 0.15 },
+        { dir =  1, portion = 0.25 },
+    },
+    defense_potion = {
+        { dir = -1, portion = 0.08 },
+        { dir =  1, portion = 0.12 },
+        { dir = -1, portion = 0.10 },
+        { dir =  1, portion = 0.18 },
+        { dir = -1, portion = 0.12 },
+        { dir =  1, portion = 0.15 },
+        { dir = -1, portion = 0.10 },
+        { dir =  1, portion = 0.15 },
+    },
+}
 
 -- [STIRRING ICON SETTINGS]
 local stir_icon_name_ccw = "anti-rotatingIcon"
@@ -90,6 +130,8 @@ local spoon_x = 0.0
 local spoon_y = 100.0
 local last_angle = 0.0
 local last_required_dir = 0
+local current_recipe_name = "strength_potion"
+local active_recipe_pattern = nil
 
 -- Ingredient State
 local guid_stir = ""
@@ -218,15 +260,86 @@ local function HideStirIcon()
     stir_icon_rotation = 0.0
 end
 
+local function BuildNormalizedPattern(recipe_name)
+    local source = recipe_stir_patterns[recipe_name] or recipe_stir_patterns["strength_potion"]
+    local normalized = {}
+    local total_portion = 0.0
+
+    for i, segment in ipairs(source) do
+        if i <= 8 then
+            local dir = (segment.dir == 1) and 1 or -1
+            local portion = tonumber(segment.portion) or 0.0
+            if portion > 0.0 then
+                if i == 1 then
+                    dir = -1
+                end
+                total_portion = total_portion + portion
+                table.insert(normalized, { dir = dir, portion = portion })
+            end
+        end
+    end
+
+    if #normalized == 0 then
+        normalized = {
+            { dir = -1, portion = 0.25 },
+            { dir =  1, portion = 0.25 },
+            { dir = -1, portion = 0.25 },
+            { dir =  1, portion = 0.25 },
+        }
+        total_portion = 1.0
+    end
+
+    local cumulative = 0.0
+    active_tick_points = {}
+
+    for _, segment in ipairs(normalized) do
+        segment.portion = segment.portion / total_portion
+        cumulative = cumulative + segment.portion
+        segment.progress_end = cumulative
+    end
+
+    for i = 1, (#normalized - 1) do
+        table.insert(active_tick_points, normalized[i].progress_end)
+    end
+
+    return normalized
+end
+
+local function SetActiveRecipePattern(recipe_name)
+    current_recipe_name = recipe_name or "strength_potion"
+    active_recipe_pattern = BuildNormalizedPattern(current_recipe_name)
+end
+
+local function GetActiveRecipePattern()
+    if not active_recipe_pattern then
+        SetActiveRecipePattern(current_recipe_name)
+    end
+    return active_recipe_pattern
+end
+
+local function GetRequiredDir(p)
+    local pattern = GetActiveRecipePattern()
+    local clamped_progress = math.max(0.0, math.min(p, 0.9999))
+
+    for _, segment in ipairs(pattern) do
+        if clamped_progress < segment.progress_end then
+            return segment.dir
+        end
+    end
+
+    return pattern[#pattern].dir
+end
+
 local function UpdateTickVisibility()
-    if entity_tick_25 then
-        SetScale(entity_tick_25, (progress < 0.24) and 0.01 or 0.0, (progress < 0.24) and bar_thickness or 0.0, (progress < 0.24) and bar_thickness or 0.0)
-    end
-    if entity_tick_50 then
-        SetScale(entity_tick_50, (progress < 0.49) and 0.01 or 0.0, (progress < 0.49) and bar_thickness or 0.0, (progress < 0.49) and bar_thickness or 0.0)
-    end
-    if entity_tick_75 then
-        SetScale(entity_tick_75, (progress < 0.74) and 0.01 or 0.0, (progress < 0.74) and bar_thickness or 0.0, (progress < 0.74) and bar_thickness or 0.0)
+    for i, tickEntity in ipairs(entity_ticks) do
+        local boundary = active_tick_points[i] or 1.0
+        local visible = progress < (boundary - 0.01)
+        SetScale(
+            tickEntity,
+            visible and 0.01 or 0.0,
+            visible and (bar_thickness * 0.9) or 0.0,
+            visible and (bar_thickness * 0.9) or 0.0
+        )
     end
 end
 
@@ -248,6 +361,7 @@ function M.on_init(arg1, arg2)
     stir_icon_id_ccw = FindEntityByName(stir_icon_name_ccw)
     stir_icon_id_cw  = FindEntityByName(stir_icon_name_cw)
 
+    SetActiveRecipePattern(current_recipe_name)
     HideStirIcon()
 
     if stir_icon_id_ccw then
@@ -306,6 +420,8 @@ function M.OnInteract(arg1, arg2)
             if GetItemNameById then
                 result_item_name = GetItemNameById(resultID)
             end
+
+            SetActiveRecipePattern(result_item_name)
 
             -- Camera Flight Setup
             if player_id then
@@ -385,11 +501,6 @@ function M.StopInteraction(entity_id)
     
     M.DestroyProgressBar()
     HideStirIcon()
-end
-
-function GetRequiredDir(p)
-    local seg = math.floor(math.min(p, 0.9999) * dir_segments)
-    return (seg % 2 == 0) and -1 or 1
 end
 
 -- =============================================================
@@ -657,14 +768,14 @@ function M.SpawnBar(cauldronID)
             SetScale(entity_fill, 0.0, bar_thickness, bar_thickness)
         end
 
-        entity_tick_25 = SpawnPrefab(prefab_tick, cauldronID)
-        entity_tick_50 = SpawnPrefab(prefab_tick, cauldronID)
-        entity_tick_75 = SpawnPrefab(prefab_tick, cauldronID)
-
-        if entity_tick_25 then SetScale(entity_tick_25, 0.01, bar_thickness * 0.9, bar_thickness * 0.9) end
-        if entity_tick_50 then SetScale(entity_tick_50, 0.01, bar_thickness * 0.9, bar_thickness * 0.9) end
-        if entity_tick_75 then SetScale(entity_tick_75, 0.01, bar_thickness * 0.9, bar_thickness * 0.9) end
-        
+        entity_ticks = {}
+        for _, _ in ipairs(active_tick_points) do
+            local tick = SpawnPrefab(prefab_tick, cauldronID)
+            if tick then
+                SetScale(tick, 0.01, bar_thickness * 0.9, bar_thickness * 0.9)
+                table.insert(entity_ticks, tick)
+            end
+        end
     else
         print("[Lua ERROR] SpawnPrefab function missing!")
     end
@@ -680,9 +791,14 @@ function M.DestroyProgressBar()
         entity_fill = nil
     end
 
-    if entity_tick_25 then DestroyEntity(entity_tick_25) entity_tick_25 = nil end
-    if entity_tick_50 then DestroyEntity(entity_tick_50) entity_tick_50 = nil end
-    if entity_tick_75 then DestroyEntity(entity_tick_75) entity_tick_75 = nil end
+    for i, tick in ipairs(entity_ticks) do
+        if tick then
+            DestroyEntity(tick)
+        end
+        entity_ticks[i] = nil
+    end
+
+    entity_ticks = {}
 end
 
 function M.UpdateBillboard(px, pz, cx, cz, cy)
@@ -734,9 +850,9 @@ function M.UpdateBillboard(px, pz, cx, cz, cy)
         SetRotation(tickEntity, 0.0, angle_deg + 180.0, 0.0)
     end
 
-    SetTickPosition(entity_tick_25, 0.25)
-    SetTickPosition(entity_tick_50, 0.50)
-    SetTickPosition(entity_tick_75, 0.75)
+    for i, tickEntity in ipairs(entity_ticks) do
+        SetTickPosition(tickEntity, active_tick_points[i] or 0.5)
+    end
 end
 
 -- =============================================================
