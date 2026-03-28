@@ -1,5 +1,5 @@
 {
-    "count": 52,
+    "count": 53,
     "entries": [
         {
             "guid": "16f0caaf-2e11-4715-ab0e-06c67810e1ba",
@@ -361,6 +361,13 @@
         {
             "guid": "9e9bb12e-919b-4628-8bc5-98719e3f89a4",
             "scriptPath": "Assets\\Scripts\\GameStateSettingsGamma.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
+        },
+        {
+            "guid": "30a375b3-769f-4f16-a8a2-14adb7b79d53",
+            "scriptPath": "Assets\\Scripts\\GameStateCredit.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1

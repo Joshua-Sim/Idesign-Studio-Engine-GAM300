@@ -363,6 +363,13 @@
             "hotReload": true,
             "initialized": false,
             "tableRef": -1
+        },
+        {
+            "guid": "30a375b3-769f-4f16-a8a2-14adb7b79d53",
+            "scriptPath": "Assets\\Scripts\\GameStateCredit.lua",
+            "hotReload": true,
+            "initialized": false,
+            "tableRef": -1
         }
     ]
 }

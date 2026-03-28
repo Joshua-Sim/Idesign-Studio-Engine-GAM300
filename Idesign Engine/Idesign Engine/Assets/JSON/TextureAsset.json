@@ -2691,6 +2691,149 @@
             "vOffset": 0.0,
             "uScale": 1.0,
             "vScale": 1.0
+        },
+        {
+            "guid": "054dfc53-5bd4-4a7a-967e-debf40c1f400",
+            "name": "END_CSPANEL5",
+            "path": "Assets\\Textures\\END_CSPANEL5.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "20129c5a-c540-4fc9-8e42-ba304d940303",
+            "name": "In-Game UI",
+            "path": "Assets\\Textures\\In-Game UI.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "f575d233-1424-4053-afc3-bc3f98024ff9",
+            "name": "MAP_LATEST",
+            "path": "Assets\\Textures\\MAP_LATEST.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "a9df7f3a-c02f-45a4-8cbb-5cb9478eb782",
+            "name": "CREDITS_HOV",
+            "path": "Assets\\Textures\\CREDITS_HOV.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "d2ce3982-8317-417a-89ee-83dd68d0554e",
+            "name": "CREDITS_UNHOV",
+            "path": "Assets\\Textures\\CREDITS_UNHOV.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "194fc103-06d5-49a7-8a33-f75a1127e913",
+            "name": "PLAY_HOV",
+            "path": "Assets\\Textures\\PLAY_HOV.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "8acb613a-c443-4da7-8f74-0090c81065e5",
+            "name": "PLAY_UNHOV",
+            "path": "Assets\\Textures\\PLAY_UNHOV.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "a5a78a7a-bbda-4902-b6a3-13069827b622",
+            "name": "QUIT_HOV",
+            "path": "Assets\\Textures\\QUIT_HOV.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "4f4e872c-1d56-44d0-9005-b55207889f99",
+            "name": "QUIT_UNHOV",
+            "path": "Assets\\Textures\\QUIT_UNHOV.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "d9ee8823-08f4-43f0-aa2c-76e437bef7b5",
+            "name": "SETTINGS_HOV",
+            "path": "Assets\\Textures\\SETTINGS_HOV.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "265cce5e-e243-4791-b58b-29e7fde5de3a",
+            "name": "SETTINGS_UNHOV",
+            "path": "Assets\\Textures\\SETTINGS_UNHOV.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "f6ce958b-42d9-45f2-b6ed-7e986c8cc5a0",
+            "name": "MAINMENU_LATEST",
+            "path": "Assets\\Textures\\MAINMENU_LATEST.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "8e43fdcb-ee42-4aaf-8146-4fa6aead6136",
+            "name": "SUN_AND_GOLD_UI",
+            "path": "Assets\\Textures\\SUN_AND_GOLD_UI.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
         }
     ]
 }

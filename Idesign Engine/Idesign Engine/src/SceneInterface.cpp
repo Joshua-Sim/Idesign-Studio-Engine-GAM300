@@ -68,6 +68,14 @@ namespace Framework
     static const float winSceneDuration = 5.0f;       // per scene
     static const float winCrossfadeDuration = 1.8f;   // fade between scenes
 
+    // ======== LOSE CUTSCENE TUNING ============ 
+    static float loseCutsceneStartTime = -1.0f;
+    static bool  loseCutsceneFinished = false;
+
+    static const float loseStartDelay = 2.0f;        // pure black first
+    static const float loseSceneDuration = 2.5f;     // how long each panel lasts
+    static const float loseCrossfadeDuration = 0.8f; // fade between panels
+
     // ========= CREDITS TUNING ===============
     static float creditStartTime = -1.0f;
     static bool  creditFinished = false;
@@ -1125,178 +1133,170 @@ namespace Framework
                 winCutsceneFinished = false;
             }
 
-            //// LOSE CUTSCENE
-            //if (engineState.Is(EngineMode::Lose))
-            //{
-            //    auto slides = ecsInterface.GetEntitiesByTag("losecs");
-            //    int sceneCount = (int)slides.size();
-            //    if (sceneCount <= 0) return;
+            // LOSE CUTSCENE
+            if (engineState.Is(EngineMode::Lose))
+            {
+                auto slides = ecsInterface.GetEntitiesByTag("lose");
+                int sceneCount = (int)slides.size();
+                if (sceneCount <= 0) return;
 
-            //    const int bgIndex = 0;                  // permanent black background
-            //    const int animatedCount = sceneCount - 1; // everything after background
+                const int bgIndex = 0;                     // permanent black background
+                const int animatedCount = sceneCount - 1; // slides[1]..slides[6]
 
-            //    if (animatedCount <= 0)
-            //    {
-            //        if (ecsInterface.IsEntityValid(slides[0]) &&
-            //            ecsInterface.HasComponent<TextureProperties>(slides[0]))
-            //        {
-            //            auto& tex = ecsInterface.GetComponent<TextureProperties>(slides[0]);
-            //            tex.isUI = true;
-            //            tex.uiAlpha = 1.0f;
-            //        }
-            //        return;
-            //    }
+                if (animatedCount <= 0)
+                {
+                    if (ecsInterface.IsEntityValid(slides[0]) &&
+                        ecsInterface.HasComponent<TextureProperties>(slides[0]))
+                    {
+                        auto& tex = ecsInterface.GetComponent<TextureProperties>(slides[0]);
+                        tex.isUI = true;
+                        tex.uiAlpha = 1.0f;
+                    }
+                    return;
+                }
 
-            //    // 1) Init
-            //    if (winCutsceneStartTime < 0.0f)
-            //    {
-            //        winCutsceneStartTime = (float)glfwGetTime();
-            //        winCutsceneFinished = false;
+                // 1) Init
+                if (loseCutsceneStartTime < 0.0f)
+                {
+                    loseCutsceneStartTime = (float)glfwGetTime();
+                    loseCutsceneFinished = false;
 
-            //        // Play win cutscene BGM
-            //        if (g_AudioSystem)
-            //        {
-            //            g_AudioSystem->StopEvent("event:/Level1BGM");
-            //            g_AudioSystem->StopEvent("event:/QuarryBGM");
-            //            g_AudioSystem->StopEvent("event:/ShopBGM");
-            //            g_AudioSystem->PlayAudio("event:/WinCutsceneBGM");
-            //        }
+                    for (auto e : slides)
+                    {
+                        if (!ecsInterface.IsEntityValid(e)) continue;
+                        if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
 
-            //        for (auto e : slides)
-            //        {
-            //            if (!ecsInterface.IsEntityValid(e)) continue;
-            //            if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
+                        auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
+                        tex.isUI = true;
+                        tex.uiAlpha = 0.0f;
+                    }
 
-            //            auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
-            //            tex.isUI = true;
-            //            tex.uiAlpha = 0.0f;
-            //        }
+                    // Permanent black background ON
+                    if (ecsInterface.IsEntityValid(slides[bgIndex]) &&
+                        ecsInterface.HasComponent<TextureProperties>(slides[bgIndex]))
+                    {
+                        auto& bg = ecsInterface.GetComponent<TextureProperties>(slides[bgIndex]);
+                        bg.isUI = true;
+                        bg.uiAlpha = 1.0f;
+                    }
+                }
 
-            //        // Permanent black background ON
-            //        if (ecsInterface.IsEntityValid(slides[bgIndex]) &&
-            //            ecsInterface.HasComponent<TextureProperties>(slides[bgIndex]))
-            //        {
-            //            auto& bg = ecsInterface.GetComponent<TextureProperties>(slides[bgIndex]);
-            //            bg.isUI = true;
-            //            bg.uiAlpha = 1.0f;
-            //        }
-            //    }
+                float totalT = (float)glfwGetTime() - loseCutsceneStartTime;
 
-            //    float totalT = (float)glfwGetTime() - winCutsceneStartTime;
+                // Hold on black first
+                if (totalT < loseStartDelay)
+                {
+                    for (int s = 1; s < sceneCount; ++s)
+                    {
+                        if (!ecsInterface.IsEntityValid(slides[s])) continue;
+                        if (!ecsInterface.HasComponent<TextureProperties>(slides[s])) continue;
 
-            //    // Hold on pure black first
-            //    if (totalT < winStartDelay)
-            //    {
-            //        for (int s = 1; s < sceneCount; ++s)
-            //        {
-            //            if (!ecsInterface.IsEntityValid(slides[s])) continue;
-            //            if (!ecsInterface.HasComponent<TextureProperties>(slides[s])) continue;
+                        auto& tex = ecsInterface.GetComponent<TextureProperties>(slides[s]);
+                        tex.isUI = true;
+                        tex.uiAlpha = 0.0f;
+                    }
 
-            //            auto& tex = ecsInterface.GetComponent<TextureProperties>(slides[s]);
-            //            tex.isUI = true;
-            //            tex.uiAlpha = 0.0f;
-            //        }
+                    if (ecsInterface.IsEntityValid(slides[bgIndex]) &&
+                        ecsInterface.HasComponent<TextureProperties>(slides[bgIndex]))
+                    {
+                        auto& bg = ecsInterface.GetComponent<TextureProperties>(slides[bgIndex]);
+                        bg.isUI = true;
+                        bg.uiAlpha = 1.0f;
+                    }
 
-            //        if (ecsInterface.IsEntityValid(slides[bgIndex]) &&
-            //            ecsInterface.HasComponent<TextureProperties>(slides[bgIndex]))
-            //        {
-            //            auto& bg = ecsInterface.GetComponent<TextureProperties>(slides[bgIndex]);
-            //            bg.isUI = true;
-            //            bg.uiAlpha = 1.0f;
-            //        }
+                    return;
+                }
 
-            //        return;
-            //    }
+                // Start animated sequence after delay
+                float t = totalT - loseStartDelay;
 
-            //    // Start animated sequence after delay
-            //    float t = totalT - winStartDelay;
+                // Animated slides are [1..sceneCount-1]
+                int animIndex = (int)glm::floor(t / loseSceneDuration);
 
-            //    // Animated slides are [1..sceneCount-1]
-            //    int animIndex = (int)glm::floor(t / winSceneDuration);
+                // Finished sequence
+                if (animIndex >= animatedCount)
+                {
+                    if (!loseCutsceneFinished)
+                    {
+                        loseCutsceneFinished = true;
 
-            //    // Finished sequence
-            //    if (animIndex >= animatedCount)
-            //    {
-            //        if (!winCutsceneFinished)
-            //        {
-            //            winCutsceneFinished = true;
+                        for (auto e : slides)
+                        {
+                            if (!ecsInterface.IsEntityValid(e)) continue;
+                            if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
 
-            //            for (auto e : slides)
-            //            {
-            //                if (!ecsInterface.IsEntityValid(e)) continue;
-            //                if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
+                            auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
+                            tex.uiAlpha = 0.0f;
+                            tex.isUI = false;
+                        }
 
-            //                auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
-            //                tex.uiAlpha = 0.0f;
-            //                tex.isUI = false;
-            //            }
+                        // Remove Lose first, then go Menu
+                        engineState.PopState();
+                        engineState.PushState(EngineMode::Menu);
+                    }
+                    return;
+                }
 
-            //            //NEXT STATE
-            //            engineState.PushState(EngineMode::Credit);
-            //        }
-            //        return;
-            //    }
+                float sceneT = t - (float)animIndex * loseSceneDuration;
+                float fadeStart = loseSceneDuration - loseCrossfadeDuration;
+                float blend = 0.0f;
 
-            //    float sceneT = t - (float)animIndex * winSceneDuration;
-            //    float fadeStart = winSceneDuration - winCrossfadeDuration;
-            //    float blend = 0.0f;
+                if (sceneT >= fadeStart)
+                    blend = Saturate((sceneT - fadeStart) / loseCrossfadeDuration);
 
-            //    if (sceneT >= fadeStart)
-            //        blend = Saturate((sceneT - fadeStart) / winCrossfadeDuration);
+                // Clear all animated slides first
+                for (int s = 1; s < sceneCount; ++s)
+                {
+                    Entity e = slides[s];
+                    if (!ecsInterface.IsEntityValid(e)) continue;
+                    if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
 
-            //    // Clear all animated slides first
-            //    for (int s = 1; s < sceneCount; ++s)
-            //    {
-            //        Entity e = slides[s];
-            //        if (!ecsInterface.IsEntityValid(e)) continue;
-            //        if (!ecsInterface.HasComponent<TextureProperties>(e)) continue;
+                    auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
+                    tex.isUI = true;
+                    tex.uiAlpha = 0.0f;
+                }
 
-            //        auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
-            //        tex.isUI = true;
-            //        tex.uiAlpha = 0.0f;
-            //    }
+                // Keep permanent black background visible the whole time
+                if (ecsInterface.IsEntityValid(slides[bgIndex]) &&
+                    ecsInterface.HasComponent<TextureProperties>(slides[bgIndex]))
+                {
+                    auto& bg = ecsInterface.GetComponent<TextureProperties>(slides[bgIndex]);
+                    bg.isUI = true;
+                    bg.uiAlpha = 1.0f;
+                }
 
-            //    // Keep permanent black background visible the whole time
-            //    if (ecsInterface.IsEntityValid(slides[bgIndex]) &&
-            //        ecsInterface.HasComponent<TextureProperties>(slides[bgIndex]))
-            //    {
-            //        auto& bg = ecsInterface.GetComponent<TextureProperties>(slides[bgIndex]);
-            //        bg.isUI = true;
-            //        bg.uiAlpha = 1.0f;
-            //    }
+                // Current animated slide
+                int currentSlide = animIndex + 1; // maps 0->1, 1->2, ...
+                if (currentSlide < sceneCount)
+                {
+                    if (ecsInterface.IsEntityValid(slides[currentSlide]) &&
+                        ecsInterface.HasComponent<TextureProperties>(slides[currentSlide]))
+                    {
+                        auto& texCur = ecsInterface.GetComponent<TextureProperties>(slides[currentSlide]);
+                        texCur.uiAlpha = 1.0f;
 
-            //    // Current animated slide
-            //    int currentSlide = animIndex + 1; // maps 0->1, 1->2, ...
-            //    if (currentSlide < sceneCount)
-            //    {
-            //        if (ecsInterface.IsEntityValid(slides[currentSlide]) &&
-            //            ecsInterface.HasComponent<TextureProperties>(slides[currentSlide]))
-            //        {
-            //            auto& texCur = ecsInterface.GetComponent<TextureProperties>(slides[currentSlide]);
-            //            texCur.uiAlpha = 1.0f;
+                        if (sceneT >= fadeStart)
+                            texCur.uiAlpha = 1.0f - blend;
+                    }
+                }
 
-            //            if (sceneT >= fadeStart)
-            //                texCur.uiAlpha = 1.0f - blend;
-            //        }
-            //    }
-
-            //    // Next animated slide
-            //    int nextSlide = currentSlide + 1;
-            //    if (nextSlide < sceneCount)
-            //    {
-            //        if (ecsInterface.IsEntityValid(slides[nextSlide]) &&
-            //            ecsInterface.HasComponent<TextureProperties>(slides[nextSlide]))
-            //        {
-            //            auto& texNext = ecsInterface.GetComponent<TextureProperties>(slides[nextSlide]);
-            //            texNext.uiAlpha = blend;
-            //        }
-            //    }
-            //}
-            //else
-            //{
-            //    winCutsceneStartTime = -1.0f;
-            //    winCutsceneFinished = false;
-            //}
+                // Next animated slide
+                int nextSlide = currentSlide + 1;
+                if (nextSlide < sceneCount)
+                {
+                    if (ecsInterface.IsEntityValid(slides[nextSlide]) &&
+                        ecsInterface.HasComponent<TextureProperties>(slides[nextSlide]))
+                    {
+                        auto& texNext = ecsInterface.GetComponent<TextureProperties>(slides[nextSlide]);
+                        texNext.uiAlpha = blend;
+                    }
+                }
+            }
+            else
+            {
+                loseCutsceneStartTime = -1.0f;
+                loseCutsceneFinished = false;
+            }
 
             // CREDIT CUTSCENE
             if (engineState.Is(EngineMode::Credit))

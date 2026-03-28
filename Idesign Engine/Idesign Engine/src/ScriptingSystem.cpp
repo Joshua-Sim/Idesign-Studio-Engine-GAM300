@@ -1413,6 +1413,14 @@ namespace Framework {
             return 0;
         }
 
+        // Start credits
+        static int lua_GameStateCredit(lua_State* L)
+        {
+            (void)L;
+            engineState.PushState(EngineMode::Credit);    // Cutscene UI
+            return 0;
+        }
+
         // ============ END GAME STATE LUA BINDINGS ============
 
 
@@ -2565,6 +2573,7 @@ namespace Framework {
         lua_register(L, "GameStateHowToPlay",           lua_GameStateHowToPlay);
         lua_register(L, "GameStateBackToMenu",          lua_GameStateBackToMenu);
         lua_register(L, "GameStateCutscene",            lua_GameStateCutscene);
+        lua_register(L, "GameStateCredit",              lua_GameStateCredit);
         lua_register(L, "GameStateSettingsAudio",       lua_GameStateSettingsAudio);
         lua_register(L, "GameStateSettingsGamma",       lua_GameStateSettingsGamma);
         lua_register(L, "GameStateBackToPause",         lua_GameStateBackToPause);
