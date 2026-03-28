@@ -68,9 +68,8 @@ namespace Framework {
                 std::cout << "[SceneManager] Scene BGM set to: " << it->second << std::endl;
             }
             else {
-                // Use default BGM instead of clearing
-                sceneManager.m_CurrentSceneBGMPath = "event:/Level1BGM";  // Default BGM for any scene
-                std::cout << "[SceneManager] Using default BGM for scene: " << load.sceneName << std::endl;
+                sceneManager.m_CurrentSceneBGMPath.clear();
+                std::cout << "[SceneManager] No BGM mapped for scene: " << load.sceneName << std::endl;
             }
 
             // ACTUALLY PLAY THE BGM

@@ -202,10 +202,6 @@ namespace Framework {
         std::cout << "[AudioSystem] Initialized with 3D audio support" << std::endl;
         ImguiManager::LogSuccess("Initialized with 3D audio support", "AudioSystem");
 
-        // At the end of AudioSystem::Initialize()
-        // Auto-play default BGM
-        PlayAudio("event:/MainMenuBGM");
-        std::cout << "[AudioSystem] Auto-playing default BGM: event:/Level1BGM" << std::endl;
     }
 
     void AudioSystem::Update(float deltaTime) {
@@ -392,6 +388,10 @@ namespace Framework {
         CreateBus("bus:/BGM");
         CreateBus("bus:/SFX");
         CreateBus("bus:/Ambient");
+
+        // Auto-play menu BGM now that banks are loaded
+        PlayAudio("event:/MainMenuBGM");
+        std::cout << "[AudioSystem] Auto-playing MainMenuBGM" << std::endl;
     }
 
     void AudioSystem::PrintAudioInfo() const {

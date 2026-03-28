@@ -20,14 +20,18 @@ namespace Framework
 
     // ======= CUTSCENE TUNING =======
     static bool cutsceneFinished = false;
-    static bool IntroFinished = false;
+    static bool IntroFinished = false; 
 
-    static const float sceneDuration = 6.0f;   // each scene lasts x second(s) total
+    static const float sceneDuration = 5.5f;   // each scene lasts x second(s) total
     static const float crossfadeDuration = 0.25f;  // fast seamless fade (tweak 0.12 ~ 0.25)
     static const int   kExpectedScenes = 10;
 
     static float cutsceneStartTime = -1.0f;
     static float fadeOutStartTime = -1.0f;
+
+    static bool openingBGMStarted = false;
+
+    static const float blackScreenDuration = 2.0f; // How long you want the black screen to last (in seconds)
 
     static bool  cutsceneSkipHolding = false;
     static float cutsceneSkipStartTime = 0.0f;
@@ -455,15 +459,16 @@ namespace Framework
 
                 if (cutsceneStartTime < 0.0f)
                 {
-                    cutsceneStartTime = (float)glfwGetTime();
+                    cutsceneStartTime = (float)glfwGetTime() - (sceneDuration - blackScreenDuration);
                     cutsceneFinished = false;
+                    openingBGMStarted = false;
 
-                    // Play quarry BGM during cutscene
+                    // Only STOP BGMs here - new BGM starts when first slide appears
                     if (g_AudioSystem) {
                         g_AudioSystem->StopEvent("event:/MainMenuBGM");
-                        g_AudioSystem->StopEvent("event:/Level1BGM");   
-                        g_AudioSystem->PlayAudio("event:/OpeningCutsceneBGM");
+                        g_AudioSystem->StopEvent("event:/Level1BGM");
                     }
+
 
                     // Init: make them UI fullscreen images, all hidden
                     for (auto e : slides)
@@ -489,6 +494,14 @@ namespace Framework
 
                 // Which scene are we in?
                 int i = (int)glm::floor(t / sceneDuration);
+
+                // Start cutscene BGM when first actual slide appears
+                if (i >= 1 && !openingBGMStarted) {
+                    openingBGMStarted = true;
+                    if (g_AudioSystem) {
+                        g_AudioSystem->PlayAudio("event:/OpeningCutsceneBGM");
+                    }
+                }
 
                 // Finished all scenes?
                 if (i >= sceneCount)
@@ -568,6 +581,7 @@ namespace Framework
                 cutsceneFinished = false;
                 cutsceneSkipHolding = false;
                 cutsceneSkipStartTime = 0.0f;
+                openingBGMStarted = false;
             }
 
             // 8. DIGIPEN LOGO INTRO + GROUP LOGO INTRO
