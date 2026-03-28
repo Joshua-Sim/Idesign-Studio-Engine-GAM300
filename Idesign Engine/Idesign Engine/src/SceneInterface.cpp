@@ -462,7 +462,7 @@ namespace Framework
                     if (g_AudioSystem) {
                         g_AudioSystem->StopEvent("event:/MainMenuBGM");
                         g_AudioSystem->StopEvent("event:/Level1BGM");   
-                        g_AudioSystem->PlayAudio("event:/QuarryBGM");
+                        g_AudioSystem->PlayAudio("event:/OpeningCutsceneBGM");
                     }
 
                     // Init: make them UI fullscreen images, all hidden
@@ -509,7 +509,7 @@ namespace Framework
                         }
 
                         if (g_AudioSystem) {
-                            g_AudioSystem->StopEvent("event:/QuarryBGM");
+                            g_AudioSystem->StopEvent("event:/OpeningCutsceneBGM");
                             g_AudioSystem->PlayAudio("event:/Level1BGM");
                         }
 
@@ -971,6 +971,7 @@ namespace Framework
                         g_AudioSystem->StopEvent("event:/QuarryBGM");
                         g_AudioSystem->StopEvent("event:/ShopBGM");
                         g_AudioSystem->StopEvent("event:/MainMenuBGM");
+                        g_AudioSystem->StopEvent("event:/OpeningCutsceneBGM");
                         g_AudioSystem->PlayAudio("event:/WinCutsceneBGM");
                     }
 
