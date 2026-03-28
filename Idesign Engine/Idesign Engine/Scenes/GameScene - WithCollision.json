@@ -5358,7 +5358,7 @@
                     "scripts": [
                         {
                             "guid": "23de8816-8d7d-42e1-ada2-3fdd7190fe5f",
-                            "scriptPath": "Assets\\Scripts\\GameStateSettingsGamma.lua",
+                            "scriptPath": "Assets\\Scripts\\GameStateSettingsAudio.lua",
                             "hotReload": false
                         }
                     ]
@@ -6078,7 +6078,7 @@
                     "scripts": [
                         {
                             "guid": "23de8816-8d7d-42e1-ada2-3fdd7190fe5f",
-                            "scriptPath": "Assets\\Scripts\\GameStateSettingsGamma.lua",
+                            "scriptPath": "Assets\\Scripts\\GameStateSettingsAudio.lua",
                             "hotReload": false
                         }
                     ]
@@ -6243,7 +6243,7 @@
                     "scripts": [
                         {
                             "guid": "23de8816-8d7d-42e1-ada2-3fdd7190fe5f",
-                            "scriptPath": "Assets\\Scripts\\GameStateSettingsGamma.lua",
+                            "scriptPath": "Assets\\Scripts\\GameStateSettingsAudio.lua",
                             "hotReload": false
                         }
                     ]
