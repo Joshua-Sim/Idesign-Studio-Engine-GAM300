@@ -460,7 +460,8 @@ namespace Framework
 
                     // Play quarry BGM during cutscene
                     if (g_AudioSystem) {
-                        g_AudioSystem->StopEvent("event:/Level1BGM");
+                        g_AudioSystem->StopEvent("event:/MainMenuBGM");
+                        g_AudioSystem->StopEvent("event:/Level1BGM");   
                         g_AudioSystem->PlayAudio("event:/QuarryBGM");
                     }
 
@@ -783,6 +784,12 @@ namespace Framework
                     dayPhaseStartTime = (float)glfwGetTime();
                     dayPhaseFinished = false;
 
+                    // Stop menu BGM, start gameplay BGM 
+                    if (g_AudioSystem) {
+                        g_AudioSystem->StopEvent("event:/MainMenuBGM");
+                        g_AudioSystem->PlayAudio("event:/Level1BGM");
+                    }
+
                     // Init all 3 entities
                     for (Entity e : dayEntities)
                     {
@@ -963,6 +970,7 @@ namespace Framework
                         g_AudioSystem->StopEvent("event:/Level1BGM");
                         g_AudioSystem->StopEvent("event:/QuarryBGM");
                         g_AudioSystem->StopEvent("event:/ShopBGM");
+                        g_AudioSystem->StopEvent("event:/MainMenuBGM");
                         g_AudioSystem->PlayAudio("event:/WinCutsceneBGM");
                     }
 
@@ -1293,6 +1301,12 @@ namespace Framework
                     creditStartTime = (float)glfwGetTime();
                     creditFinished = false;
 
+                    // Stop win cutscene BGM and play credits BGM ===
+                    if (g_AudioSystem) {
+                        g_AudioSystem->StopEvent("event:/WinCutsceneBGM");
+                        g_AudioSystem->PlayAudio("event:/CreditsBGM");
+                    }
+
                     // Init panels
                     for (int i = 0; i < sceneCount; ++i)
                     {
@@ -1371,8 +1385,8 @@ namespace Framework
 
                     // Stop ending BGM, play menu BGM
                     if (g_AudioSystem) {
-                        g_AudioSystem->StopEvent("event:/WinCutsceneBGM");
-                        g_AudioSystem->PlayAudio("event:/Level1BGM");
+                        g_AudioSystem->StopEvent("event:/CreditsBGM");
+                        g_AudioSystem->PlayAudio("event:/MainMenuBGM");
                     }
 
                     engineState.PopState();

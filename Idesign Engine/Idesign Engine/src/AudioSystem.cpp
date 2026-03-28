@@ -204,7 +204,7 @@ namespace Framework {
 
         // At the end of AudioSystem::Initialize()
         // Auto-play default BGM
-        PlayAudio("event:/Level1BGM");
+        PlayAudio("event:/MainMenuBGM");
         std::cout << "[AudioSystem] Auto-playing default BGM: event:/Level1BGM" << std::endl;
     }
 
