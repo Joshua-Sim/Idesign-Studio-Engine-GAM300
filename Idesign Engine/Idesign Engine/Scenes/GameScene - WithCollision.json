@@ -11070,6 +11070,36 @@
                         0.0
                     ],
                     "startAwake": true
+                },
+                "ParticleEmitterComponent": {
+                    "active": true,
+                    "loop": true,
+                    "duration": 1.0,
+                    "direction": [
+                    0.0,
+                    -1.0,
+                    0.0
+                    ],
+                    "emitterOffset": [
+                    0.0,
+                    10.0,
+                    0.0
+                    ],
+                    "emissionBoxHalfExtents": [
+                    5.0,
+                    5.0,
+                    5.0
+                    ],
+                    "emissionShape": 1,
+                    "spreadAngleDeg": 30.0,
+                    "range": 20.0,
+                    "particlesPerSecond": 3.0,
+                    "particleSpeed": 5.0,
+                    "particleSize": 0.5,
+                    "localSpace": true,
+                    "textureGuid": "6d002e8a-d928-45f4-8f18-083d54587cfb",
+                    "pixelFilter": true,
+                    "maxParticles": 200
                 }
             }
         },
