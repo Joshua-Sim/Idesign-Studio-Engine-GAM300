@@ -2845,6 +2845,50 @@
             "vOffset": 0.0,
             "uScale": 1.0,
             "vScale": 1.0
+        },
+        {
+            "guid": "09c695ff-ff9b-45e9-a0ce-a340c49874e4",
+            "name": "ENDCRED_UPDATED",
+            "path": "Assets\\Textures\\ENDCRED_UPDATED.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "a484c993-7cca-49e7-a989-d2824ae4dfb3",
+            "name": "ENDCRED_THREE",
+            "path": "Assets\\Textures\\ENDCRED_THREE.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "6d0c5b20-af88-4560-b2a8-8a4424faf431",
+            "name": "ENDCRED_TWO",
+            "path": "Assets\\Textures\\ENDCRED_TWO.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "55758496-6cec-436c-b1cc-19d6a53f1df7",
+            "name": "ENDCRED_ONE",
+            "path": "Assets\\Textures\\ENDCRED_ONE.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
         }
     ]
 }

@@ -2819,7 +2819,7 @@
                     "rotation": [
                         5.536709632436576e-11,
                         -41.30894470214844,
-                        0.0000918168225325644
+                        0.00021663223742507398
                     ],
                     "scale": [
                         0.9999420642852783,
@@ -3500,8 +3500,7 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 }
             }
         },
@@ -3536,8 +3535,7 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 }
             }
         },
@@ -6265,8 +6263,7 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
@@ -6886,8 +6883,7 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "b2d4bb99-3396-40de-8789-01d6cf083f4e",
@@ -11076,27 +11072,28 @@
                     "loop": true,
                     "duration": 1.0,
                     "direction": [
-                    0.0,
-                    -1.0,
-                    0.0
+                        0.0,
+                        -1.0,
+                        0.0
                     ],
-                    "emitterOffset": [
-                    0.0,
-                    10.0,
-                    0.0
-                    ],
-                    "emissionBoxHalfExtents": [
-                    5.0,
-                    5.0,
-                    5.0
-                    ],
-                    "emissionShape": 1,
                     "spreadAngleDeg": 30.0,
                     "range": 20.0,
                     "particlesPerSecond": 3.0,
                     "particleSpeed": 5.0,
                     "particleSize": 0.5,
                     "localSpace": true,
+                    "emitterOffset": [
+                        0.0,
+                        10.0,
+                        0.0
+                    ],
+                    "emissionShape": 1,
+                    "emissionBoxHalfExtents": [
+                        5.0,
+                        5.0,
+                        5.0
+                    ],
+                    "emissionRadius": 0.0,
                     "textureGuid": "6d002e8a-d928-45f4-8f18-083d54587cfb",
                     "pixelFilter": true,
                     "maxParticles": 200
@@ -11296,8 +11293,7 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "ScriptProperties": {
                     "scripts": [
@@ -15691,8 +15687,7 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
@@ -19442,8 +19437,7 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
@@ -20152,8 +20146,7 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "7f9aade7-0ecf-48c7-8e35-c8654325833e",
@@ -20748,8 +20741,8 @@
                         0.0
                     ],
                     "scale": [
-                        1920.0,
-                        1080.0,
+                        1536.0,
+                        500.0,
                         1.0
                     ],
                     "isActive": true
@@ -20768,7 +20761,7 @@
                     "guid": ""
                 },
                 "TextureComponent": {
-                    "guid": "d9cd95d5-bc05-4901-8d1d-f09e01734b0c",
+                    "guid": "617a5da4-3f2e-41ce-9a4e-5980c77830f5",
                     "isUI": false
                 }
             }
@@ -20953,8 +20946,7 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "7ab3362c-3412-437e-a341-21c9f0e6e197",
@@ -21899,8 +21891,7 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "3c9d8dfd-6930-486f-8945-f5522795e3f3",
@@ -21941,8 +21932,7 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "3e36546e-1611-4e55-ae4a-118cd864a166",
@@ -21996,8 +21986,7 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "8e43fdcb-ee42-4aaf-8146-4fa6aead6136",
@@ -23217,8 +23206,7 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "bd53721a-583e-47d7-b196-17af52bd40fe",
@@ -23916,8 +23904,7 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
@@ -24724,8 +24711,7 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "eb687c6c-3f11-4f0e-b113-a7b451c5f632",
@@ -25497,8 +25483,7 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
@@ -29108,8 +29093,7 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "f6a80947-3bc0-43d5-b515-f348d6354e8e",
@@ -29150,8 +29134,7 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "983ecaa9-d1c7-4fd5-8631-5a83db05671d",
@@ -29469,12 +29452,11 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "bd53721a-583e-47d7-b196-17af52bd40fe",
-                    "isUI": false
+                    "isUI": true
                 }
             }
         },
@@ -29485,7 +29467,7 @@
                 "TransformComponent": {
                     "position": [
                         960.0,
-                        540.0,
+                        7748.564453125,
                         1.0
                     ],
                     "rotation": [
@@ -29511,12 +29493,11 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "617a5da4-3f2e-41ce-9a4e-5980c77830f5",
-                    "isUI": false
+                    "isUI": true
                 }
             }
         },
@@ -29527,7 +29508,7 @@
                 "TransformComponent": {
                     "position": [
                         960.0,
-                        540.0,
+                        6248.564453125,
                         1.0
                     ],
                     "rotation": [
@@ -29553,12 +29534,11 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
-                    "guid": "2353044e-9b64-4580-abc8-be524faaf82d",
-                    "isUI": false
+                    "guid": "55758496-6cec-436c-b1cc-19d6a53f1df7",
+                    "isUI": true
                 }
             }
         },
@@ -29569,7 +29549,7 @@
                 "TransformComponent": {
                     "position": [
                         960.0,
-                        540.0,
+                        4748.564453125,
                         1.0
                     ],
                     "rotation": [
@@ -29598,8 +29578,8 @@
                     "guid": ""
                 },
                 "TextureComponent": {
-                    "guid": "ebbc4826-5ae8-43b8-aca4-85bba85339a2",
-                    "isUI": false
+                    "guid": "6d0c5b20-af88-4560-b2a8-8a4424faf431",
+                    "isUI": true
                 }
             }
         },
@@ -29610,7 +29590,7 @@
                 "TransformComponent": {
                     "position": [
                         960.0,
-                        540.0,
+                        3248.564453125,
                         1.0
                     ],
                     "rotation": [
@@ -29639,8 +29619,8 @@
                     "guid": ""
                 },
                 "TextureComponent": {
-                    "guid": "cff49230-aad4-4351-a255-ac17e27072ba",
-                    "isUI": false
+                    "guid": "a484c993-7cca-49e7-a989-d2824ae4dfb3",
+                    "isUI": true
                 }
             }
         },
@@ -29651,7 +29631,7 @@
                 "TransformComponent": {
                     "position": [
                         960.0,
-                        540.0,
+                        1748.564453125,
                         1.0
                     ],
                     "rotation": [
@@ -29661,7 +29641,7 @@
                     ],
                     "scale": [
                         1220.0,
-                        832.0,
+                        1220.0,
                         1.0
                     ],
                     "isActive": true
@@ -29677,11 +29657,12 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "c3e503b8-4acc-437a-b335-ff3631a19f64",
-                    "isUI": false
+                    "guid": "09c695ff-ff9b-45e9-a0ce-a340c49874e4",
+                    "isUI": true
                 }
             }
         },
@@ -29761,8 +29742,7 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
