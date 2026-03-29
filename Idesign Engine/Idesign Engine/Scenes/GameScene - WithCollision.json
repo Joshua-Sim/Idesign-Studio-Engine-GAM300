@@ -10965,6 +10965,37 @@
                         0.0
                     ],
                     "startAwake": true
+                },
+                "ParticleEmitterComponent": {
+                    "active": true,
+                    "loop": true,
+                    "duration": 1.0,
+                    "direction": [
+                        0.0,
+                        -1.0,
+                        0.0
+                    ],
+                    "spreadAngleDeg": 30.0,
+                    "range": 20.0,
+                    "particlesPerSecond": 3.0,
+                    "particleSpeed": 5.0,
+                    "particleSize": 0.5,
+                    "localSpace": true,
+                    "emitterOffset": [
+                        0.0,
+                        10.0,
+                        0.0
+                    ],
+                    "emissionShape": 1,
+                    "emissionBoxHalfExtents": [
+                        5.0,
+                        5.0,
+                        5.0
+                    ],
+                    "emissionRadius": 0.0,
+                    "textureGuid": "6d002e8a-d928-45f4-8f18-083d54587cfb",
+                    "pixelFilter": true,
+                    "maxParticles": 200
                 }
             }
         },
@@ -11182,6 +11213,37 @@
                         0.0
                     ],
                     "startAwake": true
+                },
+                "ParticleEmitterComponent": {
+                    "active": true,
+                    "loop": true,
+                    "duration": 1.0,
+                    "direction": [
+                        0.0,
+                        -1.0,
+                        0.0
+                    ],
+                    "spreadAngleDeg": 30.0,
+                    "range": 20.0,
+                    "particlesPerSecond": 3.0,
+                    "particleSpeed": 5.0,
+                    "particleSize": 0.5,
+                    "localSpace": true,
+                    "emitterOffset": [
+                        0.0,
+                        10.0,
+                        0.0
+                    ],
+                    "emissionShape": 1,
+                    "emissionBoxHalfExtents": [
+                        5.0,
+                        5.0,
+                        5.0
+                    ],
+                    "emissionRadius": 0.0,
+                    "textureGuid": "6d002e8a-d928-45f4-8f18-083d54587cfb",
+                    "pixelFilter": true,
+                    "maxParticles": 200
                 }
             }
         },
@@ -11560,6 +11622,37 @@
                         0.0
                     ],
                     "startAwake": true
+                },
+                "ParticleEmitterComponent": {
+                    "active": true,
+                    "loop": true,
+                    "duration": 1.0,
+                    "direction": [
+                        0.0,
+                        -1.0,
+                        0.0
+                    ],
+                    "spreadAngleDeg": 30.0,
+                    "range": 20.0,
+                    "particlesPerSecond": 3.0,
+                    "particleSpeed": 5.0,
+                    "particleSize": 0.5,
+                    "localSpace": true,
+                    "emitterOffset": [
+                        0.0,
+                        10.0,
+                        0.0
+                    ],
+                    "emissionShape": 1,
+                    "emissionBoxHalfExtents": [
+                        5.0,
+                        5.0,
+                        5.0
+                    ],
+                    "emissionRadius": 0.0,
+                    "textureGuid": "6d002e8a-d928-45f4-8f18-083d54587cfb",
+                    "pixelFilter": true,
+                    "maxParticles": 200
                 }
             }
         },
@@ -11640,6 +11733,37 @@
                         0.0
                     ],
                     "startAwake": true
+                },
+                "ParticleEmitterComponent": {
+                    "active": true,
+                    "loop": true,
+                    "duration": 1.0,
+                    "direction": [
+                        0.0,
+                        -1.0,
+                        0.0
+                    ],
+                    "spreadAngleDeg": 30.0,
+                    "range": 20.0,
+                    "particlesPerSecond": 3.0,
+                    "particleSpeed": 5.0,
+                    "particleSize": 0.5,
+                    "localSpace": true,
+                    "emitterOffset": [
+                        0.0,
+                        10.0,
+                        0.0
+                    ],
+                    "emissionShape": 1,
+                    "emissionBoxHalfExtents": [
+                        5.0,
+                        5.0,
+                        5.0
+                    ],
+                    "emissionRadius": 0.0,
+                    "textureGuid": "6d002e8a-d928-45f4-8f18-083d54587cfb",
+                    "pixelFilter": true,
+                    "maxParticles": 200
                 }
             }
         },
@@ -16706,6 +16830,37 @@
                         0.0
                     ],
                     "startAwake": true
+                },
+                "ParticleEmitterComponent": {
+                    "active": true,
+                    "loop": true,
+                    "duration": 1.0,
+                    "direction": [
+                        0.0,
+                        -1.0,
+                        0.0
+                    ],
+                    "spreadAngleDeg": 30.0,
+                    "range": 20.0,
+                    "particlesPerSecond": 3.0,
+                    "particleSpeed": 5.0,
+                    "particleSize": 0.5,
+                    "localSpace": true,
+                    "emitterOffset": [
+                        0.0,
+                        10.0,
+                        0.0
+                    ],
+                    "emissionShape": 1,
+                    "emissionBoxHalfExtents": [
+                        5.0,
+                        5.0,
+                        5.0
+                    ],
+                    "emissionRadius": 0.0,
+                    "textureGuid": "6d002e8a-d928-45f4-8f18-083d54587cfb",
+                    "pixelFilter": true,
+                    "maxParticles": 200
                 }
             }
         },
@@ -16768,6 +16923,37 @@
                         0.0
                     ],
                     "startAwake": true
+                },
+                "ParticleEmitterComponent": {
+                    "active": true,
+                    "loop": true,
+                    "duration": 1.0,
+                    "direction": [
+                        0.0,
+                        -1.0,
+                        0.0
+                    ],
+                    "spreadAngleDeg": 30.0,
+                    "range": 20.0,
+                    "particlesPerSecond": 3.0,
+                    "particleSpeed": 5.0,
+                    "particleSize": 0.5,
+                    "localSpace": true,
+                    "emitterOffset": [
+                        0.0,
+                        10.0,
+                        0.0
+                    ],
+                    "emissionShape": 1,
+                    "emissionBoxHalfExtents": [
+                        5.0,
+                        5.0,
+                        5.0
+                    ],
+                    "emissionRadius": 0.0,
+                    "textureGuid": "6d002e8a-d928-45f4-8f18-083d54587cfb",
+                    "pixelFilter": true,
+                    "maxParticles": 200
                 }
             }
         },
@@ -17336,7 +17522,7 @@
                 "TransformComponent": {
                     "position": [
                         -212.62210083007813,
-                        316.613525390625,
+                        315.913525390625,
                         583.29150390625
                     ],
                     "rotation": [
@@ -17956,7 +18142,7 @@
                 "TransformComponent": {
                     "position": [
                         -214.02960205078125,
-                        316.613525390625,
+                        315.913525390625,
                         581.3984985351563
                     ],
                     "rotation": [
@@ -22137,7 +22323,7 @@
                     "tags": []
                 },
                 "TimerComponent": {
-                    "duration": 300.0,
+                    "duration": 90.0,
                     "loop": false
                 },
                 "TextProperties": {
@@ -34479,6 +34665,37 @@
                         0.0
                     ],
                     "startAwake": true
+                },
+                "ParticleEmitterComponent": {
+                    "active": true,
+                    "loop": true,
+                    "duration": 1.0,
+                    "direction": [
+                        0.0,
+                        -1.0,
+                        0.0
+                    ],
+                    "spreadAngleDeg": 30.0,
+                    "range": 20.0,
+                    "particlesPerSecond": 3.0,
+                    "particleSpeed": 5.0,
+                    "particleSize": 0.5,
+                    "localSpace": true,
+                    "emitterOffset": [
+                        0.0,
+                        10.0,
+                        0.0
+                    ],
+                    "emissionShape": 1,
+                    "emissionBoxHalfExtents": [
+                        5.0,
+                        5.0,
+                        5.0
+                    ],
+                    "emissionRadius": 0.0,
+                    "textureGuid": "6d002e8a-d928-45f4-8f18-083d54587cfb",
+                    "pixelFilter": true,
+                    "maxParticles": 200
                 }
             }
         },
@@ -34541,86 +34758,37 @@
                         0.0
                     ],
                     "startAwake": true
-                }
-            }
-        },
-        {
-            "name": "GardenTree (Copy)",
-            "guid": "0f662e58-4a39-454e-a0da-b71e9e624da5",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -251.58087158203125,
-                        313.1757507324219,
-                        610.7694091796875
-                    ],
-                    "rotation": [
+                },
+                "ParticleEmitterComponent": {
+                    "active": true,
+                    "loop": true,
+                    "duration": 1.0,
+                    "direction": [
                         0.0,
-                        44.0,
+                        -1.0,
                         0.0
                     ],
-                    "scale": [
-                        7.999980926513672,
-                        7.999978065490723,
-                        7.999945163726807
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
-                    "sortIndex": 173,
-                    "children": []
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "6ce82b2e-ad7b-45b9-8fad-27f9a046a0ff",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "95b2bdaa-b3c5-42e0-9687-d0edc85dfe01",
-                    "isUI": false
-                },
-                "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                0.800000011920929,
-                                1.0,
-                                0.5
-                            ],
-                            "center": [
-                                -0.10000000149011612,
-                                0.8999999761581421,
-                                0.0
-                            ],
-                            "canPassThrough": false,
-                            "triggerMessage": "",
-                            "isInteractable": false,
-                            "interactMessage": "",
-                            "promptText": ""
-                        }
-                    ]
-                },
-                "PhysicsProperties": {
-                    "category": 0,
-                    "isImmovable": true,
-                    "gravityFactor": 1.0,
-                    "mass": 1.0,
-                    "friction": 0.5,
-                    "restitution": 0.0,
-                    "linearVelocity": [
+                    "spreadAngleDeg": 30.0,
+                    "range": 20.0,
+                    "particlesPerSecond": 3.0,
+                    "particleSpeed": 5.0,
+                    "particleSize": 0.5,
+                    "localSpace": true,
+                    "emitterOffset": [
                         0.0,
-                        0.0,
+                        10.0,
                         0.0
                     ],
-                    "angularVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
+                    "emissionShape": 1,
+                    "emissionBoxHalfExtents": [
+                        5.0,
+                        5.0,
+                        5.0
                     ],
-                    "startAwake": true
+                    "emissionRadius": 0.0,
+                    "textureGuid": "6d002e8a-d928-45f4-8f18-083d54587cfb",
+                    "pixelFilter": true,
+                    "maxParticles": 200
                 }
             }
         },
@@ -46493,68 +46661,37 @@
                         0.0
                     ],
                     "startAwake": true
-                }
-            }
-        },
-        {
-            "name": "GardenTree (Copy) (Copy)",
-            "guid": "aa00450c-de4f-427e-b81a-80a9d5af3081",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -236.49522399902344,
-                        314.3525390625,
-                        581.125732421875
-                    ],
-                    "rotation": [
+                },
+                "ParticleEmitterComponent": {
+                    "active": true,
+                    "loop": true,
+                    "duration": 1.0,
+                    "direction": [
                         0.0,
-                        0.0,
+                        -1.0,
                         0.0
                     ],
-                    "scale": [
-                        7.999999046325684,
-                        7.999988555908203,
-                        7.99999475479126
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
-                    "sortIndex": 241,
-                    "children": []
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "f597242d-9dba-4259-a91d-036298fb344c",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "95b2bdaa-b3c5-42e0-9687-d0edc85dfe01",
-                    "isUI": false
-                },
-                "BoxColliderComponent": {
-                    "colliders": []
-                },
-                "PhysicsProperties": {
-                    "category": 0,
-                    "isImmovable": true,
-                    "gravityFactor": 1.0,
-                    "mass": 1.0,
-                    "friction": 0.5,
-                    "restitution": 0.0,
-                    "linearVelocity": [
+                    "spreadAngleDeg": 30.0,
+                    "range": 20.0,
+                    "particlesPerSecond": 3.0,
+                    "particleSpeed": 5.0,
+                    "particleSize": 0.5,
+                    "localSpace": true,
+                    "emitterOffset": [
                         0.0,
-                        0.0,
+                        10.0,
                         0.0
                     ],
-                    "angularVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
+                    "emissionShape": 1,
+                    "emissionBoxHalfExtents": [
+                        5.0,
+                        5.0,
+                        5.0
                     ],
-                    "startAwake": true
+                    "emissionRadius": 0.0,
+                    "textureGuid": "6d002e8a-d928-45f4-8f18-083d54587cfb",
+                    "pixelFilter": true,
+                    "maxParticles": 200
                 }
             }
         },

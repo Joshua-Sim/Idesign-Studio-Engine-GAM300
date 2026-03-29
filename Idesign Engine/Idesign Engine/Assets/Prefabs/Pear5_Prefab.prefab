@@ -5,9 +5,9 @@
         "components": {
             "TransformComponent": {
                 "position": [
-                    -229.55905151367188,
-                    323.1844482421875,
-                    689.6799926757813
+                    -166.0,
+                    317.5,
+                    658.5
                 ],
                 "rotation": [
                     0.004841761663556099,
@@ -80,6 +80,25 @@
                 "isIngredient": true,
                 "isChoppable": true,
                 "toDestroyWhenPicked": true
+            },
+            "ParticleEmitterComponent": {
+                "active": true,
+                "loop": true,
+                "duration": 1.0,
+                "direction": [
+                    0.0,
+                    1.0,
+                    0.0
+                ],
+                "spreadAngleDeg": 100.0,
+                "range": 1.0,
+                "particlesPerSecond": 10.0,
+                "particleSpeed": 1.0,
+                "particleSize": 0.2,
+                "localSpace": true,
+                "textureGuid": "7f81f0a1-cb99-4e9a-ac72-e1f7193092f7",
+                "pixelFilter": true,
+                "maxParticles": 200
             }
         }
     }

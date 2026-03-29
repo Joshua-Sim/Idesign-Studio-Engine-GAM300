@@ -1,5 +1,5 @@
 {
-    "count": 410,
+    "count": 411,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -4504,6 +4504,17 @@
             "guid": "55758496-6cec-436c-b1cc-19d6a53f1df7",
             "name": "ENDCRED_ONE",
             "path": "Assets\\Textures\\ENDCRED_ONE.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "7f81f0a1-cb99-4e9a-ac72-e1f7193092f7",
+            "name": "PARTICLE TEST PNG",
+            "path": "Assets\\Textures\\PARTICLE TEST PNG.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
