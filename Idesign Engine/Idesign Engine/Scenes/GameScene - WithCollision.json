@@ -147,7 +147,7 @@
                     "is3D": true,
                     "minDistance": 1.0,
                     "maxDistance": 100.0,
-                    "volume": 1.0,
+                    "volume": 0.0,
                     "loop": false,
                     "playOnStart": true,
                     "isPlaying": true,
@@ -969,6 +969,46 @@
                 "TextureComponent": {
                     "guid": "0f2ece2c-6b29-43d9-a6ae-1f648d18d86d",
                     "isUI": false
+                },
+                "BoxColliderComponent": {
+                    "colliders": [
+                        {
+                            "size": [
+                                100.0,
+                                100.0,
+                                100.0
+                            ],
+                            "center": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "canPassThrough": false,
+                            "triggerMessage": "",
+                            "isInteractable": false,
+                            "interactMessage": "",
+                            "promptText": ""
+                        }
+                    ]
+                },
+                "PhysicsProperties": {
+                    "category": 0,
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 1.0,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "startAwake": true
                 }
             }
         },
@@ -1606,7 +1646,7 @@
                     "is3D": true,
                     "minDistance": 1.0,
                     "maxDistance": 50.0,
-                    "volume": 0.0,
+                    "volume": 1.0,
                     "loop": false,
                     "playOnStart": false,
                     "isPlaying": true,
@@ -2812,14 +2852,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -279.0748291015625,
-                        319.0,
-                        620.0
+                        -40.77113723754883,
+                        8.02451229095459,
+                        9.536368370056152
                     ],
                     "rotation": [
                         0.0,
-                        -0.0016907812096178532,
-                        0.0
+                        117.31407165527344,
+                        -180.0
                     ],
                     "scale": [
                         0.9999420642852783,
@@ -2898,9 +2938,9 @@
                 },
                 "ListenerComponent": {
                     "position": [
-                        -279.0748291015625,
-                        319.0,
-                        620.0
+                        -40.77113723754883,
+                        8.02451229095459,
+                        9.536368370056152
                     ],
                     "forward": [
                         0.0,
@@ -3317,9 +3357,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -264.59295654296875,
-                        316.4903259277344,
-                        365.8227233886719
+                        -264.59906005859375,
+                        312.93511962890625,
+                        365.8165588378906
                     ],
                     "rotation": [
                         0.09805543720722198,
@@ -4725,7 +4765,7 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "c43c4719-e688-4409-9c62-6b2508cc3a71",
+                    "guid": "c44c9565-d18e-4186-86af-03e26a23eafe",
                     "isUI": false
                 },
                 "ScriptProperties": {
@@ -6694,7 +6734,10 @@
                         "fd8a1cb8-26e4-488b-b46f-3409039827fd",
                         "43526dab-ef7c-4c35-bac9-d53f8d297c5a",
                         "2c8b577f-4504-4c63-a347-e6c967e77d03",
-                        "b2d88fa2-f9fc-4e52-ad27-158e876192ce"
+                        "b2d88fa2-f9fc-4e52-ad27-158e876192ce",
+                        "66af2c9a-2a1c-441b-ab1a-359528782781",
+                        "d1dbda30-00cc-43dc-a087-d472dedc0f9a",
+                        "8b77fd63-97c4-419d-8084-a812ce01689d"
                     ]
                 },
                 "TagComponent": {
@@ -9362,94 +9405,14 @@
                     "colliders": [
                         {
                             "size": [
-                                2.299999952316284,
+                                17.899999618530273,
                                 4.0,
                                 2.200000047683716
                             ],
                             "center": [
-                                0.0,
-                                1.899999976158142,
-                                0.0
-                            ],
-                            "canPassThrough": false,
-                            "triggerMessage": "",
-                            "isInteractable": false,
-                            "interactMessage": "",
-                            "promptText": ""
-                        }
-                    ]
-                },
-                "PhysicsProperties": {
-                    "category": 0,
-                    "isImmovable": true,
-                    "gravityFactor": 1.0,
-                    "mass": 1.0,
-                    "friction": 0.5,
-                    "restitution": 0.0,
-                    "linearVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "angularVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "startAwake": true
-                }
-            }
-        },
-        {
-            "name": "TreeBoundary (Copy)",
-            "guid": "55fb1862-2ff2-4a27-9b5c-dbab1f1b8d16",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -271.9920654296875,
-                        5.575689792633057,
-                        120.79862213134766
-                    ],
-                    "rotation": [
-                        0.0002517677203286439,
-                        -0.06841623038053513,
-                        -0.0000329411486745812
-                    ],
-                    "scale": [
-                        10.0,
-                        10.0,
-                        10.0
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
-                    "sortIndex": 141,
-                    "children": []
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "a0077014-9884-4a65-b44a-5c96f700552f",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "95b2bdaa-b3c5-42e0-9687-d0edc85dfe01",
-                    "isUI": false
-                },
-                "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                2.299999952316284,
-                                4.0,
-                                2.200000047683716
-                            ],
-                            "center": [
-                                0.0,
-                                1.899999976158142,
-                                0.0
+                                -3.200000047683716,
+                                1.600000023841858,
+                                0.20000000298023224
                             ],
                             "canPassThrough": false,
                             "triggerMessage": "",
@@ -10416,9 +10379,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -173.20162963867188,
-                        313.7152099609375,
-                        719.3889770507813
+                        -162.01651000976563,
+                        309.1441650390625,
+                        712.607421875
                     ],
                     "rotation": [
                         0.0003560220939107239,
@@ -10426,9 +10389,9 @@
                         -0.00025387201458215714
                     ],
                     "scale": [
-                        19.34000015258789,
-                        17.260000228881836,
-                        13.149999618530273
+                        7.880000114440918,
+                        8.739999771118164,
+                        12.0
                     ],
                     "isActive": true
                 },
@@ -10913,7 +10876,7 @@
                 "TransformComponent": {
                     "position": [
                         -196.93716430664063,
-                        313.62567138671875,
+                        313.5933532714844,
                         628.9638671875
                     ],
                     "rotation": [
@@ -10945,7 +10908,25 @@
                     "isUI": false
                 },
                 "BoxColliderComponent": {
-                    "colliders": []
+                    "colliders": [
+                        {
+                            "size": [
+                                0.5,
+                                2.0,
+                                0.550000011920929
+                            ],
+                            "center": [
+                                0.05000000074505806,
+                                1.0,
+                                -0.05000000074505806
+                            ],
+                            "canPassThrough": false,
+                            "triggerMessage": "",
+                            "isInteractable": false,
+                            "interactMessage": "",
+                            "promptText": ""
+                        }
+                    ]
                 },
                 "PhysicsProperties": {
                     "category": 0,
@@ -11068,7 +11049,7 @@
                 "TransformComponent": {
                     "position": [
                         -236.49522399902344,
-                        311.0,
+                        311.031005859375,
                         664.5771484375
                     ],
                     "rotation": [
@@ -11100,7 +11081,25 @@
                     "isUI": false
                 },
                 "BoxColliderComponent": {
-                    "colliders": []
+                    "colliders": [
+                        {
+                            "size": [
+                                0.25,
+                                1.0,
+                                0.30000001192092896
+                            ],
+                            "center": [
+                                -0.07500000298023224,
+                                1.100000023841858,
+                                -0.05000000074505806
+                            ],
+                            "canPassThrough": false,
+                            "triggerMessage": "",
+                            "isInteractable": false,
+                            "interactMessage": "",
+                            "promptText": ""
+                        }
+                    ]
                 },
                 "PhysicsProperties": {
                     "category": 0,
@@ -11193,7 +11192,25 @@
                     "isUI": false
                 },
                 "BoxColliderComponent": {
-                    "colliders": []
+                    "colliders": [
+                        {
+                            "size": [
+                                0.5,
+                                2.200000047683716,
+                                0.5
+                            ],
+                            "center": [
+                                0.0,
+                                0.8999999761581421,
+                                0.10000000149011612
+                            ],
+                            "canPassThrough": false,
+                            "triggerMessage": "",
+                            "isInteractable": false,
+                            "interactMessage": "",
+                            "promptText": ""
+                        }
+                    ]
                 },
                 "PhysicsProperties": {
                     "category": 0,
@@ -11513,7 +11530,7 @@
                             ],
                             "center": [
                                 0.0,
-                                0.800000011920929,
+                                0.6000000238418579,
                                 0.0
                             ],
                             "canPassThrough": false,
@@ -11587,14 +11604,14 @@
                     "colliders": [
                         {
                             "size": [
-                                2.299999952316284,
+                                0.5,
                                 4.0,
-                                2.200000047683716
+                                0.5
                             ],
                             "center": [
-                                0.0,
-                                1.899999976158142,
-                                0.0
+                                -0.10000000149011612,
+                                2.0,
+                                0.10000000149011612
                             ],
                             "canPassThrough": false,
                             "triggerMessage": "",
@@ -11698,14 +11715,14 @@
                     "colliders": [
                         {
                             "size": [
-                                0.800000011920929,
+                                0.4000000059604645,
                                 1.0,
                                 0.5
                             ],
                             "center": [
                                 -0.10000000149011612,
                                 0.8999999761581421,
-                                0.0
+                                0.10000000149011612
                             ],
                             "canPassThrough": false,
                             "triggerMessage": "",
@@ -11807,86 +11824,6 @@
                 },
                 "BoxColliderComponent": {
                     "colliders": []
-                },
-                "PhysicsProperties": {
-                    "category": 0,
-                    "isImmovable": true,
-                    "gravityFactor": 1.0,
-                    "mass": 1.0,
-                    "friction": 0.5,
-                    "restitution": 0.0,
-                    "linearVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "angularVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "startAwake": true
-                }
-            }
-        },
-        {
-            "name": "box garden",
-            "guid": "14c36a07-0952-477a-83e0-b1d01d419617",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -243.7103729248047,
-                        25.057058334350586,
-                        111.59546661376953
-                    ],
-                    "rotation": [
-                        -0.059811048209667206,
-                        -0.04329213127493858,
-                        -0.1121453121304512
-                    ],
-                    "scale": [
-                        0.49999505281448364,
-                        0.49999767541885376,
-                        0.5
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
-                    "sortIndex": 175,
-                    "children": []
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "5a92f04b-b30d-44f3-b990-d790fa568494",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "95b2bdaa-b3c5-42e0-9687-d0edc85dfe01",
-                    "isUI": false
-                },
-                "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                4.199999809265137,
-                                4.199999809265137,
-                                4.0
-                            ],
-                            "center": [
-                                0.0,
-                                1.899999976158142,
-                                0.0
-                            ],
-                            "canPassThrough": false,
-                            "triggerMessage": "",
-                            "isInteractable": false,
-                            "interactMessage": "",
-                            "promptText": ""
-                        }
-                    ]
                 },
                 "PhysicsProperties": {
                     "category": 0,
@@ -12058,7 +11995,7 @@
                 "TransformComponent": {
                     "position": [
                         -164.97898864746094,
-                        310.38250732421875,
+                        309.6752624511719,
                         643.86376953125
                     ],
                     "rotation": [
@@ -12090,25 +12027,7 @@
                     "isUI": false
                 },
                 "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                3.0,
-                                4.099999904632568,
-                                4.0
-                            ],
-                            "center": [
-                                0.0,
-                                1.899999976158142,
-                                0.0
-                            ],
-                            "canPassThrough": false,
-                            "triggerMessage": "",
-                            "isInteractable": false,
-                            "interactMessage": "",
-                            "promptText": ""
-                        }
-                    ]
+                    "colliders": []
                 },
                 "PhysicsProperties": {
                     "category": 0,
@@ -12138,7 +12057,7 @@
                 "TransformComponent": {
                     "position": [
                         -160.62005615234375,
-                        310.3504943847656,
+                        309.7710266113281,
                         669.8304443359375
                     ],
                     "rotation": [
@@ -12170,25 +12089,7 @@
                     "isUI": false
                 },
                 "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                3.0,
-                                4.099999904632568,
-                                4.0
-                            ],
-                            "center": [
-                                0.0,
-                                1.899999976158142,
-                                0.0
-                            ],
-                            "canPassThrough": false,
-                            "triggerMessage": "",
-                            "isInteractable": false,
-                            "interactMessage": "",
-                            "promptText": ""
-                        }
-                    ]
+                    "colliders": []
                 },
                 "PhysicsProperties": {
                     "category": 0,
@@ -12280,8 +12181,8 @@
                 "TransformComponent": {
                     "position": [
                         -179.0767822265625,
-                        311.95635986328125,
-                        586.3760375976563
+                        309.63372802734375,
+                        586.386962890625
                     ],
                     "rotation": [
                         -0.28525128960609436,
@@ -12341,9 +12242,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -160.15380859375,
-                        310.3789978027344,
-                        693.2969970703125
+                        -160.1644744873047,
+                        309.6833801269531,
+                        693.2850341796875
                     ],
                     "rotation": [
                         0.9958556294441223,
@@ -12466,7 +12367,7 @@
                 "TransformComponent": {
                     "position": [
                         -173.6850128173828,
-                        311.48175048828125,
+                        309.7888488769531,
                         564.819580078125
                     ],
                     "rotation": [
@@ -12590,7 +12491,7 @@
                 "TransformComponent": {
                     "position": [
                         -169.10704040527344,
-                        310.15478515625,
+                        309.7499694824219,
                         575.6192016601563
                     ],
                     "rotation": [
@@ -12776,7 +12677,7 @@
                 "TransformComponent": {
                     "position": [
                         -236.17184448242188,
-                        316.0265197753906,
+                        315.7351379394531,
                         583.0032958984375
                     ],
                     "rotation": [
@@ -12837,8 +12738,8 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -180.1051788330078,
-                        310.9715576171875,
+                        -180.10696411132813,
+                        309.7664489746094,
                         570.790283203125
                     ],
                     "rotation": [
@@ -12899,9 +12800,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -158.2107391357422,
-                        310.3690185546875,
-                        674.2897338867188
+                        -158.21058654785156,
+                        309.8094177246094,
+                        674.291748046875
                     ],
                     "rotation": [
                         -0.1646050214767456,
@@ -13042,86 +12943,6 @@
                 "HierarchyComponent": {
                     "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
                     "sortIndex": 193,
-                    "children": []
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "ac9a3c32-c3f7-45c7-a375-bd561ecaf0cc",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "95b2bdaa-b3c5-42e0-9687-d0edc85dfe01",
-                    "isUI": false
-                },
-                "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                3.0,
-                                4.099999904632568,
-                                4.0
-                            ],
-                            "center": [
-                                0.0,
-                                1.899999976158142,
-                                0.0
-                            ],
-                            "canPassThrough": false,
-                            "triggerMessage": "",
-                            "isInteractable": false,
-                            "interactMessage": "",
-                            "promptText": ""
-                        }
-                    ]
-                },
-                "PhysicsProperties": {
-                    "category": 0,
-                    "isImmovable": true,
-                    "gravityFactor": 1.0,
-                    "mass": 1.0,
-                    "friction": 0.5,
-                    "restitution": 0.0,
-                    "linearVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "angularVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "startAwake": true
-                }
-            }
-        },
-        {
-            "name": "Mushroom (Copy) (Copy)",
-            "guid": "5f8a88ba-c829-4d7f-ac48-4ecefaca6ced",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -202.54620361328125,
-                        5.575963973999023,
-                        59.54512023925781
-                    ],
-                    "rotation": [
-                        0.00025481326156295836,
-                        -0.06841621547937393,
-                        0.00005125941606820561
-                    ],
-                    "scale": [
-                        0.5,
-                        0.5,
-                        0.5
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
-                    "sortIndex": 194,
                     "children": []
                 },
                 "TagComponent": {
@@ -13900,7 +13721,7 @@
                 "TransformComponent": {
                     "position": [
                         -173.2562713623047,
-                        310.66351318359375,
+                        309.7522277832031,
                         595.8517456054688
                     ],
                     "rotation": [
@@ -13961,9 +13782,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -173.5564422607422,
-                        312.7713317871094,
-                        684.1853637695313
+                        -173.55386352539063,
+                        311.7615051269531,
+                        684.1903076171875
                     ],
                     "rotation": [
                         -0.30729180574417114,
@@ -13994,25 +13815,7 @@
                     "isUI": false
                 },
                 "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                3.0,
-                                4.099999904632568,
-                                4.0
-                            ],
-                            "center": [
-                                0.0,
-                                1.899999976158142,
-                                0.0
-                            ],
-                            "canPassThrough": false,
-                            "triggerMessage": "",
-                            "isInteractable": false,
-                            "interactMessage": "",
-                            "promptText": ""
-                        }
-                    ]
+                    "colliders": []
                 },
                 "PhysicsProperties": {
                     "category": 0,
@@ -14042,7 +13845,7 @@
                 "TransformComponent": {
                     "position": [
                         -166.0331573486328,
-                        310.4049987792969,
+                        309.7857971191406,
                         667.283203125
                     ],
                     "rotation": [
@@ -14074,25 +13877,7 @@
                     "isUI": false
                 },
                 "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                3.0,
-                                4.099999904632568,
-                                4.0
-                            ],
-                            "center": [
-                                0.0,
-                                1.899999976158142,
-                                0.0
-                            ],
-                            "canPassThrough": true,
-                            "triggerMessage": "",
-                            "isInteractable": false,
-                            "interactMessage": "",
-                            "promptText": ""
-                        }
-                    ]
+                    "colliders": []
                 },
                 "PhysicsProperties": {
                     "category": 0,
@@ -14330,893 +14115,13 @@
             }
         },
         {
-            "name": "box garden (Copy)",
-            "guid": "5877f4f1-8b91-4e56-9891-a9f904169a3d",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -245.55203247070313,
-                        26.183610916137695,
-                        109.62796020507813
-                    ],
-                    "rotation": [
-                        -0.003503707703202963,
-                        0.07375365495681763,
-                        -0.09493954479694366
-                    ],
-                    "scale": [
-                        0.4999975264072418,
-                        0.4999983608722687,
-                        0.5
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
-                    "sortIndex": 211,
-                    "children": []
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "5a92f04b-b30d-44f3-b990-d790fa568494",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "95b2bdaa-b3c5-42e0-9687-d0edc85dfe01",
-                    "isUI": false
-                },
-                "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                4.199999809265137,
-                                4.199999809265137,
-                                4.0
-                            ],
-                            "center": [
-                                0.0,
-                                1.899999976158142,
-                                0.0
-                            ],
-                            "canPassThrough": false,
-                            "triggerMessage": "",
-                            "isInteractable": false,
-                            "interactMessage": "",
-                            "promptText": ""
-                        }
-                    ]
-                },
-                "PhysicsProperties": {
-                    "category": 0,
-                    "isImmovable": true,
-                    "gravityFactor": 1.0,
-                    "mass": 1.0,
-                    "friction": 0.5,
-                    "restitution": 0.0,
-                    "linearVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "angularVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "startAwake": true
-                }
-            }
-        },
-        {
-            "name": "box garden (Copy)",
-            "guid": "51cf3b67-1f6b-46d3-a6e2-bfedbbaf1b8c",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -234.1083221435547,
-                        9.885149955749512,
-                        117.28152465820313
-                    ],
-                    "rotation": [
-                        0.07233382761478424,
-                        -0.014828181825578213,
-                        -0.11931288987398148
-                    ],
-                    "scale": [
-                        0.4999992251396179,
-                        0.49999988079071045,
-                        0.5
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
-                    "sortIndex": 212,
-                    "children": []
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "5a92f04b-b30d-44f3-b990-d790fa568494",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "95b2bdaa-b3c5-42e0-9687-d0edc85dfe01",
-                    "isUI": false
-                },
-                "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                4.199999809265137,
-                                4.199999809265137,
-                                4.0
-                            ],
-                            "center": [
-                                0.0,
-                                1.899999976158142,
-                                0.0
-                            ],
-                            "canPassThrough": false,
-                            "triggerMessage": "",
-                            "isInteractable": false,
-                            "interactMessage": "",
-                            "promptText": ""
-                        }
-                    ]
-                },
-                "PhysicsProperties": {
-                    "category": 0,
-                    "isImmovable": true,
-                    "gravityFactor": 1.0,
-                    "mass": 1.0,
-                    "friction": 0.5,
-                    "restitution": 0.0,
-                    "linearVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "angularVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "startAwake": true
-                }
-            }
-        },
-        {
-            "name": "box garden (Copy)",
-            "guid": "4cb189a7-2e1d-4816-bbae-7e593f1c824d",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -234.10443115234375,
-                        11.600451469421387,
-                        115.33899688720703
-                    ],
-                    "rotation": [
-                        0.067418672144413,
-                        0.03011298179626465,
-                        -0.11639387160539627
-                    ],
-                    "scale": [
-                        0.49999871850013733,
-                        0.499998539686203,
-                        0.5
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
-                    "sortIndex": 213,
-                    "children": []
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "5a92f04b-b30d-44f3-b990-d790fa568494",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "95b2bdaa-b3c5-42e0-9687-d0edc85dfe01",
-                    "isUI": false
-                },
-                "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                4.199999809265137,
-                                4.199999809265137,
-                                4.0
-                            ],
-                            "center": [
-                                0.0,
-                                1.899999976158142,
-                                0.0
-                            ],
-                            "canPassThrough": false,
-                            "triggerMessage": "",
-                            "isInteractable": false,
-                            "interactMessage": "",
-                            "promptText": ""
-                        }
-                    ]
-                },
-                "PhysicsProperties": {
-                    "category": 0,
-                    "isImmovable": true,
-                    "gravityFactor": 1.0,
-                    "mass": 1.0,
-                    "friction": 0.5,
-                    "restitution": 0.0,
-                    "linearVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "angularVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "startAwake": true
-                }
-            }
-        },
-        {
-            "name": "box garden (Copy)",
-            "guid": "949a434a-f45c-45db-a034-282718c11c8e",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -234.10198974609375,
-                        13.469475746154785,
-                        113.49848937988281
-                    ],
-                    "rotation": [
-                        0.05575966089963913,
-                        0.048403091728687286,
-                        -0.11005083471536636
-                    ],
-                    "scale": [
-                        0.49999845027923584,
-                        0.49999845027923584,
-                        0.5
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
-                    "sortIndex": 214,
-                    "children": []
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "5a92f04b-b30d-44f3-b990-d790fa568494",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "95b2bdaa-b3c5-42e0-9687-d0edc85dfe01",
-                    "isUI": false
-                },
-                "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                4.199999809265137,
-                                4.199999809265137,
-                                4.0
-                            ],
-                            "center": [
-                                0.0,
-                                1.899999976158142,
-                                0.0
-                            ],
-                            "canPassThrough": false,
-                            "triggerMessage": "",
-                            "isInteractable": false,
-                            "interactMessage": "",
-                            "promptText": ""
-                        }
-                    ]
-                },
-                "PhysicsProperties": {
-                    "category": 0,
-                    "isImmovable": true,
-                    "gravityFactor": 1.0,
-                    "mass": 1.0,
-                    "friction": 0.5,
-                    "restitution": 0.0,
-                    "linearVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "angularVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "startAwake": true
-                }
-            }
-        },
-        {
-            "name": "box garden (Copy)",
-            "guid": "b3aa01ec-3dd8-48a6-90ce-ef84871b6f77",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -234.09999084472656,
-                        15.452163696289063,
-                        111.5940933227539
-                    ],
-                    "rotation": [
-                        0.03576698154211044,
-                        0.06459624320268631,
-                        -0.10139531642198563
-                    ],
-                    "scale": [
-                        0.49999818205833435,
-                        0.49999821186065674,
-                        0.5
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
-                    "sortIndex": 215,
-                    "children": []
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "5a92f04b-b30d-44f3-b990-d790fa568494",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "95b2bdaa-b3c5-42e0-9687-d0edc85dfe01",
-                    "isUI": false
-                },
-                "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                4.199999809265137,
-                                4.199999809265137,
-                                4.0
-                            ],
-                            "center": [
-                                0.0,
-                                1.899999976158142,
-                                0.0
-                            ],
-                            "canPassThrough": false,
-                            "triggerMessage": "",
-                            "isInteractable": false,
-                            "interactMessage": "",
-                            "promptText": ""
-                        }
-                    ]
-                },
-                "PhysicsProperties": {
-                    "category": 0,
-                    "isImmovable": true,
-                    "gravityFactor": 1.0,
-                    "mass": 1.0,
-                    "friction": 0.5,
-                    "restitution": 0.0,
-                    "linearVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "angularVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "startAwake": true
-                }
-            }
-        },
-        {
-            "name": "box garden (Copy)",
-            "guid": "7b03d355-5b7b-407d-818e-93681d3ec54f",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -236.02325439453125,
-                        17.412954330444336,
-                        111.59770965576172
-                    ],
-                    "rotation": [
-                        -0.002525913994759321,
-                        0.07379364967346191,
-                        -0.09490852057933807
-                    ],
-                    "scale": [
-                        0.4999975264072418,
-                        0.4999983608722687,
-                        0.5
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
-                    "sortIndex": 216,
-                    "children": []
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "5a92f04b-b30d-44f3-b990-d790fa568494",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "95b2bdaa-b3c5-42e0-9687-d0edc85dfe01",
-                    "isUI": false
-                },
-                "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                4.199999809265137,
-                                4.199999809265137,
-                                4.0
-                            ],
-                            "center": [
-                                0.0,
-                                1.899999976158142,
-                                0.0
-                            ],
-                            "canPassThrough": false,
-                            "triggerMessage": "",
-                            "isInteractable": false,
-                            "interactMessage": "",
-                            "promptText": ""
-                        }
-                    ]
-                },
-                "PhysicsProperties": {
-                    "category": 0,
-                    "isImmovable": true,
-                    "gravityFactor": 1.0,
-                    "mass": 1.0,
-                    "friction": 0.5,
-                    "restitution": 0.0,
-                    "linearVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "angularVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "startAwake": true
-                }
-            }
-        },
-        {
-            "name": "box garden (Copy)",
-            "guid": "6b2f63f9-77d8-4516-a06f-737e507bb797",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -237.9061737060547,
-                        19.399011611938477,
-                        111.59979248046875
-                    ],
-                    "rotation": [
-                        -0.03373497724533081,
-                        0.06567975878715515,
-                        -0.10069181025028229
-                    ],
-                    "scale": [
-                        0.49999698996543884,
-                        0.49999865889549255,
-                        0.5
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
-                    "sortIndex": 217,
-                    "children": []
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "5a92f04b-b30d-44f3-b990-d790fa568494",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "95b2bdaa-b3c5-42e0-9687-d0edc85dfe01",
-                    "isUI": false
-                },
-                "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                4.199999809265137,
-                                4.199999809265137,
-                                4.0
-                            ],
-                            "center": [
-                                0.0,
-                                1.899999976158142,
-                                0.0
-                            ],
-                            "canPassThrough": false,
-                            "triggerMessage": "",
-                            "isInteractable": false,
-                            "interactMessage": "",
-                            "promptText": ""
-                        }
-                    ]
-                },
-                "PhysicsProperties": {
-                    "category": 0,
-                    "isImmovable": true,
-                    "gravityFactor": 1.0,
-                    "mass": 1.0,
-                    "friction": 0.5,
-                    "restitution": 0.0,
-                    "linearVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "angularVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "startAwake": true
-                }
-            }
-        },
-        {
-            "name": "box garden (Copy)",
-            "guid": "9fc9e8d7-5406-4409-acd9-d7b122ed76b5",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -239.8565673828125,
-                        21.304920196533203,
-                        111.6000747680664
-                    ],
-                    "rotation": [
-                        -0.06406761705875397,
-                        0.03670305386185646,
-                        -0.11447694897651672
-                    ],
-                    "scale": [
-                        0.49999624490737915,
-                        0.4999988079071045,
-                        0.5
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
-                    "sortIndex": 218,
-                    "children": []
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "5a92f04b-b30d-44f3-b990-d790fa568494",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "95b2bdaa-b3c5-42e0-9687-d0edc85dfe01",
-                    "isUI": false
-                },
-                "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                4.199999809265137,
-                                4.199999809265137,
-                                4.0
-                            ],
-                            "center": [
-                                0.0,
-                                1.899999976158142,
-                                0.0
-                            ],
-                            "canPassThrough": false,
-                            "triggerMessage": "",
-                            "isInteractable": false,
-                            "interactMessage": "",
-                            "promptText": ""
-                        }
-                    ]
-                },
-                "PhysicsProperties": {
-                    "category": 0,
-                    "isImmovable": true,
-                    "gravityFactor": 1.0,
-                    "mass": 1.0,
-                    "friction": 0.5,
-                    "restitution": 0.0,
-                    "linearVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "angularVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "startAwake": true
-                }
-            }
-        },
-        {
-            "name": "box garden (Copy)",
-            "guid": "e209f0e8-b953-489d-adba-0a2db1c8a273",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -241.7966766357422,
-                        23.113256454467773,
-                        111.59894561767578
-                    ],
-                    "rotation": [
-                        -0.07285542041063309,
-                        -0.011990050785243511,
-                        -0.11961362510919571
-                    ],
-                    "scale": [
-                        0.4999953806400299,
-                        0.49999749660491943,
-                        0.5
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
-                    "sortIndex": 219,
-                    "children": []
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "5a92f04b-b30d-44f3-b990-d790fa568494",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "95b2bdaa-b3c5-42e0-9687-d0edc85dfe01",
-                    "isUI": false
-                },
-                "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                4.199999809265137,
-                                4.199999809265137,
-                                4.0
-                            ],
-                            "center": [
-                                0.0,
-                                1.899999976158142,
-                                0.0
-                            ],
-                            "canPassThrough": false,
-                            "triggerMessage": "",
-                            "isInteractable": false,
-                            "interactMessage": "",
-                            "promptText": ""
-                        }
-                    ]
-                },
-                "PhysicsProperties": {
-                    "category": 0,
-                    "isImmovable": true,
-                    "gravityFactor": 1.0,
-                    "mass": 1.0,
-                    "friction": 0.5,
-                    "restitution": 0.0,
-                    "linearVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "angularVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "startAwake": true
-                }
-            }
-        },
-        {
-            "name": "box garden (Copy) (Copy)",
-            "guid": "0b5b7451-cd0c-418d-b2cc-95d7e9519f0d",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -236.11334228515625,
-                        5.985260486602783,
-                        120.14134979248047
-                    ],
-                    "rotation": [
-                        0.02430024743080139,
-                        0.0697239339351654,
-                        -0.09793924540281296
-                    ],
-                    "scale": [
-                        0.4999978542327881,
-                        0.49999770522117615,
-                        0.5
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
-                    "sortIndex": 220,
-                    "children": []
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "5a92f04b-b30d-44f3-b990-d790fa568494",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "95b2bdaa-b3c5-42e0-9687-d0edc85dfe01",
-                    "isUI": false
-                },
-                "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                4.199999809265137,
-                                4.199999809265137,
-                                4.0
-                            ],
-                            "center": [
-                                0.0,
-                                1.899999976158142,
-                                0.0
-                            ],
-                            "canPassThrough": false,
-                            "triggerMessage": "",
-                            "isInteractable": false,
-                            "interactMessage": "",
-                            "promptText": ""
-                        }
-                    ]
-                },
-                "PhysicsProperties": {
-                    "category": 0,
-                    "isImmovable": true,
-                    "gravityFactor": 1.0,
-                    "mass": 1.0,
-                    "friction": 0.5,
-                    "restitution": 0.0,
-                    "linearVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "angularVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "startAwake": true
-                }
-            }
-        },
-        {
-            "name": "box garden (Copy) (Copy)",
-            "guid": "b6c8fe56-04a8-41ae-a1e7-4b8eed989876",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -234.0583953857422,
-                        7.931420803070068,
-                        119.19498443603516
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        0.4999980926513672,
-                        0.49999821186065674,
-                        0.5
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
-                    "sortIndex": 221,
-                    "children": []
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "5a92f04b-b30d-44f3-b990-d790fa568494",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "95b2bdaa-b3c5-42e0-9687-d0edc85dfe01",
-                    "isUI": false
-                },
-                "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                4.199999809265137,
-                                4.199999809265137,
-                                4.0
-                            ],
-                            "center": [
-                                0.0,
-                                1.899999976158142,
-                                0.0
-                            ],
-                            "canPassThrough": false,
-                            "triggerMessage": "",
-                            "isInteractable": false,
-                            "interactMessage": "",
-                            "promptText": ""
-                        }
-                    ]
-                },
-                "PhysicsProperties": {
-                    "category": 0,
-                    "isImmovable": true,
-                    "gravityFactor": 1.0,
-                    "mass": 1.0,
-                    "friction": 0.5,
-                    "restitution": 0.0,
-                    "linearVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "angularVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "startAwake": true
-                }
-            }
-        },
-        {
             "name": "grass (Copy) (Copy)",
             "guid": "8e0e715b-c94b-4c9a-963b-11faebf97898",
             "components": {
                 "TransformComponent": {
                     "position": [
                         -163.0382843017578,
-                        309.9862365722656,
+                        309.83135986328125,
                         593.4539184570313
                     ],
                     "rotation": [
@@ -16192,19 +15097,19 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -159.3441619873047,
-                        309.9608459472656,
-                        610.062255859375
+                        -266.2070007324219,
+                        315.4524841308594,
+                        635.6536254882813
                     ],
                     "rotation": [
                         0.0,
-                        0.0,
+                        90.0,
                         0.0
                     ],
                     "scale": [
-                        0.9999902844429016,
-                        0.9999912977218628,
-                        0.9999922513961792
+                        1.5,
+                        1.5,
+                        1.5
                     ],
                     "isActive": true
                 },
@@ -16217,7 +15122,7 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "3d375724-4c1a-448d-ac97-c67b4c6404fd",
+                    "guid": "5b0e4129-babd-447a-a3f5-d1f5450908d1",
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
@@ -16225,7 +15130,42 @@
                     "isUI": false
                 },
                 "BoxColliderComponent": {
-                    "colliders": []
+                    "colliders": [
+                        {
+                            "size": [
+                                0.5,
+                                3.9000000953674316,
+                                1.0
+                            ],
+                            "center": [
+                                -1.100000023841858,
+                                2.0,
+                                0.0
+                            ],
+                            "canPassThrough": false,
+                            "triggerMessage": "",
+                            "isInteractable": false,
+                            "interactMessage": "",
+                            "promptText": ""
+                        },
+                        {
+                            "size": [
+                                2.5,
+                                1.0,
+                                1.0
+                            ],
+                            "center": [
+                                0.0,
+                                3.299999952316284,
+                                0.0
+                            ],
+                            "canPassThrough": false,
+                            "triggerMessage": "",
+                            "isInteractable": false,
+                            "interactMessage": "",
+                            "promptText": ""
+                        }
+                    ]
                 },
                 "PhysicsProperties": {
                     "category": 0,
@@ -16441,7 +15381,7 @@
                 "TransformComponent": {
                     "position": [
                         -163.0382843017578,
-                        309.8204040527344,
+                        309.7709045410156,
                         635.1171875
                     ],
                     "rotation": [
@@ -16503,7 +15443,7 @@
                 "TransformComponent": {
                     "position": [
                         -168.5099334716797,
-                        309.8204040527344,
+                        309.64306640625,
                         584.9716186523438
                     ],
                     "rotation": [
@@ -16795,14 +15735,14 @@
                     "colliders": [
                         {
                             "size": [
-                                2.299999952316284,
-                                4.0,
-                                2.200000047683716
+                                0.5,
+                                4.099999904632568,
+                                0.4000000059604645
                             ],
                             "center": [
-                                0.0,
+                                -0.15000000596046448,
                                 1.899999976158142,
-                                0.0
+                                0.10000000149011612
                             ],
                             "canPassThrough": false,
                             "triggerMessage": "",
@@ -16903,7 +15843,25 @@
                     "isUI": false
                 },
                 "BoxColliderComponent": {
-                    "colliders": []
+                    "colliders": [
+                        {
+                            "size": [
+                                0.30000001192092896,
+                                2.299999952316284,
+                                0.30000001192092896
+                            ],
+                            "center": [
+                                -0.05000000074505806,
+                                1.2000000476837158,
+                                -0.05000000074505806
+                            ],
+                            "canPassThrough": false,
+                            "triggerMessage": "",
+                            "isInteractable": false,
+                            "interactMessage": "",
+                            "promptText": ""
+                        }
+                    ]
                 },
                 "PhysicsProperties": {
                     "category": 0,
@@ -16964,7 +15922,7 @@
                 "TransformComponent": {
                     "position": [
                         -239.5778045654297,
-                        316.05560302734375,
+                        315.8223571777344,
                         578.188232421875
                     ],
                     "rotation": [
@@ -17026,7 +15984,7 @@
                 "TransformComponent": {
                     "position": [
                         -239.6837615966797,
-                        316.0265197753906,
+                        315.825927734375,
                         581.2245483398438
                     ],
                     "rotation": [
@@ -17088,7 +16046,7 @@
                 "TransformComponent": {
                     "position": [
                         -234.1714630126953,
-                        316.05560302734375,
+                        315.752197265625,
                         583.014892578125
                     ],
                     "rotation": [
@@ -17150,7 +16108,7 @@
                 "TransformComponent": {
                     "position": [
                         -233.49172973632813,
-                        316.05560302734375,
+                        315.7901611328125,
                         580.3423461914063
                     ],
                     "rotation": [
@@ -17212,7 +16170,7 @@
                 "TransformComponent": {
                     "position": [
                         -233.89459228515625,
-                        316.05560302734375,
+                        315.82305908203125,
                         578.0447998046875
                     ],
                     "rotation": [
@@ -17274,7 +16232,7 @@
                 "TransformComponent": {
                     "position": [
                         -235.57540893554688,
-                        316.05560302734375,
+                        315.789306640625,
                         578.0429077148438
                     ],
                     "rotation": [
@@ -17336,7 +16294,7 @@
                 "TransformComponent": {
                     "position": [
                         -237.7477569580078,
-                        316.05560302734375,
+                        315.78143310546875,
                         578.1904296875
                     ],
                     "rotation": [
@@ -17398,7 +16356,7 @@
                 "TransformComponent": {
                     "position": [
                         -237.48223876953125,
-                        316.0265197753906,
+                        315.7626647949219,
                         583.0018310546875
                     ],
                     "rotation": [
@@ -17460,7 +16418,7 @@
                 "TransformComponent": {
                     "position": [
                         -239.32113647460938,
-                        316.0265197753906,
+                        315.6927490234375,
                         582.999755859375
                     ],
                     "rotation": [
@@ -17522,7 +16480,7 @@
                 "TransformComponent": {
                     "position": [
                         -212.62210083007813,
-                        315.913525390625,
+                        315.91351318359375,
                         583.29150390625
                     ],
                     "rotation": [
@@ -17584,7 +16542,7 @@
                 "TransformComponent": {
                     "position": [
                         -211.01937866210938,
-                        315.8238220214844,
+                        315.6775207519531,
                         582.2338256835938
                     ],
                     "rotation": [
@@ -17593,9 +16551,9 @@
                         0.0
                     ],
                     "scale": [
-                        0.9999893307685852,
-                        0.9999904632568359,
-                        0.9999923706054688
+                        1.0399999618530273,
+                        1.2400000095367432,
+                        1.5
                     ],
                     "isActive": true
                 },
@@ -17646,7 +16604,7 @@
                 "TransformComponent": {
                     "position": [
                         -208.54344177246094,
-                        315.8238220214844,
+                        315.74658203125,
                         582.18408203125
                     ],
                     "rotation": [
@@ -17656,7 +16614,7 @@
                     ],
                     "scale": [
                         0.9999893307685852,
-                        0.9999904632568359,
+                        1.25,
                         0.9999923706054688
                     ],
                     "isActive": true
@@ -17708,7 +16666,7 @@
                 "TransformComponent": {
                     "position": [
                         -214.2899932861328,
-                        316.3982238769531,
+                        315.67279052734375,
                         578.7158203125
                     ],
                     "rotation": [
@@ -17718,7 +16676,7 @@
                     ],
                     "scale": [
                         0.9999893307685852,
-                        0.9999904632568359,
+                        1.7000000476837158,
                         0.9999923706054688
                     ],
                     "isActive": true
@@ -17770,7 +16728,7 @@
                 "TransformComponent": {
                     "position": [
                         -214.2899932861328,
-                        316.3982238769531,
+                        315.74774169921875,
                         576.171630859375
                     ],
                     "rotation": [
@@ -17832,7 +16790,7 @@
                 "TransformComponent": {
                     "position": [
                         -212.29527282714844,
-                        316.3982238769531,
+                        315.81024169921875,
                         575.5377197265625
                     ],
                     "rotation": [
@@ -17894,7 +16852,7 @@
                 "TransformComponent": {
                     "position": [
                         -210.24468994140625,
-                        316.3982238769531,
+                        315.76556396484375,
                         575.5377197265625
                     ],
                     "rotation": [
@@ -17956,7 +16914,7 @@
                 "TransformComponent": {
                     "position": [
                         -208.0734100341797,
-                        316.3982238769531,
+                        315.8519287109375,
                         575.5377197265625
                     ],
                     "rotation": [
@@ -18018,7 +16976,7 @@
                 "TransformComponent": {
                     "position": [
                         -206.99925231933594,
-                        316.3982238769531,
+                        315.7560119628906,
                         577.7147216796875
                     ],
                     "rotation": [
@@ -18028,7 +16986,7 @@
                     ],
                     "scale": [
                         0.9999893307685852,
-                        0.9999904632568359,
+                        1.5299999713897705,
                         0.9999923706054688
                     ],
                     "isActive": true
@@ -18080,7 +17038,7 @@
                 "TransformComponent": {
                     "position": [
                         -206.99925231933594,
-                        316.3982238769531,
+                        315.768310546875,
                         580.34326171875
                     ],
                     "rotation": [
@@ -18090,7 +17048,7 @@
                     ],
                     "scale": [
                         0.9999893307685852,
-                        0.9999904632568359,
+                        1.3799999952316284,
                         0.9999923706054688
                     ],
                     "isActive": true
@@ -18142,7 +17100,7 @@
                 "TransformComponent": {
                     "position": [
                         -214.02960205078125,
-                        315.913525390625,
+                        315.91351318359375,
                         581.3984985351563
                     ],
                     "rotation": [
@@ -18204,7 +17162,7 @@
                 "TransformComponent": {
                     "position": [
                         -214.02960205078125,
-                        316.613525390625,
+                        315.77099609375,
                         583.29150390625
                     ],
                     "rotation": [
@@ -21419,7 +20377,7 @@
                     "is3D": true,
                     "minDistance": 1.0,
                     "maxDistance": 100.0,
-                    "volume": 1.0,
+                    "volume": 0.0,
                     "loop": false,
                     "playOnStart": true,
                     "isPlaying": true,
@@ -22104,7 +21062,7 @@
                 },
                 "TextureComponent": {
                     "guid": "3c9d8dfd-6930-486f-8945-f5522795e3f3",
-                    "isUI": true
+                    "isUI": false
                 }
             }
         },
@@ -22199,7 +21157,7 @@
                 },
                 "TextureComponent": {
                     "guid": "8e43fdcb-ee42-4aaf-8146-4fa6aead6136",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ButtonComponent": {
                     "position": [
@@ -22229,7 +21187,7 @@
                     "rotation": [
                         0.0,
                         0.0,
-                        100.74539947509766
+                        72.34412384033203
                     ],
                     "scale": [
                         350.0,
@@ -22327,7 +21285,7 @@
                     "loop": false
                 },
                 "TextProperties": {
-                    "text": "2:13",
+                    "text": "0:54",
                     "scale": 1.149999976158142,
                     "color": [
                         0.0,
@@ -22372,14 +21330,14 @@
                     "tags": []
                 },
                 "TextProperties": {
-                    "text": "Day 3",
+                    "text": "Day 5",
                     "scale": 1.3600000143051147,
                     "color": [
                         0.0,
                         0.0,
                         0.0
                     ],
-                    "opacity": 1.0,
+                    "opacity": 0.0,
                     "alignment": 1,
                     "isBillboard": false,
                     "screenSpace": true
@@ -22417,7 +21375,7 @@
                     "tags": []
                 },
                 "TextProperties": {
-                    "text": "Night 2",
+                    "text": "Night 5",
                     "scale": 1.5,
                     "color": [
                         0.0,
@@ -23232,7 +22190,7 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        180.0,
+                        132.96875,
                         910.0,
                         -9999.0
                     ],
@@ -23242,7 +22200,7 @@
                         0.0
                     ],
                     "scale": [
-                        350.0,
+                        112.6805419921875,
                         25.0,
                         1.0
                     ],
@@ -34645,7 +33603,25 @@
                     "isUI": false
                 },
                 "BoxColliderComponent": {
-                    "colliders": []
+                    "colliders": [
+                        {
+                            "size": [
+                                0.3499999940395355,
+                                3.5,
+                                0.30000001192092896
+                            ],
+                            "center": [
+                                -0.05000000074505806,
+                                1.600000023841858,
+                                -0.05000000074505806
+                            ],
+                            "canPassThrough": false,
+                            "triggerMessage": "",
+                            "isInteractable": false,
+                            "interactMessage": "",
+                            "promptText": ""
+                        }
+                    ]
                 },
                 "PhysicsProperties": {
                     "category": 0,
@@ -34705,9 +33681,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -210.2727813720703,
-                        315.6489562988281,
-                        577.817626953125
+                        -210.2720184326172,
+                        315.60302734375,
+                        577.8178100585938
                     ],
                     "rotation": [
                         -0.039429884403944016,
@@ -34738,7 +33714,25 @@
                     "isUI": false
                 },
                 "BoxColliderComponent": {
-                    "colliders": []
+                    "colliders": [
+                        {
+                            "size": [
+                                0.44999998807907104,
+                                1.7999999523162842,
+                                0.5
+                            ],
+                            "center": [
+                                -0.06499999761581421,
+                                0.800000011920929,
+                                0.05000000074505806
+                            ],
+                            "canPassThrough": false,
+                            "triggerMessage": "",
+                            "isInteractable": false,
+                            "interactMessage": "",
+                            "promptText": ""
+                        }
+                    ]
                 },
                 "PhysicsProperties": {
                     "category": 0,
@@ -35578,9 +34572,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -208.0707550048828,
-                        320.861083984375,
-                        658.8397827148438
+                        -208.0701904296875,
+                        321.6778259277344,
+                        658.4048461914063
                     ],
                     "rotation": [
                         0.00034009231603704393,
@@ -36898,9 +35892,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -252.14344787597656,
-                        315.83636474609375,
-                        659.7730712890625
+                        -216.74050903320313,
+                        315.83807373046875,
+                        674.116943359375
                     ],
                     "rotation": [
                         -0.000045056178350932896,
@@ -37041,7 +36035,7 @@
                 "TransformComponent": {
                     "position": [
                         -153.510498046875,
-                        309.5848693847656,
+                        309.63470458984375,
                         683.6277465820313
                     ],
                     "rotation": [
@@ -37227,7 +36221,7 @@
                 "TransformComponent": {
                     "position": [
                         -166.6636505126953,
-                        309.58575439453125,
+                        309.5943603515625,
                         650.563720703125
                     ],
                     "rotation": [
@@ -37511,7 +36505,7 @@
                 "TransformComponent": {
                     "position": [
                         -153.46298217773438,
-                        309.5851745605469,
+                        309.48516845703125,
                         660.913330078125
                     ],
                     "rotation": [
@@ -40319,7 +39313,7 @@
                 "TransformComponent": {
                     "position": [
                         -226.87709045410156,
-                        315.81048583984375,
+                        315.7765197753906,
                         566.8760375976563
                     ],
                     "rotation": [
@@ -40939,7 +39933,7 @@
                 "TransformComponent": {
                     "position": [
                         -243.4691925048828,
-                        315.40643310546875,
+                        315.447509765625,
                         683.2272338867188
                     ],
                     "rotation": [
@@ -41001,7 +39995,7 @@
                 "TransformComponent": {
                     "position": [
                         -186.5617218017578,
-                        311.8607177734375,
+                        311.7781677246094,
                         572.6553955078125
                     ],
                     "rotation": [
@@ -41435,7 +40429,7 @@
                 "TransformComponent": {
                     "position": [
                         -271.052734375,
-                        315.8753662109375,
+                        315.839599609375,
                         589.1190185546875
                     ],
                     "rotation": [
@@ -42382,9 +41376,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -191.90037536621094,
-                        313.8616943359375,
-                        565.3441772460938
+                        -191.90065002441406,
+                        313.8913269042969,
+                        565.3443603515625
                     ],
                     "rotation": [
                         0.44693824648857117,
@@ -45737,7 +44731,25 @@
                     "isUI": false
                 },
                 "BoxColliderComponent": {
-                    "colliders": []
+                    "colliders": [
+                        {
+                            "size": [
+                                1.0,
+                                3.4000000953674316,
+                                15.0
+                            ],
+                            "center": [
+                                0.4000000059604645,
+                                1.399999976158142,
+                                0.20000000298023224
+                            ],
+                            "canPassThrough": false,
+                            "triggerMessage": "",
+                            "isInteractable": false,
+                            "interactMessage": "",
+                            "promptText": ""
+                        }
+                    ]
                 },
                 "PhysicsProperties": {
                     "category": 0,
@@ -46561,7 +45573,25 @@
                     "isUI": false
                 },
                 "BoxColliderComponent": {
-                    "colliders": []
+                    "colliders": [
+                        {
+                            "size": [
+                                0.800000011920929,
+                                5.099999904632568,
+                                22.299999237060547
+                            ],
+                            "center": [
+                                -0.5,
+                                1.899999976158142,
+                                -0.4000000059604645
+                            ],
+                            "canPassThrough": false,
+                            "triggerMessage": "",
+                            "isInteractable": false,
+                            "interactMessage": "",
+                            "promptText": ""
+                        }
+                    ]
                 },
                 "PhysicsProperties": {
                     "category": 0,
@@ -46626,14 +45656,14 @@
                     "colliders": [
                         {
                             "size": [
-                                2.299999952316284,
+                                0.5,
                                 4.0,
-                                2.200000047683716
+                                0.5
                             ],
                             "center": [
-                                0.0,
+                                -0.05000000074505806,
                                 1.899999976158142,
-                                0.0
+                                0.10000000149011612
                             ],
                             "canPassThrough": false,
                             "triggerMessage": "",
@@ -46702,7 +45732,7 @@
                 "TransformComponent": {
                     "position": [
                         -239.65206909179688,
-                        316.115966796875,
+                        315.79931640625,
                         664.7843627929688
                     ],
                     "rotation": [
@@ -47002,6 +46032,309 @@
                         0.0
                     ],
                     "startAwake": true
+                }
+            }
+        },
+        {
+            "name": "CustomerTextbox",
+            "guid": "f6197196-695b-450f-8060-74d32e430ad4",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "b1e7bea6-ba5d-4a40-be1c-b30224f8868c"
+                }
+            }
+        },
+        {
+            "name": "CustomerTextbox",
+            "guid": "b3176fec-a4f8-4c7b-8f22-c16df07517aa",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "b1e7bea6-ba5d-4a40-be1c-b30224f8868c"
+                }
+            }
+        },
+        {
+            "name": "Customer_Slot_1",
+            "guid": "7617e484-797e-4b3e-8fc6-6aaf1395bf99",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "584b841f-a181-4adb-a75c-852abf944c79"
+                }
+            }
+        },
+        {
+            "name": "Customer_Slot_2",
+            "guid": "59d3ad64-d3cc-477b-ba9c-e522503be1b3",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "2b031b5f-39b1-4596-8f6f-ad7a639fb94d"
+                }
+            }
+        },
+        {
+            "name": "TreeBoundary (Copy) (Copy)",
+            "guid": "66af2c9a-2a1c-441b-ab1a-359528782781",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -173.20162963867188,
+                        313.7152099609375,
+                        719.3889770507813
+                    ],
+                    "rotation": [
+                        0.0003560220939107239,
+                        -0.06841623038053513,
+                        -0.00025387201458215714
+                    ],
+                    "scale": [
+                        19.34000015258789,
+                        17.260000228881836,
+                        13.149999618530273
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
+                    "sortIndex": 157,
+                    "children": []
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "MeshComponent": {
+                    "guid": "a0077014-9884-4a65-b44a-5c96f700552f",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "95b2bdaa-b3c5-42e0-9687-d0edc85dfe01",
+                    "isUI": false
+                },
+                "BoxColliderComponent": {
+                    "colliders": []
+                },
+                "PhysicsProperties": {
+                    "category": 0,
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 0.5,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "startAwake": true
+                }
+            }
+        },
+        {
+            "name": "TreeBoundary (Copy) (Copy)",
+            "guid": "d1dbda30-00cc-43dc-a087-d472dedc0f9a",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -173.1935272216797,
+                        312.8723449707031,
+                        712.593994140625
+                    ],
+                    "rotation": [
+                        0.0003560220939107239,
+                        -0.06841623038053513,
+                        -0.00025387201458215714
+                    ],
+                    "scale": [
+                        7.880000114440918,
+                        8.739999771118164,
+                        12.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
+                    "sortIndex": 157,
+                    "children": []
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "MeshComponent": {
+                    "guid": "a0077014-9884-4a65-b44a-5c96f700552f",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "95b2bdaa-b3c5-42e0-9687-d0edc85dfe01",
+                    "isUI": false
+                },
+                "BoxColliderComponent": {
+                    "colliders": []
+                },
+                "PhysicsProperties": {
+                    "category": 0,
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 0.5,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "startAwake": true
+                }
+            }
+        },
+        {
+            "name": "CustomerTextbox",
+            "guid": "7f91d7e9-b546-465d-9b4e-4ccce1c4fd8d",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "b1e7bea6-ba5d-4a40-be1c-b30224f8868c"
+                }
+            }
+        },
+        {
+            "name": "Customer_Slot_1",
+            "guid": "3b0805fe-4f56-4d47-805c-8d0626be9e7e",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "584b841f-a181-4adb-a75c-852abf944c79"
+                }
+            }
+        },
+        {
+            "name": "ProgressBarFrame",
+            "guid": "898b56cc-e94e-44e5-97eb-bbff872cc6a0",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "6c60686a-c68c-4284-bce0-019cfcbf77fa"
+                }
+            }
+        },
+        {
+            "name": "ProgressBarFill",
+            "guid": "c33095e0-6f91-45c1-8f94-56b4eaa5159e",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "5dfc16be-aa4a-420a-9105-f7c9652f3620"
+                }
+            }
+        },
+        {
+            "name": "CustomerTextbox",
+            "guid": "bbf9c9b9-6c4b-4f76-b741-cf4f35f81887",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "b1e7bea6-ba5d-4a40-be1c-b30224f8868c"
+                }
+            }
+        },
+        {
+            "name": "Customer_Slot_2",
+            "guid": "ebdb9142-4b74-4e0f-863d-b99ff5db50b0",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "2b031b5f-39b1-4596-8f6f-ad7a639fb94d"
+                }
+            }
+        },
+        {
+            "name": "CustomerTextbox",
+            "guid": "cc423b8d-d4ed-4a20-b1b2-32934cf643a7",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "b1e7bea6-ba5d-4a40-be1c-b30224f8868c"
+                }
+            }
+        },
+        {
+            "name": "grass (Copy) (Copy) (Copy) (Copy)",
+            "guid": "8b77fd63-97c4-419d-8084-a812ce01689d",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -159.3441619873047,
+                        309.9608459472656,
+                        610.062255859375
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.9999902844429016,
+                        0.9999912977218628,
+                        0.9999922513961792
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "d0238a78-c7df-4e3b-bc44-c5282a568b3d",
+                    "sortIndex": 230,
+                    "children": []
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "MeshComponent": {
+                    "guid": "3d375724-4c1a-448d-ac97-c67b4c6404fd",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "95b2bdaa-b3c5-42e0-9687-d0edc85dfe01",
+                    "isUI": false
+                },
+                "BoxColliderComponent": {
+                    "colliders": []
+                },
+                "PhysicsProperties": {
+                    "category": 0,
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 0.5,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "startAwake": true
+                }
+            }
+        },
+        {
+            "name": "Customer_Slot_1",
+            "guid": "74bdc73d-b3ff-40d7-8202-15870db57226",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "584b841f-a181-4adb-a75c-852abf944c79"
+                }
+            }
+        },
+        {
+            "name": "Customer_Slot_2",
+            "guid": "6dddd40b-ceda-4fe2-a386-440d091e76d4",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "2b031b5f-39b1-4596-8f6f-ad7a639fb94d"
                 }
             }
         }
