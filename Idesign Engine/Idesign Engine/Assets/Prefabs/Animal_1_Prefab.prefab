@@ -107,6 +107,30 @@
                         "luaFunctionToCall": "OnInteract"
                     }
                 ]
+            },
+            "ParticleEmitterComponent": {
+                "active": true,
+                "loop": true,
+                "duration": 1.0,
+                "direction": [
+                    0.0,
+                    1.0,
+                    0.0
+                ],
+                "emitterOffset": [
+                    0.0,
+                    0.5,
+                    0.0
+                ],
+                "spreadAngleDeg": 100.0,
+                "range": 2.0,
+                "particlesPerSecond": 10.0,
+                "particleSpeed": 1.0,
+                "particleSize": 0.3,
+                "localSpace": true,
+                "textureGuid": "7f81f0a1-cb99-4e9a-ac72-e1f7193092f7",
+                "pixelFilter": true,
+                "maxParticles": 200
             }
         }
     }

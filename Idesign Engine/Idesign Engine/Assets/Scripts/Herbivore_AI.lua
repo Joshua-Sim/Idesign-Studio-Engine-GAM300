@@ -7,7 +7,7 @@ M.waitMax = 5.0
 M.arrivalDist = 1.5
 
 -- 10 seconds converted to milliseconds for SetData
-local REGROWTH_TIME_MS = 10000 
+local REGROWTH_TIME_MS = 180000
 
 -- =========================================================
 -- HELPERS: per-entity state via SetData/GetData
@@ -79,6 +79,8 @@ function M:on_update(dt)
             SetState(self.entity, "IsSheared", 0)
             print("[Herbivore_AI] Wool regrew on sheep " .. tostring(self.entity) .. "!")
             
+            SetParticleEmitterActive(self.entity, true)
+
             -- Swap BACK to the fluffy sheep model
             if SetMesh then SetMesh(self.entity, "Assets/Objects/SheepWithWool.obj") end
             if SetTexture then SetTexture(self.entity, "Assets/Textures/SheepWithWool.png") end
@@ -125,6 +127,8 @@ function M.OnInteract(senderID, targetID, actionType)
         -- 2. Swap using clean, relative paths
         if SetMesh then SetMesh(targetID, "Assets/Objects/SheepWithoutWool.obj") end
         if SetTexture then SetTexture(targetID, "Assets/Textures/SheepWithoutWool.png") end
+
+        SetParticleEmitterActive(targetID, false)
 
         -- 3. Update the C++ state so it can't be sheared again immediately
         SetState(targetID, "IsSheared", 1)

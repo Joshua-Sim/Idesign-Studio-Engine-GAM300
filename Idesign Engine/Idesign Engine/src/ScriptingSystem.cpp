@@ -30,6 +30,7 @@
 #include "PhaseManager.h"
 #include <Core.h>
 #include "Upgrade.h"
+#include <ParticleComponent.h>
 
 extern Framework::Coordinator ecsInterface;
 
@@ -1661,6 +1662,21 @@ namespace Framework {
             return 0; // Returns nothing
         }
 
+        static int lua_SetParticleEmitterActive(lua_State* L)
+        {
+            // Arg 1: Entity ID
+            Entity e = static_cast<Entity>(luaL_checkinteger(L, 1));
+            // Arg 2: Boolean state
+            bool active = lua_toboolean(L, 2);
+
+            if (ecsInterface.IsEntityValid(e) && ecsInterface.HasComponent<ParticleEmitterComponent>(e))
+            {
+                auto& emitter = ecsInterface.GetComponent<ParticleEmitterComponent>(e);
+                emitter.active = active;
+            }
+            return 0;
+        }
+
         static int Lua_LoadScene(lua_State* L)
         {
             int argc = lua_gettop(L);
@@ -2564,6 +2580,7 @@ namespace Framework {
         lua_register(L, "SubscribeToEvent", lua_SubscribeToEvent); // Maybe add register if needed
         lua_register(L, "SetScriptVariable", lua_SetScriptVariable);
         lua_register(L, "GetLookedAtEntity", lua_GetLookedAtEntity);
+        lua_register(L, "SetParticleEmitterActive", lua_SetParticleEmitterActive);
 
         // Engine States
         lua_register(L, "GameStateStart",               lua_GameStateStart);
