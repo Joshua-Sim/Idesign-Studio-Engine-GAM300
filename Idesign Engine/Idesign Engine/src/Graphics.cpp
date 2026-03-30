@@ -2168,11 +2168,14 @@ namespace Framework {
     {
         static std::vector<std::string> boneNames;
         static std::vector<std::string> shadowNames;
+        static std::vector<std::string> farPlaneNames; // NEW
 
-        // Pre-calculate the strings once to save CPU time
         if (boneNames.empty()) {
-            for (int i = 0; i < 100; ++i) boneNames.push_back("uBoneMatrices[" + std::to_string(i) + "]");
-            for (int i = 0; i < 8; ++i) shadowNames.push_back("uPointShadowMaps[" + std::to_string(i) + "]");
+            for (int i = 0; i < 150; ++i) boneNames.push_back("uBoneMatrices[" + std::to_string(i) + "]");
+            for (int i = 0; i < MAX_POINT_LIGHTS; ++i) {
+                shadowNames.push_back("uPointShadowMaps[" + std::to_string(i) + "]");
+                farPlaneNames.push_back("uPointShadowFarPlanes[" + std::to_string(i) + "]"); // NEW
+            }
         }
         // Get the correct pick UV for this view
         glm::vec2& pickUV = (viewIndex == 0) ? pendingPickUV0 : pendingPickUV1;
@@ -2431,45 +2434,31 @@ namespace Framework {
 
         // 2. Bind Textures & Set Uniforms GLOBALLY for this pass.
         //    This avoids re-binding them thousands of times inside the loop.
+        // 2. Bind Textures & Set Uniforms GLOBALLY for this pass.
         auto SetupShadowsForShader = [&](ShaderProgram& sh) {
             sh.use();
             int baseUnit = 2; // Start at Texture Unit 2 (0=Albedo, 1=DirShadow)
 
-            // FIX: use a compacted 'shadowCount' index so that uPointShadowMaps[k] and
-            // uPointLights[k] refer to the same light.
-            // LightProperties::upload already packs enabled lights into 0..N-1 slots.
-            // We must bind cubemaps using the same compacted counter, not the raw
-            // points[] index (which would skip disabled lights and cause a mismatch).
-
-            // Step 1: lock ALL sampler slots first so none default to unit 0.
+            // Step 1: Default all slots efficiently using the cache
             for (int i = 0; i < MAX_POINT_LIGHTS; ++i) {
-                sh.setInt(("uPointShadowMaps[" + std::to_string(i) + "]").c_str(), baseUnit + i);
-                sh.setFloat(("uPointShadowFarPlanes[" + std::to_string(i) + "]").c_str(), 0.0f);
+                sh.setInt(shadowNames[i].c_str(), baseUnit + i);
+                sh.setFloat(farPlaneNames[i].c_str(), 0.0f);
             }
 
-            // Step 2: bind actual cubemaps using a synchronized index
+            // Step 2: Bind actual cubemaps using the synchronized index (i)
             int unitOffset = 0;
-            int activeLightIndex = 0; // This guarantees we match LightProperties::upload exactly!
+            for (size_t i = 0; i < points.size() && i < MAX_POINT_LIGHTS; ++i) {
 
-            for (size_t i = 0; i < points.size(); ++i) {
-                if (!points[i].enabled) continue; // Skip disabled lights (matching upload behavior)
-                if (activeLightIndex >= MAX_POINT_LIGHTS) break;
-
-                // Only bind a texture if this specific light casts a shadow
                 if (points[i].castsShadow && validShadowTextures[i] != 0) {
                     glActiveTexture(GL_TEXTURE0 + baseUnit + unitOffset);
                     glBindTexture(GL_TEXTURE_CUBE_MAP, validShadowTextures[i]);
 
-                    // Assign this texture unit to the EXACT matching light index
-                    std::string uniformName = "uPointShadowMaps[" + std::to_string(activeLightIndex) + "]";
-                    sh.setInt(uniformName.c_str(), baseUnit + unitOffset);
-
-                    // Update the far plane for this specific index
-                    sh.setFloat(("uPointShadowFarPlanes[" + std::to_string(activeLightIndex) + "]").c_str(), points[i].shadowFarPlane);
+                    // Use the fast cached strings!
+                    sh.setInt(shadowNames[i].c_str(), baseUnit + unitOffset);
+                    sh.setFloat(farPlaneNames[i].c_str(), points[i].shadowFarPlane);
 
                     unitOffset++;
                 }
-                activeLightIndex++; // Increment for EVERY enabled light, shadow or not!
             }
             };
 
@@ -2947,143 +2936,6 @@ namespace Framework {
 
         // --- PARTICLES END   --- (Jasper)
         glStencilMask(0x00);
-        for (auto it = transparentEntities.rbegin(); it != transparentEntities.rend(); ++it)
-        {
-
-            auto const& entityId = it->second;
-            auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
-            auto& mesh = ecsInterface.GetComponent<MeshProperties>(entityId);
-
-            if (!tr.isActive) continue; // Skip pass if isactive is false
-
-            glm::mat4 model(1.0f);
-            model = glm::translate(model, tr.position);
-            model = glm::rotate(model, glm::radians(tr.rotation.x), { 1,0,0 });
-            model = glm::rotate(model, glm::radians(tr.rotation.y), { 0,1,0 });
-            model = glm::rotate(model, glm::radians(tr.rotation.z), { 0,0,1 });
-            model = glm::scale(model, tr.scale);
-
-            if (mesh.debugShape == DebugShapeType::None && mesh.vao != 0)
-            {
-                bool isSkinned = ecsInterface.HasComponent<AnimationProperties>(entityId);
-                ShaderProgram& currentShader = isSkinned ? skinnedShader : meshShader;
-
-                currentShader.use();
-                currentShader.setMat4("uProj", proj);
-                currentShader.setMat4("uView", view);
-                currentShader.setVec3("uViewPos", cam.position);
-                currentShader.setMat4("uModel", model);
-
-                glActiveTexture(GL_TEXTURE1);
-                glBindTexture(GL_TEXTURE_2D, m_shadowDepthTexture);
-                currentShader.setInt("uShadowMap", 1);
-                currentShader.setMat4("uLightSpaceMatrix", m_lightSpaceMatrix);
-                int pointShadowUnit = 2; // Start at texture unit 2
-                int pointShadowCount = 0;
-
-
-                // 'points' is the std::vector<PointLightCPU> passed into RenderView
-                for (int i = 0; i < (int)points.size(); ++i)
-                {
-                    // The 'points' vector is already packed with only enabled lights.
-                    // We just need to check if this enabled light also casts a shadow.
-                    if (points[i].castsShadow && pointShadowCount < MAX_POINT_LIGHTS)
-                    {
-                        // We need to find the *actual* LightProperties component
-                        // to get the shadowDepthCubeMap texture ID.
-                        // This is a bit tricky, but we can search by position.
-
-                        // This is inefficient, but will prove the fix.
-                        // A better long-term fix is to add the textureID to PointLightCPU.
-                        GLuint textureID = 0;
-                        for (auto const& entityId : mEntities)
-                        {
-                            if (!ecsInterface.HasComponent<LightProperties>(entityId)) continue;
-                            auto& light = ecsInterface.GetComponent<LightProperties>(entityId);
-                            auto& transform = ecsInterface.GetComponent<TransformComponent>(entityId);
-
-                            // Check if this is the same light
-                            if (light.type == LightType::Point && (transform.position + light.offset) == points[i].position)
-                            {
-                                textureID = light.shadowDepthCubeMap;
-                                break;
-                            }
-                        }
-
-                        if (textureID != 0)
-                        {
-                            glActiveTexture(GL_TEXTURE0 + pointShadowUnit);
-                            glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
-
-                            // 'pointShadowCount' will now match the shader's 'i' index
-                            std::string samplerName = "uPointShadowMaps[" + std::to_string(pointShadowCount) + "]";
-                            currentShader.setInt(samplerName.c_str(), pointShadowUnit);
-
-                            pointShadowUnit++;
-                            pointShadowCount++;
-                        }
-                    }
-                }
-                if (isSkinned)
-                {
-                    auto& animator = ecsInterface.GetComponent<AnimationProperties>(entityId);
-                    for (size_t i = 0; i < animator.finalBoneMatrices.size(); ++i)
-                    {
-                        currentShader.setMat4(("uBoneMatrices[" + std::to_string(i) + "]").c_str(), animator.finalBoneMatrices[i]);
-                    }
-                }
-
-                // [Graphics.cpp] - Optimized Material Application
-                if (ecsInterface.HasComponent<MaterialProperties>(entityId))
-                {
-                    auto& material = ecsInterface.GetComponent<MaterialProperties>(entityId);
-
-                    // 1. Determine base color (Yellow if hovered, otherwise material color)
-                    const bool isSelected = ((int)entityId == sel) || ((int)entityId == hoverSel);
-                    glm::vec3 finalAlbedo = isSelected ? glm::vec3(1.0f, 0.85f, 0.3f) : material.albedo;
-
-                    currentShader.setVec3("uAlbedo", finalAlbedo);
-                    currentShader.setVec3("uMaterial.ambient", material.ambient);
-                    currentShader.setVec3("uMaterial.specular", material.specular);
-                    currentShader.setFloat("uMaterial.shininess", material.shininess);
-                    currentShader.setFloat("uMaterial.opacity", material.opacity); // CRITICAL: Reset opacity
-                }
-                else
-                {
-                    // 2. FALLBACK: Reset to safe defaults so the next object isn't "weird"
-                    const bool isSelected = ((int)entityId == sel) || ((int)entityId == hoverSel);
-                    currentShader.setVec3("uAlbedo", isSelected ? glm::vec3(1.0f, 0.85f, 0.3f) : glm::vec3(1.0f));
-
-                    currentShader.setVec3("uMaterial.ambient", glm::vec3(0.1f));
-                    currentShader.setVec3("uMaterial.specular", glm::vec3(0.5f));
-                    currentShader.setFloat("uMaterial.shininess", 32.0f);
-                    currentShader.setFloat("uMaterial.opacity", 1.0f); // Ensure 100% visible
-                }
-                glActiveTexture(GL_TEXTURE0);
-                currentShader.setInt("uTexture", 0);
-                if (ecsInterface.HasComponent<TextureProperties>(entityId)) {
-                    auto& tex = ecsInterface.GetComponent<TextureProperties>(entityId);
-                    glBindTexture(GL_TEXTURE_2D, tex.textureID);
-                }
-                else {
-                    glBindTexture(GL_TEXTURE_2D, 0);
-                }
-
-                LightProperties::upload(currentShader, sun, hasSun, points, spots);
-                bool doOutline = ((int)entityId == hoverSel);
-
-                if (doOutline) {
-                    glStencilFunc(GL_ALWAYS, 1, 0xFF);
-                    glStencilMask(0xFF); // Enable ONLY for this one object
-                }
-                glBindVertexArray(mesh.vao);
-                glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
-                if (doOutline) {
-                    glStencilMask(0x00);
-                    glStencilFunc(GL_ALWAYS, 0, 0xFF); // Optional: Reset func if needed
-                }
-            }
-        }
 
         // --- 3. CLEANUP STATE ---
         glDepthMask(GL_TRUE);
