@@ -741,7 +741,7 @@ namespace Framework {
             if (light.type != LightType::Point || !light.castsShadow) continue;
 
             auto& transform = ecsInterface.GetComponent<TransformComponent>(entityId);
-            glm::vec3 lightPos = transform.position;
+            glm::vec3 lightPos = transform.position + light.offset;
 
             // 1. DISTANCE CHECK
             glm::vec3 diff = lightPos - gameCamera.position;
@@ -800,14 +800,14 @@ namespace Framework {
             float near_plane = 0.1f;
             glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), 1.0f, near_plane, light.shadowFarPlane);
 
-            // Create the 6 view matrices for the Cube Map
+            // 3. Now build the 6 camera angles using the UPDATED lightPos
             std::vector<glm::mat4> shadowTransforms;
-            shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
-            shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(-1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
-            shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 1.0, 0.0), glm::vec3(0.0, 0.0, 1.0)));
-            shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, -1.0, 0.0), glm::vec3(0.0, 0.0, -1.0)));
-            shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0, -1.0, 0.0)));
-            shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, -1.0, 0.0)));
+            shadowTransforms.push_back(shadowProj* glm::lookAt(lightPos, lightPos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+            shadowTransforms.push_back(shadowProj* glm::lookAt(lightPos, lightPos + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+            shadowTransforms.push_back(shadowProj* glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
+            shadowTransforms.push_back(shadowProj* glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)));
+            shadowTransforms.push_back(shadowProj* glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+            shadowTransforms.push_back(shadowProj* glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
 
             glViewport(0, 0, POINT_SHADOW_WIDTH, POINT_SHADOW_HEIGHT);
             glBindFramebuffer(GL_FRAMEBUFFER, light.shadowFBO);
@@ -2002,19 +2002,17 @@ namespace Framework {
         outPointLights.clear();
         outSpotLights.clear();
 
-        // Iterate over all entities managed by the Graphics system
         for (auto const& entity : mEntities)
         {
-            // Check if this entity ALSO has a LightComponent
             if (ecsInterface.HasComponent<LightProperties>(entity))
             {
                 auto& light = ecsInterface.GetComponent<LightProperties>(entity);
                 auto& transform = ecsInterface.GetComponent<TransformComponent>(entity);
 
-                if (!light.enabled)
-                {
-                    continue;
-                }
+                if (!light.enabled) continue;
+
+                // [NEW] Calculate the actual position using your offset
+                glm::vec3 actualLightPos = transform.position + light.offset;
 
                 // --- Inlined GetForwardVector() ---
                 glm::vec3 forward;
@@ -2024,19 +2022,16 @@ namespace Framework {
                 forward.y = sin(pitch);
                 forward.z = sin(yaw) * cos(pitch);
                 forward = glm::normalize(forward);
-                // --- End ---
 
                 switch (light.type)
                 {
                 case LightType::Directional:
-                    if (!outHasSun) // Only one sun
+                    if (!outHasSun)
                     {
                         outSun.direction = forward;
                         outSun.color = light.color;
                         outSun.intensity = light.intensity;
-                        outSun.position = transform.position;
-                        outHasSun = true;
-                        outSun.position = transform.position;
+                        outSun.position = actualLightPos; // <-- CHANGED
                         outSun.shadowBiasConst = light.shadowBiasConst;
                         outSun.shadowBiasFactor = light.shadowBiasFactor;
                         outHasSun = true;
@@ -2045,30 +2040,28 @@ namespace Framework {
 
                 case LightType::Point:
                     outPointLights.push_back({
-                        transform.position,
+                        actualLightPos, // <-- CHANGED
                         light.color,
                         light.intensity,
                         light.radius,
-                        true,               // enabled
+                        true,
                         light.castsShadow,
                         light.shadowBiasConst,
                         light.shadowBiasFactor,
-                        // FIX: carry the actual far plane used when rendering the cubemap
-                        // so SetupShadowsForShader can upload it as uPointShadowFarPlanes[i].
                         light.shadowFarPlane
                         });
                     break;
 
                 case LightType::Spot:
                     outSpotLights.push_back({
-                        transform.position,
-                        forward, // direction
+                        actualLightPos, // <-- CHANGED
+                        forward,
                         light.color,
                         light.intensity,
                         light.radius,
                         light.innerCutOffAngle,
                         light.outerCutOffAngle,
-                        true // enabled
+                        true
                         });
                     break;
                 }
@@ -2252,7 +2245,7 @@ namespace Framework {
                     if (!ecsInterface.HasComponent<LightProperties>(entityId)) continue;
                     auto& light = ecsInterface.GetComponent<LightProperties>(entityId);
                     auto& transform = ecsInterface.GetComponent<TransformComponent>(entityId);
-                    if (light.type == LightType::Point && transform.position == points[i].position)
+                    if (light.type == LightType::Point && (transform.position + light.offset) == points[i].position)
                     {
                         textureID = light.shadowDepthCubeMap;
                         break;
@@ -2454,19 +2447,29 @@ namespace Framework {
                 sh.setFloat(("uPointShadowFarPlanes[" + std::to_string(i) + "]").c_str(), 0.0f);
             }
 
-            // Step 2: bind actual cubemaps and upload far planes using a compacted counter
-            int shadowCount = 0;
-            for (size_t i = 0; i < points.size() && shadowCount < MAX_POINT_LIGHTS; ++i) {
-                if (!points[i].castsShadow || validShadowTextures[i] == 0) continue;
+            // Step 2: bind actual cubemaps using a synchronized index
+            int unitOffset = 0;
+            int activeLightIndex = 0; // This guarantees we match LightProperties::upload exactly!
 
-                glActiveTexture(GL_TEXTURE0 + baseUnit + shadowCount);
-                glBindTexture(GL_TEXTURE_CUBE_MAP, validShadowTextures[i]);
+            for (size_t i = 0; i < points.size(); ++i) {
+                if (!points[i].enabled) continue; // Skip disabled lights (matching upload behavior)
+                if (activeLightIndex >= MAX_POINT_LIGHTS) break;
 
-                // Upload the exact far plane that was used to write this cubemap
-                sh.setFloat(("uPointShadowFarPlanes[" + std::to_string(shadowCount) + "]").c_str(),
-                    points[i].shadowFarPlane);
+                // Only bind a texture if this specific light casts a shadow
+                if (points[i].castsShadow && validShadowTextures[i] != 0) {
+                    glActiveTexture(GL_TEXTURE0 + baseUnit + unitOffset);
+                    glBindTexture(GL_TEXTURE_CUBE_MAP, validShadowTextures[i]);
 
-                shadowCount++;
+                    // Assign this texture unit to the EXACT matching light index
+                    std::string uniformName = "uPointShadowMaps[" + std::to_string(activeLightIndex) + "]";
+                    sh.setInt(uniformName.c_str(), baseUnit + unitOffset);
+
+                    // Update the far plane for this specific index
+                    sh.setFloat(("uPointShadowFarPlanes[" + std::to_string(activeLightIndex) + "]").c_str(), points[i].shadowFarPlane);
+
+                    unitOffset++;
+                }
+                activeLightIndex++; // Increment for EVERY enabled light, shadow or not!
             }
             };
 
@@ -3000,7 +3003,7 @@ namespace Framework {
                             auto& transform = ecsInterface.GetComponent<TransformComponent>(entityId);
 
                             // Check if this is the same light
-                            if (light.type == LightType::Point && transform.position == points[i].position)
+                            if (light.type == LightType::Point && (transform.position + light.offset) == points[i].position)
                             {
                                 textureID = light.shadowDepthCubeMap;
                                 break;

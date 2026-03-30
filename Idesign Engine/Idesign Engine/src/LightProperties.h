@@ -49,8 +49,9 @@ namespace Framework
         // Tune per-light via the editor if Peter-Panning appears.
         float shadowBiasConst{ 0.08f };
         float shadowBiasFactor{ 0.04f };
+
         // Carry the actual far plane used when rendering the cubemap
-        float shadowFarPlane{ 0.0f };
+        float shadowFarPlane{ 100.0f };
     };
 
     struct SpotLightCPU {
@@ -83,6 +84,7 @@ namespace Framework
 
         // --- Serialized Properties ---
         bool enabled = true;
+        glm::vec3 offset{ 0.0f, 0.0f, 0.0f };
         glm::vec3 color = { 1.0f, 1.0f, 1.0f };
         float intensity = 1.0f;
         float radius = 10.0f;
@@ -102,7 +104,7 @@ namespace Framework
         // For Point lights (samplerCube)
         GLuint    shadowDepthCubeMap = 0; // The 6-sided texture
         GLuint    shadowDepthRBO = 0;     // Depth buffer for the FBO
-        float     shadowFarPlane = 0.0f;  // The far plane used when the cubemap was rendered
+        float     shadowFarPlane = 100.0f;  // The far plane used when the cubemap was rendered
 
 
         static void upload(ShaderProgram& shader,
@@ -134,6 +136,7 @@ namespace Framework
                 shader.setBool((base + ".castsShadow").c_str(), pointLights[i].castsShadow);
                 shader.setFloat((base + ".shadowBiasConst").c_str(), pointLights[i].shadowBiasConst);
                 shader.setFloat((base + ".shadowBiasFactor").c_str(), pointLights[i].shadowBiasFactor);
+                shader.setFloat((base + ".shadowFarPlane").c_str(), pointLights[i].shadowFarPlane);
                 activePoints++;
             }
             shader.setInt("uNumPointLights", activePoints);
@@ -167,11 +170,13 @@ namespace Framework
         PROP_COLOR3(color, LightProperties),
         PROP_SLIDER_FLOAT(intensity, LightProperties, 0.0f, 20.0f),
         PROP_DRAG_FLOAT(radius, LightProperties),
+        PROP_VEC3(offset, LightProperties),
         PROP_SLIDER_FLOAT(innerCutOffAngle, LightProperties, 0.0f, 1.5708f), // 0-90 deg
         PROP_SLIDER_FLOAT(outerCutOffAngle, LightProperties, 0.0f, 1.5708f), // 0-90 deg
         PROP_BOOL(castsShadow, LightProperties),
         PROP_DRAG_FLOAT(shadowBiasConst, LightProperties, 0.0f, 0.01f),
-        PROP_DRAG_FLOAT(shadowBiasFactor, LightProperties, 0.0f, 0.1f)
+        PROP_DRAG_FLOAT(shadowBiasFactor, LightProperties, 0.0f, 0.1f),
+        PROP_DRAG_FLOAT(shadowFarPlane, LightProperties)
     };
 
     inline const prop_list g_LightProps{ "LightProperties", g_LightPropsArray };

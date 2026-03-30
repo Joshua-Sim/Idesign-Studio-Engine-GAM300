@@ -6283,67 +6283,12 @@
             }
         },
         {
-            "name": "Quarry-Light1",
-            "guid": "20081029-f90b-422c-89dd-4b708f329c6b",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -189.60000610351563,
-                        332.11785888671875,
-                        -125.98800659179688
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "",
-                    "sortIndex": 99,
-                    "children": []
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": ""
-                },
-                "TextureComponent": {
-                    "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
-                    "isUI": false
-                },
-                "LightProperties": {
-                    "enabled": true,
-                    "color": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "intensity": 0.8360000252723694,
-                    "radius": 200.0,
-                    "innerCutOffAngle": 0.21816615760326385,
-                    "outerCutOffAngle": 0.2617993950843811,
-                    "castsShadow": true,
-                    "shadowBiasConst": 0.004999999888241291,
-                    "shadowBiasFactor": 0.10000000149011612,
-                    "type": "Point"
-                }
-            }
-        },
-        {
             "name": "Quarry-rock1 (Copy)",
             "guid": "dc4b6550-bbbd-4e3c-b285-81bd1a1fcab2",
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -168.47860717773438,
+                        -150.47860717773438,
                         304.5889892578125,
                         -89.05257415771484
                     ],
@@ -6435,14 +6380,14 @@
             }
         },
         {
-            "name": "Quarry-rock1 (Copy)",
+            "name": "QuarryLamp1",
             "guid": "5a4c53f9-31f0-4414-9bc5-f40ede36de8c",
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -204.5520477294922,
+                        -193.0,
                         338.9750061035156,
-                        -107.16348266601563
+                        -101.0
                     ],
                     "rotation": [
                         0.0,
@@ -6480,12 +6425,12 @@
                         1.0
                     ],
                     "intensity": 0.4740000069141388,
-                    "radius": 10.039999961853027,
+                    "radius": 150,
                     "innerCutOffAngle": 0.21816615760326385,
                     "outerCutOffAngle": 0.2617993950843811,
-                    "castsShadow": false,
-                    "shadowBiasConst": 0.004999999888241291,
-                    "shadowBiasFactor": 0.05000000074505806,
+                    "castsShadow": true,
+                    "shadowBiasConst": 0.51,
+                    "shadowBiasFactor": 0.60,
                     "type": "Point"
                 },
                 "BoxColliderComponent": {
@@ -6846,9 +6791,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -192.7617950439453,
-                        306.2541809082031,
-                        -129.94293212890625
+                        -202.0,
+                        308.245,
+                        -117.8
                     ],
                     "rotation": [
                         1.0229949951171875,
@@ -7005,13 +6950,13 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -182.43373107910156,
-                        306.26617431640625,
-                        -131.77821350097656
+                        -200.3,
+                        306.191,
+                        -116.0
                     ],
                     "rotation": [
                         12.498001098632813,
-                        -1.3079986572265625,
+                        -21.3079986572265625,
                         5.0
                     ],
                     "scale": [
@@ -7279,13 +7224,13 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -186.0047149658203,
+                        -198.697,
                         306.37481689453125,
-                        -122.46524047851563
+                        -105.538
                     ],
                     "rotation": [
                         0.0,
-                        16.979995727539063,
+                        162.4,
                         0.0000762939453125
                     ],
                     "scale": [
@@ -13989,18 +13934,18 @@
             }
         },
         {
-            "name": "Quarry-rock1 (Copy) (Copy)",
+            "name": "QuarryLamp2",
             "guid": "0a7b50fc-85d5-4c73-8e3b-5d56ce1cb5f8",
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -144.36074829101563,
+                        -167.0,
                         338.9750061035156,
-                        -168.01353454589844
+                        -192.0
                     ],
                     "rotation": [
                         0.0,
-                        49.99999237060547,
+                        150.0,
                         0.0
                     ],
                     "scale": [
@@ -14027,19 +13972,115 @@
                     "isUI": false
                 },
                 "LightProperties": {
-                    "enabled": false,
+                    "enabled": true,
                     "color": [
                         1.0,
                         1.0,
                         1.0
                     ],
                     "intensity": 0.4740000069141388,
-                    "radius": 10.039999961853027,
+                    "radius": 150.0,
                     "innerCutOffAngle": 0.21816615760326385,
                     "outerCutOffAngle": 0.2617993950843811,
-                    "castsShadow": false,
-                    "shadowBiasConst": 0.004999999888241291,
-                    "shadowBiasFactor": 0.05000000074505806,
+                    "castsShadow": true,
+                    "shadowBiasConst": 0.40,
+                    "shadowBiasFactor": 0.50,
+                    "type": "Point"
+                },
+                "BoxColliderComponent": {
+                    "colliders": [
+                        {
+                            "size": [
+                                1.100000023841858,
+                                0.6499999761581421,
+                                1.0
+                            ],
+                            "center": [
+                                0.30000001192092896,
+                                0.30000001192092896,
+                                0.10000000149011612
+                            ],
+                            "canPassThrough": false,
+                            "triggerMessage": "",
+                            "isInteractable": false,
+                            "interactMessage": "",
+                            "promptText": ""
+                        }
+                    ]
+                },
+                "PhysicsProperties": {
+                    "category": 0,
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 0.5,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "startAwake": true
+                }
+            }
+        },
+                {
+            "name": "QuarryLamp3",
+            "guid": "0a7b50fc-6767-4c73-8e3b-5d56ce1cb5f8",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -112.0,
+                        338.9750061035156,
+                        -86.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        20.0,
+                        0.0
+                    ],
+                    "scale": [
+                        3.9999983310699463,
+                        3.9999988079071045,
+                        3.9999959468841553
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "sortIndex": 210,
+                    "children": []
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "MeshComponent": {
+                    "guid": "129121d0-1b79-4037-92cc-441ec6337a1f",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "b52ea343-007a-490b-ae1f-ce5a3ff76c90",
+                    "isUI": false
+                },
+                "LightProperties": {
+                    "enabled": true,
+                    "color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "intensity": 0.4740000069141388,
+                    "radius": 150.0,
+                    "innerCutOffAngle": 0.21816615760326385,
+                    "outerCutOffAngle": 0.2617993950843811,
+                    "castsShadow": true,
+                    "shadowBiasConst": 0.40,
+                    "shadowBiasFactor": 0.50,
                     "type": "Point"
                 },
                 "BoxColliderComponent": {
@@ -24590,61 +24631,6 @@
             }
         },
         {
-            "name": "coalCaveLight",
-            "guid": "0cbef080-3f5f-484c-beaa-07831dc6abcd",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -116.478759765625,
-                        331.8082275390625,
-                        -85.2786865234375
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "",
-                    "sortIndex": 417,
-                    "children": []
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": ""
-                },
-                "TextureComponent": {
-                    "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
-                    "isUI": false
-                },
-                "LightProperties": {
-                    "enabled": true,
-                    "color": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "intensity": 1.409000039100647,
-                    "radius": 100.0,
-                    "innerCutOffAngle": 0.21816615760326385,
-                    "outerCutOffAngle": 0.2617993950843811,
-                    "castsShadow": false,
-                    "shadowBiasConst": 0.004999999888241291,
-                    "shadowBiasFactor": 0.05000000074505806,
-                    "type": "Point"
-                }
-            }
-        },
-        {
             "name": "COPPERQUARRY",
             "guid": "504c8f4e-0701-4399-8247-3fa43c509ddd",
             "components": {
@@ -27003,14 +26989,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -193.6976776123047,
-                        308.2367858886719,
-                        -130.8826446533203
+                        -202.9,
+                        306.256,
+                        -117.6
                     ],
                     "rotation": [
-                        1.0229949951171875,
-                        25.0,
-                        -2.9980010986328125
+                        -0.4,
+                        12.0,
+                        1.5
                     ],
                     "scale": [
                         0.5,
@@ -27083,14 +27069,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -194.3243865966797,
-                        306.2271728515625,
-                        -131.45541381835938
+                        -200.5,
+                        306.316,
+                        -118.5
                     ],
                     "rotation": [
                         1.0229949951171875,
                         -25.5,
-                        -1.4980010986328125
+                        1.5
                     ],
                     "scale": [
                         0.5,
@@ -27163,9 +27149,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -187.03451538085938,
-                        305.9659729003906,
-                        -134.1896209716797
+                        -192.62,
+                        306.0,
+                        -116.6
                     ],
                     "rotation": [
                         1.311004638671875,
