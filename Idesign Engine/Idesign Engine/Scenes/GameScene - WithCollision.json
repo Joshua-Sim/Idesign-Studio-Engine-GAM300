@@ -31083,24 +31083,6 @@
             }
         },
         {
-            "name": "CustomerTextbox",
-            "guid": "e26ac258-688b-4a43-b31b-7d97e42e51dd",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "b1e7bea6-ba5d-4a40-be1c-b30224f8868c"
-                }
-            }
-        },
-        {
-            "name": "CustomerTextbox",
-            "guid": "3d60a744-9e0f-46c5-a5ea-d40fb12f0aac",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "b1e7bea6-ba5d-4a40-be1c-b30224f8868c"
-                }
-            }
-        },
-        {
             "name": "TreeBoundary (Copy) (Copy)",
             "guid": "03d41868-fa23-48e4-bdc3-681e9b528f99",
             "components": {
@@ -31845,24 +31827,6 @@
             }
         },
         {
-            "name": "CustomerTextbox",
-            "guid": "71dda57a-d1d7-406c-a216-f27e9f6308b6",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "b1e7bea6-ba5d-4a40-be1c-b30224f8868c"
-                }
-            }
-        },
-        {
-            "name": "CustomerTextbox",
-            "guid": "e909b7e2-1867-4be2-8af1-e912781cfbef",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "b1e7bea6-ba5d-4a40-be1c-b30224f8868c"
-                }
-            }
-        },
-        {
             "name": "TreeBoundary (Copy) (Copy) (Copy)",
             "guid": "abf74c3e-e945-4946-9174-b79045db5825",
             "components": {
@@ -32541,24 +32505,6 @@
                         0.0
                     ],
                     "startAwake": true
-                }
-            }
-        },
-        {
-            "name": "CustomerTextbox",
-            "guid": "cf987895-b861-494c-bc70-c76a88c71f0f",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "b1e7bea6-ba5d-4a40-be1c-b30224f8868c"
-                }
-            }
-        },
-        {
-            "name": "CustomerTextbox",
-            "guid": "74840248-2df1-468e-8b07-bcf912ba62d7",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "b1e7bea6-ba5d-4a40-be1c-b30224f8868c"
                 }
             }
         },
@@ -33467,24 +33413,6 @@
             }
         },
         {
-            "name": "CustomerTextbox",
-            "guid": "2d99e40c-18e1-493e-9d69-5d110940e5c0",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "b1e7bea6-ba5d-4a40-be1c-b30224f8868c"
-                }
-            }
-        },
-        {
-            "name": "Customer_Slot_2",
-            "guid": "2a4081be-9e05-4ce4-b7cb-fdf585765e58",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "2b031b5f-39b1-4596-8f6f-ad7a639fb94d"
-                }
-            }
-        },
-        {
             "name": "ProgressBarFrame",
             "guid": "9425e668-c0a9-4ea5-b976-1a36600e075b",
             "components": {
@@ -33499,15 +33427,6 @@
             "components": {
                 "PrefabComponent": {
                     "prefabGUID.id": "5dfc16be-aa4a-420a-9105-f7c9652f3620"
-                }
-            }
-        },
-        {
-            "name": "CustomerTextbox",
-            "guid": "47b58879-d933-4504-a142-265b10ab4a7b",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "b1e7bea6-ba5d-4a40-be1c-b30224f8868c"
                 }
             }
         },
@@ -38302,15 +38221,6 @@
                         0.0
                     ],
                     "startAwake": true
-                }
-            }
-        },
-        {
-            "name": "Customer_Slot_1",
-            "guid": "3d63e40f-f7e4-4254-8cdf-2647d940e64a",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "584b841f-a181-4adb-a75c-852abf944c79"
                 }
             }
         },
@@ -45938,24 +45848,6 @@
             }
         },
         {
-            "name": "CustomerTextbox",
-            "guid": "f6197196-695b-450f-8060-74d32e430ad4",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "b1e7bea6-ba5d-4a40-be1c-b30224f8868c"
-                }
-            }
-        },
-        {
-            "name": "CustomerTextbox",
-            "guid": "b3176fec-a4f8-4c7b-8f22-c16df07517aa",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "b1e7bea6-ba5d-4a40-be1c-b30224f8868c"
-                }
-            }
-        },
-        {
             "name": "TreeBoundary (Copy) (Copy)",
             "guid": "66af2c9a-2a1c-441b-ab1a-359528782781",
             "components": {
@@ -46080,15 +45972,6 @@
             }
         },
         {
-            "name": "CustomerTextbox",
-            "guid": "7f91d7e9-b546-465d-9b4e-4ccce1c4fd8d",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "b1e7bea6-ba5d-4a40-be1c-b30224f8868c"
-                }
-            }
-        },
-        {
             "name": "ProgressBarFrame",
             "guid": "898b56cc-e94e-44e5-97eb-bbff872cc6a0",
             "components": {
@@ -46103,24 +45986,6 @@
             "components": {
                 "PrefabComponent": {
                     "prefabGUID.id": "5dfc16be-aa4a-420a-9105-f7c9652f3620"
-                }
-            }
-        },
-        {
-            "name": "CustomerTextbox",
-            "guid": "bbf9c9b9-6c4b-4f76-b741-cf4f35f81887",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "b1e7bea6-ba5d-4a40-be1c-b30224f8868c"
-                }
-            }
-        },
-        {
-            "name": "CustomerTextbox",
-            "guid": "cc423b8d-d4ed-4a20-b1b2-32934cf643a7",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "b1e7bea6-ba5d-4a40-be1c-b30224f8868c"
                 }
             }
         },
