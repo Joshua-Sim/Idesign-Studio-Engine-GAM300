@@ -412,7 +412,7 @@
                 "TransformComponent": {
                     "position": [
                         -32.06560134887695,
-                        13.163,
+                        13.163000106811523,
                         9.240556716918945
                     ],
                     "rotation": [
@@ -774,11 +774,17 @@
                     ],
                     "intensity": 0.5690000057220459,
                     "radius": 30.0,
+                    "offset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
                     "innerCutOffAngle": 0.21816615760326385,
                     "outerCutOffAngle": 0.35899999737739563,
                     "castsShadow": true,
                     "shadowBiasConst": 0.44999998807907104,
                     "shadowBiasFactor": 1.0,
+                    "shadowFarPlane": 30.0,
                     "type": "Point"
                 }
             }
@@ -1884,11 +1890,17 @@
                     ],
                     "intensity": 1.5169999599456787,
                     "radius": 20.0,
+                    "offset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
                     "innerCutOffAngle": 0.21816615760326385,
                     "outerCutOffAngle": 0.2617993950843811,
                     "castsShadow": true,
                     "shadowBiasConst": 0.004999999888241291,
                     "shadowBiasFactor": 1.0,
+                    "shadowFarPlane": 20.0,
                     "type": "Point"
                 }
             }
@@ -2862,14 +2874,14 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -176,
-                        321,
-                        -145
+                        -36.0,
+                        8.024513244628906,
+                        9.5
                     ],
                     "rotation": [
                         0.0,
-                        117.31407165527344,
-                        -180.0
+                        0.0,
+                        0.0
                     ],
                     "scale": [
                         0.9999420642852783,
@@ -2948,9 +2960,9 @@
                 },
                 "ListenerComponent": {
                     "position": [
-                        -40.77113723754883,
-                        8.02451229095459,
-                        9.536368370056152
+                        -36.0,
+                        8.024513244628906,
+                        9.5
                     ],
                     "forward": [
                         0.0,
@@ -4242,11 +4254,17 @@
                     ],
                     "intensity": 1.3270000219345093,
                     "radius": 30.100000381469727,
+                    "offset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
                     "innerCutOffAngle": 0.21816615760326385,
                     "outerCutOffAngle": 0.2617993950843811,
                     "castsShadow": true,
                     "shadowBiasConst": 0.004999999888241291,
                     "shadowBiasFactor": 1.0,
+                    "shadowFarPlane": 30.100000381469727,
                     "type": "Point"
                 }
             }
@@ -6425,12 +6443,18 @@
                         1.0
                     ],
                     "intensity": 0.4740000069141388,
-                    "radius": 150,
+                    "radius": 150.0,
+                    "offset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
                     "innerCutOffAngle": 0.21816615760326385,
                     "outerCutOffAngle": 0.2617993950843811,
                     "castsShadow": true,
-                    "shadowBiasConst": 0.51,
-                    "shadowBiasFactor": 0.60,
+                    "shadowBiasConst": 0.5099999904632568,
+                    "shadowBiasFactor": 0.6000000238418579,
+                    "shadowFarPlane": 150.0,
                     "type": "Point"
                 },
                 "BoxColliderComponent": {
@@ -6776,11 +6800,17 @@
                     ],
                     "intensity": 2.8959999084472656,
                     "radius": 200.0,
+                    "offset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
                     "innerCutOffAngle": 0.21816615760326385,
                     "outerCutOffAngle": 0.2617993950843811,
                     "castsShadow": false,
                     "shadowBiasConst": 0.004999999888241291,
                     "shadowBiasFactor": 0.05000000074505806,
+                    "shadowFarPlane": 100.0,
                     "type": "Point"
                 }
             }
@@ -6792,8 +6822,8 @@
                 "TransformComponent": {
                     "position": [
                         -202.0,
-                        308.245,
-                        -117.8
+                        308.2449951171875,
+                        -117.80000305175781
                     ],
                     "rotation": [
                         1.0229949951171875,
@@ -6950,13 +6980,13 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -200.3,
-                        306.191,
+                        -200.3000030517578,
+                        306.1910095214844,
                         -116.0
                     ],
                     "rotation": [
                         12.498001098632813,
-                        -21.3079986572265625,
+                        -21.307998657226563,
                         5.0
                     ],
                     "scale": [
@@ -7224,13 +7254,13 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -198.697,
+                        -198.69700622558594,
                         306.37481689453125,
-                        -105.538
+                        -105.53800201416016
                     ],
                     "rotation": [
                         0.0,
-                        162.4,
+                        162.39999389648438,
                         0.0000762939453125
                     ],
                     "scale": [
@@ -13980,11 +14010,17 @@
                     ],
                     "intensity": 0.4740000069141388,
                     "radius": 150.0,
+                    "offset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
                     "innerCutOffAngle": 0.21816615760326385,
                     "outerCutOffAngle": 0.2617993950843811,
                     "castsShadow": true,
-                    "shadowBiasConst": 0.40,
-                    "shadowBiasFactor": 0.50,
+                    "shadowBiasConst": 0.4000000059604645,
+                    "shadowBiasFactor": 0.5,
+                    "shadowFarPlane": 150.0,
                     "type": "Point"
                 },
                 "BoxColliderComponent": {
@@ -14029,7 +14065,7 @@
                 }
             }
         },
-                {
+        {
             "name": "QuarryLamp3",
             "guid": "0a7b50fc-6767-4c73-8e3b-5d56ce1cb5f8",
             "components": {
@@ -14076,11 +14112,17 @@
                     ],
                     "intensity": 0.4740000069141388,
                     "radius": 150.0,
+                    "offset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
                     "innerCutOffAngle": 0.21816615760326385,
                     "outerCutOffAngle": 0.2617993950843811,
                     "castsShadow": true,
-                    "shadowBiasConst": 0.40,
-                    "shadowBiasFactor": 0.50,
+                    "shadowBiasConst": 0.4000000059604645,
+                    "shadowBiasFactor": 0.5,
+                    "shadowFarPlane": 150.0,
                     "type": "Point"
                 },
                 "BoxColliderComponent": {
@@ -14765,11 +14807,17 @@
                     ],
                     "intensity": 2.8959999084472656,
                     "radius": 200.0,
+                    "offset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
                     "innerCutOffAngle": 0.21816615760326385,
                     "outerCutOffAngle": 0.2617993950843811,
                     "castsShadow": false,
                     "shadowBiasConst": 0.004999999888241291,
                     "shadowBiasFactor": 0.05000000074505806,
+                    "shadowFarPlane": 100.0,
                     "type": "Point"
                 }
             }
@@ -21083,8 +21131,8 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        85.0,
-                        150.0,
+                        173.0,
+                        109.0,
                         1.0
                     ],
                     "rotation": [
@@ -21093,8 +21141,8 @@
                         0.0
                     ],
                     "scale": [
-                        150.0,
-                        275.0,
+                        350.0,
+                        230.0,
                         1.0
                     ],
                     "isActive": true
@@ -21113,17 +21161,17 @@
                     "guid": ""
                 },
                 "TextureComponent": {
-                    "guid": "3e36546e-1611-4e55-ae4a-118cd864a166",
-                    "isUI": false
+                    "guid": "ce60b20b-5180-43d0-ad3f-98b9867873ae",
+                    "isUI": true
                 },
                 "ButtonComponent": {
                     "position": [
-                        85.0,
-                        150.0
+                        173.0,
+                        109.0
                     ],
                     "size": [
-                        150.0,
-                        275.0
+                        350.0,
+                        230.0
                     ],
                     "isHovered": false,
                     "isFrontButton": false,
@@ -21198,7 +21246,7 @@
                     "rotation": [
                         0.0,
                         0.0,
-                        72.34412384033203
+                        192.79354858398438
                     ],
                     "scale": [
                         350.0,
@@ -21296,7 +21344,7 @@
                     "loop": false
                 },
                 "TextProperties": {
-                    "text": "0:54",
+                    "text": "13:57",
                     "scale": 1.149999976158142,
                     "color": [
                         0.0,
@@ -21341,7 +21389,7 @@
                     "tags": []
                 },
                 "TextProperties": {
-                    "text": "Day 5",
+                    "text": "Day 1",
                     "scale": 1.3600000143051147,
                     "color": [
                         0.0,
@@ -21361,8 +21409,8 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        0.07000000029802322,
-                        0.17000000178813934,
+                        0.05999999865889549,
+                        0.12999999523162842,
                         1.0
                     ],
                     "rotation": [
@@ -21386,14 +21434,14 @@
                     "tags": []
                 },
                 "TextProperties": {
-                    "text": "Night 5",
-                    "scale": 1.5,
+                    "text": "Night 1",
+                    "scale": 1.100000023841858,
                     "color": [
                         0.0,
                         0.0,
                         0.0
                     ],
-                    "opacity": 0.0,
+                    "opacity": 1.0,
                     "alignment": 0,
                     "isBillboard": false,
                     "screenSpace": true
@@ -21567,7 +21615,7 @@
                     "position": [
                         180.0,
                         985.0,
-                        -9999.0
+                        0.10000000149011612
                     ],
                     "rotation": [
                         0.0,
@@ -21593,7 +21641,7 @@
                 },
                 "TextureComponent": {
                     "guid": "c9f59b41-aa63-4f6a-bced-772e7289bffc",
-                    "isUI": false
+                    "isUI": true
                 }
             }
         },
@@ -21605,7 +21653,7 @@
                     "position": [
                         575.0,
                         985.0,
-                        -9999.0
+                        0.10000000149011612
                     ],
                     "rotation": [
                         0.0,
@@ -21631,7 +21679,7 @@
                 },
                 "TextureComponent": {
                     "guid": "c9f59b41-aa63-4f6a-bced-772e7289bffc",
-                    "isUI": false
+                    "isUI": true
                 }
             }
         },
@@ -21643,7 +21691,7 @@
                     "position": [
                         65.0,
                         1015.0,
-                        -9999.0
+                        0.20000000298023224
                     ],
                     "rotation": [
                         0.0,
@@ -21669,7 +21717,7 @@
                 },
                 "TextureComponent": {
                     "guid": "faa37630-25ba-425a-88ea-07ddf4d46bea",
-                    "isUI": false
+                    "isUI": true
                 }
             }
         },
@@ -21707,7 +21755,7 @@
                 },
                 "TextureComponent": {
                     "guid": "faa37630-25ba-425a-88ea-07ddf4d46bea",
-                    "isUI": false
+                    "isUI": true
                 }
             }
         },
@@ -21719,7 +21767,7 @@
                     "position": [
                         150.0,
                         1010.0,
-                        -9999.0
+                        0.20000000298023224
                     ],
                     "rotation": [
                         0.0,
@@ -21745,7 +21793,7 @@
                 },
                 "TextureComponent": {
                     "guid": "943131dd-336b-4192-9686-b41c70b7c9f1",
-                    "isUI": false
+                    "isUI": true
                 }
             }
         },
@@ -21757,7 +21805,7 @@
                     "position": [
                         550.0,
                         1010.0,
-                        -9999.0
+                        0.20000000298023224
                     ],
                     "rotation": [
                         0.0,
@@ -21783,7 +21831,7 @@
                 },
                 "TextureComponent": {
                     "guid": "943131dd-336b-4192-9686-b41c70b7c9f1",
-                    "isUI": false
+                    "isUI": true
                 }
             }
         },
@@ -21885,7 +21933,7 @@
                     "position": [
                         0.07000000029802322,
                         0.8600000143051147,
-                        -9999.0
+                        0.20000000298023224
                     ],
                     "rotation": [
                         0.0,
@@ -21908,14 +21956,14 @@
                     "tags": []
                 },
                 "TextProperties": {
-                    "text": "",
+                    "text": "strength_potion",
                     "scale": 0.75,
                     "color": [
                         1.0,
                         1.0,
                         1.0
                     ],
-                    "opacity": 0.0,
+                    "opacity": 1.0,
                     "alignment": 0,
                     "isBillboard": false,
                     "screenSpace": true
@@ -21930,7 +21978,7 @@
                     "position": [
                         0.2750000059604645,
                         0.8600000143051147,
-                        -9999.0
+                        0.20000000298023224
                     ],
                     "rotation": [
                         0.0,
@@ -21953,14 +22001,14 @@
                     "tags": []
                 },
                 "TextProperties": {
-                    "text": "",
+                    "text": "strength_potion",
                     "scale": 0.75,
                     "color": [
                         1.0,
                         1.0,
                         1.0
                     ],
-                    "opacity": 0.0,
+                    "opacity": 1.0,
                     "alignment": 0,
                     "isBillboard": false,
                     "screenSpace": true
@@ -21975,7 +22023,7 @@
                     "position": [
                         265.0,
                         1015.0,
-                        -9999.0
+                        0.20000000298023224
                     ],
                     "rotation": [
                         0.0,
@@ -22001,7 +22049,7 @@
                 },
                 "TextureComponent": {
                     "guid": "bdb167fd-7bba-433f-ad25-4ce1d7ebd2cc",
-                    "isUI": false
+                    "isUI": true
                 }
             }
         },
@@ -22013,7 +22061,7 @@
                     "position": [
                         665.0,
                         1015.0,
-                        -9999.0
+                        0.20000000298023224
                     ],
                     "rotation": [
                         0.0,
@@ -22039,7 +22087,7 @@
                 },
                 "TextureComponent": {
                     "guid": "bdb167fd-7bba-433f-ad25-4ce1d7ebd2cc",
-                    "isUI": false
+                    "isUI": true
                 }
             }
         },
@@ -22051,7 +22099,7 @@
                     "position": [
                         265.0,
                         1015.0,
-                        -9999.0
+                        0.30000001192092896
                     ],
                     "rotation": [
                         0.0,
@@ -22077,7 +22125,7 @@
                 },
                 "TextureComponent": {
                     "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
-                    "isUI": false
+                    "isUI": true
                 }
             }
         },
@@ -22089,7 +22137,7 @@
                     "position": [
                         665.0,
                         1015.0,
-                        -9999.0
+                        0.30000001192092896
                     ],
                     "rotation": [
                         0.0,
@@ -22115,7 +22163,7 @@
                 },
                 "TextureComponent": {
                     "guid": "d51ae7b6-67be-4d65-acc3-eaa40328d190",
-                    "isUI": false
+                    "isUI": true
                 }
             }
         },
@@ -22127,7 +22175,7 @@
                     "position": [
                         180.0,
                         910.0,
-                        -9999.0
+                        0.20000000298023224
                     ],
                     "rotation": [
                         0.0,
@@ -22153,7 +22201,7 @@
                 },
                 "TextureComponent": {
                     "guid": "3ea2414e-3cf2-4dcf-9440-e437ca432a22",
-                    "isUI": false
+                    "isUI": true
                 }
             }
         },
@@ -22165,7 +22213,7 @@
                     "position": [
                         575.0,
                         910.0,
-                        -9999.0
+                        0.20000000298023224
                     ],
                     "rotation": [
                         0.0,
@@ -22191,7 +22239,7 @@
                 },
                 "TextureComponent": {
                     "guid": "3ea2414e-3cf2-4dcf-9440-e437ca432a22",
-                    "isUI": false
+                    "isUI": true
                 }
             }
         },
@@ -22201,9 +22249,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        132.96875,
+                        101.46874237060547,
                         910.0,
-                        -9999.0
+                        0.30000001192092896
                     ],
                     "rotation": [
                         0.0,
@@ -22211,7 +22259,7 @@
                         0.0
                     ],
                     "scale": [
-                        112.6805419921875,
+                        192.93748474121094,
                         25.0,
                         1.0
                     ],
@@ -22229,7 +22277,7 @@
                 },
                 "TextureComponent": {
                     "guid": "3d869cc3-558f-41ee-91d7-e20312bb5f6f",
-                    "isUI": false
+                    "isUI": true
                 }
             }
         },
@@ -22239,9 +22287,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        575.0,
+                        503.78472900390625,
                         910.0,
-                        -9999.0
+                        0.30000001192092896
                     ],
                     "rotation": [
                         0.0,
@@ -22249,7 +22297,7 @@
                         0.0
                     ],
                     "scale": [
-                        350.0,
+                        207.56944274902344,
                         25.0,
                         1.0
                     ],
@@ -22267,7 +22315,7 @@
                 },
                 "TextureComponent": {
                     "guid": "3d869cc3-558f-41ee-91d7-e20312bb5f6f",
-                    "isUI": false
+                    "isUI": true
                 }
             }
         },
@@ -22305,7 +22353,7 @@
                 },
                 "TextureComponent": {
                     "guid": "a173d13b-1d81-4778-a55d-c2bd0b6b3761",
-                    "isUI": false
+                    "isUI": true
                 }
             }
         },
@@ -22317,7 +22365,7 @@
                     "position": [
                         465.0,
                         1015.0,
-                        -9999.0
+                        0.20000000298023224
                     ],
                     "rotation": [
                         0.0,
@@ -22343,7 +22391,7 @@
                 },
                 "TextureComponent": {
                     "guid": "a173d13b-1d81-4778-a55d-c2bd0b6b3761",
-                    "isUI": false
+                    "isUI": true
                 }
             }
         },
@@ -26989,12 +27037,12 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -202.9,
-                        306.256,
-                        -117.6
+                        -202.89999389648438,
+                        306.2560119628906,
+                        -117.5999984741211
                     ],
                     "rotation": [
-                        -0.4,
+                        -0.4000000059604645,
                         12.0,
                         1.5
                     ],
@@ -27070,7 +27118,7 @@
                 "TransformComponent": {
                     "position": [
                         -200.5,
-                        306.316,
+                        306.3160095214844,
                         -118.5
                     ],
                     "rotation": [
@@ -27149,9 +27197,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -192.62,
+                        -192.6199951171875,
                         306.0,
-                        -116.6
+                        -116.5999984741211
                     ],
                     "rotation": [
                         1.311004638671875,
@@ -28261,7 +28309,7 @@
                 },
                 "TextureComponent": {
                     "guid": "983ecaa9-d1c7-4fd5-8631-5a83db05671d",
-                    "isUI": true
+                    "isUI": false
                 }
             }
         },
@@ -28897,11 +28945,17 @@
                     ],
                     "intensity": 0.23999999463558197,
                     "radius": 10.0,
+                    "offset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
                     "innerCutOffAngle": 0.21816615760326385,
                     "outerCutOffAngle": 0.2617993950843811,
                     "castsShadow": false,
                     "shadowBiasConst": 0.07999999821186066,
                     "shadowBiasFactor": 0.03999999910593033,
+                    "shadowFarPlane": 100.0,
                     "type": "Directional"
                 }
             }
@@ -46048,6 +46102,78 @@
                         0.0
                     ],
                     "startAwake": true
+                }
+            }
+        },
+        {
+            "name": "Customer_Slot_1",
+            "guid": "3e932cbf-f789-499d-bb85-60e905fd9882",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "584b841f-a181-4adb-a75c-852abf944c79"
+                }
+            }
+        },
+        {
+            "name": "ProgressBarFrame",
+            "guid": "6d79d177-a7c4-46df-9f73-fdabe5daa693",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "6c60686a-c68c-4284-bce0-019cfcbf77fa"
+                }
+            }
+        },
+        {
+            "name": "ProgressBarFill",
+            "guid": "1d448eff-0981-4517-9bbf-323adf9a2f45",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "5dfc16be-aa4a-420a-9105-f7c9652f3620"
+                }
+            }
+        },
+        {
+            "name": "CustomerTextbox",
+            "guid": "6e5fffa6-3670-442b-9c54-7943f7898e6f",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "b1e7bea6-ba5d-4a40-be1c-b30224f8868c"
+                }
+            }
+        },
+        {
+            "name": "Customer_Slot_2",
+            "guid": "37ec2117-939b-431e-a3c4-1c5bd7f3104f",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "2b031b5f-39b1-4596-8f6f-ad7a639fb94d"
+                }
+            }
+        },
+        {
+            "name": "ProgressBarFrame",
+            "guid": "225c2aa0-3063-4538-9708-ae20a38288ab",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "6c60686a-c68c-4284-bce0-019cfcbf77fa"
+                }
+            }
+        },
+        {
+            "name": "ProgressBarFill",
+            "guid": "b58701c6-cd9d-46c1-9c2e-8f956f8fbc51",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "5dfc16be-aa4a-420a-9105-f7c9652f3620"
+                }
+            }
+        },
+        {
+            "name": "CustomerTextbox",
+            "guid": "809dc784-3618-4572-b637-8d0e44132ced",
+            "components": {
+                "PrefabComponent": {
+                    "prefabGUID.id": "b1e7bea6-ba5d-4a40-be1c-b30224f8868c"
                 }
             }
         }

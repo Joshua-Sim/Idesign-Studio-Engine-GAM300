@@ -1,5 +1,5 @@
 {
-    "count": 411,
+    "count": 412,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -4515,6 +4515,17 @@
             "guid": "7f81f0a1-cb99-4e9a-ac72-e1f7193092f7",
             "name": "PARTICLE TEST PNG",
             "path": "Assets\\Textures\\PARTICLE TEST PNG.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "ce60b20b-5180-43d0-ad3f-98b9867873ae",
+            "name": "MOON_AND_GOLD",
+            "path": "Assets\\Textures\\MOON_AND_GOLD.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
