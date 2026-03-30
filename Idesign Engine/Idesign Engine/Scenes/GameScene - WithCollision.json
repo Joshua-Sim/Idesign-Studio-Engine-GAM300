@@ -406,6 +406,96 @@
             }
         },
         {
+            "name": "Floor2",
+            "guid": "1bb31b9b-4e34-4d02-a51f-7c7df73d7ba4",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -32.06560134887695,
+                        13.163,
+                        9.240556716918945
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.3908507227897644,
+                        0.0020719559397548437,
+                        0.22487787902355194
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
+                    "sortIndex": 3,
+                    "children": []
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "MeshComponent": {
+                    "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "0f2ece2c-6b29-43d9-a6ae-1f648d18d86d",
+                    "isUI": false
+                },
+                "NavMeshComponent": {
+                    "guid": "",
+                    "isNavMeshSource": true,
+                    "runtimeGenerated": true,
+                    "agentRadius": 0.5,
+                    "agentHeight": 2.0,
+                    "cellSize": 0.30000001192092896,
+                    "cellHeight": 0.20000000298023224,
+                    "maxSlope": 45.0
+                },
+                "BoxColliderComponent": {
+                    "colliders": [
+                        {
+                            "size": [
+                                337.1000061035156,
+                                104.5,
+                                99.80000305175781
+                            ],
+                            "center": [
+                                -25.0,
+                                0.0,
+                                0.0
+                            ],
+                            "canPassThrough": false,
+                            "triggerMessage": "",
+                            "isInteractable": false,
+                            "interactMessage": "",
+                            "promptText": ""
+                        }
+                    ]
+                },
+                "PhysicsProperties": {
+                    "category": 0,
+                    "isImmovable": true,
+                    "gravityFactor": 1.0,
+                    "mass": 1.0,
+                    "friction": 0.5,
+                    "restitution": 0.0,
+                    "linearVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "startAwake": true
+                }
+            }
+        },
+        {
             "name": "Sidewall1",
             "guid": "e4130229-f40b-4ea2-b7fc-1286364c377d",
             "components": {
@@ -929,86 +1019,6 @@
                 "TextureComponent": {
                     "guid": "b57b4683-8581-4256-9cc5-60c900acec67",
                     "isUI": false
-                }
-            }
-        },
-        {
-            "name": "Roof",
-            "guid": "d2412103-1ae6-44e0-8b00-2758dc7bd406",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -32.43061447143555,
-                        13.0,
-                        9.240556716918945
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        0.38257095217704773,
-                        0.000750000006519258,
-                        0.22487787902355194
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
-                    "sortIndex": 12,
-                    "children": []
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "b3e40e99-b06a-4bb3-8a28-f7c4782d7941",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "0f2ece2c-6b29-43d9-a6ae-1f648d18d86d",
-                    "isUI": false
-                },
-                "BoxColliderComponent": {
-                    "colliders": [
-                        {
-                            "size": [
-                                100.0,
-                                100.0,
-                                100.0
-                            ],
-                            "center": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ],
-                            "canPassThrough": false,
-                            "triggerMessage": "",
-                            "isInteractable": false,
-                            "interactMessage": "",
-                            "promptText": ""
-                        }
-                    ]
-                },
-                "PhysicsProperties": {
-                    "category": 0,
-                    "isImmovable": true,
-                    "gravityFactor": 1.0,
-                    "mass": 1.0,
-                    "friction": 1.0,
-                    "restitution": 0.0,
-                    "linearVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "angularVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "startAwake": true
                 }
             }
         },
@@ -2852,9 +2862,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -40.77113723754883,
-                        8.02451229095459,
-                        9.536368370056152
+                        -176,
+                        321,
+                        -145
                     ],
                     "rotation": [
                         0.0,
@@ -7437,46 +7447,6 @@
                         0.0
                     ],
                     "startAwake": true
-                }
-            }
-        },
-        {
-            "name": "clay mound",
-            "guid": "118e6906-9e8f-4196-be68-fb13bcd158f9",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -154.91351318359375,
-                        305.7539978027344,
-                        -118.27742767333984
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        5.000001430511475,
-                        6.999997138977051,
-                        5.0
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "",
-                    "sortIndex": 111,
-                    "children": []
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "MeshComponent": {
-                    "guid": "082855c0-23a0-485d-a250-7334458728bc",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
-                },
-                "TextureComponent": {
-                    "guid": "bb86e2ff-7a24-4492-9e03-134fbfe85046",
-                    "isUI": false
                 }
             }
         },
@@ -21281,7 +21251,7 @@
                     "tags": []
                 },
                 "TimerComponent": {
-                    "duration": 90.0,
+                    "duration": 900.0,
                     "loop": false
                 },
                 "TextProperties": {
@@ -33493,15 +33463,6 @@
             }
         },
         {
-            "name": "Customer_Slot_1",
-            "guid": "8f60e81a-dbde-4fc9-9835-24a4eaa3dabe",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "584b841f-a181-4adb-a75c-852abf944c79"
-                }
-            }
-        },
-        {
             "name": "ProgressBarFrame",
             "guid": "632e21d0-fe1a-4e50-93d2-21870527bb26",
             "components": {
@@ -38988,15 +38949,6 @@
             }
         },
         {
-            "name": "Customer_Slot_2",
-            "guid": "155e0598-d4fb-479c-b287-5501d9d8637d",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "584b841f-a181-4adb-a75c-852abf944c79"
-                }
-            }
-        },
-        {
             "name": "grass (Copy) (Copy) (Copy)",
             "guid": "c574335c-f44a-4595-9cfe-22fffd030b17",
             "components": {
@@ -43621,24 +43573,6 @@
             }
         },
         {
-            "name": "Customer_Slot_1",
-            "guid": "11002ab6-7bdb-48c8-93e3-50a61d02b137",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "584b841f-a181-4adb-a75c-852abf944c79"
-                }
-            }
-        },
-        {
-            "name": "Customer_Slot_2",
-            "guid": "c9679ad8-4d20-4734-8bde-625f7413898d",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "2b031b5f-39b1-4596-8f6f-ad7a639fb94d"
-                }
-            }
-        },
-        {
             "name": "grass (Copy) (Copy) (Copy) (Copy) (Copy)",
             "guid": "cfaa571b-8a4b-4c6c-a460-5529045f12e8",
             "components": {
@@ -45083,24 +45017,6 @@
             }
         },
         {
-            "name": "Customer_Slot_1",
-            "guid": "c578f676-4205-4695-b934-edc0a2cf30ab",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "584b841f-a181-4adb-a75c-852abf944c79"
-                }
-            }
-        },
-        {
-            "name": "Customer_Slot_2",
-            "guid": "7f58323c-4e50-424e-a5fb-05a4fec8597c",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "2b031b5f-39b1-4596-8f6f-ad7a639fb94d"
-                }
-            }
-        },
-        {
             "name": "TreeBoundary (Copy) (Copy) (Copy)",
             "guid": "2ff6fe52-bedc-486c-9aa2-6ef02096b899",
             "components": {
@@ -46054,24 +45970,6 @@
             }
         },
         {
-            "name": "Customer_Slot_1",
-            "guid": "7617e484-797e-4b3e-8fc6-6aaf1395bf99",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "584b841f-a181-4adb-a75c-852abf944c79"
-                }
-            }
-        },
-        {
-            "name": "Customer_Slot_2",
-            "guid": "59d3ad64-d3cc-477b-ba9c-e522503be1b3",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "2b031b5f-39b1-4596-8f6f-ad7a639fb94d"
-                }
-            }
-        },
-        {
             "name": "TreeBoundary (Copy) (Copy)",
             "guid": "66af2c9a-2a1c-441b-ab1a-359528782781",
             "components": {
@@ -46205,15 +46103,6 @@
             }
         },
         {
-            "name": "Customer_Slot_1",
-            "guid": "3b0805fe-4f56-4d47-805c-8d0626be9e7e",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "584b841f-a181-4adb-a75c-852abf944c79"
-                }
-            }
-        },
-        {
             "name": "ProgressBarFrame",
             "guid": "898b56cc-e94e-44e5-97eb-bbff872cc6a0",
             "components": {
@@ -46237,15 +46126,6 @@
             "components": {
                 "PrefabComponent": {
                     "prefabGUID.id": "b1e7bea6-ba5d-4a40-be1c-b30224f8868c"
-                }
-            }
-        },
-        {
-            "name": "Customer_Slot_2",
-            "guid": "ebdb9142-4b74-4e0f-863d-b99ff5db50b0",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "2b031b5f-39b1-4596-8f6f-ad7a639fb94d"
                 }
             }
         },
@@ -46317,24 +46197,6 @@
                         0.0
                     ],
                     "startAwake": true
-                }
-            }
-        },
-        {
-            "name": "Customer_Slot_1",
-            "guid": "74bdc73d-b3ff-40d7-8202-15870db57226",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "584b841f-a181-4adb-a75c-852abf944c79"
-                }
-            }
-        },
-        {
-            "name": "Customer_Slot_2",
-            "guid": "6dddd40b-ceda-4fe2-a386-440d091e76d4",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "2b031b5f-39b1-4596-8f6f-ad7a639fb94d"
                 }
             }
         }

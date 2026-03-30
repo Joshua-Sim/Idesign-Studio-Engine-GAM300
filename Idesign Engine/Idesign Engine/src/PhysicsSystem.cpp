@@ -195,58 +195,50 @@ namespace Framework {
 
         auto CreateJoltBody = [&](const std::vector<const BoxColliderEntry*>& entries, bool isSensor)
             {
+                if (entries.empty()) return;
+
                 JPH::ShapeRefC shape = nullptr;
 
-                // Focus on Case A (Single box) which is what most slanted ramps use
-                if (entries.size() == 1) {
-                    const auto* entry = entries[0];
+                // Force ALL colliders to use a Compound Shape. 
+                // This guarantees that the 'center' offset is strictly respected by Jolt.
+                JPH::StaticCompoundShapeSettings compoundSettings;
+
+                for (const auto* entry : entries) {
+                    // 1. Calculate scaled half extents
                     JPH::Vec3 half_extents(
                         std::abs(0.5f * entry->size.x * tf.scale.x),
                         std::abs(0.5f * entry->size.y * tf.scale.y),
                         std::abs(0.5f * entry->size.z * tf.scale.z)
                     );
+                    // Prevent zero-sized physics anomalies
                     half_extents = JPH::Vec3::sMax(half_extents, JPH::Vec3(0.001f, 0.001f, 0.001f));
 
-                    shape = new JPH::BoxShape(half_extents);
+                    // 2. Calculate local offset based on your 'center' property
+                    JPH::Vec3 offset(
+                        entry->center.x * tf.scale.x,
+                        entry->center.y * tf.scale.y,
+                        entry->center.z * tf.scale.z
+                    );
 
-                    // If there's an offset, wrap it in an OffsetCenterOfMassShape 
-                    // This is WAY more reliable for rotated single boxes than StaticCompoundShape
-                    if (glm::length(entry->center) > 0.001f) {
-                        JPH::Vec3 joltOffset(
-                            entry->center.x * tf.scale.x,
-                            entry->center.y * tf.scale.y,
-                            entry->center.z * tf.scale.z
-                        );
-                        shape = new JPH::OffsetCenterOfMassShape(shape, joltOffset);
-                    }
-                }
-                else {
-                    // Case B: Compound Shape (Multiple boxes OR single box with offset)
-                    // This keeps the Physics Center of Mass aligned with your Entity Pivot
-                    JPH::StaticCompoundShapeSettings compoundSettings;
-
-                    for (const auto* entry : entries) {
-                        JPH::Vec3 half_extents(
-                            std::abs(0.5f * entry->size.x * tf.scale.x),
-                            std::abs(0.5f * entry->size.y * tf.scale.y),
-                            std::abs(0.5f * entry->size.z * tf.scale.z)
-                        );
-                        half_extents = JPH::Vec3::sMax(half_extents, JPH::Vec3(0.001f, 0.001f, 0.001f));
-
-                        JPH::Vec3 offset(
-                            entry->center.x * tf.scale.x,
-                            entry->center.y * tf.scale.y,
-                            entry->center.z * tf.scale.z
-                        );
-
-                        compoundSettings.AddShape(offset, JPH::Quat::sIdentity(), new JPH::BoxShapeSettings(half_extents));
-                    }
-
-                    auto result = compoundSettings.Create();
-                    if (result.HasError()) return;
-                    shape = result.Get();
+                    // 3. Add to compound shape at the explicit offset
+                    compoundSettings.AddShape(offset, JPH::Quat::sIdentity(), new JPH::BoxShapeSettings(half_extents));
                 }
 
+                auto result = compoundSettings.Create();
+                if (result.HasError()) {
+                    // Grab the friendly name of the entity
+                    std::string entityName = ecsInterface.GetEntityName(e);
+
+                    // Print the detailed error message
+                    std::cout << "[Physics] Failed to create shape for Entity '" << entityName
+                        << "' (ID: " << e << ") "
+                        << "at Position (" << tf.position.x << ", " << tf.position.y << ", " << tf.position.z << ")\n"
+                        << "          Jolt Error: " << result.GetError().c_str() << std::endl;
+                    return;
+                }
+                shape = result.Get();
+
+                // The rest of the BodyCreationSettings remains exactly the same as your original code
                 JPH::BodyCreationSettings bcs(
                     shape,
                     JPH::RVec3(tf.position.x, tf.position.y, tf.position.z),
@@ -274,7 +266,6 @@ namespace Framework {
                 }
 
                 if (prop.motionType == 1) {
-
                     bcs.mMotionQuality = JPH::EMotionQuality::LinearCast;
                     bcs.mAllowSleeping = false;
                 }
