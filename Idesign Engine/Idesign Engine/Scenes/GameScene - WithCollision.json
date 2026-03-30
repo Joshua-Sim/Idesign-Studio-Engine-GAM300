@@ -20238,7 +20238,8 @@
                         "bfd552ac-3041-4bd9-b6e2-bd92408d0fb3",
                         "2dcc2352-5b36-465a-a806-165efd87b11f",
                         "96b0dccf-d2fd-4b4c-8574-5b4fe3e2f8d8",
-                        "359dd368-5b15-456e-98a3-1a77b8c77e9e"
+                        "359dd368-5b15-456e-98a3-1a77b8c77e9e",
+                        "c8f2a6d3-9b7e-4f41-8a2c-5d9e1f3b7a61"
                     ]
                 },
                 "TagComponent": {
@@ -20479,11 +20480,6 @@
                 },
                 "ScriptProperties": {
                     "scripts": [
-                        {
-                            "guid": "b20ceaf5-8708-422e-a0d1-9234f7d411c0",
-                            "scriptPath": "Assets\\Scripts\\MapSelectionUI.lua",
-                            "hotReload": false
-                        }
                     ]
                 },
                 "ButtonComponent": {
@@ -21937,11 +21933,7 @@
                 },
                 "ScriptProperties": {
                     "scripts": [
-                        {
-                            "guid": "b20ceaf5-8708-422e-a0d1-9234f7d411c0",
-                            "scriptPath": "Assets\\Scripts\\MapSelectionUI.lua",
-                            "hotReload": false
-                        }
+
                     ]
                 },
                 "ButtonComponent": {
@@ -21956,6 +21948,47 @@
                     "isHovered": false,
                     "isFrontButton": true,
                     "hoverTextureGuid": ""
+                }
+            }
+        },
+        {
+            "name": "PlayerMapIcon",
+            "guid": "c8f2a6d3-9b7e-4f41-8a2c-5d9e1f3b7a61",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        462.0,
+                        745.0,
+                        -99999.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        110.0,
+                        110.0,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "7f8f7e0e-9a54-4f43-b9d1-5b93d522180a",
+                    "sortIndex": 335,
+                    "children": []
+                },
+                "TagComponent": {
+                    "tags": [
+                        "map"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": ""
+                },
+                "TextureComponent": {
+                    "guid": "6164f3f9-ba5f-40e6-a04d-c287e57ca0a9",
+                    "isUI": false
                 }
             }
         },
