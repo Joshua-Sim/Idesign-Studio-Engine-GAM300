@@ -113,6 +113,36 @@ namespace Framework
             const std::vector<PointLightCPU>& pointLights,
             const std::vector<SpotLightCPU>& spotLights)
         {
+            // 1. Static cache to hold uniform names permanently in memory
+            static std::vector<std::string> p_pos, p_col, p_int, p_rad, p_cast, p_bConst, p_bFact, p_far;
+            static std::vector<std::string> s_pos, s_dir, s_col, s_int, s_rad, s_in, s_out;
+            static bool initialized = false;
+
+            // 2. Build the strings ONLY ONCE on the very first call
+            if (!initialized) {
+                for (int i = 0; i < 8; ++i) { // 8 is your hardcoded max
+                    std::string pBase = "uPointLights[" + std::to_string(i) + "]";
+                    p_pos.push_back(pBase + ".position");
+                    p_col.push_back(pBase + ".color");
+                    p_int.push_back(pBase + ".intensity");
+                    p_rad.push_back(pBase + ".radius");
+                    p_cast.push_back(pBase + ".castsShadow");
+                    p_bConst.push_back(pBase + ".shadowBiasConst");
+                    p_bFact.push_back(pBase + ".shadowBiasFactor");
+                    p_far.push_back(pBase + ".shadowFarPlane");
+
+                    std::string sBase = "uSpotLights[" + std::to_string(i) + "]";
+                    s_pos.push_back(sBase + ".position");
+                    s_dir.push_back(sBase + ".direction");
+                    s_col.push_back(sBase + ".color");
+                    s_int.push_back(sBase + ".intensity");
+                    s_rad.push_back(sBase + ".radius");
+                    s_in.push_back(sBase + ".innerCutoff");
+                    s_out.push_back(sBase + ".outerCutoff");
+                }
+                initialized = true;
+            }
+
             // --- Directional ---
             shader.setBool("uHasDirLight", hasSun);
             if (hasSun) {
@@ -124,19 +154,18 @@ namespace Framework
             // --- Point lights ---
             int activePoints = 0;
             for (int i = 0; i < (int)pointLights.size(); ++i) {
-                // Check the 'enabled' flag from the CPU struct
                 if (!pointLights[i].enabled) continue;
-                if (activePoints >= 8) break; // Hardcoded max lights for safety
+                if (activePoints >= 8) break;
 
-                std::string base = "uPointLights[" + std::to_string(activePoints) + "]";
-                shader.setVec3((base + ".position").c_str(), pointLights[i].position);
-                shader.setVec3((base + ".color").c_str(), pointLights[i].color);
-                shader.setFloat((base + ".intensity").c_str(), pointLights[i].intensity);
-                shader.setFloat((base + ".radius").c_str(), pointLights[i].radius);
-                shader.setBool((base + ".castsShadow").c_str(), pointLights[i].castsShadow);
-                shader.setFloat((base + ".shadowBiasConst").c_str(), pointLights[i].shadowBiasConst);
-                shader.setFloat((base + ".shadowBiasFactor").c_str(), pointLights[i].shadowBiasFactor);
-                shader.setFloat((base + ".shadowFarPlane").c_str(), pointLights[i].shadowFarPlane);
+                // 3. Use the cached strings via .c_str() (Zero allocations!)
+                shader.setVec3(p_pos[activePoints].c_str(), pointLights[i].position);
+                shader.setVec3(p_col[activePoints].c_str(), pointLights[i].color);
+                shader.setFloat(p_int[activePoints].c_str(), pointLights[i].intensity);
+                shader.setFloat(p_rad[activePoints].c_str(), pointLights[i].radius);
+                shader.setBool(p_cast[activePoints].c_str(), pointLights[i].castsShadow);
+                shader.setFloat(p_bConst[activePoints].c_str(), pointLights[i].shadowBiasConst);
+                shader.setFloat(p_bFact[activePoints].c_str(), pointLights[i].shadowBiasFactor);
+                shader.setFloat(p_far[activePoints].c_str(), pointLights[i].shadowFarPlane);
                 activePoints++;
             }
             shader.setInt("uNumPointLights", activePoints);
@@ -145,18 +174,16 @@ namespace Framework
             int activeSpots = 0;
             for (int i = 0; i < (int)spotLights.size(); ++i) {
                 if (!spotLights[i].enabled) continue;
-                if (activeSpots >= 8) break; // Hardcoded max lights for safety
+                if (activeSpots >= 8) break;
 
-                std::string base = "uSpotLights[" + std::to_string(activeSpots) + "]";
-                shader.setVec3((base + ".position").c_str(), spotLights[i].position);
-                shader.setVec3((base + ".direction").c_str(), spotLights[i].direction);
-                shader.setVec3((base + ".color").c_str(), spotLights[i].color);
-                shader.setFloat((base + ".intensity").c_str(), spotLights[i].intensity);
-                shader.setFloat((base + ".radius").c_str(), spotLights[i].radius);
-                // Send the cosine of the angles, which the shader expects
-                shader.setFloat((base + ".innerCutoff").c_str(), std::cos(spotLights[i].innerCutOffAngle));
-                shader.setFloat((base + ".outerCutoff").c_str(), std::cos(spotLights[i].outerCutOffAngle));
-
+                // 4. Use the cached strings here as well
+                shader.setVec3(s_pos[activeSpots].c_str(), spotLights[i].position);
+                shader.setVec3(s_dir[activeSpots].c_str(), spotLights[i].direction);
+                shader.setVec3(s_col[activeSpots].c_str(), spotLights[i].color);
+                shader.setFloat(s_int[activeSpots].c_str(), spotLights[i].intensity);
+                shader.setFloat(s_rad[activeSpots].c_str(), spotLights[i].radius);
+                shader.setFloat(s_in[activeSpots].c_str(), std::cos(spotLights[i].innerCutOffAngle));
+                shader.setFloat(s_out[activeSpots].c_str(), std::cos(spotLights[i].outerCutOffAngle));
                 activeSpots++;
             }
             shader.setInt("uNumSpotLights", activeSpots);

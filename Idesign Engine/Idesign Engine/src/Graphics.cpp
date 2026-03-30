@@ -2271,11 +2271,6 @@ namespace Framework {
         }
         terrain.draw();
 
-        //// === DRAW FOLIAGE HERE  ===
-        //if (m_treeRenderer && m_treeTextureID != 0) // Only draw if texture is loaded
-        //{
-        //    m_treeRenderer->draw(view, proj, mapModel, m_treeTextureID);
-        //}
 
         // === DRAW PEBBLES HERE  ===
         if (m_pebbleRenderer)
@@ -2305,41 +2300,6 @@ namespace Framework {
         // Objects further than this will be ignored completely
         const float MAX_RENDER_DISTANCE = 10000.0f;
 
-        //for (auto const& entityId : mEntities)
-        //{
-        //    if (ecsInterface.HasComponent<MeshProperties>(entityId))
-        //    {
-
-        //        bool isUI = false;
-        //        if (ecsInterface.HasComponent<TextureProperties>(entityId)) {
-        //            isUI = ecsInterface.GetComponent<TextureProperties>(entityId).isUI;
-        //        }
-
-        //        if (isUI) {
-        //            uiEntities.push_back(entityId); // Add to UI list
-        //            continue; 
-        //        }
-        //        float opacity = 1.0f;
-        //        if (ecsInterface.HasComponent<MaterialProperties>(entityId))
-        //        {
-        //            opacity = ecsInterface.GetComponent<MaterialProperties>(entityId).opacity;
-        //        }
-
-        //        if (opacity < 1.0f)
-        //        {
-        //            if (ecsInterface.HasComponent<TransformComponent>(entityId))
-        //            {
-        //                auto& tr = ecsInterface.GetComponent<TransformComponent>(entityId);
-        //                float distance = glm::distance(tr.position, cam.position);
-        //                transparentEntities.insert({ distance, entityId });
-        //            }
-        //        }
-        //        else
-        //        {
-        //            opaqueEntities.push_back(entityId);
-        //        }
-        //    }
-        //}
         for (auto const& entityId : mEntities)
         {
             // check if its a ui or tex
@@ -2465,6 +2425,15 @@ namespace Framework {
         // Apply these settings to BOTH shaders used in the loop
         SetupShadowsForShader(meshShader);
         SetupShadowsForShader(skinnedShader);
+        // ============================================================================
+                // [OPTIMIZATION] UPLOAD LIGHTS ONCE PER SHADER
+                // ============================================================================
+        meshShader.use();
+        LightProperties::upload(meshShader, sun, hasSun, points, spots);
+
+        skinnedShader.use();
+        LightProperties::upload(skinnedShader, sun, hasSun, points, spots);
+        // ============================================================================
 
         // Reset active texture to default for the loop
         glActiveTexture(GL_TEXTURE0);
@@ -2615,7 +2584,6 @@ namespace Framework {
                         glBindTexture(GL_TEXTURE_2D, 0);
                     }
 
-                    LightProperties::upload(currentshader, sun, hasSun, points, spots);
                     bool doOutline = ((int)entityId == hoverSel); // or: == sel, or both
                     if (doOutline) {
                         glStencilFunc(GL_ALWAYS, 1, 0xFF);
@@ -2952,7 +2920,7 @@ namespace Framework {
         pickShader.setMat4("uProj", proj);
         pickShader.setMat4("uView", view);
 
-        for (auto const& entityId : mEntities) {
+        for (auto const& entityId : opaqueEntities) {
             if (ecsInterface.HasComponent<MeshProperties>(entityId) && ecsInterface.GetComponent<MeshProperties>(entityId).vao != 0)
             {
 
@@ -3420,6 +3388,7 @@ namespace Framework {
         if (m_cachedEntities.isDirty ||
             (m_cachedEntities.meshEntities.empty() && m_cachedEntities.skinnedEntities.empty()))
         {
+            m_cachedEntities.isDirty = true;
             RebuildEntityCache();
         }
 
