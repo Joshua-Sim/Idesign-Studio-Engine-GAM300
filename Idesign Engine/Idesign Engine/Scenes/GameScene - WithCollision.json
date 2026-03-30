@@ -21926,96 +21926,6 @@
             }
         },
         {
-            "name": "OrderText_1",
-            "guid": "354e5b38-1f6d-4116-a411-8c35b84cc073",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        0.07000000029802322,
-                        0.8600000143051147,
-                        0.20000000298023224
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "02175505-17a5-48fa-8c4b-d9062714f854",
-                    "sortIndex": 356,
-                    "children": []
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "TextProperties": {
-                    "text": "strength_potion",
-                    "scale": 0.75,
-                    "color": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "opacity": 1.0,
-                    "alignment": 0,
-                    "isBillboard": false,
-                    "screenSpace": true
-                }
-            }
-        },
-        {
-            "name": "OrderText_2",
-            "guid": "2d0a9e9f-b9c2-41e2-96b8-2ec96723fc06",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        0.2750000059604645,
-                        0.8600000143051147,
-                        0.20000000298023224
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "02175505-17a5-48fa-8c4b-d9062714f854",
-                    "sortIndex": 357,
-                    "children": []
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "TextProperties": {
-                    "text": "strength_potion",
-                    "scale": 0.75,
-                    "color": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "opacity": 1.0,
-                    "alignment": 0,
-                    "isBillboard": false,
-                    "screenSpace": true
-                }
-            }
-        },
-        {
             "name": "PotionSlot_1",
             "guid": "e1a53132-3005-4281-8b67-1f1a34d73403",
             "components": {
@@ -46106,15 +46016,6 @@
             }
         },
         {
-            "name": "Customer_Slot_1",
-            "guid": "3e932cbf-f789-499d-bb85-60e905fd9882",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "584b841f-a181-4adb-a75c-852abf944c79"
-                }
-            }
-        },
-        {
             "name": "ProgressBarFrame",
             "guid": "6d79d177-a7c4-46df-9f73-fdabe5daa693",
             "components": {
@@ -46133,24 +46034,6 @@
             }
         },
         {
-            "name": "CustomerTextbox",
-            "guid": "6e5fffa6-3670-442b-9c54-7943f7898e6f",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "b1e7bea6-ba5d-4a40-be1c-b30224f8868c"
-                }
-            }
-        },
-        {
-            "name": "Customer_Slot_2",
-            "guid": "37ec2117-939b-431e-a3c4-1c5bd7f3104f",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "2b031b5f-39b1-4596-8f6f-ad7a639fb94d"
-                }
-            }
-        },
-        {
             "name": "ProgressBarFrame",
             "guid": "225c2aa0-3063-4538-9708-ae20a38288ab",
             "components": {
@@ -46165,15 +46048,6 @@
             "components": {
                 "PrefabComponent": {
                     "prefabGUID.id": "5dfc16be-aa4a-420a-9105-f7c9652f3620"
-                }
-            }
-        },
-        {
-            "name": "CustomerTextbox",
-            "guid": "809dc784-3618-4572-b637-8d0e44132ced",
-            "components": {
-                "PrefabComponent": {
-                    "prefabGUID.id": "b1e7bea6-ba5d-4a40-be1c-b30224f8868c"
                 }
             }
         }
