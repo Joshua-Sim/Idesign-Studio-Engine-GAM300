@@ -88,7 +88,7 @@ function NightTutorial:PlayNextStep()
     
     if self.sequenceStep == 1 then
         target = "Frog"
-        offX, offY, offZ = 0, 2, 4
+        offX, offY, offZ = 3.979, 1.59, 0.429
     elseif self.sequenceStep == 2 then
         target = "Cutting_Board"
         offX, offY, offZ = 2.0, 4.0, 4.0

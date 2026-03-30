@@ -207,7 +207,6 @@
         }
 
         void DialogueSystem::StartDialogue() {
-            return;
             std::cout << "[DialogueSystem] ===== StartDialogue() CALLED =====" << std::endl;
 
             if (dialogueQueue.empty()) {

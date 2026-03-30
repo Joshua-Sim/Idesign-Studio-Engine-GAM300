@@ -46,7 +46,7 @@ namespace Framework
         std::shared_ptr<Graphics> mGraphicsSystem;
 
         // --- Interaction Properties ---
-        const float mInteractRange = 3.0f;
+        const float mInteractRange = 3.5f; // Increase for counter interact
         const float mLookRange     = 30.0f;  // Wider range so can see from back of store
         Entity      mLookAtEntity  = 0;       // Entity currently under the look-at ray (0 = none)
 

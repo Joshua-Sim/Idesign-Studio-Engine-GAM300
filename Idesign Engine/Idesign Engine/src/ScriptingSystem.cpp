@@ -826,13 +826,16 @@ namespace Framework {
         }
 
         static int lua_CutsceneStart(lua_State* L) {
-            return 0;
+
+            if (ScriptingSystem::SkipCutscene) {
+                return 0;
+            }
 
             auto dialogueSys = ecsInterface.GetSystem<Framework::DialogueSystem>();
             if (dialogueSys) {
-                dialogueSys->setActive(false);  // <-- THIS IS THE KEY LINE= true;
-                dialogueSys->isCutscene = false;
-                dialogueSys->isMidFlight = false;
+                dialogueSys->setActive(!ScriptingSystem::SkipCutscene);  // <-- THIS IS THE KEY LINE= true;
+                dialogueSys->isCutscene = !ScriptingSystem::SkipCutscene;
+                dialogueSys->isMidFlight = !ScriptingSystem::SkipCutscene;
                 engineState.PushState(EngineMode::Dialogue);  // block all input
             }
             return 0;
@@ -1057,7 +1060,12 @@ namespace Framework {
         }
 
         static int lua_DialogueStart(lua_State* L) {
-            return 0;
+
+            if (ScriptingSystem::SkipCutscene) {
+                return 0;
+            }
+         
+
             auto dialogueSys = ecsInterface.GetSystem<Framework::DialogueSystem>();
             if (dialogueSys) dialogueSys->StartDialogue();
             return 0;
