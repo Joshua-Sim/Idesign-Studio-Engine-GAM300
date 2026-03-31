@@ -21,6 +21,9 @@ local PLAYER_MAP_ICON = "PlayerMapIcon"
 local mapIcon = nil
 local currentMapLocation = 0   -- 0 = none, 1 = Forest, 2 = Quarry
 
+-- Timer should only start on first travel of the day
+local dayTimerStarted = false
+
 local iconPositions = {
     [1] = { x = 462.0,  y = 745.0, z = 1.0 },   -- Forest
     [2] = { x = 1410.0, y = 738.0, z = 1.0 }    -- Quarry
@@ -203,7 +206,6 @@ local function IsMouseOver(e)
            my >= ey - sy * 0.5 and my <= ey + sy * 0.5
 end
 
-
 local function CheckAndApplyMapReset()
     local resetFlag = 0
     local ok, result = pcall(function()
@@ -216,9 +218,11 @@ local function CheckAndApplyMapReset()
 
     if resetFlag == 1 then
         currentMapLocation = 0
+        dayTimerStarted = false
         HidePlayerMapIcon()
         SetData("ResetMapIconNextOpen", 0)
         print("[MapSelectionUI] Map icon reset for new day")
+        print("[MapSelectionUI] Day travel timer reset")
     end
 end
 
@@ -337,6 +341,7 @@ function M:on_update(dt)
         end
     end
 end
+
 -- =========================================================
 -- LOCATION SELECTED
 -- =========================================================
@@ -387,7 +392,17 @@ function M:ConfirmTravel(locData)
 
     FireEvent("StartPhaseTransition")
     FireEvent("RequestHerbSpawn")
-    GameStateStart()
+
+    -- Start timer ONLY on first travel of the day
+    if not dayTimerStarted then
+        GameStateStart()
+        dayTimerStarted = true
+        print("[MapSelectionUI] First travel of day -> timer started")
+    else
+        print("[MapSelectionUI] Travel during same day -> timer continues")
+    end
+
+    PopEngineState()
     SetUIFocused(false)
 end
 
@@ -403,9 +418,9 @@ function M:ShowMap()
 end
 
 function M:HideMap()
-    GameStateStart()
     SetDialogVisible(false)
     pendingLocation = nil
+    PopEngineState()
     SetUIFocused(false)
 end
 
