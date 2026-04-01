@@ -33,6 +33,8 @@ local quarryPlaying = false
 local wasInQuarry = false
 local wasInShop = false
 
+local firstPlayFrame = true
+
 -- Forest/Backyard bounds (measured in-game)
 local backyardMin = { 
     x = -296, 
@@ -143,8 +145,20 @@ end
 
 function M:on_update(dt)
 
-    -- Don't run audio logic during menu/intro/cutscene
-    if HasEngineState("Menu") or HasEngineState("Intro") or HasEngineState("Cutscene") then return end
+    -- Don't run audio logic during menu/intro/cutscene or when not playing
+    if HasEngineState("Menu") or HasEngineState("Intro") or HasEngineState("Cutscene") then 
+        firstPlayFrame = true
+        return 
+    end
+
+    -- On first frame back in gameplay, reset zone state to avoid stale BGM
+    if firstPlayFrame then
+        firstPlayFrame = false
+        wasInQuarry = false
+        wasInShop = false
+        -- Don't call Sound.Stop here - Level1BGM is already managed by SceneInterface
+    end
+
     local isInBackyard = self:IsInBackyard()
 
     -- Handle ambient occlusion (volume control based on location)
