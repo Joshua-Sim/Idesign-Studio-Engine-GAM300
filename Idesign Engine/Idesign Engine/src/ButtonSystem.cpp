@@ -418,8 +418,15 @@ namespace Framework {
 
             bool inside = (designX > left && designX < right && designY > bottom && designY < top);
 
+            // Don't register hover on invisible buttons
+            if (!tex.isUI || tex.uiAlpha <= 0.0f) {
+                inside = false;
+            }
+
             // TEXTURE SWAP LOGIC
             if (inside && !button.isHovered) {
+
+               
                 // --- FIX 2: VALIDATE ORIGINAL ID ---
                 // Only store the original if it's actually valid (> 0).
                 // If it's 0, it means the base texture hasn't loaded yet.
@@ -431,6 +438,12 @@ namespace Framework {
                     if (button.hoverTextureID != 0) {
                         tex.textureID = button.hoverTextureID;
                         tex.guid = button.hoverTextureGuid;
+
+                        // Only play hover sound if the button is actually visible
+                        if (g_AudioSystem && tex.isUI && tex.uiAlpha > 0.0f) {
+                            g_AudioSystem->PlayAudio("event:/ButtonHover");
+                        }
+
                     }
                 }
             }

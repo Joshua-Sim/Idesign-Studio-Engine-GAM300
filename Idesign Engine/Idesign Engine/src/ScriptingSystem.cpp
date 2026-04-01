@@ -1188,6 +1188,11 @@ namespace Framework {
             if (stateName == "MapSelection")    return EngineMode::MapSelection;
             if (stateName == "DayStats")        return EngineMode::DayStats;
             if (stateName == "EndStats")        return EngineMode::EndStats;
+            if (stateName == "Intro")           return EngineMode::Intro;
+            if (stateName == "Cutscene")        return EngineMode::Cutscene;
+            if (stateName == "Win")             return EngineMode::Win;
+            if (stateName == "Lose")            return EngineMode::Lose;
+            if (stateName == "Credit")          return EngineMode::Credit;
 
             std::cerr << "[Lua] Unknown EngineMode: " << stateName << std::endl;
             return EngineMode::Play; // Default fallback
@@ -1211,6 +1216,11 @@ namespace Framework {
             case EngineMode::MapSelection:   return "MapSelection";
             case EngineMode::DayStats:       return "DayStats";
             case EngineMode::EndStats:       return "EndStats";
+            case EngineMode::Intro:          return "Intro";
+            case EngineMode::Cutscene:       return "Cutscene";
+            case EngineMode::Win:            return "Win";
+            case EngineMode::Lose:           return "Lose";
+            case EngineMode::Credit:         return "Credit";
             default: return "Unknown";
             }
         }

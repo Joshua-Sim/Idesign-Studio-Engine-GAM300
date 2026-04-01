@@ -206,7 +206,7 @@ namespace Framework {
 
     void AudioSystem::Update(float deltaTime) {
 
-        bool audioPaused = false;
+        
         Entity activeListenerEntity = {};
         bool foundListener = false;
 
@@ -388,10 +388,7 @@ namespace Framework {
         CreateBus("bus:/BGM");
         CreateBus("bus:/SFX");
         CreateBus("bus:/Ambient");
-
-        // Auto-play menu BGM now that banks are loaded
-        PlayAudio("event:/MainMenuBGM");
-        std::cout << "[AudioSystem] Auto-playing MainMenuBGM" << std::endl;
+        
     }
 
     void AudioSystem::PrintAudioInfo() const {
@@ -964,6 +961,8 @@ namespace Framework {
     void AudioSystem::PauseAllAudio() {
         for (auto& kv : activeEvents) {
             if (kv.second) {
+                // Don't pause BGM events - they're managed by SceneInterface
+                if (kv.first.find("BGM") != std::string::npos) continue;
                 kv.second->setPaused(true);
             }
         }
@@ -972,6 +971,7 @@ namespace Framework {
     void AudioSystem::ResumeAllAudio() {
         for (auto& kv : activeEvents) {
             if (kv.second) {
+                if (kv.first.find("BGM") != std::string::npos) continue;
                 kv.second->setPaused(false);
             }
         }

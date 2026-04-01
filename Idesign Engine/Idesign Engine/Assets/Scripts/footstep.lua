@@ -142,6 +142,9 @@ end
 
 
 function M:on_update(dt)
+
+    -- Don't run audio logic during menu/intro/cutscene
+    if HasEngineState("Menu") or HasEngineState("Intro") or HasEngineState("Cutscene") then return end
     local isInBackyard = self:IsInBackyard()
 
     -- Handle ambient occlusion (volume control based on location)

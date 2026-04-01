@@ -318,6 +318,9 @@ namespace Framework {
         int   currentBGMChannel = -1;
         int   pendingBGMChannel = -1;
 
+        //check if audio paused 
+		bool audioPaused = false;
+
         // Channel ID counter
         int nextChannelId = 1;
 
