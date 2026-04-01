@@ -88,6 +88,8 @@ namespace Framework
     static const float creditStartY = -1400.0f; // below screen
     static const float creditEndY = 1400.0f;  // above screen
 
+	//=========== AUDIO TUNING ==============
+	static bool level1BGMStarted = false;
 
     void SceneInterface::Initialize() {}
 
@@ -470,10 +472,12 @@ namespace Framework
                     cutsceneStartTime = (float)glfwGetTime() - (sceneDuration - blackScreenDuration);
                     cutsceneFinished = false;
                     openingBGMStarted = false;
+                    level1BGMStarted = false;
 
                     // Only STOP BGMs here - new BGM starts when first slide appears
                     if (g_AudioSystem) {
                         g_AudioSystem->StopEvent("event:/MainMenuBGM");
+                        g_AudioSystem->StopEvent("event:/OpeningCutsceneBGM");
                         g_AudioSystem->StopEvent("event:/Level1BGM");
                     }
 
@@ -511,6 +515,15 @@ namespace Framework
                     }
                 }
 
+                // Start Level1BGM when R&R logo (last slide) appears
+                if (i >= sceneCount - 1 && !level1BGMStarted) {
+                    level1BGMStarted = true;
+                    if (g_AudioSystem) {
+                        g_AudioSystem->StopEvent("event:/OpeningCutsceneBGM");
+                        g_AudioSystem->PlayAudio("event:/Level1BGM");
+                    }
+                }
+
                 // Finished all scenes?
                 if (i >= sceneCount)
                 {
@@ -529,10 +542,6 @@ namespace Framework
                             tex.isUI = false;
                         }
 
-                        if (g_AudioSystem) {
-                            g_AudioSystem->StopEvent("event:/OpeningCutsceneBGM");
-                            g_AudioSystem->PlayAudio("event:/Level1BGM");
-                        }
 
                         engineState.PopState();
                         engineState.PushState(EngineMode::MapSelection);
@@ -590,6 +599,7 @@ namespace Framework
                 cutsceneSkipHolding = false;
                 cutsceneSkipStartTime = 0.0f;
                 openingBGMStarted = false;
+                level1BGMStarted = false;
             }
 
             // 8. DIGIPEN LOGO INTRO + GROUP LOGO INTRO
