@@ -450,7 +450,7 @@ namespace Framework
                         cutsceneSkipStartTime = 0.0f;
 
                         if (g_AudioSystem) {
-                            g_AudioSystem->StopEvent("event:/QuarryBGM");
+                            g_AudioSystem->StopEvent("event:/OpeningCutsceneBGM");
                             g_AudioSystem->PlayAudio("event:/Level1BGM");
                         }
 
