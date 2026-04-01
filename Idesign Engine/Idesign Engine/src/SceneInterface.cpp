@@ -650,6 +650,12 @@ namespace Framework
                     IntrocutsceneStartTime = (float)glfwGetTime();
                     IntroFinished = false;
 
+                    // Start menu BGM when intro begins
+                    if (g_AudioSystem) {
+                        g_AudioSystem->PlayAudio("event:/MainMenuBGM");
+                    }
+
+
                     for (auto e : slides)
                     {
                         if (!ecsInterface.IsEntityValid(e)) continue;
@@ -1319,6 +1325,7 @@ namespace Framework
                     // Stop win cutscene BGM and play credits BGM ===
                     if (g_AudioSystem) {
                         g_AudioSystem->StopEvent("event:/WinCutsceneBGM");
+                        g_AudioSystem->StopEvent("event:/MainMenuBGM");
                         g_AudioSystem->PlayAudio("event:/CreditsBGM");
                     }
 

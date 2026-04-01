@@ -388,10 +388,7 @@ namespace Framework {
         CreateBus("bus:/BGM");
         CreateBus("bus:/SFX");
         CreateBus("bus:/Ambient");
-
-        // Auto-play menu BGM now that banks are loaded
-        PlayAudio("event:/MainMenuBGM");
-        std::cout << "[AudioSystem] Auto-playing MainMenuBGM" << std::endl;
+        
     }
 
     void AudioSystem::PrintAudioInfo() const {
