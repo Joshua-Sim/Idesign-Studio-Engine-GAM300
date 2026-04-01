@@ -25,9 +25,25 @@ local currentMapLocation = 0   -- 0 = none, 1 = Forest, 2 = Quarry
 local dayTimerStarted = false
 
 local iconPositions = {
+    [0] = { x = 960.0,  y = 250.0, z = 1.0 },   -- House (Middle Bottom)
     [1] = { x = 462.0,  y = 745.0, z = 1.0 },   -- Forest
     [2] = { x = 1410.0, y = 738.0, z = 1.0 }    -- Quarry
 }
+
+-- =========================================================
+-- ANIMATION VARIABLES
+-- =========================================================
+local isMoving = false
+local moveTimer = 0.0
+local moveDuration = 1.0 -- How long the travel takes in seconds (adjust to your liking)
+local startPos = {x = 0, y = 0, z = 0}
+local targetPos = {x = 0, y = 0, z = 0}
+local pendingTravelData = nil -- Remembers where we are teleporting to
+
+-- Standard Linear Interpolation function
+local function Lerp(a, b, t)
+    return a + (b - a) * t
+end
 
 -- =========================================================
 -- LOCATION DATA
@@ -219,9 +235,15 @@ local function CheckAndApplyMapReset()
     if resetFlag == 1 then
         currentMapLocation = 0
         dayTimerStarted = false
-        HidePlayerMapIcon()
+        
+        -- INSTEAD OF HIDING THE ICON, SNAP IT TO THE HOUSE
+        if mapIcon and IsEntityValid(mapIcon) then
+            local pos = iconPositions[0]
+            SetPosition(mapIcon, pos.x, pos.y, pos.z)
+        end
+        
         SetData("ResetMapIconNextOpen", 0)
-        print("[MapSelectionUI] Map icon reset for new day")
+        print("[MapSelectionUI] Map icon reset to House for new day")
         print("[MapSelectionUI] Day travel timer reset")
     end
 end
@@ -312,8 +334,36 @@ end
 function M:on_update(dt)
     if not IsEngineState("MapSelection") then return end
 
+    if type(dt) ~= "number" or dt <= 0 then
+        dt = 0.016 
+    end
+
     CheckAndApplyMapReset()
-    RefreshPlayerMapIcon()
+
+    -- ANIMATION LOGIC
+    if isMoving then
+        moveTimer = moveTimer + dt
+        local t = moveTimer / moveDuration
+        
+        -- Watch the console for this! If it counts from 0.0 to 1.0, it's working.
+        print(string.format("[DEBUG-ANIMATION] Timer: %.2f | Progress: %.2f%%", moveTimer, t * 100))
+        
+        if t >= 1.0 then
+            t = 1.0
+            isMoving = false
+            SetPosition(mapIcon, targetPos.x, targetPos.y, targetPos.z)
+            self:FinishTravel(pendingTravelData)
+        else
+            -- If Lerp is missing, the script will silently die on this exact line
+            local newX = Lerp(startPos.x, targetPos.x, t)
+            local newY = Lerp(startPos.y, targetPos.y, t)
+            local newZ = Lerp(startPos.z, targetPos.z, t)
+            SetPosition(mapIcon, newX, newY, newZ)
+        end
+    else
+        -- Only run the instant snap if we are NOT animating
+        RefreshPlayerMapIcon()
+    end
 
     if not pendingLocation then return end
 
@@ -360,20 +410,50 @@ function M:OnLocationSelected(locData)
 end
 
 -- =========================================================
--- CONFIRM TRAVEL
+-- CONFIRM TRAVEL (Starts the Animation)
 -- =========================================================
 function M:ConfirmTravel(locData)
+    print("\n[DEBUG] --- ConfirmTravel TRIGGERED ---")
+    print("[DEBUG] Destination requested: " .. tostring(locData.name))
+
     SetDialogVisible(false)
     pendingLocation = nil
 
+    -- Determine the target location index
+    local targetIdx = 0
     if locData.name == "Forest" then
-        currentMapLocation = 1
+        targetIdx = 1
     elseif locData.name == "Quarry" then
-        currentMapLocation = 2
-    else
-        currentMapLocation = 0
+        targetIdx = 2
+    elseif locData.name == "House" then
+        targetIdx = 0
     end
+    print("[DEBUG] Target index resolved to: " .. tostring(targetIdx))
 
+    -- Check if the icon exists and is valid
+    if mapIcon and IsEntityValid(mapIcon) then
+        local cx, cy, cz = GetPosition(mapIcon)
+        startPos = {x = cx, y = cy, z = cz}
+        targetPos = iconPositions[targetIdx]
+        
+        print(string.format("[DEBUG] Start Pos: X=%.1f, Y=%.1f", startPos.x, startPos.y))
+        print(string.format("[DEBUG] Target Pos: X=%.1f, Y=%.1f", targetPos.x, targetPos.y))
+        
+        currentMapLocation = targetIdx
+        pendingTravelData = locData
+        isMoving = true
+        moveTimer = 0.0
+        print("[DEBUG] isMoving set to TRUE. Waiting for on_update...")
+    else
+        print("[DEBUG] ERROR: mapIcon is nil or invalid! Skipping animation.")
+        currentMapLocation = targetIdx
+        self:FinishTravel(locData)
+    end
+end
+-- =========================================================
+-- FINISH TRAVEL (Happens after animation completes)
+-- =========================================================
+function M:FinishTravel(locData)
     for _, loc in pairs(locations) do
         local img = FindEntityByName(loc.ingredientImageEntity)
         if img and IsEntityValid(img) then

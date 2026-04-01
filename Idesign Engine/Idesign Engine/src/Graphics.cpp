@@ -103,16 +103,16 @@ namespace Framework {
 
         // This is the magic hint for "True" Borderless Fullscreen:
         // It tells GLFW not to change the resolution, just take over the screen.
-        glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+        glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
 
         // 3. Create the window
         // Passing 'monitor' here instead of nullptr makes it Fullscreen.
         // Because we matched the monitor bits/refresh rate above, it won't flicker or "pop."
         window = glfwCreateWindow(
-            mode->width,
-            mode->height,
+            1280,
+            720,
             "My Engine",
-            monitor,
+            nullptr,
             nullptr
         );
 
