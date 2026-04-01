@@ -1,5 +1,5 @@
 {
-    "count": 75,
+    "count": 77,
     "entries": [
         {
             "guid": "ab20d9cc-f552-47fb-8cd9-82403e4c3b22",
@@ -449,6 +449,18 @@
             "guid": "88eeea08-85e0-47fd-9297-fd858ee22464",
             "name": "Spinner_Prefab",
             "path": "Assets\\Prefabs\\Spinner_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "fdf6b957-d479-6767-b053-911623eeb56e",
+            "name": "LeftFoot",
+            "path": "Assets\\Prefabs\\LeftFoot.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "fdf6b957-6767-6767-b053-911623eeb56e",
+            "name": "RightFoot",
+            "path": "Assets\\Prefabs\\RightFoot.prefab",
             "isScenePrefab": false
         }
     ]

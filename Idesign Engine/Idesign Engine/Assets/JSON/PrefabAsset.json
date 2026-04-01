@@ -449,6 +449,18 @@
             "name": "Spinner_Prefab",
             "path": "Assets\\Prefabs\\Spinner_Prefab.prefab",
             "isScenePrefab": false
+        },
+        {
+            "guid": "fdf6b957-d479-6767-b053-911623eeb56e",
+            "name": "LeftFoot",
+            "path": "Assets\\Prefabs\\LeftFoot.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "fdf6b957-6767-6767-b053-911623eeb56e",
+            "name": "RightFoot",
+            "path": "Assets\\Prefabs\\RightFoot.prefab",
+            "isScenePrefab": false
         }
     ]
 }

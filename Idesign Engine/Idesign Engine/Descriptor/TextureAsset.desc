@@ -1,5 +1,5 @@
 {
-    "count": 359,
+    "count": 361,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -3943,6 +3943,28 @@
             "guid": "be74f90c-0cce-43b5-b30e-d61b6407a28c",
             "name": "trashbin",
             "path": "Assets\\Textures\\trashbin.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "bf2ce39c-0414-41eb-9333-3f298754cbed",
+            "name": "leftfoot",
+            "path": "Assets\\Textures\\leftfoot.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "5f9e2a12-8afd-48ac-af8a-3392580e5c60",
+            "name": "rightfoot",
+            "path": "Assets\\Textures\\rightfoot.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,

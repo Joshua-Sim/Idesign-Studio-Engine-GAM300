@@ -25,10 +25,23 @@ local currentMapLocation = 0   -- 0 = none, 1 = Forest, 2 = Quarry
 local dayTimerStarted = false
 
 local iconPositions = {
-    [0] = { x = 960.0,  y = 250.0, z = 1.0 },   -- House (Middle Bottom)
-    [1] = { x = 462.0,  y = 745.0, z = 1.0 },   -- Forest
-    [2] = { x = 1410.0, y = 738.0, z = 1.0 }    -- Quarry
+    [0] = { x = 960.0,  y = 250.0, z = 0.9 },   -- House (Middle Bottom)
+    [1] = { x = 462.0,  y = 745.0, z = 0.9 },   -- Forest
+    [2] = { x = 1410.0, y = 738.0, z = 0.9 }    -- Quarry
 }
+
+-- =========================================================
+-- DYNAMIC FOOTPRINT VARIABLES
+-- =========================================================
+local FOOTPRINT_SPACING = 60.0   
+local FOOTPRINT_OFFSET = 12.0    
+local FOOTPRINT_LIFETIME = 1.0   
+
+local lastFootprintPos = {x = 0, y = 0}
+local isLeftFootNext = true
+
+-- THIS IS THE LINE THAT IS MISSING OR MISSPELLED:
+local activeFootprints = {}
 
 -- =========================================================
 -- ANIMATION VARIABLES
@@ -196,6 +209,49 @@ local function SetDialogVisible(visible)
 end
 
 -- =========================================================
+-- SPAWN PREFAB FOOTPRINT (FIXED VISIBILITY)
+-- =========================================================
+local function SpawnFootprint(currentX, currentY, destX, destY)
+    local vx = destX - startPos.x
+    local vy = destY - startPos.y
+    local len = math.sqrt(vx * vx + vy * vy)
+    if len == 0 then return end
+    vx = vx / len
+    vy = vy / len
+
+    local px, py, prefabName
+    if isLeftFootNext then
+        px = -vy  
+        py = vx   
+        prefabName = "LeftFoot" 
+    else
+        px = vy   
+        py = -vx  
+        prefabName = "RightFoot"
+    end
+
+    local finalX = currentX + (px * FOOTPRINT_OFFSET)
+    local finalY = currentY + (py * FOOTPRINT_OFFSET)
+    local angle = math.deg(math.atan2(vy, vx)) - 90
+    
+    -- FIX #1: SCALE
+    -- Changed 1.0, 1.0 to 30.0, 30.0 (Adjust this to match your PNG's desired pixel size!)
+    local newFootprint = SpawnPrefab(prefabName, finalX, finalY, 0.8, 0.0, 0.0, angle, 30.0, 30.0, 1.0) 
+
+    if newFootprint then
+        -- FIX #2: UI FLAG
+        -- Tell the engine to render this on the UI canvas!
+        if SetIsUI then
+            SetIsUI(newFootprint, true)
+        end
+        
+        table.insert(activeFootprints, { entity = newFootprint, life = FOOTPRINT_LIFETIME })
+    end
+
+    isLeftFootNext = not isLeftFootNext
+end
+
+-- =========================================================
 -- TEXTURE SWAP
 -- =========================================================
 local function ApplyDialogTextures(locData)
@@ -340,28 +396,40 @@ function M:on_update(dt)
 
     CheckAndApplyMapReset()
 
-    -- ANIMATION LOGIC
+-- ==== ANIMATION LOGIC ====
     if isMoving then
         moveTimer = moveTimer + dt
         local t = moveTimer / moveDuration
-        
-        -- Watch the console for this! If it counts from 0.0 to 1.0, it's working.
-        print(string.format("[DEBUG-ANIMATION] Timer: %.2f | Progress: %.2f%%", moveTimer, t * 100))
         
         if t >= 1.0 then
             t = 1.0
             isMoving = false
             SetPosition(mapIcon, targetPos.x, targetPos.y, targetPos.z)
+            if activeFootprints ~= nil then
+                for i = #activeFootprints, 1, -1 do
+                    DestroyEntity(activeFootprints[i].entity)
+                end
+                activeFootprints = {} -- Empty the table completely
+            end
             self:FinishTravel(pendingTravelData)
         else
-            -- If Lerp is missing, the script will silently die on this exact line
+            -- Move the player icon
             local newX = Lerp(startPos.x, targetPos.x, t)
             local newY = Lerp(startPos.y, targetPos.y, t)
             local newZ = Lerp(startPos.z, targetPos.z, t)
             SetPosition(mapIcon, newX, newY, newZ)
+
+            -- Check if we need to drop a footprint
+            local dx = newX - lastFootprintPos.x
+            local dy = newY - lastFootprintPos.y
+            local dist = math.sqrt(dx * dx + dy * dy)
+
+            if dist >= FOOTPRINT_SPACING then
+                SpawnFootprint(newX, newY, targetPos.x, targetPos.y)
+                lastFootprintPos = {x = newX, y = newY}
+            end
         end
     else
-        -- Only run the instant snap if we are NOT animating
         RefreshPlayerMapIcon()
     end
 
@@ -390,7 +458,21 @@ function M:on_update(dt)
             HideByZ(de.stayHover)
         end
     end
+
+    for i = #activeFootprints, 1, -1 do
+        local fp = activeFootprints[i]
+        fp.life = fp.life - dt
+        
+        if fp.life <= 0 then
+            -- Use your engine's Destroy/Delete function here!
+            DestroyEntity(fp.entity) 
+            
+            -- Remove it from the Lua table
+            table.remove(activeFootprints, i)
+        end
+    end
 end
+
 
 -- =========================================================
 -- LOCATION SELECTED
