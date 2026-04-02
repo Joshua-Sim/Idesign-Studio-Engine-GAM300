@@ -145,18 +145,47 @@ end
 
 function M:on_update(dt)
 
-    -- Don't run audio logic during menu/intro/cutscene or when not playing
-    if HasEngineState("Menu") or HasEngineState("Intro") or HasEngineState("Cutscene") then 
+    -- Only run audio logic during actual gameplay (no UI overlays)
+    -- Check for all states that mean "not in free gameplay"
+    if HasEngineState("Menu") 
+        or HasEngineState("Intro") 
+        or HasEngineState("Cutscene")
+        or HasEngineState("MapSelection")
+        or HasEngineState("Day2")
+        or HasEngineState("Day3")
+        or HasEngineState("Day4")
+        or HasEngineState("Day5")
+        or HasEngineState("Win")
+        or HasEngineState("Lose")
+        or HasEngineState("Credit")
+        or HasEngineState("DayStats")
+        or HasEngineState("Upgrade")
+        or HasEngineState("Paused")
+    then 
         firstPlayFrame = true
         return 
     end
 
-    -- On first frame back in gameplay, reset zone state to avoid stale BGM
+    -- On first frame back in gameplay, reset zone state and play correct BGM
     if firstPlayFrame then
         firstPlayFrame = false
         wasInQuarry = false
         wasInShop = false
-        -- Don't call Sound.Stop here - Level1BGM is already managed by SceneInterface
+        wasInBackyard = false
+        Sound.Stop(shopBGM)
+        Sound.Stop(quarryBGM)
+        Sound.Stop(level1BGM)
+
+        -- Immediately play the correct BGM for current zone
+        if self:IsInQuarry() then
+            Sound.Play(quarryBGM)
+            wasInQuarry = true
+        elseif self:IsInShop() then
+            Sound.Play(shopBGM)
+            wasInShop = true
+        else
+            Sound.Play(level1BGM)
+        end
     end
 
     local isInBackyard = self:IsInBackyard()
