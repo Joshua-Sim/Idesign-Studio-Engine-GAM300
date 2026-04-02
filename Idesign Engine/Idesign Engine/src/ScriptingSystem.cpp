@@ -1193,6 +1193,10 @@ namespace Framework {
             if (stateName == "Win")             return EngineMode::Win;
             if (stateName == "Lose")            return EngineMode::Lose;
             if (stateName == "Credit")          return EngineMode::Credit;
+            if (stateName == "Day2")            return EngineMode::Day2;
+            if (stateName == "Day3")            return EngineMode::Day3;
+            if (stateName == "Day4")            return EngineMode::Day4;
+            if (stateName == "Day5")            return EngineMode::Day5;
 
             std::cerr << "[Lua] Unknown EngineMode: " << stateName << std::endl;
             return EngineMode::Play; // Default fallback
@@ -1221,6 +1225,10 @@ namespace Framework {
             case EngineMode::Win:            return "Win";
             case EngineMode::Lose:           return "Lose";
             case EngineMode::Credit:         return "Credit";
+            case EngineMode::Day2:           return "Day2";
+            case EngineMode::Day3:           return "Day3";
+            case EngineMode::Day4:           return "Day4";
+            case EngineMode::Day5:           return "Day5";
             default: return "Unknown";
             }
         }

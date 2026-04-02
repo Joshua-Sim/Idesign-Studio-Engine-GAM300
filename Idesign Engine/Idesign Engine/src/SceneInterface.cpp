@@ -822,12 +822,6 @@ namespace Framework
                     dayPhaseStartTime = (float)glfwGetTime();
                     dayPhaseFinished = false;
 
-                    // Stop menu BGM, start gameplay BGM 
-                    if (g_AudioSystem) {
-                        g_AudioSystem->StopEvent("event:/MainMenuBGM");
-                        g_AudioSystem->PlayAudio("event:/Level1BGM");
-                    }
-
                     // Init all 3 entities
                     for (Entity e : dayEntities)
                     {
