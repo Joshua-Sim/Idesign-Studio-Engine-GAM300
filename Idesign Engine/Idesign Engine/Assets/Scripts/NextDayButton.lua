@@ -6,12 +6,12 @@ function M:on_init()
     RegisterButtonCallback(self.entity, function(ent)
         print("[NextDayButton] Next Day clicked!")
 
+        -- tell map UI to reset icon on next open
+        SetData("ResetMapIconNextOpen", 1)
+
         -- Leave Upgrade
         PopEngineState()
-        PushEngineState("Play")  -- Push Play state
- 
-        -- -- Push MapSelection state - this will automatically show all entities tagged with "map"
-        -- PushEngineState("MapSelection")
+        PushEngineState("Play")
 
         -- Advance day + push proper day transition
         AdvanceDayAndPushTransition()

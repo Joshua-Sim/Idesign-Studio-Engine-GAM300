@@ -1,10 +1,10 @@
 -- MapSelectionUI.lua
 --
 -- DIALOG VISIBILITY: SetIsUI called directly on the 6 cached dialog entity IDs.
--- No tag dependency for dialog � we own visibility entirely from Lua.
+-- No tag dependency for dialog - visibility fully managed from Lua.
 -- Forest/Quarry/House map buttons still rely on SceneInterface via "map" tag.
 --
--- HOVER SWAP: Z trick � hover entity pushed to HIDE_Z until mouse is over button.
+-- HOVER SWAP: Z trick - hover entity pushed to HIDE_Z until mouse is over button.
 
 local M = {}
 
@@ -13,6 +13,50 @@ SetData("quarryFirstEntered",  0)
 SetData("quarryTutorialPlayed", 0)
 
 local HIDE_Z = -99999.0  -- offscreen Z to hide an entity from rendering
+
+-- =========================================================
+-- MAP ICON
+-- =========================================================
+local PLAYER_MAP_ICON = "PlayerMapIcon"
+local mapIcon = nil
+local currentMapLocation = 0   -- 0 = none, 1 = Forest, 2 = Quarry
+
+-- Timer should only start on first travel of the day
+local dayTimerStarted = false
+
+local iconPositions = {
+    [0] = { x = 960.0,  y = 250.0, z = 0.9 },   -- House (Middle Bottom)
+    [1] = { x = 462.0,  y = 745.0, z = 0.9 },   -- Forest
+    [2] = { x = 1410.0, y = 738.0, z = 0.9 }    -- Quarry
+}
+
+-- =========================================================
+-- DYNAMIC FOOTPRINT VARIABLES
+-- =========================================================
+local FOOTPRINT_SPACING = 60.0   
+local FOOTPRINT_OFFSET = 12.0    
+local FOOTPRINT_LIFETIME = 1.0   
+
+local lastFootprintPos = {x = 0, y = 0}
+local isLeftFootNext = true
+
+-- THIS IS THE LINE THAT IS MISSING OR MISSPELLED:
+local activeFootprints = {}
+
+-- =========================================================
+-- ANIMATION VARIABLES
+-- =========================================================
+local isMoving = false
+local moveTimer = 0.0
+local moveDuration = 1.0 -- How long the travel takes in seconds (adjust to your liking)
+local startPos = {x = 0, y = 0, z = 0}
+local targetPos = {x = 0, y = 0, z = 0}
+local pendingTravelData = nil -- Remembers where we are teleporting to
+
+-- Standard Linear Interpolation function
+local function Lerp(a, b, t)
+    return a + (b - a) * t
+end
 
 -- =========================================================
 -- LOCATION DATA
@@ -65,9 +109,6 @@ local locations = {
 -- =========================================================
 -- DIALOG ENTITY NAMES
 -- =========================================================
--- 6 entities. Do NOT need "map" tag � visibility fully managed here via SetIsUI.
--- dialog_btn_travel_normal / hover / stay_normal / stay_hover need ButtonComponent.
-
 local DIALOG_OVERLAY           = "dialog_overlay"
 local DIALOG_COMPLETE          = "dialog_complete"
 local DIALOG_BTN_TRAVEL_NORMAL = "dialog_btn_travel_normal"
@@ -75,10 +116,7 @@ local DIALOG_BTN_TRAVEL_HOVER  = "dialog_btn_travel_hover"
 local DIALOG_BTN_STAY_NORMAL   = "dialog_btn_stay_normal"
 local DIALOG_BTN_STAY_HOVER    = "dialog_btn_stay_hover"
 
--- Cached entity IDs � populated once in on_init
-local de = {}  -- dialogEntities shorthand
-
--- Cached original Z for all 4 button entities
+local de = {}
 local origZ = {}
 
 local pendingLocation = nil
@@ -86,7 +124,7 @@ local travelHovered   = false
 local stayHovered     = false
 
 -- =========================================================
--- SETISUI HELPERS � only called on known dialog entity IDs
+-- SETISUI HELPERS
 -- =========================================================
 local function ShowDialog(e)
     if e and IsEntityValid(e) then
@@ -101,7 +139,7 @@ local function HideDialog(e)
 end
 
 -- =========================================================
--- Z TRICK HELPERS � for hover swap only
+-- Z TRICK HELPERS
 -- =========================================================
 local function HideByZ(e)
     if e and IsEntityValid(e) then
@@ -118,16 +156,38 @@ local function ShowByZ(e, z)
 end
 
 -- =========================================================
+-- MAP ICON HELPERS
+-- =========================================================
+local function HidePlayerMapIcon()
+    if mapIcon and IsEntityValid(mapIcon) then
+        local x, y, _ = GetPosition(mapIcon)
+        SetPosition(mapIcon, x, y, HIDE_Z)
+    end
+end
+
+local function RefreshPlayerMapIcon()
+    if not mapIcon or not IsEntityValid(mapIcon) then
+        return
+    end
+
+    local pos = iconPositions[currentMapLocation]
+    if pos then
+        SetPosition(mapIcon, pos.x, pos.y, pos.z)
+    else
+        HidePlayerMapIcon()
+    end
+end
+
+-- =========================================================
 -- DIALOG SHOW / HIDE
 -- =========================================================
 local function SetDialogVisible(visible)
-    -- print("[MapSelectionUI] SetDialogVisible: " .. tostring(visible))
     if visible then
         ShowDialog(de.overlay)
         ShowDialog(de.complete)
         ShowDialog(de.travelNormal)
         ShowDialog(de.stayNormal)
-        -- hover entities: keep isUI true (needed for button input) but push to HIDE_Z
+
         ShowDialog(de.travelHover)
         ShowDialog(de.stayHover)
         HideByZ(de.travelHover)
@@ -139,12 +199,56 @@ local function SetDialogVisible(visible)
         HideDialog(de.travelHover)
         HideDialog(de.stayNormal)
         HideDialog(de.stayHover)
-        -- restore Z so positions are clean for next open
+
         ShowByZ(de.travelHover, origZ.travelHover or 1)
         ShowByZ(de.stayHover,   origZ.stayHover   or 1)
+
         travelHovered = false
         stayHovered   = false
     end
+end
+
+-- =========================================================
+-- SPAWN PREFAB FOOTPRINT (FIXED VISIBILITY)
+-- =========================================================
+local function SpawnFootprint(currentX, currentY, destX, destY)
+    local vx = destX - startPos.x
+    local vy = destY - startPos.y
+    local len = math.sqrt(vx * vx + vy * vy)
+    if len == 0 then return end
+    vx = vx / len
+    vy = vy / len
+
+    local px, py, prefabName
+    if isLeftFootNext then
+        px = -vy  
+        py = vx   
+        prefabName = "LeftFoot" 
+    else
+        px = vy   
+        py = -vx  
+        prefabName = "RightFoot"
+    end
+
+    local finalX = currentX + (px * FOOTPRINT_OFFSET)
+    local finalY = currentY + (py * FOOTPRINT_OFFSET)
+    local angle = math.deg(math.atan2(vy, vx)) - 90
+    
+    -- FIX #1: SCALE
+    -- Changed 1.0, 1.0 to 30.0, 30.0 (Adjust this to match your PNG's desired pixel size!)
+    local newFootprint = SpawnPrefab(prefabName, finalX, finalY, 0.8, 0.0, 0.0, angle, 30.0, 30.0, 1.0) 
+
+    if newFootprint then
+        -- FIX #2: UI FLAG
+        -- Tell the engine to render this on the UI canvas!
+        if SetIsUI then
+            SetIsUI(newFootprint, true)
+        end
+        
+        table.insert(activeFootprints, { entity = newFootprint, life = FOOTPRINT_LIFETIME })
+    end
+
+    isLeftFootNext = not isLeftFootNext
 end
 
 -- =========================================================
@@ -153,6 +257,7 @@ end
 local function ApplyDialogTextures(locData)
     if not locData or not locData.dialogTextures then return end
     local t = locData.dialogTextures
+
     if de.complete     and IsEntityValid(de.complete)     and t.complete      then SetTexture(de.complete,     t.complete)      end
     if de.travelNormal and IsEntityValid(de.travelNormal) and t.button_normal then SetTexture(de.travelNormal, t.button_normal) end
     if de.travelHover  and IsEntityValid(de.travelHover)  and t.button_hover  then SetTexture(de.travelHover,  t.button_hover)  end
@@ -168,17 +273,41 @@ local function IsMouseOver(e)
     local mx, my   = GetMousePosition()
     local ex, ey,_ = GetPosition(e)
     local sx, sy,_ = GetScale(e)
-    return mx >= ex - sx*0.5 and mx <= ex + sx*0.5 and
-           my >= ey - sy*0.5 and my <= ey + sy*0.5
+
+    return mx >= ex - sx * 0.5 and mx <= ex + sx * 0.5 and
+           my >= ey - sy * 0.5 and my <= ey + sy * 0.5
+end
+
+local function CheckAndApplyMapReset()
+    local resetFlag = 0
+    local ok, result = pcall(function()
+        return GetData("ResetMapIconNextOpen")
+    end)
+
+    if ok and result then
+        resetFlag = result
+    end
+
+    if resetFlag == 1 then
+        currentMapLocation = 0
+        dayTimerStarted = false
+        
+        -- INSTEAD OF HIDING THE ICON, SNAP IT TO THE HOUSE
+        if mapIcon and IsEntityValid(mapIcon) then
+            local pos = iconPositions[0]
+            SetPosition(mapIcon, pos.x, pos.y, pos.z)
+        end
+        
+        SetData("ResetMapIconNextOpen", 0)
+        print("[MapSelectionUI] Map icon reset to House for new day")
+        print("[MapSelectionUI] Day travel timer reset")
+    end
 end
 
 -- =========================================================
 -- ON INIT
 -- =========================================================
 function M:on_init()
-    -- print("[MapSelectionUI] ===== INITIALIZATION =====")
-
-    -- Cache dialog entity IDs
     de.overlay      = FindEntityByName(DIALOG_OVERLAY)
     de.complete     = FindEntityByName(DIALOG_COMPLETE)
     de.travelNormal = FindEntityByName(DIALOG_BTN_TRAVEL_NORMAL)
@@ -186,80 +315,126 @@ function M:on_init()
     de.stayNormal   = FindEntityByName(DIALOG_BTN_STAY_NORMAL)
     de.stayHover    = FindEntityByName(DIALOG_BTN_STAY_HOVER)
 
-    -- print("[MapSelectionUI] --- Dialog Entity Cache ---")
-    -- for k, e in pairs(de) do
-    --     print("[MapSelectionUI]   " .. k .. " = " .. tostring(e) .. " valid=" .. tostring(e ~= nil and IsEntityValid(e)))
-    -- end
+    mapIcon = FindEntityByName(PLAYER_MAP_ICON)
 
-    -- Cache original Z for all 4 button entities
-    if de.travelNormal and IsEntityValid(de.travelNormal) then local _,_,z = GetPosition(de.travelNormal) origZ.travelNormal = z end
-    if de.travelHover  and IsEntityValid(de.travelHover)  then local _,_,z = GetPosition(de.travelHover)  origZ.travelHover  = z end
-    if de.stayNormal   and IsEntityValid(de.stayNormal)   then local _,_,z = GetPosition(de.stayNormal)   origZ.stayNormal   = z end
-    if de.stayHover    and IsEntityValid(de.stayHover)    then local _,_,z = GetPosition(de.stayHover)    origZ.stayHover    = z end
+    if de.travelNormal and IsEntityValid(de.travelNormal) then
+        local _, _, z = GetPosition(de.travelNormal)
+        origZ.travelNormal = z
+    end
+    if de.travelHover and IsEntityValid(de.travelHover) then
+        local _, _, z = GetPosition(de.travelHover)
+        origZ.travelHover = z
+    end
+    if de.stayNormal and IsEntityValid(de.stayNormal) then
+        local _, _, z = GetPosition(de.stayNormal)
+        origZ.stayNormal = z
+    end
+    if de.stayHover and IsEntityValid(de.stayHover) then
+        local _, _, z = GetPosition(de.stayHover)
+        origZ.stayHover = z
+    end
 
-    -- Hide dialog on init
     SetDialogVisible(false)
+    HidePlayerMapIcon()
 
-    -- Register location button callbacks
     for _, locData in pairs(locations) do
         local btn = FindEntityByName(locData.buttonEntity)
         if btn and IsEntityValid(btn) then
-            -- print("[MapSelectionUI] Registered: " .. locData.buttonEntity .. " (ID: " .. btn .. ")")
             RegisterButtonCallback(btn, function()
                 self:OnLocationSelected(locData)
             end)
-        else
-            -- print("[MapSelectionUI] WARNING: not found: " .. locData.buttonEntity)
         end
     end
 
-    -- Register TRAVEL callbacks (normal + hover both fire confirm)
     if de.travelNormal and IsEntityValid(de.travelNormal) then
         RegisterButtonCallback(de.travelNormal, function()
-            if pendingLocation then self:ConfirmTravel(pendingLocation) end
+            if pendingLocation then
+                self:ConfirmTravel(pendingLocation)
+            end
         end)
     end
+
     if de.travelHover and IsEntityValid(de.travelHover) then
         RegisterButtonCallback(de.travelHover, function()
-            if pendingLocation then self:ConfirmTravel(pendingLocation) end
+            if pendingLocation then
+                self:ConfirmTravel(pendingLocation)
+            end
         end)
     end
 
-    -- Register STAY callbacks (normal + hover both cancel)
     if de.stayNormal and IsEntityValid(de.stayNormal) then
         RegisterButtonCallback(de.stayNormal, function()
-            -- print("[MapSelectionUI] Stay clicked � cancelling.")
-            pendingLocation = nil
-            SetDialogVisible(false)
-        end)
-    end
-    if de.stayHover and IsEntityValid(de.stayHover) then
-        RegisterButtonCallback(de.stayHover, function()
-            -- print("[MapSelectionUI] Stay clicked � cancelling.")
             pendingLocation = nil
             SetDialogVisible(false)
         end)
     end
 
-    -- Hide ingredient images
+    if de.stayHover and IsEntityValid(de.stayHover) then
+        RegisterButtonCallback(de.stayHover, function()
+            pendingLocation = nil
+            SetDialogVisible(false)
+        end)
+    end
+
     for _, locData in pairs(locations) do
         local img = FindEntityByName(locData.ingredientImageEntity)
         if img and IsEntityValid(img) then
             SetEntityScale(img, 0, 0, 0)
         end
     end
-
-    -- print("[MapSelectionUI] ===== INITIALIZATION COMPLETE =====")
 end
 
 -- =========================================================
--- ON UPDATE � hover swap via Z trick
+-- ON UPDATE
 -- =========================================================
 function M:on_update(dt)
     if not IsEngineState("MapSelection") then return end
+
+    if type(dt) ~= "number" or dt <= 0 then
+        dt = 0.016 
+    end
+
+    CheckAndApplyMapReset()
+
+-- ==== ANIMATION LOGIC ====
+    if isMoving then
+        moveTimer = moveTimer + dt
+        local t = moveTimer / moveDuration
+        
+        if t >= 1.0 then
+            t = 1.0
+            isMoving = false
+            SetPosition(mapIcon, targetPos.x, targetPos.y, targetPos.z)
+            if activeFootprints ~= nil then
+                for i = #activeFootprints, 1, -1 do
+                    DestroyEntity(activeFootprints[i].entity)
+                end
+                activeFootprints = {} -- Empty the table completely
+            end
+            self:FinishTravel(pendingTravelData)
+        else
+            -- Move the player icon
+            local newX = Lerp(startPos.x, targetPos.x, t)
+            local newY = Lerp(startPos.y, targetPos.y, t)
+            local newZ = Lerp(startPos.z, targetPos.z, t)
+            SetPosition(mapIcon, newX, newY, newZ)
+
+            -- Check if we need to drop a footprint
+            local dx = newX - lastFootprintPos.x
+            local dy = newY - lastFootprintPos.y
+            local dist = math.sqrt(dx * dx + dy * dy)
+
+            if dist >= FOOTPRINT_SPACING then
+                SpawnFootprint(newX, newY, targetPos.x, targetPos.y)
+                lastFootprintPos = {x = newX, y = newY}
+            end
+        end
+    else
+        RefreshPlayerMapIcon()
+    end
+
     if not pendingLocation then return end
 
-    -- TRAVEL hover
     local overTravel = IsMouseOver(de.travelNormal)
     if overTravel ~= travelHovered then
         travelHovered = overTravel
@@ -272,7 +447,6 @@ function M:on_update(dt)
         end
     end
 
-    -- STAY hover
     local overStay = IsMouseOver(de.stayNormal)
     if overStay ~= stayHovered then
         stayHovered = overStay
@@ -284,21 +458,31 @@ function M:on_update(dt)
             HideByZ(de.stayHover)
         end
     end
+
+    for i = #activeFootprints, 1, -1 do
+        local fp = activeFootprints[i]
+        fp.life = fp.life - dt
+        
+        if fp.life <= 0 then
+            -- Use your engine's Destroy/Delete function here!
+            DestroyEntity(fp.entity) 
+            
+            -- Remove it from the Lua table
+            table.remove(activeFootprints, i)
+        end
+    end
 end
 
+
 -- =========================================================
--- LOCATION SELECTED � show dialog
+-- LOCATION SELECTED
 -- =========================================================
 function M:OnLocationSelected(locData)
-    -- print("[MapSelectionUI] Location selected: " .. locData.name)
-
     if not IsEngineState("MapSelection") then
-        -- print("[MapSelectionUI] Ignoring � not in MapSelection state")
         return
     end
 
     if not locData.checkUnlocked() then
-        -- print("[MapSelectionUI] " .. locData.name .. " is LOCKED")
         return
     end
 
@@ -308,20 +492,57 @@ function M:OnLocationSelected(locData)
 end
 
 -- =========================================================
--- CONFIRM TRAVEL
+-- CONFIRM TRAVEL (Starts the Animation)
 -- =========================================================
 function M:ConfirmTravel(locData)
-    -- print("[MapSelectionUI] Travel confirmed: " .. locData.name)
+    print("\n[DEBUG] --- ConfirmTravel TRIGGERED ---")
+    print("[DEBUG] Destination requested: " .. tostring(locData.name))
 
     SetDialogVisible(false)
     pendingLocation = nil
 
+    -- Determine the target location index
+    local targetIdx = 0
+    if locData.name == "Forest" then
+        targetIdx = 1
+    elseif locData.name == "Quarry" then
+        targetIdx = 2
+    elseif locData.name == "House" then
+        targetIdx = 0
+    end
+    print("[DEBUG] Target index resolved to: " .. tostring(targetIdx))
+
+    -- Check if the icon exists and is valid
+    if mapIcon and IsEntityValid(mapIcon) then
+        local cx, cy, cz = GetPosition(mapIcon)
+        startPos = {x = cx, y = cy, z = cz}
+        targetPos = iconPositions[targetIdx]
+        
+        print(string.format("[DEBUG] Start Pos: X=%.1f, Y=%.1f", startPos.x, startPos.y))
+        print(string.format("[DEBUG] Target Pos: X=%.1f, Y=%.1f", targetPos.x, targetPos.y))
+        
+        currentMapLocation = targetIdx
+        pendingTravelData = locData
+        isMoving = true
+        moveTimer = 0.0
+        print("[DEBUG] isMoving set to TRUE. Waiting for on_update...")
+    else
+        print("[DEBUG] ERROR: mapIcon is nil or invalid! Skipping animation.")
+        currentMapLocation = targetIdx
+        self:FinishTravel(locData)
+    end
+end
+-- =========================================================
+-- FINISH TRAVEL (Happens after animation completes)
+-- =========================================================
+function M:FinishTravel(locData)
     for _, loc in pairs(locations) do
         local img = FindEntityByName(loc.ingredientImageEntity)
-        if img and IsEntityValid(img) then SetEntityScale(img, 0, 0, 0) end
+        if img and IsEntityValid(img) then
+            SetEntityScale(img, 0, 0, 0)
+        end
     end
 
-    -- Flick quarry first-enter flag so QuarryTutorialSystem knows to play onboarding
     if locData.name == "Quarry" and GetData("quarryTutorialPlayed") == 0 then
         SetData("quarryFirstEntered", 1)
     end
@@ -333,7 +554,17 @@ function M:ConfirmTravel(locData)
 
     FireEvent("StartPhaseTransition")
     FireEvent("RequestHerbSpawn")
-    GameStateStart()
+
+    -- Start timer ONLY on first travel of the day
+    if not dayTimerStarted then
+        GameStateStart()
+        dayTimerStarted = true
+        print("[MapSelectionUI] First travel of day -> timer started")
+    else
+        print("[MapSelectionUI] Travel during same day -> timer continues")
+    end
+
+    PopEngineState()
     SetUIFocused(false)
 end
 
@@ -341,16 +572,17 @@ end
 -- SHOW / HIDE MAP
 -- =========================================================
 function M:ShowMap()
-    -- print("[MapSelectionUI] ShowMap")
     PushEngineState("MapSelection")
     SetUIFocused(true)
+
+    CheckAndApplyMapReset()
+    RefreshPlayerMapIcon()
 end
 
 function M:HideMap()
-    -- print("[MapSelectionUI] HideMap")
-    GameStateStart()
     SetDialogVisible(false)
     pendingLocation = nil
+    PopEngineState()
     SetUIFocused(false)
 end
 

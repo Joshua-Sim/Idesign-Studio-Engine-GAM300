@@ -37,6 +37,7 @@ namespace Framework
 
     void GameSystem::Initialize()
     {
+        SetData("ResetMapIconNextOpen", 0);
         std::filesystem::path projectRoot = ScriptingSystem::GetProjectRoot();
         std::string itemsPath = (projectRoot / "Assets/JSON/items.json").string();
         bool success = InitializeItemDatabase(itemsPath);
