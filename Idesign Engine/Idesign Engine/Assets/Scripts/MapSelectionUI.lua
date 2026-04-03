@@ -30,6 +30,8 @@ local iconPositions = {
     [2] = { x = 1410.0, y = 738.0, z = 0.9 }    -- Quarry
 }
 
+local footstepSound = "event:/FootstepMap"
+
 -- =========================================================
 -- DYNAMIC FOOTPRINT VARIABLES
 -- =========================================================
@@ -426,6 +428,7 @@ function M:on_update(dt)
 
             if dist >= FOOTPRINT_SPACING then
                 SpawnFootprint(newX, newY, targetPos.x, targetPos.y)
+                Sound.Play(footstepSound)
                 lastFootprintPos = {x = newX, y = newY}
             end
         end
