@@ -74,8 +74,9 @@ namespace Framework
 
     static const float loseStartDelay = 2.0f;        // pure black first
     //static const float loseSceneDuration = 2.5f;     // how long each panel lasts
-    static const float loseCrossfadeDuration = 0.8f; // fade between panels
+    //static const float loseCrossfadeDuration = 0.8f; // fade between panels
     static const float loseSlideDurations[] = { 3.2f, 1.2f, 5.2f, 4.5f, 2.5f, 1.5f };  // one per animated slide
+    static const float loseSlideFades[] = { 1.3f, 0.8f, 0.5f, 0.8f, 1.0f, 0.8f };  // per-slide fade
     static const int   loseSlideCount = sizeof(loseSlideDurations) / sizeof(loseSlideDurations[0]);
     // ========= CREDITS TUNING ===============
     static float creditStartTime = -1.0f;
@@ -1284,13 +1285,14 @@ namespace Framework
                 // Get current slide's duration for fade calculation
                 int currentSlideIndex = glm::min(animIndex, loseSlideCount - 1);
                 float currentDuration = loseSlideDurations[currentSlideIndex];
+                float currentFade = loseSlideFades[currentSlideIndex];
                 float sceneT = t - accumulated;
-                float fadeStart = currentDuration - loseCrossfadeDuration;
+                float fadeStart = currentDuration - currentFade;
 
                 float blend = 0.0f;
 
                 if (sceneT >= fadeStart)
-                    blend = Saturate((sceneT - fadeStart) / loseCrossfadeDuration);
+                    blend = Saturate((sceneT - fadeStart) / currentFade);
 
                 // Clear all animated slides first
                 for (int s = 1; s < sceneCount; ++s)
