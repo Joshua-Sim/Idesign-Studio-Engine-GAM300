@@ -450,6 +450,9 @@ function CustomerSystem:on_update(dt)
 
     if currentPhase ~= PHASE_NIGHT then return end
 
+    -- Do not re-trigger end logic once stats screen is active
+    if HasEngineState("DayStats") or HasEngineState("EndStats") then return end
+
     -- Delayed end phase
     if waiting_to_end then
         end_phase_timer = end_phase_timer + dt

@@ -5,7 +5,7 @@
 #include "TextureLoader.h"
 #include "ComponentList.h"
 #include "PhaseManager.h"
-
+#include "EngineState.h"
 extern Framework::Coordinator ecsInterface;
 
 namespace Framework {
@@ -77,7 +77,11 @@ namespace Framework {
         m_IsActive = false;
 
         // NEW: If the transition was to the Upgrade phase, pause the game now
-        if (phaseManager && phaseManager->GetCurrentPhase() == GamePhase::Upgrade) {
+        // Don't apply upgrade state if stats screen has already taken over
+        if (phaseManager && phaseManager->GetCurrentPhase() == GamePhase::Upgrade &&
+            !engineState.HasState(EngineMode::DayStats) &&
+            !engineState.HasState(EngineMode::EndStats))
+        {
             phaseManager->ApplyUpgradeState();
         }
 

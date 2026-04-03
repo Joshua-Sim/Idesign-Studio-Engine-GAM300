@@ -110,7 +110,7 @@ namespace Framework
         static const std::vector<DayStats>& GetDayHistory() { return s_dayHistory; }
 
         // Gold earned per second of remaining day time. Tune freely.
-        static constexpr float TIME_BONUS_RATE = 2.0f;
+        static constexpr float TIME_BONUS_RATE = 1.0f;
 
     private:
         static std::vector<DayStats> s_dayHistory;

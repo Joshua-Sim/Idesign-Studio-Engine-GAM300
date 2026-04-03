@@ -21,6 +21,32 @@ local DAY_STAR_SCALE     = 60    -- per-day screen large stars
 local ROW_STAR_SCALE     = 20    -- end screen row stars (per-day column)
 local GRID_STAR_SCALE    = 40    -- end screen total grid stars
 
+-- ── Text colours (parchment-friendly) ────────────────────────
+local COLOR_VALUE    = { r = 0.25, g = 0.13, b = 0.05 }  -- dark brown  (numbers)
+local COLOR_LABEL    = { r = 0.35, g = 0.20, b = 0.08 }  -- mid brown   (labels/quote)
+local COLOR_PERF     = { r = 0.55, g = 0.32, b = 0.02 }  -- deep amber  (performance/title)
+
+-- ── Fade-in settings ──────────────────────────────────────────
+local FADE_DURATION       = 0.9     -- seconds per text element 0→1
+local STAGGER_DELAY       = 0.3     -- seconds between each text element AND each star spawn
+
+-- ── Star scale-in settings ────────────────────────────────────
+local STAR_SCALE_DURATION = 0.5     -- seconds for each star to scale 0→full size
+local STAR_OVERSHOOT      = 3.0     -- overshoot amount: higher = more bounce (try 1.0–3.0)
+
+-- ── Fade state ────────────────────────────────────────────────
+-- Each entry: { name=string, startTime=number }
+local fadeItems    = {}
+local staggerIndex = 0   -- reset at the start of each populate call
+
+-- ── Pending star spawns ───────────────────────────────────────
+-- Each entry: { x, y, z, scale, list, spawnTime }
+local pendingStars = {}
+
+-- ── Active star scale-ins ─────────────────────────────────────
+-- Each entry: { entity, targetScale, startTime }
+local scalingStars = {}
+
 -- ── Populate flags ────────────────────────────────────────────
 local dayScreenPopulated = false
 local endScreenPopulated = false
@@ -98,13 +124,46 @@ local function FormatTime(seconds)
     return string.format("%d:%02d", m, s % 60)
 end
 
--- Enable screenSpace + set text + set opacity
-local function SafeSetText(name, value)
+-- Back ease-out curve: grows past 1.0 then settles back to exactly 1.0.
+-- t should be 0→1. Uses STAR_OVERSHOOT constant for bounce amount.
+local function EaseOutBack(t)
+    local s = STAR_OVERSHOOT
+    t = t - 1
+    return t * t * ((s + 1) * t + s) + 1
+end
+
+-- Enable screenSpace + set text + opacity 0, register for fade-in using staggerIndex
+local function SafeSetText(name, value, color)
     local e = FindEntityByName(name)
     if not e then return end
     SetTextComponent(e, "screenSpace", true)
     SetTextComponent(e, "text",        tostring(value))
-    SetTextComponent(e, "opacity",     1.0)
+    SetTextComponent(e, "opacity",     0.0)
+    if color then
+        SetTextComponent(e, "color", color)
+    end
+    table.insert(fadeItems, {
+        name      = name,
+        startTime = GetRealTime() + staggerIndex * STAGGER_DELAY,
+    })
+    staggerIndex = staggerIndex + 1
+end
+
+-- Same as SafeSetText but uses an explicit startTime instead of staggerIndex.
+-- Used for elements that must wait for stars to finish before appearing.
+local function SafeSetTextAt(name, value, color, startTime)
+    local e = FindEntityByName(name)
+    if not e then return end
+    SetTextComponent(e, "screenSpace", true)
+    SetTextComponent(e, "text",        tostring(value))
+    SetTextComponent(e, "opacity",     0.0)
+    if color then
+        SetTextComponent(e, "color", color)
+    end
+    table.insert(fadeItems, {
+        name      = name,
+        startTime = startTime,
+    })
 end
 
 -- Disable screenSpace + zero opacity (completely removes from UI text pass)
@@ -128,6 +187,28 @@ local function ClearEntities(list)
     end
 end
 
+-- ── Generic star queue helper ─────────────────────────────────
+-- Queues `count` stars into pendingStars starting at firstSpawnTime.
+-- positions: array of { x, y, z }
+-- scale: target scale for all stars in this group
+-- list: the tracking table to insert spawned entities into (e.g. spawnedRowStars)
+-- Returns the absolute time when the last star finishes its scale-in.
+local function QueueStars(count, positions, scale, list, firstSpawnTime)
+    for i = 1, count do
+        local pos = positions[i]
+        table.insert(pendingStars, {
+            x         = pos.x,
+            y         = pos.y,
+            z         = pos.z,
+            scale     = scale,
+            list      = list,
+            spawnTime = firstSpawnTime + (i - 1) * STAGGER_DELAY,
+        })
+    end
+    local lastSpawnTime = firstSpawnTime + (count - 1) * STAGGER_DELAY
+    return lastSpawnTime + STAR_SCALE_DURATION
+end
+
 -- ═════════════════════════════════════════════════════════════
 -- DAY SCREEN STARS
 -- 3 large stars under "Today's Performance"
@@ -139,22 +220,16 @@ local DAY_STAR_POSITIONS = {
     { x = 1040, y = 383, z = 0.6 },   -- Star 3 (right)
 }
 
-local function SpawnDayStars(stars)
+-- Queues day stars and returns time when last star finishes scale-in.
+local function QueueDayStars(stars, firstSpawnTime)
     ClearEntities(spawnedDayStars)
     spawnedDayStars = {}
-    for i = 1, stars do
-        local pos = DAY_STAR_POSITIONS[i]
-        local e = SpawnPrefab(PREFAB_STAR, pos.x, pos.y, pos.z)
-        if e then
-            SetScale(e, DAY_STAR_SCALE, DAY_STAR_SCALE, 1)
-            table.insert(spawnedDayStars, e)
-        end
-    end
+    return QueueStars(stars, DAY_STAR_POSITIONS, DAY_STAR_SCALE, spawnedDayStars, firstSpawnTime)
 end
 
 -- ═════════════════════════════════════════════════════════════
 -- END SCREEN — ROW STARS
--- 3 small stars in STARS column per day row
+-- 3 small stars per day row, staggered after that row's text
 -- PLACEHOLDER positions — tune once visible in game
 -- ═════════════════════════════════════════════════════════════
 local ROW_STAR_START_X   = 1213
@@ -163,25 +238,22 @@ local ROW_STAR_START_Y   = 825
 local ROW_STAR_SPACING_Y = -57   -- negative = moves up each row
 local ROW_STAR_Z         = 1.0
 
-local function SpawnRowStars(history)
-    ClearEntities(spawnedRowStars)
-    spawnedRowStars = {}
-    for i, d in ipairs(history) do
-        for s = 1, d.stars do
-            local x = ROW_STAR_START_X + (s - 1) * ROW_STAR_SPACING_X
-            local y = ROW_STAR_START_Y + (i - 1) * ROW_STAR_SPACING_Y
-            local e = SpawnPrefab(PREFAB_STAR, x, y, ROW_STAR_Z)
-            if e then
-                SetScale(e, ROW_STAR_SCALE, ROW_STAR_SCALE, 1)
-                table.insert(spawnedRowStars, e)
-            end
-        end
+-- Builds the position list for a single row's stars.
+local function BuildRowStarPositions(rowIndex, starCount)
+    local positions = {}
+    for s = 1, starCount do
+        table.insert(positions, {
+            x = ROW_STAR_START_X + (s - 1) * ROW_STAR_SPACING_X,
+            y = ROW_STAR_START_Y + (rowIndex - 1) * ROW_STAR_SPACING_Y,
+            z = ROW_STAR_Z,
+        })
     end
+    return positions
 end
 
 -- ═════════════════════════════════════════════════════════════
 -- END SCREEN — TOTAL STAR GRID
--- Up to 15 small stars in a 5×3 grid
+-- Up to 15 small stars in a 5×3 grid, queued one by one
 -- PLACEHOLDER positions — tune once visible in game
 -- ═════════════════════════════════════════════════════════════
 local GRID_COLS      = 5
@@ -191,50 +263,74 @@ local GRID_START_Y   = 378
 local GRID_SPACING_Y = -45   -- negative = moves up each row
 local GRID_Z         = 1.0
 
-local function SpawnTotalStars(totalStars)
-    ClearEntities(spawnedTotalStars)
-    spawnedTotalStars = {}
+-- Builds the position list for the total star grid.
+local function BuildGridStarPositions(totalStars)
+    local positions = {}
     for i = 1, totalStars do
         local col = (i - 1) % GRID_COLS
         local row = math.floor((i - 1) / GRID_COLS)
-        local x = GRID_START_X + col * GRID_SPACING_X
-        local y = GRID_START_Y + row * GRID_SPACING_Y
-        local e = SpawnPrefab(PREFAB_STAR, x, y, GRID_Z)
-        if e then
-            SetScale(e, GRID_STAR_SCALE, GRID_STAR_SCALE, 1)
-            table.insert(spawnedTotalStars, e)
-        end
+        table.insert(positions, {
+            x = GRID_START_X + col * GRID_SPACING_X,
+            y = GRID_START_Y + row * GRID_SPACING_Y,
+            z = GRID_Z,
+        })
     end
+    return positions
 end
 
 -- ═════════════════════════════════════════════════════════════
 -- PER-DAY SCREEN POPULATE
+-- Reveal order:
+--   DayLabel → GoldFromCustomers → TimeBonusGold →
+--   CustomersServed → TimeRemaining → TotalGold →
+--   ⭐ stars one by one (bounce scale-in) →
+--   PerformanceLabel → Quote
 -- ═════════════════════════════════════════════════════════════
 function DayStatsScreen.PopulateDayScreen()
+    staggerIndex = 0
+    fadeItems    = {}
+    pendingStars = {}
+    scalingStars = {}
     local d = GetLastDayStats()
     if not d then
         print("[StatsSystem] ERROR: GetLastDayStats returned nil")
         return
     end
 
-    SafeSetText("Stats_DayLabel",          "Day " .. d.dayIndex .. " of " .. TOTAL_DAYS)
-    SafeSetText("Stats_GoldFromCustomers", tostring(d.goldFromCustomers))
-    SafeSetText("Stats_TimeBonusGold",     "+ " .. d.timeBonusGold .. " G day time bonus")
-    SafeSetText("Stats_TotalGold",         d.totalGold .. " G")
-    SafeSetText("Stats_CustomersServed",   tostring(d.customersServed))
-    SafeSetText("Stats_TimeRemaining",     FormatTime(d.timeRemaining))
-    SafeSetText("Stats_PerformanceLabel",  STAR_LABELS[d.stars] or "Decent Work")
-    SafeSetText("Stats_Quote",             STAR_QUOTES[d.stars] or "")
+    -- ── Text before stars (indices 0–5) ───────────────────────
+    SafeSetText("Stats_DayLabel",          "Day " .. d.dayIndex .. " of " .. TOTAL_DAYS,    COLOR_LABEL)
+    SafeSetText("Stats_GoldFromCustomers", tostring(d.goldFromCustomers),                   COLOR_VALUE)
+    SafeSetText("Stats_TimeBonusGold",     "+ " .. d.timeBonusGold .. " G day time bonus",  COLOR_LABEL)
+    SafeSetText("Stats_CustomersServed",   tostring(d.customersServed),                     COLOR_VALUE)
+    SafeSetText("Stats_TimeRemaining",     FormatTime(d.timeRemaining),                     COLOR_VALUE)
+    SafeSetText("Stats_TotalGold",         d.totalGold .. " G",                             COLOR_VALUE)
+    -- staggerIndex is now 6 after the above six calls
 
-    SpawnDayStars(d.stars)
+    -- ── Stars: spawn after TotalGold fully fades in ────────────
+    local totalGoldFinishTime = GetRealTime() + 5 * STAGGER_DELAY + FADE_DURATION
+    local allStarsDoneTime    = QueueDayStars(d.stars, totalGoldFinishTime)
+
+    -- ── Text after stars ───────────────────────────────────────
+    local afterStars = allStarsDoneTime + STAGGER_DELAY
+    SafeSetTextAt("Stats_PerformanceLabel", STAR_LABELS[d.stars] or "Decent Work", COLOR_PERF,  afterStars)
+    SafeSetTextAt("Stats_Quote",            STAR_QUOTES[d.stars] or "",            COLOR_LABEL, afterStars + STAGGER_DELAY)
 
     print("[StatsSystem] Day " .. d.dayIndex .. " screen populated. Stars: " .. d.stars)
 end
 
 -- ═════════════════════════════════════════════════════════════
 -- END-OF-GAME SCREEN POPULATE
+-- Reveal order per row:
+--   Row N Gold + Served → ⭐ row N stars (one by one)
+-- Then after all rows:
+--   TotalGold + TotalServed → ⭐ total star grid (one by one) →
+--   Title → Quote
 -- ═════════════════════════════════════════════════════════════
 function DayStatsScreen.PopulateEndScreen()
+    staggerIndex = 0
+    fadeItems    = {}
+    pendingStars = {}
+    scalingStars = {}
     local history = GetAllDayStats()
     if not history then
         print("[StatsSystem] ERROR: GetAllDayStats returned nil")
@@ -242,28 +338,57 @@ function DayStatsScreen.PopulateEndScreen()
     end
 
     local totalGold, totalServed, totalStars = 0, 0, 0
+    local now     = GetRealTime()
+    local cursor  = now   -- tracks the absolute time the next element should start
 
     for i = 1, TOTAL_DAYS do
         local d = history[i]
+        local stars = d and d.stars or 0
+
+        -- Row Gold text
+        SafeSetTextAt("EndStats_Row" .. i .. "Gold",
+            d and tostring(d.totalGold) or "0", COLOR_VALUE, cursor)
+        cursor = cursor + STAGGER_DELAY
+
+        -- Row Served text
+        SafeSetTextAt("EndStats_Row" .. i .. "Served",
+            d and tostring(d.customersServed) or "0", COLOR_VALUE, cursor)
+        cursor = cursor + STAGGER_DELAY
+
+        -- Accumulate totals
         if d then
             totalGold   = totalGold   + d.totalGold
             totalServed = totalServed + d.customersServed
             totalStars  = totalStars  + d.stars
-            SafeSetText("EndStats_Row" .. i .. "Gold",   tostring(d.totalGold))
-            SafeSetText("EndStats_Row" .. i .. "Served", tostring(d.customersServed))
+        end
+
+        -- Row stars: start after the Served text has fully faded in
+        if stars > 0 then
+            local rowStarStart = cursor + FADE_DURATION
+            local positions    = BuildRowStarPositions(i, stars)
+            -- QueueStars appends to spawnedRowStars directly
+            local rowDoneTime  = QueueStars(stars, positions, ROW_STAR_SCALE, spawnedRowStars, rowStarStart)
+            cursor = rowDoneTime + STAGGER_DELAY   -- next row starts after this row's stars finish
         else
-            SafeSetText("EndStats_Row" .. i .. "Gold",   "0")
-            SafeSetText("EndStats_Row" .. i .. "Served", "0")
+            cursor = cursor + FADE_DURATION + STAGGER_DELAY
         end
     end
 
-    SafeSetText("EndStats_TotalGold",   string.format("%d G", totalGold))
-    SafeSetText("EndStats_TotalServed", tostring(totalServed))
-    SafeSetText("EndStats_Title",       GetEndTitle(totalStars))
-    SafeSetText("EndStats_Quote",       GetEndQuote(totalStars))
+    -- ── Totals text after all rows done ───────────────────────
+    SafeSetTextAt("EndStats_TotalGold",   string.format("%d G", totalGold), COLOR_VALUE, cursor)
+    cursor = cursor + STAGGER_DELAY
+    SafeSetTextAt("EndStats_TotalServed", tostring(totalServed),            COLOR_VALUE, cursor)
+    cursor = cursor + STAGGER_DELAY
 
-    SpawnRowStars(history)
-    SpawnTotalStars(totalStars)
+    -- ── Total star grid after TotalServed fades in ────────────
+    local gridStarStart  = cursor + FADE_DURATION
+    local gridPositions  = BuildGridStarPositions(totalStars)
+    local gridDoneTime   = QueueStars(totalStars, gridPositions, GRID_STAR_SCALE, spawnedTotalStars, gridStarStart)
+
+    -- ── Title + Quote after grid finishes ─────────────────────
+    local afterGrid = gridDoneTime + STAGGER_DELAY
+    SafeSetTextAt("EndStats_Title", GetEndTitle(totalStars), COLOR_PERF,  afterGrid)
+    SafeSetTextAt("EndStats_Quote", GetEndQuote(totalStars), COLOR_LABEL, afterGrid + STAGGER_DELAY)
 
     print("[StatsSystem] End screen populated. Total stars: " .. totalStars .. "/" .. TOTAL_STARS)
 end
@@ -285,21 +410,69 @@ function DayStatsScreen:on_init()
     spawnedDayStars    = {}
     spawnedRowStars    = {}
     spawnedTotalStars  = {}
+    fadeItems          = {}
+    pendingStars       = {}
+    scalingStars       = {}
+    staggerIndex       = 0
 end
 
 function DayStatsScreen:on_update(dt)
+    local now = GetRealTime()
+
+    -- ── Fade tick ──────────────────────────────────────────────
+    for i = #fadeItems, 1, -1 do
+        local item = fadeItems[i]
+        if now >= item.startTime then
+            local t      = math.min((now - item.startTime) / FADE_DURATION, 1.0)
+            local smooth = t * t * (3 - 2 * t)   -- smoothstep ease-in-out
+            local e = FindEntityByName(item.name)
+            if e then SetTextComponent(e, "opacity", smooth) end
+            if t >= 1.0 then table.remove(fadeItems, i) end
+        end
+    end
+
+    -- ── Pending star spawn tick ────────────────────────────────
+    -- Spawns each star at scale 0 then hands it to scalingStars
+    for i = #pendingStars, 1, -1 do
+        local s = pendingStars[i]
+        if now >= s.spawnTime then
+            local e = SpawnPrefab(PREFAB_STAR, s.x, s.y, s.z)
+            if e then
+                SetScale(e, 0, 0, 1)   -- start at zero; scale tick grows it
+                table.insert(s.list, e)
+                table.insert(scalingStars, {
+                    entity      = e,
+                    targetScale = s.scale,
+                    startTime   = now,
+                })
+            end
+            table.remove(pendingStars, i)
+        end
+    end
+
+    -- ── Star scale-in tick (overshoot bounce) ─────────────────
+    for i = #scalingStars, 1, -1 do
+        local s = scalingStars[i]
+        local t = math.min((now - s.startTime) / STAR_SCALE_DURATION, 1.0)
+        local scale = s.targetScale * EaseOutBack(t)
+        SetScale(s.entity, scale, scale, 1)
+        if t >= 1.0 then table.remove(scalingStars, i) end
+    end
+
     -- ── Per-day screen ─────────────────────────────────────────
     if HasEngineState("DayStats") then
         if not dayScreenPopulated then
-            DayStatsScreen.PopulateDayScreen()  -- enables screenSpace on day text
+            DayStatsScreen.PopulateDayScreen()
             dayScreenPopulated = true
         end
     else
         if dayScreenPopulated then
-            -- Screen deactivated — disable screenSpace on all day text
             HideTextList(DAY_TEXT_NAMES)
             ClearEntities(spawnedDayStars)
             spawnedDayStars = {}
+            fadeItems       = {}
+            pendingStars    = {}
+            scalingStars    = {}
         end
         dayScreenPopulated = false
     end
@@ -307,17 +480,19 @@ function DayStatsScreen:on_update(dt)
     -- ── End screen ─────────────────────────────────────────────
     if HasEngineState("EndStats") then
         if not endScreenPopulated then
-            DayStatsScreen.PopulateEndScreen()  -- enables screenSpace on end text
+            DayStatsScreen.PopulateEndScreen()
             endScreenPopulated = true
         end
     else
         if endScreenPopulated then
-            -- Screen deactivated — disable screenSpace on all end text
             HideTextList(END_TEXT_NAMES)
             ClearEntities(spawnedRowStars)
             ClearEntities(spawnedTotalStars)
             spawnedRowStars   = {}
             spawnedTotalStars = {}
+            fadeItems         = {}
+            pendingStars      = {}
+            scalingStars      = {}
         end
         endScreenPopulated = false
     end

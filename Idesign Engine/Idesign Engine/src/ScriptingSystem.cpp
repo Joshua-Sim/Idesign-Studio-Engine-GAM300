@@ -1391,6 +1391,15 @@ namespace Framework {
             float timeLeft = GameSystem::GetData("dayTimeRemainingX100") / 100.0f;
             GameSystem::SaveDayStats(timeLeft);
 
+            // ── STOP the night timer so it can't fire TogglePhase after DayStats is shown ──
+            Entity phaseTimer = ecsInterface.GetEntityByName("PhaseTimerText");
+            if (ecsInterface.IsEntityValid(phaseTimer) &&
+                ecsInterface.HasComponent<TimerComponent>(phaseTimer))
+            {
+                ecsInterface.GetComponent<TimerComponent>(phaseTimer).Pause();
+                ecsInterface.GetComponent<TimerComponent>(phaseTimer).onComplete = nullptr;
+            }
+
             // If final day is finished, skip Upgrade and go to Win/Lose
             // Stats screen still shows first, then Win/Lose on Continue
             if (SceneInterface::GetCurrentDay() >= 5)
