@@ -239,10 +239,9 @@ function DayTutorial:StartDialogueForCurrentStep()
         DialogueAdd("Gather them by pressing 'E' until your bag is heavy.", "Aunt Mira", "portrait")
     elseif self.sequenceStep == 4 then
         DialogueAdd("Finally, the Gate. Use it once you are finished here.", "Aunt Mira", "pear")
-        DialogueAdd("The moon waits for no one, child. Now get to work!", "Aunt Mira", "portrait")
     elseif self.sequenceStep == 5 then
         DialogueAdd("Before you go, take a look at your Recipe Book.", "Aunt Mira", "portrait")
-        DialogueAdd("It shows you what ingredients you've found and, more importantly, what they are worth!", "Aunt Mira", "portrait")
+        DialogueAdd("It shows you what ingredients you've found and, more importantly, what they are worth as potions!", "Aunt Mira", "portrait")
         DialogueAdd("You can open it anytime by pressing 'R'. Now, get to work!", "Aunt Mira", "portrait")
     end
 
@@ -260,7 +259,7 @@ end
 
 function DayTutorial:PlayQuarryUnlockDialogue()
     DialogueClear()
-    DialogueAdd("The Quarry is open to you now, child. Rich in ore and not without its dangers.", "Aunt Mira", "portrait")
+    DialogueAdd("The Quarry is open to you now, child. Rich in ore and rare materials.", "Aunt Mira", "portrait")
     DialogueAdd("Head there when you need minerals. Some of our finer recipes demand nothing less.", "Aunt Mira", "portrait")
     DialogueStart()
     self.quarryUnlockWaitingForDialogue = true

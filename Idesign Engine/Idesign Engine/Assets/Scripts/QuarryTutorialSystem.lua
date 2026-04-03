@@ -124,7 +124,7 @@ function QuarryTutorial:StartDialogueForCurrentStep()
         DialogueAdd("Copper! A sturdy ore, useful in many of our recipes.", "Aunt Mira", "pear")
         DialogueAdd("Press 'E' near any ore to mine it. Don't leave empty-handed!", "Aunt Mira", "portrait")
     elseif self.sequenceStep == 2 then
-        DialogueAdd("And here's iron — tougher to crack, but worth every swing.", "Aunt Mira", "pear")
+        DialogueAdd("And here's iron — tougher to crack, but useful for many recipes.", "Aunt Mira", "pear")
         DialogueAdd("Fill that bag and head back when you're done. The cauldron won't stir itself!", "Aunt Mira", "portrait")
     elseif self.sequenceStep == 3 then
         DialogueAdd("This is the exit for the mine", "Aunt Mira", "pear")
