@@ -1,5 +1,5 @@
 {
-    "count": 78,
+    "count": 80,
     "entries": [
         {
             "guid": "ab20d9cc-f552-47fb-8cd9-82403e4c3b22",
@@ -467,6 +467,18 @@
             "guid": "c69ebf89-e895-48fd-6767-eda44a422dd1",
             "name": "RecipeBook_Info_BG_Prefab",
             "path": "Assets\\Prefabs\\RecipeBook_Info_BG_Prefab.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "fdf6b957-d479-6767-b053-911623eeb56e",
+            "name": "LeftFoot",
+            "path": "Assets\\Prefabs\\LeftFoot.prefab",
+            "isScenePrefab": false
+        },
+        {
+            "guid": "fdf6b957-6767-6767-b053-911623eeb56e",
+            "name": "RightFoot",
+            "path": "Assets\\Prefabs\\RightFoot.prefab",
             "isScenePrefab": false
         }
     ]

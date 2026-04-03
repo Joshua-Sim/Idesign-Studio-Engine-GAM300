@@ -2933,6 +2933,39 @@
             "vOffset": 0.0,
             "uScale": 1.0,
             "vScale": 1.0
+        },
+        {
+            "guid": "31e5f046-5203-4f7d-8569-ff77bbc824ac",
+            "name": "QUARRYGLOW",
+            "path": "Assets\\Textures\\QUARRYGLOW.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "76a5a92b-0728-4bd4-a344-713680444681",
+            "name": "FORESTGLOW",
+            "path": "Assets\\Textures\\FORESTGLOW.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "d887f2be-9a80-4f99-8696-b794df4a2c7a",
+            "name": "MAP_BG_DARK",
+            "path": "Assets\\Textures\\MAP_BG_DARK.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
         }
     ]
 }

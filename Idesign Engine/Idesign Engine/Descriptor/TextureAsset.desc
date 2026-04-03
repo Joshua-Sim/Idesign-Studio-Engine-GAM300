@@ -1,5 +1,5 @@
 {
-    "count": 412,
+    "count": 417,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -3962,6 +3962,17 @@
             "vScale": 1.0
         },
         {
+            "guid": "bf2ce39c-0414-41eb-9333-3f298754cbed",
+            "name": "leftfoot",
+            "path": "Assets\\Textures\\leftfoot.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
             "guid": "8ee4ece9-1a9e-417f-aa56-51d0243d1c94",
             "name": "RB_Info_BKMK",
             "path": "Assets\\Textures\\RB_Info_BKMK.png",
@@ -4526,6 +4537,50 @@
             "guid": "ce60b20b-5180-43d0-ad3f-98b9867873ae",
             "name": "MOON_AND_GOLD",
             "path": "Assets\\Textures\\MOON_AND_GOLD.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "5f9e2a12-8afd-48ac-af8a-3392580e5c60",
+            "name": "rightfoot",
+            "path": "Assets\\Textures\\rightfoot.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "31e5f046-5203-4f7d-8569-ff77bbc824ac",
+            "name": "QUARRYGLOW",
+            "path": "Assets\\Textures\\QUARRYGLOW.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "76a5a92b-0728-4bd4-a344-713680444681",
+            "name": "FORESTGLOW",
+            "path": "Assets\\Textures\\FORESTGLOW.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "d887f2be-9a80-4f99-8696-b794df4a2c7a",
+            "name": "MAP_BG_DARK",
+            "path": "Assets\\Textures\\MAP_BG_DARK.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
