@@ -73,9 +73,10 @@ namespace Framework
     static bool  loseCutsceneFinished = false;
 
     static const float loseStartDelay = 2.0f;        // pure black first
-    static const float loseSceneDuration = 2.5f;     // how long each panel lasts
+    //static const float loseSceneDuration = 2.5f;     // how long each panel lasts
     static const float loseCrossfadeDuration = 0.8f; // fade between panels
-
+    static const float loseSlideDurations[] = { 3.2f, 1.2f, 5.2f, 4.5f, 2.5f, 1.5f };  // one per animated slide
+    static const int   loseSlideCount = sizeof(loseSlideDurations) / sizeof(loseSlideDurations[0]);
     // ========= CREDITS TUNING ===============
     static float creditStartTime = -1.0f;
     static bool  creditFinished = false;
@@ -90,6 +91,7 @@ namespace Framework
 
 	//=========== AUDIO TUNING ==============
 	static bool level1BGMStarted = false;
+    static bool loseBGMStarted = false;
 
     void SceneInterface::Initialize() {}
 
@@ -1170,6 +1172,14 @@ namespace Framework
                 {
                     loseCutsceneStartTime = (float)glfwGetTime();
                     loseCutsceneFinished = false;
+                    loseBGMStarted = false;
+
+                    // Only STOP BGMs here - lose BGM starts when first slide appears
+                    if (g_AudioSystem) {
+                        g_AudioSystem->StopEvent("event:/Level1BGM");
+                        g_AudioSystem->StopEvent("event:/QuarryBGM");
+                        g_AudioSystem->StopEvent("event:/ShopBGM");
+                    }
 
                     for (auto e : slides)
                     {
@@ -1221,7 +1231,24 @@ namespace Framework
                 float t = totalT - loseStartDelay;
 
                 // Animated slides are [1..sceneCount-1]
-                int animIndex = (int)glm::floor(t / loseSceneDuration);
+                int animIndex = 0;
+                float accumulated = 0.0f;
+                for (int s = 0; s < animatedCount && s < loseSlideCount; ++s)
+                {
+                    if (t < accumulated + loseSlideDurations[s])
+                        break;
+                    accumulated += loseSlideDurations[s];
+                    animIndex = s + 1;
+                }
+
+                // Start lose BGM when first actual slide appears
+                if (animIndex >= 0 && !loseBGMStarted) {
+                    loseBGMStarted = true;
+                    if (g_AudioSystem) {
+                        g_AudioSystem->PlayAudio("event:/LoseCutsceneBGM");
+                        g_AudioSystem->PlayAudio("event:/LoseCutsceneVO");
+                    }
+                }
 
                 // Finished sequence
                 if (animIndex >= animatedCount)
@@ -1240,6 +1267,13 @@ namespace Framework
                             tex.isUI = false;
                         }
 
+                        // Stop lose audio and play menu BGM
+                        if (g_AudioSystem) {
+                            g_AudioSystem->StopEvent("event:/LoseCutsceneBGM");
+                            g_AudioSystem->StopEvent("event:/LoseCutsceneVO");
+                            g_AudioSystem->PlayAudio("event:/MainMenuBGM");
+                        }
+
                         // Remove Lose first, then go Menu
                         engineState.PopState();
                         engineState.PushState(EngineMode::Menu);
@@ -1247,8 +1281,12 @@ namespace Framework
                     return;
                 }
 
-                float sceneT = t - (float)animIndex * loseSceneDuration;
-                float fadeStart = loseSceneDuration - loseCrossfadeDuration;
+                // Get current slide's duration for fade calculation
+                int currentSlideIndex = glm::min(animIndex, loseSlideCount - 1);
+                float currentDuration = loseSlideDurations[currentSlideIndex];
+                float sceneT = t - accumulated;
+                float fadeStart = currentDuration - loseCrossfadeDuration;
+
                 float blend = 0.0f;
 
                 if (sceneT >= fadeStart)
@@ -1306,6 +1344,7 @@ namespace Framework
             {
                 loseCutsceneStartTime = -1.0f;
                 loseCutsceneFinished = false;
+                loseBGMStarted = false;
             }
 
             // CREDIT CUTSCENE
