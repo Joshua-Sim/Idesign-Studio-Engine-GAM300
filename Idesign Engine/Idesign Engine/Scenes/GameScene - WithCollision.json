@@ -1026,6 +1026,180 @@
             }
         },
         {
+            "name": "Light7",
+            "guid": "67679674-6767-6767-6767-6767e94eede2",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -167.0,
+                        335.0,
+                        -192.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.006000001449137926,
+                        0.006000001449137926,
+                        0.006125030107796192
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "sortIndex": 8,
+                    "children": []
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "TextureComponent": {
+                    "guid": "438f508d-b272-4142-9cd4-ac3afe55c02c",
+                    "isUI": false
+                },
+                "LightProperties": {
+                    "enabled": true,
+                    "color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "intensity": 0.5,
+                    "radius": 150.0,
+                    "offset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "innerCutOffAngle": 0.21816615760326385,
+                    "outerCutOffAngle": 0.35899999737739563,
+                    "castsShadow": true,
+                    "shadowBiasConst": 0.44999998807907104,
+                    "shadowBiasFactor": 1.0,
+                    "shadowFarPlane": 150.0,
+                    "type": "Point"
+                }
+            }
+        },
+        {
+            "name": "Light8",
+            "guid": "67679674-6767-6767-6767-6767674eede2",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -189.5,
+                        338.3,
+                        -103.7
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.006000001449137926,
+                        0.006000001449137926,
+                        0.006125030107796192
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "sortIndex": 8,
+                    "children": []
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "TextureComponent": {
+                    "guid": "438f508d-b272-4142-9cd4-ac3afe55c02c",
+                    "isUI": false
+                },
+                "LightProperties": {
+                    "enabled": true,
+                    "color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "intensity": 0.5,
+                    "radius": 150.0,
+                    "offset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "innerCutOffAngle": 0.21816615760326385,
+                    "outerCutOffAngle": 0.35899999737739563,
+                    "castsShadow": true,
+                    "shadowBiasConst": 0.44999998807907104,
+                    "shadowBiasFactor": 1.0,
+                    "shadowFarPlane": 150.0,
+                    "type": "Point"
+                }
+            }
+        },
+        {
+            "name": "Light9",
+            "guid": "67679674-6767-6767-6767-67676767ede2",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -112.0,
+                        335.0,
+                        -86.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.006000001449137926,
+                        0.006000001449137926,
+                        0.006125030107796192
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "sortIndex": 8,
+                    "children": []
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "TextureComponent": {
+                    "guid": "438f508d-b272-4142-9cd4-ac3afe55c02c",
+                    "isUI": false
+                },
+                "LightProperties": {
+                    "enabled": true,
+                    "color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "intensity": 0.5,
+                    "radius": 150.0,
+                    "offset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "innerCutOffAngle": 0.21816615760326385,
+                    "outerCutOffAngle": 0.35899999737739563,
+                    "castsShadow": true,
+                    "shadowBiasConst": 0.44999998807907104,
+                    "shadowBiasFactor": 1.0,
+                    "shadowFarPlane": 150.0,
+                    "type": "Point"
+                }
+            }
+        },
+        {
             "name": "Window",
             "guid": "88b10393-f1ce-43ec-b1ed-1e3655666008",
             "components": {
@@ -3350,9 +3524,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -30.557342529296875,
-                        10.296295166015625,
-                        15.3896484375
+                        -112.0,
+                        338.9750061035156,
+                        -86.0
                     ],
                     "rotation": [
                         0.0,
@@ -6776,9 +6950,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -193.0,
+                        -196.0,
                         338.9750061035156,
-                        -101.0
+                        -99.0
                     ],
                     "rotation": [
                         0.0,
@@ -6807,28 +6981,6 @@
                 "TextureComponent": {
                     "guid": "b52ea343-007a-490b-ae1f-ce5a3ff76c90",
                     "isUI": false
-                },
-                "LightProperties": {
-                    "enabled": true,
-                    "color": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "intensity": 0.4740000069141388,
-                    "radius": 150.0,
-                    "offset": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "innerCutOffAngle": 0.21816615760326385,
-                    "outerCutOffAngle": 0.2617993950843811,
-                    "castsShadow": true,
-                    "shadowBiasConst": 0.5099999904632568,
-                    "shadowBiasFactor": 0.6000000238418579,
-                    "shadowFarPlane": 150.0,
-                    "type": "Point"
                 },
                 "BoxColliderComponent": {
                     "colliders": [
@@ -14374,28 +14526,6 @@
                     "guid": "b52ea343-007a-490b-ae1f-ce5a3ff76c90",
                     "isUI": false
                 },
-                "LightProperties": {
-                    "enabled": true,
-                    "color": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "intensity": 0.4740000069141388,
-                    "radius": 150.0,
-                    "offset": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "innerCutOffAngle": 0.21816615760326385,
-                    "outerCutOffAngle": 0.2617993950843811,
-                    "castsShadow": true,
-                    "shadowBiasConst": 0.4000000059604645,
-                    "shadowBiasFactor": 0.5,
-                    "shadowFarPlane": 150.0,
-                    "type": "Point"
-                },
                 "BoxColliderComponent": {
                     "colliders": [
                         {
@@ -14475,28 +14605,6 @@
                 "TextureComponent": {
                     "guid": "b52ea343-007a-490b-ae1f-ce5a3ff76c90",
                     "isUI": false
-                },
-                "LightProperties": {
-                    "enabled": true,
-                    "color": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "intensity": 0.4740000069141388,
-                    "radius": 150.0,
-                    "offset": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "innerCutOffAngle": 0.21816615760326385,
-                    "outerCutOffAngle": 0.2617993950843811,
-                    "castsShadow": true,
-                    "shadowBiasConst": 0.4000000059604645,
-                    "shadowBiasFactor": 0.5,
-                    "shadowFarPlane": 150.0,
-                    "type": "Point"
                 },
                 "BoxColliderComponent": {
                     "colliders": [
