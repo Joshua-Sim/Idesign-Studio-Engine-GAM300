@@ -457,6 +457,7 @@ namespace Framework
 
                         if (g_AudioSystem) {
                             g_AudioSystem->StopEvent("event:/OpeningCutsceneBGM");
+                            g_AudioSystem->StopEvent("event:/OpeningCutsceneVO");
                             g_AudioSystem->PlayAudio("event:/Level1BGM");
                         }
 
@@ -516,6 +517,7 @@ namespace Framework
                     openingBGMStarted = true;
                     if (g_AudioSystem) {
                         g_AudioSystem->PlayAudio("event:/OpeningCutsceneBGM");
+                        g_AudioSystem->PlayAudio("event:/OpeningCutsceneVO");
                     }
                 }
 
@@ -524,6 +526,7 @@ namespace Framework
                     level1BGMStarted = true;
                     if (g_AudioSystem) {
                         g_AudioSystem->StopEvent("event:/OpeningCutsceneBGM");
+                        g_AudioSystem->StopEvent("event:/OpeningCutsceneVO");
                         g_AudioSystem->PlayAudio("event:/Level1BGM");
                     }
                 }
