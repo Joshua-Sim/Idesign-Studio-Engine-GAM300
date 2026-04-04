@@ -33,7 +33,7 @@ namespace Framework {
         void HotReloadScript(const std::string& changedPath);
         lua_State* GetLuaState() const { return L; }
 
-        static inline bool SkipCutscene = false; // Toggle to skip cutscene before submission
+        static inline bool SkipCutscene = true; // Toggle to skip cutscene before submission
 
         // =================================================================================
         //  THE UNIVERSAL CALL FUNCTION (Template Implementation)

@@ -39,6 +39,7 @@ namespace Framework
     struct PointLightCPU {
         glm::vec3 position{ 0.f, 0.f, 0.f };
         glm::vec3 color{ 1.f, 1.f, 1.f };
+        glm::vec3 offset{ 0.0f, 0.0f, 0.0f };
         float intensity{ 1.0f };
         float radius{ 10.0f };
         bool enabled{ true };
@@ -160,6 +161,7 @@ namespace Framework
                 // 3. Use the cached strings via .c_str() (Zero allocations!)
                 shader.setVec3(p_pos[activePoints].c_str(), pointLights[i].position);
                 shader.setVec3(p_col[activePoints].c_str(), pointLights[i].color);
+                shader.setVec3(p_pos[activePoints].c_str(), pointLights[i].position + pointLights[i].offset);
                 shader.setFloat(p_int[activePoints].c_str(), pointLights[i].intensity);
                 shader.setFloat(p_rad[activePoints].c_str(), pointLights[i].radius);
                 shader.setBool(p_cast[activePoints].c_str(), pointLights[i].castsShadow);

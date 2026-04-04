@@ -1,5 +1,5 @@
 {
-    "count": 126,
+    "count": 128,
     "entries": [
         {
             "guid": "9a248918-705f-4d5a-88a2-17e85868745b",
@@ -1134,6 +1134,24 @@
             "vbo": 783,
             "ebo": 784,
             "indexCount": 157614
+        },
+        {
+            "guid": "84b0c709-2b29-4ef4-a854-649e529fc650",
+            "name": "windowRim",
+            "path": "Assets\\Objects\\windowRim.obj",
+            "vao": 622,
+            "vbo": 1231,
+            "ebo": 1232,
+            "indexCount": 1770
+        },
+        {
+            "guid": "9d2fe13d-dc16-4931-b991-93e65b7389e3",
+            "name": "Candle",
+            "path": "Assets\\Objects\\Candle.obj",
+            "vao": 624,
+            "vbo": 1235,
+            "ebo": 1236,
+            "indexCount": 5208
         }
     ]
 }

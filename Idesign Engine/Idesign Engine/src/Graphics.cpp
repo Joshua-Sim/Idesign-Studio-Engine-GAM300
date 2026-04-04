@@ -2042,6 +2042,7 @@ namespace Framework {
                     outPointLights.push_back({
                         actualLightPos, // <-- CHANGED
                         light.color,
+                        light.offset,
                         light.intensity,
                         light.radius,
                         true,
@@ -2380,7 +2381,7 @@ namespace Framework {
                         auto& t = ecsInterface.GetComponent<TransformComponent>(e);
 
                         // Match specific light by position and type
-                        if (l.type == LightType::Point && t.position == point.position)
+                        if (l.type == LightType::Point && (t.position + l.offset) == point.position)
                         {
                             foundID = l.shadowDepthCubeMap;
                             break;

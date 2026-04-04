@@ -741,9 +741,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -43.69948196411133,
-                        10.00235652923584,
-                        7.636120796203613
+                        -15.873,
+                        9.0,
+                        5.673
                     ],
                     "rotation": [
                         0.0,
@@ -772,7 +772,7 @@
                         1.0,
                         1.0
                     ],
-                    "intensity": 0.5690000057220459,
+                    "intensity": 0.5,
                     "radius": 30.0,
                     "offset": [
                         0.0,
@@ -784,7 +784,169 @@
                     "castsShadow": true,
                     "shadowBiasConst": 0.44999998807907104,
                     "shadowBiasFactor": 1.0,
-                    "shadowFarPlane": 30.0,
+                    "shadowFarPlane": 60.0,
+                    "type": "Point"
+                }
+            }
+        },
+        {
+            "name": "Light3",
+            "guid": "a5959674-6767-442d-a3ee-f088e94eede2",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -32.771,
+                        9.368,
+                        7.535
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.006000001449137926,
+                        0.006000001449137926,
+                        0.006125030107796192
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "sortIndex": 8,
+                    "children": []
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "LightProperties": {
+                    "enabled": true,
+                    "color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "intensity": 0.5,
+                    "radius": 30.0,
+                    "offset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "innerCutOffAngle": 0.21816615760326385,
+                    "outerCutOffAngle": 0.35899999737739563,
+                    "castsShadow": true,
+                    "shadowBiasConst": 0.44999998807907104,
+                    "shadowBiasFactor": 1.0,
+                    "shadowFarPlane": 60.0,
+                    "type": "Point"
+                }
+            }
+        },
+        {
+            "name": "Light4",
+            "guid": "a5959674-6767-6767-a3ee-f088e94eede2",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -39.553,
+                        8.812,
+                        4.553
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.006000001449137926,
+                        0.006000001449137926,
+                        0.006125030107796192
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "sortIndex": 8,
+                    "children": []
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "LightProperties": {
+                    "enabled": true,
+                    "color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "intensity": 0.5,
+                    "radius": 30.0,
+                    "offset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "innerCutOffAngle": 0.21816615760326385,
+                    "outerCutOffAngle": 0.35899999737739563,
+                    "castsShadow": true,
+                    "shadowBiasConst": 0.44999998807907104,
+                    "shadowBiasFactor": 1.0,
+                    "shadowFarPlane": 60.0,
+                    "type": "Point"
+                }
+            }
+        },
+        {
+            "name": "Light5",
+            "guid": "a5959674-6767-6767-6767-f088e94eede2",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -44.395,
+                        9.752,
+                        19.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.006000001449137926,
+                        0.006000001449137926,
+                        0.006125030107796192
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "sortIndex": 8,
+                    "children": []
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "LightProperties": {
+                    "enabled": true,
+                    "color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "intensity": 0.5,
+                    "radius": 30.0,
+                    "offset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "innerCutOffAngle": 0.21816615760326385,
+                    "outerCutOffAngle": 0.35899999737739563,
+                    "castsShadow": true,
+                    "shadowBiasConst": 0.44999998807907104,
+                    "shadowBiasFactor": 1.0,
+                    "shadowFarPlane": 60.0,
                     "type": "Point"
                 }
             }
@@ -1681,18 +1843,18 @@
                 "TransformComponent": {
                     "position": [
                         -38.78162384033203,
-                        7.141292572021484,
-                        9.871298789978027
+                        7.423,
+                        9.770
                     ],
                     "rotation": [
                         180.0,
-                        -89.99994659423828,
+                        90.0,
                         180.0
                     ],
                     "scale": [
-                        0.020966889336705208,
-                        0.02096688747406006,
-                        0.020966889336705208
+                        2.1,
+                        2.0,
+                        2.0
                     ],
                     "isActive": true
                 },
@@ -2346,14 +2508,54 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -41.909427642822266,
-                        9.160372734069824,
-                        0.058270346373319626
+                        -39.472,
+                        6.413,
+                        4.661
                     ],
                     "rotation": [
-                        179.99989318847656,
-                        -0.000005105172022012994,
-                        179.99989318847656
+                        180.0,
+                        90.0,
+                        180.0
+                    ],
+                    "scale": [
+                        1.070039987564087,
+                        1.070039987564087,
+                        1.070039987564087
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
+                    "sortIndex": 31,
+                    "children": []
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "MeshComponent": {
+                    "guid": "4658a6a6-5858-4b7b-bf14-feea255d368c",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
+                    "isUI": false
+                }
+            }
+        },
+        {
+            "name": "Shelf 4",
+            "guid": "76664a7c-6767-49ba-b2da-6d39e08e6c61",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -44.387,
+                        7.455,
+                        19.402
+                    ],
+                    "rotation": [
+                        180.0,
+                        180.0,
+                        180.0
                     ],
                     "scale": [
                         1.070039987564087,
@@ -2732,24 +2934,24 @@
             }
         },
         {
-            "name": "Blue Potion 9",
+            "name": "Window Rim",
             "guid": "76f1fbbc-ad31-406b-b405-ead8b5c18e88",
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -21.1890811920166,
-                        9.401006698608398,
-                        0.8061068654060364
+                        -14.05,
+                        9.565,
+                        5.627
                     ],
                     "rotation": [
                         180.0,
-                        -108.93928527832031,
+                        90,
                         180.0
                     ],
                     "scale": [
-                        0.5816400051116943,
-                        0.5816398859024048,
-                        0.58163982629776
+                        2.0,
+                        2.0,
+                        2.0
                     ],
                     "isActive": true
                 },
@@ -2762,24 +2964,24 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "76f36163-789f-4c71-87b4-76fdccaa8408",
+                    "guid": "84b0c709-2b29-4ef4-a854-649e529fc650",
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "0d917096-1644-44a8-8e66-f77f83672f2c",
+                    "guid": "0f2ece2c-6b29-43d9-a6ae-1f648d18d86d",
                     "isUI": false
                 }
             }
         },
         {
-            "name": "Blue Potion 10",
+            "name": "Candle1",
             "guid": "bd799ca8-1797-4bc1-bffa-2c34cfa5cd29",
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -20.4802188873291,
-                        9.401006698608398,
-                        0.5140872001647949
+                        -15.714,
+                        7.638,
+                        5.646
                     ],
                     "rotation": [
                         180.0,
@@ -2787,9 +2989,9 @@
                         180.0
                     ],
                     "scale": [
-                        0.5816400051116943,
-                        0.5816398859024048,
-                        0.58163982629776
+                        0.4,
+                        0.4,
+                        0.4
                     ],
                     "isActive": true
                 },
@@ -2802,11 +3004,131 @@
                     "tags": []
                 },
                 "MeshComponent": {
-                    "guid": "76f36163-789f-4c71-87b4-76fdccaa8408",
+                    "guid": "9d2fe13d-dc16-4931-b991-93e65b7389e3",
                     "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "4647cf55-032f-4bd2-952f-0ae059337c19",
+                    "guid": "438f508d-b272-4142-9cd4-ac3afe55c02c",
+                    "isUI": false
+                }
+            }
+        },
+        {
+            "name": "Candle2",
+            "guid": "bd799ca8-6767-4bc1-bffa-2c34cfa5cd29",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -32.559,
+                        7.631,
+                        7.218
+                    ],
+                    "rotation": [
+                        180.0,
+                        -78.18431091308594,
+                        180.0
+                    ],
+                    "scale": [
+                        0.4,
+                        0.4,
+                        0.4
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "59cca078-d956-4d13-b89e-4f92455afb42",
+                    "sortIndex": 41,
+                    "children": []
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "MeshComponent": {
+                    "guid": "9d2fe13d-dc16-4931-b991-93e65b7389e3",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "438f508d-b272-4142-9cd4-ac3afe55c02c",
+                    "isUI": false
+                }
+            }
+        },
+        {
+            "name": "Candle3",
+            "guid": "bd799ca8-6767-6767-bffa-2c34cfa5cd29",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -39.414,
+                        7.390,
+                        4.505
+                    ],
+                    "rotation": [
+                        180.0,
+                        -78.18431091308594,
+                        180.0
+                    ],
+                    "scale": [
+                        0.4,
+                        0.4,
+                        0.4
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "59cca078-d956-4d13-b89e-4f92455afb42",
+                    "sortIndex": 41,
+                    "children": []
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "MeshComponent": {
+                    "guid": "9d2fe13d-dc16-4931-b991-93e65b7389e3",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "438f508d-b272-4142-9cd4-ac3afe55c02c",
+                    "isUI": false
+                }
+            }
+        },
+        {
+            "name": "Candle4",
+            "guid": "bd799ca8-6767-6767-bffa-2c34cfa5cd29",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -44.346,
+                        8.390,
+                        19.452
+                    ],
+                    "rotation": [
+                        180.0,
+                        -78.18431091308594,
+                        180.0
+                    ],
+                    "scale": [
+                        0.4,
+                        0.4,
+                        0.4
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "59cca078-d956-4d13-b89e-4f92455afb42",
+                    "sortIndex": 41,
+                    "children": []
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "MeshComponent": {
+                    "guid": "9d2fe13d-dc16-4931-b991-93e65b7389e3",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "438f508d-b272-4142-9cd4-ac3afe55c02c",
                     "isUI": false
                 }
             }
@@ -2874,9 +3196,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -265.5573425292969,
-                        318.2962951660156,
-                        619.3896484375
+                        -30.5573425292969,
+                        10.2962951660156,
+                        15.3896484375
                     ],
                     "rotation": [
                         0.0,
@@ -4212,60 +4534,6 @@
                         0.0
                     ],
                     "startAwake": true
-                }
-            }
-        },
-        {
-            "name": "Light2 (Copy)",
-            "guid": "3b609b69-ed69-4bc4-b293-5e99f13fdb17",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        -27.62851905822754,
-                        11.81338882446289,
-                        11.217090606689453
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        0.006000001449137926,
-                        0.006000001449137926,
-                        0.006125030107796192
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "",
-                    "sortIndex": 63,
-                    "children": []
-                },
-                "TagComponent": {
-                    "tags": []
-                },
-                "LightProperties": {
-                    "enabled": true,
-                    "color": [
-                        0.6554892063140869,
-                        0.6365410089492798,
-                        0.3543917238712311
-                    ],
-                    "intensity": 1.3270000219345093,
-                    "radius": 30.100000381469727,
-                    "offset": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "innerCutOffAngle": 0.21816615760326385,
-                    "outerCutOffAngle": 0.2617993950843811,
-                    "castsShadow": true,
-                    "shadowBiasConst": 0.004999999888241291,
-                    "shadowBiasFactor": 1.0,
-                    "shadowFarPlane": 30.100000381469727,
-                    "type": "Point"
                 }
             }
         },
