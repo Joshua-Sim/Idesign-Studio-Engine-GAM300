@@ -1,5 +1,5 @@
 {
-    "count": 372,
+    "count": 373,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -4086,6 +4086,17 @@
             "guid": "1a18afb7-e9ad-4095-8d90-b23bab88d235",
             "name": "BackButtonForGammaPageHovered",
             "path": "Assets\\Textures\\BackButtonForGammaPageHovered.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "438f508d-b272-4142-9cd4-ac3afe55c02c",
+            "name": "Candle",
+            "path": "Assets\\Textures\\Candle.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,

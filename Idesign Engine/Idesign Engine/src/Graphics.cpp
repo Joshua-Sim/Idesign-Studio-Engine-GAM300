@@ -139,7 +139,6 @@ namespace Framework {
         // PARTICLE (Jasper)
         if (m_particlePixelRenderer) { delete m_particlePixelRenderer; m_particlePixelRenderer = nullptr; }
 
-
         // [FIX] DELETE THE LEAF MESH QUAD
         // You created this with 'new' in Initialize: leafQuad = new Mesh(...)
         if (leafQuad) {

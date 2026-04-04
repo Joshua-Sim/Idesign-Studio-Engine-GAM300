@@ -1450,6 +1450,22 @@ namespace Framework {
             return 0;
         }
 
+        // Start Win
+        static int lua_GameStateWin(lua_State* L)
+        {
+            (void)L;
+            engineState.PushState(EngineMode::Win);    // Cutscene UI
+            return 0;
+        }
+
+        // Start Lose
+        static int lua_GameStateLose(lua_State* L)
+        {
+            (void)L;
+            engineState.PushState(EngineMode::Lose);    // Cutscene UI
+            return 0;
+        }
+
         // Start credits
         static int lua_GameStateCredit(lua_State* L)
         {
@@ -2626,6 +2642,8 @@ namespace Framework {
         lua_register(L, "GameStateHowToPlay",           lua_GameStateHowToPlay);
         lua_register(L, "GameStateBackToMenu",          lua_GameStateBackToMenu);
         lua_register(L, "GameStateCutscene",            lua_GameStateCutscene);
+        lua_register(L, "GameStateWin",                 lua_GameStateWin);
+        lua_register(L, "GameStateLose",                lua_GameStateLose);
         lua_register(L, "GameStateCredit",              lua_GameStateCredit);
         lua_register(L, "GameStateSettingsAudio",       lua_GameStateSettingsAudio);
         lua_register(L, "GameStateSettingsGamma",       lua_GameStateSettingsGamma);
