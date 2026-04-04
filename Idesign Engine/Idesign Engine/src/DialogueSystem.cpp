@@ -195,13 +195,15 @@
             visibleTextLines.clear();
             currentLineIndex = 0;
             currentCharIndex = 0;
+            m_currentVoiceEvent.clear();
             std::cout << "[DialogueSystem] Cleared ALL dialogue data" << std::endl;
         }
 
 
 
-        void DialogueSystem::AddLine(const std::string& text, const std::string& speaker, const std::string& portrait) {
-            DialogueLine line(text, speaker, portrait);
+        void DialogueSystem::AddLine(const std::string& text, const std::string& speaker,
+            const std::string& portrait, const std::string& voiceEvent) {
+            DialogueLine line(text, speaker, portrait, voiceEvent);
             dialogueQueue.push(line);
             std::cout << "[DialogueSystem] Added line: \"" << text << "\" by " << speaker << std::endl;
         }
@@ -293,6 +295,12 @@
             if (g_AudioSystem && typewriterSoundPlaying) {
                 g_AudioSystem->StopEvent("event:/TypeWriterSounds");
                 typewriterSoundPlaying = false;
+            }
+
+            // Stop voice over
+            if (g_AudioSystem && !m_currentVoiceEvent.empty()) {
+                g_AudioSystem->StopEvent(m_currentVoiceEvent);
+                m_currentVoiceEvent.clear();
             }
 
             isActive = false;
@@ -413,6 +421,17 @@
             if (g_AudioSystem && !typewriterSoundPlaying) {
                 g_AudioSystem->PlayAudio("event:/TypeWriterSounds");
                 typewriterSoundPlaying = true;
+            }
+
+            // Stop previous VO and play new one
+            if (g_AudioSystem) {
+                if (!m_currentVoiceEvent.empty()) {
+                    g_AudioSystem->StopEvent(m_currentVoiceEvent);
+                }
+                if (!line.voiceEvent.empty()) {
+                    g_AudioSystem->PlayAudio(line.voiceEvent);
+                    m_currentVoiceEvent = line.voiceEvent;
+                }
             }
 
             // Update speaker name

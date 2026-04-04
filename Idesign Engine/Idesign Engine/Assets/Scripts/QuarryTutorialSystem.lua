@@ -120,15 +120,15 @@ function QuarryTutorial:StartDialogueForCurrentStep()
     DialogueClear()
 
     if self.sequenceStep == 1 then
-        DialogueAdd("Welcome to the Quarry, child! A fine place to stock up on rare minerals for more elaborate potions!", "Aunt Mira", "portrait")
-        DialogueAdd("Copper! A sturdy ore, useful in many of our recipes.", "Aunt Mira", "pear")
-        DialogueAdd("Press 'E' near any ore to mine it. Don't leave empty-handed!", "Aunt Mira", "portrait")
+        DialogueAdd("Welcome to the Quarry, child! A fine place to stock up on rare minerals for more elaborate potions!", "Aunt Mira", "portrait", "event:/DialogueQuarry1")
+        DialogueAdd("Copper! A sturdy ore, useful in many of our recipes.", "Aunt Mira", "pear", "event:/DialogueQuarry2")
+        DialogueAdd("Press 'E' near any ore to mine it. Don't leave empty-handed!", "Aunt Mira", "portrait", "event:/DialogueQuarry3")
     elseif self.sequenceStep == 2 then
-        DialogueAdd("And here's iron — tougher to crack, but useful for many recipes.", "Aunt Mira", "pear")
-        DialogueAdd("Fill that bag and head back when you're done. The cauldron won't stir itself!", "Aunt Mira", "portrait")
+        DialogueAdd("And here's iron — tougher to crack, but useful for many recipes.", "Aunt Mira", "pear", "event:/DialogueQuarry4")
+        DialogueAdd("Fill that bag and head back when you're done. The cauldron won't stir itself!", "Aunt Mira", "portrait", "event:/DialogueQuarry5")
     elseif self.sequenceStep == 3 then
-        DialogueAdd("This is the exit for the mine", "Aunt Mira", "pear")
-        DialogueAdd("Make sure you don't leave anything behind!", "Aunt Mira", "portrait")
+        DialogueAdd("This is the exit for the mine", "Aunt Mira", "pear", "event:/DialogueQuarry6")
+        DialogueAdd("Make sure you don't leave anything behind!", "Aunt Mira", "portrait", "event:/DialogueQuarry7")
     end
 
     DialogueStart()

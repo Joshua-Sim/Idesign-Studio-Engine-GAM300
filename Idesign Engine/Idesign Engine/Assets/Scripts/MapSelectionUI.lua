@@ -548,6 +548,7 @@ function M:FinishTravel(locData)
 
     if locData.name == "Quarry" and GetData("quarryTutorialPlayed") == 0 then
         SetData("quarryFirstEntered", 1)
+        SetData("dayTutorialPlayed", 1)
     end
 
     TeleportPlayer(

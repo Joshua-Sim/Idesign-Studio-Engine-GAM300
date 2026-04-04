@@ -1053,9 +1053,10 @@ namespace Framework {
             const char* text = luaL_checkstring(L, 1);
             const char* speaker = luaL_optstring(L, 2, "");
             const char* portrait = luaL_optstring(L, 3, "");
+            const char* voice = luaL_optstring(L, 4, "");
 
             auto dialogueSys = ecsInterface.GetSystem<Framework::DialogueSystem>();
-            if (dialogueSys) dialogueSys->AddLine(text, speaker, portrait);
+            if (dialogueSys) dialogueSys->AddLine(text, speaker, portrait, voice);
             return 0;
         }
 
