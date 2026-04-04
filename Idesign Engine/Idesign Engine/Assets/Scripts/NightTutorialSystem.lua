@@ -116,20 +116,20 @@ end
 function NightTutorial:StartDialogueForCurrentStep()
     DialogueClear()
     if self.sequenceStep == 1 then
-        DialogueAdd("Look alive, child! The moon is high; 'tis the Night Phase now.", "Aunt Mira", "pear")
-        DialogueAdd("Don't just stand, customers awaits!", "Aunt Mira", "portrait")
+        DialogueAdd("Look alive, child! The moon is high; 'tis the Night Phase now.", "Aunt Mira", "pear", "event:/DialogueShop1")
+        DialogueAdd("Don't just stand, customers awaits!", "Aunt Mira", "portrait", "event:/DialogueShop2")
     elseif self.sequenceStep == 2 then
-        DialogueAdd("First, preparation! Use the knife!", "Aunt Mira", "pear")
-        DialogueAdd("Hold the knife and click the mouse in time to dice em up!", "Aunt Mira", "pear")
+        DialogueAdd("First, preparation! Use the knife!", "Aunt Mira", "pear", "event:/DialogueShop3")
+        DialogueAdd("Hold the knife and click the mouse in time to dice em up!", "Aunt Mira", "pear", "event:/DialogueShop4")
     elseif self.sequenceStep == 3 then
-        DialogueAdd("The Mortar is for crushing ingredients into powder.", "Aunt Mira", "pear")
-        DialogueAdd("Click the circles as they appear to grind your ingredients down!", "Aunt Mira", "portrait")
+        DialogueAdd("The Mortar is for crushing ingredients into powder.", "Aunt Mira", "pear", "event:/DialogueShop5")
+        DialogueAdd("Click the circles as they appear to grind your ingredients down!", "Aunt Mira", "portrait", "event:/DialogueShop6")
     elseif self.sequenceStep == 4 then
-         DialogueAdd("The Furnace melts your ores into refined bars.", "Aunt Mira", "pear")
-        DialogueAdd("Some recipes demand metal. Feed it well!", "Aunt Mira", "portrait")
+         DialogueAdd("The Furnace melts your ores into refined bars.", "Aunt Mira", "pear", "event:/DialogueShop7")
+        DialogueAdd("Some recipes demand metal. Feed it well!", "Aunt Mira", "portrait", "event:/DialogueShop8")
     elseif self.sequenceStep == 5 then
-        DialogueAdd("Then, the cauldron. Toss your ingredients in and stir!", "Aunt Mira", "pear")
-        DialogueAdd("Press 'R' if you've forgotten your potions and need the Recipe Book.", "Aunt Mira", "portrait")
+        DialogueAdd("Then, the cauldron. Toss your ingredients in and stir!", "Aunt Mira", "pear", "event:/DialogueShop9")
+        DialogueAdd("Press 'R' if you've forgotten your potions and need the Recipe Book.", "Aunt Mira", "portrait", "event:/DialogueShop10")
 
     end
     DialogueStart()

@@ -21,9 +21,10 @@ namespace Framework {
         std::string text;
         std::string speakerName;
         std::string portraitPath;
+        std::string voiceEvent;
         DialogueLine() = default;
-        DialogueLine(const std::string& txt, const std::string& spk, const std::string& port)
-            : text(txt), speakerName(spk), portraitPath(port) {
+        DialogueLine(const std::string& txt, const std::string& spk, const std::string& port, const std::string& voice = "")
+            : text(txt), speakerName(spk), portraitPath(port), voiceEvent(voice) {
         }
     };
 
@@ -39,7 +40,8 @@ namespace Framework {
 
         // Core API
         void Clear();
-        void AddLine(const std::string& text, const std::string& speaker = "", const std::string& portrait = "");
+        void AddLine(const std::string& text, const std::string& speaker = "",
+            const std::string& portrait = "", const std::string& voiceEvent = "");
         void StartDialogue();
         void Advance();
         void EndDialogue();
@@ -92,5 +94,6 @@ namespace Framework {
 
 		// For Typewriter sound effect
         bool typewriterSoundPlaying = false;
+        std::string m_currentVoiceEvent;  // tracks currently playing VO
     };
 } // namespace Framework

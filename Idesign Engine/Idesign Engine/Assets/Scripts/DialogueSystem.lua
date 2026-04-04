@@ -229,20 +229,20 @@ function DayTutorial:StartDialogueForCurrentStep()
     DialogueClear()
 
     if self.sequenceStep == 1 then
-        DialogueAdd("Look at these fluffy sheep! They aren't just for show.", "Aunt Mira", "pear")
-        DialogueAdd("Gather their wool, it may prove useful in certain recipes!", "Aunt Mira", "portrait")
+        DialogueAdd("Look at these fluffy sheep! They aren't just for show.", "Aunt Mira", "pear", "event:/DialogueForest1")
+        DialogueAdd("Gather their wool, it may prove useful in certain recipes!", "Aunt Mira", "portrait", "event:/DialogueForest2")
     elseif self.sequenceStep == 2 then
-        DialogueAdd("Ah, a fine pear! Some recipes require more than just roots.", "Aunt Mira", "pear")
-        DialogueAdd("Keep your eyes peeled for fruit hanging in the brush.", "Aunt Mira", "portrait")
+        DialogueAdd("Ah, a fine pear! Some recipes require more than just roots.", "Aunt Mira", "pear", "event:/DialogueForest3")
+        DialogueAdd("Keep your eyes peeled for fruit hanging in the brush.", "Aunt Mira", "portrait", "event:/DialogueForest4")
     elseif self.sequenceStep == 3 then
-        DialogueAdd("These are the herbs you need for your remedies.", "Aunt Mira", "pear")
-        DialogueAdd("Gather them by pressing 'E' until your bag is heavy.", "Aunt Mira", "portrait")
+        DialogueAdd("These are the herbs you need for your remedies.", "Aunt Mira", "pear", "event:/DialogueForest5")
+        DialogueAdd("Gather them by pressing 'E' until your bag is heavy.", "Aunt Mira", "portrait", "event:/DialogueForest6")
     elseif self.sequenceStep == 4 then
-        DialogueAdd("Finally, the Gate. Use it once you are finished here.", "Aunt Mira", "pear")
+        DialogueAdd("Finally, the Gate. Use it once you are finished here.", "Aunt Mira", "pear", "event:/DialogueForest7")
     elseif self.sequenceStep == 5 then
-        DialogueAdd("Before you go, take a look at your Recipe Book.", "Aunt Mira", "portrait")
-        DialogueAdd("It shows you what ingredients you've found and, more importantly, what they are worth as potions!", "Aunt Mira", "portrait")
-        DialogueAdd("You can open it anytime by pressing 'R'. Now, get to work!", "Aunt Mira", "portrait")
+        DialogueAdd("Before you go, take a look at your Recipe Book.", "Aunt Mira", "portrait", "event:/DialogueForest8")
+        DialogueAdd("It shows you what ingredients you've found and, more importantly, what they are worth as potions!", "Aunt Mira", "portrait", "event:/DialogueForest9")
+        DialogueAdd("You can open it anytime by pressing 'R'. Now, get to work!", "Aunt Mira", "portrait", "event:/DialogueForest10")
     end
 
     DialogueStart()
@@ -251,16 +251,16 @@ end
 
 function DayTutorial:PlayMapSelDialogue()
     DialogueClear()
-    DialogueAdd("This is the map. Every location you unlock will show itself here.", "Aunt Mira", "portrait")
-    DialogueAdd("Start with the forest — herbs won't gather themselves, and we've potions to brew.", "Aunt Mira", "portrait")
+    DialogueAdd("This is the map. Every location you unlock will show itself here.", "Aunt Mira", "portrait", "event:/DialogueMap1")
+    DialogueAdd("Start with the forest — herbs won't gather themselves, and we've potions to brew.", "Aunt Mira", "portrait", "event:/DialogueMap2")
     DialogueStart()
     self.mapSelWaitingForDialogue = true
 end
 
 function DayTutorial:PlayQuarryUnlockDialogue()
     DialogueClear()
-    DialogueAdd("The Quarry is open to you now, child. Rich in ore and rare materials.", "Aunt Mira", "portrait")
-    DialogueAdd("Head there when you need minerals. Some of our finer recipes demand nothing less.", "Aunt Mira", "portrait")
+    DialogueAdd("The Quarry is open to you now, child. Rich in ore and rare materials.", "Aunt Mira", "portrait", "event:/DialogueMap3")
+    DialogueAdd("Head there when you need minerals. Some of our finer recipes demand nothing less.", "Aunt Mira", "portrait", "event:/DialogueMap4")
     DialogueStart()
     self.quarryUnlockWaitingForDialogue = true
 end
