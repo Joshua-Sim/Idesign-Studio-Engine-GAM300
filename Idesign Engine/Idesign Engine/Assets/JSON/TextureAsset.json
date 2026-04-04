@@ -2640,6 +2640,17 @@
             "vOffset": 0.0,
             "uScale": 1.0,
             "vScale": 1.0
+        },
+        {
+            "guid": "d2edc1a5-ce25-4bc0-969a-a7a9c91115c8",
+            "name": "Max_Icon_Bordered",
+            "path": "Assets\\Textures\\Max_Icon_Bordered.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
         }
     ]
 }
