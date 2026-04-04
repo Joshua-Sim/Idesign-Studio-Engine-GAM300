@@ -34,6 +34,17 @@ local STAGGER_DELAY       = 0.3     -- seconds between each text element AND eac
 local STAR_SCALE_DURATION = 0.5     -- seconds for each star to scale 0→full size
 local STAR_OVERSHOOT      = 3.0     -- overshoot amount: higher = more bounce (try 1.0–3.0)
 
+-- ── Button scale-in settings ────────────────────────────────
+local BTN_SCALE_DURATION = 0.4     -- seconds for button to scale 0→full size
+
+-- ── Star audio ───────────────────────────────────────────────
+local STAR_SOUNDS = {
+    [0] = "event:/StatsTwinkle1",
+    [1] = "event:/StatsTwinkle2",
+    [2] = "event:/StatsTwinkle3",
+}
+local starAudioIndex = 0   -- cycles 0,1,2 → wraps back to 0 after every 3 stars
+
 -- ── Fade state ────────────────────────────────────────────────
 -- Each entry: { name=string, startTime=number }
 local fadeItems    = {}
@@ -46,6 +57,14 @@ local pendingStars = {}
 -- ── Active star scale-ins ─────────────────────────────────────
 -- Each entry: { entity, targetScale, startTime }
 local scalingStars = {}
+
+-- ── Pending button scale-ins ─────────────────────────────────
+-- Each entry: { name=string, scaleX, scaleY, startTime }
+local pendingButtons = {}
+
+-- ── Active button scale-ins ──────────────────────────────────
+-- Each entry: { entity, scaleX, scaleY, startTime }
+local scalingButtons = {}
 
 -- ── Populate flags ────────────────────────────────────────────
 local dayScreenPopulated = false
@@ -187,6 +206,19 @@ local function ClearEntities(list)
     end
 end
 
+-- Finds entity by name, sets its scale to 0, queues it for bounce scale-in.
+local function QueueButton(name, scaleX, scaleY, startTime)
+    local e = FindEntityByName(name)
+    if not e then return end
+    SetScale(e, 0, 0, 1)
+    table.insert(pendingButtons, {
+        entity    = e,
+        scaleX    = scaleX,
+        scaleY    = scaleY,
+        startTime = startTime,
+    })
+end
+
 -- ── Generic star queue helper ─────────────────────────────────
 -- Queues `count` stars into pendingStars starting at firstSpawnTime.
 -- positions: array of { x, y, z }
@@ -214,6 +246,14 @@ end
 -- 3 large stars under "Today's Performance"
 -- PLACEHOLDER positions — tune X/Y once visible in game
 -- ═════════════════════════════════════════════════════════════
+-- ── Day screen background textures (swap paths when assets are ready) ──
+local DAY_BG_TEXTURES = {
+    [0] = "Assets/Textures/OneStarEndDay.png",    -- 0 stars
+    [1] = "Assets/Textures/OneStarEndDay.png",    -- 1 star
+    [2] = "Assets/Textures/TwoStarEndDay.png",    -- 2 stars
+    [3] = "Assets/Textures/ThreeStarEndDay.png",  -- 3 stars
+}
+
 local DAY_STAR_POSITIONS = {
     { x = 880,  y = 383, z = 0.6 },   -- Star 1 (left)
     { x = 960,  y = 383, z = 0.6 },   -- Star 2 (center)
@@ -223,7 +263,7 @@ local DAY_STAR_POSITIONS = {
 -- Queues day stars and returns time when last star finishes scale-in.
 local function QueueDayStars(stars, firstSpawnTime)
     ClearEntities(spawnedDayStars)
-    spawnedDayStars = {}
+    for k in pairs(spawnedDayStars) do spawnedDayStars[k] = nil end  -- wipe in place, keep same table ref
     return QueueStars(stars, DAY_STAR_POSITIONS, DAY_STAR_SCALE, spawnedDayStars, firstSpawnTime)
 end
 
@@ -278,6 +318,26 @@ local function BuildGridStarPositions(totalStars)
     return positions
 end
 
+-- Queues all grid stars at the SAME spawnTime (simultaneous bounce-in).
+-- Plays StatsTwinkle3 once for the whole group via gridGroupSfx flag.
+-- Returns the time when the scale-in finishes.
+local function QueueGridStars(totalStars, firstSpawnTime)
+    local positions = BuildGridStarPositions(totalStars)
+    for i = 1, totalStars do
+        local pos = positions[i]
+        table.insert(pendingStars, {
+            x            = pos.x,
+            y            = pos.y,
+            z            = pos.z,
+            scale        = GRID_STAR_SCALE,
+            list         = spawnedTotalStars,
+            spawnTime    = firstSpawnTime,   -- all same time = simultaneous
+            gridGroupSfx = (i == 1),         -- only first entry triggers the sound
+        })
+    end
+    return firstSpawnTime + STAR_SCALE_DURATION
+end
+
 -- ═════════════════════════════════════════════════════════════
 -- PER-DAY SCREEN POPULATE
 -- Reveal order:
@@ -287,15 +347,22 @@ end
 --   PerformanceLabel → Quote
 -- ═════════════════════════════════════════════════════════════
 function DayStatsScreen.PopulateDayScreen()
-    staggerIndex = 0
-    fadeItems    = {}
-    pendingStars = {}
-    scalingStars = {}
+    staggerIndex   = 0
+    fadeItems      = {}
+    pendingStars   = {}
+    scalingStars   = {}
+    pendingButtons = {}
+    scalingButtons = {}
+    starAudioIndex = 0
     local d = GetLastDayStats()
     if not d then
         print("[StatsSystem] ERROR: GetLastDayStats returned nil")
         return
     end
+
+    -- ── Swap background image based on stars earned ───────────
+    local bg = FindEntityByName("DayStats_Base")
+    if bg then SetTexture(bg, DAY_BG_TEXTURES[d.stars] or "dayStats_base") end
 
     -- ── Text before stars (indices 0–5) ───────────────────────
     SafeSetText("Stats_DayLabel",          "Day " .. d.dayIndex .. " of " .. TOTAL_DAYS,    COLOR_LABEL)
@@ -315,6 +382,10 @@ function DayStatsScreen.PopulateDayScreen()
     SafeSetTextAt("Stats_PerformanceLabel", STAR_LABELS[d.stars] or "Decent Work", COLOR_PERF,  afterStars)
     SafeSetTextAt("Stats_Quote",            STAR_QUOTES[d.stars] or "",            COLOR_LABEL, afterStars + STAGGER_DELAY)
 
+    -- ── Continue button: appears after Quote fades in ─────────
+    local continueTime = afterStars + STAGGER_DELAY + FADE_DURATION
+    QueueButton("DayStats_ContinueBtn", 150, 60, continueTime)
+
     print("[StatsSystem] Day " .. d.dayIndex .. " screen populated. Stars: " .. d.stars)
 end
 
@@ -327,10 +398,17 @@ end
 --   Title → Quote
 -- ═════════════════════════════════════════════════════════════
 function DayStatsScreen.PopulateEndScreen()
-    staggerIndex = 0
-    fadeItems    = {}
-    pendingStars = {}
-    scalingStars = {}
+    staggerIndex   = 0
+    fadeItems      = {}
+    pendingStars   = {}
+    scalingStars   = {}
+    pendingButtons = {}
+    scalingButtons = {}
+    starAudioIndex = 0
+    ClearEntities(spawnedRowStars)
+    for k in pairs(spawnedRowStars)   do spawnedRowStars[k]   = nil end
+    ClearEntities(spawnedTotalStars)
+    for k in pairs(spawnedTotalStars) do spawnedTotalStars[k] = nil end
     local history = GetAllDayStats()
     if not history then
         print("[StatsSystem] ERROR: GetAllDayStats returned nil")
@@ -366,7 +444,7 @@ function DayStatsScreen.PopulateEndScreen()
         if stars > 0 then
             local rowStarStart = cursor + FADE_DURATION
             local positions    = BuildRowStarPositions(i, stars)
-            -- QueueStars appends to spawnedRowStars directly
+            starAudioIndex     = 0   -- reset so each row always plays Twinkle1,2,3 in order
             local rowDoneTime  = QueueStars(stars, positions, ROW_STAR_SCALE, spawnedRowStars, rowStarStart)
             cursor = rowDoneTime + STAGGER_DELAY   -- next row starts after this row's stars finish
         else
@@ -381,14 +459,19 @@ function DayStatsScreen.PopulateEndScreen()
     cursor = cursor + STAGGER_DELAY
 
     -- ── Total star grid after TotalServed fades in ────────────
-    local gridStarStart  = cursor + FADE_DURATION
-    local gridPositions  = BuildGridStarPositions(totalStars)
-    local gridDoneTime   = QueueStars(totalStars, gridPositions, GRID_STAR_SCALE, spawnedTotalStars, gridStarStart)
+    local gridStarStart = cursor + FADE_DURATION
+    local gridDoneTime  = QueueGridStars(totalStars, gridStarStart)
 
     -- ── Title + Quote after grid finishes ─────────────────────
     local afterGrid = gridDoneTime + STAGGER_DELAY
     SafeSetTextAt("EndStats_Title", GetEndTitle(totalStars), COLOR_PERF,  afterGrid)
     SafeSetTextAt("EndStats_Quote", GetEndQuote(totalStars), COLOR_LABEL, afterGrid + STAGGER_DELAY)
+
+    -- ── Buttons: MainMenu first, then ViewCredits ──────────────
+    local mainMenuTime    = afterGrid + STAGGER_DELAY + FADE_DURATION
+    local viewCreditsTime = mainMenuTime + STAGGER_DELAY
+    QueueButton("EndStats_MainMenuBtn",     180, 90, mainMenuTime)
+    QueueButton("EndStats_ViewCreditsBtn",  180, 90, viewCreditsTime)
 
     print("[StatsSystem] End screen populated. Total stars: " .. totalStars .. "/" .. TOTAL_STARS)
 end
@@ -413,7 +496,10 @@ function DayStatsScreen:on_init()
     fadeItems          = {}
     pendingStars       = {}
     scalingStars       = {}
+    pendingButtons     = {}
+    scalingButtons     = {}
     staggerIndex       = 0
+    starAudioIndex     = 0
 end
 
 function DayStatsScreen:on_update(dt)
@@ -433,12 +519,22 @@ function DayStatsScreen:on_update(dt)
 
     -- ── Pending star spawn tick ────────────────────────────────
     -- Spawns each star at scale 0 then hands it to scalingStars
+    local gridSfxPlayed = false   -- ensures StatsTwinkle3 fires only once per frame
     for i = #pendingStars, 1, -1 do
         local s = pendingStars[i]
         if now >= s.spawnTime then
             local e = SpawnPrefab(PREFAB_STAR, s.x, s.y, s.z)
             if e then
                 SetScale(e, 0, 0, 1)   -- start at zero; scale tick grows it
+                if s.gridGroupSfx then
+                    if not gridSfxPlayed then
+                        Sound.Play("event:/StatsTwinkle3")  -- one sound for all grid stars
+                        gridSfxPlayed = true
+                    end
+                else
+                    Sound.Play(STAR_SOUNDS[starAudioIndex % 3])
+                    starAudioIndex = starAudioIndex + 1
+                end
                 table.insert(s.list, e)
                 table.insert(scalingStars, {
                     entity      = e,
@@ -459,6 +555,29 @@ function DayStatsScreen:on_update(dt)
         if t >= 1.0 then table.remove(scalingStars, i) end
     end
 
+    -- ── Pending button scale-in tick ───────────────────────────
+    for i = #pendingButtons, 1, -1 do
+        local b = pendingButtons[i]
+        if now >= b.startTime then
+            table.insert(scalingButtons, {
+                entity    = b.entity,
+                scaleX    = b.scaleX,
+                scaleY    = b.scaleY,
+                startTime = now,
+            })
+            table.remove(pendingButtons, i)
+        end
+    end
+
+    -- ── Active button scale-in tick (overshoot bounce) ─────────
+    for i = #scalingButtons, 1, -1 do
+        local b = scalingButtons[i]
+        local t = math.min((now - b.startTime) / BTN_SCALE_DURATION, 1.0)
+        local ease = EaseOutBack(t)
+        SetScale(b.entity, b.scaleX * ease, b.scaleY * ease, 1)
+        if t >= 1.0 then table.remove(scalingButtons, i) end
+    end
+
     -- ── Per-day screen ─────────────────────────────────────────
     if HasEngineState("DayStats") then
         if not dayScreenPopulated then
@@ -473,6 +592,8 @@ function DayStatsScreen:on_update(dt)
             fadeItems       = {}
             pendingStars    = {}
             scalingStars    = {}
+            pendingButtons  = {}
+            scalingButtons  = {}
         end
         dayScreenPopulated = false
     end
@@ -493,6 +614,8 @@ function DayStatsScreen:on_update(dt)
             fadeItems         = {}
             pendingStars      = {}
             scalingStars      = {}
+            pendingButtons    = {}
+            scalingButtons    = {}
         end
         endScreenPopulated = false
     end

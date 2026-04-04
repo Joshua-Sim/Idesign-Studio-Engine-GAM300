@@ -29400,7 +29400,7 @@
                 "TransformComponent": {
                     "position": [
                         0.5,
-                        0.23000000417232513,
+                        0.110,
                         0.6000000238418579
                     ],
                     "rotation": [
@@ -29447,7 +29447,7 @@
                 "TransformComponent": {
                     "position": [
                         960.0,
-                        180.0,
+                        200.0,
                         0.6000000238418579
                     ],
                     "rotation": [
@@ -46164,17 +46164,17 @@
                     ]
                 },
                 "ButtonComponent": {
-                    "position": [
-                        985.0,
-                        750.0
-                    ],
-                    "size": [
-                        275.0,
-                        150.0
-                    ],
-                    "isHovered": false,
-                    "isFrontButton": false,
-                    "hoverTextureGuid": ""
+                  "position": [
+                    985.0,
+                    750.0
+                  ],
+                  "size": [
+                    275.0,
+                    150.0
+                  ],
+                  "isHovered": false,
+                  "isFrontButton": false,
+                  "hoverTextureGuid": "fc9538aa-c6e0-41ef-ab10-f8b10a40fc82"
                 }
             }
         },
@@ -46275,17 +46275,17 @@
                     ]
                 },
                 "ButtonComponent": {
-                    "position": [
-                        975.0,
-                        140.0
-                    ],
-                    "size": [
-                        220.0,
-                        125.0
-                    ],
-                    "isHovered": false,
-                    "isFrontButton": false,
-                    "hoverTextureGuid": ""
+                  "position": [
+                    975.0,
+                    140.0
+                  ],
+                  "size": [
+                    220.0,
+                    125.0
+                  ],
+                  "isHovered": false,
+                  "isFrontButton": false,
+                  "hoverTextureGuid": "1a18afb7-e9ad-4095-8d90-b23bab88d235"
                 }
             }
         }

@@ -1,5 +1,5 @@
 {
-    "count": 366,
+    "count": 371,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -4020,6 +4020,61 @@
             "guid": "61d151ee-d7bc-4c05-88fd-1c6a556008d8",
             "name": "GammaButton",
             "path": "Assets\\Textures\\GammaButton.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "9f8f2a7a-058d-4c91-865d-c51799fd3151",
+            "name": "TwoStarEndDay",
+            "path": "Assets\\Textures\\TwoStarEndDay.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "10b4f279-42b7-4b71-9c83-395f0f3a2a98",
+            "name": "OneStarEndDay",
+            "path": "Assets\\Textures\\OneStarEndDay.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "3af402ca-2345-4134-a27e-d3f39bc16625",
+            "name": "ThreeStarEndDay",
+            "path": "Assets\\Textures\\ThreeStarEndDay.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "fc9538aa-c6e0-41ef-ab10-f8b10a40fc82",
+            "name": "GammaButtonHovered",
+            "path": "Assets\\Textures\\GammaButtonHovered.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "1a18afb7-e9ad-4095-8d90-b23bab88d235",
+            "name": "BackButtonForGammaPageHovered",
+            "path": "Assets\\Textures\\BackButtonForGammaPageHovered.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
