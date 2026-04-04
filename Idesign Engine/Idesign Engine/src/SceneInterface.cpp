@@ -93,6 +93,7 @@ namespace Framework
 	//=========== AUDIO TUNING ==============
 	static bool level1BGMStarted = false;
     static bool loseBGMStarted = false;
+    static bool  winBGMStarted = false;
 
     void SceneInterface::Initialize() {}
 
@@ -997,7 +998,9 @@ namespace Framework
                 if (winCutsceneStartTime < 0.0f)
                 {
                     winCutsceneStartTime = (float)glfwGetTime();
-                    winCutsceneFinished = false;
+                    winCutsceneFinished = false; 
+                    winBGMStarted = false;
+
 
                     // Play win cutscene BGM
                     if (g_AudioSystem)
@@ -1007,7 +1010,7 @@ namespace Framework
                         g_AudioSystem->StopEvent("event:/ShopBGM");
                         g_AudioSystem->StopEvent("event:/MainMenuBGM");
                         g_AudioSystem->StopEvent("event:/OpeningCutsceneBGM");
-                        g_AudioSystem->PlayAudio("event:/WinCutsceneBGM");
+                        
                     }
 
                     for (auto e : slides)
@@ -1062,6 +1065,15 @@ namespace Framework
                 // Animated slides are [1..sceneCount-1]
                 int animIndex = (int)glm::floor(t / winSceneDuration);
 
+                // Start win BGM + VO when first actual slide appears
+                if (animIndex >= 0 && !winBGMStarted) {
+                    winBGMStarted = true;
+                    if (g_AudioSystem) {
+                        g_AudioSystem->PlayAudio("event:/WinCutsceneBGM");
+                        g_AudioSystem->PlayAudio("event:/WinCutsceneVO");
+                    }
+                }
+
                 // Finished sequence
                 if (animIndex >= animatedCount)
                 {
@@ -1077,6 +1089,10 @@ namespace Framework
                             auto& tex = ecsInterface.GetComponent<TextureProperties>(e);
                             tex.uiAlpha = 0.0f;
                             tex.isUI = false;
+                        }
+
+                        if (g_AudioSystem) {
+                            g_AudioSystem->StopEvent("event:/WinCutsceneVO");
                         }
 
                         //NEXT STATE
@@ -1144,6 +1160,7 @@ namespace Framework
             {
                 winCutsceneStartTime = -1.0f;
                 winCutsceneFinished = false;
+                winBGMStarted = false;
             }
 
             // LOSE CUTSCENE
