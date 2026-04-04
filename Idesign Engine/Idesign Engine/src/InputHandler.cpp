@@ -14,6 +14,7 @@
 #include "ButtonSystem.h" // Ensure this is included
 #include <RecipeBookManager.h>
 #include "GameSystem.h"
+#include "PhaseManager.h"
 
 extern Framework::RecipeBookManager* recipeBookManager;
 
@@ -132,7 +133,10 @@ namespace Framework {
         }
 
 		// toggle recipe book
-        if (IsKeyPressed(GLFW_KEY_R))
+        if (IsKeyPressed(GLFW_KEY_R) &&
+            engineState.IsInGameplay() &&
+            (phaseManager->GetCurrentPhase() == GamePhase::Night ||
+             phaseManager->GetCurrentPhase() == GamePhase::Day))
         {
             isUIFocused = !isUIFocused;
             GameSystem::bookOpen = !GameSystem::bookOpen;
