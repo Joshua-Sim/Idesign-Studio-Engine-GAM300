@@ -742,7 +742,7 @@
                 "TransformComponent": {
                     "position": [
                         -15.873,
-                        9.0,
+                        9.410,
                         5.673
                     ],
                     "rotation": [
@@ -769,8 +769,8 @@
                     "enabled": true,
                     "color": [
                         1.0,
-                        1.0,
-                        1.0
+                        0.784,
+                        0.365
                     ],
                     "intensity": 0.5,
                     "radius": 30.0,
@@ -786,6 +786,10 @@
                     "shadowBiasFactor": 1.0,
                     "shadowFarPlane": 60.0,
                     "type": "Point"
+                },                
+                "TextureComponent": {
+                    "guid": "438f508d-b272-4142-9cd4-ac3afe55c02c",
+                    "isUI": false
                 }
             }
         },
@@ -796,8 +800,8 @@
                 "TransformComponent": {
                     "position": [
                         -32.771,
-                        9.368,
-                        7.535
+                        9.507,
+                        7.237
                     ],
                     "rotation": [
                         0.0,
@@ -823,8 +827,8 @@
                     "enabled": true,
                     "color": [
                         1.0,
-                        1.0,
-                        1.0
+                        0.784,
+                        0.365
                     ],
                     "intensity": 0.5,
                     "radius": 30.0,
@@ -840,6 +844,10 @@
                     "shadowBiasFactor": 1.0,
                     "shadowFarPlane": 60.0,
                     "type": "Point"
+                },         
+                "TextureComponent": {
+                    "guid": "438f508d-b272-4142-9cd4-ac3afe55c02c",
+                    "isUI": false
                 }
             }
         },
@@ -849,9 +857,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -39.553,
-                        8.812,
-                        4.553
+                        -39.713,
+                        9.143,
+                        4.475
                     ],
                     "rotation": [
                         0.0,
@@ -877,8 +885,8 @@
                     "enabled": true,
                     "color": [
                         1.0,
-                        1.0,
-                        1.0
+                        0.784,
+                        0.365
                     ],
                     "intensity": 0.5,
                     "radius": 30.0,
@@ -894,6 +902,10 @@
                     "shadowBiasFactor": 1.0,
                     "shadowFarPlane": 60.0,
                     "type": "Point"
+                },         
+                "TextureComponent": {
+                    "guid": "438f508d-b272-4142-9cd4-ac3afe55c02c",
+                    "isUI": false
                 }
             }
         },
@@ -904,8 +916,8 @@
                 "TransformComponent": {
                     "position": [
                         -44.395,
-                        9.752,
-                        19.0
+                        10.071,
+                        19.980
                     ],
                     "rotation": [
                         0.0,
@@ -931,8 +943,8 @@
                     "enabled": true,
                     "color": [
                         1.0,
-                        1.0,
-                        1.0
+                        0.784,
+                        0.365
                     ],
                     "intensity": 0.5,
                     "radius": 30.0,
@@ -948,6 +960,68 @@
                     "shadowBiasFactor": 1.0,
                     "shadowFarPlane": 60.0,
                     "type": "Point"
+                },         
+                "TextureComponent": {
+                    "guid": "438f508d-b272-4142-9cd4-ac3afe55c02c",
+                    "isUI": false
+                }
+            }
+        },
+        {
+            "name": "Light6",
+            "guid": "67679674-6767-6767-6767-f088e94eede2",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -38,
+                        11.513,
+                        16.861
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        0.006000001449137926,
+                        0.006000001449137926,
+                        0.006125030107796192
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "",
+                    "sortIndex": 8,
+                    "children": []
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "LightProperties": {
+                    "enabled": true,
+                    "color": [
+                        1.0,
+                        0.784,
+                        0.365
+                    ],
+                    "intensity": 0.5,
+                    "radius": 30.0,
+                    "offset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "innerCutOffAngle": 0.21816615760326385,
+                    "outerCutOffAngle": 0.35899999737739563,
+                    "castsShadow": true,
+                    "shadowBiasConst": 0.44999998807907104,
+                    "shadowBiasFactor": 1.0,
+                    "shadowFarPlane": 60.0,
+                    "type": "Point"
+                },         
+                "TextureComponent": {
+                    "guid": "438f508d-b272-4142-9cd4-ac3afe55c02c",
+                    "isUI": false
                 }
             }
         },
@@ -1117,9 +1191,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -14.218849182128906,
+                        -14.219,
                         5.0,
-                        12.92231273651123
+                        12.837
                     ],
                     "rotation": [
                         180.0,
@@ -2583,6 +2657,46 @@
             }
         },
         {
+            "name": "Shelf 5",
+            "guid": "76664a7c-6767-6767-b2da-6d39e08e6c61",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -38.0,
+                        8.67,
+                        16.31
+                    ],
+                    "rotation": [
+                        180.0,
+                        -90.0,
+                        180.0
+                    ],
+                    "scale": [
+                        1.070039987564087,
+                        1.070039987564087,
+                        1.070039987564087
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "3dad660d-0e51-49b6-a366-94bde75915ec",
+                    "sortIndex": 31,
+                    "children": []
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "MeshComponent": {
+                    "guid": "4658a6a6-5858-4b7b-bf14-feea255d368c",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "8c24c8aa-00ff-4065-b384-a73ace8019dc",
+                    "isUI": false
+                }
+            }
+        },
+        {
             "name": "Blue Potions",
             "guid": "59cca078-d956-4d13-b89e-4f92455afb42",
             "components": {
@@ -3102,6 +3216,46 @@
                         -44.346,
                         8.390,
                         19.452
+                    ],
+                    "rotation": [
+                        180.0,
+                        -78.18431091308594,
+                        180.0
+                    ],
+                    "scale": [
+                        0.4,
+                        0.4,
+                        0.4
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "59cca078-d956-4d13-b89e-4f92455afb42",
+                    "sortIndex": 41,
+                    "children": []
+                },
+                "TagComponent": {
+                    "tags": []
+                },
+                "MeshComponent": {
+                    "guid": "9d2fe13d-dc16-4931-b991-93e65b7389e3",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "438f508d-b272-4142-9cd4-ac3afe55c02c",
+                    "isUI": false
+                }
+            }
+        },
+        {
+            "name": "Candle5",
+            "guid": "bd799ca8-6767-6767-6767-2c34cfa5cd29",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        -38.0,
+                        9.654,
+                        16.841
                     ],
                     "rotation": [
                         180.0,
