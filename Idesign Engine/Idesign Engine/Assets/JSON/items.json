@@ -25,21 +25,21 @@
       "id": "strength_potion",
       "name": "Potion of Strength",
       "type": "potion",
-      "value": 440,
+      "value": 200,
       "flavor": "It burns the throat and makes the heart drum like a war march."
     },
     {
       "id": "vitality_potion",
       "name": "Potion of Vitality",
       "type": "potion",
-      "value": 460,
+      "value": 240,
       "flavor": "Cooler than spring water, it washes away the ache of a long journey."
     },
         {
       "id": "warmth_potion",
       "name": "Potion of Warmth",
       "type": "potion",
-      "value": 500,
+      "value": 280,
       "flavor": "A liquid hearth for those caught in the bite of a mountain gale."
     },
     {
@@ -85,28 +85,28 @@
       "id": "mending_potion",
       "name": "Potion of Mending",
       "type": "potion",
-      "value": 600,
+      "value": 400,
       "flavor": "It knits skin and spirit back together as if the wound were only a dream."
     },
     {
       "id": "defense_potion",
       "name": "Potion of Defense",
       "type": "potion",
-      "value": 700,
+      "value": 450,
       "flavor": "Your skin feels as dense as oak, turning aside all but the fiercest blows."
     },
     {
       "id": "preservation_powder",
       "name": "Preservation Powder",
       "type": "powder",
-      "value": 650,
+      "value": 400,
       "flavor": "Fine as stardust, it keeps the rot at bay and the essence fresh."
     },
     {
       "id": "healing_powder",
       "name": "Healing Powder",
       "type": "powder",
-      "value": 700,
+      "value": 450,
       "flavor": "A gritty, glowing dust that stings briefly before the warmth of mending sets in."
     }
     
