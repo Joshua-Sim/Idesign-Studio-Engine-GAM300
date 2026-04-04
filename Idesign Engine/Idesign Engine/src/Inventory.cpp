@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Inventory.h"
+#include "EngineState.h"
 
 namespace Framework {
 
@@ -57,8 +58,8 @@ namespace Framework {
         if (i < 0) i += maxSlots;
         m_selectedIndex = i;
 
-        // === PLAY INVENTORY SELECT SFX ===
-        if (g_AudioSystem) {
+        // Only play scroll sound during active gameplay
+        if (g_AudioSystem && engineState.Is(EngineMode::Play) && !engineState.IsAnyUIOpen()) {
             g_AudioSystem->PlayAudio("event:/InventorySelect");
         }
     }
