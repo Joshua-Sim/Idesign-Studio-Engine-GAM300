@@ -280,6 +280,13 @@ namespace Framework
                                 // Audio Logic
                                 std::string lowerName = item.name;
                                 for (auto& c : lowerName) c = (char)tolower(c);
+
+                                // SET UP THE SHARED TIMER HERE
+                                static float lastForagingVoiceTime = -15.0f;
+                                float currentTime = (float)glfwGetTime();
+                                bool canAuntMiraSpeak = (currentTime - lastForagingVoiceTime >= 15.0f);
+
+
                                 if (lowerName.find("potion") != std::string::npos) {
                                     g_AudioSystem->PlayAudio("event:/PickUpPotion");
                                 }
@@ -290,13 +297,100 @@ namespace Framework
                                         pos.y >= 300.0f && pos.y <= 330.0f &&
                                         pos.z >= 533.0f && pos.z <= 726.0f) {
                                         g_AudioSystem->PlaySound3D("event:/Sheep7", Framework::Vector3(pos.x, pos.y, pos.z));
+                                        
+                                        if (canAuntMiraSpeak) {
+                                            lastForagingVoiceTime = currentTime; // Reset global timer
+
+                                            int voiceLineChoice = rand() % 3;
+                                            if (voiceLineChoice == 0) {
+                                                g_AudioSystem->PlayAudio("event:/PickUpWoolVO1"); // Placeholder 1
+                                            }
+                                            else if (voiceLineChoice == 1) {
+                                                g_AudioSystem->PlayAudio("event:/PickUpWoolVO2"); // Placeholder 2
+                                            }
+                                            else {
+                                                g_AudioSystem->PlayAudio("event:/PickUpWoolVO3"); // Placeholder 3
+                                            }
+                                        }
                                     }
                                 }
-                                else if (lowerName.find("ore") != std::string::npos) {
+                                else if (lowerName.find("copper_ore") != std::string::npos) {
                                     g_AudioSystem->PlayAudio("event:/PickUpOre");
+
+                                    // CHECK THE TIMER
+                                    if (canAuntMiraSpeak) {
+                                        lastForagingVoiceTime = currentTime; // Reset global timer
+
+                                        int voiceLineChoice = rand() % 3;
+                                        if (voiceLineChoice == 0) {
+                                            g_AudioSystem->PlayAudio("event:/PickUpCopperOreVO1"); // Placeholder 1
+                                        }
+                                        else if (voiceLineChoice == 1) {
+                                            g_AudioSystem->PlayAudio("event:/PickUpCopperOreVO2"); // Placeholder 2
+                                        }
+                                        else {
+                                            g_AudioSystem->PlayAudio("event:/PickUpCopperOreVO3"); // Placeholder 3
+                                        }
+                                    }
+                                }
+
+                                else if (lowerName.find("iron_ore") != std::string::npos) {
+                                    g_AudioSystem->PlayAudio("event:/PickUpOre");
+
+                                    // CHECK THE TIMER
+                                    if (canAuntMiraSpeak) {
+                                        lastForagingVoiceTime = currentTime; // Reset global timer
+
+                                        int voiceLineChoice = rand() % 3;
+                                        if (voiceLineChoice == 0) {
+                                            g_AudioSystem->PlayAudio("event:/PickUpIronOreVO1"); // Placeholder 1
+                                        }
+                                        else if (voiceLineChoice == 1) {
+                                            g_AudioSystem->PlayAudio("event:/PickUpIronOreVO2"); // Placeholder 2
+                                        }
+                                        else {
+                                            g_AudioSystem->PlayAudio("event:/PickUpIronOreVO3"); // Placeholder 3
+                                        }
+                                    }
+                                }
+
+                                else if (lowerName.find("pear") != std::string::npos) {
+                                    g_AudioSystem->PlayAudio("event:/PickingUpHerb");
+                                    // CHECK THE TIMER
+                                    if (canAuntMiraSpeak) {
+                                        lastForagingVoiceTime = currentTime; // Reset global timer
+
+                                        int voiceLineChoice = rand() % 3;
+                                        if (voiceLineChoice == 0) {
+                                            g_AudioSystem->PlayAudio("event:/PickUpPearVO1"); // Placeholder 1
+                                        }
+                                        else if (voiceLineChoice == 1) {
+                                            g_AudioSystem->PlayAudio("event:/PickUpPearVO2"); // Placeholder 2
+                                        }
+                                        else {
+                                            g_AudioSystem->PlayAudio("event:/PickUpPearVO3"); // Placeholder 3
+                                        }
+                                    }
                                 }
                                 else {
                                     g_AudioSystem->PlayAudio("event:/PickingUpHerb");
+
+                                    // 2. CHECK THE TIMER
+                                    if (canAuntMiraSpeak) {
+                                        lastForagingVoiceTime = currentTime; // Reset global timer
+
+                                        int voiceLineChoice = rand() % 3;
+                                        if (voiceLineChoice == 0) {
+                                            g_AudioSystem->PlayAudio("event:/PickUpHerbVO1"); // Placeholder 1
+                                        }
+                                        else if (voiceLineChoice == 1) {
+                                            g_AudioSystem->PlayAudio("event:/PickUpHerbVO2"); // Placeholder 2
+                                        }
+                                        else {
+                                            g_AudioSystem->PlayAudio("event:/PickUpHerbVO3"); // Placeholder 3
+                                        }
+                                    }
+
                                 }
 
                                 if (phaseManager->GetCurrentPhase() == GamePhase::Day) {
