@@ -4793,7 +4793,7 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "c44c9565-d18e-4186-86af-03e26a23eafe",
+                    "guid": "f33b2c37-d7c5-43b6-9f39-ec0b00ca8a8e",
                     "isUI": false
                 },
                 "ScriptProperties": {
@@ -6022,7 +6022,7 @@
                 "TransformComponent": {
                     "position": [
                         330.0,
-                        500.0,
+                        480.0,
                         1.0
                     ],
                     "rotation": [
@@ -6031,8 +6031,8 @@
                         0.0
                     ],
                     "scale": [
-                        300.0,
-                        270.0,
+                        250.0,
+                        250.0,
                         100.0
                     ],
                     "isActive": false
@@ -6112,57 +6112,6 @@
             }
         },
         {
-            "name": "howtoplaybutton (Copy) (Copy)",
-            "guid": "b42b7d83-b54a-4ab8-8d49-648c810ad3a5",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        980.0,
-                        470.0,
-                        1.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        250.0,
-                        129.58999633789063,
-                        1.0
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "23491286-9912-4971-b5d4-9145a810d598",
-                    "sortIndex": 94,
-                    "children": []
-                },
-                "TagComponent": {
-                    "tags": [
-                        "pause"
-                    ]
-                },
-                "TextureComponent": {
-                    "guid": "49b78bb6-855f-4fbb-8304-0cc90800d2ca",
-                    "isUI": false
-                },
-                "ButtonComponent": {
-                    "position": [
-                        980.0,
-                        470.0
-                    ],
-                    "size": [
-                        250.0,
-                        129.58999633789063
-                    ],
-                    "isHovered": false,
-                    "isFrontButton": true,
-                    "hoverTextureGuid": ""
-                }
-            }
-        },
-        {
             "name": "settingsbutton (Copy)",
             "guid": "a59fe5cf-9709-49c7-bdd6-804ac1d49137",
             "components": {
@@ -6195,8 +6144,8 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "2d77f5aa-e9a6-44b8-b408-7ce097441fdd",
-                    "isUI": false
+                    "guid": "bbc3bc8b-ac72-4981-a969-5cb0e9839b7f",
+                    "isUI": true
                 },
                 "ScriptProperties": {
                     "scripts": [
