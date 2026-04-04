@@ -1,5 +1,5 @@
 {
-    "count": 371,
+    "count": 372,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -4020,6 +4020,17 @@
             "guid": "61d151ee-d7bc-4c05-88fd-1c6a556008d8",
             "name": "GammaButton",
             "path": "Assets\\Textures\\GammaButton.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "d2edc1a5-ce25-4bc0-969a-a7a9c91115c8",
+            "name": "Max_Icon_Bordered",
+            "path": "Assets\\Textures\\Max_Icon_Bordered.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,

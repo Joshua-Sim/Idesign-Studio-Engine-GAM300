@@ -21584,11 +21584,11 @@
                     "tags": []
                 },
                 "TimerComponent": {
-                    "duration": 900.0,
+                    "duration": 120.0,
                     "loop": false
                 },
                 "TextProperties": {
-                    "text": "15:00",
+                    "text": "2:00",
                     "scale": 1.149999976158142,
                     "color": [
                         0.0,

@@ -33,6 +33,13 @@ local iconPositions = {
 local footstepSound = "event:/FootstepMap"
 
 -- =========================================================
+-- TRAVEL PENALTY VARIABLES
+-- =========================================================
+local penaltyFireTime = nil  -- real timestamp (ms) when penalty should fire
+local PENALTY_DELAY   = 0.8  -- seconds after travel before notification appears
+local TRAVEL_COST     = 15   -- seconds deducted from day timer per travel
+
+-- =========================================================
 -- DYNAMIC FOOTPRINT VARIABLES
 -- =========================================================
 local FOOTPRINT_SPACING = 60.0   
@@ -390,6 +397,22 @@ end
 -- ON UPDATE
 -- =========================================================
 function M:on_update(dt)
+    -- =====================================================
+    -- TRAVEL PENALTY: runs regardless of engine state so
+    -- it fires after the loading transition completes.
+    -- Uses real-time clock (no dt dependency).
+    -- =====================================================
+    if penaltyFireTime ~= nil and GetRealTime() >= penaltyFireTime then
+        penaltyFireTime = nil
+        DeductPhaseTime(TRAVEL_COST)
+        local noti = SpawnPrefab("CustomerLog_Prefab")
+        if noti then
+            SetTextComponent(noti, "text", "-" .. TRAVEL_COST .. " secs Travel Time")
+            SetTextComponent(noti, "color", {r = 1, g = 0.15, b = 0.15})
+        end
+        print("[MapSelectionUI] Travel penalty applied: -" .. TRAVEL_COST .. "s")
+    end
+
     if not IsEngineState("MapSelection") then return end
 
     if type(dt) ~= "number" or dt <= 0 then
@@ -535,6 +558,7 @@ function M:ConfirmTravel(locData)
         self:FinishTravel(locData)
     end
 end
+
 -- =========================================================
 -- FINISH TRAVEL (Happens after animation completes)
 -- =========================================================
@@ -565,7 +589,9 @@ function M:FinishTravel(locData)
         dayTimerStarted = true
         print("[MapSelectionUI] First travel of day -> timer started")
     else
-        print("[MapSelectionUI] Travel during same day -> timer continues")
+        -- Schedule penalty to fire after loading settles (real-time based, no dt)
+        penaltyFireTime = GetRealTime() + (PENALTY_DELAY)
+        print("[MapSelectionUI] Travel penalty scheduled for +" .. PENALTY_DELAY .. "s")
     end
 
     PopEngineState()

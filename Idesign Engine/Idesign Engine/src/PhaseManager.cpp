@@ -156,6 +156,7 @@ namespace Framework {
             // Set callback based on which phase just started
             if (m_currentPhase == GamePhase::Day)
             {
+                timer.duration = 120.0f;   // 2:00
                 timer.onComplete = [this]() {
                     std::cout << "[PhaseManager] Day timer expired. Transitioning to Night.\n";
                     TogglePhase();
@@ -163,6 +164,7 @@ namespace Framework {
             }
             else if (m_currentPhase == GamePhase::Night)
             {
+                timer.duration = 300.0f;   // 5:00
                 timer.onComplete = [this]() {
                     std::cout << "[PhaseManager] Night timer expired. Transitioning to Upgrade.\n";
                     TogglePhase();
@@ -172,6 +174,8 @@ namespace Framework {
             {
                 timer.onComplete = nullptr; // No auto-end for Upgrade phase
             }
+
+            timer.remainingTime = timer.duration;
 
             timer.Start(); // starts countdown with the callback set
         }

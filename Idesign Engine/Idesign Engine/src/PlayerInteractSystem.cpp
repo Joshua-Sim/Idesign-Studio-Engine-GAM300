@@ -65,9 +65,9 @@ namespace Framework
         else
         {
             // Hide + pause if in Settings or HowToPlay — frozen and invisible, resumes when back
-            const bool hiddenAndFrozen = engineState.HasState(EngineMode::Settings_Audio) || 
-                                         engineState.HasState(EngineMode::Settings_Gamma) ||
-                                         engineState.HasState(EngineMode::HowToPlay);
+            const bool hiddenAndFrozen = engineState.HasState(EngineMode::Settings_Audio) ||
+                engineState.HasState(EngineMode::Settings_Gamma) ||
+                engineState.HasState(EngineMode::HowToPlay);
 
             for (auto it = mActiveNotifications.begin(); it != mActiveNotifications.end(); )
             {
@@ -249,7 +249,7 @@ namespace Framework
                 if (!ecsInterface.HasComponent<ItemComponent>(entity)) continue;
 
                 auto& item = ecsInterface.GetComponent<ItemComponent>(entity);
-                
+
 
                 // Only move items that have been flagged by PerformInteract
                 if (item.isZipping)
@@ -298,12 +298,22 @@ namespace Framework
                                 else {
                                     g_AudioSystem->PlayAudio("event:/PickingUpHerb");
                                 }
-                                
+
                                 if (phaseManager->GetCurrentPhase() == GamePhase::Day) {
                                     Entity timerEnt = ecsInterface.GetEntityByName("PhaseTimerText");
                                     ecsInterface.GetComponent<TimerComponent>(timerEnt).remainingTime += 5.0f;
-                                    if (ecsInterface.GetComponent<TimerComponent>(timerEnt).remainingTime >= 90.0f) {
-                                        ecsInterface.GetComponent<TimerComponent>(timerEnt).remainingTime = 90.0f;
+                                    if (ecsInterface.GetComponent<TimerComponent>(timerEnt).remainingTime >= 120.0f) {
+                                        ecsInterface.GetComponent<TimerComponent>(timerEnt).remainingTime = 120.0f;
+                                    }
+
+                                    // Spawn green "+5s" floating notification
+                                    Entity noti = Framework::InstantiatePrefabByName("CustomerLog_Prefab");
+                                    if (ecsInterface.IsEntityValid(noti) &&
+                                        ecsInterface.HasComponent<TextProperties>(noti))
+                                    {
+                                        auto& tp = ecsInterface.GetComponent<TextProperties>(noti);
+                                        tp.text = "+5 secs Pickup";
+                                        tp.color = glm::vec3(0.1f, 0.9f, 0.1f);
                                     }
                                 }
 

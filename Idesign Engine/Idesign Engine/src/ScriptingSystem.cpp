@@ -3125,6 +3125,7 @@ namespace Framework {
             lua_pushinteger(L, d.stars);              lua_setfield(L, -2, "stars");
             return 1;
             });
+
         lua_register(L, "GetAllDayStats", [](lua_State* L) -> int {
             const auto& history = GameSystem::GetDayHistory();
             lua_newtable(L);
@@ -3150,6 +3151,18 @@ namespace Framework {
             for (const auto& d : history) total += d.stars;
             lua_pushinteger(L, total);
             return 1;
+            });
+
+        lua_register(L, "DeductPhaseTime", [](lua_State* L) -> int {
+            float seconds = (float)lua_tonumber(L, 1);
+            Entity timerEnt = ecsInterface.GetEntityByName("PhaseTimerText");
+            if (ecsInterface.IsEntityValid(timerEnt) &&
+                ecsInterface.HasComponent<TimerComponent>(timerEnt))
+            {
+                auto& timer = ecsInterface.GetComponent<TimerComponent>(timerEnt);
+                timer.remainingTime = std::max(0.0f, timer.remainingTime - seconds);
+            }
+            return 0;
             });
 
         // Area Unlock Functions
