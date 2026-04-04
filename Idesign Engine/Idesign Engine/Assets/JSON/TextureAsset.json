@@ -2717,6 +2717,28 @@
             "vOffset": 0.0,
             "uScale": 1.0,
             "vScale": 1.0
+        },
+        {
+            "guid": "b4f8ec2d-040f-407d-bcac-14f8f6c70c6e",
+            "name": "CREDIT_FMOD",
+            "path": "Assets\\Textures\\CREDIT_FMOD.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "80d2ea57-0f84-45f1-92fc-c928ff422c82",
+            "name": "CREDIT_ADVISORS",
+            "path": "Assets\\Textures\\CREDIT_ADVISORS.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
         }
     ]
 }

@@ -147,7 +147,7 @@
                     "is3D": true,
                     "minDistance": 1.0,
                     "maxDistance": 100.0,
-                    "volume": 1.0,
+                    "volume": 0.0,
                     "loop": false,
                     "playOnStart": true,
                     "isPlaying": false,
@@ -741,9 +741,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -15.873,
-                        9.410,
-                        5.673
+                        -15.873000144958496,
+                        9.40999984741211,
+                        5.672999858856201
                     ],
                     "rotation": [
                         0.0,
@@ -765,12 +765,16 @@
                 "TagComponent": {
                     "tags": []
                 },
+                "TextureComponent": {
+                    "guid": "438f508d-b272-4142-9cd4-ac3afe55c02c",
+                    "isUI": false
+                },
                 "LightProperties": {
                     "enabled": true,
                     "color": [
                         1.0,
-                        0.784,
-                        0.365
+                        0.7839999794960022,
+                        0.36500000953674316
                     ],
                     "intensity": 0.5,
                     "radius": 30.0,
@@ -784,12 +788,8 @@
                     "castsShadow": true,
                     "shadowBiasConst": 0.44999998807907104,
                     "shadowBiasFactor": 1.0,
-                    "shadowFarPlane": 60.0,
+                    "shadowFarPlane": 30.0,
                     "type": "Point"
-                },                
-                "TextureComponent": {
-                    "guid": "438f508d-b272-4142-9cd4-ac3afe55c02c",
-                    "isUI": false
                 }
             }
         },
@@ -799,9 +799,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -32.771,
-                        9.507,
-                        7.237
+                        -32.770999908447266,
+                        9.506999969482422,
+                        7.236999988555908
                     ],
                     "rotation": [
                         0.0,
@@ -823,12 +823,16 @@
                 "TagComponent": {
                     "tags": []
                 },
+                "TextureComponent": {
+                    "guid": "438f508d-b272-4142-9cd4-ac3afe55c02c",
+                    "isUI": false
+                },
                 "LightProperties": {
                     "enabled": true,
                     "color": [
                         1.0,
-                        0.784,
-                        0.365
+                        0.7839999794960022,
+                        0.36500000953674316
                     ],
                     "intensity": 0.5,
                     "radius": 30.0,
@@ -842,12 +846,8 @@
                     "castsShadow": true,
                     "shadowBiasConst": 0.44999998807907104,
                     "shadowBiasFactor": 1.0,
-                    "shadowFarPlane": 60.0,
+                    "shadowFarPlane": 30.0,
                     "type": "Point"
-                },         
-                "TextureComponent": {
-                    "guid": "438f508d-b272-4142-9cd4-ac3afe55c02c",
-                    "isUI": false
                 }
             }
         },
@@ -857,9 +857,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -39.713,
-                        9.143,
-                        4.475
+                        -39.7130012512207,
+                        9.142999649047852,
+                        4.474999904632568
                     ],
                     "rotation": [
                         0.0,
@@ -881,12 +881,16 @@
                 "TagComponent": {
                     "tags": []
                 },
+                "TextureComponent": {
+                    "guid": "438f508d-b272-4142-9cd4-ac3afe55c02c",
+                    "isUI": false
+                },
                 "LightProperties": {
                     "enabled": true,
                     "color": [
                         1.0,
-                        0.784,
-                        0.365
+                        0.7839999794960022,
+                        0.36500000953674316
                     ],
                     "intensity": 0.5,
                     "radius": 30.0,
@@ -900,12 +904,8 @@
                     "castsShadow": true,
                     "shadowBiasConst": 0.44999998807907104,
                     "shadowBiasFactor": 1.0,
-                    "shadowFarPlane": 60.0,
+                    "shadowFarPlane": 30.0,
                     "type": "Point"
-                },         
-                "TextureComponent": {
-                    "guid": "438f508d-b272-4142-9cd4-ac3afe55c02c",
-                    "isUI": false
                 }
             }
         },
@@ -915,9 +915,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -44.395,
-                        10.071,
-                        19.980
+                        -44.39500045776367,
+                        10.071000099182129,
+                        19.979999542236328
                     ],
                     "rotation": [
                         0.0,
@@ -939,12 +939,16 @@
                 "TagComponent": {
                     "tags": []
                 },
+                "TextureComponent": {
+                    "guid": "438f508d-b272-4142-9cd4-ac3afe55c02c",
+                    "isUI": false
+                },
                 "LightProperties": {
                     "enabled": true,
                     "color": [
                         1.0,
-                        0.784,
-                        0.365
+                        0.7839999794960022,
+                        0.36500000953674316
                     ],
                     "intensity": 0.5,
                     "radius": 30.0,
@@ -958,12 +962,8 @@
                     "castsShadow": true,
                     "shadowBiasConst": 0.44999998807907104,
                     "shadowBiasFactor": 1.0,
-                    "shadowFarPlane": 60.0,
+                    "shadowFarPlane": 30.0,
                     "type": "Point"
-                },         
-                "TextureComponent": {
-                    "guid": "438f508d-b272-4142-9cd4-ac3afe55c02c",
-                    "isUI": false
                 }
             }
         },
@@ -973,9 +973,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -38,
-                        11.513,
-                        16.861
+                        -38.0,
+                        11.512999534606934,
+                        16.861000061035156
                     ],
                     "rotation": [
                         0.0,
@@ -997,12 +997,16 @@
                 "TagComponent": {
                     "tags": []
                 },
+                "TextureComponent": {
+                    "guid": "438f508d-b272-4142-9cd4-ac3afe55c02c",
+                    "isUI": false
+                },
                 "LightProperties": {
                     "enabled": true,
                     "color": [
                         1.0,
-                        0.784,
-                        0.365
+                        0.7839999794960022,
+                        0.36500000953674316
                     ],
                     "intensity": 0.5,
                     "radius": 30.0,
@@ -1016,12 +1020,8 @@
                     "castsShadow": true,
                     "shadowBiasConst": 0.44999998807907104,
                     "shadowBiasFactor": 1.0,
-                    "shadowFarPlane": 60.0,
+                    "shadowFarPlane": 30.0,
                     "type": "Point"
-                },         
-                "TextureComponent": {
-                    "guid": "438f508d-b272-4142-9cd4-ac3afe55c02c",
-                    "isUI": false
                 }
             }
         },
@@ -1191,9 +1191,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -14.219,
+                        -14.218999862670898,
                         5.0,
-                        12.837
+                        12.836999893188477
                     ],
                     "rotation": [
                         180.0,
@@ -1898,7 +1898,7 @@
                     "is3D": true,
                     "minDistance": 1.0,
                     "maxDistance": 50.0,
-                    "volume": 0.0,
+                    "volume": 1.0,
                     "loop": false,
                     "playOnStart": false,
                     "isPlaying": false,
@@ -1917,8 +1917,8 @@
                 "TransformComponent": {
                     "position": [
                         -38.78162384033203,
-                        7.423,
-                        9.770
+                        7.422999858856201,
+                        9.770000457763672
                     ],
                     "rotation": [
                         180.0,
@@ -1926,7 +1926,7 @@
                         180.0
                     ],
                     "scale": [
-                        2.1,
+                        2.0999999046325684,
                         2.0,
                         2.0
                     ],
@@ -2582,9 +2582,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -39.472,
-                        6.413,
-                        4.661
+                        -39.47200012207031,
+                        6.413000106811523,
+                        4.660999774932861
                     ],
                     "rotation": [
                         180.0,
@@ -2622,9 +2622,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -44.387,
-                        7.455,
-                        19.402
+                        -44.387001037597656,
+                        7.454999923706055,
+                        19.402000427246094
                     ],
                     "rotation": [
                         180.0,
@@ -2663,8 +2663,8 @@
                 "TransformComponent": {
                     "position": [
                         -38.0,
-                        8.67,
-                        16.31
+                        8.670000076293945,
+                        16.309999465942383
                     ],
                     "rotation": [
                         180.0,
@@ -3053,13 +3053,13 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -14.05,
-                        9.565,
-                        5.627
+                        -14.050000190734863,
+                        9.5649995803833,
+                        5.626999855041504
                     ],
                     "rotation": [
                         180.0,
-                        90,
+                        90.0,
                         180.0
                     ],
                     "scale": [
@@ -3093,9 +3093,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -15.714,
-                        7.638,
-                        5.646
+                        -15.71399974822998,
+                        7.638000011444092,
+                        5.645999908447266
                     ],
                     "rotation": [
                         180.0,
@@ -3103,9 +3103,9 @@
                         180.0
                     ],
                     "scale": [
-                        0.4,
-                        0.4,
-                        0.4
+                        0.4000000059604645,
+                        0.4000000059604645,
+                        0.4000000059604645
                     ],
                     "isActive": true
                 },
@@ -3133,9 +3133,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -32.559,
-                        7.631,
-                        7.218
+                        -32.558998107910156,
+                        7.63100004196167,
+                        7.2179999351501465
                     ],
                     "rotation": [
                         180.0,
@@ -3143,9 +3143,9 @@
                         180.0
                     ],
                     "scale": [
-                        0.4,
-                        0.4,
-                        0.4
+                        0.4000000059604645,
+                        0.4000000059604645,
+                        0.4000000059604645
                     ],
                     "isActive": true
                 },
@@ -3173,9 +3173,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -39.414,
-                        7.390,
-                        4.505
+                        -39.41400146484375,
+                        7.389999866485596,
+                        4.505000114440918
                     ],
                     "rotation": [
                         180.0,
@@ -3183,9 +3183,9 @@
                         180.0
                     ],
                     "scale": [
-                        0.4,
-                        0.4,
-                        0.4
+                        0.4000000059604645,
+                        0.4000000059604645,
+                        0.4000000059604645
                     ],
                     "isActive": true
                 },
@@ -3213,9 +3213,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -44.346,
-                        8.390,
-                        19.452
+                        -44.34600067138672,
+                        8.390000343322754,
+                        19.45199966430664
                     ],
                     "rotation": [
                         180.0,
@@ -3223,9 +3223,9 @@
                         180.0
                     ],
                     "scale": [
-                        0.4,
-                        0.4,
-                        0.4
+                        0.4000000059604645,
+                        0.4000000059604645,
+                        0.4000000059604645
                     ],
                     "isActive": true
                 },
@@ -3254,8 +3254,8 @@
                 "TransformComponent": {
                     "position": [
                         -38.0,
-                        9.654,
-                        16.841
+                        9.654000282287598,
+                        16.840999603271484
                     ],
                     "rotation": [
                         180.0,
@@ -3263,9 +3263,9 @@
                         180.0
                     ],
                     "scale": [
-                        0.4,
-                        0.4,
-                        0.4
+                        0.4000000059604645,
+                        0.4000000059604645,
+                        0.4000000059604645
                     ],
                     "isActive": true
                 },
@@ -3350,8 +3350,8 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -30.5573425292969,
-                        10.2962951660156,
+                        -30.557342529296875,
+                        10.296295166015625,
                         15.3896484375
                     ],
                     "rotation": [
@@ -3436,9 +3436,9 @@
                 },
                 "ListenerComponent": {
                     "position": [
-                        -265.5573425292969,
-                        318.2962951660156,
-                        619.3896484375
+                        -30.557342529296875,
+                        10.296295166015625,
+                        15.3896484375
                     ],
                     "forward": [
                         0.0,
@@ -19746,8 +19746,7 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "7f9aade7-0ecf-48c7-8e35-c8654325833e",
@@ -20802,7 +20801,7 @@
                     "is3D": true,
                     "minDistance": 1.0,
                     "maxDistance": 100.0,
-                    "volume": 1.0,
+                    "volume": 0.0,
                     "loop": false,
                     "playOnStart": true,
                     "isPlaying": false,
@@ -21787,7 +21786,7 @@
                     "tags": []
                 },
                 "TextProperties": {
-                    "text": "Day 3",
+                    "text": "Day 1",
                     "scale": 1.3600000143051147,
                     "color": [
                         0.0,
@@ -28707,7 +28706,7 @@
                 },
                 "TextureComponent": {
                     "guid": "983ecaa9-d1c7-4fd5-8631-5a83db05671d",
-                    "isUI": true
+                    "isUI": false
                 }
             }
         },
@@ -29054,7 +29053,7 @@
                 "TransformComponent": {
                     "position": [
                         960.0,
-                        8506.9560546875,
+                        8508.0244140625,
                         1.0
                     ],
                     "rotation": [
@@ -29095,48 +29094,7 @@
                 "TransformComponent": {
                     "position": [
                         960.0,
-                        7006.95654296875,
-                        1.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        2000.0,
-                        1736.0,
-                        1.0
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "",
-                    "sortIndex": 449,
-                    "children": []
-                },
-                "TagComponent": {
-                    "tags": [
-                        "credit"
-                    ]
-                },
-                "MeshComponent": {
-                    "guid": ""
-                },
-                "TextureComponent": {
-                    "guid": "55758496-6cec-436c-b1cc-19d6a53f1df7",
-                    "isUI": false
-                }
-            }
-        },
-        {
-            "name": "credit 2",
-            "guid": "6261f7f3-1a68-4fff-be9a-730f9d8d031f",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        960.0,
-                        5506.95654296875,
+                        7008.0244140625,
                         1.0
                     ],
                     "rotation": [
@@ -29153,6 +29111,48 @@
                 },
                 "HierarchyComponent": {
                     "parent": "",
+                    "sortIndex": 449,
+                    "children": []
+                },
+                "TagComponent": {
+                    "tags": [
+                        "credit"
+                    ]
+                },
+                "MeshComponent": {
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                },
+                "TextureComponent": {
+                    "guid": "6d0c5b20-af88-4560-b2a8-8a4424faf431",
+                    "isUI": false
+                }
+            }
+        },
+        {
+            "name": "credit 2",
+            "guid": "6261f7f3-1a68-4fff-be9a-730f9d8d031f",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        960.0,
+                        5508.0244140625,
+                        1.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        2000.0,
+                        1652.0,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "",
                     "sortIndex": 450,
                     "children": []
                 },
@@ -29162,10 +29162,11 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "6d0c5b20-af88-4560-b2a8-8a4424faf431",
+                    "guid": "80d2ea57-0f84-45f1-92fc-c928ff422c82",
                     "isUI": false
                 }
             }
@@ -29177,7 +29178,7 @@
                 "TransformComponent": {
                     "position": [
                         960.0,
-                        4006.95654296875,
+                        4008.0244140625,
                         1.0
                     ],
                     "rotation": [
@@ -29203,7 +29204,8 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
                     "guid": "a484c993-7cca-49e7-a989-d2824ae4dfb3",
@@ -29218,7 +29220,7 @@
                 "TransformComponent": {
                     "position": [
                         960.0,
-                        2506.95654296875,
+                        2508.024169921875,
                         1.0
                     ],
                     "rotation": [
@@ -29228,7 +29230,7 @@
                     ],
                     "scale": [
                         1220.0,
-                        1220.0,
+                        1525.0,
                         1.0
                     ],
                     "isActive": true
@@ -29244,10 +29246,11 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": ""
+                    "guid": "",
+                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
                 },
                 "TextureComponent": {
-                    "guid": "09c695ff-ff9b-45e9-a0ce-a340c49874e4",
+                    "guid": "b4f8ec2d-040f-407d-bcac-14f8f6c70c6e",
                     "isUI": false
                 }
             }
@@ -29822,7 +29825,7 @@
                 "TransformComponent": {
                     "position": [
                         0.5,
-                        0.110,
+                        0.10999999940395355,
                         0.6000000238418579
                     ],
                     "rotation": [
@@ -29910,7 +29913,7 @@
                 "ButtonComponent": {
                     "position": [
                         960.0,
-                        180.0
+                        200.0
                     ],
                     "size": [
                         150.0,
@@ -46586,17 +46589,17 @@
                     ]
                 },
                 "ButtonComponent": {
-                  "position": [
-                    985.0,
-                    750.0
-                  ],
-                  "size": [
-                    275.0,
-                    150.0
-                  ],
-                  "isHovered": false,
-                  "isFrontButton": false,
-                  "hoverTextureGuid": "fc9538aa-c6e0-41ef-ab10-f8b10a40fc82"
+                    "position": [
+                        985.0,
+                        750.0
+                    ],
+                    "size": [
+                        275.0,
+                        150.0
+                    ],
+                    "isHovered": false,
+                    "isFrontButton": false,
+                    "hoverTextureGuid": "fc9538aa-c6e0-41ef-ab10-f8b10a40fc82"
                 }
             }
         },
@@ -46697,17 +46700,17 @@
                     ]
                 },
                 "ButtonComponent": {
-                  "position": [
-                    975.0,
-                    140.0
-                  ],
-                  "size": [
-                    220.0,
-                    125.0
-                  ],
-                  "isHovered": false,
-                  "isFrontButton": false,
-                  "hoverTextureGuid": "1a18afb7-e9ad-4095-8d90-b23bab88d235"
+                    "position": [
+                        975.0,
+                        140.0
+                    ],
+                    "size": [
+                        220.0,
+                        125.0
+                    ],
+                    "isHovered": false,
+                    "isFrontButton": false,
+                    "hoverTextureGuid": "1a18afb7-e9ad-4095-8d90-b23bab88d235"
                 }
             }
         }

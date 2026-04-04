@@ -1,5 +1,5 @@
 {
-    "count": 373,
+    "count": 375,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -4097,6 +4097,28 @@
             "guid": "438f508d-b272-4142-9cd4-ac3afe55c02c",
             "name": "Candle",
             "path": "Assets\\Textures\\Candle.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "b4f8ec2d-040f-407d-bcac-14f8f6c70c6e",
+            "name": "CREDIT_FMOD",
+            "path": "Assets\\Textures\\CREDIT_FMOD.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "80d2ea57-0f84-45f1-92fc-c928ff422c82",
+            "name": "CREDIT_ADVISORS",
+            "path": "Assets\\Textures\\CREDIT_ADVISORS.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
