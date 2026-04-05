@@ -12,15 +12,12 @@
 #include "Graphics.h"
 #include "EngineState.h"
 #include "InputHandler.h" 
+#include "SceneInterface.h"
 
 extern Framework::Coordinator ecsInterface;
 
-
-namespace Framework {
-
-
-
-
+namespace Framework 
+{
     void PhaseManager::Initialize()
     {
         std::cout << "[PhaseManager] Initialized. Default Phase: DAY" << std::endl;
@@ -40,7 +37,10 @@ namespace Framework {
             SetPhase(GamePhase::Night);
             break;
         case GamePhase::Night:
-            engineState.PushState(EngineMode::DayStats);
+            if (SceneInterface::GetCurrentDay() >= 5)
+                engineState.PushState(EngineMode::EndStats);
+            else
+                engineState.PushState(EngineMode::DayStats);
             break;
         case GamePhase::Upgrade:
             SetPhase(GamePhase::Day);
