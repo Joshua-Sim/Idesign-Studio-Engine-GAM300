@@ -579,7 +579,7 @@ function DayStatsScreen:on_update(dt)
     end
 
     -- ── Per-day screen ─────────────────────────────────────────
-    if HasEngineState("DayStats") then
+    if IsEngineState("DayStats") then
         if not dayScreenPopulated then
             DayStatsScreen.PopulateDayScreen()
             dayScreenPopulated = true
@@ -599,7 +599,7 @@ function DayStatsScreen:on_update(dt)
     end
 
     -- ── End screen ─────────────────────────────────────────────
-    if HasEngineState("EndStats") then
+    if IsEngineState("EndStats") then
         if not endScreenPopulated then
             DayStatsScreen.PopulateEndScreen()
             endScreenPopulated = true
