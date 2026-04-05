@@ -52,37 +52,35 @@ namespace Framework
         static void SetCurrency(int value) { SetData("currency", value); }
 
         // In GameSystem.cpp
-        static void AddCurrency(int delta) 
+        static void AddCurrency(int delta)
         {
-            // Change this temporarily:
-            int mInt = GetData("currencyMultiplier");
-
-            // 2. Safety: If it's 0 or unitialized, default to 100%
-            if (mInt < 100) mInt = 100;
-
-            // 3. Convert to FLOAT (Crucial: use .0f)
-            float multiplier = mInt / 100.0f;
-            std::cout << std::endl;
-            std::cout << "[GameSystem] Adding currency with multiplier: " << mInt << "%" << std::endl;
-
-            // 4. Multiply for income, keep raw for expenses
             int finalAmount = delta;
-            if (delta > 0) 
+
+            // 1. Is this income? (Positive delta)
+            if (delta > 0)
             {
+                int mInt = GetData("currencyMultiplier");
+                if (mInt < 100) mInt = 100; // Safety floor
+                float multiplier = mInt / 100.0f;
+
                 finalAmount = static_cast<int>(delta * multiplier);
-                
-                // Accumulate for today's stats (tracks post-multiplier gold)
+
+                // Log income details
+                std::cout << "\n[GameSystem] Adding currency with multiplier: " << mInt << "%" << std::endl;
+                std::cout << "[C++ Math] " << delta << " * " << multiplier << " = " << finalAmount << std::endl;
+
+                // Accumulate for today's stats 
                 AddData("dayGoldFromCustomers", finalAmount);
             }
+            // 2. Is this an expense? (Negative delta)
+            else if (delta < 0)
+            {
+                // No multiplier is calculated or applied.
+                std::cout << "\n[GameSystem] Deducting currency directly: " << finalAmount << std::endl;
+            }
 
-			std::cout << "[GameSystem] Final currency change after multiplier: " << finalAmount << std::endl;
-            std::cout << std::endl;
-
-            // 5. Apply the data
+            // 3. Apply the final data to the bank
             AddData("currency", finalAmount);
-
-            // Debug this line to see the math in the console!
-            std::cout << "[C++ Math] " << delta << " * " << multiplier << " = " << finalAmount << std::endl;
         }
 
         static int GetCurrency() { return GetData("currency"); }
