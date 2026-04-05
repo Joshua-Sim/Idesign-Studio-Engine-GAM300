@@ -1,3 +1,5 @@
+SubscribeToEvent("ResetWorkstations2", "MortarReset", FindEntityByName("Mortar"))
+
 local Mortar = {}
 
 -- --- PREFABS ---
@@ -38,6 +40,8 @@ local active_circles = {}
 local feedback_texts = {} 
 local click_was_down = false 
 local my_entity_id = nil
+
+local last_phase = -1 -- Initialize to -1 so it triggers on first check
 
 local FINISH_DELAY = 1.0  -- Seconds to wait after finishing before closing the UI
 
@@ -90,21 +94,14 @@ local function StopGrinderLoop()
 end
 
 
-function Mortar.on_init(self)
-    -- Safe ID Grabber
-    my_entity_id = self.entity
-    if not my_entity_id then
-        my_entity_id = FindEntityByName("Mortar")
-    end
-    
-    math.randomseed(os.time()) 
+function Mortar:on_init(arg1, arg2)
+    -- BULLETPROOF ID GRABBER
+    if type(arg1) == "table" and arg1.entity then my_entity_id = arg1.entity
+    elseif type(arg1) == "number" then my_entity_id = arg1
+    elseif type(arg2) == "number" then my_entity_id = arg2
+    else my_entity_id = FindEntityByName("Mortar") end
 
-    if my_entity_id then
-        SetInteractionText(my_entity_id, "Requires Ingredient")
-        SubscribeToEvent("ResetWorkstations", "Mortar_ResetStation", my_entity_id)
-    else
-        print("[Mortar] ERROR: Could not find ID to subscribe!")
-    end
+    math.randomseed(os.time()) 
 end
 -- --- UPDATE ---
 function Mortar.on_update(self, dt)
@@ -130,6 +127,19 @@ function Mortar.on_update(self, dt)
 
         if t >= 1.0 then is_camera_flying = false end
         return 
+    end
+
+    if GetPhase then
+        local current_phase = GetPhase()
+        if current_phase ~= last_phase then
+            -- If current_phase is 1 (Night/Reset Phase), trigger the reset
+            if current_phase == 1 then 
+                print("[Mortar] Phase changed. Resetting station...")
+                -- Call your existing reset logic
+                MortarReset() 
+            end
+            last_phase = current_phase
+        end
     end
 
     -- 2. INGREDIENT VISUALS & DYNAMIC REMOVAL
@@ -431,34 +441,26 @@ function Mortar.OnInteract(senderID, targetID, actionType)
     end
 end
 
--- Notice there is NO "Mortar." prefix here!
-function Mortar_ResetStation()
-    -- 1. Stop minigame logic if they were halfway through spinning
+-- DEFINE THE FUNCTION WITHOUT THE 'Mortar.' PREFIX SO IT IS GLOBAL
+function MortarReset()
+    print("[Mortar] --- RESET TRIGGERED ---")
+    -- Since this is now global, use 'Mortar.StopMinigame' to reference the table
     if is_playing then 
         Mortar.StopMinigame(my_entity_id, false) 
     end
     
-    -- 2. Destroy the physical ingredients sitting in the bowl
-    for _, vis_id in ipairs(visual_entities) do
-        if vis_id ~= -1 and DestroyEntity then 
-            DestroyEntity(vis_id) 
-        end
+    for i, vis_id in pairs(visual_entities) do
+        if vis_id and DestroyEntity then DestroyEntity(vis_id) end
     end
     
-    -- 3. Hard-clear all memory and state flags
     stored_ingredients = {}
     visual_entities = {}
     is_playing = false
-    is_spinning = false
-    is_finished = false
     current_progress = 0
     
-    -- 4. Reset the interaction text
-    if my_entity_id and SetInteractionText then
+    if my_entity_id then
         SetInteractionText(my_entity_id, "Requires Ingredient")
     end
-    
-    print("[Mortar] Station Reset for new day.")
 end
 
 return Mortar

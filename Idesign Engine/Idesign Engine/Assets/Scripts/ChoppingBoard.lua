@@ -1,3 +1,5 @@
+SubscribeToEvent("ResetWorkstations4", "ChoppingBoardReset", FindEntityByName("Cutting Board"))
+
 local M = {}
 
 -- --- CONFIGURATION ---
@@ -81,21 +83,23 @@ local marker_dir = 1
 local zone_pos_x = 0.0 
 local current_speed = 500.0 
 
-function M:on_init()
-    print("[ChoppingBoard] Initialized.")
+local last_phase = -1
+
+function M:on_init(arg1, arg2)
+    -- BULLETPROOF ID GRABBER
+    if type(arg1) == "table" and arg1.entity then my_entity_id = arg1.entity
+    elseif type(arg1) == "number" then my_entity_id = arg1
+    elseif type(arg2) == "number" then my_entity_id = arg2
+    else my_entity_id = FindEntityByName("Chopping Board") end
+
+    print("[ChoppingBoard] Initialized. Subscribing ID: " .. tostring(my_entity_id))
+
     player_entity = FindEntityByName("Player")
-    knife_entity = FindEntityByName(self.knife_name)
+    knife_entity = FindEntityByName(M.knife_name)
     math.randomseed(os.time()) 
     
-    -- Safe ID Grabber: Use self.entity, but fallback to the string name if it's nil!
-    my_entity_id = self.entity
-    if not my_entity_id then
-        my_entity_id = FindEntityByName("Chopping Board") 
-    end
-    
-    -- Now the subscription is guaranteed to get a valid integer ID
     if my_entity_id then
-        SubscribeToEvent("ResetWorkstations", "ChoppingBoard_ResetStation", my_entity_id)
+        SubscribeToEvent("ResetWorkstations", "ResetStation", my_entity_id)
     else
         print("[ChoppingBoard] ERROR: Could not find ID to subscribe!")
     end
@@ -116,6 +120,18 @@ end
 function M:on_update(dt)
     if not player_entity then player_entity = FindEntityByName("Player") end
     
+    if GetPhase then
+        local current_phase = GetPhase()
+        if current_phase ~= last_phase then
+            if current_phase == 1 then 
+                print("[ChoppingBoard] Phase changed. Resetting board...")
+                -- Call your existing reset logic
+                ChoppingBoardReset()
+            end
+            last_phase = current_phase
+        end
+    end
+
     -- --- 0. MANUAL CAMERA FLIGHT ---
     if is_camera_flying then
         camera_flight_t = camera_flight_t + dt
@@ -340,25 +356,34 @@ function M:ClearUI()
     SetUIFocused(false)
 end
 
--- Notice there is NO "M." prefix here! It is a pure global function.
-function ChoppingBoard_ResetStation()
-    -- 1. Stop minigame if active
+function ChoppingBoardReset()
+    print("[ChoppingBoard] --- RESET TRIGGERED ---")
+    
+    -- Since we are in a global function, call M:ClearUI() explicitly
     if ui_active then
         M:ClearUI() 
     end
     
-    -- 2. Destroy the physical herb
-    if current_herb_entity and current_herb_entity ~= -1 then
+    -- Safe destruction logic
+    if current_herb_entity and DestroyEntity then
+        print("[ChoppingBoard] Destroying herb...")
         DestroyEntity(current_herb_entity)
         current_herb_entity = nil
     end
     
-    -- 3. Safely reset the prompt using our cached ID
-    if my_entity_id and SetColliderPromptText then
-        SetColliderPromptText(my_entity_id, "Place ingredient")
+    -- Update the prompt text on the entity
+    local board_id = FindEntityByName("Chopping Board")
+    if board_id and SetColliderPromptText then
+        SetColliderPromptText(board_id, "Place ingredient")
     end
     
-    print("[ChoppingBoard] Station Reset for new day.")
+    print("[ChoppingBoard] Reset Complete.")
+end
+
+-- 3. REMAINING METHODS
+function M.on_init(arg1, arg2)
+    -- Your existing initialization
+    print("[ChoppingBoard] Initialized.")
 end
 
 return M
