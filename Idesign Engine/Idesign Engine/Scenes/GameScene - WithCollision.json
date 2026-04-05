@@ -23292,9 +23292,7 @@
                     "children": [
                         "c987408a-7f83-487b-9398-4804495eb818",
                         "77e06cdd-b44b-440f-ac4a-683a629cf4be",
-                        "4060eb4e-b126-48a6-a068-8f38643ed372",
-                        "164cc61d-c4f3-4678-8595-3c5c5c6e2442",
-                        "52ab0acd-eaeb-42d6-932a-05ddb416a1d0"
+                        "4060eb4e-b126-48a6-a068-8f38643ed372"
                     ]
                 },
                 "TagComponent": {
@@ -23383,17 +23381,17 @@
                     "isUI": false
                 },
                 "ButtonComponent": {
-                    "position": [
-                        850.0,
-                        300.0
-                    ],
-                    "size": [
-                        150.0,
-                        75.0
-                    ],
-                    "isHovered": false,
-                    "isFrontButton": false,
-                    "hoverTextureGuid": ""
+                  "position": [
+                    850.0,
+                    300.0
+                  ],
+                  "size": [
+                    150.0,
+                    75.0
+                  ],
+                  "isHovered": false,
+                  "isFrontButton": false,
+                  "hoverTextureGuid": "3e200e42-ddc7-46ae-9f47-7141cbee9d4e"
                 }
             }
         },
@@ -23434,119 +23432,17 @@
                     "isUI": false
                 },
                 "ButtonComponent": {
-                    "position": [
-                        1050.0,
-                        300.0
-                    ],
-                    "size": [
-                        150.0,
-                        75.0
-                    ],
-                    "isHovered": false,
-                    "isFrontButton": false,
-                    "hoverTextureGuid": ""
-                }
-            }
-        },
-        {
-            "name": "dialog_btn_travel_hover",
-            "guid": "164cc61d-c4f3-4678-8595-3c5c5c6e2442",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        850.0,
-                        300.0,
-                        -99999.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        150.0,
-                        75.0,
-                        1.0
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "7440da8d-2657-4a1d-896f-d2d6ee94253c",
-                    "sortIndex": 359,
-                    "children": []
-                },
-                "TagComponent": {
-                    "tags": [
-                        " "
-                    ]
-                },
-                "TextureComponent": {
-                    "guid": "3e200e42-ddc7-46ae-9f47-7141cbee9d4e",
-                    "isUI": false
-                },
-                "ButtonComponent": {
-                    "position": [
-                        850.0,
-                        300.0
-                    ],
-                    "size": [
-                        150.0,
-                        75.0
-                    ],
-                    "isHovered": false,
-                    "isFrontButton": false,
-                    "hoverTextureGuid": ""
-                }
-            }
-        },
-        {
-            "name": "dialog_btn_stay_hover",
-            "guid": "52ab0acd-eaeb-42d6-932a-05ddb416a1d0",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        1050.0,
-                        300.0,
-                        -99999.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        150.0,
-                        75.0,
-                        1.0
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "7440da8d-2657-4a1d-896f-d2d6ee94253c",
-                    "sortIndex": 360,
-                    "children": []
-                },
-                "TagComponent": {
-                    "tags": [
-                        " "
-                    ]
-                },
-                "TextureComponent": {
-                    "guid": "ab07f4b6-60b0-42a0-b6e1-403faf153505",
-                    "isUI": false
-                },
-                "ButtonComponent": {
-                    "position": [
-                        1050.0,
-                        300.0
-                    ],
-                    "size": [
-                        150.0,
-                        75.0
-                    ],
-                    "isHovered": false,
-                    "isFrontButton": false,
-                    "hoverTextureGuid": ""
+                  "position": [
+                    1050.0,
+                    300.0
+                  ],
+                  "size": [
+                    150.0,
+                    75.0
+                  ],
+                  "isHovered": false,
+                  "isFrontButton": false,
+                  "hoverTextureGuid": "ab07f4b6-60b0-42a0-b6e1-403faf153505"
                 }
             }
         },
