@@ -78,6 +78,9 @@ function NightTutorial:on_update(dt)
             self:PlayNextStep()
         else
             print("[NightTutorial] Night sequence complete. Control restored.")
+            SetCameraRot(0, 0) 
+            local px, py, pz = GetPlayerPos() -- If you have this export
+            TeleportPlayer(px, py, pz, 0, 90, 0)
         end
     end
 end

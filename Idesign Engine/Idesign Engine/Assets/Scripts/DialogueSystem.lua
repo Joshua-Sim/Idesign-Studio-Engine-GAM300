@@ -7,6 +7,10 @@ SetData("dayTutorialPlayed", 0)
 SetData("mapSelectionTutorialPlayed", 0)
 SetData("quarryUnlockAnnouncePlayed", 0)
 
+-- Add these to your DayTutorial table at the top
+DayTutorial.originalYaw = 0
+DayTutorial.originalPitch = 0
+
 DayTutorial.waitingForLanding    = false
 DayTutorial.waitingForDialogue   = false
 DayTutorial.sequenceStep         = 1
@@ -19,6 +23,8 @@ DayTutorial.quarryUnlockWaitingForDialogue = false
 DayTutorial.dayStartTime            = nil
 DayTutorial.mapSelStartTime         = nil
 DayTutorial.quarryUnlockStartTime   = nil
+
+DayTutorial.hasSavedInitialRot = false
 
 local DAY_DELAY    = 1.65 -- custo mto fit loading and timing
 local MAPSEL_DELAY = 0.5
@@ -86,8 +92,16 @@ function DayTutorial:on_update(dt)
             self:PlayNextStep()
         else
             print("[DayTutorial] Full sequence complete. Player control restored.")
+            print("[DayTutorial] Restoring rotation...")
+        
+            SetCameraRot(0, 0) 
+            -- 3. (Optional) Re-sync the Player Physics body 
+            -- If the body is still facing the Gate, it might pull the camera back
+            local px, py, pz = GetPlayerPos() -- If you have this export
+            TeleportPlayer(px, py, pz, 0, 0, 0)
         end
     end
+    
 
 
     -- F9 skip with debounce
@@ -117,8 +131,15 @@ function DayTutorial:on_update(dt)
     if inGameplay and isDayPhase and playedFlag == 0 then
         if not self.dayStartTime then
             self.dayStartTime = now
+            
         end
         if now - self.dayStartTime >= DAY_DELAY then
+            if not self.hasSavedInitialRot then
+                self.origPitch, self.origYaw = GetCameraRot() 
+                self.hasSavedInitialRot = true -- Lock it!
+                print("[DayTutorial] PERMANENT Starting Rotation Saved: " .. self.origYaw)
+            end
+
             self.dayStartTime = nil
             SetData("dayTutorialPlayed", 1)
             print("[DayTutorial] First time day detected. Starting sequence.")
@@ -133,6 +154,7 @@ function DayTutorial:on_update(dt)
         self:StartDialogueForCurrentStep()
     end
 
+
     if self.waitingForDialogue and not DialogueIsActive() then
         self.waitingForDialogue = false
         self.sequenceStep = self.sequenceStep + 1
@@ -140,6 +162,7 @@ function DayTutorial:on_update(dt)
             self:PlayNextStep()
         else
             print("[DayTutorial] Full sequence complete. Player control restored.")
+
         end
     end
 

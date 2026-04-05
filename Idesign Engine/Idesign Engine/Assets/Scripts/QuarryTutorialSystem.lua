@@ -95,6 +95,11 @@ function QuarryTutorial:on_update(dt)
             self:PlayNextStep()
         else
             print("[QuarryTutorial] Sequence complete. Control restored.")
+            SetCameraRot(0, 0) 
+            -- 3. (Optional) Re-sync the Player Physics body 
+            -- If the body is still facing the Gate, it might pull the camera back
+            local px, py, pz = GetPlayerPos() -- If you have this export
+            TeleportPlayer(px, py, pz, 0, 90, 0)
         end
     end
 end
