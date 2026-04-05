@@ -467,11 +467,9 @@ function DayStatsScreen.PopulateEndScreen()
     SafeSetTextAt("EndStats_Title", GetEndTitle(totalStars), COLOR_PERF,  afterGrid)
     SafeSetTextAt("EndStats_Quote", GetEndQuote(totalStars), COLOR_LABEL, afterGrid + STAGGER_DELAY)
 
-    -- ── Buttons: MainMenu first, then ViewCredits ──────────────
-    local mainMenuTime    = afterGrid + STAGGER_DELAY + FADE_DURATION
-    local viewCreditsTime = mainMenuTime + STAGGER_DELAY
-    QueueButton("EndStats_MainMenuBtn",     180, 90, mainMenuTime)
-    QueueButton("EndStats_ViewCreditsBtn",  180, 90, viewCreditsTime)
+    -- ── Continue button: appears after Quote fades in ─────────
+    local continueTime = afterGrid + STAGGER_DELAY + FADE_DURATION
+    QueueButton("EndStats_ContinueBtn", 200, 80, continueTime)
 
     print("[StatsSystem] End screen populated. Total stars: " .. totalStars .. "/" .. TOTAL_STARS)
 end

@@ -372,15 +372,8 @@
             "tableRef": -1
         },
         {
-            "guid": "1bfbce39-8b88-49d7-9bf6-30b68a18cc3e",
-            "scriptPath": "Assets\\Scripts\\GameStateWin.lua",
-            "hotReload": true,
-            "initialized": false,
-            "tableRef": -1
-        },
-        {
-            "guid": "1920f89e-4a64-495f-a449-208599b10c9a",
-            "scriptPath": "Assets\\Scripts\\GameStateLose.lua",
+            "guid": "09947353-2bee-401a-aaac-b525405c940d",
+            "scriptPath": "Assets\\Scripts\\GameStateWinOrLose.lua",
             "hotReload": true,
             "initialized": false,
             "tableRef": -1

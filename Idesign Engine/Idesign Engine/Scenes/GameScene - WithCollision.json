@@ -1090,8 +1090,8 @@
                 "TransformComponent": {
                     "position": [
                         -189.5,
-                        338.3,
-                        -103.7
+                        338.29998779296875,
+                        -103.69999694824219
                     ],
                     "rotation": [
                         0.0,
@@ -3524,13 +3524,13 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -112.0,
+                        -113.53894805908203,
                         338.9750061035156,
-                        -86.0
+                        -85.43988037109375
                     ],
                     "rotation": [
                         0.0,
-                        -38.78253936767578,
+                        -46.53473663330078,
                         0.0
                     ],
                     "scale": [
@@ -3610,9 +3610,9 @@
                 },
                 "ListenerComponent": {
                     "position": [
-                        -30.557342529296875,
-                        10.296295166015625,
-                        15.3896484375
+                        -113.53894805908203,
+                        338.9750061035156,
+                        -85.43988037109375
                     ],
                     "forward": [
                         0.0,
@@ -21413,7 +21413,7 @@
                     "animationSpeed": 1.0,
                     "bLoops": false,
                     "bPlayOnStart": true,
-                    "currentTime": 19.0
+                    "currentTime": 11.199997901916504
                 },
                 "TextureComponent": {
                     "guid": "5e18b4be-2838-4252-b74e-98674b4989b6",
@@ -21721,7 +21721,7 @@
                 },
                 "TextureComponent": {
                     "guid": "8e43fdcb-ee42-4aaf-8146-4fa6aead6136",
-                    "isUI": true
+                    "isUI": false
                 },
                 "ButtonComponent": {
                     "position": [
@@ -21772,7 +21772,7 @@
                 },
                 "TextureComponent": {
                     "guid": "cddcdcdf-d5c9-4eb7-a5b0-19f04bfcd26f",
-                    "isUI": true
+                    "isUI": false
                 }
             }
         },
@@ -21810,7 +21810,7 @@
                 },
                 "TextureComponent": {
                     "guid": "9f49c10c-189a-4f54-bb78-b6ed491661cc",
-                    "isUI": true
+                    "isUI": false
                 }
             }
         },
@@ -21856,7 +21856,7 @@
                         0.0,
                         0.0
                     ],
-                    "opacity": 1.0,
+                    "opacity": 0.0,
                     "alignment": 0,
                     "isBillboard": false,
                     "screenSpace": true
@@ -21901,7 +21901,7 @@
                         0.0,
                         0.0
                     ],
-                    "opacity": 1.0,
+                    "opacity": 0.0,
                     "alignment": 1,
                     "isBillboard": false,
                     "screenSpace": true
@@ -24695,7 +24695,7 @@
                     "animationSpeed": 1.0,
                     "bLoops": false,
                     "bPlayOnStart": true,
-                    "currentTime": 19.0
+                    "currentTime": 11.199997901916504
                 },
                 "TextureComponent": {
                     "guid": "a3cd56a0-4a91-4391-a29f-fa42645c282c",
@@ -28773,7 +28773,7 @@
                 },
                 "TextureComponent": {
                     "guid": "f6a80947-3bc0-43d5-b515-f348d6354e8e",
-                    "isUI": true
+                    "isUI": false
                 }
             }
         },
@@ -29228,8 +29228,7 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "6d0c5b20-af88-4560-b2a8-8a4424faf431",
@@ -29270,8 +29269,7 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "80d2ea57-0f84-45f1-92fc-c928ff422c82",
@@ -29312,8 +29310,7 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "a484c993-7cca-49e7-a989-d2824ae4dfb3",
@@ -29354,8 +29351,7 @@
                     ]
                 },
                 "MeshComponent": {
-                    "guid": "",
-                    "materialGuid": "119a0f36-daa3-4fea-8298-f3c08f675040"
+                    "guid": ""
                 },
                 "TextureComponent": {
                     "guid": "b4f8ec2d-040f-407d-bcac-14f8f6c70c6e",
@@ -30119,7 +30115,8 @@
                         "006dfb24-7f4f-4624-a375-4dd34e5b83da",
                         "1fca0de2-fa22-4934-be68-e6e0708bb7ce",
                         "60e47178-6c37-4755-8eb5-64666e51f791",
-                        "4a3b241a-86ee-40cf-97d1-b1c17d8d0548"
+                        "4a3b241a-86ee-40cf-97d1-b1c17d8d0548",
+                        "8591e381-b7c7-41dc-94f6-faf4f12f8719"
                     ]
                 },
                 "TagComponent": {
@@ -30129,7 +30126,7 @@
                 },
                 "TextureComponent": {
                     "guid": "62a82545-829b-49bb-854d-5733bc2e09bd",
-                    "isUI": false
+                    "isUI": true
                 }
             }
         },
@@ -30157,7 +30154,7 @@
                 },
                 "HierarchyComponent": {
                     "parent": "c32408e7-593e-4f9f-a7c2-46c48b9ce7e9",
-                    "sortIndex": 469,
+                    "sortIndex": 0,
                     "children": []
                 },
                 "TagComponent": {
@@ -30167,7 +30164,7 @@
                 },
                 "TextureComponent": {
                     "guid": "0bae8bdb-0725-4491-a7f8-68698992acd1",
-                    "isUI": false
+                    "isUI": true
                 }
             }
         },
@@ -30195,7 +30192,7 @@
                 },
                 "HierarchyComponent": {
                     "parent": "a6a71dfa-3497-4bfb-a3fa-d070b94cd7f1",
-                    "sortIndex": 470,
+                    "sortIndex": 2,
                     "children": []
                 },
                 "TagComponent": {
@@ -30204,17 +30201,17 @@
                     ]
                 },
                 "TextProperties": {
-                    "text": "Hello World",
+                    "text": "0",
                     "scale": 0.6499999761581421,
                     "color": [
-                        1.0,
-                        1.0,
-                        1.0
+                        0.25,
+                        0.12999999523162842,
+                        0.05000000074505806
                     ],
-                    "opacity": 0.0,
+                    "opacity": 1.0,
                     "alignment": 1,
                     "isBillboard": false,
-                    "screenSpace": false
+                    "screenSpace": true
                 }
             }
         },
@@ -30242,7 +30239,7 @@
                 },
                 "HierarchyComponent": {
                     "parent": "a6a71dfa-3497-4bfb-a3fa-d070b94cd7f1",
-                    "sortIndex": 471,
+                    "sortIndex": 3,
                     "children": []
                 },
                 "TagComponent": {
@@ -30251,17 +30248,17 @@
                     ]
                 },
                 "TextProperties": {
-                    "text": "Hello World",
+                    "text": "0",
                     "scale": 0.6499999761581421,
                     "color": [
-                        1.0,
-                        1.0,
-                        1.0
+                        0.25,
+                        0.12999999523162842,
+                        0.05000000074505806
                     ],
-                    "opacity": 0.0,
+                    "opacity": 1.0,
                     "alignment": 1,
                     "isBillboard": false,
-                    "screenSpace": false
+                    "screenSpace": true
                 }
             }
         },
@@ -30289,7 +30286,7 @@
                 },
                 "HierarchyComponent": {
                     "parent": "a6a71dfa-3497-4bfb-a3fa-d070b94cd7f1",
-                    "sortIndex": 472,
+                    "sortIndex": 4,
                     "children": []
                 },
                 "TagComponent": {
@@ -30298,17 +30295,17 @@
                     ]
                 },
                 "TextProperties": {
-                    "text": "Hello World",
+                    "text": "0",
                     "scale": 0.6499999761581421,
                     "color": [
-                        1.0,
-                        1.0,
-                        1.0
+                        0.25,
+                        0.12999999523162842,
+                        0.05000000074505806
                     ],
-                    "opacity": 0.0,
+                    "opacity": 1.0,
                     "alignment": 1,
                     "isBillboard": false,
-                    "screenSpace": false
+                    "screenSpace": true
                 }
             }
         },
@@ -30336,7 +30333,7 @@
                 },
                 "HierarchyComponent": {
                     "parent": "a6a71dfa-3497-4bfb-a3fa-d070b94cd7f1",
-                    "sortIndex": 473,
+                    "sortIndex": 5,
                     "children": []
                 },
                 "TagComponent": {
@@ -30345,17 +30342,17 @@
                     ]
                 },
                 "TextProperties": {
-                    "text": "Hello World",
+                    "text": "0",
                     "scale": 0.6499999761581421,
                     "color": [
-                        1.0,
-                        1.0,
-                        1.0
+                        0.25,
+                        0.12999999523162842,
+                        0.05000000074505806
                     ],
-                    "opacity": 0.0,
+                    "opacity": 1.0,
                     "alignment": 1,
                     "isBillboard": false,
-                    "screenSpace": false
+                    "screenSpace": true
                 }
             }
         },
@@ -30383,7 +30380,7 @@
                 },
                 "HierarchyComponent": {
                     "parent": "a6a71dfa-3497-4bfb-a3fa-d070b94cd7f1",
-                    "sortIndex": 474,
+                    "sortIndex": 6,
                     "children": []
                 },
                 "TagComponent": {
@@ -30392,17 +30389,17 @@
                     ]
                 },
                 "TextProperties": {
-                    "text": "Hello World",
+                    "text": "0",
                     "scale": 0.6499999761581421,
                     "color": [
-                        1.0,
-                        1.0,
-                        1.0
+                        0.25,
+                        0.12999999523162842,
+                        0.05000000074505806
                     ],
-                    "opacity": 0.0,
+                    "opacity": 1.0,
                     "alignment": 1,
                     "isBillboard": false,
-                    "screenSpace": false
+                    "screenSpace": true
                 }
             }
         },
@@ -30430,7 +30427,7 @@
                 },
                 "HierarchyComponent": {
                     "parent": "a6a71dfa-3497-4bfb-a3fa-d070b94cd7f1",
-                    "sortIndex": 475,
+                    "sortIndex": 7,
                     "children": []
                 },
                 "TagComponent": {
@@ -30439,17 +30436,17 @@
                     ]
                 },
                 "TextProperties": {
-                    "text": "Hello World",
+                    "text": "0",
                     "scale": 0.6499999761581421,
                     "color": [
-                        1.0,
-                        1.0,
-                        1.0
+                        0.25,
+                        0.12999999523162842,
+                        0.05000000074505806
                     ],
-                    "opacity": 0.0,
+                    "opacity": 1.0,
                     "alignment": 1,
                     "isBillboard": false,
-                    "screenSpace": false
+                    "screenSpace": true
                 }
             }
         },
@@ -30477,7 +30474,7 @@
                 },
                 "HierarchyComponent": {
                     "parent": "a6a71dfa-3497-4bfb-a3fa-d070b94cd7f1",
-                    "sortIndex": 476,
+                    "sortIndex": 8,
                     "children": []
                 },
                 "TagComponent": {
@@ -30486,17 +30483,17 @@
                     ]
                 },
                 "TextProperties": {
-                    "text": "Hello World",
+                    "text": "0",
                     "scale": 0.6499999761581421,
                     "color": [
-                        1.0,
-                        1.0,
-                        1.0
+                        0.25,
+                        0.12999999523162842,
+                        0.05000000074505806
                     ],
-                    "opacity": 0.0,
+                    "opacity": 1.0,
                     "alignment": 1,
                     "isBillboard": false,
-                    "screenSpace": false
+                    "screenSpace": true
                 }
             }
         },
@@ -30524,7 +30521,7 @@
                 },
                 "HierarchyComponent": {
                     "parent": "a6a71dfa-3497-4bfb-a3fa-d070b94cd7f1",
-                    "sortIndex": 477,
+                    "sortIndex": 9,
                     "children": []
                 },
                 "TagComponent": {
@@ -30533,17 +30530,17 @@
                     ]
                 },
                 "TextProperties": {
-                    "text": "Hello World",
+                    "text": "0",
                     "scale": 0.6499999761581421,
                     "color": [
-                        1.0,
-                        1.0,
-                        1.0
+                        0.25,
+                        0.12999999523162842,
+                        0.05000000074505806
                     ],
-                    "opacity": 0.0,
+                    "opacity": 1.0,
                     "alignment": 1,
                     "isBillboard": false,
-                    "screenSpace": false
+                    "screenSpace": true
                 }
             }
         },
@@ -30571,7 +30568,7 @@
                 },
                 "HierarchyComponent": {
                     "parent": "a6a71dfa-3497-4bfb-a3fa-d070b94cd7f1",
-                    "sortIndex": 478,
+                    "sortIndex": 10,
                     "children": []
                 },
                 "TagComponent": {
@@ -30580,17 +30577,17 @@
                     ]
                 },
                 "TextProperties": {
-                    "text": "Hello World",
+                    "text": "0",
                     "scale": 0.6499999761581421,
                     "color": [
-                        1.0,
-                        1.0,
-                        1.0
+                        0.25,
+                        0.12999999523162842,
+                        0.05000000074505806
                     ],
-                    "opacity": 0.0,
+                    "opacity": 1.0,
                     "alignment": 1,
                     "isBillboard": false,
-                    "screenSpace": false
+                    "screenSpace": true
                 }
             }
         },
@@ -30618,7 +30615,7 @@
                 },
                 "HierarchyComponent": {
                     "parent": "a6a71dfa-3497-4bfb-a3fa-d070b94cd7f1",
-                    "sortIndex": 479,
+                    "sortIndex": 11,
                     "children": []
                 },
                 "TagComponent": {
@@ -30627,17 +30624,17 @@
                     ]
                 },
                 "TextProperties": {
-                    "text": "Hello World",
+                    "text": "0",
                     "scale": 0.6499999761581421,
                     "color": [
-                        1.0,
-                        1.0,
-                        1.0
+                        0.25,
+                        0.12999999523162842,
+                        0.05000000074505806
                     ],
-                    "opacity": 0.0,
+                    "opacity": 1.0,
                     "alignment": 1,
                     "isBillboard": false,
-                    "screenSpace": false
+                    "screenSpace": true
                 }
             }
         },
@@ -30665,7 +30662,7 @@
                 },
                 "HierarchyComponent": {
                     "parent": "a6a71dfa-3497-4bfb-a3fa-d070b94cd7f1",
-                    "sortIndex": 480,
+                    "sortIndex": 12,
                     "children": []
                 },
                 "TagComponent": {
@@ -30674,17 +30671,17 @@
                     ]
                 },
                 "TextProperties": {
-                    "text": "Hello World",
+                    "text": "0 G",
                     "scale": 0.6499999761581421,
                     "color": [
-                        1.0,
-                        1.0,
-                        1.0
+                        0.25,
+                        0.12999999523162842,
+                        0.05000000074505806
                     ],
-                    "opacity": 0.0,
+                    "opacity": 1.0,
                     "alignment": 2,
                     "isBillboard": false,
-                    "screenSpace": false
+                    "screenSpace": true
                 }
             }
         },
@@ -30712,7 +30709,7 @@
                 },
                 "HierarchyComponent": {
                     "parent": "a6a71dfa-3497-4bfb-a3fa-d070b94cd7f1",
-                    "sortIndex": 481,
+                    "sortIndex": 13,
                     "children": []
                 },
                 "TagComponent": {
@@ -30721,17 +30718,17 @@
                     ]
                 },
                 "TextProperties": {
-                    "text": "Hello World",
+                    "text": "0",
                     "scale": 0.6499999761581421,
                     "color": [
-                        1.0,
-                        1.0,
-                        1.0
+                        0.25,
+                        0.12999999523162842,
+                        0.05000000074505806
                     ],
-                    "opacity": 0.0,
+                    "opacity": 1.0,
                     "alignment": 1,
                     "isBillboard": false,
-                    "screenSpace": false
+                    "screenSpace": true
                 }
             }
         },
@@ -30759,7 +30756,7 @@
                 },
                 "HierarchyComponent": {
                     "parent": "a6a71dfa-3497-4bfb-a3fa-d070b94cd7f1",
-                    "sortIndex": 482,
+                    "sortIndex": 14,
                     "children": []
                 },
                 "TagComponent": {
@@ -30768,17 +30765,17 @@
                     ]
                 },
                 "TextProperties": {
-                    "text": "Hello World",
+                    "text": "Novice Alchemist",
                     "scale": 0.6499999761581421,
                     "color": [
-                        1.0,
-                        1.0,
-                        1.0
+                        0.550000011920929,
+                        0.3199999928474426,
+                        0.019999999552965164
                     ],
-                    "opacity": 0.0,
+                    "opacity": 1.0,
                     "alignment": 1,
                     "isBillboard": false,
-                    "screenSpace": false
+                    "screenSpace": true
                 }
             }
         },
@@ -30806,7 +30803,7 @@
                 },
                 "HierarchyComponent": {
                     "parent": "a6a71dfa-3497-4bfb-a3fa-d070b94cd7f1",
-                    "sortIndex": 483,
+                    "sortIndex": 15,
                     "children": []
                 },
                 "TagComponent": {
@@ -30815,119 +30812,17 @@
                     ]
                 },
                 "TextProperties": {
-                    "text": "Hello World",
+                    "text": "\"The cauldron bubbled, but not always with success. There is more to learn.\"",
                     "scale": 0.5,
                     "color": [
-                        1.0,
-                        1.0,
-                        1.0
+                        0.3499999940395355,
+                        0.20000000298023224,
+                        0.07999999821186066
                     ],
-                    "opacity": 0.0,
+                    "opacity": 1.0,
                     "alignment": 1,
                     "isBillboard": false,
-                    "screenSpace": false
-                }
-            }
-        },
-        {
-            "name": "EndStats_MainMenuBtn",
-            "guid": "60e47178-6c37-4755-8eb5-64666e51f791",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        850.0,
-                        100.0,
-                        0.6000000238418579
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        180.0,
-                        90.0,
-                        1.0
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "a6a71dfa-3497-4bfb-a3fa-d070b94cd7f1",
-                    "sortIndex": 484,
-                    "children": []
-                },
-                "TagComponent": {
-                    "tags": [
-                        "endstats"
-                    ]
-                },
-                "TextureComponent": {
-                    "guid": "51dbf4a0-11f5-4636-b91a-a8fec3bc56af",
-                    "isUI": false
-                },
-                "ButtonComponent": {
-                    "position": [
-                        850.0,
-                        100.0
-                    ],
-                    "size": [
-                        180.0,
-                        90.0
-                    ],
-                    "isHovered": false,
-                    "isFrontButton": false,
-                    "hoverTextureGuid": "86de3b7d-8d49-4159-a059-dfcd2824537d"
-                }
-            }
-        },
-        {
-            "name": "EndStats_ViewCreditsBtn",
-            "guid": "4a3b241a-86ee-40cf-97d1-b1c17d8d0548",
-            "components": {
-                "TransformComponent": {
-                    "position": [
-                        1050.0,
-                        100.0,
-                        0.6000000238418579
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": [
-                        180.0,
-                        90.0,
-                        1.0
-                    ],
-                    "isActive": true
-                },
-                "HierarchyComponent": {
-                    "parent": "a6a71dfa-3497-4bfb-a3fa-d070b94cd7f1",
-                    "sortIndex": 485,
-                    "children": []
-                },
-                "TagComponent": {
-                    "tags": [
-                        "endstats"
-                    ]
-                },
-                "TextureComponent": {
-                    "guid": "a1d5ed54-2b7b-4ba4-8d98-285268203e4a",
-                    "isUI": false
-                },
-                "ButtonComponent": {
-                    "position": [
-                        1050.0,
-                        100.0
-                    ],
-                    "size": [
-                        180.0,
-                        90.0
-                    ],
-                    "isHovered": false,
-                    "isFrontButton": false,
-                    "hoverTextureGuid": "2aaf4580-53f7-46d5-b47f-4349d269b9dd"
+                    "screenSpace": true
                 }
             }
         },
@@ -46819,6 +46714,66 @@
                     "isHovered": false,
                     "isFrontButton": false,
                     "hoverTextureGuid": "1a18afb7-e9ad-4095-8d90-b23bab88d235"
+                }
+            }
+        },
+        {
+            "name": "EndStats_ContinueBtn",
+            "guid": "8591e381-b7c7-41dc-94f6-faf4f12f8719",
+            "components": {
+                "TransformComponent": {
+                    "position": [
+                        965.0,
+                        100.0,
+                        0.6000000238418579
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "scale": [
+                        200.0,
+                        80.0,
+                        1.0
+                    ],
+                    "isActive": true
+                },
+                "HierarchyComponent": {
+                    "parent": "a6a71dfa-3497-4bfb-a3fa-d070b94cd7f1",
+                    "sortIndex": 18,
+                    "children": []
+                },
+                "TagComponent": {
+                    "tags": [
+                        "endstats"
+                    ]
+                },
+                "TextureComponent": {
+                    "guid": "6554f959-c11d-4b17-be64-0671c6246f74",
+                    "isUI": true
+                },
+                "ScriptProperties": {
+                    "scripts": [
+                        {
+                            "guid": "09947353-2bee-401a-aaac-b525405c940d",
+                            "scriptPath": "Assets\\Scripts\\GameStateWinOrLose.lua",
+                            "hotReload": true
+                        }
+                    ]
+                },
+                "ButtonComponent": {
+                    "position": [
+                        965.0,
+                        100.0
+                    ],
+                    "size": [
+                        200.0,
+                        80.0
+                    ],
+                    "isHovered": false,
+                    "isFrontButton": false,
+                    "hoverTextureGuid": "c69c2270-9e38-48cf-b344-6c9fecd77362"
                 }
             }
         }
