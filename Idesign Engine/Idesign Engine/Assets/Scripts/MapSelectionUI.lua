@@ -413,7 +413,10 @@ function M:on_update(dt)
         print("[MapSelectionUI] Travel penalty applied: -" .. TRAVEL_COST .. "s")
     end
 
-    if not IsEngineState("MapSelection") then return end
+    if not IsEngineState("MapSelection") then
+        HidePlayerMapIcon()  --  hide the face when not on the map
+        return
+    end
 
     if type(dt) ~= "number" or dt <= 0 then
         dt = 0.016 
