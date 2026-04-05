@@ -24,7 +24,7 @@ function M:on_init()
         
         if success then
             UpdateCurrencyUI()  -- Update display
-            
+            -- Sound.Play("event:/SpendMoney")
             print("[ForestUnlock] Forest unlocked!")
             print("[ForestUnlock] Remaining currency: " .. GetCurrency())
             

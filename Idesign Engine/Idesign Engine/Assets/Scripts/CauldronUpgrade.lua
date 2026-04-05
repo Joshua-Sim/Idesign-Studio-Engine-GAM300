@@ -24,7 +24,7 @@ function M:on_init()
 
         if success then
             UpdateCurrencyUI()
-            Sound.Play("event:/spendMoney")
+            Sound.Play("event:/SpendMoney")
             print("[CauldronUpgrade] Cauldron unlocked!")
             print("[CauldronUpgrade] Remaining currency: " .. GetCurrency())
         else
