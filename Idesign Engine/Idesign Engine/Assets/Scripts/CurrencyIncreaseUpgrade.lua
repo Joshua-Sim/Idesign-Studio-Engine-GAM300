@@ -26,7 +26,7 @@ function M:on_init()
         
         if success then
             UpdateCurrencyUI()
-            Sound.Play("event:/spendMoney")
+            Sound.Play("event:/SpendMoney")
             
             local newLevel = GetCurrencyLevel()
             local newMultiplier = GetCurrencyMultiplier()

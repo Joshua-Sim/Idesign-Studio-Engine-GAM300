@@ -28,6 +28,7 @@ function M:on_init()
             
             if success then
                 UpdateCurrencyUI()
+                Sound.Play("event:/SpendMoney")
                 local newLevel = GetBackpackLevel()
                 local newSlots = GetBackpackSlotCount()
                 local newCost = GetBackpackUpgradeCost()
