@@ -602,7 +602,7 @@ namespace Framework
                     openingBGMStarted = true;
                     if (g_AudioSystem) {
                         g_AudioSystem->PlayAudio("event:/OpeningCutsceneBGM");
-                        //g_AudioSystem->PlayAudio("event:/OpeningCutsceneVO");
+                        
                     }
                 }
 
@@ -611,7 +611,7 @@ namespace Framework
                     level1BGMStarted = true;
                     if (g_AudioSystem) {
                         g_AudioSystem->StopEvent("event:/OpeningCutsceneBGM");
-                        //g_AudioSystem->StopEvent("event:/OpeningCutsceneVO");
+                        
                         g_AudioSystem->PlayAudio("event:/Level1BGM");
                     }
                 }
@@ -684,6 +684,15 @@ namespace Framework
                         texNext.isUI = true;
                         texNext.uiAlpha = blend;
                     }
+                }
+
+                // Always keep black screen behind everything as a backdrop
+                if (i > 0 && ecsInterface.IsEntityValid(slides[0]) &&
+                    ecsInterface.HasComponent<TextureProperties>(slides[0]))
+                {
+                    auto& texBg = ecsInterface.GetComponent<TextureProperties>(slides[0]);
+                    texBg.isUI = true;
+                    texBg.uiAlpha = 1.0f;
                 }
             }
             else
