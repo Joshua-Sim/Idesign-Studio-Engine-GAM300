@@ -375,6 +375,10 @@ function M.on_init(arg1, arg2)
     else
         print("[Cauldron] WARNING: Stirring icon entity '" .. stir_icon_name_cw .. "' not found!")
     end
+
+    if my_entity_id then
+        SubscribeToEvent("ResetWorkstations", "Cauldron_ResetStation", my_entity_id)
+    end
 end
 
 -- =============================================================
@@ -901,6 +905,15 @@ function M.ClearCauldron()
     end
     visual_entities = {}
     print("[Lua] Cauldron Cleared")
+end
+
+-- The Event Callback
+function Cauldron_ResetStation()
+    if is_active then
+        M.StopInteraction(my_entity_id)
+    end
+    M.ClearCauldron()
+    print("[Cauldron] Station Reset for new day.")
 end
 
 return M

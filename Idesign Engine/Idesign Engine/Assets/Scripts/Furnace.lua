@@ -123,6 +123,7 @@ function M.on_init(self)
     my_entity_id = self.entity
     math.randomseed(os.time())
     bellows_id = FindEntityByName("Bellows")
+    SubscribeToEvent("ResetWorkstations", "Furnace_ResetStation", my_entity_id)
 end
 
 -- ============================================================
@@ -486,6 +487,23 @@ function M.CompleteSmelting()
     end
     
     result_item_id = nil
+end
+
+-- The Event Callback
+function Furnace_ResetStation()
+    if is_active then 
+        M.StopMinigame() 
+    end
+    
+    for _, vis_id in ipairs(visual_entities) do
+        if vis_id ~= -1 and DestroyEntity then 
+            DestroyEntity(vis_id) 
+        end
+    end
+    
+    stored_ingredients = {}
+    visual_entities = {}
+    print("[Furnace] Station Reset for new day.")
 end
 
 function M.FailSmelting() M.StopMinigame() end

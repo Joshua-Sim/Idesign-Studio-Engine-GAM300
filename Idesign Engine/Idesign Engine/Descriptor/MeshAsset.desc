@@ -1,5 +1,5 @@
 {
-    "count": 128,
+    "count": 127,
     "entries": [
         {
             "guid": "9a248918-705f-4d5a-88a2-17e85868745b",
@@ -369,15 +369,6 @@
             "vbo": 75,
             "ebo": 76,
             "indexCount": 3540
-        },
-        {
-            "guid": "2c8bebcc-51e9-46b0-b99a-cbdfb73ea71e",
-            "name": "cauldronwithoutspoon",
-            "path": "Assets\\Objects\\cauldronwithoutspoon.fbx",
-            "vao": 39,
-            "vbo": 77,
-            "ebo": 78,
-            "indexCount": 157614
         },
         {
             "guid": "7b437109-ba19-43a9-8d7c-1300ebff9d21",

@@ -303,12 +303,13 @@ namespace Framework
                                 static float lastForagingVoiceTime = -15.0f;
                                 float currentTime = (float)glfwGetTime();
                                 bool canAuntMiraSpeak = (currentTime - lastForagingVoiceTime >= 15.0f);
-
-
+                                bool isDaytime = (phaseManager->GetCurrentPhase() == GamePhase::Day);
+                                
                                 if (lowerName.find("potion") != std::string::npos) {
                                     g_AudioSystem->PlayAudio("event:/PickUpPotion");
                                 }
                                 else if (lowerName.find("wool") != std::string::npos) {
+
                                     glm::vec3 pos = ecsInterface.GetComponent<TransformComponent>(entity).position;
                                     // Only play sheep sound if wool was picked up in the backyard (sheep area)
                                     if (pos.x >= -296.0f && pos.x <= -120.0f &&
@@ -316,7 +317,7 @@ namespace Framework
                                         pos.z >= 533.0f && pos.z <= 726.0f) {
                                         g_AudioSystem->PlaySound3D("event:/Sheep7", Framework::Vector3(pos.x, pos.y, pos.z));
                                         
-                                        if (canAuntMiraSpeak) {
+                                        if (canAuntMiraSpeak && isDaytime) {
                                             lastForagingVoiceTime = currentTime; // Reset global timer
 
                                             int voiceLineChoice = rand() % 3;
@@ -336,7 +337,7 @@ namespace Framework
                                     g_AudioSystem->PlayAudio("event:/PickUpOre");
 
                                     // CHECK THE TIMER
-                                    if (canAuntMiraSpeak) {
+                                    if (canAuntMiraSpeak && isDaytime) {
                                         lastForagingVoiceTime = currentTime; // Reset global timer
 
                                         int voiceLineChoice = rand() % 3;
@@ -356,7 +357,7 @@ namespace Framework
                                     g_AudioSystem->PlayAudio("event:/PickUpOre");
 
                                     // CHECK THE TIMER
-                                    if (canAuntMiraSpeak) {
+                                    if (canAuntMiraSpeak && isDaytime) {
                                         lastForagingVoiceTime = currentTime; // Reset global timer
 
                                         int voiceLineChoice = rand() % 3;
@@ -375,7 +376,7 @@ namespace Framework
                                 else if (lowerName.find("pear") != std::string::npos) {
                                     g_AudioSystem->PlayAudio("event:/PickingUpHerb");
                                     // CHECK THE TIMER
-                                    if (canAuntMiraSpeak) {
+                                    if (canAuntMiraSpeak && isDaytime) {
                                         lastForagingVoiceTime = currentTime; // Reset global timer
 
                                         int voiceLineChoice = rand() % 3;
@@ -394,7 +395,7 @@ namespace Framework
                                     g_AudioSystem->PlayAudio("event:/PickingUpHerb");
 
                                     // 2. CHECK THE TIMER
-                                    if (canAuntMiraSpeak) {
+                                    if (canAuntMiraSpeak && isDaytime) {
                                         lastForagingVoiceTime = currentTime; // Reset global timer
 
                                         int voiceLineChoice = rand() % 3;

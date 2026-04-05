@@ -1,5 +1,5 @@
 {
-    "count": 375,
+    "count": 373,
     "entries": [
         {
             "guid": "bac07b53-6dac-42d1-a254-cc9a613667eb",
@@ -1839,17 +1839,6 @@
             "vScale": 1.0
         },
         {
-            "guid": "d7806aaf-571e-432d-af75-d9e3c0703bf7",
-            "name": "Map",
-            "path": "Assets\\Textures\\Map.png",
-            "isUI": false,
-            "uiAlpha": 1.0,
-            "uOffset": 0.0,
-            "vOffset": 0.0,
-            "uScale": 1.0,
-            "vScale": 1.0
-        },
-        {
             "guid": "ce6cea11-f2f7-4440-90ce-a0724235b793",
             "name": "Forrest Button",
             "path": "Assets\\Textures\\Forrest Button.png",
@@ -1864,17 +1853,6 @@
             "guid": "3db45502-0b02-41ec-85b1-0ad1d5fbe585",
             "name": "Quarry button",
             "path": "Assets\\Textures\\Quarry button.png",
-            "isUI": false,
-            "uiAlpha": 1.0,
-            "uOffset": 0.0,
-            "vOffset": 0.0,
-            "uScale": 1.0,
-            "vScale": 1.0
-        },
-        {
-            "guid": "8a55939c-a0c8-4dae-9850-bcb0099ded3c",
-            "name": "Map_2",
-            "path": "Assets\\Textures\\Map_2.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
@@ -3764,17 +3742,6 @@
             "vScale": 1.0
         },
         {
-            "guid": "f575d233-1424-4053-afc3-bc3f98024ff9",
-            "name": "MAP_LATEST",
-            "path": "Assets\\Textures\\MAP_LATEST.png",
-            "isUI": false,
-            "uiAlpha": 1.0,
-            "uOffset": 0.0,
-            "vOffset": 0.0,
-            "uScale": 1.0,
-            "vScale": 1.0
-        },
-        {
             "guid": "a9df7f3a-c02f-45a4-8cbb-5cb9478eb782",
             "name": "CREDITS_HOV",
             "path": "Assets\\Textures\\CREDITS_HOV.png",
@@ -4119,6 +4086,17 @@
             "guid": "80d2ea57-0f84-45f1-92fc-c928ff422c82",
             "name": "CREDIT_ADVISORS",
             "path": "Assets\\Textures\\CREDIT_ADVISORS.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
+        },
+        {
+            "guid": "1c04f7ef-e9d7-41f1-9f6c-44adc8369d8a",
+            "name": "Key_LMB",
+            "path": "Assets\\Textures\\Key_LMB.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,

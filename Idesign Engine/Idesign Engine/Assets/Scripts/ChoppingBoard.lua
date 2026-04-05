@@ -67,6 +67,8 @@ local start_cam_rot = {pitch=0, yaw=0}
 local target_cam_pos = {x=0, y=0, z=0}
 local target_cam_rot = {pitch=0, yaw=0}
 
+local my_entity_id = nil
+
 -- UI State
 local spawned_ui_ids = {}
 local ui_active = false
@@ -84,6 +86,19 @@ function M:on_init()
     player_entity = FindEntityByName("Player")
     knife_entity = FindEntityByName(self.knife_name)
     math.randomseed(os.time()) 
+    
+    -- Safe ID Grabber: Use self.entity, but fallback to the string name if it's nil!
+    my_entity_id = self.entity
+    if not my_entity_id then
+        my_entity_id = FindEntityByName("Chopping Board") 
+    end
+    
+    -- Now the subscription is guaranteed to get a valid integer ID
+    if my_entity_id then
+        SubscribeToEvent("ResetWorkstations", "ChoppingBoard_ResetStation", my_entity_id)
+    else
+        print("[ChoppingBoard] ERROR: Could not find ID to subscribe!")
+    end
 end
 
 function M.OnInteract(entityID)
@@ -323,6 +338,27 @@ function M:ClearUI()
     
     SetCameraLock(false) 
     SetUIFocused(false)
+end
+
+-- Notice there is NO "M." prefix here! It is a pure global function.
+function ChoppingBoard_ResetStation()
+    -- 1. Stop minigame if active
+    if ui_active then
+        M:ClearUI() 
+    end
+    
+    -- 2. Destroy the physical herb
+    if current_herb_entity and current_herb_entity ~= -1 then
+        DestroyEntity(current_herb_entity)
+        current_herb_entity = nil
+    end
+    
+    -- 3. Safely reset the prompt using our cached ID
+    if my_entity_id and SetColliderPromptText then
+        SetColliderPromptText(my_entity_id, "Place ingredient")
+    end
+    
+    print("[ChoppingBoard] Station Reset for new day.")
 end
 
 return M

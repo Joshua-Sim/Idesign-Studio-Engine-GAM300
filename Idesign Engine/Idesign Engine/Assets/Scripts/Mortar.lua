@@ -90,13 +90,22 @@ local function StopGrinderLoop()
 end
 
 
--- --- INIT ---
 function Mortar.on_init(self)
+    -- Safe ID Grabber
     my_entity_id = self.entity
-    SetInteractionText(my_entity_id, "Requires Ingredient")
+    if not my_entity_id then
+        my_entity_id = FindEntityByName("Mortar")
+    end
+    
     math.randomseed(os.time()) 
-end
 
+    if my_entity_id then
+        SetInteractionText(my_entity_id, "Requires Ingredient")
+        SubscribeToEvent("ResetWorkstations", "Mortar_ResetStation", my_entity_id)
+    else
+        print("[Mortar] ERROR: Could not find ID to subscribe!")
+    end
+end
 -- --- UPDATE ---
 function Mortar.on_update(self, dt)
     -- 1. MANUAL CAMERA FLIGHT
@@ -420,6 +429,36 @@ function Mortar.OnInteract(senderID, targetID, actionType)
     else
         SetInteractionText(id_to_use, "Requires Ingredient")
     end
+end
+
+-- Notice there is NO "Mortar." prefix here!
+function Mortar_ResetStation()
+    -- 1. Stop minigame logic if they were halfway through spinning
+    if is_playing then 
+        Mortar.StopMinigame(my_entity_id, false) 
+    end
+    
+    -- 2. Destroy the physical ingredients sitting in the bowl
+    for _, vis_id in ipairs(visual_entities) do
+        if vis_id ~= -1 and DestroyEntity then 
+            DestroyEntity(vis_id) 
+        end
+    end
+    
+    -- 3. Hard-clear all memory and state flags
+    stored_ingredients = {}
+    visual_entities = {}
+    is_playing = false
+    is_spinning = false
+    is_finished = false
+    current_progress = 0
+    
+    -- 4. Reset the interaction text
+    if my_entity_id and SetInteractionText then
+        SetInteractionText(my_entity_id, "Requires Ingredient")
+    end
+    
+    print("[Mortar] Station Reset for new day.")
 end
 
 return Mortar

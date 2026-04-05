@@ -585,6 +585,7 @@ function M:FinishTravel(locData)
 
     FireEvent("StartPhaseTransition")
     FireEvent("RequestHerbSpawn")
+    FireEvent("ResetWorkstations")
 
     -- Start timer ONLY on first travel of the day
     if not dayTimerStarted then

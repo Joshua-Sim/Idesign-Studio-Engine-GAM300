@@ -40,7 +40,7 @@ namespace Framework {
             SetPhase(GamePhase::Night);
             break;
         case GamePhase::Night:
-            SetPhase(GamePhase::Upgrade);
+            engineState.PushState(EngineMode::DayStats);
             break;
         case GamePhase::Upgrade:
             SetPhase(GamePhase::Day);
