@@ -104,4 +104,9 @@ function M:on_init()
     end)
 end
 
+function M:on_update(dt)
+    local targetIcon = isMuted and icon_muted or icon_unmuted
+    SetTexture(self.entity, targetIcon)
+end
+
 return M

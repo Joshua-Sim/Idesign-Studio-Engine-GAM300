@@ -5269,7 +5269,7 @@
                     ]
                 },
                 "TextureComponent": {
-                    "guid": "d3a095a2-cf00-4087-afcd-e20ed3c7e9e9",
+                    "guid": "fd9b552e-2c89-4b09-8568-f1a3db6d13ea",
                     "isUI": false
                 },
                 "ScriptProperties": {
@@ -5292,7 +5292,7 @@
                     ],
                     "isHovered": false,
                     "isFrontButton": false,
-                    "hoverTextureGuid": ""
+                    "hoverTextureGuid": "d3a095a2-cf00-4087-afcd-e20ed3c7e9e9"
                 }
             }
         },

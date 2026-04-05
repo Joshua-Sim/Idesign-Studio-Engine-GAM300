@@ -120,4 +120,11 @@ function M:on_init()
     end)
 end
 
+function M:on_update(dt)
+    local targetIcon = isMuted and icon_muted or icon_unmuted
+    -- This ensures that even if a hover system tries to reset the texture, 
+    -- your script sets it back to the correct state every frame.
+    SetTexture(self.entity, targetIcon)
+end
+
 return M
