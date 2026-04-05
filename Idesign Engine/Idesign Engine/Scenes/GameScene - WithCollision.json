@@ -843,7 +843,7 @@
                     ],
                     "innerCutOffAngle": 0.21816615760326385,
                     "outerCutOffAngle": 0.35899999737739563,
-                    "castsShadow": true,
+                    "castsShadow": false,
                     "shadowBiasConst": 0.44999998807907104,
                     "shadowBiasFactor": 1.0,
                     "shadowFarPlane": 30.0,
@@ -917,7 +917,7 @@
                     "position": [
                         -44.39500045776367,
                         10.071000099182129,
-                        19.979999542236328
+                        19.238
                     ],
                     "rotation": [
                         0.0,
@@ -3524,9 +3524,9 @@
             "components": {
                 "TransformComponent": {
                     "position": [
-                        -113.53894805908203,
-                        338.9750061035156,
-                        -85.43988037109375
+                        -15.71399974822998,
+                        7.638000011444092,
+                        5.645999908447266
                     ],
                     "rotation": [
                         0.0,
