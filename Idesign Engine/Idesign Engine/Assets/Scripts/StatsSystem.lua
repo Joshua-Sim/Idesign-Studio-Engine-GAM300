@@ -281,10 +281,12 @@ local ROW_STAR_Z         = 1.0
 -- Builds the position list for a single row's stars.
 local function BuildRowStarPositions(rowIndex, starCount)
     local positions = {}
+    local y = ROW_STAR_START_Y + (rowIndex - 1) * ROW_STAR_SPACING_Y
+    if rowIndex == 5 then y = 591 end   -- explicit override: row 5 margin differs
     for s = 1, starCount do
         table.insert(positions, {
             x = ROW_STAR_START_X + (s - 1) * ROW_STAR_SPACING_X,
-            y = ROW_STAR_START_Y + (rowIndex - 1) * ROW_STAR_SPACING_Y,
+            y = y,
             z = ROW_STAR_Z,
         })
     end
