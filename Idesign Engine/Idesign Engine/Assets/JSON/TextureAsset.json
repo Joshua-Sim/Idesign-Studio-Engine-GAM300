@@ -1003,12 +1003,6 @@
             "isUI": false
         },
         {
-            "guid": "d7806aaf-571e-432d-af75-d9e3c0703bf7",
-            "name": "Map",
-            "path": "Assets\\Textures\\Map.png",
-            "isUI": false
-        },
-        {
             "guid": "ce6cea11-f2f7-4440-90ce-a0724235b793",
             "name": "Forrest Button",
             "path": "Assets\\Textures\\Forrest Button.png",
@@ -1018,12 +1012,6 @@
             "guid": "3db45502-0b02-41ec-85b1-0ad1d5fbe585",
             "name": "Quarry button",
             "path": "Assets\\Textures\\Quarry button.png",
-            "isUI": false
-        },
-        {
-            "guid": "8a55939c-a0c8-4dae-9850-bcb0099ded3c",
-            "name": "Map_2",
-            "path": "Assets\\Textures\\Map_2.png",
             "isUI": false
         },
         {
@@ -2370,17 +2358,6 @@
             "guid": "20129c5a-c540-4fc9-8e42-ba304d940303",
             "name": "In-Game UI",
             "path": "Assets\\Textures\\In-Game UI.png",
-            "isUI": false,
-            "uiAlpha": 1.0,
-            "uOffset": 0.0,
-            "vOffset": 0.0,
-            "uScale": 1.0,
-            "vScale": 1.0
-        },
-        {
-            "guid": "f575d233-1424-4053-afc3-bc3f98024ff9",
-            "name": "MAP_LATEST",
-            "path": "Assets\\Textures\\MAP_LATEST.png",
             "isUI": false,
             "uiAlpha": 1.0,
             "uOffset": 0.0,
