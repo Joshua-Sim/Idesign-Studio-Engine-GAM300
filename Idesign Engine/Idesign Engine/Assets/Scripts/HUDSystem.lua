@@ -257,11 +257,29 @@ function HUDSystem:SetArrivingMode(slot, is_arriving)
 end
 
 -- =========================================================
+-- HELPER FUNCTION TO CONVERT THE NAMES OF ORDERS IN THE HUD
+-- =========================================================
+local function FormatDisplayName(codeName)
+    if not codeName then return "" end
+    -- 1. Replace underscores with spaces
+    local name = codeName:gsub("_", " ")
+    -- 2. Capitalize the first letter of each word
+    return (name:gsub("(%a)([%w]*)", function(first, rest)
+        return first:upper() .. rest:lower()
+    end))
+end
+
+-- =========================================================
 -- SET ORDER TEXT
 -- =========================================================
 function HUDSystem:SetOrderText(slot, order)
     if not orderTexts[slot] then return end
-    ShowText(orderTexts[slot], order)
+    
+    -- Fetch the friendly display name, matching the logic in Customer.lua
+    local displayName = GetItemDisplayName(order) or order
+    
+    -- Show the formatted name on the HUD panel
+    ShowText(orderTexts[slot], displayName)
 end
 
 -- =========================================================
