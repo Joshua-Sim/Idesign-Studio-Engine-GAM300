@@ -209,9 +209,29 @@ namespace Framework
 
                     auto& btn = ecsInterface.GetComponent<ButtonComponent>(e);
 
-                    if (ecsInterface.EntityHasTag(e, "cauldron"))    cauldronHovered = btn.isHovered;
-                    if (ecsInterface.EntityHasTag(e, "gold"))        goldHovered = btn.isHovered;
-                    if (ecsInterface.EntityHasTag(e, "inventory"))   inventoryHovered = btn.isHovered;
+                    // If ANY cauldron entity (base, pass, or fail) is hovered, the cauldron is hovered.
+                    if (ecsInterface.EntityHasTag(e, "cauldron") ||
+                        ecsInterface.EntityHasTag(e, "cauldronpass") ||
+                        ecsInterface.EntityHasTag(e, "cauldronfail"))
+                    {
+                        if (btn.isHovered) cauldronHovered = true;
+                    }
+
+                    // Do the same for gold
+                    if (ecsInterface.EntityHasTag(e, "gold") ||
+                        ecsInterface.EntityHasTag(e, "goldpass") ||
+                        ecsInterface.EntityHasTag(e, "goldfail"))
+                    {
+                        if (btn.isHovered) goldHovered = true;
+                    }
+
+                    // Do the same for inventory
+                    if (ecsInterface.EntityHasTag(e, "inventory") ||
+                        ecsInterface.EntityHasTag(e, "inventorypass") ||
+                        ecsInterface.EntityHasTag(e, "inventoryfail"))
+                    {
+                        if (btn.isHovered) inventoryHovered = true;
+                    }
                 }
 
                 // ------------------------------------------------------------

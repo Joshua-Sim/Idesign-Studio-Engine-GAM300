@@ -12,8 +12,9 @@ function M:on_init()
         
         -- Call the C++ function to reset state to Menu
         GameStateBackToMenu()
-        
+        SetData("ResetMapIconNextOpen", 1)
         print("[GameStateBackToMenu] Returned to main menu")
+        SetCurrency(0)
         
         -- Optional: Reset any game state variables
         -- For example, if you want to reset currency on returning to menu:
