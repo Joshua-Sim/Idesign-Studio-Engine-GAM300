@@ -128,6 +128,9 @@ namespace Framework {
         bool TryAddItem_BackpackFirst(int itemId, GLuint iconTex, int count);
         bool IsInventoryFull() const;
 
+        // Resets all items and upgrade levels to defaults
+        void ClearAll();  
+
     private:
         Inventory() = default;
 

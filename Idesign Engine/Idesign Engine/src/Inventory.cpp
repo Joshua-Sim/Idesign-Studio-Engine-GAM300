@@ -407,4 +407,21 @@ namespace Framework {
 
         return craftable;
     }
+
+    // =========================================================
+    // CLEAR ALL
+    // =========================================================
+
+    void Inventory::ClearAll()
+    {
+        for (auto& slot : m_hotbar)  slot = { -1, 0, 0 };
+        for (auto& slot : mBackpack) slot = { -1, 0, 0 };
+        m_selectedIndex = 0;
+        mHotbarLevel = 1;
+        mBackpackLevel = 0;
+        mBackpackOpen = false;
+        CancelDrag();
+        std::cout << "[Inventory] ClearAll: items and levels reset to defaults.\n";
+    }
+
 } // namespace Framework

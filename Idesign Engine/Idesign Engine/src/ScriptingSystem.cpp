@@ -2618,6 +2618,12 @@ namespace Framework {
 		lua_register(L, "GetItemDisplayName", lua_GetItemDisplayNameById);
         lua_register(L, "IsInventoryFull", Lua_IsInventoryFull);
 
+        lua_register(L, "ResetProgressOnMenuReturn", [](lua_State* L) -> int {
+            UpgradeManager::Instance().ResetAll();
+            std::cout << "[ScriptingSystem] ResetProgressOnMenuReturn called.\n";
+            return 0;
+            });
+
         // Engine utility
         lua_register(L, "FindEntityByName", lua_FindEntityByName);
         lua_register(L, "GetEntitiesByTag", lua_GetEntitiesByTag);
