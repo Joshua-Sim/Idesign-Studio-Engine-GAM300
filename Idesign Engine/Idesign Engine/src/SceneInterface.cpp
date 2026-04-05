@@ -23,7 +23,7 @@ namespace Framework
     static bool IntroFinished = false; 
 
     // static const float sceneDuration = 5.5f;  // REMOVE THIS
-    static const float openingSlideDurations[] = { 1.2f, 5.5f, 5.5f, 5.5, 5.0f, 7.0f, 5.5f, 5.5f, 5.5f, 5.5f };  // per-slide, index 0 = black screen
+    static const float openingSlideDurations[] = { 1.2f, 5.5f, 5.5f, 3.0f, 5.0f, 7.0f, 4.0f, 8.1f, 5.5f, 5.5f };  // per-slide, index 0 = black screen
     static const float openingSlideFades[] = { 0.25f, 0.25f, 0.25f, 0.25f, 0.25f, 0.25f, 0.25f, 0.25f, 0.25f, 0.25f };  // per-slide fade
     static const int   openingSlideCount = sizeof(openingSlideDurations) / sizeof(openingSlideDurations[0]);
     static const int   kExpectedScenes = 10;
@@ -548,14 +548,14 @@ namespace Framework
                     std::string voEvent;
                     float voDelay = 0.0f;
                     switch (i) {
-                    case 1: voEvent = "";                  voDelay = 0.0f; break;
-                    case 2: voEvent = "event:/OpeningVO1"; voDelay = 0.0f; break;
-                    case 3: voEvent = "event:/OpeningVO2"; voDelay = 0.0f; break;
-                    case 4: voEvent = "event:/OpeningVO3"; voDelay = 0.0f; break;  // no VO
-                    case 5: voEvent = "event:/OpeningVO4"; voDelay = 0.0f; break;
-                    case 6: voEvent = "event:/OpeningVO5"; voDelay = 0.0f; break;
-                    case 7: voEvent = "CONTINUE";          voDelay = 2.0f; break;
-                    case 8: voEvent = "event:/OpeningVO6"; voDelay = 2.0f; break;
+                    case 1: voEvent = "";                        voDelay = 0.0f; break;
+                    case 2: voEvent = "event:/OpeningVO1";       voDelay = 0.0f; break;
+                    case 3: voEvent = "event:/OpeningVO2";       voDelay = 0.0f; break;
+                    case 4: voEvent = "event:/OpeningVO3";       voDelay = 0.0f; break;  // no VO
+                    case 5: voEvent = "event:/OpeningVO4";       voDelay = 0.0f; break;
+                    case 6: voEvent = "event:/OpeningVO5_Part1"; voDelay = 0.0f; break;
+                    case 7: voEvent = "event:/OpeningVO5_Part2"; voDelay = 0.0f; break;
+                    case 8: voEvent = "event:/OpeningVO6";       voDelay = 0.0f; break;
                     default: voEvent = ""; break;
                     }
 
