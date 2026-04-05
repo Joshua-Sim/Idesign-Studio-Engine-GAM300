@@ -55,6 +55,9 @@ namespace Framework
         bool IsCurrencyMaxLevel() const;
         bool IsBackpackMaxLevel() const;
 
+        // Resets all upgrade state to defaults
+        void ResetAll();
+
         // Max level constants
         static constexpr int MAX_HOTBAR_LEVEL = 1;      // Level 1 = 6 slots (max for hotbar)
         static constexpr int MAX_BACKPACK_LEVEL = 3;    // Level 3 = 3 rows

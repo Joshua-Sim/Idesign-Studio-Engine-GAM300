@@ -16,11 +16,11 @@ function M:on_init()
         print("[GameStateBackToMenu] Returned to main menu")
         SetCurrency(0)
         
-        -- Optional: Reset any game state variables
-        -- For example, if you want to reset currency on returning to menu:
-        -- SetCurrency(0)
-        
-        -- Optional: Set UI focused for menu interaction
+        -- Reset any game state variables
+        ResetProgressOnMenuReturn()                             
+        print("[GameStateBackToMenu] Inventory and upgrades reset") 
+
+        -- Set UI focused for menu interaction
         SetUIFocused(true)
     end)
 end

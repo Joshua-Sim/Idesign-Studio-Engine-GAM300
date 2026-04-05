@@ -1823,6 +1823,7 @@ namespace Framework
     void SceneInterface::AdvanceToNextDay()
     {
         ++g_CurrentDay;
+        Inventory::Instance().ClearAll();
     }
 
     void SceneInterface::PushDayTransitionStateForCurrentDay()

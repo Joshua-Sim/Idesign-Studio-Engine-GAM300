@@ -315,4 +315,28 @@ namespace Framework
         auto& inv = Inventory::Instance();
         return inv.GetBackpackLevel() >= MAX_BACKPACK_LEVEL;
     }
+
+    // =========================================================
+    // RESET ALL
+    // =========================================================
+    void UpgradeManager::ResetAll()
+    {
+        m_currencyMultiplier = 1.0f;
+        m_currencyLevel = 1;
+        m_cauldronUnlocked = false;
+
+        // Reset GameSystem data keys so Initialize() loads clean state next run
+        GameSystem::SetData("currencyMultiplier", 100); // 100 = 1.0x
+        GameSystem::SetData("currencyLevel", 1);
+        GameSystem::SetData("cauldron_unlocked", 0);
+
+        // Forest stays unlocked (default start state)
+        m_unlockedAreas[GameArea::Forest] = true;
+        GameSystem::SetData("area_1", 1);
+
+        // Reset inventory items + levels
+        Inventory::Instance().ClearAll();
+
+        std::cout << "[UpgradeManager] ResetAll: all upgrades reset to defaults.\n";
+    }
 }
