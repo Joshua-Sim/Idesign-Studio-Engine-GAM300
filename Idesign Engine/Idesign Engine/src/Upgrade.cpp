@@ -334,7 +334,10 @@ namespace Framework
         m_unlockedAreas[GameArea::Forest] = true;
         GameSystem::SetData("area_1", 1);
 
-        // Reset inventory items + levels
+        Inventory::Instance().ResetBackpackLevel(); // locked
+        //Inventory::Instance().SetHotbarLevel(1);
+
+        // Reset inventory items
         Inventory::Instance().ClearAll();
 
         std::cout << "[UpgradeManager] ResetAll: all upgrades reset to defaults.\n";

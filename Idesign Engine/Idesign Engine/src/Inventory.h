@@ -131,6 +131,8 @@ namespace Framework {
         // Resets all items and upgrade levels to defaults
         void ClearAll();  
 
+        void ResetBackpackLevel() { mBackpackLevel = 0; }
+
     private:
         Inventory() = default;
 
