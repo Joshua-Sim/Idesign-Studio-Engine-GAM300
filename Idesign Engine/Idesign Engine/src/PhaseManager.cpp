@@ -37,10 +37,7 @@ namespace Framework
             SetPhase(GamePhase::Night);
             break;
         case GamePhase::Night:
-            if (SceneInterface::GetCurrentDay() >= 5)
-                engineState.PushState(EngineMode::EndStats);
-            else
-                engineState.PushState(EngineMode::DayStats);
+            SetPhase(GamePhase::Upgrade);
             break;
         case GamePhase::Upgrade:
             SetPhase(GamePhase::Day);
