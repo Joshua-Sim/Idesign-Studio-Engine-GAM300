@@ -1,5 +1,5 @@
 {
-    "count": 7,
+    "count": 6,
     "entries": [
         {
             "guid": "e4d836ef-c0bc-46bb-914c-c1e05246eb81",
@@ -38,17 +38,6 @@
             "guid": "37152dff-3566-4f91-a676-a7d7ad4d7813",
             "name": "furance_fire",
             "path": "Assets\\Objects\\furance_fire.fbx",
-            "defaultAnimationName": "",
-            "animationSpeed": 1.0,
-            "bLoops": true,
-            "bPlayOnStart": true,
-            "currentTime": 0.0,
-            "vbo_skinning": 0
-        },
-        {
-            "guid": "644b6937-9091-45a9-882a-e90c0ea0793e",
-            "name": "cauldronwithoutspoon)",
-            "path": "Assets\\Objects\\cauldronwithoutspoon).fbx",
             "defaultAnimationName": "",
             "animationSpeed": 1.0,
             "bLoops": true,

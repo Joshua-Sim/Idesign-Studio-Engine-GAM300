@@ -1,5 +1,5 @@
 {
-    "animations": [
+    "animation": [
         {
             "guid": "e4d836ef-c0bc-46bb-914c-c1e05246eb81",
             "name": "knifechoppingwithBONEFIXED4",
@@ -59,17 +59,6 @@
             "guid": "9d229382-b04c-4fc1-8a98-b9e938aa51ae",
             "name": "FISHFINALWITHFEEDBACK",
             "path": "Assets\\Objects\\FISHFINALWITHFEEDBACK.fbx",
-            "defaultAnimationName": "",
-            "animationSpeed": 1.0,
-            "bLoops": true,
-            "bPlayOnStart": true,
-            "currentTime": 0.0,
-            "vbo_skinning": 0
-        },
-        {
-            "guid": "9c08627d-0432-445e-a983-22e3c23a7c2d",
-            "name": "cauldronwithoutspoon",
-            "path": "Assets\\Objects\\cauldronwithoutspoon.fbx",
             "defaultAnimationName": "",
             "animationSpeed": 1.0,
             "bLoops": true,
