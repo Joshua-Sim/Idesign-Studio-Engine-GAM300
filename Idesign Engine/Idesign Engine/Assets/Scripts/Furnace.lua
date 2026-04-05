@@ -64,7 +64,7 @@ local START_PROGRESS     = 0.15
 
 -- SPAWN OFFSET LOGIC:
 local SPAWN_Y_OFFSET     = 0.5 
-local SPAWN_FORWARD_DIST = 3.0 
+local SPAWN_FORWARD_DIST = 1.5
 
 -- ============================================================
 -- [STATE]
