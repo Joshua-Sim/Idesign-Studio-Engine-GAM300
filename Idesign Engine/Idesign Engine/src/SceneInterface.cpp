@@ -22,8 +22,10 @@ namespace Framework
     static bool cutsceneFinished = false;
     static bool IntroFinished = false; 
 
-    static const float sceneDuration = 5.5f;   // each scene lasts x second(s) total
-    static const float crossfadeDuration = 0.25f;  // fast seamless fade (tweak 0.12 ~ 0.25)
+    // static const float sceneDuration = 5.5f;  // REMOVE THIS
+    static const float openingSlideDurations[] = { 1.2f, 5.5f, 5.5f, 4.0f, 5.0f, 7.0f, 5.5f, 5.5f, 5.5f, 5.5f };  // per-slide, index 0 = black screen
+    static const float openingSlideFades[] = { 0.25f, 0.25f, 0.25f, 0.25f, 0.25f, 0.25f, 0.25f, 0.25f, 0.25f, 0.25f };  // per-slide fade
+    static const int   openingSlideCount = sizeof(openingSlideDurations) / sizeof(openingSlideDurations[0]);
     static const int   kExpectedScenes = 10;
 
     static float cutsceneStartTime = -1.0f;
@@ -94,6 +96,12 @@ namespace Framework
 	static bool level1BGMStarted = false;
     static bool loseBGMStarted = false;
     static bool  winBGMStarted = false;
+
+    static int lastOpeningVOSlide = -1;
+    static float openingVODelayTimer = 0.0f;
+    static bool  openingVOWaiting = false;
+    static std::string pendingOpeningVO;
+    static std::string currentOpeningVO;
 
     void SceneInterface::Initialize() {}
 
@@ -457,7 +465,7 @@ namespace Framework
 
                         if (g_AudioSystem) {
                             g_AudioSystem->StopEvent("event:/OpeningCutsceneBGM");
-                            g_AudioSystem->StopEvent("event:/OpeningCutsceneVO");
+                            //g_AudioSystem->StopEvent("event:/OpeningCutsceneVO");
                             g_AudioSystem->PlayAudio("event:/Level1BGM");
                         }
 
@@ -474,10 +482,15 @@ namespace Framework
 
                 if (cutsceneStartTime < 0.0f)
                 {
-                    cutsceneStartTime = (float)glfwGetTime() - (sceneDuration - blackScreenDuration);
+                    cutsceneStartTime = (float)glfwGetTime(); 
                     cutsceneFinished = false;
                     openingBGMStarted = false;
                     level1BGMStarted = false;
+                    lastOpeningVOSlide = -1;
+                    openingVODelayTimer = 0.0f;
+                    openingVOWaiting = false;
+                    pendingOpeningVO.clear();
+                    currentOpeningVO.clear();
 
                     // Only STOP BGMs here - new BGM starts when first slide appears
                     if (g_AudioSystem) {
@@ -509,15 +522,87 @@ namespace Framework
                 float now = (float)glfwGetTime();
                 float t = now - cutsceneStartTime;
 
-                // Which scene are we in?
-                int i = (int)glm::floor(t / sceneDuration);
+                // Find which slide we're on using cumulative durations
+                int i = 0;
+                float accumulated = 0.0f;
+                int animatedCount = sceneCount;  // total slides including black screen
+                for (int s = 0; s < animatedCount && s < openingSlideCount; ++s)
+                {
+                    if (t < accumulated + openingSlideDurations[s])
+                        break;
+                    accumulated += openingSlideDurations[s];
+                    i = s + 1;
+                }
+
+                // Per-slide voice over for opening cutscene
+                if (i != lastOpeningVOSlide && i >= 1) {
+                    lastOpeningVOSlide = i;
+
+                    // Stop previous VO
+                    if (g_AudioSystem && !currentOpeningVO.empty()) {
+                        g_AudioSystem->StopEvent(currentOpeningVO);
+                        currentOpeningVO.clear();
+                    }
+
+                    // Map slide -> VO event and delay (in seconds)
+                    std::string voEvent;
+                    float voDelay = 0.0f;
+                    switch (i) {
+                    case 1: voEvent = "";                  voDelay = 0.0f; break;
+                    case 2: voEvent = "event:/OpeningVO1"; voDelay = 0.0f; break;
+                    case 3: voEvent = "event:/OpeningVO2"; voDelay = 0.0f; break;
+                    case 4: voEvent = "event:/OpeningVO3"; voDelay = 0.0f; break;  // no VO
+                    case 5: voEvent = "event:/OpeningVO4"; voDelay = 2.0f; break;
+                    case 6: voEvent = "event:/OpeningVO5"; voDelay = 0.0f; break;
+                    case 7: voEvent = "CONTINUE";          voDelay = 2.0f; break;
+                    case 8: voEvent = "event:/OpeningVO6"; voDelay = 2.0f; break;
+                    default: voEvent = ""; break;
+                    }
+
+                    // "CONTINUE" means don't touch audio at all
+                    if (voEvent == "CONTINUE") {
+                        // Do nothing - let previous VO keep playing
+                    }
+                    else {
+                        if (!voEvent.empty() && voDelay > 0.0f) {
+                            // Queue it for delayed playback
+                            pendingOpeningVO = voEvent;
+                            openingVODelayTimer = voDelay;
+                            openingVOWaiting = true;
+                        }
+                        else if (!voEvent.empty()) {
+                            // Play immediately
+                            if (g_AudioSystem) {
+                                g_AudioSystem->PlayAudio(voEvent);
+                                currentOpeningVO = voEvent;
+                            }
+                            openingVOWaiting = false;
+                        }
+                        else {
+                            openingVOWaiting = false;
+                        }
+                    }
+                }
+
+                // Handle delayed VO playback using scene-local time
+                if (openingVOWaiting) {
+                    float sceneT = t - accumulated;
+                    if (sceneT >= openingVODelayTimer) {
+                        openingVOWaiting = false;
+                        if (g_AudioSystem && !pendingOpeningVO.empty()) {
+                            g_AudioSystem->PlayAudio(pendingOpeningVO);
+                            currentOpeningVO = pendingOpeningVO;
+                            pendingOpeningVO.clear();
+                        }
+                    }
+                }
 
                 // Start cutscene BGM when first actual slide appears
                 if (i >= 1 && !openingBGMStarted) {
                     openingBGMStarted = true;
                     if (g_AudioSystem) {
                         g_AudioSystem->PlayAudio("event:/OpeningCutsceneBGM");
-                        g_AudioSystem->PlayAudio("event:/OpeningCutsceneVO");
+                        //g_AudioSystem->PlayAudio("event:/OpeningCutsceneVO");
                     }
                 }
 
@@ -526,7 +611,7 @@ namespace Framework
                     level1BGMStarted = true;
                     if (g_AudioSystem) {
                         g_AudioSystem->StopEvent("event:/OpeningCutsceneBGM");
-                        g_AudioSystem->StopEvent("event:/OpeningCutsceneVO");
+                        //g_AudioSystem->StopEvent("event:/OpeningCutsceneVO");
                         g_AudioSystem->PlayAudio("event:/Level1BGM");
                     }
                 }
@@ -556,12 +641,15 @@ namespace Framework
                     return;
                 }
 
-                float sceneT = t - (float)i * sceneDuration;
-                float fadeStart = sceneDuration - crossfadeDuration;
+                int currentSlideIndex = glm::min(i, openingSlideCount - 1);
+                float currentDuration = openingSlideDurations[currentSlideIndex];
+                float currentFade = openingSlideFades[currentSlideIndex];
+                float sceneT = t - accumulated;
+                float fadeStart = currentDuration - currentFade;
 
                 float blend = 0.0f;
                 if (sceneT >= fadeStart)
-                    blend = Saturate((sceneT - fadeStart) / crossfadeDuration);
+                    blend = Saturate((sceneT - fadeStart) / currentFade);
 
                 // Clear all alphas first
                 for (int s = 0; s < sceneCount; ++s)
@@ -607,6 +695,11 @@ namespace Framework
                 cutsceneSkipStartTime = 0.0f;
                 openingBGMStarted = false;
                 level1BGMStarted = false;
+                lastOpeningVOSlide = -1;
+                openingVODelayTimer = 0.0f;
+                openingVOWaiting = false;
+                pendingOpeningVO.clear();
+                currentOpeningVO.clear();
             }
 
             // 8. DIGIPEN LOGO INTRO + GROUP LOGO INTRO
