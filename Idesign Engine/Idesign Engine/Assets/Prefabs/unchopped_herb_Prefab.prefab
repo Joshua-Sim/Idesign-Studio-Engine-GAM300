@@ -20,11 +20,6 @@
                     1.0
                 ]
             },
-            "TagComponent": {
-                "tags": [
-                    "Interactable"
-                ]
-            },
             "HierarchyComponent": {
                 "parent": "",
                 "children": [],

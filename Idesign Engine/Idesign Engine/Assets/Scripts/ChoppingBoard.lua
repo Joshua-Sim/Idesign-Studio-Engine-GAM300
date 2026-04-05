@@ -94,7 +94,7 @@ function M.OnInteract(entityID)
         M:StartChoppingSession(itemName)
         ConsumeSelectedItem()
         Sound.Play("event:/PlaceDownItem")
-        SetColliderPromptText(entityID, "Chop!")
+        SetColliderPromptText(entityID, "Pick up a knife and chop!")
     end
 end
 

@@ -110,7 +110,11 @@ namespace Framework {
         if (IsKeyPressed(GLFW_KEY_ESCAPE))
         {
             g_AudioSystem->PlayAudio("event:/ButtonClick");
-
+            if (GameSystem::bookOpen) { 
+                GameSystem::bookOpen = !GameSystem::bookOpen;
+                isUIFocused = !isUIFocused;
+            }
+            recipeBookManager->ClearBook();
             // Check if we are ALREADY paused to resume
             if (engineState.Is(EngineMode::Paused))
             {

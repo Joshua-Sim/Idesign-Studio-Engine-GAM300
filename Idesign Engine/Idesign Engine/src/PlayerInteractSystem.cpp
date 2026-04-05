@@ -208,8 +208,26 @@ namespace Framework
         {
             auto& iconTrans = ecsInterface.GetComponent<TransformComponent>(mPromptIconEntity);
 
+            // Grab the actual texture component so we can modify it
+            auto& iconTex = ecsInterface.GetComponent<TextureProperties>(mPromptIconEntity);
+
             if (foundInteractable) {
                 iconTrans.scale = glm::vec3(50.0f); // SHOW (Restore size)
+
+                // --- [NEW] TEXTURE SWAP LOGIC ---
+                std::string desiredTexture = "Assets/Textures/Key_E.png";
+
+                // Check if the raycast text indicates a chopping board interaction
+                if (textToShow == "Pick up a knife and chop!")
+                {
+                    desiredTexture = "Assets/Textures/Key_LMB.png";
+                }
+
+                // Only reload the OpenGL texture if the string has actually changed
+                if (iconTex.path != desiredTexture) {
+                    iconTex.path = desiredTexture;
+                    TextureLoader::loadTexture(iconTex, true);
+                }
             }
             else {
                 iconTrans.scale = glm::vec3(0.0f);  // HIDE (Scale to zero)
@@ -534,8 +552,8 @@ namespace Framework
 
 
         // =========================================================
-    // 1. CREATE ICON
-    // =========================================================
+        // 1. CREATE ICON
+        // =========================================================
         mPromptIconEntity = ecsInterface.GetEntityByName("InteractionIcon");
         if (!ecsInterface.IsEntityValid(mPromptIconEntity))
         {
@@ -547,10 +565,11 @@ namespace Framework
             transform.scale = glm::vec3(50.0f, 50.0f, 1.0f);
 
             ecsInterface.AddComponent(mPromptIconEntity, transform);
-
+            std::string desiredTexture = "Assets/Textures/Key_E.png";
             // TEXTURE
             TextureProperties texComp;
-            texComp.path = "Assets/Textures/Key_E.png";
+
+            texComp.path = desiredTexture;
             texComp.isUI = true;
             TextureLoader::loadTexture(texComp, true);
 

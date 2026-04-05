@@ -2716,6 +2716,17 @@
             "vOffset": 0.0,
             "uScale": 1.0,
             "vScale": 1.0
+        },
+        {
+            "guid": "1c04f7ef-e9d7-41f1-9f6c-44adc8369d8a",
+            "name": "Key_LMB",
+            "path": "Assets\\Textures\\Key_LMB.png",
+            "isUI": false,
+            "uiAlpha": 1.0,
+            "uOffset": 0.0,
+            "vOffset": 0.0,
+            "uScale": 1.0,
+            "vScale": 1.0
         }
     ]
 }
