@@ -121,7 +121,7 @@ namespace Framework
 
             // 2. Build the strings ONLY ONCE on the very first call
             if (!initialized) {
-                for (int i = 0; i < 8; ++i) { // 8 is your hardcoded max
+                for (int i = 0; i < 16; ++i) { // 8 is your hardcoded max
                     std::string pBase = "uPointLights[" + std::to_string(i) + "]";
                     p_pos.push_back(pBase + ".position");
                     p_col.push_back(pBase + ".color");
@@ -156,7 +156,7 @@ namespace Framework
             int activePoints = 0;
             for (int i = 0; i < (int)pointLights.size(); ++i) {
                 if (!pointLights[i].enabled) continue;
-                if (activePoints >= 8) break;
+                if (activePoints >= 16) break;
 
                 // 3. Use the cached strings via .c_str() (Zero allocations!)
                 shader.setVec3(p_pos[activePoints].c_str(), pointLights[i].position);
@@ -176,7 +176,7 @@ namespace Framework
             int activeSpots = 0;
             for (int i = 0; i < (int)spotLights.size(); ++i) {
                 if (!spotLights[i].enabled) continue;
-                if (activeSpots >= 8) break;
+                if (activeSpots >= 16) break;
 
                 // 4. Use the cached strings here as well
                 shader.setVec3(s_pos[activeSpots].c_str(), spotLights[i].position);
