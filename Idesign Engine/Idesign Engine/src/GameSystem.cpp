@@ -13,6 +13,7 @@
 #include <rapidjson/istreamwrapper.h>   
 #include "ItemComponent.h"
 #include "Upgrade.h"
+#include <SceneInterface.h>
 
 extern Framework::Coordinator ecsInterface;
 Framework::RecipeBookManager* recipeBookManager = nullptr;
@@ -211,7 +212,7 @@ namespace Framework
     void GameSystem::SaveDayStats(float timeRemaining)
     {
         DayStats day;
-        day.dayIndex = (int)s_dayHistory.size() + 1;
+        day.dayIndex = sceneInterface.GetCurrentDay();
         day.goldFromCustomers = GetData("dayGoldFromCustomers");
         day.timeRemainingX100 = static_cast<int>(timeRemaining * 100.0f);
         day.timeBonusGold = static_cast<int>(timeRemaining * TIME_BONUS_RATE);        

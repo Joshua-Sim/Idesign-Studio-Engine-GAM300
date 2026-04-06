@@ -60,7 +60,7 @@ namespace Framework
 
 	// DO NOT TOUCH THIS 
     // DAY COUNTER 
-    int SceneInterface::g_CurrentDay = 1;
+    int SceneInterface::g_CurrentDay = 2;
 
     // ======== WIN CUTSCENE TUNING ============ 
     static float winCutsceneStartTime = -1.0f;

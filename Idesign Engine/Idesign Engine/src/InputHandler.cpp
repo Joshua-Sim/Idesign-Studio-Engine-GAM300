@@ -15,6 +15,8 @@
 #include <RecipeBookManager.h>
 #include "GameSystem.h"
 #include "PhaseManager.h"
+#include "TextProperties.h"
+#include "SceneInterface.h"
 
 extern Framework::RecipeBookManager* recipeBookManager;
 
@@ -183,8 +185,15 @@ namespace Framework {
 
         // ESC: Toggle pause/resume
         if (IsKeyPressed(GLFW_KEY_KP_4)) {
-            GameSystem::AddCurrency(600);
+            GameSystem::AddCurrency(5000);
+            int money = GameSystem::GetCurrency();
+			ecsInterface.GetComponent<TextProperties>(ecsInterface.GetEntityByName("ScoreText")).text = "        " + std::to_string(money);
         }
+
+        if (IsKeyPressed(GLFW_KEY_KP_5)) {
+            sceneInterface.SetCurrentDay(5);
+        }
+
        
 
 

@@ -356,10 +356,25 @@ function DayStatsScreen.PopulateDayScreen()
     pendingButtons = {}
     scalingButtons = {}
     starAudioIndex = 0
-    local d = GetLastDayStats()
+    
+    local currentDayIdx = GetCurrentDay()
+    local history = GetAllDayStats()
+    local d = nil
+-- SEARCH the array for the entry where dayIndex matches the current day
+    if history then
+        for _, entry in ipairs(history) do
+            if entry and entry.dayIndex == currentDayIdx then
+                d = entry
+                break
+            end
+        end
+    end
+
+    -- Fallback if nothing was found
     if not d then
-        print("[StatsSystem] ERROR: GetLastDayStats returned nil")
-        return
+        print("[StatsSystem] ERROR: No stats found for Day " .. tostring(currentDayIdx))
+        d = { dayIndex = currentDayIdx, goldFromCustomers = 0, timeBonusGold = 0, 
+              customersServed = 0, timeRemaining = 0, totalGold = 0, stars = 0 }
     end
 
     -- ── Swap background image based on stars earned ───────────
@@ -367,7 +382,7 @@ function DayStatsScreen.PopulateDayScreen()
     if bg then SetTexture(bg, DAY_BG_TEXTURES[d.stars] or "dayStats_base") end
 
     -- ── Text before stars (indices 0–5) ───────────────────────
-    SafeSetText("Stats_DayLabel",          "Day " .. d.dayIndex .. " of " .. TOTAL_DAYS,    COLOR_LABEL)
+    SafeSetText("Stats_DayLabel", "Day " .. d.dayIndex .. " of " .. TOTAL_DAYS, COLOR_LABEL)
     SafeSetText("Stats_GoldFromCustomers", tostring(d.goldFromCustomers),                   COLOR_VALUE)
     SafeSetText("Stats_TimeBonusGold",     "+ " .. d.timeBonusGold .. " G day time bonus",  COLOR_LABEL)
     SafeSetText("Stats_CustomersServed",   tostring(d.customersServed),                     COLOR_VALUE)
@@ -400,55 +415,64 @@ end
 --   Title → Quote
 -- ═════════════════════════════════════════════════════════════
 function DayStatsScreen.PopulateEndScreen()
-    staggerIndex   = 0
-    fadeItems      = {}
-    pendingStars   = {}
-    scalingStars   = {}
+staggerIndex = 0
+    fadeItems = {}
+    pendingStars = {}
+    scalingStars = {}
     pendingButtons = {}
     scalingButtons = {}
     starAudioIndex = 0
+    
     ClearEntities(spawnedRowStars)
     for k in pairs(spawnedRowStars)   do spawnedRowStars[k]   = nil end
     ClearEntities(spawnedTotalStars)
     for k in pairs(spawnedTotalStars) do spawnedTotalStars[k] = nil end
-    local history = GetAllDayStats()
-    if not history then
-        print("[StatsSystem] ERROR: GetAllDayStats returned nil")
-        return
-    end
 
+    local history = GetAllDayStats() or {}
     local totalGold, totalServed, totalStars = 0, 0, 0
-    local now     = GetRealTime()
-    local cursor  = now   -- tracks the absolute time the next element should start
+    local now    = GetRealTime()
+    local cursor = now 
 
+    -- LOOP 1 to 5 (Rows on the screen)
     for i = 1, TOTAL_DAYS do
-        local d = history[i]
-        local stars = d and d.stars or 0
-
-        -- Row Gold text
-        SafeSetTextAt("EndStats_Row" .. i .. "Gold",
-            d and tostring(d.totalGold) or "0", COLOR_VALUE, cursor)
-        cursor = cursor + STAGGER_DELAY
-
-        -- Row Served text
-        SafeSetTextAt("EndStats_Row" .. i .. "Served",
-            d and tostring(d.customersServed) or "0", COLOR_VALUE, cursor)
-        cursor = cursor + STAGGER_DELAY
-
-        -- Accumulate totals
-        if d then
-            totalGold   = totalGold   + d.totalGold
-            totalServed = totalServed + d.customersServed
-            totalStars  = totalStars  + d.stars
+        local dayData = nil
+        
+        -- SEARCH the "stack" to see if any entry belongs to Day 'i'
+        for _, entry in ipairs(history) do
+            if entry and entry.dayIndex == i then
+                dayData = entry
+                break
+            end
         end
 
-        -- Row stars: start after the Served text has fully faded in
+        local displayGold = 0
+        local displayServed = 0
+        local stars = 0
+
+        if dayData then
+            displayGold   = dayData.totalGold or 0
+            displayServed = dayData.customersServed or 0
+            stars         = dayData.stars or 0
+            
+            -- Accumulate Grand Totals
+            totalGold   = totalGold + displayGold
+            totalServed = totalServed + displayServed
+            totalStars  = totalStars + stars
+        end
+
+        -- Populate UI for Row 'i'
+        SafeSetTextAt("EndStats_Row" .. i .. "Gold",   tostring(displayGold), COLOR_VALUE, cursor)
+        cursor = cursor + STAGGER_DELAY
+        SafeSetTextAt("EndStats_Row" .. i .. "Served", tostring(displayServed), COLOR_VALUE, cursor)
+        cursor = cursor + STAGGER_DELAY
+
+        -- Star spawning for Row 'i'
         if stars > 0 then
             local rowStarStart = cursor + FADE_DURATION
             local positions    = BuildRowStarPositions(i, stars)
-            starAudioIndex     = 0   -- reset so each row always plays Twinkle1,2,3 in order
+            starAudioIndex     = 0 
             local rowDoneTime  = QueueStars(stars, positions, ROW_STAR_SCALE, spawnedRowStars, rowStarStart)
-            cursor = rowDoneTime + STAGGER_DELAY   -- next row starts after this row's stars finish
+            cursor = rowDoneTime + STAGGER_DELAY
         else
             cursor = cursor + FADE_DURATION + STAGGER_DELAY
         end
