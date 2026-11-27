@@ -82,18 +82,21 @@ namespace Framework {
         }
     }
 
-    void InputHandler::Update(float deltaTime) {
-        (void)deltaTime;
-
-        // 1. Update Key States
+    void InputHandler::EndStep() {
         for (auto& [key, state] : keyStates) {
             if (state == KEY_PRESSED) state = KEY_HELD;
         }
         for (auto& [button, state] : mouseButtonStates) {
             if (state == KEY_PRESSED) state = KEY_HELD;
         }
+    }
 
-        glfwPollEvents();
+    void InputHandler::Update(float deltaTime) {
+        (void)deltaTime;
+
+        // NOTE: glfwPollEvents() and the PRESSED -> HELD demotion are no longer done here.
+        // CoreEngine polls once per frame (before the logic steps) and calls EndStep() after each step,
+        // so a key press can no longer be swallowed by a poll that happened elsewhere in the frame.
 
         // 2. Handle State Toggles
         // TAB: Toggle Editor vs Game Mode

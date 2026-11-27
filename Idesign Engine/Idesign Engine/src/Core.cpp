@@ -16,6 +16,20 @@
 #include "InputHandler.h"
 #include <chrono>
 #include <thread>
+#include <cmath>
+#include <algorithm>
+
+#ifdef _WIN32
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#include <windows.h>
+#include <timeapi.h>
+#pragma comment(lib, "winmm.lib")
+#endif
 namespace Framework
 {
 	//A global pointer to the core
@@ -33,6 +47,11 @@ namespace Framework
 		LastTime = 0;
 		GameActive = true;
 		CORE = this; //Set the global pointer
+#ifdef _WIN32
+		//Ask Windows for 1 ms timer resolution so sleep_for() in the frame limiter is accurate
+		//(the default granularity is ~15.6 ms, which makes frame times uneven).
+		timeBeginPeriod(1);
+#endif
 	}
 
 	/**
@@ -42,7 +61,9 @@ namespace Framework
  */
 	CoreEngine::~CoreEngine()
 	{
-		//Nothing for the destructor to do
+#ifdef _WIN32
+		timeEndPeriod(1);
+#endif
 	}
 
 	/**
@@ -64,77 +85,122 @@ namespace Framework
 * It continues until the game is marked as inactive (GameActive is set to false).
 */
 
+    namespace
+    {
+        using Clock = std::chrono::steady_clock;
+
+        // Largest frame time fed into the simulation. A long hitch (scene load, breakpoint, window drag)
+        // would otherwise make the loop run dozens of catch-up steps in one frame.
+        constexpr double kMaxFrameTime = 0.1;
+
+        // If a frame took (nearly) a whole number of fixed steps, snap to exactly that many.
+        // Without this, a 60 Hz display (16.68 ms frames) against a 60 Hz simulation (16.67 ms steps)
+        // alternates between 0 and 2 steps every few seconds, which is visible as a stutter.
+        double SnapFrameTime(double frameTime, double fixedDt)
+        {
+            constexpr double kTolerance = 0.001; // 1 ms
+            for (int k = 1; k <= 4; ++k)
+            {
+                if (std::abs(frameTime - k * fixedDt) < kTolerance)
+                    return k * fixedDt;
+            }
+            return frameTime;
+        }
+
+        // Sleeps for most of the remaining time, then spin-waits the last ~1.5 ms for precision.
+        void WaitUntil(Clock::time_point target)
+        {
+            constexpr auto kSpinMargin = std::chrono::microseconds(1500);
+            auto now = Clock::now();
+            if (target - now > kSpinMargin)
+                std::this_thread::sleep_for(target - now - kSpinMargin);
+            while (Clock::now() < target)
+                std::this_thread::yield();
+        }
+    }
+
     void CoreEngine::GameLoop()
     {
         DebugSystem* debugSystem = DebugSystem::GetInstance();
 
-        // --- Timestep and Frame Pacing variables ---
-        const double fixedDt = 1.0 / 60.0; // Target for logic updates (60 updates/sec)
-        const auto targetFrameDuration = std::chrono::duration<double>(1.0 / 60.0); // Target for rendering (60 frames/sec)
+        // Logic runs at a fixed 60 Hz. Rendering runs once per frame, AFTER the logic steps,
+        // so every presented frame shows the newest simulation state and a frame that needs
+        // 0 or 2 logic steps still renders exactly once.
+        const double fixedDt = 1.0 / 60.0;
 
         double lastTime = glfwGetTime();
         double accumulator = 0.0;
 
         while (GameActive)
         {
-            auto frameStart = std::chrono::high_resolution_clock::now();
+            const auto frameStart = Clock::now();
 
-            // --- Fixed Timestep for Game Logic ---
-            double currentTime = glfwGetTime();
-            double frameTime = currentTime - lastTime;
+            // --- Measure frame time ---
+            const double currentTime = glfwGetTime();
+            const double rawFrameTime = currentTime - lastTime; // real time, used for FPS stats
             lastTime = currentTime;
+
+            const double frameTime = SnapFrameTime((std::min)(rawFrameTime, kMaxFrameTime), fixedDt);
             accumulator += frameTime;
 
             std::unordered_map<std::string, double> systemTimes;
 
-            // Update game logic in fixed steps to ensure consistency
+            auto timedUpdate = [&](ISystem* system, float dt)
+            {
+                auto start = std::chrono::high_resolution_clock::now();
+                system->Update(dt);
+                auto end = std::chrono::high_resolution_clock::now();
+                std::chrono::duration<double, std::milli> elapsed = end - start;
+                systemTimes[system->GetName()] += elapsed.count(); // summed over all steps this frame
+            };
+
+            // --- Pump OS events ONCE per frame (previously done in InputHandler AND ImguiManager) ---
+            glfwPollEvents();
+
+            // --- Fixed timestep: game logic ---
             while (accumulator >= fixedDt)
             {
-                for (auto* system : Systems) 
+                const bool playing = engineState.Is(EngineMode::Play);
+
+                for (auto* system : Systems)
                 {
-                    auto start = std::chrono::high_resolution_clock::now();
-
-                    if (engineState.Is(EngineMode::Play)) 
-                    {
-                        system->Update(static_cast<float>(fixedDt)); // Use the constant fixedDt
-                    }
-                    else 
-                    {
-                        system->Update(0);
-                    }
-
-                    auto end = std::chrono::high_resolution_clock::now();
-                    std::chrono::duration<double, std::milli> elapsed = end - start;
-                    systemTimes[system->GetName()] = elapsed.count();
+                    if (system->GetUpdateStage() != UpdateStage::Fixed) continue;
+                    timedUpdate(system, playing ? static_cast<float>(fixedDt) : 0.0f);
                 }
+
+                // "Pressed" edges are consumed by this step; demote them to "held".
+                if (InputHandler* input = InputHandler::GetInstance())
+                    input->EndStep();
+
                 accumulator -= fixedDt;
             }
 
-            if (debugSystem) 
+            // --- Once per frame: rendering / editor UI (includes the buffer swap) ---
             {
-                debugSystem->SetSystemTimes(systemTimes);
-                // Pass the actual frameTime for accurate FPS calculation, not dt
-                debugSystem->ProcessSystemUpdateTimes(static_cast<float>(frameTime));
+                const float frameDt = engineState.Is(EngineMode::Play) ? static_cast<float>(frameTime) : 0.0f;
+                for (auto* system : Systems)
+                {
+                    if (system->GetUpdateStage() != UpdateStage::Frame) continue;
+                    timedUpdate(system, frameDt);
+                }
             }
 
-            // NOTE: All your rendering code would execute here, once per frame.
-
-            // --- Manual Frame Pacing to Cap FPS ---
-            auto frameEnd = std::chrono::high_resolution_clock::now();
-            auto elapsedFrameTime = frameEnd - frameStart;
-
-            // If the frame finished faster than our target, sleep for the remaining time
-            if (elapsedFrameTime < targetFrameDuration)
+            if (debugSystem)
             {
-                auto sleepDuration = targetFrameDuration - elapsedFrameTime;
-                std::this_thread::sleep_for(sleepDuration);
+                debugSystem->SetSystemTimes(systemTimes);
+                // Pass the real frame time for accurate FPS calculation
+                debugSystem->ProcessSystemUpdateTimes(static_cast<float>(rawFrameTime));
+            }
+
+            // --- Frame limiter (safety net when VSync is on, the real limiter when it is off) ---
+            if (frameRateCap > 0.0)
+            {
+                WaitUntil(frameStart + std::chrono::duration_cast<Clock::duration>(
+                    std::chrono::duration<double>(1.0 / frameRateCap)));
             }
         }
     }
 
-
-
-	
 	/**
  * \brief Adds a system to the CoreEngine.
  *

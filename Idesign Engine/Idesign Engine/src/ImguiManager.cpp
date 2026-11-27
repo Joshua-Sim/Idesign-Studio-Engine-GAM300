@@ -877,7 +877,7 @@ namespace Framework {
         glfwMakeContextCurrent(backup_current_context);
 
         glfwSetDropCallback(backup_current_context, DropCallback);
-        glfwPollEvents();
+        // glfwPollEvents() is now called once per frame by CoreEngine::GameLoop
         glfwSwapBuffers(m_graphicsSystem->GetWindow());
     }
 

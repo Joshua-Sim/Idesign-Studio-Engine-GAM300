@@ -16,9 +16,17 @@ namespace Framework
 {
 	///System is a pure virtual base class (which is to say, an interface) that is
 	///the base class for all systems used by the game. 
+	///When a system is updated by CoreEngine::GameLoop.
+	///  Fixed : 0..N times per frame at a constant 60 Hz (game logic, physics, scripts, ...).
+	///  Frame : exactly once per rendered frame with the real frame time (rendering, editor UI).
+	enum class UpdateStage { Fixed, Frame };
+
 	class ISystem
 	{
 	public:
+		///Defaults to Fixed. Rendering systems override this to return Frame.
+		virtual UpdateStage GetUpdateStage() const { return UpdateStage::Fixed; }
+
 		///Systems can receive all message send to the Core. 
 		///See Message.h for details.
 		//virtual void SendMessage(Message* message) { UNREFERENCED_PARAMETER(message); };

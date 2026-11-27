@@ -1,0 +1,383 @@
+diff --git a/Idesign Engine/Idesign Engine/src/Core.cpp b/Idesign Engine/Idesign Engine/src/Core.cpp
+index 42128e8..ab46299 100644
+--- a/Idesign Engine/Idesign Engine/src/Core.cpp	
++++ b/Idesign Engine/Idesign Engine/src/Core.cpp	
+@@ -16,6 +16,20 @@
+ #include "InputHandler.h"
+ #include <chrono>
+ #include <thread>
++#include <cmath>
++#include <algorithm>
++
++#ifdef _WIN32
++#ifndef NOMINMAX
++#define NOMINMAX
++#endif
++#ifndef WIN32_LEAN_AND_MEAN
++#define WIN32_LEAN_AND_MEAN
++#endif
++#include <windows.h>
++#include <timeapi.h>
++#pragma comment(lib, "winmm.lib")
++#endif
+ namespace Framework
+ {
+ 	//A global pointer to the core
+@@ -33,6 +47,11 @@ namespace Framework
+ 		LastTime = 0;
+ 		GameActive = true;
+ 		CORE = this; //Set the global pointer
++#ifdef _WIN32
++		//Ask Windows for 1 ms timer resolution so sleep_for() in the frame limiter is accurate
++		//(the default granularity is ~15.6 ms, which makes frame times uneven).
++		timeBeginPeriod(1);
++#endif
+ 	}
+ 
+ 	/**
+@@ -42,7 +61,9 @@ namespace Framework
+  */
+ 	CoreEngine::~CoreEngine()
+ 	{
+-		//Nothing for the destructor to do
++#ifdef _WIN32
++		timeEndPeriod(1);
++#endif
+ 	}
+ 
+ 	/**
+@@ -64,77 +85,122 @@ namespace Framework
+ * It continues until the game is marked as inactive (GameActive is set to false).
+ */
+ 
++    namespace
++    {
++        using Clock = std::chrono::steady_clock;
++
++        // Largest frame time fed into the simulation. A long hitch (scene load, breakpoint, window drag)
++        // would otherwise make the loop run dozens of catch-up steps in one frame.
++        constexpr double kMaxFrameTime = 0.1;
++
++        // If a frame took (nearly) a whole number of fixed steps, snap to exactly that many.
++        // Without this, a 60 Hz display (16.68 ms frames) against a 60 Hz simulation (16.67 ms steps)
++        // alternates between 0 and 2 steps every few seconds, which is visible as a stutter.
++        double SnapFrameTime(double frameTime, double fixedDt)
++        {
++            constexpr double kTolerance = 0.001; // 1 ms
++            for (int k = 1; k <= 4; ++k)
++            {
++                if (std::abs(frameTime - k * fixedDt) < kTolerance)
++                    return k * fixedDt;
++            }
++            return frameTime;
++        }
++
++        // Sleeps for most of the remaining time, then spin-waits the last ~1.5 ms for precision.
++        void WaitUntil(Clock::time_point target)
++        {
++            constexpr auto kSpinMargin = std::chrono::microseconds(1500);
++            auto now = Clock::now();
++            if (target - now > kSpinMargin)
++                std::this_thread::sleep_for(target - now - kSpinMargin);
++            while (Clock::now() < target)
++                std::this_thread::yield();
++        }
++    }
++
+     void CoreEngine::GameLoop()
+     {
+         DebugSystem* debugSystem = DebugSystem::GetInstance();
+ 
+-        // --- Timestep and Frame Pacing variables ---
+-        const double fixedDt = 1.0 / 60.0; // Target for logic updates (60 updates/sec)
+-        const auto targetFrameDuration = std::chrono::duration<double>(1.0 / 60.0); // Target for rendering (60 frames/sec)
++        // Logic runs at a fixed 60 Hz. Rendering runs once per frame, AFTER the logic steps,
++        // so every presented frame shows the newest simulation state and a frame that needs
++        // 0 or 2 logic steps still renders exactly once.
++        const double fixedDt = 1.0 / 60.0;
+ 
+         double lastTime = glfwGetTime();
+         double accumulator = 0.0;
+ 
+         while (GameActive)
+         {
+-            auto frameStart = std::chrono::high_resolution_clock::now();
++            const auto frameStart = Clock::now();
+ 
+-            // --- Fixed Timestep for Game Logic ---
+-            double currentTime = glfwGetTime();
+-            double frameTime = currentTime - lastTime;
++            // --- Measure frame time ---
++            const double currentTime = glfwGetTime();
++            const double rawFrameTime = currentTime - lastTime; // real time, used for FPS stats
+             lastTime = currentTime;
++
++            const double frameTime = SnapFrameTime((std::min)(rawFrameTime, kMaxFrameTime), fixedDt);
+             accumulator += frameTime;
+ 
+             std::unordered_map<std::string, double> systemTimes;
+ 
+-            // Update game logic in fixed steps to ensure consistency
++            auto timedUpdate = [&](ISystem* system, float dt)
++            {
++                auto start = std::chrono::high_resolution_clock::now();
++                system->Update(dt);
++                auto end = std::chrono::high_resolution_clock::now();
++                std::chrono::duration<double, std::milli> elapsed = end - start;
++                systemTimes[system->GetName()] += elapsed.count(); // summed over all steps this frame
++            };
++
++            // --- Pump OS events ONCE per frame (previously done in InputHandler AND ImguiManager) ---
++            glfwPollEvents();
++
++            // --- Fixed timestep: game logic ---
+             while (accumulator >= fixedDt)
+             {
+-                for (auto* system : Systems) 
++                const bool playing = engineState.Is(EngineMode::Play);
++
++                for (auto* system : Systems)
+                 {
+-                    auto start = std::chrono::high_resolution_clock::now();
+-
+-                    if (engineState.Is(EngineMode::Play)) 
+-                    {
+-                        system->Update(static_cast<float>(fixedDt)); // Use the constant fixedDt
+-                    }
+-                    else 
+-                    {
+-                        system->Update(0);
+-                    }
+-
+-                    auto end = std::chrono::high_resolution_clock::now();
+-                    std::chrono::duration<double, std::milli> elapsed = end - start;
+-                    systemTimes[system->GetName()] = elapsed.count();
++                    if (system->GetUpdateStage() != UpdateStage::Fixed) continue;
++                    timedUpdate(system, playing ? static_cast<float>(fixedDt) : 0.0f);
+                 }
++
++                // "Pressed" edges are consumed by this step; demote them to "held".
++                if (InputHandler* input = InputHandler::GetInstance())
++                    input->EndStep();
++
+                 accumulator -= fixedDt;
+             }
+ 
+-            if (debugSystem) 
++            // --- Once per frame: rendering / editor UI (includes the buffer swap) ---
+             {
+-                debugSystem->SetSystemTimes(systemTimes);
+-                // Pass the actual frameTime for accurate FPS calculation, not dt
+-                debugSystem->ProcessSystemUpdateTimes(static_cast<float>(frameTime));
++                const float frameDt = engineState.Is(EngineMode::Play) ? static_cast<float>(frameTime) : 0.0f;
++                for (auto* system : Systems)
++                {
++                    if (system->GetUpdateStage() != UpdateStage::Frame) continue;
++                    timedUpdate(system, frameDt);
++                }
+             }
+ 
+-            // NOTE: All your rendering code would execute here, once per frame.
+-
+-            // --- Manual Frame Pacing to Cap FPS ---
+-            auto frameEnd = std::chrono::high_resolution_clock::now();
+-            auto elapsedFrameTime = frameEnd - frameStart;
++            if (debugSystem)
++            {
++                debugSystem->SetSystemTimes(systemTimes);
++                // Pass the real frame time for accurate FPS calculation
++                debugSystem->ProcessSystemUpdateTimes(static_cast<float>(rawFrameTime));
++            }
+ 
+-            // If the frame finished faster than our target, sleep for the remaining time
+-            if (elapsedFrameTime < targetFrameDuration)
++            // --- Frame limiter (safety net when VSync is on, the real limiter when it is off) ---
++            if (frameRateCap > 0.0)
+             {
+-                auto sleepDuration = targetFrameDuration - elapsedFrameTime;
+-                std::this_thread::sleep_for(sleepDuration);
++                WaitUntil(frameStart + std::chrono::duration_cast<Clock::duration>(
++                    std::chrono::duration<double>(1.0 / frameRateCap)));
+             }
+         }
+     }
+ 
+-
+-
+-	
+ 	/**
+  * \brief Adds a system to the CoreEngine.
+  *
+diff --git a/Idesign Engine/Idesign Engine/src/Core.h b/Idesign Engine/Idesign Engine/src/Core.h
+index 562f40b..08c3106 100644
+--- a/Idesign Engine/Idesign Engine/src/Core.h	
++++ b/Idesign Engine/Idesign Engine/src/Core.h	
+@@ -32,6 +32,9 @@ namespace Framework
+ 		///Initializes all systems in the game.
+ 		void Initialize();
+ 		void EndGameLoop();
++		///Caps the frame rate (in FPS) with a sleep + short spin-wait. 0 disables the cap.
++		///When VSync is on this is only a safety net (e.g. minimised window, swap not blocking).
++		void SetFrameRateCap(double fps) { frameRateCap = fps; }
+ 	private:
+ 		//Tracks all the systems the game uses
+ 		std::vector<ISystem*> Systems;
+@@ -39,6 +42,8 @@ namespace Framework
+ 		float LastTime;
+ 		//Is the game running (true) or being shut down (false)?
+ 		bool GameActive;
++		//Manual frame-rate cap in FPS (0 = uncapped)
++		double frameRateCap = 60.0;
+ 	};
+ 
+ 	//A global pointer to the instance of the core
+diff --git a/Idesign Engine/Idesign Engine/src/Graphics.cpp b/Idesign Engine/Idesign Engine/src/Graphics.cpp
+index ee056be..7285e32 100644
+--- a/Idesign Engine/Idesign Engine/src/Graphics.cpp	
++++ b/Idesign Engine/Idesign Engine/src/Graphics.cpp	
+@@ -123,7 +123,19 @@ namespace Framework {
+         }
+ 
+         glfwMakeContextCurrent(window);
+-        glfwSwapInterval(0); // VSync Off
++        {
++            // Match the swap interval to the 60 Hz logic rate: 60 Hz -> 1, 120 Hz -> 2, 240 Hz -> 4.
++            // (Without render interpolation, rendering at a multiple of 60 keeps motion even.)
++            int interval = 0;
++            if (kEnableVSync)
++            {
++                const GLFWvidmode* vsyncMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
++                const int refresh = vsyncMode ? vsyncMode->refreshRate : 60;
++                interval = (refresh + 30) / 60;   // rounded refresh / 60
++                if (interval < 1) interval = 1;
++            }
++            glfwSwapInterval(interval);
++        }
+ 
+         if (glewInit() != GLEW_OK) {
+             std::cerr << "GLEW init failed\n";
+diff --git a/Idesign Engine/Idesign Engine/src/Graphics.h b/Idesign Engine/Idesign Engine/src/Graphics.h
+index 4636717..d80ccce 100644
+--- a/Idesign Engine/Idesign Engine/src/Graphics.h	
++++ b/Idesign Engine/Idesign Engine/src/Graphics.h	
+@@ -80,7 +80,12 @@ namespace Framework
+         void Initialize() override;
+ 
+         void Update(float deltaTime) override;
++        UpdateStage GetUpdateStage() const override { return UpdateStage::Frame; } // render once per frame
+         std::string GetName() override;
++
++        // Set to false to disable VSync (then CoreEngine's manual frame cap becomes the limiter).
++        static constexpr bool kEnableVSync = true;
++
+         static GLuint CreateFramebuffer(int width, int height, GLuint& texture, GLuint& rbo_fb);
+         void RequestPickUV(float u, float v); //main viewport (0)
+         void RequestPickUVSecondary(float u, float v);  // secondary viewport (1)
+diff --git a/Idesign Engine/Idesign Engine/src/ImguiManager.cpp b/Idesign Engine/Idesign Engine/src/ImguiManager.cpp
+index f8aad19..f06a160 100644
+--- a/Idesign Engine/Idesign Engine/src/ImguiManager.cpp	
++++ b/Idesign Engine/Idesign Engine/src/ImguiManager.cpp	
+@@ -877,7 +877,7 @@ namespace Framework {
+         glfwMakeContextCurrent(backup_current_context);
+ 
+         glfwSetDropCallback(backup_current_context, DropCallback);
+-        glfwPollEvents();
++        // glfwPollEvents() is now called once per frame by CoreEngine::GameLoop
+         glfwSwapBuffers(m_graphicsSystem->GetWindow());
+     }
+ 
+diff --git a/Idesign Engine/Idesign Engine/src/ImguiManager.h b/Idesign Engine/Idesign Engine/src/ImguiManager.h
+index 21e218b..8ffda64 100644
+--- a/Idesign Engine/Idesign Engine/src/ImguiManager.h	
++++ b/Idesign Engine/Idesign Engine/src/ImguiManager.h	
+@@ -46,6 +46,7 @@ namespace Framework
+ 
+ 		void Initialize();
+ 		void Update(float deltaTime);
++		UpdateStage GetUpdateStage() const override { return UpdateStage::Frame; } // draw + swap once per frame
+ 		std::string GetName() override;
+ 
+ 		void SetGraphicsSystem(Graphics* graphicsSystem); // New "setter" function
+diff --git a/Idesign Engine/Idesign Engine/src/InputHandler.cpp b/Idesign Engine/Idesign Engine/src/InputHandler.cpp
+index 6bf19cc..4795dc4 100644
+--- a/Idesign Engine/Idesign Engine/src/InputHandler.cpp	
++++ b/Idesign Engine/Idesign Engine/src/InputHandler.cpp	
+@@ -82,18 +82,21 @@ namespace Framework {
+         }
+     }
+ 
+-    void InputHandler::Update(float deltaTime) {
+-        (void)deltaTime;
+-
+-        // 1. Update Key States
++    void InputHandler::EndStep() {
+         for (auto& [key, state] : keyStates) {
+             if (state == KEY_PRESSED) state = KEY_HELD;
+         }
+         for (auto& [button, state] : mouseButtonStates) {
+             if (state == KEY_PRESSED) state = KEY_HELD;
+         }
++    }
++
++    void InputHandler::Update(float deltaTime) {
++        (void)deltaTime;
+ 
+-        glfwPollEvents();
++        // NOTE: glfwPollEvents() and the PRESSED -> HELD demotion are no longer done here.
++        // CoreEngine polls once per frame (before the logic steps) and calls EndStep() after each step,
++        // so a key press can no longer be swallowed by a poll that happened elsewhere in the frame.
+ 
+         // 2. Handle State Toggles
+         // TAB: Toggle Editor vs Game Mode
+diff --git a/Idesign Engine/Idesign Engine/src/InputHandler.h b/Idesign Engine/Idesign Engine/src/InputHandler.h
+index 0531dc4..360a5e1 100644
+--- a/Idesign Engine/Idesign Engine/src/InputHandler.h	
++++ b/Idesign Engine/Idesign Engine/src/InputHandler.h	
+@@ -34,6 +34,10 @@ namespace Framework {
+         // System Overrides
+         void Initialize() override;
+         void Update(float deltaTime) override;
++
++        // Called by CoreEngine after every fixed logic step: turns KEY_PRESSED into KEY_HELD
++        // so a press is seen by exactly one step. Event polling now happens once per frame in CoreEngine.
++        void EndStep();
+         std::string GetName() override { return "InputHandler"; }
+ 
+         // Setup
+diff --git a/Idesign Engine/Idesign Engine/src/System.h b/Idesign Engine/Idesign Engine/src/System.h
+index bc91aff..eee8128 100644
+--- a/Idesign Engine/Idesign Engine/src/System.h	
++++ b/Idesign Engine/Idesign Engine/src/System.h	
+@@ -16,9 +16,17 @@ namespace Framework
+ {
+ 	///System is a pure virtual base class (which is to say, an interface) that is
+ 	///the base class for all systems used by the game. 
++	///When a system is updated by CoreEngine::GameLoop.
++	///  Fixed : 0..N times per frame at a constant 60 Hz (game logic, physics, scripts, ...).
++	///  Frame : exactly once per rendered frame with the real frame time (rendering, editor UI).
++	enum class UpdateStage { Fixed, Frame };
++
+ 	class ISystem
+ 	{
+ 	public:
++		///Defaults to Fixed. Rendering systems override this to return Frame.
++		virtual UpdateStage GetUpdateStage() const { return UpdateStage::Fixed; }
++
+ 		///Systems can receive all message send to the Core. 
+ 		///See Message.h for details.
+ 		//virtual void SendMessage(Message* message) { UNREFERENCED_PARAMETER(message); };
+diff --git a/Idesign Engine/Idesign Engine/src/main.cpp b/Idesign Engine/Idesign Engine/src/main.cpp
+index 8d6d20f..37587bf 100644
+--- a/Idesign Engine/Idesign Engine/src/main.cpp	
++++ b/Idesign Engine/Idesign Engine/src/main.cpp	
+@@ -188,6 +188,10 @@ int main(void)
+     fileCheckSystem->WatchAllFolders();
+ 
+     // Initialize the engine and run the main game loop
++    // With VSync on, the swap blocks and sets the pace, so the manual cap is only a safety net
++    // (e.g. minimised window where the swap returns immediately). With VSync off it is the limiter.
++    engine->SetFrameRateCap(Graphics::kEnableVSync ? 120.0 : 60.0);
++
+     engine->Initialize();
+ 
+     // Initialize FMOD and load banks (after engine Initialize so AudioSystem::Initialize runs first)

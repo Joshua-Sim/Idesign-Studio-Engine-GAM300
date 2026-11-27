@@ -80,7 +80,12 @@ namespace Framework
         void Initialize() override;
 
         void Update(float deltaTime) override;
+        UpdateStage GetUpdateStage() const override { return UpdateStage::Frame; } // render once per frame
         std::string GetName() override;
+
+        // Set to false to disable VSync (then CoreEngine's manual frame cap becomes the limiter).
+        static constexpr bool kEnableVSync = true;
+
         static GLuint CreateFramebuffer(int width, int height, GLuint& texture, GLuint& rbo_fb);
         void RequestPickUV(float u, float v); //main viewport (0)
         void RequestPickUVSecondary(float u, float v);  // secondary viewport (1)

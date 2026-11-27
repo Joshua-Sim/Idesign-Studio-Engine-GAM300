@@ -123,7 +123,19 @@ namespace Framework {
         }
 
         glfwMakeContextCurrent(window);
-        glfwSwapInterval(0); // VSync Off
+        {
+            // Match the swap interval to the 60 Hz logic rate: 60 Hz -> 1, 120 Hz -> 2, 240 Hz -> 4.
+            // (Without render interpolation, rendering at a multiple of 60 keeps motion even.)
+            int interval = 0;
+            if (kEnableVSync)
+            {
+                const GLFWvidmode* vsyncMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+                const int refresh = vsyncMode ? vsyncMode->refreshRate : 60;
+                interval = (refresh + 30) / 60;   // rounded refresh / 60
+                if (interval < 1) interval = 1;
+            }
+            glfwSwapInterval(interval);
+        }
 
         if (glewInit() != GLEW_OK) {
             std::cerr << "GLEW init failed\n";

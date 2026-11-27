@@ -46,6 +46,7 @@ namespace Framework
 
 		void Initialize();
 		void Update(float deltaTime);
+		UpdateStage GetUpdateStage() const override { return UpdateStage::Frame; } // draw + swap once per frame
 		std::string GetName() override;
 
 		void SetGraphicsSystem(Graphics* graphicsSystem); // New "setter" function

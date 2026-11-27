@@ -188,6 +188,10 @@ int main(void)
     fileCheckSystem->WatchAllFolders();
 
     // Initialize the engine and run the main game loop
+    // With VSync on, the swap blocks and sets the pace, so the manual cap is only a safety net
+    // (e.g. minimised window where the swap returns immediately). With VSync off it is the limiter.
+    engine->SetFrameRateCap(Graphics::kEnableVSync ? 120.0 : 60.0);
+
     engine->Initialize();
 
     // Initialize FMOD and load banks (after engine Initialize so AudioSystem::Initialize runs first)

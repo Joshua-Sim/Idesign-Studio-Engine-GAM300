@@ -34,6 +34,10 @@ namespace Framework {
         // System Overrides
         void Initialize() override;
         void Update(float deltaTime) override;
+
+        // Called by CoreEngine after every fixed logic step: turns KEY_PRESSED into KEY_HELD
+        // so a press is seen by exactly one step. Event polling now happens once per frame in CoreEngine.
+        void EndStep();
         std::string GetName() override { return "InputHandler"; }
 
         // Setup
